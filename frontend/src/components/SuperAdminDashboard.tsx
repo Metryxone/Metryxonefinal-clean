@@ -99,6 +99,7 @@ const CompetencyMasterPanel = lazy(() => import('./superadmin/CompetencyMasterPa
 const CompetencyMicroFrameworkPanel = lazy(() => import('./superadmin/CompetencyMicroFrameworkPanel'));
 const RoleCompetencyProfilePanel = lazy(() => import('./superadmin/RoleCompetencyProfilePanel'));
 const AssessmentFoundationMappingPanel = lazy(() => import('./superadmin/AssessmentFoundationMappingPanel'));
+const CompetencySearchPanel = lazy(() => import('./superadmin/CompetencySearchPanel'));
 const CareerEvidencePanel = lazy(() => import('./superadmin/CareerEvidencePanel'));
 const MEIDesignPanel = lazy(() => import('./superadmin/MEIDesignPanel'));
 const EIOperationsPanel = lazy(() => import('./superadmin/EIOperationsPanel'));
@@ -816,6 +817,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       ...(cfiEnabled ? [{ id: 'cmp-micro-framework', label: 'Micro Framework', icon: Network, node: <CompetencyMicroFrameworkPanel /> }] : []),
                       ...(cfiEnabled ? [{ id: 'cmp-role-profile', label: 'Role Competency Profile', icon: Briefcase, node: <RoleCompetencyProfilePanel /> }] : []),
                       ...(cfiEnabled ? [{ id: 'cmp-assessment-mapping', label: 'Assessment Foundation Mapping', icon: ClipboardList, node: <AssessmentFoundationMappingPanel /> }] : []),
+                      ...(cfiEnabled ? [{ id: 'cmp-search-discovery', label: 'Search & Discovery', icon: Search, node: <CompetencySearchPanel /> }] : []),
                       { id: 'cmp-questions',          label: 'Questions',          icon: FileCheck,  node: <CompetencyQuestionsPanel /> },
                       { id: 'cmp-questionbank',       label: 'Question Bank',      icon: Database,   node: <QuestionBankPanel /> },
                       { id: 'cmp-custom-modules',     label: 'Custom Modules',     icon: Package,    node: <AssessmentModulesManagement onNavigate={onNavigate} modulesOnly /> },

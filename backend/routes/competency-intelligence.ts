@@ -79,6 +79,13 @@ import {
   deleteCompetencyQuestion,
   getAssessmentFoundationSummary,
 } from '../services/assessment-foundation-mapping.js';
+import {
+  searchCompetencies,
+  getSearchFacets,
+  searchMicroCompetencies,
+  getSearchSummary,
+  bulkOperation,
+} from '../services/competency-search.js';
 
 export function registerCompetencyFrameworkIntelligenceRoutes(
   app: Express,
@@ -673,6 +680,76 @@ export function registerCompetencyFrameworkIntelligenceRoutes(
         return undefined;
       }
       return { deleted: true, id };
+    }),
+  );
+
+  // ---- Phase 1.7: Search & Discovery -------------------------------------
+  // Read-mostly discovery over the EXISTING genome (no new tables). Faceted
+  // search by competency / type / role / industry / department / function /
+  // micro-competency, with filters, sorting, pagination, and bulk operations.
+  // Literal sub-paths registered BEFORE the param-free search root.
+
+  app.get('/api/competency-intelligence/search/facets', gate, requireAuth, wrap(async () =>
+    getSearchFacets(pool),
+  ));
+
+  app.get('/api/competency-intelligence/search/micro-competencies', gate, requireAuth, wrap(async (req) =>
+    searchMicroCompetencies(pool, {
+      q: req.query.q ? String(req.query.q) : undefined,
+      parentId: req.query.parent_id ? String(req.query.parent_id) : undefined,
+      includeInactive: String(req.query.include_inactive ?? '') === '1' || req.query.include_inactive === 'true',
+      limit: req.query.limit ? Number(req.query.limit) : undefined,
+      offset: req.query.offset ? Number(req.query.offset) : undefined,
+    }),
+  ));
+
+  app.get('/api/competency-intelligence/search/summary', gate, requireAuth, wrap(async () =>
+    getSearchSummary(pool),
+  ));
+
+  app.get('/api/competency-intelligence/search', gate, requireAuth, wrap(async (req) =>
+    searchCompetencies(pool, {
+      q: req.query.q ? String(req.query.q) : undefined,
+      typeKey: req.query.type ? String(req.query.type) : undefined,
+      domainId: req.query.domain_id ? String(req.query.domain_id) : undefined,
+      familyId: req.query.family_id ? String(req.query.family_id) : undefined,
+      industryId: req.query.industry_id ? String(req.query.industry_id) : undefined,
+      functionId: req.query.function_id ? String(req.query.function_id) : undefined,
+      departmentId: req.query.department_id ? String(req.query.department_id) : undefined,
+      roleId: req.query.role_id ? String(req.query.role_id) : undefined,
+      microTerm: req.query.micro ? String(req.query.micro) : undefined,
+      hasMicro: String(req.query.has_micro ?? '') === '1' || req.query.has_micro === 'true',
+      trainability: req.query.trainability ? String(req.query.trainability) : undefined,
+      stabilityLevel: req.query.stability_level ? String(req.query.stability_level) : undefined,
+      complexityLevel: req.query.complexity_level ? String(req.query.complexity_level) : undefined,
+      includeDeprecated: String(req.query.include_deprecated ?? '') === '1' || req.query.include_deprecated === 'true',
+      sort: req.query.sort ? String(req.query.sort) : undefined,
+      order: req.query.order ? String(req.query.order) : undefined,
+      limit: req.query.limit ? Number(req.query.limit) : undefined,
+      offset: req.query.offset ? Number(req.query.offset) : undefined,
+    }),
+  ));
+
+  // Admin write — bulk operations on a search-selected set (export | assign_type).
+  app.post(
+    '/api/admin/competency-intelligence/search/bulk',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req, res) => {
+      const body = (req.body ?? {}) as Record<string, unknown>;
+      const result = await bulkOperation(pool, {
+        operation: body.operation,
+        competency_ids: body.competency_ids,
+        type_key: body.type_key,
+      });
+      if (!result.ok) {
+        const notFound = result.error === 'type_not_found';
+        const bad = ['invalid_operation', 'no_competency_ids', 'too_many_ids', 'missing_type_key'].includes(result.error);
+        res.status(notFound ? 404 : bad ? 400 : 400).json({ ok: false, error: result.error });
+        return undefined;
+      }
+      return result.data;
     }),
   );
 }

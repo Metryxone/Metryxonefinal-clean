@@ -648,3 +648,9 @@ id = "dbKhE-WeKxmyqmJv0UQPD"
 uri = "file://backend/audit/production-parity/risk_matrix.md"
 type = "text"
 title = "Risk Matrix"
+
+[[outputs]]
+id = "HOQQu61n6yQW1jzbvrwgX"
+uri = "file://competency_quality_report.md"
+type = "text"
+title = "Competency Data Quality Review (Phase 1.3)"

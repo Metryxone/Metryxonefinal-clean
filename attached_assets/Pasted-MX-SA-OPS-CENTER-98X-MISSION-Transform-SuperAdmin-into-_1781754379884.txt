@@ -1,0 +1,264 @@
+MX-SA-OPS-CENTER-98X
+
+MISSION
+
+Transform SuperAdmin into a true Platform Operations Command Center.
+
+Do not build new products.
+
+Do not build new assessments.
+
+Do not build new intelligence engines.
+
+Focus on operational visibility, monitoring, alerting, platform health, and business control.
+
+This closes the gap between platform capability and platform operability.
+
+====================================================
+WORKSTREAM 1
+GLOBAL PLATFORM COMMAND CENTER
+==============================
+
+Create a single SuperAdmin Mission Control.
+
+Display:
+
+Platform Health
+
+System Health
+
+Database Health
+
+API Health
+
+Feature Flag Health
+
+Assessment Health
+
+Commercial Health
+
+Institution Health
+
+Employer Health
+
+Notification Health
+
+====================================================
+WORKSTREAM 2
+REAL-TIME ALERT CENTER
+======================
+
+Create alerts for:
+
+Failed Logins
+
+Failed Payments
+
+Failed Assessments
+
+Failed Reports
+
+Failed Notifications
+
+API Failures
+
+Database Errors
+
+Feature Flag Misconfigurations
+
+Commercial Exceptions
+
+Support Escalations
+
+Severity:
+
+Critical
+
+High
+
+Medium
+
+Low
+
+====================================================
+WORKSTREAM 3
+ACTIVITY OBSERVABILITY
+======================
+
+Track:
+
+Candidate Registrations
+
+Assessment Starts
+
+Assessment Completions
+
+Career Passport Generation
+
+Competency Completions
+
+Employer Searches
+
+Institution Activity
+
+Revenue Activity
+
+Admin Actions
+
+Support Activity
+
+====================================================
+WORKSTREAM 4
+EXECUTIVE OPERATIONS DASHBOARD
+==============================
+
+Display:
+
+Daily Active Users
+
+New Candidates
+
+Active Employers
+
+Active Institutions
+
+Assessment Volume
+
+Completion Rates
+
+Revenue Trends
+
+Subscription Trends
+
+Platform Usage
+
+====================================================
+WORKSTREAM 5
+FEATURE FLAG OPERATIONS
+=======================
+
+Display:
+
+All Feature Flags
+
+Environment Status
+
+Dependency Status
+
+Activation Status
+
+Risk Status
+
+Enablement Recommendations
+
+====================================================
+WORKSTREAM 6
+DATA QUALITY CENTER
+===================
+
+Detect:
+
+Duplicate Candidates
+
+Missing Profiles
+
+Broken References
+
+Assessment Data Issues
+
+Competency Data Issues
+
+Commercial Data Issues
+
+Institution Data Issues
+
+====================================================
+WORKSTREAM 7
+AUDIT ACTIVATION CENTER
+=======================
+
+Monitor:
+
+Admin Activity
+
+Permission Changes
+
+Role Changes
+
+Commercial Actions
+
+Assessment Actions
+
+Data Changes
+
+Approval Workflows
+
+====================================================
+WORKSTREAM 8
+NOTIFICATION OPERATIONS
+=======================
+
+Track:
+
+Email Deliverability
+
+SMS Deliverability
+
+WhatsApp Deliverability
+
+Notification Failures
+
+Retry Status
+
+Queue Health
+
+====================================================
+WORKSTREAM 9
+SUPERADMIN CERTIFICATION
+========================
+
+Generate:
+
+operations_center_audit.md
+
+platform_health_report.md
+
+observability_readiness.md
+
+alerting_readiness.md
+
+data_quality_readiness.md
+
+Targets:
+
+Platform Operations > 95%
+
+Observability > 95%
+
+Alerting > 95%
+
+Operational Visibility > 95%
+
+SuperAdmin Readiness > 95%
+
+RULES
+
+Additive Only
+
+Feature Flagged
+
+Default OFF
+
+Never Deploy
+
+Never Enable Production Automatically
+
+Reuse Existing Assets First
+
+No Duplicate Dashboards
+
+No Mock Data
+
+No Synthetic Metrics
+
+Use Actual Runtime Data

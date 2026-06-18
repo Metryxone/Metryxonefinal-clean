@@ -14,6 +14,7 @@
  */
 
 import type { Pool } from 'pg';
+import { ensureOntoRoleWeightSourceColumn } from './onet-onto-weight-bridge.js';
 
 export const ONTOLOGY_VERSION = '1.0.0';
 
@@ -272,15 +273,15 @@ export function createOntologyService(pool: Pool) {
       }
       const profile = profileRes.rows[0];
       // `source` lets user-facing surfaces flag competencies whose weights are
-      // estimated/inherited rather than measured. onto_role_weights is a curated
-      // ontology table (no O*NET-derived rows live here today), so every row is
-      // honestly 'curated'. If/when O*NET-derived weights are wired into this
-      // table, swap the literal for the real column and the estimated badge
-      // lights up automatically — see map_role_competency.source ('onet_derived').
+      // estimated/inherited rather than measured. onto_role_weights now carries a
+      // real provenance column: hand-authored rows are 'curated', while rows
+      // bridged from related O*NET occupations are 'onet_derived' (see
+      // services/onet-onto-weight-bridge.ts). COALESCE keeps legacy rows honest.
+      await ensureOntoRoleWeightSourceColumn(pool);
       const weights = await pool.query(
         `SELECT w.competency_id, c.canonical_name, c.domain_id, c.family_id,
                 w.weight::float AS weight, w.expected_level, w.rationale,
-                'curated'::text AS source
+                COALESCE(w.source, 'curated') AS source
          FROM onto_role_weights w
          JOIN onto_competencies c ON c.id = w.competency_id
          WHERE w.dna_profile_id = $1

@@ -12,6 +12,7 @@
  */
 
 import type { Pool } from 'pg';
+import { ensureOntoRoleWeightSourceColumn } from './onet-onto-weight-bridge.js';
 
 export const MOBILITY_VERSION = '3.0.0';
 
@@ -39,14 +40,16 @@ interface RoleWeightRow {
 async function getRoleVector(pool: Pool, roleId: string): Promise<RoleWeightRow[]> {
   return cached(`mob:rv:${roleId}`, async () => {
     // `source` carries provenance so downstream surfaces can flag estimated /
-    // inherited competencies. onto_role_weights is curated-only today, so every
-    // row is honestly 'curated' (no O*NET-derived rows live here). When O*NET
-    // weights are wired in, swap the literal for the real column.
+    // inherited competencies. onto_role_weights now carries a real provenance
+    // column: 'curated' for hand-authored weights, 'onet_derived' for weights
+    // bridged from related O*NET occupations (see onet-onto-weight-bridge.ts).
+    // COALESCE keeps any pre-migration legacy row honest.
+    await ensureOntoRoleWeightSourceColumn(pool);
     const { rows } = await pool.query<RoleWeightRow>(`
       SELECT w.competency_id, c.canonical_name, c.family_id, c.domain_id,
              c.leadership_relevance::float AS leadership_relevance,
              w.weight::float AS weight, w.expected_level,
-             'curated'::text AS source
+             COALESCE(w.source, 'curated') AS source
         FROM onto_role_weights w
         JOIN onto_dna_profiles p ON p.id = w.dna_profile_id AND p.is_current
         JOIN onto_competencies c ON c.id = w.competency_id

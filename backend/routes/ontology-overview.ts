@@ -9,6 +9,7 @@ import type { Express, Request, Response } from 'express';
 import type { Pool } from 'pg';
 import { runOntologySeed } from '../services/ontology-seed.js';
 import { runOnetImport } from '../services/onet-import.js';
+import { bridgeOnetDerivedWeights } from '../services/onet-onto-weight-bridge.js';
 
 type Auth = (req: Request, res: Response, next: () => void) => void;
 
@@ -107,10 +108,28 @@ export function registerOntologyOverviewRoutes(
         ? req.body.importanceThreshold
         : undefined;
       const result = await runOnetImport(pool, { download, importanceThreshold });
-      return res.status(result.ok ? 200 : 500).json(result);
+      // Bridge the freshly-derived O*NET weights into the user-facing Role-DNA
+      // table so the "Estimated / inherited" badge reflects real data. Additive
+      // and never throws — a bridge failure must not fail the import itself.
+      const bridge = result.ok ? await bridgeOnetDerivedWeights(pool) : { linksBridged: 0, ok: false };
+      return res.status(result.ok ? 200 : 500).json({ ...result, weight_bridge: bridge });
     } catch (err: any) {
       console.error('[ontology-overview] import-onet error:', err);
       return res.status(500).json({ ok: false, error: err?.message ?? 'O*NET import failed' });
+    }
+  });
+
+  // POST /api/ontology/overview/bridge-onet-weights — rebuild only the
+  // onet_derived rows in onto_role_weights from the already-imported O*NET
+  // library, without re-running the (slow) O*NET import. Idempotent + additive;
+  // curated Role-DNA weights are never touched.
+  app.post('/api/ontology/overview/bridge-onet-weights', requireAuth, requireSuperAdmin, async (_req: Request, res: Response) => {
+    try {
+      const bridge = await bridgeOnetDerivedWeights(pool);
+      return res.status(bridge.ok ? 200 : 500).json(bridge);
+    } catch (err: any) {
+      console.error('[ontology-overview] bridge-onet-weights error:', err);
+      return res.status(500).json({ ok: false, error: err?.message ?? 'weight bridge failed' });
     }
   });
 }

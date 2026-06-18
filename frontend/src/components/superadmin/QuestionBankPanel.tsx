@@ -143,7 +143,7 @@ export default function QuestionBankPanel() {
     assignSuccess, setAssignSuccess, assignConflict, setAssignConflict,
     assignPkgSearch, setAssignPkgSearch, assignMode, setAssignMode,
     assignChildSearch, setAssignChildSearch, assignPkgSort, setAssignPkgSort,
-    seedingPackages, setSeedingPackages, scoringSubTab, setScoringSubTab,
+    seedingPackages, setSeedingPackages, seedingEducation, setSeedingEducation, scoringSubTab, setScoringSubTab,
     calcModule, setCalcModule, calcInputs, setCalcInputs, calcResult, setCalcResult,
     expandedModule, setExpandedModule, publishModalOpen, setPublishModalOpen,
     publishChoice, setPublishChoice, publishStatus, setPublishStatus,

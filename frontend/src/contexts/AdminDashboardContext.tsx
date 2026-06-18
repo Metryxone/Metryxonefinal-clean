@@ -409,6 +409,8 @@ export interface AdminDashboardContextValue {
   setAssignPkgSort: React.Dispatch<React.SetStateAction<string>>;
   seedingPackages: boolean;
   setSeedingPackages: React.Dispatch<React.SetStateAction<boolean>>;
+  seedingEducation: boolean;
+  setSeedingEducation: React.Dispatch<React.SetStateAction<boolean>>;
   // Scoring state
   scoringSubTab: string;
   setScoringSubTab: React.Dispatch<React.SetStateAction<string>>;

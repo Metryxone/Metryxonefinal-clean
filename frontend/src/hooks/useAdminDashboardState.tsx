@@ -2708,34 +2708,7 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
         { id: 'caf-analytics',          icon: LineChart,      label: 'CAF Analytics' },
       ]
     },
-    // ── Competency Ontology — collapsed by default ──────────────────────────
-    {
-      label: 'Competency Ontology',
-      isLabs: true,
-      items: [
-        { id: 'ont-overview',             icon: Activity,      label: 'Ontology Overview' },
-        { id: 'ont-industries',           icon: Building2,     label: 'Industries' },
-        { id: 'ont-functions',            icon: Briefcase,     label: 'Functions' },
-        { id: 'ont-departments',          icon: Layers,        label: 'Departments' },
-        { id: 'ont-role-families',        icon: Users2,        label: 'Role Families (Ontology)' },
-        { id: 'ont-roles',                icon: UserCircle2,   label: 'Roles' },
-        { id: 'ont-career-tracks',        icon: Map,           label: 'Career Tracks' },
-        { id: 'ont-competency-levels',    icon: BarChart2,     label: 'Competency Levels' },
-        { id: 'ont-indicators',           icon: Target,        label: 'Indicators' },
-        { id: 'ont-benchmarks',           icon: BarChart3,     label: 'Benchmarks' },
-        { id: 'ont-career-paths',         icon: GitBranch,     label: 'Career Paths' },
-        { id: 'ont-learning-paths',       icon: BookOpen,      label: 'Learning Paths' },
-        { id: 'ont-future-skills',        icon: Sparkles,      label: 'Future Skills' },
-        { id: 'ont-layers',               icon: Network,       label: 'Layers' },
-        { id: 'ont-clusters',             icon: PieChart,      label: 'Competency Clusters' },
-        { id: 'ont-competencies',         icon: TrendingUp,    label: 'Competencies' },
-        { id: 'ont-micro-competencies',   icon: Brain,         label: 'Micro Competencies' },
-        { id: 'ont-concerns',             icon: AlertTriangle, label: 'Ontology Concerns' },
-        { id: 'ont-assessment-questions', icon: MessageCircle, label: 'Assessment Questions' },
-        { id: 'ont-ai-rules',             icon: Bot,           label: 'AI Rules' },
-        { id: 'ont-import-export',        icon: FileDown,      label: 'Import / Export' },
-      ]
-    },
+    // ── Competency Ontology — folded into Competency Framework tabs (see competency-fw extraTabs in SuperAdminDashboard) ──
     // ── LBI — command center, framework & engine ────────────────────────────
     {
       label: 'LBI',

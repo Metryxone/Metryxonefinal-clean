@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { Screen } from '../App';
 
-import { Menu, RefreshCw, Search, Settings, Target, Brain, FileCheck, Database, Package, Calculator, Users, BookOpen, Network, Layers } from 'lucide-react';
+import { Menu, RefreshCw, Search, Settings, Target, Brain, FileCheck, Database, Package, Calculator, Users, BookOpen, Network, Layers, Activity, Building2, Briefcase, Users2, UserCircle2, Map, BarChart2, BarChart3, GitBranch, Sparkles, PieChart, TrendingUp, AlertTriangle, MessageCircle, Bot, FileDown } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import SuperAdminLogin from './SuperAdminLogin';
@@ -756,6 +756,27 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       { id: 'cmp-blueprints',         label: 'Blueprints',         icon: BookOpen,   node: <CompetencyBlueprintPanel /> },
                       { id: 'cmp-blueprint-mappings', label: 'Blueprint Mappings', icon: Network,    node: <BlueprintMappingPanel /> },
                       { id: 'cmp-level-profiles',     label: 'Level Profiles',     icon: Layers,     node: <LevelProfilePanel /> },
+                      { id: 'ont-overview',             label: 'Ontology Overview',        icon: Activity,      node: <OntologyOverviewPanel /> },
+                      { id: 'ont-industries',           label: 'Industries',               icon: Building2,     node: <IndustriesPanel /> },
+                      { id: 'ont-functions',            label: 'Functions',                icon: Briefcase,     node: <FunctionsPanel /> },
+                      { id: 'ont-departments',          label: 'Departments',              icon: Layers,        node: <DepartmentsPanel /> },
+                      { id: 'ont-role-families',        label: 'Role Families (Ontology)', icon: Users2,        node: <RoleFamiliesPanel /> },
+                      { id: 'ont-roles',                label: 'Roles',                    icon: UserCircle2,   node: <RolesPanel /> },
+                      { id: 'ont-career-tracks',        label: 'Career Tracks',            icon: Map,           node: <CareerTracksPanel /> },
+                      { id: 'ont-competency-levels',    label: 'Competency Levels',        icon: BarChart2,     node: <CompetencyLevelsPanel /> },
+                      { id: 'ont-indicators',           label: 'Indicators',               icon: Target,        node: <IndicatorsPanel /> },
+                      { id: 'ont-benchmarks',           label: 'Benchmarks',               icon: BarChart3,     node: <BenchmarksPanel /> },
+                      { id: 'ont-career-paths',         label: 'Career Paths',             icon: GitBranch,     node: <CareerPathsPanel /> },
+                      { id: 'ont-learning-paths',       label: 'Learning Paths',           icon: BookOpen,      node: <LearningPathsOntologyPanel /> },
+                      { id: 'ont-future-skills',        label: 'Future Skills',            icon: Sparkles,      node: <FutureSkillsPanel /> },
+                      { id: 'ont-layers',               label: 'Layers',                   icon: Network,       node: <CompetencyCorePanel initialTab="ont-layers" /> },
+                      { id: 'ont-clusters',             label: 'Competency Clusters',      icon: PieChart,      node: <CompetencyCorePanel initialTab="ont-clusters" /> },
+                      { id: 'ont-competencies',         label: 'Competencies',             icon: TrendingUp,    node: <CompetencyCorePanel initialTab="ont-competencies" /> },
+                      { id: 'ont-micro-competencies',   label: 'Micro Competencies',       icon: Brain,         node: <CompetencyCorePanel initialTab="ont-micro-competencies" /> },
+                      { id: 'ont-concerns',             label: 'Ontology Concerns',        icon: AlertTriangle, node: <ConcernsMappingPanel initialTab="ont-concerns" /> },
+                      { id: 'ont-assessment-questions', label: 'Assessment Questions',     icon: MessageCircle, node: <ConcernsMappingPanel initialTab="ont-assessment-questions" /> },
+                      { id: 'ont-ai-rules',             label: 'AI Rules',                 icon: Bot,           node: <AIRulesPanel /> },
+                      { id: 'ont-import-export',        label: 'Import / Export',          icon: FileDown,      node: <OntologyImportExportPanel /> },
                     ]}
                   />
                 </div>

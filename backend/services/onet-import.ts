@@ -58,7 +58,7 @@ export interface OnetImportOptions {
 // Marker stamped on competency links synthesised for unrated occupations. Kept
 // distinct from native 'onet' rows so the derived/curated nature stays auditable
 // and is never represented as a genuine O*NET rating.
-const DERIVED_SOURCE = 'onet_derived';
+export const DERIVED_SOURCE = 'onet_derived';
 
 export interface OnetImportResult {
   counts: Record<string, number>;
@@ -130,7 +130,7 @@ function levelToProficiency(lv: number | null): string {
   return 'expert';
 }
 const PROF_ORDER = ['novice', 'developing', 'proficient', 'advanced', 'expert'];
-function oneBandBelow(p: string): string {
+export function oneBandBelow(p: string): string {
   const i = PROF_ORDER.indexOf(p);
   return i <= 0 ? 'novice' : PROF_ORDER[i - 1];
 }
@@ -401,9 +401,9 @@ export async function runOnetImport(pool: Pool, opts: OnetImportOptions = {}): P
 // a native O*NET rating. The step is idempotent: derived rows for a role that has
 // since gained native ratings are removed, and re-runs UPSERT in place.
 
-const DERIVE_MAJORITY = 0.5;   // adopt competencies present in ≥ half the relatives
-const DERIVE_MIN_COMPETENCIES = 8;   // top up to at least this many (by frequency)
-const DERIVE_MAX_COMPETENCIES = 25;  // never exceed this many derived links per role
+export const DERIVE_MAJORITY = 0.5;   // adopt competencies present in ≥ half the relatives
+export const DERIVE_MIN_COMPETENCIES = 8;   // top up to at least this many (by frequency)
+export const DERIVE_MAX_COMPETENCIES = 25;  // never exceed this many derived links per role
 
 interface NativeLink {
   competencyId: number;
@@ -412,7 +412,7 @@ interface NativeLink {
 }
 
 // SOC base ("15-1252") from an ont_roles code ("ONET_15-1252.00").
-function socBaseFromCode(code: string): string | null {
+export function socBaseFromCode(code: string): string | null {
   if (!code.startsWith('ONET_')) return null;
   const soc = code.slice('ONET_'.length);
   const base = soc.split('.')[0].trim();
@@ -420,7 +420,7 @@ function socBaseFromCode(code: string): string | null {
 }
 
 // SOC-prefix tiers from tightest (detailed base) to loosest (major group).
-function socPrefixTiers(base: string): string[] {
+export function socPrefixTiers(base: string): string[] {
   return [
     base,             // detailed base — .01/.02 siblings sharing 15-1252
     base.slice(0, 6), // broad group   — 15-125
@@ -429,7 +429,7 @@ function socPrefixTiers(base: string): string[] {
   ].filter((p, i, a) => p.length >= 2 && a.indexOf(p) === i);
 }
 
-function modal<T>(values: T[]): T | null {
+export function modal<T>(values: T[]): T | null {
   if (values.length === 0) return null;
   const freq = new Map<T, number>();
   for (const v of values) freq.set(v, (freq.get(v) ?? 0) + 1);

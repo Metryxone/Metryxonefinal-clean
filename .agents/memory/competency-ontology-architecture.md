@@ -52,5 +52,15 @@ A single `pool.query(DDL1 + BROKEN_TABLE_DEF).catch(() => null)` swallows errors
 ## Lifecycle transitions
 Validated against `ref_lifecycle_transitions` at `POST /api/ontology/lifecycle/transition`. All transitions recorded in `lfc_status_events` (append-only). Allowed path: draft→in_review→approved→published→deprecated→archived. Breaking glass (archived→draft) requires approval.
 
+## O*NET full-library importer (expands the starter seed)
+`services/onet-import.ts` (`runOnetImport`) brings the public-domain **O*NET 29.0** taxonomy into `ont_roles` / `ont_competencies` / `map_role_competency`, dwarfing the 24-role starter seed. Runner: `scripts/onet-import-run.ts`; admin route `POST /api/ontology/overview/import-onet` (mirrors the existing `/seed` route).
+
+- **Code namespaces are DISJOINT, so importer + starter coexist additively**: O*NET rows use `ONET_<soc>` (roles) / `ONET_<elementId>` (competencies) / `source='onet'`; starter rows use `ROLE_*` / `C_*` / `source='seeded'`. Never collide; both stay queryable.
+- **Source files**: 6 tab-delimited O*NET text files in `backend/data/onet/` (gitignored `.txt`, committed `README.md` with CC-BY attribution). Importer downloads any missing file on demand from onetcenter.org (`ONET_DB_BASE_URL` env override; `--no-download` to require cache).
+- **Idempotent**: every write is `ON CONFLICT DO UPDATE / DO NOTHING`; re-runs give identical counts.
+- **Build**: 23 SOC-major-group role families (`RF_ONET_nn`), 1 layer `L_ONET`, 4 clusters (SKILLS/ABILITIES/KNOWLEDGE/WORKSTYLES). Links filtered by `Scale ID=IM` (importance) `>= 3.0`; tier `core` if IM>=3.75 else `secondary`; weight=clamp(IM/3.5,0.5,1.5).
+- **Honest coverage gap (NOT a bug)**: only **879 of 1016** occupations carry skill/ability ratings in O*NET 29.0; the other 137 (aggregate codes like `15-1252.00` Software Developers) genuinely have no ratings → those roles import with zero links. Don't "fix" by fabricating links.
+- Verified dev counts: 1016 roles, 136 competencies, 49,149 links, 0 orphan FKs.
+
 ## Authoritative docs
 `docs/ONTOLOGY_ARCHITECTURE.md` — full table reference, API surface, bridging rules, lifecycle diagram, quality gate table, namespace constraints.

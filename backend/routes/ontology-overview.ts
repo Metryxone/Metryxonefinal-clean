@@ -3,10 +3,12 @@
  *
  * GET  /api/ontology/overview/stats   — entity counts + mapping coverage + governance health
  * POST /api/ontology/overview/seed    — run starter seed (idempotent, admin only)
+ * POST /api/ontology/overview/import-onet — import full O*NET role/skill library (idempotent, admin only)
  */
 import type { Express, Request, Response } from 'express';
 import type { Pool } from 'pg';
 import { runOntologySeed } from '../services/ontology-seed.js';
+import { runOnetImport } from '../services/onet-import.js';
 
 type Auth = (req: Request, res: Response, next: () => void) => void;
 
@@ -88,6 +90,25 @@ export function registerOntologyOverviewRoutes(
     } catch (err: any) {
       console.error('[ontology-overview] seed error:', err);
       return res.status(500).json({ ok: false, error: err?.message ?? 'Seed failed' });
+    }
+  });
+
+  // POST /api/ontology/overview/import-onet — import the full O*NET role/skill
+  // library into ont_roles / ont_competencies / map_role_competency. Idempotent
+  // (every write is ON CONFLICT DO UPDATE / DO NOTHING) and additive — starter
+  // seed rows use disjoint code namespaces and are untouched. Source files are
+  // downloaded on demand unless { download:false } is passed.
+  app.post('/api/ontology/overview/import-onet', requireAuth, requireSuperAdmin, async (req: Request, res: Response) => {
+    try {
+      const download = req.body?.download !== false;
+      const importanceThreshold = typeof req.body?.importanceThreshold === 'number'
+        ? req.body.importanceThreshold
+        : undefined;
+      const result = await runOnetImport(pool, { download, importanceThreshold });
+      return res.status(result.ok ? 200 : 500).json(result);
+    } catch (err: any) {
+      console.error('[ontology-overview] import-onet error:', err);
+      return res.status(500).json({ ok: false, error: err?.message ?? 'O*NET import failed' });
     }
   });
 }

@@ -64,9 +64,14 @@ interface RoleDNA {
     competency_id: string; canonical_name: string;
     domain_id: string; family_id: string;
     weight: number; expected_level: number; rationale: string | null;
+    /** Provenance — 'onet_derived' means estimated/inherited rather than measured. */
+    source?: string;
   }[];
   weight_sum: number;
 }
+
+/** True when a competency's weight is estimated/inherited from O*NET, not measured. */
+const isEstimatedSource = (source?: string) => source === 'onet_derived';
 
 const BRAND = {
   primary: '#0F172A',
@@ -544,11 +549,25 @@ function RoleDNAPane() {
             <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-2">
               Role DNA — weighted competency vector
             </div>
+            {dna.weights.some(w => isEstimatedSource(w.source)) && (
+              <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2 mb-3">
+                <span className="font-semibold">Estimated</span> weights are inherited from
+                related occupations (O*NET) because this role has no measured ratings —
+                treat them as approximate, not measured.
+              </p>
+            )}
             <div className="space-y-2.5">
               {dna.weights.map(w => (
                 <div key={w.competency_id}>
                   <div className="flex items-center justify-between text-[12.5px]">
-                    <span className="font-medium" style={{ color: BRAND.primary }}>{w.canonical_name}</span>
+                    <span className="font-medium flex items-center gap-1.5" style={{ color: BRAND.primary }}>
+                      {w.canonical_name}
+                      {isEstimatedSource(w.source) && (
+                        <span className="text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800">
+                          Estimated
+                        </span>
+                      )}
+                    </span>
                     <span className="tabular-nums text-gray-600">
                       w {(w.weight * 100).toFixed(1)}% · target L{w.expected_level}
                     </span>

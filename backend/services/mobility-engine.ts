@@ -33,14 +33,20 @@ interface RoleWeightRow {
   leadership_relevance: number;
   weight: number;
   expected_level: number;
+  source: string;
 }
 
 async function getRoleVector(pool: Pool, roleId: string): Promise<RoleWeightRow[]> {
   return cached(`mob:rv:${roleId}`, async () => {
+    // `source` carries provenance so downstream surfaces can flag estimated /
+    // inherited competencies. onto_role_weights is curated-only today, so every
+    // row is honestly 'curated' (no O*NET-derived rows live here). When O*NET
+    // weights are wired in, swap the literal for the real column.
     const { rows } = await pool.query<RoleWeightRow>(`
       SELECT w.competency_id, c.canonical_name, c.family_id, c.domain_id,
              c.leadership_relevance::float AS leadership_relevance,
-             w.weight::float AS weight, w.expected_level
+             w.weight::float AS weight, w.expected_level,
+             'curated'::text AS source
         FROM onto_role_weights w
         JOIN onto_dna_profiles p ON p.id = w.dna_profile_id AND p.is_current
         JOIN onto_competencies c ON c.id = w.competency_id
@@ -96,6 +102,7 @@ export interface RoleComparison {
     weight: number; family_id: string; domain_id: string;
     category: 'leadership'|'strategic'|'execution'|'interpersonal'|'cognitive'|'general';
     status: 'meets'|'close'|'develop'|'priority';
+    source: string;
   }>;
   gap_categories: Record<string, { count: number; avg_gap: number; total_weighted_gap: number }>;
   development_priorities: Array<{ competency_id: string; canonical_name: string;
@@ -208,7 +215,7 @@ export async function compareRoles(pool: Pool, params: {
       target_anchor: targetAnchor, gap,
       weight: Math.round(t.weight * 1000) / 1000,
       family_id: t.family_id, domain_id: t.domain_id,
-      category: cat, status,
+      category: cat, status, source: t.source,
     });
     weightedGapSum += Math.max(0, -gap) * t.weight;
 

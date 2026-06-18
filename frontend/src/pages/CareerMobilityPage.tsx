@@ -38,7 +38,12 @@ interface CompGap {
   competency_id: string; canonical_name: string; user_score: number; target_anchor: number;
   gap: number; weight: number; family_id: string; domain_id: string;
   category: string; status: 'meets'|'close'|'develop'|'priority';
+  /** Provenance of the role's target weight — 'onet_derived' means estimated/inherited. */
+  source?: string;
 }
+
+/** True when a role competency's target is estimated/inherited from O*NET, not measured. */
+const isEstimated = (source?: string) => source === 'onet_derived';
 interface Transferable {
   competency_id: string; canonical_name: string;
   user_score: number; transferability: number; contribution: number;
@@ -239,11 +244,28 @@ export default function CareerMobilityPage({ onNavigate }: Props) {
 
           {/* 4. Competency gap heatmap */}
           <Panel title="Capability Heatmap" icon={<LayersIcon size={16} />} span={8}>
+            {report.comparison.competency_gaps.some(g => isEstimated(g.source)) && (
+              <div style={{ fontSize: 11, color: '#92400E', background: '#FFFBEB',
+                            border: '1px solid #FDE68A', borderRadius: 8,
+                            padding: '6px 10px', marginBottom: 8 }}>
+                <strong>Estimated</strong> targets are inherited from related occupations
+                (O*NET) because this role has no measured ratings — treat them as approximate.
+              </div>
+            )}
             <div style={{ display: 'grid', gap: 6 }}>
               {report.comparison.competency_gaps.map(g => (
                 <div key={g.competency_id} style={{ display: 'grid',
                        gridTemplateColumns: '180px 1fr 100px 80px', alignItems: 'center', gap: 8 }}>
-                  <div style={{ fontSize: 12, fontWeight: 600 }}>{g.canonical_name}</div>
+                  <div style={{ fontSize: 12, fontWeight: 600, display: 'flex',
+                                alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                    {g.canonical_name}
+                    {isEstimated(g.source) && (
+                      <span style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase',
+                                     letterSpacing: 0.3, color: '#B45309', background: '#FEF3C7',
+                                     border: '1px solid #FDE68A', borderRadius: 999,
+                                     padding: '1px 6px' }}>Estimated</span>
+                    )}
+                  </div>
                   <Bar percent={g.user_score} anchor={g.target_anchor} color={STATUS_COLOR[g.status]} />
                   <div style={{ fontSize: 11, color: STATUS_COLOR[g.status], fontWeight: 600 }}>
                     {g.gap >= 0 ? `+${g.gap}` : g.gap} pts

@@ -6,7 +6,6 @@
  *
  * Idempotent — re-running only processes sessions still missing composites.
  */
-import 'dotenv/config';
 import pg from 'pg';
 import { backfillIntelligencePipeline } from '../services/intelligence-pipeline';
 

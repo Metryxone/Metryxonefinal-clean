@@ -36,6 +36,16 @@ DDL in `signal-capture.ts` updated from `VARCHAR(255)` → `UUID`.
 
 `seededOnce` flag prevents re-seeding on repeated pipeline calls. Cache bust via `loadCompositeRuntime(pool, true)` after insert.
 
+## Why a backfill can still yield 0 composites/patterns (honest data-density ceiling)
+
+Running the pipeline backfill produces **0 composites and 0 patterns when every session captured only 1 signal**. On the live user base, `MAX(signals per session) = 1` across ALL sessions (each completed session resolves to a single dominant concern signal, `signal_type='activated'`, `severity='high'`). Both gates require ≥2 co-active signals: composites need `ABSOLUTE_MIN_COUNT=2` (`composite-signal-engine.ts`), and domain-concentration patterns need ≥2 signals sharing a domain. So 0 rows is the CORRECT, honest output — NOT a bug, and NOT fixable by activation without fabricating signals.
+
+**Why:** The limiter is upstream signal-capture density (1 signal/session), an item-bank/runtime depth issue, not a wiring gap. The pattern/composite layer is fully wired and fires.
+
+**Second trap:** `seedCapadexSignals` (`capadex-signals-seeder.ts`) is **INSERT-only — it never runs CREATE TABLE**. On a DB where `capadex_signals` was never created by a prior migration, every INSERT throws, the error is caught + logged (non-fatal), `seededOnce` stays false, and the ontology silently never exists → `loadCompositeRuntime` returns 0 definitions. The "41 rows / 22 clusters" figures above assume the table pre-exists. Verify `to_regclass('capadex_signals')` before trusting any composite-readiness claim.
+
+**How to apply:** When asked to "activate" the CAPADEX pattern layer, first check `MAX(n) FROM (SELECT count(*) n FROM capadex_session_signals GROUP BY session_id)`. If it's 1, report the data-density ceiling honestly; don't seed/fabricate to force rows.
+
 ## Backfill
 
 `backend/scripts/run-backfill.ts` — one-shot idempotent script. Run via:

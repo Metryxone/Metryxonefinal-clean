@@ -88,7 +88,7 @@ async function resolveCurrentRoleForUser(
 
   // 2. Profile currentRole title → fuzzy-match role
   const profRes = await pool.query(
-    `SELECT data->>'currentRole' AS cr FROM career_seeker_profiles WHERE id = $1 LIMIT 1`,
+    `SELECT data->>'currentRole' AS cr FROM career_seeker_profiles WHERE user_id = $1 LIMIT 1`,
     [userId],
   ).catch(() => ({ rows: [] }));
   const crTitle: string | null = profRes.rows[0]?.cr ?? null;

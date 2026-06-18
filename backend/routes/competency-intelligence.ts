@@ -45,6 +45,14 @@ import {
   updateCompetencyMaster,
   getCompetencyMasterSummary,
 } from '../services/competency-master.js';
+import {
+  getMicroFramework,
+  getMicroMapping,
+  getMicroFrameworkSummary,
+  createMicroRelationship,
+  updateMicroRelationship,
+  deleteMicroRelationship,
+} from '../services/micro-competency.js';
 
 export function registerCompetencyFrameworkIntelligenceRoutes(
   app: Express,
@@ -181,6 +189,101 @@ export function registerCompetencyFrameworkIntelligenceRoutes(
         return undefined;
       }
       return result.row;
+    }),
+  );
+
+  // ---- Phase 1.4: Micro Competency Framework (parent-child structure) -------
+  // Additive parent->child hierarchy over the genome. A child is EITHER a real
+  // existing competency (linked) OR a named-only micro (no competency row yet,
+  // honestly flagged). Never mutates onto_competencies; never fabricates rows.
+
+  // Nested parent -> children framework (the "Micro Competency Framework").
+  app.get('/api/competency-intelligence/micro-framework', gate, requireAuth, wrap(async (req) =>
+    getMicroFramework(pool, {
+      parentId: req.query.parent_id ? String(req.query.parent_id) : undefined,
+      search: req.query.q ? String(req.query.q) : undefined,
+      activeOnly: String(req.query.active ?? '') === '1' || req.query.active === 'true',
+    }),
+  ));
+
+  // Flat parent-child mapping (the "Micro Competency Mapping").
+  app.get('/api/competency-intelligence/micro-mapping', gate, requireAuth, wrap(async () => getMicroMapping(pool)));
+
+  // Admin summary (coverage · linked-vs-named provenance · honest findings).
+  // Literal path registered BEFORE the `/micro-framework/:id` param handlers.
+  app.get(
+    '/api/admin/competency-intelligence/micro-framework/summary',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async () => getMicroFrameworkSummary(pool)),
+  );
+
+  // Admin create — one parent-child relationship. Validates parent (and child,
+  // when linked) EXIST; never creates a competency.
+  app.post(
+    '/api/admin/competency-intelligence/micro-framework',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req, res) => {
+      const body = (req.body ?? {}) as Record<string, unknown>;
+      const result = await createMicroRelationship(pool, {
+        parent_competency_id: String(body.parent_competency_id ?? ''),
+        child_competency_id: body.child_competency_id ? String(body.child_competency_id) : null,
+        micro_label: body.micro_label != null ? String(body.micro_label) : null,
+        sort_order: body.sort_order != null ? Number(body.sort_order) : undefined,
+      });
+      if (!result.ok) {
+        const notFound = result.error === 'parent_not_found' || result.error === 'child_not_found';
+        const conflict = result.error === 'duplicate_relationship';
+        res.status(notFound ? 404 : conflict ? 409 : 400).json({ ok: false, error: result.error });
+        return undefined;
+      }
+      return result.row;
+    }),
+  );
+
+  // Admin update — toggle active / re-order / relabel a named-only micro.
+  app.patch(
+    '/api/admin/competency-intelligence/micro-framework/:id',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req, res) => {
+      const id = parseInt(String(req.params.id), 10);
+      if (!Number.isFinite(id)) { res.status(400).json({ ok: false, error: 'invalid_id' }); return undefined; }
+      const body = (req.body ?? {}) as Record<string, unknown>;
+      const result = await updateMicroRelationship(pool, id, {
+        active: body.active as boolean | undefined,
+        sort_order: body.sort_order != null ? Number(body.sort_order) : undefined,
+        micro_label: body.micro_label != null ? String(body.micro_label) : undefined,
+      });
+      if (!result.ok) {
+        const notFound = result.error === 'relationship_not_found';
+        const conflict = result.error === 'duplicate_relationship';
+        res.status(notFound ? 404 : conflict ? 409 : 400).json({ ok: false, error: result.error });
+        return undefined;
+      }
+      return result.row;
+    }),
+  );
+
+  // Admin delete — remove one parent-child relationship (reversible; genome untouched).
+  app.delete(
+    '/api/admin/competency-intelligence/micro-framework/:id',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req, res) => {
+      const id = parseInt(String(req.params.id), 10);
+      if (!Number.isFinite(id)) { res.status(400).json({ ok: false, error: 'invalid_id' }); return undefined; }
+      const result = await deleteMicroRelationship(pool, id);
+      if (!result.ok) {
+        res.status(result.error === 'relationship_not_found' ? 404 : 400).json({ ok: false, error: result.error });
+        return undefined;
+      }
+      return { deleted: true, id };
     }),
   );
 }

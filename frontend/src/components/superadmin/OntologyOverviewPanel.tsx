@@ -41,6 +41,8 @@ interface Stats {
 
 interface SeedResult { phases: Record<string, number>; totalRows: number; ok: boolean; error?: string; }
 
+interface ImportResult { counts: Record<string, number>; ok: boolean; error?: string; }
+
 const HIERARCHY: Array<{
   id: string; label: string; icon: React.FC<any>; field: keyof Stats;
   target: number; section: string; color: string; description: string;
@@ -131,6 +133,7 @@ function MappingRow({ label, actual, target }: { label: string; actual: number; 
 export default function OntologyOverviewPanel() {
   const qc = useQueryClient();
   const [seedLog, setSeedLog] = useState<SeedResult | null>(null);
+  const [importLog, setImportLog] = useState<ImportResult | null>(null);
 
   const { data, isLoading, error } = useQuery<{ stats: Stats }>({
     queryKey: ['ontology-overview-stats'],
@@ -150,6 +153,20 @@ export default function OntologyOverviewPanel() {
     onSuccess: (result) => {
       setSeedLog(result);
       qc.invalidateQueries({ queryKey: ['ontology-overview-stats'] });
+    },
+  });
+
+  const importOnet = useMutation<ImportResult>({
+    mutationFn: async () => {
+      const r = await apiFetch('/api/ontology/overview/import-onet', { method: 'POST' });
+      return r.json();
+    },
+    onSuccess: (result) => {
+      setImportLog(result);
+      qc.invalidateQueries({ queryKey: ['ontology-overview-stats'] });
+    },
+    onError: (err: any) => {
+      setImportLog({ counts: {}, ok: false, error: err?.message ?? 'O*NET import failed' });
     },
   });
 
@@ -298,6 +315,56 @@ export default function OntologyOverviewPanel() {
               {Object.entries(seedLog.phases).map(([k, v]) => (
                 <span key={k}><span className="font-medium">{v}</span> {k.replace(/_/g, ' ')}</span>
               ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── O*NET library import ───────────────────────────────────────────── */}
+      <div className="bg-gradient-to-r from-violet-50 to-fuchsia-50 border border-violet-200 rounded-xl p-5">
+        <div className="flex items-start gap-3">
+          <Database className="w-5 h-5 text-violet-600 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
+                <h3 className="font-semibold text-violet-900">Import O*NET library</h3>
+                <p className="text-violet-700 text-sm mt-1">
+                  Imports the full O*NET role/skill taxonomy (~1,000 roles · ~49k role-competency links)
+                  into the <code className="text-xs bg-violet-100 px-1 rounded">ont_*</code> tables. Idempotent
+                  and additive — starter seed rows use a disjoint code namespace and are untouched. May take a
+                  minute on first run while source files download.
+                </p>
+              </div>
+              <button
+                onClick={() => importOnet.mutate()}
+                disabled={importOnet.isPending}
+                className="flex items-center gap-2 px-5 py-2.5 bg-violet-600 text-white rounded-lg font-medium text-sm hover:bg-violet-700 disabled:opacity-60 transition-colors flex-shrink-0 self-start"
+              >
+                {importOnet.isPending ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Database className="w-4 h-4" />}
+                {importOnet.isPending ? 'Importing…' : 'Import O*NET library'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Import result log */}
+      {importLog && (
+        <div className={`rounded-xl border p-4 ${importLog.ok ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'}`}>
+          <div className="flex items-center gap-2 mb-2">
+            {importLog.ok
+              ? <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              : <AlertCircle className="w-4 h-4 text-red-600" />}
+            <span className="text-sm font-semibold">
+              {importLog.ok ? 'O*NET import complete' : `O*NET import failed: ${importLog.error}`}
+            </span>
+          </div>
+          {importLog.ok && (
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-600">
+              <span><span className="font-medium">{importLog.counts.roles ?? 0}</span> roles</span>
+              <span><span className="font-medium">{importLog.counts.competencies ?? 0}</span> competencies</span>
+              <span><span className="font-medium">{importLog.counts.map_role_competency ?? 0}</span> role-competency links</span>
+              <span><span className="font-medium">{importLog.counts.links_skipped_below_threshold ?? 0}</span> links skipped (below importance threshold)</span>
             </div>
           )}
         </div>

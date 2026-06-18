@@ -5453,6 +5453,10 @@
     --tw-gradient-to: var(--color-emerald-500);
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
   }
+  .to-fuchsia-50 {
+    --tw-gradient-to: var(--color-fuchsia-50);
+    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+  }
   .to-fuchsia-50\/30 {
     --tw-gradient-to: color-mix(in srgb, oklch(97.7% 0.017 320.058) 30%, transparent);
     @supports (color: color-mix(in lab, red, red)) {

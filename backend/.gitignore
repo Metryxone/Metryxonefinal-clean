@@ -7,3 +7,5 @@ vite.config.ts.*
 .env
 .env.local
 *.log
+# O*NET bulk-import source files (public domain, downloaded on demand by services/onet-import.ts)
+data/onet/*.txt

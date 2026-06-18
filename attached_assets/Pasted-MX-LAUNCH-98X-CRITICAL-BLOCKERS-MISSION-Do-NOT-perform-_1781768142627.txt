@@ -1,0 +1,492 @@
+MX-LAUNCH-98X-CRITICAL-BLOCKERS
+
+MISSION
+
+Do NOT perform another audit.
+
+Do NOT generate another scorecard.
+
+Do NOT create another readiness report.
+
+Use all existing findings from:
+
+* Career Builder Launch Audit
+* Competency Audit Findings
+* Core Business Audit
+* Launch Readiness Reports
+* Production Parity Reports
+* SuperAdmin Audit
+* Commercial Readiness Reports
+* Gap Analysis Reports
+* Existing Roadmaps
+
+Objective:
+
+Identify the Top 20 Critical Blockers preventing MetryxOne from reaching 95-98% launch readiness.
+
+Focus ONLY on:
+
+Competency Assessment
+→ Employability Index
+→ Career Builder
+→ Career Passport
+→ Job Ecosystem
+→ Employer Portal
+
+====================================================
+
+SUCCESS CRITERIA
+
+At the end of this exercise we must know:
+
+1. What are the Top 20 launch blockers?
+
+2. What is preventing launch today?
+
+3. Which blockers have the highest customer impact?
+
+4. Which blockers have the highest employer impact?
+
+5. Which blockers have the highest revenue impact?
+
+6. Which blockers must be fixed before launch?
+
+7. Which blockers can wait until after launch?
+
+====================================================
+
+DO NOT AUDIT
+
+Do not:
+
+* Re-score
+* Re-certify
+* Re-audit
+* Re-measure
+
+Assume audits are complete.
+
+Work only from findings.
+
+====================================================
+
+SECTION 1
+
+CRITICAL BLOCKER IDENTIFICATION
+
+Identify the Top 20 blockers.
+
+For each blocker provide:
+
+Blocker ID
+
+Title
+
+Description
+
+Affected Modules
+
+Business Impact
+
+Customer Impact
+
+Employer Impact
+
+Revenue Impact
+
+Severity
+
+Launch Impact
+
+====================================================
+
+SECTION 2
+
+ROOT CAUSE ANALYSIS
+
+For each blocker provide:
+
+Observed Issue
+
+Underlying Cause
+
+Affected Systems
+
+Dependencies
+
+Evidence from existing audits
+
+Do not speculate.
+
+====================================================
+
+SECTION 3
+
+IMPLEMENTATION PLAN
+
+For each blocker provide:
+
+Implementation Tasks
+
+Affected Files
+
+Affected Services
+
+Affected Workflows
+
+Estimated Effort
+
+Risk Level
+
+Dependencies
+
+Acceptance Criteria
+
+====================================================
+
+SECTION 4
+
+CLASSIFICATION
+
+Classify blockers into:
+
+Category A
+Launch Blocking
+
+Category B
+High Priority
+
+Category C
+Post Launch
+
+====================================================
+
+SECTION 5
+
+COMPETENCY ASSESSMENT
+
+Identify launch blockers related to:
+
+Competency Framework
+
+Competency Library
+
+Competency Ontology
+
+Role Mapping
+
+Industry Mapping
+
+Question Bank
+
+Scoring Engine
+
+Benchmark Engine
+
+Development Planning
+
+Recommendations
+
+Focus:
+
+What prevents Competency Assessment from reaching 95%+ readiness?
+
+====================================================
+
+SECTION 6
+
+EMPLOYABILITY INDEX
+
+Identify launch blockers related to:
+
+Score Generation
+
+Score Persistence
+
+Benchmarks
+
+Readiness Logic
+
+Industry Calibration
+
+Role Calibration
+
+Score Explainability
+
+Focus:
+
+What prevents EI from becoming trusted and usable?
+
+====================================================
+
+SECTION 7
+
+CAREER BUILDER
+
+Identify launch blockers related to:
+
+Career Graph
+
+Career Recommendations
+
+Career Pathways
+
+Career Roadmaps
+
+Future Readiness
+
+Career Passport Integration
+
+Recommendation Persistence
+
+Focus:
+
+What prevents Career Builder from creating measurable value?
+
+====================================================
+
+SECTION 8
+
+CAREER PASSPORT
+
+Identify blockers related to:
+
+Generation
+
+Verification
+
+Sharing
+
+Employer Consumption
+
+Updates
+
+Visibility
+
+Trust
+
+====================================================
+
+SECTION 9
+
+JOB ECOSYSTEM
+
+Identify blockers related to:
+
+Job Posting
+
+Job Search
+
+Job Discovery
+
+Job Matching
+
+Job Recommendations
+
+Saved Jobs
+
+Job Alerts
+
+Application Flows
+
+Focus:
+
+What prevents successful job discovery and matching?
+
+====================================================
+
+SECTION 10
+
+EMPLOYER PORTAL
+
+Identify blockers related to:
+
+Candidate Discovery
+
+Talent Intelligence
+
+Competency Intelligence
+
+Employability Intelligence
+
+Candidate Matching
+
+Shortlisting
+
+Hiring Workflows
+
+Recruiter Value
+
+Employer Value
+
+Focus:
+
+What prevents employers from paying and renewing?
+
+====================================================
+
+SECTION 11
+
+NOTIFICATIONS
+
+Identify blockers related to:
+
+Assessment Alerts
+
+Recommendation Alerts
+
+Job Alerts
+
+Application Alerts
+
+Interview Alerts
+
+Employer Alerts
+
+Institution Alerts
+
+Reminder Workflows
+
+====================================================
+
+SECTION 12
+
+WORKFLOW AUTOMATION
+
+Identify blockers in:
+
+Assessment
+→ Score
+
+Score
+→ Recommendation
+
+Recommendation
+→ Career Plan
+
+Career Plan
+→ Job Matching
+
+Job Matching
+→ Application
+
+Application
+→ Employer Workflow
+
+Employer Workflow
+→ Hiring
+
+Hiring
+→ Outcome Tracking
+
+Focus:
+
+Broken or incomplete workflows.
+
+====================================================
+
+SECTION 13
+
+ACTIVATION
+
+Identify blockers preventing:
+
+Assessment Completion
+
+Score Generation
+
+Recommendation Generation
+
+Passport Generation
+
+Job Applications
+
+Employer Usage
+
+Hiring Activity
+
+Focus:
+
+Why are the engines not producing real outputs?
+
+====================================================
+
+SECTION 14
+
+VALIDATION
+
+Identify blockers preventing:
+
+Placement Validation
+
+Hiring Validation
+
+Career Outcome Validation
+
+Recommendation Validation
+
+Employer Outcome Validation
+
+Focus:
+
+What prevents trust?
+
+====================================================
+
+SECTION 15
+
+FOUNDER PRIORITIZATION
+
+Generate:
+
+Top 20 Launch Blockers
+
+Top 10 Must Fix Before Launch
+
+Top 10 Highest Revenue Impact
+
+Top 10 Highest Employer Impact
+
+Top 10 Highest Customer Impact
+
+Top 10 Quick Wins
+
+====================================================
+
+DELIVERABLES
+
+launch_blockers_top20.md
+
+launch_execution_backlog.md
+
+launch_quick_wins.md
+
+founder_priority_brief.md
+
+====================================================
+
+FINAL QUESTION
+
+If only 30 days remain before launch:
+
+Which 20 implementation actions will create the largest increase in launch readiness for:
+
+Competency Assessment
+
+Employability Index
+
+Career Builder
+
+Career Passport
+
+Job Ecosystem
+
+Employer Portal
+
+Rank them from highest impact to lowest impact.
+
+Do not audit.
+
+Do not score.
+
+Generate implementation actions only.

@@ -1,0 +1,130 @@
+OBJECTIVE:
+Build enterprise-grade governance, explainability, psychometric science, fairness auditing, and AI oversight into the competency intelligence ecosystem.
+
+====================================================
+STEP 1 — CREATE NEW MIGRATION
+=============================
+
+Create:
+backend/migrations/20260730_governance_science_v2.sql
+
+Add tables:
+
+* psychometric_models
+* fairness_evaluations
+* explainability_chains
+* model_governance_registry
+* competency_validity_models
+* ai_decision_audits
+* human_override_workflows
+* competency_entropy_models
+* reliability_validation_models
+
+====================================================
+STEP 2 — CREATE PSYCHOMETRIC ENGINE
+===================================
+
+Create:
+backend/services/psychometric-intelligence-engine.ts
+
+Capabilities:
+
+* IRT scoring
+* latent trait modeling
+* factor analysis
+* reliability computation
+* construct validity
+
+====================================================
+STEP 3 — CREATE FAIRNESS ENGINE V2
+==================================
+
+Create:
+backend/services/fairness-governance-engine.ts
+
+Analyze:
+
+* demographic bias
+* scoring imbalance
+* cohort fairness
+* selection-rate fairness
+
+====================================================
+STEP 4 — CREATE EXPLAINABILITY GRAPH ENGINE
+===========================================
+
+Create:
+backend/services/explainability-graph-engine.ts
+
+Generate:
+
+* score lineage
+* competency reasoning
+* readiness causality
+* intervention impact lineage
+
+====================================================
+STEP 5 — CREATE AI GOVERNANCE ENGINE
+====================================
+
+Create:
+backend/services/ai-governance-v2.ts
+
+Responsibilities:
+
+* model versioning
+* audit trails
+* hallucination tracking
+* policy validation
+* human override workflows
+
+====================================================
+STEP 6 — CREATE GOVERNANCE APIS
+===============================
+
+Create:
+backend/routes/governance-v2.ts
+
+Endpoints:
+GET /api/v2/gov/explainability
+GET /api/v2/gov/fairness
+GET /api/v2/gov/reliability
+GET /api/v2/gov/psychometrics
+POST /api/v2/gov/override
+
+====================================================
+STEP 7 — FRONTEND GOVERNANCE DASHBOARD
+======================================
+
+Create:
+frontend/src/modules/career-builder/intelligence/views/GovernanceDashboard.tsx
+
+Features:
+
+* explainability graph
+* fairness analysis
+* reliability metrics
+* psychometric intelligence
+* audit lineage
+
+====================================================
+STEP 8 — VALIDATION
+===================
+
+Test:
+
+1. Explainability chains generated
+2. Fairness audits operational
+3. Psychometric scoring operational
+4. AI governance operational
+
+====================================================
+EXPECTED RESULT
+===============
+
+By end of Phase 7:
+
+* enterprise governance operational
+* explainability deeply integrated
+* scientific competency intelligence operational
+* AI oversight functional

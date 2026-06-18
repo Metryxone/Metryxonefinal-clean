@@ -1,0 +1,54 @@
+Here is the concrete engineering specification for the composite payload schema, the telemetry calculations, and the database storage target. Please build exactly to this spec:
+
+1. COMPOSITE JSON PAYLOAD STORAGE TARGET
+- Save the final generated composite JSON object inside the existing `assessment_sessions` table (or your core sessions tracking table) in a column named `omega_x_payload`.
+- If the column does not exist or isn't a JSON/JSONB type, alter the schema to add:
+  `ALTER TABLE assessment_sessions ADD COLUMN IF NOT EXISTS omega_x_payload JSONB DEFAULT '{}'::jsonb;`
+
+2. THE COMPOSITE SCHEMA SPECIFICATION (THE 8 LAYERS)
+When compiling the final payload inside the `/complete` route, structure the JSON object exactly like this, default-initializing missing keys to an empty object or zero values:
+
+{
+  "demographic": {
+    "early_career": false,
+    "college_student": false
+  },
+  "identity": {
+    "professional": false,
+    "student": false
+  },
+  "behavioural": {
+    "overthinking": 0.00,
+    "avoidance_loop": 0.00,
+    "perfectionism": 0.00,
+    "procrastination_pattern": 0.00
+  },
+  "cognitive": {
+    "analytical": 0.00,
+    "structured": 0.00
+  },
+  "emotional": {
+    "anxious_achiever": 0.00,
+    "emotionally_balanced": 0.00
+  },
+  "capability": {
+    "leadership_potential": 0.00,
+    "adaptive_problem_solver": 0.00
+  },
+  "risk": {
+    "burnout_risk": 0.00,
+    "disengagement_risk": 0.00
+  },
+  "longitudinal": {
+    "growth_oriented": true
+  }
+}
+
+3. TELEMETRY→SCORE MODIFIER FORMULAS
+When processing the rows from `capadex_session_telemetry` for the current `session_id`, apply these exact math adjustments to the values inside the `behavioural` and `risk` blocks:
+- Overthinking & Indecisiveness: If the average `hesitation_ms` across all responses is > 8000ms OR the total `backtrack_count` for the session is >= 3, add +0.12 directly to the `overthinking` and `indecisiveness` fields.
+- Perfectionism: If the total session `backtrack_count` is >= 5, add +0.15 directly to the `perfectionism` field.
+- Math Guardrail: Use `Math.min(calculatedValue, 1.00)` to ensure no behavioral score ever exceeds a maximum ceiling of 1.00.
+
+4. EXECUTE & COMPILE
+Please apply this schema, hook the telemetry aggregations into the final serialization logic, write the output into the `omega_x_payload` column, and ensure the entire file compiles cleanly without TypeScript errors.

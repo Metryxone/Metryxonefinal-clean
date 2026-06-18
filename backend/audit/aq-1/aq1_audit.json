@@ -1,0 +1,171 @@
+{
+  "generated_at": "2026-06-04T06:44:23.159Z",
+  "bank_table": "capadex_clarity_questions",
+  "total_questions": 30638,
+  "distinct_concern_ids": 5357,
+  "distinct_bridge_tags": 325,
+  "concern_id_to_master_join_pct": 0,
+  "registry_coverage_pct": 46.7,
+  "tag_derivation": {
+    "total_master_tags": 328,
+    "avg_persona_buckets_per_tag": 1.4,
+    "multi_capability_tags": 98,
+    "avg_age_span_years": 14
+  },
+  "metadata_coverage": {
+    "question": {
+      "Present": 30638,
+      "Missing": 0,
+      "Ambiguous": 0,
+      "Conflicting": 0,
+      "present_pct": 100
+    },
+    "concern": {
+      "Present": 30638,
+      "Missing": 0,
+      "Ambiguous": 0,
+      "Conflicting": 0,
+      "present_pct": 100
+    },
+    "bridge_tag": {
+      "Present": 30638,
+      "Missing": 0,
+      "Ambiguous": 0,
+      "Conflicting": 0,
+      "present_pct": 100
+    },
+    "capability": {
+      "Present": 11290,
+      "Missing": 0,
+      "Ambiguous": 19348,
+      "Conflicting": 0,
+      "present_pct": 36.8
+    },
+    "behavior": {
+      "Present": 30558,
+      "Missing": 0,
+      "Ambiguous": 80,
+      "Conflicting": 0,
+      "present_pct": 99.7
+    },
+    "construct": {
+      "Present": 4437,
+      "Missing": 13538,
+      "Ambiguous": 12663,
+      "Conflicting": 0,
+      "present_pct": 14.5
+    },
+    "signal": {
+      "Present": 80,
+      "Missing": 0,
+      "Ambiguous": 30558,
+      "Conflicting": 0,
+      "present_pct": 0.3
+    },
+    "age_band": {
+      "Present": 0,
+      "Missing": 125,
+      "Ambiguous": 1395,
+      "Conflicting": 29118,
+      "present_pct": 0
+    },
+    "persona": {
+      "Present": 10639,
+      "Missing": 3489,
+      "Ambiguous": 16510,
+      "Conflicting": 0,
+      "present_pct": 34.7
+    },
+    "dev_stage": {
+      "Present": 14294,
+      "Missing": 16344,
+      "Ambiguous": 0,
+      "Conflicting": 0,
+      "present_pct": 46.7
+    }
+  },
+  "age": {
+    "unknown": 125,
+    "single": 0,
+    "multi": 1395,
+    "crossBoundary": 29118,
+    "youthOnly": 535,
+    "adultOnly": 860,
+    "band_distribution": {
+      "6-14": 25818,
+      "14-17": 29533,
+      "17-24": 30393,
+      "24-45": 18059,
+      "45+": 14284
+    }
+  },
+  "persona": {
+    "any_bucket": {
+      "Student": 17789,
+      "Parent": 8687,
+      "Counselor": 8337,
+      "Teacher": 13399,
+      "Professional": 15543,
+      "Entrepreneur": 0
+    },
+    "single_bucket_present": {
+      "Student": 1865,
+      "Parent": 90,
+      "Counselor": 7101,
+      "Teacher": 265,
+      "Professional": 1318,
+      "Entrepreneur": 0
+    }
+  },
+  "dev_stage": {
+    "taxonomy": [
+      "Awareness",
+      "Curiosity",
+      "Clarity",
+      "Growth",
+      "Mastery"
+    ],
+    "distribution": {
+      "Clarity": 14294,
+      "(blank)": 16344
+    },
+    "present_pct": 46.7
+  },
+  "behavior": {
+    "band": {
+      "strong": 30288,
+      "moderate": 270,
+      "weak": 80,
+      "none": 0
+    }
+  },
+  "construct": {
+    "proxy": "grounded signal family (no authoritative per-question construct exists)",
+    "reachable_families": 132,
+    "total_families": 370,
+    "missing_families": 238
+  },
+  "alignment": {
+    "mean": 60,
+    "meta_coverage_score": 53,
+    "histogram": {
+      "0-39": 0,
+      "40-49": 14039,
+      "50-59": 410,
+      "60-69": 5084,
+      "70-79": 9485,
+      "80-89": 0,
+      "90-100": 1620
+    },
+    "weak_floor_score": 43,
+    "questions_at_floor": 13979
+  },
+  "assessment_intelligence_score": 57.2,
+  "critical_gaps": [
+    "Development-stage taxonomy collapsed: only 46.7% have a stage and the only non-blank value(s) present = [Clarity] (0 of the full 5-stage taxonomy beyond \"Clarity\").",
+    "Entrepreneur persona has ZERO coverage in the concern ontology the bank derives from.",
+    "Age assignment is structurally ambiguous: 95% of questions inherit a bridge tag whose age span crosses the youth↔adult (18) boundary.",
+    "concern_id namespace is disjoint from concerns_master (0% join, measured) — the bank links to the ontology ONLY through master_bridge_tag."
+  ],
+  "classification": "RED"
+}

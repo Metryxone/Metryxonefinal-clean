@@ -1,0 +1,352 @@
+domain,total,Capability,Problem,Behavior,Trait,Outcome,Risk,pct_problem
+Academic & Career Readiness,1,0,1,0,0,0,0,100%
+Academic & Cognitive Effectiveness,140,9,105,8,8,9,1,75%
+Academic Behavior,1,0,1,0,0,0,0,100%
+Academic Counselling,1,1,0,0,0,0,0,0%
+Academic Decision Support,1,0,0,0,0,0,1,0%
+Academic Equity,1,0,0,0,0,1,0,0%
+Academic Growth,2,0,2,0,0,0,0,100%
+Academic Identity & Meaning,87,2,76,2,5,2,0,87%
+Academic Operations,2,0,2,0,0,0,0,100%
+Academic Performance,6,1,5,0,0,0,0,83%
+Academic Planning,1,0,1,0,0,0,0,100%
+Academic Planning & Recovery Intelligence,2,1,1,0,0,0,0,50%
+Academic Readiness,1,0,1,0,0,0,0,100%
+Academic Reflection,2,1,1,0,0,0,0,50%
+Academic Risk Behaviour,1,0,0,1,0,0,0,0%
+Academic Risk Intelligence,3,0,1,0,0,1,1,33%
+Academic Transition,1,0,1,0,0,0,0,100%
+Academic Transition & Future Readiness,1,0,1,0,0,0,0,100%
+Academic Transition Reflection,1,0,1,0,0,0,0,100%
+Academic-Career Identity,1,0,0,0,0,1,0,0%
+Academic-Career Misfit,1,0,0,1,0,0,0,0%
+Accountability Development,1,0,1,0,0,0,0,100%
+Accountability Reflection,1,0,1,0,0,0,0,100%
+Adaptability Coaching,1,1,0,0,0,0,0,0%
+Adaptability Guidance,1,0,1,0,0,0,0,100%
+Adaptive Development,1,0,1,0,0,0,0,100%
+Adaptive Diagnostics,1,0,1,0,0,0,0,100%
+Adaptive Growth,1,1,0,0,0,0,0,0%
+Adaptive Leadership,1,0,0,0,1,0,0,0%
+Adaptive Learning,8,0,7,1,0,0,0,88%
+Adaptive Reflection,1,0,0,0,0,1,0,0%
+Adjustment & Coping Capacity,43,0,27,7,2,5,2,63%
+Alternative Career Guidance,1,0,0,1,0,0,0,0%
+Alternative Career Reflection,1,0,1,0,0,0,0,100%
+Analytical Development,3,2,1,0,0,0,0,33%
+Aspirational Clarity,1,0,1,0,0,0,0,100%
+Aspirational Development,1,0,1,0,0,0,0,100%
+Assessment Intelligence,1,0,1,0,0,0,0,100%
+Attention Reflection,1,0,0,0,0,0,1,0%
+Balanced Reflection,1,0,1,0,0,0,0,100%
+Behavior Correction,1,0,0,1,0,0,0,0%
+Behavioral Awareness,1,0,1,0,0,0,0,100%
+Behavioral Growth,1,0,1,0,0,0,0,100%
+Behavioral Reflection,1,0,1,0,0,0,0,100%
+Behavioral Regulation,1,0,1,0,0,0,0,100%
+Behavioral Stability,2,0,2,0,0,0,0,100%
+Capability Development,1,0,1,0,0,0,0,100%
+Career & Identity Development,1,0,1,0,0,0,0,100%
+Career Alignment,2,0,2,0,0,0,0,100%
+Career Autonomy,1,0,1,0,0,0,0,100%
+Career Branding,2,0,2,0,0,0,0,100%
+Career Competition Readiness,1,0,1,0,0,0,0,100%
+Career Decision Analysis,1,0,1,0,0,0,0,100%
+Career Decision Overload,1,0,1,0,0,0,0,100%
+Career Decision Support,1,0,0,0,0,0,1,0%
+Career Development,1,0,1,0,0,0,0,100%
+Career Ecosystem Support,1,0,1,0,0,0,0,100%
+Career Execution,1,0,0,0,0,1,0,0%
+Career Execution Reflection,1,0,1,0,0,0,0,100%
+Career Expectations,1,0,1,0,0,0,0,100%
+Career Exploration,1,0,1,0,0,0,0,100%
+Career Exposure,1,0,1,0,0,0,0,100%
+Career Flexibility,1,0,0,0,1,0,0,0%
+Career Growth,35,0,35,0,0,0,0,100%
+Career Guidance,1,0,1,0,0,0,0,100%
+Career Identity,2,0,1,0,0,0,1,50%
+Career Identity & Meaning,1,0,1,0,0,0,0,100%
+Career Mapping,1,0,1,0,0,0,0,100%
+Career Planning,2,0,2,0,0,0,0,100%
+Career Preparedness,1,0,1,0,0,0,0,100%
+Career Preparedness Reflection,1,1,0,0,0,0,0,0%
+Career Prioritization,1,0,1,0,0,0,0,100%
+Career Psychology,1,0,0,0,0,0,1,0%
+Career Readiness,71,0,71,0,0,0,0,100%
+Career Readiness & Holistic Development,1,0,1,0,0,0,0,100%
+Career Recovery,1,0,0,0,0,0,1,0%
+Career Recovery Reflection,1,0,1,0,0,0,0,100%
+Career Reflection,1,0,1,0,0,0,0,100%
+Career Risk Analysis,1,0,1,0,0,0,0,100%
+Career Stability Analysis,1,0,1,0,0,0,0,100%
+Career Suitability,1,0,1,0,0,0,0,100%
+Career Sustainability,2,0,2,0,0,0,0,100%
+Career Timeline Anxiety,1,0,1,0,0,0,0,100%
+Career Tradeoff Reflection,1,0,1,0,0,0,0,100%
+Career Transition,10,0,10,0,0,0,0,100%
+Career-Academic Alignment,1,0,1,0,0,0,0,100%
+Character Development,1,0,0,0,0,0,1,0%
+Classroom Adaptation,1,0,1,0,0,0,0,100%
+Classroom Engagement,16,0,13,2,0,1,0,81%
+Cognitive Awareness,1,0,1,0,0,0,0,100%
+Cognitive Development,1,0,1,0,0,0,0,100%
+Cognitive Mapping,1,0,1,0,0,0,0,100%
+Cognitive Reflection,1,0,1,0,0,0,0,100%
+Cognitive Self-Awareness,1,0,1,0,0,0,0,100%
+Cognitive Skills,1,0,1,0,0,0,0,100%
+Cognitive Wellness,1,0,0,0,0,0,1,0%
+Cognitive-Emotional Balance,1,0,1,0,0,0,0,100%
+Collaboration & Ownership,43,0,39,3,1,0,0,91%
+College Adaptation,1,0,1,0,0,0,0,100%
+Communication & Expression,137,6,127,1,1,2,0,93%
+Communication Behavior,1,0,1,0,0,0,0,100%
+Communication Development,1,1,0,0,0,0,0,0%
+Communication Leadership,1,0,1,0,0,0,0,100%
+Competency Development,52,1,45,0,1,5,0,87%
+Competency Intelligence,3,0,3,0,0,0,0,100%
+Competitive Adaptation,1,0,0,0,0,1,0,0%
+Competitive Exam Readiness,8,0,7,1,0,0,0,88%
+Confidence Building,1,0,0,1,0,0,0,0%
+Confidence Development,1,0,1,0,0,0,0,100%
+"Confidence, Self-Concept & Comparison",181,6,138,5,17,15,0,76%
+Decision Anxiety,1,0,1,0,0,0,0,100%
+Decision Coaching,1,0,1,0,0,0,0,100%
+Decision Confidence,1,0,1,0,0,0,0,100%
+Decision Independence,1,0,0,0,1,0,0,0%
+Decision Leadership,1,0,1,0,0,0,0,100%
+Digital Learning,1,1,0,0,0,0,0,0%
+Digital Responsibility,1,0,0,0,0,0,1,0%
+"Discipline, Habits & Consistency",103,5,94,3,0,1,0,91%
+Emotional Development,3,0,1,0,2,0,0,33%
+Emotional Identity,1,0,0,1,0,0,0,0%
+Emotional Leadership,1,0,0,0,1,0,0,0%
+Emotional Learning Reflection,1,0,1,0,0,0,0,100%
+Emotional Literacy,1,0,1,0,0,0,0,100%
+Emotional Maturity,2,0,0,2,0,0,0,0%
+Emotional Recovery,52,0,31,0,13,8,0,60%
+Emotional Reflection,3,1,2,0,0,0,0,67%
+Emotional Regulation,96,0,71,0,4,21,0,74%
+Emotional Resilience,1,0,0,0,0,0,1,0%
+Emotional Response,1,0,0,0,1,0,0,0%
+Emotional Self-Awareness,1,0,1,0,0,0,0,100%
+Emotional Wellbeing,1,0,1,0,0,0,0,100%
+Employability,46,0,45,0,1,0,0,98%
+Employability & Academic Readiness,1,0,1,0,0,0,0,100%
+Employability & Future Skills,7,0,7,0,0,0,0,100%
+Employability Development,2,0,2,0,0,0,0,100%
+Engagement Behavior,1,0,1,0,0,0,0,100%
+Engagement Management,1,0,0,0,0,1,0,0%
+Entrepreneurial Leadership,1,0,0,1,0,0,0,0%
+Entrepreneurship Guidance,1,0,1,0,0,0,0,100%
+Exam Readiness,1,0,1,0,0,0,0,100%
+Examination Readiness,54,4,47,1,1,1,0,87%
+Examination Stress & Emotional Regulation,119,8,83,9,4,11,4,70%
+Executive Communication,1,1,0,0,0,0,0,0%
+Exploration Inhibition,1,0,0,1,0,0,0,0%
+Exploratory Learning,1,0,0,1,0,0,0,0%
+Faculty Development,3,0,3,0,0,0,0,100%
+Faculty Effectiveness,3,0,3,0,0,0,0,100%
+Faculty Sustainability,3,0,3,0,0,0,0,100%
+Feedback Adaptation,1,0,0,1,0,0,0,0%
+Financial Readiness,2,0,2,0,0,0,0,100%
+Foundational Learning,15,3,9,1,2,0,0,60%
+Future Career Readiness,1,0,1,0,0,0,0,100%
+Future Learning Orientation,1,0,1,0,0,0,0,100%
+Future Orientation,2,0,2,0,0,0,0,100%
+Future Self Mapping,1,1,0,0,0,0,0,0%
+Future Workforce Readiness,1,0,1,0,0,0,0,100%
+General Well-being & Coping,1,0,1,0,0,0,0,100%
+Goal Alignment,1,0,1,0,0,0,0,100%
+Goal Reflection,1,0,1,0,0,0,0,100%
+Growth Accountability,1,0,1,0,0,0,0,100%
+Growth Behavior,1,0,0,1,0,0,0,0%
+Growth Mapping,1,0,1,0,0,0,0,100%
+Growth Measurement,1,0,1,0,0,0,0,100%
+Growth Mentoring,1,0,0,0,0,1,0,0%
+Growth Mindset,1,0,0,1,0,0,0,0%
+Growth Orientation,1,1,0,0,0,0,0,0%
+Growth Persistence,1,0,1,0,0,0,0,100%
+Growth Recognition,1,0,1,0,0,0,0,100%
+Growth Reflection,1,0,1,0,0,0,0,100%
+Growth Tracking,1,0,0,0,0,0,1,0%
+Habit Development,1,0,0,0,0,1,0,0%
+Help-Seeking & Support Utilization,3,0,0,3,0,0,0,0%
+Higher Education Guidance,1,0,1,0,0,0,0,100%
+Holistic Development,46,0,24,22,0,0,0,52%
+Identity Confidence,1,0,0,1,0,0,0,0%
+Identity Conflict,1,0,1,0,0,0,0,100%
+Identity Expression,1,0,1,0,0,0,0,100%
+Identity Formation,2,0,2,0,0,0,0,100%
+Identity Integration,1,0,1,0,0,0,0,100%
+Identity Reflection,1,0,1,0,0,0,0,100%
+Inclusion & Leadership,1,0,1,0,0,0,0,100%
+Inclusive Leadership,1,0,1,0,0,0,0,100%
+Independence Development,1,0,0,0,0,0,1,0%
+Innovation & Entrepreneurship,1,0,1,0,0,0,0,100%
+Innovation Readiness,1,0,1,0,0,0,0,100%
+Inquiry & Curiosity,5,0,5,0,0,0,0,100%
+Instructional Quality,1,0,1,0,0,0,0,100%
+Integrity Reflection,1,0,1,0,0,0,0,100%
+Intellectual Growth,1,0,1,0,0,0,0,100%
+Interdisciplinary Learning,8,0,8,0,0,0,0,100%
+Intervention Intelligence,1,0,1,0,0,0,0,100%
+Language Development,1,0,1,0,0,0,0,100%
+Leadership & Ownership,80,2,74,2,0,2,0,93%
+Leadership Accountability,1,0,1,0,0,0,0,100%
+Leadership Development,2,0,2,0,0,0,0,100%
+Leadership Dynamics,1,0,1,0,0,0,0,100%
+Leadership Endurance,1,0,0,0,0,0,1,0%
+Leadership Foundations,1,0,1,0,0,0,0,100%
+Leadership Influence,1,0,1,0,0,0,0,100%
+Leadership Maturity,1,0,1,0,0,0,0,100%
+Leadership Readiness,24,1,22,1,0,0,0,92%
+Leadership Recovery,1,0,0,0,0,0,1,0%
+Leadership Transition,3,0,3,0,0,0,0,100%
+Learning Adaptability,25,3,18,0,4,0,0,72%
+Learning Awareness,1,0,0,0,1,0,0,0%
+Learning Behavior,1,0,1,0,0,0,0,100%
+Learning Dependency,1,0,0,0,1,0,0,0%
+Learning Effectiveness,1,0,1,0,0,0,0,100%
+Learning Intervention,1,1,0,0,0,0,0,0%
+Learning Mindset,1,0,0,1,0,0,0,0%
+Learning Optimization,1,0,1,0,0,0,0,100%
+Learning Persistence,1,0,1,0,0,0,0,100%
+Learning Psychology,1,0,0,0,1,0,0,0%
+Learning Quality,2,0,2,0,0,0,0,100%
+Learning Reflection,2,0,2,0,0,0,0,100%
+Learning Skills,1,0,1,0,0,0,0,100%
+Learning Sustainability,1,0,1,0,0,0,0,100%
+Life Readiness,1,0,1,0,0,0,0,100%
+Lifestyle & Adjustment,1,0,1,0,0,0,0,100%
+Lifestyle & Pressure Environment,116,1,63,5,14,23,10,54%
+Lifestyle Adaptation,1,0,1,0,0,0,0,100%
+Lifestyle-Career Reflection,1,0,1,0,0,0,0,100%
+Long-Term Engagement,1,0,0,0,0,1,0,0%
+Long-Term Growth Planning,1,0,1,0,0,0,0,100%
+Maturity Development,1,0,0,1,0,0,0,0%
+Metacognition & Self-Regulation,1,0,1,0,0,0,0,100%
+Metacognitive Development,1,0,1,0,0,0,0,100%
+Motivation Development,1,0,0,0,1,0,0,0%
+Motivation Mapping,2,0,2,0,0,0,0,100%
+Motivation Psychology,1,0,0,0,1,0,0,0%
+"Motivation, Values & Responsibility",129,9,77,9,4,30,0,60%
+Multi-Potentiality Reflection,1,0,1,0,0,0,0,100%
+Organizational Development,4,0,4,0,0,0,0,100%
+Organizational Effectiveness,4,1,3,0,0,0,0,75%
+Organizational Intelligence,1,0,1,0,0,0,0,100%
+Over-Compliance Risk,4,0,2,0,0,0,2,50%
+Ownership & Accountability,1,0,1,0,0,0,0,100%
+Parent-School Dynamics,1,0,0,0,0,0,1,0%
+Performance Analysis,1,0,1,0,0,0,0,100%
+Performance Behavior,1,0,0,1,0,0,0,0%
+Performance Coaching,1,0,1,0,0,0,0,100%
+Performance Reflection,1,0,1,0,0,0,0,100%
+Performance Resilience,1,0,0,0,0,0,1,0%
+Perseverance Coaching,1,0,1,0,0,0,0,100%
+Persistence Development,1,0,1,0,0,0,0,100%
+Personal Branding,1,0,1,0,0,0,0,100%
+Personal Decision Making,1,0,0,0,1,0,0,0%
+Personal Development,4,0,4,0,0,0,0,100%
+Personal Effectiveness,3,0,2,1,0,0,0,67%
+Personal Expansion,1,0,0,0,1,0,0,0%
+Personal Growth,1,0,0,0,0,0,1,0%
+Personal Identity Formation,1,0,1,0,0,0,0,100%
+Personal Insight,2,0,1,1,0,0,0,50%
+Personal Leadership,1,0,1,0,0,0,0,100%
+Personal Positioning,1,0,1,0,0,0,0,100%
+Personal Sustainability,1,0,0,0,0,0,1,0%
+Personal Vision,1,0,1,0,0,0,0,100%
+Personality Alignment,1,0,1,0,0,0,0,100%
+Personality Exploration,1,0,1,0,0,0,0,100%
+Personality-Career Fit,1,0,1,0,0,0,0,100%
+Placement Operations,1,0,1,0,0,0,0,100%
+Placement Risk Intelligence,1,0,1,0,0,0,0,100%
+Potential Discovery,1,1,0,0,0,0,0,0%
+Productivity Coaching,1,0,0,0,0,0,1,0%
+Productivity Reflection,2,0,2,0,0,0,0,100%
+Professional Leadership,1,0,0,1,0,0,0,0%
+Psychological Adaptation,1,0,1,0,0,0,0,100%
+Purpose Alignment,1,0,1,0,0,0,0,100%
+Purpose Discovery,1,0,1,0,0,0,0,100%
+Purpose Reflection,1,0,1,0,0,0,0,100%
+Recovery Behavior,1,0,1,0,0,0,0,100%
+Recovery Capability,1,0,0,0,0,0,1,0%
+Recovery Orientation,1,0,1,0,0,0,0,100%
+Reflective Development,2,0,1,0,0,0,1,50%
+Reflective Learning,1,0,0,0,0,1,0,0%
+Reflective Systems,1,0,1,0,0,0,0,100%
+Responsibility Development,1,0,1,0,0,0,0,100%
+STEM Learning,16,3,13,0,0,0,0,81%
+Self Discovery,2,0,2,0,0,0,0,100%
+Self Exploration,4,0,4,0,0,0,0,100%
+Self Identity,1,0,0,1,0,0,0,0%
+Self Leadership,1,0,1,0,0,0,0,100%
+Self Learning,1,0,1,0,0,0,0,100%
+Self Motivation Awareness,1,0,1,0,0,0,0,100%
+Self Perception,1,1,0,0,0,0,0,0%
+Self Progress Awareness,1,0,1,0,0,0,0,100%
+Self Reflection,32,0,32,0,0,0,0,100%
+Self-Acceptance,1,0,1,0,0,0,0,100%
+Self-Awareness Development,1,0,1,0,0,0,0,100%
+Self-Development,1,0,1,0,0,0,0,100%
+Self-Diagnostic Reflection,1,0,1,0,0,0,0,100%
+Self-Discovery,2,0,2,0,0,0,0,100%
+Self-Evaluation,1,0,1,0,0,0,0,100%
+Self-Expression,1,0,1,0,0,0,0,100%
+Self-Growth Engagement,1,1,0,0,0,0,0,0%
+Self-Identity Reflection,1,0,1,0,0,0,0,100%
+Self-Leadership,1,0,0,0,1,0,0,0%
+Self-Learning Development,1,0,0,0,1,0,0,0%
+Self-Management,1,0,1,0,0,0,0,100%
+Self-Observation,1,0,1,0,0,0,0,100%
+Self-Perception Accuracy,1,0,1,0,0,0,0,100%
+Self-Regulation,1,0,0,0,1,0,0,0%
+Self-Worth Development,1,0,0,1,0,0,0,0%
+Skill Development,1,0,1,0,0,0,0,100%
+Social & Emotional Intelligence,81,2,59,9,7,3,1,73%
+Social Capability,1,0,1,0,0,0,0,100%
+Social Development,1,0,0,0,0,0,1,0%
+Social Leadership,1,0,0,1,0,0,0,0%
+Social Learning,1,0,1,0,0,0,0,100%
+Social Reflection,1,0,1,0,0,0,0,100%
+Social Self-Awareness,1,0,1,0,0,0,0,100%
+Social Self-Development,1,0,0,0,0,0,1,0%
+Stakeholder Alignment,1,0,1,0,0,0,0,100%
+Strategic Leadership,33,0,30,0,0,3,0,91%
+Strategic Preparation,35,0,34,0,0,1,0,97%
+Strength Discovery,1,0,1,0,0,0,0,100%
+Student Balance,1,1,0,0,0,0,0,0%
+Student Behaviour,2,0,1,1,0,0,0,50%
+Student Development,1,0,0,0,0,1,0,0%
+Student Engagement,2,0,2,0,0,0,0,100%
+Student Leadership,1,0,0,1,0,0,0,0%
+Student Psychology,2,0,2,0,0,0,0,100%
+Student Recovery,1,0,0,0,0,1,0,0%
+Student Regulation,1,0,1,0,0,0,0,100%
+Student Risk Intelligence,1,0,1,0,0,0,0,100%
+Student Risk Monitoring,1,0,0,0,0,0,1,0%
+Student Success Operations,1,0,1,0,0,0,0,100%
+Student Support,1,0,1,0,0,0,0,100%
+Student Wellbeing,1,0,0,0,0,0,1,0%
+Student Wellness,2,0,1,0,0,0,1,50%
+Study Strategy Reflection,1,1,0,0,0,0,0,0%
+Subject Anxiety,1,0,1,0,0,0,0,100%
+Subject Intervention,1,0,1,0,0,0,0,100%
+Talent Discovery,1,0,1,0,0,0,0,100%
+Talent Identification,2,0,2,0,0,0,0,100%
+Teaching Quality,2,0,2,0,0,0,0,100%
+Team Leadership,1,0,1,0,0,0,0,100%
+Team Learning Reflection,1,0,1,0,0,0,0,100%
+Team Management,1,0,1,0,0,0,0,100%
+Thinking Quality Under Pressure,92,6,80,3,0,3,0,87%
+Transition & Change Adaptability,4,0,3,1,0,0,0,75%
+Transition Adaptation,1,0,1,0,0,0,0,100%
+Transition Readiness,1,0,0,0,0,1,0,0%
+Values Exploration,1,0,1,0,0,0,0,100%
+Values-Based Leadership,1,1,0,0,0,0,0,0%
+Vocational Guidance,1,1,0,0,0,0,0,0%
+Workforce Trends,1,0,0,0,0,0,1,0%
+Workplace Adaptation,46,0,38,0,4,4,0,83%
+Workplace Fit Reflection,1,0,1,0,0,0,0,100%
+Workplace Performance,9,0,8,0,0,0,1,89%
+Workplace Readiness,1,0,1,0,0,0,0,100%

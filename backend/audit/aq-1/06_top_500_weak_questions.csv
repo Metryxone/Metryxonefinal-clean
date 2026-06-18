@@ -1,0 +1,501 @@
+rank,question_id,alignment_score,concern_25,behavior_25,capability_25,construct_25,missing_fields,best_signal_band,bridge_tag,question
+1,Q_ALE_001_001,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,How comfortable are you participating in classroom activities that require discussion and interaction?
+2,Q_ALE_001_002,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,How confident are you in sharing your ideas during group activities or classroom discussions?
+3,Q_ALE_001_003,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,"How interested are you in learning through projects, discussions, and practical activities instead of only lectures?"
+4,Q_ALE_001_004,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,"When teachers encourage participation, how easily do you get involved?"
+5,Q_ALE_001_005,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,How prepared do you feel for learning environments that require teamwork and active involvement?
+6,Q_ALE_001_006,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,How uncomfortable do you feel when asked to participate in front of others?
+7,Q_ALE_001_007,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,"How often do you avoid activities that require speaking, presenting, or group involvement?"
+8,Q_ALE_001_008,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,How much does hesitation in participating affect your learning experience?
+9,Q_ALE_001_009,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,How often do you feel unsure about what to contribute during discussions?
+10,Q_ALE_001_010,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,"Compared to last year, how much more difficult has active participation become?"
+11,Q_ALE_001_011,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,"How often do you volunteer answers, ideas, or opinions during learning activities?"
+12,Q_ALE_001_012,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,How often do you ask questions to deepen your understanding during class?
+13,Q_ALE_001_013,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,How often do you collaborate effectively with classmates during projects or group tasks?
+14,Q_ALE_001_014,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,"When your ideas are challenged, how often do you continue participating constructively?"
+15,Q_ALE_001_015,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,How often do you take initiative during collaborative learning activities?
+16,Q_ALE_001_016,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,"When participation feels uncomfortable, how effectively do you manage that discomfort?"
+17,Q_ALE_001_017,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,How comfortable are you making mistakes while learning in front of others?
+18,Q_ALE_001_018,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,How often do you prepare beforehand to participate more confidently in activities?
+19,Q_ALE_001_019,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,"When group dynamics become challenging, how effectively do you continue contributing?"
+20,Q_ALE_001_020,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,How confident are you that you can become more active and engaged in learning environments?
+21,Q_ALE_001_021,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,How ready are you to participate more actively in future learning experiences?
+22,Q_ALE_001_022,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,How willing are you to step outside your comfort zone during discussions and activities?
+23,Q_ALE_001_023,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,How strongly do you believe active participation improves learning outcomes?
+24,Q_ALE_001_024,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,"If given support and encouragement, how likely are you to participate more during classes and activities?"
+25,Q_ALE_001_025,43,10,25,8,0,2,strong,LEARNING_ADAPTABILITY,"Even if active participation feels challenging today, how confident are you that you can improve with practice?"
+26,Q_ATTEND_001_001,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How aware are you of patterns in your attendance that may negatively affect your academic performance?
+27,Q_ATTEND_001_002,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How often do you notice irregularities in your attendance pattern before they start affecting your studies?
+28,Q_ATTEND_001_003,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,"Compared to others, how well do you track and understand your own attendance behavior?"
+29,Q_ATTEND_001_004,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,Do you feel unsure about how your attendance patterns may be impacting your academic success?
+30,Q_ATTEND_001_005,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,"If your current attendance pattern continues, how confident are you that it will not affect your academic outcomes negatively?"
+31,Q_ATTEND_001_006,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How concerned are you about your current attendance pattern affecting your academic progress?
+32,Q_ATTEND_001_007,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How often do you realize attendance gaps only after they have already affected your performance?
+33,Q_ATTEND_001_008,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How often do you miss classes without noticing a developing pattern over time?
+34,Q_ATTEND_001_009,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How strongly does peer influence or social activity affect your attendance consistency?
+35,Q_ATTEND_001_010,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,"Compared to last semester, how much more unpredictable has your attendance pattern become?"
+36,Q_ATTEND_001_011,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How often do you actively monitor your attendance percentage or class presence?
+37,Q_ATTEND_001_012,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How often do you attend classes even when you feel unmotivated or tired?
+38,Q_ATTEND_001_013,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,"During busy academic periods, how often do you unintentionally miss classes?"
+39,Q_ATTEND_001_014,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How likely are you to ignore small attendance drops until they become a serious issue?
+40,Q_ATTEND_001_015,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How often do attendance concerns cause you anxiety about academic eligibility or performance?
+41,Q_ATTEND_001_016,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How effectively can you identify and correct attendance issues before they affect your performance?
+42,Q_ATTEND_001_017,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,"How often do you use reminders, schedules, or systems to maintain consistent attendance?"
+43,Q_ATTEND_001_018,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,Some students realize attendance issues only after academic performance declines. How true is this for you?
+44,Q_ATTEND_001_019,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,"After maintaining consistent attendance for a period, how motivated do you feel to continue it?"
+45,Q_ATTEND_001_020,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,"Even if academic workload increases, how confident are you that you can maintain consistent attendance?"
+46,Q_ATTEND_001_021,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How ready are you to improve your awareness and control of attendance patterns?
+47,Q_ATTEND_001_022,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,"If given tools to track attendance effectively, how willing would you be to use them consistently?"
+48,Q_ATTEND_001_023,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How strongly do you believe consistent attendance directly impacts academic success?
+49,Q_ATTEND_001_024,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,"If you noticed a drop in attendance today, how likely are you to take corrective action immediately?"
+50,Q_ATTEND_001_025,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,"Even if your attendance has been inconsistent in the past, how hopeful are you that you can build a stable and consistent attendance pattern in the future?"
+51,Q_ATTNSPAN_001_001,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How well do you understand your natural attention span limits while studying or working on tasks?
+52,Q_ATTNSPAN_001_002,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How often do you notice your focus dropping during long study or work sessions?
+53,Q_ATTNSPAN_001_003,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,"Compared to others, how accurately do you think you can estimate how long you can stay focused effectively?"
+54,Q_ATTNSPAN_001_004,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,Do you sometimes feel frustrated when you are unable to focus for long periods even after trying hard?
+55,Q_ATTNSPAN_001_005,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,"If you planned a long study session tomorrow, how confident are you that you could structure it according to your attention span?"
+56,Q_ATTNSPAN_001_006,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How stressful does it feel when your attention breaks during important tasks?
+57,Q_ATTNSPAN_001_007,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How often do you continue studying even after noticing your focus has dropped significantly?
+58,Q_ATTNSPAN_001_008,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How often do you feel mentally drained because you try to focus for too long without breaks?
+59,Q_ATTNSPAN_001_009,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How strongly do comparisons with highly focused individuals affect your perception of your own attention span?
+60,Q_ATTNSPAN_001_010,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,"Compared to your expectations, how often does your actual attention span feel shorter than you think it should be?"
+61,Q_ATTNSPAN_001_011,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How often do you take breaks when you notice your focus starting to decline?
+62,Q_ATTNSPAN_001_012,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How often do you force yourself to continue studying even when you cannot concentrate?
+63,Q_ATTNSPAN_001_013,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,"During long tasks, how often do you switch methods or subjects to regain focus?"
+64,Q_ATTNSPAN_001_014,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How likely are you to plan study sessions based on your actual focus capacity rather than ideal expectations?
+65,Q_ATTNSPAN_001_015,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How often do you feel mentally exhausted after trying to concentrate for too long without breaks?
+66,Q_ATTNSPAN_001_016,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,"When your attention drops, how effectively can you reset and refocus without losing productivity?"
+67,Q_ATTNSPAN_001_017,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,"How often do you use techniques like Pomodoro, breaks, or task switching to manage attention limits?"
+68,Q_ATTNSPAN_001_018,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,Some people ignore their attention limits and try to study continuously for long hours. How true is this for you?
+69,Q_ATTNSPAN_001_019,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,"After taking a break during study sessions, how refreshed and focused do you usually feel?"
+70,Q_ATTNSPAN_001_020,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,"Even if you struggle with attention span now, how confident are you that you can improve your focus management over time?"
+71,Q_ATTNSPAN_001_021,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How ready are you to adjust your study habits according to your attention span limits?
+72,Q_ATTNSPAN_001_022,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,"If you learned how attention span works scientifically, how willing would you be to apply that understanding in daily study planning?"
+73,Q_ATTNSPAN_001_023,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,How strongly do you believe effective studying requires respecting attention span limits rather than pushing continuously?
+74,Q_ATTNSPAN_001_024,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,"If you learned one method to improve focus management today, how likely are you to use it consistently?"
+75,Q_ATTNSPAN_001_025,43,10,25,8,0,2,strong,DISCIPLINE_HABITS,"Even if your attention span feels limited now, how hopeful are you that you can learn to study effectively within your natural focus limits?"
+76,Q_CAREADAPT_001_001,43,10,25,8,0,2,strong,CAREER_READINESS,How confident are you in adapting your career plans when job markets or industries change unexpectedly?
+77,Q_CAREADAPT_001_002,43,10,25,8,0,2,strong,CAREER_READINESS,How often do changes in the job market make you feel uncertain about your career direction?
+78,Q_CAREADAPT_001_003,43,10,25,8,0,2,strong,CAREER_READINESS,"Compared to others, how well do you think you can adjust your skills and plans when industry demands change?"
+79,Q_CAREADAPT_001_004,43,10,25,8,0,2,strong,CAREER_READINESS,Do you feel anxious when you think about sudden changes in career opportunities or market conditions?
+80,Q_CAREADAPT_001_005,43,10,25,8,0,2,strong,CAREER_READINESS,"If your industry became highly competitive or unstable tomorrow, how confident are you that you could still build a strong career path?"
+81,Q_CAREADAPT_001_006,43,10,25,8,0,2,strong,CAREER_READINESS,How stressful does the idea of changing career demands or job market shifts feel to you?
+82,Q_CAREADAPT_001_007,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel overwhelmed when you hear about changes in hiring trends or job availability?
+83,Q_CAREADAPT_001_008,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you delay career decisions because the job market feels uncertain?
+84,Q_CAREADAPT_001_009,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do you feel pressure when you see peers adapting quickly to new job trends or technologies?
+85,Q_CAREADAPT_001_010,43,10,25,8,0,2,strong,CAREER_READINESS,"Compared to last year, how much harder is it for you to adapt your career plans to changing opportunities?"
+86,Q_CAREADAPT_001_011,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you update your skills or learning based on changing industry trends?
+87,Q_CAREADAPT_001_012,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you explore alternative career options when your primary path seems uncertain?
+88,Q_CAREADAPT_001_013,43,10,25,8,0,2,strong,CAREER_READINESS,"When industries change, how often do you actively seek to understand new opportunities?"
+89,Q_CAREADAPT_001_014,43,10,25,8,0,2,strong,CAREER_READINESS,How likely are you to switch or adjust your career direction if better opportunities arise in a different field?
+90,Q_CAREADAPT_001_015,43,10,25,8,0,2,strong,CAREER_READINESS,How often do changes in job markets affect your emotional stability or confidence?
+91,Q_CAREADAPT_001_016,43,10,25,8,0,2,strong,CAREER_READINESS,"When faced with uncertainty in career opportunities, how effectively can you stay calm and plan your next steps?"
+92,Q_CAREADAPT_001_017,43,10,25,8,0,2,strong,CAREER_READINESS,"How often do you take proactive steps (learning, networking, internships) to stay prepared for market changes?"
+93,Q_CAREADAPT_001_018,43,10,25,8,0,2,strong,CAREER_READINESS,Some people become stuck when job markets change rapidly and struggle to adjust their plans. How true is this for you?
+94,Q_CAREADAPT_001_019,43,10,25,8,0,2,strong,CAREER_READINESS,"After successfully learning a new skill or adapting to a change, how confident do you usually feel about your career future?"
+95,Q_CAREADAPT_001_020,43,10,25,8,0,2,strong,CAREER_READINESS,"Even if the job market becomes unpredictable, how confident are you that you can still build a successful career path?"
+96,Q_CAREADAPT_001_021,43,10,25,8,0,2,strong,CAREER_READINESS,How ready are you to actively adjust your skills and career plans based on changing industry demands?
+97,Q_CAREADAPT_001_022,43,10,25,8,0,2,strong,CAREER_READINESS,"If you were given guidance on emerging career trends, how willing would you be to adapt your plan accordingly?"
+98,Q_CAREADAPT_001_023,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do you believe that successful careers today require continuous learning and adaptability?
+99,Q_CAREADAPT_001_024,43,10,25,8,0,2,strong,CAREER_READINESS,"If you learned a new in-demand skill today, how likely are you to immediately apply it to improve your career direction?"
+100,Q_CAREADAPT_001_025,43,10,25,8,0,2,strong,CAREER_READINESS,"Even if industries continue to change rapidly, how hopeful are you that you can still build a stable and successful career?"
+101,Q_CAREER_NAR_001,43,10,25,8,0,2,strong,CAREER_READINESS,How clear is your long-term career direction beyond just getting a job?
+102,Q_CAREER_NAR_002,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you think about where you want to be professionally in 5�10 years?
+103,Q_CAREER_NAR_003,43,10,25,8,0,2,strong,CAREER_READINESS,How consistent is your career vision compared to your peers?
+104,Q_CAREER_NAR_004,43,10,25,8,0,2,strong,CAREER_READINESS,Do you feel your career choices so far are connected to a bigger long-term plan?
+105,Q_CAREER_NAR_005,43,10,25,8,0,2,strong,CAREER_READINESS,How easy is it for you to explain your career goals in a structured way?
+106,Q_CAREER_NAR_006,43,10,25,8,0,2,strong,CAREER_READINESS,How confused do you feel when thinking about your long-term career path?
+107,Q_CAREER_NAR_007,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel your career decisions are random rather than planned?
+108,Q_CAREER_NAR_008,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you change your career goals significantly?
+109,Q_CAREER_NAR_009,43,10,25,8,0,2,strong,CAREER_READINESS,How confident are you that your current path will lead to long-term success?
+110,Q_CAREER_NAR_010,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel stuck when thinking about your future direction?
+111,Q_CAREER_NAR_011,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you set long-term career goals beyond academic goals?
+112,Q_CAREER_NAR_012,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you review your career progress against a long-term vision?
+113,Q_CAREER_NAR_013,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you compare your career direction with successful professionals?
+114,Q_CAREER_NAR_014,43,10,25,8,0,2,strong,CAREER_READINESS,Do you feel pressure to have a �perfect career plan� early in life?
+115,Q_CAREER_NAR_015,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel lost when making important career decisions?
+116,Q_CAREER_NAR_016,43,10,25,8,0,2,strong,CAREER_READINESS,"When unsure about your career, how well can you still create a clear plan?"
+117,Q_CAREER_NAR_017,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you seek mentorship for long-term career guidance?
+118,Q_CAREER_NAR_018,43,10,25,8,0,2,strong,CAREER_READINESS,Do you actively write down or document your career goals?
+119,Q_CAREER_NAR_019,43,10,25,8,0,2,strong,CAREER_READINESS,How confident do you feel when explaining your future career story to others?
+120,Q_CAREER_NAR_020,43,10,25,8,0,2,strong,CAREER_READINESS,How confident are you that your career direction will remain stable over time?
+121,Q_CAREER_NAR_021,43,10,25,8,0,2,strong,CAREER_READINESS,How ready are you to build a structured long-term career plan?
+122,Q_CAREER_NAR_022,43,10,25,8,0,2,strong,CAREER_READINESS,"If given guidance, how willing are you to refine your career direction over time?"
+123,Q_CAREER_NAR_023,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do you believe having a career narrative improves success?
+124,Q_CAREER_NAR_024,43,10,25,8,0,2,strong,CAREER_READINESS,"If your career plan changes, how confident are you in adapting it smoothly?"
+125,Q_CAREER_NAR_025,43,10,25,8,0,2,strong,CAREER_READINESS,How hopeful are you that your long-term career path will become clear over time?
+126,Q_CAREER10_001_001,43,10,25,8,0,2,strong,CAREER_READINESS,How clear do you feel about your career direction after completing Class 10 or Class 12?
+127,Q_CAREER10_001_002,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel confused when choosing between different career options after Class 10/12?
+128,Q_CAREER10_001_003,43,10,25,8,0,2,strong,CAREER_READINESS,"Compared to your peers, how confident are you in understanding what career path suits you best?"
+129,Q_CAREER10_001_004,43,10,25,8,0,2,strong,CAREER_READINESS,Do you feel stressed when thinking about choosing a career after Class 10/12?
+130,Q_CAREER10_001_005,43,10,25,8,0,2,strong,CAREER_READINESS,How confident are you that your current understanding is enough to make a good career decision?
+131,Q_CAREER10_001_006,43,10,25,8,0,2,strong,CAREER_READINESS,How stressful is it for you to think about your future career after Class 10/12?
+132,Q_CAREER10_001_007,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel overwhelmed by too many career options or choices?
+133,Q_CAREER10_001_008,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you avoid thinking about career decisions because they feel confusing or stressful?
+134,Q_CAREER10_001_009,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do family or peer opinions affect your career decision-making?
+135,Q_CAREER10_001_010,43,10,25,8,0,2,strong,CAREER_READINESS,"Compared to before, how much more confused do you feel about your career after Class 10/12 decisions?"
+136,Q_CAREER10_001_011,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you research career options or explore different fields actively?
+137,Q_CAREER10_001_012,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel stuck without taking any step toward career clarity?
+138,Q_CAREER10_001_013,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel uncertain even after discussing career options with others?
+139,Q_CAREER10_001_014,43,10,25,8,0,2,strong,CAREER_READINESS,How likely are you to choose a career path without full clarity just due to pressure or urgency?
+140,Q_CAREER10_001_015,43,10,25,8,0,2,strong,CAREER_READINESS,How often does thinking about career choices disturb your emotional peace?
+141,Q_CAREER10_001_016,43,10,25,8,0,2,strong,CAREER_READINESS,"When you feel confused about career choices, how effectively can you regain clarity and focus?"
+142,Q_CAREER10_001_017,43,10,25,8,0,2,strong,CAREER_READINESS,"How often do you take structured steps (tests, counseling, research) to improve career clarity?"
+143,Q_CAREER10_001_018,43,10,25,8,0,2,strong,CAREER_READINESS,Some students feel lost after Class 10/12 and stop thinking about their future. How true is this for you?
+144,Q_CAREER10_001_019,43,10,25,8,0,2,strong,CAREER_READINESS,"After learning something new about careers, how confident do you usually feel about your future?"
+145,Q_CAREER10_001_020,43,10,25,8,0,2,strong,CAREER_READINESS,"Even if you feel confused now, how confident are you that you will eventually find a clear career direction?"
+146,Q_CAREER10_001_021,43,10,25,8,0,2,strong,CAREER_READINESS,How ready are you to actively work on improving your career clarity?
+147,Q_CAREER10_001_022,43,10,25,8,0,2,strong,CAREER_READINESS,"If proper guidance is available, how willing are you to use it for career decision-making?"
+148,Q_CAREER10_001_023,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do you believe career clarity is essential before choosing a professional path?
+149,Q_CAREER10_001_024,43,10,25,8,0,2,strong,CAREER_READINESS,"If you found a useful career assessment tool today, how likely are you to use it seriously?"
+150,Q_CAREER10_001_025,43,10,25,8,0,2,strong,CAREER_READINESS,"Even if you feel uncertain now, how hopeful are you that you will find a satisfying career path after Class 10/12?"
+151,Q_CAREERBREAK_001_001,43,10,25,8,0,2,strong,CAREER_READINESS,How confident are you in explaining career breaks as a positive or meaningful part of your personal and professional growth?
+152,Q_CAREERBREAK_001_002,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel uncertain about how future employers will view a career break in your profile?
+153,Q_CAREERBREAK_001_003,43,10,25,8,0,2,strong,CAREER_READINESS,"Compared to others, how well do you think you can present career gaps as a constructive experience?"
+154,Q_CAREERBREAK_001_004,43,10,25,8,0,2,strong,CAREER_READINESS,Do you feel uncomfortable or defensive when thinking about explaining a career break to others?
+155,Q_CAREERBREAK_001_005,43,10,25,8,0,2,strong,CAREER_READINESS,"If asked in a job interview tomorrow, how confident are you that you could explain a career break positively and confidently?"
+156,Q_CAREERBREAK_001_006,43,10,25,8,0,2,strong,CAREER_READINESS,How emotionally stressful does the thought of discussing career breaks in professional settings feel to you?
+157,Q_CAREERBREAK_001_007,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you worry that a career break might negatively affect your job opportunities?
+158,Q_CAREERBREAK_001_008,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you avoid discussing your career break when talking about your professional journey?
+159,Q_CAREERBREAK_001_009,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do you feel judged by others when they learn about gaps in your career timeline?
+160,Q_CAREERBREAK_001_010,43,10,25,8,0,2,strong,CAREER_READINESS,"Compared to earlier, how much more difficult is it now for you to view career breaks positively?"
+161,Q_CAREERBREAK_001_011,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you actively highlight skills or learning gained during your career break?
+162,Q_CAREERBREAK_001_012,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel the need to hide or downplay career breaks in resumes or profiles?
+163,Q_CAREERBREAK_001_013,43,10,25,8,0,2,strong,CAREER_READINESS,"During career planning, how often do you feel your break reduces your confidence about future opportunities?"
+164,Q_CAREERBREAK_001_014,43,10,25,8,0,2,strong,CAREER_READINESS,How likely are you to feel less confident than others in interviews because of a career break?
+165,Q_CAREERBREAK_001_015,43,10,25,8,0,2,strong,CAREER_READINESS,How often does thinking about your career break disturb your emotional confidence about your career future?
+166,Q_CAREERBREAK_001_016,43,10,25,8,0,2,strong,CAREER_READINESS,"How effectively can you reframe a career break as a learning, recovery, or growth experience when needed?"
+167,Q_CAREERBREAK_001_017,43,10,25,8,0,2,strong,CAREER_READINESS,"How often do you actively reflect on what you gained (skills, clarity, resilience) during your career break?"
+168,Q_CAREERBREAK_001_018,43,10,25,8,0,2,strong,CAREER_READINESS,Some people feel their career break reduces their identity or self-worth. How true is this for you?
+169,Q_CAREERBREAK_001_019,43,10,25,8,0,2,strong,CAREER_READINESS,"After thinking about your career journey, including breaks, how positive and confident do you usually feel about your future?"
+170,Q_CAREERBREAK_001_020,43,10,25,8,0,2,strong,CAREER_READINESS,"Even if you have a career break, how confident are you that you can still build a strong and successful professional future?"
+171,Q_CAREERBREAK_001_021,43,10,25,8,0,2,strong,CAREER_READINESS,How ready are you to confidently present your career break as part of your growth story?
+172,Q_CAREERBREAK_001_022,43,10,25,8,0,2,strong,CAREER_READINESS,"If given guidance, how willing would you be to learn how to present career breaks positively in interviews and resumes?"
+173,Q_CAREERBREAK_001_023,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do you believe career paths are non-linear and still equally valuable?
+174,Q_CAREERBREAK_001_024,43,10,25,8,0,2,strong,CAREER_READINESS,"If you learned one effective way to present your career break today, how likely are you to apply it in real interviews or profiles?"
+175,Q_CAREERBREAK_001_025,43,10,25,8,0,2,strong,CAREER_READINESS,"Even if career breaks feel like a setback now, how hopeful are you that you can turn them into a strong and meaningful part of your professional identity?"
+176,Q_CAREERDEC_001_001,43,10,25,8,0,2,strong,CAREER_READINESS,How confident are you in making career decisions without fearing long-term irreversible consequences?
+177,Q_CAREERDEC_001_002,43,10,25,8,0,2,strong,CAREER_READINESS,How often do important career decisions make you feel overwhelmed because of their perceived long-term impact?
+178,Q_CAREERDEC_001_003,43,10,25,8,0,2,strong,CAREER_READINESS,Do you worry that one wrong career decision could permanently limit your future opportunities?
+179,Q_CAREERDEC_001_004,43,10,25,8,0,2,strong,CAREER_READINESS,"When you see others progressing in different career paths, how pressured do you feel about choosing correctly?"
+180,Q_CAREERDEC_001_005,43,10,25,8,0,2,strong,CAREER_READINESS,"Even when facing major career choices, how hopeful are you that you can adjust and succeed over time?"
+181,Q_CAREERDEC_001_006,43,10,25,8,0,2,strong,CAREER_READINESS,How emotionally stressful is it for you to think about making major career decisions?
+182,Q_CAREERDEC_001_007,43,10,25,8,0,2,strong,CAREER_READINESS,How often does fear of making the wrong career choice delay your decision-making?
+183,Q_CAREERDEC_001_008,43,10,25,8,0,2,strong,CAREER_READINESS,How much has fear of irreversible career outcomes reduced your willingness to explore opportunities?
+184,Q_CAREERDEC_001_009,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do you feel others seem more certain about their career choices than you?
+185,Q_CAREERDEC_001_010,43,10,25,8,0,2,strong,CAREER_READINESS,"Compared to earlier, how difficult has it become to make career decisions confidently?"
+186,Q_CAREERDEC_001_011,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you postpone career-related actions because you are unsure whether they are the �right� choice?
+187,Q_CAREERDEC_001_012,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you spend excessive time researching career options without taking action?
+188,Q_CAREERDEC_001_013,43,10,25,8,0,2,strong,CAREER_READINESS,"When considering major career decisions, how often do you experience self-doubt?"
+189,Q_CAREERDEC_001_014,43,10,25,8,0,2,strong,CAREER_READINESS,How likely are you to avoid committing to a career path because you fear future regret?
+190,Q_CAREERDEC_001_015,43,10,25,8,0,2,strong,CAREER_READINESS,"After making a career-related decision, how quickly are you able to move forward without excessive second-guessing?"
+191,Q_CAREERDEC_001_016,43,10,25,8,0,2,strong,CAREER_READINESS,"When career uncertainty creates stress, how effectively can you focus on learning and adaptation instead of fear?"
+192,Q_CAREERDEC_001_017,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you remind yourself that career paths can evolve over time?
+193,Q_CAREERDEC_001_018,43,10,25,8,0,2,strong,CAREER_READINESS,Some people fear that one decision can permanently define their future. How true is this for you?
+194,Q_CAREERDEC_001_019,43,10,25,8,0,2,strong,CAREER_READINESS,"After receiving guidance or reassurance about career planning, how encouraged do you usually feel?"
+195,Q_CAREERDEC_001_020,43,10,25,8,0,2,strong,CAREER_READINESS,"Even if you make an imperfect career decision, how confident are you that you can adapt and recover successfully?"
+196,Q_CAREERDEC_001_021,43,10,25,8,0,2,strong,CAREER_READINESS,How ready are you to make career decisions despite uncertainty and learn from outcomes?
+197,Q_CAREERDEC_001_022,43,10,25,8,0,2,strong,CAREER_READINESS,"If decision-making support was available, how willing would you be to use it consistently?"
+198,Q_CAREERDEC_001_023,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do you believe most career decisions can be adjusted or redirected over time?
+199,Q_CAREERDEC_001_024,43,10,25,8,0,2,strong,CAREER_READINESS,"If you received one practical framework for making career decisions, how likely are you to apply it seriously?"
+200,Q_CAREERDEC_001_025,43,10,25,8,0,2,strong,CAREER_READINESS,"Even if career choices feel overwhelming now, how hopeful are you that you can build a meaningful and successful career over time?"
+201,Q_CAREERLADDER_001_001,43,10,25,8,0,2,strong,CAREER_READINESS,How clear are you about the career progression path in your chosen field?
+202,Q_CAREERLADDER_001_002,43,10,25,8,0,2,strong,CAREER_READINESS,How well do you understand the different levels or roles in a typical career ladder in your field?
+203,Q_CAREERLADDER_001_003,43,10,25,8,0,2,strong,CAREER_READINESS,"Compared to others, how confident are you about understanding career growth stages in your domain?"
+204,Q_CAREERLADDER_001_004,43,10,25,8,0,2,strong,CAREER_READINESS,Do you feel uncertain about what skills or milestones are required to move to the next level in your career?
+205,Q_CAREERLADDER_001_005,43,10,25,8,0,2,strong,CAREER_READINESS,How confident are you that you know what your next 2�3 career steps should look like?
+206,Q_CAREERLADDER_001_006,43,10,25,8,0,2,strong,CAREER_READINESS,How confused do you feel about how career growth actually works in real professional environments?
+207,Q_CAREERLADDER_001_007,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel unsure about whether your current efforts are leading you toward career growth?
+208,Q_CAREERLADDER_001_008,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel lost when trying to plan your long-term career path?
+209,Q_CAREERLADDER_001_009,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly does lack of clarity about career progression affect your motivation?
+210,Q_CAREERLADDER_001_010,43,10,25,8,0,2,strong,CAREER_READINESS,"Compared to last year, how much clearer has your understanding of career progression become?"
+211,Q_CAREERLADDER_001_011,43,10,25,8,0,2,strong,CAREER_READINESS,"How often do you actively research career paths, roles, or industry growth structures?"
+212,Q_CAREERLADDER_001_012,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you seek mentorship or guidance to understand career progression better?
+213,Q_CAREERLADDER_001_013,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel overwhelmed because you don�t know what skills are needed for career advancement?
+214,Q_CAREERLADDER_001_014,43,10,25,8,0,2,strong,CAREER_READINESS,How likely are you to choose career actions without fully understanding where they lead?
+215,Q_CAREERLADDER_001_015,43,10,25,8,0,2,strong,CAREER_READINESS,How often does uncertainty about career ladders cause you anxiety or stress?
+216,Q_CAREERLADDER_001_016,43,10,25,8,0,2,strong,CAREER_READINESS,"When you feel unclear about your career path, how effectively can you regain clarity through planning or guidance?"
+217,Q_CAREERLADDER_001_017,43,10,25,8,0,2,strong,CAREER_READINESS,"How often do you break down long-term career goals into smaller, understandable steps?"
+218,Q_CAREERLADDER_001_018,43,10,25,8,0,2,strong,CAREER_READINESS,Some students/early professionals feel stuck because they don�t understand career growth stages. How true is this for you?
+219,Q_CAREERLADDER_001_019,43,10,25,8,0,2,strong,CAREER_READINESS,"After gaining clarity about your career path, how motivated do you usually feel?"
+220,Q_CAREERLADDER_001_020,43,10,25,8,0,2,strong,CAREER_READINESS,"Even if you feel unclear now, how confident are you that you can eventually understand and navigate your career progression clearly?"
+221,Q_CAREERLADDER_001_021,43,10,25,8,0,2,strong,CAREER_READINESS,How ready are you to actively learn about career paths and progression structures in your field?
+222,Q_CAREERLADDER_001_022,43,10,25,8,0,2,strong,CAREER_READINESS,"If guidance was available, how willing would you be to map your career progression step by step?"
+223,Q_CAREERLADDER_001_023,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do you believe that understanding career ladders is important for long-term success?
+224,Q_CAREERLADDER_001_024,43,10,25,8,0,2,strong,CAREER_READINESS,"If you learned a clear career roadmap for your field, how likely are you to follow it consistently?"
+225,Q_CAREERLADDER_001_025,43,10,25,8,0,2,strong,CAREER_READINESS,"Even if career progression feels unclear now, how hopeful are you that you will eventually gain full clarity and direction?"
+226,Q_CAREERREADY_001_001,43,10,25,8,0,2,strong,CAREER_READINESS,How confident do you feel about your overall readiness to begin a professional career?
+227,Q_CAREERREADY_001_002,43,10,25,8,0,2,strong,CAREER_READINESS,How well do you think your current skills match industry expectations for your desired career path?
+228,Q_CAREERREADY_001_003,43,10,25,8,0,2,strong,CAREER_READINESS,"Compared to peers in your field, how prepared do you feel for entering the job market?"
+229,Q_CAREERREADY_001_004,43,10,25,8,0,2,strong,CAREER_READINESS,Do you feel mentally prepared to handle the responsibilities of a full-time professional role?
+230,Q_CAREERREADY_001_005,43,10,25,8,0,2,strong,CAREER_READINESS,"If you were offered a job today, how confident are you that you could perform well in it?"
+231,Q_CAREERREADY_001_006,43,10,25,8,0,2,strong,CAREER_READINESS,How anxious do you feel when you think about starting your career?
+232,Q_CAREERREADY_001_007,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you doubt your ability to succeed in your chosen career path?
+233,Q_CAREERREADY_001_008,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you avoid career-related opportunities due to lack of confidence?
+234,Q_CAREERREADY_001_009,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do comparisons with successful professionals affect your confidence about your future career?
+235,Q_CAREERREADY_001_010,43,10,25,8,0,2,strong,CAREER_READINESS,"Compared to one year ago, how much has your career readiness improved?"
+236,Q_CAREERREADY_001_011,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you actively work on improving skills relevant to your career goals?
+237,Q_CAREERREADY_001_012,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you practice applying theoretical knowledge to real-world situations?
+238,Q_CAREERREADY_001_013,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you seek feedback to improve your career readiness?
+239,Q_CAREERREADY_001_014,43,10,25,8,0,2,strong,CAREER_READINESS,How likely are you to take on challenging tasks to improve your career preparedness?
+240,Q_CAREERREADY_001_015,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel motivated when thinking about your future career?
+241,Q_CAREERREADY_001_016,43,10,25,8,0,2,strong,CAREER_READINESS,How effectively can you handle uncertainty about your future career?
+242,Q_CAREERREADY_001_017,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you create a structured plan for your career development?
+243,Q_CAREERREADY_001_018,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel overwhelmed when thinking about career decisions?
+244,Q_CAREERREADY_001_019,43,10,25,8,0,2,strong,CAREER_READINESS,"After learning something new relevant to your career, how confident do you feel about your future?"
+245,Q_CAREERREADY_001_020,43,10,25,8,0,2,strong,CAREER_READINESS,How confident are you that you will successfully transition from student life to professional life?
+246,Q_CAREERREADY_001_021,43,10,25,8,0,2,strong,CAREER_READINESS,How ready are you to start your professional career today if given the opportunity?
+247,Q_CAREERREADY_001_022,43,10,25,8,0,2,strong,CAREER_READINESS,How willing are you to improve your skills if you find gaps in your career readiness?
+248,Q_CAREERREADY_001_023,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do you believe continuous learning is essential for career readiness?
+249,Q_CAREERREADY_001_024,43,10,25,8,0,2,strong,CAREER_READINESS,How likely are you to apply new skills immediately after learning them?
+250,Q_CAREERREADY_001_025,43,10,25,8,0,2,strong,CAREER_READINESS,How hopeful are you that you will become fully career-ready within the next year?
+251,Q_CAREERSAL_001_001,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do salary expectations influence your career choice compared to your interests and skills?
+252,Q_CAREERSAL_001_002,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel pressured to choose a career mainly because it offers a high salary?
+253,Q_CAREERSAL_001_003,43,10,25,8,0,2,strong,CAREER_READINESS,"Compared to others around you, how much do you think salary expectations are shaping your career decisions?"
+254,Q_CAREERSAL_001_004,43,10,25,8,0,2,strong,CAREER_READINESS,Do you feel uncertain about your career direction because of pressure to choose high-paying options?
+255,Q_CAREERSAL_001_005,43,10,25,8,0,2,strong,CAREER_READINESS,"If you had to choose a career today, how confident are you that you would not choose only based on salary pressure?"
+256,Q_CAREERSAL_001_006,43,10,25,8,0,2,strong,CAREER_READINESS,How stressful does the idea of choosing between passion and high salary feel to you?
+257,Q_CAREERSAL_001_007,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel confused about whether to prioritize salary or personal interest in career decisions?
+258,Q_CAREERSAL_001_008,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you consider only salary while evaluating career options?
+259,Q_CAREERSAL_001_009,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do family or societal expectations about income influence your career thinking?
+260,Q_CAREERSAL_001_010,43,10,25,8,0,2,strong,CAREER_READINESS,"Compared to earlier, how much more are you prioritizing salary over interest in your career thinking?"
+261,Q_CAREERSAL_001_011,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you ignore your interests or strengths when a high-paying job option is available?
+262,Q_CAREERSAL_001_012,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel regret after considering a career option only because of salary?
+263,Q_CAREERSAL_001_013,43,10,25,8,0,2,strong,CAREER_READINESS,"During career discussions, how often do you feel pressured to justify your choices based on salary?"
+264,Q_CAREERSAL_001_014,43,10,25,8,0,2,strong,CAREER_READINESS,How likely are you to choose a career you dislike if it offers a significantly higher salary?
+265,Q_CAREERSAL_001_015,43,10,25,8,0,2,strong,CAREER_READINESS,How often do thoughts about future income dominate your career planning process?
+266,Q_CAREERSAL_001_016,43,10,25,8,0,2,strong,CAREER_READINESS,"When you feel pressured to choose high-paying careers, how effectively can you still think clearly about your interests and strengths?"
+267,Q_CAREERSAL_001_017,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you actively explore career options based on your interests rather than salary alone?
+268,Q_CAREERSAL_001_018,43,10,25,8,0,2,strong,CAREER_READINESS,Some people choose careers mainly for salary even if they lose long-term satisfaction. How true is this for you?
+269,Q_CAREERSAL_001_019,43,10,25,8,0,2,strong,CAREER_READINESS,"After exploring careers aligned with your interests, how motivated do you usually feel about your future?"
+270,Q_CAREERSAL_001_020,43,10,25,8,0,2,strong,CAREER_READINESS,"Even if salary pressure is high, how confident are you that you can still choose a career aligned with your interests and skills?"
+271,Q_CAREERSAL_001_021,43,10,25,8,0,2,strong,CAREER_READINESS,How ready are you to balance salary expectations with your interests and skills while choosing a career?
+272,Q_CAREERSAL_001_022,43,10,25,8,0,2,strong,CAREER_READINESS,"If guidance is available, how willing are you to explore careers beyond salary-based thinking?"
+273,Q_CAREERSAL_001_023,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do you believe long-term career satisfaction matters more than starting salary alone?
+274,Q_CAREERSAL_001_024,43,10,25,8,0,2,strong,CAREER_READINESS,"If you learned a method to evaluate careers beyond salary, how likely are you to apply it?"
+275,Q_CAREERSAL_001_025,43,10,25,8,0,2,strong,CAREER_READINESS,"Even if salary pressure is strong, how hopeful are you that you can still choose a career that brings both financial stability and personal satisfaction?"
+276,Q_CAREERSUST_001_001,43,10,25,8,0,2,strong,CAREER_READINESS,How prepared do you feel to build a stable and sustainable long-term career path?
+277,Q_CAREERSUST_001_002,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you think about whether your current skills will remain relevant in the long term?
+278,Q_CAREERSUST_001_003,43,10,25,8,0,2,strong,CAREER_READINESS,"Compared to others, how well do you think you are preparing for long-term career growth and stability?"
+279,Q_CAREERSUST_001_004,43,10,25,8,0,2,strong,CAREER_READINESS,Do you feel confident that your career direction can remain stable over many years?
+280,Q_CAREERSUST_001_005,43,10,25,8,0,2,strong,CAREER_READINESS,"If industry demands change significantly, how confident are you that you can adapt and sustain your career growth?"
+281,Q_CAREERSUST_001_006,43,10,25,8,0,2,strong,CAREER_READINESS,How stressful does thinking about long-term career stability feel to you?
+282,Q_CAREERSUST_001_007,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel uncertain about your ability to sustain your career over time?
+283,Q_CAREERSUST_001_008,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you avoid long-term planning because it feels overwhelming or uncertain?
+284,Q_CAREERSUST_001_009,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do comparisons with successful professionals affect your confidence in long-term career success?
+285,Q_CAREERSUST_001_010,43,10,25,8,0,2,strong,CAREER_READINESS,"Compared to last year, how much more confident are you about your long-term career sustainability?"
+286,Q_CAREERSUST_001_011,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you actively update your skills to remain relevant for future career demands?
+287,Q_CAREERSUST_001_012,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you reflect on your long-term career direction and goals?
+288,Q_CAREERSUST_001_013,43,10,25,8,0,2,strong,CAREER_READINESS,"During academic or work decisions, how often do you consider long-term impact rather than short-term results?"
+289,Q_CAREERSUST_001_014,43,10,25,8,0,2,strong,CAREER_READINESS,How likely are you to choose learning opportunities that improve long-term career stability over easy short-term gains?
+290,Q_CAREERSUST_001_015,43,10,25,8,0,2,strong,CAREER_READINESS,How often do thoughts about future career uncertainty disturb your emotional peace?
+291,Q_CAREERSUST_001_016,43,10,25,8,0,2,strong,CAREER_READINESS,"When thinking about long-term career uncertainty, how effectively can you stay calm and take constructive action?"
+292,Q_CAREERSUST_001_017,43,10,25,8,0,2,strong,CAREER_READINESS,"How often do you take steps (courses, projects, networking) to improve your long-term career stability?"
+293,Q_CAREERSUST_001_018,43,10,25,8,0,2,strong,CAREER_READINESS,Some people feel so uncertain about the future that they delay building long-term skills. How true is this for you?
+294,Q_CAREERSUST_001_019,43,10,25,8,0,2,strong,CAREER_READINESS,"After successfully learning something new, how confident do you feel about your long-term career future?"
+295,Q_CAREERSUST_001_020,43,10,25,8,0,2,strong,CAREER_READINESS,"Even if the future feels uncertain, how confident are you that you can build a stable and sustainable career over time?"
+296,Q_CAREERSUST_001_021,43,10,25,8,0,2,strong,CAREER_READINESS,How ready are you to actively work toward building a sustainable long-term career path?
+297,Q_CAREERSUST_001_022,43,10,25,8,0,2,strong,CAREER_READINESS,"If given guidance, how willing would you be to build habits that ensure long-term career stability?"
+298,Q_CAREERSUST_001_023,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do you believe long-term career success requires continuous learning and adaptability?
+299,Q_CAREERSUST_001_024,43,10,25,8,0,2,strong,CAREER_READINESS,"If you learned one strategy today for long-term career planning, how likely are you to apply it consistently?"
+300,Q_CAREERSUST_001_025,43,10,25,8,0,2,strong,CAREER_READINESS,"Even if your career path feels uncertain now, how hopeful are you that you can build a stable, successful, and sustainable future?"
+301,Q_CAREERSWITCH_001_001,43,10,25,8,0,2,strong,CAREER_READINESS,How confident are you about your ability to switch to a different career path if needed?
+302,Q_CAREERSWITCH_001_002,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you think about changing your current career direction due to uncertainty or dissatisfaction?
+303,Q_CAREERSWITCH_001_003,43,10,25,8,0,2,strong,CAREER_READINESS,"Compared to others, how easy do you think it would be for you to successfully switch careers midway?"
+304,Q_CAREERSWITCH_001_004,43,10,25,8,0,2,strong,CAREER_READINESS,Do you feel anxious when you think about changing your career path after investing time in one direction?
+305,Q_CAREERSWITCH_001_005,43,10,25,8,0,2,strong,CAREER_READINESS,"If you had to switch careers tomorrow, how confident are you that you could adapt successfully?"
+306,Q_CAREERSWITCH_001_006,43,10,25,8,0,2,strong,CAREER_READINESS,How stressful does the idea of switching careers feel to you?
+307,Q_CAREERSWITCH_001_007,43,10,25,8,0,2,strong,CAREER_READINESS,How often do doubts about your current career path affect your motivation?
+308,Q_CAREERSWITCH_001_008,43,10,25,8,0,2,strong,CAREER_READINESS,How difficult is it for you to let go of your current academic or career path even if it doesn�t feel right?
+309,Q_CAREERSWITCH_001_009,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do family or social expectations influence your hesitation to switch careers?
+310,Q_CAREERSWITCH_001_010,43,10,25,8,0,2,strong,CAREER_READINESS,"Compared to your peers, how difficult do you feel career switching would be for you?"
+311,Q_CAREERSWITCH_001_011,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you avoid exploring alternative career options due to fear of uncertainty?
+312,Q_CAREERSWITCH_001_012,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel stuck in your current career direction even when you are unsure about it?
+313,Q_CAREERSWITCH_001_013,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you delay making career decisions due to fear of making the wrong choice?
+314,Q_CAREERSWITCH_001_014,43,10,25,8,0,2,strong,CAREER_READINESS,How likely are you to continue in a career path even if it no longer aligns with your interests?
+315,Q_CAREERSWITCH_001_015,43,10,25,8,0,2,strong,CAREER_READINESS,How often does uncertainty about career switching disturb your emotional peace?
+316,Q_CAREERSWITCH_001_016,43,10,25,8,0,2,strong,CAREER_READINESS,"When you feel uncertain about your career path, how effectively can you evaluate alternatives and make decisions?"
+317,Q_CAREERSWITCH_001_017,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you actively explore new skills or fields to keep your career options open?
+318,Q_CAREERSWITCH_001_018,43,10,25,8,0,2,strong,CAREER_READINESS,Some people avoid changing careers even when they feel unhappy due to fear of starting over. How true is this for you?
+319,Q_CAREERSWITCH_001_019,43,10,25,8,0,2,strong,CAREER_READINESS,"After learning about a new career option, how motivated do you usually feel about your future?"
+320,Q_CAREERSWITCH_001_020,43,10,25,8,0,2,strong,CAREER_READINESS,"Even if you are unsure about your current career path, how confident are you that you can successfully transition if needed?"
+321,Q_CAREERSWITCH_001_021,43,10,25,8,0,2,strong,CAREER_READINESS,How ready are you to explore or switch to a new career path if your current one doesn�t feel right?
+322,Q_CAREERSWITCH_001_022,43,10,25,8,0,2,strong,CAREER_READINESS,"If guidance was available, how willing would you be to make a structured plan for switching careers?"
+323,Q_CAREERSWITCH_001_023,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do you believe it is acceptable to change careers midway if your interests evolve?
+324,Q_CAREERSWITCH_001_024,43,10,25,8,0,2,strong,CAREER_READINESS,"If you discovered a better career option today, how likely are you to seriously consider switching?"
+325,Q_CAREERSWITCH_001_025,43,10,25,8,0,2,strong,CAREER_READINESS,"Even if switching careers feels risky now, how hopeful are you that you can successfully rebuild and thrive in a new path?"
+326,Q_CAREERVAL_001_001,43,10,25,8,0,2,strong,CAREER_READINESS,"How clear are you about what truly matters to you in your career (e.g., growth, money, impact, stability, passion)?"
+327,Q_CAREERVAL_001_002,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel confused when choosing between different career paths or opportunities?
+328,Q_CAREERVAL_001_003,43,10,25,8,0,2,strong,CAREER_READINESS,"Compared to others, how confident are you that you understand your own career priorities clearly?"
+329,Q_CAREERVAL_001_004,43,10,25,8,0,2,strong,CAREER_READINESS,Do you feel uncertain about what kind of career would truly satisfy you long-term?
+330,Q_CAREERVAL_001_005,43,10,25,8,0,2,strong,CAREER_READINESS,"If you had to choose a job today, how confident are you that it would align with your true values?"
+331,Q_CAREERVAL_001_006,43,10,25,8,0,2,strong,CAREER_READINESS,How stressful does it feel when you try to decide what you want from your career?
+332,Q_CAREERVAL_001_007,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel lost when thinking about your long-term career direction?
+333,Q_CAREERVAL_001_008,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you choose opportunities without fully understanding whether they match your values?
+334,Q_CAREERVAL_001_009,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do peer opinions influence your career choices when you are unsure?
+335,Q_CAREERVAL_001_010,43,10,25,8,0,2,strong,CAREER_READINESS,"Compared to last year, how much clearer have your career values become?"
+336,Q_CAREERVAL_001_011,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you delay career decisions because you are unsure about what you truly want?
+337,Q_CAREERVAL_001_012,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel that you are following a path without fully understanding why you chose it?
+338,Q_CAREERVAL_001_013,43,10,25,8,0,2,strong,CAREER_READINESS,"During important career decisions, how often do you feel mentally stuck or overwhelmed?"
+339,Q_CAREERVAL_001_014,43,10,25,8,0,2,strong,CAREER_READINESS,How likely are you to accept a job or opportunity even if it does not fully match your personal values?
+340,Q_CAREERVAL_001_015,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel anxious about making the �wrong� career choice?
+341,Q_CAREERVAL_001_016,43,10,25,8,0,2,strong,CAREER_READINESS,How effectively can you identify what matters most to you when making career decisions?
+342,Q_CAREERVAL_001_017,43,10,25,8,0,2,strong,CAREER_READINESS,"How often do you actively reflect on your interests, strengths, and values when planning your career?"
+343,Q_CAREERVAL_001_018,43,10,25,8,0,2,strong,CAREER_READINESS,Some people follow career paths without fully understanding their own values. How true is this for you?
+344,Q_CAREERVAL_001_019,43,10,25,8,0,2,strong,CAREER_READINESS,"After understanding yourself better (strengths, interests, goals), how confident do you feel about your career direction?"
+345,Q_CAREERVAL_001_020,43,10,25,8,0,2,strong,CAREER_READINESS,"Even if you are unclear now, how confident are you that you can gradually discover your true career values?"
+346,Q_CAREERVAL_001_021,43,10,25,8,0,2,strong,CAREER_READINESS,How ready are you to actively explore and define your personal career values?
+347,Q_CAREERVAL_001_022,43,10,25,8,0,2,strong,CAREER_READINESS,"If guided properly, how willing would you be to spend time understanding what truly matters in your career?"
+348,Q_CAREERVAL_001_023,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do you believe that having clear career values leads to better long-term success and satisfaction?
+349,Q_CAREERVAL_001_024,43,10,25,8,0,2,strong,CAREER_READINESS,"If you discovered your core career values today, how likely are you to use them in decision-making?"
+350,Q_CAREERVAL_001_025,43,10,25,8,0,2,strong,CAREER_READINESS,"Even if you feel unclear now, how hopeful are you that you can eventually define a clear and meaningful career direction?"
+351,Q_CARGAP_001_001,43,10,25,8,0,2,strong,CAREER_READINESS,How confident are you in explaining gaps in your academic or professional journey in a positive and structured way?
+352,Q_CARGAP_001_002,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you feel anxious about questions related to gaps in your resume or career path?
+353,Q_CARGAP_001_003,43,10,25,8,0,2,strong,CAREER_READINESS,"Compared to others, how well do you think you can present career gaps in a professional and acceptable manner?"
+354,Q_CARGAP_001_004,43,10,25,8,0,2,strong,CAREER_READINESS,Do you feel uncomfortable or embarrassed when discussing gaps in your career or academic timeline?
+355,Q_CARGAP_001_005,43,10,25,8,0,2,strong,CAREER_READINESS,"If asked about a career gap in an interview tomorrow, how confident are you that you could explain it clearly and positively?"
+356,Q_CARGAP_001_006,43,10,25,8,0,2,strong,CAREER_READINESS,How stressful does the idea of explaining career gaps in interviews or discussions feel to you?
+357,Q_CARGAP_001_007,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you worry that your career gap may negatively affect others� perception of you?
+358,Q_CARGAP_001_008,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you avoid applying for opportunities because you feel uncertain about explaining your career gap?
+359,Q_CARGAP_001_009,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do you feel that others judge you based on gaps in your academic or professional history?
+360,Q_CARGAP_001_010,43,10,25,8,0,2,strong,CAREER_READINESS,"Compared to others, how much more difficult is it for you to explain your career gaps confidently?"
+361,Q_CARGAP_001_011,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you practice or prepare explanations for your career gaps before interviews or discussions?
+362,Q_CARGAP_001_012,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you reframe your career gaps as learning or growth experiences when thinking about them?
+363,Q_CARGAP_001_013,43,10,25,8,0,2,strong,CAREER_READINESS,"During conversations about your career, how often do you struggle to communicate your gap clearly and confidently?"
+364,Q_CARGAP_001_014,43,10,25,8,0,2,strong,CAREER_READINESS,How likely are you to feel defensive or nervous when someone asks about your career gap?
+365,Q_CARGAP_001_015,43,10,25,8,0,2,strong,CAREER_READINESS,How often does thinking about your career gap reduce your confidence in professional situations?
+366,Q_CARGAP_001_016,43,10,25,8,0,2,strong,CAREER_READINESS,"When discussing your career gap, how effectively can you present it in a way that highlights growth and learning?"
+367,Q_CARGAP_001_017,43,10,25,8,0,2,strong,CAREER_READINESS,How often do you seek feedback or improve your explanation of career gaps for interviews?
+368,Q_CARGAP_001_018,43,10,25,8,0,2,strong,CAREER_READINESS,Some people avoid discussing their career gaps completely due to fear or discomfort. How true is this for you?
+369,Q_CARGAP_001_019,43,10,25,8,0,2,strong,CAREER_READINESS,"After successfully explaining your experiences in a positive way, how confident do you usually feel?"
+370,Q_CARGAP_001_020,43,10,25,8,0,2,strong,CAREER_READINESS,"Even if you are asked about your career gap in the future, how confident are you that you can handle it professionally and positively?"
+371,Q_CARGAP_001_021,43,10,25,8,0,2,strong,CAREER_READINESS,How ready are you to improve your ability to explain career gaps in a confident and structured way?
+372,Q_CARGAP_001_022,43,10,25,8,0,2,strong,CAREER_READINESS,"If provided guidance, how willing would you be to practice explaining your career gaps in mock interviews?"
+373,Q_CARGAP_001_023,43,10,25,8,0,2,strong,CAREER_READINESS,How strongly do you believe career gaps can be explained positively if approached with the right mindset?
+374,Q_CARGAP_001_024,43,10,25,8,0,2,strong,CAREER_READINESS,"If you learned one effective way to explain career gaps today, how likely are you to use it in real situations?"
+375,Q_CARGAP_001_025,43,10,25,8,0,2,strong,CAREER_READINESS,"Even if explaining career gaps feels difficult now, how hopeful are you that you can eventually present your career journey confidently and professionally?"
+376,Q_CEP_001_001,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,How confident are you in identifying patterns of student engagement during classroom sessions?
+377,Q_CEP_001_002,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,How often do you feel unsure about which students are actively engaged during teaching sessions?
+378,Q_CEP_001_003,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,Do you feel overwhelmed when trying to monitor engagement levels of an entire class?
+379,Q_CEP_001_004,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,"Compared to your peers, how confident are you in assessing student attention and participation in real time?"
+380,Q_CEP_001_005,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,"If you were teaching a large class tomorrow, how ready would you feel to track engagement effectively?"
+381,Q_CEP_001_006,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,How stressful does it feel to assess whether students are understanding and engaged during teaching?
+382,Q_CEP_001_007,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,How often do you feel mentally exhausted from trying to observe student behavior and attention simultaneously?
+383,Q_CEP_001_008,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,How much pressure do you feel to ensure every student remains engaged throughout the session?
+384,Q_CEP_001_009,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,How strongly do institutional expectations influence your need to maintain high classroom engagement?
+385,Q_CEP_001_010,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,"Compared to last semester, how much more difficult is it to monitor student engagement effectively?"
+386,Q_CEP_001_011,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,How often do you miss signs of student disengagement during teaching?
+387,Q_CEP_001_012,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,How often do you adjust your teaching style based on student engagement levels?
+388,Q_CEP_001_013,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,"When students appear disengaged, how effectively can you re-engage them?"
+389,Q_CEP_001_014,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,How likely are you to ignore subtle signs of disengagement during busy lectures?
+390,Q_CEP_001_015,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,How often do you feel unsure about whether students are truly understanding the topic?
+391,Q_CEP_001_016,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,"When engagement drops, how effectively can you identify the cause?"
+392,Q_CEP_001_017,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,"How often do you use tools (questions, polls, feedback) to measure engagement in class?"
+393,Q_CEP_001_018,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,How often do you encourage active participation to maintain student engagement?
+394,Q_CEP_001_019,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,"After a successful class session, how confident do you feel about reading student engagement accurately?"
+395,Q_CEP_001_020,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,How confident are you that you can consistently monitor and improve classroom engagement?
+396,Q_CEP_001_021,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,How ready are you to improve your ability to observe and interpret student engagement?
+397,Q_CEP_001_022,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,"If training or classroom analytics tools were available, how willing would you be to use them?"
+398,Q_CEP_001_023,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,How strongly do you believe that observing engagement is essential for effective teaching?
+399,Q_CEP_001_024,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,"If given a simple tool to track student engagement, how likely are you to use it regularly?"
+400,Q_CEP_001_025,43,10,25,8,0,2,strong,CLASSROOM_ENGAGEMENT,"Even if monitoring engagement feels difficult now, how hopeful are you that you can master it over time?"
+401,Q_DIGI_001_001,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How aware are you of how your online habits affect your daily productivity?
+402,Q_DIGI_001_002,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How often do you lose track of time while using social media or online platforms?
+403,Q_DIGI_001_003,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How accurately can you estimate your daily screen time?
+404,Q_DIGI_001_004,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,Do you feel dependent on checking notifications throughout the day?
+405,Q_DIGI_001_005,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How confident are you that your current digital habits support your long-term goals?
+406,Q_DIGI_001_006,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How stressed do you feel when you cannot access your phone or the internet?
+407,Q_DIGI_001_007,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How often does excessive screen time affect your concentration on important tasks?
+408,Q_DIGI_001_008,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How much does online entertainment interfere with your academic or work responsibilities?
+409,Q_DIGI_001_009,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How often do online activities reduce the quality of your in-person interactions?
+410,Q_DIGI_001_010,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How difficult is it for you to stay offline when you need to focus?
+411,Q_DIGI_001_011,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,"How often do you check your phone during study, work, or important activities?"
+412,Q_DIGI_001_012,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How often do you continue scrolling online longer than you originally intended?
+413,Q_DIGI_001_013,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How often do you delay important tasks because of online activities?
+414,Q_DIGI_001_014,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How often do you compare your life with what you see online?
+415,Q_DIGI_001_015,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,"How often do online comments, likes, or reactions affect your mood?"
+416,Q_DIGI_001_016,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How effectively can you limit your screen time when necessary?
+417,Q_DIGI_001_017,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How often do you set boundaries for your digital device usage?
+418,Q_DIGI_001_018,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,"How often do you use tools such as app timers, focus modes, or screen-time limits?"
+419,Q_DIGI_001_019,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,"After reducing screen time, how much improvement do you notice in your focus or mood?"
+420,Q_DIGI_001_020,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How confident are you that you can maintain healthy digital habits in the future?
+421,Q_DIGI_001_021,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How ready are you to improve your digital discipline and online habits?
+422,Q_DIGI_001_022,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How willing are you to reduce unnecessary screen time if it improves your productivity?
+423,Q_DIGI_001_023,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How strongly do you believe digital discipline is important for personal success?
+424,Q_DIGI_001_024,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,"If given a structured plan to improve online discipline, how likely are you to follow it?"
+425,Q_DIGI_001_025,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How hopeful are you that you can build healthier digital habits over time?
+426,Q_DIGIADDICT_001_001,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How well are you able to control your digital device usage while trying to study or learn?
+427,Q_DIGIADDICT_001_002,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How often do social media or entertainment apps interrupt your study or learning sessions?
+428,Q_DIGIADDICT_001_003,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,"Compared to others, how effectively do you manage your screen time during study hours?"
+429,Q_DIGIADDICT_001_004,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,Do you feel that you spend more time on digital devices than you intend to while studying?
+430,Q_DIGIADDICT_001_005,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,"If you needed to study for long hours tomorrow, how confident are you that you could avoid digital distractions?"
+431,Q_DIGIADDICT_001_006,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How mentally distracted do you feel due to digital devices during learning sessions?
+432,Q_DIGIADDICT_001_007,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,"How often do you postpone studying because you are engaged in digital content (videos, reels, games)?"
+433,Q_DIGIADDICT_001_008,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How often do you find yourself switching between study and phone usage repeatedly?
+434,Q_DIGIADDICT_001_009,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How strongly do notifications affect your ability to stay focused while studying?
+435,Q_DIGIADDICT_001_010,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,"Compared to last year, how much more dependent have you become on digital devices during study time?"
+436,Q_DIGIADDICT_001_011,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How often do you check your phone even when you have planned to study without interruptions?
+437,Q_DIGIADDICT_001_012,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How often do you lose track of study time due to scrolling or watching online content?
+438,Q_DIGIADDICT_001_013,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,"During study sessions, how often do you feel mentally pulled toward your phone or apps?"
+439,Q_DIGIADDICT_001_014,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How likely are you to continue using digital devices even when it affects your study performance?
+440,Q_DIGIADDICT_001_015,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How often do you feel guilty about the amount of time spent on digital devices instead of studying?
+441,Q_DIGIADDICT_001_016,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,"When you realize digital distractions are affecting your studies, how effectively can you refocus?"
+442,Q_DIGIADDICT_001_017,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How often do you use techniques like app limits or study timers to control digital usage?
+443,Q_DIGIADDICT_001_018,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,Some students feel unable to study without checking their phone repeatedly. How true is this for you?
+444,Q_DIGIADDICT_001_019,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,"After completing focused study without digital distraction, how satisfied and productive do you usually feel?"
+445,Q_DIGIADDICT_001_020,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,"Even if digital distractions are strong, how confident are you that you can gradually reduce them and improve your learning habits?"
+446,Q_DIGIADDICT_001_021,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How ready are you to reduce digital distractions and improve your study habits?
+447,Q_DIGIADDICT_001_022,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,"If strategies were given (like digital detox or focus apps), how willing would you be to apply them?"
+448,Q_DIGIADDICT_001_023,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,How strongly do you believe controlling digital usage is essential for academic success?
+449,Q_DIGIADDICT_001_024,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,"If you learned one practical method today to reduce digital distraction, how likely are you to use it regularly?"
+450,Q_DIGIADDICT_001_025,43,10,25,8,0,2,strong,LIFESTYLE_PRESSURE,"Even if digital addiction feels strong now, how hopeful are you that you can regain full control and improve your learning habits?"
+451,Q_ECONANX_001_001,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,How confident are you in making stable career or financial decisions during uncertain economic conditions?
+452,Q_ECONANX_001_002,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,How often does news about economic instability affect your future planning or decisions?
+453,Q_ECONANX_001_003,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,"Compared to others, how well do you think you maintain strategic clarity during uncertain economic periods?"
+454,Q_ECONANX_001_004,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,Do you feel anxious when thinking about long-term financial or career stability during unstable economies?
+455,Q_ECONANX_001_005,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,"If the economy became more unstable tomorrow, how confident are you that you could still make rational long-term decisions?"
+456,Q_ECONANX_001_006,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,How emotionally stressful do you find discussions about economic uncertainty and market instability?
+457,Q_ECONANX_001_007,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,How often does economic uncertainty make you doubt your career or financial direction?
+458,Q_ECONANX_001_008,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,How often do you delay important decisions due to fear of economic instability?
+459,Q_ECONANX_001_009,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,"How strongly do peer discussions about layoffs, inflation, or recession affect your mindset?"
+460,Q_ECONANX_001_010,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,"Compared to previous years, how much more uncertain do you feel about your future due to economic changes?"
+461,Q_ECONANX_001_011,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,How often do you overthink multiple career or financial scenarios due to economic uncertainty?
+462,Q_ECONANX_001_012,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,How often do you avoid long-term planning because the economic future feels unpredictable?
+463,Q_ECONANX_001_013,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,"During uncertain times, how often do you feel mentally stuck when trying to plan your next steps?"
+464,Q_ECONANX_001_014,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,How likely are you to change your career plans frequently due to economic fear rather than strategy?
+465,Q_ECONANX_001_015,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,How often does uncertainty about the economy disturb your emotional calm for long periods?
+466,Q_ECONANX_001_016,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,"When facing economic uncertainty, how effectively can you separate fear from rational decision-making?"
+467,Q_ECONANX_001_017,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,How often do you actively seek reliable information before making decisions during uncertain economic conditions?
+468,Q_ECONANX_001_018,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,Some people lose clarity and become overly reactive during economic instability. How true is this for you?
+469,Q_ECONANX_001_019,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,"After making a well-informed decision during uncertainty, how confident and relieved do you usually feel?"
+470,Q_ECONANX_001_020,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,"Even if the economy becomes more unstable, how confident are you that you can still make strategic and calm decisions?"
+471,Q_ECONANX_001_021,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,How ready are you to improve your ability to handle economic uncertainty in a calm and strategic way?
+472,Q_ECONANX_001_022,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,"If guided properly, how willing would you be to develop strategies to manage economic anxiety effectively?"
+473,Q_ECONANX_001_023,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,How strongly do you believe uncertainty can be managed through strategy rather than fear?
+474,Q_ECONANX_001_024,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,"If you learned one practical method to reduce economic anxiety in decision-making, how likely are you to use it consistently?"
+475,Q_ECONANX_001_025,43,10,25,8,0,2,strong,ADJUSTMENT_COPING,"Even if economic uncertainty continues, how hopeful are you that you can develop strong strategic clarity and emotional stability?"
+476,Q_EMCAREER_001_001,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,How often do students have awareness of emerging or future career options?
+477,Q_EMCAREER_001_002,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,How often do students rely only on traditional career paths due to lack of awareness?
+478,Q_EMCAREER_001_003,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,"Compared to others, how aware are students of new and evolving career opportunities?"
+479,Q_EMCAREER_001_004,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,Do students feel confused when exploring unfamiliar or emerging careers?
+480,Q_EMCAREER_001_005,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,"If guided, how confident are students in understanding emerging career paths?"
+481,Q_EMCAREER_001_006,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,How stressful is the lack of awareness about emerging careers?
+482,Q_EMCAREER_001_007,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,How often does limited awareness affect students� career decisions?
+483,Q_EMCAREER_001_008,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,How overwhelming is it for students to explore new career options without guidance?
+484,Q_EMCAREER_001_009,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,How much does lack of exposure (school/system) limit awareness of emerging careers?
+485,Q_EMCAREER_001_010,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,"Compared to before, how has awareness of emerging careers changed?"
+486,Q_EMCAREER_001_011,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,How often do students actively research new or future career options?
+487,Q_EMCAREER_001_012,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,How often do students ignore emerging careers due to unfamiliarity?
+488,Q_EMCAREER_001_013,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,How often do students feel unsure about skills required for future careers?
+489,Q_EMCAREER_001_014,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,How likely are students to explore unconventional career paths?
+490,Q_EMCAREER_001_015,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,How often does lack of awareness reduce confidence in future planning?
+491,Q_EMCAREER_001_016,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,How effectively can students build awareness of emerging careers over time?
+492,Q_EMCAREER_001_017,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,"How often do students engage with resources (webinars, mentors, research) on new careers?"
+493,Q_EMCAREER_001_018,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,Some students lack awareness of emerging careers. How true is this here?
+494,Q_EMCAREER_001_019,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,"After support, how much improvement is seen in awareness and exploration?"
+495,Q_EMCAREER_001_020,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,"Even if unaware now, how confident are students in understanding future careers?"
+496,Q_EMCAREER_001_021,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,How ready are students to explore and learn about emerging careers?
+497,Q_EMCAREER_001_022,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,"If guidance was available, how willing would students be to follow it?"
+498,Q_EMCAREER_001_023,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,How strongly do students believe exploring new careers is important?
+499,Q_EMCAREER_001_024,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,"If given tools, how likely are students to explore emerging careers consistently?"
+500,Q_EMCAREER_001_025,43,10,25,8,0,2,strong,EMOTIONAL_REGULATION,"Even if unaware now, how hopeful are students about discovering future career paths?"

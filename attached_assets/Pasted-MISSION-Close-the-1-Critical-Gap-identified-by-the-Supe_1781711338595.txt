@@ -1,0 +1,230 @@
+MISSION
+
+Close the #1 Critical Gap identified by the SuperAdmin World-Class Audit.
+
+Build the Commercial Monetization Spine.
+
+This is the highest priority platform initiative.
+
+Do not build dashboards first.
+
+Do not build reports first.
+
+Build runtime capability.
+
+Success Chain:
+
+Customer
+→ Subscription
+→ Payment
+→ Invoice
+→ GST
+→ Entitlement
+→ Usage Metering
+→ Revenue Intelligence
+
+====================================================
+
+WORKSTREAM 1
+PRODUCT CATALOG
+
+Create:
+
+Products
+
+Plans
+
+Pricing
+
+Bundles
+
+Promotions
+
+Coupons
+
+Discount Rules
+
+====================================================
+
+WORKSTREAM 2
+SUBSCRIPTION MANAGEMENT
+
+Support:
+
+Career Builder
+
+Employer OS
+
+Institution OS
+
+Enterprise
+
+Government
+
+Features:
+
+Trial
+
+Monthly
+
+Quarterly
+
+Annual
+
+Upgrade
+
+Downgrade
+
+Renewal
+
+Cancellation
+
+====================================================
+
+WORKSTREAM 3
+RAZORPAY TEST INTEGRATION
+
+Implement:
+
+Subscriptions
+
+One-Time Payments
+
+Payment Links
+
+Refunds
+
+Webhook Processing
+
+Retry Logic
+
+Audit Logs
+
+Idempotency
+
+====================================================
+
+WORKSTREAM 4
+INVOICE ENGINE
+
+Generate:
+
+Tax Invoice
+
+Proforma Invoice
+
+Credit Note
+
+Debit Note
+
+Payment Receipt
+
+Refund Receipt
+
+PDF Generation
+
+Email Delivery
+
+====================================================
+
+WORKSTREAM 5
+GST ENGINE
+
+Support:
+
+CGST
+
+SGST
+
+IGST
+
+GSTIN Validation
+
+Tax Reports
+
+====================================================
+
+WORKSTREAM 6
+ENTITLEMENT ENGINE
+
+Manage:
+
+Views
+
+Searches
+
+Reports
+
+Exports
+
+Assessments
+
+AI Features
+
+API Access
+
+====================================================
+
+WORKSTREAM 7
+USAGE METERING
+
+Track:
+
+Views
+
+Searches
+
+Unlocks
+
+Assessments
+
+Downloads
+
+Exports
+
+API Usage
+
+====================================================
+
+WORKSTREAM 8
+REVENUE INTELLIGENCE
+
+Generate:
+
+MRR
+
+ARR
+
+Collections
+
+Revenue
+
+Renewals
+
+Forecasts
+
+====================================================
+
+CERTIFICATION
+
+Generate:
+
+commercial_spine_audit.md
+
+commercial_readiness_report.md
+
+billing_readiness_report.md
+
+GO / CONDITIONAL GO / NO GO
+
+Rules:
+
+Additive Only
+
+Feature Flagged
+
+Default OFF
+
+Never Deploy
+
+Never Enable Production Flags

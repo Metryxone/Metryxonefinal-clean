@@ -1,0 +1,28 @@
+approved{
+  "generated_at": "2026-06-03T16:50:38.200Z",
+  "flag_on": true,
+  "materialized": {
+    "nodes": 62095,
+    "edges": 142457
+  },
+  "seeded": {
+    "node_categories": 14,
+    "relationship_types": 11
+  },
+  "live_counts": {
+    "node_total": 62095,
+    "edge_total": 142457
+  },
+  "similarity": {
+    "node_type": "clarity_question",
+    "rows_written": 7500
+  },
+  "coverage_is_bijective": true,
+  "empty_categories": [
+    "report_section"
+  ],
+  "empty_relationship_types": [
+    "EXPLAINS"
+  ],
+  "canonical_graph_untouched": true
+}

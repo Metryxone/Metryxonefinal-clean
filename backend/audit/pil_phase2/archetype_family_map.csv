@@ -1,0 +1,399 @@
+family_name,archetype_key,concern_count,family_total,share_pct,is_primary
+Emotional Family,emotional_regulation,5,10,50,true
+Emotional Family,resilience_recovery,2,10,20,false
+Emotional Family,performance_anxiety,2,10,20,false
+Emotional Family,career_professional_growth,1,10,10,false
+Learning Family 3,learning_comprehension,1,10,11.11,false
+Learning Family 3,confidence_self_efficacy,6,10,66.67,true
+Learning Family 3,resilience_recovery,2,10,22.22,false
+Decision Family,career_professional_growth,2,10,20,false
+Decision Family,decision_judgment,8,10,80,true
+Professional Family,communication_expression,3,10,30,false
+Professional Family,career_professional_growth,6,10,60,true
+Professional Family,performance_anxiety,1,10,10,false
+Career Family,identity_self_awareness,2,10,20,false
+Career Family,career_professional_growth,7,10,70,true
+Career Family,time_self_discipline,1,10,10,false
+Participation Family,academic_achievement,3,10,30,false
+Participation Family,leadership_influence,5,10,50,true
+Participation Family,performance_anxiety,1,10,10,false
+Participation Family,collaboration_teamwork,1,10,10,false
+Time Family,time_self_discipline,10,10,100,true
+Expectations Family,expectations_pressure,6,10,60,true
+Expectations Family,career_professional_growth,2,10,20,false
+Expectations Family,academic_achievement,1,10,10,false
+Expectations Family,critical_reflective_thinking,1,10,10,false
+Ownership Family,motivation_drive,4,10,40,true
+Ownership Family,time_self_discipline,2,10,20,false
+Ownership Family,identity_self_awareness,2,10,20,false
+Ownership Family,career_professional_growth,2,10,20,false
+Learning Family 7,curiosity_innovation,5,10,50,true
+Learning Family 7,learning_comprehension,2,10,20,false
+Learning Family 7,motivation_drive,1,10,10,false
+Learning Family 7,academic_achievement,2,10,20,false
+Failure Family,performance_anxiety,9,10,90,true
+Failure Family,resilience_recovery,1,10,10,false
+Learning Family 2,motivation_drive,3,10,30,false
+Learning Family 2,learning_comprehension,6,10,60,true
+Learning Family 2,time_self_discipline,1,10,10,false
+Career Family 8,career_professional_growth,6,10,60,true
+Career Family 8,emotional_regulation,2,10,20,false
+Career Family 8,identity_self_awareness,2,10,20,false
+Career Family 12,performance_anxiety,10,10,100,true
+Collaboration Family,collaboration_teamwork,7,10,87.5,true
+Collaboration Family,leadership_influence,1,10,12.5,false
+Emotionally Family,career_professional_growth,4,9,100,true
+Validation Family,confidence_self_efficacy,2,9,22.22,false
+Validation Family,emotional_regulation,3,9,33.33,false
+Validation Family,expectations_pressure,4,9,44.44,true
+Confusion Family,identity_self_awareness,4,8,50,true
+Confusion Family,career_professional_growth,3,8,37.5,false
+Confusion Family,performance_anxiety,1,8,12.5,false
+Academic Family 4,time_self_discipline,8,8,100,true
+Influence Family,leadership_influence,6,8,75,true
+Influence Family,career_professional_growth,2,8,25,false
+Preparation Family 2,emotional_regulation,3,8,50,true
+Preparation Family 2,time_self_discipline,1,8,16.67,false
+Preparation Family 2,motivation_drive,2,8,33.33,false
+Discipline Family,time_self_discipline,7,8,87.5,true
+Discipline Family,confidence_self_efficacy,1,8,12.5,false
+Academic Family 3,academic_achievement,7,7,100,true
+Strengths Family,identity_self_awareness,3,7,60,true
+Strengths Family,motivation_drive,1,7,20,false
+Strengths Family,critical_reflective_thinking,1,7,20,false
+Discipline Family 2,time_self_discipline,7,7,100,true
+Exam Family,academic_achievement,7,7,100,true
+Workplace Family 3,performance_anxiety,5,7,71.43,true
+Workplace Family 3,adaptability_change,2,7,28.57,false
+Concepts Family,learning_comprehension,6,6,100,true
+Analytical Family,critical_reflective_thinking,6,6,100,true
+Asking Family,performance_anxiety,4,6,66.67,true
+Asking Family,career_professional_growth,2,6,33.33,false
+Style Family,learning_comprehension,4,6,66.67,true
+Style Family,critical_reflective_thinking,2,6,33.33,false
+Emotional Family 6,emotional_regulation,5,6,83.33,true
+Emotional Family 6,performance_anxiety,1,6,16.67,false
+Leadership Family 6,learning_comprehension,3,6,50,true
+Leadership Family 6,motivation_drive,1,6,16.67,false
+Leadership Family 6,leadership_influence,2,6,33.33,false
+Identity Family,career_professional_growth,3,6,50,true
+Identity Family,identity_self_awareness,3,6,50,true
+Learning Family 8,learning_comprehension,6,6,100,true
+Future Family,career_professional_growth,1,5,100,true
+Attention Family,focus_attention,5,5,100,true
+Academic Family 2,motivation_drive,5,5,100,true
+Accuracy Family,performance_anxiety,5,5,100,true
+Thinking Family,critical_reflective_thinking,5,5,100,true
+Performance Family,time_self_discipline,3,5,60,true
+Performance Family,academic_achievement,2,5,40,false
+Failures Family,confidence_self_efficacy,3,5,60,true
+Failures Family,resilience_recovery,2,5,40,false
+Leadership Family 3,leadership_influence,5,5,100,true
+Peers Family,expectations_pressure,3,5,60,true
+Peers Family,emotional_regulation,2,5,40,false
+Industry Family,career_professional_growth,2,5,40,true
+Industry Family,identity_self_awareness,2,5,40,true
+Industry Family,networking_relationships,1,5,20,false
+Distress Family,emotional_regulation,5,5,100,true
+Sustain Family,learning_comprehension,4,5,80,true
+Sustain Family,time_self_discipline,1,5,20,false
+Classroom Family,academic_achievement,4,4,100,true
+Learning Family,learning_comprehension,2,4,50,true
+Learning Family,academic_achievement,2,4,50,true
+Interest Family,motivation_drive,4,4,100,true
+Independent Family,critical_reflective_thinking,4,4,100,true
+Future Family 2,performance_anxiety,1,4,25,false
+Future Family 2,adaptability_change,3,4,75,true
+Workplace Family,career_professional_growth,2,4,50,true
+Workplace Family,leadership_influence,1,4,25,false
+Workplace Family,performance_anxiety,1,4,25,false
+Emotional Family 3,emotional_regulation,3,4,75,true
+Emotional Family 3,social_connection_belonging,1,4,25,false
+Emotional Family 4,emotional_regulation,4,4,100,true
+Resilience Family,resilience_recovery,4,4,100,true
+Workplace Family 2,performance_anxiety,2,4,50,true
+Workplace Family 2,adaptability_change,2,4,50,true
+Despite Family,confidence_self_efficacy,4,4,100,true
+Growth Family,leadership_influence,4,4,100,true
+Emotional Family 8,emotional_regulation,3,4,75,true
+Emotional Family 8,performance_anxiety,1,4,25,false
+Study Family,focus_attention,3,4,75,true
+Study Family,learning_comprehension,1,4,25,false
+Adaptability Family 2,adaptability_change,3,4,75,true
+Adaptability Family 2,learning_comprehension,1,4,25,false
+Critical Family,critical_reflective_thinking,4,4,100,true
+Public Family,performance_anxiety,4,4,100,true
+Wellbeing Family,leadership_influence,2,4,50,true
+Wellbeing Family,career_professional_growth,1,4,25,false
+Wellbeing Family,motivation_drive,1,4,25,false
+Constant Family,emotional_regulation,4,4,100,true
+Emotional Family 10,emotional_regulation,4,4,100,true
+Emotional Family 12,performance_anxiety,3,4,75,true
+Emotional Family 12,resilience_recovery,1,4,25,false
+Identity Family 2,leadership_influence,4,4,100,true
+Strategic Family,leadership_influence,2,3,66.67,true
+Strategic Family,networking_relationships,1,3,33.33,false
+Subjects Family,academic_achievement,3,3,100,true
+Environments Family,learning_comprehension,3,3,100,true
+Interests Family,negotiation_advocacy,1,3,50,true
+Interests Family,career_professional_growth,1,3,50,true
+Preparation Family,confidence_self_efficacy,2,3,100,true
+Progress Family,performance_anxiety,1,3,33.33,false
+Progress Family,motivation_drive,2,3,66.67,true
+Conceptual Family 2,learning_comprehension,3,3,100,true
+Leadership Family,leadership_influence,3,3,100,true
+Writing Family,academic_achievement,2,3,66.67,true
+Writing Family,communication_expression,1,3,33.33,false
+Reasoning Family,critical_reflective_thinking,3,3,100,true
+Academic Family 5,academic_achievement,3,3,100,true
+Career Family 6,career_professional_growth,3,3,100,true
+Networking Family,career_professional_growth,3,3,100,true
+Academics Family,academic_achievement,2,3,66.67,true
+Academics Family,social_connection_belonging,1,3,33.33,false
+Difficult Family,academic_achievement,1,3,33.33,false
+Difficult Family,resilience_recovery,2,3,66.67,true
+Accountability Family,time_self_discipline,3,3,100,true
+Peer Family,social_connection_belonging,1,3,33.33,false
+Peer Family,emotional_regulation,2,3,66.67,true
+Learning Family 5,learning_comprehension,3,3,100,true
+Integration Family,academic_achievement,2,3,66.67,true
+Integration Family,learning_comprehension,1,3,33.33,false
+Standards Family,career_professional_growth,1,3,33.33,false
+Standards Family,expectations_pressure,2,3,66.67,true
+Interviews Family,performance_anxiety,2,3,100,true
+Cognitive Family,focus_attention,1,3,50,true
+Cognitive Family,learning_comprehension,1,3,50,true
+Motivation Family,motivation_drive,2,3,66.67,true
+Motivation Family,career_professional_growth,1,3,33.33,false
+Communication Family 2,communication_expression,3,3,100,true
+Corporate Family,career_professional_growth,3,3,100,true
+Performance Family 2,performance_anxiety,2,3,66.67,true
+Performance Family 2,confidence_self_efficacy,1,3,33.33,false
+Leadership Family 4,confidence_self_efficacy,2,3,66.67,true
+Leadership Family 4,leadership_influence,1,3,33.33,false
+Executive Family,identity_self_awareness,1,3,33.33,false
+Executive Family,career_professional_growth,2,3,66.67,true
+Responsibilities Family,performance_anxiety,2,3,66.67,true
+Responsibilities Family,leadership_influence,1,3,33.33,false
+Leadership Family 5,leadership_influence,3,3,100,true
+Psychological Family,communication_expression,1,3,100,true
+Hidden Family 2,identity_self_awareness,1,3,50,true
+Hidden Family 2,career_professional_growth,1,3,50,true
+Comprehension Family,learning_comprehension,3,3,100,true
+Classroom Family 2,academic_achievement,3,3,100,true
+Cognitive Family 2,adaptability_change,2,3,100,true
+Correction Family,critical_reflective_thinking,1,3,100,true
+Feedback Family,learning_comprehension,1,3,100,true
+Consistency Family,time_self_discipline,3,3,100,true
+Expectations Family 3,performance_anxiety,2,3,66.67,true
+Expectations Family 3,expectations_pressure,1,3,33.33,false
+Making Family,performance_anxiety,3,3,100,true
+Academic Family 12,academic_achievement,3,3,100,true
+Environments Family 2,performance_anxiety,1,3,33.33,true
+Environments Family 2,time_self_discipline,1,3,33.33,true
+Environments Family 2,career_professional_growth,1,3,33.33,true
+Career Family 15,career_professional_growth,3,3,100,true
+Consistent Family 2,learning_comprehension,3,3,100,true
+Academic Family 14,academic_achievement,3,3,100,true
+Concept Family,learning_comprehension,3,3,100,true
+Consistency Family 2,time_self_discipline,3,3,100,true
+Professional Family 2,career_professional_growth,3,3,100,true
+Career Family 16,career_professional_growth,3,3,100,true
+Discussions Family,collaboration_teamwork,3,3,100,true
+Salary Family,confidence_self_efficacy,1,3,33.33,false
+Salary Family,negotiation_advocacy,2,3,66.67,true
+Board Family,expectations_pressure,1,3,33.33,false
+Board Family,performance_anxiety,2,3,66.67,true
+Academic Family 16,performance_anxiety,3,3,100,true
+Attention Family 2,focus_attention,3,3,100,true
+Emotional Family 13,leadership_influence,2,3,66.67,true
+Emotional Family 13,emotional_regulation,1,3,33.33,false
+Discipline Family 3,time_self_discipline,2,3,66.67,true
+Discipline Family 3,career_professional_growth,1,3,33.33,false
+Emotionally Family 4,career_professional_growth,3,3,100,true
+Emotional Family 15,leadership_influence,3,3,100,true
+Behavioral Family,identity_self_awareness,1,3,100,true
+Learning Family 10,adaptability_change,2,3,66.67,true
+Learning Family 10,learning_comprehension,1,3,33.33,false
+Conversations Family,career_professional_growth,1,2,50,true
+Conversations Family,performance_anxiety,1,2,50,true
+Distribution Family,performance_anxiety,1,2,50,true
+Distribution Family,academic_achievement,1,2,50,true
+Decline Family,motivation_drive,2,2,100,true
+Adaptability Family,adaptability_change,2,2,100,true
+Practices Family,critical_reflective_thinking,1,2,100,true
+Emotional Family 2,emotional_regulation,2,2,100,true
+Conceptual Family,academic_achievement,2,2,100,true
+Focus Family,focus_attention,2,2,100,true
+Habits Family,critical_reflective_thinking,2,2,100,true
+Initiative Family,motivation_drive,2,2,100,true
+Mathematical Family,critical_reflective_thinking,2,2,100,true
+Development Family,learning_comprehension,2,2,100,true
+Problems Family,critical_reflective_thinking,2,2,100,true
+Academic Family,focus_attention,2,2,100,true
+Subjects Family 2,academic_achievement,2,2,100,true
+Materials Family,time_self_discipline,2,2,100,true
+Career Family 2,career_professional_growth,2,2,100,true
+Avoid Family,confidence_self_efficacy,1,2,100,true
+Career Family 3,career_professional_growth,2,2,100,true
+Step Family,critical_reflective_thinking,2,2,100,true
+Career Family 4,performance_anxiety,1,2,50,true
+Career Family 4,decision_judgment,1,2,50,true
+Detached Family,learning_comprehension,1,2,100,true
+From Family,career_professional_growth,2,2,100,true
+Avoiding Family,performance_anxiety,2,2,100,true
+Preferences Family,learning_comprehension,1,2,50,true
+Preferences Family,career_professional_growth,1,2,50,true
+Marks Family,confidence_self_efficacy,2,2,100,true
+Learning Family 4,learning_comprehension,2,2,100,true
+Career Family 5,career_professional_growth,2,2,100,true
+Depth Family,learning_comprehension,1,2,50,true
+Depth Family,academic_achievement,1,2,50,true
+Career Family 7,career_professional_growth,2,2,100,true
+Studies Family,performance_anxiety,1,2,50,true
+Studies Family,confidence_self_efficacy,1,2,50,true
+Pipelines Family,leadership_influence,1,2,50,true
+Pipelines Family,time_self_discipline,1,2,50,true
+Academic Family 6,academic_achievement,2,2,100,true
+Actions Family,time_self_discipline,1,2,50,true
+Actions Family,motivation_drive,1,2,50,true
+Academic Family 7,academic_achievement,2,2,100,true
+Avoiding Family 2,academic_achievement,2,2,100,true
+Financial Family,career_professional_growth,1,2,50,true
+Financial Family,negotiation_advocacy,1,2,50,true
+Hidden Family,learning_comprehension,2,2,100,true
+Taking Family,performance_anxiety,2,2,100,true
+Emotional Family 5,emotional_regulation,2,2,100,true
+Communication Family,communication_expression,2,2,100,true
+Collapse Family,motivation_drive,2,2,100,true
+Leadership Family 2,leadership_influence,2,2,100,true
+Careers Family,learning_comprehension,1,2,50,true
+Careers Family,identity_self_awareness,1,2,50,true
+Confusion Family 2,career_professional_growth,1,2,100,true
+Career Family 9,performance_anxiety,2,2,100,true
+Academic Family 8,academic_achievement,1,2,50,true
+Academic Family 8,curiosity_innovation,1,2,50,true
+Career Family 10,decision_judgment,1,2,50,true
+Career Family 10,expectations_pressure,1,2,50,true
+Career Family 11,career_professional_growth,2,2,100,true
+Expectations Family 2,expectations_pressure,2,2,100,true
+Delays Family,performance_anxiety,2,2,100,true
+Beyond Family,expectations_pressure,2,2,100,true
+Again Family,performance_anxiety,2,2,100,true
+Academic Family 9,academic_achievement,2,2,100,true
+Emotional Family 7,performance_anxiety,2,2,100,true
+Career Family 13,career_professional_growth,2,2,100,true
+Failures Family 2,resilience_recovery,2,2,100,true
+Academic Family 10,academic_achievement,2,2,100,true
+Assessments Family,performance_anxiety,1,2,100,true
+Communication Family 3,communication_expression,2,2,100,true
+Different Family,adaptability_change,1,2,100,true
+Academic Family 11,adaptability_change,2,2,100,true
+Questions Family,academic_achievement,1,2,100,true
+Goal Family,motivation_drive,2,2,100,true
+Linkedin Family,identity_self_awareness,1,2,100,true
+Information Family 2,learning_comprehension,1,2,100,true
+Learning Family 6,learning_comprehension,2,2,100,true
+Assessments Family 2,performance_anxiety,1,2,100,true
+Practical Family,critical_reflective_thinking,2,2,100,true
+Authentic Family,identity_self_awareness,2,2,100,true
+Career Family 14,career_professional_growth,1,2,50,true
+Career Family 14,confidence_self_efficacy,1,2,50,true
+Performance Family 3,performance_anxiety,2,2,100,true
+Consistent Family,time_self_discipline,2,2,100,true
+Change Family,adaptability_change,2,2,100,true
+Distractions Family,focus_attention,2,2,100,true
+Creativity Family,curiosity_innovation,2,2,100,true
+Burnout Family,emotional_regulation,2,2,100,true
+Social Family,performance_anxiety,2,2,100,true
+Dependency Family,emotional_regulation,2,2,100,true
+Criticism Family,resilience_recovery,1,2,100,true
+Emotional Family 9,resilience_recovery,1,2,50,true
+Emotional Family 9,emotional_regulation,1,2,50,true
+Competency Family,leadership_influence,1,2,50,true
+Competency Family,identity_self_awareness,1,2,50,true
+Learn Family,learning_comprehension,2,2,100,true
+Boundaries Family,career_professional_growth,2,2,100,true
+Sustainable Family,adaptability_change,2,2,100,true
+Strategic Family 2,critical_reflective_thinking,2,2,100,true
+Credibility Family,performance_anxiety,1,2,50,true
+Credibility Family,career_professional_growth,1,2,50,true
+Diverse Family,leadership_influence,2,2,100,true
+Interactions Family,confidence_self_efficacy,1,2,50,true
+Interactions Family,performance_anxiety,1,2,50,true
+Performers Family,emotional_regulation,1,2,50,true
+Performers Family,expectations_pressure,1,2,50,true
+Emotional Family 11,resilience_recovery,2,2,100,true
+Peer Family 2,performance_anxiety,2,2,100,true
+Subject Family,confidence_self_efficacy,1,2,100,true
+Completion Family,academic_achievement,1,2,50,true
+Completion Family,time_self_discipline,1,2,50,true
+Motivation Family 2,motivation_drive,2,2,100,true
+Academic Family 13,academic_achievement,2,2,100,true
+Academic Family 15,time_self_discipline,1,2,50,true
+Academic Family 15,academic_achievement,1,2,50,true
+Ideas Family,communication_expression,2,2,100,true
+Culture Family,motivation_drive,1,2,100,true
+Isolation Family,social_connection_belonging,2,2,100,true
+Initiative Family 2,motivation_drive,1,2,100,true
+Improvement Family,career_professional_growth,1,2,50,true
+Improvement Family,time_self_discipline,1,2,50,true
+Innovation Family,curiosity_innovation,2,2,100,true
+Credibility Family 2,career_professional_growth,2,2,100,true
+Career Family 17,career_professional_growth,2,2,100,true
+Alignment Family,performance_anxiety,1,2,50,true
+Alignment Family,decision_judgment,1,2,50,true
+Initiatives Family,leadership_influence,2,2,100,true
+From Family 2,leadership_influence,2,2,100,true
+Capability Family,learning_comprehension,2,2,100,true
+Networking Family 2,networking_relationships,2,2,100,true
+World Family,performance_anxiety,1,2,50,true
+World Family,critical_reflective_thinking,1,2,50,true
+Projects Family,collaboration_teamwork,2,2,100,true
+Conceptual Family 3,performance_anxiety,1,2,50,true
+Conceptual Family 3,learning_comprehension,1,2,50,true
+Conceptual Family 4,learning_comprehension,2,2,100,true
+Comparison Family,expectations_pressure,2,2,100,true
+Goals Family,motivation_drive,2,2,100,true
+Interpretation Family,critical_reflective_thinking,2,2,100,true
+Assessments Family 3,emotional_regulation,1,2,100,true
+Habits Family 2,academic_achievement,1,2,50,true
+Habits Family 2,learning_comprehension,1,2,50,true
+Professional Family 3,career_professional_growth,1,2,50,true
+Professional Family 3,resilience_recovery,1,2,50,true
+Comparing Family,social_connection_belonging,1,2,50,true
+Comparing Family,career_professional_growth,1,2,50,true
+Curiosity Family,curiosity_innovation,2,2,100,true
+Networking Family 3,networking_relationships,2,2,100,true
+Mathematics Family,performance_anxiety,2,2,100,true
+Excellence Family,academic_achievement,1,2,100,true
+Cognitive Family 3,identity_self_awareness,1,2,100,true
+Exam Family 2,performance_anxiety,2,2,100,true
+Grades Family,academic_achievement,1,2,50,true
+Grades Family,performance_anxiety,1,2,50,true
+Adaptability Family 3,expectations_pressure,1,2,50,true
+Adaptability Family 3,adaptability_change,1,2,50,true
+Emotional Family 14,emotional_regulation,1,2,50,true
+Emotional Family 14,academic_achievement,1,2,50,true
+Full Family,learning_comprehension,2,2,100,true
+Learning Family 9,learning_comprehension,2,2,100,true
+Focused Family,learning_comprehension,1,2,100,true
+Missing Family,performance_anxiety,2,2,100,true
+Execution Family,learning_comprehension,1,2,50,true
+Execution Family,confidence_self_efficacy,1,2,50,true
+Enterprise Family,leadership_influence,1,2,100,true
+Boundaries Family 2,emotional_regulation,2,2,100,true
+Consistency Family 3,time_self_discipline,2,2,100,true
+Ended Family,performance_anxiety,1,2,100,true
+Academic Family 17,academic_achievement,2,2,100,true
+Stakes Family,performance_anxiety,1,2,100,true
+Professional Family 4,expectations_pressure,1,2,50,true
+Professional Family 4,career_professional_growth,1,2,50,true
+Academic Family 18,resilience_recovery,2,2,100,true
+Adaptability Family 4,adaptability_change,2,2,100,true
+Attendance Family,time_self_discipline,2,2,100,true
+Assignments Family,performance_anxiety,2,2,100,true
+Agility Family,adaptability_change,2,2,100,true
+Emotional Family 16,performance_anxiety,1,2,50,true
+Emotional Family 16,emotional_regulation,1,2,50,true
+Motivation Family 3,motivation_drive,2,2,100,true

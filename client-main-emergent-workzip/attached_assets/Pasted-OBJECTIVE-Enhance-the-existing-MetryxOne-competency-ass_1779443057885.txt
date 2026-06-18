@@ -1,0 +1,275 @@
+OBJECTIVE:
+Enhance the existing MetryxOne competency assessment architecture WITHOUT deleting, replacing, or overwriting any existing functionality. Build a parallel V2 Dynamic Competency Intelligence Runtime that introduces contextual competency resolution, Role DNA intelligence, adaptive runtime foundations, and enterprise-grade ontology orchestration.
+
+CRITICAL RULES:
+
+* DO NOT delete any existing code
+* DO NOT overwrite competency-assessment-runtime.ts
+* DO NOT overwrite AssessmentTab
+* DO NOT modify existing migrations
+* ALL changes must be additive
+* Existing platform must remain fully functional
+* Build all V2 systems in parallel
+* Use feature flags everywhere
+* Preserve all current APIs and flows
+
+====================================================
+PHASE 1 GOAL
+============
+
+Build the foundational intelligence runtime layer:
+
+* contextual competency resolution
+* dynamic Role DNA
+* runtime ontology orchestration
+* contextual competency weights
+* intelligence graph foundation
+* explainability foundation
+
+====================================================
+STEP 1 — CREATE NEW DATABASE MIGRATION
+======================================
+
+Create:
+backend/migrations/20260810_competency_runtime_v2_foundation.sql
+
+Add NEW tables only:
+
+1. competency_runtime_contexts
+2. role_dna_profiles_v2
+3. competency_runtime_weights
+4. competency_context_modifiers
+5. competency_resolution_history
+6. competency_intelligence_profiles
+7. competency_graph_nodes
+8. competency_graph_edges
+9. runtime_explainability_logs
+10. adaptive_intelligence_events
+
+DO NOT MODIFY:
+
+* onto_*
+* bench_*
+* mobility_*
+* p4_*
+* m3/m4/m5_*
+* cra_scores
+* cra_profiles
+
+====================================================
+STEP 2 — BUILD COMPETENCY RESOLUTION ENGINE
+===========================================
+
+Create:
+backend/services/competency-resolution-engine.ts
+
+Responsibilities:
+
+* resolve contextual Role DNA
+* determine required competencies
+* apply industry modifiers
+* apply org-layer modifiers
+* apply org-maturity modifiers
+* apply complexity modifiers
+* generate contextual competency expectations
+* generate runtime competency weights
+* generate contextual readiness expectations
+
+Inputs:
+
+* role
+* industry
+* org layer
+* org maturity
+* team size
+* experience
+* geography
+* responsibilities
+* skills
+
+Outputs:
+
+* contextual competency profile
+* role DNA
+* competency weights
+* expected proficiency levels
+* contextual readiness expectations
+* explainability metadata
+
+====================================================
+STEP 3 — BUILD ROLE DNA ENGINE
+==============================
+
+Create:
+backend/services/role-dna-engine.ts
+
+Responsibilities:
+
+* generate contextual role DNA
+* use ontology intelligence
+* use competency mappings
+* use layer intelligence
+* generate leadership/technical/behavioral expectations
+
+Use existing:
+
+* onto_roles
+* onto_role_dna_profiles
+* onto_role_competency_weights
+* onto_organisational_layers
+* onto_complexity_models
+
+====================================================
+STEP 4 — BUILD CONTEXT MODIFIER ENGINE
+======================================
+
+Create:
+backend/services/context-modifier-engine.ts
+
+Purpose:
+Dynamically adjust competency expectations.
+
+Examples:
+
+* Enterprise org → governance ↑
+* Startup → adaptability ↑
+* VP+ → strategic leadership ↑
+* Healthcare → compliance ↑
+* AI industry → learning agility ↑
+
+====================================================
+STEP 5 — CREATE V2 RUNTIME APIS
+===============================
+
+Create:
+backend/routes/competency-runtime-v2.ts
+
+Endpoints:
+POST /api/v2/competency/resolve-dna
+POST /api/v2/competency/runtime-context
+GET  /api/v2/competency/intelligence-profile/:userId
+GET  /api/v2/competency/runtime-weights/:userId
+GET  /api/v2/competency/contextual-readiness/:userId
+
+DO NOT TOUCH EXISTING ROUTES.
+
+====================================================
+STEP 6 — BUILD FEATURE FLAG SYSTEM
+==================================
+
+Create:
+backend/config/feature-flags.ts
+
+Add:
+advancedCompetencyRuntimeV2
+
+Create helpers:
+
+* isAdvancedRuntimeEnabled()
+* getRuntimeVersion()
+
+====================================================
+STEP 7 — FRONTEND SERVICE LAYER
+===============================
+
+Create:
+frontend/src/lib/services/competencyRuntimeV2Service.ts
+
+Methods:
+
+* resolveDNA()
+* fetchRuntimeWeights()
+* fetchIntelligenceProfile()
+* fetchContextualReadiness()
+
+====================================================
+STEP 8 — FRONTEND STATE MANAGEMENT
+==================================
+
+Create:
+frontend/src/lib/stores/competencyRuntimeStore.ts
+
+State:
+
+* runtimeContext
+* roleDNA
+* competencyWeights
+* readinessProfile
+* explainability
+* confidence
+* loading
+
+====================================================
+STEP 9 — ENHANCE ASSESSMENT SETUP SCREEN
+========================================
+
+Enhance existing AssessmentTab WITHOUT REWRITING.
+
+Add:
+
+* contextual competency preview
+* role DNA preview
+* competency expectation visualization
+* runtime intelligence panel
+* contextual readiness preview
+
+Use feature flags.
+
+====================================================
+STEP 10 — BUILD EXPLAINABILITY ENGINE
+=====================================
+
+Create:
+backend/services/runtime-explainability-engine.ts
+
+Generate:
+
+* why competency selected
+* why weight assigned
+* why readiness expected
+* why role DNA generated
+
+====================================================
+STEP 11 — CREATE INITIAL CONTEXT MODIFIERS
+==========================================
+
+Seed:
+
+* startup
+* enterprise
+* regulated
+* leadership
+* executive
+* managerial
+* specialist
+* healthcare
+* AI/ML
+* product
+* engineering
+* HR leadership
+
+====================================================
+STEP 12 — VALIDATION
+====================
+
+Validate:
+
+1. Existing runtime still works
+2. Existing assessments unaffected
+3. Different contexts generate different competency DNA
+4. Different layers generate different expectations
+5. Explainability metadata generated
+6. Feature flags working
+7. No regressions
+
+====================================================
+EXPECTED RESULT
+===============
+
+By end of Phase 1:
+
+* contextual competency runtime operational
+* ontology becomes runtime-aware
+* Role DNA operational
+* competency intelligence graph foundation active
+* existing platform remains untouched

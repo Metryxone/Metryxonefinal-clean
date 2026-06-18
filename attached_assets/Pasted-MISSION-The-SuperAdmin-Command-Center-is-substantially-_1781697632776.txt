@@ -1,0 +1,453 @@
+MISSION
+
+The SuperAdmin Command Center is substantially complete.
+
+Do NOT build additional SuperAdmin dashboards, command centers, navigation systems, executive cockpits, AI copilot layers, or Digital Twin capabilities during this sprint.
+
+The objective of this sprint is to transition MetryxOne from structural readiness to operational readiness.
+
+Focus on generating real platform activity, real intelligence signals, real candidate data, real assessment completions, real employer usage, and real commercial readiness.
+
+====================================================
+WORKSTREAM 1
+CAPADEX ACTIVATION ENGINE
+=========================
+
+Build complete production assessment activation.
+
+Implement:
+
+Public Assessment Landing Pages
+
+Assessment Registration Flow
+
+Assessment Invitations
+
+Assessment Campaign Launch
+
+QR Code Assessment Access
+
+Bulk Candidate Invitations
+
+School Assessment Campaigns
+
+College Assessment Campaigns
+
+Employer Assessment Campaigns
+
+Assessment Reminder Engine
+
+Assessment Completion Tracking
+
+Assessment Drop-Off Tracking
+
+Assessment Recovery Workflows
+
+Success Criteria:
+
+100+ completed assessments
+
+Real CAPADEX session generation
+
+Real signal generation
+
+====================================================
+WORKSTREAM 2
+CAREER SEEKER → EMPLOYER OS PIPELINE
+====================================
+
+Implement end-to-end candidate intelligence flow.
+
+Candidate completes profile in Career Builder.
+
+Candidate profile automatically becomes available inside Employer OS.
+
+Create:
+
+Candidate Source Registry
+
+Source Types:
+
+Career Builder
+
+Employer Invite
+
+Employer Import
+
+Referral
+
+Direct Registration
+
+Naukri API
+
+LinkedIn API
+
+Manual Upload
+
+Every candidate must contain:
+
+Source
+
+Source Date
+
+Source Campaign
+
+Source Organization
+
+Profile Completion Status
+
+Assessment Status
+
+Verification Status
+
+Employer Visibility Status
+
+Success Criteria:
+
+Single candidate identity across platform
+
+No duplicate profiles
+
+Full profile synchronization
+
+====================================================
+WORKSTREAM 3
+CANDIDATE MASTER 360
+====================
+
+Build world-class candidate profile.
+
+Display:
+
+Identity
+
+Experience
+
+Education
+
+Skills
+
+Competencies
+
+Assessments
+
+Employability Index
+
+Learning Behavior Index
+
+AI Readiness
+
+Career Readiness
+
+Leadership Readiness
+
+Future Readiness
+
+Applications
+
+Interview History
+
+Growth Potential
+
+Success Probability
+
+Risk Indicators
+
+Career Path
+
+Learning Recommendations
+
+All scores must be sourced from real engines.
+
+No placeholders.
+
+====================================================
+WORKSTREAM 4
+EMPLOYER TALENT DATABASE
+========================
+
+Build employer talent search engine.
+
+Search by:
+
+Industry
+
+Function
+
+Department
+
+Role
+
+Skill
+
+Competency
+
+EI Score
+
+LBI Score
+
+Experience
+
+Location
+
+Education
+
+Certification
+
+AI Readiness
+
+Leadership Potential
+
+Success Probability
+
+Implement subscription controls.
+
+Free Tier
+
+Professional Tier
+
+Enterprise Tier
+
+Control:
+
+Views
+
+Searches
+
+Contacts
+
+Exports
+
+Downloads
+
+Unlocks
+
+Success Criteria:
+
+Employer database operational
+
+Subscription-based visibility
+
+====================================================
+WORKSTREAM 5
+EMPLOYER INVITE & PROFILE COMPLETION
+====================================
+
+Employer uploads candidate.
+
+System generates unique identity.
+
+Candidate receives invitation.
+
+Candidate completes profile.
+
+Candidate profile updates Employer OS automatically.
+
+Track:
+
+Invitation Sent
+
+Invitation Opened
+
+Profile Started
+
+Profile Completed
+
+Assessment Started
+
+Assessment Completed
+
+Success Criteria:
+
+Employer-sourced profiles fully activated
+
+====================================================
+WORKSTREAM 6
+ASSESSMENT CAMPAIGN ENGINE
+==========================
+
+Create campaign management.
+
+Support:
+
+Schools
+
+Colleges
+
+Employers
+
+Government Programs
+
+NGOs
+
+Track:
+
+Invited
+
+Started
+
+Completed
+
+Pending
+
+Drop-Off
+
+Recovered
+
+Create campaign dashboards.
+
+====================================================
+WORKSTREAM 7
+EMPLOYABILITY INDEX ACTIVATION
+==============================
+
+Activate EI at runtime.
+
+Generate:
+
+Employability Score
+
+Readiness Score
+
+Risk Score
+
+Career Alignment Score
+
+Growth Score
+
+Success Probability
+
+Display everywhere:
+
+Career Builder
+
+Candidate Profile
+
+Employer OS
+
+Reports
+
+====================================================
+WORKSTREAM 8
+COMMERCIAL ACTIVATION
+=====================
+
+Implement:
+
+Employer Plans
+
+Institution Plans
+
+Subscription Management
+
+Trial Management
+
+Entitlements
+
+Usage Tracking
+
+Razorpay Integration Validation
+
+Revenue Dashboard
+
+MRR
+
+ARR
+
+Renewals
+
+Churn
+
+Success Criteria:
+
+First commercial-ready environment
+
+====================================================
+WORKSTREAM 9
+REAL DATA READINESS
+===================
+
+Replace demo readiness with real operational readiness.
+
+Generate:
+
+Real Users
+
+Real Candidates
+
+Real Assessments
+
+Real Employers
+
+Real Reports
+
+Real Sessions
+
+Create:
+
+Activation Dashboard
+
+Adoption Dashboard
+
+Usage Dashboard
+
+====================================================
+WORKSTREAM 10
+RE-AUDIT
+========
+
+After implementation:
+
+Run full platform audit.
+
+Measure:
+
+Structural Readiness
+
+Activation Readiness
+
+Data Readiness
+
+Commercial Readiness
+
+Employer Readiness
+
+CAPADEX Readiness
+
+Career Builder Readiness
+
+EI Readiness
+
+Overall Platform Readiness
+
+Target:
+
+Structural > 95%
+
+Activation > 80%
+
+Employer > 90%
+
+CAPADEX > 90%
+
+Commercial > 80%
+
+Overall Platform > 90%
+
+OUTPUTS
+
+Executive Summary
+
+Activation Scorecard
+
+Commercial Scorecard
+
+Employer Scorecard
+
+CAPADEX Scorecard
+
+Gap Analysis
+
+30-Day Roadmap
+
+GO / CONDITIONAL GO / NO GO

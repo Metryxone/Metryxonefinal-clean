@@ -1,0 +1,1205 @@
+{
+  "_meta": {
+    "generated": "2026-06-17",
+    "purpose": "SuperAdmin → Enterprise Command Center: dependency map (product / data / api / intelligence) for Step 1 discovery.",
+    "derivation": "nav_groups rollup is DERIVED from superadmin_inventory.json (grounded). products[] is a curated high-level grouping; every table_namespace is validated to exist among the live tables (table_count is the real row of that prefix in the 1305-table set). engines list = real backend/services/*engine* files.",
+    "honesty_notes": [
+      "EIOS/M-stack and Employer Portal have no dedicated SuperAdmin nav group yet (managed via dedicated portals / Users & Orgs) — nav_groups left [] or annotated, not fabricated.",
+      "Advanced Labs products are experimental/stub and flag-gated (byte-identical when OFF).",
+      "table_count counts tables whose name starts with the namespace prefix; a table can match only one first-token prefix."
+    ],
+    "counts": {
+      "products": 13,
+      "nav_groups": 20,
+      "intelligence_engine_files": 147,
+      "report_surfaces": 6,
+      "code_defined_tables": 1305,
+      "live_materialized_tables_dev": 167
+    },
+    "table_count_caveat": "Table counts labelled code_defined_tables are pgTable/CREATE TABLE definitions across the backend (1305). The live dev DB currently materializes only 167 tables (most are created lazily via ensure*Schema on first feature use). Namespace table_counts in this file are code-defined, NOT live row presence."
+  },
+  "product_dependencies": [
+    {
+      "name": "CAPADEX",
+      "kind": "assessment runtime + behavioural intelligence",
+      "nav_groups": [
+        "CAPADEX",
+        "CAPADEX Intelligence"
+      ],
+      "route_prefixes": [
+        "/api/capadex",
+        "/api/admin/capadex",
+        "/api/signals",
+        "/api/simulation"
+      ],
+      "table_namespaces": [
+        {
+          "namespace": "capadex_",
+          "table_count": 41
+        },
+        {
+          "namespace": "pil_",
+          "table_count": 13
+        },
+        {
+          "namespace": "wc3_",
+          "table_count": 16
+        }
+      ],
+      "intelligence": [
+        "Runtime Intelligence Pipeline",
+        "PIL (Problem Intelligence Layer)",
+        "WC-3 chain",
+        "CSI",
+        "Concern/Signal mapping",
+        "Simulation Harness"
+      ]
+    },
+    {
+      "name": "Career Builder / Career Graph",
+      "kind": "career operating system",
+      "nav_groups": [
+        "Career Intelligence"
+      ],
+      "route_prefixes": [
+        "/api/career",
+        "/api/career-seeker"
+      ],
+      "table_namespaces": [
+        {
+          "namespace": "career_",
+          "table_count": 12
+        },
+        {
+          "namespace": "cg_",
+          "table_count": 16
+        },
+        {
+          "namespace": "cp_",
+          "table_count": 12
+        },
+        {
+          "namespace": "mobility_",
+          "table_count": 11
+        }
+      ],
+      "intelligence": [
+        "Career Graph Intelligence (CGI)",
+        "Pathway/Occupation/Recommendation/Forecast/Transition analytics",
+        "career-behavior-adapter"
+      ]
+    },
+    {
+      "name": "Talent Foundation & Intelligence",
+      "kind": "competency talent graph",
+      "nav_groups": [
+        "Talent Foundation",
+        "Talent Intelligence"
+      ],
+      "route_prefixes": [
+        "/api/talent"
+      ],
+      "table_namespaces": [
+        {
+          "namespace": "talent_",
+          "table_count": 3
+        },
+        {
+          "namespace": "ti_",
+          "table_count": 21
+        },
+        {
+          "namespace": "role_",
+          "table_count": 15
+        },
+        {
+          "namespace": "gro_",
+          "table_count": 26
+        }
+      ],
+      "intelligence": [
+        "Talent Intelligence Graph (TIG)",
+        "Competency DNA / Readiness / Digital Twin / Outcome Prediction / Benchmark / Measurement Science"
+      ]
+    },
+    {
+      "name": "Vision-X Intelligence",
+      "kind": "workforce science layer",
+      "nav_groups": [
+        "Vision-X Intelligence"
+      ],
+      "route_prefixes": [
+        "/api/vx"
+      ],
+      "table_namespaces": [
+        {
+          "namespace": "sci_",
+          "table_count": 26
+        },
+        {
+          "namespace": "wos_",
+          "table_count": 19
+        },
+        {
+          "namespace": "onto_",
+          "table_count": 19
+        }
+      ],
+      "intelligence": [
+        "Capability Architecture",
+        "Labor Market / Evidence Intelligence",
+        "IRT & Adaptive Engine",
+        "Workforce Knowledge Graph",
+        "Report Intelligence (D21)"
+      ]
+    },
+    {
+      "name": "EIOS / Enterprise Workforce OS",
+      "kind": "enterprise workforce operating system",
+      "nav_groups": [],
+      "route_prefixes": [
+        "/api/eios",
+        "/api/m5",
+        "/api/m4",
+        "/api/m3"
+      ],
+      "table_namespaces": [
+        {
+          "namespace": "eios_",
+          "table_count": 8
+        },
+        {
+          "namespace": "m5_",
+          "table_count": 48
+        },
+        {
+          "namespace": "m4_",
+          "table_count": 49
+        },
+        {
+          "namespace": "m3_",
+          "table_count": 34
+        },
+        {
+          "namespace": "wos_",
+          "table_count": 19
+        }
+      ],
+      "intelligence": [
+        "EIOS 28-pillar architecture",
+        "Workforce planning / scenarios / campaigns / outcome tracking"
+      ]
+    },
+    {
+      "name": "Employer Portal",
+      "kind": "B2B hiring intelligence",
+      "nav_groups": [
+        "Users & Orgs (Employer Onboarding)"
+      ],
+      "route_prefixes": [
+        "/api/employer"
+      ],
+      "table_namespaces": [
+        {
+          "namespace": "employer_",
+          "table_count": 19
+        },
+        {
+          "namespace": "tig_",
+          "table_count": 6
+        }
+      ],
+      "intelligence": [
+        "Talent Intelligence Graph",
+        "Hiring analysis",
+        "Calibration (Brier/ECE)"
+      ]
+    },
+    {
+      "name": "Employability & Future Readiness",
+      "kind": "employability index + future readiness",
+      "nav_groups": [
+        "Employability & Future Readiness"
+      ],
+      "route_prefixes": [
+        "/api/mei",
+        "/api/frp",
+        "/api/ei"
+      ],
+      "table_namespaces": [
+        {
+          "namespace": "mei_",
+          "table_count": 13
+        },
+        {
+          "namespace": "frp_",
+          "table_count": 12
+        },
+        {
+          "namespace": "ei_",
+          "table_count": 8
+        }
+      ],
+      "intelligence": [
+        "MEI Scoring Engine",
+        "FRP Readiness Engine (5-signal FRI)",
+        "EI Formula Authority (8-dim)"
+      ]
+    },
+    {
+      "name": "Learning & Passport",
+      "kind": "learning intelligence + career passport",
+      "nav_groups": [
+        "Learning & Passport"
+      ],
+      "route_prefixes": [
+        "/api/lip",
+        "/api/passport"
+      ],
+      "table_namespaces": [
+        {
+          "namespace": "lip_",
+          "table_count": 27
+        },
+        {
+          "namespace": "cp_",
+          "table_count": 12
+        }
+      ],
+      "intelligence": [
+        "Learning Intelligence Platform",
+        "Career Passport bridge"
+      ]
+    },
+    {
+      "name": "Competency Ontology",
+      "kind": "global competency ontology",
+      "nav_groups": [
+        "Competency Ontology"
+      ],
+      "route_prefixes": [
+        "/api/admin/ontology",
+        "/api/ont"
+      ],
+      "table_namespaces": [
+        {
+          "namespace": "ont_",
+          "table_count": 24
+        },
+        {
+          "namespace": "onto_",
+          "table_count": 19
+        },
+        {
+          "namespace": "map_",
+          "table_count": 14
+        },
+        {
+          "namespace": "ref_",
+          "table_count": 7
+        },
+        {
+          "namespace": "gov_",
+          "table_count": 10
+        }
+      ],
+      "intelligence": [
+        "12-layer ontology hierarchy",
+        "Ontology governance"
+      ]
+    },
+    {
+      "name": "Assessment Factory & Config",
+      "kind": "assessment authoring + runtime",
+      "nav_groups": [
+        "Assessment Factory",
+        "Assessment Config"
+      ],
+      "route_prefixes": [
+        "/api/caf",
+        "/api/competency",
+        "/api/lbi/admin"
+      ],
+      "table_namespaces": [
+        {
+          "namespace": "caf_",
+          "table_count": 19
+        },
+        {
+          "namespace": "competency_",
+          "table_count": 35
+        },
+        {
+          "namespace": "assessment",
+          "table_count": 12
+        }
+      ],
+      "intelligence": [
+        "CAF question/scenario/scoring engines",
+        "Competency question curation"
+      ]
+    },
+    {
+      "name": "LBI (Learning Behavioural Intelligence)",
+      "kind": "behavioural psychometrics",
+      "nav_groups": [
+        "BIOS & Governance",
+        "Frameworks"
+      ],
+      "route_prefixes": [
+        "/api/lbi"
+      ],
+      "table_namespaces": [
+        {
+          "namespace": "lbi_",
+          "table_count": 38
+        },
+        {
+          "namespace": "sdi_",
+          "table_count": 12
+        }
+      ],
+      "intelligence": [
+        "LBI Engine",
+        "Predictive Intelligence",
+        "Conversation Quality",
+        "AI Governance"
+      ]
+    },
+    {
+      "name": "Reporting & Analytics",
+      "kind": "report factory + enterprise analytics",
+      "nav_groups": [
+        "Reporting & Analytics"
+      ],
+      "route_prefixes": [
+        "/api/rf",
+        "/api/admin/dynamic-report",
+        "/api/vx/reports"
+      ],
+      "table_namespaces": [
+        {
+          "namespace": "rf_",
+          "table_count": 13
+        },
+        {
+          "namespace": "anl_",
+          "table_count": 12
+        }
+      ],
+      "intelligence": [
+        "Report Factory",
+        "Dynamic Report Intelligence",
+        "OMEGA-X",
+        "Enterprise Analytics"
+      ]
+    },
+    {
+      "name": "Advanced Labs (experimental)",
+      "kind": "experimental / stub engines",
+      "nav_groups": [
+        "Advanced Labs"
+      ],
+      "route_prefixes": [
+        "/api/bios",
+        "/api/roie",
+        "/api/paie",
+        "/api/lde",
+        "/api/spe",
+        "/api/rie"
+      ],
+      "table_namespaces": [
+        {
+          "namespace": "bios_",
+          "table_count": 19
+        },
+        {
+          "namespace": "roie_",
+          "table_count": 26
+        },
+        {
+          "namespace": "paie_",
+          "table_count": 26
+        },
+        {
+          "namespace": "lde_",
+          "table_count": 33
+        },
+        {
+          "namespace": "spe_",
+          "table_count": 22
+        },
+        {
+          "namespace": "iil_",
+          "table_count": 40
+        },
+        {
+          "namespace": "nhda_",
+          "table_count": 27
+        }
+      ],
+      "intelligence": [
+        "BIOS Ultimate/Frontier",
+        "ROIE",
+        "PAIE",
+        "LDE",
+        "SPE",
+        "RIE — flagged experimental, byte-identical-OFF"
+      ]
+    }
+  ],
+  "data_dependencies": {
+    "note": "top namespaces by table count (first-token prefix).",
+    "top_namespaces": [
+      {
+        "namespace": "m4",
+        "table_count": 49
+      },
+      {
+        "namespace": "m5",
+        "table_count": 48
+      },
+      {
+        "namespace": "capadex",
+        "table_count": 41
+      },
+      {
+        "namespace": "iil",
+        "table_count": 40
+      },
+      {
+        "namespace": "lbi",
+        "table_count": 38
+      },
+      {
+        "namespace": "competency",
+        "table_count": 35
+      },
+      {
+        "namespace": "m3",
+        "table_count": 34
+      },
+      {
+        "namespace": "lde",
+        "table_count": 33
+      },
+      {
+        "namespace": "lip",
+        "table_count": 27
+      },
+      {
+        "namespace": "nhda",
+        "table_count": 27
+      },
+      {
+        "namespace": "gro",
+        "table_count": 26
+      },
+      {
+        "namespace": "paie",
+        "table_count": 26
+      },
+      {
+        "namespace": "roie",
+        "table_count": 26
+      },
+      {
+        "namespace": "sci",
+        "table_count": 26
+      },
+      {
+        "namespace": "ont",
+        "table_count": 24
+      },
+      {
+        "namespace": "spe",
+        "table_count": 22
+      },
+      {
+        "namespace": "ti",
+        "table_count": 21
+      },
+      {
+        "namespace": "bios",
+        "table_count": 19
+      },
+      {
+        "namespace": "caf",
+        "table_count": 19
+      },
+      {
+        "namespace": "employer",
+        "table_count": 19
+      },
+      {
+        "namespace": "onto",
+        "table_count": 19
+      },
+      {
+        "namespace": "wos",
+        "table_count": 19
+      },
+      {
+        "namespace": "cg",
+        "table_count": 16
+      },
+      {
+        "namespace": "wc3",
+        "table_count": 16
+      },
+      {
+        "namespace": "aig",
+        "table_count": 15
+      },
+      {
+        "namespace": "role",
+        "table_count": 15
+      },
+      {
+        "namespace": "map",
+        "table_count": 14
+      },
+      {
+        "namespace": "mei",
+        "table_count": 13
+      },
+      {
+        "namespace": "pil",
+        "table_count": 13
+      },
+      {
+        "namespace": "rf",
+        "table_count": 13
+      },
+      {
+        "namespace": "anl",
+        "table_count": 12
+      },
+      {
+        "namespace": "assessment",
+        "table_count": 12
+      },
+      {
+        "namespace": "career",
+        "table_count": 12
+      },
+      {
+        "namespace": "cp",
+        "table_count": 12
+      },
+      {
+        "namespace": "frp",
+        "table_count": 12
+      },
+      {
+        "namespace": "sdi",
+        "table_count": 12
+      },
+      {
+        "namespace": "mobility",
+        "table_count": 11
+      },
+      {
+        "namespace": "p4",
+        "table_count": 11
+      },
+      {
+        "namespace": "bench",
+        "table_count": 10
+      },
+      {
+        "namespace": "gov",
+        "table_count": 10
+      }
+    ]
+  },
+  "api_dependencies": [
+    {
+      "group": "Overview",
+      "is_labs": false,
+      "screen_count": 1,
+      "api_prefixes": [],
+      "table_namespaces": [],
+      "owner_modules": [
+        "OverviewPanel"
+      ]
+    },
+    {
+      "group": "Frameworks",
+      "is_labs": false,
+      "screen_count": 3,
+      "api_prefixes": [
+        "/api/admin/capadex",
+        "/api/lbi"
+      ],
+      "table_namespaces": [
+        "capadex_",
+        "lbi_"
+      ],
+      "owner_modules": [
+        "capadex",
+        "lbi"
+      ]
+    },
+    {
+      "group": "CAPADEX",
+      "is_labs": false,
+      "screen_count": 6,
+      "api_prefixes": [
+        "/api/admin/capadex",
+        "/api/admin/email-preview",
+        "/api/lbi"
+      ],
+      "table_namespaces": [
+        "capadex_",
+        "lbi_"
+      ],
+      "owner_modules": [
+        "capadex",
+        "lbi"
+      ]
+    },
+    {
+      "group": "CAPADEX Intelligence",
+      "is_labs": false,
+      "screen_count": 13,
+      "api_prefixes": [
+        "/api/admin/capadex",
+        "/api/admin/ci",
+        "/api/admin/intelligence",
+        "/api/admin/pil",
+        "/api/admin/signals",
+        "/api/admin/simulation",
+        "/api/signals"
+      ],
+      "table_namespaces": [
+        "capadex_",
+        "pil_"
+      ],
+      "owner_modules": [
+        "CSIPanel",
+        "capadex",
+        "ci",
+        "intelligence",
+        "pil",
+        "signals",
+        "simulation"
+      ]
+    },
+    {
+      "group": "BIOS & Governance",
+      "is_labs": false,
+      "screen_count": 6,
+      "api_prefixes": [
+        "/api/admin/bios",
+        "/api/admin/feature-flags",
+        "/api/admin/lbi",
+        "/api/admin/predictions",
+        "/api/admin/quality",
+        "/api/admin/tenants",
+        "/api/bios",
+        "/api/governance",
+        "/api/lbi"
+      ],
+      "table_namespaces": [
+        "bios_",
+        "lbi_"
+      ],
+      "owner_modules": [
+        "bios",
+        "governance",
+        "lbi",
+        "predictions",
+        "quality",
+        "tenants"
+      ]
+    },
+    {
+      "group": "Career Intelligence",
+      "is_labs": false,
+      "screen_count": 6,
+      "api_prefixes": [
+        "/api/admin/career",
+        "/api/admin/career-graph"
+      ],
+      "table_namespaces": [
+        "career_",
+        "cg_"
+      ],
+      "owner_modules": [
+        "career",
+        "career-graph"
+      ]
+    },
+    {
+      "group": "Talent Foundation",
+      "is_labs": false,
+      "screen_count": 7,
+      "api_prefixes": [
+        "/api/admin/talent"
+      ],
+      "table_namespaces": [
+        "talent_",
+        "ti_"
+      ],
+      "owner_modules": [
+        "talent"
+      ]
+    },
+    {
+      "group": "Talent Intelligence",
+      "is_labs": false,
+      "screen_count": 10,
+      "api_prefixes": [
+        "/api/admin/competency-intelligence",
+        "/api/admin/talent"
+      ],
+      "table_namespaces": [
+        "talent_",
+        "ti_"
+      ],
+      "owner_modules": [
+        "competency-intelligence",
+        "talent"
+      ]
+    },
+    {
+      "group": "Vision-X Intelligence",
+      "is_labs": false,
+      "screen_count": 9,
+      "api_prefixes": [
+        "/api/admin/vx",
+        "/api/caf",
+        "/api/vx"
+      ],
+      "table_namespaces": [
+        "sci_"
+      ],
+      "owner_modules": [
+        "vx"
+      ]
+    },
+    {
+      "group": "Employability & Future Readiness",
+      "is_labs": false,
+      "screen_count": 4,
+      "api_prefixes": [
+        "/api/admin/frp",
+        "/api/admin/mei",
+        "/api/frp",
+        "/api/mei"
+      ],
+      "table_namespaces": [
+        "frp_",
+        "mei_"
+      ],
+      "owner_modules": [
+        "frp",
+        "mei"
+      ]
+    },
+    {
+      "group": "Learning & Passport",
+      "is_labs": false,
+      "screen_count": 3,
+      "api_prefixes": [
+        "/api/admin/lip",
+        "/api/admin/passport",
+        "/api/passport"
+      ],
+      "table_namespaces": [
+        "lip_"
+      ],
+      "owner_modules": [
+        "lip",
+        "passport"
+      ]
+    },
+    {
+      "group": "Competency Ontology",
+      "is_labs": false,
+      "screen_count": 21,
+      "api_prefixes": [
+        "/api/ontology"
+      ],
+      "table_namespaces": [],
+      "owner_modules": [
+        "ontology"
+      ]
+    },
+    {
+      "group": "Assessment Factory",
+      "is_labs": false,
+      "screen_count": 8,
+      "api_prefixes": [],
+      "table_namespaces": [],
+      "owner_modules": [
+        "CAFAnalyticsPanel",
+        "CAFAssessmentBuilderPanel",
+        "CAFDifficultyLevelPanel",
+        "CAFQuestionBankPanel",
+        "CAFRandomizationPanel",
+        "CAFScenarioPanel",
+        "CAFScoringPanel",
+        "CAFSessionsPanel"
+      ]
+    },
+    {
+      "group": "Assessment Config",
+      "is_labs": false,
+      "screen_count": 4,
+      "api_prefixes": [
+        "/api/admin/competency-questions",
+        "/api/admin/curriculum",
+        "/api/admin/generate-paper",
+        "/api/admin/question-bank",
+        "/api/admin/scoring",
+        "/api/admin/seed-education-data",
+        "/api/scoring"
+      ],
+      "table_namespaces": [],
+      "owner_modules": [
+        "competency-questions",
+        "curriculum",
+        "scoring"
+      ]
+    },
+    {
+      "group": "Reporting & Analytics",
+      "is_labs": false,
+      "screen_count": 2,
+      "api_prefixes": [
+        "/api/admin/rf",
+        "/api/analytics",
+        "/api/rf"
+      ],
+      "table_namespaces": [
+        "rf_"
+      ],
+      "owner_modules": [
+        "analytics",
+        "rf"
+      ]
+    },
+    {
+      "group": "Users & Orgs",
+      "is_labs": false,
+      "screen_count": 7,
+      "api_prefixes": [
+        "/api/admin/employers",
+        "/api/admin/enrollment",
+        "/api/admin/enrollment-kyc",
+        "/api/admin/institutions",
+        "/api/admin/mentors",
+        "/api/admin/notifications",
+        "/api/admin/parents",
+        "/api/admin/students",
+        "/api/admin/users"
+      ],
+      "table_namespaces": [],
+      "owner_modules": [
+        "employers",
+        "enrollment",
+        "institutions",
+        "mentors",
+        "parents",
+        "students"
+      ]
+    },
+    {
+      "group": "Platform",
+      "is_labs": false,
+      "screen_count": 7,
+      "api_prefixes": [
+        "/api/admin/assessment-domains",
+        "/api/admin/children-list",
+        "/api/admin/documents",
+        "/api/admin/package-domains",
+        "/api/admin/student-subscriptions",
+        "/api/admin/subscription-packages"
+      ],
+      "table_namespaces": [],
+      "owner_modules": [
+        "AccessControlPanel",
+        "ConsentsPanel",
+        "ContentManagerPanel",
+        "EntityCodesPanel",
+        "LearningPlansPanel",
+        "documents",
+        "subscription-packages"
+      ]
+    },
+    {
+      "group": "Operations",
+      "is_labs": false,
+      "screen_count": 3,
+      "api_prefixes": [
+        "/api/admin/approvals",
+        "/api/admin/platform-audit",
+        "/api/ontology"
+      ],
+      "table_namespaces": [],
+      "owner_modules": [
+        "approvals",
+        "ontology",
+        "platform-audit"
+      ]
+    },
+    {
+      "group": "System",
+      "is_labs": false,
+      "screen_count": 6,
+      "api_prefixes": [
+        "/api/admin/audit",
+        "/api/admin/feature-flags",
+        "/api/admin/notification-broadcasts",
+        "/api/admin/notification-templates",
+        "/api/admin/platform-settings",
+        "/api/admin/reference",
+        "/api/admin/security",
+        "/api/admin/send-template-notification",
+        "/api/notification-templates"
+      ],
+      "table_namespaces": [],
+      "owner_modules": [
+        "FinancialsPanel",
+        "audit",
+        "feature-flags",
+        "notification-templates",
+        "platform-settings",
+        "reference"
+      ]
+    },
+    {
+      "group": "Advanced Labs",
+      "is_labs": true,
+      "screen_count": 35,
+      "api_prefixes": [
+        "/api/admin/audit",
+        "/api/admin/bios",
+        "/api/admin/lde",
+        "/api/admin/paie",
+        "/api/admin/rie",
+        "/api/admin/roie",
+        "/api/admin/spe",
+        "/api/bios",
+        "/api/lde",
+        "/api/paie",
+        "/api/roie",
+        "/api/spe"
+      ],
+      "table_namespaces": [
+        "bios_",
+        "lde_",
+        "paie_",
+        "roie_",
+        "spe_"
+      ],
+      "owner_modules": [
+        "CognitiveIntelligencePanel",
+        "DigitalTwinPanel",
+        "FairnessPanel",
+        "MemoryArchitecturePanel",
+        "PsychometricsPanel",
+        "RIEDashboardPanel",
+        "SemanticReasoningPanel",
+        "audit",
+        "bios",
+        "lde",
+        "paie",
+        "rie",
+        "roie",
+        "spe"
+      ]
+    }
+  ],
+  "intelligence_dependencies": {
+    "engine_files": [
+      "backend/services/adaptive-assessment-engine.ts",
+      "backend/services/adaptive-blueprint-generation-engine.ts",
+      "backend/services/adaptive-branching-engine.ts",
+      "backend/services/ai-competency-inference-engine.ts",
+      "backend/services/ai-reasoning-engine.ts",
+      "backend/services/assessment-blueprint-engine.ts",
+      "backend/services/assessment-runtime-orchestrator.ts",
+      "backend/services/bars-engine.ts",
+      "backend/services/bayesian-inference-engine.ts",
+      "backend/services/behavioral-contradiction-engine.ts",
+      "backend/services/behavioral-coverage-engine.ts",
+      "backend/services/behavioral-signal-engine.ts",
+      "backend/services/benchmark-engine.ts",
+      "backend/services/capadex-explainability-engine.ts",
+      "backend/services/capadex-intervention-engine.ts",
+      "backend/services/career-graph-engine.ts",
+      "backend/services/career-learning-rec-engine.ts",
+      "backend/services/career-readiness-engine.ts",
+      "backend/services/career-recommendation-engine.ts",
+      "backend/services/career-skill-gap-engine.ts",
+      "backend/services/causal-recommendation-engine.ts",
+      "backend/services/cognitive-runtime-engine.ts",
+      "backend/services/comparative-intelligence.ts",
+      "backend/services/competency-confidence-engine.ts",
+      "backend/services/competency-forecasting-engine.ts",
+      "backend/services/competency-fusion-engine.ts",
+      "backend/services/competency-graph-engine.ts",
+      "backend/services/competency-graph-engine-v2.ts",
+      "backend/services/competency-graph-traversal-engine.ts",
+      "backend/services/competency-intelligence-orchestrator.ts",
+      "backend/services/competency-intelligence-profile-engine.ts",
+      "backend/services/competency-intelligence.ts",
+      "backend/services/competency-memory-engine.ts",
+      "backend/services/competency-normalization-engine.ts",
+      "backend/services/competency-propagation-engine.ts",
+      "backend/services/competency-resolution-engine.ts",
+      "backend/services/composite-signal-engine.ts",
+      "backend/services/concern-clarity-mapping-engine.ts",
+      "backend/services/concern-resolver-engine.ts",
+      "backend/services/concern-signal-mapping-engine.ts",
+      "backend/services/confidence-calibration-engine.ts",
+      "backend/services/confidence-engine.ts",
+      "backend/services/contextual-norm-engine.ts",
+      "backend/services/contextual-question-generation-engine.ts",
+      "backend/services/contextual-role-resolution-engine.ts",
+      "backend/services/contextual-scoring-engine.ts",
+      "backend/services/contextual-weight-engine.ts",
+      "backend/services/contradiction-engine.ts",
+      "backend/services/conversational-assessment-engine.ts",
+      "backend/services/dispute-override-engine.ts",
+      "backend/services/dispute-override-engine-v2.ts",
+      "backend/services/dynamic-cohort-engine.ts",
+      "backend/services/dynamic-weight-engine.ts",
+      "backend/services/ei-engine.ts",
+      "backend/services/enterprise-intelligence.ts",
+      "backend/services/enterprise-workforce-os-engine.ts",
+      "backend/services/evidence-engine.ts",
+      "backend/services/evidence-reliability-engine.ts",
+      "backend/services/executive-workforce-intelligence.ts",
+      "backend/services/expectation-engine.ts",
+      "backend/services/explainability-engine.ts",
+      "backend/services/explainability-governance-engine.ts",
+      "backend/services/explainability-graph-engine.ts",
+      "backend/services/fairness-governance-engine.ts",
+      "backend/services/fairness-monitoring-engine.ts",
+      "backend/services/fairness-monitoring-engine-v2.ts",
+      "backend/services/framework-intelligence.ts",
+      "backend/services/frp-readiness-engine.ts",
+      "backend/services/frp-recommendation-engine.ts",
+      "backend/services/functional-competency-seeding-engine.ts",
+      "backend/services/global-role-engine.ts",
+      "backend/services/governance-engine.ts",
+      "backend/services/hypothesis-engine.ts",
+      "backend/services/intelligence-narrative-engine.ts",
+      "backend/services/intelligence-observability-engine.ts",
+      "backend/services/intelligence-pipeline.ts",
+      "backend/services/intervention-engine.ts",
+      "backend/services/intervention-intelligence.ts",
+      "backend/services/intervention-learning-engine.ts",
+      "backend/services/lbi-longitudinal-engine.ts",
+      "backend/services/lbi-profile-builder.ts",
+      "backend/services/lbi-recommendation-engine.ts",
+      "backend/services/lbi-risk-engine.ts",
+      "backend/services/lbi-trend-engine.ts",
+      "backend/services/learning-roi-engine.ts",
+      "backend/services/learning-roi-engine-v2.ts",
+      "backend/services/linkedin-intelligence-engine.ts",
+      "backend/services/lip-competency-gap-engine.ts",
+      "backend/services/lip-learning-need-engine.ts",
+      "backend/services/lip-path-builder-engine.ts",
+      "backend/services/lip-readiness-engine.ts",
+      "backend/services/lip-resource-mapping-engine.ts",
+      "backend/services/longitudinal-engine.ts",
+      "backend/services/longitudinal-intelligence.ts",
+      "backend/services/m3-market-intelligence.ts",
+      "backend/services/m5-executive-intelligence.ts",
+      "backend/services/m5-workforce-intelligence.ts",
+      "backend/services/market-intelligence-engine.ts",
+      "backend/services/market-intelligence-engine-v2.ts",
+      "backend/services/market-intelligence.ts",
+      "backend/services/mei-benchmark-engine.ts",
+      "backend/services/mei-narrative-engine.ts",
+      "backend/services/mei-recommendation-engine.ts",
+      "backend/services/mei-scoring-engine.ts",
+      "backend/services/mobility-engine.ts",
+      "backend/services/omega-report-builder.ts",
+      "backend/services/ontology-engine.ts",
+      "backend/services/pathway-engine.ts",
+      "backend/services/pattern-engine.ts",
+      "backend/services/predictive-competency-engine.ts",
+      "backend/services/predictive-readiness-engine.ts",
+      "backend/services/predictive-workforce-engine.ts",
+      "backend/services/predictive-workforce-engine-v2.ts",
+      "backend/services/proxy-language-engine.ts",
+      "backend/services/psychometric-intelligence-engine.ts",
+      "backend/services/question-generation-engine.ts",
+      "backend/services/rbac-tenant-engine.ts",
+      "backend/services/rbac-tenant-engine-v2.ts",
+      "backend/services/readiness-intelligence-engine.ts",
+      "backend/services/recommendation-engine.ts",
+      "backend/services/reliability-engine.ts",
+      "backend/services/resume-signal-engine.ts",
+      "backend/services/rie-intervention-orchestrator.ts",
+      "backend/services/rie-opportunity-engine.ts",
+      "backend/services/rie-recommendation-engine.ts",
+      "backend/services/rie-recovery-intelligence.ts",
+      "backend/services/role-dna-cache-engine.ts",
+      "backend/services/role-dna-runtime-engine.ts",
+      "backend/services/role-family-engine.ts",
+      "backend/services/role-fit-engine.ts",
+      "backend/services/role-layer-engine.ts",
+      "backend/services/role-requirements-engine.ts",
+      "backend/services/runtime-explainability-engine.ts",
+      "backend/services/runtime-optimization-engine.ts",
+      "backend/services/scenario-modeling-engine.ts",
+      "backend/services/sci-gap-intelligence.ts",
+      "backend/services/sci-psychometric-engine.ts",
+      "backend/services/stability-analysis-engine.ts",
+      "backend/services/stage-guidance-orchestrator.ts",
+      "backend/services/strength-discovery-engine.ts",
+      "backend/services/trajectory-engine.ts",
+      "backend/services/trust-engine.ts",
+      "backend/services/ucip-builder-pipeline.ts",
+      "backend/services/ucip-validation-engine.ts",
+      "backend/services/unified-adaptive-runtime-orchestrator.ts",
+      "backend/services/unified-competency-profile-engine.ts",
+      "backend/services/weighting-engine.ts"
+    ],
+    "report_surfaces": [
+      {
+        "name": "Report Factory",
+        "route": "/api/rf",
+        "file": "backend/routes/report-factory.ts",
+        "output": "PDF/HTML/JSON/CSV via template+narrative rules"
+      },
+      {
+        "name": "Dynamic Report Intelligence",
+        "route": "/api/admin/dynamic-report",
+        "file": "backend/routes/dynamic-report.ts",
+        "output": "persona reports (Parent/Student/HR/Counsellor)"
+      },
+      {
+        "name": "OMEGA-X",
+        "route": "/api/capadex/report/:id/omega",
+        "file": "backend/routes/omega-report.ts",
+        "output": "causal intelligence JSON"
+      },
+      {
+        "name": "VX Unified Reports",
+        "route": "/api/vx",
+        "file": "backend/routes/vx-report-intelligence.ts",
+        "output": "employability/leadership/future-readiness reports"
+      },
+      {
+        "name": "Report Intelligence Assembler",
+        "route": "(service)",
+        "file": "backend/routes/report-intelligence-assembler.ts",
+        "output": "composed report intelligence"
+      },
+      {
+        "name": "Unified Competency Profile",
+        "route": "/api/competency",
+        "file": "backend/routes/unified-competency-profile.ts",
+        "output": "unified competency report"
+      }
+    ]
+  }
+}

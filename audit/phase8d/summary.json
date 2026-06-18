@@ -1,0 +1,27 @@
+{
+  "generated_at": "2026-06-03T18:02:53.433Z",
+  "flag_on": true,
+  "graph": {
+    "node_count": 62095,
+    "edge_count": 142457
+  },
+  "gap_types": [
+    "orphan_node",
+    "weakly_connected",
+    "unused_construct",
+    "missing_relationship",
+    "dead_end"
+  ],
+  "gaps_by_type": {
+    "orphan_node": 299,
+    "weakly_connected": 6594,
+    "unused_construct": 0,
+    "missing_relationship": 3,
+    "dead_end": 113
+  },
+  "gap_rows_persisted": 7009,
+  "all_validations_passed": true,
+  "graph_health_score": 0.945815,
+  "graph_health_band": "strong",
+  "graph_structure_untouched": true
+}

@@ -1,0 +1,230 @@
+# CAPADEX Resolution Repair Phase (RRP-1)
+
+## Objective
+
+Repair the Concern Resolution layer identified in the Concern Resolution Accuracy Audit.
+
+Current State:
+
+Exact Match = 76.2%
+Near Match = 7.4%
+Drift Match = 10.6%
+Failure = 5.9%
+
+Trust Classification:
+
+YELLOW / RED
+
+This phase focuses only on resolution quality.
+
+No graph work.
+
+No predictive work.
+
+No recommendation changes.
+
+---
+
+## PHASE 1 – Deterministic Tie-Break Repair
+
+Current issue:
+
+Many intents produce hundreds of equal-scoring concerns.
+
+Examples:
+
+Confidence
+Discipline
+Motivation
+
+Ties are currently resolved by concern_id ordering.
+
+Replace with:
+
+1. Exact label match
+2. Exact concern phrase match
+3. Cluster match
+4. Bridge-tag match
+5. Specificity score
+6. Concern ID (last resort only)
+
+Generate:
+
+resolution_tie_audit
+
+---
+
+## PHASE 2 – IDF / Rarity Weighting
+
+Current issue:
+
+Generic words dominate scoring.
+
+Examples:
+
+stress
+work
+career
+emotion
+challenge
+
+Implement:
+
+idf_weight
+
+Rare terms receive higher weight.
+
+Common terms receive lower weight.
+
+Generate:
+
+resolver_token_weights
+
+---
+
+## PHASE 3 – Short Intent Repair
+
+Current issue:
+
+Two-word intents frequently fail.
+
+Examples:
+
+Confidence
+
+Motivation
+
+Discipline
+
+Curiosity
+
+Self-Awareness
+
+Implement:
+
+short_intent_mode
+
+For <=3 tokens:
+
+* exact label boost
+* exact bridge-tag boost
+* exact cluster boost
+
+Do not require 60% threshold.
+
+Generate:
+
+short_intent_report
+
+---
+
+## PHASE 4 – Synonym Layer Expansion
+
+Current issue:
+
+12 synonym groups
+64 tokens
+
+Insufficient.
+
+Audit:
+
+All concerns
+
+Generate:
+
+candidate_synonym_groups
+
+priority_synonym_groups
+
+Do not use LLM generation.
+
+Use ontology evidence.
+
+---
+
+## PHASE 5 – Missing Construct Audit
+
+Current audit identified missing first-class constructs.
+
+Audit:
+
+CAREER_CLARITY
+
+CAREER_STABILITY
+
+LEADERSHIP
+
+COMMUNICATION
+
+ENTREPRENEURSHIP
+
+FUTURE_READINESS
+
+Determine:
+
+* exists as concern
+* exists as bridge tag only
+* missing entirely
+
+Generate:
+
+missing_construct_report
+
+No concern creation yet.
+
+---
+
+## PHASE 6 – Confidence Scoring
+
+Create:
+
+resolution_confidence_score
+
+0–100
+
+Components:
+
+Label Match
+
+Cluster Match
+
+Bridge Tag Match
+
+Synonym Match
+
+Specificity Match
+
+Tie Margin
+
+---
+
+## VALIDATION
+
+Re-run full Concern Resolution Audit.
+
+Target:
+
+Exact > 90%
+
+Drift < 5%
+
+Failure < 2%
+
+Tie Rate < 10%
+
+---
+
+## OUTPUT REQUIRED
+
+1. Before/After Accuracy
+2. Tie Reduction Report
+3. Drift Reduction Report
+4. Short Intent Report
+5. Synonym Coverage Report
+6. Missing Construct Report
+7. Updated Trust Score
+
+STOP.
+
+WAIT FOR APPROVAL.

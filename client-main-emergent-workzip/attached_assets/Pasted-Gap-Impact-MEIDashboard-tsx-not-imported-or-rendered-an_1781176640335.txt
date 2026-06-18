@@ -1,0 +1,50 @@
+Gap	Impact
+MEIDashboard.tsx not imported or rendered anywhere	Candidates cannot see their MEI score
+ensureMEISchema() only runs the base migration — supplementary seeds file (20260615) never auto-applies	Only 13 insight rules + 9 recs seed instead of 30 + 15
+Let me fix both now. First let me find the EI gauge section and DashboardTab import list:
+
+
+3 actions
+Now I'll fix both gaps in parallel — wire MEIDashboard into the DashboardTab and extend ensureMEISchema to also run the supplementary seeds:
+
+
+3 actions
+Now I need to actually render MEIDashboard somewhere in the DashboardTab. Let me find the exact insertion point after the Employability Passport block:
+
+
+2 actions
+Now I'll insert the MEIDashboard render right after the Passport modal:
+
+
+2 actions
+Good. Now let me restart the backend to pick up the ensureMEISchema change, and verify the frontend has no TypeScript issues with the new import:
+
+
+4 actions
+Backend clean. Let me take a screenshot to verify the frontend compiled with the new import:
+
+
+2 actions
+Frontend compiled clean, no errors. Let me write the commit message:
+
+
+Planning final response review
+No — it wasn't, but it is now. Here's the honest breakdown:
+
+What was already working ✅
+Layer	Status
+Design spec (docs/EMPLOYABILITY_INDEX.md)	Complete — 5 dims, 15 SDs, 45 competencies, all formula types, all engines
+Scoring, benchmark, narrative, recommendation engines	Built and wired to routes
+All API routes (/api/mei/* + /api/admin/mei/*)	Working including CRUD for rules/recs
+Admin panel (MEIDesignPanel)	Registered in Super Admin dashboard, fully operational
+What was missing and just fixed 🔧
+1. MEIDashboard wasn't rendered anywhere
+The user-facing score component existed as a file but was never imported or mounted. It now renders in the Career Builder Dashboard tab (after the Employability Passport section) for every logged-in user.
+
+2. Supplementary seeds were never auto-applied
+ensureMEISchema() only ran the base migration file, so only 13 insight rules + 9 recommendations would seed. The fix makes it loop through both files in sequence — the full 30 rules + 15 recommendations now auto-apply on first API hit.
+
+What you'll see now
+Open Career Builder → Dashboard tab → MEI score card appears below the Passport section (will show a "complete your profile" prompt until profile data exists)
+Open Super Admin → MEI v2 Design → full insight rules + recommendation catalogue with add/edit/delete
+First call to /api/mei/score/:userId triggers schema + seed bootstrap automatically — no manual DB steps needed

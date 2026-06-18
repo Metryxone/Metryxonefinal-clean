@@ -1,0 +1,211 @@
+# ROLE
+
+You are implementing Phase 2 of the MetryxOne Adaptive Career Intelligence System.
+
+Phase 1 already exists.
+
+DO NOT overwrite existing architecture.
+
+Extend incrementally using migration-safe enhancements.
+
+---
+
+## PHASE 2 OBJECTIVE
+
+Build:
+
+1. Adaptive benchmarking
+2. Dynamic weighting engine
+3. Psychometric reliability architecture
+4. Empirical percentile engine
+5. Multi-layer cohort intelligence
+6. Benchmark confidence architecture
+7. Explainable scoring engine
+8. Context-aware benchmarking
+
+---
+
+## SCIENTIFIC REQUIREMENTS
+
+Benchmarking must evaluate:
+
+* competency-level capability
+* family-level capability
+* domain-level capability
+* role alignment
+* layer alignment
+* industry alignment
+* function alignment
+* aspirational role alignment
+
+---
+
+## REPLACE NORMAL DISTRIBUTION
+
+DO NOT use Gaussian percentile assumptions.
+
+Use empirical percentile ranking.
+
+Formula:
+
+percentile =
+count(scores <= user_score) / n
+
+Retain z-score only for diagnostics.
+
+---
+
+## WEIGHTING ENGINE
+
+Implement dynamic weighting logic.
+
+Weights depend on:
+
+* industry
+* function
+* role
+* organizational layer
+* seniority
+* organization maturity
+* team scale
+* geography
+
+Formula:
+
+AlignmentScore =
+Σ(CompetencyScore × Weight)
+
+---
+
+## PSYCHOMETRIC RELIABILITY
+
+Implement:
+
+* response consistency checks
+* reverse-item validation
+* contradictory response detection
+* assessment confidence scoring
+* reliability index
+* completion quality analysis
+* response anomaly detection
+* assessment stability tracking
+
+---
+
+## BENCHMARK CONFIDENCE TIERS
+
+Tier A = n ≥ 1000
+Tier B = n ≥ 300
+Tier C = n ≥ 100
+Tier D = n ≥ 30
+Provisional = n < 30
+
+---
+
+## COHORT TYPES
+
+Create:
+
+* global cohort
+* industry cohort
+* function cohort
+* role cohort
+* organizational layer cohort
+* aspirational cohort
+
+---
+
+## PRIVACY & LEGAL SAFETY
+
+Maintain:
+
+* k-anonymity
+* aggregate-only benchmarking
+* anti-enumeration
+* hard redaction
+* version pinning
+* reproducibility
+* auditability
+
+NEVER expose:
+
+* peer identities
+* individual benchmark data
+* raw peer records
+
+---
+
+## CREATE TABLES
+
+1. benchmark_cohorts
+2. competency_benchmarks
+3. cohort_statistics
+4. role_alignment_scores
+5. benchmark_confidence
+6. psychometric_reliability
+7. assessment_quality_metrics
+8. percentile_distributions
+9. benchmark_versions
+10. scoring_audit_logs
+
+---
+
+## EXPLAINABILITY ENGINE
+
+Every benchmark result must explain:
+
+* contributing competencies
+* benchmark cohort
+* confidence level
+* weighting logic
+* methodology version
+* percentile methodology
+* benchmark freshness
+
+---
+
+## API ENDPOINTS
+
+GET /api/benchmark/role
+GET /api/benchmark/domain
+GET /api/benchmark/family
+GET /api/benchmark/competency
+GET /api/benchmark/layer
+GET /api/benchmark/aspirational
+GET /api/benchmark/confidence
+GET /api/benchmark/reliability
+
+---
+
+## FRONTEND
+
+Create:
+
+* benchmark dashboards
+* competency radar charts
+* confidence indicators
+* cohort explainability panels
+* percentile distribution visualizations
+* reliability indicators
+* role alignment dashboards
+
+---
+
+## OUTPUT
+
+Generate:
+
+* benchmark engine
+* weighting engine
+* reliability engine
+* empirical percentile engine
+* APIs
+* services
+* frontend dashboards
+* caching
+* indexing
+* queue architecture
+* auditability
+* scalability optimizations
+
+Everything must be enterprise scalable and backward compatible.

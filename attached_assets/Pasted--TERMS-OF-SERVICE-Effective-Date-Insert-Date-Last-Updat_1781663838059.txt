@@ -1,0 +1,365 @@
+# TERMS OF SERVICE
+
+**Effective Date:** [Insert Date]
+**Last Updated:** [Insert Date]
+
+## 1. INTRODUCTION
+
+Welcome to MetryxOne ("MetryxOne", "Company", "we", "our", or "us").
+
+These Terms of Service ("Terms") govern your access to and use of MetryxOne websites, applications, assessments, reports, products, software, platforms, APIs, analytics, intelligence services, and related offerings (collectively, the "Services").
+
+By accessing, registering for, purchasing, or using the Services, you agree to be bound by these Terms.
+
+If you do not agree to these Terms, you must not access or use the Services.
+
+---
+
+# 2. COMPANY DETAILS
+
+**MetryxOne**
+
+Address:
+
+4th Floor, Bizness Square,
+Junction, Hitech City Road,
+Opposite Hitex Road,
+Jubilee Enclave,
+HITEC City, Hyderabad,
+Telangana – 500081, India
+
+Website:
+
+[www.metryxone.com](http://www.metryxone.com)
+
+Contact:
+
+[support@metryxone.com](mailto:support@metryxone.com)
+
+---
+
+# 3. ELIGIBILITY
+
+You may use the Services only if:
+
+* You are legally capable of entering into a binding agreement.
+* You comply with applicable laws.
+* Any information provided is accurate and current.
+* If you are under the age required by law, your parent, guardian, school, or authorized institution has provided necessary authorization.
+
+---
+
+# 4. SERVICES
+
+MetryxOne provides services including but not limited to:
+
+* CAPADEX™
+* Competency Intelligence™
+* Employability Intelligence™
+* Learning Behavior Intelligence™
+* Career Builder™
+* Talent Passport™
+* Employer Intelligence OS™
+* Workforce Intelligence
+* Talent Intelligence
+* Assessment Services
+* Analytics and Reporting Services
+* AI-Powered Intelligence Services
+
+Features may be modified, enhanced, suspended, or discontinued at our discretion.
+
+---
+
+# 5. ACCOUNT REGISTRATION
+
+Users may be required to create an account.
+
+You agree to:
+
+* Provide accurate information.
+* Maintain the confidentiality of credentials.
+* Notify us of unauthorized access.
+* Accept responsibility for activities occurring under your account.
+
+We may suspend or terminate accounts that violate these Terms.
+
+---
+
+# 6. ACCEPTABLE USE
+
+You agree not to:
+
+* Use the Services unlawfully.
+* Upload harmful, misleading, fraudulent, or illegal content.
+* Reverse engineer the platform.
+* Attempt unauthorized access.
+* Interfere with system operations.
+* Use automated scraping tools without authorization.
+* Circumvent subscription, licensing, or access controls.
+* Introduce malware or malicious code.
+
+---
+
+# 7. ASSESSMENTS AND INTELLIGENCE SERVICES
+
+MetryxOne provides assessments, analytics, intelligence outputs, recommendations, forecasts, and reports.
+
+You acknowledge that:
+
+* Assessments are informational tools.
+* Intelligence outputs are decision-support tools.
+* Results are probabilistic and not guarantees.
+* Outcomes may vary.
+* Human judgment should always be exercised.
+
+Assessment results, scores, recommendations, forecasts, benchmarks, and intelligence outputs should not be treated as the sole basis for educational, employment, promotion, admission, disciplinary, investment, or other significant decisions.
+
+---
+
+# 8. AI AND AUTOMATED ANALYTICS
+
+MetryxOne may use:
+
+* Artificial Intelligence
+* Machine Learning
+* Statistical Models
+* Knowledge Graphs
+* Automated Analytics
+
+to generate recommendations, scores, rankings, forecasts, and intelligence outputs.
+
+Users acknowledge that:
+
+* AI-generated outputs may contain inaccuracies.
+* Recommendations are not guarantees.
+* Automated outputs require independent review.
+* MetryxOne does not guarantee any outcome resulting from reliance on AI-generated insights.
+
+---
+
+# 9. EDUCATIONAL SERVICES
+
+Where Services are used by schools, colleges, universities, training institutions, or educational organizations:
+
+* Institutions are responsible for obtaining required permissions.
+* Institutions remain responsible for educational decisions.
+* MetryxOne provides informational and developmental support tools only.
+
+---
+
+# 10. EMPLOYER SERVICES
+
+Employer Intelligence OS™ and related services provide hiring, workforce, competency, succession, talent, and organizational intelligence.
+
+Employers acknowledge:
+
+* Assessments should not be used as the sole basis for employment decisions.
+* Human review remains necessary.
+* MetryxOne is not responsible for employment decisions made by employers.
+
+---
+
+# 11. SUBSCRIPTIONS AND PAYMENTS
+
+Certain Services require payment.
+
+Payments may be processed through authorized providers including Razorpay.
+
+Fees:
+
+* Are payable in advance unless otherwise agreed.
+* May be subject to applicable taxes.
+* May be non-refundable except where required by law.
+
+We reserve the right to change pricing upon notice.
+
+---
+
+# 12. INTELLECTUAL PROPERTY
+
+All rights in the Services are owned by MetryxOne or its licensors.
+
+This includes:
+
+* Software
+* Assessments
+* Reports
+* Methodologies
+* Algorithms
+* Competency frameworks
+* Databases
+* Content
+* Designs
+* Trademarks
+* Logos
+* Documentation
+
+No ownership rights are transferred to users.
+
+---
+
+# 13. USER CONTENT
+
+Users retain ownership of content they submit.
+
+By submitting content, users grant MetryxOne a worldwide, non-exclusive license to use, process, store, display, and analyze such content for the purpose of providing Services.
+
+Users warrant that they have the necessary rights to provide such content.
+
+---
+
+# 14. PRIVACY
+
+Use of the Services is subject to the MetryxOne Privacy Policy.
+
+By using the Services, you acknowledge and agree to the collection and processing practices described therein.
+
+---
+
+# 15. THIRD-PARTY SERVICES
+
+The Services may integrate with:
+
+* Educational systems
+* HR systems
+* Applicant Tracking Systems
+* Communication platforms
+* Payment providers
+* Cloud providers
+* Third-party applications
+
+MetryxOne is not responsible for third-party services.
+
+---
+
+# 16. DISCLAIMERS
+
+THE SERVICES ARE PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS.
+
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, METRYXONE DISCLAIMS ALL WARRANTIES INCLUDING:
+
+* MERCHANTABILITY
+* FITNESS FOR A PARTICULAR PURPOSE
+* NON-INFRINGEMENT
+* ACCURACY OF RESULTS
+* UNINTERRUPTED AVAILABILITY
+
+We do not guarantee:
+
+* Employment outcomes
+* Educational outcomes
+* Career outcomes
+* Promotion outcomes
+* Business outcomes
+* Assessment outcomes
+
+---
+
+# 17. LIMITATION OF LIABILITY
+
+To the maximum extent permitted by law:
+
+MetryxOne shall not be liable for:
+
+* Indirect damages
+* Consequential damages
+* Special damages
+* Incidental damages
+* Loss of profits
+* Loss of revenue
+* Loss of opportunities
+* Business interruption
+* Reputational damage
+
+Our total liability shall not exceed the amount paid by the user for the relevant Services during the preceding twelve (12) months.
+
+---
+
+# 18. INDEMNIFICATION
+
+You agree to indemnify and hold harmless MetryxOne, its directors, officers, employees, affiliates, partners, and agents from claims arising from:
+
+* Violation of these Terms
+* Misuse of the Services
+* Violation of laws
+* Violation of third-party rights
+
+---
+
+# 19. SUSPENSION AND TERMINATION
+
+We may suspend or terminate access where:
+
+* Terms are violated
+* Fraud is suspected
+* Security risks exist
+* Legal obligations require action
+
+Termination does not affect accrued rights or obligations.
+
+---
+
+# 20. FORCE MAJEURE
+
+MetryxOne shall not be liable for delays or failures caused by events beyond reasonable control, including:
+
+* Natural disasters
+* Government actions
+* Network failures
+* Cyber incidents
+* Power outages
+* Pandemics
+* Labor disputes
+
+---
+
+# 21. GOVERNING LAW
+
+These Terms shall be governed by and construed in accordance with the laws of India.
+
+---
+
+# 22. DISPUTE RESOLUTION
+
+Any dispute arising from these Terms shall first be addressed through good-faith negotiations.
+
+If unresolved, disputes shall be subject to the exclusive jurisdiction of the courts located in Hyderabad, Telangana, India.
+
+---
+
+# 23. CHANGES TO TERMS
+
+MetryxOne may modify these Terms at any time.
+
+Material changes may be communicated through the website, platform, email, or other appropriate channels.
+
+Continued use of the Services following updates constitutes acceptance of revised Terms.
+
+---
+
+# 24. CONTACT
+
+For questions regarding these Terms:
+
+MetryxOne
+
+4th Floor, Bizness Square,
+Junction, Hitech City Road,
+Opposite Hitex Road,
+Jubilee Enclave,
+HITEC City, Hyderabad, Telangana – 500081, India
+
+Email: [support@metryxone.com](mailto:support@metryxone.com)
+
+Website: [www.metryxone.com](http://www.metryxone.com)
+
+---
+
+# 25. ENTIRE AGREEMENT
+
+These Terms, together with the Privacy Policy and any additional agreements expressly incorporated by reference, constitute the entire agreement between you and MetryxOne regarding the Services.
+
+---
+
+**MetryxOne Human Intelligence Cloud™**
+*Making Human Potential Visible.*

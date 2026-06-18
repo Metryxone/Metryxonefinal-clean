@@ -1,0 +1,11 @@
+construct,status,has_dedicated_bridge_tag,dedicated_tag_concerns,semantic_concerns,signal_count_for_tag,question_count_for_tag,behavior_cov_pct,archetype_cov_pct,capability_cov_pct,recommendation_construct,intervention_construct
+"Career Clarity","YELLOW","false","0","17","0","0","100","100","52.9","CAREER_GROWTH","CAREER_READINESS"
+"Career Stability","YELLOW","true","1","1","0","40","100","100","100","CAREER_GROWTH","CAREER_READINESS"
+"Career Exploration","YELLOW","true","1","8","0","40","100","100","50","CAREER_GROWTH","CAREER_READINESS"
+"Leadership","RED","false","0","137","0","0","100","100","64.2","",""
+"Communication","YELLOW","false","0","56","0","0","100","96.4","67.9","COMMUNICATION","COMMUNICATION"
+"Entrepreneurship","RED","false","0","5","0","0","100","60","40","",""
+"Future Readiness","RED","false","0","40","0","0","100","95","0","",""
+"Learning Mindset","YELLOW","true","1","31","0","120","100","100","3.2","LEARNING_DRIVE","LEARNING_DRIVE"
+"Decision Making","RED","false","0","50","0","0","100","96","32","",""
+"Self Awareness","YELLOW","true","1","4","0","40","100","100","75","SELF_ESTEEM","SELF_ESTEEM"

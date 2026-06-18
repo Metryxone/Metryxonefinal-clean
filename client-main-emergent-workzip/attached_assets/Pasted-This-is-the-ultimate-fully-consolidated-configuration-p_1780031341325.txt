@@ -1,0 +1,111 @@
+This is the ultimate, fully consolidated configuration prompt for your workspace. It gathers every optimization, visual design standard, and architectural fix discussed throughout our session into a single blueprint.
+
+You can copy and paste this block directly into the Replit Agent or use it as an instruction set for your workspace update.
+
+---
+
+```markdown
+# Comprehensive System Refactor: CAPADEX Clarity Next-Generation Telemetry Control Console
+
+## 1. Executive Objective
+Refactor the frontend presentation, data-mapping layer, and administrative reporting routes of the CAPADEX platform to transform it from a standard administrative table into a premium, world-class Computational Psychometrics and Behavioral Intelligence Console. 
+
+This update introduces structured data provenance tracking, OMEGA-X consistency metrics, response latency diagnostics, and an interactive 4-tier taxonomy explorer. All modifications must preserve existing PostgreSQL schemas, Drizzle ORM configurations, and the symlink located at `/home/runner/workspace/shared`.
+
+---
+
+## 2. Platform Architecture & Visual Tokens
+Apply a highly professional, high-performance dark-substrate scientific palette across all updated views:
+- **Core Workspace Substrates**: Deep Cyber Matte (`bg-[#040814]`) and Slate-Navy Panel Surfaces (`bg-[#0B1120]`)
+- **Data Provenance Tokens (3-Tier Picker Hierarchy)**:
+  * `master_curated` (Empirical Base) -> Synthetic Cyan (`text-[#00F5D4]` / `bg-[#00F5D4]/10` / `border-[#00F5D4]/20`)
+  * `adaptive_bank` (Graph Extension) -> Neon Violet (`text-[#9D4EDD]` / `bg-[#9D4EDD]/10` / `border-[#9D4EDD]/20`)
+  * `static_fallback` (System Default) -> Neural Blue (`text-[#3A86FF]` / `bg-[#3A86FF]/10` / `border-[#3A86FF]/20`)
+- **Telemetry Risk & Integrity Monitors**:
+  * Critical Drift / Contradiction Flag -> Plasma Pink (`text-[#FF007F]` / `bg-[#FF007F]/10`)
+  * Cognitive Load / Processing Friction -> Laser Amber (`text-[#FFB703]` / `bg-[#FFB703]/10`)
+  * Target Baseline Calibration -> Matrix Green (`text-[#00F5A0]` / `bg-[#00F5A0]/10`)
+
+---
+
+## 3. Targeted Implementation Blueprint
+
+### File Target A: frontend/src/components/superadmin/CapadexReportsPanel.tsx
+1. **Interface Mapping Compliance**:
+   Ensure incoming data rows conform strictly to this TypeScript structure:
+```typescript
+   interface ReportRow {
+     id: string;
+     session_id: string;
+     user_name: string;
+     concern_area: string;
+     macro_score: number;
+     status: 'pending' | 'in_review' | 'approved' | 'published';
+     clarity_source: 'master_curated' | 'adaptive_bank' | 'static_fallback';
+     contradiction_count: number;
+     telemetry_pacing_ms: number;
+     updated_at: string;
+   }
+
+```
+
+2. **Interface Container Layout**:
+* Wrap the main panel in a clean master container: `className="grid grid-cols-1 lg:grid-cols-3 gap-6 bg-[#040814] p-6 text-slate-100 font-sans"`.
+* **Left/Center Registry Component (2 Columns)**: Displays the Telemetry Session Registry. Build a scannable table with subtle container borders (`border-[#0B1120]`).
+* **Right Analytics Panel Component (1 Column)**: Displays the Telemetry Intelligence Terminal. When an active session row is selected, render:
+* **Data Provenance Segmented Tracker**: A clean, horizontal multi-color progress indicator visualizing the exact composition of the question source layout (`master_curated` vs. `adaptive_bank`).
+* **OMEGA-X Behavioral Integrity Monitor**: Display a prominent circular metric ring alongside status chips for Cognitive Velocity ($T_{\Delta}$ processing variance) and structural Contradiction flags.
+* **Nested 4-Tier Taxonomy Accordion**: An interactive tree layout organizing data through the system's native classification hierarchy: `Strategic Domain ➔ Behavioral Family ➔ Explicit Signal ➔ Atomic Touchpoint`.
+
+
+
+
+3. **Window Interoperability Hook**:
+Maintain the working external email preview trigger:
+
+```typescript
+   const openEmailPreview = (row: ReportRow) => {
+     const url = `/api/admin/email-preview/capadex-report?stage=published&concern=${encodeURIComponent(row.concern_area)}&score=${row.macro_score}`;
+     window.open(url, '_blank');
+   };
+
+```
+
+### File Target B: Backend Router Pipeline Synchronization
+
+* **Files**: `backend/routes/capadex-clarity-questions.ts` & `backend/routes/capadex-concern-intelligence.ts`
+* **Action**: Ensure the SQL queries that populate the `/api/admin/capadex/reports` endpoint explicitly return `clarity_source`, `contradiction_count`, and `telemetry_pacing_ms` variables. To protect the frontend from parsing errors, provide clean fallback metrics for older or legacy database records:
+
+```typescript
+  const clarity_source = row.clarity_source || 'master_curated';
+  const contradiction_count = row.contradiction_count ?? 0;
+  const telemetry_pacing_ms = row.telemetry_pacing_ms || 1420;
+
+```
+
+### File Target C: Character Set Header Sanitization
+
+* **File**: `backend/routes.ts` (~Around Line 7065 inside the email preview routing layer)
+* **Action**: Locate where the system writes the `X-Preview-Subject` HTTP header response. Wrap the subject parameter in an explicit encoder call to process characters like em-dashes (`—`) safely within standard ASCII-only headers:
+
+```typescript
+  res.setHeader('X-Preview-Subject', encodeURIComponent(subject));
+
+```
+
+---
+
+## 4. Verification Check
+
+* Confirm that the `STATUS_STEPS` array `['pending', 'in_review', 'approved', 'published']` matches exactly between your frontend views and backend route validation rules.
+* Run `npm run dev:server` in the `backend/` directory and `npm run dev` in the `frontend/` directory to verify that the telemetry widgets render correctly without breaking the main app shell.
+* Avoid introducing external canvas or heavy visualization packages; build the graphs natively using Tailwind CSS utility boundaries and flexible interactive elements.
+
+```
+***
+
+### Why this structure provides reliable results:
+* **Deterministic Code Blocks**: Providing explicit TypeScript interfaces and JavaScript logic blocks stops the agent from making assumptions about data structures or falling back to standard list components.
+* **Complete System View**: It patches the interface presentation layer, updates the back-end router parsing arrays, and applies the HTTP header character fix simultaneously. This keeps your end-to-end framework fully synchronized.
+
+```

@@ -1,0 +1,277 @@
+{
+  "generated": "2026-06-09T16:54:53.564Z",
+  "completed": 9,
+  "masterCatalogueRows": 2489,
+  "coverage": {
+    "storedMasterN": 1,
+    "reMasterN": 9,
+    "storedPckN": 2,
+    "rePckN": 5,
+    "storedOutcomeN": 3,
+    "reOutcomeN": 9,
+    "sigN": 7,
+    "compN": 0,
+    "patN": 6,
+    "hypN": 0,
+    "zeroResp": 3
+  },
+  "forecast": {
+    "eligibleOwners": 2,
+    "forecastStored": 0,
+    "forecastReResolve": 2
+  },
+  "mappingGapConcerns": [
+    "Career Anxiety",
+    "Work Stress"
+  ],
+  "sessions": [
+    {
+      "sid": "0731f92c-d9d2-457f-92e9-ce2edd32664a",
+      "owned": true,
+      "who": "user_4b262cc8a5",
+      "concern": "Career Anxiety",
+      "created": "2026-05-17",
+      "responses": 10,
+      "storedMaster": null,
+      "reMaster": 65,
+      "storedPck": null,
+      "rePck": null,
+      "bridgeTag": "EXAMINATION_STRESS",
+      "resolvedConstructs": [
+        "EXAM_STRESS"
+      ],
+      "matchedModels": [
+        "exam_readiness"
+      ],
+      "outcomeReachable": true,
+      "hasStoredOutcome": false,
+      "sig": 5,
+      "comp": 0,
+      "pat": 1,
+      "hyp": 0,
+      "hypActive": 0
+    },
+    {
+      "sid": "b883418d-933b-47a6-b73d-c6c02a161f4f",
+      "owned": true,
+      "who": "user_65454b2b8b",
+      "concern": "Anxiety & Overthinking",
+      "created": "2026-05-18",
+      "responses": 10,
+      "storedMaster": null,
+      "reMaster": 705,
+      "storedPck": null,
+      "rePck": "STRESS_MANAGEMENT",
+      "bridgeTag": "EMOTIONAL_REGULATION",
+      "resolvedConstructs": [
+        "STRESS_MANAGEMENT",
+        "EMOTIONAL_REGULATION"
+      ],
+      "matchedModels": [
+        "confidence_stability",
+        "exam_readiness",
+        "holistic_wellbeing"
+      ],
+      "outcomeReachable": true,
+      "hasStoredOutcome": false,
+      "sig": 3,
+      "comp": 0,
+      "pat": 1,
+      "hyp": 0,
+      "hypActive": 0
+    },
+    {
+      "sid": "7828d7a3-ddda-4659-8846-7597443e2830",
+      "owned": true,
+      "who": "user_65454b2b8b",
+      "concern": "Anxiety & Overthinking",
+      "created": "2026-05-18",
+      "responses": 10,
+      "storedMaster": null,
+      "reMaster": 705,
+      "storedPck": null,
+      "rePck": "STRESS_MANAGEMENT",
+      "bridgeTag": "EMOTIONAL_REGULATION",
+      "resolvedConstructs": [
+        "STRESS_MANAGEMENT",
+        "EMOTIONAL_REGULATION"
+      ],
+      "matchedModels": [
+        "confidence_stability",
+        "exam_readiness",
+        "holistic_wellbeing"
+      ],
+      "outcomeReachable": true,
+      "hasStoredOutcome": false,
+      "sig": 3,
+      "comp": 0,
+      "pat": 1,
+      "hyp": 0,
+      "hypActive": 0
+    },
+    {
+      "sid": "4349237c-ce0b-41c5-9206-647c2654b26e",
+      "owned": false,
+      "who": "anon",
+      "concern": "Anxiety & Overthinking",
+      "created": "2026-05-24",
+      "responses": 3,
+      "storedMaster": null,
+      "reMaster": 705,
+      "storedPck": "STRESS_MANAGEMENT",
+      "rePck": "STRESS_MANAGEMENT",
+      "bridgeTag": "EMOTIONAL_REGULATION",
+      "resolvedConstructs": [
+        "STRESS_MANAGEMENT",
+        "EMOTIONAL_REGULATION"
+      ],
+      "matchedModels": [
+        "confidence_stability",
+        "exam_readiness",
+        "holistic_wellbeing"
+      ],
+      "outcomeReachable": true,
+      "hasStoredOutcome": true,
+      "sig": 4,
+      "comp": 0,
+      "pat": 1,
+      "hyp": 0,
+      "hypActive": 0
+    },
+    {
+      "sid": "4c9b6c0b-4907-48e3-8c56-95a65e623006",
+      "owned": false,
+      "who": "anon",
+      "concern": "Anxiety & Overthinking",
+      "created": "2026-05-24",
+      "responses": 3,
+      "storedMaster": null,
+      "reMaster": 705,
+      "storedPck": "STRESS_MANAGEMENT",
+      "rePck": "STRESS_MANAGEMENT",
+      "bridgeTag": "EMOTIONAL_REGULATION",
+      "resolvedConstructs": [
+        "STRESS_MANAGEMENT",
+        "EMOTIONAL_REGULATION"
+      ],
+      "matchedModels": [
+        "confidence_stability",
+        "exam_readiness",
+        "holistic_wellbeing"
+      ],
+      "outcomeReachable": true,
+      "hasStoredOutcome": true,
+      "sig": 4,
+      "comp": 0,
+      "pat": 1,
+      "hyp": 0,
+      "hypActive": 0
+    },
+    {
+      "sid": "d0f54fc4-7a08-4747-9ccb-422e86cc93b9",
+      "owned": false,
+      "who": "anon",
+      "concern": "Work Stress",
+      "created": "2026-05-24",
+      "responses": 0,
+      "storedMaster": null,
+      "reMaster": 430,
+      "storedPck": null,
+      "rePck": null,
+      "bridgeTag": "EMOTIONAL_REGULATION",
+      "resolvedConstructs": [
+        "EMOTIONAL_REGULATION"
+      ],
+      "matchedModels": [
+        "confidence_stability"
+      ],
+      "outcomeReachable": true,
+      "hasStoredOutcome": false,
+      "sig": 0,
+      "comp": 0,
+      "pat": 0,
+      "hyp": 0,
+      "hypActive": 0
+    },
+    {
+      "sid": "a0924499-24bf-43be-adbe-1c6f00a5dd9e",
+      "owned": false,
+      "who": "anon",
+      "concern": "Work Stress",
+      "created": "2026-05-24",
+      "responses": 0,
+      "storedMaster": null,
+      "reMaster": 430,
+      "storedPck": null,
+      "rePck": null,
+      "bridgeTag": "EMOTIONAL_REGULATION",
+      "resolvedConstructs": [
+        "EMOTIONAL_REGULATION"
+      ],
+      "matchedModels": [
+        "confidence_stability"
+      ],
+      "outcomeReachable": true,
+      "hasStoredOutcome": false,
+      "sig": 0,
+      "comp": 0,
+      "pat": 0,
+      "hyp": 0,
+      "hypActive": 0
+    },
+    {
+      "sid": "11111111-1111-1111-1111-111111111111",
+      "owned": true,
+      "who": "user_ec082847d9",
+      "concern": "Exam stress",
+      "created": "2026-05-30",
+      "responses": 0,
+      "storedMaster": null,
+      "reMaster": 1297,
+      "storedPck": null,
+      "rePck": "EXAM_PERFORMANCE",
+      "bridgeTag": "EMOTIONAL_REGULATION",
+      "resolvedConstructs": [
+        "EXAM_PERFORMANCE",
+        "EMOTIONAL_REGULATION"
+      ],
+      "matchedModels": [
+        "confidence_stability",
+        "exam_readiness"
+      ],
+      "outcomeReachable": true,
+      "hasStoredOutcome": false,
+      "sig": 2,
+      "comp": 0,
+      "pat": 0,
+      "hyp": 0,
+      "hypActive": 0
+    },
+    {
+      "sid": "1cd9ca07-4659-42c4-83fd-229e5e8f21f2",
+      "owned": true,
+      "who": "user_4b262cc8a5",
+      "concern": "Career Anxiety",
+      "created": "2026-06-01",
+      "responses": 10,
+      "storedMaster": 65,
+      "reMaster": 65,
+      "storedPck": null,
+      "rePck": null,
+      "bridgeTag": "EXAMINATION_STRESS",
+      "resolvedConstructs": [
+        "EXAM_STRESS"
+      ],
+      "matchedModels": [
+        "exam_readiness"
+      ],
+      "outcomeReachable": true,
+      "hasStoredOutcome": true,
+      "sig": 14,
+      "comp": 0,
+      "pat": 1,
+      "hyp": 0,
+      "hypActive": 0
+    }
+  ]
+}

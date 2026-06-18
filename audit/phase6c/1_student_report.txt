@@ -1,0 +1,63 @@
+# Student Development Report
+==========================
+Concern: Long-Term Career Anxiety  ·  Archetype: Performance Anxiety & Pressure Response  ·  Status: partially resolved  ·  Generated: 2026-06-03T13:57:57.700Z
+
+## Strengths
+  • Strong Decision Confidence [Csi Positive Factors] (CSI domain "Decision Confidence" scored 75 (≥ 65 → strength).)
+      Trace: Response → Signal (positive)  ›  Signal → Strength
+  • Strong Decision Making [Csi Positive Factors] (CSI domain "Decision Making" scored 75 (≥ 65 → strength).)
+      Trace: Response → Signal (positive)  ›  Signal → Strength
+  • Strong Direction Persistence [Csi Positive Factors] (CSI domain "Direction Persistence" scored 75 (≥ 65 → strength).)
+      Trace: Response → Signal (positive)  ›  Signal → Strength
+
+## Growth Areas
+  • I freeze up in interviews and forget everything I wanted to say.
+      Trace: Response → Signal  ›  Signal → Concern
+  • My heart races and my mind goes empty right before I have to present.
+      Trace: Response → Signal  ›  Signal → Concern
+  • I blank out the moment an exam starts, even when I studied hard.
+      Trace: Response → Signal  ›  Signal → Concern
+  • The night before a big test I can't sleep because I'm so worried about messing up.
+      Trace: Response → Signal  ›  Signal → Concern
+
+## Top Archetypes
+  • Performance Anxiety & Pressure Response [Behavioural archetype]
+      Trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype
+
+## Emotional Indicators
+  • Activation runtime: active (direct) [Emotional Overload] (Active)
+      Trace: Response → Signal  ›  Signal → Concern
+  • Activation runtime: active (direct) [Placement Anxiety] (Active)
+      Trace: Response → Signal  ›  Signal → Concern
+  • Activation runtime: active (direct) [Career Confusion] (Active)
+      Trace: Response → Signal  ›  Signal → Concern
+  • Activation runtime: active (direct) [Social Withdrawal] (Active)
+      Trace: Response → Signal  ›  Signal → Concern
+
+## Immediate Actions
+  • Before the workday ends, write down each moment of panic during one high-pressure task and what set it off. [First step]
+      Trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention
+  • Before the workday ends, write down each moment of panic during one high-pressure task and what set it off. [Immediate Actions]
+      Trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention
+
+## 7-Day Plan
+  • Each workday this week, log what triggers exam, interview, and presentation nerves. [This week]
+      Trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention
+
+## Development Roadmap
+  • Performance Anxiety & Pressure Response — professional: 6-stage growth pathway from immediate action to 90-day development. [Where this leads]
+      Trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention
+  • Over the next 30 days at work, follow a short calm-down routine before every test, presentation, or meeting. [This month]
+      Trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention
+  • Over the next quarter at work, build steady calm under pressure through weekly timed practice runs. [This quarter]
+      Trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention
+  • Build a daily workday habit — a two-minute breathing reset before each high-pressure moment. [Habit]
+      Trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention
+  • Practise this skill each week at work — rehearsing exams and presentations out loud until the nerves settle. [Skill Building]
+      Trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention
+  • Over the next quarter at work, build steady calm under pressure through weekly timed practice runs. [Ninety Day]
+      Trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention
+  • Each workday this week, log what triggers exam, interview, and presentation nerves. [Seven Day]
+      Trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention
+  • Over the next 30 days at work, follow a short calm-down routine before every test, presentation, or meeting. [Thirty Day]
+      Trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention

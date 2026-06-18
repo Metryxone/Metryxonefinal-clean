@@ -1,0 +1,10 @@
+session_id,has_envelope,product_consumed,product_ready,growth_consumed,growth_ready,growth_reason,mentor_consumed,mentor_ready,mentor_reason,commercial_consumed,commercial_ready,commercial_reason,decision_driven,report_consumed,report_ready,report_sources,rec_consumed,rec_ready,rec_sources,trend_consumed,trend_ready,trend_count
+0731f92c-d9d2-457f-92e9-ce2edd32664a,true,true,false,true,false,no_outcome_models,true,true,derived_from_concern_keyword,true,false,show_options,true,false,false,"",true,false,"stage",false,false,0
+b883418d-933b-47a6-b73d-c6c02a161f4f,true,true,false,true,false,no_outcome_models,true,true,derived_from_concern_keyword,true,false,show_options,true,false,false,"",true,false,"stage",false,false,0
+7828d7a3-ddda-4659-8846-7597443e2830,true,true,false,true,false,no_outcome_models,true,true,derived_from_concern_keyword,true,false,show_options,true,false,false,"",true,false,"stage",false,false,0
+4349237c-ce0b-41c5-9206-647c2654b26e,true,true,false,true,false,no_outcome_models,true,true,derived_from_concern_keyword,true,false,no_billing_identity,true,false,false,"",true,false,"stage",false,false,0
+4c9b6c0b-4907-48e3-8c56-95a65e623006,true,true,false,true,false,no_outcome_models,true,true,derived_from_concern_keyword,true,false,no_billing_identity,true,false,false,"",true,false,"stage",false,false,0
+d0f54fc4-7a08-4747-9ccb-422e86cc93b9,true,true,false,true,false,no_outcome_models,true,true,derived_from_concern_keyword,true,false,no_billing_identity,true,false,false,"",true,false,"stage",false,false,0
+a0924499-24bf-43be-adbe-1c6f00a5dd9e,true,true,false,true,false,no_outcome_models,true,true,derived_from_concern_keyword,true,false,no_billing_identity,true,false,false,"",true,false,"stage",false,false,0
+11111111-1111-1111-1111-111111111111,true,true,false,true,false,no_outcome_models,true,true,derived_from_concern_keyword,true,false,show_options,true,true,true,"behavior_graph",true,false,"stage",false,false,0
+1cd9ca07-4659-42c4-83fd-229e5e8f21f2,true,true,false,true,false,no_outcome_models,true,true,derived_from_concern_keyword,true,false,show_options,true,true,true,"behavior_graph",true,false,"stage",false,false,0

@@ -1,0 +1,126 @@
+/**
+ * Task #7 — Usage metering routes (flag `commercialUsageMetering`, default OFF → every route 503s and
+ * NO comm_usage_events table is created → byte-identical legacy).
+ *
+ *   POST /api/commercial/metering/record   — record a metered action (FAIL CLOSED if over quota → 429)
+ *   GET  /api/commercial/metering/check    — evaluate quota WITHOUT recording (?usage_type=&email=)
+ *   GET  /api/admin/commercial/metering/overview — super-admin system-wide usage overview
+ *
+ * record/check require auth; the metered identity is ALWAYS the server-authenticated principal. A
+ * client-supplied email is honoured ONLY for a super-admin (acting on behalf of) — a normal user can
+ * never meter/inspect another identity (no IDOR / quota sabotage). overview is super-admin only.
+ *
+ * When the entitlement-classes + enforcement flags are ON, recording a metered action whose usage_type
+ * is itself a feature class also requires entitlement to that class (fails closed 402/503).
+ */
+import type { Express } from 'express';
+import pg from 'pg';
+import { ensureMeteringSchema } from '../services/commercial/metering-schema';
+import { recordUsage, checkQuota, buildUsageOverview, isUsageType } from '../services/commercial/metering-engine';
+import {
+  isCommercialUsageMeteringEnabled,
+  isCommercialEntitlementEnforcementEnabled,
+  isCommercialEntitlementClassesEnabled,
+} from '../config/feature-flags';
+import { isFeatureClass, type FeatureClass, type UsageType } from '../services/commercial/plan-features';
+import { evaluateFeatureClassEntitlement } from '../services/wc7c/require-entitlement';
+
+type GuardMW = (req: any, res: any, next: any) => void;
+
+export function registerCommercialMeteringRoutes(
+  app: Express,
+  pool: pg.Pool,
+  requireAuth: GuardMW,
+  requireSuperAdmin: GuardMW,
+): void {
+  const requireMeteringFlag: GuardMW = (_req, res, next) => {
+    if (!isCommercialUsageMeteringEnabled()) {
+      return res.status(503).json({ error: 'feature_disabled', flag: 'commercialUsageMetering' });
+    }
+    next();
+  };
+  const ensureSchema: GuardMW = async (_req, res, next) => {
+    try {
+      await ensureMeteringSchema(pool);
+      next();
+    } catch (err) {
+      console.error('[metering schema]', err);
+      res.status(503).json({ error: 'schema_unavailable' });
+    }
+  };
+  const userChain = [requireAuth, requireMeteringFlag, ensureSchema];
+  const adminChain = [requireAuth, requireSuperAdmin, requireMeteringFlag, ensureSchema];
+
+  const isSuperAdmin = (req: any): boolean => {
+    const roles = req.user?.roles || [];
+    return roles.includes('super_admin') || req.user?.role === 'super_admin';
+  };
+  // Identity is ALWAYS the server-authenticated principal. A client-supplied email (`override`) is
+  // honoured ONLY for a super-admin (admin tooling acting on behalf of an identity). A normal user
+  // can never meter or inspect ANOTHER identity — this closes the IDOR / quota-sabotage hole.
+  const resolveEmail = (req: any, override?: unknown): string | null => {
+    const principal = req.user?.email ?? req.session?.email;
+    const chosen = isSuperAdmin(req) && override != null ? String(override) : principal;
+    const trimmed = typeof chosen === 'string' ? chosen.trim() : '';
+    return trimmed || null;
+  };
+
+  app.post('/api/commercial/metering/record', ...userChain, async (req: any, res) => {
+    try {
+      const email = resolveEmail(req, req.body?.email);
+      const usageType = String(req.body?.usage_type ?? '').trim();
+      if (!email) return res.status(400).json({ error: 'email required' });
+      if (!isUsageType(usageType)) return res.status(400).json({ error: 'invalid usage_type' });
+      // Feature-class enforcement: when both flags are ON, a metered action whose usage_type IS a
+      // feature class (views/searches/exports/assessments/api) requires entitlement to that class.
+      // Fails CLOSED (402/503). Usage-only types (unlocks/downloads) carry no class → nothing to gate.
+      if (
+        isCommercialEntitlementEnforcementEnabled() &&
+        isCommercialEntitlementClassesEnabled() &&
+        isFeatureClass(usageType)
+      ) {
+        const verdict = await evaluateFeatureClassEntitlement(pool, email, usageType as FeatureClass);
+        if (!verdict.allowed) return res.status(verdict.status).json(verdict.body);
+      }
+      const result = await recordUsage(pool, {
+        email,
+        usageType: usageType as UsageType,
+        quantity: req.body?.quantity,
+        subscriptionId: req.body?.subscription_id ?? null,
+        metadata: req.body?.metadata ?? null,
+      });
+      if (!result.recorded) {
+        // FAIL CLOSED — over a declared quota; event not written.
+        return res.status(429).json({ error: 'quota_exceeded', quota: result.quota });
+      }
+      res.status(201).json(result);
+    } catch (err) {
+      console.error('[metering record]', err);
+      res.status(500).json({ error: 'record failed' });
+    }
+  });
+
+  app.get('/api/commercial/metering/check', ...userChain, async (req: any, res) => {
+    try {
+      const email = resolveEmail(req, req.query?.email);
+      const usageType = String(req.query?.usage_type ?? '').trim();
+      if (!email) return res.status(400).json({ error: 'email required' });
+      if (!isUsageType(usageType)) return res.status(400).json({ error: 'invalid usage_type' });
+      const quota = await checkQuota(pool, email, usageType as UsageType);
+      res.json(quota);
+    } catch (err) {
+      console.error('[metering check]', err);
+      res.status(500).json({ error: 'check failed' });
+    }
+  });
+
+  app.get('/api/admin/commercial/metering/overview', ...adminChain, async (_req: any, res) => {
+    try {
+      const overview = await buildUsageOverview(pool);
+      res.json(overview);
+    } catch (err) {
+      console.error('[metering overview]', err);
+      res.status(500).json({ error: 'overview failed' });
+    }
+  });
+}

@@ -1,0 +1,685 @@
+If your objective is to determine **whether MteryxOne is truly ready end-to-end**, then the audit should go far beyond readiness scores and examine the entire platform from database → backend → intelligence → reports → frontend → admin → commercial → launch.
+
+Use the prompt below.
+
+---
+
+# M-XR1 — MteryxOne End-to-End Platform Readiness & Functional Completeness Audit
+
+## Mission
+
+Conduct a complete end-to-end audit of the entire MteryxOne ecosystem.
+
+This audit must determine:
+
+* What is implemented
+* What is functional
+* What is connected
+* What is activated
+* What is being consumed
+* What is producing real outputs
+* What is production-ready
+* What is still incomplete
+
+The final outcome must be a factual readiness score and a roadmap to achieve **95%+ world-class readiness**.
+
+---
+
+# Products in Scope
+
+Audit ALL products and shared infrastructure.
+
+## Core Products
+
+* CAPADEX
+* Competency Assessment
+* Employability Index (MEI)
+* Learning Behavior Index (LBI)
+* Career Builder
+
+## Shared Intelligence
+
+* Atomic Signals
+* Signal Families
+* User Intelligence
+* Behaviour Intelligence
+* Persona Intelligence
+* Context Intelligence
+* Journey Intelligence
+* Decision Intelligence
+* Outcome Intelligence
+* Trend Intelligence
+* Forecast Intelligence
+* Recommendation Intelligence
+* Intervention Intelligence
+* Memory Intelligence
+
+## Shared Platform
+
+* Reports
+* Admin
+* Commercial
+* Analytics
+* Longitudinal Intelligence
+* Snapshot Infrastructure
+
+---
+
+# Audit Rules
+
+Follow strict honesty rules.
+
+DO NOT score:
+
+* architecture
+* planned features
+* documentation
+* routes
+* migrations
+* tables
+
+UNLESS they are actively used.
+
+Score ONLY:
+
+* real execution
+* real persistence
+* real consumption
+* real activation
+* real outputs
+* real user value
+
+---
+
+# Section 1 — Database Readiness Audit
+
+Inventory every table.
+
+For every table determine:
+
+| Check    | Result |
+| -------- | ------ |
+| Exists   |        |
+| Written  |        |
+| Read     |        |
+| Consumed |        |
+| Active   |        |
+| Dead     |        |
+| Orphan   |        |
+| Partial  |        |
+| Complete |        |
+
+Generate:
+
+## Database Health %
+
+## Database Utilization %
+
+## Database Readiness %
+
+Identify:
+
+* unused tables
+* orphan tables
+* duplicate tables
+* abandoned schemas
+* conflicting schemas
+
+---
+
+# Section 2 — Backend Readiness Audit
+
+Audit every:
+
+* service
+* engine
+* route
+* workflow
+* hook
+* scheduler
+
+For each determine:
+
+| Metric          | Value |
+| --------------- | ----- |
+| Exists          |       |
+| Executed        |       |
+| Produces output |       |
+| Consumed        |       |
+| Activated       |       |
+
+Generate:
+
+## Backend Readiness %
+
+---
+
+# Section 3 — Frontend Readiness Audit
+
+Audit every:
+
+* page
+* component
+* dashboard
+* report
+* admin panel
+* workflow
+
+Determine:
+
+| Metric      | Value |
+| ----------- | ----- |
+| Reachable   |       |
+| Connected   |       |
+| Data-backed |       |
+| Intelligent |       |
+| Placeholder |       |
+| Functional  |       |
+
+Generate:
+
+## Frontend Readiness %
+
+---
+
+# Section 4 — Product Readiness Audit
+
+Audit each product end-to-end.
+
+---
+
+## CAPADEX
+
+Verify:
+
+Assessment
+
+↓
+
+Scoring
+
+↓
+
+Signal Generation
+
+↓
+
+Intelligence
+
+↓
+
+Reports
+
+↓
+
+Persistence
+
+↓
+
+Recommendations
+
+↓
+
+Activation
+
+---
+
+## Competency Assessment
+
+Verify:
+
+Assessment
+
+↓
+
+Competency Scores
+
+↓
+
+History
+
+↓
+
+Reports
+
+↓
+
+Recommendations
+
+↓
+
+Growth Plans
+
+↓
+
+Persistence
+
+---
+
+## Employability Index
+
+Verify:
+
+Competency
+
+↓
+
+MEI
+
+↓
+
+Snapshots
+
+↓
+
+Recommendations
+
+↓
+
+Forecasts
+
+↓
+
+Career Builder
+
+↓
+
+Admin
+
+---
+
+## Learning Behavior Index
+
+Verify:
+
+Assessment
+
+↓
+
+Behaviour Scores
+
+↓
+
+Reports
+
+↓
+
+Recommendations
+
+↓
+
+Personalization
+
+↓
+
+Longitudinal
+
+---
+
+## Career Builder
+
+Verify:
+
+Discovery
+
+↓
+
+Recommendations
+
+↓
+
+Pathways
+
+↓
+
+Trajectory
+
+↓
+
+Memory
+
+↓
+
+Interventions
+
+↓
+
+Reports
+
+↓
+
+Commercial
+
+---
+
+# Section 5 — Intelligence Readiness Audit
+
+Audit all intelligence engines.
+
+---
+
+## Signal Intelligence
+
+Audit:
+
+* atomic signals
+* signal families
+* signal persistence
+* signal consumption
+
+---
+
+## Decision Intelligence
+
+Audit:
+
+* generation
+* persistence
+* consumption
+
+---
+
+## Journey Intelligence
+
+Audit:
+
+* generation
+* persistence
+* activation
+
+---
+
+## Outcome Intelligence
+
+Audit:
+
+* outcome states
+* outcome trends
+* outcome predictions
+
+---
+
+## Trend Intelligence
+
+Audit:
+
+* trend generation
+* trend persistence
+* trend consumption
+
+---
+
+## Forecast Intelligence
+
+Audit:
+
+* readiness forecasts
+* competency forecasts
+* career forecasts
+* employability forecasts
+
+---
+
+## Memory Intelligence
+
+Audit:
+
+* storage
+* retrieval
+* consumption
+* recommendations
+
+---
+
+## Intervention Intelligence
+
+Audit:
+
+* generation
+* execution
+* outcomes
+
+Generate:
+
+### Intelligence Readiness %
+
+---
+
+# Section 6 — Report Intelligence Audit
+
+Inventory ALL reports.
+
+For every report verify:
+
+| Capability         | Present |
+| ------------------ | ------- |
+| Score              |         |
+| Breakdown          |         |
+| Insights           |         |
+| Explainability     |         |
+| Recommendations    |         |
+| Confidence         |         |
+| Trends             |         |
+| Forecasts          |         |
+| Benchmarks         |         |
+| Interventions      |         |
+| Outcome Simulation |         |
+| Roadmap            |         |
+
+Generate:
+
+### Report Intelligence %
+
+Identify:
+
+* duplicated reports
+* static reports
+* fabricated reports
+* disconnected reports
+
+---
+
+# Section 7 — Longitudinal Intelligence Audit
+
+Audit:
+
+* snapshots
+* history
+* trends
+* progression
+* forecasts
+* comparisons
+* memory
+
+Measure:
+
+* active rows
+* consumers
+* outputs
+
+Generate:
+
+### Longitudinal Readiness %
+
+---
+
+# Section 8 — Admin Readiness Audit
+
+Audit:
+
+## SuperAdmin
+
+* Product Health
+* Data Quality
+* Intelligence Health
+* Commercial Health
+* Operations
+* Analytics
+
+Determine:
+
+### Admin Readiness %
+
+---
+
+# Section 9 — Commercial Readiness Audit
+
+Audit:
+
+* subscriptions
+* pricing
+* payments
+* entitlements
+* renewals
+* upsells
+* forecasts
+
+Determine:
+
+| Layer | Structural | Activation |
+| ----- | ---------- | ---------- |
+
+Generate:
+
+### Commercial Readiness %
+
+---
+
+# Section 10 — Analytics & Monitoring Audit
+
+Audit:
+
+* events
+* funnels
+* telemetry
+* error tracking
+* operational monitoring
+* launch analytics
+
+Determine:
+
+### Analytics Readiness %
+
+---
+
+# Section 11 — Security & Operational Readiness
+
+Audit:
+
+* authentication
+* authorization
+* MFA
+* secrets
+* audit trails
+* rate limits
+* deployment readiness
+* backup readiness
+
+Generate:
+
+### Operational Readiness %
+
+---
+
+# Section 12 — End-to-End Functional Flow Audit
+
+Verify complete user journeys.
+
+### Student
+
+CAPADEX → Competency → EI → LBI → Career Builder
+
+### Parent
+
+CAPADEX → Reports → Recommendations → Growth
+
+### Admin
+
+Product Monitoring → Intelligence Monitoring → Data Quality
+
+### Commercial
+
+Assessment → Product Recommendation → Purchase → Entitlement
+
+Identify every break in the chain.
+
+---
+
+# Section 13 — Readiness Calculation
+
+Calculate:
+
+| Dimension    | Score |
+| ------------ | ----- |
+| Database     |       |
+| Backend      |       |
+| Frontend     |       |
+| Products     |       |
+| Intelligence |       |
+| Reports      |       |
+| Longitudinal |       |
+| Admin        |       |
+| Commercial   |       |
+| Analytics    |       |
+| Operations   |       |
+
+Generate:
+
+### Structural Readiness %
+
+### Functional Readiness %
+
+### Activation Readiness %
+
+### Intelligence Readiness %
+
+### Launch Readiness %
+
+### World-Class Readiness %
+
+---
+
+# Section 14 — Top 25 Gaps
+
+For every gap provide:
+
+* severity
+* impact
+* effort
+* dependency
+* readiness gain
+
+Rank by ROI.
+
+---
+
+# Section 15 — Roadmap to 95%+
+
+Create:
+
+## Phase 1 — Highest ROI Fixes
+
+Target: 80% → 90%
+
+## Phase 2 — Product Completion
+
+Target: 90% → 95%
+
+## Phase 3 — World-Class Layer
+
+Target: 95% → 99%
+
+For each phase provide:
+
+* exact workstreams
+* effort estimate
+* readiness gain
+* dependencies
+
+---
+
+# Final Executive Question
+
+Answer:
+
+> If MteryxOne were launched to 10,000 users tomorrow, what percentage of the platform would function exactly as intended, what would fail first, what are the top 25 blockers preventing 95%+ readiness, and what is the exact execution sequence required to achieve a genuinely world-class platform?

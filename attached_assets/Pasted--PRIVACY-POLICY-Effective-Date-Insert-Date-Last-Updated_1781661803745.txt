@@ -1,0 +1,421 @@
+# PRIVACY POLICY
+
+**Effective Date:** [Insert Date]
+**Last Updated:** [Insert Date]
+
+## 1. INTRODUCTION
+
+MetryxOne ("MetryxOne", "Company", "we", "our", or "us") is a Human Intelligence Cloud™ platform that provides behavioral intelligence, competency intelligence, employability intelligence, learning intelligence, career intelligence, workforce intelligence, talent intelligence, and related services to individuals, educational institutions, employers, government agencies, training providers, and other organizations.
+
+This Privacy Policy explains how we collect, use, process, store, disclose, and protect personal information when you access or use our website, applications, assessments, products, services, reports, analytics, and related offerings.
+
+This Privacy Policy is intended to comply with applicable Indian laws, including the Digital Personal Data Protection Act, 2023 ("DPDP Act").
+
+---
+
+# 2. DATA FIDUCIARY DETAILS
+
+**MetryxOne**
+
+Address:
+
+4th Floor, Bizness Square,
+Junction, Hitech City Road,
+Opposite Hitex Road,
+Jubilee Enclave,
+HITEC City,
+Hyderabad,
+Telangana – 500081,
+India
+
+Privacy Contact:
+
+[privacy@metryxone.com](mailto:privacy@metryxone.com)
+
+Website:
+
+[www.metryxone.com](http://www.metryxone.com)
+
+---
+
+# 3. INFORMATION WE COLLECT
+
+## Personal Information
+
+We may collect:
+
+* Name
+* Email address
+* Mobile number
+* Date of birth
+* Gender
+* Location
+* Educational information
+* Employment information
+* Professional information
+* Skills and certifications
+* Career aspirations
+* Profile photographs (if voluntarily uploaded)
+
+## Assessment Information
+
+Information generated through:
+
+* CAPADEX™
+* Competency Assessments
+* Employability Intelligence
+* Learning Behavior Intelligence (LBI)
+* Career Assessments
+* Leadership Assessments
+* Future Readiness Assessments
+* Workforce Assessments
+
+Including:
+
+* Assessment responses
+* Scores
+* Competency profiles
+* Behavioral indicators
+* Learning indicators
+* Career indicators
+* Recommendations
+* Development plans
+
+## Candidate and Workforce Information
+
+* Resume information
+* Job applications
+* Interview records
+* Hiring status
+* Career history
+* Workforce development records
+* Talent management records
+
+## Technical Information
+
+* IP address
+* Device information
+* Browser information
+* Operating system
+* Login information
+* Usage analytics
+* Cookies and similar technologies
+
+## Payment Information
+
+Payments are processed through Razorpay and other authorized payment providers.
+
+MetryxOne does not store complete card information.
+
+Payment processing is governed by the respective payment provider's privacy policies.
+
+---
+
+# 4. PURPOSES OF PROCESSING
+
+We process information to:
+
+* Deliver assessments and reports
+* Generate intelligence insights
+* Build competency profiles
+* Calculate employability indicators
+* Support learning and career development
+* Enable talent intelligence services
+* Facilitate recruitment and hiring
+* Enable workforce intelligence and organizational analytics
+* Improve products and services
+* Conduct benchmarking and research
+* Maintain security
+* Meet legal obligations
+* Provide customer support
+
+---
+
+# 5. TALENT INTELLIGENCE AND ANALYTICS
+
+MetryxOne may generate:
+
+* Behavioral insights
+* Competency intelligence
+* Employability intelligence
+* Learning intelligence
+* Career intelligence
+* Workforce intelligence
+* Leadership readiness indicators
+* Succession indicators
+* Development recommendations
+* Benchmarking insights
+
+These insights are intended to support decision-making and should not be considered the sole basis for educational, employment, promotion, disciplinary, or other significant decisions.
+
+Human judgment should always be applied.
+
+---
+
+# 6. AI AND AUTOMATED PROCESSING
+
+MetryxOne uses:
+
+* Artificial Intelligence
+* Machine Learning
+* Statistical Models
+* Knowledge Graphs
+* Analytical Algorithms
+
+to generate recommendations, scores, rankings, forecasts, benchmarks, and intelligence outputs.
+
+AI-generated outputs:
+
+* May contain limitations
+* Should be independently reviewed
+* Are intended to support, not replace, human decision-making
+
+MetryxOne does not guarantee outcomes based on AI-generated insights.
+
+---
+
+# 7. EMPLOYER ACCESS TO CANDIDATE DATA
+
+Where candidates:
+
+* Apply for jobs
+* Join employer-sponsored programs
+* Participate in recruitment processes
+* Consent to profile visibility
+
+MetryxOne may share relevant profile information with authorized employers.
+
+Such information may include:
+
+* Resume data
+* Assessment results
+* Competency profiles
+* Employability indicators
+* Skills information
+* Career information
+
+Employers receive only information authorized by applicable permissions, platform settings, or candidate consent.
+
+---
+
+# 8. EDUCATIONAL INSTITUTIONS AND STUDENT DATA
+
+MetryxOne provides services to:
+
+* Schools
+* Colleges
+* Universities
+* Training Institutions
+
+Educational institutions may receive reports, analytics, benchmarks, and intelligence outputs related to participating learners.
+
+Student information is processed solely for educational, developmental, research, benchmarking, and institutional improvement purposes.
+
+---
+
+# 9. CHILDREN AND MINORS
+
+MetryxOne may provide services to users under the age of 18 through schools, educational institutions, parents, guardians, or authorized programs.
+
+Where required under applicable law:
+
+* Parent or guardian consent will be obtained
+* Institution-authorized processing will be used
+* Additional safeguards will be implemented
+
+MetryxOne does not knowingly process children's data in violation of applicable laws.
+
+---
+
+# 10. INFORMATION SHARING
+
+We do not sell personal information.
+
+We may share information with:
+
+### Educational Institutions
+
+For educational and developmental purposes.
+
+### Employers
+
+For recruitment, hiring, workforce development, and talent management purposes.
+
+### Service Providers
+
+Including:
+
+* Google Cloud
+* Analytics providers
+* Communication providers
+* Security providers
+* Payment providers
+
+### Legal Authorities
+
+Where required by law or regulatory obligations.
+
+---
+
+# 11. DATA SECURITY
+
+MetryxOne uses industry-standard security measures including:
+
+* Encryption in transit
+* Access controls
+* Role-based permissions
+* Audit logging
+* Security monitoring
+* Vulnerability management
+* Authentication controls
+
+While we strive to protect information, no system can guarantee absolute security.
+
+---
+
+# 12. DATA STORAGE
+
+Information may be stored using infrastructure hosted on Google Cloud and related technology providers.
+
+Data may be processed in locations permitted under applicable law and contractual safeguards.
+
+---
+
+# 13. DATA RETENTION
+
+Information is retained only as long as necessary to:
+
+* Deliver services
+* Maintain assessment histories
+* Support longitudinal intelligence
+* Meet legal obligations
+* Resolve disputes
+* Enforce agreements
+
+Retention periods may vary depending on:
+
+* User type
+* Assessment type
+* Regulatory requirements
+* Customer agreements
+
+---
+
+# 14. USER RIGHTS
+
+Subject to applicable laws, users may have rights to:
+
+* Access information
+* Correct information
+* Update information
+* Withdraw consent
+* Request deletion where legally permissible
+* Request grievance resolution
+
+Requests may be submitted to:
+
+[privacy@metryxone.com](mailto:privacy@metryxone.com)
+
+---
+
+# 15. WITHDRAWAL OF CONSENT
+
+Users may withdraw consent where processing is based on consent.
+
+Withdrawal of consent may impact access to certain services and functionality.
+
+Withdrawal does not affect processing that occurred before withdrawal.
+
+---
+
+# 16. COOKIES
+
+MetryxOne uses:
+
+### Essential Cookies
+
+Required for platform functionality.
+
+### Performance Cookies
+
+Used to improve service quality.
+
+### Analytics Cookies
+
+Used to understand platform usage.
+
+### Preference Cookies
+
+Used to remember user settings.
+
+Users may control cookies through browser settings.
+
+---
+
+# 17. RESEARCH AND BENCHMARKING
+
+MetryxOne may use anonymized, aggregated, or de-identified information for:
+
+* Research
+* Benchmarking
+* Product improvement
+* Industry reports
+* Workforce analytics
+* Educational analytics
+
+Such information will not directly identify individuals.
+
+---
+
+# 18. THIRD-PARTY LINKS
+
+Our services may contain links to third-party websites and services.
+
+MetryxOne is not responsible for third-party privacy practices.
+
+Users should review applicable third-party policies.
+
+---
+
+# 19. GRIEVANCE REDRESSAL
+
+Questions, complaints, requests, or concerns regarding personal information may be directed to:
+
+Privacy Officer
+
+Email: [privacy@metryxone.com](mailto:privacy@metryxone.com)
+
+Address:
+
+4th Floor, Bizness Square,
+Junction, Hitech City Road,
+Opposite Hitex Road,
+Jubilee Enclave,
+HITEC City,
+Hyderabad,
+Telangana – 500081,
+India
+
+We will make reasonable efforts to respond within timelines prescribed by applicable law.
+
+---
+
+# 20. POLICY UPDATES
+
+We may update this Privacy Policy from time to time.
+
+Material changes will be communicated through the website, platform, email, or other appropriate channels.
+
+Continued use of services following updates constitutes acceptance of the revised Privacy Policy.
+
+---
+
+# 21. CONSENT
+
+By using MetryxOne services, assessments, applications, websites, and related offerings, you acknowledge that you have read, understood, and agreed to this Privacy Policy and the data processing practices described herein.
+
+---
+
+**MetryxOne Human Intelligence Cloud™**
+
+*Making Human Potential Visible.*

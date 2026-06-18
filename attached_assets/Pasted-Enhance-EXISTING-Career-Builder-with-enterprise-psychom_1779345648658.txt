@@ -1,0 +1,102 @@
+Enhance EXISTING Career Builder with enterprise psychometric rigor.
+
+OBJECTIVE
+Make the platform scientifically defensible and statistically reliable.
+
+========================================
+PHASE 3 SCOPE
+========================================
+
+BUILD:
+1. Evidence Reliability Engine
+2. Bayesian Competency Inference
+3. Confidence Intervals
+4. Longitudinal Stability Scoring
+5. Psychometric Explainability Layer
+
+========================================
+CREATE
+========================================
+
+backend/services/evidence-reliability-engine.ts
+
+backend/services/bayesian-inference-engine.ts
+
+backend/services/stability-analysis-engine.ts
+
+========================================
+EVIDENCE RELIABILITY
+========================================
+
+Each signal weighted by:
+- metric specificity
+- behavioural density
+- external validation
+- consistency
+- recency
+- contradiction penalties
+
+========================================
+BAYESIAN INFERENCE
+========================================
+
+Replace static competency certainty with:
+P(mastery | evidence)
+
+Store:
+{
+  probability_mastery,
+  uncertainty,
+  evidence_strength,
+  confidence_interval
+}
+
+========================================
+CONFIDENCE INTERVALS
+========================================
+
+All scores expose:
+- EI ± uncertainty
+- competency ± uncertainty
+- fitment ± uncertainty
+- role transition ± uncertainty
+
+========================================
+LONGITUDINAL STABILITY
+========================================
+
+Detect:
+- temporary spikes
+- inconsistency
+- coaching contamination
+- behavioural instability
+
+========================================
+UI ENHANCEMENTS
+========================================
+
+Add:
+- confidence intervals
+- evidence confidence
+- statistical reliability
+- uncertainty indicators
+
+========================================
+EXPLAINABILITY
+========================================
+
+Expose:
+- evidence sources
+- excluded evidence
+- confidence math
+- methodology versions
+- cohort sizes
+
+========================================
+SUCCESS CRITERIA
+========================================
+
+- Scores become probabilistic
+- Confidence intervals render correctly
+- Evidence weighting works
+- Scientific explainability operational

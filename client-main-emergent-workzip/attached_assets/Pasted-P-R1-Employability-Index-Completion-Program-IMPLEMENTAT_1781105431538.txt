@@ -1,0 +1,121 @@
+P-R1 — Employability Index Completion Program
+
+IMPLEMENTATION TASK
+
+Context
+
+Completed:
+
+* P-R0 Priority 1 Shared Foundation Activation
+* WC-P1 Employability Index Readiness Audit
+* P-X1 Shared Product Foundation Audit
+
+Current State
+
+WC-P1 identified the primary readiness blocker:
+
+The Employability Index uses two conflicting scoring systems.
+
+Gauge Score:
+
+* useHybridEI
+* 6-dimension runtime model
+
+Breakdown Modal:
+
+* 8-dimension documented model
+
+As a result:
+
+* Competency Assessment affects the breakdown score
+* Competency Assessment does not affect the displayed gauge score
+* Education affects the breakdown score
+* Education does not affect the displayed gauge score
+
+This creates score inconsistency and undermines trust.
+
+Objective
+
+Raise Employability Index readiness from its current audited state toward 90%+ by completing the highest-impact gaps.
+
+Workstream 1 — Formula Authority
+
+Implement EI-00 and EI-01.
+
+Tasks
+
+1. Select a single authoritative scoring model.
+2. Reconcile gauge and breakdown calculations.
+3. Ensure the same dimensions drive:
+
+   * score
+   * breakdown
+   * recommendations
+   * trends
+   * snapshots
+4. Remove duplicate scoring paths.
+5. Validate score bands.
+6. Produce before vs after calculations using real records.
+
+Deliverables
+
+* authoritative formula document
+* migration notes
+* score comparison report
+
+Workstream 2 — Competency Assessment Integration
+
+Tasks
+
+1. Verify competency assessment contribution.
+2. Ensure contribution affects final EI score.
+3. Ensure contribution affects recommendations.
+4. Ensure contribution persists in snapshots.
+
+Deliverables
+
+* implementation notes
+* validation report
+
+Workstream 3 — Recommendation Integrity
+
+Tasks
+
+1. Audit all recommendation calculations.
+2. Verify recommendations consume the authoritative EI score.
+3. Verify recommendations consume competency signals.
+4. Remove stale calculations.
+
+Deliverables
+
+* recommendation dependency map
+* validation report
+
+Workstream 4 — Snapshot Integrity
+
+Tasks
+
+1. Verify snapshots capture:
+
+   * score
+   * dimensions
+   * competency contribution
+   * recommendation inputs
+2. Verify trend generation remains correct after formula reconciliation.
+
+Deliverables
+
+* snapshot validation report
+* trend validation report
+
+Success Criteria
+
+* Gauge score equals authoritative score.
+* Breakdown score equals authoritative score.
+* Competency Assessment changes the final EI score.
+* Recommendations use the same score source.
+* Snapshots store the authoritative score.
+* Trends remain valid.
+* No duplicate scoring paths remain.
+
+STOP FOR APPROVAL if a fundamental architectural conflict is discovered.

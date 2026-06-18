@@ -1,0 +1,101 @@
+No.	Competency	No.	Competency	No.	Competency
+1	Adaptability	101	Agile Collaboration	201	Personal Credibility
+2	Accountability	102	Ambiguity Tolerance	202	Personal Resilience
+3	Active Listening	103	Appreciation of Diversity	203	Personal Responsibility
+4	Analytical Thinking	104	Assertive Communication	204	Persuasive Communication
+5	Attention to Detail	105	Attention to Deadlines	205	Positivity in Leadership
+6	Building Trust	106	Authenticity	206	Pragmatism
+7	Business Acumen	107	Autonomy	207	Prioritization
+8	Collaboration	108	Balanced Judgment	208	Process Orientation
+9	Communication	109	Brand Ambassadorship	209	Professional Demeanor
+10	Conflict Resolution	110	Business Ethics	210	Progress Tracking
+11	Creativity	111	Candor	211	Project Execution
+12	Customer Focus	112	Capacity to Learn	212	Providing Constructive Feedback
+13	Decision-Making	113	Careful Listening	213	Purpose-Driven Leadership
+14	Delegation	114	Change Advocacy	214	Quick Decision Making
+15	Dependability	115	Client Orientation	215	Real-Time Problem Solving
+16	Emotional Intelligence	116	Collaboration Across Teams	216	Relationship Building
+17	Empathy	117	Command Skills	217	Reliability
+18	Ethical Judgment	118	Commercial Awareness	218	Respect for Diversity
+19	Flexibility	119	Composure under Pressure	219	Respectfulness
+20	Goal Orientation	120	Conceptual Thinking	220	Results Orientation
+21	Initiative	121	Confidence in Decision Making	221	Return on Investment Focus
+22	Innovation	122	Consistency	222	Risk Awareness
+23	Integrity	123	Constructive Feedback	223	Role Clarity
+24	Interpersonal Skills	124	Continuous Learning	224	Root Cause Analysis
+25	Leadership	125	Contingency Planning	225	Safety Focus
+26	Learning Agility	126	Contextual Awareness	226	Scenario Planning
+27	Negotiation	127	Contribution to Team Success	227	Securing Stakeholder Buy-In
+28	Organizational Awareness	128	Cost Management	228	Self-Directed Learning
+29	Ownership	129	Cross-Cultural Competence	229	Self-Motivation
+30	Patience	130	Curiosity	230	Sense of Urgency
+31	Persuasion	131	Customer Relationship Building	231	Servant Leadership
+32	Planning and Organizing	132	Customer Service Excellence	232	Setting Clear Expectations
+33	Presentation Skills	133	Data-Driven Decision Making	233	Sharing Knowledge
+34	Problem-Solving	134	Delegation and Empowerment	234	Short-Term Planning
+35	Project Management	135	Dependable Leadership	235	Solution Orientation
+36	Resilience	136	Design Thinking	236	Sound Judgment
+37	Risk Management	137	Determination	237	Stakeholder Collaboration
+38	Self-Awareness	138	Developing People	238	Stakeholder Engagement
+39	Self-Control	139	Diplomacy	239	Stewardship
+40	Service Orientation	140	Discretion	240	Strategic Execution
+41	Strategic Thinking	141	Diversity & Inclusion Awareness	241	Structured Thinking
+42	Stress Management	142	Effective Time Use	242	Sustainability Focus
+43	Teamwork	143	Emotional Regulation	243	Systems Thinking
+44	Time Management	144	Employee Advocacy	244	Talent Development
+45	Tolerance for Ambiguity	145	Empowerment of Others	245	Task Prioritization
+46	Transparency	146	Encouragement	246	Technical Competence
+47	Vision	147	Energy Management	247	Team Building
+48	Work Ethic	148	Engaging Leadership	248	Team Motivation
+49	Accountable Leadership	149	Enterprise Risk Management	249	Time Sensitivity
+50	Agility in Execution	150	Entrepreneurial Spirit	250	Timeliness
+51	Assertiveness	151	Environmental Awareness	251	Tolerance for Risk
+52	Building Relationships	152	Ethical Decision Making	252	Transformational Leadership
+53	Change Management	153	External Awareness	253	Transparent Communication
+54	Coaching	154	Fairness in Judgment	254	Trust Building
+55	Commitment	155	Financial Acumen	255	Understanding Others
+56	Conscientiousness	156	Follow-Up	256	User-Centered Design Thinking
+57	Critical Thinking	157	Foresight	257	Value Creation
+58	Customer Advocacy	158	Formal Presentation Skills	258	Vendor Management
+59	Decision Quality	159	Forward Thinking	259	Visionary Thinking
+60	Diversity Awareness	160	Global Mindset	260	Volunteer Engagement
+61	Emotional Stability	161	Goal Achievement	261	Workload Management
+62	Entrepreneurial Thinking	162	Growth Mindset	262	Workplace Diversity Management
+63	Facilitation	163	Handling Ambiguity	263	Zero Defects Focus
+64	Fairness	164	Honesty	264	Workplace Conflict Resolution
+65	Focus on Results	165	Human Relations Skills	265	Workplace Safety Focus
+66	Influencing Others	166	Impact and Influence	266	Written Communication
+67	Judgment	167	Inclusivity	267	Workplace Accountability
+68	Learning Orientation	168	Independent Thinking	268	Wellness Management
+69	Listening Skills	169	Industry Awareness	269	Balanced Decision Making
+70	Managing Complexity	170	Influencing without Authority	270	Boundary Setting
+71	Managing Conflict	171	Innovation Leadership	271	Customer Retention Focus
+72	Mentorship	172	Inspirational Leadership	272	Active Problem Identification
+73	Motivation	173	Integrity and Ethics	273	Driving Operational Efficiency
+74	Networking	174	Intellectual Curiosity	274	Employee Retention Focus
+75	Open-Mindedness	175	Job Crafting	275	Informed Risk Taking
+76	Organizational Commitment	176	Knowledge Sharing	276	Managing Feedback Loops
+77	Passion for Excellence	177	Lateral Thinking	277	Performance Monitoring
+78	Patience with Others	178	Leading by Example	278	Quality Assurance
+79	Peer Mentoring	179	Learning from Mistakes	279	Quick Adaptability
+80	Perseverance	180	Listening to Employees	280	Rapid Prototyping
+81	Persuasion Skills	181	Long-Term Planning	281	Resolving Complex Issues
+82	Positive Reinforcement	182	Loyalty	282	Return on Time Management
+83	Process Improvement	183	Managing Cross-Functional Teams	283	Scaling Operations
+84	Professional Integrity	184	Managing Up	284	Self-Reliance
+85	Public Speaking	185	Market Awareness	285	Systems Thinking
+86	Quality Focus	186	Mediation Skills	286	Team Empowerment
+87	Relationship Management	187	Mentoring Others	287	Task Delegation
+88	Resourcefulness	188	Mission-Driven Focus	288	Technology Adoption
+89	Risk-Taking	189	Negotiating with Stakeholders	289	Transparent Leadership
+90	Self-Development	190	Objective Setting	290	Troubleshooting Skills
+91	Self-Discipline	191	Open Communication	291	Trust in Others
+92	Situational Awareness	192	Operational Decision Making	292	Workforce Agility
+93	Social Awareness	193	Optimism	293	Time Estimation Accuracy
+94	Sound Decision Making	194	Organizational Alignment	294	Unified Team Focus
+95	Stakeholder Management	195	Out-of-the-Box Thinking	295	Volunteer Management
+96	Strategic Planning	196	Ownership of Results	296	Workforce Empowerment
+97	Stress Tolerance	197	Passion for Learning	297	Workforce Flexibility
+98	Strong Work Ethic	198	Patience in Adversity	298	Workplace Inclusiveness
+99	Talent Management	199	People Orientation	299	Zero Waste Management
+100	Team Leadership	200	Personal Accountability	300	Zero Tolerance for Bias

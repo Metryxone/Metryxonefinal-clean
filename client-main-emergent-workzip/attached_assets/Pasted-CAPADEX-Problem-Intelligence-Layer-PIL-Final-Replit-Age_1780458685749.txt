@@ -1,0 +1,143 @@
+CAPADEX Problem Intelligence Layer (PIL) – Final Replit Agent Implementation Prompt v1.0
+
+You are a Senior Psychometrician, Assessment Architect, Educational Researcher, Career Development Expert, Human Development Scientist, Data Modeler, AI Systems Architect, and Full-Stack Engineer.
+
+Your task is to design and implement the CAPADEX Problem Intelligence Layer (PIL).
+
+The objective is to transform CAPADEX from a capability-centric assessment platform into a human-centered problem discovery, diagnosis, guidance, and intervention platform while preserving all existing assessment architecture.
+
+CRITICAL IMPLEMENTATION PRINCIPLES
+DO NOT MODIFY EXISTING CAPADEX DATA
+
+Existing tables, domains, competencies, bridge tags, concerns, assessments, questions, scoring systems, reports, and interventions must remain untouched.
+
+Everything created in this project must be implemented as an extension layer.
+
+QUALITY OVER QUANTITY
+
+This is a psychometric platform.
+
+Do not optimize for record volume.
+
+Do not mass-generate generic content.
+
+Generate fewer but higher-quality records.
+
+Human realism is more important than scale.
+
+HUMAN-FIRST RULE
+
+People do not experience:
+
+Learning Mindset
+Interdisciplinary Learning
+Self Management
+Career Clarity
+
+People experience:
+
+I study but forget everything.
+I keep changing my career goals.
+I don't know what I'm good at.
+I get distracted every time I try to work.
+My child avoids difficult tasks.
+My student struggles to connect concepts.
+
+All generated content must be written from real-world human experience.
+
+Never generate psychometric jargon.
+
+CAPADEX PROBLEM INTELLIGENCE HIERARCHY
+
+All generated content must follow this structure:
+
+Domain
+ ↓
+Archetype
+ ↓
+Concern
+ ↓
+Problem
+ ↓
+Behavior
+ ↓
+Emotion
+ ↓
+Question
+ ↓
+Intervention
+ ↓
+Outcome
+
+Example:
+
+Learning
+ ↓
+Learning Effectiveness
+ ↓
+Retention
+ ↓
+I study but forget everything
+ ↓
+Needs repeated revision
+ ↓
+Frustration
+ ↓
+Assessment Question
+ ↓
+Learning Strategy
+ ↓
+Improved Retention
+
+This hierarchy is mandatory.
+
+IMPLEMENTATION PHASES
+
+The system MUST stop after every phase and wait for approval before proceeding.
+
+PHASE 1 — CONCERN CLASSIFICATION
+
+Analyze the complete CAPADEX concern database.
+
+Classify every concern into one primary category.
+
+Allowed categories:
+
+Capability
+Problem
+Behavior
+Trait
+Outcome
+Risk
+
+Create:
+
+concern_classification
+
+Fields:
+
+id
+concern_id
+concern_name
+classification
+confidence_score
+reasoning
+created_at
+PHASE 1 OUTPUT
+
+Generate:
+
+Classification Summary
+Type	Count
+Capability	
+Problem	
+Behavior	
+Trait	
+Outcome	
+Risk	
+
+STOP.
+
+WAIT FOR HUMAN APPROVAL.
+
+DO NOT PROCEED.

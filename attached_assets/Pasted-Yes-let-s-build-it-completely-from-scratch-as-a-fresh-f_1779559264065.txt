@@ -1,0 +1,26 @@
+Yes, let's build it completely from scratch as a fresh feature build. Please execute the implementation following these exact steps:
+
+1. DATABASE SCHEMA SETUP:
+Create the database table `adaptive_ontology_edges` with the following columns:
+- id (SERIAL PRIMARY KEY)
+- source_bucket (VARCHAR(50), NOT NULL)
+- target_bucket (VARCHAR(50), NOT NULL)
+- weight (NUMERIC(3,2), NOT NULL, DEFAULT 0.50)
+- status (VARCHAR(20), DEFAULT 'approved')
+- created_at (TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
+Include a CHECK constraint on weight to keep it between 0.00 and 1.00. Create an index lookup on `source_bucket`.
+
+2. BESPOKE MANAGEMENT UI PANEL:
+Create a brand-new file at `frontend/src/components/superadmin/OntologyMatrixPanel.tsx`. Inside, use our shared `<CrudTable />` component pointing to `/api/admin/capadex/ontology`. Set up column headers and text/number form fields for source_bucket, target_bucket, and weight.
+
+3. CONSOLE INTEGRATION:
+- Open `frontend/src/components/admin/AdminSidebar.tsx` and add this new panel into the 'Intelligence Suite' nav group.
+- Open `frontend/src/components/SuperAdminDashboard.tsx` and register the panel in the main dashboard switch routing block under our `DialogsErrorBoundary`.
+
+4. PROTECTED API ENDPOINTS:
+Build the backend GET and POST endpoints for `/api/admin/capadex/ontology`. Enforce our platform's standard protection line: `requireAuth, requireSuperAdmin`. Ensure new entries land with a status of 'draft' and accurately trigger a log block inside `writeAuditEvent(...)`.
+
+5. INTELLIGENCE PICKER JOIN:
+Open `backend/routes/capadex-concern-intelligence.ts` and update the `pickQuestions` function. Refactor its SQL query to perform a subquery or join against our new `adaptive_ontology_edges` table where status = 'approved' and weight >= 0.60. The engine must fetch questions that match either the user's primary concern_bucket OR any highly-correlated target_buckets, filtered carefully by the user's age requirements. Maintain our default hardcoded fallback array inside the try/catch loop.
+
+Please begin by executing the database migration step first!

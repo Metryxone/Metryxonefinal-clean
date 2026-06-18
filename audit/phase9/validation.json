@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-06-03T19:12:15.233Z",
+  "accuracy_framework": {
+    "methodology": "Predictions are deterministic, a-priori-weighted compositions of the descriptive layers (readiness = clamp(0.5 + strengths − risks); expected = readiness + Σ traced intervention uplift). Validity is established by internal-consistency invariants until realized outcomes enable empirical calibration.",
+    "empirical_accuracy_available": false,
+    "outcome_truth_note": "No realized longitudinal outcomes are recorded yet, so empirical accuracy (predicted vs actual) is not measurable. We deliberately make NO accuracy claim — only internal validity + explainability.",
+    "consistency_checks": [
+      {
+        "name": "determinism",
+        "passed": true,
+        "detail": "identical input ⇒ identical output"
+      },
+      {
+        "name": "risk_monotonicity",
+        "passed": true,
+        "detail": "sev0.9→0.302 < sev0.2→0.456"
+      },
+      {
+        "name": "strength_monotonicity",
+        "passed": true,
+        "detail": "with strength 0.662 > base 0.5"
+      },
+      {
+        "name": "neutral_baseline",
+        "passed": true,
+        "detail": "no-evidence baseline 0.5"
+      },
+      {
+        "name": "confidence_tracks_chain",
+        "passed": true,
+        "detail": "full 0.3333 > partial 0.0952"
+      },
+      {
+        "name": "expected_ge_current",
+        "passed": true,
+        "detail": "expected 0.9 ≥ current 0.5"
+      }
+    ],
+    "consistency_passed": 6,
+    "consistency_total": 6,
+    "internally_valid": true
+  },
+  "coverage": {
+    "prediction_coverage": {
+      "evaluated": 10,
+      "produced": 10,
+      "degraded": 10,
+      "coverage": 1
+    },
+    "explainability_coverage": {
+      "predictions_total": 51,
+      "predictions_traced": 51,
+      "coverage": 1
+    },
+    "outcome_coverage": {
+      "with_realized_outcome": 0,
+      "total": 10,
+      "coverage": 0,
+      "note": "No realized-outcome records exist (no longitudinal follow-up captured) — honestly 0%."
+    },
+    "prediction_explainability_score": 1
+  }
+}

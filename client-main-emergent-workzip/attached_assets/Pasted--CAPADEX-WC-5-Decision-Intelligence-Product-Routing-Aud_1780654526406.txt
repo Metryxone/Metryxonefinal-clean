@@ -1,0 +1,375 @@
+# CAPADEX WC-5 — Decision Intelligence & Product Routing Audit
+
+## Objective
+
+Determine whether CAPADEX can consistently and accurately recommend the next best action, report, product, pathway, mentor, and subscription for every user segment.
+
+This is a DESIGN + AUDIT phase only.
+
+No implementation.
+
+No schema changes.
+
+No migrations.
+
+No code changes.
+
+No question generation.
+
+STOP FOR APPROVAL.
+
+---
+
+# Background
+
+Completed:
+
+* AQ-1 Metadata Reconstruction
+* AQ-2 Metadata Intelligence
+* WC-1 Runtime Grounding
+* WC-2 World-Class Readiness Audit
+* WC-3 Intelligence Layers
+* L1 Stage Intelligence
+* L2 Outcome Intelligence
+* L3 Journey Intelligence
+* L5A Question Stage Intelligence
+* L5B Context Intelligence
+
+Current Intelligence Chain:
+
+Concern
+↓
+Stage
+↓
+Context
+↓
+Outcome
+↓
+Journey
+
+The next maturity layer is:
+
+Concern
+↓
+Stage
+↓
+Context
+↓
+Outcome
+↓
+Journey
+↓
+Decision
+↓
+Product
+↓
+Action
+↓
+Growth Plan
+↓
+Subscription
+
+---
+
+# Strategic Goal
+
+Evaluate CAPADEX as a Decision Intelligence Platform rather than only an Assessment Platform.
+
+Determine whether CAPADEX can answer:
+
+1. What is happening?
+2. Why is it happening?
+3. What should the user do next?
+4. Which product should be recommended?
+5. Which report should be generated?
+6. Which growth pathway should be activated?
+7. Which subscription should be offered?
+
+---
+
+# User Segments
+
+Audit separately for:
+
+* School Students
+* College Students
+* Job Seekers
+* Competitive Exam Aspirants
+* Parents
+* Teachers
+* Counsellors
+* Institutions
+
+---
+
+# Track A — Decision Reachability Audit
+
+For every major concern determine:
+
+Can CAPADEX derive:
+
+* Stage
+* Context
+* Outcome
+* Journey
+* Product
+* Action
+
+Measure:
+
+1. Decision Reachability %
+2. Missing Decision Paths
+3. Decision Ambiguity %
+4. Decision Confidence
+5. Product Reachability %
+
+Generate:
+
+* Decision Reachability Report
+* Missing Decision Matrix
+
+---
+
+# Track B — Product Routing Audit
+
+Evaluate routing quality for:
+
+* LBI
+* Career Builder
+* Employability Index
+* Competitive Exam Support
+* Family Support
+* Mentoring
+
+For each route determine:
+
+1. Coverage
+2. Precision
+3. Ambiguity
+4. Missing Signals
+5. Missing Contexts
+
+Generate:
+
+* Product Routing Report
+* Product Gap Report
+
+---
+
+# Track C — Stage-to-Action Audit
+
+For every stage determine:
+
+Awareness
+Curiosity
+Clarity
+Growth
+Mastery
+
+Can CAPADEX recommend:
+
+* Insight
+* Report
+* Action
+* Product
+* Subscription
+
+Generate:
+
+Stage Decision Matrix
+
+Example:
+
+Awareness
+→ Snapshot
+
+Curiosity
+→ Curiosity Report
+
+Clarity
+→ Deep Insight Report
+
+Growth
+→ Action Plan
+
+Mastery
+→ Coaching / Mentoring
+
+Audit actual readiness.
+
+Do not assume.
+
+---
+
+# Track D — Context-to-Decision Audit
+
+Contexts:
+
+* AI Job Disruption
+* Employability
+* Career Transition
+* Entrepreneurship
+* Competitive Exams
+* Family Pressure
+* Placement Anxiety
+* Leadership
+* Digital Behaviour
+* Career Clarity
+
+For each context determine:
+
+Current Decision Capability
+
+Can CAPADEX recommend:
+
+* Report
+* Product
+* Growth Plan
+* Mentor
+* Subscription
+
+Generate:
+
+Context Decision Matrix
+
+---
+
+# Track E — Future Readiness Decision Audit
+
+Evaluate CAPADEX capability to support:
+
+* AI Disruption
+* Career Resilience
+* Adaptability
+* Future Employability
+* Lifelong Learning
+* Upskilling
+* Reskilling
+* Human vs AI Skills
+* Emerging Careers
+* Entrepreneurship
+
+Determine:
+
+1. Current Capability
+2. Missing Capability
+3. Product Readiness
+4. Commercial Readiness
+
+Generate:
+
+Future Readiness Decision Report
+
+---
+
+# Track F — Commercial Conversion Audit
+
+Map:
+
+Concern
+↓
+Stage
+↓
+Context
+↓
+Outcome
+↓
+Journey
+↓
+Product
+
+Measure:
+
+1. Conversion Readiness
+2. Upsell Readiness
+3. Subscription Readiness
+4. Revenue Potential
+
+Generate:
+
+Commercial Conversion Matrix
+
+---
+
+# Track G — Decision Intelligence Scoring
+
+Create a Decision Intelligence Score (DIS).
+
+Components:
+
+* Stage Intelligence
+* Context Intelligence
+* Outcome Intelligence
+* Journey Intelligence
+* Product Intelligence
+* Action Intelligence
+
+Score:
+
+Current State
+Target State
+Gap
+Effort
+Impact
+
+Generate:
+
+Decision Intelligence Scorecard
+
+---
+
+# World-Class Benchmark
+
+Compare CAPADEX against:
+
+* Career Guidance Platforms
+* Employability Platforms
+* Future Readiness Platforms
+* Entrepreneurship Readiness Platforms
+* Coaching Platforms
+
+Identify:
+
+* Missing Decision Layers
+* Missing Product Layers
+* Missing Recommendation Layers
+* Missing Growth Layers
+
+Generate:
+
+World-Class Decision Gap Report
+
+---
+
+# Final Outputs
+
+1. Decision Reachability Report
+2. Product Routing Report
+3. Stage Decision Matrix
+4. Context Decision Matrix
+5. Future Readiness Decision Report
+6. Commercial Conversion Matrix
+7. Decision Intelligence Scorecard
+8. World-Class Decision Gap Report
+9. Top 25 High-Impact Improvements
+10. CAPADEX Decision Intelligence Roadmap
+11. Executive Summary
+
+For every recommendation provide:
+
+* Current State
+* Target State
+* Gap
+* Business Impact
+* User Impact
+* Revenue Impact
+* Implementation Difficulty
+* Priority
+
+No implementation.
+
+No code changes.
+
+STOP.
+
+WAIT FOR APPROVAL.

@@ -1,0 +1,203 @@
+OBJECTIVE:
+Fully unify all adaptive intelligence systems into a realtime event-driven Enterprise Human Capability Intelligence Operating System using the single competency intelligence profile and orchestration architecture.
+
+CRITICAL REQUIREMENTS:
+
+1. ALL adaptive modules consume SAME competency profile
+2. Event orchestration mandatory
+3. Intelligence propagation realtime
+4. Mobility/coaching/workforce MUST synchronize
+5. Predictive intelligence integrated
+6. Governance/explainability integrated
+
+====================================================
+PHASE 3 GOAL
+============
+
+Build:
+
+* competency intelligence orchestrator
+* realtime intelligence propagation
+* unified adaptive intelligence
+* predictive intelligence
+* workforce simulations
+* enterprise workforce OS
+* governance & explainability
+
+====================================================
+STEP 1 — CREATE NEW DATABASE MIGRATION
+======================================
+
+Create:
+backend/migrations/20260905_enterprise_adaptive_intelligence.sql
+
+Add:
+
+1. workforce_capability_graphs
+2. predictive_readiness_models
+3. organizational_readiness_profiles
+4. workforce_simulation_runs
+5. ai_inferred_competencies
+6. explainability_chains
+7. governance_audit_logs
+8. fairness_audits_v2
+9. workforce_observability_logs
+10. intelligence_refresh_state
+
+====================================================
+STEP 2 — BUILD COMPETENCY INTELLIGENCE ORCHESTRATOR
+===================================================
+
+Create:
+backend/services/competency-intelligence-orchestrator.ts
+
+THIS IS THE CENTRAL NERVOUS SYSTEM.
+
+Responsibilities:
+
+* synchronize all adaptive systems
+* propagate competency updates
+* orchestrate intelligence flows
+* maintain single competency profile
+* coordinate event propagation
+
+====================================================
+STEP 3 — BUILD REALTIME EVENT PROPAGATION
+=========================================
+
+Enhance:
+backend/services/adaptive-event-bus.ts
+
+CRITICAL:
+ALL adaptive systems must subscribe to events.
+
+Examples:
+assessment.completed
+↓
+benchmark.updated
+↓
+mobility.updated
+↓
+coaching.updated
+↓
+simulation.updated
+
+====================================================
+STEP 4 — LINK ALL ADAPTIVE MODULES
+==================================
+
+Enhance:
+
+* mobility-engine.ts
+* adaptive-benchmark.ts
+* m5-ai-coaching.ts
+* workforce-simulation.ts
+* trajectory-engine.ts
+
+ALL must consume:
+competency_intelligence_profiles
+
+NO isolated intelligence logic allowed.
+
+====================================================
+STEP 5 — BUILD PREDICTIVE INTELLIGENCE
+======================================
+
+Create:
+backend/services/predictive-readiness-engine.ts
+
+Predict:
+
+* future readiness
+* promotion probability
+* leadership emergence
+* burnout risk
+* capability decay
+
+====================================================
+STEP 6 — BUILD WORKFORCE SIMULATION ENGINE
+==========================================
+
+Create:
+backend/services/workforce-simulation-v2.ts
+
+Simulate:
+
+* workforce readiness
+* capability uplift
+* succession pipelines
+* organizational risk
+* workforce resilience
+
+====================================================
+STEP 7 — BUILD GOVERNANCE & EXPLAINABILITY
+==========================================
+
+Create:
+backend/services/explainability-governance-engine.ts
+
+Generate:
+
+* explainability lineage
+* competency reasoning
+* fairness audits
+* governance logs
+* confidence lineage
+
+====================================================
+STEP 8 — BUILD ENTERPRISE WORKFORCE OS
+======================================
+
+Create:
+backend/services/enterprise-workforce-os-engine.ts
+
+Capabilities:
+
+* organizational competency graph
+* workforce capability mapping
+* succession intelligence
+* executive workforce analytics
+* enterprise readiness
+
+====================================================
+STEP 9 — FRONTEND WORKFORCE OS DASHBOARD
+========================================
+
+Create:
+frontend/src/modules/career-builder/workforce/views/EnterpriseWorkforceOSDashboard.tsx
+
+Features:
+
+* workforce capability graph
+* readiness heatmaps
+* workforce risk
+* leadership pipelines
+* organizational simulations
+
+====================================================
+STEP 10 — VALIDATION
+====================
+
+Validate:
+
+1. All systems consume SAME competency profile
+2. Event orchestration operational
+3. Intelligence propagation realtime
+4. Reporting intelligence-driven
+5. Coaching contextualized
+6. Mobility contextualized
+7. Workforce intelligence unified
+8. Existing platform untouched
+
+====================================================
+EXPECTED RESULT
+===============
+
+By end of Phase 3:
+
+* platform becomes fully unified realtime Adaptive Human Capability Intelligence OS
+* realtime role-based competency assessments operational
+* graph-driven intelligence operational
+* adaptive intelligence fully synchronized
+* enterprise workforce intelligence operational
+* governance, prediction, coaching, benchmarking, mobility, and simulations fully unified

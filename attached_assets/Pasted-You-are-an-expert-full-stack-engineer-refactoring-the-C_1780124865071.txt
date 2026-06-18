@@ -1,0 +1,24 @@
+You are an expert full-stack engineer refactoring the CAPADEX engine inside our Behavioral Intelligence SaaS platform. Please read our architectural blueprints, including "replit final.docx" and "Capadex final.docx" verbatim, to understand our codebase, routing architectures, and data structures. 
+
+Implement the following fixes and architectural enhancements across the CAPADEX subsystem strictly using our established design tokens, database schemas, and routing conventions:
+
+1. FIX CRITICAL BACKEND HEADERS CRASH (backend/routes.ts):
+Locate the email preview route handling 'POST /api/admin/capadex/email-preview'. Our corporate branding contains an em-dash ('—'), which breaks Node.js HTTP header compliance (ASCII-only rule) and crashes the server when applied directly to 'X-Preview-Subject'. Ensure this header value is strictly wrapped using 'encodeURIComponent(subject)' to guarantee runtime HTTP safety.
+
+2. HARDEN BIOS SIGNAL INGEST PAYLOAD CONTRACT (backend/routes/signal-capture.ts):
+The 'POST /api/signals/ingest' route expects 'timings' formatted as a key-value map ('Record<itemId, {response_time_ms, answer_changed, response_value}>') rather than a sequential array. Add a defensive validation middleware layer: if the client passes 'timings' as an array, automatically parse and reduce it into the canonical item-keyed record mapping configuration before hitting the database ingest pipelines.
+
+3. RESOLVE LEVEL_META DICTIONARY DUPLICITY (frontend/src/components/admin/CapadexReportsPanel.tsx):
+Refactor the client-side 'LEVEL_META' dictionary inside the Reports Panel. Eliminate the legacy duplication between 'Mastery' and 'Advanced' keys. Ensure it maps uniquely and displays the canonical behavioral progression spectrum: Forming ➔ Emerging ➔ Developing ➔ Proficient ➔ Advanced. Ensure 'getLevelFromScore' mirrors the exact score breakpoints calculated by the backend engine (>=80 for Advanced, >=60 for Proficient).
+
+4. IMPLEMENT COMPONENT STATE HYDRATION (Pragati Workspace ➔ Free Assessment Modal):
+Create a shared session bridge hook. When a user exits mid-way through the 13-state conversational FSM inside 'PragatiWorkspace.tsx', cache the identified 'concern_id', 'subPersona', and 'ageBand' safely into local sessionStorage. Update 'FreeAssessmentModal.tsx' (specifically inside the 'IntroPhase' step) to automatically check for this state cache on mount. If present, seamlessly pre-hydrate the 3-track / 11-sub-persona configurations and display an inline toast indicating that their workspace state has been recovered.
+
+5. SURFACE DATA PROVENANCE PILLS IN THE PRE-PAYMENT BRIEF (frontend/src/components/assessment/phases/CapadexBridgePhase.tsx):
+Our clarity-question 3-tier picker ('pickQuestionsFromMaster' -> 'pickQuestionsFromDB' -> static fallback) injects an explicit provenance flag ('master_curated' | 'adaptive_bank' | 'static_fallback') into the response metadata envelope. Expose this provenance value directly inside 'CapadexBridgePhase.tsx' and 'CapadexReportPhase.tsx' as a small, stylized data-lineage badge alongside the diagnostic heuristic cards.
+
+CRITICAL DESIGN CANON & CONSTRAINTS:
+- Keep all visual components perfectly consistent across both report views ('CapadexBridgePhase.tsx' and 'CapadexReportPhase.tsx'). 
+- Use the uniform border token '#E8EBF4', 'rounded-xl' layout styling wrappers, navy corporate branding code '#344E86', and section typography set precisely to 'text-[11px] font-black uppercase tracking-widest'. 
+- Do not strip gradient definitions from the pre-payment layers.
+- Do not modify, corrupt, or truncate any existing stable frameworks or seed files listed in the feature map documentation.

@@ -1,0 +1,501 @@
+question_id,concern_id,response_type,composite,distinctiveness,diagnostic_power,signal_value,human_readability,behavioral_realism,options
+Q_RECALL_001_020,RECALL_001,frequency,24,0,0,34,43,45,
+Q_ENT_001_012_v2,ENT_001,frequency,24,0,0,34,43,45,
+FAW_PROF_003,CONCERN_LEA_602,situational_fit,64,100,33.33333333333333,48,52,85,"Highly cyclical — deep bursts of focus followed by prolonged slumps | Reactive — constantly responding to urgent workspace demands instead of deep work | Anxious — focus is sustained entirely by high-pressure incoming deadlines | Avoidant — struggle immensely to initiate complex tasks, leading to major delays"
+FAW_PROF_001,CONCERN_LEA_602,situational_fit,65,100,33.33333333333333,48,83,62,"Digital interruptions (Slack, emails, phone notifications) | Internal fatigue or burnout from prolonged screen time | Ambiguity around which task truly takes priority | Constant context-switching across different projects"
+FAW_PROF_002,CONCERN_LEA_602,situational_fit,66,100,33.33333333333333,48,66,85,"Push through the fatigue, even if output quality drops | Step away completely to reset, risking timeline delays | Switch to lower-cognitive tasks like sorting emails | Procrastinate or browse non-work channels to escape the friction"
+Q_UNCERT_001_018_v2,UNCERT_001,agreement,81,100,100,100,60,45,Freeze Completely ? Small Steps
+Q_RES_001_019,RES_001,likelihood,86,100,100,70,100,60,Very Unlikely | Unlikely | Neutral | Likely | Very Likely
+Q_LEARN_001_025_v3,LEARN_001,confidence,91,100,100,70,100,83,Very low | Low | Moderate | High | Very high
+Q_CAREER_001_001,CAREER_001,decision_clarity,95,100,100,100,100,77,Completely Confused | Slightly Clear | Moderately Clear | Clear | Very Clear
+Q_CAREER_001_008,CAREER_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_CAREER_001_010,CAREER_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_CAREER_001_013,CAREER_001,social_comfort,95,100,100,100,100,77,Very Uncomfortable | Uncomfortable | Neutral | Comfortable | Very Comfortable
+Q_CAREER_001_016,CAREER_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_CAREER_001_021,CAREER_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_CAREER_001_022,CAREER_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_CAREER_001_023,CAREER_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_SKILL_001_004,SKILL_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_SKILL_001_009,SKILL_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_SKILL_001_010,SKILL_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_SKILL_001_016,SKILL_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_SKILL_001_021,SKILL_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_SKILL_001_022,SKILL_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_SKILL_001_023,SKILL_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_PLACE_001_004,PLACE_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_PLACE_001_009,PLACE_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_PLACE_001_010,PLACE_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_PLACE_001_016,PLACE_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_PLACE_001_021,PLACE_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_PLACE_001_022,PLACE_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_PLACE_001_023,PLACE_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_PRACTICAL_001_004,PRACTICAL_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_PRACTICAL_001_008,PRACTICAL_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_PRACTICAL_001_009,PRACTICAL_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_PRACTICAL_001_010,PRACTICAL_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_PRACTICAL_001_016,PRACTICAL_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_PRACTICAL_001_021,PRACTICAL_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_PRACTICAL_001_022,PRACTICAL_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_PRACTICAL_001_023,PRACTICAL_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_PLACE_001_004_v2,PLACE_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_PLACE_001_009_v2,PLACE_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_PLACE_001_010_v2,PLACE_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_PLACE_001_013_v2,PLACE_001,social_comfort,95,100,100,100,100,77,Very Uncomfortable | Uncomfortable | Neutral | Comfortable | Very Comfortable
+Q_PLACE_001_016_v2,PLACE_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_PLACE_001_021_v2,PLACE_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_PLACE_001_022_v2,PLACE_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_PLACE_001_023_v2,PLACE_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_TRANSITION_001_004,TRANSITION_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_TRANSITION_001_009,TRANSITION_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_TRANSITION_001_010,TRANSITION_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_TRANSITION_001_016,TRANSITION_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_TRANSITION_001_021,TRANSITION_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_TRANSITION_001_022,TRANSITION_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_TRANSITION_001_023,TRANSITION_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_INTERVIEW_001_004,INTERVIEW_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_INTERVIEW_001_009,INTERVIEW_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_INTERVIEW_001_010,INTERVIEW_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_INTERVIEW_001_016,INTERVIEW_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_INTERVIEW_001_021,INTERVIEW_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_INTERVIEW_001_022,INTERVIEW_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_INTERVIEW_001_023,INTERVIEW_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_BURNOUT_001_003,BURNOUT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_BURNOUT_001_009,BURNOUT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_BURNOUT_001_010,BURNOUT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_BURNOUT_001_016,BURNOUT_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_BURNOUT_001_021,BURNOUT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_BURNOUT_001_022,BURNOUT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_BURNOUT_001_023,BURNOUT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_WORK_001_004,WORK_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_WORK_001_009,WORK_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_WORK_001_010,WORK_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_WORK_001_016,WORK_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_WORK_001_021,WORK_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_WORK_001_022,WORK_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_WORK_001_023,WORK_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_TRANS_001_004,TRANS_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_TRANS_001_009,TRANS_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_TRANS_001_010,TRANS_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_TRANS_001_013,TRANS_001,social_comfort,95,100,100,100,100,77,Very Uncomfortable | Uncomfortable | Neutral | Comfortable | Very Comfortable
+Q_TRANS_001_016,TRANS_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_TRANS_001_021,TRANS_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_TRANS_001_022,TRANS_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_TRANS_001_023,TRANS_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_PREP_001_004,PREP_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_PREP_001_009,PREP_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_PREP_001_010,PREP_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_PREP_001_016,PREP_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_PREP_001_021,PREP_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_PREP_001_022,PREP_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_PREP_001_023,PREP_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_TIME_001_004,TIME_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_TIME_001_008,TIME_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_TIME_001_009,TIME_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_TIME_001_010,TIME_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_TIME_001_016,TIME_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_TIME_001_021,TIME_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_TIME_001_022,TIME_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_TIME_001_023,TIME_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_LEARN_001_023,LEARN_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_FAIL_001_004,FAIL_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_FAIL_001_009,FAIL_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_FAIL_001_010,FAIL_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_FAIL_001_016,FAIL_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_FAIL_001_021,FAIL_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_FAIL_001_022,FAIL_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_FAIL_001_023,FAIL_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_COMPARE_001_004,COMPARE_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_COMPARE_001_009,COMPARE_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_COMPARE_001_010,COMPARE_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_COMPARE_001_016,COMPARE_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_COMPARE_001_021,COMPARE_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_COMPARE_001_022,COMPARE_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_COMPARE_001_023,COMPARE_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_CONCEPT_001_004,CONCEPT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_CONCEPT_001_009,CONCEPT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_CONCEPT_001_010,CONCEPT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_CONCEPT_001_016,CONCEPT_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_CONCEPT_001_021,CONCEPT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_CONCEPT_001_022,CONCEPT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_CONCEPT_001_023,CONCEPT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_FOCUS_001_004,FOCUS_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_FOCUS_001_009,FOCUS_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_FOCUS_001_010,FOCUS_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_FOCUS_001_016,FOCUS_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_FOCUS_001_021,FOCUS_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_FOCUS_001_022,FOCUS_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_FOCUS_001_023,FOCUS_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_UNCERT_001_004,UNCERT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_UNCERT_001_009,UNCERT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_UNCERT_001_010,UNCERT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_UNCERT_001_016,UNCERT_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_UNCERT_001_021,UNCERT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_UNCERT_001_022,UNCERT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_UNCERT_001_023,UNCERT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_TIMEALLOC_001_010,TIMEALLOC_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_BURNOUT_001_003_v2,BURNOUT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_BURNOUT_001_004_v2,BURNOUT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_BURNOUT_001_009_v2,BURNOUT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_BURNOUT_001_010_v2,BURNOUT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_BURNOUT_001_015_v2,BURNOUT_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_BURNOUT_001_016_v2,BURNOUT_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_BURNOUT_001_021_v2,BURNOUT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_BURNOUT_001_022_v2,BURNOUT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_BURNOUT_001_023_v2,BURNOUT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_TIMEALLOC_001_004,TIMEALLOC_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_TIMEALLOC_001_009,TIMEALLOC_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_TIMEALLOC_001_016,TIMEALLOC_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_TIMEALLOC_001_021,TIMEALLOC_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_TIMEALLOC_001_022,TIMEALLOC_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_TIMEALLOC_001_023,TIMEALLOC_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_MOTIV_001_004,MOTIV_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_MOTIV_001_009,MOTIV_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_MOTIV_001_010,MOTIV_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_MOTIV_001_016,MOTIV_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_MOTIV_001_021,MOTIV_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_MOTIV_001_022,MOTIV_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_MOTIV_001_023,MOTIV_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_RANK_001_004,RANK_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_RANK_001_009,RANK_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_RANK_001_010,RANK_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_RANK_001_016,RANK_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_RANK_001_021,RANK_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_RANK_001_022,RANK_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_RANK_001_023,RANK_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_MOCKCONF_001_004,MOCKCONF_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_MOCKCONF_001_009,MOCKCONF_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_MOCKCONF_001_010,MOCKCONF_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_MOCKCONF_001_016,MOCKCONF_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_MOCKCONF_001_021,MOCKCONF_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_MOCKCONF_001_022,MOCKCONF_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_MOCKCONF_001_023,MOCKCONF_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_FAMILY_001_004,FAMILY_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_FAMILY_001_009,FAMILY_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_FAMILY_001_010,FAMILY_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_FAMILY_001_016,FAMILY_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_FAMILY_001_021,FAMILY_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_FAMILY_001_022,FAMILY_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_FAMILY_001_023,FAMILY_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_SELFBELIEF_001_004,SELFBELIEF_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_SELFBELIEF_001_009,SELFBELIEF_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_SELFBELIEF_001_010,SELFBELIEF_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_SELFBELIEF_001_016,SELFBELIEF_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_SELFBELIEF_001_021,SELFBELIEF_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_SELFBELIEF_001_022,SELFBELIEF_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_SELFBELIEF_001_023,SELFBELIEF_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_TESTSTRAT_001_004,TESTSTRAT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_TESTSTRAT_001_009,TESTSTRAT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_TESTSTRAT_001_010,TESTSTRAT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_RESULTPRESS_001_004,RESULTPRESS_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_TESTSTRAT_001_016,TESTSTRAT_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_TESTSTRAT_001_021,TESTSTRAT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_TESTSTRAT_001_022,TESTSTRAT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_TESTSTRAT_001_023,TESTSTRAT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_RESULTPRESS_001_009,RESULTPRESS_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_RESULTPRESS_001_010,RESULTPRESS_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_RESULTPRESS_001_016,RESULTPRESS_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_RESULTPRESS_001_021,RESULTPRESS_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_RESULTPRESS_001_022,RESULTPRESS_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_RESULTPRESS_001_023,RESULTPRESS_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_REATTEMPT_001_003,REATTEMPT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_REATTEMPT_001_009,REATTEMPT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_REATTEMPT_001_010,REATTEMPT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_REATTEMPT_001_015,REATTEMPT_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_REATTEMPT_001_016,REATTEMPT_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_REATTEMPT_001_021,REATTEMPT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_REATTEMPT_001_022,REATTEMPT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_REATTEMPT_001_023,REATTEMPT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_ENDURANCE_001_004,ENDURANCE_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_ENDURANCE_001_009,ENDURANCE_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_ENDURANCE_001_010,ENDURANCE_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_ENDURANCE_001_016,ENDURANCE_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_ENDURANCE_001_021,ENDURANCE_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_ENDURANCE_001_022,ENDURANCE_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_ENDURANCE_001_023,ENDURANCE_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_COMPARE_001_003_v2,COMPARE_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_COMPARE_001_004_v2,COMPARE_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_COMPARE_001_009_v2,COMPARE_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_COMPARE_001_010_v2,COMPARE_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_COMPARE_001_015_v2,COMPARE_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_COMPARE_001_016_v2,COMPARE_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_COMPARE_001_021_v2,COMPARE_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_COMPARE_001_022_v2,COMPARE_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_COMPARE_001_023_v2,COMPARE_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_MULTIEXP_001_004,MULTIEXP_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_MULTIEXP_001_009,MULTIEXP_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_MULTIEXP_001_010,MULTIEXP_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_MULTIEXP_001_016,MULTIEXP_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_MULTIEXP_001_021,MULTIEXP_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_MULTIEXP_001_022,MULTIEXP_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_MULTIEXP_001_023,MULTIEXP_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_OUTCOME_001_001,OUTCOME_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_OUTCOME_001_002,OUTCOME_001,frequency,95,100,100,100,100,77,Very Short Time | Short Time | Moderate Time | Long Time | Very Long Time
+Q_OUTCOME_001_003,OUTCOME_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_OUTCOME_001_009,OUTCOME_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_OUTCOME_001_010,OUTCOME_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_OUTCOME_001_015,OUTCOME_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_OUTCOME_001_016,OUTCOME_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_OUTCOME_001_021,OUTCOME_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_OUTCOME_001_022,OUTCOME_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_OUTCOME_001_023,OUTCOME_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_MOCKCONF_001_004_v2,MOCKCONF_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_MOCKCONF_001_009_v2,MOCKCONF_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_MOCKCONF_001_010_v2,MOCKCONF_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_MOCKCONF_001_016_v2,MOCKCONF_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_MOCKCONF_001_021_v2,MOCKCONF_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_MOCKCONF_001_022_v2,MOCKCONF_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_MOCKCONF_001_023_v2,MOCKCONF_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_SOCIAL_001_003,SOCIAL_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_SOCIAL_001_004,SOCIAL_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_SOCIAL_001_009,SOCIAL_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_SOCIAL_001_010,SOCIAL_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_SOCIAL_001_015,SOCIAL_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_SOCIAL_001_016,SOCIAL_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_SOCIAL_001_021,SOCIAL_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_SOCIAL_001_022,SOCIAL_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_SOCIAL_001_023,SOCIAL_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_LIMITEDATT_001_004,LIMITEDATT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_LIMITEDATT_001_009,LIMITEDATT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_LIMITEDATT_001_010,LIMITEDATT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_LIMITEDATT_001_016,LIMITEDATT_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_LIMITEDATT_001_021,LIMITEDATT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_LIMITEDATT_001_022,LIMITEDATT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_LIMITEDATT_001_023,LIMITEDATT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_FAILURE_001_003,FAILURE_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_FAILURE_001_009,FAILURE_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_FAILURE_001_010,FAILURE_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_FAILURE_001_015,FAILURE_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_FAILURE_001_016,FAILURE_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_FAILURE_001_021,FAILURE_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_FAILURE_001_022,FAILURE_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_FAILURE_001_023,FAILURE_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_MULTIATTEMPT_001_004,MULTIATTEMPT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_MULTIATTEMPT_001_009,MULTIATTEMPT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_MULTIATTEMPT_001_010,MULTIATTEMPT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_MULTIATTEMPT_001_016,MULTIATTEMPT_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_MULTIATTEMPT_001_021,MULTIATTEMPT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_MULTIATTEMPT_001_022,MULTIATTEMPT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_MULTIATTEMPT_001_023,MULTIATTEMPT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_IDENTITY_001_001,IDENTITY_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_IDENTITY_001_003,IDENTITY_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_IDENTITY_001_009,IDENTITY_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_IDENTITY_001_010,IDENTITY_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_IDENTITY_001_015,IDENTITY_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_IDENTITY_001_016,IDENTITY_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_IDENTITY_001_021,IDENTITY_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_IDENTITY_001_022,IDENTITY_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_IDENTITY_001_023,IDENTITY_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_CUTOFFREC_001_004,CUTOFFREC_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_CUTOFFREC_001_009,CUTOFFREC_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_CUTOFFREC_001_010,CUTOFFREC_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_CUTOFFREC_001_016,CUTOFFREC_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_CUTOFFREC_001_021,CUTOFFREC_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_CUTOFFREC_001_022,CUTOFFREC_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_CUTOFFREC_001_023,CUTOFFREC_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_HOPE_001_003,HOPE_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_HOPE_001_009,HOPE_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_HOPE_001_010,HOPE_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_EMO_001_004,EMO_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_HOPE_001_015,HOPE_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_HOPE_001_016,HOPE_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_HOPE_001_021,HOPE_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_HOPE_001_022,HOPE_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_HOPE_001_023,HOPE_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_HOLISTIC_001_004,HOLISTIC_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_HOLISTIC_001_009,HOLISTIC_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_HOLISTIC_001_010,HOLISTIC_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_HOLISTIC_001_016,HOLISTIC_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_HOLISTIC_001_021,HOLISTIC_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_HOLISTIC_001_022,HOLISTIC_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_HOLISTIC_001_023,HOLISTIC_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_CAREER_001_003_v2,CAREER_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_CAREER_001_004_v2,CAREER_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_CAREER_001_009_v2,CAREER_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_CAREER_001_010_v2,CAREER_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_CAREER_001_015_v2,CAREER_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_CAREER_001_016_v2,CAREER_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_CAREER_001_021_v2,CAREER_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_CAREER_001_022_v2,CAREER_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_CAREER_001_023_v2,CAREER_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_STREAMCONF_001_004,STREAMCONF_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_STREAMCONF_001_009,STREAMCONF_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_STREAMCONF_001_010,STREAMCONF_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_STREAMCONF_001_016,STREAMCONF_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_STREAMCONF_001_021,STREAMCONF_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_STREAMCONF_001_022,STREAMCONF_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_STREAMCONF_001_023,STREAMCONF_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_CAREER_001_003_v3,CAREER_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_CAREER_001_004_v3,CAREER_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_CAREER_001_008_v3,CAREER_001,energy_motivation,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_CAREER_001_009_v3,CAREER_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_CAREER_001_010_v3,CAREER_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_CAREER_001_015_v3,CAREER_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_CAREER_001_016_v3,CAREER_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_CAREER_001_021_v3,CAREER_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_CAREER_001_022_v3,CAREER_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_CAREER_001_023_v3,CAREER_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_FAMCAREER_001_004,FAMCAREER_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_FAMCAREER_001_009,FAMCAREER_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_FAMCAREER_001_010,FAMCAREER_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_FAMCAREER_001_016,FAMCAREER_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_FAMCAREER_001_021,FAMCAREER_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_FAMCAREER_001_022,FAMCAREER_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_FAMCAREER_001_023,FAMCAREER_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_ANXIETY_001_002,ANXIETY_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_ANXIETY_001_003,ANXIETY_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_ANXIETY_001_009,ANXIETY_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_ANXIETY_001_010,ANXIETY_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_ANXIETY_001_015,ANXIETY_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_ANXIETY_001_016,ANXIETY_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_ANXIETY_001_021,ANXIETY_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_ANXIETY_001_022,ANXIETY_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_ANXIETY_001_023,ANXIETY_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_CAREERUNCERT_001_004,CAREERUNCERT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_CAREERUNCERT_001_009,CAREERUNCERT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_CAREERUNCERT_001_010,CAREERUNCERT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_CAREERUNCERT_001_016,CAREERUNCERT_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_CAREERUNCERT_001_021,CAREERUNCERT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_CAREERUNCERT_001_022,CAREERUNCERT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_CAREERUNCERT_001_023,CAREERUNCERT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_CAREER_001_002_v4,CAREER_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_CAREER_001_003_v4,CAREER_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_CAREER_001_009_v4,CAREER_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_CAREER_001_010_v4,CAREER_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_CAREER_001_015_v4,CAREER_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_CAREER_001_016_v4,CAREER_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_CAREER_001_021_v4,CAREER_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_CAREER_001_022_v4,CAREER_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_CAREER_001_023_v4,CAREER_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_SKILLGAP_001_004,SKILLGAP_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_SKILLGAP_001_006,SKILLGAP_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_SKILLGAP_001_009,SKILLGAP_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_SKILLGAP_001_010,SKILLGAP_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_SKILLGAP_001_016,SKILLGAP_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_SKILLGAP_001_021,SKILLGAP_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_SKILLGAP_001_022,SKILLGAP_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_SKILLGAP_001_023,SKILLGAP_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_COMPETENCE_001_003,COMPETENCE_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_COMPETENCE_001_007,COMPETENCE_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_COMPETENCE_001_009,COMPETENCE_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_COMPETENCE_001_010,COMPETENCE_001,intensity,95,100,100,100,100,77,No improvement | Slight improvement | Moderate | Strong | Very Strong
+Q_COMPETENCE_001_015,COMPETENCE_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_COMPETENCE_001_016,COMPETENCE_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_COMPETENCE_001_021,COMPETENCE_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_COMPETENCE_001_022,COMPETENCE_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_COMPETENCE_001_023,COMPETENCE_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_MULTIATTEMPT_001_004_v2,MULTIATTEMPT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_MULTIATTEMPT_001_009_v2,MULTIATTEMPT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_MULTIATTEMPT_001_010_v2,MULTIATTEMPT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_MULTIATTEMPT_001_016_v2,MULTIATTEMPT_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_MULTIATTEMPT_001_021_v2,MULTIATTEMPT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_MULTIATTEMPT_001_022_v2,MULTIATTEMPT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_MULTIATTEMPT_001_023_v2,MULTIATTEMPT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_HOLISTIC_001_001_v2,HOLISTIC_001,confidence,95,100,100,100,100,77,Very Poorly | Poorly | Moderately | Well | Very Well
+Q_HOLISTIC_001_003_v2,HOLISTIC_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_HOLISTIC_001_008_v2,HOLISTIC_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_HOLISTIC_001_009_v2,HOLISTIC_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_HOLISTIC_001_010_v2,HOLISTIC_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_HOLISTIC_001_015_v2,HOLISTIC_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_HOLISTIC_001_016_v2,HOLISTIC_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_HOLISTIC_001_021_v2,HOLISTIC_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_HOLISTIC_001_022_v2,HOLISTIC_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_HOLISTIC_001_023_v2,HOLISTIC_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_HOLISTIC_001_004_v3,HOLISTIC_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_HOLISTIC_001_009_v3,HOLISTIC_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_HOLISTIC_001_010_v3,HOLISTIC_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_HOLISTIC_001_016_v3,HOLISTIC_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_HOLISTIC_001_021_v3,HOLISTIC_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_HOLISTIC_001_022_v3,HOLISTIC_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_HOLISTIC_001_023_v3,HOLISTIC_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_INTERNSHIP_001_003,INTERNSHIP_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_INTERNSHIP_001_004,INTERNSHIP_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_INTERNSHIP_001_009,INTERNSHIP_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_INTERNSHIP_001_010,INTERNSHIP_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_INTERNSHIP_001_015,INTERNSHIP_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_INTERNSHIP_001_016,INTERNSHIP_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_INTERNSHIP_001_021,INTERNSHIP_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_INTERNSHIP_001_022,INTERNSHIP_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_INTERNSHIP_001_023,INTERNSHIP_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_INTERVIEWCONF_001_004,INTERVIEWCONF_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_INTERVIEWCONF_001_009,INTERVIEWCONF_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_INTERVIEWCONF_001_010,INTERVIEWCONF_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_INTERVIEWCONF_001_016,INTERVIEWCONF_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_INTERVIEWCONF_001_021,INTERVIEWCONF_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_INTERVIEWCONF_001_022,INTERVIEWCONF_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_INTERVIEWCONF_001_023,INTERVIEWCONF_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_WORK_001_003_v2,WORK_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_WORK_001_009_v2,WORK_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_WORK_001_015_v2,WORK_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_WORK_001_016_v2,WORK_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_WORK_001_021_v2,WORK_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_WORK_001_022_v2,WORK_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_WORK_001_023_v2,WORK_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_PLACEREJ_001_004,PLACEREJ_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_PLACEREJ_001_009,PLACEREJ_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_PLACEREJ_001_010,PLACEREJ_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_PLACEREJ_001_016,PLACEREJ_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_PLACEREJ_001_021,PLACEREJ_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_PLACEREJ_001_022,PLACEREJ_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_PLACEREJ_001_023,PLACEREJ_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_TECH_001_003,TECH_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_TECH_001_008,TECH_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_TECH_001_009,TECH_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_TECH_001_010,TECH_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_TECH_001_016,TECH_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_TECH_001_021,TECH_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_TECH_001_022,TECH_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_TECH_001_023,TECH_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_PRO_001_004,PRO_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_PRO_001_007,PRO_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_PRO_001_009,PRO_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_PRO_001_010,PRO_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_PRO_001_014,PRO_001,social_comfort,95,100,100,100,100,77,Very Uncomfortable | Uncomfortable | Neutral | Comfortable | Very Comfortable
+Q_PRO_001_016,PRO_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_PRO_001_021,PRO_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_PRO_001_022,PRO_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_PRO_001_023,PRO_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_PLACEMENT_001_003,PLACEMENT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_PLACEMENT_001_004,PLACEMENT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_PLACEMENT_001_009,PLACEMENT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_PLACEMENT_001_010,PLACEMENT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_PLACEMENT_001_015,PLACEMENT_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_PLACEMENT_001_016,PLACEMENT_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_PLACEMENT_001_021,PLACEMENT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_PLACEMENT_001_022,PLACEMENT_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_PLACEMENT_001_023,PLACEMENT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_EMO_001_001,EMO_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_EMO_001_003,EMO_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_EMO_001_008,EMO_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_EMO_001_009,EMO_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_EMO_001_010,EMO_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_EMO_001_016,EMO_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_EMO_001_021,EMO_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_EMO_001_022,EMO_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_EMO_001_023,EMO_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_JOB_001_003,JOB_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_JOB_001_009,JOB_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_JOB_001_010,JOB_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_JOB_001_015,JOB_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_JOB_001_016,JOB_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_JOB_001_021,JOB_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_JOB_001_022,JOB_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_JOB_001_023,JOB_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_FAM_001_003,FAM_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_FAM_001_004,FAM_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_FAM_001_008,FAM_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_FAM_001_009,FAM_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_FAM_001_014,FAM_001,social_comfort,95,100,100,100,100,77,Very Uncomfortable | Uncomfortable | Neutral | Comfortable | Very Comfortable
+Q_FAM_001_016,FAM_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_FAM_001_021,FAM_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_FAM_001_022,FAM_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_FAM_001_023,FAM_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_GROWTH_001_003,GROWTH_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_GROWTH_001_009,GROWTH_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_GROWTH_001_010,GROWTH_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely
+Q_GROWTH_001_015,GROWTH_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_GROWTH_001_016,GROWTH_001,coping_effectiveness,95,100,100,100,100,77,Very Ineffective | Ineffective | Neutral | Effective | Very Effective
+Q_GROWTH_001_021,GROWTH_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_GROWTH_001_022,GROWTH_001,readiness,95,100,100,100,100,77,Not Ready | Slightly Ready | Somewhat Ready | Ready | Fully Ready
+Q_GROWTH_001_023,GROWTH_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_INT_001_004,INT_001,agreement,95,100,100,100,100,77,Strongly Disagree | Disagree | Neutral | Agree | Strongly Agree
+Q_INT_001_007,INT_001,intensity,95,100,100,100,100,77,Not at all | Slightly | Moderately | Strongly | Extremely

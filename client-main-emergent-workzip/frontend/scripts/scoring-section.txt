@@ -1,0 +1,506 @@
+
+              {/* ═══════════════════════════════════════════════════════════════
+                  CALCULATION & NORMS ENGINE  (compact + functional)
+              ═══════════════════════════════════════════════════════════════ */}
+              {activeTab === 'scoring' && (
+                <div className="flex flex-col h-full">
+
+                  {/* ── Compact Header ─────────────────────────────────────── */}
+                  <div className="bg-white border-b px-6 py-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                          <Calculator className="h-5 w-5" style={{ color: BRAND.primary }} />
+                          Calculation &amp; Norms Engine
+                        </h2>
+                        <p className="text-xs text-gray-500">Configure scoring formulas, age-band norms, domain weights and band thresholds</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <label className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-50 cursor-pointer transition-colors">
+                          <Upload className="h-3.5 w-3.5" />
+                          Import CSV
+                          <input type="file" accept=".csv" className="hidden" onChange={e => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+                            const reader = new FileReader();
+                            reader.onload = ev => {
+                              const text = ev.target?.result as string;
+                              const lines = text.trim().split('\n').slice(1);
+                              const parsed = lines.map(ln => {
+                                const [band, grades, ages, p20, p40, p60, p80] = ln.split(',');
+                                return { band: (band||'').trim(), grades: (grades||'').trim(), ages: (ages||'').trim(), p20: Number(p20)||0, p40: Number(p40)||0, p60: Number(p60)||0, p80: Number(p80)||0 };
+                              }).filter(r => r.band);
+                              if (parsed.length) setNormRows(parsed);
+                            };
+                            reader.readAsText(file);
+                            e.target.value = '';
+                          }} />
+                        </label>
+                        <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => {
+                          const tab = scoringSubTab;
+                          let csv = '';
+                          if (tab === 'agebands') {
+                            csv = 'Band,Grades,Ages,P20,P40,P60,P80\n' + normRows.map(r => r.band+','+r.grades+','+r.ages+','+r.p20+','+r.p40+','+r.p60+','+r.p80).join('\n');
+                          } else if (tab === 'domains') {
+                            csv = 'ID,Domain,Subdomain,Module,Band,Weight%,Status\n' + domainRows.map(r => r.id+','+r.domain+','+r.subdomain+','+r.module+','+r.band+','+r.weight+','+r.status).join('\n');
+                          } else {
+                            csv = 'Module,Name,Formula,Weights,Bands,Params,Status\n' + formulaRows.map(r => r.code+',"'+r.name+'","'+r.formula+'","'+r.weights+'","'+r.bands+'",'+r.params+','+r.status).join('\n');
+                          }
+                          const blob = new Blob([csv], { type: 'text/csv' });
+                          const url = URL.createObjectURL(blob);
+                          const a = document.createElement('a');
+                          a.href = url; a.download = 'metryx-norms-'+tab+'.csv'; a.click();
+                          URL.revokeObjectURL(url);
+                        }}>
+                          <Download className="h-3.5 w-3.5" /> Export CSV
+                        </Button>
+                        <Button size="sm" style={{ backgroundColor: BRAND.primary }} className="text-white gap-1.5 text-xs">
+                          <Save className="h-3.5 w-3.5" /> Save Config
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="flex gap-6">
+                      {[
+                        { label: 'Scoring Modules', value: '6' },
+                        { label: 'Age Bands', value: '7' },
+                        { label: 'Configurable Weights', value: '24' },
+                        { label: 'Percentile Tiers', value: '5' },
+                        { label: 'Domains Configured', value: String(domainRows.length) },
+                        { label: 'Last Calibrated', value: 'Jan 2025' },
+                      ].map((k, i) => (
+                        <div key={i} className="text-center">
+                          <p className="text-lg font-bold leading-none" style={{ color: BRAND.primary }}>{k.value}</p>
+                          <p className="text-[10px] text-gray-500 mt-0.5">{k.label}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* ── Sub-tab Bar ────────────────────────────────────────── */}
+                  <div className="bg-white border-b px-6 flex gap-0">
+                    {[
+                      { id: 'registry',   label: 'Module Registry' },
+                      { id: 'domains',    label: 'Domain & Subdomain Config' },
+                      { id: 'agebands',  label: 'Age Band Norms' },
+                      { id: 'formulas',  label: 'Formula Parameters' },
+                      { id: 'calculator', label: 'Test Calculator' },
+                    ].map(t => (
+                      <button
+                        key={t.id}
+                        onClick={() => setScoringSubTab(t.id)}
+                        className={'px-4 py-2.5 text-xs font-medium border-b-2 transition-colors whitespace-nowrap ' + (scoringSubTab === t.id ? '' : 'border-transparent text-gray-500 hover:text-gray-800')}
+                        style={scoringSubTab === t.id ? { borderColor: BRAND.primary, color: BRAND.primary } : {}}
+                      >
+                        {t.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="flex-1 overflow-auto p-5 space-y-4">
+
+                    {/* ═══════ MODULE REGISTRY ═══════ */}
+                    {scoringSubTab === 'registry' && (
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm font-semibold text-gray-800">All Scoring Modules</p>
+                          <Badge variant="outline" className="text-xs">6 active</Badge>
+                        </div>
+                        <Card>
+                          <div className="overflow-x-auto">
+                            <table className="w-full text-xs">
+                              <thead>
+                                <tr className="border-b bg-gray-50">
+                                  {['Code','Module Name','Formula','Domain Weights','Performance Bands','Params','Status','Actions'].map(h => (
+                                    <th key={h} className="px-3 py-2.5 text-left font-semibold text-gray-600 uppercase tracking-wider text-[10px] whitespace-nowrap">{h}</th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-gray-100">
+                                {formulaRows.map(m => (
+                                  <tr key={m.code} className="hover:bg-gray-50 group">
+                                    <td className="px-3 py-2">
+                                      <span className="inline-flex items-center justify-center h-6 px-2 rounded text-white text-[10px] font-bold" style={{ backgroundColor: m.color }}>{m.code}</span>
+                                    </td>
+                                    <td className="px-3 py-2 font-medium text-gray-800 whitespace-nowrap">{m.name}</td>
+                                    <td className="px-3 py-2">
+                                      <code className="text-[10px] bg-gray-50 border border-gray-100 rounded px-1.5 py-0.5 font-mono">{m.formula}</code>
+                                    </td>
+                                    <td className="px-3 py-2 text-gray-600 text-[10px]">{m.weights}</td>
+                                    <td className="px-3 py-2 text-gray-500 text-[10px] max-w-xs">{m.bands}</td>
+                                    <td className="px-3 py-2 text-center">
+                                      <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-[10px] font-medium">{m.params}</span>
+                                    </td>
+                                    <td className="px-3 py-2">
+                                      <span className="px-2 py-0.5 bg-green-50 text-green-700 border border-green-200 rounded text-[10px] font-medium">{m.status}</span>
+                                    </td>
+                                    <td className="px-3 py-2">
+                                      <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <Button variant="ghost" size="sm" className="h-6 px-1.5 text-[10px]" onClick={() => setScoringSubTab('formulas')}>Edit</Button>
+                                        <Button variant="ghost" size="sm" className="h-6 px-1.5 text-[10px]" onClick={() => setScoringSubTab('calculator')}>Test</Button>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </Card>
+                        <div className="grid grid-cols-3 gap-3">
+                          {[
+                            { title: 'Age Band Norms', desc: 'Edit P20–P80 percentile cutoffs per cohort', tab: 'agebands', icon: BarChart2, color: '#344E86' },
+                            { title: 'Formula Parameters', desc: 'Adjust weights, thresholds, scale factors', tab: 'formulas', icon: SlidersHorizontal, color: '#059669' },
+                            { title: 'Test Calculator', desc: 'Verify scores with live formula execution', tab: 'calculator', icon: FlaskConical, color: '#7C3AED' },
+                          ].map(card => {
+                            const Icon = card.icon;
+                            return (
+                              <Card key={card.tab} className="cursor-pointer hover:shadow-md transition-shadow border" onClick={() => setScoringSubTab(card.tab)}>
+                                <CardContent className="pt-3 pb-3 flex items-start gap-3">
+                                  <div className="h-8 w-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: card.color + '18' }}>
+                                    <Icon className="h-4 w-4" style={{ color: card.color }} />
+                                  </div>
+                                  <div>
+                                    <p className="text-sm font-semibold text-gray-800">{card.title}</p>
+                                    <p className="text-xs text-gray-500">{card.desc}</p>
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ═══════ DOMAIN & SUBDOMAIN CONFIG ═══════ */}
+                    {scoringSubTab === 'domains' && (
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-semibold text-gray-800">Domain &amp; Subdomain Configuration</p>
+                            <p className="text-xs text-gray-500">Map assessment domains to scoring modules, age bands and weights for upcoming assessments</p>
+                          </div>
+                          <Button size="sm" style={{ backgroundColor: BRAND.primary }} className="text-white gap-1.5 text-xs" onClick={() => setDomainRows(prev => [...prev, { id: Date.now(), domain: 'New Domain', subdomain: 'New Subdomain', module: 'LES', band: 'A–E3', weight: 20, status: 'Draft' }])}>
+                            <Plus className="h-3.5 w-3.5" /> Add Row
+                          </Button>
+                        </div>
+                        <Card>
+                          <div className="overflow-x-auto">
+                            <table className="w-full text-xs">
+                              <thead>
+                                <tr className="border-b bg-gray-50">
+                                  {['#','Domain','Subdomain','Scoring Module','Age Band Scope','Weight (%)','Status',''].map((h,i) => (
+                                    <th key={i} className="px-3 py-2.5 text-left font-semibold text-gray-600 uppercase tracking-wider text-[10px] whitespace-nowrap">{h}</th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-gray-100">
+                                {domainRows.map((row, idx) => (
+                                  <tr key={row.id} className="hover:bg-gray-50 group">
+                                    <td className="px-3 py-1.5 text-gray-400 font-mono text-[10px]">{String(idx+1).padStart(2,'0')}</td>
+                                    <td className="px-3 py-1.5">
+                                      <input className="w-36 border-b border-transparent group-hover:border-gray-300 focus:border-blue-400 focus:outline-none text-gray-800 font-medium bg-transparent text-xs py-0.5" value={row.domain} onChange={e => setDomainRows(p => p.map(r => r.id===row.id ? {...r, domain: e.target.value} : r))} />
+                                    </td>
+                                    <td className="px-3 py-1.5">
+                                      <input className="w-40 border-b border-transparent group-hover:border-gray-300 focus:border-blue-400 focus:outline-none text-gray-700 bg-transparent text-xs py-0.5" value={row.subdomain} onChange={e => setDomainRows(p => p.map(r => r.id===row.id ? {...r, subdomain: e.target.value} : r))} />
+                                    </td>
+                                    <td className="px-3 py-1.5">
+                                      <select className="border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none bg-white" value={row.module} onChange={e => setDomainRows(p => p.map(r => r.id===row.id ? {...r, module: e.target.value} : r))}>
+                                        {['LES','ATT','MEM','CU','STR','EXAM'].map(m => <option key={m} value={m}>{m}</option>)}
+                                      </select>
+                                    </td>
+                                    <td className="px-3 py-1.5">
+                                      <select className="border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none bg-white" value={row.band} onChange={e => setDomainRows(p => p.map(r => r.id===row.id ? {...r, band: e.target.value} : r))}>
+                                        {['A–E3','A–D','B–E2','C–E3','D–E3','E1–E3'].map(b => <option key={b} value={b}>{b}</option>)}
+                                      </select>
+                                    </td>
+                                    <td className="px-3 py-1.5">
+                                      <div className="flex items-center gap-1">
+                                        <input type="number" min={0} max={100} className="w-14 border border-gray-200 rounded px-2 py-1 text-xs text-center focus:outline-none font-mono" value={row.weight} onChange={e => setDomainRows(p => p.map(r => r.id===row.id ? {...r, weight: Number(e.target.value)} : r))} />
+                                        <span className="text-gray-400">%</span>
+                                      </div>
+                                    </td>
+                                    <td className="px-3 py-1.5">
+                                      <select className={'border rounded px-2 py-1 text-[10px] font-medium focus:outline-none ' + (row.status==='Active' ? 'border-green-200 text-green-700 bg-green-50' : 'border-amber-200 text-amber-700 bg-amber-50')} value={row.status} onChange={e => setDomainRows(p => p.map(r => r.id===row.id ? {...r, status: e.target.value} : r))}>
+                                        <option value="Active">Active</option>
+                                        <option value="Draft">Draft</option>
+                                        <option value="Inactive">Inactive</option>
+                                      </select>
+                                    </td>
+                                    <td className="px-3 py-1.5">
+                                      <Button variant="ghost" size="sm" className="h-6 px-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-opacity text-[10px]" onClick={() => setDomainRows(p => p.filter(r => r.id !== row.id))}>
+                                        <Trash2 className="h-3 w-3" />
+                                      </Button>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                              <tfoot>
+                                <tr className="border-t bg-gray-50">
+                                  <td colSpan={5} className="px-3 py-2 text-xs text-gray-500 font-medium">Total weight allocation</td>
+                                  <td className="px-3 py-2">
+                                    <span className={'font-bold text-xs font-mono ' + (domainRows.reduce((s,r)=>s+r.weight,0)===100?'text-green-600':'text-orange-500')}>
+                                      {domainRows.reduce((s,r)=>s+r.weight,0)}%
+                                    </span>
+                                  </td>
+                                  <td colSpan={2} />
+                                </tr>
+                              </tfoot>
+                            </table>
+                          </div>
+                        </Card>
+                        {/* Domain summary cards */}
+                        <div className="grid grid-cols-2 gap-3">
+                          {(() => {
+                            const grouped: Record<string, typeof domainRows> = {};
+                            domainRows.forEach(r => { if (!grouped[r.domain]) grouped[r.domain]=[]; grouped[r.domain].push(r); });
+                            return Object.entries(grouped).map(([domain, rows]) => (
+                              <Card key={domain} className="border">
+                                <CardContent className="pt-3 pb-3">
+                                  <div className="flex items-center justify-between mb-2">
+                                    <p className="text-xs font-bold text-gray-800">{domain}</p>
+                                    <Badge variant="outline" className="text-[10px]">{rows.length} subdomains</Badge>
+                                  </div>
+                                  <div className="space-y-1">
+                                    {rows.map(r => (
+                                      <div key={r.id} className="flex items-center justify-between text-[10px]">
+                                        <span className="text-gray-600">{r.subdomain}</span>
+                                        <div className="flex items-center gap-2">
+                                          <span className="px-1.5 py-0.5 rounded font-medium" style={{ backgroundColor: (formulaRows.find(f=>f.code===r.module)?.color||'#888')+'20', color: formulaRows.find(f=>f.code===r.module)?.color||'#888' }}>{r.module}</span>
+                                          <span className="text-gray-400">{r.weight}%</span>
+                                          <span className={'px-1.5 py-0.5 rounded ' + (r.status==='Active'?'bg-green-50 text-green-600':'bg-amber-50 text-amber-600')}>{r.status}</span>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            ));
+                          })()}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ═══════ AGE BAND NORMS ═══════ */}
+                    {scoringSubTab === 'agebands' && (
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-semibold text-gray-800">Age Band Norm Tables</p>
+                            <p className="text-xs text-gray-500">P20–P80 cutoff scores used to classify raw scores into performance tiers by cohort</p>
+                          </div>
+                          <div className="flex items-center gap-2 text-xs">
+                            {[['P20','bg-red-100 text-red-700'],['P40','bg-orange-100 text-orange-700'],['P60','bg-yellow-100 text-yellow-700'],['P80','bg-green-100 text-green-700']].map(([l,cls]) => (
+                              <span key={l} className={'px-2 py-0.5 rounded font-medium ' + cls}>{l}</span>
+                            ))}
+                            <span className="text-gray-400">= lower boundary for each tier</span>
+                          </div>
+                        </div>
+                        <Card>
+                          <div className="overflow-x-auto">
+                            <table className="w-full text-xs">
+                              <thead>
+                                <tr className="border-b bg-gray-50">
+                                  <th className="px-3 py-2.5 text-left text-[10px] font-semibold text-gray-600 uppercase tracking-wider">Band</th>
+                                  <th className="px-3 py-2.5 text-left text-[10px] font-semibold text-gray-600 uppercase tracking-wider">Grades</th>
+                                  <th className="px-3 py-2.5 text-left text-[10px] font-semibold text-gray-600 uppercase tracking-wider">Ages</th>
+                                  <th className="px-3 py-2.5 text-center text-[10px] font-semibold text-red-600 uppercase tracking-wider">P20</th>
+                                  <th className="px-3 py-2.5 text-center text-[10px] font-semibold text-orange-600 uppercase tracking-wider">P40</th>
+                                  <th className="px-3 py-2.5 text-center text-[10px] font-semibold text-yellow-600 uppercase tracking-wider">P60</th>
+                                  <th className="px-3 py-2.5 text-center text-[10px] font-semibold text-green-600 uppercase tracking-wider">P80</th>
+                                  <th className="px-3 py-2.5 text-left text-[10px] font-semibold text-gray-600 uppercase tracking-wider">Spread</th>
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-gray-100">
+                                {normRows.map((r, ri) => (
+                                  <tr key={r.band} className="hover:bg-gray-50">
+                                    <td className="px-3 py-1.5">
+                                      <span className="inline-flex items-center justify-center h-6 w-8 rounded text-white text-[10px] font-bold" style={{ backgroundColor: BRAND.primary }}>{r.band}</span>
+                                    </td>
+                                    <td className="px-3 py-1.5 text-gray-700">{r.grades}</td>
+                                    <td className="px-3 py-1.5 text-gray-700">{r.ages} yrs</td>
+                                    {(['p20','p40','p60','p80'] as const).map(key => (
+                                      <td key={key} className="px-3 py-1.5 text-center">
+                                        <input type="number" value={r[key]} onChange={e => setNormRows(p => p.map((row,rIdx) => rIdx===ri ? {...row, [key]: Number(e.target.value)} : row))} className="w-14 border rounded text-center py-0.5 text-xs font-mono focus:outline-none focus:ring-1 focus:ring-blue-400" />
+                                      </td>
+                                    ))}
+                                    <td className="px-3 py-1.5">
+                                      <div className="flex items-center gap-1">
+                                        <div className="relative h-2 w-20 bg-gray-100 rounded-full overflow-hidden">
+                                          <div className="absolute top-0 h-full rounded-full" style={{ left: r.p20+'%', width: (r.p80-r.p20)+'%', backgroundColor: BRAND.primary+'99' }} />
+                                        </div>
+                                        <span className="text-[10px] text-gray-400">{r.p20}–{r.p80}</span>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </Card>
+                        <Card className="border-amber-200 bg-amber-50">
+                          <CardContent className="py-2 px-4">
+                            <div className="flex gap-2 items-start">
+                              <AlertTriangle className="h-3.5 w-3.5 text-amber-600 flex-shrink-0 mt-0.5" />
+                              <p className="text-xs text-amber-700">ATT, MEM and STR apply internal scaling before these cutoffs. Fatigue Sensitivity and Adaptability are additive adjustments on top of the base percentile classification.</p>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    )}
+
+                    {/* ═══════ FORMULA PARAMETERS ═══════ */}
+                    {scoringSubTab === 'formulas' && (
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between mb-1">
+                          <p className="text-sm font-semibold text-gray-800">Scoring Formula Parameters</p>
+                          <p className="text-xs text-gray-500">Click any row to expand steps &amp; edit parameters</p>
+                        </div>
+                        {formulaRows.map(m => {
+                          const details: Record<string, {steps:{label:string,formula:string,note:string}[], params:{key:string,label:string,value:string,editable:boolean}[]}> = {
+                            LES: { steps:[{label:'Sum Likert responses',formula:'Raw = Σ item_scores',note:'Items 1–7: MMI, Items 8–14: MCI'},{label:'Normalize 0–100',formula:'LES% = ((Raw − 7) ÷ 28) × 100',note:'Min=7, Max=35, range=28'},{label:'Split MMI / MCI',formula:'MMI% = ((MMI_raw − 7) ÷ 28) × 100',note:'Same formula per subscale'},{label:'Pattern detection',formula:'MMI>70 & MCI<50 → Aware but Passive',note:'Cross-pattern flags for learning style'}], params:[{key:'item_count',label:'Total items',value:'14',editable:false},{key:'min_raw',label:'Min raw',value:'7',editable:false},{key:'max_raw',label:'Max raw',value:'35',editable:false},{key:'mmi_items',label:'MMI items',value:'7',editable:true},{key:'mci_items',label:'MCI items',value:'7',editable:true}] },
+                            ATT: { steps:[{label:'Stability Score',formula:'Stability = Hit Rate − False Alarm Rate',note:'Hit Rate = correct taps ÷ targets'},{label:'Self-report avg',formula:'SR_avg = Σ scores ÷ n',note:'Likert 1–5'},{label:'Composite ATI',formula:'ATI = (Stability × 0.6) + (SR_avg × 8)',note:'Stability 0–1, scaled ×8'},{label:'Fatigue flag',formula:'1H_acc − 2H_acc > 15% → Fatigue Detected',note:'First vs second half accuracy gap'}], params:[{key:'stability_weight',label:'Stability weight',value:'0.60',editable:true},{key:'sr_scale',label:'SR scale factor',value:'8',editable:true},{key:'fatigue_threshold',label:'Fatigue threshold',value:'15%',editable:true}] },
+                            MEM: { steps:[{label:'Encoding (recall)',formula:'ENC = (Correct Recalls ÷ Targets) × 100',note:'Immediate word recall accuracy'},{label:'Recognition',formula:'REC = (TP ÷ (TP+FN)) × 100',note:'Sensitivity to target items'},{label:'Distortion resistance',formula:'DR = (1 − FalseAlarms÷Distractors) × 100',note:'Ability to reject lure items'},{label:'Composite MEM',formula:'MEM = 0.4×ENC + 0.4×REC + 0.2×DR',note:'All subscores normalized before combining'}], params:[{key:'enc_weight',label:'Encoding weight',value:'0.40',editable:true},{key:'rec_weight',label:'Recognition weight',value:'0.40',editable:true},{key:'dr_weight',label:'Distortion resist.',value:'0.20',editable:true}] },
+                            CU:  { steps:[{label:'CU1 – Main Idea',formula:'CU1 = Σ option_scores (0–10)',note:'Text comprehension questions'},{label:'CU2 – Cause-Effect',formula:'CU2 = Σ option_scores (0–10)',note:'Inferential reasoning questions'},{label:'CU3 – Application',formula:'CU3 = Σ option_scores (0–10)',note:'Transfer-to-novel-context questions'},{label:'Overall CU',formula:'CU = (CU1+CU2+CU3) ÷ 3',note:'Arithmetic mean of three dimensions'}], params:[{key:'cu1_max',label:'CU1 max score',value:'10',editable:true},{key:'cu2_max',label:'CU2 max score',value:'10',editable:true},{key:'cu3_max',label:'CU3 max score',value:'10',editable:true}] },
+                            STR: { steps:[{label:'Tag responses',formula:'V / R / P tag per option selected',note:'Tags defined per question in bank'},{label:'Sum tags',formula:'V_total = Σ V-tags, R_total = Σ R, P_total = Σ P',note:'Count per strategy type'},{label:'Dominant strategy',formula:'Dominant = argmax(V, R, P)',note:'Highest count; tie → Balanced'},{label:'Adaptability',formula:'Adaptability = switches on hard ÷ total_hard',note:'Strategy switches on difficulty-3+ items'}], params:[{key:'dominant_threshold',label:'Dominant threshold',value:'40%',editable:true},{key:'adaptability_min',label:'Min switches for Adaptive',value:'30%',editable:true}] },
+                            EXAM:{ steps:[{label:'Domain score',formula:'Domain% = (Σ option_score ÷ max_possible) × 100',note:'Per subdomain, normalized to 100'},{label:'Overall score',formula:'Overall = weighted avg of subdomains',note:'Equal weight unless overridden'},{label:'Readiness band',formula:'<40 Needs Support | 40–55 Dev | 55–70 Appr | 70–85 On Track | 85+ Ready',note:'Applied after board/grade filter'}], params:[{key:'subdomain_weight',label:'Subdomain weighting',value:'Equal',editable:false},{key:'board_filter',label:'Board/Grade filter',value:'Yes',editable:false}] },
+                          };
+                          const d = details[m.code] || details['LES'];
+                          return (
+                            <Card key={m.code} className="overflow-hidden">
+                              <div className="flex items-center gap-3 px-4 py-2.5 cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => setExpandedModule(expandedModule === m.code ? null : m.code)}>
+                                <span className="inline-flex items-center justify-center h-6 px-2 rounded text-white text-[10px] font-bold flex-shrink-0" style={{ backgroundColor: m.color }}>{m.code}</span>
+                                <span className="font-medium text-sm text-gray-800 flex-1">{m.name}</span>
+                                <code className="text-[10px] bg-gray-50 border border-gray-100 rounded px-2 py-0.5 font-mono text-gray-600 hidden md:inline">{m.formula}</code>
+                                <span className="text-[10px] text-gray-400 hidden lg:inline mr-2">{m.weights}</span>
+                                <span className="px-2 py-0.5 bg-green-50 text-green-700 border border-green-200 rounded text-[10px] font-medium">{m.status}</span>
+                                <ChevronDown className={'h-4 w-4 text-gray-400 transition-transform ' + (expandedModule === m.code ? 'rotate-180' : '')} />
+                              </div>
+                              {expandedModule === m.code && (
+                                <div className="border-t grid grid-cols-1 lg:grid-cols-2 gap-4 p-4 bg-gray-50">
+                                  <div>
+                                    <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-500 mb-2">Calculation Steps</p>
+                                    <div className="space-y-2.5">
+                                      {d.steps.map((s,si) => (
+                                        <div key={si} className="flex gap-2.5">
+                                          <div className="h-5 w-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0 mt-0.5" style={{ backgroundColor: m.color }}>{si+1}</div>
+                                          <div className="flex-1">
+                                            <p className="text-xs font-medium text-gray-800">{s.label}</p>
+                                            <code className="text-[10px] bg-white border border-gray-200 rounded px-2 py-0.5 block mt-0.5 font-mono">{s.formula}</code>
+                                            <p className="text-[10px] text-gray-500 mt-0.5">{s.note}</p>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-500 mb-2">Editable Parameters</p>
+                                    <div className="space-y-2">
+                                      {d.params.map(p => (
+                                        <div key={p.key} className="flex items-center gap-2">
+                                          <div className="flex-1">
+                                            <p className="text-xs font-medium text-gray-700">{p.label}</p>
+                                            <p className="text-[10px] font-mono text-gray-400">{p.key}</p>
+                                          </div>
+                                          {p.editable ? (
+                                            <input type="text" defaultValue={p.value} className="w-20 border rounded px-2 py-1 text-xs text-center font-mono focus:outline-none focus:ring-1" style={{ '--tw-ring-color': m.color } as React.CSSProperties} />
+                                          ) : (
+                                            <span className="w-20 text-center text-xs font-mono text-gray-500 bg-gray-100 rounded px-2 py-1">{p.value}</span>
+                                          )}
+                                          {!p.editable && <span className="text-[10px] text-gray-400">fixed</span>}
+                                        </div>
+                                      ))}
+                                      <Button size="sm" className="text-white text-xs mt-2 gap-1" style={{ backgroundColor: m.color }}>
+                                        <Save className="h-3 w-3" /> Save {m.code}
+                                      </Button>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                            </Card>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* ═══════ TEST CALCULATOR ═══════ */}
+                    {scoringSubTab === 'calculator' && (
+                      <div className="max-w-2xl space-y-4">
+                        <div>
+                          <p className="text-sm font-semibold text-gray-800">Live Score Calculator</p>
+                          <p className="text-xs text-gray-500">Enter raw values — calculates exactly what the backend scoring engine returns</p>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {[{id:'les',label:'LES'},{id:'att',label:'ATT'},{id:'mem',label:'MEM'},{id:'cu',label:'CU'}].map(m => (
+                            <button key={m.id} onClick={() => { setCalcModule(m.id); setCalcInputs({}); setCalcResult(null); }} className={'px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ' + (calcModule===m.id ? 'text-white border-transparent' : 'bg-white border-gray-200 text-gray-600 hover:border-gray-400')} style={calcModule===m.id ? { backgroundColor: BRAND.primary } : {}}>
+                              {m.label}
+                            </button>
+                          ))}
+                        </div>
+                        <Card>
+                          <CardContent className="pt-4 pb-4">
+                            {(() => {
+                              const inputSets: Record<string, {key:string,label:string,min:number,max:number,step?:number}[]> = {
+                                les: [{key:'raw',label:'Raw Total Score (7–35)',min:7,max:35},{key:'mmi_raw',label:'MMI Subscore (7–35)',min:7,max:35},{key:'mci_raw',label:'MCI Subscore (7–35)',min:7,max:35}],
+                                att: [{key:'stability',label:'Stability Score (0–1)',min:0,max:1,step:0.01},{key:'sr_avg',label:'Self-Report Avg (1–5)',min:1,max:5,step:0.1},{key:'h1_acc',label:'1st Half Accuracy %',min:0,max:100},{key:'h2_acc',label:'2nd Half Accuracy %',min:0,max:100}],
+                                mem: [{key:'enc',label:'Encoding Score (0–100)',min:0,max:100},{key:'rec',label:'Recognition Score (0–100)',min:0,max:100},{key:'dr',label:'Distortion Resistance (0–100)',min:0,max:100}],
+                                cu:  [{key:'cu1',label:'CU1 – Main Idea (0–10)',min:0,max:10,step:0.5},{key:'cu2',label:'CU2 – Cause-Effect (0–10)',min:0,max:10,step:0.5},{key:'cu3',label:'CU3 – Application (0–10)',min:0,max:10,step:0.5}],
+                              };
+                              const inputs = inputSets[calcModule] || inputSets.les;
+                              return (
+                                <div className="grid grid-cols-2 gap-3 mb-4">
+                                  {inputs.map(inp => (
+                                    <div key={inp.key}>
+                                      <label className="block text-[10px] font-medium text-gray-600 mb-1">{inp.label}</label>
+                                      <input type="number" min={inp.min} max={inp.max} step={inp.step||1} value={calcInputs[inp.key]||''} onChange={e => setCalcInputs(p => ({...p, [inp.key]: e.target.value}))} placeholder={inp.min+'–'+inp.max} className="w-full border rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-blue-400" />
+                                    </div>
+                                  ))}
+                                </div>
+                              );
+                            })()}
+                            <Button size="sm" onClick={() => {
+                              const g = (k: string) => parseFloat(calcInputs[k]||'0');
+                              let result: Record<string,string> = {};
+                              if (calcModule==='les') {
+                                const les=((g('raw')-7)/28)*100, mmi=((g('mmi_raw')-7)/28)*100, mci=((g('mci_raw')-7)/28)*100;
+                                result={'LES%':les.toFixed(1),'MMI%':mmi.toFixed(1),'MCI%':mci.toFixed(1),'Pattern':mmi>70&&mci<50?'Aware but Passive':mmi>60&&mci>60?'Balanced Self-Regulated':mmi<50&&mci>60?'Regulated w/o Awareness':'Developing','Band':les<40?'Developing':les<60?'Emerging':les<75?'Proficient':les<90?'Advanced':'Exceptional'};
+                              } else if (calcModule==='att') {
+                                const ati=g('stability')*0.6+g('sr_avg')*8;
+                                result={'ATI Score':ati.toFixed(2),'Band':ati<30?'Very Low':ati<50?'Low':ati<65?'Moderate':ati<80?'High':'Very High','Fatigue':(g('h1_acc')-g('h2_acc'))>15?'Detected':'No','Stability (60%)':(g('stability')*0.6).toFixed(3),'SR (40%)':(g('sr_avg')*8).toFixed(2)};
+                              } else if (calcModule==='mem') {
+                                const mem=0.4*g('enc')+0.4*g('rec')+0.2*g('dr');
+                                result={'MEM%':mem.toFixed(1),'Band':mem<40?'Weak':mem<55?'Developing':mem<70?'Functional':mem<85?'Strong':'Exceptional','Encoding (40%)':(0.4*g('enc')).toFixed(1),'Recognition (40%)':(0.4*g('rec')).toFixed(1),'Distortion (20%)':(0.2*g('dr')).toFixed(1),'Flag':g('rec')>80&&g('dr')<40?'Confusion Risk':g('enc')<40&&g('rec')<40?'Consolidation Gap':'None'};
+                              } else if (calcModule==='cu') {
+                                const cu=(g('cu1')+g('cu2')+g('cu3'))/3;
+                                result={'CU Score':cu.toFixed(2),'CU1':g('cu1').toFixed(1),'CU2':g('cu2').toFixed(1),'CU3':g('cu3').toFixed(1),'Band':cu<4?'Below Basic':cu<6?'Basic':cu<7.5?'Developing':cu<9?'Proficient':'Advanced'};
+                              }
+                              setCalcResult(result);
+                            }} style={{ backgroundColor: BRAND.primary }} className="text-white gap-1.5 text-xs">
+                              <Calculator className="h-3.5 w-3.5" /> Calculate
+                            </Button>
+                          </CardContent>
+                        </Card>
+                        {calcResult && (
+                          <Card className="border-green-200 bg-green-50">
+                            <CardHeader className="pb-1 pt-3">
+                              <CardTitle className="text-xs text-green-800 flex items-center gap-1.5">
+                                <CheckCircle className="h-3.5 w-3.5" /> Result — {calcModule.toUpperCase()}
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent className="pb-3">
+                              <div className="grid grid-cols-3 gap-2">
+                                {Object.entries(calcResult).map(([k,v]) => (
+                                  <div key={k} className="bg-white rounded border border-green-200 px-2.5 py-1.5">
+                                    <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">{k}</p>
+                                    <p className="text-xs font-bold text-gray-900 mt-0.5">{String(v)}</p>
+                                  </div>
+                                ))}
+                              </div>
+                            </CardContent>
+                          </Card>
+                        )}
+                      </div>
+                    )}
+
+                  </div>
+                </div>
+              )}
+

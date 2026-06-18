@@ -1,0 +1,226 @@
+OBJECTIVE:
+Transform the existing static competency assessment system into a fully adaptive, ontology-driven assessment runtime capable of dynamically generating contextual assessment blueprints based on role DNA, industry, organizational layer, business complexity, and competency intelligence.
+
+This phase MUST enhance the existing runtime WITHOUT replacing or breaking:
+
+* competency-assessment-runtime.ts
+* AssessmentTab
+* existing benchmark flows
+* existing adaptive intelligence pages
+
+====================================================
+STEP 1 — CREATE NEW DATABASE MIGRATION
+======================================
+
+Create:
+backend/migrations/20260705_assessment_blueprint_v2.sql
+
+Add tables:
+
+1. assessment_blueprints_v2
+2. assessment_blueprint_competencies
+3. adaptive_question_pools
+4. competency_question_templates
+5. assessment_branching_rules
+6. assessment_runtime_sessions_v2
+7. competency_signal_capture
+8. behavioral_assessment_signals
+9. assessment_explainability_logs
+
+====================================================
+STEP 2 — CREATE ASSESSMENT BLUEPRINT ENGINE
+===========================================
+
+Create:
+backend/services/assessment-blueprint-engine.ts
+
+Responsibilities:
+
+* dynamically generate assessments
+* resolve blueprint from role DNA
+* determine competency depth
+* determine assessment intensity
+* select question pools
+* generate branching logic
+* determine simulation requirements
+* determine behavioral probes
+
+Core methods:
+
+* generateBlueprint()
+* resolveQuestionPools()
+* generateAdaptiveFlow()
+* computeAssessmentComplexity()
+* resolveBehavioralSignals()
+
+====================================================
+STEP 3 — CREATE ADAPTIVE ASSESSMENT ENGINE
+==========================================
+
+Create:
+backend/services/adaptive-assessment-engine.ts
+
+Capabilities:
+
+* adaptive branching
+* confidence-driven progression
+* contradiction detection
+* dynamic difficulty adjustment
+* behavioral signal inference
+* response consistency scoring
+
+Features:
+
+* runtime question selection
+* competency-specific progression
+* difficulty escalation
+* behavioral branching
+* competency depth expansion
+
+====================================================
+STEP 4 — ENHANCE QUESTION SYSTEM
+================================
+
+Create:
+frontend/src/data/catalogs/assessment-question-bank-v2.ts
+
+Support question types:
+
+* MCQ
+* situational judgement
+* behavioral
+* leadership scenarios
+* case studies
+* simulations
+* communication prompts
+* AI conversational prompts
+* portfolio review prompts
+
+====================================================
+STEP 5 — CREATE ASSESSMENT ORCHESTRATOR
+=======================================
+
+Create:
+backend/services/assessment-runtime-orchestrator.ts
+
+Purpose:
+Central runtime controller.
+
+Responsibilities:
+
+* fetch role DNA
+* generate blueprint
+* initialize assessment
+* track runtime state
+* persist competency signals
+* trigger scoring pipeline
+* generate explainability metadata
+
+====================================================
+STEP 6 — CREATE V2 ASSESSMENT APIs
+==================================
+
+Create:
+backend/routes/adaptive-assessment-v2.ts
+
+Endpoints:
+POST /api/v2/assessment/generate-blueprint
+POST /api/v2/assessment/start
+POST /api/v2/assessment/next-question
+POST /api/v2/assessment/submit-response
+POST /api/v2/assessment/complete
+GET  /api/v2/assessment/explainability/:sessionId
+
+====================================================
+STEP 7 — FRONTEND ENHANCEMENT
+=============================
+
+Create:
+frontend/src/modules/career-builder/competency/views/AdaptiveAssessmentRuntime.tsx
+
+Features:
+
+* dynamic question rendering
+* adaptive transitions
+* competency progress visualization
+* confidence meter
+* explainability hints
+* contextual competency indicators
+* runtime behavioral indicators
+
+====================================================
+STEP 8 — BUILD SIGNAL CAPTURE SYSTEM
+====================================
+
+Capture:
+
+* response confidence
+* response time
+* consistency
+* contradiction patterns
+* hesitation patterns
+* competency depth
+* behavioral indicators
+* leadership indicators
+
+====================================================
+STEP 9 — CREATE ASSESSMENT SESSION ENGINE
+=========================================
+
+Features:
+
+* resumable sessions
+* runtime state persistence
+* adaptive progression tracking
+* confidence stabilization
+* audit history
+
+====================================================
+STEP 10 — EXPLAINABILITY
+========================
+
+Generate:
+
+* why question selected
+* why difficulty changed
+* why competency expanded
+* why branching occurred
+* confidence rationale
+
+====================================================
+STEP 11 — BACKWARD COMPATIBILITY
+================================
+
+Ensure:
+
+* old assessment runtime still works
+* AssessmentTab remains operational
+* feature flag controls V2 rollout
+* existing score APIs remain untouched
+
+====================================================
+STEP 12 — VALIDATION
+====================
+
+Test:
+
+1. Dynamic assessment generation
+2. Different roles generate different blueprints
+3. Different industries produce different assessment flows
+4. Behavioral branching works
+5. Confidence adjustment works
+6. Runtime explainability works
+7. Existing assessment unaffected
+
+====================================================
+EXPECTED RESULT
+===============
+
+By end of Phase 2:
+
+* assessments become adaptive
+* competency DNA drives assessment generation
+* runtime branching operational
+* behavioral intelligence captured
+* contextual assessment intelligence active
+* ontology fully connected to runtime assessment

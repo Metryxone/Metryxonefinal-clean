@@ -1,0 +1,650 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "ORsnxGlD3999bX54NuBQv"
+uri = "file://CAPADEX_Complete_Documentation.md"
+type = "text"
+title = "CAPADEX Complete End-to-End Documentation"
+
+[[outputs]]
+id = "Eua9VKVQZn5Q-H5K2Cekc"
+uri = "file://MetryxOne_Complete_Documentation.md"
+type = "text"
+title = "MetryxOne — Complete End-to-End Platform Documentation"
+
+[[outputs]]
+id = "OqwxoKn0nqBXg-7ON2dRh"
+uri = "file://CAPADEX_Document.md"
+type = "text"
+title = "CAPADEX Comprehensive System Document v1.1"
+
+[[outputs]]
+id = "WKEks9q4RkcIxyDp1bi5l"
+uri = "file://CareerBuilder_Document.md"
+type = "text"
+title = "Career Builder Comprehensive System Document"
+
+[[outputs]]
+id = "O8eNGY-5D6NStXcfoomHX"
+uri = "file://StudentDashboard_Document.md"
+type = "text"
+title = "Student Dashboard Document"
+
+[[outputs]]
+id = "lCw9BaVvsEoSUEYLFDReW"
+uri = "file://ParentDashboard_Document.md"
+type = "text"
+title = "Parent Dashboard Document"
+
+[[outputs]]
+id = "0rXJH0IwqGjmsV5ksaiX8"
+uri = "file://InstitutionDashboard_Document.md"
+type = "text"
+title = "Institution Dashboard Document"
+
+[[outputs]]
+id = "smeZ2Nk52NfwVVxnlnpoi"
+uri = "file://CompetitiveExam_Document.md"
+type = "text"
+title = "Exam Ready™ — Competitive Exam Document"
+
+[[outputs]]
+id = "jMhEfUMHsLGsyH2glpYch"
+uri = "file://Mentor_Document.md"
+type = "text"
+title = "Mentor Feature Document"
+
+[[outputs]]
+id = "b1ol54iMqVS1Qs4i8G1iw"
+uri = "file://docs/EMPLOYABILITY_INDEX.md"
+type = "text"
+title = "Employability Index — Methodology & Reference"
+
+[[outputs]]
+id = "4ehPMMJsicEffa1JWVYMY"
+uri = "file://docs/peer-benchmarking.md"
+type = "text"
+title = "MetryxOne Peer Benchmarking — System Document"
+
+[[outputs]]
+id = "vIBMqfGD70109y8P1z141"
+uri = "file://docs/MICRO_ACCURATE_STAGE_GUIDANCE.md"
+type = "text"
+title = "Micro-Accurate Stage Guidance — Design Document"
+
+[[outputs]]
+id = "mcQpBSp3WbDHNqOSPgasW"
+uri = "file://docs/COMPETENCY_ASSESSMENT.md"
+type = "text"
+title = "Competency Assessment — Technical Document"
+
+[[outputs]]
+id = "O3uAsXmmM5WNe5Br2kYzj"
+uri = "file://docs/COMPETENCY_AND_ADAPTIVE_INTELLIGENCE.md"
+type = "text"
+title = "Competency Assessment & Adaptive Intelligence — Technical Document"
+
+[[outputs]]
+id = "Yi3Qwwr88KbxhKmGflE5s"
+uri = "file://docs/CAREER_BUILDER.md"
+type = "text"
+title = "Career Builder — Technical Documentation"
+
+[[outputs]]
+id = "Qn8Msf93GpKTBBsvI-Ohc"
+uri = "file://.local/orphan_concerns_524.csv"
+type = "table"
+title = "524 orphan concerns (with resolved clarity bucket)"
+
+[[outputs]]
+id = "LVA_g_cH8fSHBV-x6FsSE"
+uri = "file://reports/career-builder-enhancement-audit.md"
+type = "text"
+title = "Career Builder — World-Class Enhancement Audit"
+
+[[outputs]]
+id = "Sq0Fta15BW0DKLQLcx_7Y"
+uri = "file://reports/career-os-architecture-blueprint.md"
+type = "text"
+title = "Career OS — Architecture Blueprint (review before implementation)"
+
+[[outputs]]
+id = "aWNPLycnOXqmDboLUtpX7"
+uri = "file://reports/intelligence-waste-report.md"
+type = "text"
+title = "Intelligence Waste Report"
+
+[[outputs]]
+id = "_hngowoI3TOdWXDCF7Wau"
+uri = "file://reports/career-builder-dependency-map.md"
+type = "text"
+title = "Career Builder Dependency Map"
+
+[[outputs]]
+id = "0hHaXsqb49zzWdsMcHo54"
+uri = "file://reports/career-os-4week-roi-plan.md"
+type = "text"
+title = "Career OS — 4-Week ROI Plan (Top 20)"
+
+[[outputs]]
+id = "bVn2JdYxIzD5g79B2q9Em"
+uri = "file://reports/hidden-intelligence-inventory.md"
+type = "text"
+title = "Hidden Intelligence Inventory"
+
+[[outputs]]
+id = "Q0H2N09yqW2ezPRXOHmxZ"
+uri = "file://docs/CAPADEX.md"
+type = "text"
+title = "CAPADEX — Behavioural Runtime (updated §19.3: report-email rebuild)"
+
+[[outputs]]
+id = "Ijbo7zMWtq11r-DemvgDj"
+uri = "file://docs/CAPADEX_QUESTION_RELEVANCE_AUDIT.md"
+type = "text"
+title = "CAPADEX Question Relevance Audit — full report"
+
+[[outputs]]
+id = "393T3FpWOjilJBVj7sKrl"
+uri = "file://backend/scripts/out/question-relevance-audit.csv"
+type = "table"
+title = "Per concern→question data (14,934 rows)"
+
+[[outputs]]
+id = "UzsP5yMmF0x8gxncBqgji"
+uri = "file://audit/phase3/proxy_cleanup_proposed.csv"
+type = "table"
+title = "Proxy-language cleanup — proposed rewrites (793 rows, dry-run)"
+
+[[outputs]]
+id = "2-Dz4sLFcBZSrEI9M0-HQ"
+uri = "file://audit/phase3/proxy_cleanup_summary.json"
+type = "unspecified"
+title = "Remediation summary"
+
+[[outputs]]
+id = "Tf1SMu6gJWutl1rMyBXIJ"
+uri = "file://backend/scripts/out/confidence-options-review.csv"
+type = "table"
+title = "Confidence question options — review (2,286 rows, before generic scale → new context-aware)"
+
+[[outputs]]
+id = "CX9cpViEIB_zN9xQ6UDox"
+uri = "file://exports/clarity_questions_by_concern.xlsx"
+type = "table"
+title = "Clarity Questions by Concern (30,638 rows)"
+
+[[outputs]]
+id = "hD3expjABV07at-164CjO"
+uri = "file://audit/pil_phase1/samples.csv"
+type = "table"
+title = "Validation samples (549 rows, per-row verdicts)"
+
+[[outputs]]
+id = "TMhHVEjYt0QZwU30DxP7E"
+uri = "file://audit/pil_phase1/capability_gap.csv"
+type = "table"
+title = "Capability-gap review list (674 likely-misclassified)"
+
+[[outputs]]
+id = "vwzr9vhvsgXStG1XeKvTj"
+uri = "file://audit/pil_phase1/domain_distribution.csv"
+type = "table"
+title = "Domain × category distribution matrix"
+
+[[outputs]]
+id = "ruJFlxwB1E1AVYBG3HXp-"
+uri = "file://audit/phase6c/1_student_report.txt"
+type = "text"
+title = "1 — Student Report (example, print-ready)"
+
+[[outputs]]
+id = "hZcrCj7Xhr_jdHOIhGDWH"
+uri = "file://audit/phase6c/2_parent_report.txt"
+type = "text"
+title = "2 — Parent Report (example, print-ready)"
+
+[[outputs]]
+id = "qlWPctxBpHlb9Xa5Shjo2"
+uri = "file://audit/phase6c/3_counselor_report.txt"
+type = "text"
+title = "3 — Counselor Report (example, print-ready)"
+
+[[outputs]]
+id = "N4j9Dy8hWCx0BvKvO79OQ"
+uri = "file://audit/phase6c/4_institution_report.txt"
+type = "text"
+title = "4 — Institution Cohort Report (example, print-ready)"
+
+[[outputs]]
+id = "T34oXm00ko8t1NPBGGXDZ"
+uri = "file://audit/phase6c/5_explainability_coverage.txt"
+type = "text"
+title = "5 — Explainability Coverage Summary"
+
+[[outputs]]
+id = "D2TpUV6xOv9r6ly0ZnFOW"
+uri = "file://audit/phase6c/6_report_readiness.txt"
+type = "text"
+title = "6 — Report Readiness Score"
+
+[[outputs]]
+id = "XKFYZ9QHZD-RgAJLs45G3"
+uri = "file://audit/phase7/1_career_recommendations.txt"
+type = "text"
+title = "1 · Career Recommendations (cluster / pathway / exploration)"
+
+[[outputs]]
+id = "xEGV4lwI4lhZ3efOVi9Mt"
+uri = "file://audit/phase7/2_learning_recommendations.txt"
+type = "text"
+title = "2 · Learning Recommendations (course / certification / pathway)"
+
+[[outputs]]
+id = "UFpY5W4XTB6fpL3kgf6Vz"
+uri = "file://audit/phase7/3_project_recommendations.txt"
+type = "text"
+title = "3 · Project Recommendations (research / portfolio / team / leadership)"
+
+[[outputs]]
+id = "5_ADHYi-5qGzyBtyJaEdd"
+uri = "file://audit/phase7/4_development_recommendations.txt"
+type = "text"
+title = "4 · Development Recommendations (communication / leadership / critical thinking / readiness)"
+
+[[outputs]]
+id = "gKgGjm6uQQWjC8Stll7NO"
+uri = "file://audit/phase7/5_explainability_coverage.txt"
+type = "text"
+title = "5 · Explainability Coverage (8-node trace, coverage vs chain completeness)"
+
+[[outputs]]
+id = "f3KXE3kfY1EHlZ7uwexv-"
+uri = "file://audit/phase7/6_recommendation_readiness.txt"
+type = "text"
+title = "6 · Recommendation Readiness Score (per stakeholder)"
+
+[[outputs]]
+id = "LY7CbY3COUm2aGjpsqxBK"
+uri = "file://audit/phase8/GRAPH_OVERVIEW.md"
+type = "text"
+title = "Phase 8 — Knowledge Graph Overview"
+
+[[outputs]]
+id = "0oi5obBVoLE0BS-hC1AZl"
+uri = "file://audit/phase8/graph_summary.json"
+type = "unspecified"
+title = "Graph Summary (nodes/edges/provenance by type)"
+
+[[outputs]]
+id = "kJMxmTZXeDw4pJibjSOvK"
+uri = "file://audit/phase8/components.csv"
+type = "table"
+title = "Connected Components"
+
+[[outputs]]
+id = "CD9akm-ek-O1AasDuqiEo"
+uri = "file://audit/phase8/hubs.csv"
+type = "table"
+title = "Highest-Degree Hub Nodes"
+
+[[outputs]]
+id = "NG3JFgmsNIv4su4nra8Wz"
+uri = "file://audit/phase8/sample_paths.json"
+type = "unspecified"
+title = "Sample Provenance-Traced Paths"
+
+[[outputs]]
+id = "pAqjPIQlPONSElOM2tIPP"
+uri = "file://audit/phase8a/summary.json"
+type = "unspecified"
+title = "Phase 8A — Run Summary"
+
+[[outputs]]
+id = "4BI12wjAq5eQekX81oa4k"
+uri = "file://audit/phase8a/coverage_report.json"
+type = "unspecified"
+title = "Bijective Coverage Proof"
+
+[[outputs]]
+id = "czrYNAKZz1oUvhPhrSwiV"
+uri = "file://audit/phase8a/node_type_catalog.csv"
+type = "table"
+title = "Node Type Catalog (14 categories)"
+
+[[outputs]]
+id = "UVZaXbNPzWNM7t2fl3_ZJ"
+uri = "file://audit/phase8a/relationship_type_catalog.csv"
+type = "table"
+title = "Relationship Type Catalog (11 verbs)"
+
+[[outputs]]
+id = "vVIehADOKeP41vk8qwos3"
+uri = "file://audit/phase8a/graph_metadata.json"
+type = "unspecified"
+title = "Graph Metadata Snapshot"
+
+[[outputs]]
+id = "12ORV4eX4g5k17uz2xdMe"
+uri = "file://audit/phase8e/GRAPH_EXPLAINABILITY.md"
+type = "text"
+title = "Phase 8E — Graph Explainability Report"
+
+[[outputs]]
+id = "htiZZjsAJt6PQgsbBxjtM"
+uri = "file://audit/phase8f/KNOWLEDGE_GRAPH_READINESS.md"
+type = "text"
+title = "Phase 8F — Knowledge Graph Readiness (READY FOR PHASE 9)"
+
+[[outputs]]
+id = "uxo4jh_NMcbMov6CoX7oG"
+uri = "file://audit/phase9/PREDICTIVE_INTELLIGENCE.md"
+type = "text"
+title = "Phase 9 — Predictive & Outcome Intelligence (summary)"
+
+[[outputs]]
+id = "mM_ctZT0SJqSsw9L0l5n6"
+uri = "file://audit/concern-resolution/CONCERN_RESOLUTION_AUDIT.md"
+type = "text"
+title = "Concern Resolution Accuracy Audit"
+
+[[outputs]]
+id = "CvidOWzBpymCXXc-_Tsvf"
+uri = "file://audit/concern-resolution/top_500_drift.csv"
+type = "table"
+title = "Top 500 Drift Matches"
+
+[[outputs]]
+id = "_7Z_enweA68ZVUHK3lAY5"
+uri = "file://audit/concern-resolution/top_200_failures.csv"
+type = "table"
+title = "Top 200 Failures"
+
+[[outputs]]
+id = "g2hjxxcLrrWTcofNRL2Bz"
+uri = "file://audit/concern-resolution/top_100_ambiguous.csv"
+type = "table"
+title = "Top 100 Ambiguous Intents"
+
+[[outputs]]
+id = "C8QOK91NfC43yczfoFMpX"
+uri = "file://audit/concern-resolution/bridge_tag_health.csv"
+type = "table"
+title = "Bridge-Tag Health Report"
+
+[[outputs]]
+id = "dWEbeeCCdUtYwVa7SEU2p"
+uri = "file://audit/rrp1/RRP1_REPORT.md"
+type = "text"
+title = "RRP-1 Resolution Repair — Before/After Report"
+
+[[outputs]]
+id = "CrMsuym6IJq8nFxwsbxcc"
+uri = "file://audit/rrp1/validation_summary.json"
+type = "unspecified"
+title = "Validation summary (counts + targets)"
+
+[[outputs]]
+id = "Zm49LFIy8nTsstr-XVgRp"
+uri = "file://audit/rrp1/short_intent_recovered.csv"
+type = "table"
+title = "Short intents recovered (649)"
+
+[[outputs]]
+id = "t6d8zXccAQ16MGkCc2awn"
+uri = "file://audit/rrp1/drift_reduction_fixed.csv"
+type = "table"
+title = "Drift corrected (1,152)"
+
+[[outputs]]
+id = "2O-rmsjWCGtLYE8DlMJ2e"
+uri = "file://audit/rrp1/synonym_priority_groups.csv"
+type = "table"
+title = "Priority synonym candidates (40)"
+
+[[outputs]]
+id = "LsnfEe_-wr6dIrFOFGnOs"
+uri = "file://audit/wc1/ONTOLOGY_READINESS_REPORT.md"
+type = "text"
+title = "WC-1 Ontology Readiness Report"
+
+[[outputs]]
+id = "DMsqAPZiaH_zBCXptFntM"
+uri = "file://audit/wc1/bridge_tag_coverage_matrix.csv"
+type = "table"
+title = "Bridge-Tag Coverage Matrix (328 tags × 9 metrics)"
+
+[[outputs]]
+id = "SqTJHXypS-JT9x7AaGKSb"
+uri = "file://audit/wc1/construct_coverage_matrix.csv"
+type = "table"
+title = "Marketed Construct Coverage Matrix (RAG)"
+
+[[outputs]]
+id = "wwlv_lhbCIECWcEbqd9S9"
+uri = "file://audit/wc1/top_50_missing_constructs.csv"
+type = "table"
+title = "Top 50 Missing Constructs"
+
+[[outputs]]
+id = "e2byLRBiB593E6UTgC55c"
+uri = "file://audit/wc1/top_50_overlapping_constructs.csv"
+type = "table"
+title = "Top 50 Overlapping Constructs"
+
+[[outputs]]
+id = "lERdeiwchDOrG_nhpmVdF"
+uri = "file://audit/wc1/top_50_candidate_consolidations.csv"
+type = "table"
+title = "Top 50 Candidate Consolidations"
+
+[[outputs]]
+id = "X0zxR-uh4zzzgl4XApuiI"
+uri = "file://audit/wc1a/SIGNAL_GROUNDING_REPORT.md"
+type = "text"
+title = "WC-1A Signal Grounding Report"
+
+[[outputs]]
+id = "xRITqptsK4KaKxPq3f7_L"
+uri = "file://audit/wc1a/signal_grounding_matrix.csv"
+type = "table"
+title = "Signal Grounding Matrix (328 tags)"
+
+[[outputs]]
+id = "3-HwFtsqItOV76GTpq0AN"
+uri = "file://audit/wc1a/candidate_signal_reuse_map.csv"
+type = "table"
+title = "Candidate Signal Reuse Map"
+
+[[outputs]]
+id = "o_NFvph6qqQDlWBQEfXN6"
+uri = "file://audit/wc1a/signal_gap_report.csv"
+type = "table"
+title = "Signal Gap Report (RED — empty, none)"
+
+[[outputs]]
+id = "Mu1LUTysgMbb3yPBjmBb1"
+uri = "file://audit/wc1a/coverage_health_forecast.json"
+type = "unspecified"
+title = "Coverage & Ontology Health Forecast"
+
+[[outputs]]
+id = "WECMPxDn4e8zwMp7OiOO8"
+uri = "file://audit/wc1a/top_100_grounding_opportunities.csv"
+type = "table"
+title = "Top 100 Highest-Impact Grounding Opportunities"
+
+[[outputs]]
+id = "k5N06jB3GBSmjnSQk4hxR"
+uri = "file://audit/wc1a/priority_construct_grounding.csv"
+type = "table"
+title = "Priority Construct Grounding (10 marketed constructs)"
+
+[[outputs]]
+id = "3bGwrM8jlRb37MS6GHVzG"
+uri = "file://audit/wc1b/SIGNAL_GROUNDING_IMPLEMENTATION_REPORT.md"
+type = "text"
+title = "WC-1B Signal Grounding — Implementation Report"
+
+[[outputs]]
+id = "yXOeU0eLfzQNXr-sbv1O1"
+uri = "file://audit/wc1b/coverage_delta_report.md"
+type = "text"
+title = "Coverage Delta Report (before/after)"
+
+[[outputs]]
+id = "C5pQKKqHpYLwasrTuuGnK"
+uri = "file://audit/wc1b/signal_grounding_summary.json"
+type = "unspecified"
+title = "signal_grounding_summary.json"
+
+[[outputs]]
+id = "eW4tI5kMLO9nMDSl0aFzy"
+uri = "file://audit/wc1b/signal_linkage_audit.csv"
+type = "table"
+title = "signal_linkage_audit.csv"
+
+[[outputs]]
+id = "SDKaDXXUj_fcXso9RlTE3"
+uri = "file://attached_assets/METRYXONE_MASTER_DISCOVERY_DOSSIER.md"
+type = "text"
+title = "MetryxOne Master Discovery Dossier"
+
+[[outputs]]
+id = "FkDTj0tI6Oqswc-021t2d"
+uri = "file://backend/audit/c-1/C1_QSIL_AUDIT.md"
+type = "text"
+title = "C-1 QSIL — Question Semantic Intelligence Audit"
+
+[[outputs]]
+id = "wUwBFXKOCzwhtxgmjnQDm"
+uri = "file://backend/audit/c-1/c1_qsil_audit.json"
+type = "unspecified"
+title = "C-1 QSIL — Machine-readable metrics"
+
+[[outputs]]
+id = "5_H_52hOP8aRaMH8HUF0A"
+uri = "file://backend/audit/c-1a/C1A_QDA_ARCHITECTURE.md"
+type = "text"
+title = "C-1A QDA — Question Differentiation Architecture (design)"
+
+[[outputs]]
+id = "cUkXhxJgjIGYFyVX9D0EJ"
+uri = "file://backend/audit/c-1a/c1a_qda.json"
+type = "unspecified"
+title = "C-1A QDA — Machine-readable architecture spec"
+
+[[outputs]]
+id = "mnDKk_GjAdxmBBoy6bJTQ"
+uri = "file://backend/audit/wc-3/WC3_IMPLEMENTATION_HEALTH.md"
+type = "text"
+title = "WC-3 Implementation Health Report"
+
+[[outputs]]
+id = "o9GBD5y3IVBU-fyBD2Xeu"
+uri = "file://backend/audit/wc-8/WC8_EXECUTIVE_SUMMARY.md"
+type = "text"
+title = "WC-8 Executive Summary"
+
+[[outputs]]
+id = "3aT1pYyenJ8DWnvL4Tv0R"
+uri = "file://backend/audit/wc-8/WC8_90PLUS_READINESS_ROADMAP.md"
+type = "text"
+title = "WC-8 — 90+ Readiness Roadmap (minimal build set)"
+
+[[outputs]]
+id = "2DevtRDvTXRCc0Uj6Wer2"
+uri = "file://backend/audit/wc-8/WC8_README.md"
+type = "text"
+title = "WC-8 — All 10 deliverables (index)"
+
+[[outputs]]
+id = "R88TUoUuTYab1UALfIcEu"
+uri = "file://backend/audit/wc-9/WC9_IMPLEMENTATION_ROADMAP.md"
+type = "text"
+title = "WC-9 — Implementation Roadmap (40→90+, minimum architecture)"
+
+[[outputs]]
+id = "kmiVhn0RHW_ASBnf6kEuf"
+uri = "file://backend/audit/wc-9/WC9_ACTIVATION_ARCHITECTURE.md"
+type = "text"
+title = "WC-9 — Future Readiness Activation Architecture"
+
+[[outputs]]
+id = "982Z4b5JD6Os5UpdZmI0N"
+uri = "file://backend/audit/wc-9/WC9_README.md"
+type = "text"
+title = "WC-9 — All 10 deliverables (index)"
+
+[[outputs]]
+id = "6kjSp-4AATaENTU6VGtkQ"
+uri = "file://docs/enterprise-architecture-blueprint.md"
+type = "text"
+title = "MetryxOne — Enterprise Architecture Blueprint v1.0"
+
+[[outputs]]
+id = "7U_b8pvzyM3SuFxhUmjDA"
+uri = "file://docs/superadmin-platform-spec.md"
+type = "text"
+title = "Super Admin Platform Spec — 18 Modules × 10 Sections"
+
+[[outputs]]
+id = "gpdqKN9w9UvcNgYezQ3Xw"
+uri = "file://docs/competency-ontology.md"
+type = "text"
+title = "MetryxOne Competency Ontology — Normalized Database Architecture v1.0"
+
+[[outputs]]
+id = "IszlcCxxZq9kCCRjJ8dZZ"
+uri = "file://backend/audit/sa-100x/SA-100X-AUDIT.md"
+type = "text"
+title = "SA-100X SuperAdmin Certification Audit"
+
+[[outputs]]
+id = "zXoTzZKZwp4dKD155M3v-"
+uri = "file://backend/audit/platform-activation/platform_activation_inventory.md"
+type = "text"
+title = "Platform Activation Inventory"
+
+[[outputs]]
+id = "bG20plMrPE_E01igr-1u0"
+uri = "file://backend/audit/platform-activation/activation_gap_report.md"
+type = "text"
+title = "Activation Gap Report"
+
+[[outputs]]
+id = "AMenXAa-qErLPrAy-Kc1f"
+uri = "file://backend/audit/production-parity/feature_flag_inventory.md"
+type = "text"
+title = "Feature Flag Inventory"
+
+[[outputs]]
+id = "JPbO7-4cBhffsD-rjdAR3"
+uri = "file://backend/audit/production-parity/feature_activation_matrix.md"
+type = "text"
+title = "Feature Activation Matrix"
+
+[[outputs]]
+id = "bfIDNCjtuvYMZ7Xyb5wRf"
+uri = "file://backend/audit/production-parity/production_parity_report.md"
+type = "text"
+title = "Production Parity Report"
+
+[[outputs]]
+id = "Z9mTov9tNRGHC2d8JdV6V"
+uri = "file://backend/audit/production-parity/production_parity_gap.md"
+type = "text"
+title = "Production Parity Gap"
+
+[[outputs]]
+id = "FOeMbzfT4Ful519HDEVik"
+uri = "file://backend/audit/production-parity/production_enablement_plan.md"
+type = "text"
+title = "Production Enablement Plan"
+
+[[outputs]]
+id = "dbKhE-WeKxmyqmJv0UQPD"
+uri = "file://backend/audit/production-parity/risk_matrix.md"
+type = "text"
+title = "Risk Matrix"

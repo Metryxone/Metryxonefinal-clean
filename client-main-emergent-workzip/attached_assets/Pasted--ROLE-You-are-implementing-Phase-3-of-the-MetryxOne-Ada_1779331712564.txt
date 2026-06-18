@@ -1,0 +1,164 @@
+# ROLE
+
+You are implementing Phase 3 of the MetryxOne Adaptive Career Intelligence System.
+
+Phases 1 and 2 already exist.
+
+DO NOT overwrite existing systems.
+
+Extend incrementally using migration-safe enhancements.
+
+---
+
+## PHASE 3 OBJECTIVE
+
+Build:
+
+1. Aspirational role intelligence
+2. Career mobility intelligence
+3. Transferability analysis
+4. Development pathway engine
+5. Competency gap analysis
+6. Capability maturity modeling
+7. Adjacent career discovery
+8. Personalized development sequencing
+
+---
+
+## CAREER INTELLIGENCE MODEL
+
+Compare:
+
+Current Role DNA
+vs
+Target Role DNA
+
+Calculate:
+
+* role overlap
+* transferable strengths
+* competency gaps
+* leadership gaps
+* strategic gaps
+* execution gaps
+* development priorities
+
+---
+
+## TRANSFERABILITY ENGINE
+
+Identify:
+
+* transferable competencies
+* adjacent career pathways
+* mobility readiness
+* cross-functional compatibility
+* industry transition capability
+
+---
+
+## DEVELOPMENT PATHWAYS
+
+Build developmental sequencing.
+
+Example:
+
+Emotional Awareness
+→ Emotional Regulation
+→ Conflict Resolution
+→ Leadership Presence
+
+Strategic Thinking
+→ Systems Thinking
+→ Organizational Alignment
+
+---
+
+## READINESS MODEL
+
+Allowed language:
+
+* developmental readiness
+* capability proximity
+* alignment indicators
+* development opportunity
+
+NOT allowed:
+
+* likely to get hired
+* suitable candidate
+* promotion prediction
+
+---
+
+## CREATE TABLES
+
+1. career_paths
+2. role_transitions
+3. transferability_maps
+4. competency_gaps
+5. development_pathways
+6. capability_maturity_models
+7. role_mobility_scores
+8. learning_sequences
+9. aspiration_profiles
+10. adjacent_role_mappings
+
+---
+
+## AI RECOMMENDATION ENGINE
+
+Generate:
+
+* competency development priorities
+* role progression recommendations
+* leadership growth suggestions
+* transferable capability insights
+* development sequencing
+* adjacent career opportunities
+
+---
+
+## FRONTEND
+
+Create:
+
+* current vs target role dashboards
+* career mobility maps
+* competency gap visualizations
+* readiness indicators
+* development roadmaps
+* transferable strength panels
+* adjacent role explorer
+
+---
+
+## VISUALIZATIONS
+
+Implement:
+
+* radar charts
+* transition maps
+* capability heatmaps
+* pathway diagrams
+* mobility graphs
+* progression timelines
+
+---
+
+## OUTPUT
+
+Generate:
+
+* mobility engine
+* pathway engine
+* recommendation engine
+* APIs
+* frontend dashboards
+* visualization system
+* scalable modular architecture
+* TypeScript types
+* audit logging
+* caching strategy
+
+Everything must integrate seamlessly into the existing Career Builder.

@@ -1,0 +1,75 @@
+{
+  "generated_at": "2026-06-03T18:47:08.746Z",
+  "integrity": {
+    "all_validations_passed": true,
+    "health_score": 0.945815,
+    "health_band": "strong",
+    "validations": [
+      {
+        "name": "No Orphan Recommendations",
+        "passed": true,
+        "orphans": 0
+      },
+      {
+        "name": "No Orphan Interventions",
+        "passed": true,
+        "orphans": 0
+      },
+      {
+        "name": "No Orphan Archetypes",
+        "passed": true,
+        "orphans": 0
+      }
+    ]
+  },
+  "explainability": {
+    "support_rate": 1,
+    "source_trace_rate": 0.565553,
+    "all_validations_passed": true,
+    "score": 0.826221,
+    "band": "moderate"
+  },
+  "verifications": [
+    {
+      "name": "Graph Integrity",
+      "passed": true,
+      "detail": "All structural validations passed (no orphan recommendations/interventions/archetypes).",
+      "metrics": {
+        "health_score": 0.945815,
+        "health_band": "strong",
+        "validations_total": 3,
+        "validations_passed": 3
+      }
+    },
+    {
+      "name": "Lineage Integrity",
+      "passed": true,
+      "detail": "No unsupported statements — every recommendation/intervention has a real grounding edge.",
+      "metrics": {
+        "support_rate": 1,
+        "source_trace_rate": 0.565553,
+        "statements": 1167,
+        "unsupported": 0
+      }
+    },
+    {
+      "name": "Determinism",
+      "passed": true,
+      "detail": "Identical certification payload across two independent re-runs.",
+      "metrics": {
+        "reruns": 2
+      }
+    },
+    {
+      "name": "Performance",
+      "passed": true,
+      "detail": "Validation completed in 7299ms (budget 30000ms).",
+      "metrics": {
+        "index_ms": 995,
+        "compute_ms": 6269,
+        "total_ms": 7299,
+        "budget_ms": 30000
+      }
+    }
+  ]
+}

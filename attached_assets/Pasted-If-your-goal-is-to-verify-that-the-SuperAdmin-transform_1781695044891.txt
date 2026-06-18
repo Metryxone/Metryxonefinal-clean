@@ -1,0 +1,783 @@
+If your goal is to verify that the **SuperAdmin transformation has truly reached 98%+ world-class readiness**, then the audit prompt must go far beyond checking screens and APIs.
+
+It must audit:
+
+* Frontend
+* Backend
+* Database
+* UX
+* Navigation
+* RBAC
+* Search
+* Performance
+* Readiness
+* Intelligence Visibility
+* Data Governance
+* Product Operations
+* Executive Intelligence
+* AI Operations
+* Customer Success
+* Commercial Intelligence
+* Platform Operations
+
+---
+
+# SA-100X-AUDIT
+
+## World-Class SuperAdmin Certification Audit Prompt
+
+```text
+SA-100X-AUDIT
+
+MISSION
+
+Perform a complete forensic audit of the MetryxOne SuperAdmin Command Center.
+
+Objective:
+
+Determine whether the platform has achieved:
+
+98%+ World-Class Readiness
+
+across:
+
+Architecture
+Navigation
+Frontend
+Backend
+Database
+Operations
+Intelligence
+Governance
+Commercial
+Executive Intelligence
+AI Operations
+Platform Health
+
+Do NOT assume implementation is correct.
+
+Use evidence only.
+
+====================================================
+SECTION 1
+STRUCTURAL AUDIT
+====================================================
+
+Inventory:
+
+All Screens
+
+All Routes
+
+All APIs
+
+All DB Tables
+
+All Services
+
+All Dashboards
+
+All Widgets
+
+All Navigation Items
+
+Generate:
+
+Screen Count
+
+Visible Screen Count
+
+Hidden Screen Count
+
+Orphan Screen Count
+
+Unused Screen Count
+
+Duplicate Screen Count
+
+Verify:
+
+No duplicate functionality.
+
+No orphan routes.
+
+No dead screens.
+
+No broken navigation.
+
+Score:
+
+Structural Readiness
+
+====================================================
+SECTION 2
+MISSION CONTROL AUDIT
+====================================================
+
+Verify Mission Control exists.
+
+Check:
+
+Platform Health
+
+Product Health
+
+Revenue Health
+
+Data Health
+
+Security Health
+
+Intelligence Health
+
+Assessment Health
+
+Customer Health
+
+Alerts
+
+Actions Required
+
+Verify:
+
+Every widget is backed by real data.
+
+No hardcoded values.
+
+No mock data.
+
+Measure:
+
+Mission Control Coverage %
+
+Mission Control Accuracy %
+
+====================================================
+SECTION 3
+NAVIGATION AUDIT
+====================================================
+
+Verify:
+
+Navigation groups
+
+Screen hierarchy
+
+Searchability
+
+User discoverability
+
+Measure:
+
+Average clicks to reach screen
+
+Maximum navigation depth
+
+Search coverage
+
+Duplicate navigation paths
+
+Verify:
+
+Visible navigation < 40 destinations
+
+Score:
+
+Navigation Readiness
+
+====================================================
+SECTION 4
+GLOBAL SEARCH AUDIT
+====================================================
+
+Verify search coverage for:
+
+Users
+
+Candidates
+
+Employers
+
+Institutions
+
+Assessments
+
+Questions
+
+Signals
+
+Competencies
+
+Reports
+
+Jobs
+
+Subscriptions
+
+Verify:
+
+Search speed
+
+Search accuracy
+
+Index coverage
+
+Missing entities
+
+Measure:
+
+Search Coverage %
+
+Search Accuracy %
+
+====================================================
+SECTION 5
+PRODUCT COMMAND CENTER AUDIT
+====================================================
+
+Audit:
+
+CAPADEX
+
+Competency
+
+LBI
+
+EI
+
+Career Builder
+
+Employer OS
+
+Verify each displays:
+
+Health
+
+Readiness
+
+Usage
+
+Coverage
+
+Forecasts
+
+Outcomes
+
+Verify:
+
+Real data source
+
+Real APIs
+
+No placeholders
+
+Generate:
+
+Product Readiness Matrix
+
+====================================================
+SECTION 6
+INTELLIGENCE OS AUDIT
+====================================================
+
+Verify:
+
+Questions
+
+Signals
+
+Composites
+
+Patterns
+
+Trends
+
+Forecasts
+
+Outcomes
+
+Verify:
+
+Pipeline visibility
+
+Dependency visibility
+
+Failure detection
+
+Knowledge Graph visibility
+
+Ontology visibility
+
+Generate:
+
+Intelligence Coverage Score
+
+====================================================
+SECTION 7
+DATA GOVERNANCE AUDIT
+====================================================
+
+Verify:
+
+Missing records
+
+Duplicate records
+
+Broken mappings
+
+Orphan records
+
+Coverage gaps
+
+Data drift
+
+Data trust score
+
+Generate:
+
+Data Quality Score
+
+Data Governance Score
+
+====================================================
+SECTION 8
+ASSESSMENT FACTORY AUDIT
+====================================================
+
+Audit:
+
+CAPADEX
+
+Competency
+
+LBI
+
+EI
+
+Custom Assessments
+
+Verify:
+
+Creation
+
+Versioning
+
+Cloning
+
+Archiving
+
+Campaign Launch
+
+Benchmarking
+
+Generate:
+
+Assessment Operations Score
+
+====================================================
+SECTION 9
+COMPETENCY ARCHITECTURE AUDIT
+====================================================
+
+Verify:
+
+Industries
+
+Functions
+
+Departments
+
+Roles
+
+Skills
+
+Competencies
+
+Questions
+
+Signals
+
+Check:
+
+Coverage
+
+Integrity
+
+Completeness
+
+Generate:
+
+Competency Architecture Score
+
+====================================================
+SECTION 10
+EMPLOYER OS AUDIT
+====================================================
+
+Verify:
+
+Jobs
+
+Candidates
+
+Hiring
+
+Talent Pools
+
+Succession
+
+Leadership
+
+Internal Mobility
+
+Workforce Planning
+
+Verify:
+
+End-to-end workflows
+
+Generate:
+
+Employer OS Readiness
+
+====================================================
+SECTION 11
+REPORT FACTORY AUDIT
+====================================================
+
+Verify:
+
+Assessment Reports
+
+Competency Reports
+
+LBI Reports
+
+EI Reports
+
+Career Reports
+
+Employer Reports
+
+Executive Reports
+
+Check:
+
+Generation
+
+Downloads
+
+Failures
+
+Usage
+
+Template coverage
+
+Generate:
+
+Report Factory Score
+
+====================================================
+SECTION 12
+PLATFORM OPERATIONS AUDIT
+====================================================
+
+Verify:
+
+API Health
+
+Queue Health
+
+DB Health
+
+Storage Health
+
+Authentication Health
+
+Session Health
+
+Workflow Health
+
+Approval Health
+
+Generate:
+
+Operations Readiness
+
+====================================================
+SECTION 13
+CUSTOMER SUCCESS AUDIT
+====================================================
+
+Verify:
+
+Institution 360
+
+Employer 360
+
+User 360
+
+Check:
+
+Health scores
+
+Risk scores
+
+Usage metrics
+
+Renewal indicators
+
+Generate:
+
+Customer Success Score
+
+====================================================
+SECTION 14
+COMMERCIAL AUDIT
+====================================================
+
+Verify:
+
+Revenue
+
+Subscriptions
+
+Trials
+
+Renewals
+
+Entitlements
+
+Pricing
+
+Forecasting
+
+Generate:
+
+Commercial Readiness
+
+====================================================
+SECTION 15
+ANALYTICS AUDIT
+====================================================
+
+Verify:
+
+User Analytics
+
+Product Analytics
+
+Assessment Analytics
+
+Commercial Analytics
+
+Intelligence Analytics
+
+Generate:
+
+Analytics Coverage Score
+
+====================================================
+SECTION 16
+AI OPERATIONS AUDIT
+====================================================
+
+Verify:
+
+Prompt Quality
+
+Response Quality
+
+Latency
+
+Failures
+
+Bias Monitoring
+
+Explainability
+
+Confidence
+
+Auditability
+
+Generate:
+
+AI Operations Score
+
+====================================================
+SECTION 17
+SECURITY AUDIT
+====================================================
+
+Verify:
+
+RBAC
+
+Permissions
+
+Audit Logs
+
+Session Controls
+
+Feature Authorization
+
+Tenant Isolation
+
+Generate:
+
+Security Readiness
+
+====================================================
+SECTION 18
+PERFORMANCE AUDIT
+====================================================
+
+Measure:
+
+Page Load Time
+
+Dashboard Load Time
+
+API Latency
+
+Search Latency
+
+DB Performance
+
+Generate:
+
+Performance Score
+
+====================================================
+SECTION 19
+EXECUTIVE INTELLIGENCE AUDIT
+====================================================
+
+Verify:
+
+CEO Cockpit
+
+CHRO Cockpit
+
+Institution Cockpit
+
+Government Cockpit
+
+Investor Cockpit
+
+Generate:
+
+Executive Readiness
+
+====================================================
+SECTION 20
+DIGITAL TWIN AUDIT
+====================================================
+
+Verify:
+
+Dependency Mapping
+
+Impact Simulation
+
+Bottleneck Detection
+
+Risk Detection
+
+Generate:
+
+Digital Twin Score
+
+====================================================
+SECTION 21
+READINESS CERTIFICATION
+====================================================
+
+Generate:
+
+Structural Readiness
+
+Navigation Readiness
+
+Product Readiness
+
+Intelligence Readiness
+
+Data Readiness
+
+Assessment Readiness
+
+Employer Readiness
+
+Commercial Readiness
+
+AI Readiness
+
+Executive Readiness
+
+Operations Readiness
+
+Security Readiness
+
+Platform Readiness
+
+====================================================
+OUTPUTS
+====================================================
+
+1. Executive Summary
+
+2. Readiness Scorecard
+
+3. Product Readiness Matrix
+
+4. Gap Analysis
+
+5. Critical Risks
+
+6. Orphan Screen Report
+
+7. Dead Route Report
+
+8. Duplicate Functionality Report
+
+9. Security Findings
+
+10. Performance Findings
+
+11. Top 50 Improvements
+
+12. 30-Day Roadmap
+
+13. 90-Day Roadmap
+
+14. Certification Result
+
+GO
+
+CONDITIONAL GO
+
+NO GO
+
+====================================================
+SUCCESS CRITERIA
+====================================================
+
+World-Class Readiness ≥ 98%
+
+Navigation ≥ 98%
+
+Operations ≥ 98%
+
+Intelligence ≥ 98%
+
+Data Governance ≥ 98%
+
+Executive Intelligence ≥ 98%
+
+Security ≥ 98%
+
+Platform Maturity ≥ 98%
+```
+
+This is the audit prompt I would run **after every major phase** and again after the full SuperAdmin transformation to certify whether MetryxOne has truly achieved world-class readiness.

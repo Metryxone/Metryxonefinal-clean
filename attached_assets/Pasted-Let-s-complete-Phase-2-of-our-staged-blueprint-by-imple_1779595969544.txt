@@ -1,0 +1,21 @@
+Let's complete Phase 2 of our staged blueprint by implementing the back-propagation scoring math inside the assessment completion pipeline.
+
+1. UPDATE THE ROUTER HANDLER:
+Open `backend/routes/capadex-concern-intelligence.ts` and locate the `/complete` endpoint (or the core calculation function responsible for aggregating responses when a user completes an assessment).
+
+2. REFRACTOR THE PASS 1 AGGREGATION LOOP:
+Modify the response processing logic to compile a key-value score map grouped cleanly by the `concern_bucket` snapshot that we are now capturing in `capadex_responses`:
+`const bucketScores: Record<string, number> = {};`
+Sum the raw points for each response into its corresponding bucket key.
+
+3. APPLY PASS 2 ONTOLOGY BACK-PROPAGATION:
+- Identify the user's `primary_construct_key` for this testing session.
+- Iterate over the entries in your `bucketScores` map. For any bucket key that does NOT match the `primary_construct_key`, execute a query against our `adaptive_ontology_edges` table:
+  `SELECT weight FROM adaptive_ontology_edges WHERE source_bucket = $1 AND target_bucket = $2 AND status = 'approved'`
+  (Pass the primary_construct_key as $1 and the secondary bucket key as $2).
+- If a row is returned with an approved edge weight >= 0.60, apply the back-propagation formula: multiply that secondary bucket's accumulated score by the edge weight, and add that calculated fractional value straight into the `bucketScores[primary_construct_key]` running total.
+
+4. PRESERVE PAYLOAD INTEGRITY:
+Ensure this newly aggregated and weighted `bucketScores` structure maps cleanly into the downstream OMEGA-X payload generator and report-saving queries. Wrap the database edge lookups inside a try/catch safeguard that defaults to a standard flat score addition (weight = 1.0) if an edge lookup fails or a database timeout occurs, ensuring the user's final report screen never freezes.
+
+Please audit the variables, hook the mathematics cleanly into our session state, and let me know when the scoring engine is updated!

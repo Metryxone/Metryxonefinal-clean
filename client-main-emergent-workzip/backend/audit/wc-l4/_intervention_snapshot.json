@@ -1,0 +1,222 @@
+{
+  "generated_at": "2026-06-10T04:02:53.569Z",
+  "pii": {
+    "email_mask": "sha256→user_<hex[:10]>"
+  },
+  "base": {
+    "completed_sessions": 9,
+    "sessions_with_outcome_state": 6
+  },
+  "totals": {
+    "total_interventions": 6,
+    "sessions_with_intervention": 4,
+    "multi_model_interventions": 4,
+    "priority_elevated_interventions": 0
+  },
+  "annotations": {
+    "with_stage": 6,
+    "journey_real": 2,
+    "journey_degraded": 4,
+    "decision_real": 0,
+    "decision_degraded": 6,
+    "with_user": 6,
+    "with_trend_concern": 0,
+    "with_forecast_concern": 0
+  },
+  "confidence": {
+    "min": 0.67,
+    "max": 0.93,
+    "mean": 0.843,
+    "median": 0.93
+  },
+  "axes": {
+    "structural": {
+      "score": 5,
+      "max": 5,
+      "components": [
+        {
+          "k": "Feature flag + helper (interventionIntelligence)",
+          "present": true
+        },
+        {
+          "k": "Deterministic registry (polarity, generator layer)",
+          "present": true
+        },
+        {
+          "k": "Compose engine — library-backed generator only",
+          "present": true
+        },
+        {
+          "k": "post-completion hook item 19 (flag-gated)",
+          "present": true
+        },
+        {
+          "k": "Persistence schema + idempotent backfill",
+          "present": true
+        }
+      ]
+    },
+    "activation": {
+      "score": 2,
+      "max": 5,
+      "enablers": [
+        {
+          "k": "Generator fires (≥1 library-backed intervention persisted)",
+          "present": true
+        },
+        {
+          "k": "Real (non-degraded) journey context on ≥1 intervention",
+          "present": true
+        },
+        {
+          "k": "Real (non-degraded) decision context on ≥1 intervention",
+          "present": false
+        },
+        {
+          "k": "Trend consumption (≥1 polarity-aware concern annotation)",
+          "present": false
+        },
+        {
+          "k": "Forecast consumption (≥1 polarity-aware concern annotation)",
+          "present": false
+        }
+      ]
+    }
+  },
+  "sessions": [
+    {
+      "session_id": "4349237c-ce0b-41c5-9206-647c2654b26e",
+      "user": "(anonymous)",
+      "intervention_count": 1,
+      "models": [
+        "confidence_stability"
+      ],
+      "any_priority_elevated": false,
+      "trend_concerns": false,
+      "forecast_concerns": false,
+      "journey_degraded": null,
+      "decision_degraded": true,
+      "interventions": [
+        {
+          "intervention_id": "2f3958b7-115d-4e7e-8a7e-52303fd9553a",
+          "name": "Stress management is functional but breaks down when multiple demands stack up. Build a \"pressure audit\": list all current obligations and rate each 1-10 for urgency. Drop or defer anything rated below 5. Visible load management prevents the stack overflow.",
+          "model_key": "confidence_stability",
+          "confidence": "0.67",
+          "priority": 0,
+          "priority_elevated": false,
+          "generator_models": [
+            "confidence_stability",
+            "exam_readiness",
+            "holistic_wellbeing"
+          ]
+        }
+      ]
+    },
+    {
+      "session_id": "4c9b6c0b-4907-48e3-8c56-95a65e623006",
+      "user": "(anonymous)",
+      "intervention_count": 1,
+      "models": [
+        "confidence_stability"
+      ],
+      "any_priority_elevated": false,
+      "trend_concerns": false,
+      "forecast_concerns": false,
+      "journey_degraded": null,
+      "decision_degraded": true,
+      "interventions": [
+        {
+          "intervention_id": "2f3958b7-115d-4e7e-8a7e-52303fd9553a",
+          "name": "Stress management is functional but breaks down when multiple demands stack up. Build a \"pressure audit\": list all current obligations and rate each 1-10 for urgency. Drop or defer anything rated below 5. Visible load management prevents the stack overflow.",
+          "model_key": "confidence_stability",
+          "confidence": "0.67",
+          "priority": 0,
+          "priority_elevated": false,
+          "generator_models": [
+            "confidence_stability",
+            "exam_readiness",
+            "holistic_wellbeing"
+          ]
+        }
+      ]
+    },
+    {
+      "session_id": "7828d7a3-ddda-4659-8846-7597443e2830",
+      "user": "user_65454b2b8b",
+      "intervention_count": 2,
+      "models": [
+        "confidence_stability"
+      ],
+      "any_priority_elevated": false,
+      "trend_concerns": false,
+      "forecast_concerns": false,
+      "journey_degraded": true,
+      "decision_degraded": true,
+      "interventions": [
+        {
+          "intervention_id": "09ebd572-ad0a-4c26-956a-dfb1c1bb93e0",
+          "name": "Your emotional regulation is developing — you can manage moderate emotional situations but lose control under sustained pressure. The daily practice is labelling: when you feel an emotion, name it specifically (not \"bad\" but \"frustrated because I don't understand this\"). Precise labelling reduces emotional intensity measurably.",
+          "model_key": "confidence_stability",
+          "confidence": "0.93",
+          "priority": 0,
+          "priority_elevated": false,
+          "generator_models": [
+            "confidence_stability"
+          ]
+        },
+        {
+          "intervention_id": "2f3958b7-115d-4e7e-8a7e-52303fd9553a",
+          "name": "Stress management is functional but breaks down when multiple demands stack up. Build a \"pressure audit\": list all current obligations and rate each 1-10 for urgency. Drop or defer anything rated below 5. Visible load management prevents the stack overflow.",
+          "model_key": "confidence_stability",
+          "confidence": "0.93",
+          "priority": 0,
+          "priority_elevated": false,
+          "generator_models": [
+            "confidence_stability",
+            "exam_readiness",
+            "holistic_wellbeing"
+          ]
+        }
+      ]
+    },
+    {
+      "session_id": "b883418d-933b-47a6-b73d-c6c02a161f4f",
+      "user": "user_65454b2b8b",
+      "intervention_count": 2,
+      "models": [
+        "confidence_stability"
+      ],
+      "any_priority_elevated": false,
+      "trend_concerns": false,
+      "forecast_concerns": false,
+      "journey_degraded": true,
+      "decision_degraded": true,
+      "interventions": [
+        {
+          "intervention_id": "2f3958b7-115d-4e7e-8a7e-52303fd9553a",
+          "name": "Stress management is functional but breaks down when multiple demands stack up. Build a \"pressure audit\": list all current obligations and rate each 1-10 for urgency. Drop or defer anything rated below 5. Visible load management prevents the stack overflow.",
+          "model_key": "confidence_stability",
+          "confidence": "0.93",
+          "priority": 0,
+          "priority_elevated": false,
+          "generator_models": [
+            "confidence_stability",
+            "exam_readiness",
+            "holistic_wellbeing"
+          ]
+        },
+        {
+          "intervention_id": "09ebd572-ad0a-4c26-956a-dfb1c1bb93e0",
+          "name": "Your emotional regulation is developing — you can manage moderate emotional situations but lose control under sustained pressure. The daily practice is labelling: when you feel an emotion, name it specifically (not \"bad\" but \"frustrated because I don't understand this\"). Precise labelling reduces emotional intensity measurably.",
+          "model_key": "confidence_stability",
+          "confidence": "0.93",
+          "priority": 0,
+          "priority_elevated": false,
+          "generator_models": [
+            "confidence_stability"
+          ]
+        }
+      ]
+    }
+  ]
+}

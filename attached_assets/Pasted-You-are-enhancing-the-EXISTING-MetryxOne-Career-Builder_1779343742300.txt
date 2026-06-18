@@ -1,0 +1,356 @@
+You are enhancing the EXISTING MetryxOne Career Builder platform.
+DO NOT rewrite, remove, or replace existing Career Builder functionality.
+DO NOT change existing scoring formulas unless explicitly instructed.
+Enhance the current guidance panel progressively.
+
+OBJECTIVE
+Transform the current static “Gap to next stage” guidance panel into a micro-accurate evidence-driven intelligence layer using EXISTING backend intelligence systems already available in the platform.
+
+EXISTING PLATFORM CONTEXT
+The Career Builder already contains:
+- Employability Index™ (EI)
+- Fitment analysis
+- Career velocity
+- Market intelligence
+- Workforce intelligence
+- Mobility recommendations
+- Benchmarking
+- Behavioural memory
+- Explainability envelope
+- Career pathways
+- IDP engine
+- Simulations
+
+The current issue:
+Stage guidance is generic and static.
+
+Current example:
+- Ship one portfolio project
+- Close top 2 skill gaps
+- Run 2 mock interviews
+
+Goal:
+Replace generic guidance generation with dynamic evidence-driven guidance while preserving the current UX shell.
+
+DO NOT OVERWRITE EXISTING UI.
+Preserve:
+- card layout
+- EI badges
+- CTA structure
+- action sequencing
+- mobile responsiveness
+- existing fallback behavior
+
+========================================
+PHASE 1 SCOPE
+========================================
+
+BUILD:
+1. Stage Guidance Orchestrator
+2. Weighted Gap Decomposition
+3. Velocity Overlay
+4. Dynamic EI Projection
+5. Explainability Drawer
+6. Reliability Layer
+7. Graceful Fallbacks
+8. Telemetry
+
+========================================
+BACKEND IMPLEMENTATION
+========================================
+
+CREATE:
+backend/services/stage-guidance-orchestrator.ts
+
+Purpose:
+Aggregate intelligence from existing systems into one unified guidance payload.
+
+USE EXISTING ENDPOINTS/SERVICES:
+- /api/benchmark/role
+- /api/longitudinal/velocity
+- /api/mobility/recommendations
+- /api/mobility/pathway
+- /api/mobility/adjacent
+- /api/benchmark/reliability
+
+DO NOT duplicate business logic already implemented elsewhere.
+
+========================================
+CREATE NEW ENDPOINT
+========================================
+
+GET /api/career/stage-guidance
+
+Query params:
+- session_id
+- target_role_id
+
+Response shape:
+
+{
+  target_role: {
+    id: string,
+    name: string,
+    family: string
+  },
+
+  overall_gap: {
+    current_ei: number,
+    target_ei: number,
+    gap_points: number,
+    confidence_interval: {
+      min: number,
+      max: number
+    }
+  },
+
+  reliability: {
+    composite_reliability: number,
+    quality_tier: 'A'|'B'|'C'|'D',
+    contradictions_pct: number,
+    completion_pct: number
+  },
+
+  gap_decomposition: [
+    {
+      competency_id: string,
+      competency_name: string,
+      user_score: number,
+      cohort_p50: number,
+      target_anchor: number,
+      gap_pts: number,
+      weighted_gap: number,
+      percentile: number,
+      weight: number,
+      confidence_tier: string,
+      trend: 'accelerating'|'stabilizing'|'flat'|'declining',
+      velocity_30d: number
+    }
+  ],
+
+  ranked_steps: [
+    {
+      id: string,
+      title: string,
+      category: string,
+      projected_ei_lift: number,
+      confidence_interval: {
+        min: number,
+        max: number
+      },
+      confidence_tier: string,
+      effort_hours: number,
+      roi_score: number,
+      rationale: string,
+      why_recommended: string[],
+      behavioural_indicators: string[],
+      pathway_id?: string,
+      cta: {
+        label: string,
+        route: string
+      }
+    }
+  ],
+
+  adjacent_offramp: {
+    role_id: string,
+    role_name: string,
+    current_gap: number,
+    projected_gap: number,
+    switchability: number
+  } | null,
+
+  static_fallback_used: boolean,
+
+  explainability: {
+    methodology_version: string,
+    weighting_policy: string,
+    cohort_size: number,
+    data_sources: string[],
+    generated_at: string
+  }
+}
+
+========================================
+RANKING FORMULA
+========================================
+
+Implement EXACTLY:
+
+score =
+(projected_ei_lift / max(effort_hours, 0.5))
+× velocity_multiplier
+× confidence_multiplier
+× weight_multiplier
+
+velocity_multiplier:
+accelerating → 1.4
+stabilizing → 1.1
+flat → 1.0
+declining → 1.6
+
+confidence_multiplier:
+A → 1.0
+B → 0.9
+C → 0.7
+D → 0.4
+
+weight_multiplier:
+role competency weight
+
+========================================
+FRONTEND IMPLEMENTATION
+========================================
+
+DO NOT REPLACE EXISTING COMPONENT.
+Enhance existing guidance panel progressively.
+
+CREATE:
+frontend/src/hooks/useStageGuidance.ts
+
+CREATE:
+frontend/src/components/career/StageGuidancePanel.tsx
+
+USE:
+React Query or existing fetch abstraction.
+
+========================================
+UI REQUIREMENTS
+========================================
+
+PRESERVE existing UI structure.
+
+ADD:
+1. weighted gap bars
+2. trend arrows
+3. confidence pills
+4. evidence-backed rationale
+5. projected lift ranges
+6. explainability modal
+7. adjacent role suggestion
+8. low reliability banners
+
+========================================
+EXAMPLE UI
+========================================
+
+Gap to next stage
+13 pts to Career-Ready
+
+Target Role:
+Senior Backend Engineer
+
+Reliability:
+B — Moderate evidence confidence
+
+Top weighted gaps:
+Stakeholder Management
+You: 42
+Median: 58
+Target: 65
+Trend: Flat
+
+Recommended sequence:
+1. Portfolio Evidence Strengthening
+Projected Lift: +5.8 ±1.2 EI
+Effort: ~6h
+Confidence: B
+
+Why:
+Your portfolio evidence lacks quantified impact metrics compared to Career-Ready peers.
+
+========================================
+EXPLAINABILITY DRAWER
+========================================
+
+Add expandable drawer:
+“How was this computed?”
+
+Show:
+- methodology version
+- cohort size
+- evidence sources
+- ranking factors
+- reliability tier
+- excluded signals
+- confidence logic
+
+========================================
+RELIABILITY BANNERS
+========================================
+
+If quality_tier is C or D:
+Show yellow banner:
+
+“Underlying evidence confidence is limited. Recommendations should be treated as directional.”
+
+========================================
+GRACEFUL FALLBACKS
+========================================
+
+If ANY intelligence endpoint fails:
+- panel must NEVER break
+- preserve existing static STAGE_GUIDANCE
+- set static_fallback_used=true
+- log telemetry event
+
+========================================
+TELEMETRY
+========================================
+
+Track:
+- guidance_rendered
+- fallback_used
+- explainability_opened
+- intervention_clicked
+- adjacent_role_clicked
+
+========================================
+ACCESSIBILITY
+========================================
+
+Implement:
+- aria labels
+- keyboard navigation
+- screen-reader text
+- non-color confidence indicators
+
+========================================
+TESTING
+========================================
+
+CREATE:
+- orchestrator unit tests
+- ranking formula tests
+- degraded-state tests
+- mobile rendering tests
+- accessibility tests
+
+========================================
+NON-NEGOTIABLE RULES
+========================================
+
+- DO NOT overwrite existing Career Builder
+- DO NOT remove existing guidance
+- DO NOT break current APIs
+- DO NOT change EI scoring logic
+- DO NOT introduce placeholder data
+- DO NOT generate random scores
+- ALL numbers must derive from existing systems
+- ALL recommendations must be evidence-backed
+- ALL guidance must remain developmental
+- NEVER imply hiring guarantees
+
+========================================
+SUCCESS CRITERIA
+========================================
+
+Implementation is complete when:
+- Two users with same EI but different gaps receive different guidance
+- Guidance reflects velocity + weighted gaps
+- EI lifts are dynamically computed
+- Explainability modal works
+- Reliability banners render correctly
+- Fallback path never breaks UI
+- Mobile responsive at 320px
+- Existing Career Builder remains fully functional

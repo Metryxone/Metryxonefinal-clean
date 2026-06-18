@@ -1,0 +1,21 @@
+{
+  "generated_at": "2026-06-03T18:47:08.746Z",
+  "score": 0.953433,
+  "band": "strong",
+  "components": {
+    "graph_health": 0.945815,
+    "structure": 0.997592,
+    "traversal": 0.99816,
+    "explainability_support": 1,
+    "gap_clean": 0.888944,
+    "similarity": 0.815515
+  },
+  "weights": {
+    "graph_health": 0.3,
+    "structure": 0.2,
+    "traversal": 0.15,
+    "explainability_support": 0.15,
+    "gap_clean": 0.1,
+    "similarity": 0.1
+  }
+}

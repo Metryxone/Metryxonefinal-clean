@@ -1,0 +1,57 @@
+Act as a Staff Full-Stack Engineer. We are deploying a 100% airtight fix for our Capadex diagnostic assessment pipeline. The current setup creates irrelevant questions, garbled proxy text, and broken frontend selection loops. 
+
+Apply the following production-grade implementations directly to our codebase files. Replace the existing content of these specific files with the code blocks provided below.
+
+---
+
+### STEP 1: BACKEND SCHEMA & LLM INPUT INTEGRITY
+File to modify: `backend/routes/capadex-concern-intelligence.ts` (or your shared schema file)
+
+Ensure this exact structural contract is exported and utilized across the backend router:
+
+```typescript
+export interface StructuralClarityQuestion {
+  id: string;
+  evaluation_type: 'LIKERT' | 'RANKING';
+  question_text: string;
+  options: {
+    key: string;         // Fixed token: "opt_1", "opt_2", etc.
+    option_text: string; // Plain-text answer variant
+    score_weight: number; // Normalized 0-100 value
+  }[];
+}
+
+/**
+ * Robust, non-destructive proxy text reframer.
+ * Deep-clones the spec and modifies ONLY the question_text string.
+ * Completely isolates the options array to maintain database schema integrity.
+ */
+export function rephraseForProxy(spec: StructuralClarityQuestion, subjectName: string): StructuralClarityQuestion {
+  const cloned: StructuralClarityQuestion = JSON.parse(JSON.stringify(spec));
+  let text = cloned.question_text;
+
+  // 1. Structural substitution matching common English clauses cleanly
+  if (text.toLowerCase().includes("how confident are you")) {
+    text = text.replace(/are you/i, `is ${subjectName}`);
+  } else if (text.toLowerCase().includes("do you feel")) {
+    text = text.replace(/do you feel/i, `does ${subjectName} feel`);
+  } else if (text.toLowerCase().includes("are you able to")) {
+    text = text.replace(/are you able to/i, `is ${subjectName} able to`);
+  } else {
+    // Structural Fallback matching standard pronouns
+    text = text.replace(/\byou are\b/i, `${subjectName} is`);
+    text = text.replace(/\byou\b/i, subjectName);
+  }
+
+  // 2. Trailing Pronoun and Possessive Sweeps
+  text = text.replace(/\byour\b/i, "their");
+  text = text.replace(/\byours\b/i, "theirs");
+  text = text.replace(/\byourself\b/i, "themselves");
+
+  // 3. Post-processing safety guard: clean up accidental double verb anomalies
+  text = text.replace(/\bis is\b/gi, "is");
+  text = text.replace(/\bdoes feel\b/gi, "feels");
+
+  cloned.question_text = text;
+  return cloned;
+}

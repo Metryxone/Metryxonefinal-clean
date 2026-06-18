@@ -1,0 +1,300 @@
+Use this as your **next Replit prompt**. It follows the same discipline that made WC-L0 → WC-L5 successful:
+
+---
+
+# WC-C1 — Commercial Wave 2 Readiness Audit
+
+## Phase Type
+
+AUDIT ONLY
+
+NO IMPLEMENTATION
+
+NO SCHEMA CHANGES
+
+NO DEPLOYMENT
+
+STOP FOR APPROVAL
+
+---
+
+# Objective
+
+Determine the true commercial readiness of CAPADEX and identify the shortest path to a fully monetizable platform.
+
+The purpose of this audit is to measure:
+
+```text
+Intelligence → Product → Subscription → Revenue
+```
+
+and identify all missing components required for:
+
+* Paid Consumer Launch
+* LBI Launch
+* Employability Index Launch
+* Subscription Intelligence
+* Recurring Revenue
+
+---
+
+# Scope
+
+## 1. Product Inventory Audit
+
+Measure:
+
+* LBI readiness
+* Employability Index readiness
+* Career Builder readiness
+* Mentor Intelligence readiness
+* Mastery Intelligence readiness
+
+Determine:
+
+* existing runtime surfaces
+* existing activation paths
+* existing reporting paths
+
+---
+
+## 2. Subscription Audit
+
+Measure:
+
+* payment flows
+* Razorpay integration
+* subscription tables
+* subscription persistence
+* active plans
+* inactive plans
+
+Determine:
+
+* what already exists
+* what is partially built
+* what is missing
+
+---
+
+## 3. Entitlement Audit
+
+Measure:
+
+* feature gating
+* plan gating
+* user access control
+* package ownership
+
+Determine whether:
+
+```text
+Free
+↓
+LBI
+↓
+Employability
+↓
+Career Builder
+↓
+Mentor
+↓
+Premium
+```
+
+can be enforced today.
+
+---
+
+## 4. Upgrade Path Audit
+
+Measure:
+
+Current upgrade routes:
+
+```text
+Assessment
+→ Product
+→ Subscription
+→ Renewal
+→ Upsell
+```
+
+Determine:
+
+* upgrade opportunities
+* missing transitions
+* broken transitions
+
+---
+
+## 5. Revenue Intelligence Audit
+
+Measure:
+
+Existing:
+
+* offer intelligence
+* commercial recommendations
+* pricing intelligence
+* package intelligence
+
+Determine:
+
+* current revenue readiness
+* forecastable revenue readiness
+
+---
+
+## 6. Renewal Readiness Audit
+
+Measure:
+
+* recurring billing capability
+* renewal reminders
+* expiry tracking
+* subscription lifecycle
+
+---
+
+## 7. Upsell Readiness Audit
+
+Measure:
+
+Ability to recommend:
+
+* next product
+* next subscription
+* mentor services
+* mastery services
+
+using existing intelligence.
+
+---
+
+## 8. Commercial Forecast Readiness
+
+Measure whether existing:
+
+* trend intelligence
+* forecast intelligence
+* memory intelligence
+
+can support:
+
+* revenue forecasting
+* conversion forecasting
+* retention forecasting
+
+without building new engines.
+
+---
+
+## 9. Product Packaging Audit
+
+Evaluate alignment of:
+
+### CAPADEX
+
+Entry Assessment Layer
+
+### Curiosity Intelligence
+
+Discovery Layer
+
+### Growth Intelligence
+
+Development Layer
+
+### Mastery Intelligence
+
+Longitudinal Layer
+
+Determine if packaging architecture is complete.
+
+---
+
+## 10. Commercial Gap Analysis
+
+Identify:
+
+### Missing
+
+* Entitlement Engine
+* Renewal Engine
+* Upsell Engine
+* Revenue Forecasting
+* Commercial Forecasting
+
+Measure readiness for each.
+
+---
+
+# Deliverables
+
+Generate:
+
+1. Executive Summary
+2. Product Readiness Report
+3. Subscription Audit Report
+4. Entitlement Audit Report
+5. Revenue Intelligence Report
+6. Upgrade Path Report
+7. Renewal Readiness Report
+8. Upsell Readiness Report
+9. Commercial Forecast Readiness Report
+10. Commercial Expansion Roadmap
+
+Store in:
+
+```text
+backend/audit/wc-c1/
+```
+
+---
+
+# Success Criteria
+
+Answer with evidence:
+
+### Current Commercial Readiness %
+
+### Revenue Readiness %
+
+### Subscription Readiness %
+
+### Product Monetization Readiness %
+
+### Missing Components
+
+### Fastest Path To 95% Commercial Readiness
+
+### Fastest Path To Paid Consumer Launch
+
+---
+
+# Constraints
+
+Reuse existing assets only.
+
+Do NOT build:
+
+* new engines
+* new products
+* new subscriptions
+* new tables
+* new schemas
+
+Audit only.
+
+All findings must be measured from actual runtime state.
+
+No assumptions.
+
+No inflation.
+
+Coverage and confidence must be reported separately.
+
+Architect honesty review mandatory.
+
+STOP FOR APPROVAL.

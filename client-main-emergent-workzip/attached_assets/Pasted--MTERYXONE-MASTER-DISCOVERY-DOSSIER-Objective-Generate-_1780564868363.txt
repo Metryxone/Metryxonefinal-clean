@@ -1,0 +1,294 @@
+# MTERYXONE MASTER DISCOVERY DOSSIER
+
+Objective:
+
+Generate a complete and brutally honest business, product, content, data, workflow, and monetization inventory of the current MteryxOne platform.
+
+Assume the output will be reviewed by an external product strategist who has never seen the platform before.
+
+Do not summarize.
+
+Do not market.
+
+Do not hide gaps.
+
+Document reality.
+
+---
+
+## SECTION 1 — BUSINESS VISION
+
+Provide:
+
+* Mission
+* Vision
+* Core Problem Being Solved
+* Target Outcomes
+* Unique Value Proposition
+
+Explain:
+
+What MteryxOne ultimately wants to become.
+
+---
+
+## SECTION 2 — CUSTOMER SEGMENTS
+
+List all customer groups.
+
+For each:
+
+* Student
+* Parent
+* School
+* College
+* Counselor
+* Mentor
+* Corporate
+* Government
+* NGO
+
+Document:
+
+* User needs
+* Pain points
+* Expected outcomes
+* Current support level
+
+---
+
+## SECTION 3 — PRODUCT ARCHITECTURE
+
+Document every module.
+
+For each module:
+
+* Name
+* Purpose
+* Status
+* Completion %
+* Dependencies
+* User Type
+* Current Usage
+
+Examples:
+
+CAPADEX
+Career Builder
+Mentoring
+Learning Hub
+Institution Dashboard
+Analytics
+etc.
+
+---
+
+## SECTION 4 — CAPADEX INVENTORY
+
+Document:
+
+* Concerns
+* Bridge Tags
+* Questions
+* Signals
+* Capabilities
+* Problems
+* Behaviors
+* Archetypes
+* Interventions
+* Recommendations
+
+Provide counts.
+
+Provide maturity assessment.
+
+Provide known weaknesses.
+
+---
+
+## SECTION 5 — ASSESSMENT ENGINE
+
+Document:
+
+* Assessment types
+* Assessment flow
+* Question engine
+* Adaptive logic
+* Scoring logic
+* Report generation
+
+Show actual flow.
+
+---
+
+## SECTION 6 — CAREER BUILDER
+
+Document:
+
+* Inputs
+* Outputs
+* AI components
+* Recommendations
+* Workflows
+* Data sources
+
+---
+
+## SECTION 7 — DEVELOPMENT JOURNEY
+
+Document:
+
+Current student journey.
+
+Example:
+
+Assessment
+→ Report
+→ Intervention
+→ Career Builder
+→ Mentorship
+
+Show actual implementation status.
+
+---
+
+## SECTION 8 — CONTENT INVENTORY
+
+Document:
+
+Available:
+
+* Courses
+* Learning Paths
+* Mentors
+* Career Library
+* College Library
+* Skill Frameworks
+* Intervention Programs
+
+Provide counts.
+
+Provide quality assessment.
+
+---
+
+## SECTION 9 — MONETIZATION
+
+Document:
+
+Current:
+
+* Revenue streams
+* Pricing
+* Subscription models
+* Enterprise models
+
+If not implemented:
+
+Describe intended model.
+
+---
+
+## SECTION 10 — DATA ASSETS
+
+Document:
+
+All databases.
+
+Provide counts:
+
+Users
+Assessments
+Questions
+Signals
+Careers
+Colleges
+Mentors
+Content Assets
+
+---
+
+## SECTION 11 — PLATFORM GAPS
+
+Provide brutally honest list of:
+
+Critical Gaps
+
+High Priority Gaps
+
+Medium Priority Gaps
+
+Low Priority Gaps
+
+---
+
+## SECTION 12 — COMPETITIVE POSITIONING
+
+Compare against:
+
+CareerGuide
+Mindler
+Univariety
+MyCaptain
+Coursera Career Services
+LinkedIn Learning
+
+Identify strengths and weaknesses.
+
+---
+
+## SECTION 13 — 3 YEAR STRATEGY
+
+Document:
+
+Current roadmap.
+
+Growth targets.
+
+Revenue targets.
+
+User targets.
+
+Institution targets.
+
+---
+
+## SECTION 14 — PRODUCT MATURITY SCORECARD
+
+Score:
+
+Assessment
+Career Intelligence
+Development Intelligence
+Mentoring
+Institution Platform
+Analytics
+Monetization
+Scalability
+
+0-100
+
+Provide justification.
+
+---
+
+## FINAL OUTPUT
+
+Generate:
+
+1. Executive Summary
+2. Product Architecture Map
+3. Revenue Architecture Map
+4. User Journey Map
+5. Capability Maturity Map
+6. Top 25 Strategic Risks
+7. Top 25 Growth Opportunities
+8. Recommended Future Direction
+
+Output as a complete business dossier.
+
+Do not hide problems.
+
+Do not optimize scores.
+
+Describe reality.

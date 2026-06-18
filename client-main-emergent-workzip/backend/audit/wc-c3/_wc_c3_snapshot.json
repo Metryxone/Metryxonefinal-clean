@@ -1,0 +1,430 @@
+{
+  "audit": "WC-C3 — Entitlement Enforcement Audit",
+  "generated_at": "2026-06-10T06:54:23.489Z",
+  "method": "recomputed live: static route enumeration over routes.ts + routes/*.ts (inline + spread-array + global app.use guards), fresh paid-tier re-derivation from capadex.ts, buildEntitlementOverview, live DB, env/flag config defaults, source-introspected constants; read-only; PII sha256-masked",
+  "env_posture": {
+    "razorpay": {
+      "razorpay_key_id": false,
+      "razorpay_key_secret": false,
+      "razorpay_webhook_secret": false
+    },
+    "razorpay_configured": false,
+    "flag_defaults": {
+      "commercialEntitlement": false,
+      "commercialActivation": false
+    },
+    "dev_override_footnote": "workflow sets FF_COMMERCIAL_ACTIVATION=1 only (not an entitlement enabler)"
+  },
+  "db_ground_truth": {
+    "payments_total": 6,
+    "payments_paid": 0,
+    "payments_pending": 6,
+    "payments_demo": 6,
+    "distinct_payer_emails": 2,
+    "distinct_paid_emails": 0,
+    "packages_total": 0,
+    "student_subscriptions_active": 0,
+    "sessions_total": 27,
+    "sessions_completed": 9,
+    "mentor_profiles": 0
+  },
+  "table_existence": {
+    "mentor_bookings": false
+  },
+  "entitlement_overview_live": {
+    "generated_at": "2026-06-10T06:54:23.538Z",
+    "degraded": false,
+    "paying_identities": 0,
+    "entitled_identities": 0,
+    "coverage_pct": null,
+    "owned_stage_distribution": [],
+    "active_package_grants": 0
+  },
+  "lockstep": {
+    "stage_keys_consistent": true,
+    "ladder_consistent": true,
+    "keys": {
+      "capadex_payments_STAGE_PRICES": [
+        "CAP_INS",
+        "CAP_GRW",
+        "CAP_MAS"
+      ],
+      "entitlement_STAGE_FEATURES": [
+        "CAP_INS",
+        "CAP_GRW",
+        "CAP_MAS"
+      ],
+      "subscription_STAGE_PRICES": [
+        "CAP_INS",
+        "CAP_GRW",
+        "CAP_MAS"
+      ],
+      "entitlement_LADDER": [
+        "CAP_INS",
+        "CAP_GRW",
+        "CAP_MAS"
+      ],
+      "subscription_LADDER": [
+        "CAP_INS",
+        "CAP_GRW",
+        "CAP_MAS"
+      ]
+    }
+  },
+  "route_surface": {
+    "files_scanned": 143,
+    "routes_enumerated": 1941,
+    "global_rbac_prefixes": [
+      "/api/admin/bios/runtime-state",
+      "/api/admin/iil",
+      "/api/admin/nhda"
+    ],
+    "guard_distribution": {
+      "rbac_inline": 796,
+      "rbac_spread": 49,
+      "rbac_global": 94,
+      "entitlement": 0,
+      "none": 1002
+    },
+    "static_analysis_limitation": "middleware-level detection only; in-handler auth checks are not inspected except for the confirmed sample. \"none\" on a public/consumer route is not necessarily a gap — the RBAC finding is scoped to /api/admin/* which the codebase convention expects to be guarded."
+  },
+  "entitlement_guard_exists": false,
+  "paid_tier_endpoints": [
+    {
+      "method": "GET",
+      "path": "/api/capadex/report/:session_id",
+      "loc": "routes/capadex.ts:3360",
+      "runtime_flag": false,
+      "rbac": "none",
+      "entitlement": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/capadex/report/:session_id/pdf",
+      "loc": "routes/capadex.ts:3548",
+      "runtime_flag": false,
+      "rbac": "none",
+      "entitlement": "none"
+    },
+    {
+      "method": "POST",
+      "path": "/api/capadex/report/:session_id/send-email",
+      "loc": "routes/capadex.ts:3748",
+      "runtime_flag": false,
+      "rbac": "none",
+      "entitlement": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/capadex/session/:id/explain",
+      "loc": "routes/capadex.ts:2603",
+      "runtime_flag": true,
+      "rbac": "none",
+      "entitlement": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/capadex/session/:id/grounding",
+      "loc": "routes/capadex.ts:2644",
+      "runtime_flag": false,
+      "rbac": "none",
+      "entitlement": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/capadex/session/:id/guidance",
+      "loc": "routes/capadex.ts:2621",
+      "runtime_flag": true,
+      "rbac": "none",
+      "entitlement": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/capadex/session/:id/omega-x",
+      "loc": "routes/capadex.ts:2565",
+      "runtime_flag": false,
+      "rbac": "none",
+      "entitlement": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/capadex/session/:id/patterns",
+      "loc": "routes/capadex.ts:2590",
+      "runtime_flag": false,
+      "rbac": "none",
+      "entitlement": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/capadex/session/:id/pipeline",
+      "loc": "routes/capadex.ts:2711",
+      "runtime_flag": false,
+      "rbac": "none",
+      "entitlement": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/capadex/session/:id/report",
+      "loc": "routes/capadex.ts:3037",
+      "runtime_flag": true,
+      "rbac": "none",
+      "entitlement": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/capadex/session/:id/reports",
+      "loc": "routes/capadex.ts:3078",
+      "runtime_flag": true,
+      "rbac": "none",
+      "entitlement": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/capadex/session/:id/signals",
+      "loc": "routes/capadex.ts:2580",
+      "runtime_flag": false,
+      "rbac": "none",
+      "entitlement": "none"
+    },
+    {
+      "method": "GET",
+      "path": "/api/capadex/session/:id/stage",
+      "loc": "routes/capadex.ts:2734",
+      "runtime_flag": false,
+      "rbac": "none",
+      "entitlement": "none"
+    }
+  ],
+  "admin_rbac_gap": {
+    "axis": "RBAC / SECURITY — separate from entitlement; QUARANTINED from the entitlement readiness %",
+    "admin_routes_total": 623,
+    "admin_routes_guarded": 411,
+    "admin_routes_no_guard_detected": 212,
+    "by_file": {
+      "routes/behavioural-signals.ts": 3,
+      "routes/bios-agents.ts": 4,
+      "routes/bios-frontier.ts": 5,
+      "routes/bios-fusion.ts": 4,
+      "routes/bios-simulation.ts": 5,
+      "routes/capadex-enterprise.ts": 14,
+      "routes/capadex-payments.ts": 1,
+      "routes/capadex.ts": 6,
+      "routes/cognitive-intelligence.ts": 3,
+      "routes/concern-intelligence-admin.ts": 7,
+      "routes/csi.ts": 5,
+      "routes/digital-twin.ts": 3,
+      "routes/ethics-governance.ts": 6,
+      "routes/fairness-engine.ts": 4,
+      "routes/lbi-engine.ts": 4,
+      "routes/lde-evolution.ts": 4,
+      "routes/lde-governance.ts": 7,
+      "routes/lde-intelligence.ts": 5,
+      "routes/lde-temporal.ts": 3,
+      "routes/memory-architecture.ts": 2,
+      "routes/omega-report.ts": 3,
+      "routes/paie-forecasting.ts": 13,
+      "routes/paie-governance.ts": 12,
+      "routes/paie-intelligence.ts": 7,
+      "routes/paie-opportunity.ts": 6,
+      "routes/pragati.ts": 4,
+      "routes/predictive-intelligence.ts": 4,
+      "routes/psychometrics-engine.ts": 2,
+      "routes/roie-governance.ts": 12,
+      "routes/roie-opportunity.ts": 8,
+      "routes/roie-risk.ts": 12,
+      "routes/roie-semantic.ts": 5,
+      "routes/semantic-reasoning.ts": 4,
+      "routes/signal-capture.ts": 3,
+      "routes/spe-governance.ts": 5,
+      "routes/spe-longitudinal.ts": 3,
+      "routes/spe-psychometrics.ts": 4,
+      "routes/spe-scoring-engine.ts": 3,
+      "routes/tenants.ts": 7
+    },
+    "confirmed_unguarded_sample": [
+      {
+        "method": "GET",
+        "path": "/api/admin/capadex/payments",
+        "loc": "routes/capadex-payments.ts:316"
+      },
+      {
+        "method": "GET",
+        "path": "/api/admin/capadex/users",
+        "loc": "routes/capadex-enterprise.ts:767"
+      },
+      {
+        "method": "GET",
+        "path": "/api/admin/capadex/users/:id/journey",
+        "loc": "routes/capadex-enterprise.ts:814"
+      },
+      {
+        "method": "GET",
+        "path": "/api/admin/capadex/analytics",
+        "loc": "routes/capadex-enterprise.ts:858"
+      },
+      {
+        "method": "GET",
+        "path": "/api/admin/ci/categories",
+        "loc": "routes/concern-intelligence-admin.ts:13"
+      },
+      {
+        "method": "PATCH",
+        "path": "/api/admin/ci/categories/:key",
+        "loc": "routes/concern-intelligence-admin.ts:26"
+      },
+      {
+        "method": "GET",
+        "path": "/api/admin/ci/questions",
+        "loc": "routes/concern-intelligence-admin.ts:69"
+      },
+      {
+        "method": "GET",
+        "path": "/api/admin/spe/dashboard",
+        "loc": "routes/spe-scoring-engine.ts:365"
+      },
+      {
+        "method": "GET",
+        "path": "/api/admin/spe/scores",
+        "loc": "routes/spe-scoring-engine.ts:398"
+      },
+      {
+        "method": "GET",
+        "path": "/api/admin/spe/users/:userId",
+        "loc": "routes/spe-scoring-engine.ts:424"
+      }
+    ],
+    "note": "These expose admin data/actions (incl. payment PII at routes/capadex-payments.ts and a state-changing migration endpoint) with no route-level RBAC. Fixing them is a security pass, NOT entitlement enforcement."
+  },
+  "enforcement_readiness": {
+    "structural_pct": 48,
+    "structural": "12/25",
+    "structural_after_keystone_pct": 84,
+    "structural_after_keystone": "21/25",
+    "activation_pct": 0,
+    "activation": "0/5",
+    "dimensions": [
+      {
+        "name": "entitlement_resolver",
+        "tier": "real",
+        "score": 5,
+        "after_keystone": "real"
+      },
+      {
+        "name": "enforcement_middleware",
+        "tier": "absent",
+        "score": 1,
+        "after_keystone": "gated-real"
+      },
+      {
+        "name": "report_endpoint_protection",
+        "tier": "absent",
+        "score": 1,
+        "after_keystone": "gated-real"
+      },
+      {
+        "name": "fulfillment_access_provisioning",
+        "tier": "partial",
+        "score": 3,
+        "after_keystone": "gated-real"
+      },
+      {
+        "name": "activation_path_wiring",
+        "tier": "stub",
+        "score": 2,
+        "after_keystone": "gated-real"
+      }
+    ],
+    "after_keystone_note": "Flag-gated cells projected at gated-real(4) while commercialEntitlement defaults OFF — never real(5). Activation stays 0% until real keys + paid volume exist."
+  },
+  "monetization_coverage": {
+    "product_monetization_readiness_wc_c1_6x5": {
+      "name": "Product Monetization Readiness (WC-C1 6 products × 5 cells)",
+      "now_structural_pct": 13.3,
+      "now": "4/30",
+      "after_entitlement_keystone_pct": 20,
+      "after": "6/30",
+      "premise_correction": "The objective's \"20% → >90% through enforcement\" is FALSE on THIS metric: the keystone reaches 20% (6/30) only. >90% here = PRODUCTIZATION (build LBI/Employability/Career Builder/Longitudinal SKUs + mentor), NOT entitlement enforcement."
+    },
+    "live_sku_entitlement_wiring_readiness_PROPOSED_REBASELINE": {
+      "name": "Live-SKU Entitlement Wiring Readiness (CAPADEX stage ladder only) — PROPOSED re-baseline, requires explicit user approval",
+      "now_structural_pct": 60,
+      "now": "3/5",
+      "after_entitlement_keystone_pct": 100,
+      "after": "5/5",
+      "note": "On THIS denominator the entitlement keystone reaches ≥90% (100% structural). Package SKU excluded (email-keyed keystone cannot lift it). The audit does not adopt this metric; it offers it."
+    },
+    "activation_pct_both": 0,
+    "activation_note": "Activation stays 0% on every metric until real keys + paid volume exist — not reachable by configuration/engineering."
+  },
+  "products_monetizable_immediately": [
+    {
+      "product": "CAPADEX stage ladder (Insight/Growth/Mastery)",
+      "immediate": true,
+      "what_it_needs": "guard (U1+U2) + flag flip (U3) + Razorpay keys (U4); ZERO product build",
+      "why": "only product with a real priced SKU + checkout order path + stage→feature map."
+    },
+    {
+      "product": "Package / Institute",
+      "immediate": false,
+      "what_it_needs": "entitlement-disjoint: deriveEntitlement excludes packages, no feature map, child/student-keyed grants → separate larger track",
+      "why": "email-keyed keystone cannot lift it."
+    },
+    {
+      "product": "Mentor Intelligence",
+      "immediate": false,
+      "what_it_needs": "product build (mentor_bookings ABSENT, mentor_profiles=0)",
+      "why": "named in entitlement map but a stub; not sellable."
+    }
+  ],
+  "enforcement_effort_units": [
+    {
+      "id": "U1",
+      "unit": "Write ONE requireEntitlement(feature) middleware calling deriveEntitlement(pool,email) → 403 when feature absent",
+      "size": "S",
+      "axis": "Structural (entitlement)",
+      "note": "single function; resolver already exists."
+    },
+    {
+      "id": "U2",
+      "unit": "Apply the guard to the 13 paid-tier CAPADEX endpoints + a small endpoint→required-feature lookup",
+      "size": "S",
+      "axis": "Structural (entitlement)",
+      "note": "mechanical wiring; feature strings already in STAGE_FEATURES."
+    },
+    {
+      "id": "U3",
+      "unit": "Un-gate commercialEntitlement (config default OFF)",
+      "size": "XS",
+      "axis": "Activation prerequisite",
+      "note": "flag flip."
+    },
+    {
+      "id": "U4",
+      "unit": "Configure real Razorpay keys (KEY_ID/SECRET/WEBHOOK_SECRET) — exits demo mode",
+      "size": "S",
+      "axis": "Activation prerequisite",
+      "note": "ops/secrets, not code."
+    },
+    {
+      "id": "U5",
+      "unit": "Guard the 212 unguarded /api/admin/* endpoints (RBAC/security — SEPARATE track from entitlement)",
+      "size": "M",
+      "axis": "Structural (RBAC/security)",
+      "note": "reuse requireAuth+requireSuperAdmin convention; size grows with count."
+    },
+    {
+      "id": "U6",
+      "unit": "Fix entitlement-engine.ts header doc/code drift (claims package coverage the code lacks)",
+      "size": "XS",
+      "axis": "Hygiene",
+      "note": "comment-only."
+    }
+  ],
+  "pii": {
+    "distinct_payer_emails": 2,
+    "masked_sample": [
+      "user_65454b2b8b",
+      "user_4b262cc8a5"
+    ]
+  }
+}

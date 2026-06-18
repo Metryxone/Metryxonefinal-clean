@@ -1,0 +1,691 @@
+# 🚀 METRYXONE ENTERPRISE BUILD PROMPT (PRODUCTION HARDENED VERSION)
+
+You are building an enterprise-grade intelligent assessment, learning intelligence, and career analytics platform called:
+
+# METRYXONE
+
+The platform already includes:
+
+* CAPADEX adaptive assessment engine
+* CSI (Career Stage Index)
+* LBI (Learning Behavior Index)
+* Recommendation Engine
+* Benchmark Engine
+* Super Admin Layer
+* Event-Driven Architecture
+
+Your task is to UPGRADE the system into a:
+
+# Production-Grade, Research-Validated, Multi-Tenant Career Intelligence Platform
+
+This upgrade MUST include:
+
+1. Production Hardening
+2. Psychometric Science Layer
+3. AI Explainability
+4. Multi-Tenant Enterprise Architecture
+5. Research & Validation Framework
+6. Longitudinal Intelligence System
+
+Build this as a scalable SaaS platform.
+
+---
+
+# 🧱 CORE TECH STACK
+
+Frontend:
+
+* Next.js
+* TailwindCSS
+* TypeScript
+
+Backend:
+
+* FastAPI
+* Python 3.11+
+* Async architecture
+
+Database:
+
+* PostgreSQL
+
+Cache:
+
+* Redis
+
+Queue:
+
+* Redis Streams / Celery
+
+ORM:
+
+* SQLAlchemy
+
+Validation:
+
+* Pydantic
+
+Deployment Ready:
+
+* Docker
+* Docker Compose
+
+Observability:
+
+* Prometheus
+* Grafana
+* OpenTelemetry logging
+
+---
+
+# 🚀 SECTION 1 — PRODUCTION HARDENING
+
+---
+
+# OBJECTIVE
+
+Convert platform from prototype-grade → enterprise-grade.
+
+---
+
+# 1.1 CONFIG MANAGEMENT
+
+Implement centralized config service.
+
+Environment-specific configs:
+
+* development
+* staging
+* production
+
+Create:
+backend/shared/config/
+
+Support:
+
+* env validation
+* secret management
+* typed settings
+
+---
+
+# 1.2 ERROR HANDLING
+
+Implement:
+
+* centralized exception middleware
+* structured API error responses
+* correlation IDs
+
+API Response Format:
+
+{
+"success": false,
+"error_code": "CSI_CALCULATION_FAILED",
+"message": "Unable to calculate CSI",
+"trace_id": "uuid"
+}
+
+---
+
+# 1.3 OBSERVABILITY
+
+Integrate:
+
+* request tracing
+* API metrics
+* latency monitoring
+* event tracking
+
+Track:
+
+* CSI recalculation time
+* assessment generation latency
+* recommendation engine time
+
+---
+
+# 1.4 RATE LIMITING
+
+Add:
+
+* IP throttling
+* login protection
+* API abuse prevention
+
+Use Redis-based rate limiter.
+
+---
+
+# 1.5 BACKGROUND WORKERS
+
+Move heavy operations to async workers:
+
+* CSI recalculation
+* LBI processing
+* recommendation generation
+* benchmarking updates
+
+Never execute heavy logic synchronously.
+
+---
+
+# 1.6 AUDITABILITY
+
+Every critical action must generate audit logs.
+
+Track:
+
+* scoring changes
+* admin changes
+* assessment edits
+* norms updates
+
+---
+
+# 1.7 VERSIONING
+
+Version:
+
+* scoring formulas
+* psychometric models
+* norms
+* assessments
+
+Tables must include:
+
+* version_number
+* created_by
+* approved_by
+
+---
+
+# 🧠 SECTION 2 — PSYCHOMETRICS LAYER
+
+---
+
+# OBJECTIVE
+
+Make assessments scientifically defensible.
+
+---
+
+# 2.1 PSYCHOMETRIC METADATA
+
+Update questions table:
+
+ALTER TABLE questions ADD COLUMN discrimination_index FLOAT;
+ALTER TABLE questions ADD COLUMN difficulty_parameter FLOAT;
+ALTER TABLE questions ADD COLUMN guessing_parameter FLOAT;
+ALTER TABLE questions ADD COLUMN psychometric_validated BOOLEAN;
+
+---
+
+# 2.2 ITEM RESPONSE THEORY (IRT)
+
+Implement lightweight IRT support.
+
+Store:
+
+* item difficulty
+* item discrimination
+* response probability
+
+Create:
+backend/psychometrics/
+
+---
+
+# 2.3 RELIABILITY ANALYSIS
+
+Calculate:
+
+* Cronbach Alpha
+* consistency score
+* internal reliability
+
+Store in:
+assessment_reliability table
+
+---
+
+# 2.4 VALIDITY LAYER
+
+Support:
+
+* construct validity
+* criterion validity
+* predictive validity
+
+Create:
+validation_studies table
+
+---
+
+# 2.5 NORMING ENGINE
+
+Create scientifically normalized percentile logic.
+
+Percentiles must be based on:
+
+* cohort size
+* CSI range
+* competency domain
+* geography
+* institution
+
+---
+
+# 2.6 ADAPTIVE TESTING ENGINE
+
+Questions must adapt using:
+
+* CSI
+* previous responses
+* psychometric confidence
+
+NOT just static difficulty.
+
+---
+
+# 🤖 SECTION 3 — AI EXPLAINABILITY LAYER
+
+---
+
+# OBJECTIVE
+
+All AI-driven outputs must be explainable.
+
+---
+
+# 3.1 EXPLAINABLE CSI
+
+For every CSI score generate:
+
+{
+"score": 68,
+"top_positive_factors": [
+"Strong consistency",
+"High analytical performance"
+],
+"top_negative_factors": [
+"Low persistence",
+"Weak role alignment"
+]
+}
+
+---
+
+# 3.2 RECOMMENDATION EXPLAINABILITY
+
+Every recommendation must explain:
+
+* WHY generated
+* WHAT signal triggered it
+* HOW it improves CSI
+
+---
+
+# 3.3 HIRING SIGNAL EXPLAINABILITY
+
+Employer-facing outputs must explain:
+
+* competency gaps
+* confidence level
+* behavioral indicators
+
+---
+
+# 3.4 DECISION TRACEABILITY
+
+Store decision traces:
+
+CREATE TABLE ai_decision_logs (
+id UUID PRIMARY KEY,
+user_id UUID,
+engine TEXT,
+input_payload JSONB,
+output_payload JSONB,
+created_at TIMESTAMP
+);
+
+---
+
+# 🏢 SECTION 4 — MULTI-TENANT ENTERPRISE LAYER
+
+---
+
+# OBJECTIVE
+
+Support:
+
+* schools
+* universities
+* enterprises
+* governments
+
+from a single platform.
+
+---
+
+# 4.1 TENANT SYSTEM
+
+Create:
+
+CREATE TABLE tenants (
+tenant_id UUID PRIMARY KEY,
+tenant_name TEXT,
+tenant_type TEXT,
+created_at TIMESTAMP
+);
+
+---
+
+# 4.2 TENANT ISOLATION
+
+Every table must include:
+
+tenant_id UUID
+
+Apply row-level isolation.
+
+---
+
+# 4.3 ENTERPRISE ADMIN HIERARCHY
+
+Roles:
+
+* SUPER_ADMIN
+* TENANT_ADMIN
+* SCHOOL_ADMIN
+* FACULTY
+* STUDENT
+
+---
+
+# 4.4 TENANT CONFIGURATION
+
+Each tenant can customize:
+
+* assessments
+* norms
+* scoring weights
+* competency frameworks
+
+---
+
+# 4.5 ORGANIZATION ANALYTICS
+
+Generate:
+
+* institution-wide CSI
+* department heatmaps
+* competency gaps
+* employability trends
+
+---
+
+# 🔬 SECTION 5 — RESEARCH & VALIDATION LAYER
+
+---
+
+# OBJECTIVE
+
+Transform MetryxOne into a research-grade platform.
+
+---
+
+# 5.1 RESEARCH DATASETS
+
+Store anonymized behavioral datasets.
+
+Create:
+research_datasets table
+
+---
+
+# 5.2 LONGITUDINAL STUDIES
+
+Track:
+
+* CSI over time
+* learning progression
+* intervention impact
+
+---
+
+# 5.3 EXPERIMENT FRAMEWORK
+
+Support A/B testing.
+
+Example:
+
+* assessment formats
+* recommendation models
+* adaptive difficulty algorithms
+
+---
+
+# 5.4 VALIDATION STUDIES
+
+Track:
+
+* predictive success
+* hiring outcomes
+* academic outcomes
+
+---
+
+# 5.5 OUTCOME TRACKING
+
+Store:
+
+* placements
+* promotions
+* academic growth
+* skill progression
+
+---
+
+# 📈 SECTION 6 — LONGITUDINAL INTELLIGENCE
+
+---
+
+# OBJECTIVE
+
+Track how users evolve over years.
+
+---
+
+# 6.1 TRAJECTORY ENGINE
+
+Create:
+
+career_trajectory table
+
+Track:
+
+* CSI progression
+* competency evolution
+* learning trends
+
+---
+
+# 6.2 TREND DETECTION
+
+Detect:
+
+* stagnation
+* acceleration
+* decline
+
+---
+
+# 6.3 PREDICTIVE GROWTH MODEL
+
+Forecast:
+
+* future CSI
+* readiness timeline
+* probability of success
+
+---
+
+# 6.4 INTERVENTION ENGINE
+
+If system detects:
+
+* declining consistency
+* low persistence
+
+Trigger:
+
+* nudges
+* simplified assessments
+* mentor suggestions
+
+---
+
+# 🧠 SECTION 7 — ADVANCED CAPADEX ENGINE
+
+---
+
+# QUESTION ASSIGNMENT LOGIC
+
+Inputs:
+
+* CSI
+* LBI
+* psychometric confidence
+* competency gap
+* role alignment
+
+Generate:
+
+* adaptive question path
+* personalized difficulty
+* cognitive load balancing
+
+---
+
+# LEARNING STYLE DETECTION
+
+Classify:
+
+* reflective learner
+* impulsive learner
+* exploratory learner
+* persistent learner
+
+---
+
+# COGNITIVE LOAD MANAGEMENT
+
+Younger / lower CSI users:
+
+* smaller chunks
+* simpler interfaces
+* guided flow
+
+Advanced users:
+
+* ambiguity
+* simulations
+* case studies
+
+---
+
+# 📊 SECTION 8 — ADVANCED ANALYTICS
+
+---
+
+Generate dashboards for:
+
+Students:
+
+* CSI trend
+* learning strengths
+* behavioral insights
+
+Parents:
+
+* engagement patterns
+* growth trajectory
+
+Employers:
+
+* hireability prediction
+* competency mapping
+
+Institutions:
+
+* cohort intelligence
+* risk identification
+
+---
+
+# 🔐 SECTION 9 — ENTERPRISE SECURITY
+
+---
+
+Implement:
+
+* RBAC
+* tenant isolation
+* audit logs
+* encrypted sensitive fields
+* JWT auth
+* refresh tokens
+* session expiration
+
+---
+
+# 🧪 SECTION 10 — TESTING & VALIDATION
+
+---
+
+Generate:
+
+* unit tests
+* integration tests
+* psychometric validation tests
+* adaptive assessment tests
+* performance tests
+
+---
+
+# PERFORMANCE TARGETS
+
+* API latency < 200ms
+* adaptive assessment generation < 1 second
+* CSI recalculation async
+* 99.9% uptime architecture
+
+---
+
+# 🚀 FINAL EXPECTATION
+
+Generate:
+
+1. Full production-grade architecture
+2. SQLAlchemy models
+3. Async FastAPI services
+4. Multi-tenant middleware
+5. Psychometric engine
+6. CSI service
+7. LBI service
+8. Explainability engine
+9. Longitudinal intelligence engine
+10. Research framework
+11. Adaptive CAPADEX engine
+12. Enterprise analytics
+13. Event-driven infrastructure
+14. Dockerized deployment structure
+
+Build clean, modular, enterprise-ready code suitable for:
+
+* schools
+* universities
+* enterprises
+* government skilling ecosystems
+* research institutions

@@ -1,0 +1,1376 @@
+{
+  "generated_at": "2026-06-03T17:46:51.454Z",
+  "by_category": [
+    {
+      "category": "concern",
+      "examples": [
+        {
+          "anchor": "concern:CONCERN_ACA_2439",
+          "anchor_label": "Decision-Making Confidence During Career Planning",
+          "matches": [
+            {
+              "id": "concern:CONCERN_CON_1084",
+              "label": "Negotiating Career Growth Opportunities",
+              "score": 0.3125,
+              "shared_count": 5,
+              "hub_only": true,
+              "shared_neighbors": [
+                {
+                  "id": "archetype:career_professional_growth",
+                  "label": "Career Growth & Professional Identity",
+                  "category": "archetype",
+                  "degree": 314,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0003",
+                  "label": "fear_of_failure",
+                  "category": "signal",
+                  "degree": 488,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0006",
+                  "label": "confidence_instability",
+                  "category": "signal",
+                  "degree": 554,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0004",
+                  "label": "placement_anxiety",
+                  "category": "signal",
+                  "degree": 555,
+                  "is_hub": true
+                }
+              ]
+            },
+            {
+              "id": "concern:CONCERN_COM_671",
+              "label": "Building Professional Confidence After Mistakes",
+              "score": 0.294118,
+              "shared_count": 5,
+              "hub_only": true,
+              "shared_neighbors": [
+                {
+                  "id": "archetype:career_professional_growth",
+                  "label": "Career Growth & Professional Identity",
+                  "category": "archetype",
+                  "degree": 314,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0003",
+                  "label": "fear_of_failure",
+                  "category": "signal",
+                  "degree": 488,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0006",
+                  "label": "confidence_instability",
+                  "category": "signal",
+                  "degree": 554,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0004",
+                  "label": "placement_anxiety",
+                  "category": "signal",
+                  "degree": 555,
+                  "is_hub": true
+                }
+              ]
+            },
+            {
+              "id": "concern:CONCERN_CAR_518",
+              "label": "Reapplying After Previous Rejections",
+              "score": 0.25,
+              "shared_count": 4,
+              "hub_only": true,
+              "shared_neighbors": [
+                {
+                  "id": "signal:SIG_0003",
+                  "label": "fear_of_failure",
+                  "category": "signal",
+                  "degree": 488,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0006",
+                  "label": "confidence_instability",
+                  "category": "signal",
+                  "degree": 554,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0004",
+                  "label": "placement_anxiety",
+                  "category": "signal",
+                  "degree": 555,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0010",
+                  "label": "emotional_overload",
+                  "category": "signal",
+                  "degree": 1021,
+                  "is_hub": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "anchor": "concern:CONCERN_ACA_652",
+          "anchor_label": "Transitioning Into Strategic Leadership Roles",
+          "matches": [
+            {
+              "id": "concern:CONCERN_EMO_1042",
+              "label": "Entering Leadership Tracks in New Industries",
+              "score": 0.375,
+              "shared_count": 6,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "bridge_tag:LEADERSHIP_READINESS",
+                  "label": "LEADERSHIP_READINESS",
+                  "category": "bridge_tag",
+                  "degree": 49,
+                  "is_hub": false
+                },
+                {
+                  "id": "archetype:leadership_influence",
+                  "label": "Leadership & Influence",
+                  "category": "archetype",
+                  "degree": 199,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0012",
+                  "label": "low_self_belief",
+                  "category": "signal",
+                  "degree": 212,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0006",
+                  "label": "confidence_instability",
+                  "category": "signal",
+                  "degree": 554,
+                  "is_hub": true
+                }
+              ]
+            },
+            {
+              "id": "concern:CONCERN_EMO_948",
+              "label": "Transitioning from Operational Leadership to Visionary Leadership",
+              "score": 0.375,
+              "shared_count": 6,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "bridge_tag:LEADERSHIP_READINESS",
+                  "label": "LEADERSHIP_READINESS",
+                  "category": "bridge_tag",
+                  "degree": 49,
+                  "is_hub": false
+                },
+                {
+                  "id": "archetype:leadership_influence",
+                  "label": "Leadership & Influence",
+                  "category": "archetype",
+                  "degree": 199,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0012",
+                  "label": "low_self_belief",
+                  "category": "signal",
+                  "degree": 212,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0006",
+                  "label": "confidence_instability",
+                  "category": "signal",
+                  "degree": 554,
+                  "is_hub": true
+                }
+              ]
+            },
+            {
+              "id": "concern:CONCERN_EMP_794",
+              "label": "Transitioning into Enterprise-Level Leadership",
+              "score": 0.375,
+              "shared_count": 6,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "bridge_tag:LEADERSHIP_READINESS",
+                  "label": "LEADERSHIP_READINESS",
+                  "category": "bridge_tag",
+                  "degree": 49,
+                  "is_hub": false
+                },
+                {
+                  "id": "archetype:leadership_influence",
+                  "label": "Leadership & Influence",
+                  "category": "archetype",
+                  "degree": 199,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0012",
+                  "label": "low_self_belief",
+                  "category": "signal",
+                  "degree": 212,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0006",
+                  "label": "confidence_instability",
+                  "category": "signal",
+                  "degree": 554,
+                  "is_hub": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "anchor": "concern:CONCERN_CAR_212",
+          "anchor_label": "Career Decision-Making Confidence",
+          "matches": [
+            {
+              "id": "concern:CONCERN_CON_238",
+              "label": "Evaluate Career Risks Rationally",
+              "score": 0.3125,
+              "shared_count": 5,
+              "hub_only": true,
+              "shared_neighbors": [
+                {
+                  "id": "signal:SIG_0007",
+                  "label": "decision_paralysis",
+                  "category": "signal",
+                  "degree": 80,
+                  "is_hub": true
+                },
+                {
+                  "id": "archetype:career_professional_growth",
+                  "label": "Career Growth & Professional Identity",
+                  "category": "archetype",
+                  "degree": 314,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0003",
+                  "label": "fear_of_failure",
+                  "category": "signal",
+                  "degree": 488,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0001",
+                  "label": "career_confusion",
+                  "category": "signal",
+                  "degree": 566,
+                  "is_hub": true
+                }
+              ]
+            },
+            {
+              "id": "concern:CONCERN_THI_239",
+              "label": "Building Career Commitment After Selection",
+              "score": 0.294118,
+              "shared_count": 5,
+              "hub_only": true,
+              "shared_neighbors": [
+                {
+                  "id": "signal:SIG_0007",
+                  "label": "decision_paralysis",
+                  "category": "signal",
+                  "degree": 80,
+                  "is_hub": true
+                },
+                {
+                  "id": "archetype:career_professional_growth",
+                  "label": "Career Growth & Professional Identity",
+                  "category": "archetype",
+                  "degree": 314,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0003",
+                  "label": "fear_of_failure",
+                  "category": "signal",
+                  "degree": 488,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0006",
+                  "label": "confidence_instability",
+                  "category": "signal",
+                  "degree": 554,
+                  "is_hub": true
+                }
+              ]
+            },
+            {
+              "id": "concern:CONCERN_CON_72",
+              "label": "Decision-Making Under Career Pressure",
+              "score": 0.277778,
+              "shared_count": 5,
+              "hub_only": true,
+              "shared_neighbors": [
+                {
+                  "id": "signal:SIG_0007",
+                  "label": "decision_paralysis",
+                  "category": "signal",
+                  "degree": 80,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0003",
+                  "label": "fear_of_failure",
+                  "category": "signal",
+                  "degree": 488,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0006",
+                  "label": "confidence_instability",
+                  "category": "signal",
+                  "degree": 554,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0001",
+                  "label": "career_confusion",
+                  "category": "signal",
+                  "degree": 566,
+                  "is_hub": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "anchor": "concern:CONCERN_CAR_251",
+          "anchor_label": "Building Confidence After Career Decision Mistakes",
+          "matches": [
+            {
+              "id": "concern:CONCERN_LIF_453",
+              "label": "Building Career Confidence After Layoffs or Offer Revocations",
+              "score": 0.294118,
+              "shared_count": 5,
+              "hub_only": true,
+              "shared_neighbors": [
+                {
+                  "id": "archetype:career_professional_growth",
+                  "label": "Career Growth & Professional Identity",
+                  "category": "archetype",
+                  "degree": 314,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0006",
+                  "label": "confidence_instability",
+                  "category": "signal",
+                  "degree": 554,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0001",
+                  "label": "career_confusion",
+                  "category": "signal",
+                  "degree": 566,
+                  "is_hub": true
+                },
+                {
+                  "id": "bridge_tag:EMOTIONAL_RECOVERY",
+                  "label": "EMOTIONAL_RECOVERY",
+                  "category": "bridge_tag",
+                  "degree": 852,
+                  "is_hub": true
+                }
+              ]
+            },
+            {
+              "id": "concern:CONCERN_CAR_518",
+              "label": "Reapplying After Previous Rejections",
+              "score": 0.25,
+              "shared_count": 4,
+              "hub_only": true,
+              "shared_neighbors": [
+                {
+                  "id": "signal:SIG_0003",
+                  "label": "fear_of_failure",
+                  "category": "signal",
+                  "degree": 488,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0006",
+                  "label": "confidence_instability",
+                  "category": "signal",
+                  "degree": 554,
+                  "is_hub": true
+                },
+                {
+                  "id": "bridge_tag:EMOTIONAL_RECOVERY",
+                  "label": "EMOTIONAL_RECOVERY",
+                  "category": "bridge_tag",
+                  "degree": 852,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0010",
+                  "label": "emotional_overload",
+                  "category": "signal",
+                  "degree": 1021,
+                  "is_hub": true
+                }
+              ]
+            },
+            {
+              "id": "concern:CONCERN_STR_667",
+              "label": "Workplace Feedback Emotionally",
+              "score": 0.25,
+              "shared_count": 4,
+              "hub_only": true,
+              "shared_neighbors": [
+                {
+                  "id": "archetype:career_professional_growth",
+                  "label": "Career Growth & Professional Identity",
+                  "category": "archetype",
+                  "degree": 314,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0006",
+                  "label": "confidence_instability",
+                  "category": "signal",
+                  "degree": 554,
+                  "is_hub": true
+                },
+                {
+                  "id": "bridge_tag:EMOTIONAL_RECOVERY",
+                  "label": "EMOTIONAL_RECOVERY",
+                  "category": "bridge_tag",
+                  "degree": 852,
+                  "is_hub": true
+                },
+                {
+                  "id": "signal:SIG_0010",
+                  "label": "emotional_overload",
+                  "category": "signal",
+                  "degree": 1021,
+                  "is_hub": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "behavior",
+      "examples": [
+        {
+          "anchor": "behavior:10",
+          "anchor_label": "doubts their ability to handle {task}",
+          "matches": [
+            {
+              "id": "behavior:11",
+              "label": "freezes when a problem has no obvious answer",
+              "score": 1,
+              "shared_count": 2,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "problem_framing:CONCERN_ACA_1050",
+                  "label": "Cross-Domain Thinking Anxiety",
+                  "category": "problem",
+                  "degree": 3,
+                  "is_hub": false
+                },
+                {
+                  "id": "concern:CONCERN_ACA_1050",
+                  "label": "Build Cross-Domain Problem-Solving Confidence",
+                  "category": "concern",
+                  "degree": 9,
+                  "is_hub": false
+                }
+              ]
+            },
+            {
+              "id": "behavior:12",
+              "label": "shows visible discomfort during {task}",
+              "score": 0.5,
+              "shared_count": 1,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "concern:CONCERN_ACA_1050",
+                  "label": "Build Cross-Domain Problem-Solving Confidence",
+                  "category": "concern",
+                  "degree": 9,
+                  "is_hub": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "anchor": "behavior:100",
+          "anchor_label": "lets their contributions go unnoticed at {setting}",
+          "matches": [
+            {
+              "id": "behavior:96",
+              "label": "avoids the hardest {task}",
+              "score": 1,
+              "shared_count": 2,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "problem_framing:CONCERN_ACA_1282",
+                  "label": "Classroom Outcome Blindness",
+                  "category": "problem",
+                  "degree": 6,
+                  "is_hub": false
+                },
+                {
+                  "id": "concern:CONCERN_ACA_1282",
+                  "label": "Visibility into Classroom-Level Learning Outcomes",
+                  "category": "concern",
+                  "degree": 10,
+                  "is_hub": false
+                }
+              ]
+            },
+            {
+              "id": "behavior:97",
+              "label": "gives up after the first mistake",
+              "score": 1,
+              "shared_count": 2,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "problem_framing:CONCERN_ACA_1282",
+                  "label": "Classroom Outcome Blindness",
+                  "category": "problem",
+                  "degree": 6,
+                  "is_hub": false
+                },
+                {
+                  "id": "concern:CONCERN_ACA_1282",
+                  "label": "Visibility into Classroom-Level Learning Outcomes",
+                  "category": "concern",
+                  "degree": 10,
+                  "is_hub": false
+                }
+              ]
+            },
+            {
+              "id": "behavior:98",
+              "label": "rarely explores topics beyond what is required",
+              "score": 1,
+              "shared_count": 2,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "problem_framing:CONCERN_ACA_1282",
+                  "label": "Classroom Outcome Blindness",
+                  "category": "problem",
+                  "degree": 6,
+                  "is_hub": false
+                },
+                {
+                  "id": "concern:CONCERN_ACA_1282",
+                  "label": "Visibility into Classroom-Level Learning Outcomes",
+                  "category": "concern",
+                  "degree": 10,
+                  "is_hub": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "anchor": "behavior:1000",
+          "anchor_label": "struggles to stay steady when routines change",
+          "matches": [
+            {
+              "id": "behavior:998",
+              "label": "misses opportunities by not acting on them",
+              "score": 1,
+              "shared_count": 2,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "problem_framing:CONCERN_ADJ_442",
+                  "label": "Career Stability Weakness",
+                  "category": "problem",
+                  "degree": 4,
+                  "is_hub": false
+                },
+                {
+                  "id": "concern:CONCERN_ADJ_442",
+                  "label": "Build Long-Term Career Stability Early",
+                  "category": "concern",
+                  "degree": 8,
+                  "is_hub": false
+                }
+              ]
+            },
+            {
+              "id": "behavior:999",
+              "label": "cannot describe a clear next career step",
+              "score": 1,
+              "shared_count": 2,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "problem_framing:CONCERN_ADJ_442",
+                  "label": "Career Stability Weakness",
+                  "category": "problem",
+                  "degree": 4,
+                  "is_hub": false
+                },
+                {
+                  "id": "concern:CONCERN_ADJ_442",
+                  "label": "Build Long-Term Career Stability Early",
+                  "category": "concern",
+                  "degree": 8,
+                  "is_hub": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "anchor": "behavior:1004",
+          "anchor_label": "cannot describe a clear next career step",
+          "matches": [
+            {
+              "id": "behavior:1005",
+              "label": "misses opportunities by not acting on them",
+              "score": 1,
+              "shared_count": 2,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "problem_framing:CONCERN_ADJ_5",
+                  "label": "Career Direction Ambiguity",
+                  "category": "problem",
+                  "degree": 5,
+                  "is_hub": false
+                },
+                {
+                  "id": "concern:CONCERN_ADJ_5",
+                  "label": "Career Direction Clarity",
+                  "category": "concern",
+                  "degree": 10,
+                  "is_hub": false
+                }
+              ]
+            },
+            {
+              "id": "behavior:1006",
+              "label": "misreads instructions for {task}",
+              "score": 1,
+              "shared_count": 2,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "problem_framing:CONCERN_ADJ_5",
+                  "label": "Career Direction Ambiguity",
+                  "category": "problem",
+                  "degree": 5,
+                  "is_hub": false
+                },
+                {
+                  "id": "concern:CONCERN_ADJ_5",
+                  "label": "Career Direction Clarity",
+                  "category": "concern",
+                  "degree": 10,
+                  "is_hub": false
+                }
+              ]
+            },
+            {
+              "id": "behavior:1007",
+              "label": "struggles to set direction for {peers}",
+              "score": 1,
+              "shared_count": 2,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "problem_framing:CONCERN_ADJ_5",
+                  "label": "Career Direction Ambiguity",
+                  "category": "problem",
+                  "degree": 5,
+                  "is_hub": false
+                },
+                {
+                  "id": "concern:CONCERN_ADJ_5",
+                  "label": "Career Direction Clarity",
+                  "category": "concern",
+                  "degree": 10,
+                  "is_hub": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "problem",
+      "examples": []
+    },
+    {
+      "category": "archetype",
+      "examples": []
+    },
+    {
+      "category": "intervention",
+      "examples": [
+        {
+          "anchor": "intervention:1",
+          "anchor_label": "Today, pick the weakest subject and finish one focused homework or revision task.",
+          "matches": [
+            {
+              "id": "intervention:10",
+              "label": "Each workday this week, track grades and homework due dates in one place.",
+              "score": 1,
+              "shared_count": 2,
+              "hub_only": true,
+              "shared_neighbors": [
+                {
+                  "id": "problem:1",
+                  "label": "My grades keep dropping no matter how much I revise.",
+                  "category": "problem",
+                  "degree": 56,
+                  "is_hub": true
+                },
+                {
+                  "id": "archetype:academic_achievement",
+                  "label": "Academic Achievement & Exam Performance",
+                  "category": "archetype",
+                  "degree": 231,
+                  "is_hub": true
+                }
+              ]
+            },
+            {
+              "id": "intervention:11",
+              "label": "Over the next 30 days, follow a weekly revision plan that covers every subject before the next test.",
+              "score": 1,
+              "shared_count": 2,
+              "hub_only": true,
+              "shared_neighbors": [
+                {
+                  "id": "problem:1",
+                  "label": "My grades keep dropping no matter how much I revise.",
+                  "category": "problem",
+                  "degree": 56,
+                  "is_hub": true
+                },
+                {
+                  "id": "archetype:academic_achievement",
+                  "label": "Academic Achievement & Exam Performance",
+                  "category": "archetype",
+                  "degree": 231,
+                  "is_hub": true
+                }
+              ]
+            },
+            {
+              "id": "intervention:12",
+              "label": "Over the next 30 days, help your child follow a weekly revision plan that covers every subject before the next test.",
+              "score": 1,
+              "shared_count": 2,
+              "hub_only": true,
+              "shared_neighbors": [
+                {
+                  "id": "problem:1",
+                  "label": "My grades keep dropping no matter how much I revise.",
+                  "category": "problem",
+                  "degree": 56,
+                  "is_hub": true
+                },
+                {
+                  "id": "archetype:academic_achievement",
+                  "label": "Academic Achievement & Exam Performance",
+                  "category": "archetype",
+                  "degree": 231,
+                  "is_hub": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "anchor": "intervention:10",
+          "anchor_label": "Each workday this week, track grades and homework due dates in one place.",
+          "matches": [
+            {
+              "id": "intervention:1",
+              "label": "Today, pick the weakest subject and finish one focused homework or revision task.",
+              "score": 1,
+              "shared_count": 2,
+              "hub_only": true,
+              "shared_neighbors": [
+                {
+                  "id": "problem:1",
+                  "label": "My grades keep dropping no matter how much I revise.",
+                  "category": "problem",
+                  "degree": 56,
+                  "is_hub": true
+                },
+                {
+                  "id": "archetype:academic_achievement",
+                  "label": "Academic Achievement & Exam Performance",
+                  "category": "archetype",
+                  "degree": 231,
+                  "is_hub": true
+                }
+              ]
+            },
+            {
+              "id": "intervention:11",
+              "label": "Over the next 30 days, follow a weekly revision plan that covers every subject before the next test.",
+              "score": 1,
+              "shared_count": 2,
+              "hub_only": true,
+              "shared_neighbors": [
+                {
+                  "id": "problem:1",
+                  "label": "My grades keep dropping no matter how much I revise.",
+                  "category": "problem",
+                  "degree": 56,
+                  "is_hub": true
+                },
+                {
+                  "id": "archetype:academic_achievement",
+                  "label": "Academic Achievement & Exam Performance",
+                  "category": "archetype",
+                  "degree": 231,
+                  "is_hub": true
+                }
+              ]
+            },
+            {
+              "id": "intervention:12",
+              "label": "Over the next 30 days, help your child follow a weekly revision plan that covers every subject before the next test.",
+              "score": 1,
+              "shared_count": 2,
+              "hub_only": true,
+              "shared_neighbors": [
+                {
+                  "id": "problem:1",
+                  "label": "My grades keep dropping no matter how much I revise.",
+                  "category": "problem",
+                  "degree": 56,
+                  "is_hub": true
+                },
+                {
+                  "id": "archetype:academic_achievement",
+                  "label": "Academic Achievement & Exam Performance",
+                  "category": "archetype",
+                  "degree": 231,
+                  "is_hub": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "anchor": "intervention:100",
+          "anchor_label": "Each workday this week, note one contribution to the group and one task others carried.",
+          "matches": [
+            {
+              "id": "intervention:101",
+              "label": "Over the next 30 days, take a clear shared role in a group project and deliver it.",
+              "score": 1,
+              "shared_count": 2,
+              "hub_only": true,
+              "shared_neighbors": [
+                {
+                  "id": "problem:13",
+                  "label": "I struggle to work with others and end up doing it alone.",
+                  "category": "problem",
+                  "degree": 56,
+                  "is_hub": true
+                },
+                {
+                  "id": "archetype:collaboration_teamwork",
+                  "label": "Collaboration & Teamwork",
+                  "category": "archetype",
+                  "degree": 98,
+                  "is_hub": true
+                }
+              ]
+            },
+            {
+              "id": "intervention:102",
+              "label": "Over the next 30 days, help your child take a clear shared role in a group project and deliver it.",
+              "score": 1,
+              "shared_count": 2,
+              "hub_only": true,
+              "shared_neighbors": [
+                {
+                  "id": "problem:13",
+                  "label": "I struggle to work with others and end up doing it alone.",
+                  "category": "problem",
+                  "degree": 56,
+                  "is_hub": true
+                },
+                {
+                  "id": "archetype:collaboration_teamwork",
+                  "label": "Collaboration & Teamwork",
+                  "category": "archetype",
+                  "degree": 98,
+                  "is_hub": true
+                }
+              ]
+            },
+            {
+              "id": "intervention:103",
+              "label": "Over the next month, coach the student to take a clear shared role in a group project and deliver it.",
+              "score": 1,
+              "shared_count": 2,
+              "hub_only": true,
+              "shared_neighbors": [
+                {
+                  "id": "problem:13",
+                  "label": "I struggle to work with others and end up doing it alone.",
+                  "category": "problem",
+                  "degree": 56,
+                  "is_hub": true
+                },
+                {
+                  "id": "archetype:collaboration_teamwork",
+                  "label": "Collaboration & Teamwork",
+                  "category": "archetype",
+                  "degree": 98,
+                  "is_hub": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "anchor": "intervention:101",
+          "anchor_label": "Over the next 30 days, take a clear shared role in a group project and deliver it.",
+          "matches": [
+            {
+              "id": "intervention:100",
+              "label": "Each workday this week, note one contribution to the group and one task others carried.",
+              "score": 1,
+              "shared_count": 2,
+              "hub_only": true,
+              "shared_neighbors": [
+                {
+                  "id": "problem:13",
+                  "label": "I struggle to work with others and end up doing it alone.",
+                  "category": "problem",
+                  "degree": 56,
+                  "is_hub": true
+                },
+                {
+                  "id": "archetype:collaboration_teamwork",
+                  "label": "Collaboration & Teamwork",
+                  "category": "archetype",
+                  "degree": 98,
+                  "is_hub": true
+                }
+              ]
+            },
+            {
+              "id": "intervention:102",
+              "label": "Over the next 30 days, help your child take a clear shared role in a group project and deliver it.",
+              "score": 1,
+              "shared_count": 2,
+              "hub_only": true,
+              "shared_neighbors": [
+                {
+                  "id": "problem:13",
+                  "label": "I struggle to work with others and end up doing it alone.",
+                  "category": "problem",
+                  "degree": 56,
+                  "is_hub": true
+                },
+                {
+                  "id": "archetype:collaboration_teamwork",
+                  "label": "Collaboration & Teamwork",
+                  "category": "archetype",
+                  "degree": 98,
+                  "is_hub": true
+                }
+              ]
+            },
+            {
+              "id": "intervention:103",
+              "label": "Over the next month, coach the student to take a clear shared role in a group project and deliver it.",
+              "score": 1,
+              "shared_count": 2,
+              "hub_only": true,
+              "shared_neighbors": [
+                {
+                  "id": "problem:13",
+                  "label": "I struggle to work with others and end up doing it alone.",
+                  "category": "problem",
+                  "degree": 56,
+                  "is_hub": true
+                },
+                {
+                  "id": "archetype:collaboration_teamwork",
+                  "label": "Collaboration & Teamwork",
+                  "category": "archetype",
+                  "degree": 98,
+                  "is_hub": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "recommendation",
+      "examples": [
+        {
+          "anchor": "recommendation:career:cluster:ACADEMIC_RECOVERY",
+          "anchor_label": "Academic Recovery-aligned career cluster",
+          "matches": [
+            {
+              "id": "recommendation:career:exploration:ACADEMIC_RECOVERY",
+              "label": "Explore where academic recovery matters most",
+              "score": 1,
+              "shared_count": 1,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "construct:ACADEMIC_RECOVERY",
+                  "label": "ACADEMIC_RECOVERY",
+                  "category": "signal",
+                  "degree": 15,
+                  "is_hub": false
+                }
+              ]
+            },
+            {
+              "id": "recommendation:career:pathway:ACADEMIC_RECOVERY",
+              "label": "Academic Recovery growth pathway",
+              "score": 1,
+              "shared_count": 1,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "construct:ACADEMIC_RECOVERY",
+                  "label": "ACADEMIC_RECOVERY",
+                  "category": "signal",
+                  "degree": 15,
+                  "is_hub": false
+                }
+              ]
+            },
+            {
+              "id": "recommendation:development:career_readiness:ACADEMIC_RECOVERY",
+              "label": "Develop academic recovery (Career Readiness Development)",
+              "score": 1,
+              "shared_count": 1,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "construct:ACADEMIC_RECOVERY",
+                  "label": "ACADEMIC_RECOVERY",
+                  "category": "signal",
+                  "degree": 15,
+                  "is_hub": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "anchor": "recommendation:career:cluster:ANXIETY",
+          "anchor_label": "Calm-environment & structured roles",
+          "matches": [
+            {
+              "id": "recommendation:career:exploration:ANXIETY",
+              "label": "Job-shadow before committing",
+              "score": 1,
+              "shared_count": 1,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "construct:ANXIETY",
+                  "label": "ANXIETY",
+                  "category": "signal",
+                  "degree": 19,
+                  "is_hub": false
+                }
+              ]
+            },
+            {
+              "id": "recommendation:career:pathway:ANXIETY",
+              "label": "Low-stakes-to-high-stakes exposure pathway",
+              "score": 1,
+              "shared_count": 1,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "construct:ANXIETY",
+                  "label": "ANXIETY",
+                  "category": "signal",
+                  "degree": 19,
+                  "is_hub": false
+                }
+              ]
+            },
+            {
+              "id": "recommendation:development:career_readiness:ANXIETY",
+              "label": "Build steady calm under evaluation",
+              "score": 1,
+              "shared_count": 1,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "construct:ANXIETY",
+                  "label": "ANXIETY",
+                  "category": "signal",
+                  "degree": 19,
+                  "is_hub": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "anchor": "recommendation:career:cluster:ATTENTION_REGULATION",
+          "anchor_label": "Attention Regulation-aligned career cluster",
+          "matches": [
+            {
+              "id": "recommendation:career:exploration:ATTENTION_REGULATION",
+              "label": "Explore where attention regulation matters most",
+              "score": 1,
+              "shared_count": 1,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "construct:ATTENTION_REGULATION",
+                  "label": "ATTENTION_REGULATION",
+                  "category": "signal",
+                  "degree": 17,
+                  "is_hub": false
+                }
+              ]
+            },
+            {
+              "id": "recommendation:career:pathway:ATTENTION_REGULATION",
+              "label": "Attention Regulation growth pathway",
+              "score": 1,
+              "shared_count": 1,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "construct:ATTENTION_REGULATION",
+                  "label": "ATTENTION_REGULATION",
+                  "category": "signal",
+                  "degree": 17,
+                  "is_hub": false
+                }
+              ]
+            },
+            {
+              "id": "recommendation:development:career_readiness:ATTENTION_REGULATION",
+              "label": "Develop attention regulation (Career Readiness Development)",
+              "score": 1,
+              "shared_count": 1,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "construct:ATTENTION_REGULATION",
+                  "label": "ATTENTION_REGULATION",
+                  "category": "signal",
+                  "degree": 17,
+                  "is_hub": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "anchor": "recommendation:career:cluster:CAREER_CLARITY",
+          "anchor_label": "Exploratory / interest-discovery roles",
+          "matches": [
+            {
+              "id": "recommendation:career:exploration:CAREER_CLARITY",
+              "label": "Run informational interviews",
+              "score": 1,
+              "shared_count": 1,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "construct:CAREER_CLARITY",
+                  "label": "CAREER_CLARITY",
+                  "category": "signal",
+                  "degree": 15,
+                  "is_hub": false
+                }
+              ]
+            },
+            {
+              "id": "recommendation:career:pathway:CAREER_CLARITY",
+              "label": "Structured decision-making pathway",
+              "score": 1,
+              "shared_count": 1,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "construct:CAREER_CLARITY",
+                  "label": "CAREER_CLARITY",
+                  "category": "signal",
+                  "degree": 15,
+                  "is_hub": false
+                }
+              ]
+            },
+            {
+              "id": "recommendation:development:career_readiness:CAREER_CLARITY",
+              "label": "Turn career confusion into a clear plan",
+              "score": 1,
+              "shared_count": 1,
+              "hub_only": false,
+              "shared_neighbors": [
+                {
+                  "id": "construct:CAREER_CLARITY",
+                  "label": "CAREER_CLARITY",
+                  "category": "signal",
+                  "degree": 15,
+                  "is_hub": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "recommendations_like_this": {
+    "anchor": "recommendation:career:cluster:ACADEMIC_RECOVERY",
+    "anchor_label": "Academic Recovery-aligned career cluster",
+    "result": {
+      "node": {
+        "id": "recommendation:career:cluster:ACADEMIC_RECOVERY",
+        "node_type": "recommendation",
+        "category": "recommendation",
+        "label": "Academic Recovery-aligned career cluster"
+      },
+      "target_category": "recommendation",
+      "matches": [
+        {
+          "id": "recommendation:career:exploration:ACADEMIC_RECOVERY",
+          "node_type": "recommendation",
+          "category": "recommendation",
+          "label": "Explore where academic recovery matters most",
+          "score": 1,
+          "shared_count": 1,
+          "shared_neighbors": [
+            {
+              "id": "construct:ACADEMIC_RECOVERY",
+              "node_type": "construct",
+              "category": "signal",
+              "label": "ACADEMIC_RECOVERY",
+              "degree": 15,
+              "is_hub": false
+            }
+          ],
+          "hub_only": false
+        },
+        {
+          "id": "recommendation:career:pathway:ACADEMIC_RECOVERY",
+          "node_type": "recommendation",
+          "category": "recommendation",
+          "label": "Academic Recovery growth pathway",
+          "score": 1,
+          "shared_count": 1,
+          "shared_neighbors": [
+            {
+              "id": "construct:ACADEMIC_RECOVERY",
+              "node_type": "construct",
+              "category": "signal",
+              "label": "ACADEMIC_RECOVERY",
+              "degree": 15,
+              "is_hub": false
+            }
+          ],
+          "hub_only": false
+        },
+        {
+          "id": "recommendation:development:career_readiness:ACADEMIC_RECOVERY",
+          "node_type": "recommendation",
+          "category": "recommendation",
+          "label": "Develop academic recovery (Career Readiness Development)",
+          "score": 1,
+          "shared_count": 1,
+          "shared_neighbors": [
+            {
+              "id": "construct:ACADEMIC_RECOVERY",
+              "node_type": "construct",
+              "category": "signal",
+              "label": "ACADEMIC_RECOVERY",
+              "degree": 15,
+              "is_hub": false
+            }
+          ],
+          "hub_only": false
+        },
+        {
+          "id": "recommendation:learning:certification:ACADEMIC_RECOVERY",
+          "node_type": "recommendation",
+          "category": "recommendation",
+          "label": "Academic Recovery credential",
+          "score": 1,
+          "shared_count": 1,
+          "shared_neighbors": [
+            {
+              "id": "construct:ACADEMIC_RECOVERY",
+              "node_type": "construct",
+              "category": "signal",
+              "label": "ACADEMIC_RECOVERY",
+              "degree": 15,
+              "is_hub": false
+            }
+          ],
+          "hub_only": false
+        },
+        {
+          "id": "recommendation:learning:course:ACADEMIC_RECOVERY",
+          "node_type": "recommendation",
+          "category": "recommendation",
+          "label": "Foundations of Academic Recovery",
+          "score": 1,
+          "shared_count": 1,
+          "shared_neighbors": [
+            {
+              "id": "construct:ACADEMIC_RECOVERY",
+              "node_type": "construct",
+              "category": "signal",
+              "label": "ACADEMIC_RECOVERY",
+              "degree": 15,
+              "is_hub": false
+            }
+          ],
+          "hub_only": false
+        }
+      ],
+      "candidates_considered": 10,
+      "truncated": false
+    }
+  }
+}

@@ -1,0 +1,3959 @@
+{
+  "student": {
+    "report_type": "student",
+    "session_id": "1cd9ca07-4659-42c4-83fd-229e5e8f21f2",
+    "generated_at": "2026-06-03T13:57:57.700Z",
+    "archetype": {
+      "key": "performance_anxiety",
+      "name": "Performance Anxiety & Pressure Response"
+    },
+    "concern_label": "Long-Term Career Anxiety",
+    "degraded": true,
+    "reason": "partial_chain",
+    "title": "Student Development Report",
+    "sections": [
+      {
+        "key": "strengths",
+        "title": "Strengths",
+        "items": [
+          {
+            "text": "Strong Decision Confidence",
+            "label": "Csi Positive Factors",
+            "meta": "CSI domain \"Decision Confidence\" scored 75 (≥ 65 → strength).",
+            "severity": null,
+            "self_trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal (positive)",
+                "summary": "Positive evidence: CSI domain \"Decision Confidence\" scored 75 (≥ 65 → strength)."
+              },
+              {
+                "step": 2,
+                "key": "signal_to_strength",
+                "label": "Signal → Strength",
+                "summary": "Strength surfaced via Csi Positive Factors (confidence 75%)."
+              }
+            ],
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal (positive)",
+                "summary": "Positive evidence: CSI domain \"Decision Confidence\" scored 75 (≥ 65 → strength)."
+              },
+              {
+                "step": 2,
+                "key": "signal_to_strength",
+                "label": "Signal → Strength",
+                "summary": "Strength surfaced via Csi Positive Factors (confidence 75%)."
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Strong Decision Making",
+            "label": "Csi Positive Factors",
+            "meta": "CSI domain \"Decision Making\" scored 75 (≥ 65 → strength).",
+            "severity": null,
+            "self_trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal (positive)",
+                "summary": "Positive evidence: CSI domain \"Decision Making\" scored 75 (≥ 65 → strength)."
+              },
+              {
+                "step": 2,
+                "key": "signal_to_strength",
+                "label": "Signal → Strength",
+                "summary": "Strength surfaced via Csi Positive Factors (confidence 75%)."
+              }
+            ],
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal (positive)",
+                "summary": "Positive evidence: CSI domain \"Decision Making\" scored 75 (≥ 65 → strength)."
+              },
+              {
+                "step": 2,
+                "key": "signal_to_strength",
+                "label": "Signal → Strength",
+                "summary": "Strength surfaced via Csi Positive Factors (confidence 75%)."
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Strong Direction Persistence",
+            "label": "Csi Positive Factors",
+            "meta": "CSI domain \"Direction Persistence\" scored 75 (≥ 65 → strength).",
+            "severity": null,
+            "self_trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal (positive)",
+                "summary": "Positive evidence: CSI domain \"Direction Persistence\" scored 75 (≥ 65 → strength)."
+              },
+              {
+                "step": 2,
+                "key": "signal_to_strength",
+                "label": "Signal → Strength",
+                "summary": "Strength surfaced via Csi Positive Factors (confidence 75%)."
+              }
+            ],
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal (positive)",
+                "summary": "Positive evidence: CSI domain \"Direction Persistence\" scored 75 (≥ 65 → strength)."
+              },
+              {
+                "step": 2,
+                "key": "signal_to_strength",
+                "label": "Signal → Strength",
+                "summary": "Strength surfaced via Csi Positive Factors (confidence 75%)."
+              }
+            ],
+            "traced": true
+          }
+        ],
+        "note": null,
+        "anchor": "response_to_signal"
+      },
+      {
+        "key": "growth_areas",
+        "title": "Growth Areas",
+        "items": [
+          {
+            "text": "I freeze up in interviews and forget everything I wanted to say.",
+            "label": null,
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "My heart races and my mind goes empty right before I have to present.",
+            "label": null,
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "I blank out the moment an exam starts, even when I studied hard.",
+            "label": null,
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "The night before a big test I can't sleep because I'm so worried about messing up.",
+            "label": null,
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          }
+        ],
+        "note": null,
+        "anchor": "capability_to_problem"
+      },
+      {
+        "key": "top_archetypes",
+        "title": "Top Archetypes",
+        "items": [
+          {
+            "text": "Performance Anxiety & Pressure Response",
+            "label": "Behavioural archetype",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              }
+            ],
+            "traced": true
+          }
+        ],
+        "note": null,
+        "anchor": "behavior_to_archetype"
+      },
+      {
+        "key": "emotional_indicators",
+        "title": "Emotional Indicators",
+        "items": [
+          {
+            "text": "Activation runtime: active (direct)",
+            "label": "Emotional Overload",
+            "meta": "Active",
+            "severity": "moderate",
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Activation runtime: active (direct)",
+            "label": "Placement Anxiety",
+            "meta": "Active",
+            "severity": "moderate",
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Activation runtime: active (direct)",
+            "label": "Career Confusion",
+            "meta": "Active",
+            "severity": "moderate",
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Activation runtime: active (direct)",
+            "label": "Social Withdrawal",
+            "meta": "Active",
+            "severity": "moderate",
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          }
+        ],
+        "note": null,
+        "anchor": "signal_to_concern"
+      },
+      {
+        "key": "immediate_actions",
+        "title": "Immediate Actions",
+        "items": [
+          {
+            "text": "Before the workday ends, write down each moment of panic during one high-pressure task and what set it off.",
+            "label": "First step",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Before the workday ends, write down each moment of panic during one high-pressure task and what set it off.",
+            "label": "Immediate Actions",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          }
+        ],
+        "note": null,
+        "anchor": "archetype_to_intervention"
+      },
+      {
+        "key": "seven_day_plan",
+        "title": "7-Day Plan",
+        "items": [
+          {
+            "text": "Each workday this week, log what triggers exam, interview, and presentation nerves.",
+            "label": "This week",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          }
+        ],
+        "note": null,
+        "anchor": "archetype_to_intervention"
+      },
+      {
+        "key": "development_roadmap",
+        "title": "Development Roadmap",
+        "items": [
+          {
+            "text": "Performance Anxiety & Pressure Response — professional: 6-stage growth pathway from immediate action to 90-day development.",
+            "label": "Where this leads",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Over the next 30 days at work, follow a short calm-down routine before every test, presentation, or meeting.",
+            "label": "This month",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Over the next quarter at work, build steady calm under pressure through weekly timed practice runs.",
+            "label": "This quarter",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Build a daily workday habit — a two-minute breathing reset before each high-pressure moment.",
+            "label": "Habit",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Practise this skill each week at work — rehearsing exams and presentations out loud until the nerves settle.",
+            "label": "Skill Building",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Over the next quarter at work, build steady calm under pressure through weekly timed practice runs.",
+            "label": "Ninety Day",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Each workday this week, log what triggers exam, interview, and presentation nerves.",
+            "label": "Seven Day",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Over the next 30 days at work, follow a short calm-down routine before every test, presentation, or meeting.",
+            "label": "Thirty Day",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          }
+        ],
+        "note": null,
+        "anchor": "archetype_to_intervention"
+      }
+    ],
+    "explainability": {
+      "total_statements": 23,
+      "traced_statements": 23,
+      "coverage": 1,
+      "fully_traceable": true,
+      "by_section": [
+        {
+          "key": "strengths",
+          "title": "Strengths",
+          "statements": 3,
+          "traced": 3,
+          "coverage": 1
+        },
+        {
+          "key": "growth_areas",
+          "title": "Growth Areas",
+          "statements": 4,
+          "traced": 4,
+          "coverage": 1
+        },
+        {
+          "key": "top_archetypes",
+          "title": "Top Archetypes",
+          "statements": 1,
+          "traced": 1,
+          "coverage": 1
+        },
+        {
+          "key": "emotional_indicators",
+          "title": "Emotional Indicators",
+          "statements": 4,
+          "traced": 4,
+          "coverage": 1
+        },
+        {
+          "key": "immediate_actions",
+          "title": "Immediate Actions",
+          "statements": 2,
+          "traced": 2,
+          "coverage": 1
+        },
+        {
+          "key": "seven_day_plan",
+          "title": "7-Day Plan",
+          "statements": 1,
+          "traced": 1,
+          "coverage": 1
+        },
+        {
+          "key": "development_roadmap",
+          "title": "Development Roadmap",
+          "statements": 8,
+          "traced": 8,
+          "coverage": 1
+        }
+      ],
+      "lineage": [
+        {
+          "step": 1,
+          "key": "response_to_signal",
+          "label": "Response → Signal",
+          "resolved": true,
+          "summary": "5 behavioural signals activated from the responses",
+          "data": {
+            "signals": [
+              {
+                "signal_key": "GENERAL_CONCERN",
+                "signal_type": "activated",
+                "lifecycle_state": "dominant",
+                "severity": "high",
+                "strength": 1,
+                "confidence": 0.95,
+                "evidence_count": 10,
+                "description": "Activation runtime: dominant (direct)"
+              },
+              {
+                "signal_key": "emotional_overload",
+                "signal_type": "activated",
+                "lifecycle_state": "active",
+                "severity": "moderate",
+                "strength": 0.6771,
+                "confidence": 0.92,
+                "evidence_count": 0,
+                "description": "Activation runtime: active (direct)"
+              },
+              {
+                "signal_key": "placement_anxiety",
+                "signal_type": "activated",
+                "lifecycle_state": "active",
+                "severity": "moderate",
+                "strength": 0.5646,
+                "confidence": 0.76,
+                "evidence_count": 0,
+                "description": "Activation runtime: active (direct)"
+              },
+              {
+                "signal_key": "career_confusion",
+                "signal_type": "activated",
+                "lifecycle_state": "active",
+                "severity": "moderate",
+                "strength": 0.5624,
+                "confidence": 0.76,
+                "evidence_count": 0,
+                "description": "Activation runtime: active (direct)"
+              },
+              {
+                "signal_key": "social_withdrawal",
+                "signal_type": "activated",
+                "lifecycle_state": "active",
+                "severity": "moderate",
+                "strength": 0.558,
+                "confidence": 0.75,
+                "evidence_count": 0,
+                "description": "Activation runtime: active (direct)"
+              }
+            ],
+            "total": 5
+          }
+        },
+        {
+          "step": 2,
+          "key": "signal_to_concern",
+          "label": "Signal → Concern",
+          "resolved": true,
+          "summary": "Signals point to \"Long-Term Career Anxiety\"",
+          "data": {
+            "concern_id": "CONCERN_COM_65",
+            "concern_label": "Long-Term Career Anxiety",
+            "domain": "Examination Stress & Emotional Regulation",
+            "concern_cluster": "Difficulty Managing Long-Term Career Anxiety",
+            "supporting_signal_count": 5,
+            "method": "master_pk",
+            "confidence": 1
+          }
+        },
+        {
+          "step": 3,
+          "key": "concern_to_capability",
+          "label": "Concern → Capability",
+          "resolved": false,
+          "summary": "No mapped capability for this concern",
+          "data": null
+        },
+        {
+          "step": 4,
+          "key": "capability_to_problem",
+          "label": "Capability → Problem",
+          "resolved": false,
+          "summary": "No mapped problem for this capability",
+          "data": null
+        },
+        {
+          "step": 5,
+          "key": "problem_to_behavior",
+          "label": "Problem → Behavior",
+          "resolved": true,
+          "summary": "3 observable behaviours",
+          "data": {
+            "behaviours": [
+              {
+                "behavior_statement": "worries excessively before {evaluation}",
+                "behavior_category": "Emotional"
+              },
+              {
+                "behavior_statement": "misses opportunities by not acting on them",
+                "behavior_category": "Career"
+              },
+              {
+                "behavior_statement": "cannot describe a clear next career step",
+                "behavior_category": "Career"
+              }
+            ]
+          }
+        },
+        {
+          "step": 6,
+          "key": "behavior_to_archetype",
+          "label": "Behavior → Archetype",
+          "resolved": true,
+          "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\"",
+          "data": {
+            "archetype_key": "performance_anxiety",
+            "archetype_name": "Performance Anxiety & Pressure Response"
+          }
+        },
+        {
+          "step": 7,
+          "key": "archetype_to_intervention",
+          "label": "Archetype → Intervention",
+          "resolved": true,
+          "summary": "6 interventions + action plan",
+          "data": {
+            "interventions": [
+              {
+                "type": "immediate_actions",
+                "text": "Before the workday ends, write down each moment of panic during one high-pressure task and what set it off."
+              },
+              {
+                "type": "seven_day",
+                "text": "Each workday this week, log what triggers exam, interview, and presentation nerves."
+              },
+              {
+                "type": "thirty_day",
+                "text": "Over the next 30 days at work, follow a short calm-down routine before every test, presentation, or meeting."
+              },
+              {
+                "type": "ninety_day",
+                "text": "Over the next quarter at work, build steady calm under pressure through weekly timed practice runs."
+              },
+              {
+                "type": "habit",
+                "text": "Build a daily workday habit — a two-minute breathing reset before each high-pressure moment."
+              },
+              {
+                "type": "skill_building",
+                "text": "Practise this skill each week at work — rehearsing exams and presentations out loud until the nerves settle."
+              }
+            ],
+            "action_plan": {
+              "plan_title": "Performance Anxiety & Pressure Response — professional action plan",
+              "step_immediate": "Before the workday ends, write down each moment of panic during one high-pressure task and what set it off.",
+              "step_week": "Each workday this week, log what triggers exam, interview, and presentation nerves.",
+              "step_month": "Over the next 30 days at work, follow a short calm-down routine before every test, presentation, or meeting.",
+              "step_quarter": "Over the next quarter at work, build steady calm under pressure through weekly timed practice runs.",
+              "total_days": 90
+            }
+          }
+        }
+      ]
+    },
+    "readiness": {
+      "score": 90,
+      "band": "partial",
+      "components": {
+        "explainability": 1,
+        "section_fill": 1,
+        "data_completeness": 0.5,
+        "stakeholder_specificity": 1
+      },
+      "note": "Report is usable; surfaced statements are fully traceable to the resolved depth, but the lineage chain is partially resolved (2 hop(s) unresolved)."
+    }
+  },
+  "parent": {
+    "report_type": "parent",
+    "session_id": "1cd9ca07-4659-42c4-83fd-229e5e8f21f2",
+    "generated_at": "2026-06-03T13:57:57.723Z",
+    "archetype": {
+      "key": "performance_anxiety",
+      "name": "Performance Anxiety & Pressure Response"
+    },
+    "concern_label": "Long-Term Career Anxiety",
+    "degraded": true,
+    "reason": "partial_chain",
+    "title": "Parent Guidance Report",
+    "sections": [
+      {
+        "key": "child_strengths",
+        "title": "Child Strengths",
+        "items": [
+          {
+            "text": "Strong Decision Confidence",
+            "label": "Csi Positive Factors",
+            "meta": "CSI domain \"Decision Confidence\" scored 75 (≥ 65 → strength).",
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Strong Decision Making",
+            "label": "Csi Positive Factors",
+            "meta": "CSI domain \"Decision Making\" scored 75 (≥ 65 → strength).",
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Strong Direction Persistence",
+            "label": "Csi Positive Factors",
+            "meta": "CSI domain \"Direction Persistence\" scored 75 (≥ 65 → strength).",
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              }
+            ],
+            "traced": true
+          }
+        ],
+        "note": null,
+        "anchor": "response_to_signal"
+      },
+      {
+        "key": "development_opportunities",
+        "title": "Development Opportunities",
+        "items": [
+          {
+            "text": "Long-Term Career Anxiety",
+            "label": "Focus area",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "I freeze up in interviews and forget everything I wanted to say.",
+            "label": null,
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "My heart races and my mind goes empty right before I have to present.",
+            "label": null,
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "I blank out the moment an exam starts, even when I studied hard.",
+            "label": null,
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "The night before a big test I can't sleep because I'm so worried about messing up.",
+            "label": null,
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          }
+        ],
+        "note": null,
+        "anchor": "capability_to_problem"
+      },
+      {
+        "key": "home_support_actions",
+        "title": "Home Support Actions",
+        "items": [
+          {
+            "text": "Before the workday ends, write down each moment of panic during one high-pressure task and what set it off.",
+            "label": "Start here",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Before the workday ends, write down each moment of panic during one high-pressure task and what set it off.",
+            "label": "Immediate Actions",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Build a daily workday habit — a two-minute breathing reset before each high-pressure moment.",
+            "label": "Habit",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Practise this skill each week at work — rehearsing exams and presentations out loud until the nerves settle.",
+            "label": "Skill Building",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          }
+        ],
+        "note": null,
+        "anchor": "archetype_to_intervention"
+      },
+      {
+        "key": "suggested_conversations",
+        "title": "Suggested Conversations",
+        "items": [
+          {
+            "text": "Explore together: what is test and exam anxiety at work?",
+            "label": "Informational",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Explore together: why do I freeze up and go blank in exams at work?",
+            "label": "Diagnostic",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Explore together: at work I feel panicky and blank before every test",
+            "label": "Emotional",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Explore together: how do I stay calm and focused in exams at work?",
+            "label": "Help Seeking",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Explore together: how to stay calm in future exams and interviews as my career grows",
+            "label": "Future Planning",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Ask about: I freeze up in interviews and forget everything I wanted to say.",
+            "label": "Conversation starter",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Ask about: My heart races and my mind goes empty right before I have to present.",
+            "label": "Conversation starter",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Ask about: I blank out the moment an exam starts, even when I studied hard.",
+            "label": "Conversation starter",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Ask about: The night before a big test I can't sleep because I'm so worried about messing up.",
+            "label": "Conversation starter",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              }
+            ],
+            "traced": true
+          }
+        ],
+        "note": null,
+        "anchor": "problem_to_behavior"
+      },
+      {
+        "key": "parent_guidance",
+        "title": "Parent Guidance",
+        "items": [
+          {
+            "text": "Over the next 30 days at work, follow a short calm-down routine before every test, presentation, or meeting.",
+            "label": "This month",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Over the next quarter at work, build steady calm under pressure through weekly timed practice runs.",
+            "label": "This quarter",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Over the next quarter at work, build steady calm under pressure through weekly timed practice runs.",
+            "label": "Ninety Day",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Each workday this week, log what triggers exam, interview, and presentation nerves.",
+            "label": "Seven Day",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Over the next 30 days at work, follow a short calm-down routine before every test, presentation, or meeting.",
+            "label": "Thirty Day",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Performance Anxiety & Pressure Response — professional: 6-stage growth pathway from immediate action to 90-day development.",
+            "label": "Longer-term pathway",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          }
+        ],
+        "note": null,
+        "anchor": "archetype_to_intervention"
+      }
+    ],
+    "explainability": {
+      "total_statements": 27,
+      "traced_statements": 27,
+      "coverage": 1,
+      "fully_traceable": true,
+      "by_section": [
+        {
+          "key": "child_strengths",
+          "title": "Child Strengths",
+          "statements": 3,
+          "traced": 3,
+          "coverage": 1
+        },
+        {
+          "key": "development_opportunities",
+          "title": "Development Opportunities",
+          "statements": 5,
+          "traced": 5,
+          "coverage": 1
+        },
+        {
+          "key": "home_support_actions",
+          "title": "Home Support Actions",
+          "statements": 4,
+          "traced": 4,
+          "coverage": 1
+        },
+        {
+          "key": "suggested_conversations",
+          "title": "Suggested Conversations",
+          "statements": 9,
+          "traced": 9,
+          "coverage": 1
+        },
+        {
+          "key": "parent_guidance",
+          "title": "Parent Guidance",
+          "statements": 6,
+          "traced": 6,
+          "coverage": 1
+        }
+      ],
+      "lineage": [
+        {
+          "step": 1,
+          "key": "response_to_signal",
+          "label": "Response → Signal",
+          "resolved": true,
+          "summary": "5 behavioural signals activated from the responses",
+          "data": {
+            "signals": [
+              {
+                "signal_key": "GENERAL_CONCERN",
+                "signal_type": "activated",
+                "lifecycle_state": "dominant",
+                "severity": "high",
+                "strength": 1,
+                "confidence": 0.95,
+                "evidence_count": 10,
+                "description": "Activation runtime: dominant (direct)"
+              },
+              {
+                "signal_key": "emotional_overload",
+                "signal_type": "activated",
+                "lifecycle_state": "active",
+                "severity": "moderate",
+                "strength": 0.6771,
+                "confidence": 0.92,
+                "evidence_count": 0,
+                "description": "Activation runtime: active (direct)"
+              },
+              {
+                "signal_key": "placement_anxiety",
+                "signal_type": "activated",
+                "lifecycle_state": "active",
+                "severity": "moderate",
+                "strength": 0.5646,
+                "confidence": 0.76,
+                "evidence_count": 0,
+                "description": "Activation runtime: active (direct)"
+              },
+              {
+                "signal_key": "career_confusion",
+                "signal_type": "activated",
+                "lifecycle_state": "active",
+                "severity": "moderate",
+                "strength": 0.5624,
+                "confidence": 0.76,
+                "evidence_count": 0,
+                "description": "Activation runtime: active (direct)"
+              },
+              {
+                "signal_key": "social_withdrawal",
+                "signal_type": "activated",
+                "lifecycle_state": "active",
+                "severity": "moderate",
+                "strength": 0.558,
+                "confidence": 0.75,
+                "evidence_count": 0,
+                "description": "Activation runtime: active (direct)"
+              }
+            ],
+            "total": 5
+          }
+        },
+        {
+          "step": 2,
+          "key": "signal_to_concern",
+          "label": "Signal → Concern",
+          "resolved": true,
+          "summary": "Signals point to \"Long-Term Career Anxiety\"",
+          "data": {
+            "concern_id": "CONCERN_COM_65",
+            "concern_label": "Long-Term Career Anxiety",
+            "domain": "Examination Stress & Emotional Regulation",
+            "concern_cluster": "Difficulty Managing Long-Term Career Anxiety",
+            "supporting_signal_count": 5,
+            "method": "master_pk",
+            "confidence": 1
+          }
+        },
+        {
+          "step": 3,
+          "key": "concern_to_capability",
+          "label": "Concern → Capability",
+          "resolved": false,
+          "summary": "No mapped capability for this concern",
+          "data": null
+        },
+        {
+          "step": 4,
+          "key": "capability_to_problem",
+          "label": "Capability → Problem",
+          "resolved": false,
+          "summary": "No mapped problem for this capability",
+          "data": null
+        },
+        {
+          "step": 5,
+          "key": "problem_to_behavior",
+          "label": "Problem → Behavior",
+          "resolved": true,
+          "summary": "3 observable behaviours",
+          "data": {
+            "behaviours": [
+              {
+                "behavior_statement": "worries excessively before {evaluation}",
+                "behavior_category": "Emotional"
+              },
+              {
+                "behavior_statement": "misses opportunities by not acting on them",
+                "behavior_category": "Career"
+              },
+              {
+                "behavior_statement": "cannot describe a clear next career step",
+                "behavior_category": "Career"
+              }
+            ]
+          }
+        },
+        {
+          "step": 6,
+          "key": "behavior_to_archetype",
+          "label": "Behavior → Archetype",
+          "resolved": true,
+          "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\"",
+          "data": {
+            "archetype_key": "performance_anxiety",
+            "archetype_name": "Performance Anxiety & Pressure Response"
+          }
+        },
+        {
+          "step": 7,
+          "key": "archetype_to_intervention",
+          "label": "Archetype → Intervention",
+          "resolved": true,
+          "summary": "6 interventions + action plan",
+          "data": {
+            "interventions": [
+              {
+                "type": "immediate_actions",
+                "text": "Before the workday ends, write down each moment of panic during one high-pressure task and what set it off."
+              },
+              {
+                "type": "seven_day",
+                "text": "Each workday this week, log what triggers exam, interview, and presentation nerves."
+              },
+              {
+                "type": "thirty_day",
+                "text": "Over the next 30 days at work, follow a short calm-down routine before every test, presentation, or meeting."
+              },
+              {
+                "type": "ninety_day",
+                "text": "Over the next quarter at work, build steady calm under pressure through weekly timed practice runs."
+              },
+              {
+                "type": "habit",
+                "text": "Build a daily workday habit — a two-minute breathing reset before each high-pressure moment."
+              },
+              {
+                "type": "skill_building",
+                "text": "Practise this skill each week at work — rehearsing exams and presentations out loud until the nerves settle."
+              }
+            ],
+            "action_plan": {
+              "plan_title": "Performance Anxiety & Pressure Response — professional action plan",
+              "step_immediate": "Before the workday ends, write down each moment of panic during one high-pressure task and what set it off.",
+              "step_week": "Each workday this week, log what triggers exam, interview, and presentation nerves.",
+              "step_month": "Over the next 30 days at work, follow a short calm-down routine before every test, presentation, or meeting.",
+              "step_quarter": "Over the next quarter at work, build steady calm under pressure through weekly timed practice runs.",
+              "total_days": 90
+            }
+          }
+        }
+      ]
+    },
+    "readiness": {
+      "score": 90,
+      "band": "partial",
+      "components": {
+        "explainability": 1,
+        "section_fill": 1,
+        "data_completeness": 0.5,
+        "stakeholder_specificity": 1
+      },
+      "note": "Report is usable; surfaced statements are fully traceable to the resolved depth, but the lineage chain is partially resolved (2 hop(s) unresolved)."
+    }
+  },
+  "counselor": {
+    "report_type": "counselor",
+    "session_id": "1cd9ca07-4659-42c4-83fd-229e5e8f21f2",
+    "generated_at": "2026-06-03T13:57:57.733Z",
+    "archetype": {
+      "key": "performance_anxiety",
+      "name": "Performance Anxiety & Pressure Response"
+    },
+    "concern_label": "Long-Term Career Anxiety",
+    "degraded": true,
+    "reason": "partial_chain",
+    "title": "Counselor Intelligence Report",
+    "sections": [
+      {
+        "key": "priority_risks",
+        "title": "Priority Risks",
+        "items": [
+          {
+            "text": "Activation runtime: active (direct)",
+            "label": "Emotional Overload",
+            "meta": "Active · confidence 92%",
+            "severity": "moderate",
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Activation runtime: active (direct)",
+            "label": "Placement Anxiety",
+            "meta": "Active · confidence 76%",
+            "severity": "moderate",
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Activation runtime: active (direct)",
+            "label": "Career Confusion",
+            "meta": "Active · confidence 76%",
+            "severity": "moderate",
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Activation runtime: active (direct)",
+            "label": "Social Withdrawal",
+            "meta": "Active · confidence 75%",
+            "severity": "moderate",
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          }
+        ],
+        "note": null,
+        "anchor": "signal_to_concern"
+      },
+      {
+        "key": "priority_interventions",
+        "title": "Priority Interventions",
+        "items": [
+          {
+            "text": "Before the workday ends, write down each moment of panic during one high-pressure task and what set it off.",
+            "label": "Immediate Actions",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Build a daily workday habit — a two-minute breathing reset before each high-pressure moment.",
+            "label": "Habit",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Practise this skill each week at work — rehearsing exams and presentations out loud until the nerves settle.",
+            "label": "Skill Building",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Over the next quarter at work, build steady calm under pressure through weekly timed practice runs.",
+            "label": "Ninety Day",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Each workday this week, log what triggers exam, interview, and presentation nerves.",
+            "label": "Seven Day",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Over the next 30 days at work, follow a short calm-down routine before every test, presentation, or meeting.",
+            "label": "Thirty Day",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          }
+        ],
+        "note": null,
+        "anchor": "archetype_to_intervention"
+      },
+      {
+        "key": "follow_up_recommendations",
+        "title": "Follow-Up Recommendations",
+        "items": [
+          {
+            "text": "Each workday this week, log what triggers exam, interview, and presentation nerves.",
+            "label": "Within a week",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Over the next 30 days at work, follow a short calm-down routine before every test, presentation, or meeting.",
+            "label": "Within a month",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Over the next quarter at work, build steady calm under pressure through weekly timed practice runs.",
+            "label": "Within a quarter",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "what is test and exam anxiety at work?",
+            "label": "Informational",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "why do I freeze up and go blank in exams at work?",
+            "label": "Diagnostic",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "at work I feel panicky and blank before every test",
+            "label": "Emotional",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "how do I stay calm and focused in exams at work?",
+            "label": "Help Seeking",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "how to stay calm in future exams and interviews as my career grows",
+            "label": "Future Planning",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          }
+        ],
+        "note": null,
+        "anchor": "archetype_to_intervention"
+      },
+      {
+        "key": "monitoring_guidance",
+        "title": "Monitoring Guidance",
+        "items": [
+          {
+            "text": "Review window: 90 days",
+            "label": "Cadence",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "worries excessively before {evaluation}",
+            "label": "Emotional",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "misses opportunities by not acting on them",
+            "label": "Career",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "cannot describe a clear next career step",
+            "label": "Career",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Re-measure: Emotional Overload",
+            "label": "Signal to track",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Re-measure: Placement Anxiety",
+            "label": "Signal to track",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Re-measure: Career Confusion",
+            "label": "Signal to track",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Re-measure: Social Withdrawal",
+            "label": "Signal to track",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              }
+            ],
+            "traced": true
+          }
+        ],
+        "note": null,
+        "anchor": "problem_to_behavior"
+      }
+    ],
+    "explainability": {
+      "total_statements": 26,
+      "traced_statements": 26,
+      "coverage": 1,
+      "fully_traceable": true,
+      "by_section": [
+        {
+          "key": "priority_risks",
+          "title": "Priority Risks",
+          "statements": 4,
+          "traced": 4,
+          "coverage": 1
+        },
+        {
+          "key": "priority_interventions",
+          "title": "Priority Interventions",
+          "statements": 6,
+          "traced": 6,
+          "coverage": 1
+        },
+        {
+          "key": "follow_up_recommendations",
+          "title": "Follow-Up Recommendations",
+          "statements": 8,
+          "traced": 8,
+          "coverage": 1
+        },
+        {
+          "key": "monitoring_guidance",
+          "title": "Monitoring Guidance",
+          "statements": 8,
+          "traced": 8,
+          "coverage": 1
+        }
+      ],
+      "lineage": [
+        {
+          "step": 1,
+          "key": "response_to_signal",
+          "label": "Response → Signal",
+          "resolved": true,
+          "summary": "5 behavioural signals activated from the responses",
+          "data": {
+            "signals": [
+              {
+                "signal_key": "GENERAL_CONCERN",
+                "signal_type": "activated",
+                "lifecycle_state": "dominant",
+                "severity": "high",
+                "strength": 1,
+                "confidence": 0.95,
+                "evidence_count": 10,
+                "description": "Activation runtime: dominant (direct)"
+              },
+              {
+                "signal_key": "emotional_overload",
+                "signal_type": "activated",
+                "lifecycle_state": "active",
+                "severity": "moderate",
+                "strength": 0.6771,
+                "confidence": 0.92,
+                "evidence_count": 0,
+                "description": "Activation runtime: active (direct)"
+              },
+              {
+                "signal_key": "placement_anxiety",
+                "signal_type": "activated",
+                "lifecycle_state": "active",
+                "severity": "moderate",
+                "strength": 0.5646,
+                "confidence": 0.76,
+                "evidence_count": 0,
+                "description": "Activation runtime: active (direct)"
+              },
+              {
+                "signal_key": "career_confusion",
+                "signal_type": "activated",
+                "lifecycle_state": "active",
+                "severity": "moderate",
+                "strength": 0.5624,
+                "confidence": 0.76,
+                "evidence_count": 0,
+                "description": "Activation runtime: active (direct)"
+              },
+              {
+                "signal_key": "social_withdrawal",
+                "signal_type": "activated",
+                "lifecycle_state": "active",
+                "severity": "moderate",
+                "strength": 0.558,
+                "confidence": 0.75,
+                "evidence_count": 0,
+                "description": "Activation runtime: active (direct)"
+              }
+            ],
+            "total": 5
+          }
+        },
+        {
+          "step": 2,
+          "key": "signal_to_concern",
+          "label": "Signal → Concern",
+          "resolved": true,
+          "summary": "Signals point to \"Long-Term Career Anxiety\"",
+          "data": {
+            "concern_id": "CONCERN_COM_65",
+            "concern_label": "Long-Term Career Anxiety",
+            "domain": "Examination Stress & Emotional Regulation",
+            "concern_cluster": "Difficulty Managing Long-Term Career Anxiety",
+            "supporting_signal_count": 5,
+            "method": "master_pk",
+            "confidence": 1
+          }
+        },
+        {
+          "step": 3,
+          "key": "concern_to_capability",
+          "label": "Concern → Capability",
+          "resolved": false,
+          "summary": "No mapped capability for this concern",
+          "data": null
+        },
+        {
+          "step": 4,
+          "key": "capability_to_problem",
+          "label": "Capability → Problem",
+          "resolved": false,
+          "summary": "No mapped problem for this capability",
+          "data": null
+        },
+        {
+          "step": 5,
+          "key": "problem_to_behavior",
+          "label": "Problem → Behavior",
+          "resolved": true,
+          "summary": "3 observable behaviours",
+          "data": {
+            "behaviours": [
+              {
+                "behavior_statement": "worries excessively before {evaluation}",
+                "behavior_category": "Emotional"
+              },
+              {
+                "behavior_statement": "misses opportunities by not acting on them",
+                "behavior_category": "Career"
+              },
+              {
+                "behavior_statement": "cannot describe a clear next career step",
+                "behavior_category": "Career"
+              }
+            ]
+          }
+        },
+        {
+          "step": 6,
+          "key": "behavior_to_archetype",
+          "label": "Behavior → Archetype",
+          "resolved": true,
+          "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\"",
+          "data": {
+            "archetype_key": "performance_anxiety",
+            "archetype_name": "Performance Anxiety & Pressure Response"
+          }
+        },
+        {
+          "step": 7,
+          "key": "archetype_to_intervention",
+          "label": "Archetype → Intervention",
+          "resolved": true,
+          "summary": "6 interventions + action plan",
+          "data": {
+            "interventions": [
+              {
+                "type": "immediate_actions",
+                "text": "Before the workday ends, write down each moment of panic during one high-pressure task and what set it off."
+              },
+              {
+                "type": "seven_day",
+                "text": "Each workday this week, log what triggers exam, interview, and presentation nerves."
+              },
+              {
+                "type": "thirty_day",
+                "text": "Over the next 30 days at work, follow a short calm-down routine before every test, presentation, or meeting."
+              },
+              {
+                "type": "ninety_day",
+                "text": "Over the next quarter at work, build steady calm under pressure through weekly timed practice runs."
+              },
+              {
+                "type": "habit",
+                "text": "Build a daily workday habit — a two-minute breathing reset before each high-pressure moment."
+              },
+              {
+                "type": "skill_building",
+                "text": "Practise this skill each week at work — rehearsing exams and presentations out loud until the nerves settle."
+              }
+            ],
+            "action_plan": {
+              "plan_title": "Performance Anxiety & Pressure Response — professional action plan",
+              "step_immediate": "Before the workday ends, write down each moment of panic during one high-pressure task and what set it off.",
+              "step_week": "Each workday this week, log what triggers exam, interview, and presentation nerves.",
+              "step_month": "Over the next 30 days at work, follow a short calm-down routine before every test, presentation, or meeting.",
+              "step_quarter": "Over the next quarter at work, build steady calm under pressure through weekly timed practice runs.",
+              "total_days": 90
+            }
+          }
+        }
+      ]
+    },
+    "readiness": {
+      "score": 90,
+      "band": "partial",
+      "components": {
+        "explainability": 1,
+        "section_fill": 1,
+        "data_completeness": 0.5,
+        "stakeholder_specificity": 1
+      },
+      "note": "Report is usable; surfaced statements are fully traceable to the resolved depth, but the lineage chain is partially resolved (2 hop(s) unresolved)."
+    }
+  },
+  "institution": {
+    "report_type": "institution",
+    "generated_at": "2026-06-03T13:57:57.830Z",
+    "cohort_size": 6,
+    "session_ids": [
+      "11111111-1111-1111-1111-111111111111",
+      "1cd9ca07-4659-42c4-83fd-229e5e8f21f2",
+      "4349237c-ce0b-41c5-9206-647c2654b26e",
+      "4c9b6c0b-4907-48e3-8c56-95a65e623006",
+      "a0924499-24bf-43be-adbe-1c6f00a5dd9e",
+      "d0f54fc4-7a08-4747-9ccb-422e86cc93b9"
+    ],
+    "degraded": true,
+    "reason": "partial_cohort_resolution",
+    "title": "Institution Cohort Report",
+    "sections": [
+      {
+        "key": "cohort_strengths",
+        "title": "Cohort Strengths",
+        "items": [
+          {
+            "text": "Strong Decision Confidence",
+            "label": "1 of 6",
+            "meta": "CSI domain \"Decision Confidence\" scored 75 (≥ 65 → strength).",
+            "severity": null,
+            "self_trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal (positive)",
+                "summary": "Present in 1 of 6 cohort sessions."
+              }
+            ],
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal (positive)",
+                "summary": "Present in 1 of 6 cohort sessions."
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Strong Decision Making",
+            "label": "1 of 6",
+            "meta": "CSI domain \"Decision Making\" scored 75 (≥ 65 → strength).",
+            "severity": null,
+            "self_trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal (positive)",
+                "summary": "Present in 1 of 6 cohort sessions."
+              }
+            ],
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal (positive)",
+                "summary": "Present in 1 of 6 cohort sessions."
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Strong Direction Persistence",
+            "label": "1 of 6",
+            "meta": "CSI domain \"Direction Persistence\" scored 75 (≥ 65 → strength).",
+            "severity": null,
+            "self_trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal (positive)",
+                "summary": "Present in 1 of 6 cohort sessions."
+              }
+            ],
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal (positive)",
+                "summary": "Present in 1 of 6 cohort sessions."
+              }
+            ],
+            "traced": true
+          }
+        ],
+        "note": null,
+        "anchor": "response_to_signal"
+      },
+      {
+        "key": "cohort_risks",
+        "title": "Cohort Risks",
+        "items": [
+          {
+            "text": "Avoidance Pattern",
+            "label": "1 of 6",
+            "meta": "moderate severity",
+            "severity": "moderate",
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Career Confusion",
+            "label": "1 of 6",
+            "meta": "moderate severity",
+            "severity": "moderate",
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Cognitive Blocking",
+            "label": "1 of 6",
+            "meta": "moderate severity",
+            "severity": "moderate",
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Emotional Overload",
+            "label": "1 of 6",
+            "meta": "moderate severity",
+            "severity": "moderate",
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Placement Anxiety",
+            "label": "1 of 6",
+            "meta": "moderate severity",
+            "severity": "moderate",
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Social Withdrawal",
+            "label": "1 of 6",
+            "meta": "moderate severity",
+            "severity": "moderate",
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              }
+            ],
+            "traced": true
+          }
+        ],
+        "note": null,
+        "anchor": "signal_to_concern"
+      },
+      {
+        "key": "archetype_distribution",
+        "title": "Archetype Distribution",
+        "items": [
+          {
+            "text": "Performance Anxiety & Pressure Response",
+            "label": "4 of 6 (67%)",
+            "meta": null,
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              }
+            ],
+            "traced": true
+          }
+        ],
+        "note": null,
+        "anchor": "behavior_to_archetype"
+      },
+      {
+        "key": "intervention_opportunities",
+        "title": "Intervention Opportunities",
+        "items": [
+          {
+            "text": "Habit",
+            "label": "4 of 6",
+            "meta": "Build a daily workday habit — a two-minute breathing reset before each high-pressure moment.",
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Immediate Actions",
+            "label": "4 of 6",
+            "meta": "Before the workday ends, write down each moment of panic during one high-pressure task and what set it off.",
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Ninety Day",
+            "label": "4 of 6",
+            "meta": "Over the next quarter at work, build steady calm under pressure through weekly timed practice runs.",
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Seven Day",
+            "label": "4 of 6",
+            "meta": "Each workday this week, log what triggers exam, interview, and presentation nerves.",
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Skill Building",
+            "label": "4 of 6",
+            "meta": "Practise this skill each week at work — rehearsing exams and presentations out loud until the nerves settle.",
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          },
+          {
+            "text": "Thirty Day",
+            "label": "4 of 6",
+            "meta": "Over the next 30 days at work, follow a short calm-down routine before every test, presentation, or meeting.",
+            "severity": null,
+            "trace": [
+              {
+                "step": 1,
+                "key": "response_to_signal",
+                "label": "Response → Signal",
+                "summary": "5 behavioural signals activated from the responses"
+              },
+              {
+                "step": 2,
+                "key": "signal_to_concern",
+                "label": "Signal → Concern",
+                "summary": "Signals point to \"Long-Term Career Anxiety\""
+              },
+              {
+                "step": 5,
+                "key": "problem_to_behavior",
+                "label": "Problem → Behavior",
+                "summary": "3 observable behaviours"
+              },
+              {
+                "step": 6,
+                "key": "behavior_to_archetype",
+                "label": "Behavior → Archetype",
+                "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\""
+              },
+              {
+                "step": 7,
+                "key": "archetype_to_intervention",
+                "label": "Archetype → Intervention",
+                "summary": "6 interventions + action plan"
+              }
+            ],
+            "traced": true
+          }
+        ],
+        "note": null,
+        "anchor": "archetype_to_intervention"
+      }
+    ],
+    "explainability": {
+      "total_statements": 16,
+      "traced_statements": 16,
+      "coverage": 1,
+      "fully_traceable": true,
+      "by_section": [
+        {
+          "key": "cohort_strengths",
+          "title": "Cohort Strengths",
+          "statements": 3,
+          "traced": 3,
+          "coverage": 1
+        },
+        {
+          "key": "cohort_risks",
+          "title": "Cohort Risks",
+          "statements": 6,
+          "traced": 6,
+          "coverage": 1
+        },
+        {
+          "key": "archetype_distribution",
+          "title": "Archetype Distribution",
+          "statements": 1,
+          "traced": 1,
+          "coverage": 1
+        },
+        {
+          "key": "intervention_opportunities",
+          "title": "Intervention Opportunities",
+          "statements": 6,
+          "traced": 6,
+          "coverage": 1
+        }
+      ],
+      "lineage": [
+        {
+          "step": 1,
+          "key": "response_to_signal",
+          "label": "Response → Signal",
+          "resolved": true,
+          "summary": "5 behavioural signals activated from the responses",
+          "data": {
+            "signals": [
+              {
+                "signal_key": "GENERAL_CONCERN",
+                "signal_type": "activated",
+                "lifecycle_state": "dominant",
+                "severity": "high",
+                "strength": 1,
+                "confidence": 0.95,
+                "evidence_count": 10,
+                "description": "Activation runtime: dominant (direct)"
+              },
+              {
+                "signal_key": "emotional_overload",
+                "signal_type": "activated",
+                "lifecycle_state": "active",
+                "severity": "moderate",
+                "strength": 0.6771,
+                "confidence": 0.92,
+                "evidence_count": 0,
+                "description": "Activation runtime: active (direct)"
+              },
+              {
+                "signal_key": "placement_anxiety",
+                "signal_type": "activated",
+                "lifecycle_state": "active",
+                "severity": "moderate",
+                "strength": 0.5646,
+                "confidence": 0.76,
+                "evidence_count": 0,
+                "description": "Activation runtime: active (direct)"
+              },
+              {
+                "signal_key": "career_confusion",
+                "signal_type": "activated",
+                "lifecycle_state": "active",
+                "severity": "moderate",
+                "strength": 0.5624,
+                "confidence": 0.76,
+                "evidence_count": 0,
+                "description": "Activation runtime: active (direct)"
+              },
+              {
+                "signal_key": "social_withdrawal",
+                "signal_type": "activated",
+                "lifecycle_state": "active",
+                "severity": "moderate",
+                "strength": 0.558,
+                "confidence": 0.75,
+                "evidence_count": 0,
+                "description": "Activation runtime: active (direct)"
+              }
+            ],
+            "total": 5
+          }
+        },
+        {
+          "step": 2,
+          "key": "signal_to_concern",
+          "label": "Signal → Concern",
+          "resolved": true,
+          "summary": "Signals point to \"Long-Term Career Anxiety\"",
+          "data": {
+            "concern_id": "CONCERN_COM_65",
+            "concern_label": "Long-Term Career Anxiety",
+            "domain": "Examination Stress & Emotional Regulation",
+            "concern_cluster": "Difficulty Managing Long-Term Career Anxiety",
+            "supporting_signal_count": 5,
+            "method": "master_pk",
+            "confidence": 1
+          }
+        },
+        {
+          "step": 3,
+          "key": "concern_to_capability",
+          "label": "Concern → Capability",
+          "resolved": false,
+          "summary": "No mapped capability for this concern",
+          "data": null
+        },
+        {
+          "step": 4,
+          "key": "capability_to_problem",
+          "label": "Capability → Problem",
+          "resolved": false,
+          "summary": "No mapped problem for this capability",
+          "data": null
+        },
+        {
+          "step": 5,
+          "key": "problem_to_behavior",
+          "label": "Problem → Behavior",
+          "resolved": true,
+          "summary": "3 observable behaviours",
+          "data": {
+            "behaviours": [
+              {
+                "behavior_statement": "worries excessively before {evaluation}",
+                "behavior_category": "Emotional"
+              },
+              {
+                "behavior_statement": "misses opportunities by not acting on them",
+                "behavior_category": "Career"
+              },
+              {
+                "behavior_statement": "cannot describe a clear next career step",
+                "behavior_category": "Career"
+              }
+            ]
+          }
+        },
+        {
+          "step": 6,
+          "key": "behavior_to_archetype",
+          "label": "Behavior → Archetype",
+          "resolved": true,
+          "summary": "Behavioural archetype: \"Performance Anxiety & Pressure Response\"",
+          "data": {
+            "archetype_key": "performance_anxiety",
+            "archetype_name": "Performance Anxiety & Pressure Response"
+          }
+        },
+        {
+          "step": 7,
+          "key": "archetype_to_intervention",
+          "label": "Archetype → Intervention",
+          "resolved": true,
+          "summary": "6 interventions + action plan",
+          "data": {
+            "interventions": [
+              {
+                "type": "immediate_actions",
+                "text": "Before the workday ends, write down each moment of panic during one high-pressure task and what set it off."
+              },
+              {
+                "type": "seven_day",
+                "text": "Each workday this week, log what triggers exam, interview, and presentation nerves."
+              },
+              {
+                "type": "thirty_day",
+                "text": "Over the next 30 days at work, follow a short calm-down routine before every test, presentation, or meeting."
+              },
+              {
+                "type": "ninety_day",
+                "text": "Over the next quarter at work, build steady calm under pressure through weekly timed practice runs."
+              },
+              {
+                "type": "habit",
+                "text": "Build a daily workday habit — a two-minute breathing reset before each high-pressure moment."
+              },
+              {
+                "type": "skill_building",
+                "text": "Practise this skill each week at work — rehearsing exams and presentations out loud until the nerves settle."
+              }
+            ],
+            "action_plan": {
+              "plan_title": "Performance Anxiety & Pressure Response — professional action plan",
+              "step_immediate": "Before the workday ends, write down each moment of panic during one high-pressure task and what set it off.",
+              "step_week": "Each workday this week, log what triggers exam, interview, and presentation nerves.",
+              "step_month": "Over the next 30 days at work, follow a short calm-down routine before every test, presentation, or meeting.",
+              "step_quarter": "Over the next quarter at work, build steady calm under pressure through weekly timed practice runs.",
+              "total_days": 90
+            }
+          }
+        }
+      ]
+    },
+    "readiness": {
+      "score": 90,
+      "band": "partial",
+      "components": {
+        "explainability": 1,
+        "section_fill": 1,
+        "data_completeness": 0.5,
+        "stakeholder_specificity": 1
+      },
+      "note": "Report is usable; surfaced statements are fully traceable to the resolved depth, but the lineage chain is partially resolved (2 hop(s) unresolved)."
+    }
+  }
+}

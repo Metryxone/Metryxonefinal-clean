@@ -1,0 +1,14 @@
+{
+  "generated_at": "2026-06-03T17:11:33.095Z",
+  "flag_on": true,
+  "graph": {
+    "node_count": 62095,
+    "edge_count": 142457
+  },
+  "traversal_coverage": 1,
+  "lineage_coverage": 0.8571,
+  "no_broken_paths": true,
+  "no_infinite_loops": true,
+  "traversal_readiness_score": 0.9429,
+  "graph_structure_untouched": true
+}

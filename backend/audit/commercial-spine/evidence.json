@@ -1,0 +1,78 @@
+{
+  "generated_at": "2026-06-17T17:23:33.074Z",
+  "tableStatus": {
+    "capadex_payments": true,
+    "student_subscriptions": false,
+    "comm_products": true,
+    "comm_plans": true,
+    "comm_customers": true,
+    "comm_subscriptions": true,
+    "comm_subscription_events": true,
+    "comm_entitlement_grants": false,
+    "comm_usage_events": false
+  },
+  "fileStatus": {
+    "Entitlement engine (feature classes)": true,
+    "Plan-features parser": true,
+    "Entitlement grants schema": true,
+    "Entitlement routes": true,
+    "Entitlement enforcement gate": true,
+    "Metering schema": true,
+    "Metering engine": true,
+    "Metering routes": true,
+    "Revenue intelligence (incl. recurring)": true,
+    "Commercial read surface": true,
+    "Migration (canonical reference)": true
+  },
+  "flagStatus": {
+    "commercialEntitlementClasses": {
+      "registered": true,
+      "defaultOff": true
+    },
+    "commercialUsageMetering": {
+      "registered": true,
+      "defaultOff": true
+    },
+    "commercialRecurringRevenue": {
+      "registered": true,
+      "defaultOff": true
+    }
+  },
+  "entitlement": {
+    "payingNonDemo": 0,
+    "payingAll": 0,
+    "activeGrants": null,
+    "activePkg": null
+  },
+  "metering": {
+    "usageEvents": null,
+    "usageIdentities": null,
+    "plansWithQuota": 0
+  },
+  "revenue": {
+    "activeSubs": 0,
+    "subPaymentsPaise": 0,
+    "oneTimePaise": 0,
+    "monthsOfData": 0
+  },
+  "areas": [
+    {
+      "name": "Entitlement (feature classes + enforcement)",
+      "structural": true,
+      "activation": false,
+      "verdict": "CONDITIONAL"
+    },
+    {
+      "name": "Usage Metering",
+      "structural": true,
+      "activation": false,
+      "verdict": "CONDITIONAL"
+    },
+    {
+      "name": "Revenue Intelligence (MRR/ARR/renewals/forecast)",
+      "structural": true,
+      "activation": false,
+      "verdict": "CONDITIONAL"
+    }
+  ]
+}

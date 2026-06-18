@@ -1,0 +1,64 @@
+{
+  "phase": "WC-3",
+  "title": "CAPADEX Intelligence Layer Implementation Design",
+  "mode": "design_only",
+  "constraints": {
+    "no_implementation": true,
+    "no_schema_executed": true,
+    "no_runtime_changes_executed": true,
+    "no_enrichment": true,
+    "no_new_ontology_signal_concern_archetype_capability": true,
+    "no_code_db_production_changes": true,
+    "stop_for_approval": true,
+    "honest_ceilings_carried_from_wc2": true
+  },
+  "baseline": {
+    "source": "backend/audit/wc-2",
+    "world_class_readiness_score": 51,
+    "tier": "Developing (Operational)",
+    "differentiability_baseline": 0.096,
+    "differentiability_ceiling": 0.55,
+    "signal_coverage_pct": 55.8,
+    "exam_corpus_routes": 0
+  },
+  "layers": [
+    {"id": "L1", "name": "Stage Intelligence", "current": 45, "target": 90, "realistic_band": [88, 92], "design_reachable": "yes", "new_tables": ["wc3_stage_definitions", "wc3_stage_entity_map", "wc3_stage_state", "wc3_stage_progression"], "flag": "FF_WC3_STAGE"},
+    {"id": "L2", "name": "Outcome Intelligence", "current": 42, "target": 90, "realistic_band": [85, 90], "design_reachable": "yes", "note": "Exam outcome gated by corpus", "new_tables": ["wc3_outcome_models", "wc3_outcome_state", "wc3_outcome_actions"], "flag": "FF_WC3_OUTCOME"},
+    {"id": "L3", "name": "Journey Intelligence", "current": 50, "target": 90, "realistic_band": [80, 88], "design_reachable": "partial", "note": "Competitive-Exam pathway corpus = 0", "new_tables": ["wc3_journey_pathways", "wc3_journey_state", "wc3_routing_decisions"], "flag": "FF_WC3_JOURNEY"},
+    {"id": "L4", "name": "Dynamic Personalization", "current": 55, "target": 90, "realistic_band": [78, 85], "design_reachable": "partial", "note": "within-tag differentiability ceiling; repo-wide 90+ needs C-2 Wave 2", "new_tables": ["wc3_personalization_profile", "wc3_personalization_decisions"], "flag": "FF_WC3_DYN_PERSONALIZATION"},
+    {"id": "L5", "name": "Question Intelligence 2.0", "current": 51, "target": 90, "realistic_band": [76, 82], "design_reachable": "partial", "note": "bulk lift needs C-2 Waves 2-4", "schema_changes": ["capadex_question_metadata.qis_v2", "capadex_question_metadata.qis_v2_components", "wc3_question_quality_matrix"], "flag": "FF_WC3_QIS_V2"},
+    {"id": "L6", "name": "Longitudinal Intelligence", "current": 40, "target": 90, "realistic_band": [85, 92], "design_reachable": "yes", "note": "accrues with data over time", "new_tables": ["wc3_longitudinal_snapshots", "wc3_longitudinal_trends"], "flag": "FF_WC3_LONGITUDINAL"},
+    {"id": "L7", "name": "Outcome Validation", "current": 30, "target": 90, "realistic_band": [85, 92], "design_reachable": "yes", "note": "accrues with observation data; harness allowed to fail", "new_tables": ["wc3_outcome_predictions", "wc3_outcome_observations", "wc3_outcome_validation_runs"], "flag": "FF_WC3_OUTCOME_VALIDATION"}
+  ],
+  "migrations": [
+    {"id": "M1", "creates": ["capadex_question_metadata.qis_v2*", "wc3_question_quality_matrix"], "depends_on": []},
+    {"id": "M2", "creates": ["wc3_personalization_profile", "wc3_personalization_decisions"], "depends_on": ["M1"]},
+    {"id": "M3", "creates": ["wc3_stage_*"], "depends_on": []},
+    {"id": "M4", "creates": ["wc3_outcome_models", "wc3_outcome_state", "wc3_outcome_actions"], "depends_on": ["M3"]},
+    {"id": "M5", "creates": ["wc3_journey_*"], "depends_on": ["M3", "M4"]},
+    {"id": "M6", "creates": ["wc3_longitudinal_*"], "depends_on": []},
+    {"id": "M7", "creates": ["wc3_outcome_predictions", "wc3_outcome_observations", "wc3_outcome_validation_runs"], "depends_on": ["M4", "M6"]}
+  ],
+  "roadmap": {
+    "phase_A_foundation_no_enrichment": ["A1 L4 wiring", "A2 L1 stage", "A3 L6 longitudinal"],
+    "phase_B_composition": ["B1 L2 outcome", "B2 L3 journey", "B3 L7 validation"],
+    "phase_C_enrichment_gated": ["C1 L5 promote", "C2 capability wave2", "C3 signal wave3", "C4 behaviour+corpus"],
+    "phase_D_adoption": ["D1 credential adoption (AIS/Trust)", "D2 LBI integration"]
+  },
+  "composite_trajectory": {
+    "today": 51,
+    "end_phase_A": [64, 68],
+    "end_phase_B": [72, 76],
+    "end_phase_C": [82, 86],
+    "stated_90plus_all_layers": "not_reachable_repo_wide"
+  },
+  "outputs": {
+    "1": "WC3_ARCHITECTURE.md",
+    "2": "WC3_DATA_MODEL.md",
+    "3": "WC3_RUNTIME_DESIGN.md",
+    "4": "WC3_MIGRATION_PLAN.md",
+    "5": "WC3_VALIDATION_PLAN.md",
+    "6": "WC3_ROADMAP.md"
+  },
+  "status": "design_complete_stop_for_approval"
+}

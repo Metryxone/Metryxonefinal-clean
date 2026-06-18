@@ -1,0 +1,19 @@
+Let's merge our frontend UX enhancements into a single, comprehensive styling and interaction pass. We want to upgrade both our view layouts and our input fields to match our empathetic, relief-first design standards while ensuring pristine telemetry capture conditions.
+
+1. INPUT FIELD UPGRADES (THE LIVE SENSORS):
+- Dynamic Auto-Expanding Textareas: Refactor all open-text input components to use dynamic height adjustments that expand seamlessly with text volume, completely eliminating internal vertical scrollbars.
+- Ambient Sync Indicators: Remove high-pressure intermediate submit actions. Implement a debounced auto-save hook that updates local states and displays a soft, low-contrast, fading "Saved" or "Synced" micro-label in the bottom corner of the input field.
+- Padded Click Targets: Ensure all single and multi-choice option cards feature a minimum vertical padding of 16px to create effortless click targets. Apply a smooth `transition: background-color 0.25s ease-in-out` to all hover and active states to keep interaction profiles calm.
+
+2. SOFT-LANDING MODAL FOR SAFETY INTERCEPTS:
+- Locate the active client hook where `payload.safety_intercept === true` is captured.
+- Instead of executing a jarring, cold redirect, render a beautifully styled, high-empathy modal overlay. 
+- Use a soft, grounding color palette (sage greens / muted teals). Feature a high-priority primary button for direct counselor routing and a secondary low-friction button for immediate decompression or breathing exercises.
+
+3. OMEGA-X DASHBOARD REFINEMENT:
+- In the dashboard or post-assessment results view, replace standard text or rigid bar metrics for 'overthinking', 'perfectionism', and 'burnout_risk' with smooth, animated progress rings or soft horizontal slider tracks.
+- Add warm, user-friendly, non-clinical tooltips to explicitly contextualize what each behavioral metric indicator means in a supportive manner.
+
+4. COMPILATION & SAFEGUARDS:
+- Ensure all updated form elements, overlays, and metrics components handle empty state skeletons gracefully using our centralized factory defaults.
+- Verify that both frontend and backend compilation layers pass with absolute zero errors or TypeScript warnings.

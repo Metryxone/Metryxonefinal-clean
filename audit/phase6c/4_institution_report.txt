@@ -1,0 +1,43 @@
+# Institution Cohort Report
+=========================
+Cohort size: 6  ·  Status: partially resolved
+
+## Cohort Strengths
+  • Strong Decision Confidence [1 of 6] (CSI domain "Decision Confidence" scored 75 (≥ 65 → strength).)
+      Trace: Response → Signal (positive)
+  • Strong Decision Making [1 of 6] (CSI domain "Decision Making" scored 75 (≥ 65 → strength).)
+      Trace: Response → Signal (positive)
+  • Strong Direction Persistence [1 of 6] (CSI domain "Direction Persistence" scored 75 (≥ 65 → strength).)
+      Trace: Response → Signal (positive)
+
+## Cohort Risks
+  • Avoidance Pattern [1 of 6] (moderate severity)
+      Trace: Response → Signal  ›  Signal → Concern
+  • Career Confusion [1 of 6] (moderate severity)
+      Trace: Response → Signal  ›  Signal → Concern
+  • Cognitive Blocking [1 of 6] (moderate severity)
+      Trace: Response → Signal  ›  Signal → Concern
+  • Emotional Overload [1 of 6] (moderate severity)
+      Trace: Response → Signal  ›  Signal → Concern
+  • Placement Anxiety [1 of 6] (moderate severity)
+      Trace: Response → Signal  ›  Signal → Concern
+  • Social Withdrawal [1 of 6] (moderate severity)
+      Trace: Response → Signal  ›  Signal → Concern
+
+## Archetype Distribution
+  • Performance Anxiety & Pressure Response [4 of 6 (67%)]
+      Trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype
+
+## Intervention Opportunities
+  • Habit [4 of 6] (Build a daily workday habit — a two-minute breathing reset before each high-pressure moment.)
+      Trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention
+  • Immediate Actions [4 of 6] (Before the workday ends, write down each moment of panic during one high-pressure task and what set it off.)
+      Trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention
+  • Ninety Day [4 of 6] (Over the next quarter at work, build steady calm under pressure through weekly timed practice runs.)
+      Trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention
+  • Seven Day [4 of 6] (Each workday this week, log what triggers exam, interview, and presentation nerves.)
+      Trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention
+  • Skill Building [4 of 6] (Practise this skill each week at work — rehearsing exams and presentations out loud until the nerves settle.)
+      Trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention
+  • Thirty Day [4 of 6] (Over the next 30 days at work, follow a short calm-down routine before every test, presentation, or meeting.)
+      Trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention

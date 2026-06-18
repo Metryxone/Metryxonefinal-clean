@@ -1,0 +1,81 @@
+{
+  "generated_at": "2026-06-04T03:51:20.287Z",
+  "total_intents": 14934,
+  "targets": {
+    "exact": ">90%",
+    "drift": "<5%",
+    "failure": "<2%",
+    "tie_rate": "<10%"
+  },
+  "before": {
+    "exact": 76.2,
+    "near": 7.4,
+    "drift": 10.6,
+    "failure": 5.9,
+    "tie_ge2": 31.1,
+    "tie_ge10": 4.3,
+    "trust": "YELLOW",
+    "counts": {
+      "exact": 11383,
+      "near": 1099,
+      "drift": 1578,
+      "failure": 874,
+      "tie2": 4649,
+      "tie10": 638,
+      "arbitrary": 0
+    }
+  },
+  "after": {
+    "exact": 89.1,
+    "near": 3.7,
+    "drift": 4.3,
+    "failure": 2.9,
+    "tie_ge2": 24.3,
+    "tie_ge10": 1.6,
+    "trust": "YELLOW",
+    "counts": {
+      "exact": 13308,
+      "near": 555,
+      "drift": 639,
+      "failure": 432,
+      "tie2": 3636,
+      "tie10": 234,
+      "arbitrary": 615
+    }
+  },
+  "deltas": {
+    "exact": 12.9,
+    "drift": -6.3,
+    "failure": -3,
+    "tie_ge2": -6.8
+  },
+  "short_intent": {
+    "before": {
+      "total": 721,
+      "exact_pct": 42.6,
+      "fail_pct": 7.4
+    },
+    "after": {
+      "total": 721,
+      "exact_pct": 71,
+      "fail_pct": 0
+    }
+  },
+  "confidence": {
+    "mean": 43.5,
+    "resolved": 14502,
+    "buckets": {
+      "0-19": 90,
+      "20-39": 4369,
+      "40-59": 9762,
+      "60-79": 281,
+      "80-100": 0
+    }
+  },
+  "targets_met": {
+    "exact_gt_90": false,
+    "drift_lt_5": true,
+    "failure_lt_2": false,
+    "tie_lt_10": false
+  }
+}

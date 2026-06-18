@@ -1,0 +1,434 @@
+# ROLE
+
+You are a principal enterprise architect, industrial-organizational psychologist, psychometrician, workforce intelligence scientist, ontology engineer, and senior full-stack engineer.
+
+Your task is to ENHANCE the existing MetryxOne Career Builder platform into a scientifically robust, legally defensible, scalable Adaptive Career Intelligence System.
+
+IMPORTANT:
+
+* DO NOT overwrite existing functionality.
+* Preserve all current EI benchmarking features.
+* Preserve existing APIs.
+* Preserve versioning.
+* Preserve k-anonymity.
+* Preserve cohort benchmarking.
+* Preserve existing database data.
+* Use migration-safe enhancements only.
+* Mark deprecated structures instead of deleting them.
+* Maintain backward compatibility at all times.
+
+---
+
+## PRE-IMPLEMENTATION REQUIREMENTS
+
+Before implementation:
+
+1. Analyze current database schema
+2. Analyze existing APIs
+3. Analyze current frontend architecture
+4. Detect reusable modules
+5. Detect existing benchmark logic
+6. Extend architecture incrementally
+7. Generate migration-safe changes only
+8. Preserve methodology versioning
+9. Preserve auditability
+10. Preserve benchmark reproducibility
+
+---
+
+## PHASE 1 OBJECTIVE
+
+Build the foundational scientific architecture for:
+
+1. Competency ontology
+2. Workforce taxonomy
+3. Capability domains
+4. Competency families
+5. Canonical competency normalization
+6. Organizational layer architecture
+7. Proficiency models
+8. Complexity calibration
+9. Behavioral indicator framework
+10. Role DNA framework
+11. Competency relationship graph
+12. Dynamic weighting foundation
+
+---
+
+## SCIENTIFIC FOUNDATION
+
+The system must separate:
+
+1. Potential
+2. Capability
+3. Performance
+4. Preference
+5. Readiness
+
+The system must distinguish between:
+
+* cognitive capabilities
+* behavioral capabilities
+* interpersonal capabilities
+* functional competencies
+* strategic competencies
+
+Core scientific principle:
+
+Competencies remain stable.
+Importance weights vary by role context.
+
+---
+
+## CREATE SCIENTIFIC CAPABILITY DOMAINS
+
+1. Cognitive Capabilities
+2. Behavioral Capabilities
+3. Interpersonal & Leadership Capabilities
+4. Functional & Execution Capabilities
+5. Strategic & Organizational Capabilities
+
+---
+
+## CREATE COMPETENCY FAMILIES
+
+Examples:
+
+Communication Family
+Leadership Family
+Execution Family
+Innovation Family
+Strategic Reasoning Family
+Relationship Management Family
+Learning Agility Family
+Operational Excellence Family
+Governance & Ethics Family
+Stakeholder Influence Family
+
+---
+
+## COMPETENCY NORMALIZATION
+
+Normalize duplicate competencies into canonical competencies.
+
+Examples:
+
+* Active Listening / Listening Skills / Careful Listening
+* Accountability / Personal Accountability
+* Collaboration / Teamwork
+* Strategic Thinking / Visionary Thinking
+* Persuasion / Persuasion Skills
+
+Every competency must contain:
+
+* competency_id
+* canonical_name
+* aliases
+* capability_domain
+* competency_family
+* scientific_type
+* measurable_behaviors
+* observable_indicators
+* trainability
+* stability_level
+* complexity_level
+* role_relevance
+* leadership_relevance
+* related_competencies
+* developmental_dependencies
+* assessment_methods
+* scoring_metadata
+* benchmark_metadata
+* legal_classification
+
+---
+
+## BEHAVIORAL INDICATORS
+
+Every competency MUST contain observable behaviors.
+
+Example:
+
+Leadership:
+
+* delegates effectively
+* handles conflict constructively
+* coaches team members
+* aligns teams to goals
+* communicates expectations clearly
+
+Communication:
+
+* conveys ideas clearly
+* adapts communication to audience
+* listens actively
+* summarizes accurately
+* responds constructively
+
+---
+
+## PROFICIENCY MODEL
+
+Implement 5-level proficiency system:
+
+Level 1 = Awareness
+Level 2 = Basic Application
+Level 3 = Independent Application
+Level 4 = Advanced Application
+Level 5 = Expert / Strategic Application
+
+Each proficiency level must include:
+
+* behavioral indicators
+* complexity expectations
+* role applicability
+* developmental expectations
+
+---
+
+## COMPLEXITY CALIBRATION
+
+The same competency must behave differently across organizational layers.
+
+Example:
+
+Communication:
+Executive Layer:
+
+* task communication
+
+Managerial Layer:
+
+* cross-team coordination
+
+Leadership Layer:
+
+* influence and alignment
+
+Strategic Layer:
+
+* enterprise narrative shaping
+
+---
+
+## WORKFORCE TAXONOMY
+
+Create hierarchical workforce taxonomy:
+
+Industry
+→ Function
+→ Subfunction
+→ Role Family
+→ Role
+→ Organizational Layer
+
+Example:
+
+IT
+→ Engineering
+→ Backend Engineering
+→ Backend Engineer
+→ Senior Backend Engineer
+→ Leadership Layer
+
+---
+
+## ORGANIZATIONAL LAYERS
+
+Create 4 organizational layers:
+
+1. Executive Layer
+2. Managerial Layer
+3. Leadership Layer
+4. Strategic Layer
+
+Each layer must contain:
+
+* capability expectations
+* cognitive complexity
+* behavioral expectations
+* strategic expectations
+* decision scope
+* ambiguity tolerance
+* leadership accountability
+* minimum score
+* median score
+* high performer score
+* exceptional score
+
+---
+
+## SCORE ARCHITECTURE
+
+Implement score interpretation:
+
+0–35 = Foundational Development
+36–55 = Emerging Capability
+56–70 = Operationally Competitive
+71–85 = Professionally Advanced
+86–100 = Highly Differentiated Capability
+
+DO NOT imply:
+
+* employability guarantees
+* hiring suitability
+* promotion certainty
+* psychological diagnosis
+
+---
+
+## ROLE DNA ARCHITECTURE
+
+Every role becomes a weighted competency vector.
+
+Example:
+
+{
+"role": "Engineering Manager",
+"industry": "IT",
+"function": "Engineering",
+"layer": "Leadership",
+"role_dna": {
+"strategic_thinking": 0.90,
+"systems_thinking": 0.84,
+"stakeholder_management": 0.79,
+"coaching": 0.72
+}
+}
+
+---
+
+## COMPETENCY RELATIONSHIP GRAPH
+
+Create competency dependency graph.
+
+Example:
+
+Emotional Regulation
+→ Conflict Resolution
+→ Leadership Presence
+
+Systems Thinking
+→ Strategic Thinking
+→ Organizational Alignment
+
+Learning Agility
+→ Adaptability
+→ Career Mobility
+
+---
+
+## DATABASE REQUIREMENTS
+
+Create migration-safe PostgreSQL schema using Prisma ORM.
+
+Create tables:
+
+1. competency_domains
+2. competency_families
+3. competencies
+4. competency_aliases
+5. behavioral_indicators
+6. proficiency_levels
+7. competency_complexity_models
+8. competency_relationships
+9. industries
+10. functions
+11. subfunctions
+12. role_families
+13. job_roles
+14. organizational_layers
+15. role_dna_profiles
+16. role_competency_weights
+17. capability_models
+18. competency_versions
+19. ontology_audit_logs
+
+---
+
+## BACKEND REQUIREMENTS
+
+Tech Stack:
+
+* Node.js
+* Express
+* PostgreSQL
+* Prisma ORM
+* Redis
+* TypeScript
+
+Implement:
+
+* modular architecture
+* service layer
+* repository layer
+* validation layer
+* audit logging
+* caching
+* versioning
+* migration safety
+* seed scripts
+* indexing strategy
+
+---
+
+## API ENDPOINTS
+
+Create:
+
+GET /api/competencies
+GET /api/competencies/:id
+GET /api/domains
+GET /api/families
+GET /api/industries
+GET /api/functions
+GET /api/subfunctions
+GET /api/roles
+GET /api/roles/:id
+GET /api/roles/:id/dna
+GET /api/layers
+GET /api/proficiency-models
+GET /api/competency-relationships
+
+---
+
+## FRONTEND REQUIREMENTS
+
+Use:
+
+* React
+* Tailwind
+* shadcn/ui
+* Recharts
+
+Create:
+
+* competency ontology explorer
+* workforce taxonomy explorer
+* role DNA visualizer
+* competency relationship graph
+* proficiency visualization
+* organizational layer dashboards
+* admin management console
+
+---
+
+## OUTPUT REQUIREMENTS
+
+Generate:
+
+* Prisma schema
+* migrations
+* seed data
+* APIs
+* backend services
+* frontend pages
+* reusable components
+* TypeScript types
+* caching layer
+* indexing strategy
+* audit logging
+* architecture diagrams
+* scalable folder structure
+
+Everything must be production-grade, modular, scalable, explainable, scientifically defensible, and backward compatible.

@@ -1,0 +1,33 @@
+Please write a comprehensive, production-grade database migration and relational alignment script in Python using pandas and regex. This script will act as a unified data pipeline to clean, audit, and systematically link our "concerns.xlsx - Sheet1.csv" (Master Catalog) and "Clarity Questions.csv" (Child Pool) before importing them into our PostgreSQL database using Drizzle ORM layout rules.
+
+The script must sequentially handle all of the following file-handling and structural failure vectors within a clean try-except architecture:
+
+1. Flexible File Ingestion & Parsing:
+   - For Master Concerns: Load "concerns.xlsx - Sheet1.csv" first, and fall back to "concerns.xlsx" if it fails. Cleanly drop the accidental trailing column 'Unnamed: 19'. Implement a phantom-row drop rule to remove rows where both 'Concern ID' and 'Domain' are null (specifically dropping trailing-empty CSV artifacts).
+   - For Clarity Questions: Load "Clarity Questions.csv" using 'latin1' or 'utf-8-sig' encoding to safely process smart quotes and non-standard punctuation (such as \x93 decoding errors). Correct the header alignment if row 0 contains text labels ('question_id', 'concern_id', etc.) and row 1 contains data, automatically dropping any placeholder indexes.
+
+2. Tier 1 Relational Linkage (Building the Bridge Tags):
+   - Address the broken join chain between Master Concern IDs (which use row counters like CONCERN_DOM_1) and Clarity Question IDs (which use legacy static categories like CAREER_001).
+   - In BOTH datasets, generate a matching 'Relational_Bridge_Tag' column by tokenizing the domain text or legacy concern categories. Map 'CAREER'/'EMP' to 'CAREER_READINESS', 'COLLEGE'/'DOM'/'CAMPUS' to 'COLLEGE_ADAPT', 'DISCIPLINE'/'HABIT'/'DIS' to 'DISCIPLINE_HABITS', 'ADJUST'/'COPING'/'ADJ' to 'ADJUSTMENT_COPING', and 'STRESS'/'EXAM'/'EXA' to 'EXAM_STRESS'. This ensures backend SQL joins resolve perfectly at runtime.
+
+3. Question Deduplication & Validation:
+   - Scan the Clarity Questions dataset for duplicate 'question_id' values (e.g., repeating blocks like Q_COMP_001_003). 
+   - Preserve the first record and append an incremental numerical suffix (e.g., '_v2') to duplicates so primary keys stay unique and don't break user served-ID memory tracking or application state.
+
+4. Age Range Regex Normalization:
+   - In the Master Concerns data, safely process the 'Typical Age Band' column which contains mixed, variable hyphen styles (standard hyphen '-', en-dash '–', and em-dash '—').
+   - Use regex to split the string regardless of the dash character type used. Extract and type-cast the bounds into two new explicit integer columns: 'age_min' and 'age_max'. Completely drop the original string-based 'Typical Age Band' column.
+
+5. Micro-Null Field Fortification & Sibling Fallbacks:
+   - For Master Concerns: Ensure strategic routing slots ('Assessment Dimension', 'Root Cause Group', 'Intervention Lens', 'Capability Mapping') have zero empty spaces to satisfy strict database NOT NULL constraints. Implement a sibling-derived routing fallback chain where blank routing slots inherit iteratively from 'Intelligence Layer', 'Concern Category', 'Contextual Modifier', or 'Domain'. Apply the sentinel value 'UNASSIGNED_ROUTING_NODE' only when every candidate is also blank.
+   - For Clarity Questions: Fill any missing fields in 'response_type', 'polarity', or score mappings with safe fallbacks so Drizzle ORM .notNull() parameters never fail mid-transaction.
+
+6. Scoring & Space Normalization:
+   - Strip all leading/trailing whitespaces from 'Concern ID', 'concern_id', and 'question_id' strings.
+   - Force Title Case on categorical strings ('Relevance in India', 'Severity', 'CAPADEX Priority') to remove duplicate groupings.
+   - Clean the text strings within answer options (Option A, B, C, D, E) to prevent trailing whitespaces from breaking frontend selection states. Explicitly cast score columns ('Option A Score' through 'Option E Score') as clean integers.
+
+7. Verification & Final Payload Generation:
+   - Save the fully audited master concerns as 'audited_capadex_concerns.csv'.
+   - Save the relational, unique child pool as 'audited_clarity_questions.csv'.
+   - Print a complete execution breakdown summarizing: total processed rows for both files, a count of fixed nulls per column, verification that 'age_min'/'age_max' bounds are true integers, and a 3-row preview of the generated relational join tags to verify perfect schema alignment.

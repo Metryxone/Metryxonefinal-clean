@@ -1,0 +1,418 @@
+Given the C-1 findings, I would **not jump to C-2**.
+
+The audit produced a major architectural finding:
+
+```text
+Question Intelligence Problem
+≠ Missing Metadata
+
+Question Intelligence Problem
+= Missing Differentiation Architecture
+```
+
+Therefore the next prompt should be:
+
+# CAPADEX C-1A
+
+## Question Differentiation Architecture (QDA)
+
+**Objective**
+
+Design the Question Differentiation Architecture that will guide all future Question Intelligence enrichment, Context Intelligence, Archetype Intelligence, and Routing Readiness work.
+
+This is an architecture-design phase.
+
+Do NOT modify questions.
+
+Do NOT execute C-2.
+
+Do NOT enrich metadata.
+
+Do NOT update production tables.
+
+Analyze and design only.
+
+---
+
+## Inputs
+
+Use findings from:
+
+```text
+AQ-1
+AQ-2
+AQ-2R
+C-1 QSIL Audit
+```
+
+Particularly:
+
+```text
+30,638 Questions
+
+325 Bridge Tags
+
+Repository Differentiability = 0.096
+
+100% of Bridge Tags >80% Metadata Uniformity
+
+172 Tags ≥95% Uniformity
+
+Primary Capability:
+286 possible values
+Effectively 1 per tag
+
+Signal Coverage:
+55.8%
+
+Context Intelligence:
+0%
+
+Archetype Intelligence:
+0%
+```
+
+---
+
+# PHASE 1
+
+## Differentiation Failure Analysis
+
+Determine:
+
+### Why differentiation is low
+
+Quantify contribution of:
+
+```text
+Age
+Persona
+Stage
+Behavior
+Capability
+Signal
+```
+
+to overall differentiation.
+
+Calculate:
+
+```text
+Differentiation Contribution Score
+```
+
+for each dimension.
+
+Generate:
+
+```text
+differentiation_failure_report
+```
+
+---
+
+# PHASE 2
+
+## Context Intelligence Architecture
+
+Design Question Context Framework.
+
+Evaluate and recommend final context taxonomy.
+
+Candidate contexts:
+
+```text
+Academic
+
+Learning
+
+Career
+
+Employment
+
+Competitive Exams
+
+Entrepreneurship
+
+Financial
+
+Family
+
+Social
+
+Leadership
+
+Skill Development
+
+Personal Development
+
+Digital Literacy
+```
+
+For each context define:
+
+```text
+Definition
+
+Purpose
+
+Routing Value
+
+Example Question Types
+
+Expected Distribution
+```
+
+Generate:
+
+```text
+context_architecture_report
+```
+
+---
+
+# PHASE 3
+
+## Archetype Intelligence Architecture
+
+Design Question Archetype Framework.
+
+Evaluate and recommend final archetypes.
+
+Candidate archetypes:
+
+```text
+Reflective
+
+Behavioral
+
+Situational
+
+Decision-Based
+
+Evidence-Based
+
+Preference-Based
+
+Future-Oriented
+
+Historical
+```
+
+For each archetype define:
+
+```text
+Definition
+
+Purpose
+
+Assessment Value
+
+Routing Value
+
+Example Question Types
+
+Expected Distribution
+```
+
+Generate:
+
+```text
+archetype_architecture_report
+```
+
+---
+
+# PHASE 4
+
+## Question Diversity Standards
+
+Design minimum differentiation standards.
+
+Recommend:
+
+### Per Bridge Tag
+
+Minimum:
+
+```text
+Capabilities
+
+Behaviors
+
+Signals
+
+Contexts
+
+Archetypes
+```
+
+Determine:
+
+```text
+Minimum Diversity Threshold
+
+Target Diversity Threshold
+
+Excellent Diversity Threshold
+```
+
+Generate:
+
+```text
+question_diversity_standard
+```
+
+---
+
+# PHASE 5
+
+## Question Intelligence Score V2
+
+Design future scoring model.
+
+Current Inputs:
+
+```text
+Age
+Persona
+Stage
+Behavior
+Capability
+Signal
+```
+
+Evaluate adding:
+
+```text
+Context
+Archetype
+```
+
+Design:
+
+```text
+Question Intelligence Score V2
+
+Question Differentiability Score
+
+Question Relevance Score
+```
+
+Provide formulas and weighting rationale.
+
+Generate:
+
+```text
+qis_v2_architecture
+```
+
+---
+
+# PHASE 6
+
+## C-2 Enrichment Blueprint
+
+Using all findings:
+
+Identify:
+
+```text
+Top 250 Concerns
+
+Top 500 Bridge Tags
+
+Top 1000 Questions
+```
+
+that should be prioritized in C-2.
+
+Estimate:
+
+```text
+Expected Gain
+
+Expected Risk
+
+Expected Runtime Impact
+
+Expected Routing Impact
+```
+
+Generate:
+
+```text
+c2_enrichment_blueprint
+```
+
+---
+
+# VALIDATION
+
+Produce:
+
+1. Differentiation Failure Report
+
+2. Context Architecture Report
+
+3. Archetype Architecture Report
+
+4. Question Diversity Standards
+
+5. Question Intelligence Score V2 Design
+
+6. Question Relevance Model
+
+7. Question Differentiability Model
+
+8. C-2 Enrichment Blueprint
+
+9. Expected Assessment Intelligence Gain
+
+10. Expected Routing Accuracy Gain
+
+11. CAPADEX Readiness Assessment
+
+---
+
+# OUTPUT FORMAT
+
+Executive Summary
+
+Key Findings
+
+Architecture Recommendations
+
+Framework Definitions
+
+Standards Table
+
+Scoring Models
+
+C-2 Blueprint
+
+Risk Assessment
+
+Go / No-Go Recommendation
+
+---
+
+# IMPORTANT
+
+This is a design phase.
+
+No question modifications.
+
+No metadata updates.
+
+No database writes.
+
+No production changes.
+
+No C-2 execution.
+
+Analyze, design, and report only.
+
+STOP.
+
+WAIT FOR APPROVAL.

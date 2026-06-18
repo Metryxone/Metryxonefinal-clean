@@ -1,0 +1,10 @@
+export { LandingPage } from './LandingPage';
+export { ComparePage } from './ComparePage';
+export { LoginPage } from './LoginPage';
+export { CheckoutPage } from './CheckoutPage';
+export { AssessmentStartPage } from './AssessmentStartPage';
+export { AssessmentStartAllPage } from './AssessmentStartAllPage';
+export { AssessmentPage } from './AssessmentPage';
+export { ReportStatusPage } from './ReportStatusPage';
+export { ReportViewPage } from './ReportViewPage';
+export { DisclaimerPage } from './DisclaimerPage';

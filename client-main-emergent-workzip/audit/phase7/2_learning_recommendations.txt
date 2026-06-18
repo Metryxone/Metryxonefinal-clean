@@ -1,0 +1,201 @@
+LEARNING RECOMMENDATIONS — anchor session 1cd9ca07-4659-42c4-83fd-229e5e8f21f2
+============================================================
+### LEARNING — student
+  • [certification] Mindfulness / stress-resilience certificate
+      A recognised mindfulness or resilience credential that builds and evidences your self-regulation skills.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [course] Performance psychology & exam confidence
+      A short course on managing performance anxiety, test-taking strategy, and pre-performance routines.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Confidence-first learning pathway
+      Sequence courses so early wins build momentum before tackling the most evaluative, high-pressure modules.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [certification] Career-planning / self-assessment credential
+      A recognised career-readiness or strengths-assessment certificate that sharpens direction.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [course] Career exploration & decision-making
+      A course on values, interests, and structured career decision frameworks.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Discover-then-specialise pathway
+      Start with broad foundational learning, then specialise once a direction emerges.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [certification] Wellbeing / peer-support certificate
+      A credential in emotional first-aid or peer support that formalises your regulation skills.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [course] Emotional intelligence fundamentals
+      A course building awareness, labelling, and modulation of emotional responses in study and work.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Regulate-then-stretch pathway
+      Build regulation foundations before moving into more emotionally demanding learning.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [certification] Public-speaking / debate credential
+      A recognised speaking or debate certificate that both builds and evidences social confidence.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [course] Confident communication & presence
+      A course on speaking up, group participation, and social assertiveness.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Participate-then-present pathway
+      Begin with participatory learning before moving to presentation-heavy modules.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+
+### LEARNING — parent
+  • [certification] Mindfulness / stress-resilience certificate
+      Help your child by encouraging this: A recognised mindfulness or resilience credential that builds and evidences your self-regulation skills.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [course] Performance psychology & exam confidence
+      Help your child by encouraging this: A short course on managing performance anxiety, test-taking strategy, and pre-performance routines.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Confidence-first learning pathway
+      Help your child by encouraging this: Sequence courses so early wins build momentum before tackling the most evaluative, high-pressure modules.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [certification] Career-planning / self-assessment credential
+      Help your child by encouraging this: A recognised career-readiness or strengths-assessment certificate that sharpens direction.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [course] Career exploration & decision-making
+      Help your child by encouraging this: A course on values, interests, and structured career decision frameworks.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Discover-then-specialise pathway
+      Help your child by encouraging this: Start with broad foundational learning, then specialise once a direction emerges.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [certification] Wellbeing / peer-support certificate
+      Help your child by encouraging this: A credential in emotional first-aid or peer support that formalises your regulation skills.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [course] Emotional intelligence fundamentals
+      Help your child by encouraging this: A course building awareness, labelling, and modulation of emotional responses in study and work.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Regulate-then-stretch pathway
+      Help your child by encouraging this: Build regulation foundations before moving into more emotionally demanding learning.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [certification] Public-speaking / debate credential
+      Help your child by encouraging this: A recognised speaking or debate certificate that both builds and evidences social confidence.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [course] Confident communication & presence
+      Help your child by encouraging this: A course on speaking up, group participation, and social assertiveness.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Participate-then-present pathway
+      Help your child by encouraging this: Begin with participatory learning before moving to presentation-heavy modules.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+
+### LEARNING — counselor
+  • [certification] Mindfulness / stress-resilience certificate
+      For this student, consider guiding them toward: A recognised mindfulness or resilience credential that builds and evidences your self-regulation skills.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [course] Performance psychology & exam confidence
+      For this student, consider guiding them toward: A short course on managing performance anxiety, test-taking strategy, and pre-performance routines.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Confidence-first learning pathway
+      For this student, consider guiding them toward: Sequence courses so early wins build momentum before tackling the most evaluative, high-pressure modules.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [certification] Career-planning / self-assessment credential
+      For this student, consider guiding them toward: A recognised career-readiness or strengths-assessment certificate that sharpens direction.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [course] Career exploration & decision-making
+      For this student, consider guiding them toward: A course on values, interests, and structured career decision frameworks.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Discover-then-specialise pathway
+      For this student, consider guiding them toward: Start with broad foundational learning, then specialise once a direction emerges.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [certification] Wellbeing / peer-support certificate
+      For this student, consider guiding them toward: A credential in emotional first-aid or peer support that formalises your regulation skills.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [course] Emotional intelligence fundamentals
+      For this student, consider guiding them toward: A course building awareness, labelling, and modulation of emotional responses in study and work.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Regulate-then-stretch pathway
+      For this student, consider guiding them toward: Build regulation foundations before moving into more emotionally demanding learning.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [certification] Public-speaking / debate credential
+      For this student, consider guiding them toward: A recognised speaking or debate certificate that both builds and evidences social confidence.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [course] Confident communication & presence
+      For this student, consider guiding them toward: A course on speaking up, group participation, and social assertiveness.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Participate-then-present pathway
+      For this student, consider guiding them toward: Begin with participatory learning before moving to presentation-heavy modules.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+
+### LEARNING — institution
+  • [certification] Mindfulness / stress-resilience certificate
+      For students showing this pattern across the cohort: A recognised mindfulness or resilience credential that builds and evidences your self-regulation skills.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [course] Performance psychology & exam confidence
+      For students showing this pattern across the cohort: A short course on managing performance anxiety, test-taking strategy, and pre-performance routines.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Confidence-first learning pathway
+      For students showing this pattern across the cohort: Sequence courses so early wins build momentum before tackling the most evaluative, high-pressure modules.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [certification] Career-planning / self-assessment credential
+      For students showing this pattern across the cohort: A recognised career-readiness or strengths-assessment certificate that sharpens direction.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [course] Career exploration & decision-making
+      For students showing this pattern across the cohort: A course on values, interests, and structured career decision frameworks.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Discover-then-specialise pathway
+      For students showing this pattern across the cohort: Start with broad foundational learning, then specialise once a direction emerges.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [certification] Wellbeing / peer-support certificate
+      For students showing this pattern across the cohort: A credential in emotional first-aid or peer support that formalises your regulation skills.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [course] Emotional intelligence fundamentals
+      For students showing this pattern across the cohort: A course building awareness, labelling, and modulation of emotional responses in study and work.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Regulate-then-stretch pathway
+      For students showing this pattern across the cohort: Build regulation foundations before moving into more emotionally demanding learning.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [certification] Public-speaking / debate credential
+      For students showing this pattern across the cohort: A recognised speaking or debate certificate that both builds and evidences social confidence.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [course] Confident communication & presence
+      For students showing this pattern across the cohort: A course on speaking up, group participation, and social assertiveness.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Participate-then-present pathway
+      For students showing this pattern across the cohort: Begin with participatory learning before moving to presentation-heavy modules.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation

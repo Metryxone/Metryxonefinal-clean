@@ -1,0 +1,257 @@
+# CAPADEX Phase 4 – Search Intent Intelligence Layer
+
+## Objective
+
+Transform Human Intelligence into Search Intelligence.
+
+Current State:
+
+Archetype
+↓
+Problem
+↓
+Emotion
+↓
+Narrative
+
+Target State:
+
+Archetype
+↓
+Problem
+↓
+Search Intent
+↓
+Discovery Path
+
+This phase builds the language layer that connects CAPADEX to how real people seek help.
+
+---
+
+## INPUTS
+
+Use only:
+
+* human_problem_library
+* human_emotion_library
+* stakeholder_narratives
+* archetype_library
+* archetype_assignments
+
+Do not use external AI services.
+
+Do not scrape external search engines.
+
+Generate intents from existing CAPADEX intelligence.
+
+---
+
+## STAKEHOLDERS
+
+Generate separately for:
+
+### Student
+
+### Parent
+
+### Teacher
+
+### Counselor
+
+### Professional
+
+---
+
+## SEARCH INTENT TYPES
+
+Generate:
+
+### Informational
+
+Examples:
+
+* What is career clarity?
+* How can I improve focus?
+
+---
+
+### Diagnostic
+
+Examples:
+
+* Why do I keep changing my career goals?
+* Why do I forget everything I study?
+
+---
+
+### Emotional
+
+Examples:
+
+* I feel lost about my future.
+* I am worried I will choose the wrong career.
+
+---
+
+### Help Seeking
+
+Examples:
+
+* How do I become more confident?
+* How can I stop procrastinating?
+
+---
+
+### Future Planning
+
+Examples:
+
+* Which career fits my strengths?
+* How do I prepare for leadership roles?
+
+---
+
+## GENERATION RULES
+
+Every search intent must link to:
+
+* archetype_id
+* problem_id
+* stakeholder_type
+* intent_type
+
+No orphan records.
+
+---
+
+## HUMAN LANGUAGE RULES
+
+Searches must sound real.
+
+GOOD:
+
+* Why can't I focus while studying?
+* How do I choose a career?
+
+BAD:
+
+* Improve metacognitive regulation
+* Enhance vocational decision efficacy
+
+No psychometric terminology.
+
+No assessment language.
+
+---
+
+## QUALITY ENGINE
+
+For every search phrase calculate:
+
+### Search Realism Score
+
+### Human Language Score
+
+### Archetype Alignment Score
+
+### Intent Clarity Score
+
+Range:
+
+1–5
+
+Create:
+
+search_intent_quality_scores
+
+---
+
+## DUPLICATE DETECTION
+
+Detect:
+
+* exact duplicates
+* semantic duplicates
+* stakeholder duplicates
+
+Prevent duplicate storage.
+
+---
+
+## TABLES
+
+search_intents
+
+search_intent_quality_scores
+
+search_intent_duplicate_review
+
+search_intent_clusters
+
+---
+
+## ANALYTICS
+
+Generate:
+
+### Top Search Clusters
+
+### Archetype Search Demand
+
+### Stakeholder Search Patterns
+
+### Emotional Search Patterns
+
+---
+
+## VALIDATION
+
+Target:
+
+Search Realism > 85%
+
+Alignment > 85%
+
+Duplicate Rate < 10%
+
+---
+
+## OUTPUT REQUIRED
+
+1. Search Intent Distribution
+2. Stakeholder Coverage
+3. Intent Type Coverage
+4. Top Search Clusters
+5. Quality Distribution
+6. Duplicate Analysis
+7. Discovery Readiness Score
+
+---
+
+## SUCCESS CRITERIA
+
+Every archetype generates:
+
+* informational intents
+* diagnostic intents
+* emotional intents
+* help-seeking intents
+* future-planning intents
+
+Every stakeholder receives coverage.
+
+---
+
+## FINAL RECOMMENDATION
+
+Choose:
+
+### Proceed to Phase 5 Intervention Intelligence
+
+or
+
+### Refine Search Intent Quality
+
+STOP.
+
+WAIT FOR APPROVAL.

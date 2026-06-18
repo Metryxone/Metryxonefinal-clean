@@ -1,0 +1,11 @@
+construct,target_tag,has_dedicated_tag,concern_count,classification,best_family,best_domain,best_similarity,candidate_signal_count,relationship_path
+"Career Clarity",CAREER_CLARITY,false,230,GREEN,"career_decision_signals","Career Intelligence",0.276,100,"Career Clarity (semantic) -> Career Intelligence -> career_decision_signals -> 40 atomic signals"
+"Leadership",LEADERSHIP,false,153,GREEN,"professional_confidence_signals","Career Intelligence",0.2874,200,"Leadership (semantic) -> Career Intelligence -> professional_confidence_signals -> 80 atomic signals"
+"Communication",COMMUNICATION,false,57,GREEN,"employability_gap_signals","Employability Intelligence",0.2733,160,"Communication (semantic) -> Employability Intelligence -> employability_gap_signals -> 40 atomic signals"
+"Decision Making",DECISION_MAKING,false,51,GREEN,"career_decision_signals","Career Intelligence",0.2459,160,"Decision Making (semantic) -> Career Intelligence -> career_decision_signals -> 40 atomic signals"
+"Entrepreneurship",ENTREPRENEURSHIP,false,16,YELLOW,"role_fit_signals","Career Intelligence",0.1783,120,"Entrepreneurship (semantic) -> Career Intelligence -> role_fit_signals -> 40 atomic signals"
+"Future Readiness",FUTURE_READINESS,false,64,GREEN,"workplace_readiness_signals","Career Intelligence",0.2887,160,"Future Readiness (semantic) -> Career Intelligence -> workplace_readiness_signals -> 80 atomic signals"
+"Learning Mindset",LEARNING_MINDSET,true,1,GREEN,"engagement_signals","Behavioral Intelligence",0.2939,120,"LEARNING_MINDSET -> domain:Behavioral Intelligence -> family:engagement_signals -> 40 atomic signals"
+"Self Awareness",SELF_AWARENESS,true,1,GREEN,"self_reflection_signals","Cognitive Intelligence",0.3099,200,"SELF_AWARENESS -> domain:Cognitive Intelligence -> family:self_reflection_signals -> 40 atomic signals"
+"Career Exploration",CAREER_EXPLORATION,true,1,GREEN,"career_exploration_signals","Career Intelligence",0.3201,100,"CAREER_EXPLORATION -> domain:Career Intelligence -> family:career_exploration_signals -> 40 atomic signals"
+"Career Stability",CAREER_STABILITY,true,1,GREEN,"career_exploration_signals","Career Intelligence",0.3523,120,"CAREER_STABILITY -> domain:Career Intelligence -> family:career_exploration_signals -> 40 atomic signals"

@@ -1,0 +1,134 @@
+Create a modern, minimal, and elegant chatbot interface for "MetryxOne AI Assistant" using React (Vite or plain React).
+
+## 🎨 Design Philosophy
+
+* Clean, distraction-free UI
+* Soft colors, no harsh contrasts
+* Professional and premium feel (like Apple / Notion / Stripe)
+* Focus on readability and spacing
+* Smooth and subtle interactions (no flashy animations)
+
+---
+
+## 🧱 Layout Structure
+
+1. Full screen responsive layout
+2. Centered chat container with max width ~700px
+3. Three main sections:
+
+   * Header (top)
+   * Chat messages area (middle, scrollable)
+   * Input box (bottom, sticky)
+
+---
+
+## 🎯 Header Design
+
+* Title: "MetryxOne AI Assistant"
+* Small subtitle: "Ask anything about skills, careers, or health"
+* Light bottom border
+* Subtle shadow or blur effect
+* Keep height compact
+
+---
+
+## 💬 Chat Message Design
+
+### User Message
+
+* Right aligned
+* Soft blue background
+* Rounded corners (border-radius: 16px)
+* Padding: 10–14px
+* Max width: 70%
+
+### Bot Message
+
+* Left aligned
+* Light gray/white background
+* Slight border
+* Same rounded corners
+* Comfortable line spacing
+
+### General
+
+* Use plenty of vertical spacing between messages
+* Add fade-in animation for new messages (very subtle)
+* Font: Inter / system font
+* Font size: 14–16px
+
+---
+
+## ✍️ Input Box Design
+
+* Fixed at bottom
+* Rounded input field
+* Placeholder: "Type your question..."
+* Send button on right (icon or minimal button)
+* Soft shadow on input container
+* On focus: slight border highlight
+
+---
+
+## 🎨 Color Palette
+
+* Background: #f9fafb (very light gray)
+* Primary: #2563eb (soft blue)
+* Text: #111827 (dark gray, not pure black)
+* Secondary text: #6b7280
+* Borders: #e5e7eb
+
+---
+
+## ✨ UX Enhancements
+
+* Auto-scroll to latest message
+* Disable send button when input is empty
+* Press Enter to send
+* Show "typing..." indicator while waiting for response
+* Smooth transitions (150–250ms)
+
+---
+
+## 📱 Responsiveness
+
+* Mobile-first design
+* Chat container should use full width on small screens
+* Input area should not break on mobile keyboard open
+
+---
+
+## ⚙️ Code Requirements
+
+* Use functional React components
+* Use hooks (useState, useEffect)
+* Keep code modular:
+
+  * ChatContainer
+  * MessageBubble
+  * InputBox
+* No heavy UI libraries (keep lightweight)
+* Optional: Tailwind CSS for styling
+
+---
+
+## 🧼 Clean Code Rules
+
+* Avoid clutter
+* Keep components reusable
+* Use clear naming
+* No inline messy styles
+
+---
+
+## 💡 Final Goal
+
+The UI should feel:
+
+* Calm
+* Premium
+* Effortless to use
+
+It should not look like a typical chatbot — it should feel like a well-designed product.
+
+Output complete working code (HTML + CSS + React).

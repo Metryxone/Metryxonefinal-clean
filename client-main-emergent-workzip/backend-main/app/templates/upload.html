@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>MetryxOne Bulk Upload</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 24px; }
+    .card { max-width: 720px; padding: 20px; border: 1px solid #ddd; border-radius: 12px; }
+    label { display:block; margin-top: 12px; font-weight: 600; }
+    input, select { width: 100%; padding: 10px; margin-top: 6px; }
+    button { margin-top: 16px; padding: 10px 14px; cursor:pointer; }
+    .hint { color:#666; font-size: 13px; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>MetryxOne Bulk Upload</h2>
+
+    <form action="/admin/upload" method="post" enctype="multipart/form-data">
+      <label>Upload Type</label>
+      <select name="upload_type" required>
+        <option value="question_bank">question_bank</option>
+        <option value="question_options">question_options</option>
+        <option value="task_variants">task_variants</option>
+      </select>
+
+      <label>Module Code</label>
+      <input name="module_code" value="EXAM_READY" />
+
+      <label>Sheet Name (Excel only)</label>
+      <input name="sheet_name" placeholder="Optional for XLSX" />
+
+      <label>File</label>
+      <input type="file" name="file" required />
+
+      <button type="submit">Upload</button>
+      <div class="hint">
+        If your CSV does not have module_code, it will use this Module Code (or DEFAULT_MODULE_CODE in .env).
+      </div>
+    </form>
+
+    <form action="/admin/bootstrap" method="post" style="margin-top:18px;">
+      <button type="submit">Bootstrap Tables</button>
+    </form>
+  </div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "generated_at": "2026-06-03T17:46:51.497Z",
+  "flag_on": true,
+  "graph": {
+    "node_count": 62095,
+    "edge_count": 142457
+  },
+  "detect_categories": [
+    "concern",
+    "behavior",
+    "problem",
+    "archetype",
+    "intervention",
+    "recommendation"
+  ],
+  "similarity_coverage": 0.6764,
+  "explainability_coverage": 1,
+  "false_match_rate": 0.6931,
+  "similarity_index_rows_written": 42704,
+  "similarity_readiness_score": 0.7319,
+  "graph_structure_untouched": true
+}

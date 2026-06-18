@@ -1,0 +1,185 @@
+{
+  "generated_at": "2026-06-09T15:43:51.350Z",
+  "flag_enabled": true,
+  "population": {
+    "total_owners_with_completed": 3,
+    "trend_eligible_owners": 2,
+    "forecastable_owners": 2,
+    "anonymous_completed_sessions": 4
+  },
+  "per_kind_over_eligible": [
+    {
+      "kind": "risk",
+      "forecastable": 0,
+      "no_trend": 2,
+      "confidences": []
+    },
+    {
+      "kind": "growth",
+      "forecastable": 2,
+      "no_trend": 0,
+      "confidences": [
+        0.33,
+        0.33
+      ]
+    },
+    {
+      "kind": "outcome",
+      "forecastable": 0,
+      "no_trend": 2,
+      "confidences": []
+    },
+    {
+      "kind": "journey",
+      "forecastable": 2,
+      "no_trend": 0,
+      "confidences": [
+        0.33,
+        0.33
+      ]
+    }
+  ],
+  "ineligible_owners": 1,
+  "users": [
+    {
+      "email": "user_65454b2b8b",
+      "completed": 2,
+      "flagEnabled": true,
+      "forecasts": {
+        "growth": {
+          "kind": "growth",
+          "label": "Growth Forecast",
+          "forecastable": true,
+          "source_metric": "wc3_longitudinal_snapshots.canonical_stage",
+          "horizon": "next_session",
+          "points": 2,
+          "last_value": 25,
+          "slope_per_session": 0,
+          "projected_value": 25,
+          "projected_direction": "stable",
+          "forecast_confidence": 0.33,
+          "confidence_band": "low",
+          "basis": "Linear extrapolation of the wc3_longitudinal_snapshots.canonical_stage trend (2 comparable sessions): last 25 + slope 0/session."
+        },
+        "outcome": {
+          "kind": "outcome",
+          "label": "Outcome Forecast",
+          "forecastable": false,
+          "reason": "no_trend",
+          "detail": "User has ≥2 sessions but this lever/dimension had <2 readable points — no trend to extrapolate."
+        },
+        "journey": {
+          "kind": "journey",
+          "label": "Journey Forecast",
+          "forecastable": true,
+          "source_metric": "wc3_journey_state.route_confidence",
+          "horizon": "next_session",
+          "points": 2,
+          "last_value": 20,
+          "slope_per_session": 0,
+          "projected_value": 20,
+          "projected_direction": "stable",
+          "forecast_confidence": 0.33,
+          "confidence_band": "low",
+          "basis": "Linear extrapolation of the wc3_journey_state.route_confidence trend (2 comparable sessions): last 20 + slope 0/session."
+        },
+        "risk": {
+          "kind": "risk",
+          "label": "Risk Forecast",
+          "forecastable": false,
+          "reason": "no_trend",
+          "detail": "User has ≥2 sessions but this lever/dimension had <2 readable points — no trend to extrapolate."
+        }
+      },
+      "forecastableCount": 2
+    },
+    {
+      "email": "user_4b262cc8a5",
+      "completed": 2,
+      "flagEnabled": true,
+      "forecasts": {
+        "growth": {
+          "kind": "growth",
+          "label": "Growth Forecast",
+          "forecastable": true,
+          "source_metric": "wc3_longitudinal_snapshots.canonical_stage",
+          "horizon": "next_session",
+          "points": 2,
+          "last_value": 25,
+          "slope_per_session": 0,
+          "projected_value": 25,
+          "projected_direction": "stable",
+          "forecast_confidence": 0.33,
+          "confidence_band": "low",
+          "basis": "Linear extrapolation of the wc3_longitudinal_snapshots.canonical_stage trend (2 comparable sessions): last 25 + slope 0/session."
+        },
+        "outcome": {
+          "kind": "outcome",
+          "label": "Outcome Forecast",
+          "forecastable": false,
+          "reason": "no_trend",
+          "detail": "User has ≥2 sessions but this lever/dimension had <2 readable points — no trend to extrapolate."
+        },
+        "journey": {
+          "kind": "journey",
+          "label": "Journey Forecast",
+          "forecastable": true,
+          "source_metric": "wc3_journey_state.route_confidence",
+          "horizon": "next_session",
+          "points": 2,
+          "last_value": 51,
+          "slope_per_session": 31,
+          "projected_value": 82,
+          "projected_direction": "improving",
+          "forecast_confidence": 0.33,
+          "confidence_band": "low",
+          "basis": "Linear extrapolation of the wc3_journey_state.route_confidence trend (2 comparable sessions): last 51 + slope 31/session."
+        },
+        "risk": {
+          "kind": "risk",
+          "label": "Risk Forecast",
+          "forecastable": false,
+          "reason": "no_trend",
+          "detail": "User has ≥2 sessions but this lever/dimension had <2 readable points — no trend to extrapolate."
+        }
+      },
+      "forecastableCount": 2
+    },
+    {
+      "email": "user_ec082847d9",
+      "completed": 1,
+      "flagEnabled": true,
+      "forecasts": {
+        "growth": {
+          "kind": "growth",
+          "label": "Growth Forecast",
+          "forecastable": false,
+          "reason": "insufficient_sessions",
+          "detail": "Needs ≥2 completed sessions to form a trend; user has 1."
+        },
+        "outcome": {
+          "kind": "outcome",
+          "label": "Outcome Forecast",
+          "forecastable": false,
+          "reason": "insufficient_sessions",
+          "detail": "Needs ≥2 completed sessions to form a trend; user has 1."
+        },
+        "journey": {
+          "kind": "journey",
+          "label": "Journey Forecast",
+          "forecastable": false,
+          "reason": "insufficient_sessions",
+          "detail": "Needs ≥2 completed sessions to form a trend; user has 1."
+        },
+        "risk": {
+          "kind": "risk",
+          "label": "Risk Forecast",
+          "forecastable": false,
+          "reason": "insufficient_sessions",
+          "detail": "Needs ≥2 completed sessions to form a trend; user has 1."
+        }
+      },
+      "forecastableCount": 0
+    }
+  ]
+}

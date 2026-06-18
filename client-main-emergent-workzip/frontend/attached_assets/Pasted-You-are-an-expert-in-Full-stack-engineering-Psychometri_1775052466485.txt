@@ -1,0 +1,473 @@
+You are an expert in:
+
+* Full-stack engineering
+* Psychometrics
+* Assessment design
+* Data science
+* Talent analytics
+
+Build a **production-grade web platform**:
+
+# METRYXONE – Competency Intelligence & Career Seeker Portal
+
+This platform must include a **fully functional competency assessment system**, not just placeholders.
+
+---
+
+# 🔷 1. CORE OBJECTIVE
+
+The system must:
+
+1. Measure competencies using **multi-method assessments**
+2. Convert responses into **validated scores**
+3. Benchmark against **real user cohorts**
+4. Predict **role fit probability**
+5. Identify **skill gaps**
+6. Recommend **targeted interventions**
+
+---
+
+# 🔷 2. COMPETENCY FRAMEWORK (DEDUPLICATED)
+
+Use structured domains:
+
+1. Cognitive & Aptitude
+2. Execution & Discipline
+3. Communication
+4. Interpersonal
+5. Emotional Intelligence
+6. Adaptability & Learning
+7. Ethics & Professionalism
+8. Leadership & Initiative
+9. Planning & Organization
+10. Functional & Digital Skills
+11. Customer Orientation
+
+Each competency:
+
+* competency_id
+* definition
+* measurable indicators
+
+---
+
+# 🔷 3. ASSESSMENT ENGINE (CRITICAL – IMPLEMENT FULLY)
+
+---
+
+## 🎯 3.1 MULTI-METHOD ASSESSMENT DESIGN
+
+Each competency must be measured using **at least 2 methods**:
+
+---
+
+### 1. Objective Tests (MCQ / Numeric)
+
+Used for:
+
+* Numerical aptitude
+* Logical reasoning
+* Analytical thinking
+
+Structure:
+
+* question_id
+* difficulty_level (easy/medium/hard)
+* correct_answer
+* time_taken
+
+---
+
+---
+
+### 2. Situational Judgment Tests (SJT)
+
+Used for:
+
+* Decision making
+* Ethics
+* leadership
+* interpersonal skills
+
+Structure:
+
+* scenario
+* 4–5 options
+* scoring weight per option
+
+---
+
+---
+
+### 3. Self-Assessment (Likert Scale)
+
+Used for:
+
+* behavioral traits
+* motivation
+* emotional intelligence
+
+Scale:
+1–5 (Strongly Disagree → Strongly Agree)
+
+---
+
+---
+
+### 4. Behavioral Simulation (Rule-Based)
+
+Used for:
+
+* problem solving
+* prioritization
+* execution
+
+Example:
+
+* “You have 5 tasks, limited time—what do you do?”
+
+Score based on:
+
+* priority correctness
+* decision path
+
+---
+
+---
+
+### 5. Writing Assessment
+
+Used for:
+
+* communication
+* clarity
+
+Evaluate using:
+
+* keyword matching
+* sentence structure (basic NLP)
+
+---
+
+---
+
+## 🎯 3.2 QUESTION BANK DESIGN
+
+Create tables:
+
+### QUESTIONS
+
+* question_id
+* competency_id
+* type (MCQ, SJT, Likert, Simulation)
+* difficulty
+* correct_answer
+* scoring_weight
+
+---
+
+### RESPONSES
+
+* user_id
+* question_id
+* answer
+* time_taken
+
+---
+
+---
+
+# 🔷 4. SCORING MODEL (PRACTICAL)
+
+---
+
+## 🎯 Step 1: Question-Level Score
+
+MCQ:
+Score = 1 if correct else 0
+
+---
+
+SJT:
+Score = predefined weight (0–1)
+
+---
+
+Likert:
+Normalize to 0–1
+
+---
+
+Simulation:
+Score based on rule-based evaluation
+
+---
+
+---
+
+## 🎯 Step 2: Competency Score
+
+Competency Score =
+Σ(question_score × weight) / total_weight
+
+---
+
+---
+
+## 🎯 Step 3: Multi-Source Aggregation
+
+Final Competency Score =
+(Assessment Score × 0.5)
+
+* (CV Score × 0.2)
+* (Experience Score × 0.2)
+* (Behavior Score × 0.1)
+
+---
+
+---
+
+## 🎯 Step 4: Confidence Score
+
+Based on:
+
+* number of questions attempted
+* consistency
+* data sources
+
+---
+
+Final Score =
+Competency Score × Confidence
+
+---
+
+---
+
+# 🔷 5. ADAPTIVE ASSESSMENT ENGINE
+
+---
+
+If user answers correctly:
+
+→ Increase difficulty
+
+If wrong:
+
+→ decrease difficulty
+
+---
+
+Store ability level dynamically
+
+---
+
+---
+
+# 🔷 6. NORMALIZATION
+
+---
+
+Use:
+
+Z-score normalization
+
+AND
+
+Min-max scaling
+
+---
+
+---
+
+# 🔷 7. BENCHMARK ENGINE
+
+---
+
+Build cohorts:
+
+* target role
+* industry
+* stage
+
+Compute:
+
+* mean
+* percentile
+
+---
+
+---
+
+# 🔷 8. PERCENTILE ENGINE
+
+---
+
+Percentile =
+(number of users below / total users) × 100
+
+---
+
+---
+
+# 🔷 9. ROLE WEIGHT ENGINE
+
+---
+
+Use role-stage matrix
+
+Example:
+
+| competency | weight |
+| ---------- | ------ |
+
+---
+
+---
+
+# 🔷 10. ROLE FIT PROBABILITY
+
+---
+
+RoleFit =
+(0.4 × weighted_score)
+
+* (0.3 × percentile)
+  − (0.2 × gap)
+* (0.1 × consistency)
+
+---
+
+---
+
+# 🔷 11. GAP ANALYSIS
+
+---
+
+Gap = target_score − user_score
+
+Priority =
+gap × weight
+
+---
+
+---
+
+# 🔷 12. INTERVENTION ENGINE
+
+---
+
+Map each competency → learning module
+
+Return:
+
+* course
+* practice
+* project
+
+---
+
+---
+
+# 🔷 13. GROWTH SIMULATION
+
+---
+
+Future Score =
+current + improvement
+
+---
+
+---
+
+# 🔷 14. JOB MATCHING
+
+---
+
+Use cosine similarity between:
+
+candidate vector
+job vector
+
+---
+
+---
+
+# 🔷 15. FRONTEND
+
+---
+
+Dashboard must show:
+
+* competency scores
+* percentile
+* role fit
+* gaps
+* recommendations
+
+---
+
+---
+
+# 🔷 16. API ENDPOINTS
+
+---
+
+* /start-assessment
+* /submit-answer
+* /compute-score
+* /get-percentile
+* /role-fit
+* /gap-analysis
+* /recommendations
+
+---
+
+---
+
+# 🔷 17. SAMPLE DATA
+
+---
+
+Create:
+
+* 100 questions
+* 50 competencies
+* 100 users
+
+---
+
+---
+
+# 🔷 18. FINAL OUTPUT
+
+---
+
+Return JSON:
+
+{
+competency_scores,
+percentile,
+role_fit,
+gaps,
+recommendations
+}
+
+---
+
+---
+
+# 🔷 FINAL REQUIREMENT
+
+---
+
+System must be:
+
+* modular
+* scalable
+* assessment-driven
+* explainable
+
+Include comments for scoring logic.
+
+---

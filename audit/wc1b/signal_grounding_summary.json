@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-06-04T05:06:12.608Z",
+  "dry_run": false,
+  "runtime_activation_wired": false,
+  "note": "Additive reuse-linkage only. Runtime signal-activation wiring is a deliberate follow-up (forecast figures below are directional, not measured runtime deltas).",
+  "tags_grounded": 182,
+  "family_links": 351,
+  "atomic_links": 14402,
+  "signals_reused_distinct": 5581,
+  "coverage": {
+    "signal_coverage_before_pct": 7.6,
+    "signal_coverage_after_pct": 63.1,
+    "signal_coverage_delta_pct": 55.5,
+    "concern_coverage_before_pct": 42.8,
+    "concern_coverage_after_pct": 90.4,
+    "concern_coverage_delta_pct": 47.6,
+    "ontology_health_before": 60.8,
+    "ontology_health_after": 67.8,
+    "ontology_health_delta": 7,
+    "tags_total": 328,
+    "tags_grounded_before": 25,
+    "tags_grounded_after": 207
+  },
+  "success_criteria": {
+    "signal_coverage_gt_60": true,
+    "concern_coverage_gt_85": true,
+    "ontology_health_gt_67": true,
+    "all_pass": true
+  },
+  "resolver_impact_forecast": {
+    "concerns_newly_grounded": 1184,
+    "basis": "concerns under newly-grounded GREEN tags gain reusable atomic-signal evidence",
+    "note": "directional; not a measured resolver-accuracy delta; requires runtime wiring (follow-up) to realize"
+  },
+  "question_quality_impact_forecast": {
+    "questions_under_grounded_green": 17100,
+    "questions_total": 30638,
+    "pct_addressable": 55.8,
+    "note": "directional; clarity questions under grounded tags become signal-targetable once runtime wiring lands"
+  },
+  "verification": {
+    "dry_run": false,
+    "no_signal_fabrication": true,
+    "fabricated_rows": 0,
+    "no_signal_duplication": true,
+    "total_atomic_rows": 14402,
+    "distinct_tag_signal_pairs": 14402,
+    "no_new_bridge_tags": true,
+    "non_canonical_tags_inserted": 0,
+    "non_canonical_tags_rejected_pre_insert": 0,
+    "no_new_signals": true,
+    "atomic_signals_before": 15972,
+    "atomic_signals_after": 15972,
+    "no_concern_modification": true,
+    "concerns_before": 2489,
+    "concerns_after": 2489,
+    "no_bridge_tag_modification": true,
+    "distinct_bridge_tags_before": 328,
+    "distinct_bridge_tags_after": 328,
+    "distinct_signals_reused": 5581,
+    "tags_grounded_in_table": 182
+  }
+}

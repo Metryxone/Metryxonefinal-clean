@@ -1,0 +1,296 @@
+family_name,concern_count,concerns_covered,coverage_pct,avg_behaviors
+Emotional Family,185,5,50,2.8
+Learning Family 3,31,4,40,2.5
+Decision Family,22,10,100,3.8
+Professional Family,15,7,70,3
+Career Family,13,8,80,3
+Participation Family,12,5,50,2.7
+Time Family,11,10,100,3.6
+Expectations Family,11,3,30,2.3
+Ownership Family,11,7,70,3
+Learning Family 7,11,9,90,3.1
+Failure Family,10,0,0,1.8
+Learning Family 2,10,10,100,4.6
+Career Family 8,10,10,100,4.3
+Career Family 12,10,9,90,3.1
+Collaboration Family,10,1,10,1
+Emotionally Family,9,0,0,1.22
+Validation Family,9,1,11.11,1.89
+Confusion Family,8,3,37.5,2.38
+Academic Family 4,8,4,50,2.88
+Influence Family,8,2,25,1.63
+Preparation Family 2,8,8,100,4.13
+Discipline Family,8,3,37.5,2.63
+Academic Family 3,7,5,71.43,2.71
+Strengths Family,7,1,14.29,0.86
+Discipline Family 2,7,7,100,5
+Exam Family,7,2,28.57,1.71
+Workplace Family 3,7,0,0,1
+Concepts Family,6,0,0,1
+Analytical Family,6,1,16.67,2.5
+Asking Family,6,0,0,0.67
+Style Family,6,4,66.67,3.17
+Emotional Family 6,6,0,0,1.5
+Leadership Family 6,6,6,100,4.67
+Identity Family,6,0,0,2
+Learning Family 8,6,6,100,4
+Future Family,5,1,20,1.4
+Attention Family,5,1,20,2.4
+Following Family,5,0,0,0
+Academic Family 2,5,5,100,4.2
+Accuracy Family,5,3,60,2.8
+Thinking Family,5,4,80,3
+Performance Family,5,1,20,2.2
+Failures Family,5,2,40,2
+Leadership Family 3,5,5,100,4.2
+Peers Family,5,0,0,1.2
+Industry Family,5,0,0,0.6
+Distress Family,5,1,20,1.8
+Sustain Family,5,4,80,4
+Classroom Family,4,1,25,2.25
+Learning Family,4,4,100,4
+Interest Family,4,0,0,0.25
+Independent Family,4,2,50,2.5
+Application Family,4,0,0,0.75
+Future Family 2,4,0,0,1.75
+Workplace Family,4,1,25,1.75
+Emotional Family 3,4,1,25,1.75
+Emotional Family 4,4,3,75,2.75
+Resilience Family,4,1,25,2.5
+Workplace Family 2,4,0,0,0.75
+Despite Family,4,0,0,1.25
+Growth Family,4,4,100,5
+Emotional Family 8,4,2,50,2.25
+Study Family,4,3,75,4.25
+Adaptability Family 2,4,3,75,3.75
+Critical Family,4,3,75,3.25
+Public Family,4,3,75,2.75
+Wellbeing Family,4,3,75,3.25
+Constant Family,4,1,25,2.25
+Emotional Family 10,4,0,0,1.25
+Emotional Family 12,4,0,0,1.75
+Identity Family 2,4,4,100,4.5
+Strategic Family,3,0,0,2
+Subjects Family,3,0,0,1
+Environments Family,3,3,100,3.33
+Interests Family,3,0,0,0.67
+Preparation Family,3,2,66.67,2.67
+Progress Family,3,0,0,1.33
+Conceptual Family 2,3,0,0,1
+Leadership Family,3,3,100,3
+Writing Family,3,0,0,1.67
+Reasoning Family,3,1,33.33,2.33
+Information Family,3,0,0,0
+Academic Family 5,3,0,0,1.67
+Career Family 6,3,3,100,3.67
+Networking Family,3,0,0,1
+Academics Family,3,0,0,0.33
+Difficult Family,3,0,0,1.67
+Accountability Family,3,3,100,3
+Peer Family,3,0,0,1.67
+Learning Family 5,3,3,100,3
+Integration Family,3,0,0,1
+Standards Family,3,0,0,1.33
+Interviews Family,3,1,33.33,2
+Cognitive Family,3,1,33.33,2.33
+Motivation Family,3,2,66.67,3
+Communication Family 2,3,0,0,2
+Corporate Family,3,0,0,1
+Performance Family 2,3,1,33.33,2.33
+Leadership Family 4,3,3,100,4.67
+Executive Family,3,0,0,0.67
+Responsibilities Family,3,0,0,2
+Leadership Family 5,3,3,100,3.33
+Psychological Family,3,0,0,0.67
+Hidden Family 2,3,0,0,0.33
+Comprehension Family,3,3,100,3.33
+Classroom Family 2,3,0,0,2
+Cognitive Family 2,3,1,33.33,1.67
+Correction Family,3,0,0,0.67
+Feedback Family,3,0,0,2
+Consistency Family,3,0,0,2
+Expectations Family 3,3,0,0,1
+Making Family,3,0,0,2
+Academic Family 12,3,1,33.33,3
+Environments Family 2,3,1,33.33,1.33
+Career Family 15,3,3,100,3
+Consistent Family 2,3,3,100,4.33
+Academic Family 14,3,0,0,1
+Concept Family,3,0,0,1
+Consistency Family 2,3,3,100,3.67
+Professional Family 2,3,0,0,1
+Career Family 16,3,0,0,2
+Discussions Family,3,0,0,1
+Salary Family,3,0,0,0.33
+Board Family,3,0,0,1
+Academic Family 16,3,0,0,2
+Attention Family 2,3,2,66.67,3.33
+Emotional Family 13,3,2,66.67,3.33
+Discipline Family 3,3,3,100,3.33
+Emotionally Family 4,3,0,0,0.33
+Imposter Family,3,0,0,0.33
+Emotional Family 15,3,3,100,4
+Behavioral Family,3,0,0,0.33
+Learning Family 10,3,3,100,3.67
+Conversations Family,2,0,0,0.5
+Distribution Family,2,0,0,2
+Decline Family,2,0,0,1
+Adaptability Family,2,1,50,2.5
+Practices Family,2,0,0,0.5
+Emotional Family 2,2,0,0,2
+Conceptual Family,2,2,100,3
+Negative Family,2,1,50,1.5
+Focus Family,2,2,100,5
+Habits Family,2,0,0,2
+Initiative Family,2,2,100,4
+Mathematical Family,2,0,0,1
+Development Family,2,0,0,0
+Problems Family,2,0,0,0
+Academic Family,2,2,100,4
+Subjects Family 2,2,0,0,1
+Breaking Family,2,0,0,0
+Materials Family,2,0,0,2
+Career Family 2,2,0,0,2
+Avoid Family,2,0,0,0
+Career Family 3,2,0,0,2
+Step Family,2,0,0,1.5
+Career Family 4,2,2,100,3.5
+Detached Family,2,1,50,1.5
+From Family,2,1,50,2
+Avoiding Family,2,0,0,1
+Preferences Family,2,1,50,3.5
+Marks Family,2,0,0,0
+Learning Family 4,2,2,100,3.5
+Career Family 5,2,2,100,3.5
+Depth Family,2,2,100,3.5
+Career Family 7,2,1,50,2.5
+Studies Family,2,0,0,1
+Pipelines Family,2,0,0,2
+Academic Family 6,2,0,0,1
+Internship Family,2,0,0,1.5
+Actions Family,2,0,0,1.5
+Academic Family 7,2,0,0,1.5
+Emotionally Family 2,2,0,0,0
+Avoiding Family 2,2,0,0,1
+Financial Family,2,0,0,0.5
+Hidden Family,2,2,100,3
+Taking Family,2,0,0,1.5
+Emotional Family 5,2,2,100,3
+Ecosystems Family,2,0,0,1.5
+Communication Family,2,2,100,3.5
+Collapse Family,2,0,0,1
+Leadership Family 2,2,2,100,4.5
+Careers Family,2,0,0,1.5
+Confusion Family 2,2,0,0,0
+Career Family 9,2,2,100,3
+Academic Family 8,2,1,50,3
+Career Family 10,2,2,100,4
+Interviews Family 2,2,0,0,1
+Career Family 11,2,2,100,3.5
+Expectations Family 2,2,1,50,2.5
+Delays Family,2,0,0,2
+Beyond Family,2,1,50,2.5
+Again Family,2,0,0,1
+Academic Family 9,2,0,0,1
+Emotional Family 7,2,0,0,2
+Career Family 13,2,2,100,4.5
+Failures Family 2,2,0,0,1
+Academic Family 10,2,0,0,1
+Assessments Family,2,2,100,3.5
+Communication Family 3,2,0,0,2
+Different Family,2,0,0,0.5
+Academic Family 11,2,0,0,2
+Accuracy Family 2,2,0,0,0
+Development Family 2,2,0,0,0
+Questions Family,2,0,0,0.5
+Goal Family,2,0,0,1
+Linkedin Family,2,0,0,0
+Information Family 2,2,2,100,4
+Learning Family 6,2,2,100,3
+Assessments Family 2,2,0,0,0.5
+Practical Family,2,0,0,2
+Authentic Family,2,0,0,0
+Career Family 14,2,1,50,2.5
+Performance Family 3,2,0,0,2
+Consistent Family,2,0,0,2
+Change Family,2,1,50,2
+Distractions Family,2,2,100,3
+Creativity Family,2,0,0,0.5
+Burnout Family,2,0,0,1
+Social Family,2,0,0,2
+Dependency Family,2,0,0,1
+Criticism Family,2,0,0,1
+Emotional Family 9,2,0,0,1.5
+Competency Family,2,0,0,2
+Learn Family,2,0,0,0
+Boundaries Family,2,0,0,1.5
+Sustainable Family,2,1,50,2.5
+Strategic Family 2,2,2,100,4.5
+Credibility Family,2,0,0,0
+Diverse Family,2,2,100,3
+Interactions Family,2,0,0,1.5
+Performers Family,2,0,0,1
+Emotional Family 11,2,0,0,2
+Peer Family 2,2,0,0,2
+Subject Family,2,0,0,1.5
+Completion Family,2,0,0,1.5
+Motivation Family 2,2,2,100,3
+Academic Family 13,2,0,0,1
+Oral Family,2,0,0,0
+Academic Family 15,2,1,50,3.5
+Ideas Family,2,0,0,0
+Culture Family,2,1,50,3
+Isolation Family,2,0,0,1
+Profile Family,2,0,0,0
+Initiative Family 2,2,0,0,1
+Improvement Family,2,1,50,3
+Innovation Family,2,0,0,0.5
+Credibility Family 2,2,0,0,1
+Career Family 17,2,0,0,2
+Alignment Family,2,2,100,3
+Initiatives Family,2,1,50,2.5
+From Family 2,2,2,100,3
+Capability Family,2,2,100,4
+Networking Family 2,2,2,100,3
+World Family,2,0,0,1.5
+Projects Family,2,0,0,1
+Emotionally Family 3,2,0,0,0
+Fast Family,2,0,0,0
+Conceptual Family 3,2,0,0,1.5
+Conceptual Family 4,2,0,0,0
+Comparison Family,2,1,50,2.5
+Goals Family,2,2,100,3
+Interpretation Family,2,0,0,1
+Assessments Family 3,2,0,0,0
+Habits Family 2,2,1,50,2.5
+Professional Family 3,2,1,50,2.5
+Comparing Family,2,0,0,1
+Curiosity Family,2,0,0,1
+Networking Family 3,2,0,0,2
+Mathematics Family,2,0,0,1
+Excellence Family,2,0,0,1.5
+Cognitive Family 3,2,0,0,1.5
+Exam Family 2,2,0,0,2
+Grades Family,2,0,0,1
+Adaptability Family 3,2,0,0,1.5
+Preparedness Family,2,0,0,0
+Emotional Family 14,2,2,100,3.5
+Full Family,2,2,100,5
+Learning Family 9,2,2,100,3.5
+Focused Family,2,1,50,1.5
+Missing Family,2,1,50,2.5
+Execution Family,2,1,50,3
+Enterprise Family,2,0,0,0
+Boundaries Family 2,2,0,0,1
+Consistency Family 3,2,2,100,4
+Ended Family,2,0,0,0
+Academic Family 17,2,0,0,1
+Stakes Family,2,0,0,0
+Professional Family 4,2,0,0,1.5
+Academic Family 18,2,0,0,1
+Adaptability Family 4,2,0,0,1
+Attendance Family,2,0,0,1
+Assignments Family,2,1,50,2.5
+Agility Family,2,2,100,3
+Emotional Family 16,2,0,0,2
+Motivation Family 3,2,0,0,1

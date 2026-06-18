@@ -1,0 +1,168 @@
+OBJECTIVE:
+Introduce AI-driven competency inference, conversational assessment intelligence, behavioral reasoning, and automated capability extraction from resumes, portfolios, profiles, and conversational interactions.
+
+====================================================
+STEP 1 — CREATE NEW MIGRATION
+=============================
+
+Create:
+backend/migrations/20260720_ai_inference_v2.sql
+
+Add tables:
+
+* competency_inference_sources
+* ai_inferred_competencies
+* behavioral_inference_profiles
+* conversational_assessment_sessions
+* ai_reasoning_chains
+* portfolio_signal_analysis
+* github_signal_analysis
+* linkedin_signal_analysis
+* inference_confidence_models
+* ai_assessment_memory
+
+====================================================
+STEP 2 — CREATE AI COMPETENCY INFERENCE ENGINE
+==============================================
+
+Create:
+backend/services/ai-competency-inference-engine.ts
+
+Responsibilities:
+
+* infer competencies from resumes
+* infer competencies from LinkedIn
+* infer competencies from GitHub
+* infer competencies from projects
+* infer competencies from behavioral text
+* generate competency confidence
+
+====================================================
+STEP 3 — CREATE CONVERSATIONAL AI ASSESSMENT ENGINE
+===================================================
+
+Create:
+backend/services/conversational-assessment-engine.ts
+
+Capabilities:
+
+* dynamic probing
+* contradiction detection
+* behavioral inference
+* leadership signal extraction
+* communication intelligence
+* contextual questioning
+
+====================================================
+STEP 4 — CREATE AI REASONING ENGINE
+===================================
+
+Create:
+backend/services/ai-reasoning-engine.ts
+
+Purpose:
+Generate explainable competency reasoning.
+
+Outputs:
+
+* why competency inferred
+* confidence reasoning
+* behavioral evidence
+* readiness rationale
+
+====================================================
+STEP 5 — CREATE RESUME SIGNAL ENGINE
+====================================
+
+Create:
+backend/services/resume-signal-engine.ts
+
+Extract:
+
+* technical competencies
+* leadership signals
+* execution indicators
+* project complexity
+* industry exposure
+
+====================================================
+STEP 6 — CREATE GITHUB ANALYZER
+===============================
+
+Create:
+backend/services/github-competency-analyzer.ts
+
+Analyze:
+
+* repository complexity
+* architecture maturity
+* language depth
+* collaboration indicators
+* engineering patterns
+
+====================================================
+STEP 7 — CREATE LINKEDIN ANALYZER
+=================================
+
+Create:
+backend/services/linkedin-intelligence-engine.ts
+
+Extract:
+
+* career progression
+* leadership indicators
+* skill evolution
+* industry trajectory
+
+====================================================
+STEP 8 — CREATE AI ASSESSMENT APIS
+==================================
+
+Create:
+backend/routes/ai-assessment-v2.ts
+
+Endpoints:
+POST /api/v2/ai/infer-competencies
+POST /api/v2/ai/start-conversation
+POST /api/v2/ai/analyze-resume
+POST /api/v2/ai/analyze-linkedin
+POST /api/v2/ai/analyze-github
+GET  /api/v2/ai/reasoning/:userId
+
+====================================================
+STEP 9 — FRONTEND AI INTELLIGENCE PANEL
+=======================================
+
+Create:
+frontend/src/modules/career-builder/intelligence/views/AICompetencyInsights.tsx
+
+Features:
+
+* inferred competency view
+* behavioral reasoning
+* confidence visualization
+* explainability graph
+* conversational intelligence
+
+====================================================
+STEP 10 — VALIDATION
+====================
+
+Test:
+
+1. Resume inference works
+2. LinkedIn analysis works
+3. GitHub competency extraction works
+4. Conversational assessment adapts dynamically
+5. Explainability generated correctly
+
+====================================================
+EXPECTED RESULT
+===============
+
+By end of Phase 5:
+
+* AI competency inference operational
+* conversational intelligence operational
+* automated competency extraction functional
+* explainable AI competency reasoning active

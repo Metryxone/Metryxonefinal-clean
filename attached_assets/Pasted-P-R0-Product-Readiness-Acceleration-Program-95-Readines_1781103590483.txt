@@ -1,0 +1,265 @@
+P-R0 — Product Readiness Acceleration Program (95% Readiness Path)
+
+IMPLEMENTATION PROGRAM
+
+Context
+
+Completed audits:
+
+* WC-L0E User Intelligence
+* WC-L1B Longitudinal Intelligence
+* WC-L5 Memory Layer
+* WC-C1 → WC-C10 Commercial & Launch Audits
+* WC-P1 Employability Index Audit
+* WC-P2 Learning Behavior Index Audit
+* WC-P3 Career Builder Audit
+* P-X1 Shared Product Foundation Audit
+
+Goal
+
+Achieve 95%+ readiness across CAPADEX, Employability Index, Learning Behavior Index, and Career Builder before deployment.
+
+Guiding Principle
+
+No new architectures unless absolutely required.
+
+Reuse existing CAPADEX infrastructure:
+
+* User Intelligence Store
+* Trend Engine
+* Memory Layer
+* Recommendation Infrastructure
+* Snapshot Infrastructure
+* Decision Intelligence
+* Journey Intelligence
+* Outcome Intelligence
+
+Priority 1 — Shared Foundation Activation
+
+Objective
+
+Activate shared capabilities already built but not consumed by products.
+
+Deliverables
+
+PR0-F1. Identity & Persistence Activation
+
+* Connect products to User Intelligence Store
+* Standardize user-level persistence
+* Standardize snapshot ownership
+* Eliminate orphan product state
+
+PR0-F2. Snapshot Framework Activation
+
+* EI snapshot automation
+* LBI snapshot automation
+* Career Builder snapshot automation
+* Historical version tracking
+
+PR0-F3. Trend Consumption
+
+* EI trend consumption
+* LBI trend consumption
+* Career Builder trend consumption
+
+PR0-F4. Memory Consumption
+
+* Enable Memory Layer consumption
+* Enable recommendation memory usage
+* Enable longitudinal context usage
+
+PR0-F5. Personalization Consumption
+
+* Persona consumption
+* Behaviour consumption
+* Recommendation personalization
+* Report personalization
+
+Success Criteria
+
+* Shared infrastructure consumed by all products
+* Duplicate persistence removed
+* Duplicate trend logic removed
+* Duplicate memory logic removed
+
+Priority 2 — Employability Index Hardening
+
+Objective
+
+Move EI from WC-P1 state toward 95% readiness.
+
+Workstreams
+
+EI-01 Formula Reconciliation
+
+* Single authoritative formula
+* Gauge = Breakdown
+* Competency Assessment integrated
+* Education integrated
+
+EI-02 Snapshot Integration
+
+* Automatic snapshot creation
+* Trend generation
+
+EI-03 Recommendation Hardening
+
+* Occupation-specific recommendations
+* Qualification-specific recommendations
+* Institution-specific recommendations
+
+EI-04 Data Expansion
+
+* Occupations
+* Skills
+* Qualifications
+* Institutions
+* Pathways
+
+Target
+
+Coverage ≥ 85%
+Confidence ≥ 80%
+
+Priority 3 — Learning Behavior Index Completion
+
+Objective
+
+Resolve WC-P2 findings.
+
+Workstreams
+
+LBI-01 Architecture Consolidation
+
+* Select authoritative LBI architecture
+* Eliminate disconnected systems
+
+LBI-02 Framework Seeding
+
+* Domains
+* Age bands
+* Questions
+* Scoring assets
+
+LBI-03 Report Integrity
+
+* Real scores only
+* No fabricated outputs
+
+LBI-04 Longitudinal Layer
+
+* Historical tracking
+* Trend tracking
+
+Target
+
+Coverage ≥ 85%
+Confidence ≥ 75%
+
+Priority 4 — Career Builder Completion
+
+Objective
+
+Resolve WC-P3 findings.
+
+Workstreams
+
+CB-01 Persistence
+
+* DB-backed memory
+* Growth plan persistence
+
+CB-02 Recommendation Activation
+
+* Recommendation bridge activation
+* User-linked recommendations
+
+CB-03 Marketplace Supply
+
+* Mentors
+* Jobs
+* Opportunities
+
+CB-04 Longitudinal Intelligence
+
+* Career history
+* Progress tracking
+
+Target
+
+Coverage ≥ 85%
+Confidence ≥ 75%
+
+Priority 5 — Intelligence Activation Layer
+
+Objective
+
+Activate platform intelligence that depends on product maturity.
+
+Workstreams
+
+* Memory Engine
+* Hypothesis Engine
+* Intervention Engine
+* Re-engagement Engine
+
+Target
+
+All engines operational and consuming real product data.
+
+Priority 6 — Forecast Intelligence
+
+Objective
+
+Build prediction only after longitudinal data exists.
+
+Workstreams
+
+* Outcome Forecasting
+* Growth Forecasting
+* Risk Prediction
+* Recommendation Forecasting
+
+Target
+
+Forecast Intelligence ≥ 90%
+
+Priority 7 — Commercial Wave 2 Activation
+
+Objective
+
+Activate existing commercial infrastructure.
+
+Workstreams
+
+* Entitlement Consumption
+* Renewal Activation
+* Upsell Activation
+* Commercial Forecasting
+
+Target
+
+Commercial Readiness ≥ 95%
+
+Priority 8 — Final Product Readiness Audit
+
+Measure
+
+* CAPADEX
+* Employability Index
+* Learning Behavior Index
+* Career Builder
+* Shared Foundation
+* Commercial Layer
+
+Success Criteria
+
+* Every flagship product ≥ 95% readiness
+* Commercial readiness ≥ 95%
+* Intelligence readiness ≥ 95%
+* Security readiness ≥ 95%
+* Operational readiness ≥ 95%
+
+Only after successful completion:
+
+APPROVE DEPLOYMENT OF CAPADEX + MTERYXONE

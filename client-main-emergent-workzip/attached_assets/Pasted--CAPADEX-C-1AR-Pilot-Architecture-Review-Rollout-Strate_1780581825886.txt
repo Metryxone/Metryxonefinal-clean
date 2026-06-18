@@ -1,0 +1,329 @@
+# CAPADEX C-1AR
+
+## Pilot Architecture Review & Rollout Strategy
+
+### Objective
+
+Review the completed C-1A Pilot findings and convert them into the final repository-wide rollout strategy.
+
+This phase updates the architecture based on measured evidence.
+
+No repository enrichment.
+
+No production writes.
+
+No metadata updates.
+
+No question modifications.
+
+No C-2 execution.
+
+Review and planning only.
+
+---
+
+## Inputs
+
+Use:
+
+AQ-1
+
+AQ-2
+
+AQ-2R
+
+C-1 QSIL Audit
+
+C-1A QDA Architecture
+
+C-1A Pilot Validation
+
+Treat pilot findings as the highest-priority evidence source.
+
+---
+
+# PHASE 1
+
+## Pilot Findings Validation
+
+Review:
+
+Differentiability Improvement
+
+Question Intelligence Improvement
+
+Routing Impact
+
+Coverage Rates
+
+Classification Rates
+
+Contribution Analysis
+
+Validate:
+
+Measured Gains
+
+Statistical Reliability
+
+Scalability
+
+Generate:
+
+pilot_validation_report
+
+---
+
+# PHASE 2
+
+## Architecture Reassessment
+
+Compare:
+
+Original C-1A Assumptions
+
+vs
+
+Pilot Results
+
+For each dimension evaluate:
+
+Age
+
+Persona
+
+Stage
+
+Capability
+
+Behavior
+
+Signal
+
+Context
+
+Archetype
+
+Classify:
+
+Validated
+
+Partially Validated
+
+Not Validated
+
+Generate:
+
+architecture_reassessment_report
+
+---
+
+# PHASE 3
+
+## Rollout Priority Redesign
+
+Using pilot evidence, redesign implementation order.
+
+Evaluate:
+
+Archetype Rollout
+
+Capability Rollout
+
+Behavior Rollout
+
+Signal Rollout
+
+Context Rollout
+
+Recommend:
+
+Priority Level
+
+Expected Impact
+
+Implementation Complexity
+
+Expected ROI
+
+Generate:
+
+rollout_priority_report
+
+---
+
+# PHASE 4
+
+## Signal Strategy Review
+
+Review signal findings.
+
+Determine:
+
+Grounded Signal Coverage
+
+Evidence Strength
+
+Coverage Gaps
+
+Signal Backfill Feasibility
+
+Define:
+
+Evidence Requirements
+
+Classification Rules
+
+Quality Gates
+
+Generate:
+
+signal_strategy_report
+
+---
+
+# PHASE 5
+
+## Repository Rollout Blueprint
+
+Design repository-wide implementation plan.
+
+Create:
+
+Wave 1
+
+Wave 2
+
+Wave 3
+
+Wave 4
+
+For each wave specify:
+
+Target Tags
+
+Target Concerns
+
+Target Question Counts
+
+Expected Gain
+
+Expected Risk
+
+Generate:
+
+repository_rollout_blueprint
+
+---
+
+# PHASE 6
+
+## Success Metrics
+
+Define repository-wide success criteria.
+
+Metrics:
+
+Differentiability Score
+
+QIS V2
+
+Signal Coverage
+
+Archetype Coverage
+
+Capability Coverage
+
+Routing Precision
+
+Assessment Intelligence Score
+
+Trust Score
+
+Define:
+
+Minimum Success
+
+Target Success
+
+Stretch Success
+
+Generate:
+
+success_metrics_report
+
+---
+
+# PHASE 7
+
+## Final Recommendation
+
+Provide:
+
+Approved for Rollout
+
+Approved with Modifications
+
+Not Approved
+
+For:
+
+Archetype
+
+Capability
+
+Behavior
+
+Signal
+
+Context
+
+QIS V2
+
+Generate:
+
+final_governance_report
+
+---
+
+# OUTPUT
+
+1. Pilot Validation Report
+
+2. Architecture Reassessment Report
+
+3. Rollout Priority Report
+
+4. Signal Strategy Report
+
+5. Repository Rollout Blueprint
+
+6. Success Metrics Report
+
+7. Final Governance Report
+
+8. Updated CAPADEX Roadmap
+
+9. C-2 Execution Recommendation
+
+10. GO / NO-GO Decision
+
+---
+
+# IMPORTANT
+
+Do not enrich repository questions.
+
+Do not modify production data.
+
+Do not create new metadata.
+
+Do not execute rollout.
+
+Do not start C-2.
+
+Convert pilot evidence into final rollout strategy only.
+
+STOP.
+
+WAIT FOR APPROVAL.

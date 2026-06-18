@@ -1,0 +1,31 @@
+### STUDENT
+Score: 90/100  ·  band: partial
+  explainability:          100%  (weight 40%)
+  section fill:            100%  (weight 30%)
+  data completeness:       50%  (weight 20%)
+  stakeholder specificity: 100%  (weight 10%)
+  → Report is usable; surfaced statements are fully traceable to the resolved depth, but the lineage chain is partially resolved (2 hop(s) unresolved).
+
+### PARENT
+Score: 90/100  ·  band: partial
+  explainability:          100%  (weight 40%)
+  section fill:            100%  (weight 30%)
+  data completeness:       50%  (weight 20%)
+  stakeholder specificity: 100%  (weight 10%)
+  → Report is usable; surfaced statements are fully traceable to the resolved depth, but the lineage chain is partially resolved (2 hop(s) unresolved).
+
+### COUNSELOR
+Score: 90/100  ·  band: partial
+  explainability:          100%  (weight 40%)
+  section fill:            100%  (weight 30%)
+  data completeness:       50%  (weight 20%)
+  stakeholder specificity: 100%  (weight 10%)
+  → Report is usable; surfaced statements are fully traceable to the resolved depth, but the lineage chain is partially resolved (2 hop(s) unresolved).
+
+### INSTITUTION
+Score: 90/100  ·  band: partial
+  explainability:          100%  (weight 40%)
+  section fill:            100%  (weight 30%)
+  data completeness:       50%  (weight 20%)
+  stakeholder specificity: 100%  (weight 10%)
+  → Report is usable; surfaced statements are fully traceable to the resolved depth, but the lineage chain is partially resolved (2 hop(s) unresolved).

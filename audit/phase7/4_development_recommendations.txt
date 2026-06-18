@@ -1,0 +1,89 @@
+DEVELOPMENT RECOMMENDATIONS — anchor session 1cd9ca07-4659-42c4-83fd-229e5e8f21f2
+============================================================
+### DEVELOPMENT — student
+  • [career_readiness] Build steady calm under evaluation
+      Develop pre-performance routines, breathing resets, and rehearsal habits so interviews, exams, and presentations feel manageable.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [career_readiness] Turn career confusion into a clear plan
+      Develop the decision-making habits — values clarity, option mapping, checkpoints — that resolve career uncertainty.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [career_readiness] Strengthen emotional steadiness at work
+      Build the habits that keep you regulated through setbacks, feedback, and pressure.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [communication] Grow confident social communication
+      Develop the habits — speaking up early, asking questions, contributing in groups — that reduce withdrawal.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [leadership] Practise being visible in groups
+      Build comfort taking shared responsibility and being seen in collaborative settings.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+
+### DEVELOPMENT — parent
+  • [career_readiness] Build steady calm under evaluation
+      Help your child by encouraging this: Develop pre-performance routines, breathing resets, and rehearsal habits so interviews, exams, and presentations feel manageable.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [career_readiness] Turn career confusion into a clear plan
+      Help your child by encouraging this: Develop the decision-making habits — values clarity, option mapping, checkpoints — that resolve career uncertainty.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [career_readiness] Strengthen emotional steadiness at work
+      Help your child by encouraging this: Build the habits that keep you regulated through setbacks, feedback, and pressure.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [communication] Grow confident social communication
+      Help your child by encouraging this: Develop the habits — speaking up early, asking questions, contributing in groups — that reduce withdrawal.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [leadership] Practise being visible in groups
+      Help your child by encouraging this: Build comfort taking shared responsibility and being seen in collaborative settings.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+
+### DEVELOPMENT — counselor
+  • [career_readiness] Build steady calm under evaluation
+      For this student, consider guiding them toward: Develop pre-performance routines, breathing resets, and rehearsal habits so interviews, exams, and presentations feel manageable.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [career_readiness] Turn career confusion into a clear plan
+      For this student, consider guiding them toward: Develop the decision-making habits — values clarity, option mapping, checkpoints — that resolve career uncertainty.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [career_readiness] Strengthen emotional steadiness at work
+      For this student, consider guiding them toward: Build the habits that keep you regulated through setbacks, feedback, and pressure.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [communication] Grow confident social communication
+      For this student, consider guiding them toward: Develop the habits — speaking up early, asking questions, contributing in groups — that reduce withdrawal.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [leadership] Practise being visible in groups
+      For this student, consider guiding them toward: Build comfort taking shared responsibility and being seen in collaborative settings.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+
+### DEVELOPMENT — institution
+  • [career_readiness] Build steady calm under evaluation
+      For students showing this pattern across the cohort: Develop pre-performance routines, breathing resets, and rehearsal habits so interviews, exams, and presentations feel manageable.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [career_readiness] Turn career confusion into a clear plan
+      For students showing this pattern across the cohort: Develop the decision-making habits — values clarity, option mapping, checkpoints — that resolve career uncertainty.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [career_readiness] Strengthen emotional steadiness at work
+      For students showing this pattern across the cohort: Build the habits that keep you regulated through setbacks, feedback, and pressure.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [communication] Grow confident social communication
+      For students showing this pattern across the cohort: Develop the habits — speaking up early, asking questions, contributing in groups — that reduce withdrawal.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [leadership] Practise being visible in groups
+      For students showing this pattern across the cohort: Build comfort taking shared responsibility and being seen in collaborative settings.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation

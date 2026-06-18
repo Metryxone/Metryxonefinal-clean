@@ -1,0 +1,638 @@
+Use this as the **master implementation prompt** for taking the Employer Intelligence Operating System from its current state to **98%+ World-Class Certification**.
+
+---
+
+# EP-WORLDCLASS-98
+
+# Employer Intelligence Operating System (EIOS)
+
+## World-Class Implementation Program
+
+### Mission
+
+Transform the current Employer Portal into a fully operational **Employer Intelligence Operating System (EIOS)** capable of supporting:
+
+* Hiring Intelligence
+* Talent Intelligence
+* Competency Intelligence
+* Workforce Intelligence
+* Leadership Intelligence
+* Succession Intelligence
+* Learning Intelligence
+* Forecast Intelligence
+* Outcome Intelligence
+* Executive Intelligence
+
+while consuming shared MetryxOne intelligence assets.
+
+---
+
+# NON-NEGOTIABLE ARCHITECTURE RULES
+
+Do NOT create duplicate intelligence engines.
+
+Consume existing:
+
+* CAPADEX Intelligence
+* Competency Intelligence
+* Employability Intelligence
+* Learning Behavior Intelligence
+* Career Intelligence
+* Knowledge Graph
+* Trend Engine
+* Forecast Engine
+* Outcome Engine
+* Memory Engine
+
+All new employer capabilities must consume shared intelligence.
+
+---
+
+# EMPLOYER COMPETENCY ARCHITECTURE
+
+Use the following hierarchy as the authoritative workforce model:
+
+```text
+Industry
+↓
+Function
+↓
+Department
+↓
+Sub-Department
+↓
+Role
+↓
+Behavioral Competencies
+↓
+Functional Competencies
+↓
+Cognitive Competencies
+```
+
+Example:
+
+```text
+Information Technology
+↓
+Executive Management
+↓
+Strategy & Leadership
+↓
+Chief Executive Officer
+```
+
+Each role must support:
+
+### Behavioral
+
+* Visionary Leadership
+* Strategic Influence
+* Executive Presence
+* Change Leadership
+* Decision Making
+* Stakeholder Management
+
+### Functional
+
+* Business Strategy
+* Revenue Growth
+* SaaS Expertise
+* AI Transformation
+* Operational Excellence
+
+### Cognitive
+
+* Systems Thinking
+* Strategic Reasoning
+* Analytical Thinking
+* Complex Problem Solving
+* Future Thinking
+
+---
+
+# WORKSTREAM 1
+
+## Assessment Campaign Engine
+
+### Objective
+
+Activate workforce intelligence.
+
+Build:
+
+```text
+Organization
+↓
+Employees
+↓
+Role Mapping
+↓
+Assessment Assignment
+↓
+Invitations
+↓
+Reminders
+↓
+Assessment Completion
+↓
+Intelligence Generation
+```
+
+Features:
+
+* Employee import
+* Bulk import
+* Department import
+* Role mapping
+* Bulk invitations
+* Reminder engine
+* Campaign dashboard
+* Completion tracking
+* Assessment analytics
+
+Outputs:
+
+* Completion Rate
+* Department Participation
+* Capability Coverage
+* Assessment Health
+
+Target:
+
+95%+ activation readiness
+
+---
+
+# WORKSTREAM 2
+
+## Competency Intelligence
+
+Generate for every employee:
+
+### Behavioral Profile
+
+### Functional Profile
+
+### Cognitive Profile
+
+Generate:
+
+* Competency Index
+* Strength Profile
+* Gap Profile
+* Growth Profile
+* Readiness Profile
+
+Produce:
+
+* Trends
+* Forecasts
+* Outcomes
+* Recommendations
+
+Target:
+
+98%+ competency intelligence readiness
+
+---
+
+# WORKSTREAM 3
+
+## 9-Box Talent Intelligence
+
+Build:
+
+```text
+Performance
+×
+Potential
+```
+
+Generate:
+
+### High Potential
+
+### High Performer
+
+### Future Leader
+
+### Emerging Leader
+
+### Core Contributor
+
+### At Risk Talent
+
+### Under Performer
+
+Outputs:
+
+* Talent Pools
+* Leadership Pools
+* Promotion Pools
+* Retention Pools
+
+Target:
+
+98%+ talent intelligence readiness
+
+---
+
+# WORKSTREAM 4
+
+## Succession Intelligence
+
+Generate for every critical role:
+
+### Ready Now
+
+### Ready in 6 Months
+
+### Ready in 12 Months
+
+### Ready in 24 Months
+
+Outputs:
+
+* Successor Ranking
+* Bench Strength
+* Succession Coverage
+* Vacancy Risk
+* Leadership Risk
+
+Generate:
+
+* Organization Succession Map
+* Department Succession Map
+
+Target:
+
+98%+ succession readiness
+
+---
+
+# WORKSTREAM 5
+
+## Critical Role Intelligence
+
+Identify:
+
+* CEO
+* CXO
+* VP
+* Director
+* Manager
+* Critical Specialists
+
+Generate:
+
+* Single Point Dependency
+* Capability Exposure
+* Replacement Risk
+* Time to Replace
+* Successor Availability
+
+Outputs:
+
+Critical Role Risk Index
+
+Target:
+
+98%+ readiness
+
+---
+
+# WORKSTREAM 6
+
+## Workforce Capability Heatmaps
+
+Generate heatmaps by:
+
+### Organization
+
+### Business Unit
+
+### Function
+
+### Department
+
+### Team
+
+### Geography
+
+Across:
+
+* Behavioral
+* Functional
+* Cognitive
+* Leadership
+* AI Readiness
+
+Outputs:
+
+* Capability Health
+* Capability Density
+* Capability Risk
+
+Target:
+
+98%+ workforce intelligence
+
+---
+
+# WORKSTREAM 7
+
+## Internal Talent Marketplace
+
+Generate:
+
+* Internal Candidate Match
+* Promotion Match
+* Lateral Mobility Match
+* Reskilling Match
+* Career Transition Match
+
+Outputs:
+
+* Internal Mobility Index
+* Career Path Recommendations
+
+Target:
+
+98%+ mobility readiness
+
+---
+
+# WORKSTREAM 8
+
+## Learning Intelligence
+
+Generate:
+
+```text
+Gap
+↓
+Learning Path
+↓
+Development Plan
+↓
+Outcome
+```
+
+Outputs:
+
+* Upskilling Plans
+* Reskilling Plans
+* Leadership Plans
+* Team Learning Plans
+
+Measure:
+
+* Learning Effectiveness
+* Learning ROI
+* Growth Velocity
+
+Target:
+
+98%+ learning readiness
+
+---
+
+# WORKSTREAM 9
+
+## Outcome Intelligence
+
+Track:
+
+```text
+Assessment
+↓
+Learning
+↓
+Performance
+↓
+Promotion
+↓
+Retention
+↓
+Leadership Growth
+```
+
+Generate:
+
+* Success Drivers
+* Failure Drivers
+* Outcome Attribution
+* Prediction Accuracy
+
+Feed outcomes back into:
+
+* Hiring Intelligence
+* Competency Intelligence
+* Workforce Intelligence
+* Succession Intelligence
+
+Target:
+
+95%+ outcome readiness
+
+---
+
+# WORKSTREAM 10
+
+## Workforce Forecasting
+
+Forecast:
+
+* Capability Supply
+* Capability Demand
+* Leadership Supply
+* Hiring Needs
+* Workforce Growth
+* AI Readiness
+
+Generate:
+
+* Workforce Forecast Index
+* Capability Forecast Index
+
+Target:
+
+98%+ forecasting readiness
+
+---
+
+# WORKSTREAM 11
+
+## Executive Intelligence Cockpit
+
+### CEO
+
+* Workforce Health
+* Leadership Health
+* Future Readiness
+* Organizational Risk
+
+### CHRO
+
+* Talent Health
+* Succession Health
+* Capability Health
+* Attrition Risk
+
+### COO
+
+* Workforce Capacity
+* Productivity Risk
+* Capability Risk
+
+Every metric must include:
+
+* Current State
+* Trend
+* Forecast
+* Risk
+* Intervention
+* Outcome
+
+Target:
+
+98%+ executive intelligence readiness
+
+---
+
+# WORKSTREAM 12
+
+## Employer Report Factory 3.0
+
+Generate:
+
+* Hiring Intelligence Report
+* Candidate Intelligence Report
+* Competency Report
+* Talent Report
+* Workforce Report
+* Succession Report
+* Leadership Report
+* Learning Report
+* Executive Report
+
+Every report must contain:
+
+### Scores
+
+### Insights
+
+### Patterns
+
+### Trends
+
+### Forecasts
+
+### Outcomes
+
+### Recommendations
+
+### Confidence
+
+### Explainability
+
+### Evidence
+
+Target:
+
+98%+ reporting readiness
+
+---
+
+# WORKSTREAM 13
+
+## Organizational Network Intelligence
+
+Generate:
+
+* Influence Network
+* Collaboration Network
+* Knowledge Network
+
+Identify:
+
+* Hidden Leaders
+* Organizational Connectors
+* Knowledge Concentration
+* Knowledge Risk
+
+Target:
+
+98%+ organizational intelligence
+
+---
+
+# WORKSTREAM 14
+
+## Workforce Scenario Simulator
+
+Simulate:
+
+* Hiring
+* Promotion
+* Attrition
+* Reskilling
+* Restructuring
+
+Predict:
+
+* Capability Impact
+* Cost Impact
+* Leadership Impact
+* Readiness Impact
+
+Target:
+
+98%+ strategic intelligence
+
+---
+
+# WORKSTREAM 15
+
+## Final Certification
+
+Measure:
+
+| Dimension               | Target |
+| ----------------------- | ------ |
+| Architecture            | 98%+   |
+| Security                | 98%+   |
+| Hiring Intelligence     | 98%+   |
+| Talent Intelligence     | 98%+   |
+| Competency Intelligence | 98%+   |
+| Workforce Intelligence  | 98%+   |
+| Succession Intelligence | 98%+   |
+| Learning Intelligence   | 98%+   |
+| Reporting Intelligence  | 98%+   |
+| Executive Intelligence  | 98%+   |
+| Forecast Intelligence   | 98%+   |
+| Activation              | 95%+   |
+| Outcome Intelligence    | 95%+   |
+| Enterprise Readiness    | 95%+   |
+
+Generate:
+
+1. Employer OS Certification Report
+2. Gap Analysis
+3. Remaining Risks
+4. 98%+ Readiness Scorecard
+5. GO / CONDITIONAL GO / NO GO Verdict
+
+### Implementation Rules
+
+* Reuse existing intelligence engines.
+* No duplicate scoring systems.
+* No mock data.
+* No fabricated intelligence.
+* Every output must be explainable.
+* Every prediction must expose confidence.
+* Every intelligence object must support trend, forecast, and outcome tracking.
+* All modules must be tenant-isolated and enterprise-ready.
+
+STOP only if a fundamental architectural conflict is discovered.

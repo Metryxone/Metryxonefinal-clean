@@ -1,0 +1,170 @@
+# CAPADEX Phase 6B – Runtime Intelligence Experience Layer
+
+## Objective
+
+Surface the completed Runtime Intelligence Pipeline to end users.
+
+Phase 6A successfully resolved:
+
+Response
+→ Signal
+→ Concern
+→ Capability
+→ Problem
+→ Behavior
+→ Archetype
+→ Intervention
+
+This phase exposes that intelligence inside the live CAPADEX experience.
+
+Do not generate new intelligence.
+
+Do not modify existing intelligence libraries.
+
+Use only existing runtime outputs.
+
+---
+
+## INPUTS
+
+Use:
+
+* pipeline-resolver
+* guidance engine
+* archetypes
+* human intelligence
+* search intelligence
+* intervention intelligence
+
+---
+
+# STUDENT EXPERIENCE
+
+Create:
+
+Student Intelligence Summary
+
+Display:
+
+### Top Archetypes
+
+### Key Problems
+
+### Emotional Indicators
+
+### Immediate Actions
+
+### 7-Day Actions
+
+### Growth Opportunities
+
+---
+
+# PARENT EXPERIENCE
+
+Create:
+
+Parent Intelligence Summary
+
+Display:
+
+### Child Strengths
+
+### Growth Areas
+
+### Home Support Actions
+
+### Intervention Suggestions
+
+---
+
+# COUNSELOR EXPERIENCE
+
+Create:
+
+Counselor Intelligence Summary
+
+Display:
+
+### Priority Risks
+
+### Priority Interventions
+
+### Recommended Follow-Ups
+
+### Progress Monitoring Suggestions
+
+---
+
+# EXPLAINABILITY PANEL
+
+Every recommendation must display:
+
+Response
+→ Signal
+→ Concern
+→ Capability
+→ Problem
+→ Behavior
+→ Archetype
+→ Intervention
+
+Provide:
+
+"Why am I seeing this?"
+
+interaction.
+
+---
+
+# RUNTIME API
+
+Create:
+
+GET runtime-summary
+
+GET runtime-explainability
+
+GET stakeholder-summary
+
+Read-only.
+
+---
+
+# UI COMPONENTS
+
+Create:
+
+StudentIntelligencePanel
+
+ParentIntelligencePanel
+
+CounselorIntelligencePanel
+
+ExplainabilityPanel
+
+---
+
+# VALIDATION
+
+Verify:
+
+* lineage visible
+* no orphan recommendations
+* explainability coverage = 100%
+* runtime remains deterministic
+
+---
+
+# OUTPUT REQUIRED
+
+1. Student Experience Screens
+2. Parent Experience Screens
+3. Counselor Experience Screens
+4. Explainability Examples
+5. Runtime Coverage
+6. Activation Readiness
+
+STOP
+
+WAIT FOR APPROVAL.

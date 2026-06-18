@@ -1,0 +1,285 @@
+{
+  "generated_at": "2026-06-03T17:11:33.089Z",
+  "examples": [
+    {
+      "from": "concern:CONCERN_CAR_212",
+      "from_label": "Career Decision-Making Confidence",
+      "to": "intervention:61",
+      "to_label": "Today, list three roles or career paths worth exploring and one question to ask about each.",
+      "hops": 2,
+      "reachable": true,
+      "path": [
+        {
+          "id": "concern:CONCERN_CAR_212",
+          "category": "concern",
+          "label": "Career Decision-Making Confidence",
+          "verb": null
+        },
+        {
+          "id": "archetype:career_professional_growth",
+          "category": "archetype",
+          "label": "Career Growth & Professional Identity",
+          "verb": "CLUSTERS_WITH"
+        },
+        {
+          "id": "intervention:61",
+          "category": "intervention",
+          "label": "Today, list three roles or career paths worth exploring and one question to ask about each.",
+          "verb": "SUPPORTS"
+        }
+      ]
+    },
+    {
+      "from": "concern:CONCERN_CAR_251",
+      "from_label": "Building Confidence After Career Decision Mistakes",
+      "to": "intervention:61",
+      "to_label": "Today, list three roles or career paths worth exploring and one question to ask about each.",
+      "hops": 2,
+      "reachable": true,
+      "path": [
+        {
+          "id": "concern:CONCERN_CAR_251",
+          "category": "concern",
+          "label": "Building Confidence After Career Decision Mistakes",
+          "verb": null
+        },
+        {
+          "id": "archetype:career_professional_growth",
+          "category": "archetype",
+          "label": "Career Growth & Professional Identity",
+          "verb": "CLUSTERS_WITH"
+        },
+        {
+          "id": "intervention:61",
+          "category": "intervention",
+          "label": "Today, list three roles or career paths worth exploring and one question to ask about each.",
+          "verb": "SUPPORTS"
+        }
+      ]
+    },
+    {
+      "from": "concern:CONCERN_DIS_36",
+      "from_label": "Emotional Stability During Career Uncertainty",
+      "to": "intervention:61",
+      "to_label": "Today, list three roles or career paths worth exploring and one question to ask about each.",
+      "hops": 2,
+      "reachable": true,
+      "path": [
+        {
+          "id": "concern:CONCERN_DIS_36",
+          "category": "concern",
+          "label": "Emotional Stability During Career Uncertainty",
+          "verb": null
+        },
+        {
+          "id": "archetype:career_professional_growth",
+          "category": "archetype",
+          "label": "Career Growth & Professional Identity",
+          "verb": "CLUSTERS_WITH"
+        },
+        {
+          "id": "intervention:61",
+          "category": "intervention",
+          "label": "Today, list three roles or career paths worth exploring and one question to ask about each.",
+          "verb": "SUPPORTS"
+        }
+      ]
+    },
+    {
+      "from": "concern:CONCERN_LIF_757",
+      "from_label": "Emotional Confidence During Leadership Exposure",
+      "to": "intervention:391",
+      "to_label": "Today, volunteer to lead one small task or group decision.",
+      "hops": 2,
+      "reachable": true,
+      "path": [
+        {
+          "id": "concern:CONCERN_LIF_757",
+          "category": "concern",
+          "label": "Emotional Confidence During Leadership Exposure",
+          "verb": null
+        },
+        {
+          "id": "archetype:leadership_influence",
+          "category": "archetype",
+          "label": "Leadership & Influence",
+          "verb": "CLUSTERS_WITH"
+        },
+        {
+          "id": "intervention:391",
+          "category": "intervention",
+          "label": "Today, volunteer to lead one small task or group decision.",
+          "verb": "SUPPORTS"
+        }
+      ]
+    },
+    {
+      "from": "concern:CONCERN_MOT_1098",
+      "from_label": "Build Strategic Decision-Making Confidence",
+      "to": "intervention:241",
+      "to_label": "Today, make one small decision, write down why, and commit to it.",
+      "hops": 2,
+      "reachable": true,
+      "path": [
+        {
+          "id": "concern:CONCERN_MOT_1098",
+          "category": "concern",
+          "label": "Build Strategic Decision-Making Confidence",
+          "verb": null
+        },
+        {
+          "id": "archetype:decision_judgment",
+          "category": "archetype",
+          "label": "Decision-Making & Judgment",
+          "verb": "CLUSTERS_WITH"
+        },
+        {
+          "id": "intervention:241",
+          "category": "intervention",
+          "label": "Today, make one small decision, write down why, and commit to it.",
+          "verb": "SUPPORTS"
+        }
+      ]
+    },
+    {
+      "from": "concern:CONCERN_SEL_220",
+      "from_label": "Emotional Stability During Career Uncertainty",
+      "to": "intervention:61",
+      "to_label": "Today, list three roles or career paths worth exploring and one question to ask about each.",
+      "hops": 2,
+      "reachable": true,
+      "path": [
+        {
+          "id": "concern:CONCERN_SEL_220",
+          "category": "concern",
+          "label": "Emotional Stability During Career Uncertainty",
+          "verb": null
+        },
+        {
+          "id": "archetype:career_professional_growth",
+          "category": "archetype",
+          "label": "Career Growth & Professional Identity",
+          "verb": "CLUSTERS_WITH"
+        },
+        {
+          "id": "intervention:61",
+          "category": "intervention",
+          "label": "Today, list three roles or career paths worth exploring and one question to ask about each.",
+          "verb": "SUPPORTS"
+        }
+      ]
+    },
+    {
+      "from": "concern:CONCERN_ACA_175",
+      "from_label": "Building Confidence in Personal Preparation Style",
+      "to": "intervention:151",
+      "to_label": "Today, write down three recent wins and one challenge worth taking on today.",
+      "hops": 2,
+      "reachable": true,
+      "path": [
+        {
+          "id": "concern:CONCERN_ACA_175",
+          "category": "concern",
+          "label": "Building Confidence in Personal Preparation Style",
+          "verb": null
+        },
+        {
+          "id": "archetype:confidence_self_efficacy",
+          "category": "archetype",
+          "label": "Confidence & Self-Efficacy",
+          "verb": "CLUSTERS_WITH"
+        },
+        {
+          "id": "intervention:151",
+          "category": "intervention",
+          "label": "Today, write down three recent wins and one challenge worth taking on today.",
+          "verb": "SUPPORTS"
+        }
+      ]
+    },
+    {
+      "from": "concern:CONCERN_ACA_2246",
+      "from_label": "Handling Students with Weak Learning Confidence in New Topics",
+      "to": "intervention:421",
+      "to_label": "Today, pick one tricky concept and explain it out loud in simple, everyday words.",
+      "hops": 2,
+      "reachable": true,
+      "path": [
+        {
+          "id": "concern:CONCERN_ACA_2246",
+          "category": "concern",
+          "label": "Handling Students with Weak Learning Confidence in New Topics",
+          "verb": null
+        },
+        {
+          "id": "archetype:learning_comprehension",
+          "category": "archetype",
+          "label": "Learning & Comprehension",
+          "verb": "CLUSTERS_WITH"
+        },
+        {
+          "id": "intervention:421",
+          "category": "intervention",
+          "label": "Today, pick one tricky concept and explain it out loud in simple, everyday words.",
+          "verb": "SUPPORTS"
+        }
+      ]
+    },
+    {
+      "from": "concern:CONCERN_CAR_1346",
+      "from_label": "Holistic Integration of Employability, Emotional Stability, Career Direction, and Workplace Readiness",
+      "to": "intervention:61",
+      "to_label": "Today, list three roles or career paths worth exploring and one question to ask about each.",
+      "hops": 2,
+      "reachable": true,
+      "path": [
+        {
+          "id": "concern:CONCERN_CAR_1346",
+          "category": "concern",
+          "label": "Holistic Integration of Employability, Emotional Stability, Career Direction, and Workplace Readiness",
+          "verb": null
+        },
+        {
+          "id": "archetype:career_professional_growth",
+          "category": "archetype",
+          "label": "Career Growth & Professional Identity",
+          "verb": "CLUSTERS_WITH"
+        },
+        {
+          "id": "intervention:61",
+          "category": "intervention",
+          "label": "Today, list three roles or career paths worth exploring and one question to ask about each.",
+          "verb": "SUPPORTS"
+        }
+      ]
+    },
+    {
+      "from": "concern:CONCERN_CAR_374",
+      "from_label": "Networking Confidence During Career Events",
+      "to": "intervention:61",
+      "to_label": "Today, list three roles or career paths worth exploring and one question to ask about each.",
+      "hops": 2,
+      "reachable": true,
+      "path": [
+        {
+          "id": "concern:CONCERN_CAR_374",
+          "category": "concern",
+          "label": "Networking Confidence During Career Events",
+          "verb": null
+        },
+        {
+          "id": "archetype:career_professional_growth",
+          "category": "archetype",
+          "label": "Career Growth & Professional Identity",
+          "verb": "CLUSTERS_WITH"
+        },
+        {
+          "id": "intervention:61",
+          "category": "intervention",
+          "label": "Today, list three roles or career paths worth exploring and one question to ask about each.",
+          "verb": "SUPPORTS"
+        }
+      ]
+    }
+  ]
+}

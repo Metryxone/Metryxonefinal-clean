@@ -1,0 +1,25 @@
+```text
+Please rewrite the core onboarding phase view inside 'frontend/src/components/FreeAssessmentModal.tsx' (or its active sub-phase file 'IntroPhase.tsx') to execute Phase 1 of our step-by-step pipeline recovery: building a true Typeahead Search & Dropdown Portal. 
+
+The current input element acts as a static text container that doesn't display matching items while typing because of data column mismatches and string formatting errors. 
+
+Modify ONLY the search filtration loop, query state hook, and dropdown layout box using these strict parameters:
+
+1. SCHEMA HEADERS RECOGNITION:
+   - Map your catalog loop directly to the strict sentence-case headers in our loaded data file: 'Concern ID', 'Domain', 'Concern Cluster', 'Typical Age Band', and 'Primary Persona'. 
+
+2. TOKENIZED MULTI-WORD FUZZY LOOKUPS:
+   - Split the typed search string by whitespace into an array of lowercase tokens. 
+   - A row must only return if every token matches a word or phrase within the 'Concern Cluster', 'Domain', or 'Common Indian Context' fields of that record.
+
+3. STRING RECODING & EN-DASH REPAIR:
+   - Prevent valid results from being hidden by running a string character normalizer (.replace(/[-–—]/g, '-')) on the chosen age-band variable and the row's 'Typical Age Band' value before running the equality filter. This ensures hyphens and en-dashes match seamlessly.
+
+4. PORTAL COMBOBOX OVERLAY PORT:
+   - Wrap the main search text box in a relative container. Below it, render an absolute-positioned floating dropdown frame (z-50) that displays up to 5 matching suggestion rows whenever a query is active and suggestions exist.
+   - For each matching item button inside the dropdown list, display the 'Concern Cluster' text as the main title and the 'Domain' string as a secondary label.
+
+5. SELECTION CLEANUP CALLBACK:
+   - On clicking a dropdown item button, invoke the 'addConcern(item)' state handler function, completely wipe out the active search query string to clear the box, and close the dropdown layout portal cleanly.
+
+```

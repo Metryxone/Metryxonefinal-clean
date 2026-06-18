@@ -1,0 +1,825 @@
+# 🚀 METRYXONE BIOS — ULTIMATE EXHAUSTIVE HUMAN INTELLIGENCE INFRASTRUCTURE IMPLEMENTATION PROMPT
+
+Build a production-grade AI-native Human Intelligence Infrastructure Platform called:
+
+# METRYXONE BIOS
+
+This platform is NOT:
+
+* an LMS
+* an assessment engine
+* an analytics platform
+* an employability portal
+
+This platform IS:
+
+> A Living Human Intelligence Operating System
+
+capable of:
+
+* understanding human cognition
+* modeling behavioural evolution
+* detecting emotional and developmental states
+* adapting experiences dynamically
+* orchestrating intelligent interventions
+* building longitudinal developmental intelligence
+* predicting trajectories
+* continuously learning from human evolution
+
+The architecture must deeply implement:
+
+* CAPADEX
+* CSI
+* LBI
+* Behavioural Signal Capture
+* Cognitive Intelligence
+* Human State Modeling
+* Meta-Learning Intelligence
+* Psychometric Intelligence
+* Longitudinal Intelligence
+* Adaptive Intervention Intelligence
+* Semantic Human Intelligence
+* Human Digital Twin Architecture
+* Multi-Agent Intelligence Orchestration
+
+The implementation must align with the uploaded Behavioural Signal Capture specification. 
+
+---
+
+# 🎯 MASTER SYSTEM OBJECTIVE
+
+Transform:
+
+Human Interaction
+↓
+Behavioural Signals
+↓
+Contextual Intelligence
+↓
+Cognitive Intelligence
+↓
+Developmental Intelligence
+↓
+Prediction Intelligence
+↓
+Adaptive Interventions
+↓
+Longitudinal Human Evolution
+↓
+Self-Evolving Intelligence Infrastructure
+
+into a fully operational enterprise platform.
+
+---
+
+# 🧱 CORE TECH STACK
+
+Frontend:
+
+* Next.js
+* TypeScript
+* TailwindCSS
+
+Backend:
+
+* FastAPI
+* Python 3.11+
+* Async architecture
+
+Database:
+
+* PostgreSQL
+
+Caching:
+
+* Redis
+
+Event Architecture:
+
+* Redis Streams
+
+Graph Intelligence:
+
+* Neo4j abstraction
+
+ORM:
+
+* SQLAlchemy
+
+Validation:
+
+* Pydantic
+
+AI Layer:
+
+* OpenAI abstraction
+* Local LLM abstraction
+
+Monitoring:
+
+* OpenTelemetry
+* Prometheus
+* Grafana
+
+Deployment:
+
+* Docker
+* Docker Compose
+
+---
+
+# 📁 MASTER PROJECT STRUCTURE
+
+metryxone/
+│
+├── frontend/
+│   ├── student-dashboard/
+│   ├── parent-dashboard/
+│   ├── teacher-dashboard/
+│   ├── counsellor-dashboard/
+│   ├── employer-dashboard/
+│   ├── admin-dashboard/
+│
+├── backend/
+│   ├── api-gateway/
+│   ├── auth-service/
+│   ├── user-service/
+│   ├── signal-service/
+│   ├── cognition-service/
+│   ├── human-state-service/
+│   ├── capadex-engine/
+│   ├── csi-service/
+│   ├── lbi-service/
+│   ├── psychometrics-service/
+│   ├── semantic-reasoning-service/
+│   ├── graph-service/
+│   ├── prediction-service/
+│   ├── intervention-service/
+│   ├── meta-learning-service/
+│   ├── developmental-intelligence-service/
+│   ├── digital-twin-service/
+│   ├── explainability-service/
+│   ├── benchmark-service/
+│   ├── longitudinal-service/
+│   ├── fairness-service/
+│   ├── governance-service/
+│   ├── research-service/
+│   ├── analytics-service/
+│   ├── multi-agent-orchestrator/
+│   ├── admin-service/
+│   ├── monitoring-service/
+│   ├── event-service/
+│
+├── shared/
+│   ├── constants/
+│   ├── utilities/
+│   ├── behavioural_models/
+│   ├── cognitive_models/
+│   ├── psychometric_models/
+│   ├── intervention_models/
+│
+├── infra/
+│   ├── docker/
+│   ├── deployment/
+│   ├── monitoring/
+
+---
+
+# 🧠 SECTION 1 — BEHAVIOURAL SIGNAL CAPTURE ENGINE
+
+Implement Behavioural Signal Capture as the CENTRAL NERVOUS SYSTEM.
+
+Capture:
+
+* explicit signals
+* implicit signals
+* emotional signals
+* cognitive signals
+* executive function signals
+* linguistic signals
+* environmental signals
+* developmental signals
+* digital behaviour signals
+* motivational signals
+* social signals
+* meta-signals
+
+Support capture from:
+
+* assessments
+* conversations
+* journals
+* clickstreams
+* typing rhythm
+* response timing
+* navigation flow
+* retries
+* session behaviour
+* intervention interactions
+
+---
+
+# MICRO-BEHAVIOURAL DETECTION
+
+Detect:
+
+* impulsivity
+* hesitation
+* anxiety
+* overload
+* disengagement
+* avoidance
+* resilience
+* frustration
+* reflection depth
+* confidence instability
+
+Implement real-time inference engine.
+
+---
+
+# 🧠 SECTION 2 — COGNITIVE ARCHITECTURE ENGINE
+
+Implement real cognitive modeling.
+
+Support:
+
+* working memory
+* attention stability
+* cognitive flexibility
+* processing depth
+* metacognition
+* reasoning style
+* abstraction ability
+* cognitive fatigue
+* overload thresholds
+
+---
+
+# HUMAN STATE ENGINE
+
+Detect:
+
+* flow state
+* burnout
+* emotional suppression
+* resilience depletion
+* stress accumulation
+* attention fragmentation
+* cognitive overload
+* motivational collapse
+
+---
+
+# 🧠 SECTION 3 — CSI ENGINE
+
+CSI = Career Stage Index
+
+Measures:
+
+* capability maturity
+* behavioural stability
+* developmental readiness
+* adaptability
+
+CSI MUST:
+
+* update continuously
+* support explainability
+* support confidence scoring
+* support longitudinal tracking
+* support uncertainty estimation
+
+---
+
+# 🧠 SECTION 4 — LBI ENGINE
+
+LBI = Learning Behaviour Index
+
+Track:
+
+* persistence
+* pacing
+* engagement
+* retries
+* focus
+* adaptability
+* consistency
+* learning velocity
+
+Classify:
+
+* reflective learners
+* impulsive learners
+* exploratory learners
+* persistent learners
+* disengaged learners
+
+---
+
+# 🧠 SECTION 5 — META-LEARNING ENGINE
+
+Detect HOW humans learn best.
+
+Support:
+
+* visual learning
+* exploratory learning
+* reflective learning
+* challenge-driven learning
+* reinforcement-based learning
+
+Adapt:
+
+* pacing
+* teaching style
+* assessment format
+* feedback style
+* challenge intensity
+
+---
+
+# 🧠 SECTION 6 — CAPADEX ADAPTIVE ASSESSMENT ENGINE
+
+Generate fully adaptive assessments using:
+
+* CSI
+* LBI
+* cognitive state
+* psychometric confidence
+* behavioural signals
+* developmental stage
+* competency gaps
+
+Support:
+
+* MCQ
+* simulations
+* reflective prompts
+* behavioural reasoning
+* cognitive puzzles
+* case studies
+* scenario assessments
+
+Implement:
+
+* cognitive load balancing
+* anxiety-aware UX
+* pacing adaptation
+* difficulty adaptation
+* challenge optimization
+
+---
+
+# 🧠 SECTION 7 — PSYCHOMETRICS ENGINE
+
+Implement:
+
+* Item Response Theory
+* Cronbach Alpha
+* reliability analysis
+* validity scoring
+* adaptive calibration
+* fairness testing
+* bias correction
+* response validity
+* confidence estimation
+
+---
+
+# 🧠 SECTION 8 — SEMANTIC REASONING ENGINE
+
+Implement:
+
+* ontology reasoning
+* semantic relationships
+* causal inference
+* hidden pattern detection
+* cross-signal correlation
+* behavioural chain reasoning
+
+Example:
+
+sleep instability
+↓
+attention fragmentation
+↓
+reduced persistence
+↓
+engagement decline
+
+---
+
+# 🧠 SECTION 9 — KNOWLEDGE GRAPH ENGINE
+
+Build semantic human intelligence graph:
+
+Concern ↔ Behaviour ↔ Competency ↔ Risk ↔ Intervention ↔ Outcome
+
+Implement:
+
+* graph traversal
+* graph reasoning
+* semantic clustering
+* hidden relationship detection
+
+---
+
+# 🧠 SECTION 10 — PREDICTIVE INTELLIGENCE ENGINE
+
+Predict:
+
+* burnout
+* dropout
+* employability
+* leadership emergence
+* resilience trajectory
+* behavioural regression
+* growth acceleration
+* emotional deterioration
+
+Use:
+
+* CSI
+* LBI
+* cognitive state
+* longitudinal patterns
+* behavioural history
+
+---
+
+# 🧠 SECTION 11 — INTERVENTION INTELLIGENCE ENGINE
+
+Convert intelligence into adaptive action.
+
+Support:
+
+* mentor escalation
+* emotional support
+* pacing adjustments
+* challenge optimization
+* recovery interventions
+* behavioural coaching
+* motivational nudges
+
+Implement:
+
+* intervention sequencing
+* intervention effectiveness tracking
+* intervention optimization
+
+---
+
+# 🧠 SECTION 12 — LONGITUDINAL INTELLIGENCE ENGINE
+
+Track:
+
+* behavioural evolution
+* competency evolution
+* resilience development
+* emotional cycles
+* intervention outcomes
+* developmental trajectories
+
+Detect:
+
+* stagnation
+* relapse
+* acceleration
+* volatility
+* growth momentum
+
+---
+
+# 🧠 SECTION 13 — HUMAN DIGITAL TWIN ENGINE
+
+Maintain continuously evolving developmental model.
+
+Track:
+
+* cognitive state
+* emotional state
+* behavioural state
+* developmental state
+* adaptation patterns
+* intervention responsiveness
+
+---
+
+# 🧠 SECTION 14 — MULTI-AGENT AI ORCHESTRATION
+
+Implement AI agents:
+
+* assessment agent
+* cognition agent
+* emotional agent
+* mentor agent
+* prediction agent
+* explainability agent
+* intervention agent
+
+Agents collaborate using orchestrator layer.
+
+---
+
+# 🧠 SECTION 15 — EXPLAINABILITY ENGINE
+
+Every output must explain:
+
+* WHY generated
+* WHICH signals contributed
+* WHICH models contributed
+* CONFIDENCE level
+* UNCERTAINTY level
+
+---
+
+# 🧠 SECTION 16 — FAIRNESS & BIAS ENGINE
+
+Implement:
+
+* demographic fairness analysis
+* cultural fairness
+* socioeconomic fairness
+* psychometric fairness
+* intervention fairness
+
+Detect:
+
+* model bias
+* scoring drift
+* unfair interventions
+
+---
+
+# 🧠 SECTION 17 — UNCERTAINTY MODELING ENGINE
+
+Humans are inconsistent.
+
+Implement:
+
+* probabilistic confidence
+* ambiguity handling
+* contradiction resolution
+* uncertainty propagation
+
+Support:
+
+* incomplete signals
+* conflicting behaviours
+* sparse data
+
+---
+
+# 🧠 SECTION 18 — CULTURAL & CONTEXTUAL ADAPTATION
+
+Support:
+
+* regional behaviour interpretation
+* cultural contextualization
+* multilingual adaptation
+* socioeconomic contextualization
+
+---
+
+# 🧠 SECTION 19 — SELF-EVOLVING INTELLIGENCE ENGINE
+
+System must learn from:
+
+* interventions
+* outcomes
+* longitudinal behaviour
+* predictive accuracy
+
+Continuously improve:
+
+* recommendations
+* assessments
+* interventions
+* predictions
+
+---
+
+# 🧠 SECTION 20 — RESEARCH & SCIENTIFIC VALIDATION
+
+Implement:
+
+* longitudinal validation
+* predictive validation
+* intervention effectiveness studies
+* reliability testing
+* fairness audits
+* psychometric calibration
+
+Store:
+
+* validation reports
+* calibration metrics
+* model lineage
+* model versions
+
+---
+
+# 🧠 SECTION 21 — ETHICS & GOVERNANCE ENGINE
+
+Implement:
+
+* explainable AI governance
+* emotional safety safeguards
+* child protection
+* consent management
+* intervention approval workflows
+* ethical escalation mechanisms
+* human-in-the-loop review
+
+---
+
+# 🧠 SECTION 22 — MULTI-TENANT ENTERPRISE ARCHITECTURE
+
+Support:
+
+* schools
+* universities
+* enterprises
+* governments
+* skilling ecosystems
+
+Implement:
+
+* tenant isolation
+* tenant-level customization
+* tenant-specific competency models
+* custom scoring frameworks
+
+Roles:
+
+* SUPER_ADMIN
+* TENANT_ADMIN
+* SCHOOL_ADMIN
+* COUNSELLOR
+* TEACHER
+* EMPLOYER
+* STUDENT
+
+---
+
+# 🧠 SECTION 23 — EVENT-DRIVEN ORCHESTRATION
+
+Events:
+
+* SIGNAL_CAPTURED
+* PATTERN_DETECTED
+* CSI_UPDATED
+* LBI_UPDATED
+* COGNITIVE_STATE_CHANGED
+* INTERVENTION_TRIGGERED
+* TRAJECTORY_UPDATED
+
+Flow:
+
+Human Interaction
+↓
+Signal Capture
+↓
+Interpretation
+↓
+Cognitive Intelligence
+↓
+Prediction
+↓
+Intervention
+↓
+Longitudinal Memory
+↓
+Adaptive Evolution
+
+---
+
+# 🧠 SECTION 24 — MEMORY ARCHITECTURE
+
+Implement:
+
+* episodic memory
+* behavioural memory
+* intervention memory
+* emotional memory
+* developmental memory
+
+Allow:
+
+* historical pattern reconstruction
+* behavioural continuity analysis
+
+---
+
+# 🧠 SECTION 25 — HUMAN-IN-THE-LOOP INTELLIGENCE
+
+Support:
+
+* counsellor overrides
+* mentor feedback
+* educator review
+* intervention approval
+* manual intelligence correction
+
+---
+
+# 🧠 SECTION 26 — SECURITY & COMPLIANCE
+
+Implement:
+
+* RBAC
+* JWT authentication
+* encrypted sensitive fields
+* audit logging
+* compliance-ready logging
+* tenant isolation
+* secure event pipelines
+
+---
+
+# 🧠 SECTION 27 — OBSERVABILITY & OPERATIONS
+
+Implement:
+
+* tracing
+* metrics
+* behavioural monitoring
+* anomaly detection
+* model drift monitoring
+* intervention effectiveness dashboards
+
+---
+
+# 🧠 SECTION 28 — TESTING & VALIDATION
+
+Generate:
+
+* unit tests
+* integration tests
+* psychometric validation tests
+* fairness tests
+* intervention tests
+* scalability tests
+* longitudinal validation tests
+
+---
+
+# 🧠 SECTION 29 — FRONTEND EXPERIENCE
+
+Generate:
+
+* student dashboards
+* parent dashboards
+* teacher dashboards
+* counsellor dashboards
+* employer dashboards
+* enterprise analytics dashboards
+
+---
+
+# 🧠 SECTION 30 — FINAL OUTPUT EXPECTATION
+
+Generate:
+
+1. Full FastAPI architecture
+2. SQLAlchemy models
+3. Signal Intelligence Engine
+4. Cognitive Intelligence Engine
+5. Human State Engine
+6. CSI service
+7. LBI service
+8. Meta-Learning Engine
+9. CAPADEX engine
+10. Psychometrics engine
+11. Semantic reasoning engine
+12. Knowledge graph abstraction
+13. Predictive intelligence engine
+14. Intervention engine
+15. Longitudinal intelligence engine
+16. Digital Human Twin engine
+17. Multi-agent orchestration
+18. Explainability engine
+19. Fairness engine
+20. Governance engine
+21. Multi-tenant middleware
+22. Admin APIs
+23. Enterprise analytics
+24. Event infrastructure
+25. Dockerized deployment
+26. Monitoring infrastructure
+27. Seed datasets
+28. Frontend integration architecture
+29. CI/CD readiness
+30. Production hardening
+
+Build this as:
+
+* modular
+* enterprise-grade
+* research-validatable
+* AI-native
+* future-ready
+* globally scalable
+
+Human Intelligence Infrastructure Platform.

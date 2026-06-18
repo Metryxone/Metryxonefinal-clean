@@ -1,0 +1,317 @@
+# CAPADEX L5C — Outcome Projection Intelligence
+
+## Objective
+
+Extend Layer 2 (Question Intelligence) by projecting Outcome Intelligence onto every question.
+
+This phase is strictly:
+
+QUESTION → OUTCOME
+
+Only.
+
+No Journey Intelligence.
+
+No Persona Intelligence.
+
+No Effectiveness Intelligence.
+
+No Outcome Validation.
+
+STOP FOR APPROVAL AFTER COMPLETION.
+
+---
+
+# Background
+
+Completed:
+
+* AQ-1 Metadata Intelligence
+* AQ-2 Runtime Intelligence
+* WC-1 through WC-9
+* L1 Stage Intelligence
+* L2 Outcome Intelligence
+* L3 Journey Intelligence
+* L5A Stage Intelligence
+* L5B Context Intelligence Audit
+
+Current Question Intelligence Dimensions:
+
+| Dimension | Status   |
+| --------- | -------- |
+| Stage     | Complete |
+| Context   | Audited  |
+| Outcome   | Missing  |
+| Journey   | Missing  |
+| Persona   | Missing  |
+
+The next objective is to make every question understand:
+
+"What outcome am I helping create?"
+
+---
+
+# Guiding Principle
+
+Do NOT invent new intelligence.
+
+Expose intelligence that already exists in the CAPADEX architecture.
+
+Use only existing:
+
+* Questions
+* Question Metadata
+* Bridge Tags
+* Concerns
+* Constructs
+* Outcome Models
+
+No new:
+
+* Constructs
+* Signals
+* Outcome Models
+* Ontologies
+* Contexts
+* Personas
+
+---
+
+# Intelligence Chain
+
+Use the existing chain:
+
+Question
+↓
+Bridge Tag
+↓
+Concern
+↓
+Construct
+↓
+Outcome Model
+
+Derive outcome affinity from the existing architecture.
+
+---
+
+# Required Derivations
+
+For every question derive:
+
+### Primary Outcome
+
+The strongest reachable outcome.
+
+Examples:
+
+* Learning Effectiveness
+* Career Clarity
+* Employability Readiness
+* Confidence Stability
+* Decision Quality
+* Exam Readiness
+* Family Wellbeing
+
+Use only outcome models that already exist.
+
+---
+
+### Secondary Outcome
+
+If another outcome has meaningful overlap.
+
+Otherwise leave null.
+
+---
+
+### Outcome Confidence
+
+Derive from:
+
+* Construct overlap
+* Concern reachability
+* Outcome-model affinity
+* Coverage strength
+
+Confidence must be measured, not fabricated.
+
+---
+
+# Required Storage Design
+
+Design additive only.
+
+Flag-gated.
+
+Default OFF.
+
+Byte-identical when OFF.
+
+No existing runtime behavior changes.
+
+No question selection changes.
+
+No personalization changes.
+
+No journey changes.
+
+No assessment scoring changes.
+
+---
+
+# Required Measurements
+
+Measure:
+
+### Coverage
+
+Questions with at least one reachable outcome.
+
+---
+
+### Reachability
+
+Question
+→ Concern
+→ Construct
+→ Outcome
+
+success rate.
+
+---
+
+### Distribution
+
+Outcome distribution across the entire question bank.
+
+---
+
+### Ambiguity
+
+Questions reaching multiple outcomes.
+
+---
+
+### Confidence Distribution
+
+Low
+Medium
+High
+
+---
+
+### Coverage by Stage
+
+Outcome coverage by:
+
+* Awareness
+* Curiosity
+* Clarity
+* Growth
+* Mastery
+
+(using L5A output)
+
+---
+
+### Coverage by Context
+
+Outcome coverage by:
+
+* AI Future of Work
+* Career Transition
+* Employability
+* Entrepreneurship
+* Family Pressure
+* Placement Anxiety
+* Leadership
+* Digital Behaviour
+* Competitive Exams
+* Career Clarity
+
+(using L5B audit output)
+
+---
+
+# Required Audit
+
+For every outcome model provide:
+
+Current Coverage
+Reachable Questions
+Reachable Concerns
+Coverage %
+Confidence
+Ambiguity
+Gaps
+
+---
+
+# Required Outputs
+
+1. Outcome Projection Report
+2. Outcome Coverage Report
+3. Outcome Distribution Report
+4. Outcome Confidence Report
+5. Outcome Reachability Report
+6. Outcome Ambiguity Report
+7. Stage × Outcome Matrix
+8. Context × Outcome Matrix
+9. Question Intelligence Score Delta
+10. Layer-2 Readiness Report
+
+---
+
+# Success Criteria
+
+Every question should know:
+
+* Where it sits in development (Stage)
+* Which situation it belongs to (Context)
+* What outcome it contributes toward (Outcome)
+
+Layer 2 should progress from:
+
+~88%
+
+to
+
+91%+
+
+without introducing any new ontology or intelligence layer.
+
+---
+
+# Explicitly Excluded
+
+Do NOT implement:
+
+* Journey Projection Intelligence
+* Persona Intelligence
+* Question Effectiveness
+* Outcome Validation
+* Longitudinal Analytics
+* New Outcome Models
+
+Those belong to later phases.
+
+---
+
+# Deliverable Discipline
+
+Ground every number in real data.
+
+Never fabricate.
+
+Use existing runtime structures.
+
+Use existing WC-3 outcome models.
+
+Use existing WC-3 concern→construct mappings.
+
+Produce design + audit + implementation for Outcome Projection only.
+
+STOP.
+
+WAIT FOR APPROVAL.

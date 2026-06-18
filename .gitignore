@@ -1,0 +1,68 @@
+# pg backups (noisy, kept on /app persistent volume)
+.backups/snapshot-*.sql.gz
+.backups/.tmp-*.sql.gz
+.backups/pre-migration.sql
+-e 
+# Environment and credential files
+.env
+.env.*
+*.env
+credentials.json
+*.pem
+*.key
+.credentials
+-e 
+# Environment and credential files
+.env
+.env.*
+*.env
+credentials.json
+*.pem
+*.key
+.credentials
+-e 
+# Environment and credential files
+.env
+.env.*
+*.env
+credentials.json
+*.pem
+*.key
+.credentials
+-e 
+# Environment and credential files
+.env
+.env.*
+*.env
+credentials.json
+*.pem
+*.key
+.credentials
+-e 
+# Environment and credential files
+.env
+.env.*
+*.env
+credentials.json
+*.pem
+*.key
+.credentials
+
+# Production build output (regenerated on every deploy by the build step)
+backend/public/
+db-backup*
+db-backup*
+db-backup*
+db-backup*
+db-backup*
+db-backup*
+db-backup*
+db-backup*
+db-backup*
+db-backup*
+db-backup*
+db-backup*
+.pgdata/
+*.zip
+db-backup*
+*.zip

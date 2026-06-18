@@ -1,0 +1,36 @@
+
+Tier 1 — High impact, wiring only (infrastructure already exists)
+1. EI Breakdown Radar in Trajectory tab
+The ei_snapshot_versions.breakdown JSONB already stores 6 sub-dimensions — technicalScore, softScore, experienceScore, certScore, projectScore, completenessScore — but the Trajectory tab only shows the overall EI number. Users can't see which sub-score is dragging or driving their index. Adding a dimension radar to the Trajectory tab would be the single highest-value improvement.
+
+2. Auto-snapshot on CAPADEX completion
+Right now EI snapshots are taken manually (via /api/ei/resolve). postCompletionHooks already fires at the end of every CAPADEX session — wiring a snapshot call there means the EI score refreshes automatically after every assessment, with no user action required.
+
+3. Report archiving
+rf_generated_reports table exists and has zero rows — the Report tab generates a fresh narrative each time but never persists it. Saving each generation there and showing a timeline ("your report 3 weeks ago vs today") turns the Report tab from a snapshot into a longitudinal story.
+
+Tier 2 — Moderate effort, real product value
+4. Admin per-user EI drill-down
+The admin health panel only shows aggregate pool stats. Adding a user search → calls /api/ei/intelligence with an admin-scoped userId override → renders their full panel (Forecast / Trajectory / Interventions) inside the admin view. Useful for support and QA.
+
+5. EI drop alerts
+Trend intelligence already detects when slope_per_snapshot turns negative. A notification trigger (email or in-app) when a user's EI drops more than N points between snapshots is spec'd in notification-engine-backend.md but has no implementation yet.
+
+6. Comparative cohort specificity
+The current k-anonymity check (37 users ≥ 30) passes at the pool level, but resolveComparativeIntelligence segments by seniority + domain — so a real user with a unique combination gets suppressed data at the comparative tab even though the overall pool is large. Broadening the fallback (e.g., seniority-only when domain cohort is thin) would surface real peer data for more users.
+
+Tier 3 — Larger builds
+7. Intervention effectiveness tracking
+The system recommends interventions but never measures if the EI score actually rose after one is completed. Closing that loop (log a learn_recommendation_event when an intervention is acted on, correlate with the next snapshot) would make the causal scoring self-correcting over time.
+
+8. Career goals context in EI
+The career passport stores target roles and goals but the EI Forecast and Report tabs don't reference them. Wiring the user's stated goal into the report narrative ("at your current trajectory you'll reach your target Senior Engineer band in ~4 months") would make the intelligence feel personal rather than generic.
+
+Quickest wins to build next
+Priority	What	Effort
+1	Breakdown radar in Trajectory tab	Small — data already in JSONB
+2	Auto-snapshot on CAPADEX end	Small — one hook call
+3	Report archiving + history timeline	Medium
+4	Admin per-user drill-down	Medium
+5	EI drop alert trigger	Medium
+Want me to start on any of these?

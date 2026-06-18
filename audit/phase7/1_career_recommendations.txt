@@ -1,0 +1,201 @@
+CAREER RECOMMENDATIONS — anchor session 1cd9ca07-4659-42c4-83fd-229e5e8f21f2
+============================================================
+### CAREER — student
+  • [cluster] Calm-environment & structured roles
+      Career fields with predictable rhythms and clear expectations — quality assurance, research, archival, lab-based and analytical roles — where high-pressure improvisation is rare.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [exploration] Job-shadow before committing
+      Shadow professionals in fields of interest to test how each environment feels under real pressure before narrowing your choices.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Low-stakes-to-high-stakes exposure pathway
+      A staged route that begins in supportive, well-scaffolded settings and gradually adds performance pressure as confidence builds, rather than starting in high-stakes roles.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [cluster] Exploratory / interest-discovery roles
+      Broad, exposure-rich fields and rotational programmes that let you sample several directions before committing.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [exploration] Run informational interviews
+      Talk to people in 3–5 fields you are curious about to replace guesswork with first-hand insight.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Structured decision-making pathway
+      A route that moves from broad exploration → shortlisting → informed commitment, with a decision checkpoint at each stage.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [cluster] People-centred & supportive roles
+      Fields that reward emotional steadiness and empathy — counselling, healthcare support, education, human services — where regulated responses are a genuine strength.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [exploration] Try roles with emotional demands in small doses
+      Volunteer or intern in settings with moderate emotional load to learn which environments you regulate well in.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Self-awareness-to-mastery pathway
+      A route that pairs role exploration with steadily growing emotional self-management responsibilities.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [cluster] Collaborative & client-facing roles
+      Fields where steady interpersonal confidence is rewarded — and which, with practice, build it: team-based, client-facing, and community roles.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [exploration] Test social-load of different settings
+      Sample roles with different interaction demands to find where you engage most comfortably.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Small-group-to-public pathway
+      A route that grows from one-to-one and small-group settings toward more public, visible responsibilities.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+
+### CAREER — parent
+  • [cluster] Calm-environment & structured roles
+      Help your child by encouraging this: Career fields with predictable rhythms and clear expectations — quality assurance, research, archival, lab-based and analytical roles — where high-pressure improvisation is rare.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [exploration] Job-shadow before committing
+      Help your child by encouraging this: Shadow professionals in fields of interest to test how each environment feels under real pressure before narrowing your choices.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Low-stakes-to-high-stakes exposure pathway
+      Help your child by encouraging this: A staged route that begins in supportive, well-scaffolded settings and gradually adds performance pressure as confidence builds, rather than starting in high-stakes roles.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [cluster] Exploratory / interest-discovery roles
+      Help your child by encouraging this: Broad, exposure-rich fields and rotational programmes that let you sample several directions before committing.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [exploration] Run informational interviews
+      Help your child by encouraging this: Talk to people in 3–5 fields you are curious about to replace guesswork with first-hand insight.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Structured decision-making pathway
+      Help your child by encouraging this: A route that moves from broad exploration → shortlisting → informed commitment, with a decision checkpoint at each stage.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [cluster] People-centred & supportive roles
+      Help your child by encouraging this: Fields that reward emotional steadiness and empathy — counselling, healthcare support, education, human services — where regulated responses are a genuine strength.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [exploration] Try roles with emotional demands in small doses
+      Help your child by encouraging this: Volunteer or intern in settings with moderate emotional load to learn which environments you regulate well in.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Self-awareness-to-mastery pathway
+      Help your child by encouraging this: A route that pairs role exploration with steadily growing emotional self-management responsibilities.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [cluster] Collaborative & client-facing roles
+      Help your child by encouraging this: Fields where steady interpersonal confidence is rewarded — and which, with practice, build it: team-based, client-facing, and community roles.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [exploration] Test social-load of different settings
+      Help your child by encouraging this: Sample roles with different interaction demands to find where you engage most comfortably.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Small-group-to-public pathway
+      Help your child by encouraging this: A route that grows from one-to-one and small-group settings toward more public, visible responsibilities.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+
+### CAREER — counselor
+  • [cluster] Calm-environment & structured roles
+      For this student, consider guiding them toward: Career fields with predictable rhythms and clear expectations — quality assurance, research, archival, lab-based and analytical roles — where high-pressure improvisation is rare.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [exploration] Job-shadow before committing
+      For this student, consider guiding them toward: Shadow professionals in fields of interest to test how each environment feels under real pressure before narrowing your choices.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Low-stakes-to-high-stakes exposure pathway
+      For this student, consider guiding them toward: A staged route that begins in supportive, well-scaffolded settings and gradually adds performance pressure as confidence builds, rather than starting in high-stakes roles.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [cluster] Exploratory / interest-discovery roles
+      For this student, consider guiding them toward: Broad, exposure-rich fields and rotational programmes that let you sample several directions before committing.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [exploration] Run informational interviews
+      For this student, consider guiding them toward: Talk to people in 3–5 fields you are curious about to replace guesswork with first-hand insight.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Structured decision-making pathway
+      For this student, consider guiding them toward: A route that moves from broad exploration → shortlisting → informed commitment, with a decision checkpoint at each stage.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [cluster] People-centred & supportive roles
+      For this student, consider guiding them toward: Fields that reward emotional steadiness and empathy — counselling, healthcare support, education, human services — where regulated responses are a genuine strength.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [exploration] Try roles with emotional demands in small doses
+      For this student, consider guiding them toward: Volunteer or intern in settings with moderate emotional load to learn which environments you regulate well in.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Self-awareness-to-mastery pathway
+      For this student, consider guiding them toward: A route that pairs role exploration with steadily growing emotional self-management responsibilities.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [cluster] Collaborative & client-facing roles
+      For this student, consider guiding them toward: Fields where steady interpersonal confidence is rewarded — and which, with practice, build it: team-based, client-facing, and community roles.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [exploration] Test social-load of different settings
+      For this student, consider guiding them toward: Sample roles with different interaction demands to find where you engage most comfortably.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Small-group-to-public pathway
+      For this student, consider guiding them toward: A route that grows from one-to-one and small-group settings toward more public, visible responsibilities.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+
+### CAREER — institution
+  • [cluster] Calm-environment & structured roles
+      For students showing this pattern across the cohort: Career fields with predictable rhythms and clear expectations — quality assurance, research, archival, lab-based and analytical roles — where high-pressure improvisation is rare.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [exploration] Job-shadow before committing
+      For students showing this pattern across the cohort: Shadow professionals in fields of interest to test how each environment feels under real pressure before narrowing your choices.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Low-stakes-to-high-stakes exposure pathway
+      For students showing this pattern across the cohort: A staged route that begins in supportive, well-scaffolded settings and gradually adds performance pressure as confidence builds, rather than starting in high-stakes roles.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [cluster] Exploratory / interest-discovery roles
+      For students showing this pattern across the cohort: Broad, exposure-rich fields and rotational programmes that let you sample several directions before committing.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [exploration] Run informational interviews
+      For students showing this pattern across the cohort: Talk to people in 3–5 fields you are curious about to replace guesswork with first-hand insight.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Structured decision-making pathway
+      For students showing this pattern across the cohort: A route that moves from broad exploration → shortlisting → informed commitment, with a decision checkpoint at each stage.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [cluster] People-centred & supportive roles
+      For students showing this pattern across the cohort: Fields that reward emotional steadiness and empathy — counselling, healthcare support, education, human services — where regulated responses are a genuine strength.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [exploration] Try roles with emotional demands in small doses
+      For students showing this pattern across the cohort: Volunteer or intern in settings with moderate emotional load to learn which environments you regulate well in.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Self-awareness-to-mastery pathway
+      For students showing this pattern across the cohort: A route that pairs role exploration with steadily growing emotional self-management responsibilities.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [cluster] Collaborative & client-facing roles
+      For students showing this pattern across the cohort: Fields where steady interpersonal confidence is rewarded — and which, with practice, build it: team-based, client-facing, and community roles.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [exploration] Test social-load of different settings
+      For students showing this pattern across the cohort: Sample roles with different interaction demands to find where you engage most comfortably.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [pathway] Small-group-to-public pathway
+      For students showing this pattern across the cohort: A route that grows from one-to-one and small-group settings toward more public, visible responsibilities.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation

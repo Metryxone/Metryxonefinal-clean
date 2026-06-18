@@ -1,0 +1,21 @@
+Let's choose Option 1: Author a dedicated professional work-focus clarity question cluster and seed it directly into our 12,000+ question clarity repository bank under the 'focus_at_work' category. This solves the generic fallback loop at the root level without breaking our database schema or altering any frontend code.
+
+Open `backend/routes/capadex-concern-intelligence.ts` (or our dedicated repository module) and implement these updates:
+
+1. SEED THE PROFESSIONAL FOCUS AT WORK BANK:
+Inject a high-quality array of work-focused clarity question items into our master repository. Ensure each question contains distinct, professional situational option arrays (not generic Likert scales). Use this structural layout to seed them:
+
+- Question 1: "When managing competing deadlines or high-priority tasks at work, what typically breaks your focus first?"
+  * Options: ["Digital interruptions (Slack, emails, phone notifications)", "Internal fatigue or burnout from prolonged screen time", "Ambiguity around which task truly takes priority", "Constant context-switching across different projects"]
+- Question 2: "When you notice your focus slipping during a critical workday project, how do you typically handle the drift?"
+  * Options: ["Push through the fatigue, even if output quality drops", "Step away completely to reset, risking timeline delays", "Switch to lower-cognitive tasks like sorting emails", "Procrastinate or browse non-work channels to escape the friction"]
+- Question 3: "What does your executive focus or workplace concentration style look like on an average day?"
+  * Options: ["Highly cyclical — deep bursts of focus followed by prolonged slumps", "Reactive — constantly responding to urgent workspace demands instead of deep work", "Anxious — focus is sustained entirely by high-pressure incoming deadlines", "Avoidant — struggle immensely to initiate complex tasks, leading to major delays"]
+
+2. ALIGN WITH EXCLUSION & PROXY FILTERS:
+- Ensure these new items are assigned the category key 'focus_at_work' so our fuzzy filter maps them instantly.
+- Assign each item a unique, structured ID (e.g., 'faw_prof_001', 'faw_prof_002', 'faw_prof_003').
+- Ensure these questions pass seamlessly through our unbiased Fisher-Yates shuffle engine and historical `answeredIds` exclusion mask.
+- Verify that they feed cleanly into our third-person proxy reframer (`rephraseForProxy`) so that if a counsellor evaluates an employee, the grammar reframes dynamically.
+
+Run `tsc` to verify type safety and test the routing flow to ensure 'Focus at work' now serves an entirely unique, workplace-relevant trajectory!

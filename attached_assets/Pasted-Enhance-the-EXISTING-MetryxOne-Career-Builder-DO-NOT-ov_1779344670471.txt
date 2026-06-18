@@ -1,0 +1,160 @@
+Enhance the EXISTING MetryxOne Career Builder.
+DO NOT overwrite existing functionality.
+
+OBJECTIVE
+Transform competency guidance into behavioural intelligence.
+
+CURRENT LIMITATION
+Competencies are too broad:
+- leadership
+- communication
+- stakeholder management
+
+NEW GOAL
+Diagnose behavioural micro-signals causing competency gaps.
+
+========================================
+PHASE 2 SCOPE
+========================================
+
+BUILD:
+1. Behavioural Micro-Signal Engine
+2. Evidence Extraction Pipeline
+3. Behavioural Diagnostics
+4. Contradiction Detection
+5. Behavioural Memory Evolution
+6. Behaviour-Driven Recommendations
+
+========================================
+CREATE
+========================================
+
+backend/services/behavioral-signal-engine.ts
+
+backend/services/evidence-extractor.ts
+
+backend/services/contradiction-detector.ts
+
+========================================
+MICRO SIGNAL MODEL
+========================================
+
+Each competency decomposes into micro-signals.
+
+Example:
+
+stakeholder_management:
+- escalation_timing
+- expectation_alignment
+- tradeoff_framing
+- executive_summarisation
+- influence_without_authority
+
+communication:
+- structured_responses
+- quantified_outcomes
+- narrative_clarity
+- concise_reasoning
+
+leadership:
+- ownership_signals
+- accountability_consistency
+- conflict_navigation
+- ambiguity_handling
+
+========================================
+EVIDENCE SOURCES
+========================================
+
+Extract behavioural signals from:
+- interview transcripts
+- AI simulations
+- resume narratives
+- project descriptions
+- goals
+- profile summaries
+- job tracker notes
+
+========================================
+SCORING MODEL
+========================================
+
+Each micro-signal includes:
+{
+  frequency,
+  confidence,
+  evidence_count,
+  recency_weight,
+  behavioural_strength
+}
+
+========================================
+CONTRADICTION DETECTION
+========================================
+
+Detect inconsistencies:
+- leadership claims without ownership signals
+- strategy claims without systems thinking evidence
+- inflated project scale claims
+- inconsistent timelines
+
+Return:
+{
+  contradiction_score,
+  contradiction_flags[]
+}
+
+========================================
+GUIDANCE ENHANCEMENT
+========================================
+
+Replace generic recommendations with behavioural intelligence.
+
+OLD:
+“Run 2 mock interviews”
+
+NEW:
+“Your interview responses contain 31% fewer quantified ownership signals than Career-Ready peers.”
+
+========================================
+UI ENHANCEMENTS
+========================================
+
+Add:
+- behavioural indicators
+- evidence snippets
+- micro-signal breakdowns
+- behavioural trend evolution
+- signal confidence bars
+
+========================================
+BEHAVIOURAL MEMORY
+========================================
+
+Extend Career Velocity memory system.
+
+Track:
+- behavioural consistency
+- signal evolution
+- maturity progression
+- confidence growth
+
+========================================
+TESTING
+========================================
+
+Create:
+- behavioural extraction tests
+- contradiction tests
+- evidence parsing tests
+- signal confidence tests
+
+========================================
+SUCCESS CRITERIA
+========================================
+
+- Guidance becomes behaviour-specific
+- Recommendations explain WHY gaps exist
+- Contradictions are surfaced safely
+- Behavioural evolution is trackable
+- Existing Career Builder remains stable

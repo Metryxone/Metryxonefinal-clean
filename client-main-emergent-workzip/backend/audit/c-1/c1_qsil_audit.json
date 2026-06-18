@@ -1,0 +1,83 @@
+{
+  "phase": "C-1",
+  "name": "Question Semantic Intelligence Layer (QSIL) — Audit",
+  "mode": "audit_and_report_only",
+  "questions_modified": 0,
+  "generated_against": "live database (capadex_clarity_questions x capadex_question_metadata)",
+  "scale": {
+    "total_questions": 30638,
+    "metadata_join_coverage_pct": 100.0,
+    "distinct_bridge_tags": 325,
+    "distinct_clarity_concern_ids": 5357,
+    "master_concerns": 2489,
+    "metadata_provenance": "aq2_reconstruction"
+  },
+  "dimension_coverage_pct": {
+    "age_band": 99.6,
+    "persona_primary": 96.9,
+    "dev_stage": 100.0,
+    "primary_behavior": 99.9,
+    "secondary_behavior": 55.8,
+    "primary_capability": 100.0,
+    "secondary_capability": 63.2,
+    "signal_family": 55.8,
+    "context": 0.0,
+    "archetype": 0.0
+  },
+  "dimensions_absent_at_question_level": ["context", "archetype", "secondary_age_band", "secondary_persona", "secondary_signal"],
+  "global_cardinality_distinct_values": {
+    "age_band": 4, "persona_primary": 5, "dev_stage": 5,
+    "primary_behavior": 119, "primary_capability": 286, "signal_family": 87
+  },
+  "question_intelligence_score": {"mean": 51.1, "sd": 16.9, "min": 21.95, "max": 87.27,
+    "bands": {"A_70_100": {"n": 5783, "pct": 18.9}, "B_55_70": {"n": 6740, "pct": 22.0}, "C_40_55": {"n": 8442, "pct": 27.6}, "D_lt_40": {"n": 9673, "pct": 31.6}}},
+  "uniformity": {
+    "metric": "Herfindahl concentration (HHI) per dimension, averaged over the 6 populated dims; 1.0 = identical metadata across every question in the tag",
+    "repository_weighted_uniformity": 0.9039,
+    "repository_differentiability": 0.0961,
+    "tags_ge_0_80_uniformity": {"tags": 325, "pct_tags": 100.0, "questions": 30638, "pct_questions": 100.0},
+    "bands": {
+      "near_identical_ge_0_95": {"tags": 172, "questions": 7264, "pct_questions": 23.7},
+      "high_0_80_0_95": {"tags": 153, "questions": 23374, "pct_questions": 76.3},
+      "below_0_80": {"tags": 0, "questions": 0, "pct_questions": 0.0}
+    },
+    "fully_generic_tags_single_valued_all_dims": {"tags": 171, "questions": 7204}
+  },
+  "per_dimension_within_tag_uniformity": {
+    "age_band": {"weighted_hhi": 1.000, "single_valued_tags": 324, "missing_tags": 1},
+    "persona_primary": {"weighted_hhi": 0.985, "single_valued_tags": 292, "missing_tags": 20},
+    "dev_stage": {"weighted_hhi": 0.438, "single_valued_tags": 172, "multi_valued_tags": 153, "note": "ONLY dimension that differentiates questions within a tag"},
+    "primary_behavior": {"weighted_hhi": 1.000, "single_valued_tags": 324, "missing_tags": 1},
+    "primary_capability": {"weighted_hhi": 1.000, "single_valued_tags": 325, "missing_tags": 0, "note": "every tag has exactly one capability value"},
+    "signal_family": {"weighted_hhi": 1.000, "single_valued_tags": 181, "missing_tags": 144, "note": "uniform where present; absent in 144 tags"}
+  },
+  "signal_dilution": {
+    "tags_zero_signal": 144, "tags_zero_signal_questions": 13538,
+    "clarity_concerns_total": 5357, "concerns_zero_signal": 1933, "concerns_under_half_signal": 2133
+  },
+  "value_distributions": {
+    "age_band": [["14-17",17972,58.7],["18-24",7209,23.5],["25-45",5187,16.9],["46+",145,0.5],["(null)",125,0.4]],
+    "persona_primary": [["Student",12513,40.8],["Counselor",7222,23.6],["Professional",6916,22.6],["Teacher",2390,7.8],["(null)",948,3.1],["Parent",649,2.1]],
+    "persona_absent_allowed_value": "Entrepreneur (0 questions)",
+    "dev_stage": [["Clarity",10777,35.2],["Growth",8293,27.1],["Awareness",6409,20.9],["Mastery",4566,14.9],["Curiosity",593,1.9]],
+    "signal_strength": [["(null)",13538,44.2],["moderate",13280,43.3],["strong",3820,12.5]],
+    "signal_strength_absent_value": "weak (0 questions)"
+  },
+  "top_generic_assessment_risk_tags": [
+    ["EMPLOYABILITY",1150,0.8745],["EMOTIONAL_REGULATION",1100,0.8777],["CAREER_READINESS",1000,0.8762],
+    ["COMPETENCY_DEVELOPMENT",1014,0.8735],["DISCIPLINE_HABITS",925,0.8676],["EMOTIONAL_RECOVERY",800,0.8784],
+    ["SOCIAL_EMOTIONAL",825,0.8548],["WORKPLACE_ADAPTATION",682,0.8769],["CAREER_GROWTH",675,0.8773],
+    ["EXAMINATION_STRESS",650,0.8774]
+  ],
+  "requested_vs_available_scope": {
+    "top_500_bridge_tags_requested": "only 325 bridge tags exist in total",
+    "top_250_concerns_requested": "5357 clarity concern_ids exist; severity-ranked subset reportable",
+    "top_1000_questions_requested": "reportable, but enrichment priority is better expressed per-tag (325) since metadata is tag-inherited"
+  },
+  "projections_NOT_MEASURED": {
+    "basis": "AQ-2R already MEASURED that a within-pool re-rank on tag-level metadata yields ~0 delta on signal/construct (signal/age/behavior/capability are uniform within a pool); only dev_stage moved.",
+    "differentiability_target_after_C2": "projection only: 0.096 -> ~0.35-0.55 achievable, BUT capped by genuinely low-cardinality dims (age=4, persona=5, stage=5 can never differentiate much); real headroom is behavior(119)/capability(286)/signal(87 + fix 44% missing coverage)",
+    "trust_score_impact": "directional positive; AQ-2R measured selection-trust +3.8 with tag-level metadata; question-level enrichment expected to extend this, magnitude unproven until C-2 measured",
+    "routing_accuracy_gain": "bounded by the 76.3% of questions in high-uniformity pools that currently cannot be differentiated; not quantifiable pre-enrichment"
+  }
+}

@@ -1,0 +1,15 @@
+category_key,label,member_node_types,source_tables,node_count
+domain,Domain,domain,capadex_domains,20
+bridge_tag,Bridge Tag,bridge_tag,(relational/master bridge tag),331
+concern,Concern,concern,capadex_concerns_master,2489
+signal,Signal,family|atomic_signal|signal|construct,capadex_families|capadex_atomic_signals|capadex_signals|(anchor_construct/construct_key),16431
+question,Question,clarity_question,capadex_clarity_questions,30638
+capability,Capability,capability|competency,capability_problem_map|onto_competencies,1204
+problem,Problem,problem_framing|problem,capability_problem_map|human_problem_library,993
+behavior,Behavior,behavior,behavior_library,8030
+archetype,Archetype,archetype,archetype_library,22
+emotion,Emotion,emotion,human_emotion_library,220
+search_intent,Search Intent,search_intent,search_intents,550
+intervention,Intervention,intervention|runtime_intervention,pil_intervention_library|intervention_library,800
+recommendation,Recommendation,recommendation,recommendation_library,367
+report_section,Report Section,,,0

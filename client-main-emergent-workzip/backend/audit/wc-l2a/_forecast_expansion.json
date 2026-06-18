@@ -1,0 +1,292 @@
+{
+  "generated_at": "2026-06-09T16:18:56.166Z",
+  "flag_enabled": true,
+  "cross_check_mismatches": 0,
+  "population": {
+    "identified_owners": 3,
+    "eligible_owners": 2,
+    "ineligible_owners": 1,
+    "forecastable_owners": 2,
+    "anonymous_completed_sessions": 4,
+    "owned_completed_sessions": 5,
+    "depth_buckets": {
+      "1": 1,
+      "2": 2,
+      "3": 0,
+      "4": 0,
+      "5+": 0
+    }
+  },
+  "per_session_state_capture": {
+    "denominator": 5,
+    "counts": {
+      "stage": 5,
+      "outcome": 1,
+      "journey": 5,
+      "decision": 5,
+      "behaviour_risk": 2,
+      "behaviour_confidence": 4,
+      "behaviour_engagement": 4,
+      "behaviour_motivation": 3,
+      "behaviour_adaptability": 1
+    }
+  },
+  "per_layer_over_eligible": [
+    {
+      "layer": "stage",
+      "source": "wc3_longitudinal_snapshots.canonical_stage (WC-L1 stage lever)",
+      "forecastable": 2,
+      "no_trend": 0,
+      "eligible_denominator": 2,
+      "mean_confidence": 0.33,
+      "confidences": [
+        0.33,
+        0.33
+      ]
+    },
+    {
+      "layer": "outcome",
+      "source": "wc3_outcome_state.current_order (WC-L1 outcome lever)",
+      "forecastable": 0,
+      "no_trend": 2,
+      "eligible_denominator": 2,
+      "mean_confidence": null,
+      "confidences": []
+    },
+    {
+      "layer": "journey",
+      "source": "wc3_journey_state.route_confidence (WC-L1 journey lever)",
+      "forecastable": 2,
+      "no_trend": 0,
+      "eligible_denominator": 2,
+      "mean_confidence": 0.33,
+      "confidences": [
+        0.33,
+        0.33
+      ]
+    },
+    {
+      "layer": "decision",
+      "source": "wc7b_decision_state.confidence (WC-11 decision lever)",
+      "forecastable": 2,
+      "no_trend": 0,
+      "eligible_denominator": 2,
+      "mean_confidence": 0.33,
+      "confidences": [
+        0.33,
+        0.33
+      ]
+    },
+    {
+      "layer": "behaviour",
+      "source": "wcl0_user_intelligence.risk (WC-L0B behaviour risk dim)",
+      "forecastable": 0,
+      "no_trend": 2,
+      "eligible_denominator": 2,
+      "mean_confidence": null,
+      "confidences": []
+    }
+  ],
+  "confidence_buckets": {
+    "low": 6,
+    "moderate": 0,
+    "high": 0
+  },
+  "forecast_loss": {
+    "total_cells": 15,
+    "forecastable_cells": 6,
+    "lost_cells": 9,
+    "session_depth": 5,
+    "by_layer_state": {
+      "stage": 0,
+      "outcome": 2,
+      "journey": 0,
+      "decision": 0,
+      "behaviour": 2
+    }
+  },
+  "coverage_curve": [
+    {
+      "depth": "1",
+      "owners": 1,
+      "withForecast": 0,
+      "coverage": "0.0%"
+    },
+    {
+      "depth": "2",
+      "owners": 2,
+      "withForecast": 2,
+      "coverage": "100.0%"
+    },
+    {
+      "depth": "3",
+      "owners": 0,
+      "withForecast": 0,
+      "coverage": "no data"
+    },
+    {
+      "depth": "4",
+      "owners": 0,
+      "withForecast": 0,
+      "coverage": "no data"
+    },
+    {
+      "depth": "5+",
+      "owners": 0,
+      "withForecast": 0,
+      "coverage": "no data"
+    }
+  ],
+  "scenarios": {
+    "A_plus1": {
+      "eligible": 3,
+      "coverage": 3
+    },
+    "B_plus2": {
+      "eligible": 3,
+      "coverage": 3
+    },
+    "C_outcome_full_eligible_coverage": 2,
+    "D_behaviour_full_eligible_coverage": 2,
+    "E_combined": {
+      "eligible": 3,
+      "coverageAllLayers": 3
+    },
+    "target_plan": [
+      {
+        "target": 50,
+        "ownersNeeded": 2,
+        "haveNow": 2,
+        "shortfall": 0
+      },
+      {
+        "target": 75,
+        "ownersNeeded": 3,
+        "haveNow": 2,
+        "shortfall": 1
+      },
+      {
+        "target": 90,
+        "ownersNeeded": 3,
+        "haveNow": 2,
+        "shortfall": 1
+      }
+    ]
+  },
+  "owners": [
+    {
+      "owner": "user_65454b2b8b",
+      "completed": 2,
+      "eligible": true,
+      "any_forecastable": true,
+      "cells": {
+        "stage": {
+          "forecastable": true,
+          "confidence": 0.33,
+          "points": 2,
+          "reason": null
+        },
+        "outcome": {
+          "forecastable": false,
+          "confidence": null,
+          "points": null,
+          "reason": "no_trend"
+        },
+        "journey": {
+          "forecastable": true,
+          "confidence": 0.33,
+          "points": 2,
+          "reason": null
+        },
+        "decision": {
+          "forecastable": true,
+          "confidence": 0.33,
+          "points": 2,
+          "reason": null
+        },
+        "behaviour": {
+          "forecastable": false,
+          "confidence": null,
+          "points": null,
+          "reason": "no_trend"
+        }
+      }
+    },
+    {
+      "owner": "user_4b262cc8a5",
+      "completed": 2,
+      "eligible": true,
+      "any_forecastable": true,
+      "cells": {
+        "stage": {
+          "forecastable": true,
+          "confidence": 0.33,
+          "points": 2,
+          "reason": null
+        },
+        "outcome": {
+          "forecastable": false,
+          "confidence": null,
+          "points": null,
+          "reason": "no_trend"
+        },
+        "journey": {
+          "forecastable": true,
+          "confidence": 0.33,
+          "points": 2,
+          "reason": null
+        },
+        "decision": {
+          "forecastable": true,
+          "confidence": 0.33,
+          "points": 2,
+          "reason": null
+        },
+        "behaviour": {
+          "forecastable": false,
+          "confidence": null,
+          "points": null,
+          "reason": "no_trend"
+        }
+      }
+    },
+    {
+      "owner": "user_ec082847d9",
+      "completed": 1,
+      "eligible": false,
+      "any_forecastable": false,
+      "cells": {
+        "stage": {
+          "forecastable": false,
+          "confidence": null,
+          "points": null,
+          "reason": "insufficient_sessions"
+        },
+        "outcome": {
+          "forecastable": false,
+          "confidence": null,
+          "points": null,
+          "reason": "insufficient_sessions"
+        },
+        "journey": {
+          "forecastable": false,
+          "confidence": null,
+          "points": null,
+          "reason": "insufficient_sessions"
+        },
+        "decision": {
+          "forecastable": false,
+          "confidence": null,
+          "points": null,
+          "reason": "insufficient_sessions"
+        },
+        "behaviour": {
+          "forecastable": false,
+          "confidence": null,
+          "points": null,
+          "reason": "insufficient_sessions"
+        }
+      }
+    }
+  ]
+}

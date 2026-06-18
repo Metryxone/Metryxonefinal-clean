@@ -1,0 +1,666 @@
+{
+  "node_type_catalog": [
+    {
+      "category_key": "domain",
+      "label": "Domain",
+      "description": "Top-tier behavioural domain.",
+      "member_node_types": [
+        "domain"
+      ],
+      "source_tables": [
+        "capadex_domains"
+      ],
+      "display_order": 0,
+      "node_count": 20,
+      "counts_refreshed_at": "2026-06-03T16:50:15.605Z",
+      "updated_at": "2026-06-03T16:50:15.605Z"
+    },
+    {
+      "category_key": "bridge_tag",
+      "label": "Bridge Tag",
+      "description": "Routing hub joining concerns, signals and clarity questions.",
+      "member_node_types": [
+        "bridge_tag"
+      ],
+      "source_tables": [
+        "(relational/master bridge tag)"
+      ],
+      "display_order": 1,
+      "node_count": 331,
+      "counts_refreshed_at": "2026-06-03T16:50:15.614Z",
+      "updated_at": "2026-06-03T16:50:15.614Z"
+    },
+    {
+      "category_key": "concern",
+      "label": "Concern",
+      "description": "Master concern surfaced to a person.",
+      "member_node_types": [
+        "concern"
+      ],
+      "source_tables": [
+        "capadex_concerns_master"
+      ],
+      "display_order": 2,
+      "node_count": 2489,
+      "counts_refreshed_at": "2026-06-03T16:50:15.616Z",
+      "updated_at": "2026-06-03T16:50:15.616Z"
+    },
+    {
+      "category_key": "signal",
+      "label": "Signal",
+      "description": "Behavioural signal at any grain (family, atomic, master, construct).",
+      "member_node_types": [
+        "family",
+        "atomic_signal",
+        "signal",
+        "construct"
+      ],
+      "source_tables": [
+        "capadex_families",
+        "capadex_atomic_signals",
+        "capadex_signals",
+        "(anchor_construct/construct_key)"
+      ],
+      "display_order": 3,
+      "node_count": 16431,
+      "counts_refreshed_at": "2026-06-03T16:50:15.619Z",
+      "updated_at": "2026-06-03T16:50:15.619Z"
+    },
+    {
+      "category_key": "question",
+      "label": "Question",
+      "description": "Assessment / clarity question.",
+      "member_node_types": [
+        "clarity_question"
+      ],
+      "source_tables": [
+        "capadex_clarity_questions"
+      ],
+      "display_order": 4,
+      "node_count": 30638,
+      "counts_refreshed_at": "2026-06-03T16:50:15.622Z",
+      "updated_at": "2026-06-03T16:50:15.622Z"
+    },
+    {
+      "category_key": "capability",
+      "label": "Capability",
+      "description": "Strength framing / trainable competency.",
+      "member_node_types": [
+        "capability",
+        "competency"
+      ],
+      "source_tables": [
+        "capability_problem_map",
+        "onto_competencies"
+      ],
+      "display_order": 5,
+      "node_count": 1204,
+      "counts_refreshed_at": "2026-06-03T16:50:15.624Z",
+      "updated_at": "2026-06-03T16:50:15.624Z"
+    },
+    {
+      "category_key": "problem",
+      "label": "Problem",
+      "description": "Deficit framing / human problem statement.",
+      "member_node_types": [
+        "problem_framing",
+        "problem"
+      ],
+      "source_tables": [
+        "capability_problem_map",
+        "human_problem_library"
+      ],
+      "display_order": 6,
+      "node_count": 993,
+      "counts_refreshed_at": "2026-06-03T16:50:15.626Z",
+      "updated_at": "2026-06-03T16:50:15.626Z"
+    },
+    {
+      "category_key": "behavior",
+      "label": "Behavior",
+      "description": "Observable behaviour statement.",
+      "member_node_types": [
+        "behavior"
+      ],
+      "source_tables": [
+        "behavior_library"
+      ],
+      "display_order": 7,
+      "node_count": 8030,
+      "counts_refreshed_at": "2026-06-03T16:50:15.629Z",
+      "updated_at": "2026-06-03T16:50:15.629Z"
+    },
+    {
+      "category_key": "archetype",
+      "label": "Archetype",
+      "description": "Behavioural archetype.",
+      "member_node_types": [
+        "archetype"
+      ],
+      "source_tables": [
+        "archetype_library"
+      ],
+      "display_order": 8,
+      "node_count": 22,
+      "counts_refreshed_at": "2026-06-03T16:50:15.632Z",
+      "updated_at": "2026-06-03T16:50:15.632Z"
+    },
+    {
+      "category_key": "emotion",
+      "label": "Emotion",
+      "description": "Emotion statement.",
+      "member_node_types": [
+        "emotion"
+      ],
+      "source_tables": [
+        "human_emotion_library"
+      ],
+      "display_order": 9,
+      "node_count": 220,
+      "counts_refreshed_at": "2026-06-03T16:50:15.634Z",
+      "updated_at": "2026-06-03T16:50:15.634Z"
+    },
+    {
+      "category_key": "search_intent",
+      "label": "Search Intent",
+      "description": "Stakeholder search intent.",
+      "member_node_types": [
+        "search_intent"
+      ],
+      "source_tables": [
+        "search_intents"
+      ],
+      "display_order": 10,
+      "node_count": 550,
+      "counts_refreshed_at": "2026-06-03T16:50:15.637Z",
+      "updated_at": "2026-06-03T16:50:15.637Z"
+    },
+    {
+      "category_key": "intervention",
+      "label": "Intervention",
+      "description": "Authored or runtime intervention.",
+      "member_node_types": [
+        "intervention",
+        "runtime_intervention"
+      ],
+      "source_tables": [
+        "pil_intervention_library",
+        "intervention_library"
+      ],
+      "display_order": 11,
+      "node_count": 800,
+      "counts_refreshed_at": "2026-06-03T16:50:15.640Z",
+      "updated_at": "2026-06-03T16:50:15.640Z"
+    },
+    {
+      "category_key": "recommendation",
+      "label": "Recommendation",
+      "description": "Authored recommendation.",
+      "member_node_types": [
+        "recommendation"
+      ],
+      "source_tables": [
+        "recommendation_library"
+      ],
+      "display_order": 12,
+      "node_count": 367,
+      "counts_refreshed_at": "2026-06-03T16:50:15.642Z",
+      "updated_at": "2026-06-03T16:50:15.642Z"
+    },
+    {
+      "category_key": "report_section",
+      "label": "Report Section",
+      "description": "Report narrative section (forward-looking: no graph nodes yet).",
+      "member_node_types": [],
+      "source_tables": [],
+      "display_order": 13,
+      "node_count": 0,
+      "counts_refreshed_at": "2026-06-03T16:50:15.645Z",
+      "updated_at": "2026-06-03T16:50:15.645Z"
+    }
+  ],
+  "relationship_type_catalog": [
+    {
+      "relationship_type": "BELONGS_TO",
+      "label": "Belongs To",
+      "description": "Structural containment / hierarchy membership.",
+      "directed": true,
+      "member_relations": [
+        "family_belongs_to_domain",
+        "atomic_belongs_to_family",
+        "atomic_belongs_to_domain",
+        "problem_belongs_to_archetype",
+        "emotion_belongs_to_archetype"
+      ],
+      "display_order": 0,
+      "edge_count": 32652,
+      "counts_refreshed_at": "2026-06-03T16:50:15.647Z",
+      "updated_at": "2026-06-03T16:50:15.647Z"
+    },
+    {
+      "relationship_type": "INDICATES",
+      "label": "Indicates",
+      "description": "Observable evidence that points to a concern.",
+      "directed": true,
+      "member_relations": [
+        "behavior_indicates_concern"
+      ],
+      "display_order": 1,
+      "edge_count": 8030,
+      "counts_refreshed_at": "2026-06-03T16:50:15.650Z",
+      "updated_at": "2026-06-03T16:50:15.650Z"
+    },
+    {
+      "relationship_type": "MEASURES",
+      "label": "Measures",
+      "description": "A signal or question that quantifies a concern.",
+      "directed": true,
+      "member_relations": [
+        "concern_activates_signal",
+        "concern_resolves_clarity"
+      ],
+      "display_order": 2,
+      "edge_count": 15618,
+      "counts_refreshed_at": "2026-06-03T16:50:15.652Z",
+      "updated_at": "2026-06-03T16:50:15.652Z"
+    },
+    {
+      "relationship_type": "CONTRIBUTES_TO",
+      "label": "Contributes To",
+      "description": "A capability that addresses / contributes to a problem.",
+      "directed": true,
+      "member_relations": [
+        "capability_addresses_problem"
+      ],
+      "display_order": 3,
+      "edge_count": 905,
+      "counts_refreshed_at": "2026-06-03T16:50:15.655Z",
+      "updated_at": "2026-06-03T16:50:15.655Z"
+    },
+    {
+      "relationship_type": "CAUSES",
+      "label": "Causes",
+      "description": "A problem that manifests as a behaviour.",
+      "directed": true,
+      "member_relations": [
+        "problem_manifests_behavior"
+      ],
+      "display_order": 4,
+      "edge_count": 29730,
+      "counts_refreshed_at": "2026-06-03T16:50:15.665Z",
+      "updated_at": "2026-06-03T16:50:15.665Z"
+    },
+    {
+      "relationship_type": "EXPRESSES",
+      "label": "Expresses",
+      "description": "A concern expressed as a capability framing.",
+      "directed": true,
+      "member_relations": [
+        "concern_framed_as_capability"
+      ],
+      "display_order": 5,
+      "edge_count": 905,
+      "counts_refreshed_at": "2026-06-03T16:50:15.667Z",
+      "updated_at": "2026-06-03T16:50:15.667Z"
+    },
+    {
+      "relationship_type": "CLUSTERS_WITH",
+      "label": "Clusters With",
+      "description": "Grouping under a routing hub or archetype cluster.",
+      "directed": true,
+      "member_relations": [
+        "tagged_with",
+        "archetype_covers_concern"
+      ],
+      "display_order": 6,
+      "edge_count": 51690,
+      "counts_refreshed_at": "2026-06-03T16:50:15.670Z",
+      "updated_at": "2026-06-03T16:50:15.670Z"
+    },
+    {
+      "relationship_type": "LEADS_TO",
+      "label": "Leads To",
+      "description": "A search intent that leads to an archetype or problem.",
+      "directed": true,
+      "member_relations": [
+        "intent_for_archetype",
+        "intent_for_problem"
+      ],
+      "display_order": 7,
+      "edge_count": 1100,
+      "counts_refreshed_at": "2026-06-03T16:50:15.672Z",
+      "updated_at": "2026-06-03T16:50:15.672Z"
+    },
+    {
+      "relationship_type": "RECOMMENDS",
+      "label": "Recommends",
+      "description": "A recommendation anchored on a construct.",
+      "directed": true,
+      "member_relations": [
+        "recommendation_anchored_on_construct"
+      ],
+      "display_order": 8,
+      "edge_count": 367,
+      "counts_refreshed_at": "2026-06-03T16:50:15.675Z",
+      "updated_at": "2026-06-03T16:50:15.675Z"
+    },
+    {
+      "relationship_type": "SUPPORTS",
+      "label": "Supports",
+      "description": "An intervention that supports an archetype, problem or construct.",
+      "directed": true,
+      "member_relations": [
+        "intervention_for_archetype",
+        "intervention_for_problem",
+        "runtime_intervention_for_construct"
+      ],
+      "display_order": 9,
+      "edge_count": 1460,
+      "counts_refreshed_at": "2026-06-03T16:50:15.678Z",
+      "updated_at": "2026-06-03T16:50:15.678Z"
+    },
+    {
+      "relationship_type": "EXPLAINS",
+      "label": "Explains",
+      "description": "Explanatory lineage (forward-looking: no graph edges yet).",
+      "directed": true,
+      "member_relations": [],
+      "display_order": 10,
+      "edge_count": 0,
+      "counts_refreshed_at": "2026-06-03T16:50:15.680Z",
+      "updated_at": "2026-06-03T16:50:15.680Z"
+    }
+  ],
+  "graph_metadata": {
+    "canonical_tables": [
+      "pil_kg_nodes",
+      "pil_kg_edges"
+    ],
+    "edge_count": 142457,
+    "edge_relations_declared": 19,
+    "edge_relations_present": 19,
+    "last_refreshed_at": "2026-06-03T16:50:15.736Z",
+    "maturation_tables": [
+      "pil_kg_node_types",
+      "pil_kg_relationship_types",
+      "pil_kg_metadata",
+      "pil_kg_similarity_index",
+      "pil_kg_audit"
+    ],
+    "node_categories": 14,
+    "node_count": 62095,
+    "node_types_declared": 19,
+    "node_types_present": 19,
+    "relationship_types": 11,
+    "taxonomy_is_bijective": true
+  },
+  "similarity_sample": [
+    {
+      "source_id": "clarity_question:AC001",
+      "target_id": "clarity_question:AC002",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.895Z"
+    },
+    {
+      "source_id": "clarity_question:AC001",
+      "target_id": "clarity_question:AC003",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.899Z"
+    },
+    {
+      "source_id": "clarity_question:AC001",
+      "target_id": "clarity_question:AC004",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.901Z"
+    },
+    {
+      "source_id": "clarity_question:AC001",
+      "target_id": "clarity_question:AC005",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.904Z"
+    },
+    {
+      "source_id": "clarity_question:AC001",
+      "target_id": "clarity_question:AC006",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.907Z"
+    },
+    {
+      "source_id": "clarity_question:AC001__2",
+      "target_id": "clarity_question:AC002__2",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.909Z"
+    },
+    {
+      "source_id": "clarity_question:AC001__2",
+      "target_id": "clarity_question:AC003__2",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.911Z"
+    },
+    {
+      "source_id": "clarity_question:AC001__2",
+      "target_id": "clarity_question:AC004__2",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.913Z"
+    },
+    {
+      "source_id": "clarity_question:AC001__2",
+      "target_id": "clarity_question:AC005__2",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.916Z"
+    },
+    {
+      "source_id": "clarity_question:AC001__2",
+      "target_id": "clarity_question:AC006__2",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.918Z"
+    },
+    {
+      "source_id": "clarity_question:AC001__3",
+      "target_id": "clarity_question:AC002__3",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.921Z"
+    },
+    {
+      "source_id": "clarity_question:AC001__3",
+      "target_id": "clarity_question:AC003__3",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.923Z"
+    },
+    {
+      "source_id": "clarity_question:AC001__3",
+      "target_id": "clarity_question:AC004__3",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.926Z"
+    },
+    {
+      "source_id": "clarity_question:AC001__3",
+      "target_id": "clarity_question:AC005__3",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.928Z"
+    },
+    {
+      "source_id": "clarity_question:AC001__3",
+      "target_id": "clarity_question:AC006__3",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.931Z"
+    },
+    {
+      "source_id": "clarity_question:AC002",
+      "target_id": "clarity_question:AC001",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.933Z"
+    },
+    {
+      "source_id": "clarity_question:AC002",
+      "target_id": "clarity_question:AC003",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.940Z"
+    },
+    {
+      "source_id": "clarity_question:AC002",
+      "target_id": "clarity_question:AC004",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.942Z"
+    },
+    {
+      "source_id": "clarity_question:AC002",
+      "target_id": "clarity_question:AC005",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.944Z"
+    },
+    {
+      "source_id": "clarity_question:AC002",
+      "target_id": "clarity_question:AC006",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.947Z"
+    },
+    {
+      "source_id": "clarity_question:AC002__2",
+      "target_id": "clarity_question:AC001__2",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.950Z"
+    },
+    {
+      "source_id": "clarity_question:AC002__2",
+      "target_id": "clarity_question:AC003__2",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.952Z"
+    },
+    {
+      "source_id": "clarity_question:AC002__2",
+      "target_id": "clarity_question:AC004__2",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.955Z"
+    },
+    {
+      "source_id": "clarity_question:AC002__2",
+      "target_id": "clarity_question:AC005__2",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.957Z"
+    },
+    {
+      "source_id": "clarity_question:AC002__2",
+      "target_id": "clarity_question:AC006__2",
+      "method": "jaccard_neighbors",
+      "score": "1.000000",
+      "shared_count": 1,
+      "computed_at": "2026-06-03T16:50:15.967Z"
+    }
+  ],
+  "recent_audit": [
+    {
+      "id": "5",
+      "event_type": "compute_similarity",
+      "status": "ok",
+      "node_count": null,
+      "edge_count": null,
+      "affected_rows": 7500,
+      "duration_ms": 22319,
+      "details": {
+        "pairs": 7500,
+        "method": "jaccard_neighbors",
+        "node_type": "clarity_question",
+        "candidates": 1500
+      },
+      "created_at": "2026-06-03T16:50:38.101Z"
+    },
+    {
+      "id": "4",
+      "event_type": "refresh_metadata",
+      "status": "ok",
+      "node_count": 62095,
+      "edge_count": 142457,
+      "affected_rows": 12,
+      "duration_ms": 82,
+      "details": {},
+      "created_at": "2026-06-03T16:50:15.767Z"
+    },
+    {
+      "id": "3",
+      "event_type": "refresh_counts",
+      "status": "ok",
+      "node_count": 62095,
+      "edge_count": 142457,
+      "affected_rows": 25,
+      "duration_ms": 174,
+      "details": {},
+      "created_at": "2026-06-03T16:50:15.682Z"
+    },
+    {
+      "id": "2",
+      "event_type": "seed_catalogs",
+      "status": "ok",
+      "node_count": null,
+      "edge_count": null,
+      "affected_rows": 25,
+      "duration_ms": 68,
+      "details": {
+        "node_categories": 14,
+        "relationship_types": 11
+      },
+      "created_at": "2026-06-03T16:50:15.505Z"
+    },
+    {
+      "id": "1",
+      "event_type": "materialize",
+      "status": "ok",
+      "node_count": 62095,
+      "edge_count": 142457,
+      "affected_rows": null,
+      "duration_ms": 4779,
+      "details": {
+        "source": "phase8a-audit"
+      },
+      "created_at": "2026-06-03T16:50:15.422Z"
+    }
+  ]
+}

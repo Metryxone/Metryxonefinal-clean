@@ -1,0 +1,442 @@
+MX-SA-WORLDCLASS-AUDIT-01
+
+MISSION
+
+Perform a complete World-Class SuperAdmin Audit.
+
+Do not measure screen count.
+
+Do not measure route count.
+
+Do not measure table count.
+
+Measure operational capability.
+
+The question is:
+
+"Can the SuperAdmin run MetryxOne end-to-end without engineering support?"
+
+==================================================
+PILLAR 1
+MISSION CONTROL
+===============
+
+Audit:
+
+Global Health
+
+Platform Health
+
+Service Health
+
+Database Health
+
+Feature Flag Health
+
+Deployment Health
+
+Security Health
+
+Alerting
+
+Score:
+
+0-100
+
+Evidence Required.
+
+==================================================
+PILLAR 2
+PRODUCT OPERATIONS
+==================
+
+Audit:
+
+CAPADEX
+
+Competency
+
+EI
+
+LBI
+
+Career Builder
+
+Employer OS
+
+Institution OS
+
+Commercial OS
+
+For each:
+
+Activation
+
+Usage
+
+Errors
+
+Adoption
+
+Readiness
+
+Score.
+
+==================================================
+PILLAR 3
+USER OPERATIONS
+===============
+
+Audit:
+
+Users
+
+Candidates
+
+Employers
+
+Institutions
+
+Partners
+
+Admins
+
+Can SuperAdmin:
+
+View
+
+Search
+
+Impersonate
+
+Support
+
+Suspend
+
+Restore
+
+Audit
+
+Score.
+
+==================================================
+PILLAR 4
+COMMERCIAL OPERATIONS
+=====================
+
+Audit:
+
+Subscriptions
+
+Payments
+
+Invoices
+
+GST
+
+Collections
+
+Revenue
+
+Refunds
+
+Entitlements
+
+Can SuperAdmin manage everything?
+
+Score.
+
+==================================================
+PILLAR 5
+ASSESSMENT OPERATIONS
+=====================
+
+Audit:
+
+CAPADEX
+
+Competency
+
+EI
+
+Campaigns
+
+Invitations
+
+Reports
+
+Can SuperAdmin manage all assessment operations?
+
+Score.
+
+==================================================
+PILLAR 6
+EMPLOYER OPERATIONS
+===================
+
+Audit:
+
+Employers
+
+Jobs
+
+Talent Pools
+
+Searches
+
+Shortlists
+
+Hiring Intelligence
+
+Subscriptions
+
+Score.
+
+==================================================
+PILLAR 7
+INSTITUTION OPERATIONS
+======================
+
+Audit:
+
+Schools
+
+Colleges
+
+Universities
+
+Campaigns
+
+Students
+
+Faculty
+
+Reports
+
+Score.
+
+==================================================
+PILLAR 8
+SUPPORT OPERATIONS
+==================
+
+Audit:
+
+Support Tickets
+
+Issues
+
+Escalations
+
+Activity Logs
+
+Notifications
+
+Communication History
+
+Score.
+
+==================================================
+PILLAR 9
+SECURITY OPERATIONS
+===================
+
+Audit:
+
+RBAC
+
+Audit Logs
+
+Feature Flags
+
+Access Control
+
+Data Isolation
+
+Suspicious Activity
+
+Score.
+
+==================================================
+PILLAR 10
+ANALYTICS & EXECUTIVE INTELLIGENCE
+==================================
+
+Audit:
+
+CEO Dashboard
+
+Revenue Dashboard
+
+Growth Dashboard
+
+Product Dashboard
+
+Customer Dashboard
+
+Risk Dashboard
+
+Score.
+
+==================================================
+PILLAR 11
+DATA OPERATIONS
+===============
+
+Audit:
+
+Imports
+
+Exports
+
+Bulk Uploads
+
+Data Corrections
+
+Data Quality
+
+Data Health
+
+Score.
+
+==================================================
+PILLAR 12
+AUTOMATION OPERATIONS
+=====================
+
+Audit:
+
+Emails
+
+SMS
+
+WhatsApp
+
+Campaigns
+
+Triggers
+
+Workflows
+
+Score.
+
+==================================================
+PILLAR 13
+COMPLIANCE OPERATIONS
+=====================
+
+Audit:
+
+Privacy
+
+Terms
+
+GST
+
+Invoices
+
+Audit Trails
+
+Retention Policies
+
+Score.
+
+==================================================
+PILLAR 14
+DEPLOYMENT OPERATIONS
+=====================
+
+Audit:
+
+Environment Health
+
+Production Parity
+
+Feature Flags
+
+Monitoring
+
+Backups
+
+Recovery
+
+Score.
+
+==================================================
+PILLAR 15
+WORLD-CLASS CERTIFICATION
+=========================
+
+Generate:
+
+superadmin_worldclass_audit.md
+
+superadmin_gap_analysis.md
+
+superadmin_roadmap.md
+
+For every gap:
+
+Critical
+
+High
+
+Medium
+
+Low
+
+==================================================
+READINESS MODEL
+===============
+
+Structural Readiness
+
+Operational Readiness
+
+Activation Readiness
+
+Commercial Readiness
+
+Executive Readiness
+
+Overall SuperAdmin Readiness
+
+==================================================
+OUTPUT
+======
+
+Current Score
+
+Target Score
+
+Gap
+
+Evidence
+
+Recommendation
+
+GO
+
+CONDITIONAL GO
+
+NO GO
+
+IMPORTANT
+
+Do not estimate.
+
+Use actual routes.
+
+Use actual tables.
+
+Use actual screens.
+
+Use actual APIs.
+
+Use actual feature flags.
+
+Provide evidence for every score.
+
+Do not award points for screens that exist but cannot perform operational actions.
+
+Measure capability, not UI count.

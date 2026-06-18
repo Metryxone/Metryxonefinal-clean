@@ -1,0 +1,33 @@
+{
+  "generated_at": "2026-06-03T18:26:48.321Z",
+  "per_category": [
+    {
+      "category": "intervention",
+      "total": 800,
+      "supported": 800,
+      "unsupported": 0,
+      "unsupported_ids": [],
+      "reaches_source": 660,
+      "source_trace_rate": 0.825,
+      "support_rate": 1
+    },
+    {
+      "category": "recommendation",
+      "total": 367,
+      "supported": 367,
+      "unsupported": 0,
+      "unsupported_ids": [],
+      "reaches_source": 0,
+      "source_trace_rate": 0,
+      "support_rate": 1
+    }
+  ],
+  "totals": {
+    "statements": 1167,
+    "supported": 1167,
+    "unsupported": 0,
+    "reaches_source": 660,
+    "support_rate": 1,
+    "source_trace_rate": 0.565553
+  }
+}

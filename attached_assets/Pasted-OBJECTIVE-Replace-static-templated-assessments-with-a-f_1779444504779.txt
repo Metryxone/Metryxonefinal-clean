@@ -1,0 +1,228 @@
+OBJECTIVE:
+Replace static templated assessments with a fully adaptive realtime competency intelligence assessment engine driven entirely by ontology, competency graph intelligence, and contextual runtime Role DNA.
+
+CRITICAL REQUIREMENTS:
+
+1. NO static question arrays
+2. NO fixed 20-question flow
+3. Questions generated dynamically
+4. Reports generated from competency graph
+5. Assessment adapts in realtime
+6. Reporting MUST NOT use templates
+7. All scoring contextualized
+
+====================================================
+PHASE 2 GOAL
+============
+
+Build:
+
+* realtime assessment blueprint engine
+* dynamic question generation
+* adaptive branching runtime
+* contextual scoring
+* graph-driven reporting
+* realtime competency inference
+
+====================================================
+STEP 1 — CREATE NEW DATABASE MIGRATION
+======================================
+
+Create:
+backend/migrations/20260830_adaptive_runtime_v2.sql
+
+Add:
+
+1. assessment_blueprints_v2
+2. adaptive_assessment_sessions
+3. dynamic_question_generation_logs
+4. competency_signal_capture
+5. contextual_scoring_profiles
+6. readiness_models_v2
+7. competency_reasoning_chains
+8. ai_report_generations
+9. behavioral_signal_profiles
+10. assessment_confidence_models
+
+====================================================
+STEP 2 — BUILD ASSESSMENT BLUEPRINT ENGINE
+==========================================
+
+Create:
+backend/services/assessment-blueprint-engine.ts
+
+CRITICAL:
+NO hardcoded assessment flows.
+
+Blueprints must dynamically generate from:
+
+* competency profile
+* Role DNA
+* ontology
+* org layer
+* industry
+* leadership complexity
+* competency graph
+
+Generate:
+
+* behavioral probes
+* strategic scenarios
+* situational judgement
+* technical probes
+* communication probes
+* AI conversational assessments
+
+====================================================
+STEP 3 — BUILD REALTIME QUESTION GENERATION ENGINE
+==================================================
+
+Create:
+backend/services/question-generation-engine.ts
+
+THIS FIXES THE STATIC QUESTION ISSUE.
+
+Questions MUST dynamically generate from:
+
+* competency graph
+* competency profile
+* contextual readiness gaps
+* leadership maturity
+* industry context
+
+DO NOT use:
+
+* static arrays
+* fixed question banks
+* fixed sequencing
+
+====================================================
+STEP 4 — BUILD ADAPTIVE ASSESSMENT RUNTIME
+==========================================
+
+Create:
+backend/services/adaptive-assessment-engine.ts
+
+Capabilities:
+
+* realtime branching
+* adaptive difficulty
+* confidence stabilization
+* contradiction detection
+* competency-depth expansion
+* behavioral probing
+
+CRITICAL:
+Question count dynamically changes.
+
+NO fixed:
+“Question 1 of 20”
+
+====================================================
+STEP 5 — BUILD CONTEXTUAL SCORING ENGINE
+========================================
+
+Create:
+backend/services/contextual-scoring-engine.ts
+
+Scoring MUST include:
+
+* competency weighting
+* contextual readiness
+* leadership maturity
+* behavioral consistency
+* confidence
+* reliability
+* longitudinal growth
+
+====================================================
+STEP 6 — BUILD GRAPH-DRIVEN REPORT ENGINE
+=========================================
+
+Create:
+backend/services/intelligence-report-engine.ts
+
+CRITICAL REQUIREMENT:
+Reports MUST generate from competency graph.
+
+NO report templates.
+
+Reports dynamically generate:
+
+* competency intelligence
+* benchmark intelligence
+* readiness intelligence
+* leadership maturity
+* mobility readiness
+* growth pathways
+* workforce positioning
+* explainability chains
+
+====================================================
+STEP 7 — BUILD AI REASONING ENGINE
+==================================
+
+Create:
+backend/services/competency-reasoning-engine.ts
+
+Generate:
+
+* why competency scored
+* why readiness generated
+* why recommendations generated
+* confidence lineage
+* benchmark rationale
+
+====================================================
+STEP 8 — CREATE V2 APIS
+=======================
+
+Create:
+backend/routes/adaptive-assessment-v2.ts
+
+Endpoints:
+POST /api/v2/assessment/start
+POST /api/v2/assessment/next
+POST /api/v2/assessment/respond
+POST /api/v2/assessment/complete
+GET  /api/v2/report/intelligence/:sessionId
+
+====================================================
+STEP 9 — FRONTEND ENHANCEMENT
+=============================
+
+Enhance AssessmentTab WITHOUT rewriting.
+
+Add:
+
+* realtime adaptive runtime
+* competency confidence indicators
+* adaptive progression
+* contextual intelligence
+* realtime readiness indicators
+
+====================================================
+STEP 10 — VALIDATION
+====================
+
+Validate:
+
+1. Questions generated dynamically
+2. NO hardcoded arrays
+3. NO fixed question counts
+4. Reports graph-driven
+5. Different roles generate different flows
+6. Different industries generate different scenarios
+7. Existing assessments unaffected
+
+====================================================
+EXPECTED RESULT
+===============
+
+By end of Phase 2:
+
+* realtime role-based assessments operational
+* static assessments eliminated from V2
+* reporting becomes intelligence-driven
+* contextual scoring operational
+* adaptive runtime operational

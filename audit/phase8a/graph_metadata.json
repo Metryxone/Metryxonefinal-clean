@@ -1,0 +1,23 @@
+{
+  "node_count": 62095,
+  "edge_count": 142457,
+  "node_types_present": 19,
+  "edge_relations_present": 19,
+  "node_types_declared": 19,
+  "edge_relations_declared": 19,
+  "node_categories": 14,
+  "relationship_types": 11,
+  "taxonomy_is_bijective": true,
+  "canonical_tables": [
+    "pil_kg_nodes",
+    "pil_kg_edges"
+  ],
+  "maturation_tables": [
+    "pil_kg_node_types",
+    "pil_kg_relationship_types",
+    "pil_kg_metadata",
+    "pil_kg_similarity_index",
+    "pil_kg_audit"
+  ],
+  "last_refreshed_at": "2026-06-03T16:50:15.736Z"
+}

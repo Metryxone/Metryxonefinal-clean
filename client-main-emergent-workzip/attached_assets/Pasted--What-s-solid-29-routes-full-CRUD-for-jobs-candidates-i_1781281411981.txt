@@ -1,0 +1,22 @@
+✅ What's solid
+29 routes, full CRUD for jobs/candidates/interviews/offers/refs/activity, 8-domain intelligence bridge, employer gating, real assessment emails.
+
+🟡 Gaps with high real-world impact
+1. Match score is manual — match_score is a column you can set when adding a candidate, but there's no auto-compute. A candidate's skills are never compared against the job's skills requirements. You're leaving the most useful number uncomputed.
+
+2. Interview scorecard is a free-text field — feedback is a single text blob. Real hiring loops need per-criterion ratings (communication, problem-solving, culture fit, etc.) with an aggregate recommendation. The data model supports it but the structure isn't there.
+
+3. Intelligence tab shows "No platform data" — the 8-domain bridge only lights up if the candidate used MetryxOne with the same email. There's no fallback insight for cold candidates. Most real employer users will see an empty tab.
+
+4. No public job application URL — jobs can't be shared with candidates. There's no way for a candidate to discover and apply to a job externally, so the pipeline can only be filled manually by the employer.
+
+5. Pipeline Kanban view — the table view exists but there's no drag-and-drop stage advancement. Moving candidates through stages (Applied → Screening → Interview → Offer) requires opening a dropdown in every row.
+
+🟢 Smaller wins
+6. Bulk assessment email — the "Select All + Send" button exists in the UI but it only marks candidates one by one. A real bulk-send via a single API call would complete the feature.
+
+7. Offer letter generation — offer data (amount, role, start date) is stored but never rendered into a shareable document or email.
+
+8. Analytics charts — the analytics endpoint returns numbers but the UI has no charts. A simple pipeline funnel (Applied → Screened → Interviewed → Offered → Hired) would make the portal feel real.
+
+Which of these would you like me to build? The highest-bang options are probably auto match scoring (1), public job application link (4), and pipeline funnel chart (8) — they'd make the portal feel production-ready for an employer's first session.

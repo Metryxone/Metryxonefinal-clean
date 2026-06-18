@@ -1,0 +1,34 @@
+Please rewrite and overhaul our core introduction and assessment component in 'frontend/src/components/FreeAssessmentModal.tsx'. This structural update must replace our hardcoded single-persona wizard layout with an enterprise-grade, data-driven multi-persona behavioral orchestration engine that aligns perfectly with our CAPADEX backend.
+
+Ensure the component fully incorporates the following technical execution blocks:
+
+1. PERSONA ENGINE & ORCHESTRATION CONTEXT STATE
+   - Replace the static text blocks and layout tracking. Create a dedicated 'activePersona' local state hook that maps to these four primary structural actors: 'parent' (default), 'teacher', 'professional', and 'student'.
+   - Update the "I AM A..." selection array row. Using our design system tokens, ensure active state pills are distinctly emphasized with heavier backgrounds and clear borders, while inactive items use muted ghost styles.
+   - Update the top sub-header text metadata to reflect the deep data matrix architecture: "14,000+ audited data matrices · 20+ Core Cognitive Domains · Free & Confidential".
+   - When a persona is selected, dynamically set and hold the precise underlying orchestration payload to match our backend expectations:
+     * 'parent': actor_persona="PARENT", target_persona="STUDENT", relationship_type="parent_child"
+     * 'teacher': actor_persona="TEACHER", target_persona="STUDENT", relationship_type="teacher_student"
+     * 'professional': actor_persona="self", target_persona="self", relationship_type="direct"
+     * 'student': actor_persona="self", target_persona="self", relationship_type="direct"
+
+2. CONTEXT-AWARE FORM FIELDS & MORPHING INTERFACE
+   - Dynamically transition the text labels, descriptions, and input placeholders across all three text-field elements based on the 'activePersona' selection:
+     * If 'parent': Field 1="Child's Name" (Placeholder: "Child's first name"), Field 2="Age" (Placeholder: "e.g. 14"), Field 3="Child's school / grade (opt.)" (Placeholder: "e.g. DPS Noida, Class 7"). Main Concern Input Header="WHAT WORRIES YOU ABOUT YOUR CHILD?" (Placeholder: "e.g., can't stop scrolling, exam stress, or mood swings").
+     * If 'teacher': Field 1="Student Initials / ID", Field 2="Age", Field 3="Class / Section". Main Concern Input Header="OBSERVED CLASSROOM BEHAVIOR CONCERNS?" (Placeholder: "e.g., low classroom engagement, learning pace bottlenecks, or screen distraction").
+     * If 'professional': Field 1="Your Name", Field 2="Your Age", Field 3="Target Role / Industry". Main Concern Input Header="WHAT ARE YOUR PRIMARY PROFESSIONAL OR CAREER FRICTIONS?" (Placeholder: "e.g., career direction friction, technological disruption anxiety, or workflow focus gaps").
+     * If 'student': Field 1="Your Name", Field 2="Your Age", Field 3="Institution / College". Main Concern Input Header="WHAT PERSONAL OR CAMPUS LIFE CHALLENGES ARE YOU ENCOUNTERING?" (Placeholder: "e.g., campus adjustment pressure, examination anxiety, or distraction habits").
+
+3. DEBOUNCED ONTOLOGY ROUTING PREVIEW
+   - Implement a real-time, 300ms debounced text listener tracking the main Concern description textarea box.
+   - Inject a clean, animated sub-caption pill row directly beneath the textarea to display live ontology mapping indicators based on keyword matching:
+     * If string matches keywords ("scroll", "screen", "game", "phone", "scrolling"), render a violet badge: "[ 🔍 Mapping to: Adaptive Intelligence / Digital Distraction Domain ]"
+     * If string matches keywords ("stress", "exam", "worry", "pressure", "anxiety"), render a red/orange badge: "[ 🔍 Mapping to: Stress & Resilience Lifecycle Bucket ]"
+     * If text box is populated but no key tokens match, fallback gracefully to our core runtime sentinel string: "[ 🔍 Mapping to: General Behavioral Matrix ]"
+     * Completely hide this sub-caption row if the input field is empty.
+
+4. SYSTEM HARDEING, VALDIATION, & SUBMIT LIFECYCLE
+   - Add inline validation logic checking the Age input field against the chosen persona profile. If a 'professional' or 'teacher' inputs an unrealistic age bounds, or a 'parent' enters an age mismatch, present a helpful, inline helper tip warning.
+   - Keep the primary CTA action button disabled and in a grey state until Name, Age, and the Concern text block pass basic length criteria. 
+   - When valid, transition the button smoothly into an indigo or deep slate active button state, changing its text label from "Describe your concern to begin" to "Launch Clarity Journey →".
+   - Upon clicking the action button, compile the runtime context payload—including Name, Age, Contextual Option, Concern string, actor_persona, target_persona, and relationship_type—and dispatch it securely to initiate the initial 13-state FSM state step via our server-side '/api/capadex/concern/analyze' endpoint.

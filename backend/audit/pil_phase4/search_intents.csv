@@ -1,0 +1,551 @@
+archetype_key,archetype_name,problem_id,stakeholder_type,intent_type,search_phrase,realism_pass,aligned,intent_clear,is_duplicate,search_realism,human_language,archetype_alignment,intent_clarity,composite
+academic_achievement,Academic Achievement & Exam Performance,1,student,informational,what is low grades and exam results?,true,true,true,false,5,5,5,5,5
+academic_achievement,Academic Achievement & Exam Performance,1,parent,informational,what causes low grades and exam results in children?,true,true,true,false,5,5,5,5,5
+academic_achievement,Academic Achievement & Exam Performance,1,teacher,informational,signs of low grades and exam results in students,true,true,true,false,5,5,5,5,5
+academic_achievement,Academic Achievement & Exam Performance,1,counselor,informational,what does low grades and exam results look like?,true,true,true,false,5,5,5,5,5
+academic_achievement,Academic Achievement & Exam Performance,1,professional,informational,what is low grades and exam results at work?,true,true,true,false,5,5,5,5,5
+academic_achievement,Academic Achievement & Exam Performance,1,student,diagnostic,why do I study hard but my grades stay low?,true,true,true,false,5,5,4,5,4.75
+academic_achievement,Academic Achievement & Exam Performance,1,parent,diagnostic,why does my child study hard but their grades stay low?,true,true,true,false,5,5,4,5,4.75
+academic_achievement,Academic Achievement & Exam Performance,1,teacher,diagnostic,why does a student study hard but their grades stay low?,true,true,true,false,5,5,4,5,4.75
+academic_achievement,Academic Achievement & Exam Performance,1,counselor,diagnostic,why does a client study hard but their grades stay low?,true,true,true,false,5,5,4,5,4.75
+academic_achievement,Academic Achievement & Exam Performance,1,professional,diagnostic,why do I study hard but my grades stay low at work?,true,true,true,false,5,5,4,5,4.75
+academic_achievement,Academic Achievement & Exam Performance,1,student,emotional,I feel discouraged about low grades,true,true,true,false,5,5,3,5,4.5
+academic_achievement,Academic Achievement & Exam Performance,1,parent,emotional,I am worried my child is discouraged about low grades,true,true,true,false,5,5,3,5,4.5
+academic_achievement,Academic Achievement & Exam Performance,1,teacher,emotional,my student seems discouraged about low grades in class,true,true,true,false,5,5,4,5,4.75
+academic_achievement,Academic Achievement & Exam Performance,1,counselor,emotional,my client feels discouraged about low grades,true,true,true,false,5,5,3,5,4.5
+academic_achievement,Academic Achievement & Exam Performance,1,professional,emotional,at work I feel discouraged about low grades,true,true,true,false,5,5,3,5,4.5
+academic_achievement,Academic Achievement & Exam Performance,1,student,help_seeking,how do I bring up low grades and results?,true,true,true,false,5,5,4,5,4.75
+academic_achievement,Academic Achievement & Exam Performance,1,parent,help_seeking,how to help my child bring up low grades and results,true,true,true,false,5,5,4,5,4.75
+academic_achievement,Academic Achievement & Exam Performance,1,teacher,help_seeking,helping a student bring up low grades and results,true,true,true,false,5,5,4,5,4.75
+academic_achievement,Academic Achievement & Exam Performance,1,counselor,help_seeking,ways to help a client bring up low grades and results,true,true,true,false,5,5,4,5,4.75
+academic_achievement,Academic Achievement & Exam Performance,1,professional,help_seeking,how do I bring up low grades and results at work?,true,true,true,false,5,5,4,5,4.75
+academic_achievement,Academic Achievement & Exam Performance,1,student,future_planning,how to keep grades on track going forward,true,true,true,false,5,5,3,5,4.5
+academic_achievement,Academic Achievement & Exam Performance,1,parent,future_planning,preparing my child to keep grades on track,true,true,true,false,5,5,3,5,4.5
+academic_achievement,Academic Achievement & Exam Performance,1,teacher,future_planning,setting a student up to keep grades on track,true,true,true,false,5,5,3,5,4.5
+academic_achievement,Academic Achievement & Exam Performance,1,counselor,future_planning,guiding a client to keep grades on track,true,true,true,false,5,5,3,5,4.5
+academic_achievement,Academic Achievement & Exam Performance,1,professional,future_planning,how to keep grades on track as my career grows,true,true,true,false,5,5,3,5,4.5
+adaptability_change,Adaptability & Change Navigation,5,student,informational,what is trouble coping with change?,true,true,true,false,5,5,3,5,4.5
+adaptability_change,Adaptability & Change Navigation,5,parent,informational,what causes trouble coping with change in children?,true,true,true,false,5,5,3,5,4.5
+adaptability_change,Adaptability & Change Navigation,5,teacher,informational,signs of trouble coping with change in students,true,true,true,false,5,5,3,5,4.5
+adaptability_change,Adaptability & Change Navigation,5,counselor,informational,what does trouble coping with change look like?,true,true,true,false,5,5,3,5,4.5
+adaptability_change,Adaptability & Change Navigation,5,professional,informational,what is trouble coping with change at work?,true,true,true,false,5,5,3,5,4.5
+adaptability_change,Adaptability & Change Navigation,5,student,diagnostic,why do I get thrown when plans suddenly change?,true,true,true,false,5,5,5,5,5
+adaptability_change,Adaptability & Change Navigation,5,parent,diagnostic,why does my child get thrown when routines change?,true,true,true,false,5,5,4,5,4.75
+adaptability_change,Adaptability & Change Navigation,5,teacher,diagnostic,why does a student get thrown when routines change?,true,true,true,false,5,5,4,5,4.75
+adaptability_change,Adaptability & Change Navigation,5,counselor,diagnostic,why does a client get thrown when routines change?,true,true,true,false,5,5,4,5,4.75
+adaptability_change,Adaptability & Change Navigation,5,professional,diagnostic,why do I get thrown when plans suddenly change at work?,true,true,true,false,5,5,5,5,5
+adaptability_change,Adaptability & Change Navigation,5,student,emotional,I feel anxious when plans suddenly change,true,true,true,false,5,5,4,5,4.75
+adaptability_change,Adaptability & Change Navigation,5,parent,emotional,I am worried my child is anxious when plans suddenly change,true,true,true,false,5,5,4,5,4.75
+adaptability_change,Adaptability & Change Navigation,5,teacher,emotional,my student seems anxious when plans suddenly change in class,true,true,true,false,5,5,4,5,4.75
+adaptability_change,Adaptability & Change Navigation,5,counselor,emotional,my client feels anxious when plans suddenly change,true,true,true,false,5,5,4,5,4.75
+adaptability_change,Adaptability & Change Navigation,5,professional,emotional,at work I feel anxious when plans suddenly change,true,true,true,false,5,5,4,5,4.75
+adaptability_change,Adaptability & Change Navigation,5,student,help_seeking,how do I stay steady when things change?,true,true,true,false,5,5,3,5,4.5
+adaptability_change,Adaptability & Change Navigation,5,parent,help_seeking,how to help my child stay steady when things change,true,true,true,false,5,5,3,5,4.5
+adaptability_change,Adaptability & Change Navigation,5,teacher,help_seeking,helping a student stay steady when things change,true,true,true,false,5,5,3,5,4.5
+adaptability_change,Adaptability & Change Navigation,5,counselor,help_seeking,ways to help a client stay steady when things change,true,true,true,false,5,5,3,5,4.5
+adaptability_change,Adaptability & Change Navigation,5,professional,help_seeking,how do I stay steady when things change at work?,true,true,true,false,5,5,3,5,4.5
+adaptability_change,Adaptability & Change Navigation,5,student,future_planning,how to adapt to change with ease going forward,true,true,true,false,5,5,4,5,4.75
+adaptability_change,Adaptability & Change Navigation,5,parent,future_planning,preparing my child to adapt to change with ease,true,true,true,false,5,5,4,5,4.75
+adaptability_change,Adaptability & Change Navigation,5,teacher,future_planning,setting a student up to adapt to change with ease,true,true,true,false,5,5,4,5,4.75
+adaptability_change,Adaptability & Change Navigation,5,counselor,future_planning,guiding a client to adapt to change with ease,true,true,true,false,5,5,4,5,4.75
+adaptability_change,Adaptability & Change Navigation,5,professional,future_planning,how to adapt to change with ease as my career grows,true,true,true,false,5,5,4,5,4.75
+career_professional_growth,Career Growth & Professional Identity,12,student,informational,what is career confusion?,true,true,true,false,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,12,parent,informational,what causes career confusion in children?,true,true,true,false,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,12,teacher,informational,signs of career confusion in students,true,true,true,false,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,12,counselor,informational,what does career confusion look like?,true,true,true,false,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,9,professional,informational,what is career confusion at work?,true,true,true,false,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,12,student,diagnostic,why do I feel stuck about my next career step?,true,true,true,false,5,5,3,4,4.25
+career_professional_growth,Career Growth & Professional Identity,12,parent,diagnostic,why does my child feel lost about which career to choose?,true,true,true,false,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,12,teacher,diagnostic,why does a student feel lost about which career to choose?,true,true,true,false,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,12,counselor,diagnostic,why does a client feel lost about which career to choose?,true,true,true,false,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,9,professional,diagnostic,why do I feel stuck about my next career step at work?,true,true,true,false,5,5,3,4,4.25
+career_professional_growth,Career Growth & Professional Identity,12,student,emotional,I feel lost about which career to choose,true,true,true,false,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,12,parent,emotional,I am worried my child is lost about which career to choose,true,true,true,true,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,12,teacher,emotional,my student seems lost about which career to choose in class,true,true,true,true,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,12,counselor,emotional,my client feels lost about which career to choose,true,true,true,true,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,9,professional,emotional,at work I feel lost about which career to choose,true,true,true,false,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,12,student,help_seeking,how do I find the right career direction?,true,true,true,false,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,12,parent,help_seeking,how to help my child find the right career direction,true,true,true,false,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,12,teacher,help_seeking,helping a student find the right career direction,true,true,true,false,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,12,counselor,help_seeking,ways to help a client find the right career direction,true,true,true,false,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,9,professional,help_seeking,how do I find the right career direction at work?,true,true,true,false,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,12,student,future_planning,how to choose and grow a career going forward,true,true,true,false,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,12,parent,future_planning,preparing my child to choose and grow a career,true,true,true,false,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,12,teacher,future_planning,setting a student up to choose and grow a career,true,true,true,false,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,12,counselor,future_planning,guiding a client to choose and grow a career,true,true,true,false,5,5,3,5,4.5
+career_professional_growth,Career Growth & Professional Identity,9,professional,future_planning,how to choose and grow a career as my career grows,true,true,true,false,5,5,3,5,4.5
+collaboration_teamwork,Collaboration & Teamwork,13,student,informational,what is trouble working in a team?,true,true,true,false,5,5,3,5,4.5
+collaboration_teamwork,Collaboration & Teamwork,13,parent,informational,what causes trouble working in a team in children?,true,true,true,false,5,5,3,5,4.5
+collaboration_teamwork,Collaboration & Teamwork,13,teacher,informational,signs of trouble working in a team in students,true,true,true,false,5,5,3,5,4.5
+collaboration_teamwork,Collaboration & Teamwork,13,counselor,informational,what does trouble working in a team look like?,true,true,true,false,5,5,3,5,4.5
+collaboration_teamwork,Collaboration & Teamwork,13,professional,informational,what is trouble working in a team at work?,true,true,true,false,5,5,3,5,4.5
+collaboration_teamwork,Collaboration & Teamwork,13,student,diagnostic,why do I find it hard to work with others?,true,true,true,false,5,5,3,5,4.5
+collaboration_teamwork,Collaboration & Teamwork,13,parent,diagnostic,why does my child struggle to work in a group?,true,true,true,false,5,5,3,5,4.5
+collaboration_teamwork,Collaboration & Teamwork,13,teacher,diagnostic,why does a student struggle to work in a group?,true,true,true,false,5,5,3,5,4.5
+collaboration_teamwork,Collaboration & Teamwork,13,counselor,diagnostic,why does a client struggle to work in a group?,true,true,true,false,5,5,3,5,4.5
+collaboration_teamwork,Collaboration & Teamwork,13,professional,diagnostic,why do I find it hard to work with others at work?,true,true,true,false,5,5,3,5,4.5
+collaboration_teamwork,Collaboration & Teamwork,13,student,emotional,I feel frustrated and out of sync in a group,true,true,true,false,5,5,3,5,4.5
+collaboration_teamwork,Collaboration & Teamwork,13,parent,emotional,I am worried my child is frustrated and out of sync in a group,true,true,true,false,4,5,3,5,4.25
+collaboration_teamwork,Collaboration & Teamwork,13,teacher,emotional,my student seems frustrated and out of sync in a group in class,true,true,true,false,4,5,3,5,4.25
+collaboration_teamwork,Collaboration & Teamwork,13,counselor,emotional,my client feels frustrated and out of sync in a group,true,true,true,false,5,5,3,5,4.5
+collaboration_teamwork,Collaboration & Teamwork,13,professional,emotional,at work I feel frustrated and out of sync in a group,true,true,true,false,5,5,3,5,4.5
+collaboration_teamwork,Collaboration & Teamwork,13,student,help_seeking,how do I collaborate well in a team?,true,true,true,false,5,5,4,5,4.75
+collaboration_teamwork,Collaboration & Teamwork,13,parent,help_seeking,how to help my child collaborate well in a team,true,true,true,false,5,5,4,5,4.75
+collaboration_teamwork,Collaboration & Teamwork,13,teacher,help_seeking,helping a student collaborate well in a team,true,true,true,false,5,5,4,5,4.75
+collaboration_teamwork,Collaboration & Teamwork,13,counselor,help_seeking,ways to help a client collaborate well in a team,true,true,true,false,5,5,4,5,4.75
+collaboration_teamwork,Collaboration & Teamwork,13,professional,help_seeking,how do I collaborate well in a team at work?,true,true,true,false,5,5,4,5,4.75
+collaboration_teamwork,Collaboration & Teamwork,13,student,future_planning,how to work well with teammates and colleagues going forward,true,true,true,false,5,5,4,5,4.75
+collaboration_teamwork,Collaboration & Teamwork,13,parent,future_planning,preparing my child to work well with teammates and colleagues,true,true,true,false,5,5,4,5,4.75
+collaboration_teamwork,Collaboration & Teamwork,13,teacher,future_planning,setting a student up to work well with teammates and colleagues,true,true,true,false,5,5,4,5,4.75
+collaboration_teamwork,Collaboration & Teamwork,13,counselor,future_planning,guiding a client to work well with teammates and colleagues,true,true,true,false,5,5,4,5,4.75
+collaboration_teamwork,Collaboration & Teamwork,13,professional,future_planning,how to work well with teammates and colleagues as my career grows,true,true,true,false,5,5,4,5,4.75
+communication_expression,Communication & Expression,17,student,informational,what is trouble expressing thoughts clearly?,true,true,true,false,5,5,4,5,4.75
+communication_expression,Communication & Expression,17,parent,informational,what causes trouble expressing thoughts clearly in children?,true,true,true,false,5,5,4,5,4.75
+communication_expression,Communication & Expression,17,teacher,informational,signs of trouble expressing thoughts clearly in students,true,true,true,false,5,5,4,5,4.75
+communication_expression,Communication & Expression,17,counselor,informational,what does trouble expressing thoughts clearly look like?,true,true,true,false,5,5,4,5,4.75
+communication_expression,Communication & Expression,17,professional,informational,what is trouble expressing thoughts clearly at work?,true,true,true,false,5,5,4,5,4.75
+communication_expression,Communication & Expression,17,student,diagnostic,why do I struggle to get my point across?,true,true,true,false,5,5,3,5,4.5
+communication_expression,Communication & Expression,17,parent,diagnostic,why does my child struggle to put thoughts into words?,true,true,true,false,5,5,4,5,4.75
+communication_expression,Communication & Expression,17,teacher,diagnostic,why does a student struggle to put thoughts into words?,true,true,true,false,5,5,4,5,4.75
+communication_expression,Communication & Expression,17,counselor,diagnostic,why does a client struggle to put thoughts into words?,true,true,true,false,5,5,4,5,4.75
+communication_expression,Communication & Expression,17,professional,diagnostic,why do I struggle to get my point across at work?,true,true,true,false,5,5,3,5,4.5
+communication_expression,Communication & Expression,17,student,emotional,I feel frustrated and misunderstood when explaining things,true,true,true,false,5,5,3,5,4.5
+communication_expression,Communication & Expression,17,parent,emotional,I am worried my child is frustrated and misunderstood when explaining things,true,true,true,false,5,5,3,5,4.5
+communication_expression,Communication & Expression,17,teacher,emotional,my student seems frustrated and misunderstood when explaining things in class,true,true,true,false,5,5,3,5,4.5
+communication_expression,Communication & Expression,17,counselor,emotional,my client feels frustrated and misunderstood when explaining things,true,true,true,false,5,5,3,5,4.5
+communication_expression,Communication & Expression,17,professional,emotional,at work I feel frustrated and misunderstood when explaining things,true,true,true,false,5,5,3,5,4.5
+communication_expression,Communication & Expression,17,student,help_seeking,how do I express thoughts clearly and be understood?,true,true,true,false,5,5,5,5,5
+communication_expression,Communication & Expression,17,parent,help_seeking,how to help my child express thoughts clearly and be understood,true,true,true,false,5,5,5,5,5
+communication_expression,Communication & Expression,17,teacher,help_seeking,helping a student express thoughts clearly and be understood,true,true,true,false,5,5,5,5,5
+communication_expression,Communication & Expression,17,counselor,help_seeking,ways to help a client express thoughts clearly and be understood,true,true,true,false,5,5,5,5,5
+communication_expression,Communication & Expression,17,professional,help_seeking,how do I express thoughts clearly and be understood at work?,true,true,true,false,5,5,5,5,5
+communication_expression,Communication & Expression,17,student,future_planning,how to communicate clearly and confidently going forward,true,true,true,false,5,5,4,5,4.75
+communication_expression,Communication & Expression,17,parent,future_planning,preparing my child to communicate clearly and confidently,true,true,true,false,5,5,4,5,4.75
+communication_expression,Communication & Expression,17,teacher,future_planning,setting a student up to communicate clearly and confidently,true,true,true,false,5,5,4,5,4.75
+communication_expression,Communication & Expression,17,counselor,future_planning,guiding a client to communicate clearly and confidently,true,true,true,false,5,5,4,5,4.75
+communication_expression,Communication & Expression,17,professional,future_planning,how to communicate clearly and confidently as my career grows,true,true,true,false,5,5,4,5,4.75
+confidence_self_efficacy,Confidence & Self-Efficacy,21,student,informational,what is low confidence and self-doubt?,true,true,true,false,5,5,4,5,4.75
+confidence_self_efficacy,Confidence & Self-Efficacy,21,parent,informational,what causes low confidence and self-doubt in children?,true,true,true,false,5,5,4,5,4.75
+confidence_self_efficacy,Confidence & Self-Efficacy,21,teacher,informational,signs of low confidence and self-doubt in students,true,true,true,false,5,5,4,5,4.75
+confidence_self_efficacy,Confidence & Self-Efficacy,21,counselor,informational,what does low confidence and self-doubt look like?,true,true,true,false,5,5,4,5,4.75
+confidence_self_efficacy,Confidence & Self-Efficacy,21,professional,informational,what is low confidence and self-doubt at work?,true,true,true,false,5,5,4,5,4.75
+confidence_self_efficacy,Confidence & Self-Efficacy,21,student,diagnostic,why do I doubt myself and second-guess everything?,true,true,true,false,5,5,4,5,4.75
+confidence_self_efficacy,Confidence & Self-Efficacy,21,parent,diagnostic,why does my child doubt themselves and give up easily?,true,true,true,false,5,5,3,5,4.5
+confidence_self_efficacy,Confidence & Self-Efficacy,21,teacher,diagnostic,why does a student doubt themselves and give up easily?,true,true,true,false,5,5,3,5,4.5
+confidence_self_efficacy,Confidence & Self-Efficacy,21,counselor,diagnostic,why does a client doubt themselves and give up easily?,true,true,true,false,5,5,3,5,4.5
+confidence_self_efficacy,Confidence & Self-Efficacy,21,professional,diagnostic,why do I doubt myself and second-guess everything at work?,true,true,true,false,5,5,4,5,4.75
+confidence_self_efficacy,Confidence & Self-Efficacy,21,student,emotional,I feel full of self-doubt and never good enough,true,true,true,false,5,5,3,5,4.5
+confidence_self_efficacy,Confidence & Self-Efficacy,21,parent,emotional,I am worried my child is full of self-doubt and never good enough,true,true,true,false,4,5,3,5,4.25
+confidence_self_efficacy,Confidence & Self-Efficacy,21,teacher,emotional,my student seems full of self-doubt and never good enough in class,true,true,true,false,5,5,3,5,4.5
+confidence_self_efficacy,Confidence & Self-Efficacy,21,counselor,emotional,my client feels full of self-doubt and never good enough,true,true,true,false,5,5,3,5,4.5
+confidence_self_efficacy,Confidence & Self-Efficacy,21,professional,emotional,at work I feel full of self-doubt and never good enough,true,true,true,false,5,5,3,5,4.5
+confidence_self_efficacy,Confidence & Self-Efficacy,21,student,help_seeking,how do I build real confidence and self-belief?,true,true,true,false,5,5,3,5,4.5
+confidence_self_efficacy,Confidence & Self-Efficacy,21,parent,help_seeking,how to help my child build real confidence and self-belief,true,true,true,false,5,5,3,5,4.5
+confidence_self_efficacy,Confidence & Self-Efficacy,21,teacher,help_seeking,helping a student build real confidence and self-belief,true,true,true,false,5,5,3,5,4.5
+confidence_self_efficacy,Confidence & Self-Efficacy,21,counselor,help_seeking,ways to help a client build real confidence and self-belief,true,true,true,false,5,5,3,5,4.5
+confidence_self_efficacy,Confidence & Self-Efficacy,21,professional,help_seeking,how do I build real confidence and self-belief at work?,true,true,true,false,5,5,3,5,4.5
+confidence_self_efficacy,Confidence & Self-Efficacy,21,student,future_planning,how to build lasting confidence going forward,true,true,true,false,5,5,3,5,4.5
+confidence_self_efficacy,Confidence & Self-Efficacy,21,parent,future_planning,preparing my child to build lasting confidence,true,true,true,false,5,5,3,5,4.5
+confidence_self_efficacy,Confidence & Self-Efficacy,21,teacher,future_planning,setting a student up to build lasting confidence,true,true,true,false,5,5,3,5,4.5
+confidence_self_efficacy,Confidence & Self-Efficacy,21,counselor,future_planning,guiding a client to build lasting confidence,true,true,true,false,5,5,3,5,4.5
+confidence_self_efficacy,Confidence & Self-Efficacy,21,professional,future_planning,how to build lasting confidence as my career grows,true,true,true,false,5,5,3,5,4.5
+critical_reflective_thinking,Critical & Reflective Thinking,25,student,informational,what is trouble thinking things through?,true,true,true,false,5,5,3,5,4.5
+critical_reflective_thinking,Critical & Reflective Thinking,25,parent,informational,what causes trouble thinking things through in children?,true,true,true,false,5,5,3,5,4.5
+critical_reflective_thinking,Critical & Reflective Thinking,25,teacher,informational,signs of trouble thinking things through in students,true,true,true,false,5,5,3,5,4.5
+critical_reflective_thinking,Critical & Reflective Thinking,25,counselor,informational,what does trouble thinking things through look like?,true,true,true,false,5,5,3,5,4.5
+critical_reflective_thinking,Critical & Reflective Thinking,25,professional,informational,what is trouble thinking things through at work?,true,true,true,false,5,5,3,5,4.5
+critical_reflective_thinking,Critical & Reflective Thinking,25,student,diagnostic,why do I jump to conclusions without thinking?,true,true,true,false,5,5,4,5,4.75
+critical_reflective_thinking,Critical & Reflective Thinking,25,parent,diagnostic,why does my child jump to conclusions without thinking it through?,true,true,true,false,5,5,4,5,4.75
+critical_reflective_thinking,Critical & Reflective Thinking,25,teacher,diagnostic,why does a student jump to conclusions without thinking it through?,true,true,true,false,5,5,4,5,4.75
+critical_reflective_thinking,Critical & Reflective Thinking,25,counselor,diagnostic,why does a client jump to conclusions without thinking it through?,true,true,true,false,5,5,4,5,4.75
+critical_reflective_thinking,Critical & Reflective Thinking,25,professional,diagnostic,why do I jump to conclusions without thinking at work?,true,true,true,false,5,5,4,5,4.75
+critical_reflective_thinking,Critical & Reflective Thinking,25,student,emotional,I feel stuck repeating the same mistakes,true,true,true,false,5,5,3,5,4.5
+critical_reflective_thinking,Critical & Reflective Thinking,25,parent,emotional,I am worried my child is stuck repeating the same mistakes,true,true,true,false,5,5,3,5,4.5
+critical_reflective_thinking,Critical & Reflective Thinking,25,teacher,emotional,my student seems stuck repeating the same mistakes in class,true,true,true,false,5,5,3,5,4.5
+critical_reflective_thinking,Critical & Reflective Thinking,25,counselor,emotional,my client feels stuck repeating the same mistakes,true,true,true,false,5,5,3,5,4.5
+critical_reflective_thinking,Critical & Reflective Thinking,25,professional,emotional,at work I feel stuck repeating the same mistakes,true,true,true,false,5,5,3,5,4.5
+critical_reflective_thinking,Critical & Reflective Thinking,25,student,help_seeking,how do I think clearly and question assumptions?,true,true,true,false,5,5,4,5,4.75
+critical_reflective_thinking,Critical & Reflective Thinking,25,parent,help_seeking,how to help my child think clearly and question assumptions,true,true,true,false,5,5,4,5,4.75
+critical_reflective_thinking,Critical & Reflective Thinking,25,teacher,help_seeking,helping a student think clearly and question assumptions,true,true,true,false,5,5,4,5,4.75
+critical_reflective_thinking,Critical & Reflective Thinking,25,counselor,help_seeking,ways to help a client think clearly and question assumptions,true,true,true,false,5,5,4,5,4.75
+critical_reflective_thinking,Critical & Reflective Thinking,25,professional,help_seeking,how do I think clearly and question assumptions at work?,true,true,true,false,5,5,4,5,4.75
+critical_reflective_thinking,Critical & Reflective Thinking,25,student,future_planning,how to think things through before deciding going forward,true,true,true,false,5,5,3,5,4.5
+critical_reflective_thinking,Critical & Reflective Thinking,25,parent,future_planning,preparing my child to think things through before deciding,true,true,true,false,5,5,3,5,4.5
+critical_reflective_thinking,Critical & Reflective Thinking,25,teacher,future_planning,setting a student up to think things through before deciding,true,true,true,false,5,5,3,5,4.5
+critical_reflective_thinking,Critical & Reflective Thinking,25,counselor,future_planning,guiding a client to think things through before deciding,true,true,true,false,5,5,3,5,4.5
+critical_reflective_thinking,Critical & Reflective Thinking,25,professional,future_planning,how to think things through before deciding as my career grows,true,true,true,false,5,5,3,5,4.5
+curiosity_innovation,Curiosity & Innovation,29,student,informational,what is low curiosity and creativity?,true,true,true,false,5,5,4,5,4.75
+curiosity_innovation,Curiosity & Innovation,29,parent,informational,what causes low curiosity and creativity in children?,true,true,true,false,5,5,4,5,4.75
+curiosity_innovation,Curiosity & Innovation,29,teacher,informational,signs of low curiosity and creativity in students,true,true,true,false,5,5,4,5,4.75
+curiosity_innovation,Curiosity & Innovation,29,counselor,informational,what does low curiosity and creativity look like?,true,true,true,false,5,5,4,5,4.75
+curiosity_innovation,Curiosity & Innovation,29,professional,informational,what is low curiosity and creativity at work?,true,true,true,false,5,5,4,5,4.75
+curiosity_innovation,Curiosity & Innovation,29,student,diagnostic,why do I feel short on new ideas and curiosity?,true,true,true,false,5,5,5,4,4.75
+curiosity_innovation,Curiosity & Innovation,29,parent,diagnostic,why does my child rarely explore or ask questions?,true,true,true,false,5,5,4,5,4.75
+curiosity_innovation,Curiosity & Innovation,29,teacher,diagnostic,why does a student rarely explore or ask questions?,true,true,true,false,5,5,4,5,4.75
+curiosity_innovation,Curiosity & Innovation,29,counselor,diagnostic,why does a client rarely explore or ask questions?,true,true,true,false,5,5,4,5,4.75
+curiosity_innovation,Curiosity & Innovation,29,professional,diagnostic,why do I feel short on new ideas and curiosity at work?,true,true,true,false,5,5,5,4,4.75
+curiosity_innovation,Curiosity & Innovation,29,student,emotional,I feel creatively stuck and out of fresh ideas,true,true,true,false,5,5,4,5,4.75
+curiosity_innovation,Curiosity & Innovation,29,parent,emotional,I am worried my child is creatively stuck and out of fresh ideas,true,true,true,false,4,5,4,5,4.5
+curiosity_innovation,Curiosity & Innovation,29,teacher,emotional,my student seems creatively stuck and out of fresh ideas in class,true,true,true,false,5,5,4,5,4.75
+curiosity_innovation,Curiosity & Innovation,29,counselor,emotional,my client feels creatively stuck and out of fresh ideas,true,true,true,false,5,5,4,5,4.75
+curiosity_innovation,Curiosity & Innovation,29,professional,emotional,at work I feel creatively stuck and out of fresh ideas,true,true,true,false,5,5,4,5,4.75
+curiosity_innovation,Curiosity & Innovation,29,student,help_seeking,how do I spark curiosity and creativity?,true,true,true,false,5,5,4,5,4.75
+curiosity_innovation,Curiosity & Innovation,29,parent,help_seeking,how to help my child spark curiosity and creativity,true,true,true,false,5,5,4,5,4.75
+curiosity_innovation,Curiosity & Innovation,29,teacher,help_seeking,helping a student spark curiosity and creativity,true,true,true,false,5,5,4,5,4.75
+curiosity_innovation,Curiosity & Innovation,29,counselor,help_seeking,ways to help a client spark curiosity and creativity,true,true,true,false,5,5,4,5,4.75
+curiosity_innovation,Curiosity & Innovation,29,professional,help_seeking,how do I spark curiosity and creativity at work?,true,true,true,false,5,5,4,5,4.75
+curiosity_innovation,Curiosity & Innovation,29,student,future_planning,how to keep exploring and creating new ideas going forward,true,true,true,false,5,5,4,5,4.75
+curiosity_innovation,Curiosity & Innovation,29,parent,future_planning,preparing my child to keep exploring and creating new ideas,true,true,true,false,5,5,4,5,4.75
+curiosity_innovation,Curiosity & Innovation,29,teacher,future_planning,setting a student up to keep exploring and creating new ideas,true,true,true,false,5,5,4,5,4.75
+curiosity_innovation,Curiosity & Innovation,29,counselor,future_planning,guiding a client to keep exploring and creating new ideas,true,true,true,false,5,5,4,5,4.75
+curiosity_innovation,Curiosity & Innovation,29,professional,future_planning,how to keep exploring and creating new ideas as my career grows,true,true,true,false,5,5,4,5,4.75
+decision_judgment,Decision-Making & Judgment,33,student,informational,what is trouble making decisions?,true,true,true,false,5,5,3,5,4.5
+decision_judgment,Decision-Making & Judgment,33,parent,informational,what causes trouble making decisions in children?,true,true,true,false,5,5,3,5,4.5
+decision_judgment,Decision-Making & Judgment,33,teacher,informational,signs of trouble making decisions in students,true,true,true,false,5,5,3,5,4.5
+decision_judgment,Decision-Making & Judgment,33,counselor,informational,what does trouble making decisions look like?,true,true,true,false,5,5,3,5,4.5
+decision_judgment,Decision-Making & Judgment,33,professional,informational,what is trouble making decisions at work?,true,true,true,false,5,5,3,5,4.5
+decision_judgment,Decision-Making & Judgment,33,student,diagnostic,why do I keep changing my mind and regret choices?,true,true,true,false,5,5,4,5,4.75
+decision_judgment,Decision-Making & Judgment,33,parent,diagnostic,why does my child can not decide and keep changing their mind?,true,true,true,false,5,5,3,5,4.5
+decision_judgment,Decision-Making & Judgment,33,teacher,diagnostic,why does a student can not decide and keep changing their mind?,true,true,true,false,5,5,3,5,4.5
+decision_judgment,Decision-Making & Judgment,33,counselor,diagnostic,why does a client can not decide and keep changing their mind?,true,true,true,false,5,5,3,5,4.5
+decision_judgment,Decision-Making & Judgment,33,professional,diagnostic,why do I keep changing my mind and regret choices at work?,true,true,true,false,5,5,4,5,4.75
+decision_judgment,Decision-Making & Judgment,33,student,emotional,I feel anxious and indecisive about every choice,true,true,true,false,5,5,4,5,4.75
+decision_judgment,Decision-Making & Judgment,33,parent,emotional,I am worried my child is anxious and indecisive about every choice,true,true,true,false,5,5,4,5,4.75
+decision_judgment,Decision-Making & Judgment,33,teacher,emotional,my student seems anxious and indecisive about every choice in class,true,true,true,false,5,5,4,5,4.75
+decision_judgment,Decision-Making & Judgment,33,counselor,emotional,my client feels anxious and indecisive about every choice,true,true,true,false,5,5,4,5,4.75
+decision_judgment,Decision-Making & Judgment,33,professional,emotional,at work I feel anxious and indecisive about every choice,true,true,true,false,5,5,4,5,4.75
+decision_judgment,Decision-Making & Judgment,33,student,help_seeking,how do I make decisions without second-guessing?,true,true,true,false,5,5,3,5,4.5
+decision_judgment,Decision-Making & Judgment,33,parent,help_seeking,how to help my child make decisions without second-guessing,true,true,true,false,5,5,3,5,4.5
+decision_judgment,Decision-Making & Judgment,33,teacher,help_seeking,helping a student make decisions without second-guessing,true,true,true,false,5,5,3,5,4.5
+decision_judgment,Decision-Making & Judgment,33,counselor,help_seeking,ways to help a client make decisions without second-guessing,true,true,true,false,5,5,3,5,4.5
+decision_judgment,Decision-Making & Judgment,33,professional,help_seeking,how do I make decisions without second-guessing at work?,true,true,true,false,5,5,3,5,4.5
+decision_judgment,Decision-Making & Judgment,33,student,future_planning,how to make confident decisions and commit going forward,true,true,true,false,5,5,4,5,4.75
+decision_judgment,Decision-Making & Judgment,33,parent,future_planning,preparing my child to make confident decisions and commit,true,true,true,false,5,5,4,5,4.75
+decision_judgment,Decision-Making & Judgment,33,teacher,future_planning,setting a student up to make confident decisions and commit,true,true,true,false,5,5,4,5,4.75
+decision_judgment,Decision-Making & Judgment,33,counselor,future_planning,guiding a client to make confident decisions and commit,true,true,true,false,5,5,4,5,4.75
+decision_judgment,Decision-Making & Judgment,33,professional,future_planning,how to make confident decisions and commit as my career grows,true,true,true,false,5,5,4,5,4.75
+emotional_regulation,Emotional Regulation & Coping,37,student,informational,what is trouble controlling emotions?,true,true,true,false,5,5,3,5,4.5
+emotional_regulation,Emotional Regulation & Coping,37,parent,informational,what causes trouble controlling emotions in children?,true,true,true,false,5,5,3,5,4.5
+emotional_regulation,Emotional Regulation & Coping,37,teacher,informational,signs of trouble controlling emotions in students,true,true,true,false,5,5,3,5,4.5
+emotional_regulation,Emotional Regulation & Coping,37,counselor,informational,what does trouble controlling emotions look like?,true,true,true,false,5,5,3,5,4.5
+emotional_regulation,Emotional Regulation & Coping,37,professional,informational,what is trouble controlling emotions at work?,true,true,true,false,5,5,3,5,4.5
+emotional_regulation,Emotional Regulation & Coping,37,student,diagnostic,why do I get overwhelmed and snap over small things?,true,true,true,false,5,5,4,5,4.75
+emotional_regulation,Emotional Regulation & Coping,37,parent,diagnostic,why does my child melt down over the smallest things?,true,false,true,false,5,5,1,5,4
+emotional_regulation,Emotional Regulation & Coping,37,teacher,diagnostic,why does a student melt down over the smallest things?,true,false,true,false,5,5,1,5,4
+emotional_regulation,Emotional Regulation & Coping,37,counselor,diagnostic,why does a client melt down over the smallest things?,true,false,true,false,5,5,1,5,4
+emotional_regulation,Emotional Regulation & Coping,37,professional,diagnostic,why do I get overwhelmed and snap over small things at work?,true,true,true,false,5,5,4,5,4.75
+emotional_regulation,Emotional Regulation & Coping,37,student,emotional,I feel overwhelmed and close to losing control,true,true,true,false,5,5,4,5,4.75
+emotional_regulation,Emotional Regulation & Coping,37,parent,emotional,I am worried my child is overwhelmed and close to losing control,true,true,true,false,5,5,4,5,4.75
+emotional_regulation,Emotional Regulation & Coping,37,teacher,emotional,my student seems overwhelmed and close to losing control in class,true,true,true,false,5,5,4,5,4.75
+emotional_regulation,Emotional Regulation & Coping,37,counselor,emotional,my client feels overwhelmed and close to losing control,true,true,true,false,5,5,4,5,4.75
+emotional_regulation,Emotional Regulation & Coping,37,professional,emotional,at work I feel overwhelmed and close to losing control,true,true,true,false,5,5,4,5,4.75
+emotional_regulation,Emotional Regulation & Coping,37,student,help_seeking,how do I stay calm when overwhelmed?,true,true,true,false,5,5,4,5,4.75
+emotional_regulation,Emotional Regulation & Coping,37,parent,help_seeking,how to help my child stay calm when overwhelmed,true,true,true,false,5,5,4,5,4.75
+emotional_regulation,Emotional Regulation & Coping,37,teacher,help_seeking,helping a student stay calm when overwhelmed,true,true,true,false,5,5,4,5,4.75
+emotional_regulation,Emotional Regulation & Coping,37,counselor,help_seeking,ways to help a client stay calm when overwhelmed,true,true,true,false,5,5,4,5,4.75
+emotional_regulation,Emotional Regulation & Coping,37,professional,help_seeking,how do I stay calm when overwhelmed at work?,true,true,true,false,5,5,4,5,4.75
+emotional_regulation,Emotional Regulation & Coping,37,student,future_planning,how to manage stress and stay calm going forward,true,true,true,false,5,5,3,5,4.5
+emotional_regulation,Emotional Regulation & Coping,37,parent,future_planning,preparing my child to manage stress and stay calm,true,true,true,false,5,5,3,5,4.5
+emotional_regulation,Emotional Regulation & Coping,37,teacher,future_planning,setting a student up to manage stress and stay calm,true,true,true,false,5,5,3,5,4.5
+emotional_regulation,Emotional Regulation & Coping,37,counselor,future_planning,guiding a client to manage stress and stay calm,true,true,true,false,5,5,3,5,4.5
+emotional_regulation,Emotional Regulation & Coping,37,professional,future_planning,how to manage stress and stay calm as my career grows,true,true,true,false,5,5,3,5,4.5
+expectations_pressure,Expectations & External Pressure,41,student,informational,what is pressure to meet expectations?,true,true,true,false,5,5,4,5,4.75
+expectations_pressure,Expectations & External Pressure,41,parent,informational,what causes pressure to meet expectations in children?,true,true,true,false,5,5,4,5,4.75
+expectations_pressure,Expectations & External Pressure,41,teacher,informational,signs of pressure to meet expectations in students,true,true,true,false,5,5,4,5,4.75
+expectations_pressure,Expectations & External Pressure,41,counselor,informational,what does pressure to meet expectations look like?,true,true,true,false,5,5,4,5,4.75
+expectations_pressure,Expectations & External Pressure,41,professional,informational,what is pressure to meet expectations at work?,true,true,true,false,5,5,4,5,4.75
+expectations_pressure,Expectations & External Pressure,41,student,diagnostic,why do I feel crushed by everyone’s expectations?,true,true,true,false,5,5,3,4,4.25
+expectations_pressure,Expectations & External Pressure,41,parent,diagnostic,why does my child feel crushed by pressure to please everyone?,true,true,true,false,5,5,4,5,4.75
+expectations_pressure,Expectations & External Pressure,41,teacher,diagnostic,why does a student feel crushed by pressure to please everyone?,true,true,true,false,5,5,4,5,4.75
+expectations_pressure,Expectations & External Pressure,41,counselor,diagnostic,why does a client feel crushed by pressure to please everyone?,true,true,true,false,5,5,4,5,4.75
+expectations_pressure,Expectations & External Pressure,41,professional,diagnostic,why do I feel crushed by everyone’s expectations at work?,true,true,true,false,5,5,3,4,4.25
+expectations_pressure,Expectations & External Pressure,41,student,emotional,I feel exhausted from pressure to please everyone,true,true,true,false,5,5,4,5,4.75
+expectations_pressure,Expectations & External Pressure,41,parent,emotional,I am worried my child is exhausted from pressure to please everyone,true,true,true,false,5,5,4,5,4.75
+expectations_pressure,Expectations & External Pressure,41,teacher,emotional,my student seems exhausted from pressure to please everyone in class,true,true,true,false,5,5,4,5,4.75
+expectations_pressure,Expectations & External Pressure,41,counselor,emotional,my client feels exhausted from pressure to please everyone,true,true,true,false,5,5,4,5,4.75
+expectations_pressure,Expectations & External Pressure,41,professional,emotional,at work I feel exhausted from pressure to please everyone,true,true,true,false,5,5,4,5,4.75
+expectations_pressure,Expectations & External Pressure,41,student,help_seeking,how do I handle pressure without burning out?,true,true,true,false,5,5,3,5,4.5
+expectations_pressure,Expectations & External Pressure,41,parent,help_seeking,how to help my child handle pressure without burning out,true,true,true,false,5,5,3,5,4.5
+expectations_pressure,Expectations & External Pressure,41,teacher,help_seeking,helping a student handle pressure without burning out,true,true,true,false,5,5,3,5,4.5
+expectations_pressure,Expectations & External Pressure,41,counselor,help_seeking,ways to help a client handle pressure without burning out,true,true,true,false,5,5,3,5,4.5
+expectations_pressure,Expectations & External Pressure,41,professional,help_seeking,how do I handle pressure without burning out at work?,true,true,true,false,5,5,3,5,4.5
+expectations_pressure,Expectations & External Pressure,41,student,future_planning,how to handle expectations and pressure going forward,true,true,true,false,5,5,4,5,4.75
+expectations_pressure,Expectations & External Pressure,41,parent,future_planning,preparing my child to handle expectations and pressure,true,true,true,false,5,5,4,5,4.75
+expectations_pressure,Expectations & External Pressure,41,teacher,future_planning,setting a student up to handle expectations and pressure,true,true,true,false,5,5,4,5,4.75
+expectations_pressure,Expectations & External Pressure,41,counselor,future_planning,guiding a client to handle expectations and pressure,true,true,true,false,5,5,4,5,4.75
+expectations_pressure,Expectations & External Pressure,41,professional,future_planning,how to handle expectations and pressure as my career grows,true,true,true,false,5,5,4,5,4.75
+focus_attention,Focus & Attention Regulation,45,student,informational,what is poor focus and concentration?,true,true,true,false,5,5,4,5,4.75
+focus_attention,Focus & Attention Regulation,45,parent,informational,what causes poor focus and concentration in children?,true,true,true,false,5,5,4,5,4.75
+focus_attention,Focus & Attention Regulation,45,teacher,informational,signs of poor focus and concentration in students,true,true,true,false,5,5,4,5,4.75
+focus_attention,Focus & Attention Regulation,45,counselor,informational,what does poor focus and concentration look like?,true,true,true,false,5,5,4,5,4.75
+focus_attention,Focus & Attention Regulation,45,professional,informational,what is poor focus and concentration at work?,true,true,true,false,5,5,4,5,4.75
+focus_attention,Focus & Attention Regulation,45,student,diagnostic,why do I lose focus and get distracted easily?,true,true,true,false,5,5,4,5,4.75
+focus_attention,Focus & Attention Regulation,45,parent,diagnostic,why does my child lose focus while studying?,true,true,true,false,5,5,3,5,4.5
+focus_attention,Focus & Attention Regulation,45,teacher,diagnostic,why does a student lose focus while studying?,true,true,true,false,5,5,3,5,4.5
+focus_attention,Focus & Attention Regulation,45,counselor,diagnostic,why does a client lose focus while studying?,true,true,true,false,5,5,3,5,4.5
+focus_attention,Focus & Attention Regulation,45,professional,diagnostic,why do I lose focus and get distracted easily at work?,true,true,true,false,5,5,4,5,4.75
+focus_attention,Focus & Attention Regulation,45,student,emotional,I feel scattered and unable to concentrate,true,true,true,false,5,5,3,5,4.5
+focus_attention,Focus & Attention Regulation,45,parent,emotional,I am worried my child is scattered and unable to concentrate,true,true,true,false,5,5,3,5,4.5
+focus_attention,Focus & Attention Regulation,45,teacher,emotional,my student seems scattered and unable to concentrate in class,true,true,true,false,5,5,3,5,4.5
+focus_attention,Focus & Attention Regulation,45,counselor,emotional,my client feels scattered and unable to concentrate,true,true,true,false,5,5,3,5,4.5
+focus_attention,Focus & Attention Regulation,45,professional,emotional,at work I feel scattered and unable to concentrate,true,true,true,false,5,5,3,5,4.5
+focus_attention,Focus & Attention Regulation,45,student,help_seeking,how do I focus without getting distracted?,true,true,true,false,5,5,4,5,4.75
+focus_attention,Focus & Attention Regulation,45,parent,help_seeking,how to help my child focus without getting distracted,true,true,true,false,5,5,4,5,4.75
+focus_attention,Focus & Attention Regulation,45,teacher,help_seeking,helping a student focus without getting distracted,true,true,true,false,5,5,4,5,4.75
+focus_attention,Focus & Attention Regulation,45,counselor,help_seeking,ways to help a client focus without getting distracted,true,true,true,false,5,5,4,5,4.75
+focus_attention,Focus & Attention Regulation,45,professional,help_seeking,how do I focus without getting distracted at work?,true,true,true,false,5,5,4,5,4.75
+focus_attention,Focus & Attention Regulation,45,student,future_planning,how to build lasting focus and attention going forward,true,true,true,true,5,5,4,5,4.75
+focus_attention,Focus & Attention Regulation,45,parent,future_planning,preparing my child to build lasting focus and attention,true,true,true,false,5,5,4,5,4.75
+focus_attention,Focus & Attention Regulation,45,teacher,future_planning,setting a student up to build lasting focus and attention,true,true,true,false,5,5,4,5,4.75
+focus_attention,Focus & Attention Regulation,45,counselor,future_planning,guiding a client to build lasting focus and attention,true,true,true,false,5,5,4,5,4.75
+focus_attention,Focus & Attention Regulation,45,professional,future_planning,how to build lasting focus and attention as my career grows,true,true,true,true,5,5,4,5,4.75
+identity_self_awareness,Identity & Self-Awareness,49,student,informational,what is feeling lost about identity?,true,true,true,false,5,5,3,5,4.5
+identity_self_awareness,Identity & Self-Awareness,49,parent,informational,what causes feeling lost about identity in children?,true,true,true,false,5,5,3,5,4.5
+identity_self_awareness,Identity & Self-Awareness,49,teacher,informational,signs of feeling lost about identity in students,true,true,true,false,5,5,3,5,4.5
+identity_self_awareness,Identity & Self-Awareness,49,counselor,informational,what does feeling lost about identity look like?,true,true,true,false,5,5,3,5,4.5
+identity_self_awareness,Identity & Self-Awareness,49,professional,informational,what is feeling lost about identity at work?,true,true,true,false,5,5,3,5,4.5
+identity_self_awareness,Identity & Self-Awareness,49,student,diagnostic,why do I feel lost about who I am?,true,true,true,false,5,5,4,4,4.5
+identity_self_awareness,Identity & Self-Awareness,49,parent,diagnostic,why does my child seem lost about who they are?,true,true,true,false,5,5,3,5,4.5
+identity_self_awareness,Identity & Self-Awareness,49,teacher,diagnostic,why does a student seem lost about who they are?,true,true,true,false,5,5,3,5,4.5
+identity_self_awareness,Identity & Self-Awareness,49,counselor,diagnostic,why does a client seem lost about who they are?,true,true,true,false,5,5,3,5,4.5
+identity_self_awareness,Identity & Self-Awareness,49,professional,diagnostic,why do I feel lost about who I am at work?,true,true,true,false,5,5,4,4,4.5
+identity_self_awareness,Identity & Self-Awareness,49,student,emotional,I feel lost about identity and purpose,true,true,true,false,5,5,4,5,4.75
+identity_self_awareness,Identity & Self-Awareness,49,parent,emotional,I am worried my child is lost about identity and purpose,true,true,true,false,5,5,4,5,4.75
+identity_self_awareness,Identity & Self-Awareness,49,teacher,emotional,my student seems lost about identity and purpose in class,true,true,true,false,5,5,4,5,4.75
+identity_self_awareness,Identity & Self-Awareness,49,counselor,emotional,my client feels lost about identity and purpose,true,true,true,false,5,5,4,5,4.75
+identity_self_awareness,Identity & Self-Awareness,49,professional,emotional,at work I feel lost about identity and purpose,true,true,true,false,5,5,4,5,4.75
+identity_self_awareness,Identity & Self-Awareness,49,student,help_seeking,how do I build a clear sense of self and purpose?,true,true,true,false,5,5,3,5,4.5
+identity_self_awareness,Identity & Self-Awareness,49,parent,help_seeking,how to help my child build a clear sense of self and purpose,true,true,true,false,4,5,3,5,4.25
+identity_self_awareness,Identity & Self-Awareness,49,teacher,help_seeking,helping a student build a clear sense of self and purpose,true,true,true,false,5,5,3,5,4.5
+identity_self_awareness,Identity & Self-Awareness,49,counselor,help_seeking,ways to help a client build a clear sense of self and purpose,true,true,true,false,4,5,3,5,4.25
+identity_self_awareness,Identity & Self-Awareness,49,professional,help_seeking,how do I build a clear sense of self and purpose at work?,true,true,true,false,4,5,3,5,4.25
+identity_self_awareness,Identity & Self-Awareness,49,student,future_planning,how to build self-awareness and purpose going forward,true,true,true,false,5,5,3,5,4.5
+identity_self_awareness,Identity & Self-Awareness,49,parent,future_planning,preparing my child to build self-awareness and purpose,true,true,true,false,5,5,3,5,4.5
+identity_self_awareness,Identity & Self-Awareness,49,teacher,future_planning,setting a student up to build self-awareness and purpose,true,true,true,false,5,5,3,5,4.5
+identity_self_awareness,Identity & Self-Awareness,49,counselor,future_planning,guiding a client to build self-awareness and purpose,true,true,true,false,5,5,3,5,4.5
+identity_self_awareness,Identity & Self-Awareness,49,professional,future_planning,how to build self-awareness and purpose as my career grows,true,true,true,false,5,5,3,5,4.5
+leadership_influence,Leadership & Influence,56,student,informational,what is trouble leading a team?,true,true,true,true,5,5,4,5,4.75
+leadership_influence,Leadership & Influence,56,parent,informational,what causes trouble leading a team in children?,true,true,true,true,5,5,4,5,4.75
+leadership_influence,Leadership & Influence,56,teacher,informational,signs of trouble leading a team in students,true,true,true,true,5,5,4,5,4.75
+leadership_influence,Leadership & Influence,56,counselor,informational,what does trouble leading a team look like?,true,true,true,true,5,5,4,5,4.75
+leadership_influence,Leadership & Influence,53,professional,informational,what is trouble leading a team at work?,true,true,true,true,5,5,4,5,4.75
+leadership_influence,Leadership & Influence,56,student,diagnostic,why do I struggle to take charge of a group?,true,true,true,false,5,5,4,5,4.75
+leadership_influence,Leadership & Influence,56,parent,diagnostic,why does my child hold back from leading a group?,true,true,true,false,5,5,4,5,4.75
+leadership_influence,Leadership & Influence,56,teacher,diagnostic,why does a student hold back from leading a group?,true,true,true,false,5,5,4,5,4.75
+leadership_influence,Leadership & Influence,56,counselor,diagnostic,why does a client hold back from leading a group?,true,true,true,false,5,5,4,5,4.75
+leadership_influence,Leadership & Influence,53,professional,diagnostic,why do I struggle to take charge of a group at work?,true,true,true,false,5,5,4,5,4.75
+leadership_influence,Leadership & Influence,56,student,emotional,I feel unsure about leading others,true,true,true,false,5,5,3,5,4.5
+leadership_influence,Leadership & Influence,56,parent,emotional,I am worried my child is unsure about leading others,true,true,true,false,5,5,3,5,4.5
+leadership_influence,Leadership & Influence,56,teacher,emotional,my student seems unsure about leading others in class,true,true,true,false,5,5,3,5,4.5
+leadership_influence,Leadership & Influence,56,counselor,emotional,my client feels unsure about leading others,true,true,true,false,5,5,3,5,4.5
+leadership_influence,Leadership & Influence,53,professional,emotional,at work I feel unsure about leading others,true,true,true,false,5,5,3,5,4.5
+leadership_influence,Leadership & Influence,56,student,help_seeking,how do I lead a team with confidence?,true,true,true,false,5,5,4,5,4.75
+leadership_influence,Leadership & Influence,56,parent,help_seeking,how to help my child lead a team with confidence,true,true,true,false,5,5,4,5,4.75
+leadership_influence,Leadership & Influence,56,teacher,help_seeking,helping a student lead a team with confidence,true,true,true,false,5,5,4,5,4.75
+leadership_influence,Leadership & Influence,56,counselor,help_seeking,ways to help a client lead a team with confidence,true,true,true,false,5,5,4,5,4.75
+leadership_influence,Leadership & Influence,53,professional,help_seeking,how do I lead a team with confidence at work?,true,true,true,false,5,5,4,5,4.75
+leadership_influence,Leadership & Influence,56,student,future_planning,how to lead a team well going forward,true,true,true,false,5,5,4,5,4.75
+leadership_influence,Leadership & Influence,56,parent,future_planning,preparing my child to lead a team well,true,true,true,false,5,5,4,5,4.75
+leadership_influence,Leadership & Influence,56,teacher,future_planning,setting a student up to lead a team well,true,true,true,false,5,5,4,5,4.75
+leadership_influence,Leadership & Influence,56,counselor,future_planning,guiding a client to lead a team well,true,true,true,false,5,5,4,5,4.75
+leadership_influence,Leadership & Influence,53,professional,future_planning,how to lead a team well as my career grows,true,true,true,false,5,5,4,5,4.75
+learning_comprehension,Learning & Comprehension,57,student,informational,what is trouble understanding study material?,true,true,true,false,5,5,4,5,4.75
+learning_comprehension,Learning & Comprehension,59,parent,informational,what causes trouble understanding study material in children?,true,true,true,false,5,5,4,5,4.75
+learning_comprehension,Learning & Comprehension,59,teacher,informational,signs of trouble understanding study material in students,true,true,true,false,5,5,4,5,4.75
+learning_comprehension,Learning & Comprehension,59,counselor,informational,what does trouble understanding study material look like?,true,true,true,false,5,5,4,5,4.75
+learning_comprehension,Learning & Comprehension,59,professional,informational,what is trouble understanding study material at work?,true,true,true,false,5,5,4,5,4.75
+learning_comprehension,Learning & Comprehension,57,student,diagnostic,why do I study for hours but forget everything?,true,true,true,false,5,5,4,5,4.75
+learning_comprehension,Learning & Comprehension,59,parent,diagnostic,why does my child study hard but forget everything?,true,true,true,false,5,5,4,5,4.75
+learning_comprehension,Learning & Comprehension,59,teacher,diagnostic,why does a student study hard but forget everything?,true,true,true,false,5,5,4,5,4.75
+learning_comprehension,Learning & Comprehension,59,counselor,diagnostic,why does a client study hard but forget everything?,true,true,true,false,5,5,4,5,4.75
+learning_comprehension,Learning & Comprehension,59,professional,diagnostic,why do I study for hours but forget everything at work?,true,true,true,false,5,5,4,5,4.75
+learning_comprehension,Learning & Comprehension,57,student,emotional,I feel frustrated that studying never sticks,true,true,true,false,5,5,3,5,4.5
+learning_comprehension,Learning & Comprehension,59,parent,emotional,I am worried my child is frustrated that studying never sticks,true,true,true,false,5,5,3,5,4.5
+learning_comprehension,Learning & Comprehension,59,teacher,emotional,my student seems frustrated that studying never sticks in class,true,true,true,false,5,5,4,5,4.75
+learning_comprehension,Learning & Comprehension,59,counselor,emotional,my client feels frustrated that studying never sticks,true,true,true,false,5,5,3,5,4.5
+learning_comprehension,Learning & Comprehension,59,professional,emotional,at work I feel frustrated that studying never sticks,true,true,true,false,5,5,3,5,4.5
+learning_comprehension,Learning & Comprehension,57,student,help_seeking,how do I understand and remember study material?,true,true,true,false,5,5,5,5,5
+learning_comprehension,Learning & Comprehension,59,parent,help_seeking,how to help my child understand and remember study material,true,true,true,false,5,5,5,5,5
+learning_comprehension,Learning & Comprehension,59,teacher,help_seeking,helping a student understand and remember study material,true,true,true,false,5,5,5,5,5
+learning_comprehension,Learning & Comprehension,59,counselor,help_seeking,ways to help a client understand and remember study material,true,true,true,false,5,5,5,5,5
+learning_comprehension,Learning & Comprehension,59,professional,help_seeking,how do I understand and remember study material at work?,true,true,true,false,5,5,5,5,5
+learning_comprehension,Learning & Comprehension,57,student,future_planning,how to learn in a way that sticks going forward,true,true,true,false,5,5,3,5,4.5
+learning_comprehension,Learning & Comprehension,59,parent,future_planning,preparing my child to learn in a way that sticks,true,true,true,false,5,5,3,5,4.5
+learning_comprehension,Learning & Comprehension,59,teacher,future_planning,setting a student up to learn in a way that sticks,true,true,true,false,5,5,3,5,4.5
+learning_comprehension,Learning & Comprehension,59,counselor,future_planning,guiding a client to learn in a way that sticks,true,true,true,false,5,5,3,5,4.5
+learning_comprehension,Learning & Comprehension,59,professional,future_planning,how to learn in a way that sticks as my career grows,true,true,true,false,5,5,3,5,4.5
+motivation_drive,Motivation & Drive,61,student,informational,what is low motivation and drive?,true,true,true,false,5,5,4,5,4.75
+motivation_drive,Motivation & Drive,61,parent,informational,what causes low motivation and drive in children?,true,true,true,false,5,5,4,5,4.75
+motivation_drive,Motivation & Drive,61,teacher,informational,signs of low motivation and drive in students,true,true,true,false,5,5,4,5,4.75
+motivation_drive,Motivation & Drive,61,counselor,informational,what does low motivation and drive look like?,true,true,true,false,5,5,4,5,4.75
+motivation_drive,Motivation & Drive,61,professional,informational,what is low motivation and drive at work?,true,true,true,false,5,5,4,5,4.75
+motivation_drive,Motivation & Drive,61,student,diagnostic,why do I have no motivation to get started?,true,true,true,false,5,5,4,5,4.75
+motivation_drive,Motivation & Drive,61,parent,diagnostic,why does my child have no motivation or drive?,true,true,true,false,5,5,4,5,4.75
+motivation_drive,Motivation & Drive,61,teacher,diagnostic,why does a student have no motivation or drive?,true,true,true,false,5,5,4,5,4.75
+motivation_drive,Motivation & Drive,61,counselor,diagnostic,why does a client have no motivation or drive?,true,true,true,false,5,5,4,5,4.75
+motivation_drive,Motivation & Drive,61,professional,diagnostic,why do I have no motivation to get started at work?,true,true,true,false,5,5,4,5,4.75
+motivation_drive,Motivation & Drive,61,student,emotional,I feel drained of motivation and drive,true,true,true,false,5,5,4,5,4.75
+motivation_drive,Motivation & Drive,61,parent,emotional,I am worried my child is drained of motivation and drive,true,true,true,false,5,5,4,5,4.75
+motivation_drive,Motivation & Drive,61,teacher,emotional,my student seems drained of motivation and drive in class,true,true,true,false,5,5,4,5,4.75
+motivation_drive,Motivation & Drive,61,counselor,emotional,my client feels drained of motivation and drive,true,true,true,false,5,5,4,5,4.75
+motivation_drive,Motivation & Drive,61,professional,emotional,at work I feel drained of motivation and drive,true,true,true,false,5,5,4,5,4.75
+motivation_drive,Motivation & Drive,61,student,help_seeking,how do I find the motivation to follow through?,true,true,true,false,5,5,3,5,4.5
+motivation_drive,Motivation & Drive,61,parent,help_seeking,how to help my child find the motivation to follow through,true,true,true,false,5,5,3,5,4.5
+motivation_drive,Motivation & Drive,61,teacher,help_seeking,helping a student find the motivation to follow through,true,true,true,false,5,5,3,5,4.5
+motivation_drive,Motivation & Drive,61,counselor,help_seeking,ways to help a client find the motivation to follow through,true,true,true,false,5,5,3,5,4.5
+motivation_drive,Motivation & Drive,61,professional,help_seeking,how do I find the motivation to follow through at work?,true,true,true,false,5,5,3,5,4.5
+motivation_drive,Motivation & Drive,61,student,future_planning,how to stay motivated toward my goals going forward,true,true,true,false,5,5,4,5,4.75
+motivation_drive,Motivation & Drive,61,parent,future_planning,preparing my child to stay motivated toward my goals,true,true,true,false,5,5,4,5,4.75
+motivation_drive,Motivation & Drive,61,teacher,future_planning,setting a student up to stay motivated toward my goals,true,true,true,false,5,5,4,5,4.75
+motivation_drive,Motivation & Drive,61,counselor,future_planning,guiding a client to stay motivated toward my goals,true,true,true,false,5,5,4,5,4.75
+motivation_drive,Motivation & Drive,61,professional,future_planning,how to stay motivated toward my goals as my career grows,true,true,true,false,5,5,4,5,4.75
+negotiation_advocacy,Negotiation & Advocacy,65,student,informational,what is trouble standing up for yourself?,true,true,true,false,5,5,3,5,4.5
+negotiation_advocacy,Negotiation & Advocacy,65,parent,informational,what causes trouble standing up for yourself in children?,true,true,true,false,5,5,3,5,4.5
+negotiation_advocacy,Negotiation & Advocacy,65,teacher,informational,signs of trouble standing up for yourself in students,true,true,true,false,5,5,3,5,4.5
+negotiation_advocacy,Negotiation & Advocacy,65,counselor,informational,what does trouble standing up for yourself look like?,true,true,true,false,5,5,3,5,4.5
+negotiation_advocacy,Negotiation & Advocacy,66,professional,informational,what is trouble standing up for yourself at work?,true,true,true,false,5,5,3,5,4.5
+negotiation_advocacy,Negotiation & Advocacy,65,student,diagnostic,why do I struggle to ask for what I deserve?,true,true,true,false,5,5,3,5,4.5
+negotiation_advocacy,Negotiation & Advocacy,65,parent,diagnostic,why does my child struggle to stand up for themselves?,true,true,true,false,5,5,3,5,4.5
+negotiation_advocacy,Negotiation & Advocacy,65,teacher,diagnostic,why does a student struggle to stand up for themselves?,true,true,true,false,5,5,3,5,4.5
+negotiation_advocacy,Negotiation & Advocacy,65,counselor,diagnostic,why does a client struggle to stand up for themselves?,true,true,true,false,5,5,3,5,4.5
+negotiation_advocacy,Negotiation & Advocacy,66,professional,diagnostic,why do I struggle to ask for what I deserve at work?,true,true,true,false,5,5,3,5,4.5
+negotiation_advocacy,Negotiation & Advocacy,65,student,emotional,I feel walked over and unable to push back,true,true,true,false,5,5,3,5,4.5
+negotiation_advocacy,Negotiation & Advocacy,65,parent,emotional,I am worried my child is walked over and unable to push back,true,true,true,false,4,5,3,5,4.25
+negotiation_advocacy,Negotiation & Advocacy,65,teacher,emotional,my student seems walked over and unable to push back in class,true,true,true,false,5,5,3,5,4.5
+negotiation_advocacy,Negotiation & Advocacy,65,counselor,emotional,my client feels walked over and unable to push back,true,true,true,false,5,5,3,5,4.5
+negotiation_advocacy,Negotiation & Advocacy,66,professional,emotional,at work I feel walked over and unable to push back,true,true,true,false,5,5,3,5,4.5
+negotiation_advocacy,Negotiation & Advocacy,65,student,help_seeking,how do I stand up and negotiate confidently?,true,true,true,false,5,5,4,5,4.75
+negotiation_advocacy,Negotiation & Advocacy,65,parent,help_seeking,how to help my child stand up and negotiate confidently,true,true,true,false,5,5,4,5,4.75
+negotiation_advocacy,Negotiation & Advocacy,65,teacher,help_seeking,helping a student stand up and negotiate confidently,true,true,true,false,5,5,4,5,4.75
+negotiation_advocacy,Negotiation & Advocacy,65,counselor,help_seeking,ways to help a client stand up and negotiate confidently,true,true,true,false,5,5,4,5,4.75
+negotiation_advocacy,Negotiation & Advocacy,66,professional,help_seeking,how do I stand up and negotiate confidently at work?,true,true,true,false,5,5,4,5,4.75
+negotiation_advocacy,Negotiation & Advocacy,65,student,future_planning,how to negotiate and self-advocate going forward,true,true,true,false,5,5,3,5,4.5
+negotiation_advocacy,Negotiation & Advocacy,65,parent,future_planning,preparing my child to negotiate and self-advocate,true,true,true,false,5,5,3,5,4.5
+negotiation_advocacy,Negotiation & Advocacy,65,teacher,future_planning,setting a student up to negotiate and self-advocate,true,true,true,false,5,5,3,5,4.5
+negotiation_advocacy,Negotiation & Advocacy,65,counselor,future_planning,guiding a client to negotiate and self-advocate,true,true,true,false,5,5,3,5,4.5
+negotiation_advocacy,Negotiation & Advocacy,66,professional,future_planning,how to negotiate and self-advocate as my career grows,true,true,true,false,5,5,3,5,4.5
+networking_relationships,Networking & Relationship Building,69,student,informational,what is trouble networking?,true,true,true,false,5,5,3,5,4.5
+networking_relationships,Networking & Relationship Building,69,parent,informational,what causes trouble networking in children?,true,true,true,false,5,5,3,5,4.5
+networking_relationships,Networking & Relationship Building,69,teacher,informational,signs of trouble networking in students,true,true,true,false,5,5,3,5,4.5
+networking_relationships,Networking & Relationship Building,69,counselor,informational,what does trouble networking look like?,true,true,true,false,5,5,3,5,4.5
+networking_relationships,Networking & Relationship Building,69,professional,informational,what is trouble networking at work?,true,true,true,false,5,5,3,5,4.5
+networking_relationships,Networking & Relationship Building,69,student,diagnostic,why do I find it hard to reach out to new contacts?,true,true,true,false,5,5,4,5,4.75
+networking_relationships,Networking & Relationship Building,69,parent,diagnostic,why does my child find it hard to build connections?,true,true,true,false,5,5,3,5,4.5
+networking_relationships,Networking & Relationship Building,69,teacher,diagnostic,why does a student find it hard to build connections?,true,true,true,false,5,5,3,5,4.5
+networking_relationships,Networking & Relationship Building,69,counselor,diagnostic,why does a client find it hard to build connections?,true,true,true,false,5,5,3,5,4.5
+networking_relationships,Networking & Relationship Building,69,professional,diagnostic,why do I find it hard to reach out to new contacts at work?,true,true,true,false,4,5,4,5,4.5
+networking_relationships,Networking & Relationship Building,69,student,emotional,I feel awkward about networking and reaching out,true,true,true,false,5,5,3,5,4.5
+networking_relationships,Networking & Relationship Building,69,parent,emotional,I am worried my child is awkward about networking and reaching out,true,true,true,false,5,5,3,5,4.5
+networking_relationships,Networking & Relationship Building,69,teacher,emotional,my student seems awkward about networking and reaching out in class,true,true,true,false,5,5,3,5,4.5
+networking_relationships,Networking & Relationship Building,69,counselor,emotional,my client feels awkward about networking and reaching out,true,true,true,false,5,5,3,5,4.5
+networking_relationships,Networking & Relationship Building,69,professional,emotional,at work I feel awkward about networking and reaching out,true,true,true,false,5,5,3,5,4.5
+networking_relationships,Networking & Relationship Building,69,student,help_seeking,how do I build a network and reach out confidently?,true,true,true,false,5,5,4,5,4.75
+networking_relationships,Networking & Relationship Building,69,parent,help_seeking,how to help my child build a network and reach out confidently,true,true,true,false,5,5,4,5,4.75
+networking_relationships,Networking & Relationship Building,69,teacher,help_seeking,helping a student build a network and reach out confidently,true,true,true,false,5,5,4,5,4.75
+networking_relationships,Networking & Relationship Building,69,counselor,help_seeking,ways to help a client build a network and reach out confidently,true,true,true,false,5,5,4,5,4.75
+networking_relationships,Networking & Relationship Building,69,professional,help_seeking,how do I build a network and reach out confidently at work?,true,true,true,false,5,5,4,5,4.75
+networking_relationships,Networking & Relationship Building,69,student,future_planning,how to grow my network and professional connections going forward,true,true,true,false,5,5,4,5,4.75
+networking_relationships,Networking & Relationship Building,69,parent,future_planning,preparing my child to grow my network and professional connections,true,true,true,false,5,5,4,5,4.75
+networking_relationships,Networking & Relationship Building,69,teacher,future_planning,setting a student up to grow my network and professional connections,true,true,true,false,5,5,4,5,4.75
+networking_relationships,Networking & Relationship Building,69,counselor,future_planning,guiding a client to grow my network and professional connections,true,true,true,false,5,5,4,5,4.75
+networking_relationships,Networking & Relationship Building,69,professional,future_planning,how to grow my network and professional connections as my career grows,true,true,true,false,5,5,4,5,4.75
+performance_anxiety,Performance Anxiety & Pressure Response,73,student,informational,what is test and exam anxiety?,true,true,true,false,5,5,4,5,4.75
+performance_anxiety,Performance Anxiety & Pressure Response,74,parent,informational,what causes test and exam anxiety in children?,true,true,true,false,5,5,4,5,4.75
+performance_anxiety,Performance Anxiety & Pressure Response,74,teacher,informational,signs of test and exam anxiety in students,true,true,true,false,5,5,4,5,4.75
+performance_anxiety,Performance Anxiety & Pressure Response,74,counselor,informational,what does test and exam anxiety look like?,true,true,true,false,5,5,4,5,4.75
+performance_anxiety,Performance Anxiety & Pressure Response,75,professional,informational,what is test and exam anxiety at work?,true,true,true,false,5,5,4,5,4.75
+performance_anxiety,Performance Anxiety & Pressure Response,73,student,diagnostic,why do I freeze up and go blank in exams?,true,true,true,false,5,5,5,5,5
+performance_anxiety,Performance Anxiety & Pressure Response,74,parent,diagnostic,why does my child freeze up and go blank in exams?,true,true,true,false,5,5,5,5,5
+performance_anxiety,Performance Anxiety & Pressure Response,74,teacher,diagnostic,why does a student freeze up and go blank in exams?,true,true,true,false,5,5,5,5,5
+performance_anxiety,Performance Anxiety & Pressure Response,74,counselor,diagnostic,why does a client freeze up and go blank in exams?,true,true,true,false,5,5,5,5,5
+performance_anxiety,Performance Anxiety & Pressure Response,75,professional,diagnostic,why do I freeze up and go blank in exams at work?,true,true,true,false,5,5,5,5,5
+performance_anxiety,Performance Anxiety & Pressure Response,73,student,emotional,I feel panicky and blank before every test,true,true,true,false,5,5,4,5,4.75
+performance_anxiety,Performance Anxiety & Pressure Response,74,parent,emotional,I am worried my child is panicky and blank before every test,true,true,true,false,5,5,5,5,5
+performance_anxiety,Performance Anxiety & Pressure Response,74,teacher,emotional,my student seems panicky and blank before every test in class,true,true,true,false,5,5,4,5,4.75
+performance_anxiety,Performance Anxiety & Pressure Response,74,counselor,emotional,my client feels panicky and blank before every test,true,true,true,false,5,5,4,5,4.75
+performance_anxiety,Performance Anxiety & Pressure Response,75,professional,emotional,at work I feel panicky and blank before every test,true,true,true,false,5,5,4,5,4.75
+performance_anxiety,Performance Anxiety & Pressure Response,73,student,help_seeking,how do I stay calm and focused in exams?,true,true,true,false,5,5,4,5,4.75
+performance_anxiety,Performance Anxiety & Pressure Response,74,parent,help_seeking,how to help my child stay calm and focused in exams,true,true,true,true,5,5,4,5,4.75
+performance_anxiety,Performance Anxiety & Pressure Response,74,teacher,help_seeking,helping a student stay calm and focused in exams,true,true,true,false,5,5,4,5,4.75
+performance_anxiety,Performance Anxiety & Pressure Response,74,counselor,help_seeking,ways to help a client stay calm and focused in exams,true,true,true,true,5,5,4,5,4.75
+performance_anxiety,Performance Anxiety & Pressure Response,75,professional,help_seeking,how do I stay calm and focused in exams at work?,true,true,true,false,5,5,4,5,4.75
+performance_anxiety,Performance Anxiety & Pressure Response,73,student,future_planning,how to stay calm in future exams and interviews going forward,true,true,true,false,5,5,5,5,5
+performance_anxiety,Performance Anxiety & Pressure Response,74,parent,future_planning,preparing my child to stay calm in future exams and interviews,true,true,true,false,5,5,5,5,5
+performance_anxiety,Performance Anxiety & Pressure Response,74,teacher,future_planning,setting a student up to stay calm in future exams and interviews,true,true,true,false,5,5,5,5,5
+performance_anxiety,Performance Anxiety & Pressure Response,74,counselor,future_planning,guiding a client to stay calm in future exams and interviews,true,true,true,false,5,5,5,5,5
+performance_anxiety,Performance Anxiety & Pressure Response,75,professional,future_planning,how to stay calm in future exams and interviews as my career grows,true,true,true,false,4,5,5,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,student,informational,what is giving up after setbacks?,true,true,true,false,5,5,4,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,parent,informational,what causes giving up after setbacks in children?,true,true,true,false,5,5,4,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,teacher,informational,signs of giving up after setbacks in students,true,true,true,false,5,5,4,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,counselor,informational,what does giving up after setbacks look like?,true,true,true,false,5,5,4,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,professional,informational,what is giving up after setbacks at work?,true,true,true,false,5,5,4,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,student,diagnostic,why do I fall apart and give up after a setback?,true,true,true,false,5,5,4,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,parent,diagnostic,why does my child give up easily after a setback?,true,true,true,false,5,5,4,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,teacher,diagnostic,why does a student give up easily after a setback?,true,true,true,false,5,5,4,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,counselor,diagnostic,why does a client give up easily after a setback?,true,true,true,false,5,5,4,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,professional,diagnostic,why do I fall apart and give up after a setback at work?,true,true,true,false,4,5,4,5,4.5
+resilience_recovery,Resilience & Failure Recovery,77,student,emotional,I feel crushed and ready to give up after failure,true,true,true,false,5,5,4,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,parent,emotional,I am worried my child is crushed and ready to give up after failure,true,true,true,false,4,5,4,5,4.5
+resilience_recovery,Resilience & Failure Recovery,77,teacher,emotional,my student seems crushed and ready to give up after failure in class,true,true,true,false,4,5,4,5,4.5
+resilience_recovery,Resilience & Failure Recovery,77,counselor,emotional,my client feels crushed and ready to give up after failure,true,true,true,false,5,5,4,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,professional,emotional,at work I feel crushed and ready to give up after failure,true,true,true,false,5,5,4,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,student,help_seeking,how do I bounce back after failure?,true,true,true,false,5,5,4,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,parent,help_seeking,how to help my child bounce back after failure,true,true,true,false,5,5,4,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,teacher,help_seeking,helping a student bounce back after failure,true,true,true,false,5,5,4,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,counselor,help_seeking,ways to help a client bounce back after failure,true,true,true,false,5,5,4,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,professional,help_seeking,how do I bounce back after failure at work?,true,true,true,false,5,5,4,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,student,future_planning,how to recover from setbacks and keep going going forward,true,true,true,false,5,5,4,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,parent,future_planning,preparing my child to recover from setbacks and keep going,true,true,true,false,5,5,4,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,teacher,future_planning,setting a student up to recover from setbacks and keep going,true,true,true,false,5,5,4,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,counselor,future_planning,guiding a client to recover from setbacks and keep going,true,true,true,false,5,5,4,5,4.75
+resilience_recovery,Resilience & Failure Recovery,77,professional,future_planning,how to recover from setbacks and keep going as my career grows,true,true,true,false,5,5,4,5,4.75
+social_connection_belonging,Social Connection & Belonging,81,student,informational,what is loneliness and not belonging?,true,true,true,false,5,5,4,5,4.75
+social_connection_belonging,Social Connection & Belonging,81,parent,informational,what causes loneliness and not belonging in children?,true,true,true,false,5,5,4,5,4.75
+social_connection_belonging,Social Connection & Belonging,81,teacher,informational,signs of loneliness and not belonging in students,true,true,true,false,5,5,4,5,4.75
+social_connection_belonging,Social Connection & Belonging,81,counselor,informational,what does loneliness and not belonging look like?,true,true,true,false,5,5,4,5,4.75
+social_connection_belonging,Social Connection & Belonging,81,professional,informational,what is loneliness and not belonging at work?,true,true,true,false,5,5,4,5,4.75
+social_connection_belonging,Social Connection & Belonging,81,student,diagnostic,why do I feel lonely and like I do not belong?,true,true,true,false,5,5,4,4,4.5
+social_connection_belonging,Social Connection & Belonging,81,parent,diagnostic,why does my child feel lonely and left out?,true,true,true,false,5,5,4,5,4.75
+social_connection_belonging,Social Connection & Belonging,81,teacher,diagnostic,why does a student feel lonely and left out?,true,true,true,false,5,5,4,5,4.75
+social_connection_belonging,Social Connection & Belonging,81,counselor,diagnostic,why does a client feel lonely and left out?,true,true,true,false,5,5,4,5,4.75
+social_connection_belonging,Social Connection & Belonging,81,professional,diagnostic,why do I feel lonely and like I do not belong at work?,true,true,true,false,4,5,4,4,4.25
+social_connection_belonging,Social Connection & Belonging,81,student,emotional,I feel isolated and left out like an outsider,true,true,true,false,5,5,5,5,5
+social_connection_belonging,Social Connection & Belonging,81,parent,emotional,I am worried my child is isolated and left out like an outsider,true,true,true,false,4,5,5,5,4.75
+social_connection_belonging,Social Connection & Belonging,81,teacher,emotional,my student seems isolated and left out like an outsider in class,true,true,true,false,5,5,5,5,5
+social_connection_belonging,Social Connection & Belonging,81,counselor,emotional,my client feels isolated and left out like an outsider,true,true,true,false,5,5,5,5,5
+social_connection_belonging,Social Connection & Belonging,81,professional,emotional,at work I feel isolated and left out like an outsider,true,true,true,false,5,5,5,5,5
+social_connection_belonging,Social Connection & Belonging,81,student,help_seeking,how do I make friends and feel a sense of belonging?,true,true,true,false,5,5,4,5,4.75
+social_connection_belonging,Social Connection & Belonging,81,parent,help_seeking,how to help my child make friends and feel a sense of belonging,true,true,true,false,4,5,4,5,4.5
+social_connection_belonging,Social Connection & Belonging,81,teacher,help_seeking,helping a student make friends and feel a sense of belonging,true,true,true,false,5,5,4,5,4.75
+social_connection_belonging,Social Connection & Belonging,81,counselor,help_seeking,ways to help a client make friends and feel a sense of belonging,true,true,true,false,4,5,4,5,4.5
+social_connection_belonging,Social Connection & Belonging,81,professional,help_seeking,how do I make friends and feel a sense of belonging at work?,true,true,true,false,4,5,4,5,4.5
+social_connection_belonging,Social Connection & Belonging,81,student,future_planning,how to build friendships and belonging going forward,true,true,true,false,5,5,3,5,4.5
+social_connection_belonging,Social Connection & Belonging,81,parent,future_planning,preparing my child to build friendships and belonging,true,true,true,false,5,5,3,5,4.5
+social_connection_belonging,Social Connection & Belonging,81,teacher,future_planning,setting a student up to build friendships and belonging,true,true,true,false,5,5,3,5,4.5
+social_connection_belonging,Social Connection & Belonging,81,counselor,future_planning,guiding a client to build friendships and belonging,true,true,true,false,5,5,3,5,4.5
+social_connection_belonging,Social Connection & Belonging,81,professional,future_planning,how to build friendships and belonging as my career grows,true,true,true,false,5,5,3,5,4.5
+time_self_discipline,Time Management & Self-Discipline,85,student,informational,what is procrastination and poor time management?,true,true,true,false,5,5,4,5,4.75
+time_self_discipline,Time Management & Self-Discipline,85,parent,informational,what causes procrastination and poor time management in children?,true,true,true,false,5,5,4,5,4.75
+time_self_discipline,Time Management & Self-Discipline,85,teacher,informational,signs of procrastination and poor time management in students,true,true,true,false,5,5,4,5,4.75
+time_self_discipline,Time Management & Self-Discipline,85,counselor,informational,what does procrastination and poor time management look like?,true,true,true,false,5,5,4,5,4.75
+time_self_discipline,Time Management & Self-Discipline,85,professional,informational,what is procrastination and poor time management at work?,true,true,true,false,5,5,4,5,4.75
+time_self_discipline,Time Management & Self-Discipline,85,student,diagnostic,why do I procrastinate and leave things to the last minute?,true,true,true,false,5,5,4,5,4.75
+time_self_discipline,Time Management & Self-Discipline,85,parent,diagnostic,why does my child procrastinate and miss deadlines?,true,true,true,false,5,5,4,5,4.75
+time_self_discipline,Time Management & Self-Discipline,85,teacher,diagnostic,why does a student procrastinate and miss deadlines?,true,true,true,false,5,5,4,5,4.75
+time_self_discipline,Time Management & Self-Discipline,85,counselor,diagnostic,why does a client procrastinate and miss deadlines?,true,true,true,false,5,5,4,5,4.75
+time_self_discipline,Time Management & Self-Discipline,85,professional,diagnostic,why do I procrastinate and leave things to the last minute at work?,true,true,true,false,4,5,4,5,4.5
+time_self_discipline,Time Management & Self-Discipline,85,student,emotional,I feel stressed from missing deadlines,true,true,true,false,5,5,3,5,4.5
+time_self_discipline,Time Management & Self-Discipline,85,parent,emotional,I am worried my child is stressed from missing deadlines,true,true,true,false,5,5,3,5,4.5
+time_self_discipline,Time Management & Self-Discipline,85,teacher,emotional,my student seems stressed from missing deadlines in class,true,true,true,false,5,5,3,5,4.5
+time_self_discipline,Time Management & Self-Discipline,85,counselor,emotional,my client feels stressed from missing deadlines,true,true,true,false,5,5,3,5,4.5
+time_self_discipline,Time Management & Self-Discipline,85,professional,emotional,at work I feel stressed from missing deadlines,true,true,true,false,5,5,3,5,4.5
+time_self_discipline,Time Management & Self-Discipline,85,student,help_seeking,how do I stop procrastinating and stick to a plan?,true,true,true,false,5,5,4,5,4.75
+time_self_discipline,Time Management & Self-Discipline,85,parent,help_seeking,how to help my child stop procrastinating and stick to a plan,true,true,true,false,5,5,4,5,4.75
+time_self_discipline,Time Management & Self-Discipline,85,teacher,help_seeking,helping a student stop procrastinating and stick to a plan,true,true,true,false,5,5,4,5,4.75
+time_self_discipline,Time Management & Self-Discipline,85,counselor,help_seeking,ways to help a client stop procrastinating and stick to a plan,true,true,true,false,5,5,4,5,4.75
+time_self_discipline,Time Management & Self-Discipline,85,professional,help_seeking,how do I stop procrastinating and stick to a plan at work?,true,true,true,false,5,5,4,5,4.75
+time_self_discipline,Time Management & Self-Discipline,85,student,future_planning,how to stay on top of deadlines going forward,true,true,true,false,5,5,3,5,4.5
+time_self_discipline,Time Management & Self-Discipline,85,parent,future_planning,preparing my child to stay on top of deadlines,true,true,true,false,5,5,3,5,4.5
+time_self_discipline,Time Management & Self-Discipline,85,teacher,future_planning,setting a student up to stay on top of deadlines,true,true,true,false,5,5,3,5,4.5
+time_self_discipline,Time Management & Self-Discipline,85,counselor,future_planning,guiding a client to stay on top of deadlines,true,true,true,false,5,5,3,5,4.5
+time_self_discipline,Time Management & Self-Discipline,85,professional,future_planning,how to stay on top of deadlines as my career grows,true,true,true,false,5,5,3,5,4.5

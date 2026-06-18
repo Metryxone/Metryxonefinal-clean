@@ -1,0 +1,7 @@
+surface,persona,stage,outcome,journey,behaviour,longitudinal,envelope_age_severity,coded_depth,live,live_pci,primary_file
+Report,1.0,0.0,0.0,0.0,1.0,0.5,0.0,0.36,LIVE,0.36,services/pil/report-section-engine.ts
+Recommendation,1.0,0.0,1.0,0.0,1.0,0.0,0.0,0.43,LIVE,0.43,services/pil/recommendation-generator.ts
+Growth Plan,0.0,1.0,1.0,1.0,0.5,0.0,0.0,0.50,GATED,0.00,services/wc7b/growth-plan-bridge.ts
+Mentor,0.0,0.5,1.0,NA,0.5,0.0,0.0,0.33,GATED,0.00,services/wc7b/mentor-bridge.ts
+Commercial Offer,0.0,1.0,0.5,0.0,0.0,NA,0.0,0.25,GATED,0.00,services/wc7c/subscription-engine.ts
+AVERAGE,0.40,0.50,0.70,0.20,0.60,0.10,0.00,0.37,40% live,0.16,

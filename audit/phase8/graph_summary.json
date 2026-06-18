@@ -1,0 +1,2126 @@
+{
+  "built_at": "2026-06-03T16:06:48.369Z",
+  "node_count": 62095,
+  "edge_count": 142457,
+  "nodes_by_type": {
+    "domain": 20,
+    "bridge_tag": 331,
+    "family": 400,
+    "atomic_signal": 15972,
+    "signal": 20,
+    "concern": 2489,
+    "clarity_question": 30638,
+    "capability": 905,
+    "problem_framing": 905,
+    "behavior": 8030,
+    "archetype": 22,
+    "problem": 88,
+    "emotion": 220,
+    "search_intent": 550,
+    "intervention": 660,
+    "competency": 299,
+    "recommendation": 367,
+    "construct": 39,
+    "runtime_intervention": 140
+  },
+  "edges_by_relation": {
+    "tagged_with": 49539,
+    "family_belongs_to_domain": 400,
+    "atomic_belongs_to_family": 15972,
+    "atomic_belongs_to_domain": 15972,
+    "concern_activates_signal": 5858,
+    "concern_resolves_clarity": 9760,
+    "concern_framed_as_capability": 905,
+    "capability_addresses_problem": 905,
+    "behavior_indicates_concern": 8030,
+    "problem_manifests_behavior": 29730,
+    "archetype_covers_concern": 2151,
+    "problem_belongs_to_archetype": 88,
+    "emotion_belongs_to_archetype": 220,
+    "intent_for_archetype": 550,
+    "intent_for_problem": 550,
+    "intervention_for_archetype": 660,
+    "intervention_for_problem": 660,
+    "recommendation_anchored_on_construct": 367,
+    "runtime_intervention_for_construct": 140
+  },
+  "edges_by_provenance_table": {
+    "capadex_domains": 20,
+    "capadex_families": 800,
+    "capadex_atomic_signals": 47916,
+    "capadex_signals": 20,
+    "capadex_concerns_master": 2489,
+    "capadex_clarity_questions": 30638,
+    "capadex_concern_signal_map": 5858,
+    "capadex_concern_clarity_map": 9760,
+    "capability_problem_map": 1810,
+    "behavior_library": 8030,
+    "capability_problem_behavior_map": 29730,
+    "archetype_concern_map": 2151,
+    "human_problem_library": 88,
+    "human_emotion_library": 220,
+    "search_intents": 1100,
+    "pil_intervention_library": 1320,
+    "recommendation_library": 367,
+    "intervention_library": 140
+  },
+  "component_count": 341,
+  "largest_component_size": 61158,
+  "orphan_count": 299,
+  "components": [
+    {
+      "id": 0,
+      "size": 61158,
+      "by_type": {
+        "domain": 20,
+        "bridge_tag": 329,
+        "family": 400,
+        "atomic_signal": 15972,
+        "signal": 20,
+        "concern": 2487,
+        "clarity_question": 30558,
+        "capability": 904,
+        "behavior": 8024,
+        "archetype": 22,
+        "problem_framing": 904,
+        "problem": 88,
+        "emotion": 220,
+        "search_intent": 550,
+        "intervention": 660
+      },
+      "sample": [
+        {
+          "id": "domain:DOM_001",
+          "type": "domain",
+          "label": "Emotional Intelligence"
+        },
+        {
+          "id": "bridge_tag:ADJUSTMENT_COPING",
+          "type": "bridge_tag",
+          "label": "ADJUSTMENT_COPING"
+        },
+        {
+          "id": "family:FAM_EMO_001",
+          "type": "family",
+          "label": "fear_signals"
+        },
+        {
+          "id": "family:FAM_EMO_002",
+          "type": "family",
+          "label": "anxiety_signals"
+        },
+        {
+          "id": "family:FAM_EMO_003",
+          "type": "family",
+          "label": "overload_signals"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "size": 47,
+      "by_type": {
+        "concern": 1,
+        "bridge_tag": 1,
+        "capability": 1,
+        "behavior": 3,
+        "clarity_question": 40,
+        "problem_framing": 1
+      },
+      "sample": [
+        {
+          "id": "concern:CONCERN_COM_1311",
+          "type": "concern",
+          "label": "Tracking Institutional Effectiveness of Student Interventions"
+        },
+        {
+          "id": "bridge_tag:INTERVENTION_INTELLIGENCE",
+          "type": "bridge_tag",
+          "label": "INTERVENTION_INTELLIGENCE"
+        },
+        {
+          "id": "capability:CONCERN_COM_1311",
+          "type": "capability",
+          "label": "Tracking Institutional Effectiveness of Student Interventions"
+        },
+        {
+          "id": "behavior:1912",
+          "type": "behavior",
+          "label": "struggles to organize {task}"
+        },
+        {
+          "id": "behavior:1913",
+          "type": "behavior",
+          "label": "needs prompting to keep up with {task}"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "size": 45,
+      "by_type": {
+        "concern": 1,
+        "bridge_tag": 1,
+        "behavior": 3,
+        "clarity_question": 40
+      },
+      "sample": [
+        {
+          "id": "concern:CONCERN_SEL_1618",
+          "type": "concern",
+          "label": "identifying improvement areas"
+        },
+        {
+          "id": "bridge_tag:GROWTH_TRACKING",
+          "type": "bridge_tag",
+          "label": "GROWTH_TRACKING"
+        },
+        {
+          "id": "behavior:6724",
+          "type": "behavior",
+          "label": "ignores feedback meant to improve {task}"
+        },
+        {
+          "id": "behavior:6725",
+          "type": "behavior",
+          "label": "struggles to organize {task}"
+        },
+        {
+          "id": "behavior:6726",
+          "type": "behavior",
+          "label": "needs prompting to keep up with {task}"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "size": 20,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 8
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:ANXIETY",
+          "type": "recommendation",
+          "label": "Calm-environment & structured roles"
+        },
+        {
+          "id": "construct:ANXIETY",
+          "type": "construct",
+          "label": "ANXIETY"
+        },
+        {
+          "id": "recommendation:career:exploration:ANXIETY",
+          "type": "recommendation",
+          "label": "Job-shadow before committing"
+        },
+        {
+          "id": "recommendation:career:pathway:ANXIETY",
+          "type": "recommendation",
+          "label": "Low-stakes-to-high-stakes exposure pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:ANXIETY",
+          "type": "recommendation",
+          "label": "Build steady calm under evaluation"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "size": 18,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 6
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:ATTENTION_REGULATION",
+          "type": "recommendation",
+          "label": "Attention Regulation-aligned career cluster"
+        },
+        {
+          "id": "construct:ATTENTION_REGULATION",
+          "type": "construct",
+          "label": "ATTENTION_REGULATION"
+        },
+        {
+          "id": "recommendation:career:exploration:ATTENTION_REGULATION",
+          "type": "recommendation",
+          "label": "Explore where attention regulation matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:ATTENTION_REGULATION",
+          "type": "recommendation",
+          "label": "Attention Regulation growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:ATTENTION_REGULATION",
+          "type": "recommendation",
+          "label": "Develop attention regulation (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "size": 18,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 6
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:EMOTIONAL_REGULATION",
+          "type": "recommendation",
+          "label": "People-centred & supportive roles"
+        },
+        {
+          "id": "construct:EMOTIONAL_REGULATION",
+          "type": "construct",
+          "label": "EMOTIONAL_REGULATION"
+        },
+        {
+          "id": "recommendation:career:exploration:EMOTIONAL_REGULATION",
+          "type": "recommendation",
+          "label": "Try roles with emotional demands in small doses"
+        },
+        {
+          "id": "recommendation:career:pathway:EMOTIONAL_REGULATION",
+          "type": "recommendation",
+          "label": "Self-awareness-to-mastery pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:EMOTIONAL_REGULATION",
+          "type": "recommendation",
+          "label": "Strengthen emotional steadiness at work"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "size": 18,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 6
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:EXECUTIVE_FUNCTION",
+          "type": "recommendation",
+          "label": "Executive Function-aligned career cluster"
+        },
+        {
+          "id": "construct:EXECUTIVE_FUNCTION",
+          "type": "construct",
+          "label": "EXECUTIVE_FUNCTION"
+        },
+        {
+          "id": "recommendation:career:exploration:EXECUTIVE_FUNCTION",
+          "type": "recommendation",
+          "label": "Explore where executive function matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:EXECUTIVE_FUNCTION",
+          "type": "recommendation",
+          "label": "Executive Function growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:EXECUTIVE_FUNCTION",
+          "type": "recommendation",
+          "label": "Develop executive function (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "size": 18,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 6
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:INTRINSIC_MOTIVATION",
+          "type": "recommendation",
+          "label": "Intrinsic Motivation-aligned career cluster"
+        },
+        {
+          "id": "construct:INTRINSIC_MOTIVATION",
+          "type": "construct",
+          "label": "INTRINSIC_MOTIVATION"
+        },
+        {
+          "id": "recommendation:career:exploration:INTRINSIC_MOTIVATION",
+          "type": "recommendation",
+          "label": "Explore where intrinsic motivation matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:INTRINSIC_MOTIVATION",
+          "type": "recommendation",
+          "label": "Intrinsic Motivation growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:INTRINSIC_MOTIVATION",
+          "type": "recommendation",
+          "label": "Develop intrinsic motivation (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "size": 18,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 6
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:PROCRASTINATION",
+          "type": "recommendation",
+          "label": "Procrastination-aligned career cluster"
+        },
+        {
+          "id": "construct:PROCRASTINATION",
+          "type": "construct",
+          "label": "PROCRASTINATION"
+        },
+        {
+          "id": "recommendation:career:exploration:PROCRASTINATION",
+          "type": "recommendation",
+          "label": "Explore where procrastination matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:PROCRASTINATION",
+          "type": "recommendation",
+          "label": "Procrastination growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:PROCRASTINATION",
+          "type": "recommendation",
+          "label": "Develop procrastination (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "size": 18,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 6
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:SELF_ESTEEM",
+          "type": "recommendation",
+          "label": "Self-Esteem-aligned career cluster"
+        },
+        {
+          "id": "construct:SELF_ESTEEM",
+          "type": "construct",
+          "label": "SELF_ESTEEM"
+        },
+        {
+          "id": "recommendation:career:exploration:SELF_ESTEEM",
+          "type": "recommendation",
+          "label": "Explore where self-esteem matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:SELF_ESTEEM",
+          "type": "recommendation",
+          "label": "Self-Esteem growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:SELF_ESTEEM",
+          "type": "recommendation",
+          "label": "Develop self-esteem (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "size": 17,
+      "by_type": {
+        "recommendation": 12,
+        "construct": 1,
+        "runtime_intervention": 4
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:GOAL_ORIENTATION",
+          "type": "recommendation",
+          "label": "Goal Orientation-aligned career cluster"
+        },
+        {
+          "id": "construct:GOAL_ORIENTATION",
+          "type": "construct",
+          "label": "GOAL_ORIENTATION"
+        },
+        {
+          "id": "recommendation:career:exploration:GOAL_ORIENTATION",
+          "type": "recommendation",
+          "label": "Explore where goal orientation matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:GOAL_ORIENTATION",
+          "type": "recommendation",
+          "label": "Goal Orientation growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:GOAL_ORIENTATION",
+          "type": "recommendation",
+          "label": "Develop goal orientation (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "size": 17,
+      "by_type": {
+        "recommendation": 12,
+        "construct": 1,
+        "runtime_intervention": 4
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:PEER_RELATIONS",
+          "type": "recommendation",
+          "label": "Peer Relations-aligned career cluster"
+        },
+        {
+          "id": "construct:PEER_RELATIONS",
+          "type": "construct",
+          "label": "PEER_RELATIONS"
+        },
+        {
+          "id": "recommendation:career:exploration:PEER_RELATIONS",
+          "type": "recommendation",
+          "label": "Explore where peer relations matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:PEER_RELATIONS",
+          "type": "recommendation",
+          "label": "Peer Relations growth pathway"
+        },
+        {
+          "id": "recommendation:development:communication:PEER_RELATIONS",
+          "type": "recommendation",
+          "label": "Develop peer relations (Communication Development)"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "size": 17,
+      "by_type": {
+        "recommendation": 12,
+        "construct": 1,
+        "runtime_intervention": 4
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:SOCIAL_CONFIDENCE",
+          "type": "recommendation",
+          "label": "Collaborative & client-facing roles"
+        },
+        {
+          "id": "construct:SOCIAL_CONFIDENCE",
+          "type": "construct",
+          "label": "SOCIAL_CONFIDENCE"
+        },
+        {
+          "id": "recommendation:career:exploration:SOCIAL_CONFIDENCE",
+          "type": "recommendation",
+          "label": "Test social-load of different settings"
+        },
+        {
+          "id": "recommendation:career:pathway:SOCIAL_CONFIDENCE",
+          "type": "recommendation",
+          "label": "Small-group-to-public pathway"
+        },
+        {
+          "id": "recommendation:development:communication:SOCIAL_CONFIDENCE",
+          "type": "recommendation",
+          "label": "Grow confident social communication"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "size": 16,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 4
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:ACADEMIC_RECOVERY",
+          "type": "recommendation",
+          "label": "Academic Recovery-aligned career cluster"
+        },
+        {
+          "id": "construct:ACADEMIC_RECOVERY",
+          "type": "construct",
+          "label": "ACADEMIC_RECOVERY"
+        },
+        {
+          "id": "recommendation:career:exploration:ACADEMIC_RECOVERY",
+          "type": "recommendation",
+          "label": "Explore where academic recovery matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:ACADEMIC_RECOVERY",
+          "type": "recommendation",
+          "label": "Academic Recovery growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:ACADEMIC_RECOVERY",
+          "type": "recommendation",
+          "label": "Develop academic recovery (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "size": 16,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 4
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:CAREER_CLARITY",
+          "type": "recommendation",
+          "label": "Exploratory / interest-discovery roles"
+        },
+        {
+          "id": "construct:CAREER_CLARITY",
+          "type": "construct",
+          "label": "CAREER_CLARITY"
+        },
+        {
+          "id": "recommendation:career:exploration:CAREER_CLARITY",
+          "type": "recommendation",
+          "label": "Run informational interviews"
+        },
+        {
+          "id": "recommendation:career:pathway:CAREER_CLARITY",
+          "type": "recommendation",
+          "label": "Structured decision-making pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:CAREER_CLARITY",
+          "type": "recommendation",
+          "label": "Turn career confusion into a clear plan"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "size": 16,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 4
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:COMMUNICATION",
+          "type": "recommendation",
+          "label": "Communication-aligned career cluster"
+        },
+        {
+          "id": "construct:COMMUNICATION",
+          "type": "construct",
+          "label": "COMMUNICATION"
+        },
+        {
+          "id": "recommendation:career:exploration:COMMUNICATION",
+          "type": "recommendation",
+          "label": "Explore where communication matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:COMMUNICATION",
+          "type": "recommendation",
+          "label": "Communication growth pathway"
+        },
+        {
+          "id": "recommendation:development:communication:COMMUNICATION",
+          "type": "recommendation",
+          "label": "Develop communication (Communication Development)"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "size": 16,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 4
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:CRITICAL_THINKING",
+          "type": "recommendation",
+          "label": "Critical Thinking-aligned career cluster"
+        },
+        {
+          "id": "construct:CRITICAL_THINKING",
+          "type": "construct",
+          "label": "CRITICAL_THINKING"
+        },
+        {
+          "id": "recommendation:career:exploration:CRITICAL_THINKING",
+          "type": "recommendation",
+          "label": "Explore where critical thinking matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:CRITICAL_THINKING",
+          "type": "recommendation",
+          "label": "Critical Thinking growth pathway"
+        },
+        {
+          "id": "recommendation:development:critical_thinking:CRITICAL_THINKING",
+          "type": "recommendation",
+          "label": "Develop critical thinking (Critical Thinking Development)"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "size": 16,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 4
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:DIGITAL_DEPENDENCY",
+          "type": "recommendation",
+          "label": "Digital Dependency-aligned career cluster"
+        },
+        {
+          "id": "construct:DIGITAL_DEPENDENCY",
+          "type": "construct",
+          "label": "DIGITAL_DEPENDENCY"
+        },
+        {
+          "id": "recommendation:career:exploration:DIGITAL_DEPENDENCY",
+          "type": "recommendation",
+          "label": "Explore where digital dependency matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:DIGITAL_DEPENDENCY",
+          "type": "recommendation",
+          "label": "Digital Dependency growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:DIGITAL_DEPENDENCY",
+          "type": "recommendation",
+          "label": "Develop digital dependency (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "size": 16,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 4
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:EXAM_READINESS",
+          "type": "recommendation",
+          "label": "Exam Readiness-aligned career cluster"
+        },
+        {
+          "id": "construct:EXAM_READINESS",
+          "type": "construct",
+          "label": "EXAM_READINESS"
+        },
+        {
+          "id": "recommendation:career:exploration:EXAM_READINESS",
+          "type": "recommendation",
+          "label": "Explore where exam readiness matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:EXAM_READINESS",
+          "type": "recommendation",
+          "label": "Exam Readiness growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:EXAM_READINESS",
+          "type": "recommendation",
+          "label": "Develop exam readiness (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "size": 16,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 4
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:FAMILY_DYNAMICS",
+          "type": "recommendation",
+          "label": "Family Dynamics-aligned career cluster"
+        },
+        {
+          "id": "construct:FAMILY_DYNAMICS",
+          "type": "construct",
+          "label": "FAMILY_DYNAMICS"
+        },
+        {
+          "id": "recommendation:career:exploration:FAMILY_DYNAMICS",
+          "type": "recommendation",
+          "label": "Explore where family dynamics matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:FAMILY_DYNAMICS",
+          "type": "recommendation",
+          "label": "Family Dynamics growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:FAMILY_DYNAMICS",
+          "type": "recommendation",
+          "label": "Develop family dynamics (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "size": 16,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 4
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:HABIT_FORMATION",
+          "type": "recommendation",
+          "label": "Habit Formation-aligned career cluster"
+        },
+        {
+          "id": "construct:HABIT_FORMATION",
+          "type": "construct",
+          "label": "HABIT_FORMATION"
+        },
+        {
+          "id": "recommendation:career:exploration:HABIT_FORMATION",
+          "type": "recommendation",
+          "label": "Explore where habit formation matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:HABIT_FORMATION",
+          "type": "recommendation",
+          "label": "Habit Formation growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:HABIT_FORMATION",
+          "type": "recommendation",
+          "label": "Develop habit formation (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "size": 16,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 4
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:IMPULSE_CONTROL",
+          "type": "recommendation",
+          "label": "Impulse Control-aligned career cluster"
+        },
+        {
+          "id": "construct:IMPULSE_CONTROL",
+          "type": "construct",
+          "label": "IMPULSE_CONTROL"
+        },
+        {
+          "id": "recommendation:career:exploration:IMPULSE_CONTROL",
+          "type": "recommendation",
+          "label": "Explore where impulse control matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:IMPULSE_CONTROL",
+          "type": "recommendation",
+          "label": "Impulse Control growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:IMPULSE_CONTROL",
+          "type": "recommendation",
+          "label": "Develop impulse control (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "size": 16,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 4
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:LEARNING_APPROACH",
+          "type": "recommendation",
+          "label": "Learning Approach-aligned career cluster"
+        },
+        {
+          "id": "construct:LEARNING_APPROACH",
+          "type": "construct",
+          "label": "LEARNING_APPROACH"
+        },
+        {
+          "id": "recommendation:career:exploration:LEARNING_APPROACH",
+          "type": "recommendation",
+          "label": "Explore where learning approach matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:LEARNING_APPROACH",
+          "type": "recommendation",
+          "label": "Learning Approach growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:LEARNING_APPROACH",
+          "type": "recommendation",
+          "label": "Develop learning approach (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "size": 16,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 4
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:MENTAL_HEALTH",
+          "type": "recommendation",
+          "label": "Mental Health-aligned career cluster"
+        },
+        {
+          "id": "construct:MENTAL_HEALTH",
+          "type": "construct",
+          "label": "MENTAL_HEALTH"
+        },
+        {
+          "id": "recommendation:career:exploration:MENTAL_HEALTH",
+          "type": "recommendation",
+          "label": "Explore where mental health matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:MENTAL_HEALTH",
+          "type": "recommendation",
+          "label": "Mental Health growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:MENTAL_HEALTH",
+          "type": "recommendation",
+          "label": "Develop mental health (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "size": 16,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 4
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:PROCESSING_SPEED",
+          "type": "recommendation",
+          "label": "Processing Speed-aligned career cluster"
+        },
+        {
+          "id": "construct:PROCESSING_SPEED",
+          "type": "construct",
+          "label": "PROCESSING_SPEED"
+        },
+        {
+          "id": "recommendation:career:exploration:PROCESSING_SPEED",
+          "type": "recommendation",
+          "label": "Explore where processing speed matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:PROCESSING_SPEED",
+          "type": "recommendation",
+          "label": "Processing Speed growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:PROCESSING_SPEED",
+          "type": "recommendation",
+          "label": "Develop processing speed (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "size": 16,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 4
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:RESILIENCE",
+          "type": "recommendation",
+          "label": "Resilience-aligned career cluster"
+        },
+        {
+          "id": "construct:RESILIENCE",
+          "type": "construct",
+          "label": "RESILIENCE"
+        },
+        {
+          "id": "recommendation:career:exploration:RESILIENCE",
+          "type": "recommendation",
+          "label": "Explore where resilience matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:RESILIENCE",
+          "type": "recommendation",
+          "label": "Resilience growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:RESILIENCE",
+          "type": "recommendation",
+          "label": "Develop resilience (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "size": 16,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 4
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:SAFETY_THREATS",
+          "type": "recommendation",
+          "label": "Safety & Threat Exposure-aligned career cluster"
+        },
+        {
+          "id": "construct:SAFETY_THREATS",
+          "type": "construct",
+          "label": "SAFETY_THREATS"
+        },
+        {
+          "id": "recommendation:career:exploration:SAFETY_THREATS",
+          "type": "recommendation",
+          "label": "Explore where safety & threat exposure matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:SAFETY_THREATS",
+          "type": "recommendation",
+          "label": "Safety & Threat Exposure growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:SAFETY_THREATS",
+          "type": "recommendation",
+          "label": "Develop safety & threat exposure (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "size": 16,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 4
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:SKILL_AWARENESS",
+          "type": "recommendation",
+          "label": "Skill Awareness-aligned career cluster"
+        },
+        {
+          "id": "construct:SKILL_AWARENESS",
+          "type": "construct",
+          "label": "SKILL_AWARENESS"
+        },
+        {
+          "id": "recommendation:career:exploration:SKILL_AWARENESS",
+          "type": "recommendation",
+          "label": "Explore where skill awareness matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:SKILL_AWARENESS",
+          "type": "recommendation",
+          "label": "Skill Awareness growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:SKILL_AWARENESS",
+          "type": "recommendation",
+          "label": "Develop skill awareness (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "size": 16,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 4
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:STRESS_MANAGEMENT",
+          "type": "recommendation",
+          "label": "Stress Management-aligned career cluster"
+        },
+        {
+          "id": "construct:STRESS_MANAGEMENT",
+          "type": "construct",
+          "label": "STRESS_MANAGEMENT"
+        },
+        {
+          "id": "recommendation:career:exploration:STRESS_MANAGEMENT",
+          "type": "recommendation",
+          "label": "Explore where stress management matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:STRESS_MANAGEMENT",
+          "type": "recommendation",
+          "label": "Stress Management growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:STRESS_MANAGEMENT",
+          "type": "recommendation",
+          "label": "Develop stress management (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "size": 16,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 4
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:WORKING_MEMORY",
+          "type": "recommendation",
+          "label": "Working Memory-aligned career cluster"
+        },
+        {
+          "id": "construct:WORKING_MEMORY",
+          "type": "construct",
+          "label": "WORKING_MEMORY"
+        },
+        {
+          "id": "recommendation:career:exploration:WORKING_MEMORY",
+          "type": "recommendation",
+          "label": "Explore where working memory matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:WORKING_MEMORY",
+          "type": "recommendation",
+          "label": "Working Memory growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:WORKING_MEMORY",
+          "type": "recommendation",
+          "label": "Develop working memory (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "size": 14,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 2
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:CREATIVITY",
+          "type": "recommendation",
+          "label": "Creativity & Curiosity-aligned career cluster"
+        },
+        {
+          "id": "construct:CREATIVITY",
+          "type": "construct",
+          "label": "CREATIVITY"
+        },
+        {
+          "id": "recommendation:career:exploration:CREATIVITY",
+          "type": "recommendation",
+          "label": "Explore where creativity & curiosity matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:CREATIVITY",
+          "type": "recommendation",
+          "label": "Creativity & Curiosity growth pathway"
+        },
+        {
+          "id": "recommendation:development:critical_thinking:CREATIVITY",
+          "type": "recommendation",
+          "label": "Develop creativity & curiosity (Critical Thinking Development)"
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "size": 14,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 2
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:DIGITAL_DISCIPLINE",
+          "type": "recommendation",
+          "label": "Digital Discipline-aligned career cluster"
+        },
+        {
+          "id": "construct:DIGITAL_DISCIPLINE",
+          "type": "construct",
+          "label": "DIGITAL_DISCIPLINE"
+        },
+        {
+          "id": "recommendation:career:exploration:DIGITAL_DISCIPLINE",
+          "type": "recommendation",
+          "label": "Explore where digital discipline matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:DIGITAL_DISCIPLINE",
+          "type": "recommendation",
+          "label": "Digital Discipline growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:DIGITAL_DISCIPLINE",
+          "type": "recommendation",
+          "label": "Develop digital discipline (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "size": 14,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 2
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:EXAM_PERFORMANCE",
+          "type": "recommendation",
+          "label": "Exam Performance-aligned career cluster"
+        },
+        {
+          "id": "construct:EXAM_PERFORMANCE",
+          "type": "construct",
+          "label": "EXAM_PERFORMANCE"
+        },
+        {
+          "id": "recommendation:career:exploration:EXAM_PERFORMANCE",
+          "type": "recommendation",
+          "label": "Explore where exam performance matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:EXAM_PERFORMANCE",
+          "type": "recommendation",
+          "label": "Exam Performance growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:EXAM_PERFORMANCE",
+          "type": "recommendation",
+          "label": "Develop exam performance (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "size": 14,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 2
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:LEARNING_DRIVE",
+          "type": "recommendation",
+          "label": "Learning Drive-aligned career cluster"
+        },
+        {
+          "id": "construct:LEARNING_DRIVE",
+          "type": "construct",
+          "label": "LEARNING_DRIVE"
+        },
+        {
+          "id": "recommendation:career:exploration:LEARNING_DRIVE",
+          "type": "recommendation",
+          "label": "Explore where learning drive matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:LEARNING_DRIVE",
+          "type": "recommendation",
+          "label": "Learning Drive growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:LEARNING_DRIVE",
+          "type": "recommendation",
+          "label": "Develop learning drive (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "size": 14,
+      "by_type": {
+        "recommendation": 11,
+        "construct": 1,
+        "runtime_intervention": 2
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:PHYSICAL_WELLBEING",
+          "type": "recommendation",
+          "label": "Physical Wellbeing-aligned career cluster"
+        },
+        {
+          "id": "construct:PHYSICAL_WELLBEING",
+          "type": "construct",
+          "label": "PHYSICAL_WELLBEING"
+        },
+        {
+          "id": "recommendation:career:exploration:PHYSICAL_WELLBEING",
+          "type": "recommendation",
+          "label": "Explore where physical wellbeing matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:PHYSICAL_WELLBEING",
+          "type": "recommendation",
+          "label": "Physical Wellbeing growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:PHYSICAL_WELLBEING",
+          "type": "recommendation",
+          "label": "Develop physical wellbeing (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "size": 13,
+      "by_type": {
+        "recommendation": 12,
+        "construct": 1
+      },
+      "sample": [
+        {
+          "id": "recommendation:career:cluster:CAREER_GROWTH",
+          "type": "recommendation",
+          "label": "Career Growth-aligned career cluster"
+        },
+        {
+          "id": "construct:CAREER_GROWTH",
+          "type": "construct",
+          "label": "CAREER_GROWTH"
+        },
+        {
+          "id": "recommendation:career:exploration:CAREER_GROWTH",
+          "type": "recommendation",
+          "label": "Explore where career growth matters most"
+        },
+        {
+          "id": "recommendation:career:pathway:CAREER_GROWTH",
+          "type": "recommendation",
+          "label": "Career Growth growth pathway"
+        },
+        {
+          "id": "recommendation:development:career_readiness:CAREER_GROWTH",
+          "type": "recommendation",
+          "label": "Develop career growth (Career Readiness Development)"
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "size": 2,
+      "by_type": {
+        "runtime_intervention": 1,
+        "construct": 1
+      },
+      "sample": [
+        {
+          "id": "runtime_intervention:05b1c227-d5d9-4e04-a91f-a92cdbba787c",
+          "type": "runtime_intervention",
+          "label": "EXAM_STRESS · student · low"
+        },
+        {
+          "id": "construct:EXAM_STRESS",
+          "type": "construct",
+          "label": "EXAM_STRESS"
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "size": 2,
+      "by_type": {
+        "runtime_intervention": 1,
+        "construct": 1
+      },
+      "sample": [
+        {
+          "id": "runtime_intervention:642af7b0-92d3-4272-a0bd-b75559ac0158",
+          "type": "runtime_intervention",
+          "label": "DISCIPLINE_HABITS · student · low"
+        },
+        {
+          "id": "construct:DISCIPLINE_HABITS",
+          "type": "construct",
+          "label": "DISCIPLINE_HABITS"
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "size": 2,
+      "by_type": {
+        "runtime_intervention": 1,
+        "construct": 1
+      },
+      "sample": [
+        {
+          "id": "runtime_intervention:710f7c57-9557-424b-b594-be354d59cf2d",
+          "type": "runtime_intervention",
+          "label": "GENERAL_CONCERN · student · low"
+        },
+        {
+          "id": "construct:GENERAL_CONCERN",
+          "type": "construct",
+          "label": "GENERAL_CONCERN"
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "size": 2,
+      "by_type": {
+        "runtime_intervention": 1,
+        "construct": 1
+      },
+      "sample": [
+        {
+          "id": "runtime_intervention:9662e564-52f5-4237-a197-431aab71b551",
+          "type": "runtime_intervention",
+          "label": "COLLEGE_ADAPT · student · low"
+        },
+        {
+          "id": "construct:COLLEGE_ADAPT",
+          "type": "construct",
+          "label": "COLLEGE_ADAPT"
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "size": 2,
+      "by_type": {
+        "runtime_intervention": 1,
+        "construct": 1
+      },
+      "sample": [
+        {
+          "id": "runtime_intervention:9df82837-0b3f-408d-acc4-f0c188cc2760",
+          "type": "runtime_intervention",
+          "label": "ADJUSTMENT_COPING · student · low"
+        },
+        {
+          "id": "construct:ADJUSTMENT_COPING",
+          "type": "construct",
+          "label": "ADJUSTMENT_COPING"
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "size": 2,
+      "by_type": {
+        "runtime_intervention": 1,
+        "construct": 1
+      },
+      "sample": [
+        {
+          "id": "runtime_intervention:e5888f22-4a17-4f42-b2f1-d72c9c514f3a",
+          "type": "runtime_intervention",
+          "label": "CAREER_READINESS · student · low"
+        },
+        {
+          "id": "construct:CAREER_READINESS",
+          "type": "construct",
+          "label": "CAREER_READINESS"
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "size": 1,
+      "by_type": {
+        "competency": 1
+      },
+      "sample": [
+        {
+          "id": "competency:comp_accountability",
+          "type": "competency",
+          "label": "Accountability"
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "size": 1,
+      "by_type": {
+        "competency": 1
+      },
+      "sample": [
+        {
+          "id": "competency:comp_accountable_leadership",
+          "type": "competency",
+          "label": "Accountable Leadership"
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "size": 1,
+      "by_type": {
+        "competency": 1
+      },
+      "sample": [
+        {
+          "id": "competency:comp_active_listening",
+          "type": "competency",
+          "label": "Active Listening"
+        }
+      ]
+    },
+    {
+      "id": 45,
+      "size": 1,
+      "by_type": {
+        "competency": 1
+      },
+      "sample": [
+        {
+          "id": "competency:comp_active_problem_identification",
+          "type": "competency",
+          "label": "Active Problem Identification"
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "size": 1,
+      "by_type": {
+        "competency": 1
+      },
+      "sample": [
+        {
+          "id": "competency:comp_adaptability",
+          "type": "competency",
+          "label": "Adaptability"
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "size": 1,
+      "by_type": {
+        "competency": 1
+      },
+      "sample": [
+        {
+          "id": "competency:comp_agile_collaboration",
+          "type": "competency",
+          "label": "Agile Collaboration"
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "size": 1,
+      "by_type": {
+        "competency": 1
+      },
+      "sample": [
+        {
+          "id": "competency:comp_agility_in_execution",
+          "type": "competency",
+          "label": "Agility in Execution"
+        }
+      ]
+    },
+    {
+      "id": 49,
+      "size": 1,
+      "by_type": {
+        "competency": 1
+      },
+      "sample": [
+        {
+          "id": "competency:comp_ambiguity_tolerance",
+          "type": "competency",
+          "label": "Ambiguity Tolerance"
+        }
+      ]
+    }
+  ],
+  "component_total": 341,
+  "orphans": {
+    "total": 299,
+    "by_type": {
+      "competency": 299
+    },
+    "sample": [
+      {
+        "id": "competency:comp_accountability",
+        "type": "competency",
+        "key": "comp_accountability",
+        "label": "Accountability",
+        "attrs": {
+          "comp_domain": "dom_behavioral",
+          "comp_family": "fam_work_ethic"
+        }
+      },
+      {
+        "id": "competency:comp_accountable_leadership",
+        "type": "competency",
+        "key": "comp_accountable_leadership",
+        "label": "Accountable Leadership",
+        "attrs": {
+          "comp_domain": "dom_interpersonal",
+          "comp_family": "fam_leadership"
+        }
+      },
+      {
+        "id": "competency:comp_active_listening",
+        "type": "competency",
+        "key": "comp_active_listening",
+        "label": "Active Listening",
+        "attrs": {
+          "comp_domain": "dom_interpersonal",
+          "comp_family": "fam_communication"
+        }
+      },
+      {
+        "id": "competency:comp_active_problem_identification",
+        "type": "competency",
+        "key": "comp_active_problem_identification",
+        "label": "Active Problem Identification",
+        "attrs": {
+          "comp_domain": "dom_behavioral",
+          "comp_family": "fam_execution"
+        }
+      },
+      {
+        "id": "competency:comp_adaptability",
+        "type": "competency",
+        "key": "comp_adaptability",
+        "label": "Adaptability",
+        "attrs": {
+          "comp_domain": "dom_behavioral",
+          "comp_family": "fam_resilience"
+        }
+      },
+      {
+        "id": "competency:comp_agile_collaboration",
+        "type": "competency",
+        "key": "comp_agile_collaboration",
+        "label": "Agile Collaboration",
+        "attrs": {
+          "comp_domain": "dom_strategic",
+          "comp_family": "fam_change_transformation"
+        }
+      },
+      {
+        "id": "competency:comp_agility_in_execution",
+        "type": "competency",
+        "key": "comp_agility_in_execution",
+        "label": "Agility in Execution",
+        "attrs": {
+          "comp_domain": "dom_strategic",
+          "comp_family": "fam_change_transformation"
+        }
+      },
+      {
+        "id": "competency:comp_ambiguity_tolerance",
+        "type": "competency",
+        "key": "comp_ambiguity_tolerance",
+        "label": "Ambiguity Tolerance",
+        "attrs": {
+          "comp_domain": "dom_behavioral",
+          "comp_family": "fam_resilience"
+        }
+      },
+      {
+        "id": "competency:comp_analytical_thinking",
+        "type": "competency",
+        "key": "comp_analytical_thinking",
+        "label": "Analytical Thinking",
+        "attrs": {
+          "comp_domain": "dom_cognitive",
+          "comp_family": "fam_analytical_reasoning"
+        }
+      },
+      {
+        "id": "competency:comp_appreciation_of_diversity",
+        "type": "competency",
+        "key": "comp_appreciation_of_diversity",
+        "label": "Appreciation of Diversity",
+        "attrs": {
+          "comp_domain": "dom_interpersonal",
+          "comp_family": "fam_empathy_diversity"
+        }
+      },
+      {
+        "id": "competency:comp_assertive_communication",
+        "type": "competency",
+        "key": "comp_assertive_communication",
+        "label": "Assertive Communication",
+        "attrs": {
+          "comp_domain": "dom_interpersonal",
+          "comp_family": "fam_communication"
+        }
+      },
+      {
+        "id": "competency:comp_assertiveness",
+        "type": "competency",
+        "key": "comp_assertiveness",
+        "label": "Assertiveness",
+        "attrs": {
+          "comp_domain": "dom_behavioral",
+          "comp_family": "fam_execution"
+        }
+      },
+      {
+        "id": "competency:comp_attention_to_deadlines",
+        "type": "competency",
+        "key": "comp_attention_to_deadlines",
+        "label": "Attention to Deadlines",
+        "attrs": {
+          "comp_domain": "dom_functional",
+          "comp_family": "fam_project_delivery"
+        }
+      },
+      {
+        "id": "competency:comp_attention_to_detail",
+        "type": "competency",
+        "key": "comp_attention_to_detail",
+        "label": "Attention to Detail",
+        "attrs": {
+          "comp_domain": "dom_functional",
+          "comp_family": "fam_operational_excellence"
+        }
+      },
+      {
+        "id": "competency:comp_authenticity",
+        "type": "competency",
+        "key": "comp_authenticity",
+        "label": "Authenticity",
+        "attrs": {
+          "comp_domain": "dom_strategic",
+          "comp_family": "fam_governance_ethics"
+        }
+      },
+      {
+        "id": "competency:comp_autonomy",
+        "type": "competency",
+        "key": "comp_autonomy",
+        "label": "Autonomy",
+        "attrs": {
+          "comp_domain": "dom_behavioral",
+          "comp_family": "fam_work_ethic"
+        }
+      },
+      {
+        "id": "competency:comp_balanced_decision_making",
+        "type": "competency",
+        "key": "comp_balanced_decision_making",
+        "label": "Balanced Decision Making",
+        "attrs": {
+          "comp_domain": "dom_cognitive",
+          "comp_family": "fam_decision_making"
+        }
+      },
+      {
+        "id": "competency:comp_balanced_judgment",
+        "type": "competency",
+        "key": "comp_balanced_judgment",
+        "label": "Balanced Judgment",
+        "attrs": {
+          "comp_domain": "dom_cognitive",
+          "comp_family": "fam_decision_making"
+        }
+      },
+      {
+        "id": "competency:comp_boundary_setting",
+        "type": "competency",
+        "key": "comp_boundary_setting",
+        "label": "Boundary Setting",
+        "attrs": {
+          "comp_domain": "dom_behavioral",
+          "comp_family": "fam_self_regulation"
+        }
+      },
+      {
+        "id": "competency:comp_brand_ambassadorship",
+        "type": "competency",
+        "key": "comp_brand_ambassadorship",
+        "label": "Brand Ambassadorship",
+        "attrs": {
+          "comp_domain": "dom_behavioral",
+          "comp_family": "fam_execution"
+        }
+      }
+    ]
+  },
+  "top_hubs": [
+    {
+      "id": "bridge_tag:STRENGTH_SIGNAL",
+      "type": "bridge_tag",
+      "label": "STRENGTH_SIGNAL",
+      "degree": 8970
+    },
+    {
+      "id": "bridge_tag:ADJUSTMENT_COPING",
+      "type": "bridge_tag",
+      "label": "ADJUSTMENT_COPING",
+      "degree": 4173
+    },
+    {
+      "id": "bridge_tag:CAREER_READINESS",
+      "type": "bridge_tag",
+      "label": "CAREER_READINESS",
+      "degree": 3160
+    },
+    {
+      "id": "bridge_tag:DISCIPLINE_HABITS",
+      "type": "bridge_tag",
+      "label": "DISCIPLINE_HABITS",
+      "degree": 2077
+    },
+    {
+      "id": "bridge_tag:EMOTIONAL_REGULATION",
+      "type": "bridge_tag",
+      "label": "EMOTIONAL_REGULATION",
+      "degree": 1952
+    },
+    {
+      "id": "bridge_tag:CONFIDENCE_SELF",
+      "type": "bridge_tag",
+      "label": "CONFIDENCE_SELF",
+      "degree": 1796
+    },
+    {
+      "id": "bridge_tag:SOCIAL_EMOTIONAL",
+      "type": "bridge_tag",
+      "label": "SOCIAL_EMOTIONAL",
+      "degree": 1548
+    },
+    {
+      "id": "bridge_tag:EMPLOYABILITY",
+      "type": "bridge_tag",
+      "label": "EMPLOYABILITY",
+      "degree": 1507
+    },
+    {
+      "id": "bridge_tag:EXAMINATION_STRESS",
+      "type": "bridge_tag",
+      "label": "EXAMINATION_STRESS",
+      "degree": 1411
+    },
+    {
+      "id": "bridge_tag:MOTIVATION_VALUES",
+      "type": "bridge_tag",
+      "label": "MOTIVATION_VALUES",
+      "degree": 1391
+    },
+    {
+      "id": "bridge_tag:COMPETENCY_DEVELOPMENT",
+      "type": "bridge_tag",
+      "label": "COMPETENCY_DEVELOPMENT",
+      "degree": 1353
+    },
+    {
+      "id": "bridge_tag:EMOTIONAL_RECOVERY",
+      "type": "bridge_tag",
+      "label": "EMOTIONAL_RECOVERY",
+      "degree": 1258
+    },
+    {
+      "id": "bridge_tag:ACADEMIC_COGNITIVE",
+      "type": "bridge_tag",
+      "label": "ACADEMIC_COGNITIVE",
+      "degree": 1119
+    },
+    {
+      "id": "bridge_tag:THINKING_QUALITY",
+      "type": "bridge_tag",
+      "label": "THINKING_QUALITY",
+      "degree": 1087
+    },
+    {
+      "id": "bridge_tag:WORKPLACE_ADAPTATION",
+      "type": "bridge_tag",
+      "label": "WORKPLACE_ADAPTATION",
+      "degree": 1022
+    },
+    {
+      "id": "signal:SIG_0010",
+      "type": "signal",
+      "label": "emotional_overload",
+      "degree": 1021
+    },
+    {
+      "id": "bridge_tag:LIFESTYLE_PRESSURE",
+      "type": "bridge_tag",
+      "label": "LIFESTYLE_PRESSURE",
+      "degree": 1010
+    },
+    {
+      "id": "bridge_tag:HOLISTIC_DEVELOPMENT",
+      "type": "bridge_tag",
+      "label": "HOLISTIC_DEVELOPMENT",
+      "degree": 1004
+    },
+    {
+      "id": "bridge_tag:CAREER_GROWTH",
+      "type": "bridge_tag",
+      "label": "CAREER_GROWTH",
+      "degree": 961
+    },
+    {
+      "id": "bridge_tag:LEADERSHIP_OWNERSHIP",
+      "type": "bridge_tag",
+      "label": "LEADERSHIP_OWNERSHIP",
+      "degree": 881
+    },
+    {
+      "id": "domain:DOM_010",
+      "type": "domain",
+      "label": "Resilience Intelligence",
+      "degree": 861
+    },
+    {
+      "id": "domain:DOM_018",
+      "type": "domain",
+      "label": "Collaboration Intelligence",
+      "degree": 861
+    },
+    {
+      "id": "domain:DOM_015",
+      "type": "domain",
+      "label": "Wellbeing Intelligence",
+      "degree": 841
+    },
+    {
+      "id": "domain:DOM_016",
+      "type": "domain",
+      "label": "Employability Intelligence",
+      "degree": 841
+    },
+    {
+      "id": "domain:DOM_007",
+      "type": "domain",
+      "label": "Identity Intelligence",
+      "degree": 836
+    },
+    {
+      "id": "domain:DOM_002",
+      "type": "domain",
+      "label": "Cognitive Intelligence",
+      "degree": 825
+    },
+    {
+      "id": "domain:DOM_013",
+      "type": "domain",
+      "label": "Communication Intelligence",
+      "degree": 822
+    },
+    {
+      "id": "domain:DOM_001",
+      "type": "domain",
+      "label": "Emotional Intelligence",
+      "degree": 821
+    },
+    {
+      "id": "domain:DOM_003",
+      "type": "domain",
+      "label": "Behavioral Intelligence",
+      "degree": 821
+    },
+    {
+      "id": "domain:DOM_004",
+      "type": "domain",
+      "label": "Motivational Intelligence",
+      "degree": 821
+    },
+    {
+      "id": "domain:DOM_005",
+      "type": "domain",
+      "label": "Social Intelligence",
+      "degree": 821
+    },
+    {
+      "id": "domain:DOM_006",
+      "type": "domain",
+      "label": "Executive Function Intelligence",
+      "degree": 821
+    },
+    {
+      "id": "domain:DOM_008",
+      "type": "domain",
+      "label": "Adaptive Intelligence",
+      "degree": 821
+    },
+    {
+      "id": "domain:DOM_009",
+      "type": "domain",
+      "label": "Performance Intelligence",
+      "degree": 821
+    },
+    {
+      "id": "domain:DOM_014",
+      "type": "domain",
+      "label": "Decision Intelligence",
+      "degree": 821
+    },
+    {
+      "id": "domain:DOM_020",
+      "type": "domain",
+      "label": "Ethical & Integrity Intelligence",
+      "degree": 813
+    },
+    {
+      "id": "domain:DOM_012",
+      "type": "domain",
+      "label": "Learning Intelligence",
+      "degree": 801
+    },
+    {
+      "id": "domain:DOM_017",
+      "type": "domain",
+      "label": "Leadership Intelligence",
+      "degree": 801
+    },
+    {
+      "id": "bridge_tag:GENERAL_CONCERN",
+      "type": "bridge_tag",
+      "label": "GENERAL_CONCERN",
+      "degree": 769
+    },
+    {
+      "id": "domain:DOM_011",
+      "type": "domain",
+      "label": "Career Intelligence",
+      "degree": 761
+    },
+    {
+      "id": "domain:DOM_019",
+      "type": "domain",
+      "label": "Creativity Intelligence",
+      "degree": 761
+    },
+    {
+      "id": "bridge_tag:COMMUNICATION_EXPRESSION",
+      "type": "bridge_tag",
+      "label": "COMMUNICATION_EXPRESSION",
+      "degree": 670
+    },
+    {
+      "id": "bridge_tag:STRATEGIC_PREPARATION",
+      "type": "bridge_tag",
+      "label": "STRATEGIC_PREPARATION",
+      "degree": 631
+    },
+    {
+      "id": "bridge_tag:ACADEMIC_IDENTITY",
+      "type": "bridge_tag",
+      "label": "ACADEMIC_IDENTITY",
+      "degree": 579
+    },
+    {
+      "id": "bridge_tag:LEARNING_ADAPTABILITY",
+      "type": "bridge_tag",
+      "label": "LEARNING_ADAPTABILITY",
+      "degree": 570
+    },
+    {
+      "id": "signal:SIG_0001",
+      "type": "signal",
+      "label": "career_confusion",
+      "degree": 566
+    },
+    {
+      "id": "signal:SIG_0004",
+      "type": "signal",
+      "label": "placement_anxiety",
+      "degree": 555
+    },
+    {
+      "id": "signal:SIG_0006",
+      "type": "signal",
+      "label": "confidence_instability",
+      "degree": 554
+    },
+    {
+      "id": "signal:SIG_0020",
+      "type": "signal",
+      "label": "practical_skill_gap",
+      "degree": 543
+    },
+    {
+      "id": "signal:SIG_0003",
+      "type": "signal",
+      "label": "fear_of_failure",
+      "degree": 488
+    }
+  ]
+}

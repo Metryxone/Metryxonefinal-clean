@@ -1,0 +1,734 @@
+MX-COMMERCIAL-OS-98X
+
+MISSION
+
+Transform MetryxOne into a world-class Commercial Operating System (Commercial OS) that manages the complete commercial lifecycle across Career Builder, CAPADEX, Competency Intelligence, Employer OS, Institution OS, Enterprise Customers, Government Programs, Partners, and Future Marketplace Services.
+
+Do not implement Razorpay alone.
+
+Build a complete commercial, billing, subscription, entitlement, revenue, contract, partner, finance, compliance, and customer success platform.
+
+OBJECTIVES
+
+1. Commercial Readiness ≥ 98%
+2. Subscription Coverage ≥ 98%
+3. Revenue Visibility ≥ 98%
+4. Finance Readiness ≥ 95%
+5. Billing Readiness ≥ 98%
+6. Customer Success Visibility ≥ 95%
+7. Enterprise Readiness ≥ 95%
+8. Launch Readiness ≥ 95%
+
+====================================================
+WORKSTREAM 1
+SUBSCRIPTION MANAGEMENT PLATFORM
+================================
+
+Support Subscription Models:
+
+Career Builder
+
+* Free
+* Pro
+* Premium
+
+Employer OS
+
+* Starter
+* Growth
+* Professional
+* Enterprise
+
+Institution OS
+
+* School
+* College
+* University
+* Group Enterprise
+
+Government Programs
+
+* Program Based
+* Annual Contract
+* Multi-Year Contract
+
+Features:
+
+* Free Trial
+* Paid Trial
+* Monthly Billing
+* Quarterly Billing
+* Annual Billing
+* Multi-Year Contracts
+* Upgrade
+* Downgrade
+* Pause
+* Resume
+* Renewal
+* Auto-Renewal
+* Cancellation
+* Grace Period
+* Trial Conversion
+* Subscription History
+
+====================================================
+WORKSTREAM 2
+ENTITLEMENT ENGINE
+==================
+
+Control Access To:
+
+Candidate Views
+
+Candidate Contact Unlocks
+
+Job Postings
+
+Talent Searches
+
+Talent Pools
+
+Shortlists
+
+Assessments
+
+Assessment Campaigns
+
+Reports
+
+Report Downloads
+
+Exports
+
+API Access
+
+Benchmark Access
+
+Employer Intelligence
+
+Workforce Intelligence
+
+Career Intelligence
+
+AI Features
+
+Analytics
+
+Executive Dashboards
+
+Passport Access
+
+Bulk Uploads
+
+Marketplace Access
+
+Rules:
+
+* Plan-based
+* Volume-based
+* Usage-based
+* Contract-based
+
+====================================================
+WORKSTREAM 3
+USAGE METERING ENGINE
+=====================
+
+Track:
+
+Candidate Searches
+
+Profile Views
+
+Contact Unlocks
+
+Downloads
+
+Exports
+
+Assessments
+
+Assessment Invitations
+
+Assessment Completions
+
+Report Generations
+
+Report Downloads
+
+API Calls
+
+Storage Usage
+
+Campaign Usage
+
+Institution Usage
+
+Employer Usage
+
+User Activity
+
+Create:
+
+Usage Ledger
+
+Usage History
+
+Consumption Analytics
+
+Overage Tracking
+
+====================================================
+WORKSTREAM 4
+PAYMENT INFRASTRUCTURE
+======================
+
+Primary Gateway:
+
+Razorpay
+
+Support:
+
+* One-Time Payments
+* Subscription Payments
+* Payment Links
+* Invoice Payments
+* Auto Debit
+* UPI
+* Net Banking
+* Credit Card
+* Debit Card
+* Wallets
+
+Implement:
+
+* Webhooks
+* Retries
+* Failed Payment Recovery
+* Refund Processing
+* Audit Logs
+* Idempotency Protection
+* Payment Reconciliation
+
+Track:
+
+payment.created
+
+payment.captured
+
+payment.failed
+
+subscription.created
+
+subscription.activated
+
+subscription.paused
+
+subscription.cancelled
+
+refund.processed
+
+====================================================
+WORKSTREAM 5
+INVOICE MANAGEMENT SYSTEM
+=========================
+
+Generate:
+
+Tax Invoice
+
+Proforma Invoice
+
+Advance Invoice
+
+Subscription Invoice
+
+Assessment Invoice
+
+Campaign Invoice
+
+Enterprise Invoice
+
+Credit Note
+
+Debit Note
+
+Refund Receipt
+
+Payment Receipt
+
+Receipt Voucher
+
+Invoice PDF
+
+Invoice Email
+
+Invoice History
+
+Features:
+
+Invoice Numbering
+
+Auto Generation
+
+Custom Templates
+
+GST Compliance
+
+Download
+
+Email Delivery
+
+Audit Trail
+
+====================================================
+WORKSTREAM 6
+GST & TAX ENGINE
+================
+
+Support:
+
+GSTIN Validation
+
+CGST
+
+SGST
+
+IGST
+
+Tax Calculation
+
+Reverse Charge
+
+Tax Exemption
+
+Institution Tax Rules
+
+Government Tax Rules
+
+Generate:
+
+GST Reports
+
+Tax Summary
+
+Export Reports
+
+Finance Reports
+
+====================================================
+WORKSTREAM 7
+CONTRACT & QUOTE MANAGEMENT
+===========================
+
+Manage:
+
+Leads
+
+Opportunities
+
+Quotes
+
+Proposals
+
+MSA
+
+SOW
+
+Enterprise Contracts
+
+Government Contracts
+
+Amendments
+
+Renewals
+
+Expiry Tracking
+
+Approval Workflows
+
+Store:
+
+Contract Repository
+
+Document History
+
+Version Tracking
+
+====================================================
+WORKSTREAM 8
+COLLECTIONS MANAGEMENT
+======================
+
+Track:
+
+Outstanding Invoices
+
+Invoice Aging
+
+Collections
+
+Overdue Payments
+
+Reminder History
+
+Recovery Actions
+
+Dunning Workflows
+
+Collection Effectiveness
+
+Generate:
+
+Collections Dashboard
+
+Recovery Dashboard
+
+Aging Reports
+
+====================================================
+WORKSTREAM 9
+REVENUE INTELLIGENCE
+====================
+
+Generate:
+
+MRR
+
+ARR
+
+Bookings
+
+Billings
+
+Collections
+
+Revenue Recognition
+
+Deferred Revenue
+
+Expansion Revenue
+
+Upsell Revenue
+
+Cross-Sell Revenue
+
+Renewal Revenue
+
+Churn Revenue
+
+Forecast Revenue
+
+Customer Lifetime Value
+
+CAC Recovery
+
+Revenue Health Score
+
+====================================================
+WORKSTREAM 10
+CUSTOMER SUCCESS INTELLIGENCE
+=============================
+
+Generate:
+
+Usage Score
+
+Adoption Score
+
+Health Score
+
+Renewal Risk
+
+Expansion Opportunity
+
+Engagement Score
+
+Support Score
+
+Success Score
+
+Identify:
+
+At-Risk Accounts
+
+Dormant Accounts
+
+Expansion Accounts
+
+Power Users
+
+====================================================
+WORKSTREAM 11
+PARTNER MANAGEMENT
+==================
+
+Support:
+
+Referral Partners
+
+Institution Partners
+
+Training Partners
+
+Resellers
+
+Channel Partners
+
+Franchise Partners
+
+Affiliates
+
+Track:
+
+Partner Performance
+
+Partner Revenue
+
+Partner Pipeline
+
+Partner Commissions
+
+Partner Payouts
+
+====================================================
+WORKSTREAM 12
+PAYOUT MANAGEMENT
+=================
+
+Support:
+
+Trainer Payouts
+
+Counselor Payouts
+
+Assessor Payouts
+
+Consultant Payouts
+
+Affiliate Payouts
+
+Vendor Payments
+
+Partner Payments
+
+Features:
+
+Approval Workflow
+
+Payout Ledger
+
+Payout History
+
+Reconciliation
+
+Tax Deductions
+
+====================================================
+WORKSTREAM 13
+FINANCE & EXECUTIVE DASHBOARDS
+==============================
+
+CEO Dashboard
+
+Finance Dashboard
+
+Sales Dashboard
+
+Customer Success Dashboard
+
+Collections Dashboard
+
+Partner Dashboard
+
+Views:
+
+Revenue
+
+Growth
+
+MRR
+
+ARR
+
+Collections
+
+Forecast
+
+Churn
+
+Renewals
+
+Profitability
+
+Partner Performance
+
+====================================================
+WORKSTREAM 14
+AUDIT, COMPLIANCE & GOVERNANCE
+==============================
+
+Track:
+
+Invoices
+
+Payments
+
+Refunds
+
+Subscriptions
+
+Contracts
+
+Collections
+
+Payouts
+
+Entitlements
+
+Usage
+
+Revenue Events
+
+Audit Trails
+
+Features:
+
+Immutable Logs
+
+Approval History
+
+Compliance Reports
+
+Financial Audit Reports
+
+====================================================
+WORKSTREAM 15
+NOTIFICATION & COMMUNICATION ENGINE
+===================================
+
+Email Notifications
+
+SMS Notifications
+
+WhatsApp Notifications
+
+In-App Notifications
+
+Events:
+
+Payment Success
+
+Payment Failure
+
+Invoice Generated
+
+Invoice Due
+
+Subscription Expiry
+
+Renewal Reminder
+
+Collection Reminder
+
+Refund Processed
+
+Contract Expiry
+
+====================================================
+WORKSTREAM 16
+COMMERCIAL APIs
+===============
+
+Create Secure APIs For:
+
+Subscriptions
+
+Invoices
+
+Payments
+
+Contracts
+
+Usage
+
+Entitlements
+
+Revenue
+
+Partners
+
+Payouts
+
+Audit Logs
+
+Support:
+
+Rate Limiting
+
+Audit Logging
+
+RBAC
+
+API Keys
+
+====================================================
+WORKSTREAM 17
+COMMERCIAL CERTIFICATION AUDIT
+==============================
+
+Generate:
+
+commercial_readiness_report.md
+
+subscription_readiness_report.md
+
+billing_readiness_report.md
+
+finance_readiness_report.md
+
+revenue_readiness_report.md
+
+partner_readiness_report.md
+
+customer_success_readiness_report.md
+
+commercial_gap_analysis.md
+
+CERTIFICATION TARGETS
+
+Commercial Readiness ≥ 98%
+
+Subscription Coverage ≥ 98%
+
+Billing Readiness ≥ 98%
+
+Revenue Visibility ≥ 98%
+
+Finance Readiness ≥ 95%
+
+Contract Coverage ≥ 95%
+
+Partner Coverage ≥ 95%
+
+Customer Success Visibility ≥ 95%
+
+Enterprise Readiness ≥ 95%
+
+Launch Readiness ≥ 95%
+
+FINAL OUTPUT
+
+Commercial OS Certification
+
+GO
+
+CONDITIONAL GO
+
+NO GO
+
+Remaining Gaps
+
+30-Day Commercial Roadmap
+
+90-Day Commercial Expansion Roadmap

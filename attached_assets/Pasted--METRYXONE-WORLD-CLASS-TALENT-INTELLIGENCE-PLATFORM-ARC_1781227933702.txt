@@ -1,0 +1,660 @@
+# METRYXONE WORLD-CLASS TALENT INTELLIGENCE PLATFORM ARCHITECT
+
+You are a council consisting of:
+
+* Chief Product Officer
+* Chief Enterprise Architect
+* Workforce Scientist
+* Industrial & Organizational Psychologist
+* Competency Framework Expert
+* Talent Intelligence Expert
+* Career Development Expert
+* Learning Science Expert
+* AI Systems Architect
+* Data Architect
+* HR Technology Expert
+
+Your task is to design MetryxOne as a world-class Talent Intelligence Platform, not merely a competency assessment system.
+
+The platform must support:
+
+1. Competency Assessment
+2. Employability Index
+3. Career Builder
+4. Career Readiness
+5. Promotion Readiness
+6. Leadership Readiness
+7. Future Readiness
+8. Learning Recommendations
+9. Talent Intelligence
+10. Workforce Analytics
+11. Career Passport
+12. Organizational Talent Mapping
+
+---
+
+# CORE ARCHITECTURAL PRINCIPLE
+
+Do NOT design around roles, competencies, or assessments.
+
+Design around:
+
+Atomic Signals
+↓
+Concerns
+↓
+Competencies
+↓
+Competency DNA
+↓
+Role Readiness
+↓
+Career Readiness
+↓
+Future Readiness
+↓
+Outcome Prediction
+
+All modules must reuse the same signal architecture.
+
+---
+
+# DELIVERABLE 1
+
+Generate a complete ontology.
+
+Hierarchy:
+
+Industry
+↓
+Function
+↓
+Department
+↓
+Role Family
+↓
+Role
+↓
+Role Layer
+↓
+Competency Cluster
+↓
+Competency
+↓
+Micro Competency
+↓
+Concern
+↓
+Atomic Signal
+↓
+Behavior Indicator
+↓
+Question
+
+Generate:
+
+Master tables
+
+Reference tables
+
+Mapping tables
+
+Relationships
+
+Primary Keys
+
+Foreign Keys
+
+Versioning Strategy
+
+Lifecycle Management
+
+Governance Rules
+
+---
+
+# DELIVERABLE 2
+
+Design a Universal Atomic Signal Library.
+
+Generate:
+
+200-300 reusable atomic signals.
+
+Examples:
+
+Planning
+
+Decision Quality
+
+Curiosity
+
+Accountability
+
+Adaptability
+
+Influence
+
+Learning Agility
+
+Systems Thinking
+
+Risk Awareness
+
+Strategic Thinking
+
+Map:
+
+Atomic Signal
+↓
+Concern
+↓
+Competency
+↓
+Indexes
+
+Ensure signals can be reused across:
+
+Employability Index
+
+Career Builder
+
+Leadership Index
+
+Future Readiness
+
+Promotion Readiness
+
+Role Readiness
+
+---
+
+# DELIVERABLE 3
+
+Design a Competency DNA Framework.
+
+For every competency generate:
+
+Core Components
+
+Observable Behaviors
+
+Failure Indicators
+
+Development Indicators
+
+Dependencies
+
+Competency Relationships
+
+Example:
+
+Leadership
+
+Influence
+
+Delegation
+
+Coaching
+
+Accountability
+
+Strategic Thinking
+
+Generate relationship maps.
+
+---
+
+# DELIVERABLE 4
+
+Design a CAPADEX-Compatible Concern Intelligence Framework.
+
+Generate:
+
+Competency
+↓
+Concern
+↓
+Indicator
+↓
+Signal
+↓
+Question
+
+For every concern generate:
+
+Description
+
+Risk Indicators
+
+Growth Indicators
+
+Assessment Indicators
+
+Insight Logic
+
+Recommendation Logic
+
+---
+
+# DELIVERABLE 5
+
+Design the Assessment Factory.
+
+Support:
+
+Behavioral
+
+Functional
+
+Cognitive
+
+Leadership
+
+Future Readiness
+
+Generate:
+
+Question Architecture
+
+Scenario Architecture
+
+Difficulty Levels
+
+Adaptive Logic
+
+Assessment Runtime
+
+Session Management
+
+Response Storage
+
+Question Analytics
+
+Psychometric Analytics
+
+Reliability Tracking
+
+Validity Tracking
+
+---
+
+# DELIVERABLE 6
+
+Design the Role Readiness Engine.
+
+Generate:
+
+Role Requirements
+
+Competency Requirements
+
+Signal Requirements
+
+Weighting Logic
+
+Gap Logic
+
+Readiness Formula
+
+Outputs:
+
+Role Readiness %
+
+Promotion Readiness %
+
+Success Probability %
+
+---
+
+# DELIVERABLE 7
+
+Design the Employability Index.
+
+Generate:
+
+Dimensions
+
+Subdimensions
+
+Atomic Signal Mapping
+
+Competency Mapping
+
+Industry Calibration
+
+Scoring Logic
+
+Benchmark Logic
+
+Narrative Logic
+
+Recommendation Logic
+
+---
+
+# DELIVERABLE 8
+
+Design the Career Builder.
+
+Generate:
+
+Career Graph
+
+Career Tracks
+
+Role Adjacencies
+
+Promotion Paths
+
+Alternative Paths
+
+Gap Analysis
+
+Career Recommendations
+
+Probability of Success
+
+Time-to-Readiness Prediction
+
+---
+
+# DELIVERABLE 9
+
+Design the Future Readiness Engine.
+
+Generate:
+
+Future Skill Taxonomy
+
+Emerging Skills
+
+AI Readiness
+
+Automation Risk
+
+Role Evolution
+
+Future Competency Mapping
+
+Future Readiness Formula
+
+---
+
+# DELIVERABLE 10
+
+Design a Talent Digital Twin.
+
+Generate:
+
+Current State
+
+Target State
+
+Predicted State
+
+Gap State
+
+Career State
+
+Learning State
+
+Future State
+
+Generate prediction models.
+
+---
+
+# DELIVERABLE 11
+
+Design a Career Passport.
+
+Store:
+
+Assessments
+
+Competencies
+
+Projects
+
+Achievements
+
+Certifications
+
+Experience
+
+Learning History
+
+Career Goals
+
+Readiness Scores
+
+Generate lifecycle architecture.
+
+---
+
+# DELIVERABLE 12
+
+Design the Learning Intelligence Engine.
+
+Generate:
+
+Gap Detection
+
+Learning Path Generation
+
+Course Recommendations
+
+Project Recommendations
+
+Mentor Recommendations
+
+Certification Recommendations
+
+Impact Prediction
+
+---
+
+# DELIVERABLE 13
+
+Design the Outcome Prediction Engine.
+
+Predict:
+
+Employability Probability
+
+Promotion Probability
+
+Role Success Probability
+
+Leadership Potential
+
+Future Employability
+
+Career Velocity
+
+Generate formulas and data models.
+
+---
+
+# DELIVERABLE 14
+
+Design the Benchmark Intelligence Engine.
+
+Generate:
+
+Industry Benchmarks
+
+Role Benchmarks
+
+Layer Benchmarks
+
+Top Performer Benchmarks
+
+Percentiles
+
+Comparative Analytics
+
+---
+
+# DELIVERABLE 15
+
+Design the World-Class Super Admin.
+
+Generate all modules required to manage:
+
+Ontology
+
+Competencies
+
+Signals
+
+Concerns
+
+Questions
+
+Assessments
+
+Scoring
+
+Benchmarks
+
+Career Builder
+
+Learning Engine
+
+Future Readiness
+
+AI Insights
+
+Reports
+
+Analytics
+
+Governance
+
+Audit
+
+Version Control
+
+Approval Workflows
+
+RBAC
+
+Localization
+
+Bulk Imports
+
+API Management
+
+---
+
+# DELIVERABLE 16
+
+Design AI Governance.
+
+Generate:
+
+Prompt Repository
+
+Prompt Versioning
+
+Insight Generation Rules
+
+Recommendation Rules
+
+Model Registry
+
+Audit Logs
+
+Quality Controls
+
+Bias Detection
+
+Explainability Framework
+
+---
+
+# DELIVERABLE 17
+
+Design Enterprise Analytics.
+
+Generate:
+
+Operational Data Model
+
+Analytics Warehouse
+
+Fact Tables
+
+Dimension Tables
+
+Executive Dashboards
+
+Predictive Analytics
+
+Workforce Analytics
+
+Talent Intelligence Dashboards
+
+---
+
+# DELIVERABLE 18
+
+Generate a complete implementation roadmap.
+
+Phase 1
+
+Ontology + Signals + Assessments
+
+Phase 2
+
+Employability + Career Builder
+
+Phase 3
+
+Learning Intelligence
+
+Phase 4
+
+Future Readiness
+
+Phase 5
+
+Talent Digital Twin
+
+Phase 6
+
+Outcome Prediction
+
+Phase 7
+
+Enterprise Intelligence
+
+For each phase provide:
+
+Modules
+
+Dependencies
+
+Tables
+
+APIs
+
+Services
+
+Screens
+
+Reports
+
+Testing
+
+Deployment
+
+Success Metrics
+
+Resource Estimates
+
+Risk Factors
+
+Output a world-class implementation-ready blueprint.

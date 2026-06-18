@@ -1,0 +1,969 @@
+# METRYXONE — ADVANCED CURIOSITY STAGE + PARGATI INTELLIGENCE SYSTEM IMPLEMENTATION PROMPT
+
+You are working on MetryxOne.
+
+This task is NOT a simple UI redesign.
+
+This is a strategic restructuring of:
+
+* onboarding
+* adaptive conversation
+* competency decoding presentation
+* intelligence perception
+* growth insight experience
+* conversational UX
+* report architecture
+
+The goal is to evolve MetryxOne into:
+
+# an adaptive AI-powered competency decoding and growth intelligence platform.
+
+---
+
+## CORE PRODUCT POSITIONING
+
+IMPORTANT:
+MetryxOne is NOT:
+
+* therapy
+* counseling
+* mental health support
+* emotional wellness
+* healing platform
+* psychological diagnosis
+* emotional coaching
+
+MetryxOne IS:
+
+* a competency decoding platform
+* a growth intelligence system
+* a behavioral and performance insights platform
+* an adaptive competency analysis ecosystem
+
+The platform helps users:
+
+* identify growth blockers
+* understand performance friction
+* improve clarity and execution
+* decode behavioral tendencies
+* strengthen competency development
+* improve decision-making
+* improve consistency and growth momentum
+
+The entire platform should feel like:
+
+# intelligent growth decoding
+
+NOT:
+
+# emotional analysis or therapy.
+
+---
+
+## CRITICAL STRATEGIC GOAL
+
+DO NOT destroy the current personality of the product.
+
+Preserve:
+
+* conversational intelligence
+* adaptive flow
+* Pargati personality
+* guided conversational exploration
+* existing stage-analysis engine
+* conversational immersion
+
+The objective is:
+
+# evolve the framing and intelligence perception
+
+NOT replace the conversational experience.
+
+---
+
+## PARGATI ROLE DEFINITION
+
+Pargati is NOT:
+
+* a therapist
+* emotional support AI
+* wellness coach
+
+Pargati IS:
+
+# an adaptive growth intelligence guide.
+
+Pargati should feel:
+
+* intelligent
+* observant
+* insightful
+* thoughtful
+* adaptive
+* conversational
+* growth-oriented
+* clarity-focused
+
+Pargati should NOT feel:
+
+* clinical
+* robotic
+* emotionally diagnostic
+* dashboard-heavy
+* cold/corporate
+
+---
+
+## LANGUAGE SYSTEM RULES
+
+REMOVE therapy-style wording across:
+
+* onboarding
+* assessments
+* reports
+* loaders
+* transitions
+* CTA sections
+* Pargati conversations
+
+DO NOT USE:
+
+* emotional exhaustion
+* emotional struggles
+* emotional burden
+* therapy
+* trauma
+* anxiety
+* emotional loops
+* mental health
+* psychologically overwhelmed
+* healing
+
+USE INSTEAD:
+
+* competency
+* capability
+* growth
+* performance
+* execution
+* consistency
+* clarity
+* behavioral signals
+* momentum
+* performance friction
+* growth blockers
+* cognitive load
+* decision-making
+* productivity
+* focus stability
+* execution patterns
+* capability strengths
+* leadership readiness
+
+---
+
+## PRIMARY EXPERIENCE FLOW
+
+The onboarding and curiosity stage should now follow this structure:
+
+1. Start Your Clarity Journey
+2. Rapid 5-question signal detection
+3. Intelligent micro-feedback
+4. Initial competency signal detection
+5. Adaptive Curiosity Assessment
+6. Pargati adaptive conversation
+7. Existing stage-analysis engine
+8. Competency Snapshot Report
+9. Insight continuation flow
+
+IMPORTANT:
+Preserve the existing backend stage-analysis architecture.
+
+DO NOT rewrite unless absolutely necessary.
+
+Preserve:
+
+* adaptive questioning
+* concern mapping
+* competency relationships
+* amplification logic
+* stage-analysis routing
+* signal weighting
+* conversational progression
+
+Primary work areas:
+
+* onboarding redesign
+* frontend restructuring
+* intelligence perception
+* conversation refinement
+* UX optimization
+* mobile responsiveness
+* conversion optimization
+
+---
+
+## PHASE 1 — ENTRY EXPERIENCE
+
+Replace the current:
+
+* Quick Clarity
+* Guided Understanding
+* Deep Reflection
+
+cards/entry flow.
+
+NEW HERO EXPERIENCE:
+
+HEADER:
+
+# "Start Your Clarity Journey"
+
+SUBTEXT:
+
+# "Discover the patterns influencing your growth, decisions, and performance potential."
+
+PRIMARY CTA:
+
+# "Begin Assessment"
+
+VISUAL REQUIREMENTS:
+
+* premium SaaS feel
+* conversational
+* lightweight
+* modern
+* intelligent
+* mobile-first
+* low-friction
+
+DO NOT:
+
+* make it look like therapy
+* make it look like a corporate HR assessment
+* make it dashboard-heavy
+* make it feel emotionally intense
+
+---
+
+## PHASE 2 — RAPID SIGNAL DETECTION FLOW
+
+Create a fast onboarding experience.
+
+PRIMARY GOALS:
+
+* reduce friction
+* improve completion rates
+* create immediate relevance
+* generate perceived intelligence
+* trigger curiosity
+* create trust in the platform
+
+TARGET COMPLETION:
+45–90 seconds
+
+UX REQUIREMENTS:
+
+* card/chip-based interactions
+* minimal typing
+* smooth transitions
+* progress visualization
+* subtle motion
+* low cognitive load
+* mobile-first responsiveness
+
+---
+
+## QUESTION 1
+
+TITLE:
+
+# "Which area would you like more clarity in?"
+
+OPTIONS:
+
+* Career Direction
+* Productivity
+* Leadership
+* Confidence
+* Communication
+* Decision Making
+* Learning & Growth
+* Focus & Consistency
+
+BACKEND:
+Map answers into existing competency/stage-analysis categories.
+
+---
+
+## QUESTION 2
+
+TITLE:
+
+# "What slows your progress the most?"
+
+OPTIONS:
+
+* Overanalyzing options
+* Difficulty staying consistent
+* Lack of direction
+* Low execution momentum
+* Distractions
+* Difficulty prioritizing
+* Fear of making wrong decisions
+* Trouble maintaining focus
+
+MAP INTO:
+
+* execution friction
+* clarity disruption
+* prioritization instability
+* consistency disruption
+* momentum instability
+
+---
+
+## QUESTION 3
+
+TITLE:
+
+# "Which statement fits your current phase best?"
+
+OPTIONS:
+
+* I know I can achieve more
+* I’m trying to regain momentum
+* I feel capable but inconsistent
+* I’m exploring my next direction
+* I need better clarity and structure
+* I want to improve my performance
+
+---
+
+## QUESTION 4
+
+TITLE:
+
+# "What would create the biggest improvement right now?"
+
+OPTIONS:
+
+* Better clarity
+* Stronger discipline
+* Faster execution
+* Improved confidence
+* Better communication
+* Smarter decision-making
+* Consistent growth habits
+
+---
+
+## QUESTION 5
+
+TITLE:
+
+# "What are you looking for most from MetryxOne?"
+
+OPTIONS:
+
+* Personal clarity
+* Growth direction
+* Competency insights
+* Performance improvement
+* Better self-understanding
+* Structured growth plan
+
+---
+
+## INTELLIGENT MICRO-FEEDBACK
+
+After every 1–2 questions, inject subtle intelligent observations.
+
+EXAMPLES:
+
+* "Execution consistency is often closely linked with clarity."
+* "Growth momentum frequently depends on prioritization behavior."
+* "High-performing users often benefit from deeper competency decoding."
+
+GOAL:
+Create:
+
+* intelligence perception
+* engagement
+* trust
+* curiosity
+
+WITHOUT:
+
+* revealing full insights
+* sounding therapeutic
+
+---
+
+## PROGRESS EXPERIENCE
+
+DO NOT use generic survey progress bars.
+
+Use intelligent stage-oriented progression.
+
+EXAMPLE:
+
+Signal Detection
+■■■■□□□□
+
+Growth Mapping
+■■□□□□□□
+
+Competency Snapshot
+□□□□□□□□
+
+The flow should feel:
+
+* immersive
+* intelligent
+* premium
+* guided
+
+---
+
+## PHASE 3 — INITIAL SIGNAL DETECTION
+
+After Question 5:
+
+DO NOT show the final report immediately.
+
+Instead create:
+
+# Adaptive Curiosity Assessment
+
+TRANSITION SCREEN:
+
+HEADER:
+
+# "Initial competency signals detected"
+
+SUBTEXT:
+
+# "Continue with a personalized adaptive assessment to unlock a deeper growth snapshot."
+
+DISPLAY DYNAMIC SIGNAL CARDS:
+
+* Growth Orientation
+* Execution Stability
+* Clarity Consistency
+* Leadership Readiness
+* Focus Stability
+
+STATUS TYPES:
+
+* Strong
+* Moderate
+* Developing
+* Emerging
+
+IMPORTANT:
+Generate dynamically from existing stage-analysis signals.
+
+CTA:
+
+# "Continue Assessment"
+
+ESTIMATED TIME:
+3–5 mins
+
+---
+
+## PHASE 4 — TRANSITION INTO PARGATI CONVERSATION
+
+After clicking Continue Assessment:
+
+Transition naturally into the EXISTING Pargati conversational flow.
+
+IMPORTANT:
+DO NOT convert the experience into:
+
+* static forms
+* corporate assessments
+* repetitive questionnaires
+
+The adaptive conversation system is a major product strength.
+
+Example transition:
+
+# "I’m starting to notice a few important growth signals. Let’s explore them further."
+
+Then continue into:
+
+* adaptive questioning
+* competency decoding
+* dynamic conversational exploration
+* stage analysis
+
+---
+
+## PARGATI CONVERSATIONAL INTELLIGENCE
+
+Pargati should feel like:
+
+# a thinking adaptive intelligence system.
+
+Add:
+
+* observational synthesis
+* evolving understanding
+* cross-signal references
+* competency relationships
+* progressive realization
+
+EXAMPLES:
+
+"I’m noticing a recurring tension between clarity and execution consistency."
+
+"Earlier you mentioned difficulty maintaining momentum, and I’m now seeing prioritization instability appear again."
+
+"Your responses suggest strong ambition, but execution momentum may fluctuate when direction becomes unclear."
+
+This is CRITICAL.
+
+The system should feel:
+
+# actively intelligent
+
+NOT reactive.
+
+---
+
+## DYNAMIC CONVERSATION PERSONALITY
+
+Adapt conversational tone based on user signals.
+
+EXAMPLES:
+
+HIGH-AMBITION USERS:
+
+* strategic
+* forward-moving
+* growth-focused
+
+CONFUSED USERS:
+
+* grounding
+* clarity-oriented
+
+ANALYTICAL USERS:
+
+* pattern-oriented
+* insight-heavy
+
+ACTION-ORIENTED USERS:
+
+* execution-focused
+* momentum-oriented
+
+This should happen subtly.
+
+---
+
+## CONVERSATION REFINEMENT RULES
+
+OLD:
+"How has this emotionally affected you?"
+
+NEW:
+"How has this been affecting your consistency or performance recently?"
+
+OLD:
+"Tell me more about what you’re feeling."
+
+NEW:
+"What do you think is contributing most to this challenge?"
+
+OLD:
+"This may be causing emotional overwhelm."
+
+NEW:
+"This may be creating cognitive overload and reducing execution clarity."
+
+---
+
+## COMPETENCY RELATIONSHIP INTELLIGENCE
+
+This is a CORE DIFFERENTIATOR.
+
+The system should identify:
+
+# interactions between competencies.
+
+EXAMPLES:
+
+"Decision fatigue may be indirectly affecting execution consistency."
+
+"Strong self-awareness combined with excessive analysis may reduce action momentum."
+
+"Clarity instability may be weakening confidence during execution."
+
+This should appear:
+
+* naturally
+* intelligently
+* conversationally
+
+---
+
+## PHASE 5 — EXISTING STAGE ANALYSIS ENGINE
+
+Preserve:
+
+* adaptive routing
+* competency mapping
+* amplification relationships
+* signal weighting
+* conversation flow
+* dynamic questioning
+
+DO NOT rebuild unless necessary.
+
+Improve:
+
+* pacing
+* transitions
+* terminology
+* visual hierarchy
+* intelligence perception
+* mobile readability
+
+---
+
+## PHASE 6 — LOADER EXPERIENCE
+
+Replace generic loaders.
+
+USE ROTATING LOADERS:
+
+* "Analyzing behavioral indicators..."
+* "Mapping competency signals..."
+* "Identifying growth patterns..."
+* "Evaluating execution tendencies..."
+* "Generating your growth snapshot..."
+
+DO NOT use:
+
+* emotional analysis
+* therapy-style wording
+
+---
+
+## PHASE 7 — COMPETENCY SNAPSHOT REPORT
+
+Redesign the report presentation.
+
+The report should feel:
+
+* intelligent
+* premium
+* actionable
+* capability-focused
+* growth-oriented
+
+NOT:
+
+* psychological
+* clinical
+* emotionally diagnostic
+
+---
+
+## REPORT NARRATIVE FLOW
+
+Structure the report like progressive intelligence discovery.
+
+FLOW:
+
+1. What We Detected
+2. What May Be Influencing It
+3. How It Affects Growth
+4. Hidden Strengths
+5. Immediate Growth Focus
+6. Next-Level Insights
+
+The report should feel:
+
+# progressively unfolding
+
+NOT static.
+
+---
+
+## SECTION 1 — PRIMARY GROWTH AREA
+
+EXAMPLE:
+
+# "Strategic Clarity & Execution Consistency"
+
+---
+
+## SECTION 2 — COMPETENCY SNAPSHOT
+
+EXAMPLE:
+"Your responses indicate strong growth orientation with opportunities to improve clarity, consistency, and execution momentum."
+
+Generate dynamically based on:
+
+* competency signals
+* blockers
+* capability strengths
+* growth readiness
+
+---
+
+## SECTION 3 — KEY SIGNALS
+
+Display responsive cards/grid.
+
+EXAMPLES:
+
+* Decision Clarity
+* Execution Consistency
+* Focus Stability
+* Leadership Readiness
+* Communication Confidence
+* Growth Orientation
+
+STATUS TYPES:
+
+* Strong
+* Moderate
+* Developing
+* Needs Attention
+
+DO NOT use:
+
+* percentages
+* psychological scores
+* clinical scoring
+
+---
+
+## SECTION 4 — GROWTH FRICTION
+
+EXAMPLE:
+"You may be spending significant energy evaluating possibilities rather than executing consistently."
+
+---
+
+## SECTION 5 — HIDDEN STRENGTHS
+
+EXAMPLE:
+"Your responses suggest strong adaptability and growth orientation, which are valuable indicators for accelerated capability development."
+
+---
+
+## SECTION 6 — IMMEDIATE GROWTH FOCUS
+
+Provide lightweight actionable direction.
+
+EXAMPLES:
+
+* Reduce over-analysis during execution
+* Improve prioritization structure
+* Strengthen consistency systems
+* Simplify decision pathways
+
+---
+
+## SECTION 7 — GROWTH POTENTIAL
+
+Introduce capability amplification.
+
+EXAMPLES:
+
+* Strategic awareness
+* Learning agility
+* Leadership readiness
+* Adaptive thinking
+* High growth orientation
+
+GOAL:
+Prevent the platform from feeling negative.
+
+---
+
+## PHASE 8 — INSIGHT STAGE CTA
+
+DO NOT hard-sell.
+
+HEADER:
+
+# "Unlock Deeper Competency Insights"
+
+SUBTEXT:
+
+# "Continue exploring execution tendencies, growth patterns, decision styles, and capability strengths."
+
+CTA:
+
+# "Continue to Insights"
+
+---
+
+## OPTIONAL ADVANCED ENHANCEMENTS
+
+Design architecture to support future additions:
+
+1. Competency Archetypes
+   Examples:
+
+* Strategic Explorer
+* Execution Builder
+* Growth Accelerator
+* Adaptive Thinker
+* Momentum Rebuilder
+
+2. Growth Momentum Tracking
+
+3. Longitudinal Competency Intelligence
+
+4. Capability Evolution Tracking
+
+5. Growth Readiness Scoring
+
+6. Cognitive Style Detection
+
+Examples:
+
+* strategic thinker
+* exploratory thinker
+* action-oriented
+* reflective analyzer
+
+---
+
+## SIGNAL CONFIDENCE SYSTEM
+
+Internally support:
+
+* strong signals
+* emerging signals
+* exploratory signals
+
+Use this for:
+
+* adaptive questioning
+* insight confidence
+* report accuracy
+
+---
+
+## SIGNAL MAPPING REQUIREMENTS
+
+Improve mapping between:
+
+* onboarding answers
+* competency categories
+* stage-analysis signals
+* report generation
+* adaptive conversation
+
+EXAMPLE:
+
+{
+answer: "Difficulty staying consistent",
+maps_to: [
+"execution_consistency",
+"discipline_stability",
+"momentum_disruption"
+],
+weights: {
+execution_consistency: 0.8,
+momentum_disruption: 0.6
+}
+}
+
+---
+
+## COMPETENCY TAXONOMY
+
+Internally organize competencies.
+
+EXAMPLE:
+
+Execution
+
+* Consistency
+* Momentum
+* Discipline
+* Follow-through
+
+Clarity
+
+* Decision-making
+* Prioritization
+* Strategic thinking
+
+Leadership
+
+* Communication
+* Influence
+* Ownership
+
+Growth
+
+* Learning agility
+* Adaptability
+* Self-direction
+
+---
+
+## MOBILE-FIRST UX REQUIREMENTS
+
+Fix:
+
+* excessive width issues
+* inconsistent spacing
+* visual clutter
+* poor tap targets
+* readability problems
+
+Improve:
+
+* responsiveness
+* interaction smoothness
+* card hierarchy
+* mobile navigation
+* transition pacing
+
+---
+
+## FINAL IMPLEMENTATION REQUIREMENTS
+
+Before implementation:
+
+1. inspect current onboarding components
+2. identify reusable logic
+3. identify adaptive assessment entry points
+4. identify report-generation components
+5. identify therapy-style wording
+6. preserve Pargati conversational identity
+
+IMPLEMENT INCREMENTALLY:
+
+* avoid breaking existing flows
+* preserve backend intelligence
+* preserve adaptive quality
+* preserve conversation immersion
+
+AFTER IMPLEMENTATION VERIFY:
+
+* onboarding completion improves
+* mobile responsiveness works
+* Pargati conversation still feels natural
+* adaptive stage analysis functions correctly
+* signal mapping works properly
+* reports generate correctly
+* CTA flows work correctly
+* intelligence perception improves
+* no therapy-style wording remains
+
+FINAL EXPERIENCE SHOULD FEEL LIKE:
+
+# "An adaptive conversational competency intelligence platform that intelligently decodes growth patterns, performance tendencies, and capability strengths through guided AI interaction."

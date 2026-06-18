@@ -1,0 +1,265 @@
+PROJECT RECOMMENDATIONS — anchor session 1cd9ca07-4659-42c4-83fd-229e5e8f21f2
+============================================================
+### PROJECT — student
+  • [leadership] Lead a peer study/support circle
+      Facilitate a small support group — a low-stakes way to practise visible responsibility in a safe setting.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [portfolio] A "calm under pressure" showcase
+      Document one high-pressure task you prepared for and delivered, including the routine you used — evidence of growth.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [research] Investigate what triggers your performance dips
+      A small self-study tracking the situations, thoughts, and routines around moments of panic — turning anxiety into observable data.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [team] Low-pressure collaborative project
+      Join a small, supportive team where you can contribute steadily and rebuild trust in performing alongside others.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [leadership] Organise a careers exploration event
+      Lead a small peer event (panel, fair, or talk) — clarifying your own direction while helping others.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [portfolio] Build a "direction map" artefact
+      Create a visual map linking your interests and strengths to concrete roles — evidence of deliberate planning.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [research] Investigate three possible career directions
+      A comparison project researching day-to-day reality, entry routes, and fit for three options.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [team] Join a cross-interest project team
+      Work with peers from different interest areas to broaden your sense of what fits.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [leadership] Mentor a younger peer
+      A low-stakes leadership role that rewards patience and emotional steadiness.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [portfolio] Document a hard moment you handled well
+      Capture a situation where you stayed regulated under strain — a concrete piece of evidence.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [research] Map your emotional triggers and recoveries
+      A reflective log study identifying what destabilises you and what helps you recover fastest.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [team] Be the steady presence on a team project
+      Take a collaborative role where calm coordination matters, practising regulation in a group.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [leadership] Co-lead a small group activity
+      Share leadership of a low-stakes activity to practise visible social presence.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [portfolio] Record a presentation you delivered
+      Capture a talk or group contribution you made — proof of social engagement.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [research] Study where withdrawal happens for you
+      A small reflective study of the situations you pull back from and what would make engaging easier.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [team] Take an active role on a team project
+      Choose a contributing role in a supportive group to rebuild confidence in being seen and heard.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+
+### PROJECT — parent
+  • [leadership] Lead a peer study/support circle
+      Help your child by encouraging this: Facilitate a small support group — a low-stakes way to practise visible responsibility in a safe setting.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [portfolio] A "calm under pressure" showcase
+      Help your child by encouraging this: Document one high-pressure task you prepared for and delivered, including the routine you used — evidence of growth.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [research] Investigate what triggers your performance dips
+      Help your child by encouraging this: A small self-study tracking the situations, thoughts, and routines around moments of panic — turning anxiety into observable data.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [team] Low-pressure collaborative project
+      Help your child by encouraging this: Join a small, supportive team where you can contribute steadily and rebuild trust in performing alongside others.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [leadership] Organise a careers exploration event
+      Help your child by encouraging this: Lead a small peer event (panel, fair, or talk) — clarifying your own direction while helping others.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [portfolio] Build a "direction map" artefact
+      Help your child by encouraging this: Create a visual map linking your interests and strengths to concrete roles — evidence of deliberate planning.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [research] Investigate three possible career directions
+      Help your child by encouraging this: A comparison project researching day-to-day reality, entry routes, and fit for three options.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [team] Join a cross-interest project team
+      Help your child by encouraging this: Work with peers from different interest areas to broaden your sense of what fits.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [leadership] Mentor a younger peer
+      Help your child by encouraging this: A low-stakes leadership role that rewards patience and emotional steadiness.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [portfolio] Document a hard moment you handled well
+      Help your child by encouraging this: Capture a situation where you stayed regulated under strain — a concrete piece of evidence.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [research] Map your emotional triggers and recoveries
+      Help your child by encouraging this: A reflective log study identifying what destabilises you and what helps you recover fastest.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [team] Be the steady presence on a team project
+      Help your child by encouraging this: Take a collaborative role where calm coordination matters, practising regulation in a group.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [leadership] Co-lead a small group activity
+      Help your child by encouraging this: Share leadership of a low-stakes activity to practise visible social presence.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [portfolio] Record a presentation you delivered
+      Help your child by encouraging this: Capture a talk or group contribution you made — proof of social engagement.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [research] Study where withdrawal happens for you
+      Help your child by encouraging this: A small reflective study of the situations you pull back from and what would make engaging easier.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [team] Take an active role on a team project
+      Help your child by encouraging this: Choose a contributing role in a supportive group to rebuild confidence in being seen and heard.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+
+### PROJECT — counselor
+  • [leadership] Lead a peer study/support circle
+      For this student, consider guiding them toward: Facilitate a small support group — a low-stakes way to practise visible responsibility in a safe setting.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [portfolio] A "calm under pressure" showcase
+      For this student, consider guiding them toward: Document one high-pressure task you prepared for and delivered, including the routine you used — evidence of growth.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [research] Investigate what triggers your performance dips
+      For this student, consider guiding them toward: A small self-study tracking the situations, thoughts, and routines around moments of panic — turning anxiety into observable data.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [team] Low-pressure collaborative project
+      For this student, consider guiding them toward: Join a small, supportive team where you can contribute steadily and rebuild trust in performing alongside others.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [leadership] Organise a careers exploration event
+      For this student, consider guiding them toward: Lead a small peer event (panel, fair, or talk) — clarifying your own direction while helping others.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [portfolio] Build a "direction map" artefact
+      For this student, consider guiding them toward: Create a visual map linking your interests and strengths to concrete roles — evidence of deliberate planning.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [research] Investigate three possible career directions
+      For this student, consider guiding them toward: A comparison project researching day-to-day reality, entry routes, and fit for three options.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [team] Join a cross-interest project team
+      For this student, consider guiding them toward: Work with peers from different interest areas to broaden your sense of what fits.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [leadership] Mentor a younger peer
+      For this student, consider guiding them toward: A low-stakes leadership role that rewards patience and emotional steadiness.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [portfolio] Document a hard moment you handled well
+      For this student, consider guiding them toward: Capture a situation where you stayed regulated under strain — a concrete piece of evidence.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [research] Map your emotional triggers and recoveries
+      For this student, consider guiding them toward: A reflective log study identifying what destabilises you and what helps you recover fastest.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [team] Be the steady presence on a team project
+      For this student, consider guiding them toward: Take a collaborative role where calm coordination matters, practising regulation in a group.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [leadership] Co-lead a small group activity
+      For this student, consider guiding them toward: Share leadership of a low-stakes activity to practise visible social presence.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [portfolio] Record a presentation you delivered
+      For this student, consider guiding them toward: Capture a talk or group contribution you made — proof of social engagement.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [research] Study where withdrawal happens for you
+      For this student, consider guiding them toward: A small reflective study of the situations you pull back from and what would make engaging easier.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [team] Take an active role on a team project
+      For this student, consider guiding them toward: Choose a contributing role in a supportive group to rebuild confidence in being seen and heard.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+
+### PROJECT — institution
+  • [leadership] Lead a peer study/support circle
+      For students showing this pattern across the cohort: Facilitate a small support group — a low-stakes way to practise visible responsibility in a safe setting.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [portfolio] A "calm under pressure" showcase
+      For students showing this pattern across the cohort: Document one high-pressure task you prepared for and delivered, including the routine you used — evidence of growth.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [research] Investigate what triggers your performance dips
+      For students showing this pattern across the cohort: A small self-study tracking the situations, thoughts, and routines around moments of panic — turning anxiety into observable data.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [team] Low-pressure collaborative project
+      For students showing this pattern across the cohort: Join a small, supportive team where you can contribute steadily and rebuild trust in performing alongside others.
+      anchor construct: ANXIETY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [leadership] Organise a careers exploration event
+      For students showing this pattern across the cohort: Lead a small peer event (panel, fair, or talk) — clarifying your own direction while helping others.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [portfolio] Build a "direction map" artefact
+      For students showing this pattern across the cohort: Create a visual map linking your interests and strengths to concrete roles — evidence of deliberate planning.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [research] Investigate three possible career directions
+      For students showing this pattern across the cohort: A comparison project researching day-to-day reality, entry routes, and fit for three options.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [team] Join a cross-interest project team
+      For students showing this pattern across the cohort: Work with peers from different interest areas to broaden your sense of what fits.
+      anchor construct: CAREER_CLARITY (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [leadership] Mentor a younger peer
+      For students showing this pattern across the cohort: A low-stakes leadership role that rewards patience and emotional steadiness.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [portfolio] Document a hard moment you handled well
+      For students showing this pattern across the cohort: Capture a situation where you stayed regulated under strain — a concrete piece of evidence.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [research] Map your emotional triggers and recoveries
+      For students showing this pattern across the cohort: A reflective log study identifying what destabilises you and what helps you recover fastest.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [team] Be the steady presence on a team project
+      For students showing this pattern across the cohort: Take a collaborative role where calm coordination matters, practising regulation in a group.
+      anchor construct: EMOTIONAL_REGULATION (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [leadership] Co-lead a small group activity
+      For students showing this pattern across the cohort: Share leadership of a low-stakes activity to practise visible social presence.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [portfolio] Record a presentation you delivered
+      For students showing this pattern across the cohort: Capture a talk or group contribution you made — proof of social engagement.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [research] Study where withdrawal happens for you
+      For students showing this pattern across the cohort: A small reflective study of the situations you pull back from and what would make engaging easier.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation
+  • [team] Take an active role on a team project
+      For students showing this pattern across the cohort: Choose a contributing role in a supportive group to rebuild confidence in being seen and heard.
+      anchor construct: SOCIAL_CONFIDENCE (intervention)  ·  traced: YES  ·  chain complete: no
+      trace: Response → Signal  ›  Signal → Concern  ›  Problem → Behavior  ›  Behavior → Archetype  ›  Archetype → Intervention  ›  Intervention → Recommendation

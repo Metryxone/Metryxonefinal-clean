@@ -1,0 +1,201 @@
+intent,target_id,target_label,target_tag,best_matched,nTok,best_score,tie
+i have trouble with confidence,CONCERN_CON_1735,Confidence,CONFIDENCE_SELF,1,2,50,444
+i struggle with discipline,CONCERN_ADJ_1749,Discipline,DISCIPLINE_HABITS,1,2,50,310
+i struggle with motivation,CONCERN_EXA_1743,Motivation,MOTIVATION_VALUES,1,2,50,310
+i have trouble with discipline,CONCERN_ADJ_1749,Discipline,DISCIPLINE_HABITS,1,2,50,298
+i have trouble with motivation,CONCERN_EXA_1743,Motivation,MOTIVATION_VALUES,1,2,50,298
+i keep struggling with interest in studies,CONCERN_STU_1353,interest in studies,ENGAGEMENT_MANAGEMENT,1,4,25,162
+i need help with placement pressure,CONCERN_EMP_17,Placement Pressure,EXAMINATION_STRESS,2,4,50,137
+i struggle with interest in studies,CONCERN_STU_1353,interest in studies,ENGAGEMENT_MANAGEMENT,1,3,33,119
+i have trouble with interest in studies,CONCERN_STU_1353,interest in studies,ENGAGEMENT_MANAGEMENT,1,3,33,107
+i cannot manage curiosity,CONCERN_CON_1795,Curiosity,MOTIVATION_VALUES,1,3,33,92
+i keep struggling with focus & attention,CONCERN_LIF_1733,Focus & Attention,ACADEMIC_COGNITIVE,2,4,50,91
+i keep struggling with accountability,CONCERN_ADJ_1810,Accountability,MOTIVATION_VALUES,1,3,33,87
+i keep struggling with distractions,CONCERN_SEL_1416,distractions,PRODUCTIVITY_COACHING,1,3,33,83
+i need help with leadership confidence,CONCERN_SOC_1846,Leadership Confidence,LEADERSHIP_OWNERSHIP,2,4,50,76
+i need help with curiosity,CONCERN_CON_1795,Curiosity,MOTIVATION_VALUES,1,3,33,75
+i keep struggling with resilience,CONCERN_EXA_1755,Resilience,EXAMINATION_STRESS,1,3,33,75
+i cannot manage purpose,CONCERN_EXA_1821,Purpose,ACADEMIC_IDENTITY,1,3,33,74
+i need help with accountability,CONCERN_ADJ_1810,Accountability,MOTIVATION_VALUES,1,3,33,73
+i cannot manage managing larger responsibilities,CONCERN_COM_596,Managing Larger Responsibilities,CONFIDENCE_SELF,2,5,40,73
+i keep struggling with purpose,CONCERN_EXA_1821,Purpose,ACADEMIC_IDENTITY,1,3,33,71
+i need help with distractions,CONCERN_SEL_1416,distractions,PRODUCTIVITY_COACHING,1,3,33,69
+i cannot manage self-awareness,CONCERN_EXA_1826,Self-Awareness,SELF_REFLECTION,1,3,33,68
+i keep struggling with self-awareness,CONCERN_EXA_1826,Self-Awareness,SELF_REFLECTION,1,3,33,65
+i cannot manage procrastination,CONCERN_MOT_1744,Procrastination,DISCIPLINE_HABITS,1,3,33,64
+i cannot manage work-life boundaries,CONCERN_EMO_605,Work-Life Boundaries,LIFESTYLE_PRESSURE,1,4,25,63
+i keep struggling with self-discipline,CONCERN_DIS_1943,Self-Discipline,DISCIPLINE_HABITS,1,3,33,63
+i need help with resilience,CONCERN_EXA_1755,Resilience,EXAMINATION_STRESS,1,3,33,61
+i keep struggling with procrastination,CONCERN_MOT_1744,Procrastination,DISCIPLINE_HABITS,1,3,33,61
+i cannot manage loneliness,CONCERN_SOC_1757,Loneliness,ADJUSTMENT_COPING,1,3,33,61
+i keep struggling with work-life boundaries,CONCERN_EMO_605,Work-Life Boundaries,LIFESTYLE_PRESSURE,1,4,25,60
+i cannot manage gratitude,CONCERN_EXA_1856,Gratitude,MOTIVATION_VALUES,1,3,33,59
+i keep struggling with loneliness,CONCERN_SOC_1757,Loneliness,ADJUSTMENT_COPING,1,3,33,58
+i keep struggling with academic focus,CONCERN_ACA_1931,Academic Focus,ACADEMIC_COGNITIVE,2,4,50,57
+i keep struggling with academic focus,CONCERN_PUR_1647,Academic Focus,ACADEMIC_COGNITIVE,2,4,50,57
+i keep struggling with gratitude,CONCERN_EXA_1856,Gratitude,MOTIVATION_VALUES,1,3,33,56
+i need help with self-awareness,CONCERN_EXA_1826,Self-Awareness,SELF_REFLECTION,1,3,33,51
+i cannot manage academic focus,CONCERN_ACA_1931,Academic Focus,ACADEMIC_COGNITIVE,2,4,50,51
+i cannot manage academic focus,CONCERN_PUR_1647,Academic Focus,ACADEMIC_COGNITIVE,2,4,50,51
+i need help with self-discipline,CONCERN_DIS_1943,Self-Discipline,DISCIPLINE_HABITS,1,3,33,49
+i cannot manage career awareness,CONCERN_EXA_1833,Career Awareness,ACADEMIC_IDENTITY,2,4,50,49
+i cannot manage career awareness,CONCERN_THI_1966,Career Awareness,ACADEMIC_IDENTITY,2,4,50,49
+i need help with procrastination,CONCERN_MOT_1744,Procrastination,DISCIPLINE_HABITS,1,3,33,47
+i cannot manage comparison stress,CONCERN_LIF_1753,Comparison Stress,CONFIDENCE_SELF,2,4,50,47
+i need help with work-life boundaries,CONCERN_EMO_605,Work-Life Boundaries,LIFESTYLE_PRESSURE,1,4,25,46
+i struggle with curiosity,CONCERN_CON_1795,Curiosity,MOTIVATION_VALUES,1,2,50,46
+i cannot manage academic confidence,CONCERN_THI_1652,Academic Confidence,CONFIDENCE_SELF,2,4,50,46
+i keep struggling with career confusion,CONCERN_CON_1736,Career Confusion,ACADEMIC_IDENTITY,2,4,50,45
+i keep struggling with emotional exhaustion,CONCERN_EXA_1825,Emotional Exhaustion,EXAMINATION_STRESS,2,4,50,45
+i need help with loneliness,CONCERN_SOC_1757,Loneliness,ADJUSTMENT_COPING,1,3,33,44
+i struggle with accountability,CONCERN_ADJ_1810,Accountability,MOTIVATION_VALUES,1,2,50,44
+i cannot manage workplace networking,CONCERN_CAR_390,Workplace Networking,SOCIAL_EMOTIONAL,2,4,50,43
+i keep struggling with study discipline,CONCERN_DIS_1660,Study Discipline,DISCIPLINE_HABITS,2,4,50,43
+i keep struggling with study motivation,CONCERN_DIS_1985,Study Motivation,MOTIVATION_VALUES,2,4,50,43
+i keep struggling with study motivation,CONCERN_DIS_2473,Study Motivation,MOTIVATION_VALUES,2,4,50,43
+i need help with emotional exhaustion,CONCERN_EXA_1825,Emotional Exhaustion,EXAMINATION_STRESS,2,4,50,43
+i keep struggling with study discipline,CONCERN_LEA_1438,study discipline,ACADEMIC_BEHAVIOR,2,4,50,43
+i need help with gratitude,CONCERN_EXA_1856,Gratitude,MOTIVATION_VALUES,1,3,33,42
+i keep struggling with managing professional responsibilities,CONCERN_ADJ_392,Managing Professional Responsibilities,CONFIDENCE_SELF,2,5,40,40
+i keep struggling with career awareness,CONCERN_EXA_1833,Career Awareness,ACADEMIC_IDENTITY,2,4,50,40
+i struggle with distractions,CONCERN_SEL_1416,distractions,PRODUCTIVITY_COACHING,1,2,50,40
+i keep struggling with career awareness,CONCERN_THI_1966,Career Awareness,ACADEMIC_IDENTITY,2,4,50,40
+i need help with career confusion,CONCERN_CON_1736,Career Confusion,ACADEMIC_IDENTITY,2,4,50,38
+i need help with peer pressure,CONCERN_DIS_1745,Peer Pressure,SOCIAL_EMOTIONAL,2,4,50,38
+i keep struggling with peer pressure,CONCERN_DIS_1745,Peer Pressure,SOCIAL_EMOTIONAL,2,4,50,36
+i cannot manage workplace collaboration,CONCERN_CAR_380,Workplace Collaboration,COLLABORATION_OWNERSHIP,2,4,50,35
+i keep struggling with competing academic priorities,CONCERN_ACA_2051,Competing Academic Priorities,DISCIPLINE_HABITS,2,5,40,34
+i need help with managing professional responsibilities,CONCERN_ADJ_392,Managing Professional Responsibilities,CONFIDENCE_SELF,2,5,40,34
+i keep struggling with communication skills,CONCERN_ACA_1939,Communication Skills,COMMUNICATION_EXPRESSION,2,4,50,34
+i cannot manage communication skills,CONCERN_ACA_1939,Communication Skills,COMMUNICATION_EXPRESSION,2,4,50,34
+i struggle with managing professional responsibilities,CONCERN_ADJ_392,Managing Professional Responsibilities,CONFIDENCE_SELF,2,4,50,34
+i keep struggling with communication skills,CONCERN_COM_1655,Communication Skills,COMMUNICATION_EXPRESSION,2,4,50,34
+i cannot manage communication skills,CONCERN_COM_1655,Communication Skills,COMMUNICATION_EXPRESSION,2,4,50,34
+i have trouble with curiosity,CONCERN_CON_1795,Curiosity,MOTIVATION_VALUES,1,2,50,34
+i cannot manage career reinvention possibilities,CONCERN_COM_500,Career Reinvention Possibilities,CONFIDENCE_SELF,2,5,40,33
+i cannot manage fear of exams,CONCERN_EXA_1665,Fear of Exams,EXAMINATION_STRESS,2,4,50,33
+i have trouble with accountability,CONCERN_ADJ_1810,Accountability,MOTIVATION_VALUES,1,2,50,32
+i have trouble with managing professional responsibilities,CONCERN_ADJ_392,Managing Professional Responsibilities,CONFIDENCE_SELF,2,4,50,32
+i cannot manage placement interviews,CONCERN_CAR_362,Placement Interviews,COMMUNICATION_EXPRESSION,2,4,50,32
+i cannot manage job interviews,CONCERN_EMP_462,Job Interviews,COMMUNICATION_EXPRESSION,2,4,50,32
+i struggle with resilience,CONCERN_EXA_1755,Resilience,EXAMINATION_STRESS,1,2,50,32
+i need help with career awareness,CONCERN_EXA_1833,Career Awareness,ACADEMIC_IDENTITY,2,4,50,32
+i cannot manage placement interviews,CONCERN_LIF_30,Placement Interviews,EMPLOYABILITY,2,4,50,32
+i need help with career awareness,CONCERN_THI_1966,Career Awareness,ACADEMIC_IDENTITY,2,4,50,32
+i cannot manage leading small responsibilities,CONCERN_ACA_718,Leading Small Responsibilities,LEADERSHIP_OWNERSHIP,2,5,40,31
+i keep struggling with fear of exams,CONCERN_EXA_1665,Fear of Exams,EXAMINATION_STRESS,2,4,50,31
+i cannot manage leadership initiative,CONCERN_SOC_1670,Leadership Initiative,LEADERSHIP_OWNERSHIP,2,4,50,30
+i need help with adapting to change,CONCERN_THI_1814,Adapting to Change,ADJUSTMENT_COPING,2,4,50,30
+i cannot manage emotional instability,CONCERN_SOC_1746,Emotional Instability,EXAMINATION_STRESS,2,4,50,29
+i need help with academic expectations,CONCERN_DIS_1695,Academic Expectations,EXAMINATION_STRESS,2,4,50,28
+i struggle with purpose,CONCERN_EXA_1821,Purpose,ACADEMIC_IDENTITY,1,2,50,28
+i keep struggling with competitive readiness,CONCERN_MOT_1975,Competitive Readiness,COMPETITIVE_EXAM,2,4,50,28
+i have trouble with distractions,CONCERN_SEL_1416,distractions,PRODUCTIVITY_COACHING,1,2,50,28
+i cannot manage problem-solving ability,CONCERN_FOU_1933,Problem-Solving Ability,THINKING_QUALITY,2,4,50,27
+i cannot manage workplace decision-making,CONCERN_LIF_388,Workplace Decision-Making,THINKING_QUALITY,2,4,50,27
+i cannot manage problem-solving ability,CONCERN_STU_1369,problem-solving ability,COGNITIVE_SKILLS,2,4,50,27
+i need help with workplace networking,CONCERN_CAR_390,Workplace Networking,SOCIAL_EMOTIONAL,2,4,50,26
+i cannot manage academic expectations,CONCERN_DIS_1695,Academic Expectations,EXAMINATION_STRESS,2,4,50,26
+i need help with emotional instability,CONCERN_SOC_1746,Emotional Instability,EXAMINATION_STRESS,2,4,50,26
+i keep struggling with learning fatigue,CONCERN_THI_2017,Learning Fatigue,EXAMINATION_STRESS,2,4,50,26
+i keep struggling with leading small responsibilities,CONCERN_ACA_718,Leading Small Responsibilities,LEADERSHIP_OWNERSHIP,2,5,40,25
+i cannot manage fear of failure,CONCERN_ACA_1734,Fear of Failure,CONFIDENCE_SELF,2,4,50,25
+i need help with fear of failure,CONCERN_ACA_1734,Fear of Failure,CONFIDENCE_SELF,2,4,50,25
+i keep struggling with retention ability,CONCERN_ACA_1937,Retention Ability,ACADEMIC_COGNITIVE,2,4,50,25
+i struggle with competing academic priorities,CONCERN_ACA_2051,Competing Academic Priorities,DISCIPLINE_HABITS,2,4,50,25
+i keep struggling with self-correction ability,CONCERN_EXA_2018,Self-Correction Ability,SELF_REFLECTION,2,4,50,25
+i keep struggling with leadership initiative,CONCERN_SOC_1670,Leadership Initiative,LEADERSHIP_OWNERSHIP,2,4,50,25
+i cannot manage concentration during studies,CONCERN_ACA_1648,Concentration During Studies,ACADEMIC_COGNITIVE,2,5,40,24
+i cannot manage handling strategic responsibilities,CONCERN_COL_610,Handling Strategic Responsibilities,STRATEGIC_PREPARATION,2,5,40,24
+i keep struggling with career reinvention possibilities,CONCERN_COM_500,Career Reinvention Possibilities,CONFIDENCE_SELF,2,5,40,24
+i cannot manage handling strategic responsibilities,CONCERN_LIF_1078,Handling Strategic Responsibilities,STRATEGIC_PREPARATION,2,5,40,24
+i cannot manage employability confidence,CONCERN_CAR_6,Employability Confidence,EMPLOYABILITY,2,4,50,24
+i cannot manage competitive readiness,CONCERN_MOT_1975,Competitive Readiness,COMPETITIVE_EXAM,2,4,50,24
+i cannot manage understanding concepts,CONCERN_ACA_1649,Understanding Concepts,ACADEMIC_COGNITIVE,2,4,50,23
+i need help with understanding concepts,CONCERN_ACA_1649,Understanding Concepts,ACADEMIC_COGNITIVE,2,4,50,23
+i keep struggling with fear of failure,CONCERN_ACA_1734,Fear of Failure,CONFIDENCE_SELF,2,4,50,23
+i need help with competitive readiness,CONCERN_MOT_1975,Competitive Readiness,COMPETITIVE_EXAM,2,4,50,23
+i need help with learning fatigue,CONCERN_THI_2017,Learning Fatigue,EXAMINATION_STRESS,2,4,50,23
+i cannot manage competing academic priorities,CONCERN_ACA_2051,Competing Academic Priorities,DISCIPLINE_HABITS,2,5,40,22
+i keep struggling with placement interviews,CONCERN_CAR_362,Placement Interviews,COMMUNICATION_EXPRESSION,2,4,50,22
+i keep struggling with job interviews,CONCERN_EMP_462,Job Interviews,COMMUNICATION_EXPRESSION,2,4,50,22
+i cannot manage reading habits,CONCERN_EXA_1765,Reading Habits,FOUNDATIONAL_LEARNING,2,4,50,22
+i struggle with self-awareness,CONCERN_EXA_1826,Self-Awareness,SELF_REFLECTION,1,2,50,22
+i keep struggling with placement interviews,CONCERN_LIF_30,Placement Interviews,EMPLOYABILITY,2,4,50,22
+i keep struggling with managing larger responsibilities,CONCERN_COM_596,Managing Larger Responsibilities,CONFIDENCE_SELF,2,5,40,21
+i keep struggling with academic ownership,CONCERN_ACA_1974,Academic Ownership,MOTIVATION_VALUES,2,4,50,21
+i keep struggling with academic uncertainty,CONCERN_COM_2053,Academic Uncertainty,EXAMINATION_STRESS,2,4,50,21
+i keep struggling with social isolation,CONCERN_EXA_1748,Social Isolation,ADJUSTMENT_COPING,2,4,50,21
+i keep struggling with academic ownership,CONCERN_MOT_1992,Academic Ownership,MOTIVATION_VALUES,2,4,50,21
+i keep struggling with academic ownership,CONCERN_MOT_2480,Academic Ownership,MOTIVATION_VALUES,2,4,50,21
+i keep struggling with academic uncertainty,CONCERN_PER_1461,academic uncertainty,PSYCHOLOGICAL_ADAPTATION,2,4,50,21
+i keep struggling with concentration during studies,CONCERN_ACA_1648,Concentration During Studies,ACADEMIC_COGNITIVE,2,5,40,20
+i need help with concentration during studies,CONCERN_ACA_1648,Concentration During Studies,ACADEMIC_COGNITIVE,2,5,40,20
+i keep struggling with understanding concepts,CONCERN_ACA_1649,Understanding Concepts,ACADEMIC_COGNITIVE,2,4,50,20
+i need help with identity confusion,CONCERN_ACA_1822,Identity Confusion,ACADEMIC_IDENTITY,2,4,50,20
+i cannot manage academic ownership,CONCERN_ACA_1974,Academic Ownership,MOTIVATION_VALUES,2,4,50,20
+i struggle with self-discipline,CONCERN_DIS_1943,Self-Discipline,DISCIPLINE_HABITS,1,2,50,20
+i have trouble with resilience,CONCERN_EXA_1755,Resilience,EXAMINATION_STRESS,1,2,50,20
+i cannot manage academic ownership,CONCERN_MOT_1992,Academic Ownership,MOTIVATION_VALUES,2,4,50,20
+i cannot manage academic ownership,CONCERN_MOT_2480,Academic Ownership,MOTIVATION_VALUES,2,4,50,20
+i need help with handling strategic responsibilities,CONCERN_COL_610,Handling Strategic Responsibilities,STRATEGIC_PREPARATION,2,5,40,19
+i need help with handling strategic responsibilities,CONCERN_LIF_1078,Handling Strategic Responsibilities,STRATEGIC_PREPARATION,2,5,40,19
+i cannot manage identity confusion,CONCERN_ACA_1822,Identity Confusion,ACADEMIC_IDENTITY,2,4,50,19
+i keep struggling with employability confidence,CONCERN_CAR_6,Employability Confidence,EMPLOYABILITY,2,4,50,19
+i need help with employability confidence,CONCERN_CAR_6,Employability Confidence,EMPLOYABILITY,2,4,50,19
+i need help with academic uncertainty,CONCERN_COM_2053,Academic Uncertainty,EXAMINATION_STRESS,2,4,50,19
+i cannot manage consistency in performance,CONCERN_DIS_1662,Consistency in Performance,ACADEMIC_PERFORMANCE,2,4,50,19
+i keep struggling with workplace decision-making,CONCERN_LIF_388,Workplace Decision-Making,THINKING_QUALITY,2,4,50,19
+i need help with academic uncertainty,CONCERN_PER_1461,academic uncertainty,PSYCHOLOGICAL_ADAPTATION,2,4,50,19
+i keep struggling with identity confusion,CONCERN_ACA_1822,Identity Confusion,ACADEMIC_IDENTITY,2,4,50,18
+i cannot manage retention ability,CONCERN_ACA_1937,Retention Ability,ACADEMIC_COGNITIVE,2,4,50,18
+i need help with academic ownership,CONCERN_ACA_1974,Academic Ownership,MOTIVATION_VALUES,2,4,50,18
+i have trouble with competing academic priorities,CONCERN_ACA_2051,Competing Academic Priorities,DISCIPLINE_HABITS,2,4,50,18
+i cannot manage leadership interactions,CONCERN_CAR_566,Leadership Interactions,COMMUNICATION_EXPRESSION,2,4,50,18
+i need help with exam strategy,CONCERN_COM_1961,Exam Strategy,EXAMINATION_READINESS,2,4,50,18
+i keep struggling with internship readiness,CONCERN_COM_8,Internship Readiness,CAREER_READINESS,2,4,50,18
+i cannot manage revision consistency,CONCERN_DIS_2406,Revision Consistency,DISCIPLINE_HABITS,2,4,50,18
+i cannot manage self-correction ability,CONCERN_EXA_2018,Self-Correction Ability,SELF_REFLECTION,2,4,50,18
+i struggle with procrastination,CONCERN_MOT_1744,Procrastination,DISCIPLINE_HABITS,1,2,50,18
+i need help with academic ownership,CONCERN_MOT_1992,Academic Ownership,MOTIVATION_VALUES,2,4,50,18
+i need help with academic ownership,CONCERN_MOT_2480,Academic Ownership,MOTIVATION_VALUES,2,4,50,18
+i cannot manage revision consistency,CONCERN_SEL_2019,Revision Consistency,EXAMINATION_READINESS,2,4,50,18
+i struggle with work-life boundaries,CONCERN_EMO_605,Work-Life Boundaries,LIFESTYLE_PRESSURE,1,3,33,17
+i need help with leading small responsibilities,CONCERN_ACA_718,Leading Small Responsibilities,LEADERSHIP_OWNERSHIP,2,5,40,17
+i need help with career reinvention possibilities,CONCERN_COM_500,Career Reinvention Possibilities,CONFIDENCE_SELF,2,5,40,17
+i keep struggling with setting academic priorities,CONCERN_MOT_1993,Setting Academic Priorities,DISCIPLINE_HABITS,2,5,40,17
+i keep struggling with setting academic priorities,CONCERN_MOT_2481,Setting Academic Priorities,DISCIPLINE_HABITS,2,5,40,17
+i struggle with career reinvention possibilities,CONCERN_COM_500,Career Reinvention Possibilities,CONFIDENCE_SELF,2,4,50,17
+i struggle with managing larger responsibilities,CONCERN_COM_596,Managing Larger Responsibilities,CONFIDENCE_SELF,2,4,50,17
+i need help with social isolation,CONCERN_EXA_1748,Social Isolation,ADJUSTMENT_COPING,2,4,50,17
+i need help with problem-solving ability,CONCERN_FOU_1933,Problem-Solving Ability,THINKING_QUALITY,2,4,50,17
+i need help with problem-solving ability,CONCERN_STU_1369,problem-solving ability,COGNITIVE_SKILLS,2,4,50,17
+i cannot manage learning fatigue,CONCERN_THI_2017,Learning Fatigue,EXAMINATION_STRESS,2,4,50,17
+i need help with managing larger responsibilities,CONCERN_COM_596,Managing Larger Responsibilities,CONFIDENCE_SELF,2,5,40,16
+i struggle with concentration during studies,CONCERN_ACA_1648,Concentration During Studies,ACADEMIC_COGNITIVE,2,4,50,16
+i need help with analytical thinking,CONCERN_ACA_1651,Analytical Thinking,THINKING_QUALITY,2,4,50,16
+i cannot manage independent thinking,CONCERN_ACA_1959,Independent Thinking,THINKING_QUALITY,2,4,50,16
+i struggle with leading small responsibilities,CONCERN_ACA_718,Leading Small Responsibilities,LEADERSHIP_OWNERSHIP,2,4,50,16
+i keep struggling with learning persistence,CONCERN_ADJ_1991,Learning Persistence,MOTIVATION_VALUES,2,4,50,16
+i need help with workplace collaboration,CONCERN_CAR_380,Workplace Collaboration,COLLABORATION_OWNERSHIP,2,4,50,16
+i need help with working in teams,CONCERN_CLA_1669,Working in Teams,SOCIAL_EMOTIONAL,2,4,50,16
+i keep struggling with academic endurance,CONCERN_EXA_1715,Academic Endurance,ACADEMIC_PERFORMANCE,2,4,50,16
+i cannot manage social isolation,CONCERN_EXA_1748,Social Isolation,ADJUSTMENT_COPING,2,4,50,16
+i keep struggling with reading habits,CONCERN_EXA_1765,Reading Habits,FOUNDATIONAL_LEARNING,2,4,50,16
+i have trouble with purpose,CONCERN_EXA_1821,Purpose,ACADEMIC_IDENTITY,1,2,50,16
+i keep struggling with learning accountability,CONCERN_EXA_2098,Learning Accountability,MOTIVATION_VALUES,2,4,50,16
+i keep struggling with decision-making confidence,CONCERN_EXP_1513,decision-making confidence,PERSONAL_DECISION,2,4,50,16
+i cannot manage independent thinking,CONCERN_FOU_1797,Independent Thinking,THINKING_QUALITY,2,4,50,16
+i keep struggling with learning persistence,CONCERN_HOL_2479,Learning Persistence,MOTIVATION_VALUES,2,4,50,16
+i cannot manage consistency in attendance,CONCERN_SEL_1984,Consistency in Attendance,DISCIPLINE_HABITS,2,4,50,16
+i cannot manage consistency in attendance,CONCERN_SEL_2472,Consistency in Attendance,DISCIPLINE_HABITS,2,4,50,16
+i need help with leadership initiative,CONCERN_SOC_1670,Leadership Initiative,LEADERSHIP_OWNERSHIP,2,4,50,16
+i need help with analytical thinking,CONCERN_THI_1934,Analytical Thinking,THINKING_QUALITY,2,4,50,16
+i keep struggling with emotional boundaries online,CONCERN_MOT_1874,Emotional Boundaries Online,LIFESTYLE_PRESSURE,2,5,40,15
+i cannot manage emotional boundaries online,CONCERN_MOT_1874,Emotional Boundaries Online,LIFESTYLE_PRESSURE,2,5,40,15
+i need help with setting academic priorities,CONCERN_MOT_1993,Setting Academic Priorities,DISCIPLINE_HABITS,2,5,40,15
+i need help with setting academic priorities,CONCERN_MOT_2481,Setting Academic Priorities,DISCIPLINE_HABITS,2,5,40,15
+i keep struggling with analytical thinking,CONCERN_ACA_1651,Analytical Thinking,THINKING_QUALITY,2,4,50,15
+i keep struggling with initiative in learning,CONCERN_ACA_1687,Initiative in Learning,MOTIVATION_VALUES,2,4,50,15
+i have trouble with leading small responsibilities,CONCERN_ACA_718,Leading Small Responsibilities,LEADERSHIP_OWNERSHIP,2,4,50,15
+i need help with semester pressure,CONCERN_COM_23,Semester Pressure,EXAMINATION_STRESS,2,4,50,15

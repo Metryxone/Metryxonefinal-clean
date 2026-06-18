@@ -1,0 +1,602 @@
+{
+  "generated_at": "2026-06-03T19:12:15.183Z",
+  "examples": [
+    {
+      "subject_id": "1cd9ca07-4659-42c4-83fd-229e5e8f21f2",
+      "source": "session",
+      "concern_label": "Long-Term Career Anxiety",
+      "archetype": "Performance Anxiety & Pressure Response",
+      "dimension": "career",
+      "score": 0.39,
+      "band": "at_risk",
+      "confidence": 0.2381,
+      "confidence_band": "low",
+      "expected_outcome": {
+        "score": 0.677,
+        "uplift": 0.287,
+        "band": "developing"
+      },
+      "chain_completeness": 0.7143,
+      "degraded": true,
+      "contributions": [
+        {
+          "kind": "risk",
+          "label": "Activation runtime: active (direct)",
+          "matched_tokens": [
+            "career"
+          ],
+          "contribution": -0.11,
+          "evidence": "Active signal · severity 0.5 · confidence 0.76"
+        }
+      ],
+      "intervention_levers": [
+        {
+          "key": "career_clarity",
+          "title": "Career confusion: targeted career clarity plan",
+          "construct": "CAREER_CLARITY",
+          "expected_uplift": 0.287
+        }
+      ],
+      "rationale": "career readiness predicted at risk (0.39) from 0 strengths and 1 active risk; 1 intervention lever available; chain 5/7 resolved; degraded: partial chain resolution.",
+      "trace": [
+        {
+          "category": "concern",
+          "label": "concern CONCERN_COM_65",
+          "resolved": true
+        },
+        {
+          "category": "capability",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "problem",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "behavior",
+          "label": "3 observable behaviours",
+          "resolved": true
+        },
+        {
+          "category": "archetype",
+          "label": "Performance Anxiety & Pressure Response",
+          "resolved": true
+        },
+        {
+          "category": "intervention",
+          "label": "6 interventions + action plan",
+          "resolved": true
+        },
+        {
+          "category": "recommendation",
+          "label": "4 active construct(s)",
+          "resolved": true
+        }
+      ]
+    },
+    {
+      "subject_id": "11111111-1111-1111-1111-111111111111",
+      "source": "session",
+      "concern_label": "Student Stress During Exam Cycles",
+      "archetype": "Performance Anxiety & Pressure Response",
+      "dimension": "career",
+      "score": 0.5,
+      "band": "developing",
+      "confidence": 0,
+      "confidence_band": "low",
+      "expected_outcome": {
+        "score": 0.5,
+        "uplift": 0,
+        "band": "developing"
+      },
+      "chain_completeness": 0.5714,
+      "degraded": true,
+      "contributions": [],
+      "intervention_levers": [],
+      "rationale": "career readiness predicted developing (0.5) from 0 strengths and 0 active risks; chain 4/7 resolved; no dimension-relevant evidence → neutral baseline (low confidence); degraded: partial chain resolution.",
+      "trace": [
+        {
+          "category": "concern",
+          "label": "concern CONCERN_DIS_1297",
+          "resolved": true
+        },
+        {
+          "category": "capability",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "problem",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "behavior",
+          "label": "2 observable behaviours",
+          "resolved": true
+        },
+        {
+          "category": "archetype",
+          "label": "Performance Anxiety & Pressure Response",
+          "resolved": true
+        },
+        {
+          "category": "intervention",
+          "label": "6 interventions + action plan",
+          "resolved": true
+        },
+        {
+          "category": "recommendation",
+          "label": null,
+          "resolved": false
+        }
+      ]
+    },
+    {
+      "subject_id": "Academic Achievement & Exam Performance",
+      "source": "archetype",
+      "concern_label": null,
+      "archetype": "Academic Achievement & Exam Performance",
+      "dimension": "career",
+      "score": 0.5,
+      "band": "developing",
+      "confidence": 0,
+      "confidence_band": "low",
+      "expected_outcome": {
+        "score": 0.5,
+        "uplift": 0,
+        "band": "developing"
+      },
+      "chain_completeness": 0.2857,
+      "degraded": true,
+      "contributions": [],
+      "intervention_levers": [],
+      "rationale": "career readiness predicted developing (0.5) from 0 strengths and 0 active risks; chain 2/7 resolved; no dimension-relevant evidence → neutral baseline (low confidence); degraded: partial chain resolution.",
+      "trace": [
+        {
+          "category": "concern",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "capability",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "problem",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "behavior",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "archetype",
+          "label": "Academic Achievement & Exam Performance",
+          "resolved": true
+        },
+        {
+          "category": "intervention",
+          "label": "Today, pick the weakest subject and finish one focused homework or revision task., Each workday this week, track grades and homework due dates in one place., Over the next 30 days, follow a weekly revision plan that covers every subject before the next test.",
+          "resolved": true
+        },
+        {
+          "category": "recommendation",
+          "label": null,
+          "resolved": false
+        }
+      ]
+    },
+    {
+      "subject_id": "Adaptability & Change Navigation",
+      "source": "archetype",
+      "concern_label": null,
+      "archetype": "Adaptability & Change Navigation",
+      "dimension": "career",
+      "score": 0.5,
+      "band": "developing",
+      "confidence": 0,
+      "confidence_band": "low",
+      "expected_outcome": {
+        "score": 0.5,
+        "uplift": 0,
+        "band": "developing"
+      },
+      "chain_completeness": 0.2857,
+      "degraded": true,
+      "contributions": [],
+      "intervention_levers": [],
+      "rationale": "career readiness predicted developing (0.5) from 0 strengths and 0 active risks; chain 2/7 resolved; no dimension-relevant evidence → neutral baseline (low confidence); degraded: partial chain resolution.",
+      "trace": [
+        {
+          "category": "concern",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "capability",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "problem",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "behavior",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "archetype",
+          "label": "Adaptability & Change Navigation",
+          "resolved": true
+        },
+        {
+          "category": "intervention",
+          "label": "Today, write down one new option instead of stalling the next time a plan changes., Today, help your child write down one new option instead of stalling the next time a plan changes., In class today, have the student write down one new option instead of stalling the next time a plan changes.",
+          "resolved": true
+        },
+        {
+          "category": "recommendation",
+          "label": null,
+          "resolved": false
+        }
+      ]
+    },
+    {
+      "subject_id": "Career Growth & Professional Identity",
+      "source": "archetype",
+      "concern_label": null,
+      "archetype": "Career Growth & Professional Identity",
+      "dimension": "career",
+      "score": 0.5,
+      "band": "developing",
+      "confidence": 0,
+      "confidence_band": "low",
+      "expected_outcome": {
+        "score": 0.5,
+        "uplift": 0,
+        "band": "developing"
+      },
+      "chain_completeness": 0.2857,
+      "degraded": true,
+      "contributions": [],
+      "intervention_levers": [],
+      "rationale": "career readiness predicted developing (0.5) from 0 strengths and 0 active risks; chain 2/7 resolved; no dimension-relevant evidence → neutral baseline (low confidence); degraded: partial chain resolution.",
+      "trace": [
+        {
+          "category": "concern",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "capability",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "problem",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "behavior",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "archetype",
+          "label": "Career Growth & Professional Identity",
+          "resolved": true
+        },
+        {
+          "category": "intervention",
+          "label": "Today, list three roles or career paths worth exploring and one question to ask about each., Today, help your child list three roles or career paths worth exploring and one question to ask about each., In class today, have the student list three roles or career paths worth exploring and one question to ask about each.",
+          "resolved": true
+        },
+        {
+          "category": "recommendation",
+          "label": null,
+          "resolved": false
+        }
+      ]
+    },
+    {
+      "subject_id": "Collaboration & Teamwork",
+      "source": "archetype",
+      "concern_label": null,
+      "archetype": "Collaboration & Teamwork",
+      "dimension": "career",
+      "score": 0.5,
+      "band": "developing",
+      "confidence": 0,
+      "confidence_band": "low",
+      "expected_outcome": {
+        "score": 0.5,
+        "uplift": 0,
+        "band": "developing"
+      },
+      "chain_completeness": 0.2857,
+      "degraded": true,
+      "contributions": [],
+      "intervention_levers": [],
+      "rationale": "career readiness predicted developing (0.5) from 0 strengths and 0 active risks; chain 2/7 resolved; no dimension-relevant evidence → neutral baseline (low confidence); degraded: partial chain resolution.",
+      "trace": [
+        {
+          "category": "concern",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "capability",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "problem",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "behavior",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "archetype",
+          "label": "Collaboration & Teamwork",
+          "resolved": true
+        },
+        {
+          "category": "intervention",
+          "label": "Each workday this week, note one contribution to the group and one task others carried., Over the next 30 days, take a clear shared role in a group project and deliver it., Over the next 30 days, help your child take a clear shared role in a group project and deliver it.",
+          "resolved": true
+        },
+        {
+          "category": "recommendation",
+          "label": null,
+          "resolved": false
+        }
+      ]
+    },
+    {
+      "subject_id": "Communication & Expression",
+      "source": "archetype",
+      "concern_label": null,
+      "archetype": "Communication & Expression",
+      "dimension": "career",
+      "score": 0.5,
+      "band": "developing",
+      "confidence": 0,
+      "confidence_band": "low",
+      "expected_outcome": {
+        "score": 0.5,
+        "uplift": 0,
+        "band": "developing"
+      },
+      "chain_completeness": 0.2857,
+      "degraded": true,
+      "contributions": [],
+      "intervention_levers": [],
+      "rationale": "career readiness predicted developing (0.5) from 0 strengths and 0 active risks; chain 2/7 resolved; no dimension-relevant evidence → neutral baseline (low confidence); degraded: partial chain resolution.",
+      "trace": [
+        {
+          "category": "concern",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "capability",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "problem",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "behavior",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "archetype",
+          "label": "Communication & Expression",
+          "resolved": true
+        },
+        {
+          "category": "intervention",
+          "label": "Today, say one clear thought out loud or in a message., Today, help your child say one clear thought out loud or in a message., In class today, have the student say one clear thought out loud or in a message.",
+          "resolved": true
+        },
+        {
+          "category": "recommendation",
+          "label": null,
+          "resolved": false
+        }
+      ]
+    },
+    {
+      "subject_id": "Confidence & Self-Efficacy",
+      "source": "archetype",
+      "concern_label": null,
+      "archetype": "Confidence & Self-Efficacy",
+      "dimension": "career",
+      "score": 0.5,
+      "band": "developing",
+      "confidence": 0,
+      "confidence_band": "low",
+      "expected_outcome": {
+        "score": 0.5,
+        "uplift": 0,
+        "band": "developing"
+      },
+      "chain_completeness": 0.2857,
+      "degraded": true,
+      "contributions": [],
+      "intervention_levers": [],
+      "rationale": "career readiness predicted developing (0.5) from 0 strengths and 0 active risks; chain 2/7 resolved; no dimension-relevant evidence → neutral baseline (low confidence); degraded: partial chain resolution.",
+      "trace": [
+        {
+          "category": "concern",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "capability",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "problem",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "behavior",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "archetype",
+          "label": "Confidence & Self-Efficacy",
+          "resolved": true
+        },
+        {
+          "category": "intervention",
+          "label": "Today, write down three recent wins and one challenge worth taking on today., Today, help your child write down three recent wins and one challenge worth taking on today., In class today, have the student write down three recent wins and one challenge worth taking on today.",
+          "resolved": true
+        },
+        {
+          "category": "recommendation",
+          "label": null,
+          "resolved": false
+        }
+      ]
+    },
+    {
+      "subject_id": "Critical & Reflective Thinking",
+      "source": "archetype",
+      "concern_label": null,
+      "archetype": "Critical & Reflective Thinking",
+      "dimension": "career",
+      "score": 0.5,
+      "band": "developing",
+      "confidence": 0,
+      "confidence_band": "low",
+      "expected_outcome": {
+        "score": 0.5,
+        "uplift": 0,
+        "band": "developing"
+      },
+      "chain_completeness": 0.2857,
+      "degraded": true,
+      "contributions": [],
+      "intervention_levers": [],
+      "rationale": "career readiness predicted developing (0.5) from 0 strengths and 0 active risks; chain 2/7 resolved; no dimension-relevant evidence → neutral baseline (low confidence); degraded: partial chain resolution.",
+      "trace": [
+        {
+          "category": "concern",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "capability",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "problem",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "behavior",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "archetype",
+          "label": "Critical & Reflective Thinking",
+          "resolved": true
+        },
+        {
+          "category": "intervention",
+          "label": "Today, ask why once and weigh one other option before deciding anything., Today, help your child ask why once and weigh one other option before deciding anything., In class today, have the student ask why once and weigh one other option before deciding anything.",
+          "resolved": true
+        },
+        {
+          "category": "recommendation",
+          "label": null,
+          "resolved": false
+        }
+      ]
+    },
+    {
+      "subject_id": "Curiosity & Innovation",
+      "source": "archetype",
+      "concern_label": null,
+      "archetype": "Curiosity & Innovation",
+      "dimension": "career",
+      "score": 0.5,
+      "band": "developing",
+      "confidence": 0,
+      "confidence_band": "low",
+      "expected_outcome": {
+        "score": 0.5,
+        "uplift": 0,
+        "band": "developing"
+      },
+      "chain_completeness": 0.2857,
+      "degraded": true,
+      "contributions": [],
+      "intervention_levers": [],
+      "rationale": "career readiness predicted developing (0.5) from 0 strengths and 0 active risks; chain 2/7 resolved; no dimension-relevant evidence → neutral baseline (low confidence); degraded: partial chain resolution.",
+      "trace": [
+        {
+          "category": "concern",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "capability",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "problem",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "behavior",
+          "label": null,
+          "resolved": false
+        },
+        {
+          "category": "archetype",
+          "label": "Curiosity & Innovation",
+          "resolved": true
+        },
+        {
+          "category": "intervention",
+          "label": "Today, ask one curious question and write down a fresh idea it sparks., Today, help your child ask one curious question and write down a fresh idea it sparks., In class today, have the student ask one curious question and write down a fresh idea it sparks.",
+          "resolved": true
+        },
+        {
+          "category": "recommendation",
+          "label": null,
+          "resolved": false
+        }
+      ]
+    }
+  ]
+}

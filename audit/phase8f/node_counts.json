@@ -1,0 +1,19 @@
+{
+  "generated_at": "2026-06-03T18:47:08.746Z",
+  "node_count": 62095,
+  "category_counts": {
+    "archetype": 22,
+    "signal": 16431,
+    "behavior": 8030,
+    "bridge_tag": 331,
+    "capability": 1204,
+    "question": 30638,
+    "concern": 2489,
+    "domain": 20,
+    "emotion": 220,
+    "intervention": 800,
+    "problem": 993,
+    "recommendation": 367,
+    "search_intent": 550
+  }
+}

@@ -1,0 +1,74 @@
+Understood — I'm now building this directly. The new instruction is the MX-SA-WORLDCLASS-AUDIT-01 SuperAdmin World-Class Audit (read-only capability measurement → 3 markdown deliverables). This is a different scope than the Commercial Spine title on the task, so I'll note that drift at the end.
+
+This is a large, evidence-based audit. Let me set up a plan and kick off parallel investigation + real data measurement.
+
+
+3 actions
+Large surface (184 panels, many admin route files). I'll measure real capability with parallel exploration + actual data counts. Let me set up the plan and launch everything in parallel.
+
+
+Updated plan
+
+Planning agent execution strategy
+Now let me launch parallel investigation across all 15 pillars and measure real data simultaneously.
+
+
+9 actions
+Table inventory captured. Now let me measure real row counts for the Activation axis across all pillar-relevant tables while the explorers run.
+
+
+3 actions
+Rich activation data captured. Key signals already visible: admin_audit_logs=0, RBAC tables (role_definitions/role_permissions/permission_definitions) all 0, subscription_packages=0, capadex_payments=0, analytics fact tables (anl_*) 0. Let me wait for the parallel capability explorers to return.
+
+
+3 actions
+Strong evidence gathered. Before scoring, I need to resolve contradictions between explorers — particularly around audit-log tables (platform_audit_log vs admin_audit_logs) and Institution Ops tables (institutes/children/iil_*) that did NOT appear in my table inventory. Let me verify existence directly.
+
+
+3 actions
+Verification complete — and it surfaced two major honesty corrections to the explorer reports:
+
+platform_audit_log does not exist; the real table admin_audit_logs exists but is empty (0 rows) → audit trail is wired but has captured nothing.
+Institution Ops tables (institutes, children, iil_institutions) do NOT exist in this DB → Pillar 7 routes/panels reference non-materialized tables (over-credited by the explorer).
+DB feature_flags table: all 10 rows disabled; student_subscriptions absent; caf_assessments/caf_question_bank = 0.
+I have a complete, evidence-based picture. Writing the three deliverables now.
+
+
+2 actions
+Writing all three deliverables now (independent writes, batched).
+
+
+4 actions
+Deliverables written. Now let me validate the audit's evidence and reasoning with an architect review (honesty-critical work), and record a durable lesson in memory in parallel.
+
+
+4 actions
+The architect review (strict) flagged three legitimate honesty issues. Given the honesty-over-optimism mandate, I'll fix all three: (1) align the Critical-blocker set across all three docs, (2) downgrade two over-claims to match cited evidence, (3) add a reproducible scoring-trace appendix.
+
+
+2 actions
+Mockup-sandbox failures are pre-existing/unrelated — ignoring. Now the remaining two fixes (downgrade over-claims, add scoring trace) across the three docs.
+
+
+5 actions
+The mockup-sandbox workflow failures are pre-existing and unrelated to this audit. Finishing the remaining honesty fixes: qualify the causal claims and add the scoring-trace appendix.
+
+
+3 actions
+Now the final fix: appending the scoring-trace appendix to the audit so the rubric is reproducible.
+
+
+2 actions
+All three honesty fixes from the architect review are now applied. Let me read the follow-up-tasks skill and finalize (commit message, session-plan cleanup).
+
+
+2 actions
+All honesty fixes applied. The two mockup-sandbox workflow failures are pre-existing and unrelated to this audit. Finalizing: proposing follow-ups, writing the commit message, and cleaning up the completed session plan.
+
+
+Show less
+
+Proposed three follow-up remediation tasks
+
+Planning documentation update completion
+Audit complete. All three deliverables written, architect-reviewed, and corrected for the three honesty findings. Marking the task complete.

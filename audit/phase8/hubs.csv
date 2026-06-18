@@ -1,0 +1,51 @@
+node_id,type,label,degree
+bridge_tag:STRENGTH_SIGNAL,bridge_tag,STRENGTH_SIGNAL,8970
+bridge_tag:ADJUSTMENT_COPING,bridge_tag,ADJUSTMENT_COPING,4173
+bridge_tag:CAREER_READINESS,bridge_tag,CAREER_READINESS,3160
+bridge_tag:DISCIPLINE_HABITS,bridge_tag,DISCIPLINE_HABITS,2077
+bridge_tag:EMOTIONAL_REGULATION,bridge_tag,EMOTIONAL_REGULATION,1952
+bridge_tag:CONFIDENCE_SELF,bridge_tag,CONFIDENCE_SELF,1796
+bridge_tag:SOCIAL_EMOTIONAL,bridge_tag,SOCIAL_EMOTIONAL,1548
+bridge_tag:EMPLOYABILITY,bridge_tag,EMPLOYABILITY,1507
+bridge_tag:EXAMINATION_STRESS,bridge_tag,EXAMINATION_STRESS,1411
+bridge_tag:MOTIVATION_VALUES,bridge_tag,MOTIVATION_VALUES,1391
+bridge_tag:COMPETENCY_DEVELOPMENT,bridge_tag,COMPETENCY_DEVELOPMENT,1353
+bridge_tag:EMOTIONAL_RECOVERY,bridge_tag,EMOTIONAL_RECOVERY,1258
+bridge_tag:ACADEMIC_COGNITIVE,bridge_tag,ACADEMIC_COGNITIVE,1119
+bridge_tag:THINKING_QUALITY,bridge_tag,THINKING_QUALITY,1087
+bridge_tag:WORKPLACE_ADAPTATION,bridge_tag,WORKPLACE_ADAPTATION,1022
+signal:SIG_0010,signal,emotional_overload,1021
+bridge_tag:LIFESTYLE_PRESSURE,bridge_tag,LIFESTYLE_PRESSURE,1010
+bridge_tag:HOLISTIC_DEVELOPMENT,bridge_tag,HOLISTIC_DEVELOPMENT,1004
+bridge_tag:CAREER_GROWTH,bridge_tag,CAREER_GROWTH,961
+bridge_tag:LEADERSHIP_OWNERSHIP,bridge_tag,LEADERSHIP_OWNERSHIP,881
+domain:DOM_010,domain,Resilience Intelligence,861
+domain:DOM_018,domain,Collaboration Intelligence,861
+domain:DOM_015,domain,Wellbeing Intelligence,841
+domain:DOM_016,domain,Employability Intelligence,841
+domain:DOM_007,domain,Identity Intelligence,836
+domain:DOM_002,domain,Cognitive Intelligence,825
+domain:DOM_013,domain,Communication Intelligence,822
+domain:DOM_001,domain,Emotional Intelligence,821
+domain:DOM_003,domain,Behavioral Intelligence,821
+domain:DOM_004,domain,Motivational Intelligence,821
+domain:DOM_005,domain,Social Intelligence,821
+domain:DOM_006,domain,Executive Function Intelligence,821
+domain:DOM_008,domain,Adaptive Intelligence,821
+domain:DOM_009,domain,Performance Intelligence,821
+domain:DOM_014,domain,Decision Intelligence,821
+domain:DOM_020,domain,Ethical & Integrity Intelligence,813
+domain:DOM_012,domain,Learning Intelligence,801
+domain:DOM_017,domain,Leadership Intelligence,801
+bridge_tag:GENERAL_CONCERN,bridge_tag,GENERAL_CONCERN,769
+domain:DOM_011,domain,Career Intelligence,761
+domain:DOM_019,domain,Creativity Intelligence,761
+bridge_tag:COMMUNICATION_EXPRESSION,bridge_tag,COMMUNICATION_EXPRESSION,670
+bridge_tag:STRATEGIC_PREPARATION,bridge_tag,STRATEGIC_PREPARATION,631
+bridge_tag:ACADEMIC_IDENTITY,bridge_tag,ACADEMIC_IDENTITY,579
+bridge_tag:LEARNING_ADAPTABILITY,bridge_tag,LEARNING_ADAPTABILITY,570
+signal:SIG_0001,signal,career_confusion,566
+signal:SIG_0004,signal,placement_anxiety,555
+signal:SIG_0006,signal,confidence_instability,554
+signal:SIG_0020,signal,practical_skill_gap,543
+signal:SIG_0003,signal,fear_of_failure,488

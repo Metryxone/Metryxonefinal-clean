@@ -1,0 +1,28 @@
+Let's build Module 2 of our development roadmap: The Edge-Triggered Safety Circuit Breaker ("Relief-First" Gateway) inside our active question routing architecture.
+
+1. UPDATE THE ROUTING INTERCEPTOR (BACKEND):
+Open `backend/routes/capadex.ts` (or the module handling our active question fetch/next-question generation logic).
+- Locate the endpoint that serves the next question to the user interface (typically where the response is recorded and the next item id is computed).
+- Right after saving the current response and running our multi-pass back-propagation score update, perform a real-time validation check on the active session's running `omega_x_payload`.
+- Extract the scores under the `risk` layer: `crisis_risk` and `emotional_breakdown_risk`.
+
+2. IMPLEMENT THE SAFETY CIRCUIT BREAKER LOGIC:
+If either `crisis_risk` OR `emotional_breakdown_risk` has scaled to a value >= 0.80:
+- Intercept the standard questionnaire queue progression.
+- Instead of returning the next question object, return a structured safety response payload containing:
+  {
+    "safety_intercept": true,
+    "terminate_assessment": true,
+    "relief_target": "immediate_support",
+    "support_resources": {
+      "message": "Your well-being is our absolute priority right now. Let's pause the questions and focus on immediate relief.",
+      "action_type": "counsellor_routing"
+    }
+  }
+
+3. FRONTEND DESTRUCTIVE INTERCEPT HOOK:
+Locate the frontend assessment tracking loop component where the incoming next-question object is processed.
+- Add an explicit conditional check on the incoming server payload: if `payload.safety_intercept === true`, break out of the standard multi-choice questionnaire view grid.
+- Instantly mount our dedicated relief interface or direct counseling resource cards, rendering them as a high-priority overlay or screen redirect to fulfill a true relief-first user experience.
+
+Please implement this dynamic backend safety check and ensure the frontend transitions seamlessly into relief mode when the circuit breaker trips. Verify that the build compiles cleanly with zero TypeScript errors!

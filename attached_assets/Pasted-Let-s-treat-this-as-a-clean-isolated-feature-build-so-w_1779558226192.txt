@@ -1,0 +1,23 @@
+Let's treat this as a clean, isolated feature build so we do not conflict with any existing tables or default configs. Here is our architectural plan:
+
+1. TARGET DATABASE TABLE:
+We will use the table `adaptive_ontology_edges` which has been created and verified in our database. It contains: id, source_bucket, target_bucket, weight, and status.
+
+2. REGISTER A CUSTOM ADMIN PANEL ROUTE:
+Instead of forcing this into the config-driven framework-configs tabs where `clusterCorrelationsApi` is already active, let's treat this as a bespoke workflow panel (matching Section 1 of our technical document).
+- Look at how custom panels like `ConcernAreasPanel.tsx` are registered under `frontend/src/components/superadmin/`.
+- Create a new file: `frontend/src/components/superadmin/OntologyMatrixPanel.tsx`.
+- Inside it, use our generic `<CrudTable />` primitive component to point directly to our endpoint `/api/admin/superadmin/capadex/ontology` with columns and form fields for source_bucket, target_bucket, and weight.
+- Register this new panel inside `SuperAdminDashboard.tsx` and attach it to the `AdminSidebar.tsx` navigation list under 'Intelligence Suite' or 'Platform Ops'.
+
+3. BACKEND ROUTING & INVARIANTS:
+- Create the backend routes for `GET` and `POST` actions on `/api/admin/superadmin/capadex/ontology`.
+- Secure them with our auth bookends: `requireAuth, requireSuperAdmin`.
+- New entries must default to a status of 'draft' and append a log entry using `writeAuditEvent(...)`.
+
+4. ENGINE JOIN INTEGRATION:
+- Open `backend/routes/capadex-concern-intelligence.ts`. Locate the active `pickQuestions` function.
+- Update its core SQL selection logic to perform a clean JOIN or Subquery against `adaptive_ontology_edges` where `status = 'approved'` and `weight >= 0.60`. This allows the engine to pull questions matching BOTH the user's primary concern_bucket AND any highly-correlated target_buckets, while still respecting the user's target age ranges.
+- Ensure our default hardcoded fallback array remains perfectly safe inside the try/catch block.
+
+Please review this step-by-step plan and let me know when you are ready to begin writing the individual file updates.

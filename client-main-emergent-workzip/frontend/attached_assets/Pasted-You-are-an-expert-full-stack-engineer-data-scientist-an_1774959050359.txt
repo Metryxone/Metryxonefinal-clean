@@ -1,0 +1,409 @@
+You are an expert full-stack engineer, data scientist, and system architect.
+
+Build a production-grade web application called **Metryxone** — a Universal Competency Intelligence, Talent Benchmarking, Role Transition, and Hiring Prediction Platform.
+
+The system must be modular, scalable, and enterprise-ready.
+
+---
+
+# 🔷 1. TECH STACK
+
+Backend:
+
+* Python (FastAPI preferred)
+* PostgreSQL (relational data)
+* Neo4j or graph-based structure (for competency graph)
+
+Frontend:
+
+* React (simple dashboard UI)
+
+ML / Data:
+
+* Python (scikit-learn / numpy / pandas)
+
+Deployment-ready structure:
+
+* Modular microservices architecture (logical separation even if monolith initially)
+
+---
+
+# 🔷 2. CORE SYSTEM MODULES (MANDATORY)
+
+---
+
+## 2.1 USER MANAGEMENT
+
+Create APIs for:
+
+* User registration/login
+* Profile creation
+* Career stage selection:
+
+  * Fresher
+  * Early Career
+  * Manager
+  * Leader
+
+Fields:
+
+* user_id
+* demographics
+* current_role
+* target_role
+* industry
+* experience_years
+
+---
+
+## 2.2 CV PARSER MODULE
+
+* Accept CV upload (PDF/DOC)
+* Extract:
+
+  * skills
+  * experience
+  * projects
+* Map extracted data to competency IDs
+
+Use placeholder NLP logic (can simulate extraction)
+
+---
+
+## 2.3 COMPETENCY FRAMEWORK
+
+Create a structured competency system:
+
+Tables:
+
+* competencies (id, name, domain, subdomain)
+* domains
+* subdomains
+
+Use domains:
+
+* Cognitive & Thinking
+* Execution & Discipline
+* Communication & Influence
+* Social & Emotional
+* Motivation & Ethics
+* Functional & Business
+* Leadership & Growth
+
+Each competency must be scorable (0–100)
+
+---
+
+## 2.4 COMPETENCY GRAPH
+
+* Create adjacency relationships between competencies
+* Store in graph structure
+
+Example:
+Problem Solving → Analytical Thinking → Decision Making
+
+---
+
+## 2.5 SCORING ENGINE
+
+For each competency:
+
+Raw Score =
+(Assessment × W1) + (Experience × W2) + (Behavior × W3) + (Validation × W4)
+
+Confidence Score:
+Based on:
+
+* number of sources
+* recency
+* verification
+
+Final Score:
+Final = Raw × Confidence
+
+Store:
+
+* competency_score
+* confidence_score
+
+---
+
+## 2.6 NORMALIZATION ENGINE
+
+Implement:
+
+* Z-score normalization
+* Min-max scaling
+
+---
+
+## 2.7 WEIGHTING ENGINE
+
+Create role-stage weight matrix table:
+
+Fields:
+
+* role
+* industry
+* stage
+* competency_id
+* weight
+
+Apply weights:
+
+Role-Aligned Score =
+SUM(score × weight)
+
+---
+
+## 2.8 BENCHMARK ENGINE
+
+Create cohort filtering:
+
+Filters:
+
+* role
+* industry
+* stage
+* geography
+
+Compute:
+
+* mean
+* median
+* std deviation
+
+---
+
+## 2.9 PERCENTILE ENGINE
+
+Formula:
+
+Percentile =
+(number of users below / total users) × 100
+
+Compute:
+
+* competency percentile
+* domain percentile
+* role percentile
+* global percentile
+
+---
+
+## 2.10 ROLE TRANSITION ENGINE
+
+Inputs:
+
+* current profile
+* target role
+
+Compute:
+
+Gap = target_avg - user_score
+Weighted Gap = gap × weight
+
+---
+
+## 2.11 ROLE FITNESS PROBABILITY ENGINE
+
+Formula:
+
+RoleFit =
+(α × weighted_score)
+
+* (β × percentile)
+
+- (γ × gap)
+
+* (δ × consistency)
+
+Return:
+
+* probability %
+* readiness level
+
+---
+
+## 2.12 GAP PRIORITIZATION
+
+Priority =
+weight × gap × impact
+
+Classify:
+
+* Critical
+* High
+* Medium
+* Low
+
+---
+
+## 2.13 INTERVENTION ENGINE
+
+Generate recommendations:
+
+Based on:
+
+* gap
+* domain
+
+Return:
+
+* courses
+* projects
+* mentorship
+
+---
+
+## 2.14 GROWTH SIMULATION
+
+Future Score =
+current + expected improvement
+
+Predict:
+
+* new percentile
+* new role fit
+
+---
+
+## 2.15 VISIBILITY ENGINE
+
+Visibility Score =
+(percentile × W1)
+
+* (role_fit × W2)
+* (verification × W3)
+
+---
+
+## 2.16 EMPLOYER MATCHING ENGINE
+
+Match Score =
+similarity(candidate_vector, job_vector)
+
+Return ranked candidates
+
+---
+
+## 2.17 VERIFICATION SYSTEM
+
+Add:
+
+* verified badge
+* confidence scoring
+* fraud detection placeholder
+
+---
+
+## 2.18 GOVERNANCE & FAIRNESS
+
+Add:
+
+* bias detection placeholder
+* explainable output (show why score given)
+
+---
+
+---
+
+# 🔷 3. DATABASE SCHEMA
+
+Create tables:
+
+* users
+* competencies
+* scores
+* weights
+* benchmarks
+* interventions
+* jobs
+
+---
+
+# 🔷 4. API ENDPOINTS
+
+Create endpoints:
+
+* /upload-cv
+* /run-assessment
+* /compute-score
+* /get-percentile
+* /role-fit
+* /gap-analysis
+* /interventions
+* /simulate-growth
+* /match-candidates
+
+---
+
+# 🔷 5. FRONTEND (REACT)
+
+Create simple dashboard:
+
+Pages:
+
+1. Profile
+2. Competency Scores
+3. Benchmark Comparison
+4. Gap Analysis
+5. Role Fit
+6. Recommendations
+
+---
+
+# 🔷 6. SAMPLE DATA
+
+Seed system with:
+
+* 50 competencies
+* 100 dummy users
+* sample benchmarks
+
+---
+
+# 🔷 7. OUTPUT REPORT
+
+Generate JSON report:
+
+* scores
+* percentiles
+* role fit
+* gaps
+* recommendations
+
+---
+
+# 🔷 8. ARCHITECTURE REQUIREMENTS
+
+* Modular code structure
+* Clear separation of:
+
+  * scoring
+  * benchmarking
+  * prediction
+
+---
+
+# 🔷 9. FUTURE-READY FEATURES (PLACEHOLDERS)
+
+* AI-based scoring
+* video analysis
+* adaptive assessments
+* dynamic weight learning
+
+---
+
+# 🔷 10. FINAL REQUIREMENT
+
+Code must be:
+
+* clean
+* modular
+* extensible
+* production-oriented
+
+Include comments explaining logic.
+
+---

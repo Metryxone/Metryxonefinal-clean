@@ -1,0 +1,95 @@
+{
+  "generated_at": "2026-05-30T09:51:02.433Z",
+  "summary": {
+    "total_domains": 20,
+    "total_families": 400,
+    "total_signals": 15972,
+    "total_composites": 20,
+    "total_relationships": 3,
+    "total_contradictions": 7496,
+    "total_interventions": 140,
+    "orphaned_signals": [],
+    "orphaned_composites": [],
+    "missing_relationships": [
+      "ADJUSTMENT_COPING",
+      "CAREER_READINESS",
+      "COLLEGE_ADAPT",
+      "DISCIPLINE_HABITS",
+      "EXAM_STRESS",
+      "GENERAL_CONCERN"
+    ],
+    "missing_interventions": []
+  },
+  "audits": {
+    "signal_coverage": {
+      "total_atomic": 15972,
+      "orphaned_count": 0,
+      "with_intervention_mapping": 7476,
+      "without_intervention_mapping": 8496,
+      "intervention_mapping_coverage_pct": 46.8,
+      "with_contradiction_links": 7476
+    },
+    "composite_coverage": {
+      "total_composites": 20,
+      "orphaned_count": 0,
+      "buckets_with_atomic_children": 20
+    },
+    "relationship_edges": {
+      "total_edges": 3,
+      "duplicate_edge_groups": [],
+      "dangling_edges": [
+        {
+          "source_bucket": "academic",
+          "target_bucket": "emotional",
+          "status": "draft"
+        },
+        {
+          "source_bucket": "STRESS_MANAGEMENT",
+          "target_bucket": "EMOTIONAL_REGULATION",
+          "status": "approved"
+        },
+        {
+          "source_bucket": "EMOTIONAL_REGULATION",
+          "target_bucket": "STRESS_MANAGEMENT",
+          "status": "draft"
+        }
+      ],
+      "isolated_buckets": [
+        "ADJUSTMENT_COPING",
+        "CAREER_READINESS",
+        "COLLEGE_ADAPT",
+        "DISCIPLINE_HABITS",
+        "EXAM_STRESS",
+        "GENERAL_CONCERN"
+      ],
+      "missing_inverse_edges": []
+    },
+    "contradiction_rules": {
+      "total_contradiction_tokens": 7496,
+      "rows_with_contradictions": 7496,
+      "duplicate_within_row": []
+    },
+    "intervention_mapping": {
+      "library_total": 140,
+      "buckets_total": 6,
+      "buckets_mapped": 6,
+      "buckets_missing": []
+    }
+  },
+  "repair_plan": {
+    "intervention_backfill": [],
+    "inverse_edge_backfill": [],
+    "manual_curation_required": {
+      "isolated_buckets": [
+        "ADJUSTMENT_COPING",
+        "CAREER_READINESS",
+        "COLLEGE_ADAPT",
+        "DISCIPLINE_HABITS",
+        "EXAM_STRESS",
+        "GENERAL_CONCERN"
+      ],
+      "atomic_signals_without_intervention_mapping": 8496
+    }
+  },
+  "readiness_score": 69.4
+}

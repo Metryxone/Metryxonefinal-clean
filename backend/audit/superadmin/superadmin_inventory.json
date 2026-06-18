@@ -1,0 +1,2905 @@
+{
+  "_meta": {
+    "generated": "2026-06-17",
+    "purpose": "SuperAdmin → Enterprise Command Center: full screen/route/api/table inventory (Step 1 discovery).",
+    "source": "frontend nav config (useAdminDashboardState.tsx) + SuperAdminDashboard switch + per-panel /api grep + grounded against 1305 live DB tables.",
+    "counts": {
+      "nav_groups": 20,
+      "screens": 161,
+      "lazy_panels": 158,
+      "backend_route_files": 208,
+      "code_defined_tables": 1305,
+      "live_materialized_tables_dev": 167
+    },
+    "honesty_notes": [
+      "usage_frequency is a STRUCTURAL ESTIMATE by nav placement — there is NO runtime usage telemetry in the platform. Do not read these as measured numbers.",
+      "api[] is grep-derived from each panel file (real). table[] is a best-effort namespace inference from the dominant API prefix, validated to exist among the 1305 live tables; empty [] means no confident mapping (see dependency map).",
+      "Some screens share a panel component or render multiple components; panel_component shows the primary."
+    ],
+    "table_count_caveat": "Table counts labelled code_defined_tables are pgTable/CREATE TABLE definitions across the backend (1305). The live dev DB currently materializes only 167 tables (most are created lazily via ensure*Schema on first feature use). Namespace table_counts in this file are code-defined, NOT live row presence."
+  },
+  "screens": [
+    {
+      "screen": "Overview",
+      "route": "admin#overview",
+      "nav_group": "Overview",
+      "is_labs": false,
+      "panel_component": "OverviewPanel",
+      "panel_file": "frontend/src/components/superadmin/OverviewPanel.tsx",
+      "api": [],
+      "owner_module": "OverviewPanel",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "LBI Framework",
+      "route": "admin#lbi-fw",
+      "nav_group": "Frameworks",
+      "is_labs": false,
+      "panel_component": "FrameworkPanel",
+      "panel_file": "frontend/src/components/admin/FrameworkPanel.tsx",
+      "api": [
+        "/api/lbi/admin/domains",
+        "/api/lbi/admin/questions-all"
+      ],
+      "owner_module": "lbi",
+      "table": [
+        "lbi_"
+      ],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Competency",
+      "route": "admin#competency-fw",
+      "nav_group": "Frameworks",
+      "is_labs": false,
+      "panel_component": "FrameworkPanel",
+      "panel_file": "frontend/src/components/admin/FrameworkPanel.tsx",
+      "api": [
+        "/api/lbi/admin/domains",
+        "/api/lbi/admin/questions-all"
+      ],
+      "owner_module": "lbi",
+      "table": [
+        "lbi_"
+      ],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Reports",
+      "route": "admin#reports",
+      "nav_group": "Frameworks",
+      "is_labs": false,
+      "panel_component": "UnifiedReportsPanel",
+      "panel_file": "frontend/src/components/superadmin/UnifiedReportsPanel.tsx",
+      "api": [
+        "/api/admin/capadex/reports"
+      ],
+      "owner_module": "capadex",
+      "table": [
+        "capadex_"
+      ],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "CAPADEX Framework",
+      "route": "admin#capadex-fw",
+      "nav_group": "CAPADEX",
+      "is_labs": false,
+      "panel_component": "FrameworkPanel",
+      "panel_file": "frontend/src/components/admin/FrameworkPanel.tsx",
+      "api": [
+        "/api/lbi/admin/domains",
+        "/api/lbi/admin/questions-all"
+      ],
+      "owner_module": "lbi",
+      "table": [
+        "lbi_"
+      ],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Users & Journeys",
+      "route": "admin#capadex-users",
+      "nav_group": "CAPADEX",
+      "is_labs": false,
+      "panel_component": "CapadexUsersPanel",
+      "panel_file": "frontend/src/components/superadmin/CapadexUsersPanel.tsx",
+      "api": [
+        "/api/admin/capadex/users"
+      ],
+      "owner_module": "capadex",
+      "table": [
+        "capadex_"
+      ],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Analytics",
+      "route": "admin#capadex-analytics",
+      "nav_group": "CAPADEX",
+      "is_labs": false,
+      "panel_component": "CapadexAnalyticsPanel",
+      "panel_file": "frontend/src/components/superadmin/CapadexAnalyticsPanel.tsx",
+      "api": [
+        "/api/admin/capadex/analytics"
+      ],
+      "owner_module": "capadex",
+      "table": [
+        "capadex_"
+      ],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Risk & Interventions",
+      "route": "admin#capadex-interventions",
+      "nav_group": "CAPADEX",
+      "is_labs": false,
+      "panel_component": "CapadexInterventionsPanel",
+      "panel_file": "frontend/src/components/superadmin/CapadexInterventionsPanel.tsx",
+      "api": [
+        "/api/admin/capadex/interventions",
+        "/api/admin/capadex/interventions/",
+        "/api/admin/capadex/risk-flags",
+        "/api/admin/capadex/risk-flags/"
+      ],
+      "owner_module": "capadex",
+      "table": [
+        "capadex_"
+      ],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Upgrade Pricing",
+      "route": "admin#capadex-pricing",
+      "nav_group": "CAPADEX",
+      "is_labs": false,
+      "panel_component": "CapadexPricingPanel",
+      "panel_file": "frontend/src/components/superadmin/CapadexPricingPanel.tsx",
+      "api": [
+        "/api/admin/capadex/pricing",
+        "/api/admin/capadex/pricing/"
+      ],
+      "owner_module": "capadex",
+      "table": [
+        "capadex_"
+      ],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Reports",
+      "route": "admin#capadex-reports",
+      "nav_group": "CAPADEX",
+      "is_labs": false,
+      "panel_component": "CapadexReportsPanel",
+      "panel_file": "frontend/src/components/superadmin/CapadexReportsPanel.tsx",
+      "api": [
+        "/api/admin/capadex/email-preview",
+        "/api/admin/capadex/pricing",
+        "/api/admin/capadex/pricing/",
+        "/api/admin/capadex/reports",
+        "/api/admin/capadex/reports/",
+        "/api/admin/email-preview/capadex-report"
+      ],
+      "owner_module": "capadex",
+      "table": [
+        "capadex_"
+      ],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Signal Intelligence",
+      "route": "admin#signal-intelligence",
+      "nav_group": "CAPADEX Intelligence",
+      "is_labs": false,
+      "panel_component": "SignalIntelligencePanel",
+      "panel_file": "frontend/src/components/superadmin/SignalIntelligencePanel.tsx",
+      "api": [
+        "/api/admin/signals/",
+        "/api/admin/signals/profiles",
+        "/api/signals/"
+      ],
+      "owner_module": "signals",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Intelligence Pipeline",
+      "route": "admin#intelligence-pipeline",
+      "nav_group": "CAPADEX Intelligence",
+      "is_labs": false,
+      "panel_component": "IntelligencePipelinePanel",
+      "panel_file": "frontend/src/components/superadmin/IntelligencePipelinePanel.tsx",
+      "api": [
+        "/api/admin/intelligence/activation-analytics",
+        "/api/admin/intelligence/backfill",
+        "/api/admin/intelligence/diagnostics"
+      ],
+      "owner_module": "intelligence",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "CSI Profiles",
+      "route": "admin#csi-intelligence",
+      "nav_group": "CAPADEX Intelligence",
+      "is_labs": false,
+      "panel_component": "CSIPanel",
+      "panel_file": "frontend/src/components/superadmin/CSIPanel.tsx",
+      "api": [],
+      "owner_module": "CSIPanel",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Concern Engine",
+      "route": "admin#concern-intelligence",
+      "nav_group": "CAPADEX Intelligence",
+      "is_labs": false,
+      "panel_component": "ConcernIntelligencePanel",
+      "panel_file": "frontend/src/components/superadmin/ConcernIntelligencePanel.tsx",
+      "api": [
+        "/api/admin/ci/categories",
+        "/api/admin/ci/categories/",
+        "/api/admin/ci/questions",
+        "/api/admin/ci/questions/"
+      ],
+      "owner_module": "ci",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Concern → Signal Map",
+      "route": "admin#concern-signal-map",
+      "nav_group": "CAPADEX Intelligence",
+      "is_labs": false,
+      "panel_component": "ConcernSignalMapPanel",
+      "panel_file": "frontend/src/components/superadmin/ConcernSignalMapPanel.tsx",
+      "api": [
+        "/api/admin/capadex/concern-signal-map"
+      ],
+      "owner_module": "capadex",
+      "table": [
+        "capadex_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Ontology Matrix",
+      "route": "admin#ontology-matrix",
+      "nav_group": "CAPADEX Intelligence",
+      "is_labs": false,
+      "panel_component": "OntologyMatrixPanel",
+      "panel_file": "frontend/src/components/superadmin/OntologyMatrixPanel.tsx",
+      "api": [
+        "/api/admin/capadex/ontology"
+      ],
+      "owner_module": "capadex",
+      "table": [
+        "capadex_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Bridge-Tag Coverage",
+      "route": "admin#coverage-dashboard",
+      "nav_group": "CAPADEX Intelligence",
+      "is_labs": false,
+      "panel_component": "CoverageDashboardPanel",
+      "panel_file": "frontend/src/components/superadmin/CoverageDashboardPanel.tsx",
+      "api": [
+        "/api/admin/capadex/coverage/registry",
+        "/api/admin/capadex/coverage/registry.csv",
+        "/api/admin/capadex/coverage/roadmap",
+        "/api/admin/capadex/coverage/roadmap.csv",
+        "/api/admin/capadex/coverage/stats",
+        "/api/admin/capadex/coverage/tag/"
+      ],
+      "owner_module": "capadex",
+      "table": [
+        "capadex_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Question Registry",
+      "route": "admin#question-registry",
+      "nav_group": "CAPADEX Intelligence",
+      "is_labs": false,
+      "panel_component": "QuestionRegistryPanel",
+      "panel_file": "frontend/src/components/superadmin/QuestionRegistryPanel.tsx",
+      "api": [
+        "/api/admin/capadex/question-registry/",
+        "/api/admin/capadex/question-registry/coverage",
+        "/api/admin/capadex/question-registry/coverage.csv",
+        "/api/admin/capadex/question-registry/export.csv",
+        "/api/admin/capadex/question-registry/governance",
+        "/api/admin/capadex/question-registry/refresh",
+        "/api/admin/capadex/question-registry/registry",
+        "/api/admin/capadex/question-registry/stats"
+      ],
+      "owner_module": "capadex",
+      "table": [
+        "capadex_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Archetype Intelligence",
+      "route": "admin#archetype-intelligence",
+      "nav_group": "CAPADEX Intelligence",
+      "is_labs": false,
+      "panel_component": "ArchetypeIntelligencePanel",
+      "panel_file": "frontend/src/components/superadmin/ArchetypeIntelligencePanel.tsx",
+      "api": [
+        "/api/admin/pil/archetypes"
+      ],
+      "owner_module": "pil",
+      "table": [
+        "pil_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Human Intelligence",
+      "route": "admin#human-intelligence",
+      "nav_group": "CAPADEX Intelligence",
+      "is_labs": false,
+      "panel_component": "HumanIntelligencePanel",
+      "panel_file": "frontend/src/components/superadmin/HumanIntelligencePanel.tsx",
+      "api": [
+        "/api/admin/pil/human/",
+        "/api/admin/pil/human/problems",
+        "/api/admin/pil/human/stats"
+      ],
+      "owner_module": "pil",
+      "table": [
+        "pil_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Intervention Intelligence",
+      "route": "admin#intervention-intelligence",
+      "nav_group": "CAPADEX Intelligence",
+      "is_labs": false,
+      "panel_component": "InterventionIntelligencePanel",
+      "panel_file": "frontend/src/components/superadmin/InterventionIntelligencePanel.tsx",
+      "api": [
+        "/api/admin/pil/intervention/",
+        "/api/admin/pil/intervention/interventions",
+        "/api/admin/pil/intervention/stats"
+      ],
+      "owner_module": "pil",
+      "table": [
+        "pil_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Search Intent",
+      "route": "admin#search-intent",
+      "nav_group": "CAPADEX Intelligence",
+      "is_labs": false,
+      "panel_component": "SearchIntentPanel",
+      "panel_file": "frontend/src/components/superadmin/SearchIntentPanel.tsx",
+      "api": [
+        "/api/admin/pil/search/",
+        "/api/admin/pil/search/clusters",
+        "/api/admin/pil/search/intents",
+        "/api/admin/pil/search/stats"
+      ],
+      "owner_module": "pil",
+      "table": [
+        "pil_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Simulation & Validation",
+      "route": "admin#simulation-validation",
+      "nav_group": "CAPADEX Intelligence",
+      "is_labs": false,
+      "panel_component": "SimulationDashboard",
+      "panel_file": "frontend/src/components/superadmin/SimulationDashboard.tsx",
+      "api": [
+        "/api/admin/simulation/config",
+        "/api/admin/simulation/latest",
+        "/api/admin/simulation/run",
+        "/api/admin/simulation/runs"
+      ],
+      "owner_module": "simulation",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "LBI Engine",
+      "route": "admin#lbi-intelligence",
+      "nav_group": "BIOS & Governance",
+      "is_labs": false,
+      "panel_component": "LBIPanel",
+      "panel_file": "frontend/src/components/superadmin/LBIPanel.tsx",
+      "api": [
+        "/api/admin/lbi/activation-health",
+        "/api/admin/lbi/analytics",
+        "/api/admin/lbi/backfill-intelligence",
+        "/api/admin/lbi/cohort-analytics",
+        "/api/admin/lbi/longitudinal-aggregates",
+        "/api/admin/lbi/profiles",
+        "/api/admin/lbi/profiles/",
+        "/api/admin/lbi/quality-health",
+        "/api/admin/lbi/recalculate-all",
+        "/api/lbi/domains",
+        "/api/lbi/intelligence",
+        "/api/lbi/interventions"
+      ],
+      "owner_module": "lbi",
+      "table": [
+        "lbi_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Predictive Intelligence",
+      "route": "admin#predictive-intelligence",
+      "nav_group": "BIOS & Governance",
+      "is_labs": false,
+      "panel_component": "PredictiveIntelligencePanel",
+      "panel_file": "frontend/src/components/superadmin/PredictiveIntelligencePanel.tsx",
+      "api": [
+        "/api/admin/predictions/dashboard",
+        "/api/admin/predictions/detect-trajectories",
+        "/api/admin/predictions/profiles",
+        "/api/admin/predictions/trajectories"
+      ],
+      "owner_module": "predictions",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Conv. Quality",
+      "route": "admin#conv-quality",
+      "nav_group": "BIOS & Governance",
+      "is_labs": false,
+      "panel_component": "ConversationalQualityPanel",
+      "panel_file": "frontend/src/components/superadmin/ConversationalQualityPanel.tsx",
+      "api": [
+        "/api/admin/quality/dashboard",
+        "/api/admin/quality/sessions",
+        "/api/bios/quality/"
+      ],
+      "owner_module": "quality",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Runtime Intelligence",
+      "route": "admin#runtime-intelligence",
+      "nav_group": "BIOS & Governance",
+      "is_labs": false,
+      "panel_component": "GovernancePanel",
+      "panel_file": "frontend/src/components/superadmin/GovernancePanel.tsx",
+      "api": [
+        "/api/admin/bios/explainability-log",
+        "/api/admin/bios/runtime-state",
+        "/api/admin/bios/runtime-state/",
+        "/api/admin/bios/simulate",
+        "/api/admin/feature-flags/ws-status",
+        "/api/bios/"
+      ],
+      "owner_module": "bios",
+      "table": [
+        "bios_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "AI Governance Platform",
+      "route": "admin#ai-governance",
+      "nav_group": "BIOS & Governance",
+      "is_labs": false,
+      "panel_component": "AiGovernancePanel",
+      "panel_file": "frontend/src/components/superadmin/AiGovernancePanel.tsx",
+      "api": [
+        "/api/governance/ai"
+      ],
+      "owner_module": "governance",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Multi-Tenant",
+      "route": "admin#tenants",
+      "nav_group": "BIOS & Governance",
+      "is_labs": false,
+      "panel_component": "TenantsPanel",
+      "panel_file": "frontend/src/components/superadmin/TenantsPanel.tsx",
+      "api": [
+        "/api/admin/tenants",
+        "/api/admin/tenants/"
+      ],
+      "owner_module": "tenants",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Career Graph Intelligence",
+      "route": "admin#career-graph-admin",
+      "nav_group": "Career Intelligence",
+      "is_labs": false,
+      "panel_component": "CareerGraphPanel",
+      "panel_file": "frontend/src/components/superadmin/CareerGraphPanel.tsx",
+      "api": [
+        "/api/admin/career-graph/edges",
+        "/api/admin/career-graph/edges/",
+        "/api/admin/career-graph/learning-resources",
+        "/api/admin/career-graph/learning-resources/",
+        "/api/admin/career-graph/roles",
+        "/api/admin/career-graph/roles/",
+        "/api/admin/career-graph/stats",
+        "/api/admin/career-graph/tracks",
+        "/api/admin/career-graph/track-waypoints"
+      ],
+      "owner_module": "career-graph",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Pathway Analytics",
+      "route": "admin#career-pathway-analytics",
+      "nav_group": "Career Intelligence",
+      "is_labs": false,
+      "panel_component": "CareerPathwayAnalyticsPanel",
+      "panel_file": "frontend/src/components/superadmin/CareerPathwayAnalyticsPanel.tsx",
+      "api": [
+        "/api/admin/career/pi/pathway-analytics"
+      ],
+      "owner_module": "career",
+      "table": [
+        "career_",
+        "cg_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Occupation Analytics",
+      "route": "admin#occupation-analytics",
+      "nav_group": "Career Intelligence",
+      "is_labs": false,
+      "panel_component": "OccupationAnalyticsPanel",
+      "panel_file": "frontend/src/components/superadmin/OccupationAnalyticsPanel.tsx",
+      "api": [
+        "/api/admin/career/pi/occupation-analytics"
+      ],
+      "owner_module": "career",
+      "table": [
+        "career_",
+        "cg_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Recommendation Analytics",
+      "route": "admin#recommendation-analytics",
+      "nav_group": "Career Intelligence",
+      "is_labs": false,
+      "panel_component": "RecommendationAnalyticsPanel",
+      "panel_file": "frontend/src/components/superadmin/RecommendationAnalyticsPanel.tsx",
+      "api": [
+        "/api/admin/career/pi/recommendation-analytics"
+      ],
+      "owner_module": "career",
+      "table": [
+        "career_",
+        "cg_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Forecast Analytics",
+      "route": "admin#forecast-analytics",
+      "nav_group": "Career Intelligence",
+      "is_labs": false,
+      "panel_component": "ForecastAnalyticsPanel",
+      "panel_file": "frontend/src/components/superadmin/ForecastAnalyticsPanel.tsx",
+      "api": [
+        "/api/admin/career/pi/forecast-analytics"
+      ],
+      "owner_module": "career",
+      "table": [
+        "career_",
+        "cg_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Transition Analytics",
+      "route": "admin#transition-analytics",
+      "nav_group": "Career Intelligence",
+      "is_labs": false,
+      "panel_component": "TransitionAnalyticsPanel",
+      "panel_file": "frontend/src/components/superadmin/TransitionAnalyticsPanel.tsx",
+      "api": [
+        "/api/admin/career/pi/transition-analytics"
+      ],
+      "owner_module": "career",
+      "table": [
+        "career_",
+        "cg_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Role Families",
+      "route": "admin#role-families",
+      "nav_group": "Talent Foundation",
+      "is_labs": false,
+      "panel_component": "RoleFamilyPanel",
+      "panel_file": "frontend/src/components/superadmin/RoleFamilyPanel.tsx",
+      "api": [
+        "/api/admin/talent/export/role-families.csv",
+        "/api/admin/talent/role-families",
+        "/api/admin/talent/role-families/",
+        "/api/admin/talent/summary"
+      ],
+      "owner_module": "talent",
+      "table": [
+        "talent_",
+        "ti_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Competency Blueprints",
+      "route": "admin#competency-blueprints",
+      "nav_group": "Talent Foundation",
+      "is_labs": false,
+      "panel_component": "CompetencyBlueprintPanel",
+      "panel_file": "frontend/src/components/superadmin/CompetencyBlueprintPanel.tsx",
+      "api": [
+        "/api/admin/talent/blueprints",
+        "/api/admin/talent/blueprints/",
+        "/api/admin/talent/export/blueprints.csv",
+        "/api/admin/talent/summary"
+      ],
+      "owner_module": "talent",
+      "table": [
+        "talent_",
+        "ti_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Blueprint Mappings",
+      "route": "admin#blueprint-mappings",
+      "nav_group": "Talent Foundation",
+      "is_labs": false,
+      "panel_component": "BlueprintMappingPanel",
+      "panel_file": "frontend/src/components/superadmin/BlueprintMappingPanel.tsx",
+      "api": [
+        "/api/admin/talent/blueprints",
+        "/api/admin/talent/role-families",
+        "/api/admin/talent/role-families/",
+        "/api/admin/talent/summary"
+      ],
+      "owner_module": "talent",
+      "table": [
+        "talent_",
+        "ti_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Level Profiles",
+      "route": "admin#level-profiles",
+      "nav_group": "Talent Foundation",
+      "is_labs": false,
+      "panel_component": "LevelProfilePanel",
+      "panel_file": "frontend/src/components/superadmin/LevelProfilePanel.tsx",
+      "api": [
+        "/api/admin/talent/level-profiles",
+        "/api/admin/talent/level-profiles/",
+        "/api/admin/talent/level-profiles/summary",
+        "/api/admin/talent/role-families"
+      ],
+      "owner_module": "talent",
+      "table": [
+        "talent_",
+        "ti_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Talent Scoring",
+      "route": "admin#talent-scoring",
+      "nav_group": "Talent Foundation",
+      "is_labs": false,
+      "panel_component": "TalentScoringPanel",
+      "panel_file": "frontend/src/components/superadmin/TalentScoringPanel.tsx",
+      "api": [
+        "/api/admin/talent/scoring/compute",
+        "/api/admin/talent/scoring/overview",
+        "/api/admin/talent/scoring/user/"
+      ],
+      "owner_module": "talent",
+      "table": [
+        "talent_",
+        "ti_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Gap Intelligence",
+      "route": "admin#talent-gaps",
+      "nav_group": "Talent Foundation",
+      "is_labs": false,
+      "panel_component": "TalentGapPanel",
+      "panel_file": "frontend/src/components/superadmin/TalentGapPanel.tsx",
+      "api": [
+        "/api/admin/talent/gaps/overview"
+      ],
+      "owner_module": "talent",
+      "table": [
+        "talent_",
+        "ti_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Pipeline Analytics",
+      "route": "admin#talent-pipeline",
+      "nav_group": "Talent Foundation",
+      "is_labs": false,
+      "panel_component": "TalentPipelinePanel",
+      "panel_file": "frontend/src/components/superadmin/TalentPipelinePanel.tsx",
+      "api": [
+        "/api/admin/talent/pipeline"
+      ],
+      "owner_module": "talent",
+      "table": [
+        "talent_",
+        "ti_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Competency Intelligence",
+      "route": "admin#competency-intelligence-admin",
+      "nav_group": "Talent Intelligence",
+      "is_labs": false,
+      "panel_component": "CompetencyIntelligenceAdminPanel",
+      "panel_file": "frontend/src/components/superadmin/CompetencyIntelligenceAdminPanel.tsx",
+      "api": [
+        "/api/admin/competency-intelligence/overview"
+      ],
+      "owner_module": "competency-intelligence",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Signal Master (D3)",
+      "route": "admin#talent-signal-master",
+      "nav_group": "Talent Intelligence",
+      "is_labs": false,
+      "panel_component": "TalentSignalMasterPanel",
+      "panel_file": "frontend/src/components/superadmin/TalentSignalMasterPanel.tsx",
+      "api": [
+        "/api/admin/talent/signals",
+        "/api/admin/talent/signals/stats"
+      ],
+      "owner_module": "talent",
+      "table": [
+        "talent_",
+        "ti_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Concern Intelligence (D4)",
+      "route": "admin#talent-concern-intelligence",
+      "nav_group": "Talent Intelligence",
+      "is_labs": false,
+      "panel_component": "TalentConcernIntelligencePanel",
+      "panel_file": "frontend/src/components/superadmin/TalentConcernIntelligencePanel.tsx",
+      "api": [
+        "/api/admin/talent/concerns",
+        "/api/admin/talent/concerns/chain/overview",
+        "/api/admin/talent/concerns/stats"
+      ],
+      "owner_module": "talent",
+      "table": [
+        "talent_",
+        "ti_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Competency DNA (D5)",
+      "route": "admin#talent-competency-dna",
+      "nav_group": "Talent Intelligence",
+      "is_labs": false,
+      "panel_component": "TalentCompetencyDNAPanel",
+      "panel_file": "frontend/src/components/superadmin/TalentCompetencyDNAPanel.tsx",
+      "api": [
+        "/api/admin/talent/competency-dna"
+      ],
+      "owner_module": "talent",
+      "table": [
+        "talent_",
+        "ti_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Readiness Engine (D9)",
+      "route": "admin#talent-readiness-engine",
+      "nav_group": "Talent Intelligence",
+      "is_labs": false,
+      "panel_component": "TalentReadinessEnginePanel",
+      "panel_file": "frontend/src/components/superadmin/TalentReadinessEnginePanel.tsx",
+      "api": [
+        "/api/admin/talent/readiness",
+        "/api/admin/talent/readiness/compute/",
+        "/api/admin/talent/readiness/pipeline"
+      ],
+      "owner_module": "talent",
+      "table": [
+        "talent_",
+        "ti_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Digital Twin (D14)",
+      "route": "admin#talent-digital-twin-admin",
+      "nav_group": "Talent Intelligence",
+      "is_labs": false,
+      "panel_component": "TalentDigitalTwinAdminPanel",
+      "panel_file": "frontend/src/components/superadmin/TalentDigitalTwinAdminPanel.tsx",
+      "api": [
+        "/api/admin/talent/twin",
+        "/api/admin/talent/twin/synthesize/"
+      ],
+      "owner_module": "talent",
+      "table": [
+        "talent_",
+        "ti_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Outcome Prediction (D15)",
+      "route": "admin#talent-outcome-prediction",
+      "nav_group": "Talent Intelligence",
+      "is_labs": false,
+      "panel_component": "TalentOutcomePredictionPanel",
+      "panel_file": "frontend/src/components/superadmin/TalentOutcomePredictionPanel.tsx",
+      "api": [
+        "/api/admin/talent/predictions",
+        "/api/admin/talent/predictions/compute/",
+        "/api/admin/talent/predictions/high-potential",
+        "/api/admin/talent/predictions/high-risk"
+      ],
+      "owner_module": "talent",
+      "table": [
+        "talent_",
+        "ti_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Benchmark Engine (D17)",
+      "route": "admin#talent-benchmark-engine",
+      "nav_group": "Talent Intelligence",
+      "is_labs": false,
+      "panel_component": "TalentBenchmarkEnginePanel",
+      "panel_file": "frontend/src/components/superadmin/TalentBenchmarkEnginePanel.tsx",
+      "api": [
+        "/api/admin/talent/benchmarks/industry",
+        "/api/admin/talent/benchmarks/layer",
+        "/api/admin/talent/benchmarks/role"
+      ],
+      "owner_module": "talent",
+      "table": [
+        "talent_",
+        "ti_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Scoring Formulas & Weights (D8)",
+      "route": "admin#talent-measurement-science",
+      "nav_group": "Talent Intelligence",
+      "is_labs": false,
+      "panel_component": "TalentMeasurementSciencePanel",
+      "panel_file": "frontend/src/components/superadmin/TalentMeasurementSciencePanel.tsx",
+      "api": [
+        "/api/admin/talent/measurement/formulas",
+        "/api/admin/talent/measurement/norm-groups/compute",
+        "/api/admin/talent/measurement/overview",
+        "/api/admin/talent/measurement/score-bands",
+        "/api/admin/talent/measurement/signal-weights"
+      ],
+      "owner_module": "talent",
+      "table": [
+        "talent_",
+        "ti_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Analytics Warehouse (D20)",
+      "route": "admin#talent-analytics-warehouse",
+      "nav_group": "Talent Intelligence",
+      "is_labs": false,
+      "panel_component": "TalentAnalyticsWarehousePanel",
+      "panel_file": "frontend/src/components/superadmin/TalentAnalyticsWarehousePanel.tsx",
+      "api": [
+        "/api/admin/talent/warehouse/compute-kpis",
+        "/api/admin/talent/warehouse/executive-dashboard",
+        "/api/admin/talent/warehouse/fact-tables",
+        "/api/admin/talent/warehouse/kpis",
+        "/api/admin/talent/warehouse/load"
+      ],
+      "owner_module": "talent",
+      "table": [
+        "talent_",
+        "ti_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Capability Architecture (D3)",
+      "route": "admin#vx-capability-architecture",
+      "nav_group": "Vision-X Intelligence",
+      "is_labs": false,
+      "panel_component": "VXCapabilityArchitecturePanel",
+      "panel_file": "frontend/src/components/superadmin/VXCapabilityArchitecturePanel.tsx",
+      "api": [
+        "/api/admin/vx/capabilities",
+        "/api/admin/vx/capabilities/stats"
+      ],
+      "owner_module": "vx",
+      "table": [
+        "sci_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Labor Market Intelligence (D15)",
+      "route": "admin#vx-labor-market-intelligence",
+      "nav_group": "Vision-X Intelligence",
+      "is_labs": false,
+      "panel_component": "VXLaborMarketIntelligencePanel",
+      "panel_file": "frontend/src/components/superadmin/VXLaborMarketIntelligencePanel.tsx",
+      "api": [
+        "/api/admin/vx/labor-market/future-demand",
+        "/api/admin/vx/labor-market/market-intelligence",
+        "/api/admin/vx/labor-market/overview",
+        "/api/admin/vx/labor-market/skill-demand"
+      ],
+      "owner_module": "vx",
+      "table": [
+        "sci_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Evidence Intelligence (D16)",
+      "route": "admin#vx-evidence-intelligence",
+      "nav_group": "Vision-X Intelligence",
+      "is_labs": false,
+      "panel_component": "VXEvidenceIntelligencePanel",
+      "panel_file": "frontend/src/components/superadmin/VXEvidenceIntelligencePanel.tsx",
+      "api": [
+        "/api/admin/vx/evidence/overview",
+        "/api/admin/vx/evidence/quality-rules"
+      ],
+      "owner_module": "vx",
+      "table": [
+        "sci_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Tenant Configuration (D0)",
+      "route": "admin#vx-tenant-configuration",
+      "nav_group": "Vision-X Intelligence",
+      "is_labs": false,
+      "panel_component": "VXTenantConfigurationPanel",
+      "panel_file": "frontend/src/components/superadmin/VXTenantConfigurationPanel.tsx",
+      "api": [
+        "/api/admin/vx/tenants",
+        "/api/admin/vx/tenants/",
+        "/api/admin/vx/tenants/overview"
+      ],
+      "owner_module": "vx",
+      "table": [
+        "sci_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Assessment Runtime Extended (D7A)",
+      "route": "admin#vx-assessment-runtime",
+      "nav_group": "Vision-X Intelligence",
+      "is_labs": false,
+      "panel_component": "VXAssessmentRuntimePanel",
+      "panel_file": "frontend/src/components/superadmin/VXAssessmentRuntimePanel.tsx",
+      "api": [
+        "/api/admin/vx/assessment-runtime/overview",
+        "/api/caf/sessions/"
+      ],
+      "owner_module": "vx",
+      "table": [
+        "sci_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Competency Science Council (D25)",
+      "route": "admin#vx-competency-science-council",
+      "nav_group": "Vision-X Intelligence",
+      "is_labs": false,
+      "panel_component": "VXCompetencyScienceCouncilPanel",
+      "panel_file": "frontend/src/components/superadmin/VXCompetencyScienceCouncilPanel.tsx",
+      "api": [
+        "/api/admin/vx/science-council/cycles",
+        "/api/admin/vx/science-council/governance-rules",
+        "/api/admin/vx/science-council/members",
+        "/api/admin/vx/science-council/overview",
+        "/api/admin/vx/science-council/reviews"
+      ],
+      "owner_module": "vx",
+      "table": [
+        "sci_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Workforce Knowledge Graph (D1)",
+      "route": "admin#vx-workforce-knowledge-graph",
+      "nav_group": "Vision-X Intelligence",
+      "is_labs": false,
+      "panel_component": "VXWorkforceKnowledgeGraphPanel",
+      "panel_file": "frontend/src/components/superadmin/VXWorkforceKnowledgeGraphPanel.tsx",
+      "api": [
+        "/api/admin/vx/wkg/materialize",
+        "/api/admin/vx/wkg/nodes",
+        "/api/admin/vx/wkg/overview",
+        "/api/admin/vx/wkg/schema"
+      ],
+      "owner_module": "vx",
+      "table": [
+        "sci_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "IRT & Adaptive Engine (D9)",
+      "route": "admin#vx-irt-engine",
+      "nav_group": "Vision-X Intelligence",
+      "is_labs": false,
+      "panel_component": "VXIRTEnginePanel",
+      "panel_file": "frontend/src/components/superadmin/VXIRTEnginePanel.tsx",
+      "api": [
+        "/api/admin/vx/irt/items",
+        "/api/admin/vx/irt/overview",
+        "/api/admin/vx/irt/simulate-calibration"
+      ],
+      "owner_module": "vx",
+      "table": [
+        "sci_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Report Intelligence (D21)",
+      "route": "admin#vx-report-intelligence",
+      "nav_group": "Vision-X Intelligence",
+      "is_labs": false,
+      "panel_component": "VXReportIntelligencePanel",
+      "panel_file": "frontend/src/components/superadmin/VXReportIntelligencePanel.tsx",
+      "api": [
+        "/api/admin/vx/reports/narrative-rules",
+        "/api/admin/vx/reports/overview",
+        "/api/admin/vx/reports/sections",
+        "/api/admin/vx/reports/templates",
+        "/api/vx/reports/generate-narrative"
+      ],
+      "owner_module": "vx",
+      "table": [
+        "sci_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "EI Health & Analytics",
+      "route": "admin#ei-health",
+      "nav_group": "Employability & Future Readiness",
+      "is_labs": false,
+      "panel_component": "EIOperationsPanel",
+      "panel_file": "frontend/src/components/superadmin/EIOperationsPanel.tsx",
+      "api": [
+        "/api/admin/mei/pipeline-health",
+        "/api/admin/mei/pipeline-health/backfill",
+        "/api/admin/mei/pipeline-health/rebuild/"
+      ],
+      "owner_module": "mei",
+      "table": [
+        "mei_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "MEI v2 Design",
+      "route": "admin#mei-v2-design",
+      "nav_group": "Employability & Future Readiness",
+      "is_labs": false,
+      "panel_component": "MEIDesignPanel",
+      "panel_file": "frontend/src/components/superadmin/MEIDesignPanel.tsx",
+      "api": [
+        "/api/admin/mei/benchmark/refresh",
+        "/api/admin/mei/calibration/",
+        "/api/admin/mei/calibration/industry",
+        "/api/admin/mei/calibration/role",
+        "/api/admin/mei/competencies",
+        "/api/admin/mei/dimensions",
+        "/api/admin/mei/dimensions/",
+        "/api/admin/mei/insight-rules",
+        "/api/admin/mei/insight-rules/",
+        "/api/admin/mei/recommendations",
+        "/api/admin/mei/recommendations/",
+        "/api/admin/mei/scores",
+        "/api/admin/mei/subdimensions",
+        "/api/mei/score/:userId"
+      ],
+      "owner_module": "mei",
+      "table": [
+        "mei_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Future Readiness Platform",
+      "route": "admin#frp-admin",
+      "nav_group": "Employability & Future Readiness",
+      "is_labs": false,
+      "panel_component": "FRPDesignPanel",
+      "panel_file": "frontend/src/components/superadmin/FRPDesignPanel.tsx",
+      "api": [
+        "/api/admin/frp/ai-impact",
+        "/api/admin/frp/ai-impact/",
+        "/api/admin/frp/analytics",
+        "/api/admin/frp/automation-risk",
+        "/api/admin/frp/backfill-users",
+        "/api/admin/frp/benchmarks",
+        "/api/admin/frp/industry-forecast",
+        "/api/admin/frp/role-evolution",
+        "/api/admin/frp/skill-library",
+        "/api/admin/frp/skill-library/",
+        "/api/admin/frp/stats",
+        "/api/admin/frp/user-readiness"
+      ],
+      "owner_module": "frp",
+      "table": [
+        "frp_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "FRP Enrichment (D13)",
+      "route": "admin#talent-frp-enrichment",
+      "nav_group": "Employability & Future Readiness",
+      "is_labs": false,
+      "panel_component": "TalentFRPEnrichmentPanel",
+      "panel_file": "frontend/src/components/superadmin/TalentFRPEnrichmentPanel.tsx",
+      "api": [
+        "/api/admin/frp/ai-readiness",
+        "/api/admin/frp/automation-risk",
+        "/api/admin/frp/future-competency-map",
+        "/api/frp/ai-readiness/compute/"
+      ],
+      "owner_module": "frp",
+      "table": [
+        "frp_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Learning Intelligence Platform",
+      "route": "admin#lip-admin",
+      "nav_group": "Learning & Passport",
+      "is_labs": false,
+      "panel_component": "LIPDesignPanel",
+      "panel_file": "frontend/src/components/superadmin/LIPDesignPanel.tsx",
+      "api": [
+        "/api/admin/lip/certifications",
+        "/api/admin/lip/certifications/",
+        "/api/admin/lip/courses",
+        "/api/admin/lip/courses/",
+        "/api/admin/lip/mentors",
+        "/api/admin/lip/mentors/",
+        "/api/admin/lip/path-templates",
+        "/api/admin/lip/projects",
+        "/api/admin/lip/readiness-weights",
+        "/api/admin/lip/stats"
+      ],
+      "owner_module": "lip",
+      "table": [
+        "lip_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Learning Catalog (D12)",
+      "route": "admin#talent-learning-catalog",
+      "nav_group": "Learning & Passport",
+      "is_labs": false,
+      "panel_component": "TalentLearningCatalogPanel",
+      "panel_file": "frontend/src/components/superadmin/TalentLearningCatalogPanel.tsx",
+      "api": [
+        "/api/admin/lip/catalog/certifications",
+        "/api/admin/lip/catalog/courses",
+        "/api/admin/lip/catalog/mentors",
+        "/api/admin/lip/catalog/overview",
+        "/api/admin/lip/catalog/projects"
+      ],
+      "owner_module": "lip",
+      "table": [
+        "lip_"
+      ],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Passport Stats & Governance",
+      "route": "admin#passport-stats-admin",
+      "nav_group": "Learning & Passport",
+      "is_labs": false,
+      "panel_component": "PassportStatsPanel",
+      "panel_file": "frontend/src/components/superadmin/PassportStatsPanel.tsx",
+      "api": [
+        "/api/admin/passport/stats",
+        "/api/passport/analytics",
+        "/api/passport/sync"
+      ],
+      "owner_module": "passport",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Ontology Overview",
+      "route": "admin#ont-overview",
+      "nav_group": "Competency Ontology",
+      "is_labs": false,
+      "panel_component": "OntologyOverviewPanel",
+      "panel_file": "frontend/src/components/superadmin/OntologyOverviewPanel.tsx",
+      "api": [
+        "/api/ontology/overview/seed",
+        "/api/ontology/overview/stats"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Industries",
+      "route": "admin#ont-industries",
+      "nav_group": "Competency Ontology",
+      "is_labs": false,
+      "panel_component": "IndustriesPanel",
+      "panel_file": "frontend/src/components/superadmin/IndustriesPanel.tsx",
+      "api": [
+        "/api/ontology/industries",
+        "/api/ontology/industries/"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Functions",
+      "route": "admin#ont-functions",
+      "nav_group": "Competency Ontology",
+      "is_labs": false,
+      "panel_component": "FunctionsPanel",
+      "panel_file": "frontend/src/components/superadmin/FunctionsPanel.tsx",
+      "api": [
+        "/api/ontology/functions",
+        "/api/ontology/functions/"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Departments",
+      "route": "admin#ont-departments",
+      "nav_group": "Competency Ontology",
+      "is_labs": false,
+      "panel_component": "DepartmentsPanel",
+      "panel_file": "frontend/src/components/superadmin/DepartmentsPanel.tsx",
+      "api": [
+        "/api/ontology/departments",
+        "/api/ontology/departments/",
+        "/api/ontology/functions"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Role Families",
+      "route": "admin#ont-role-families",
+      "nav_group": "Competency Ontology",
+      "is_labs": false,
+      "panel_component": "RoleFamiliesPanel",
+      "panel_file": "frontend/src/components/superadmin/RoleFamiliesPanel.tsx",
+      "api": [
+        "/api/ontology/role-families",
+        "/api/ontology/role-families/"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Roles",
+      "route": "admin#ont-roles",
+      "nav_group": "Competency Ontology",
+      "is_labs": false,
+      "panel_component": "RolesPanel",
+      "panel_file": "frontend/src/components/superadmin/RolesPanel.tsx",
+      "api": [
+        "/api/ontology/",
+        "/api/ontology/departments",
+        "/api/ontology/role-families",
+        "/api/ontology/role-families/",
+        "/api/ontology/roles",
+        "/api/ontology/roles/"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Career Tracks",
+      "route": "admin#ont-career-tracks",
+      "nav_group": "Competency Ontology",
+      "is_labs": false,
+      "panel_component": "CareerTracksPanel",
+      "panel_file": "frontend/src/components/superadmin/CareerTracksPanel.tsx",
+      "api": [
+        "/api/ontology/career-tracks",
+        "/api/ontology/career-tracks/"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Competency Levels",
+      "route": "admin#ont-competency-levels",
+      "nav_group": "Competency Ontology",
+      "is_labs": false,
+      "panel_component": "CompetencyLevelsPanel",
+      "panel_file": "frontend/src/components/superadmin/CompetencyLevelsPanel.tsx",
+      "api": [
+        "/api/ontology/competency-levels",
+        "/api/ontology/competency-levels/"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Indicators",
+      "route": "admin#ont-indicators",
+      "nav_group": "Competency Ontology",
+      "is_labs": false,
+      "panel_component": "IndicatorsPanel",
+      "panel_file": "frontend/src/components/superadmin/IndicatorsPanel.tsx",
+      "api": [
+        "/api/ontology/indicators",
+        "/api/ontology/indicators/"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Benchmarks",
+      "route": "admin#ont-benchmarks",
+      "nav_group": "Competency Ontology",
+      "is_labs": false,
+      "panel_component": "BenchmarksPanel",
+      "panel_file": "frontend/src/components/superadmin/BenchmarksPanel.tsx",
+      "api": [
+        "/api/ontology/benchmarks",
+        "/api/ontology/benchmarks/"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Career Paths",
+      "route": "admin#ont-career-paths",
+      "nav_group": "Competency Ontology",
+      "is_labs": false,
+      "panel_component": "CareerPathsPanel",
+      "panel_file": "frontend/src/components/superadmin/CareerPathsPanel.tsx",
+      "api": [
+        "/api/ontology/career-paths",
+        "/api/ontology/career-paths/"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Learning Paths",
+      "route": "admin#ont-learning-paths",
+      "nav_group": "Competency Ontology",
+      "is_labs": false,
+      "panel_component": "LearningPathsOntologyPanel",
+      "panel_file": "frontend/src/components/superadmin/LearningPathsOntologyPanel.tsx",
+      "api": [
+        "/api/ontology/learning-paths",
+        "/api/ontology/learning-paths/"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Future Skills",
+      "route": "admin#ont-future-skills",
+      "nav_group": "Competency Ontology",
+      "is_labs": false,
+      "panel_component": "FutureSkillsPanel",
+      "panel_file": "frontend/src/components/superadmin/FutureSkillsPanel.tsx",
+      "api": [
+        "/api/ontology/future-skills",
+        "/api/ontology/future-skills/"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Layers",
+      "route": "admin#ont-layers",
+      "nav_group": "Competency Ontology",
+      "is_labs": false,
+      "panel_component": "CompetencyCorePanel",
+      "panel_file": "frontend/src/components/superadmin/CompetencyCorePanel.tsx",
+      "api": [
+        "/api/ontology/clusters",
+        "/api/ontology/clusters/",
+        "/api/ontology/competencies",
+        "/api/ontology/competencies/",
+        "/api/ontology/competency-core/stats",
+        "/api/ontology/layers",
+        "/api/ontology/layers/",
+        "/api/ontology/micro-competencies",
+        "/api/ontology/micro-competencies/"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Competency Clusters",
+      "route": "admin#ont-clusters",
+      "nav_group": "Competency Ontology",
+      "is_labs": false,
+      "panel_component": "CompetencyCorePanel",
+      "panel_file": "frontend/src/components/superadmin/CompetencyCorePanel.tsx",
+      "api": [
+        "/api/ontology/clusters",
+        "/api/ontology/clusters/",
+        "/api/ontology/competencies",
+        "/api/ontology/competencies/",
+        "/api/ontology/competency-core/stats",
+        "/api/ontology/layers",
+        "/api/ontology/layers/",
+        "/api/ontology/micro-competencies",
+        "/api/ontology/micro-competencies/"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Competencies",
+      "route": "admin#ont-competencies",
+      "nav_group": "Competency Ontology",
+      "is_labs": false,
+      "panel_component": "CompetencyCorePanel",
+      "panel_file": "frontend/src/components/superadmin/CompetencyCorePanel.tsx",
+      "api": [
+        "/api/ontology/clusters",
+        "/api/ontology/clusters/",
+        "/api/ontology/competencies",
+        "/api/ontology/competencies/",
+        "/api/ontology/competency-core/stats",
+        "/api/ontology/layers",
+        "/api/ontology/layers/",
+        "/api/ontology/micro-competencies",
+        "/api/ontology/micro-competencies/"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Micro Competencies",
+      "route": "admin#ont-micro-competencies",
+      "nav_group": "Competency Ontology",
+      "is_labs": false,
+      "panel_component": "CompetencyCorePanel",
+      "panel_file": "frontend/src/components/superadmin/CompetencyCorePanel.tsx",
+      "api": [
+        "/api/ontology/clusters",
+        "/api/ontology/clusters/",
+        "/api/ontology/competencies",
+        "/api/ontology/competencies/",
+        "/api/ontology/competency-core/stats",
+        "/api/ontology/layers",
+        "/api/ontology/layers/",
+        "/api/ontology/micro-competencies",
+        "/api/ontology/micro-competencies/"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Ontology Concerns",
+      "route": "admin#ont-concerns",
+      "nav_group": "Competency Ontology",
+      "is_labs": false,
+      "panel_component": "ConcernsMappingPanel",
+      "panel_file": "frontend/src/components/superadmin/ConcernsMappingPanel.tsx",
+      "api": [
+        "/api/ontology/assessment-questions",
+        "/api/ontology/assessment-questions/",
+        "/api/ontology/concerns/:id/indicators",
+        "/api/ontology/concerns-mapping/stats",
+        "/api/ontology/indicators/:id/questions",
+        "/api/ontology/micro-competencies/:id/concerns",
+        "/api/ontology/ont-concerns",
+        "/api/ontology/ont-concerns/"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Assessment Questions",
+      "route": "admin#ont-assessment-questions",
+      "nav_group": "Competency Ontology",
+      "is_labs": false,
+      "panel_component": "ConcernsMappingPanel",
+      "panel_file": "frontend/src/components/superadmin/ConcernsMappingPanel.tsx",
+      "api": [
+        "/api/ontology/assessment-questions",
+        "/api/ontology/assessment-questions/",
+        "/api/ontology/concerns/:id/indicators",
+        "/api/ontology/concerns-mapping/stats",
+        "/api/ontology/indicators/:id/questions",
+        "/api/ontology/micro-competencies/:id/concerns",
+        "/api/ontology/ont-concerns",
+        "/api/ontology/ont-concerns/"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "AI Rules",
+      "route": "admin#ont-ai-rules",
+      "nav_group": "Competency Ontology",
+      "is_labs": false,
+      "panel_component": "AIRulesPanel",
+      "panel_file": "frontend/src/components/superadmin/AIRulesPanel.tsx",
+      "api": [
+        "/api/ontology/ai-rules",
+        "/api/ontology/ai-rules/"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Import / Export",
+      "route": "admin#ont-import-export",
+      "nav_group": "Competency Ontology",
+      "is_labs": false,
+      "panel_component": "OntologyImportExportPanel",
+      "panel_file": "frontend/src/components/superadmin/OntologyImportExportPanel.tsx",
+      "api": [
+        "/api/ontology/"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Question Bank",
+      "route": "admin#caf-question-bank",
+      "nav_group": "Assessment Factory",
+      "is_labs": false,
+      "panel_component": "CAFQuestionBankPanel",
+      "panel_file": "frontend/src/components/superadmin/caf/CAFQuestionBankPanel.tsx",
+      "api": [],
+      "owner_module": "CAFQuestionBankPanel",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Scenario Framework",
+      "route": "admin#caf-scenarios",
+      "nav_group": "Assessment Factory",
+      "is_labs": false,
+      "panel_component": "CAFScenarioPanel",
+      "panel_file": "frontend/src/components/superadmin/caf/CAFScenarioPanel.tsx",
+      "api": [],
+      "owner_module": "CAFScenarioPanel",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Difficulty & Levels",
+      "route": "admin#caf-difficulty-level",
+      "nav_group": "Assessment Factory",
+      "is_labs": false,
+      "panel_component": "CAFDifficultyLevelPanel",
+      "panel_file": "frontend/src/components/superadmin/caf/CAFDifficultyLevelPanel.tsx",
+      "api": [],
+      "owner_module": "CAFDifficultyLevelPanel",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Assessment Builder",
+      "route": "admin#caf-assessment-builder",
+      "nav_group": "Assessment Factory",
+      "is_labs": false,
+      "panel_component": "CAFAssessmentBuilderPanel",
+      "panel_file": "frontend/src/components/superadmin/caf/CAFAssessmentBuilderPanel.tsx",
+      "api": [],
+      "owner_module": "CAFAssessmentBuilderPanel",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Randomization Engine",
+      "route": "admin#caf-randomization",
+      "nav_group": "Assessment Factory",
+      "is_labs": false,
+      "panel_component": "CAFRandomizationPanel",
+      "panel_file": "frontend/src/components/superadmin/caf/CAFRandomizationPanel.tsx",
+      "api": [],
+      "owner_module": "CAFRandomizationPanel",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Sessions",
+      "route": "admin#caf-sessions",
+      "nav_group": "Assessment Factory",
+      "is_labs": false,
+      "panel_component": "CAFSessionsPanel",
+      "panel_file": "frontend/src/components/superadmin/caf/CAFSessionsPanel.tsx",
+      "api": [],
+      "owner_module": "CAFSessionsPanel",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Scoring Engine",
+      "route": "admin#caf-scoring",
+      "nav_group": "Assessment Factory",
+      "is_labs": false,
+      "panel_component": "CAFScoringPanel",
+      "panel_file": "frontend/src/components/superadmin/caf/CAFScoringPanel.tsx",
+      "api": [],
+      "owner_module": "CAFScoringPanel",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Analytics",
+      "route": "admin#caf-analytics",
+      "nav_group": "Assessment Factory",
+      "is_labs": false,
+      "panel_component": "CAFAnalyticsPanel",
+      "panel_file": "frontend/src/components/superadmin/caf/CAFAnalyticsPanel.tsx",
+      "api": [],
+      "owner_module": "CAFAnalyticsPanel",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Question Bank",
+      "route": "admin#questionbank",
+      "nav_group": "Assessment Config",
+      "is_labs": false,
+      "panel_component": "QuestionBankPanel",
+      "panel_file": "frontend/src/components/superadmin/QuestionBankPanel.tsx",
+      "api": [
+        "/api/admin/curriculum/template",
+        "/api/admin/generate-paper/",
+        "/api/admin/question-bank/template",
+        "/api/admin/seed-education-data"
+      ],
+      "owner_module": "curriculum",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Competency Questions",
+      "route": "admin#competency-questions",
+      "nav_group": "Assessment Config",
+      "is_labs": false,
+      "panel_component": "CompetencyQuestionsPanel",
+      "panel_file": "frontend/src/components/superadmin/CompetencyQuestionsPanel.tsx",
+      "api": [
+        "/api/admin/competency-questions",
+        "/api/admin/competency-questions/",
+        "/api/admin/competency-questions/generate",
+        "/api/admin/competency-questions/stats"
+      ],
+      "owner_module": "competency-questions",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Custom Modules",
+      "route": "admin#custom-modules",
+      "nav_group": "Assessment Config",
+      "is_labs": false,
+      "panel_component": "AssessmentModulesManagement",
+      "panel_file": null,
+      "api": [],
+      "owner_module": null,
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Norms & Scoring",
+      "route": "admin#scoring",
+      "nav_group": "Assessment Config",
+      "is_labs": false,
+      "panel_component": "ScoringPanel",
+      "panel_file": "frontend/src/components/superadmin/ScoringPanel.tsx",
+      "api": [
+        "/api/admin/scoring/assessment-products/",
+        "/api/scoring/"
+      ],
+      "owner_module": "scoring",
+      "table": [],
+      "usage_frequency": "specialized (est — no telemetry)"
+    },
+    {
+      "screen": "Design Report Factory",
+      "route": "admin#report-factory-admin",
+      "nav_group": "Reporting & Analytics",
+      "is_labs": false,
+      "panel_component": "ReportFactoryPanel",
+      "panel_file": "frontend/src/components/superadmin/ReportFactoryPanel.tsx",
+      "api": [
+        "/api/admin/rf/stats",
+        "/api/rf/benchmarks",
+        "/api/rf/benchmarks/",
+        "/api/rf/exports",
+        "/api/rf/exports/:jobUuid",
+        "/api/rf/insights/rules",
+        "/api/rf/insights/rules/",
+        "/api/rf/languages",
+        "/api/rf/languages/",
+        "/api/rf/narratives",
+        "/api/rf/narratives/",
+        "/api/rf/reports",
+        "/api/rf/templates",
+        "/api/rf/templates/",
+        "/api/rf/visualizations",
+        "/api/rf/visualizations/",
+        "/api/rf/white-label",
+        "/api/rf/white-label/"
+      ],
+      "owner_module": "rf",
+      "table": [
+        "rf_"
+      ],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Enterprise Analytics",
+      "route": "admin#enterprise-analytics",
+      "nav_group": "Reporting & Analytics",
+      "is_labs": false,
+      "panel_component": "EnterpriseAnalyticsPanel",
+      "panel_file": "frontend/src/components/superadmin/EnterpriseAnalyticsPanel.tsx",
+      "api": [
+        "/api/analytics/executive",
+        "/api/analytics/features",
+        "/api/analytics/refresh"
+      ],
+      "owner_module": "analytics",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "User Management",
+      "route": "admin#usermgmt",
+      "nav_group": "Users & Orgs",
+      "is_labs": false,
+      "panel_component": "UserMgmtPanel",
+      "panel_file": "frontend/src/components/superadmin/UserMgmtPanel.tsx",
+      "api": [
+        "/api/admin/enrollment/",
+        "/api/admin/enrollment-kyc/doc/",
+        "/api/admin/mentors/",
+        "/api/admin/users/"
+      ],
+      "owner_module": "enrollment",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Parents",
+      "route": "admin#parents",
+      "nav_group": "Users & Orgs",
+      "is_labs": false,
+      "panel_component": "ParentsPanel",
+      "panel_file": "frontend/src/components/superadmin/ParentsPanel.tsx",
+      "api": [
+        "/api/admin/notifications/send",
+        "/api/admin/parents/",
+        "/api/admin/parents/export",
+        "/api/admin/users/"
+      ],
+      "owner_module": "parents",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Students (18+)",
+      "route": "admin#students",
+      "nav_group": "Users & Orgs",
+      "is_labs": false,
+      "panel_component": "StudentsPanel",
+      "panel_file": "frontend/src/components/superadmin/StudentsPanel.tsx",
+      "api": [
+        "/api/admin/notifications/send",
+        "/api/admin/students/",
+        "/api/admin/students/class-roster/export",
+        "/api/admin/students/export",
+        "/api/admin/users/"
+      ],
+      "owner_module": "students",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Institutions",
+      "route": "admin#institutions",
+      "nav_group": "Users & Orgs",
+      "is_labs": false,
+      "panel_component": "InstitutionsPanel",
+      "panel_file": "frontend/src/components/superadmin/InstitutionsPanel.tsx",
+      "api": [
+        "/api/admin/institutions/",
+        "/api/admin/parents/"
+      ],
+      "owner_module": "institutions",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "HR & Jobs",
+      "route": "admin#hr",
+      "nav_group": "Users & Orgs",
+      "is_labs": false,
+      "panel_component": "HRPanel",
+      "panel_file": "frontend/src/components/superadmin/HRPanel.tsx",
+      "api": [
+        "/api/admin/mentors/"
+      ],
+      "owner_module": "mentors",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Mentors",
+      "route": "admin#mentors",
+      "nav_group": "Users & Orgs",
+      "is_labs": false,
+      "panel_component": "MentorsPanel",
+      "panel_file": "frontend/src/components/superadmin/MentorsPanel.tsx",
+      "api": [
+        "/api/admin/mentors/"
+      ],
+      "owner_module": "mentors",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Employer Onboarding",
+      "route": "admin#employer-onboarding",
+      "nav_group": "Users & Orgs",
+      "is_labs": false,
+      "panel_component": "EmployerOnboardingPanel",
+      "panel_file": "frontend/src/components/superadmin/EmployerOnboardingPanel.tsx",
+      "api": [
+        "/api/admin/employers",
+        "/api/admin/employers/"
+      ],
+      "owner_module": "employers",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Pricing & Packages",
+      "route": "admin#pricing",
+      "nav_group": "Platform",
+      "is_labs": false,
+      "panel_component": "PricingPanel",
+      "panel_file": "frontend/src/components/superadmin/PricingPanel.tsx",
+      "api": [
+        "/api/admin/assessment-domains/",
+        "/api/admin/children-list",
+        "/api/admin/package-domains/",
+        "/api/admin/student-subscriptions",
+        "/api/admin/student-subscriptions/",
+        "/api/admin/student-subscriptions/bulk",
+        "/api/admin/subscription-packages",
+        "/api/admin/subscription-packages/",
+        "/api/admin/subscription-packages/seed",
+        "/api/admin/subscription-packages/stats"
+      ],
+      "owner_module": "subscription-packages",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Learning Plans",
+      "route": "admin#learning",
+      "nav_group": "Platform",
+      "is_labs": false,
+      "panel_component": "LearningPlansPanel",
+      "panel_file": "frontend/src/components/superadmin/LearningPlansPanel.tsx",
+      "api": [],
+      "owner_module": "LearningPlansPanel",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Content Manager",
+      "route": "admin#content",
+      "nav_group": "Platform",
+      "is_labs": false,
+      "panel_component": "ContentManagerPanel",
+      "panel_file": "frontend/src/components/superadmin/ContentManagerPanel.tsx",
+      "api": [],
+      "owner_module": "ContentManagerPanel",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Documents",
+      "route": "admin#documents",
+      "nav_group": "Platform",
+      "is_labs": false,
+      "panel_component": "DocumentsPanel",
+      "panel_file": "frontend/src/components/superadmin/DocumentsPanel.tsx",
+      "api": [
+        "/api/admin/documents",
+        "/api/admin/documents/"
+      ],
+      "owner_module": "documents",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Entity Codes",
+      "route": "admin#codes",
+      "nav_group": "Platform",
+      "is_labs": false,
+      "panel_component": "EntityCodesPanel",
+      "panel_file": "frontend/src/components/superadmin/EntityCodesPanel.tsx",
+      "api": [],
+      "owner_module": "EntityCodesPanel",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Consents",
+      "route": "admin#consents",
+      "nav_group": "Platform",
+      "is_labs": false,
+      "panel_component": "ConsentsPanel",
+      "panel_file": "frontend/src/components/superadmin/ConsentsPanel.tsx",
+      "api": [],
+      "owner_module": "ConsentsPanel",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Access Control",
+      "route": "admin#access",
+      "nav_group": "Platform",
+      "is_labs": false,
+      "panel_component": "AccessControlPanel",
+      "panel_file": "frontend/src/components/superadmin/AccessControlPanel.tsx",
+      "api": [],
+      "owner_module": "AccessControlPanel",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Platform Audit Log",
+      "route": "admin#platform-audit",
+      "nav_group": "Operations",
+      "is_labs": false,
+      "panel_component": "PlatformAuditLogPanel",
+      "panel_file": "frontend/src/components/superadmin/PlatformAuditLogPanel.tsx",
+      "api": [
+        "/api/admin/platform-audit"
+      ],
+      "owner_module": "platform-audit",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Approval Workflow",
+      "route": "admin#approvals",
+      "nav_group": "Operations",
+      "is_labs": false,
+      "panel_component": "ApprovalWorkflowPanel",
+      "panel_file": "frontend/src/components/superadmin/ApprovalWorkflowPanel.tsx",
+      "api": [
+        "/api/admin/approvals",
+        "/api/admin/approvals/",
+        "/api/admin/approvals/stats"
+      ],
+      "owner_module": "approvals",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Ontology Governance",
+      "route": "admin#ont-governance",
+      "nav_group": "Operations",
+      "is_labs": false,
+      "panel_component": "OntologyGovernancePanel",
+      "panel_file": "frontend/src/components/superadmin/OntologyGovernancePanel.tsx",
+      "api": [
+        "/api/ontology/changes",
+        "/api/ontology/governance/quality-rules",
+        "/api/ontology/governance/quality-rules/",
+        "/api/ontology/governance/reviews",
+        "/api/ontology/governance/schedules",
+        "/api/ontology/governance/stats",
+        "/api/ontology/lifecycle",
+        "/api/ontology/ref/assessment-types",
+        "/api/ontology/ref/competency-categories",
+        "/api/ontology/ref/lifecycle-transitions",
+        "/api/ontology/ref/proficiency-levels",
+        "/api/ontology/ref/seniority-levels",
+        "/api/ontology/versions"
+      ],
+      "owner_module": "ontology",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Financials",
+      "route": "admin#financials",
+      "nav_group": "System",
+      "is_labs": false,
+      "panel_component": "FinancialsPanel",
+      "panel_file": "frontend/src/components/superadmin/FinancialsPanel.tsx",
+      "api": [],
+      "owner_module": "FinancialsPanel",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Security & Audit",
+      "route": "admin#security",
+      "nav_group": "System",
+      "is_labs": false,
+      "panel_component": "SecurityPanel",
+      "panel_file": "frontend/src/components/superadmin/SecurityPanel.tsx",
+      "api": [
+        "/api/admin/audit/export",
+        "/api/admin/security/incidents"
+      ],
+      "owner_module": "audit",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Notifications",
+      "route": "admin#notifications_mgmt",
+      "nav_group": "System",
+      "is_labs": false,
+      "panel_component": "NotificationsMgmtPanel",
+      "panel_file": "frontend/src/components/superadmin/NotificationsMgmtPanel.tsx",
+      "api": [
+        "/api/admin/notification-broadcasts",
+        "/api/admin/notification-broadcasts/",
+        "/api/admin/notification-templates",
+        "/api/admin/notification-templates/",
+        "/api/admin/send-template-notification",
+        "/api/notification-templates"
+      ],
+      "owner_module": "notification-templates",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Reference Intelligence",
+      "route": "admin#reference-intelligence",
+      "nav_group": "System",
+      "is_labs": false,
+      "panel_component": "ReferenceIntelligencePanel",
+      "panel_file": "frontend/src/components/superadmin/ReferenceIntelligencePanel.tsx",
+      "api": [
+        "/api/admin/reference/audit-logs",
+        "/api/admin/reference/entities/",
+        "/api/admin/reference/institutions/",
+        "/api/admin/reference/provenance",
+        "/api/admin/reference/review-queue",
+        "/api/admin/reference/review-queue/",
+        "/api/admin/reference/seed",
+        "/api/admin/reference/stats"
+      ],
+      "owner_module": "reference",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Feature Flags",
+      "route": "admin#feature-flags",
+      "nav_group": "System",
+      "is_labs": false,
+      "panel_component": "FeatureFlagsPanel",
+      "panel_file": "frontend/src/components/superadmin/FeatureFlagsPanel.tsx",
+      "api": [
+        "/api/admin/feature-flags",
+        "/api/admin/feature-flags/",
+        "/api/admin/feature-flags/ws-status"
+      ],
+      "owner_module": "feature-flags",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Settings",
+      "route": "admin#settings",
+      "nav_group": "System",
+      "is_labs": false,
+      "panel_component": "SettingsPanel",
+      "panel_file": "frontend/src/components/superadmin/SettingsPanel.tsx",
+      "api": [
+        "/api/admin/platform-settings"
+      ],
+      "owner_module": "platform-settings",
+      "table": [],
+      "usage_frequency": "core (est — no telemetry)"
+    },
+    {
+      "screen": "Cognitive Intelligence",
+      "route": "admin#cognitive-intelligence",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "CognitiveIntelligencePanel",
+      "panel_file": "frontend/src/components/superadmin/CognitiveIntelligencePanel.tsx",
+      "api": [],
+      "owner_module": "CognitiveIntelligencePanel",
+      "table": [],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "Human Digital Twin",
+      "route": "admin#digital-twin",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "DigitalTwinPanel",
+      "panel_file": "frontend/src/components/superadmin/DigitalTwinPanel.tsx",
+      "api": [],
+      "owner_module": "DigitalTwinPanel",
+      "table": [],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "Psychometrics Engine",
+      "route": "admin#psychometrics",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "PsychometricsPanel",
+      "panel_file": "frontend/src/components/superadmin/PsychometricsPanel.tsx",
+      "api": [],
+      "owner_module": "PsychometricsPanel",
+      "table": [],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "Semantic Reasoning",
+      "route": "admin#semantic-reasoning",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "SemanticReasoningPanel",
+      "panel_file": "frontend/src/components/superadmin/SemanticReasoningPanel.tsx",
+      "api": [],
+      "owner_module": "SemanticReasoningPanel",
+      "table": [],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "Memory Architecture",
+      "route": "admin#memory-architecture",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "MemoryArchitecturePanel",
+      "panel_file": "frontend/src/components/superadmin/MemoryArchitecturePanel.tsx",
+      "api": [],
+      "owner_module": "MemoryArchitecturePanel",
+      "table": [],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "Ethics & Governance",
+      "route": "admin#ethics-governance",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "EthicsGovernancePanel",
+      "panel_file": "frontend/src/components/superadmin/EthicsGovernancePanel.tsx",
+      "api": [
+        "/api/admin/audit/events",
+        "/api/admin/audit/governance"
+      ],
+      "owner_module": "audit",
+      "table": [],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "Fairness & Bias",
+      "route": "admin#fairness-engine",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "FairnessPanel",
+      "panel_file": "frontend/src/components/superadmin/FairnessPanel.tsx",
+      "api": [],
+      "owner_module": "FairnessPanel",
+      "table": [],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "SPE: Scoring Engine",
+      "route": "admin#spe-scoring",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "SPEScoringPanel",
+      "panel_file": "frontend/src/components/superadmin/SPEScoringPanel.tsx",
+      "api": [
+        "/api/admin/spe/dashboard",
+        "/api/admin/spe/scores",
+        "/api/spe/assessments",
+        "/api/spe/score"
+      ],
+      "owner_module": "spe",
+      "table": [
+        "spe_"
+      ],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "SPE: IRT & Calibration",
+      "route": "admin#spe-psychometrics",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "SPEPsychometricsPanel",
+      "panel_file": "frontend/src/components/superadmin/SPEPsychometricsPanel.tsx",
+      "api": [
+        "/api/admin/spe/ability",
+        "/api/admin/spe/fairness",
+        "/api/admin/spe/psychometrics",
+        "/api/spe/ability",
+        "/api/spe/calibrate/:assessmentId",
+        "/api/spe/fairness/dif"
+      ],
+      "owner_module": "spe",
+      "table": [
+        "spe_"
+      ],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "SPE: Longitudinal",
+      "route": "admin#spe-longitudinal",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "SPELongitudinalPanel",
+      "panel_file": "frontend/src/components/superadmin/SPELongitudinalPanel.tsx",
+      "api": [
+        "/api/admin/spe/interventions",
+        "/api/admin/spe/longitudinal",
+        "/api/admin/spe/predictive",
+        "/api/spe/interventions",
+        "/api/spe/longitudinal/snapshot",
+        "/api/spe/predict"
+      ],
+      "owner_module": "spe",
+      "table": [
+        "spe_"
+      ],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "SPE: Governance",
+      "route": "admin#spe-governance",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "SPEGovernancePanel",
+      "panel_file": "frontend/src/components/superadmin/SPEGovernancePanel.tsx",
+      "api": [
+        "/api/admin/spe/adversarial",
+        "/api/admin/spe/adversarial/",
+        "/api/admin/spe/governance",
+        "/api/admin/spe/reviews",
+        "/api/admin/spe/reviews/",
+        "/api/spe/adversarial/analyze",
+        "/api/spe/meta/compute",
+        "/api/spe/review/escalate",
+        "/api/spe/trust/compute"
+      ],
+      "owner_module": "spe",
+      "table": [
+        "spe_"
+      ],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "BIOS: Neuro-Symbolic",
+      "route": "admin#bios-frontier",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "BIOSFrontierPanel",
+      "panel_file": "frontend/src/components/superadmin/BIOSFrontierPanel.tsx",
+      "api": [
+        "/api/admin/bios/causal-chains",
+        "/api/admin/bios/emergent-patterns",
+        "/api/admin/bios/frontier/dashboard",
+        "/api/admin/bios/neuro-symbolic/dashboard",
+        "/api/admin/bios/self-healing/log",
+        "/api/bios/emergent/scan",
+        "/api/bios/neuro-symbolic/analyze",
+        "/api/bios/self-heal/trigger"
+      ],
+      "owner_module": "bios",
+      "table": [
+        "bios_"
+      ],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "BIOS: Fusion & Meta-Learning",
+      "route": "admin#bios-fusion",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "BIOSFusionPanel",
+      "panel_file": "frontend/src/components/superadmin/BIOSFusionPanel.tsx",
+      "api": [
+        "/api/admin/bios/fusion/dashboard",
+        "/api/admin/bios/latent-traits",
+        "/api/admin/bios/meta-learning",
+        "/api/admin/bios/phase-transitions",
+        "/api/bios/fusion/compute",
+        "/api/bios/latent-traits/compute",
+        "/api/bios/meta-learning/profile",
+        "/api/bios/multimodal/fuse",
+        "/api/bios/phase-transition/detect"
+      ],
+      "owner_module": "bios",
+      "table": [
+        "bios_"
+      ],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "BIOS: Agents & Population",
+      "route": "admin#bios-agents",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "BIOSAgentsPanel",
+      "panel_file": "frontend/src/components/superadmin/BIOSAgentsPanel.tsx",
+      "api": [
+        "/api/admin/bios/agents/events",
+        "/api/admin/bios/agents/status",
+        "/api/admin/bios/federated/norms",
+        "/api/admin/bios/population",
+        "/api/bios/agents/dispatch",
+        "/api/bios/agents/orchestrate",
+        "/api/bios/institutional/compute",
+        "/api/bios/population/compute"
+      ],
+      "owner_module": "bios",
+      "table": [
+        "bios_"
+      ],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "BIOS: Simulation",
+      "route": "admin#bios-simulation",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "BIOSSimulationPanel",
+      "panel_file": "frontend/src/components/superadmin/BIOSSimulationPanel.tsx",
+      "api": [
+        "/api/admin/bios/economics",
+        "/api/admin/bios/ethics/audit-log",
+        "/api/admin/bios/knowledge-graph/overview",
+        "/api/admin/bios/simulations",
+        "/api/bios/economics/profile",
+        "/api/bios/ethics/audit",
+        "/api/bios/knowledge-graph/nodes",
+        "/api/bios/simulate/population"
+      ],
+      "owner_module": "bios",
+      "table": [
+        "bios_"
+      ],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "ROIE: Risk Engine",
+      "route": "admin#roie-risk",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "ROIERiskPanel",
+      "panel_file": "frontend/src/components/superadmin/ROIERiskPanel.tsx",
+      "api": [
+        "/api/admin/roie/behavioural",
+        "/api/admin/roie/cascading",
+        "/api/admin/roie/cognitive",
+        "/api/admin/roie/compound",
+        "/api/admin/roie/early-warnings",
+        "/api/admin/roie/early-warnings/",
+        "/api/admin/roie/emotional",
+        "/api/admin/roie/environmental",
+        "/api/admin/roie/human-states",
+        "/api/admin/roie/risk/dashboard",
+        "/api/roie/compute-all"
+      ],
+      "owner_module": "roie",
+      "table": [
+        "roie_"
+      ],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "ROIE: Opportunities",
+      "route": "admin#roie-opportunity",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "ROIEOpportunityPanel",
+      "panel_file": "frontend/src/components/superadmin/ROIEOpportunityPanel.tsx",
+      "api": [
+        "/api/admin/roie/forecasts",
+        "/api/admin/roie/interventions",
+        "/api/admin/roie/interventions/",
+        "/api/admin/roie/opportunity/dashboard",
+        "/api/admin/roie/potential",
+        "/api/admin/roie/recovery",
+        "/api/admin/roie/trajectories",
+        "/api/roie/forecast/compute",
+        "/api/roie/intervention/initiate",
+        "/api/roie/opportunity/compute"
+      ],
+      "owner_module": "roie",
+      "table": [
+        "roie_"
+      ],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "ROIE: Semantic & Population",
+      "route": "admin#roie-semantic",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "ROIESemanticPanel",
+      "panel_file": "frontend/src/components/superadmin/ROIESemanticPanel.tsx",
+      "api": [
+        "/api/admin/roie/contagion",
+        "/api/admin/roie/population",
+        "/api/admin/roie/semantic",
+        "/api/admin/roie/simulation/history",
+        "/api/admin/roie/socioeconomic",
+        "/api/roie/knowledge-graph/traverse",
+        "/api/roie/population/compute",
+        "/api/roie/semantic/analyze",
+        "/api/roie/simulation/run",
+        "/api/roie/socioeconomic/profile"
+      ],
+      "owner_module": "roie",
+      "table": [
+        "roie_"
+      ],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "ROIE: Governance",
+      "route": "admin#roie-governance",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "ROIEGovernancePanel",
+      "panel_file": "frontend/src/components/superadmin/ROIEGovernancePanel.tsx",
+      "api": [
+        "/api/admin/roie/agents/dispatch",
+        "/api/admin/roie/agents/orchestrate-all",
+        "/api/admin/roie/agents/status",
+        "/api/admin/roie/events",
+        "/api/admin/roie/events/process-pending",
+        "/api/admin/roie/evolution",
+        "/api/admin/roie/evolution/recalibrate",
+        "/api/admin/roie/fairness",
+        "/api/admin/roie/governance",
+        "/api/admin/roie/master-dashboard",
+        "/api/admin/roie/observability",
+        "/api/admin/roie/trust",
+        "/api/roie/fairness/audit",
+        "/api/roie/trust/assess"
+      ],
+      "owner_module": "roie",
+      "table": [
+        "roie_"
+      ],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "PAIE: Forecasting",
+      "route": "admin#paie-forecasting",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "PAIEForecastingPanel",
+      "panel_file": "frontend/src/components/superadmin/PAIEForecastingPanel.tsx",
+      "api": [
+        "/api/admin/paie/behavioural/dashboard",
+        "/api/admin/paie/black-swan/",
+        "/api/admin/paie/black-swan/dashboard",
+        "/api/admin/paie/cognitive/dashboard",
+        "/api/admin/paie/early-warnings",
+        "/api/admin/paie/early-warnings/",
+        "/api/admin/paie/emotional/dashboard",
+        "/api/admin/paie/forecasting/master",
+        "/api/admin/paie/signals/dashboard",
+        "/api/admin/paie/temporal/dashboard",
+        "/api/admin/paie/trajectories",
+        "/api/admin/paie/trust/dashboard",
+        "/api/paie/compute-all"
+      ],
+      "owner_module": "paie",
+      "table": [
+        "paie_"
+      ],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "PAIE: Opportunities",
+      "route": "admin#paie-opportunity",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "PAIEOpportunityPanel",
+      "panel_file": "frontend/src/components/superadmin/PAIEOpportunityPanel.tsx",
+      "api": [
+        "/api/admin/paie/counterfactuals",
+        "/api/admin/paie/interventions/predictions",
+        "/api/admin/paie/interventions/predictions/",
+        "/api/admin/paie/opportunity/dashboard",
+        "/api/admin/paie/opportunity/master",
+        "/api/admin/paie/potential/dashboard",
+        "/api/paie/counterfactual/simulate",
+        "/api/paie/intervention/predict",
+        "/api/paie/opportunity/compute",
+        "/api/paie/potential/compute"
+      ],
+      "owner_module": "paie",
+      "table": [
+        "paie_"
+      ],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "PAIE: Intelligence",
+      "route": "admin#paie-intelligence",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "PAIEIntelligencePanel",
+      "panel_file": "frontend/src/components/superadmin/PAIEIntelligencePanel.tsx",
+      "api": [
+        "/api/admin/paie/causal/dashboard",
+        "/api/admin/paie/graph/dashboard",
+        "/api/admin/paie/graph/traverse",
+        "/api/admin/paie/institutional/dashboard",
+        "/api/admin/paie/intelligence/master",
+        "/api/admin/paie/population/dashboard",
+        "/api/admin/paie/socioeconomic/dashboard",
+        "/api/paie/causal/detect",
+        "/api/paie/graph/seed",
+        "/api/paie/institutional/forecast",
+        "/api/paie/population/compute",
+        "/api/paie/socioeconomic/profile"
+      ],
+      "owner_module": "paie",
+      "table": [
+        "paie_"
+      ],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "PAIE: Governance",
+      "route": "admin#paie-governance",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "PAIEGovernancePanel",
+      "panel_file": "frontend/src/components/superadmin/PAIEGovernancePanel.tsx",
+      "api": [
+        "/api/admin/paie/agents/",
+        "/api/admin/paie/agents/orchestrate",
+        "/api/admin/paie/agents/status",
+        "/api/admin/paie/events",
+        "/api/admin/paie/events/",
+        "/api/admin/paie/fairness/dashboard",
+        "/api/admin/paie/governance/master",
+        "/api/admin/paie/meta/dashboard",
+        "/api/admin/paie/model/evolution",
+        "/api/admin/paie/observability/dashboard",
+        "/api/admin/paie/observability/seed-metrics",
+        "/api/admin/paie/simulations",
+        "/api/paie/fairness/audit-all",
+        "/api/paie/meta/predict",
+        "/api/paie/model/evolve",
+        "/api/paie/simulation/run"
+      ],
+      "owner_module": "paie",
+      "table": [
+        "paie_"
+      ],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "LDE: Knowledge Graph",
+      "route": "admin#lde-graph",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "LDEGraphPanel",
+      "panel_file": "frontend/src/components/superadmin/LDEGraphPanel.tsx",
+      "api": [
+        "/api/lde/graph/nodes",
+        "/api/lde/graph/traverse/concern"
+      ],
+      "owner_module": "lde",
+      "table": [
+        "lde_"
+      ],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "LDE: Temporal",
+      "route": "admin#lde-temporal",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "LDETemporalPanel",
+      "panel_file": "frontend/src/components/superadmin/LDETemporalPanel.tsx",
+      "api": [
+        "/api/admin/lde/events/log",
+        "/api/admin/lde/features/coverage",
+        "/api/admin/lde/temporal/master",
+        "/api/lde/embeddings/generate",
+        "/api/lde/events/ingest",
+        "/api/lde/events/replay",
+        "/api/lde/features/upsert",
+        "/api/lde/signals/aggregate",
+        "/api/lde/timeline/update"
+      ],
+      "owner_module": "lde",
+      "table": [
+        "lde_"
+      ],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "LDE: Evolution",
+      "route": "admin#lde-evolution",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "LDEEvolutionPanel",
+      "panel_file": "frontend/src/components/superadmin/LDEEvolutionPanel.tsx",
+      "api": [
+        "/api/admin/lde/drift/alerts",
+        "/api/admin/lde/evolution/master",
+        "/api/admin/lde/fractures",
+        "/api/admin/lde/twins",
+        "/api/lde/drift/detect",
+        "/api/lde/emotional-memory/store",
+        "/api/lde/fracture/scan",
+        "/api/lde/hidden/detect",
+        "/api/lde/identity/checkpoint",
+        "/api/lde/momentum/compute",
+        "/api/lde/narrative/generate",
+        "/api/lde/ontology/seed",
+        "/api/lde/trust/update",
+        "/api/lde/twin/simulate"
+      ],
+      "owner_module": "lde",
+      "table": [
+        "lde_"
+      ],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "LDE: Intelligence",
+      "route": "admin#lde-intelligence",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "LDEIntelligencePanel",
+      "panel_file": "frontend/src/components/superadmin/LDEIntelligencePanel.tsx",
+      "api": [
+        "/api/admin/lde/cohorts",
+        "/api/admin/lde/federated",
+        "/api/admin/lde/intelligence/master",
+        "/api/admin/lde/multigenerational",
+        "/api/admin/lde/simulations",
+        "/api/lde/benchmark/compute",
+        "/api/lde/cohort/update",
+        "/api/lde/federated/sync",
+        "/api/lde/graph/seed",
+        "/api/lde/graph/seed/domains",
+        "/api/lde/meta/check",
+        "/api/lde/multigenerational/record",
+        "/api/lde/ontology/seed",
+        "/api/lde/semantic/reason",
+        "/api/lde/simulation/run"
+      ],
+      "owner_module": "lde",
+      "table": [
+        "lde_"
+      ],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "LDE: Governance",
+      "route": "admin#lde-governance",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "LDEGovernancePanel",
+      "panel_file": "frontend/src/components/superadmin/LDEGovernancePanel.tsx",
+      "api": [
+        "/api/admin/lde/coevolution",
+        "/api/admin/lde/constitutional",
+        "/api/admin/lde/governance/master",
+        "/api/admin/lde/observability/dashboard",
+        "/api/admin/lde/observability/seed",
+        "/api/admin/lde/recursive/history",
+        "/api/admin/lde/research",
+        "/api/lde/coevolution/record",
+        "/api/lde/constitutional/check",
+        "/api/lde/explain",
+        "/api/lde/recursive/evolve",
+        "/api/lde/research/experiment",
+        "/api/lde/research/export/"
+      ],
+      "owner_module": "lde",
+      "table": [
+        "lde_"
+      ],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "RIE: Dashboard",
+      "route": "admin#rie-dashboard",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "RIEDashboardPanel",
+      "panel_file": "frontend/src/components/superadmin/RIEDashboardPanel.tsx",
+      "api": [],
+      "owner_module": "RIEDashboardPanel",
+      "table": [],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "RIE: Recommendations",
+      "route": "admin#rie-recommendations",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "RIERecommendationsPanel",
+      "panel_file": "frontend/src/components/superadmin/RIERecommendationsPanel.tsx",
+      "api": [
+        "/api/admin/rie/recommendations"
+      ],
+      "owner_module": "rie",
+      "table": [],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "RIE: Interventions",
+      "route": "admin#rie-interventions",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "RIEInterventionsPanel",
+      "panel_file": "frontend/src/components/superadmin/RIEInterventionsPanel.tsx",
+      "api": [
+        "/api/admin/rie/interventions"
+      ],
+      "owner_module": "rie",
+      "table": [],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "RIE: Escalations",
+      "route": "admin#rie-escalations",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "RIEEscalationsPanel",
+      "panel_file": "frontend/src/components/superadmin/RIEEscalationsPanel.tsx",
+      "api": [
+        "/api/admin/rie/counsellors",
+        "/api/admin/rie/escalations",
+        "/api/admin/rie/escalations/"
+      ],
+      "owner_module": "rie",
+      "table": [],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "RIE: Recovery Profiles",
+      "route": "admin#rie-recovery",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "RIERecoveryPanel",
+      "panel_file": "frontend/src/components/superadmin/RIERecoveryPanel.tsx",
+      "api": [
+        "/api/admin/rie/recovery-profiles"
+      ],
+      "owner_module": "rie",
+      "table": [],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "RIE: Opportunities",
+      "route": "admin#rie-opportunity",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "RIEOpportunityPanel",
+      "panel_file": "frontend/src/components/superadmin/RIEOpportunityPanel.tsx",
+      "api": [
+        "/api/admin/rie/opportunity-flags"
+      ],
+      "owner_module": "rie",
+      "table": [],
+      "usage_frequency": "experimental (est — no telemetry)"
+    },
+    {
+      "screen": "RIE: Counsellor Directory",
+      "route": "admin#rie-counsellors",
+      "nav_group": "Advanced Labs",
+      "is_labs": true,
+      "panel_component": "CounsellorDirectoryPanel",
+      "panel_file": "frontend/src/components/superadmin/CounsellorDirectoryPanel.tsx",
+      "api": [
+        "/api/admin/rie/counsellors/",
+        "/api/admin/rie/counsellors/directory"
+      ],
+      "owner_module": "rie",
+      "table": [],
+      "usage_frequency": "experimental (est — no telemetry)"
+    }
+  ]
+}

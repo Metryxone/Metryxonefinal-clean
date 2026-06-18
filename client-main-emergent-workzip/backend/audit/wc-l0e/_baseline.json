@@ -1,0 +1,195 @@
+{
+  "stamp": "2026-06-09T15:07:20.695Z",
+  "completed": 9,
+  "sessions": [
+    {
+      "sid": "11111111-1111-1111-1111-111111111111",
+      "email": "user_ec082847d9",
+      "concern": "Exam stress",
+      "createdAt": "2026-05-30T13:32:42.464Z",
+      "responses": 0,
+      "signalCount": 2,
+      "activatedCount": 2,
+      "backfillCount": 0,
+      "graphPresent": true,
+      "dims": {
+        "motivation": 18,
+        "confidence": null,
+        "risk": 50,
+        "engagement": null,
+        "adaptability": 40
+      },
+      "learningStyle": null,
+      "dimsPresent": 3,
+      "constructDimsPresent": 2
+    },
+    {
+      "sid": "b883418d-933b-47a6-b73d-c6c02a161f4f",
+      "email": "user_65454b2b8b",
+      "concern": "Anxiety & Overthinking",
+      "createdAt": "2026-05-18T12:10:42.154Z",
+      "responses": 10,
+      "signalCount": 0,
+      "activatedCount": 0,
+      "backfillCount": 0,
+      "graphPresent": false,
+      "dims": {
+        "motivation": null,
+        "confidence": null,
+        "risk": null,
+        "engagement": null,
+        "adaptability": null
+      },
+      "learningStyle": null,
+      "dimsPresent": 0,
+      "constructDimsPresent": 0
+    },
+    {
+      "sid": "7828d7a3-ddda-4659-8846-7597443e2830",
+      "email": "user_65454b2b8b",
+      "concern": "Anxiety & Overthinking",
+      "createdAt": "2026-05-18T14:39:31.698Z",
+      "responses": 10,
+      "signalCount": 0,
+      "activatedCount": 0,
+      "backfillCount": 0,
+      "graphPresent": false,
+      "dims": {
+        "motivation": null,
+        "confidence": null,
+        "risk": null,
+        "engagement": null,
+        "adaptability": null
+      },
+      "learningStyle": null,
+      "dimsPresent": 0,
+      "constructDimsPresent": 0
+    },
+    {
+      "sid": "0731f92c-d9d2-457f-92e9-ce2edd32664a",
+      "email": "user_4b262cc8a5",
+      "concern": "Career Anxiety",
+      "createdAt": "2026-05-17T15:27:45.921Z",
+      "responses": 10,
+      "signalCount": 0,
+      "activatedCount": 0,
+      "backfillCount": 0,
+      "graphPresent": false,
+      "dims": {
+        "motivation": null,
+        "confidence": null,
+        "risk": null,
+        "engagement": null,
+        "adaptability": null
+      },
+      "learningStyle": null,
+      "dimsPresent": 0,
+      "constructDimsPresent": 0
+    },
+    {
+      "sid": "1cd9ca07-4659-42c4-83fd-229e5e8f21f2",
+      "email": "user_4b262cc8a5",
+      "concern": "Career Anxiety",
+      "createdAt": "2026-06-01T09:51:15.482Z",
+      "responses": 10,
+      "signalCount": 14,
+      "activatedCount": 5,
+      "backfillCount": 0,
+      "graphPresent": true,
+      "dims": {
+        "motivation": 44,
+        "confidence": 44,
+        "risk": 50,
+        "engagement": 32,
+        "adaptability": null
+      },
+      "learningStyle": "High emotional load",
+      "dimsPresent": 5,
+      "constructDimsPresent": 3
+    },
+    {
+      "sid": "4349237c-ce0b-41c5-9206-647c2654b26e",
+      "email": null,
+      "concern": "Anxiety & Overthinking",
+      "createdAt": "2026-05-24T04:19:00.234Z",
+      "responses": 3,
+      "signalCount": 0,
+      "activatedCount": 0,
+      "backfillCount": 0,
+      "graphPresent": false,
+      "dims": {
+        "motivation": null,
+        "confidence": null,
+        "risk": null,
+        "engagement": null,
+        "adaptability": null
+      },
+      "learningStyle": null,
+      "dimsPresent": 0,
+      "constructDimsPresent": 0
+    },
+    {
+      "sid": "4c9b6c0b-4907-48e3-8c56-95a65e623006",
+      "email": null,
+      "concern": "Anxiety & Overthinking",
+      "createdAt": "2026-05-24T04:23:14.022Z",
+      "responses": 3,
+      "signalCount": 0,
+      "activatedCount": 0,
+      "backfillCount": 0,
+      "graphPresent": false,
+      "dims": {
+        "motivation": null,
+        "confidence": null,
+        "risk": null,
+        "engagement": null,
+        "adaptability": null
+      },
+      "learningStyle": null,
+      "dimsPresent": 0,
+      "constructDimsPresent": 0
+    },
+    {
+      "sid": "d0f54fc4-7a08-4747-9ccb-422e86cc93b9",
+      "email": null,
+      "concern": "Work Stress",
+      "createdAt": "2026-05-24T05:00:44.928Z",
+      "responses": 0,
+      "signalCount": 0,
+      "activatedCount": 0,
+      "backfillCount": 0,
+      "graphPresent": false,
+      "dims": {
+        "motivation": null,
+        "confidence": null,
+        "risk": null,
+        "engagement": null,
+        "adaptability": null
+      },
+      "learningStyle": null,
+      "dimsPresent": 0,
+      "constructDimsPresent": 0
+    },
+    {
+      "sid": "a0924499-24bf-43be-adbe-1c6f00a5dd9e",
+      "email": null,
+      "concern": "Work Stress",
+      "createdAt": "2026-05-24T05:31:37.622Z",
+      "responses": 0,
+      "signalCount": 0,
+      "activatedCount": 0,
+      "backfillCount": 0,
+      "graphPresent": false,
+      "dims": {
+        "motivation": null,
+        "confidence": null,
+        "risk": null,
+        "engagement": null,
+        "adaptability": null
+      },
+      "learningStyle": null,
+      "dimsPresent": 0,
+      "constructDimsPresent": 0
+    }
+  ]
+}

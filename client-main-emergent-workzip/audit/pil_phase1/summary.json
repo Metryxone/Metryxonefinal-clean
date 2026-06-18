@@ -1,0 +1,52 @@
+{
+  "total": 2489,
+  "sampleVerdictTally": {
+    "Capability": {
+      "Correct": 56,
+      "Questionable": 26,
+      "Incorrect": 13
+    },
+    "Problem": {
+      "Correct": 54,
+      "Questionable": 15,
+      "Incorrect": 31
+    },
+    "Behavior": {
+      "Correct": 100,
+      "Questionable": 0,
+      "Incorrect": 0
+    },
+    "Trait": {
+      "Correct": 100,
+      "Questionable": 0,
+      "Incorrect": 0
+    },
+    "Outcome": {
+      "Correct": 84,
+      "Questionable": 16,
+      "Incorrect": 0
+    },
+    "Risk": {
+      "Correct": 49,
+      "Questionable": 0,
+      "Incorrect": 0
+    }
+  },
+  "sampleStrictPct": "81.4",
+  "sampleLenientPct": "91.9",
+  "wholeTally": {
+    "Correct": 1504,
+    "Questionable": 363,
+    "Incorrect": 622
+  },
+  "wholeStrictPct": "60.4",
+  "wholeLenientPct": "75.0",
+  "polarity": {
+    "positive": 976,
+    "negative": 616,
+    "neutral": 897
+  },
+  "capabilityGap": 674,
+  "capabilityGapInProblem": 608,
+  "fullyProblemDomains": 213
+}

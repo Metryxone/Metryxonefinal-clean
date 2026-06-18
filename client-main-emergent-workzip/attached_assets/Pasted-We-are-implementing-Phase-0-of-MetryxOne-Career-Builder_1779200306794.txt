@@ -1,0 +1,239 @@
+We are implementing Phase 0 of MetryxOne Career Builder:
+Architecture Stabilization & Engineering Foundation.
+
+IMPORTANT:
+This phase is mandatory before feature expansion.
+
+GOAL:
+Transform the current codebase into a scalable, modular, Replit-friendly intelligence architecture.
+
+DO NOT redesign the product UI.
+DO NOT remove existing functionality.
+DO NOT change current scoring formulas.
+
+IMPLEMENT:
+
+====================================================
+1. MASTER FRONTEND ARCHITECTURE
+====================================================
+
+Create modular domain-driven structure:
+
+frontend/src/modules/career-builder/
+
+Modules:
+- dashboard
+- profile
+- resume
+- competency
+- intelligence
+- future-map
+- pathways
+- development
+- learning
+- recruiter
+- jobs
+- interview
+- goals
+- fresher
+- benchmarking
+- workforce
+- simulations
+- analytics
+- ai-copilot
+
+Each module must contain:
+- components/
+- hooks/
+- services/
+- types/
+- utils/
+- views/
+
+====================================================
+2. SHARED UI DESIGN SYSTEM
+====================================================
+
+Create:
+frontend/src/components/career/
+
+Reusable components:
+- SectionCard
+- MetricCard
+- EIGauge
+- SkillBar
+- RadarChart
+- HeatMap
+- ProgressTimeline
+- IntelligencePanel
+- BenchmarkCard
+- InsightCard
+- RecommendationCard
+- EmptyState
+- LoadingState
+- ErrorState
+- TabLayout
+
+Create design token system:
+frontend/src/design-system/
+
+Define:
+- typography
+- spacing
+- shadows
+- radius
+- breakpoints
+- animations
+- chart standards
+- graph standards
+- color system
+
+====================================================
+3. STATE MANAGEMENT
+====================================================
+
+Implement Zustand.
+
+Create stores:
+- authStore
+- profileStore
+- competencyStore
+- intelligenceStore
+- benchmarkStore
+- idpStore
+- workforceStore
+- uiStore
+- simulationStore
+
+====================================================
+4. ENGINE ARCHITECTURE
+====================================================
+
+Create:
+frontend/src/lib/engines/
+
+Engines:
+- competencyEngine
+- fitmentEngine
+- employabilityEngine
+- recommendationEngine
+- benchmarkEngine
+- scoringEngine
+- idpEngine
+- visibilityEngine
+- workforceEngine
+
+Each engine must define:
+- input contract
+- output contract
+- dependencies
+- deterministic logic
+- explainability layer
+
+====================================================
+5. SERVICE LAYER
+====================================================
+
+Create:
+frontend/src/lib/services/
+
+Services:
+- profileService
+- competencyService
+- fitmentService
+- benchmarkService
+- visibilityService
+- idpService
+- workforceService
+- simulationService
+
+====================================================
+6. DATABASE NORMALIZATION
+====================================================
+
+Prepare normalized schema structure:
+
+Tables:
+- user_profiles
+- user_skills
+- competency_scores
+- benchmark_profiles
+- intervention_plans
+- workforce_signals
+- simulation_sessions
+- behavioral_signals
+- recruiter_visibility
+- transformation_history
+- career_trajectory
+- role_catalog
+- competency_catalog
+
+====================================================
+7. EVENT-DRIVEN INTELLIGENCE PIPELINE
+====================================================
+
+Create intelligence event architecture.
+
+Example flow:
+
+profile_updated
+→ competency_recalculated
+→ fitment_updated
+→ future_roles_recomputed
+→ idp_regenerated
+→ benchmark_updated
+
+Implement reusable event dispatcher system.
+
+====================================================
+8. CONFIG-DRIVEN CATALOG SYSTEM
+====================================================
+
+Move hardcoded data into:
+frontend/src/data/catalogs/
+
+Catalogs:
+- competencies
+- roles
+- pathways
+- interventions
+- workforce-signals
+- benchmark-profiles
+- simulation-scenarios
+
+====================================================
+9. PERFORMANCE OPTIMIZATION
+====================================================
+
+Implement:
+- lazy loading
+- memoization
+- route splitting
+- render optimization
+- query caching
+- virtualization for large datasets
+
+====================================================
+10. TYPESCRIPT GOVERNANCE
+====================================================
+
+Create strict TypeScript contracts for:
+- engines
+- services
+- stores
+- APIs
+- events
+- simulations
+- workforce systems
+
+====================================================
+SUCCESS CRITERIA
+====================================================
+
+- monolith removed
+- modular architecture stable
+- reusable UI system operational
+- event pipeline functional
+- normalized schema structure prepared
+- scalable Replit architecture achieved
+- existing functionality preserved

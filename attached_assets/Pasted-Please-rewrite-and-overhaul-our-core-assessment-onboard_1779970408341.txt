@@ -1,0 +1,45 @@
+Please rewrite and overhaul our core assessment onboarding module in 'frontend/src/components/FreeAssessmentModal.tsx'. This update must convert our static wizard into an enterprise-grade, data-driven multi-persona behavioral orchestration engine that exactly mirrors our CAPADEX backend 'concerns.xlsx' relational matrix.
+
+Ensure the component fully incorporates the following technical execution blocks end-to-end:
+
+1. THE COMPREHENSIVE PERSONA ARCHITECTURE
+   - Replace basic buttons with a primary group categorized into 3 Macro-Tracks. Selecting an option inside a track dynamically drives the underlying 'primary_persona' token and sets the critical proxy flag ('is_proxy: boolean'):
+     * THE LEARNER TRACK (is_proxy: false): Maps to 'Campus Student', 'Competitive Aspirant', 'Career Explorer', or 'Skill Development Learner'.
+     * THE PROFESSIONAL TRACK (is_proxy: false): Maps to 'Early Career Professional', 'Mid-Career Professional', or 'Career Transition Professional'.
+     * THE PROXY/INSTITUTIONAL TRACK (is_proxy: true): Maps to 'Parent', 'Teacher / Educator', 'Academic Counsellor', or 'Placement & Career Cell'.
+   - Style the selector layout using your signature system design tokens. The selected capsule should elevate smoothly using sharp contrast, clear borders, and solid backgrounds.
+   - Refactor the sub-header stats label to show the massive scale of the underlying ontology: "14,000+ audited data matrices · 20+ Core Cognitive Domains · Free & Confidential".
+
+2. DYNAMIC INTUITIVE FORM FIELDS & AGE-BAND DROPDOWNS
+   - Replace standard text inputs with smart-morphing containers that swap text labels, sub-headers, and placeholders based on the chosen persona:
+     * If is_proxy is TRUE: Field 1="Target Name/Identifier", Field 2="Target's Academic/Corporate Institution".
+     * If is_proxy is FALSE: Field 1="Your Full Name", Field 2="Your Current Domain/Target Industry".
+   - CRITICAL AGE BOUNDS HARDENING: Instead of a dangerous open text field for age, implement a dynamic dropdown populated by standardizing your ontology's 'Typical Age Band' properties. Segment options clearly based on the persona context (e.g., K-12 schooling subsets '6-14' or '14-17' for Parents; higher-ed and workspace brackets '17-24', '24-45', or '45+' for Professionals and Advisors).
+   - If a manual entry overrides these brackets, display a subtle helper validation message below the field to protect downstream question affinity matching.
+
+3. CONTEXTUAL MODIFIER & SENSORY INPUT FIELD
+   - Update the core Concern Input Title block dynamically to prompt for environmental triggers:
+     * If Proxy Track: "WHAT ARE YOUR CHIEF BEHAVIORAL OR PERFORMANCE CONCERNS FOR THIS INDIVIDUAL?"
+     * If Learner/Professional Track: "WHAT ARE THE PRIMARY FRICTIONS, FOCUS BOTTLENECK, OR TRANSITION STRESSORS YOU ARE FACING?"
+   - Set the main text placeholder text to prompt for cultural realities matching your database nodes: "e.g., exam anxiety, digital distraction/scrolling, workplace career friction, placement readiness stress".
+
+4. DEBOUNCED ONTOLOGY ROUTING & INDIAN CONTEXT PREVIEW
+   - Implement a real-time, 300ms debounced tracking hook on the main Concern textarea input box.
+   - Display a clean, sliding indicator chip line below the text area simulating your live analytics matching engine:
+     * If text includes "scroll", "screen", "game", "phone", render: "[ 🔍 Core Domain: Adaptive Intelligence & Self Regulation ]"
+     * If text includes "exam", "placement", "career", "aspirant", render: "[ 🔍 Core Domain: Career Readiness & Transition Stress ]"
+     * Fall back gracefully to your baseline tracking sentinel if text is written but unmapped: "[ 🔍 Core Domain: General Behavioral Alignment Matrix ]"
+   - Include a secondary subtle status message if key words match localized performance pressures (e.g., coaching, scaling tracking): "✨ Context Alert: Sociocultural performance amplifiers detected. Mapping assessment dimension scaling factor."
+
+5. SUBMIT LIFECYCLE & PAYLOAD SPLICING
+   - Transition the primary CTA action button away from its initial disabled state ("Describe your concern to begin") into an active indigo or deep slate layout state ("Launch Clarity Journey →") once minimum validation thresholds are passed.
+   - On submission, block default browser routing. package the form state variables into an explicitly structured data object matching the exact requirements of your ingestion system:
+     {
+       "primary_persona": string,     // e.g., 'Competitive Aspirant' or 'Parent'
+       "is_proxy": boolean,           // true if filling for a dependent, false if self
+       "target_age_band": string,     // e.g., '17–24'
+       "assessee_name": string,       // sanitized string string name
+       "contextual_anchor": string,   // company, school, or institution context string
+       "raw_concern_text": string     // user entered narrative text string
+     }
+   - Post this data envelope smoothly to your initialization endpoint: '/api/capadex/concern/analyze' to successfully cache the state environment and trigger the 13-state FSM loop.

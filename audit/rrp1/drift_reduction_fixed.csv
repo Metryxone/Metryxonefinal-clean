@@ -1,0 +1,1153 @@
+intent,target_id,target_tag,before_class,after_class,resolved_id,confidence
+"weak ability to measure collaborative competencies institutionally",CONCERN_ACA_1188,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_ACA_1188,35
+"i struggle with measure collaborative competencies institutionally",CONCERN_ACA_1188,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_ACA_1188,38
+"i have trouble with measure collaborative competencies institutionally",CONCERN_ACA_1188,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_ACA_1188,38
+"poor concentration during studies",CONCERN_ACA_1648,ACADEMIC_COGNITIVE,drift,exact,CONCERN_ACA_1648,32
+"i have trouble with revising effectively",CONCERN_ACA_1664,EXAMINATION_READINESS,drift,exact,CONCERN_ACA_1664,37
+"academic pressure",CONCERN_ACA_1731,EXAMINATION_STRESS,drift,exact,CONCERN_ACA_1731,42
+"i have trouble with academic pressure",CONCERN_ACA_1731,EXAMINATION_STRESS,drift,exact,CONCERN_ACA_1731,30
+"fear of failure",CONCERN_ACA_1734,CONFIDENCE_SELF,drift,exact,CONCERN_ACA_1734,46
+"i struggle with fear of failure",CONCERN_ACA_1734,CONFIDENCE_SELF,drift,near,CONCERN_CAR_256,31
+"i have trouble with fear of failure",CONCERN_ACA_1734,CONFIDENCE_SELF,drift,exact,CONCERN_ACA_1734,34
+"i struggle with academic dishonesty",CONCERN_ACA_1859,MOTIVATION_VALUES,drift,exact,CONCERN_ACA_1859,36
+"i struggle with conceptual understanding",CONCERN_ACA_1932,FOUNDATIONAL_LEARNING,drift,exact,CONCERN_ACA_1932,36
+"i have trouble with conceptual understanding",CONCERN_ACA_1932,FOUNDATIONAL_LEARNING,drift,exact,CONCERN_ACA_1932,36
+"difficulty following instructions",CONCERN_ACA_1938,ACADEMIC_COGNITIVE,drift,exact,CONCERN_ACA_1938,39
+"i struggle with following instructions",CONCERN_ACA_1938,ACADEMIC_COGNITIVE,drift,exact,CONCERN_ACA_1938,39
+"i have trouble with following instructions",CONCERN_ACA_1938,ACADEMIC_COGNITIVE,drift,exact,CONCERN_ACA_1938,39
+"i struggle with communication skills",CONCERN_ACA_1939,COMMUNICATION_EXPRESSION,drift,near,CONCERN_SOC_2334,29
+"i struggle with attention during revision",CONCERN_ACA_2031,EXAMINATION_READINESS,drift,exact,CONCERN_ACA_2031,38
+"i have trouble with attention during revision",CONCERN_ACA_2031,EXAMINATION_READINESS,drift,exact,CONCERN_ACA_2031,38
+"i keep struggling with attention during revision",CONCERN_ACA_2031,EXAMINATION_READINESS,drift,exact,CONCERN_ACA_2031,32
+"i cannot manage attention during revision",CONCERN_ACA_2031,EXAMINATION_READINESS,drift,exact,CONCERN_ACA_2031,32
+"i need help with attention during revision",CONCERN_ACA_2031,EXAMINATION_READINESS,drift,exact,CONCERN_ACA_2031,32
+"i keep struggling with supporting students with weak academic communication in group activities",CONCERN_ACA_2298,COMMUNICATION_EXPRESSION,drift,failure,,0
+"i need help with supporting students with weak academic communication in group activities",CONCERN_ACA_2298,COMMUNICATION_EXPRESSION,drift,failure,,0
+"difficulty balancing passion and practical career choices",CONCERN_ACA_2430,ACADEMIC_IDENTITY,drift,exact,CONCERN_ACA_2430,43
+"i struggle with balancing passion and practical career choices",CONCERN_ACA_2430,ACADEMIC_IDENTITY,drift,exact,CONCERN_ACA_2430,43
+"i have trouble with balancing passion and practical career choices",CONCERN_ACA_2430,ACADEMIC_IDENTITY,drift,exact,CONCERN_ACA_2430,43
+"i keep struggling with balancing passion and practical career choices",CONCERN_ACA_2430,ACADEMIC_IDENTITY,drift,exact,CONCERN_ACA_2430,36
+"i cannot manage balancing passion and practical career choices",CONCERN_ACA_2430,ACADEMIC_IDENTITY,drift,exact,CONCERN_ACA_2430,36
+"i need help with balancing passion and practical career choices",CONCERN_ACA_2430,ACADEMIC_IDENTITY,drift,exact,CONCERN_ACA_2430,36
+"i keep struggling with supporting students with weak academic organization during exams",CONCERN_ACA_2454,DISCIPLINE_HABITS,drift,failure,,0
+"i need help with supporting students with weak academic organization during exams",CONCERN_ACA_2454,DISCIPLINE_HABITS,drift,failure,,0
+"i keep struggling with visibility into student attention stability during classes",CONCERN_ADA_1274,ACADEMIC_COGNITIVE,drift,exact,CONCERN_ADA_1274,34
+"i need help with visibility into student attention stability during classes",CONCERN_ADA_1274,ACADEMIC_COGNITIVE,drift,exact,CONCERN_ADA_1274,34
+"i keep struggling with concept application skills",CONCERN_ADJ_1689,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_ADJ_1689,33
+"lack of discipline",CONCERN_ADJ_1749,DISCIPLINE_HABITS,drift,exact,CONCERN_ADJ_1749,37
+"i have trouble with learning persistence",CONCERN_ADJ_1991,MOTIVATION_VALUES,drift,exact,CONCERN_ADJ_1991,35
+"i cannot manage handling students with weak learning ownership",CONCERN_ADJ_2222,MOTIVATION_VALUES,drift,failure,,0
+"i need help with handling students with weak learning ownership",CONCERN_ADJ_2222,MOTIVATION_VALUES,drift,failure,,0
+"weak confidence in managing professional responsibilities",CONCERN_ADJ_392,CONFIDENCE_SELF,drift,exact,CONCERN_ADJ_392,27
+"i cannot manage emotional recovery after failed career transitions",CONCERN_CAR_1041,EMOTIONAL_RECOVERY,drift,near,CONCERN_LEA_655,22
+"difficulty balancing passion and financial stability",CONCERN_CAR_1398,CAREER_SUSTAINABILITY,drift,exact,CONCERN_CAR_1398,42
+"i struggle with balancing passion and financial stability",CONCERN_CAR_1398,CAREER_SUSTAINABILITY,drift,exact,CONCERN_CAR_1398,42
+"i have trouble with balancing passion and financial stability",CONCERN_CAR_1398,CAREER_SUSTAINABILITY,drift,exact,CONCERN_CAR_1398,42
+"i keep struggling with balancing passion and financial stability",CONCERN_CAR_1398,CAREER_SUSTAINABILITY,drift,exact,CONCERN_CAR_1398,37
+"i cannot manage balancing passion and financial stability",CONCERN_CAR_1398,CAREER_SUSTAINABILITY,drift,exact,CONCERN_CAR_1398,37
+"i need help with balancing passion and financial stability",CONCERN_CAR_1398,CAREER_SUSTAINABILITY,drift,exact,CONCERN_CAR_1398,37
+"lack of awareness about emerging career possibilities",CONCERN_CAR_1566,CAREER_EXPLORATION,drift,exact,CONCERN_CAR_1566,36
+"i struggle with awareness about emerging career possibilities",CONCERN_CAR_1566,CAREER_EXPLORATION,drift,exact,CONCERN_CAR_1566,35
+"i have trouble with awareness about emerging career possibilities",CONCERN_CAR_1566,CAREER_EXPLORATION,drift,exact,CONCERN_CAR_1566,35
+"i struggle with confidence after repeated failures",CONCERN_CAR_1576,CAREER_RECOVERY,drift,exact,CONCERN_CAR_1576,39
+"i have trouble with confidence after repeated failures",CONCERN_CAR_1576,CAREER_RECOVERY,drift,exact,CONCERN_CAR_1576,39
+"i keep struggling with confidence after repeated failures",CONCERN_CAR_1576,CAREER_RECOVERY,drift,exact,CONCERN_CAR_1576,34
+"i cannot manage confidence after repeated failures",CONCERN_CAR_1576,CAREER_RECOVERY,drift,exact,CONCERN_CAR_1576,34
+"i need help with confidence after repeated failures",CONCERN_CAR_1576,CAREER_RECOVERY,drift,exact,CONCERN_CAR_1576,34
+"weak career decision-making confidence",CONCERN_CAR_212,THINKING_QUALITY,drift,exact,CONCERN_CAR_212,37
+"i have trouble with career decision-making confidence",CONCERN_CAR_212,THINKING_QUALITY,drift,exact,CONCERN_CAR_212,36
+"i keep struggling with career decision-making confidence",CONCERN_CAR_212,THINKING_QUALITY,drift,failure,,0
+"i cannot manage career decision-making confidence",CONCERN_CAR_212,THINKING_QUALITY,drift,near,CONCERN_CAR_770,26
+"i need help with career decision-making confidence",CONCERN_CAR_212,THINKING_QUALITY,drift,exact,CONCERN_CAR_212,30
+"i need help with build career confidence after academic struggles",CONCERN_CAR_256,CONFIDENCE_SELF,drift,failure,,0
+"i keep struggling with skill progress effectively",CONCERN_CAR_275,SELF_REFLECTION,drift,exact,CONCERN_CAR_275,34
+"i have trouble with placement interviews",CONCERN_CAR_362,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_CAR_362,37
+"i cannot manage placement rejection emotionally",CONCERN_CAR_365,EMOTIONAL_RECOVERY,drift,exact,CONCERN_CAR_365,34
+"i cannot manage motivation during slow career progression",CONCERN_CAR_437,MOTIVATION_VALUES,drift,failure,,0
+"i keep struggling with confidence after multiple job rejections",CONCERN_CAR_466,EMOTIONAL_RECOVERY,drift,exact,CONCERN_CAR_466,35
+"i have trouble with career transition uncertainty",CONCERN_CAR_493,EMOTIONAL_REGULATION,drift,exact,CONCERN_CAR_493,36
+"i cannot manage career transition uncertainty",CONCERN_CAR_493,EMOTIONAL_REGULATION,drift,near,CONCERN_CAR_713,20
+"i need help with career transition uncertainty",CONCERN_CAR_493,EMOTIONAL_REGULATION,drift,exact,CONCERN_CAR_493,31
+"difficulty sustaining emotional stability during workplace uncertainty",CONCERN_CAR_759,EMOTIONAL_REGULATION,drift,exact,CONCERN_CAR_759,41
+"i struggle with sustaining emotional stability during workplace uncertainty",CONCERN_CAR_759,EMOTIONAL_REGULATION,drift,exact,CONCERN_CAR_759,40
+"i have trouble with sustaining emotional stability during workplace uncertainty",CONCERN_CAR_759,EMOTIONAL_REGULATION,drift,exact,CONCERN_CAR_759,40
+"i keep struggling with sustaining emotional stability during workplace uncertainty",CONCERN_CAR_759,EMOTIONAL_REGULATION,drift,exact,CONCERN_CAR_759,34
+"i cannot manage sustaining emotional stability during workplace uncertainty",CONCERN_CAR_759,EMOTIONAL_REGULATION,drift,exact,CONCERN_CAR_759,34
+"i need help with sustaining emotional stability during workplace uncertainty",CONCERN_CAR_759,EMOTIONAL_REGULATION,drift,exact,CONCERN_CAR_759,34
+"i cannot manage emotional pressure during succession discussions",CONCERN_CAR_841,LEADERSHIP_TRANSITION,drift,exact,CONCERN_CAR_841,33
+"i keep struggling with building confidence in workplace decision-making",CONCERN_CAR_87,EMPLOYABILITY,drift,exact,CONCERN_CAR_87,34
+"i cannot manage building confidence in workplace decision-making",CONCERN_CAR_87,EMPLOYABILITY,drift,exact,CONCERN_CAR_87,33
+"i keep struggling with build strategic career narratives for interviews",CONCERN_CAR_994,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_CAR_994,34
+"i cannot manage build strategic career narratives for interviews",CONCERN_CAR_994,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_CAR_994,34
+"i need help with build strategic career narratives for interviews",CONCERN_CAR_994,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_CAR_994,34
+"i struggle with recover from social rejection",CONCERN_CHA_1427,EMOTIONAL_RESILIENCE,drift,exact,CONCERN_CHA_1427,40
+"i have trouble with recover from social rejection",CONCERN_CHA_1427,EMOTIONAL_RESILIENCE,drift,exact,CONCERN_CHA_1427,40
+"i keep struggling with recover from social rejection",CONCERN_CHA_1427,EMOTIONAL_RESILIENCE,drift,exact,CONCERN_CHA_1427,34
+"i cannot manage recover from social rejection",CONCERN_CHA_1427,EMOTIONAL_RESILIENCE,drift,exact,CONCERN_CHA_1427,34
+"i need help with recover from social rejection",CONCERN_CHA_1427,EMOTIONAL_RESILIENCE,drift,exact,CONCERN_CHA_1427,34
+"difficulty working in teams",CONCERN_CLA_1669,SOCIAL_EMOTIONAL,drift,exact,CONCERN_CLA_1669,36
+"i have trouble with working in teams",CONCERN_CLA_1669,SOCIAL_EMOTIONAL,drift,exact,CONCERN_CLA_1669,35
+"i keep struggling with academic planning skills",CONCERN_CLA_1706,ACADEMIC_PLANNING,drift,exact,CONCERN_CLA_1706,35
+"i need help with supporting students with weak learning discipline",CONCERN_CLA_2130,DISCIPLINE_HABITS,drift,failure,,0
+"difficulty handling emotional uncertainty during career transitions",CONCERN_COL_1147,CAREER_GROWTH,drift,exact,CONCERN_COL_1147,36
+"i keep struggling with emotional uncertainty during career transitions",CONCERN_COL_1147,CAREER_GROWTH,drift,exact,CONCERN_COL_1147,32
+"i need help with emotional uncertainty during career transitions",CONCERN_COL_1147,CAREER_GROWTH,drift,exact,CONCERN_COL_1147,32
+"i struggle with self-directed learning skills",CONCERN_COL_2,EMPLOYABILITY_ACADEMIC,drift,exact,CONCERN_COL_2,40
+"i keep struggling with self-directed learning skills",CONCERN_COL_2,EMPLOYABILITY_ACADEMIC,drift,exact,CONCERN_COL_2,40
+"i cannot manage handling students with weak academic endurance",CONCERN_COL_2198,ACADEMIC_COGNITIVE,drift,failure,,0
+"i keep struggling with supporting students with weak concept mapping skills",CONCERN_COL_2259,FOUNDATIONAL_LEARNING,drift,exact,CONCERN_COL_2259,32
+"i need help with supporting students with weak concept mapping skills",CONCERN_COL_2259,FOUNDATIONAL_LEARNING,drift,failure,,0
+"i cannot manage emotional pressure from peer placements",CONCERN_COL_411,CONFIDENCE_SELF,drift,near,CONCERN_WOR_1139,21
+"i cannot manage emotional pressure during succession transitions",CONCERN_COL_911,LEADERSHIP_TRANSITION,drift,exact,CONCERN_COL_911,33
+"weak ability to integrate emotional intelligence into enterprise strategy",CONCERN_COL_950,STRATEGIC_LEADERSHIP,drift,exact,CONCERN_COL_950,37
+"i keep struggling with integrate emotional intelligence into enterprise strategy",CONCERN_COL_950,STRATEGIC_LEADERSHIP,drift,exact,CONCERN_COL_950,34
+"i cannot manage integrate emotional intelligence into enterprise strategy",CONCERN_COL_950,STRATEGIC_LEADERSHIP,drift,exact,CONCERN_COL_950,34
+"i need help with integrate emotional intelligence into enterprise strategy",CONCERN_COL_950,STRATEGIC_LEADERSHIP,drift,exact,CONCERN_COL_950,34
+"difficulty managing emotional anxiety during job insecurity",CONCERN_COM_1091,EMPLOYABILITY,drift,exact,CONCERN_COM_1091,35
+"i keep struggling with emotional anxiety during job insecurity",CONCERN_COM_1091,EMPLOYABILITY,drift,exact,CONCERN_COM_1091,32
+"i need help with emotional anxiety during job insecurity",CONCERN_COM_1091,EMPLOYABILITY,drift,exact,CONCERN_COM_1091,32
+"difficulty managing emotional anxiety during career stagnation",CONCERN_COM_1109,CAREER_GROWTH,drift,exact,CONCERN_COM_1109,35
+"i keep struggling with emotional anxiety during career stagnation",CONCERN_COM_1109,CAREER_GROWTH,drift,exact,CONCERN_COM_1109,32
+"i need help with emotional anxiety during career stagnation",CONCERN_COM_1109,CAREER_GROWTH,drift,exact,CONCERN_COM_1109,32
+"i struggle with communication skills",CONCERN_COM_1655,COMMUNICATION_EXPRESSION,drift,near,CONCERN_SOC_2334,29
+"i struggle with multiple subjects",CONCERN_COM_1684,ACADEMIC_PERFORMANCE,drift,exact,CONCERN_COM_1684,36
+"i have trouble with multiple subjects",CONCERN_COM_1684,ACADEMIC_PERFORMANCE,drift,exact,CONCERN_COM_1684,36
+"i keep struggling with solving higher-order questions",CONCERN_COM_1690,THINKING_QUALITY,drift,exact,CONCERN_COM_1690,42
+"i struggle with conversational skills",CONCERN_COM_1786,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_COM_1786,39
+"fear of asking questions",CONCERN_COM_1940,CONFIDENCE_SELF,drift,exact,CONCERN_COM_1940,49
+"i struggle with fear of asking questions",CONCERN_COM_1940,CONFIDENCE_SELF,drift,exact,CONCERN_COM_1940,39
+"i have trouble with fear of asking questions",CONCERN_COM_1940,CONFIDENCE_SELF,drift,exact,CONCERN_COM_1940,39
+"i keep struggling with fear of asking questions",CONCERN_COM_1940,CONFIDENCE_SELF,drift,exact,CONCERN_COM_1940,34
+"i cannot manage fear of asking questions",CONCERN_COM_1940,CONFIDENCE_SELF,drift,exact,CONCERN_COM_1940,34
+"i need help with fear of asking questions",CONCERN_COM_1940,CONFIDENCE_SELF,drift,exact,CONCERN_COM_1940,34
+"difficulty handling academic uncertainty",CONCERN_COM_2053,EXAMINATION_STRESS,drift,exact,CONCERN_COM_2053,31
+"i have trouble with academic uncertainty",CONCERN_COM_2053,EXAMINATION_STRESS,drift,exact,CONCERN_COM_2053,32
+"i keep struggling with cognitive flexibility in learning",CONCERN_COM_2095,LEARNING_ADAPTABILITY,drift,exact,CONCERN_COM_2095,34
+"i keep struggling with academic confidence after school change",CONCERN_COM_2109,ADJUSTMENT_COPING,drift,exact,CONCERN_COM_2109,33
+"i keep struggling with supporting students with weak academic planning",CONCERN_COM_2207,DISCIPLINE_HABITS,drift,failure,,0
+"i need help with supporting students with weak academic planning",CONCERN_COM_2207,DISCIPLINE_HABITS,drift,failure,,0
+"i keep struggling with supporting students with low academic persistence",CONCERN_COM_2213,MOTIVATION_VALUES,drift,exact,CONCERN_COM_2213,32
+"i need help with supporting students with low academic persistence",CONCERN_COM_2213,MOTIVATION_VALUES,drift,exact,CONCERN_COM_2213,32
+"i need help with managing students with weak academic reflection practices",CONCERN_COM_2254,SELF_REFLECTION,drift,failure,,0
+"i need help with supporting students with weak learning adaptability during curriculum changes",CONCERN_COM_2295,LEARNING_ADAPTABILITY,drift,failure,,0
+"difficulty managing semester pressure",CONCERN_COM_23,EXAMINATION_STRESS,drift,exact,CONCERN_COM_23,32
+"difficulty understanding workplace expectations",CONCERN_COM_367,CAREER_READINESS,drift,exact,CONCERN_COM_367,38
+"i struggle with understanding workplace expectations",CONCERN_COM_367,CAREER_READINESS,drift,exact,CONCERN_COM_367,37
+"i have trouble with understanding workplace expectations",CONCERN_COM_367,CAREER_READINESS,drift,exact,CONCERN_COM_367,37
+"i need help with understanding workplace expectations",CONCERN_COM_367,CAREER_READINESS,drift,exact,CONCERN_COM_367,31
+"i keep struggling with confidence after poor interview performance",CONCERN_COM_383,EMOTIONAL_RECOVERY,drift,exact,CONCERN_COM_383,34
+"i cannot manage placement preparation alongside academic pressure",CONCERN_COM_387,LIFESTYLE_PRESSURE,drift,exact,CONCERN_COM_387,37
+"i keep struggling with emotional stability during job search delays",CONCERN_COM_396,EMOTIONAL_RECOVERY,drift,exact,CONCERN_COM_396,34
+"i need help with emotional stability during job search delays",CONCERN_COM_396,EMOTIONAL_RECOVERY,drift,exact,CONCERN_COM_396,34
+"weak ability to manage workplace priorities without supervision",CONCERN_COM_434,OWNERSHIP_ACCOUNTABILITY,drift,exact,CONCERN_COM_434,31
+"i keep struggling with building confidence after layoffs",CONCERN_COM_481,EMOTIONAL_RECOVERY,drift,exact,CONCERN_COM_481,33
+"i have trouble with emotional pressure from financial responsibilities",CONCERN_COM_527,EMOTIONAL_REGULATION,drift,exact,CONCERN_COM_527,32
+"difficulty handling employment instability emotionally",CONCERN_COM_541,EMOTIONAL_REGULATION,drift,exact,CONCERN_COM_541,37
+"i have trouble with employment instability emotionally",CONCERN_COM_541,EMOTIONAL_REGULATION,drift,exact,CONCERN_COM_541,40
+"i keep struggling with employment instability emotionally",CONCERN_COM_541,EMOTIONAL_REGULATION,drift,exact,CONCERN_COM_541,34
+"i need help with employment instability emotionally",CONCERN_COM_541,EMOTIONAL_REGULATION,drift,exact,CONCERN_COM_541,34
+"i cannot manage career stagnation emotionally",CONCERN_COM_575,CAREER_GROWTH,drift,exact,CONCERN_COM_575,33
+"difficulty managing long-term career anxiety",CONCERN_COM_65,EXAMINATION_STRESS,drift,exact,CONCERN_COM_65,33
+"i struggle with long-term career anxiety",CONCERN_COM_65,EXAMINATION_STRESS,drift,failure,,0
+"i have trouble with long-term career anxiety",CONCERN_COM_65,EXAMINATION_STRESS,drift,exact,CONCERN_COM_65,36
+"i keep struggling with long-term career anxiety",CONCERN_COM_65,EXAMINATION_STRESS,drift,exact,CONCERN_COM_65,30
+"i need help with long-term career anxiety",CONCERN_COM_65,EXAMINATION_STRESS,drift,failure,,0
+"difficulty building consistent work discipline",CONCERN_COM_677,DISCIPLINE_HABITS,drift,exact,CONCERN_COM_677,42
+"difficulty managing emotional exhaustion during long projects",CONCERN_COM_715,LIFESTYLE_PRESSURE,drift,exact,CONCERN_COM_715,35
+"i keep struggling with emotional exhaustion during long projects",CONCERN_COM_715,LIFESTYLE_PRESSURE,drift,exact,CONCERN_COM_715,33
+"i cannot manage emotional exhaustion during long projects",CONCERN_COM_715,LIFESTYLE_PRESSURE,drift,exact,CONCERN_COM_715,33
+"i need help with emotional exhaustion during long projects",CONCERN_COM_715,LIFESTYLE_PRESSURE,drift,exact,CONCERN_COM_715,33
+"difficulty managing family expectations during career transition",CONCERN_COM_975,LIFESTYLE_PRESSURE,drift,exact,CONCERN_COM_975,35
+"i keep struggling with family expectations during career transition",CONCERN_COM_975,LIFESTYLE_PRESSURE,drift,exact,CONCERN_COM_975,33
+"i cannot manage family expectations during career transition",CONCERN_COM_975,LIFESTYLE_PRESSURE,drift,exact,CONCERN_COM_975,33
+"i need help with family expectations during career transition",CONCERN_COM_975,LIFESTYLE_PRESSURE,drift,exact,CONCERN_COM_975,33
+"i cannot manage isolation during preparation",CONCERN_CON_133,SOCIAL_EMOTIONAL,drift,exact,CONCERN_CON_133,31
+"i cannot manage confidence",CONCERN_CON_1735,CONFIDENCE_SELF,drift,near,CONCERN_EMO_740,16
+"career confusion",CONCERN_CON_1736,ACADEMIC_IDENTITY,drift,exact,CONCERN_CON_1736,45
+"i have trouble with career confusion",CONCERN_CON_1736,ACADEMIC_IDENTITY,drift,exact,CONCERN_CON_1736,33
+"social anxiety",CONCERN_CON_1782,SOCIAL_EMOTIONAL,drift,exact,CONCERN_CON_1782,50
+"i have trouble with social anxiety",CONCERN_CON_1782,SOCIAL_EMOTIONAL,drift,exact,CONCERN_CON_1782,36
+"lack of curiosity",CONCERN_CON_1795,MOTIVATION_VALUES,drift,exact,CONCERN_CON_1795,34
+"i struggle with learned helplessness",CONCERN_CON_1812,EXAMINATION_STRESS,drift,exact,CONCERN_CON_1812,39
+"fear of making mistakes",CONCERN_CON_1818,CONFIDENCE_SELF,drift,exact,CONCERN_CON_1818,48
+"i struggle with fear of making mistakes",CONCERN_CON_1818,CONFIDENCE_SELF,drift,exact,CONCERN_CON_1818,39
+"i have trouble with fear of making mistakes",CONCERN_CON_1818,CONFIDENCE_SELF,drift,exact,CONCERN_CON_1818,39
+"i keep struggling with fear of making mistakes",CONCERN_CON_1818,CONFIDENCE_SELF,drift,exact,CONCERN_CON_1818,33
+"i need help with fear of making mistakes",CONCERN_CON_1818,CONFIDENCE_SELF,drift,exact,CONCERN_CON_1818,33
+"i keep struggling with child becoming emotionally detached from grandparents",CONCERN_CON_1867,ADJUSTMENT_COPING,drift,exact,CONCERN_CON_1867,35
+"i cannot manage child becoming emotionally detached from grandparents",CONCERN_CON_1867,ADJUSTMENT_COPING,drift,exact,CONCERN_CON_1867,35
+"i need help with child becoming emotionally detached from grandparents",CONCERN_CON_1867,ADJUSTMENT_COPING,drift,exact,CONCERN_CON_1867,35
+"i keep struggling with building confidence after long study gaps",CONCERN_CON_189,MOTIVATION_VALUES,drift,exact,CONCERN_CON_189,32
+"i keep struggling with emotional recovery after criticism",CONCERN_CON_1891,EXAMINATION_STRESS,drift,exact,CONCERN_CON_1891,34
+"i keep struggling with child becoming emotionally overwhelmed by news & media",CONCERN_CON_1909,LIFESTYLE_PRESSURE,drift,exact,CONCERN_CON_1909,35
+"i cannot manage child becoming emotionally overwhelmed by news & media",CONCERN_CON_1909,LIFESTYLE_PRESSURE,drift,exact,CONCERN_CON_1909,35
+"i need help with child becoming emotionally overwhelmed by news & media",CONCERN_CON_1909,LIFESTYLE_PRESSURE,drift,exact,CONCERN_CON_1909,35
+"i keep struggling with academic expectations from parents",CONCERN_CON_2087,EXAMINATION_STRESS,drift,exact,CONCERN_CON_2087,32
+"i need help with supporting students with weak exam strategy",CONCERN_CON_2140,EXAMINATION_READINESS,drift,failure,,0
+"i keep struggling with student stress before exams",CONCERN_CON_2145,EXAMINATION_STRESS,drift,exact,CONCERN_CON_2145,36
+"i need help with student stress before exams",CONCERN_CON_2145,EXAMINATION_STRESS,drift,exact,CONCERN_CON_2145,36
+"i keep struggling with managing students with weak collaborative communication",CONCERN_CON_2204,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_CON_2204,31
+"i cannot manage managing students with weak collaborative communication",CONCERN_CON_2204,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_CON_2204,31
+"i need help with managing students with weak collaborative communication",CONCERN_CON_2204,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_CON_2204,31
+"i keep struggling with helping students recover after academic failure",CONCERN_CON_2225,EXAMINATION_STRESS,drift,exact,CONCERN_CON_2225,34
+"i keep struggling with handling students with weak concept revision methods",CONCERN_CON_2234,EXAMINATION_READINESS,drift,exact,CONCERN_CON_2234,31
+"i cannot manage handling students with weak concept revision methods",CONCERN_CON_2234,EXAMINATION_READINESS,drift,failure,,0
+"i keep struggling with supporting students with weak academic goal clarity",CONCERN_CON_2244,ACADEMIC_IDENTITY,drift,failure,,0
+"i need help with supporting students with weak academic goal clarity",CONCERN_CON_2244,ACADEMIC_IDENTITY,drift,failure,,0
+"i need help with students overdependent on external validation",CONCERN_CON_2365,CONFIDENCE_SELF,drift,exact,CONCERN_CON_2365,39
+"difficulty adjusting to academic transitions",CONCERN_CON_2367,ADJUSTMENT_COPING,drift,exact,CONCERN_CON_2367,39
+"i have trouble with adjusting to academic transitions",CONCERN_CON_2367,ADJUSTMENT_COPING,drift,exact,CONCERN_CON_2367,38
+"i cannot manage adjusting to academic transitions",CONCERN_CON_2367,ADJUSTMENT_COPING,drift,exact,CONCERN_CON_2367,32
+"i need help with adjusting to academic transitions",CONCERN_CON_2367,ADJUSTMENT_COPING,drift,near,CONCERN_DIS_2215,33
+"i struggle with awareness of emerging career opportunities",CONCERN_CON_516,CAREER_READINESS,drift,exact,CONCERN_CON_516,35
+"i have trouble with awareness of emerging career opportunities",CONCERN_CON_516,CAREER_READINESS,drift,exact,CONCERN_CON_516,35
+"i keep struggling with building entrepreneurial confidence",CONCERN_CON_59,CAREER_READINESS,drift,exact,CONCERN_CON_59,38
+"i cannot manage building entrepreneurial confidence",CONCERN_CON_59,CAREER_READINESS,drift,exact,CONCERN_CON_59,36
+"i struggle with confidence in non-traditional careers",CONCERN_DEC_1385,ALTERNATIVE_CAREER,drift,exact,CONCERN_DEC_1385,40
+"i have trouble with confidence in non-traditional careers",CONCERN_DEC_1385,ALTERNATIVE_CAREER,drift,exact,CONCERN_DEC_1385,40
+"i keep struggling with confidence in non-traditional careers",CONCERN_DEC_1385,ALTERNATIVE_CAREER,drift,exact,CONCERN_DEC_1385,34
+"i cannot manage confidence in non-traditional careers",CONCERN_DEC_1385,ALTERNATIVE_CAREER,drift,exact,CONCERN_DEC_1385,34
+"i need help with confidence in non-traditional careers",CONCERN_DEC_1385,ALTERNATIVE_CAREER,drift,exact,CONCERN_DEC_1385,34
+"lack of ownership for personal growth",CONCERN_DEC_1436,GROWTH_ACCOUNTABILITY,drift,exact,CONCERN_DEC_1436,41
+"i struggle with ownership for personal growth",CONCERN_DEC_1436,GROWTH_ACCOUNTABILITY,drift,failure,,0
+"i have trouble with ownership for personal growth",CONCERN_DEC_1436,GROWTH_ACCOUNTABILITY,drift,exact,CONCERN_DEC_1436,38
+"i keep struggling with ownership for personal growth",CONCERN_DEC_1436,GROWTH_ACCOUNTABILITY,drift,exact,CONCERN_DEC_1436,32
+"i cannot manage ownership for personal growth",CONCERN_DEC_1436,GROWTH_ACCOUNTABILITY,drift,exact,CONCERN_DEC_1436,32
+"i need help with ownership for personal growth",CONCERN_DEC_1436,GROWTH_ACCOUNTABILITY,drift,exact,CONCERN_DEC_1436,32
+"i struggle with confidence in peer interactions",CONCERN_DEC_1470,SOCIAL_LEADERSHIP,drift,failure,,0
+"i have trouble with confidence in peer interactions",CONCERN_DEC_1470,SOCIAL_LEADERSHIP,drift,exact,CONCERN_DEC_1470,37
+"i cannot manage confidence in peer interactions",CONCERN_DEC_1470,SOCIAL_LEADERSHIP,drift,exact,CONCERN_DEC_1470,31
+"i need help with confidence in peer interactions",CONCERN_DEC_1470,SOCIAL_LEADERSHIP,drift,exact,CONCERN_DEC_1470,31
+"i cannot manage emotional recovery after poor mock scores",CONCERN_DIS_110,EXAMINATION_STRESS,drift,exact,CONCERN_DIS_110,32
+"weak emotional control during negative feedback",CONCERN_DIS_126,SOCIAL_EMOTIONAL,drift,exact,CONCERN_DIS_126,44
+"i struggle with emotional control during negative feedback",CONCERN_DIS_126,SOCIAL_EMOTIONAL,drift,exact,CONCERN_DIS_126,43
+"i have trouble with emotional control during negative feedback",CONCERN_DIS_126,SOCIAL_EMOTIONAL,drift,exact,CONCERN_DIS_126,43
+"i keep struggling with emotional control during negative feedback",CONCERN_DIS_126,SOCIAL_EMOTIONAL,drift,exact,CONCERN_DIS_126,36
+"i cannot manage emotional control during negative feedback",CONCERN_DIS_126,SOCIAL_EMOTIONAL,drift,exact,CONCERN_DIS_126,36
+"i need help with emotional control during negative feedback",CONCERN_DIS_126,SOCIAL_EMOTIONAL,drift,exact,CONCERN_DIS_126,36
+"i keep struggling with emotional recovery after negative comparisons",CONCERN_DIS_154,CONFIDENCE_SELF,drift,exact,CONCERN_DIS_154,37
+"i have trouble with study discipline",CONCERN_DIS_1660,DISCIPLINE_HABITS,drift,exact,CONCERN_DIS_1660,36
+"i have trouble with consistency in performance",CONCERN_DIS_1662,ACADEMIC_PERFORMANCE,drift,exact,CONCERN_DIS_1662,36
+"i have trouble with academic expectations",CONCERN_DIS_1695,EXAMINATION_STRESS,drift,exact,CONCERN_DIS_1695,32
+"peer pressure",CONCERN_DIS_1745,SOCIAL_EMOTIONAL,drift,exact,CONCERN_DIS_1745,45
+"i have trouble with peer pressure",CONCERN_DIS_1745,SOCIAL_EMOTIONAL,drift,exact,CONCERN_DIS_1745,32
+"tuition dependency",CONCERN_DIS_1762,ACADEMIC_COGNITIVE,drift,exact,CONCERN_DIS_1762,49
+"i struggle with tuition dependency",CONCERN_DIS_1762,ACADEMIC_COGNITIVE,drift,exact,CONCERN_DIS_1762,37
+"i have trouble with tuition dependency",CONCERN_DIS_1762,ACADEMIC_COGNITIVE,drift,exact,CONCERN_DIS_1762,37
+"weak emotional regulation",CONCERN_DIS_1780,EXAMINATION_STRESS,drift,exact,CONCERN_DIS_1780,33
+"i have trouble with emotional regulation",CONCERN_DIS_1780,EXAMINATION_STRESS,drift,exact,CONCERN_DIS_1780,30
+"i keep struggling with child showing emotional fatigue from constant comparison",CONCERN_DIS_1900,CONFIDENCE_SELF,drift,exact,CONCERN_DIS_1900,34
+"i cannot manage child showing emotional fatigue from constant comparison",CONCERN_DIS_1900,CONFIDENCE_SELF,drift,exact,CONCERN_DIS_1900,34
+"i need help with child showing emotional fatigue from constant comparison",CONCERN_DIS_1900,CONFIDENCE_SELF,drift,exact,CONCERN_DIS_1900,34
+"i cannot manage revising without guidance",CONCERN_DIS_2011,EXAMINATION_READINESS,drift,exact,CONCERN_DIS_2011,39
+"i struggle with concept simplification ability",CONCERN_DIS_2074,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_DIS_2074,41
+"i keep struggling with concept simplification ability",CONCERN_DIS_2074,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_DIS_2074,41
+"i keep struggling with handling students with weak concept transfer skills",CONCERN_DIS_2252,INTERDISCIPLINARY_LEARNING,drift,exact,CONCERN_DIS_2252,31
+"i cannot manage handling students with weak concept transfer skills",CONCERN_DIS_2252,INTERDISCIPLINARY_LEARNING,drift,failure,,0
+"i cannot manage handling students with weak cognitive accuracy under pressure",CONCERN_DIS_2288,THINKING_QUALITY,drift,failure,,0
+"i need help with handling students with weak cognitive accuracy under pressure",CONCERN_DIS_2288,THINKING_QUALITY,drift,failure,,0
+"i need help with supporting students with weak learning recovery after academic breaks",CONCERN_DIS_2292,ACADEMIC_COGNITIVE,drift,failure,,0
+"i keep struggling with child becoming emotionally reactive during feedback",CONCERN_DIS_2329,SOCIAL_EMOTIONAL,drift,exact,CONCERN_DIS_2329,36
+"i cannot manage child becoming emotionally reactive during feedback",CONCERN_DIS_2329,SOCIAL_EMOTIONAL,drift,exact,CONCERN_DIS_2329,36
+"i need help with child becoming emotionally reactive during feedback",CONCERN_DIS_2329,SOCIAL_EMOTIONAL,drift,exact,CONCERN_DIS_2329,36
+"i need help with students with weak numerical reasoning",CONCERN_DIS_2455,STEM_LEARNING,drift,exact,CONCERN_DIS_2455,37
+"i need help with supporting students with weak learning structure across subjects",CONCERN_DIS_2460,ACADEMIC_COGNITIVE,drift,failure,,0
+"i keep struggling with solving unfamiliar problems",CONCERN_DIS_286,THINKING_QUALITY,drift,exact,CONCERN_DIS_286,39
+"weak emotional stability during career uncertainty",CONCERN_DIS_36,EXAMINATION_STRESS,drift,exact,CONCERN_DIS_36,39
+"i struggle with emotional stability during career uncertainty",CONCERN_DIS_36,EXAMINATION_STRESS,drift,exact,CONCERN_DIS_36,38
+"i have trouble with emotional stability during career uncertainty",CONCERN_DIS_36,EXAMINATION_STRESS,drift,exact,CONCERN_DIS_36,38
+"i keep struggling with emotional stability during career uncertainty",CONCERN_DIS_36,EXAMINATION_STRESS,drift,exact,CONCERN_DIS_36,31
+"i need help with emotional stability during career uncertainty",CONCERN_DIS_36,EXAMINATION_STRESS,drift,exact,CONCERN_DIS_36,31
+"i need help with handle technical assessments under pressure",CONCERN_DIS_488,EXAMINATION_READINESS,drift,exact,CONCERN_DIS_488,37
+"difficulty managing emotional fatigue from networking efforts",CONCERN_DIS_545,SOCIAL_EMOTIONAL,drift,exact,CONCERN_DIS_545,38
+"i struggle with emotional fatigue from networking efforts",CONCERN_DIS_545,SOCIAL_EMOTIONAL,drift,exact,CONCERN_DIS_545,41
+"i have trouble with emotional fatigue from networking efforts",CONCERN_DIS_545,SOCIAL_EMOTIONAL,drift,exact,CONCERN_DIS_545,41
+"i keep struggling with emotional fatigue from networking efforts",CONCERN_DIS_545,SOCIAL_EMOTIONAL,drift,exact,CONCERN_DIS_545,36
+"i cannot manage emotional fatigue from networking efforts",CONCERN_DIS_545,SOCIAL_EMOTIONAL,drift,exact,CONCERN_DIS_545,36
+"i need help with emotional fatigue from networking efforts",CONCERN_DIS_545,SOCIAL_EMOTIONAL,drift,exact,CONCERN_DIS_545,36
+"i keep struggling with building confidence after public professional failure",CONCERN_DIS_555,EMOTIONAL_RECOVERY,drift,exact,CONCERN_DIS_555,34
+"weak ability to build long-term professional confidence",CONCERN_EMO_1106,CONFIDENCE_SELF,drift,exact,CONCERN_EMO_1106,36
+"i struggle with build long-term professional confidence",CONCERN_EMO_1106,CONFIDENCE_SELF,drift,near,CONCERN_CAR_256,35
+"i have trouble with build long-term professional confidence",CONCERN_EMO_1106,CONFIDENCE_SELF,drift,exact,CONCERN_EMO_1106,38
+"i keep struggling with build long-term professional confidence",CONCERN_EMO_1106,CONFIDENCE_SELF,drift,exact,CONCERN_EMO_1106,33
+"i need help with build long-term professional confidence",CONCERN_EMO_1106,CONFIDENCE_SELF,drift,exact,CONCERN_EMO_1106,33
+"i have trouble with emotional pressure from team dependencies",CONCERN_EMO_1137,COLLABORATION_OWNERSHIP,drift,failure,,0
+"i keep struggling with sustaining emotional stability during economic uncertainty",CONCERN_EMO_1159,EMPLOYABILITY,drift,exact,CONCERN_EMO_1159,32
+"i cannot manage sustaining emotional stability during economic uncertainty",CONCERN_EMO_1159,EMPLOYABILITY,drift,exact,CONCERN_EMO_1159,32
+"i need help with sustaining emotional stability during economic uncertainty",CONCERN_EMO_1159,EMPLOYABILITY,drift,exact,CONCERN_EMO_1159,32
+"i keep struggling with visibility into real classroom participation equity",CONCERN_EMO_1202,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_EMO_1202,36
+"i cannot manage visibility into real classroom participation equity",CONCERN_EMO_1202,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_EMO_1202,36
+"i need help with visibility into real classroom participation equity",CONCERN_EMO_1202,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_EMO_1202,36
+"i keep struggling with student readiness for entrepreneurial careers",CONCERN_EMO_1341,INNOVATION_ENTREPRENEURSHIP,drift,exact,CONCERN_EMO_1341,36
+"weak ability to identify transferable skills",CONCERN_EMO_252,CAREER_READINESS,drift,exact,CONCERN_EMO_252,36
+"i struggle with identify transferable skills",CONCERN_EMO_252,CAREER_READINESS,drift,exact,CONCERN_EMO_252,40
+"i have trouble with identify transferable skills",CONCERN_EMO_252,CAREER_READINESS,drift,exact,CONCERN_EMO_252,40
+"i keep struggling with identify transferable skills",CONCERN_EMO_252,CAREER_READINESS,drift,exact,CONCERN_EMO_252,34
+"i cannot manage identify transferable skills",CONCERN_EMO_252,CAREER_READINESS,drift,exact,CONCERN_EMO_252,34
+"i need help with identify transferable skills",CONCERN_EMO_252,CAREER_READINESS,drift,exact,CONCERN_EMO_252,34
+"weak awareness of industry-relevant competencies",CONCERN_EMO_274,CAREER_READINESS,drift,exact,CONCERN_EMO_274,32
+"i keep struggling with awareness of personal learning style effectiveness",CONCERN_EMO_294,SELF_REFLECTION,drift,exact,CONCERN_EMO_294,35
+"i cannot manage awareness of personal learning style effectiveness",CONCERN_EMO_294,SELF_REFLECTION,drift,exact,CONCERN_EMO_294,35
+"i need help with awareness of personal learning style effectiveness",CONCERN_EMO_294,SELF_REFLECTION,drift,exact,CONCERN_EMO_294,35
+"i struggle with group discussions",CONCERN_EMO_366,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_EMO_366,38
+"i have trouble with group discussions",CONCERN_EMO_366,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_EMO_366,38
+"weak ability to build recruiter relationships",CONCERN_EMO_514,SOCIAL_EMOTIONAL,drift,exact,CONCERN_EMO_514,36
+"i struggle with build recruiter relationships",CONCERN_EMO_514,SOCIAL_EMOTIONAL,drift,exact,CONCERN_EMO_514,40
+"i have trouble with build recruiter relationships",CONCERN_EMO_514,SOCIAL_EMOTIONAL,drift,exact,CONCERN_EMO_514,40
+"i keep struggling with build recruiter relationships",CONCERN_EMO_514,SOCIAL_EMOTIONAL,drift,exact,CONCERN_EMO_514,34
+"i cannot manage build recruiter relationships",CONCERN_EMO_514,SOCIAL_EMOTIONAL,drift,exact,CONCERN_EMO_514,34
+"i need help with build recruiter relationships",CONCERN_EMO_514,SOCIAL_EMOTIONAL,drift,exact,CONCERN_EMO_514,34
+"weak ability to build credibility in new domains quickly",CONCERN_EMO_550,CAREER_TRANSITION,drift,exact,CONCERN_EMO_550,38
+"i keep struggling with build credibility in new domains quickly",CONCERN_EMO_550,CAREER_TRANSITION,drift,exact,CONCERN_EMO_550,36
+"i cannot manage build credibility in new domains quickly",CONCERN_EMO_550,CAREER_TRANSITION,drift,exact,CONCERN_EMO_550,36
+"i need help with build credibility in new domains quickly",CONCERN_EMO_550,CAREER_TRANSITION,drift,exact,CONCERN_EMO_550,36
+"i keep struggling with handling difficult conversations",CONCERN_EMO_577,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_EMO_577,39
+"i need help with handling difficult conversations",CONCERN_EMO_577,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_EMO_577,38
+"i struggle with understanding long-term career growth pathways",CONCERN_EMO_679,CAREER_GROWTH,drift,exact,CONCERN_EMO_679,43
+"i have trouble with understanding long-term career growth pathways",CONCERN_EMO_679,CAREER_GROWTH,drift,exact,CONCERN_EMO_679,43
+"i keep struggling with understanding long-term career growth pathways",CONCERN_EMO_679,CAREER_GROWTH,drift,exact,CONCERN_EMO_679,35
+"i cannot manage understanding long-term career growth pathways",CONCERN_EMO_679,CAREER_GROWTH,drift,exact,CONCERN_EMO_679,35
+"i need help with understanding long-term career growth pathways",CONCERN_EMO_679,CAREER_GROWTH,drift,failure,,0
+"i cannot manage driving organizational change",CONCERN_EMO_784,STRATEGIC_LEADERSHIP,drift,exact,CONCERN_EMO_784,38
+"i struggle with build leadership alignment across geographies",CONCERN_EMO_886,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_EMO_886,33
+"i have trouble with build leadership alignment across geographies",CONCERN_EMO_886,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_EMO_886,33
+"i keep struggling with build leadership alignment across geographies",CONCERN_EMO_886,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_EMO_886,33
+"i cannot manage build leadership alignment across geographies",CONCERN_EMO_886,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_EMO_886,33
+"i need help with build leadership alignment across geographies",CONCERN_EMO_886,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_EMO_886,33
+"i cannot manage emotional pressure from past career success comparisons",CONCERN_EMP_1053,CONFIDENCE_SELF,drift,exact,CONCERN_EMP_1053,37
+"i struggle with emotional reactions to workplace politics",CONCERN_EMP_1071,WORKPLACE_ADAPTATION,drift,exact,CONCERN_EMP_1071,41
+"i have trouble with emotional reactions to workplace politics",CONCERN_EMP_1071,WORKPLACE_ADAPTATION,drift,exact,CONCERN_EMP_1071,41
+"i keep struggling with emotional reactions to workplace politics",CONCERN_EMP_1071,WORKPLACE_ADAPTATION,drift,exact,CONCERN_EMP_1071,36
+"i cannot manage emotional reactions to workplace politics",CONCERN_EMP_1071,WORKPLACE_ADAPTATION,drift,exact,CONCERN_EMP_1071,36
+"i need help with emotional reactions to workplace politics",CONCERN_EMP_1071,WORKPLACE_ADAPTATION,drift,exact,CONCERN_EMP_1071,36
+"difficulty managing emotional stress during leadership reviews",CONCERN_EMP_1095,LEADERSHIP_OWNERSHIP,drift,exact,CONCERN_EMP_1095,35
+"i keep struggling with visibility into institutional collaboration culture",CONCERN_EMP_1214,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_EMP_1214,36
+"i keep struggling with visibility into student self-learning capability",CONCERN_EMP_1238,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_EMP_1238,35
+"i need help with visibility into student career direction clarity",CONCERN_EMP_1318,CAREER_GROWTH,drift,failure,,0
+"i have trouble with placement pressure",CONCERN_EMP_17,EXAMINATION_STRESS,drift,exact,CONCERN_EMP_17,34
+"i keep struggling with building consistent learning habits in college",CONCERN_EMP_21,DISCIPLINE_HABITS,drift,exact,CONCERN_EMP_21,34
+"i struggle with building long-term career vision",CONCERN_EMP_31,CAREER_READINESS,drift,exact,CONCERN_EMP_31,40
+"i have trouble with building long-term career vision",CONCERN_EMP_31,CAREER_READINESS,drift,exact,CONCERN_EMP_31,40
+"i keep struggling with building long-term career vision",CONCERN_EMP_31,CAREER_READINESS,drift,exact,CONCERN_EMP_31,35
+"i cannot manage building long-term career vision",CONCERN_EMP_31,CAREER_READINESS,drift,exact,CONCERN_EMP_31,35
+"i need help with building long-term career vision",CONCERN_EMP_31,CAREER_READINESS,drift,exact,CONCERN_EMP_31,35
+"i have trouble with rejection during placements",CONCERN_EMP_33,EXAMINATION_STRESS,drift,exact,CONCERN_EMP_33,39
+"i keep struggling with rejection during placements",CONCERN_EMP_33,EXAMINATION_STRESS,drift,exact,CONCERN_EMP_33,34
+"i cannot manage rejection during placements",CONCERN_EMP_33,EXAMINATION_STRESS,drift,exact,CONCERN_EMP_33,34
+"i need help with rejection during placements",CONCERN_EMP_33,EXAMINATION_STRESS,drift,exact,CONCERN_EMP_33,34
+"i cannot manage building confidence in professional writing",CONCERN_EMP_395,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_EMP_395,35
+"i cannot manage building long-term confidence after low salary offers",CONCERN_EMP_413,CONFIDENCE_SELF,drift,exact,CONCERN_EMP_413,33
+"i need help with building long-term confidence after low salary offers",CONCERN_EMP_413,CONFIDENCE_SELF,drift,exact,CONCERN_EMP_413,33
+"i have trouble with job interviews",CONCERN_EMP_462,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_EMP_462,37
+"i cannot manage transitioning into enterprise-level leadership",CONCERN_EMP_794,LEADERSHIP_READINESS,drift,exact,CONCERN_EMP_794,41
+"i keep struggling with sustaining motivation over long academic cycles",CONCERN_ENG_1466,LONG_TERM,drift,exact,CONCERN_ENG_1466,36
+"i cannot manage sustaining motivation over long academic cycles",CONCERN_ENG_1466,LONG_TERM,drift,exact,CONCERN_ENG_1466,36
+"i struggle with difficulty maintaining focus during long study hours",CONCERN_EXA_111,ACADEMIC_COGNITIVE,drift,exact,CONCERN_EXA_111,39
+"i have trouble with difficulty maintaining focus during long study hours",CONCERN_EXA_111,ACADEMIC_COGNITIVE,drift,exact,CONCERN_EXA_111,39
+"i keep struggling with difficulty maintaining focus during long study hours",CONCERN_EXA_111,ACADEMIC_COGNITIVE,drift,exact,CONCERN_EXA_111,32
+"i cannot manage difficulty maintaining focus during long study hours",CONCERN_EXA_111,ACADEMIC_COGNITIVE,drift,exact,CONCERN_EXA_111,32
+"i need help with difficulty maintaining focus during long study hours",CONCERN_EXA_111,ACADEMIC_COGNITIVE,drift,near,CONCERN_COM_2453,32
+"i struggle with solving high-weightage problems",CONCERN_EXA_142,CONFIDENCE_SELF,drift,exact,CONCERN_EXA_142,44
+"i keep struggling with solving high-weightage problems",CONCERN_EXA_142,CONFIDENCE_SELF,drift,exact,CONCERN_EXA_142,43
+"fear of exams",CONCERN_EXA_1665,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_1665,49
+"i struggle with fear of exams",CONCERN_EXA_1665,EXAMINATION_STRESS,drift,near,CONCERN_MOT_2172,24
+"i have trouble with fear of exams",CONCERN_EXA_1665,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_1665,35
+"difficulty handling academic pressure",CONCERN_EXA_1667,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_1667,30
+"i have trouble with academic pressure",CONCERN_EXA_1667,EXAMINATION_STRESS,drift,near,CONCERN_ACA_1731,30
+"i keep struggling with solving application-based questions",CONCERN_EXA_1709,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_EXA_1709,38
+"i have trouble with academic endurance",CONCERN_EXA_1715,ACADEMIC_PERFORMANCE,drift,exact,CONCERN_EXA_1715,38
+"screen addiction",CONCERN_EXA_1732,LIFESTYLE_PRESSURE,drift,exact,CONCERN_EXA_1732,54
+"i struggle with screen addiction",CONCERN_EXA_1732,LIFESTYLE_PRESSURE,drift,exact,CONCERN_EXA_1732,42
+"i have trouble with screen addiction",CONCERN_EXA_1732,LIFESTYLE_PRESSURE,drift,exact,CONCERN_EXA_1732,42
+"i need help with motivation",CONCERN_EXA_1743,MOTIVATION_VALUES,drift,near,CONCERN_STE_2219,25
+"social isolation",CONCERN_EXA_1748,ADJUSTMENT_COPING,drift,exact,CONCERN_EXA_1748,48
+"i struggle with social isolation",CONCERN_EXA_1748,ADJUSTMENT_COPING,drift,exact,CONCERN_EXA_1748,36
+"i have trouble with social isolation",CONCERN_EXA_1748,ADJUSTMENT_COPING,drift,exact,CONCERN_EXA_1748,36
+"low resilience",CONCERN_EXA_1755,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_1755,37
+"lack of purpose & direction",CONCERN_EXA_1760,ACADEMIC_IDENTITY,drift,exact,CONCERN_EXA_1760,40
+"i struggle with purpose & direction",CONCERN_EXA_1760,ACADEMIC_IDENTITY,drift,exact,CONCERN_EXA_1760,38
+"i have trouble with purpose & direction",CONCERN_EXA_1760,ACADEMIC_IDENTITY,drift,exact,CONCERN_EXA_1760,38
+"study burnout",CONCERN_EXA_1764,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_1764,47
+"i struggle with study burnout",CONCERN_EXA_1764,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_1764,35
+"i have trouble with study burnout",CONCERN_EXA_1764,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_1764,35
+"i have trouble with reading habits",CONCERN_EXA_1765,FOUNDATIONAL_LEARNING,drift,exact,CONCERN_EXA_1765,37
+"fear of judgement",CONCERN_EXA_1781,CONFIDENCE_SELF,drift,exact,CONCERN_EXA_1781,49
+"i struggle with fear of judgement",CONCERN_EXA_1781,CONFIDENCE_SELF,drift,exact,CONCERN_EXA_1781,36
+"i have trouble with fear of judgement",CONCERN_EXA_1781,CONFIDENCE_SELF,drift,exact,CONCERN_EXA_1781,36
+"i struggle with group discussions",CONCERN_EXA_18,COMMUNICATION_EXPRESSION,drift,near,CONCERN_EMO_366,38
+"i have trouble with group discussions",CONCERN_EXA_18,COMMUNICATION_EXPRESSION,drift,near,CONCERN_EMO_366,38
+"i struggle with emotional over-sensitivity",CONCERN_EXA_1803,SOCIAL_EMOTIONAL,drift,exact,CONCERN_EXA_1803,41
+"constant overthinking",CONCERN_EXA_1824,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_1824,50
+"i struggle with constant overthinking",CONCERN_EXA_1824,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_1824,38
+"i have trouble with constant overthinking",CONCERN_EXA_1824,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_1824,38
+"emotional exhaustion",CONCERN_EXA_1825,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_1825,45
+"i have trouble with emotional exhaustion",CONCERN_EXA_1825,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_1825,33
+"i cannot manage chronic academic stress",CONCERN_EXA_1831,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_1831,38
+"i need help with chronic academic stress",CONCERN_EXA_1831,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_1831,38
+"fear of competitive exams",CONCERN_EXA_1832,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_1832,48
+"i struggle with fear of competitive exams",CONCERN_EXA_1832,EXAMINATION_STRESS,drift,failure,,0
+"i have trouble with fear of competitive exams",CONCERN_EXA_1832,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_1832,39
+"i keep struggling with fear of competitive exams",CONCERN_EXA_1832,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_1832,33
+"i cannot manage fear of competitive exams",CONCERN_EXA_1832,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_1832,33
+"lack of career awareness",CONCERN_EXA_1833,ACADEMIC_IDENTITY,drift,exact,CONCERN_EXA_1833,37
+"i have trouble with career awareness",CONCERN_EXA_1833,ACADEMIC_IDENTITY,drift,exact,CONCERN_EXA_1833,33
+"i keep struggling with child avoiding difficult subjects completely",CONCERN_EXA_1912,ACADEMIC_COGNITIVE,drift,exact,CONCERN_EXA_1912,36
+"i cannot manage child avoiding difficult subjects completely",CONCERN_EXA_1912,ACADEMIC_COGNITIVE,drift,exact,CONCERN_EXA_1912,36
+"i need help with child avoiding difficult subjects completely",CONCERN_EXA_1912,ACADEMIC_COGNITIVE,drift,exact,CONCERN_EXA_1912,36
+"i keep struggling with child becoming emotionally aggressive online",CONCERN_EXA_1916,LIFESTYLE_PRESSURE,drift,exact,CONCERN_EXA_1916,35
+"i cannot manage child becoming emotionally aggressive online",CONCERN_EXA_1916,LIFESTYLE_PRESSURE,drift,exact,CONCERN_EXA_1916,35
+"i need help with child becoming emotionally aggressive online",CONCERN_EXA_1916,LIFESTYLE_PRESSURE,drift,exact,CONCERN_EXA_1916,35
+"weak goal orientation",CONCERN_EXA_1962,MOTIVATION_VALUES,drift,exact,CONCERN_EXA_1962,38
+"i struggle with goal orientation",CONCERN_EXA_1962,MOTIVATION_VALUES,drift,exact,CONCERN_EXA_1962,38
+"i have trouble with goal orientation",CONCERN_EXA_1962,MOTIVATION_VALUES,drift,exact,CONCERN_EXA_1962,38
+"i struggle with multiple subjects",CONCERN_EXA_1972,ACADEMIC_COGNITIVE,drift,near,CONCERN_COM_1684,36
+"i have trouble with multiple subjects",CONCERN_EXA_1972,ACADEMIC_COGNITIVE,drift,near,CONCERN_COM_1684,36
+"i need help with sustaining hope during long competitive journeys",CONCERN_EXA_199,MOTIVATION_VALUES,drift,exact,CONCERN_EXA_199,39
+"i keep struggling with academic recovery after poor scores",CONCERN_EXA_2000,CONFIDENCE_SELF,drift,near,CONCERN_CAR_256,27
+"i cannot manage academic recovery after poor scores",CONCERN_EXA_2000,CONFIDENCE_SELF,drift,exact,CONCERN_EXA_2000,32
+"i need help with academic recovery after poor scores",CONCERN_EXA_2000,CONFIDENCE_SELF,drift,exact,CONCERN_EXA_2000,32
+"weak long-term career vision",CONCERN_EXA_206,ACADEMIC_IDENTITY,drift,exact,CONCERN_EXA_206,38
+"i struggle with long-term career vision",CONCERN_EXA_206,ACADEMIC_IDENTITY,drift,exact,CONCERN_EXA_206,37
+"i have trouble with long-term career vision",CONCERN_EXA_206,ACADEMIC_IDENTITY,drift,exact,CONCERN_EXA_206,37
+"i keep struggling with long-term career vision",CONCERN_EXA_206,ACADEMIC_IDENTITY,drift,exact,CONCERN_EXA_206,32
+"i need help with long-term career vision",CONCERN_EXA_206,ACADEMIC_IDENTITY,drift,exact,CONCERN_EXA_206,32
+"i struggle with consistency across subjects",CONCERN_EXA_2061,ACADEMIC_PERFORMANCE,drift,exact,CONCERN_EXA_2061,38
+"i have trouble with consistency across subjects",CONCERN_EXA_2061,ACADEMIC_PERFORMANCE,drift,exact,CONCERN_EXA_2061,38
+"i keep struggling with consistency across subjects",CONCERN_EXA_2061,ACADEMIC_PERFORMANCE,drift,exact,CONCERN_EXA_2061,32
+"i cannot manage consistency across subjects",CONCERN_EXA_2061,ACADEMIC_PERFORMANCE,drift,exact,CONCERN_EXA_2061,32
+"i need help with consistency across subjects",CONCERN_EXA_2061,ACADEMIC_PERFORMANCE,drift,exact,CONCERN_EXA_2061,32
+"i keep struggling with adaptive problem-solving skills",CONCERN_EXA_2068,THINKING_QUALITY,drift,exact,CONCERN_EXA_2068,36
+"i keep struggling with helping students recover after poor results",CONCERN_EXA_2141,CONFIDENCE_SELF,drift,exact,CONCERN_EXA_2141,34
+"i cannot manage helping students recover after poor results",CONCERN_EXA_2141,CONFIDENCE_SELF,drift,exact,CONCERN_EXA_2141,34
+"i need help with helping students recover after poor results",CONCERN_EXA_2141,CONFIDENCE_SELF,drift,exact,CONCERN_EXA_2141,41
+"i need help with managing students with weak classroom engagement",CONCERN_EXA_2153,CLASSROOM_ENGAGEMENT,drift,exact,CONCERN_EXA_2153,31
+"i keep struggling with supporting students with weak conceptual integration",CONCERN_EXA_2157,INTERDISCIPLINARY_LEARNING,drift,exact,CONCERN_EXA_2157,32
+"i cannot manage supporting students with weak conceptual integration",CONCERN_EXA_2157,INTERDISCIPLINARY_LEARNING,drift,exact,CONCERN_EXA_2157,32
+"i need help with supporting students with weak conceptual integration",CONCERN_EXA_2157,INTERDISCIPLINARY_LEARNING,drift,exact,CONCERN_EXA_2157,32
+"i cannot manage supporting students with weak attention recovery",CONCERN_EXA_2159,ACADEMIC_COGNITIVE,drift,failure,,0
+"i struggle with student burnout during competitive preparation",CONCERN_EXA_2168,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_2168,39
+"i have trouble with student burnout during competitive preparation",CONCERN_EXA_2168,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_2168,39
+"i keep struggling with student burnout during competitive preparation",CONCERN_EXA_2168,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_2168,32
+"i cannot manage student burnout during competitive preparation",CONCERN_EXA_2168,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_2168,32
+"i need help with student burnout during competitive preparation",CONCERN_EXA_2168,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_2168,32
+"i cannot manage supporting students with weak verbal participation",CONCERN_EXA_2169,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_EXA_2169,32
+"i keep struggling with supporting students with weak goal persistence",CONCERN_EXA_2171,MOTIVATION_VALUES,drift,exact,CONCERN_EXA_2171,31
+"i need help with supporting students with weak goal persistence",CONCERN_EXA_2171,MOTIVATION_VALUES,drift,exact,CONCERN_EXA_2171,31
+"i keep struggling with supporting students with weak practical application skills",CONCERN_EXA_2173,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_EXA_2173,32
+"i cannot manage supporting students with weak practical application skills",CONCERN_EXA_2173,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_EXA_2173,32
+"i need help with supporting students with weak practical application skills",CONCERN_EXA_2173,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_EXA_2173,32
+"i cannot manage supporting students with weak reading fluency",CONCERN_EXA_2182,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_EXA_2182,33
+"i need help with supporting students with weak reading fluency",CONCERN_EXA_2182,COMMUNICATION_EXPRESSION,drift,failure,,0
+"i cannot manage supporting students with weak interpretation skills",CONCERN_EXA_2196,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_EXA_2196,32
+"i keep struggling with supporting students with low academic curiosity",CONCERN_EXA_2235,MOTIVATION_VALUES,drift,exact,CONCERN_EXA_2235,32
+"i need help with supporting students with low academic curiosity",CONCERN_EXA_2235,MOTIVATION_VALUES,drift,exact,CONCERN_EXA_2235,32
+"i cannot manage supporting students with weak long-answer structuring skills",CONCERN_EXA_2238,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_EXA_2238,39
+"i need help with managing students with weak academic resilience",CONCERN_EXA_2248,EXAMINATION_STRESS,drift,failure,,0
+"i need help with supporting students with weak learning adaptability across subjects",CONCERN_EXA_2256,LEARNING_ADAPTABILITY,drift,failure,,0
+"i cannot manage handling students with weak academic ownership during projects",CONCERN_EXA_2258,COLLABORATION_OWNERSHIP,drift,failure,,0
+"i cannot manage managing students with weak conceptual recall during viva",CONCERN_EXA_2278,EXAMINATION_READINESS,drift,exact,CONCERN_EXA_2278,31
+"i keep struggling with supporting students with weak applied reasoning skills",CONCERN_EXA_2283,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_EXA_2283,33
+"i cannot manage supporting students with weak applied reasoning skills",CONCERN_EXA_2283,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_EXA_2283,33
+"i need help with supporting students with weak applied reasoning skills",CONCERN_EXA_2283,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_EXA_2283,33
+"i keep struggling with supporting students with weak interpretation of case-based questions",CONCERN_EXA_2286,EXAMINATION_READINESS,drift,exact,CONCERN_EXA_2286,32
+"i cannot manage supporting students with weak interpretation of case-based questions",CONCERN_EXA_2286,EXAMINATION_READINESS,drift,exact,CONCERN_EXA_2286,32
+"i need help with supporting students with weak interpretation of case-based questions",CONCERN_EXA_2286,EXAMINATION_READINESS,drift,failure,,0
+"i keep struggling with slow emotional recovery after poor scores",CONCERN_EXA_2359,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_2359,34
+"i keep struggling with students losing confidence after comparison",CONCERN_EXA_2362,CONFIDENCE_SELF,drift,exact,CONCERN_EXA_2362,33
+"i cannot manage students losing confidence after comparison",CONCERN_EXA_2362,CONFIDENCE_SELF,drift,exact,CONCERN_EXA_2362,33
+"i need help with students losing confidence after comparison",CONCERN_EXA_2362,CONFIDENCE_SELF,drift,exact,CONCERN_EXA_2362,33
+"i keep struggling with supporting students with weak academic initiative",CONCERN_EXA_2463,MOTIVATION_VALUES,drift,failure,,0
+"i need help with supporting students with weak academic initiative",CONCERN_EXA_2463,MOTIVATION_VALUES,drift,failure,,0
+"i cannot manage academic stress productively",CONCERN_EXA_2487,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_2487,34
+"i need help with academic stress productively",CONCERN_EXA_2487,EXAMINATION_STRESS,drift,exact,CONCERN_EXA_2487,34
+"i cannot manage academic recovery after poor scores",CONCERN_EXA_2488,EXAMINATION_STRESS,drift,near,CONCERN_EXA_2000,32
+"i need help with academic recovery after poor scores",CONCERN_EXA_2488,EXAMINATION_STRESS,drift,near,CONCERN_EXA_2000,32
+"i struggle with cross-cultural communication",CONCERN_EXA_90,COMMUNICATION_EXPRESSION,drift,near,CONCERN_SOC_2334,29
+"i have trouble with cross-cultural communication",CONCERN_EXA_90,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_EXA_90,40
+"weak decision-making confidence",CONCERN_EXP_1513,PERSONAL_DECISION,drift,exact,CONCERN_EXP_1513,35
+"i have trouble with decision-making confidence",CONCERN_EXP_1513,PERSONAL_DECISION,drift,exact,CONCERN_EXP_1513,34
+"i keep struggling with visibility into student attention fatigue institutionally",CONCERN_FAC_1210,ACADEMIC_COGNITIVE,drift,exact,CONCERN_FAC_1210,34
+"i need help with visibility into student attention fatigue institutionally",CONCERN_FAC_1210,ACADEMIC_COGNITIVE,drift,exact,CONCERN_FAC_1210,34
+"i need help with visibility into student stress distribution across grades",CONCERN_FAC_1218,EMOTIONAL_REGULATION,drift,failure,,0
+"i keep struggling with visibility into student adaptability during curriculum changes",CONCERN_FAC_1250,ADAPTIVE_LEARNING,drift,exact,CONCERN_FAC_1250,34
+"i need help with visibility into student adaptability during curriculum changes",CONCERN_FAC_1250,ADAPTIVE_LEARNING,drift,failure,,0
+"i need help with visibility into student learning pace differences",CONCERN_FAC_1286,ADAPTIVE_DIAGNOSTICS,drift,failure,,0
+"weak independent learning ability",CONCERN_FOU_1675,SELF_LEARNING,drift,exact,CONCERN_FOU_1675,39
+"i struggle with independent learning ability",CONCERN_FOU_1675,SELF_LEARNING,drift,failure,,0
+"i have trouble with independent learning ability",CONCERN_FOU_1675,SELF_LEARNING,drift,exact,CONCERN_FOU_1675,37
+"i keep struggling with independent learning ability",CONCERN_FOU_1675,SELF_LEARNING,drift,exact,CONCERN_FOU_1675,31
+"difficulty identifying student learning gaps",CONCERN_FOU_2115,CLASSROOM_ENGAGEMENT,drift,exact,CONCERN_FOU_2115,39
+"i have trouble with identifying student learning gaps",CONCERN_FOU_2115,CLASSROOM_ENGAGEMENT,drift,exact,CONCERN_FOU_2115,37
+"i keep struggling with identifying student learning gaps",CONCERN_FOU_2115,CLASSROOM_ENGAGEMENT,drift,exact,CONCERN_FOU_2115,32
+"i cannot manage identifying student learning gaps",CONCERN_FOU_2115,CLASSROOM_ENGAGEMENT,drift,exact,CONCERN_FOU_2115,32
+"i need help with identifying student learning gaps",CONCERN_FOU_2115,CLASSROOM_ENGAGEMENT,drift,exact,CONCERN_FOU_2115,32
+"i struggle with supporting students with weak academic recovery skills",CONCERN_FOU_2167,EXAMINATION_STRESS,drift,failure,,0
+"i have trouble with supporting students with weak academic recovery skills",CONCERN_FOU_2167,EXAMINATION_STRESS,drift,exact,CONCERN_FOU_2167,37
+"i keep struggling with supporting students with weak academic recovery skills",CONCERN_FOU_2167,EXAMINATION_STRESS,drift,failure,,0
+"i need help with supporting students with weak academic recovery skills",CONCERN_FOU_2167,EXAMINATION_STRESS,drift,failure,,0
+"i need help with encouraging students to think independently",CONCERN_FOU_2179,THINKING_QUALITY,drift,exact,CONCERN_FOU_2179,38
+"i cannot manage managing students with weak verbal confidence in presentations",CONCERN_FOU_2260,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_FOU_2260,34
+"difficulty handling criticism and feedback",CONCERN_FUT_1424,GROWTH_MINDSET,drift,exact,CONCERN_FUT_1424,34
+"i struggle with criticism and feedback",CONCERN_FUT_1424,GROWTH_MINDSET,drift,exact,CONCERN_FUT_1424,38
+"i have trouble with criticism and feedback",CONCERN_FUT_1424,GROWTH_MINDSET,drift,exact,CONCERN_FUT_1424,38
+"difficulty managing emotional pressure during organizational restructuring",CONCERN_HOL_1081,WORKPLACE_ADAPTATION,drift,exact,CONCERN_HOL_1081,34
+"i struggle with emotional pressure during organizational restructuring",CONCERN_HOL_1081,WORKPLACE_ADAPTATION,drift,exact,CONCERN_HOL_1081,39
+"i have trouble with emotional pressure during organizational restructuring",CONCERN_HOL_1081,WORKPLACE_ADAPTATION,drift,exact,CONCERN_HOL_1081,39
+"i keep struggling with emotional pressure during organizational restructuring",CONCERN_HOL_1081,WORKPLACE_ADAPTATION,drift,exact,CONCERN_HOL_1081,31
+"weak visibility into student attendance pattern risks",CONCERN_HOL_1292,BEHAVIORAL_STABILITY,drift,exact,CONCERN_HOL_1292,42
+"i struggle with visibility into student attendance pattern risks",CONCERN_HOL_1292,BEHAVIORAL_STABILITY,drift,exact,CONCERN_HOL_1292,41
+"i have trouble with visibility into student attendance pattern risks",CONCERN_HOL_1292,BEHAVIORAL_STABILITY,drift,exact,CONCERN_HOL_1292,41
+"i keep struggling with visibility into student attendance pattern risks",CONCERN_HOL_1292,BEHAVIORAL_STABILITY,drift,exact,CONCERN_HOL_1292,35
+"i cannot manage visibility into student attendance pattern risks",CONCERN_HOL_1292,BEHAVIORAL_STABILITY,drift,exact,CONCERN_HOL_1292,35
+"i need help with visibility into student attendance pattern risks",CONCERN_HOL_1292,BEHAVIORAL_STABILITY,drift,exact,CONCERN_HOL_1292,35
+"i have trouble with learning persistence",CONCERN_HOL_2479,MOTIVATION_VALUES,drift,near,CONCERN_ADJ_1991,35
+"difficulty adjusting from campus culture to corporate culture",CONCERN_HOL_661,WORKPLACE_ADAPTATION,drift,exact,CONCERN_HOL_661,42
+"i struggle with adjusting from campus culture to corporate culture",CONCERN_HOL_661,WORKPLACE_ADAPTATION,drift,exact,CONCERN_HOL_661,42
+"i have trouble with adjusting from campus culture to corporate culture",CONCERN_HOL_661,WORKPLACE_ADAPTATION,drift,exact,CONCERN_HOL_661,42
+"i keep struggling with adjusting from campus culture to corporate culture",CONCERN_HOL_661,WORKPLACE_ADAPTATION,drift,exact,CONCERN_HOL_661,37
+"i cannot manage adjusting from campus culture to corporate culture",CONCERN_HOL_661,WORKPLACE_ADAPTATION,drift,exact,CONCERN_HOL_661,37
+"i need help with adjusting from campus culture to corporate culture",CONCERN_HOL_661,WORKPLACE_ADAPTATION,drift,exact,CONCERN_HOL_661,37
+"difficulty managing emotional fatigue from continuous upskilling",CONCERN_HOL_981,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_HOL_981,36
+"i struggle with emotional fatigue from continuous upskilling",CONCERN_HOL_981,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_HOL_981,39
+"i have trouble with emotional fatigue from continuous upskilling",CONCERN_HOL_981,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_HOL_981,39
+"i keep struggling with emotional fatigue from continuous upskilling",CONCERN_HOL_981,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_HOL_981,34
+"i cannot manage emotional fatigue from continuous upskilling",CONCERN_HOL_981,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_HOL_981,34
+"i need help with emotional fatigue from continuous upskilling",CONCERN_HOL_981,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_HOL_981,34
+"i struggle with clarity about long-term goals",CONCERN_IDE_1504,ASPIRATIONAL_DEVELOPMENT,drift,exact,CONCERN_IDE_1504,38
+"i have trouble with clarity about long-term goals",CONCERN_IDE_1504,ASPIRATIONAL_DEVELOPMENT,drift,exact,CONCERN_IDE_1504,38
+"i keep struggling with clarity about long-term goals",CONCERN_IDE_1504,ASPIRATIONAL_DEVELOPMENT,drift,exact,CONCERN_IDE_1504,33
+"i cannot manage clarity about long-term goals",CONCERN_IDE_1504,ASPIRATIONAL_DEVELOPMENT,drift,exact,CONCERN_IDE_1504,33
+"i need help with clarity about long-term goals",CONCERN_IDE_1504,ASPIRATIONAL_DEVELOPMENT,drift,exact,CONCERN_IDE_1504,33
+"i struggle with awareness about personal strengths",CONCERN_IDE_1527,SELF_EXPLORATION,drift,exact,CONCERN_IDE_1527,39
+"i have trouble with awareness about personal strengths",CONCERN_IDE_1527,SELF_EXPLORATION,drift,exact,CONCERN_IDE_1527,39
+"i keep struggling with awareness about personal strengths",CONCERN_IDE_1527,SELF_EXPLORATION,drift,exact,CONCERN_IDE_1527,33
+"i cannot manage awareness about personal strengths",CONCERN_IDE_1527,SELF_EXPLORATION,drift,exact,CONCERN_IDE_1527,33
+"i need help with awareness about personal strengths",CONCERN_IDE_1527,SELF_EXPLORATION,drift,exact,CONCERN_IDE_1527,33
+"i struggle with identifying personal blind spots",CONCERN_IDE_1542,REFLECTIVE_DEVELOPMENT,drift,exact,CONCERN_IDE_1542,43
+"i have trouble with identifying personal blind spots",CONCERN_IDE_1542,REFLECTIVE_DEVELOPMENT,drift,exact,CONCERN_IDE_1542,43
+"i keep struggling with identifying personal blind spots",CONCERN_IDE_1542,REFLECTIVE_DEVELOPMENT,drift,exact,CONCERN_IDE_1542,39
+"i cannot manage identifying personal blind spots",CONCERN_IDE_1542,REFLECTIVE_DEVELOPMENT,drift,exact,CONCERN_IDE_1542,39
+"i need help with identifying personal blind spots",CONCERN_IDE_1542,REFLECTIVE_DEVELOPMENT,drift,exact,CONCERN_IDE_1542,39
+"i need help with visibility into institutional emotional recovery after failure",CONCERN_INQ_1254,EMOTIONAL_RECOVERY,drift,failure,,0
+"i keep struggling with visibility into learning retention across subjects",CONCERN_INQ_1270,ACADEMIC_COGNITIVE,drift,exact,CONCERN_INQ_1270,37
+"i struggle with leadership and team collaboration",CONCERN_INT_1429,LEADERSHIP_READINESS,drift,exact,CONCERN_INT_1429,39
+"i have trouble with leadership and team collaboration",CONCERN_INT_1429,LEADERSHIP_READINESS,drift,exact,CONCERN_INT_1429,39
+"i need help with leadership and team collaboration",CONCERN_INT_1429,LEADERSHIP_READINESS,drift,exact,CONCERN_INT_1429,33
+"i struggle with understanding of personal learning style",CONCERN_INT_1642,LEARNING_REFLECTION,drift,exact,CONCERN_INT_1642,41
+"i have trouble with understanding of personal learning style",CONCERN_INT_1642,LEARNING_REFLECTION,drift,exact,CONCERN_INT_1642,41
+"i keep struggling with understanding of personal learning style",CONCERN_INT_1642,LEARNING_REFLECTION,drift,exact,CONCERN_INT_1642,36
+"i cannot manage understanding of personal learning style",CONCERN_INT_1642,LEARNING_REFLECTION,drift,exact,CONCERN_INT_1642,36
+"i need help with understanding of personal learning style",CONCERN_INT_1642,LEARNING_REFLECTION,drift,exact,CONCERN_INT_1642,36
+"i struggle with strategic preparation for exams",CONCERN_INT_2097,EXAMINATION_READINESS,drift,failure,,0
+"i have trouble with strategic preparation for exams",CONCERN_INT_2097,EXAMINATION_READINESS,drift,exact,CONCERN_INT_2097,38
+"i keep struggling with emotionally reactive students",CONCERN_INT_2158,EXAMINATION_STRESS,drift,exact,CONCERN_INT_2158,30
+"i cannot manage emotionally reactive students",CONCERN_INT_2158,EXAMINATION_STRESS,drift,exact,CONCERN_INT_2158,30
+"lack of academic goal clarity",CONCERN_LAN_1361,CAREER_ACADEMIC,drift,exact,CONCERN_LAN_1361,42
+"i struggle with academic goal clarity",CONCERN_LAN_1361,CAREER_ACADEMIC,drift,exact,CONCERN_LAN_1361,39
+"i have trouble with academic goal clarity",CONCERN_LAN_1361,CAREER_ACADEMIC,drift,exact,CONCERN_LAN_1361,39
+"i keep struggling with academic goal clarity",CONCERN_LAN_1361,CAREER_ACADEMIC,drift,exact,CONCERN_LAN_1361,33
+"i cannot manage academic goal clarity",CONCERN_LAN_1361,CAREER_ACADEMIC,drift,exact,CONCERN_LAN_1361,33
+"i need help with academic goal clarity",CONCERN_LAN_1361,CAREER_ACADEMIC,drift,exact,CONCERN_LAN_1361,33
+"i keep struggling with professional networking environments",CONCERN_LEA_1096,SOCIAL_EMOTIONAL,drift,exact,CONCERN_LEA_1096,34
+"i struggle with teacher adaptability to new pedagogies",CONCERN_LEA_1209,FACULTY_DEVELOPMENT,drift,exact,CONCERN_LEA_1209,34
+"i have trouble with teacher adaptability to new pedagogies",CONCERN_LEA_1209,FACULTY_DEVELOPMENT,drift,exact,CONCERN_LEA_1209,34
+"i struggle with institutional innovation readiness",CONCERN_LEA_1229,INQUIRY_CURIOSITY,drift,exact,CONCERN_LEA_1229,38
+"i have trouble with institutional innovation readiness",CONCERN_LEA_1229,INQUIRY_CURIOSITY,drift,exact,CONCERN_LEA_1229,38
+"i cannot manage institutional innovation readiness",CONCERN_LEA_1229,INQUIRY_CURIOSITY,drift,exact,CONCERN_LEA_1229,33
+"i need help with institutional innovation readiness",CONCERN_LEA_1229,INQUIRY_CURIOSITY,drift,exact,CONCERN_LEA_1229,33
+"i cannot manage visibility into student professional discipline and reliability",CONCERN_LEA_1330,DISCIPLINE_HABITS,drift,near,CONCERN_LEA_1246,30
+"i need help with visibility into student professional discipline and reliability",CONCERN_LEA_1330,DISCIPLINE_HABITS,drift,failure,,0
+"inconsistent performance across subjects",CONCERN_LEA_1358,PERFORMANCE_ANALYSIS,drift,exact,CONCERN_LEA_1358,50
+"i struggle with inconsistent performance across subjects",CONCERN_LEA_1358,PERFORMANCE_ANALYSIS,drift,exact,CONCERN_LEA_1358,42
+"i have trouble with inconsistent performance across subjects",CONCERN_LEA_1358,PERFORMANCE_ANALYSIS,drift,exact,CONCERN_LEA_1358,42
+"i keep struggling with inconsistent performance across subjects",CONCERN_LEA_1358,PERFORMANCE_ANALYSIS,drift,exact,CONCERN_LEA_1358,37
+"i cannot manage inconsistent performance across subjects",CONCERN_LEA_1358,PERFORMANCE_ANALYSIS,drift,exact,CONCERN_LEA_1358,37
+"i need help with inconsistent performance across subjects",CONCERN_LEA_1358,PERFORMANCE_ANALYSIS,drift,exact,CONCERN_LEA_1358,37
+"difficulty adapting to higher grades",CONCERN_LEA_1365,ACADEMIC_TRANSITION,drift,exact,CONCERN_LEA_1365,41
+"i struggle with adapting to higher grades",CONCERN_LEA_1365,ACADEMIC_TRANSITION,drift,exact,CONCERN_LEA_1365,43
+"i have trouble with adapting to higher grades",CONCERN_LEA_1365,ACADEMIC_TRANSITION,drift,exact,CONCERN_LEA_1365,41
+"i keep struggling with adapting to higher grades",CONCERN_LEA_1365,ACADEMIC_TRANSITION,drift,exact,CONCERN_LEA_1365,35
+"i cannot manage adapting to higher grades",CONCERN_LEA_1365,ACADEMIC_TRANSITION,drift,exact,CONCERN_LEA_1365,36
+"i need help with adapting to higher grades",CONCERN_LEA_1365,ACADEMIC_TRANSITION,drift,exact,CONCERN_LEA_1365,36
+"i need help with academic stamina during long exams",CONCERN_LEA_1371,EXAM_READINESS,drift,exact,CONCERN_LEA_1371,39
+"poor adaptability to changing expectations",CONCERN_LEA_1419,ADAPTABILITY_COACHING,drift,exact,CONCERN_LEA_1419,43
+"i have trouble with adaptability to changing expectations",CONCERN_LEA_1419,ADAPTABILITY_COACHING,drift,exact,CONCERN_LEA_1419,40
+"i keep struggling with adaptability to changing expectations",CONCERN_LEA_1419,ADAPTABILITY_COACHING,drift,exact,CONCERN_LEA_1419,34
+"i cannot manage adaptability to changing expectations",CONCERN_LEA_1419,ADAPTABILITY_COACHING,drift,exact,CONCERN_LEA_1419,34
+"i need help with adaptability to changing expectations",CONCERN_LEA_1419,ADAPTABILITY_COACHING,drift,exact,CONCERN_LEA_1419,34
+"i struggle with stress management under pressure",CONCERN_LEA_1430,PERFORMANCE_RESILIENCE,drift,exact,CONCERN_LEA_1430,38
+"i have trouble with stress management under pressure",CONCERN_LEA_1430,PERFORMANCE_RESILIENCE,drift,exact,CONCERN_LEA_1430,38
+"i keep struggling with stress management under pressure",CONCERN_LEA_1430,PERFORMANCE_RESILIENCE,drift,exact,CONCERN_LEA_1430,33
+"i cannot manage stress management under pressure",CONCERN_LEA_1430,PERFORMANCE_RESILIENCE,drift,exact,CONCERN_LEA_1430,40
+"i need help with stress management under pressure",CONCERN_LEA_1430,PERFORMANCE_RESILIENCE,drift,exact,CONCERN_LEA_1430,33
+"lack of study discipline",CONCERN_LEA_1438,ACADEMIC_BEHAVIOR,drift,exact,CONCERN_LEA_1438,37
+"i need help with frequent comparison with peers",CONCERN_LEA_1445,STUDENT_PSYCHOLOGY,drift,exact,CONCERN_LEA_1445,33
+"i cannot manage influencing or motivating peers",CONCERN_LEA_1473,TEAM_LEADERSHIP,drift,exact,CONCERN_LEA_1473,40
+"i keep struggling with adapting leadership style across situations",CONCERN_LEA_1478,ADAPTIVE_LEADERSHIP,drift,exact,CONCERN_LEA_1478,37
+"i need help with adapting leadership style across situations",CONCERN_LEA_1478,ADAPTIVE_LEADERSHIP,drift,exact,CONCERN_LEA_1478,37
+"i struggle with awareness about personal strengths",CONCERN_LEA_1497,SELF_DISCOVERY,drift,near,CONCERN_IDE_1527,39
+"i have trouble with awareness about personal strengths",CONCERN_LEA_1497,SELF_DISCOVERY,drift,near,CONCERN_IDE_1527,39
+"i keep struggling with awareness about personal strengths",CONCERN_LEA_1497,SELF_DISCOVERY,drift,near,CONCERN_IDE_1527,33
+"i cannot manage awareness about personal strengths",CONCERN_LEA_1497,SELF_DISCOVERY,drift,near,CONCERN_IDE_1527,33
+"i need help with awareness about personal strengths",CONCERN_LEA_1497,SELF_DISCOVERY,drift,near,CONCERN_IDE_1527,33
+"i struggle with reflect on learning mistakes",CONCERN_LEA_1590,METACOGNITIVE_DEVELOPMENT,drift,exact,CONCERN_LEA_1590,40
+"i have trouble with reflect on learning mistakes",CONCERN_LEA_1590,METACOGNITIVE_DEVELOPMENT,drift,exact,CONCERN_LEA_1590,40
+"i keep struggling with reflect on learning mistakes",CONCERN_LEA_1590,METACOGNITIVE_DEVELOPMENT,drift,exact,CONCERN_LEA_1590,34
+"i cannot manage reflect on learning mistakes",CONCERN_LEA_1590,METACOGNITIVE_DEVELOPMENT,drift,exact,CONCERN_LEA_1590,34
+"i need help with reflect on learning mistakes",CONCERN_LEA_1590,METACOGNITIVE_DEVELOPMENT,drift,exact,CONCERN_LEA_1590,34
+"difficulty maintaining motivation during slow progress",CONCERN_LEA_1643,GROWTH_PERSISTENCE,drift,exact,CONCERN_LEA_1643,37
+"i struggle with motivation during slow progress",CONCERN_LEA_1643,GROWTH_PERSISTENCE,drift,exact,CONCERN_LEA_1643,39
+"i have trouble with motivation during slow progress",CONCERN_LEA_1643,GROWTH_PERSISTENCE,drift,exact,CONCERN_LEA_1643,39
+"i keep struggling with motivation during slow progress",CONCERN_LEA_1643,GROWTH_PERSISTENCE,drift,exact,CONCERN_LEA_1643,34
+"i need help with motivation during slow progress",CONCERN_LEA_1643,GROWTH_PERSISTENCE,drift,exact,CONCERN_LEA_1643,34
+"i keep struggling with child becoming too dependent on parents",CONCERN_LEA_1847,ADJUSTMENT_COPING,drift,exact,CONCERN_LEA_1847,37
+"i cannot manage child becoming too dependent on parents",CONCERN_LEA_1847,ADJUSTMENT_COPING,drift,exact,CONCERN_LEA_1847,37
+"i need help with child becoming too dependent on parents",CONCERN_LEA_1847,ADJUSTMENT_COPING,drift,exact,CONCERN_LEA_1847,37
+"poor attention span during learning",CONCERN_LEA_1936,ACADEMIC_COGNITIVE,drift,exact,CONCERN_LEA_1936,41
+"i struggle with attention span during learning",CONCERN_LEA_1936,ACADEMIC_COGNITIVE,drift,exact,CONCERN_LEA_1936,39
+"i have trouble with attention span during learning",CONCERN_LEA_1936,ACADEMIC_COGNITIVE,drift,exact,CONCERN_LEA_1936,39
+"i keep struggling with attention span during learning",CONCERN_LEA_1936,ACADEMIC_COGNITIVE,drift,exact,CONCERN_LEA_1936,34
+"i cannot manage attention span during learning",CONCERN_LEA_1936,ACADEMIC_COGNITIVE,drift,exact,CONCERN_LEA_1936,34
+"i need help with attention span during learning",CONCERN_LEA_1936,ACADEMIC_COGNITIVE,drift,exact,CONCERN_LEA_1936,34
+"i cannot manage excessive dependence on tuition",CONCERN_LEA_1958,ACADEMIC_COGNITIVE,drift,exact,CONCERN_LEA_1958,36
+"i need help with digital learning discipline",CONCERN_LEA_1968,LIFESTYLE_PRESSURE,drift,near,CONCERN_EXA_2279,31
+"i have trouble with continuous assessments",CONCERN_LEA_2111,EXAMINATION_READINESS,drift,exact,CONCERN_LEA_2111,37
+"i cannot manage handling students with weak academic motivation",CONCERN_LEA_2134,MOTIVATION_VALUES,drift,failure,,0
+"i keep struggling with managing students with low confidence in competitive discussions",CONCERN_LEA_2224,CONFIDENCE_SELF,drift,exact,CONCERN_LEA_2224,32
+"i cannot manage managing students with low confidence in competitive discussions",CONCERN_LEA_2224,CONFIDENCE_SELF,drift,failure,,0
+"i need help with managing students with low confidence in competitive discussions",CONCERN_LEA_2224,CONFIDENCE_SELF,drift,failure,,0
+"i need help with managing students with weak emotional stability during results & rankings",CONCERN_LEA_2296,EXAMINATION_STRESS,drift,failure,,0
+"i struggle with handling workplace uncertainty",CONCERN_LEA_604,EMOTIONAL_REGULATION,drift,failure,,0
+"i have trouble with handling workplace uncertainty",CONCERN_LEA_604,EMOTIONAL_REGULATION,drift,exact,CONCERN_LEA_604,36
+"i need help with handling workplace uncertainty",CONCERN_LEA_604,EMOTIONAL_REGULATION,drift,exact,CONCERN_LEA_604,31
+"difficulty maintaining emotional stability during workplace conflict",CONCERN_LEA_625,EMOTIONAL_REGULATION,drift,exact,CONCERN_LEA_625,36
+"i cannot manage optimism during workplace uncertainty",CONCERN_LEA_647,MOTIVATION_VALUES,drift,exact,CONCERN_LEA_647,38
+"i cannot manage healthy habits during career growth phases",CONCERN_LEA_653,LIFESTYLE_PRESSURE,drift,exact,CONCERN_LEA_653,36
+"i keep struggling with motivation during slow growth phases",CONCERN_LEA_709,MOTIVATION_VALUES,drift,exact,CONCERN_LEA_709,34
+"i cannot manage motivation during slow growth phases",CONCERN_LEA_709,MOTIVATION_VALUES,drift,exact,CONCERN_LEA_709,34
+"i need help with motivation during slow growth phases",CONCERN_LEA_709,MOTIVATION_VALUES,drift,exact,CONCERN_LEA_709,34
+"i have trouble with peer competition emotionally",CONCERN_LEA_719,CONFIDENCE_SELF,drift,exact,CONCERN_LEA_719,37
+"i keep struggling with peer competition emotionally",CONCERN_LEA_719,CONFIDENCE_SELF,drift,exact,CONCERN_LEA_719,32
+"i cannot manage peer competition emotionally",CONCERN_LEA_719,CONFIDENCE_SELF,drift,exact,CONCERN_LEA_719,32
+"difficulty maintaining emotional balance during workplace mistakes",CONCERN_LEA_733,EMOTIONAL_RECOVERY,drift,exact,CONCERN_LEA_733,37
+"i keep struggling with emotional balance during workplace mistakes",CONCERN_LEA_733,EMOTIONAL_RECOVERY,drift,exact,CONCERN_LEA_733,34
+"i cannot manage emotional balance during workplace mistakes",CONCERN_LEA_733,EMOTIONAL_RECOVERY,drift,failure,,0
+"i need help with emotional balance during workplace mistakes",CONCERN_LEA_733,EMOTIONAL_RECOVERY,drift,exact,CONCERN_LEA_733,34
+"weak ability to align personal growth with organizational opportunities",CONCERN_LEA_758,CAREER_GROWTH,drift,exact,CONCERN_LEA_758,38
+"i struggle with align personal growth with organizational opportunities",CONCERN_LEA_758,CAREER_GROWTH,drift,exact,CONCERN_LEA_758,35
+"i have trouble with align personal growth with organizational opportunities",CONCERN_LEA_758,CAREER_GROWTH,drift,exact,CONCERN_LEA_758,35
+"i keep struggling with align personal growth with organizational opportunities",CONCERN_LEA_758,CAREER_GROWTH,drift,exact,CONCERN_LEA_758,35
+"i cannot manage align personal growth with organizational opportunities",CONCERN_LEA_758,CAREER_GROWTH,drift,exact,CONCERN_LEA_758,35
+"i need help with align personal growth with organizational opportunities",CONCERN_LEA_758,CAREER_GROWTH,drift,exact,CONCERN_LEA_758,35
+"i cannot manage career plateau anxiety",CONCERN_LEA_769,CAREER_GROWTH,drift,exact,CONCERN_LEA_769,39
+"i cannot manage balancing strategic vision with operational execution",CONCERN_LEA_865,STRATEGIC_LEADERSHIP,drift,exact,CONCERN_LEA_865,38
+"i cannot manage leadership identity during rapid growth",CONCERN_LEA_875,ACADEMIC_IDENTITY,drift,exact,CONCERN_LEA_875,35
+"i cannot manage emotional pressure during public organizational failures",CONCERN_LEA_927,EMOTIONAL_RECOVERY,drift,failure,,0
+"i need help with emotional pressure during public organizational failures",CONCERN_LEA_927,EMOTIONAL_RECOVERY,drift,exact,CONCERN_LEA_927,33
+"i keep struggling with build strategic career narratives across diverse domains",CONCERN_LIF_1044,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_LIF_1044,34
+"i cannot manage build strategic career narratives across diverse domains",CONCERN_LIF_1044,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_LIF_1044,34
+"i need help with build strategic career narratives across diverse domains",CONCERN_LIF_1044,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_LIF_1044,34
+"i struggle with build long-term learning discipline",CONCERN_LIF_1090,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_LIF_1090,37
+"i have trouble with build long-term learning discipline",CONCERN_LIF_1090,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_LIF_1090,37
+"i keep struggling with build long-term learning discipline",CONCERN_LIF_1090,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_LIF_1090,32
+"i cannot manage build long-term learning discipline",CONCERN_LIF_1090,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_LIF_1090,32
+"i keep struggling with handling unpredictable questions",CONCERN_LIF_140,THINKING_QUALITY,drift,exact,CONCERN_LIF_140,40
+"i struggle with focus & attention",CONCERN_LIF_1733,ACADEMIC_COGNITIVE,drift,exact,CONCERN_LIF_1733,37
+"i have trouble with focus & attention",CONCERN_LIF_1733,ACADEMIC_COGNITIVE,drift,exact,CONCERN_LIF_1733,37
+"gaming addiction",CONCERN_LIF_1738,LIFESTYLE_PRESSURE,drift,exact,CONCERN_LIF_1738,54
+"i struggle with gaming addiction",CONCERN_LIF_1738,LIFESTYLE_PRESSURE,drift,exact,CONCERN_LIF_1738,42
+"i have trouble with gaming addiction",CONCERN_LIF_1738,LIFESTYLE_PRESSURE,drift,exact,CONCERN_LIF_1738,42
+"emotional withdrawal",CONCERN_LIF_1740,ADJUSTMENT_COPING,drift,exact,CONCERN_LIF_1740,48
+"i have trouble with emotional withdrawal",CONCERN_LIF_1740,ADJUSTMENT_COPING,drift,exact,CONCERN_LIF_1740,35
+"comparison stress",CONCERN_LIF_1753,CONFIDENCE_SELF,drift,exact,CONCERN_LIF_1753,44
+"i have trouble with comparison stress",CONCERN_LIF_1753,CONFIDENCE_SELF,drift,exact,CONCERN_LIF_1753,32
+"i struggle with emotional manipulation by peers",CONCERN_LIF_1775,SOCIAL_EMOTIONAL,drift,exact,CONCERN_LIF_1775,42
+"i keep struggling with emotional manipulation by peers",CONCERN_LIF_1775,SOCIAL_EMOTIONAL,drift,exact,CONCERN_LIF_1775,42
+"i cannot manage emotional manipulation by peers",CONCERN_LIF_1775,SOCIAL_EMOTIONAL,drift,exact,CONCERN_LIF_1775,40
+"child losing interest in studies",CONCERN_LIF_1792,ACADEMIC_COGNITIVE,drift,exact,CONCERN_LIF_1792,39
+"i struggle with child losing interest in studies",CONCERN_LIF_1792,ACADEMIC_COGNITIVE,drift,exact,CONCERN_LIF_1792,34
+"i have trouble with child losing interest in studies",CONCERN_LIF_1792,ACADEMIC_COGNITIVE,drift,exact,CONCERN_LIF_1792,34
+"unrealistic career expectations",CONCERN_LIF_1835,ACADEMIC_IDENTITY,drift,exact,CONCERN_LIF_1835,47
+"i struggle with unrealistic career expectations",CONCERN_LIF_1835,ACADEMIC_IDENTITY,drift,exact,CONCERN_LIF_1835,38
+"i have trouble with unrealistic career expectations",CONCERN_LIF_1835,ACADEMIC_IDENTITY,drift,exact,CONCERN_LIF_1835,38
+"i keep struggling with unrealistic career expectations",CONCERN_LIF_1835,ACADEMIC_IDENTITY,drift,exact,CONCERN_LIF_1835,32
+"i cannot manage unrealistic career expectations",CONCERN_LIF_1835,ACADEMIC_IDENTITY,drift,exact,CONCERN_LIF_1835,32
+"i need help with unrealistic career expectations",CONCERN_LIF_1835,ACADEMIC_IDENTITY,drift,exact,CONCERN_LIF_1835,32
+"i struggle with stress tolerance",CONCERN_LIF_1840,EXAMINATION_STRESS,drift,exact,CONCERN_LIF_1840,40
+"i keep struggling with child becoming too influenced by peer opinions",CONCERN_LIF_1889,SOCIAL_EMOTIONAL,drift,exact,CONCERN_LIF_1889,37
+"i cannot manage child becoming too influenced by peer opinions",CONCERN_LIF_1889,SOCIAL_EMOTIONAL,drift,exact,CONCERN_LIF_1889,37
+"i need help with child becoming too influenced by peer opinions",CONCERN_LIF_1889,SOCIAL_EMOTIONAL,drift,exact,CONCERN_LIF_1889,37
+"i cannot manage supporting students with weak self-confidence",CONCERN_LIF_2144,CONFIDENCE_SELF,drift,exact,CONCERN_LIF_2144,35
+"i cannot manage handling students with weak academic self-awareness",CONCERN_LIF_2264,SELF_REFLECTION,drift,failure,,0
+"i keep struggling with supporting students with weak academic curiosity in stem subjects",CONCERN_LIF_2280,STEM_LEARNING,drift,failure,,0
+"i need help with supporting students with weak academic curiosity in stem subjects",CONCERN_LIF_2280,STEM_LEARNING,drift,failure,,0
+"weak awareness of industry-relevant competencies",CONCERN_LIF_372,EMPLOYABILITY,drift,near,CONCERN_EMO_274,32
+"weak confidence in workplace decision-making",CONCERN_LIF_388,THINKING_QUALITY,drift,exact,CONCERN_LIF_388,32
+"i have trouble with workplace decision-making",CONCERN_LIF_388,THINKING_QUALITY,drift,exact,CONCERN_LIF_388,35
+"difficulty adapting to rapid workplace changes",CONCERN_LIF_569,ADAPTIVE_LEARNING,drift,exact,CONCERN_LIF_569,42
+"i have trouble with adapting to rapid workplace changes",CONCERN_LIF_569,ADAPTIVE_LEARNING,drift,exact,CONCERN_LIF_569,42
+"i cannot manage adapting to rapid workplace changes",CONCERN_LIF_569,ADAPTIVE_LEARNING,drift,exact,CONCERN_LIF_569,36
+"i need help with adapting to rapid workplace changes",CONCERN_LIF_569,ADAPTIVE_LEARNING,drift,exact,CONCERN_LIF_569,36
+"weak ability to translate academic knowledge into execution",CONCERN_LIF_670,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_LIF_670,38
+"i keep struggling with translate academic knowledge into execution",CONCERN_LIF_670,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_LIF_670,36
+"i cannot manage translate academic knowledge into execution",CONCERN_LIF_670,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_LIF_670,36
+"i need help with translate academic knowledge into execution",CONCERN_LIF_670,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_LIF_670,36
+"i need help with emotional confidence during leadership exposure",CONCERN_LIF_757,LEADERSHIP_OWNERSHIP,drift,failure,,0
+"i keep struggling with build confidence in unfamiliar work environments",CONCERN_LIF_986,WORKPLACE_ADAPTATION,drift,exact,CONCERN_LIF_986,35
+"i cannot manage build confidence in unfamiliar work environments",CONCERN_LIF_986,WORKPLACE_ADAPTATION,drift,exact,CONCERN_LIF_986,35
+"uncertainty about long-term career direction",CONCERN_LON_1557,CAREER_REFLECTION,drift,exact,CONCERN_LON_1557,48
+"i struggle with uncertainty about long-term career direction",CONCERN_LON_1557,CAREER_REFLECTION,drift,exact,CONCERN_LON_1557,40
+"i have trouble with uncertainty about long-term career direction",CONCERN_LON_1557,CAREER_REFLECTION,drift,exact,CONCERN_LON_1557,40
+"i keep struggling with uncertainty about long-term career direction",CONCERN_LON_1557,CAREER_REFLECTION,drift,exact,CONCERN_LON_1557,35
+"i cannot manage uncertainty about long-term career direction",CONCERN_LON_1557,CAREER_REFLECTION,drift,exact,CONCERN_LON_1557,35
+"i need help with uncertainty about long-term career direction",CONCERN_LON_1557,CAREER_REFLECTION,drift,exact,CONCERN_LON_1557,35
+"i need help with visibility into student leadership participation equity",CONCERN_MOT_1190,LEADERSHIP_OWNERSHIP,drift,failure,,0
+"i keep struggling with student emotional wellbeing institutionally",CONCERN_MOT_1289,EMOTIONAL_REGULATION,drift,exact,CONCERN_MOT_1289,35
+"i need help with building industry-relevant skills",CONCERN_MOT_13,EMPLOYABILITY,drift,exact,CONCERN_MOT_13,36
+"i struggle with concept integration across subjects",CONCERN_MOT_130,ACADEMIC_COGNITIVE,drift,exact,CONCERN_MOT_130,41
+"i have trouble with concept integration across subjects",CONCERN_MOT_130,ACADEMIC_COGNITIVE,drift,exact,CONCERN_MOT_130,41
+"i keep struggling with concept integration across subjects",CONCERN_MOT_130,ACADEMIC_COGNITIVE,drift,exact,CONCERN_MOT_130,36
+"i cannot manage concept integration across subjects",CONCERN_MOT_130,ACADEMIC_COGNITIVE,drift,exact,CONCERN_MOT_130,36
+"i need help with concept integration across subjects",CONCERN_MOT_130,ACADEMIC_COGNITIVE,drift,exact,CONCERN_MOT_130,36
+"difficulty prioritizing tasks",CONCERN_MOT_1679,DISCIPLINE_HABITS,drift,exact,CONCERN_MOT_1679,38
+"i struggle with prioritizing tasks",CONCERN_MOT_1679,DISCIPLINE_HABITS,drift,exact,CONCERN_MOT_1679,38
+"i have trouble with prioritizing tasks",CONCERN_MOT_1679,DISCIPLINE_HABITS,drift,exact,CONCERN_MOT_1679,38
+"procrastination",CONCERN_MOT_1744,DISCIPLINE_HABITS,drift,exact,CONCERN_MOT_1744,54
+"i keep struggling with child avoiding challenges",CONCERN_MOT_1811,CONFIDENCE_SELF,drift,exact,CONCERN_MOT_1811,34
+"i need help with child avoiding challenges",CONCERN_MOT_1811,CONFIDENCE_SELF,drift,exact,CONCERN_MOT_1811,34
+"weak real-world problem solving",CONCERN_MOT_1837,THINKING_QUALITY,drift,exact,CONCERN_MOT_1837,42
+"i have trouble with real-world problem solving",CONCERN_MOT_1837,THINKING_QUALITY,drift,exact,CONCERN_MOT_1837,42
+"i keep struggling with real-world problem solving",CONCERN_MOT_1837,THINKING_QUALITY,drift,exact,CONCERN_MOT_1837,36
+"i cannot manage real-world problem solving",CONCERN_MOT_1837,THINKING_QUALITY,drift,exact,CONCERN_MOT_1837,36
+"i need help with real-world problem solving",CONCERN_MOT_1837,THINKING_QUALITY,drift,exact,CONCERN_MOT_1837,36
+"fear of missing opportunities",CONCERN_MOT_1855,EXAMINATION_STRESS,drift,exact,CONCERN_MOT_1855,36
+"i cannot manage excessive dependency on shortcuts",CONCERN_MOT_1858,ACADEMIC_COGNITIVE,drift,exact,CONCERN_MOT_1858,38
+"i keep struggling with child losing interest in cultural identity",CONCERN_MOT_1861,ACADEMIC_IDENTITY,drift,exact,CONCERN_MOT_1861,38
+"i cannot manage child losing interest in cultural identity",CONCERN_MOT_1861,ACADEMIC_IDENTITY,drift,exact,CONCERN_MOT_1861,38
+"i need help with child losing interest in cultural identity",CONCERN_MOT_1861,ACADEMIC_IDENTITY,drift,exact,CONCERN_MOT_1861,38
+"i struggle with curiosity & exploration",CONCERN_MOT_1946,MOTIVATION_VALUES,drift,exact,CONCERN_MOT_1946,38
+"i have trouble with curiosity & exploration",CONCERN_MOT_1946,MOTIVATION_VALUES,drift,exact,CONCERN_MOT_1946,38
+"difficulty managing academic pressure",CONCERN_MOT_1964,EXAMINATION_STRESS,drift,exact,CONCERN_MOT_1964,29
+"i have trouble with academic pressure",CONCERN_MOT_1964,EXAMINATION_STRESS,drift,near,CONCERN_ACA_1731,30
+"weak competitive readiness",CONCERN_MOT_1975,COMPETITIVE_EXAM,drift,exact,CONCERN_MOT_1975,38
+"i have trouble with competitive readiness",CONCERN_MOT_1975,COMPETITIVE_EXAM,drift,exact,CONCERN_MOT_1975,36
+"weak adaptability to academic changes",CONCERN_MOT_1986,LEARNING_ADAPTABILITY,drift,exact,CONCERN_MOT_1986,40
+"i have trouble with adaptability to academic changes",CONCERN_MOT_1986,LEARNING_ADAPTABILITY,drift,exact,CONCERN_MOT_1986,39
+"i cannot manage adaptability to academic changes",CONCERN_MOT_1986,LEARNING_ADAPTABILITY,drift,exact,CONCERN_MOT_1986,33
+"i need help with adaptability to academic changes",CONCERN_MOT_1986,LEARNING_ADAPTABILITY,drift,exact,CONCERN_MOT_1986,33
+"weak academic ownership",CONCERN_MOT_1992,MOTIVATION_VALUES,drift,exact,CONCERN_MOT_1992,34
+"i have trouble with academic momentum",CONCERN_MOT_2099,MOTIVATION_VALUES,drift,exact,CONCERN_MOT_2099,34
+"i have trouble with learning reflection skills",CONCERN_MOT_2100,SELF_REFLECTION,drift,exact,CONCERN_MOT_2100,38
+"i cannot manage learning reflection skills",CONCERN_MOT_2100,SELF_REFLECTION,drift,exact,CONCERN_MOT_2100,32
+"i need help with learning reflection skills",CONCERN_MOT_2100,SELF_REFLECTION,drift,exact,CONCERN_MOT_2100,32
+"i cannot manage supporting students with weak self-regulation skills",CONCERN_MOT_2161,DISCIPLINE_HABITS,drift,exact,CONCERN_MOT_2161,36
+"i need help with students with weak writing speed",CONCERN_MOT_2181,EXAMINATION_READINESS,drift,exact,CONCERN_MOT_2181,36
+"i keep struggling with managing students with weak academic follow-through",CONCERN_MOT_2214,DISCIPLINE_HABITS,drift,near,CONCERN_LEA_1246,15
+"i need help with managing students with weak academic follow-through",CONCERN_MOT_2214,DISCIPLINE_HABITS,drift,failure,,0
+"i need help with supporting students with weak exam strategy skills",CONCERN_MOT_2220,EXAMINATION_READINESS,drift,failure,,0
+"i keep struggling with supporting students with weak cognitive flexibility",CONCERN_MOT_2223,LEARNING_ADAPTABILITY,drift,exact,CONCERN_MOT_2223,31
+"i need help with supporting students with weak cognitive flexibility",CONCERN_MOT_2223,LEARNING_ADAPTABILITY,drift,failure,,0
+"i keep struggling with managing students with weak multi-step problem solving skills",CONCERN_MOT_2236,THINKING_QUALITY,drift,failure,,0
+"i cannot manage managing students with weak multi-step problem solving skills",CONCERN_MOT_2236,THINKING_QUALITY,drift,exact,CONCERN_MOT_2236,35
+"i struggle with multiple academic expectations",CONCERN_MOT_2326,ADJUSTMENT_COPING,drift,exact,CONCERN_MOT_2326,37
+"i have trouble with multiple academic expectations",CONCERN_MOT_2326,ADJUSTMENT_COPING,drift,exact,CONCERN_MOT_2326,37
+"i keep struggling with multiple academic expectations",CONCERN_MOT_2326,ADJUSTMENT_COPING,drift,exact,CONCERN_MOT_2326,31
+"i need help with multiple academic expectations",CONCERN_MOT_2326,ADJUSTMENT_COPING,drift,exact,CONCERN_MOT_2326,31
+"i keep struggling with students depending entirely on external motivation",CONCERN_MOT_2393,MOTIVATION_VALUES,drift,exact,CONCERN_MOT_2393,38
+"i cannot manage students depending entirely on external motivation",CONCERN_MOT_2393,MOTIVATION_VALUES,drift,exact,CONCERN_MOT_2393,38
+"i need help with students depending entirely on external motivation",CONCERN_MOT_2393,MOTIVATION_VALUES,drift,exact,CONCERN_MOT_2393,38
+"i struggle with motivation after repeated failures",CONCERN_MOT_2395,MOTIVATION_VALUES,drift,exact,CONCERN_MOT_2395,41
+"i have trouble with motivation after repeated failures",CONCERN_MOT_2395,MOTIVATION_VALUES,drift,exact,CONCERN_MOT_2395,41
+"i keep struggling with motivation after repeated failures",CONCERN_MOT_2395,MOTIVATION_VALUES,drift,exact,CONCERN_MOT_2395,36
+"i cannot manage motivation after repeated failures",CONCERN_MOT_2395,MOTIVATION_VALUES,drift,exact,CONCERN_MOT_2395,36
+"i need help with motivation after repeated failures",CONCERN_MOT_2395,MOTIVATION_VALUES,drift,exact,CONCERN_MOT_2395,36
+"i keep struggling with emotional recovery after career-related rejections",CONCERN_MOT_240,EXAMINATION_STRESS,drift,exact,CONCERN_MOT_240,41
+"i keep struggling with alignment between academic effort and personal goals",CONCERN_MOT_2400,MOTIVATION_VALUES,drift,exact,CONCERN_MOT_2400,35
+"i cannot manage alignment between academic effort and personal goals",CONCERN_MOT_2400,MOTIVATION_VALUES,drift,exact,CONCERN_MOT_2400,35
+"i need help with alignment between academic effort and personal goals",CONCERN_MOT_2400,MOTIVATION_VALUES,drift,exact,CONCERN_MOT_2400,35
+"i need help with building long-term academic commitment",CONCERN_MOT_2401,MOTIVATION_VALUES,drift,exact,CONCERN_MOT_2401,37
+"weak adaptability to academic changes",CONCERN_MOT_2474,LEARNING_ADAPTABILITY,drift,near,CONCERN_MOT_1986,40
+"i have trouble with adaptability to academic changes",CONCERN_MOT_2474,LEARNING_ADAPTABILITY,drift,near,CONCERN_MOT_1986,39
+"i cannot manage adaptability to academic changes",CONCERN_MOT_2474,LEARNING_ADAPTABILITY,drift,near,CONCERN_MOT_1986,33
+"i need help with adaptability to academic changes",CONCERN_MOT_2474,LEARNING_ADAPTABILITY,drift,near,CONCERN_MOT_1986,33
+"weak academic ownership",CONCERN_MOT_2480,MOTIVATION_VALUES,drift,near,CONCERN_MOT_1992,34
+"weak understanding of workplace accountability standards",CONCERN_MOT_408,EMPLOYABILITY,drift,exact,CONCERN_MOT_408,42
+"i struggle with understanding of workplace accountability standards",CONCERN_MOT_408,EMPLOYABILITY,drift,exact,CONCERN_MOT_408,41
+"i have trouble with understanding of workplace accountability standards",CONCERN_MOT_408,EMPLOYABILITY,drift,exact,CONCERN_MOT_408,41
+"i keep struggling with understanding of workplace accountability standards",CONCERN_MOT_408,EMPLOYABILITY,drift,exact,CONCERN_MOT_408,36
+"i cannot manage understanding of workplace accountability standards",CONCERN_MOT_408,EMPLOYABILITY,drift,exact,CONCERN_MOT_408,36
+"i need help with understanding of workplace accountability standards",CONCERN_MOT_408,EMPLOYABILITY,drift,exact,CONCERN_MOT_408,36
+"i keep struggling with handling workplace competition",CONCERN_MOT_438,CONFIDENCE_SELF,drift,exact,CONCERN_MOT_438,35
+"i cannot manage handling workplace competition",CONCERN_MOT_438,CONFIDENCE_SELF,drift,exact,CONCERN_MOT_438,34
+"i keep struggling with public speaking during leadership forums",CONCERN_MOT_590,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_MOT_590,34
+"i cannot manage public speaking during leadership forums",CONCERN_MOT_590,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_MOT_590,34
+"i need help with public speaking during leadership forums",CONCERN_MOT_590,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_MOT_590,34
+"i need help with long-term learning progression",CONCERN_ORG_1279,ACADEMIC_GROWTH,drift,exact,CONCERN_ORG_1279,34
+"weak visibility into student behavioral pattern changes",CONCERN_ORG_1296,DISCIPLINE_HABITS,drift,exact,CONCERN_ORG_1296,41
+"i struggle with visibility into student behavioral pattern changes",CONCERN_ORG_1296,DISCIPLINE_HABITS,drift,exact,CONCERN_ORG_1296,40
+"i have trouble with visibility into student behavioral pattern changes",CONCERN_ORG_1296,DISCIPLINE_HABITS,drift,exact,CONCERN_ORG_1296,40
+"i keep struggling with visibility into student behavioral pattern changes",CONCERN_ORG_1296,DISCIPLINE_HABITS,drift,exact,CONCERN_ORG_1296,34
+"i cannot manage visibility into student behavioral pattern changes",CONCERN_ORG_1296,DISCIPLINE_HABITS,drift,exact,CONCERN_ORG_1296,34
+"i need help with visibility into student behavioral pattern changes",CONCERN_ORG_1296,DISCIPLINE_HABITS,drift,exact,CONCERN_ORG_1296,34
+"i keep struggling with hidden emotional distress behind good performance",CONCERN_OVE_2316,OVER_COMPLIANCE,drift,exact,CONCERN_OVE_2316,39
+"i cannot manage uncertainty about future-proof careers",CONCERN_PER_1401,FUTURE_WORKFORCE,drift,exact,CONCERN_PER_1401,38
+"i struggle with resilience after setbacks",CONCERN_PER_1411,EMOTIONAL_DEVELOPMENT,drift,exact,CONCERN_PER_1411,39
+"i have trouble with resilience after setbacks",CONCERN_PER_1411,EMOTIONAL_DEVELOPMENT,drift,exact,CONCERN_PER_1411,39
+"i keep struggling with resilience after setbacks",CONCERN_PER_1411,EMOTIONAL_DEVELOPMENT,drift,exact,CONCERN_PER_1411,33
+"i cannot manage resilience after setbacks",CONCERN_PER_1411,EMOTIONAL_DEVELOPMENT,drift,exact,CONCERN_PER_1411,33
+"i need help with resilience after setbacks",CONCERN_PER_1411,EMOTIONAL_DEVELOPMENT,drift,exact,CONCERN_PER_1411,33
+"i have trouble with emotional regulation during conflicts",CONCERN_PER_1414,STUDENT_BEHAVIOUR,drift,exact,CONCERN_PER_1414,37
+"i keep struggling with emotional regulation during conflicts",CONCERN_PER_1414,STUDENT_BEHAVIOUR,drift,exact,CONCERN_PER_1414,32
+"i struggle with self-awareness about strengths and weaknesses",CONCERN_PER_1431,PERSONAL_INSIGHT,drift,exact,CONCERN_PER_1431,43
+"i have trouble with self-awareness about strengths and weaknesses",CONCERN_PER_1431,PERSONAL_INSIGHT,drift,exact,CONCERN_PER_1431,43
+"i keep struggling with self-awareness about strengths and weaknesses",CONCERN_PER_1431,PERSONAL_INSIGHT,drift,exact,CONCERN_PER_1431,37
+"i cannot manage self-awareness about strengths and weaknesses",CONCERN_PER_1431,PERSONAL_INSIGHT,drift,exact,CONCERN_PER_1431,37
+"i need help with self-awareness about strengths and weaknesses",CONCERN_PER_1431,PERSONAL_INSIGHT,drift,exact,CONCERN_PER_1431,37
+"excessive comparison with peers",CONCERN_PER_1432,EMOTIONAL_WELLBEING,drift,exact,CONCERN_PER_1432,47
+"i struggle with excessive comparison with peers",CONCERN_PER_1432,EMOTIONAL_WELLBEING,drift,exact,CONCERN_PER_1432,37
+"i have trouble with excessive comparison with peers",CONCERN_PER_1432,EMOTIONAL_WELLBEING,drift,exact,CONCERN_PER_1432,37
+"i keep struggling with excessive comparison with peers",CONCERN_PER_1432,EMOTIONAL_WELLBEING,drift,exact,CONCERN_PER_1432,32
+"i have trouble with adaptability to changing environments",CONCERN_PER_1518,ADAPTIVE_DEVELOPMENT,drift,exact,CONCERN_PER_1518,39
+"i keep struggling with adaptability to changing environments",CONCERN_PER_1518,ADAPTIVE_DEVELOPMENT,drift,exact,CONCERN_PER_1518,33
+"i cannot manage adaptability to changing environments",CONCERN_PER_1518,ADAPTIVE_DEVELOPMENT,drift,exact,CONCERN_PER_1518,33
+"i need help with adaptability to changing environments",CONCERN_PER_1518,ADAPTIVE_DEVELOPMENT,drift,exact,CONCERN_PER_1518,33
+"dependence on external validation for confidence",CONCERN_PER_1530,EMOTIONAL_DEVELOPMENT,drift,exact,CONCERN_PER_1530,48
+"i struggle with dependence on external validation for confidence",CONCERN_PER_1530,EMOTIONAL_DEVELOPMENT,drift,exact,CONCERN_PER_1530,40
+"i have trouble with dependence on external validation for confidence",CONCERN_PER_1530,EMOTIONAL_DEVELOPMENT,drift,exact,CONCERN_PER_1530,40
+"i keep struggling with dependence on external validation for confidence",CONCERN_PER_1530,EMOTIONAL_DEVELOPMENT,drift,exact,CONCERN_PER_1530,35
+"i need help with dependence on external validation for confidence",CONCERN_PER_1530,EMOTIONAL_DEVELOPMENT,drift,near,CONCERN_PER_1501,37
+"i keep struggling with student adaptability for dynamic careers",CONCERN_PLA_1325,ADAPTIVE_LEARNING,drift,exact,CONCERN_PLA_1325,35
+"i keep struggling with confusion between degree and career outcomes",CONCERN_SEL_1396,CAREER_MAPPING,drift,exact,CONCERN_SEL_1396,37
+"i cannot manage confusion between degree and career outcomes",CONCERN_SEL_1396,CAREER_MAPPING,drift,exact,CONCERN_SEL_1396,37
+"i need help with confusion between degree and career outcomes",CONCERN_SEL_1396,CAREER_MAPPING,drift,exact,CONCERN_SEL_1396,37
+"difficulty managing distractions",CONCERN_SEL_1416,PRODUCTIVITY_COACHING,drift,exact,CONCERN_SEL_1416,28
+"weak communication during presentations and interviews",CONCERN_SEL_1481,EXECUTIVE_COMMUNICATION,drift,exact,CONCERN_SEL_1481,42
+"i struggle with communication during presentations and interviews",CONCERN_SEL_1481,EXECUTIVE_COMMUNICATION,drift,exact,CONCERN_SEL_1481,41
+"i have trouble with communication during presentations and interviews",CONCERN_SEL_1481,EXECUTIVE_COMMUNICATION,drift,exact,CONCERN_SEL_1481,41
+"i keep struggling with communication during presentations and interviews",CONCERN_SEL_1481,EXECUTIVE_COMMUNICATION,drift,exact,CONCERN_SEL_1481,36
+"i cannot manage communication during presentations and interviews",CONCERN_SEL_1481,EXECUTIVE_COMMUNICATION,drift,exact,CONCERN_SEL_1481,36
+"i need help with communication during presentations and interviews",CONCERN_SEL_1481,EXECUTIVE_COMMUNICATION,drift,exact,CONCERN_SEL_1481,36
+"i struggle with awareness about behavioral patterns",CONCERN_SEL_1511,BEHAVIORAL_REFLECTION,drift,exact,CONCERN_SEL_1511,42
+"i have trouble with awareness about behavioral patterns",CONCERN_SEL_1511,BEHAVIORAL_REFLECTION,drift,exact,CONCERN_SEL_1511,42
+"i keep struggling with awareness about behavioral patterns",CONCERN_SEL_1511,BEHAVIORAL_REFLECTION,drift,exact,CONCERN_SEL_1511,36
+"i cannot manage awareness about behavioral patterns",CONCERN_SEL_1511,BEHAVIORAL_REFLECTION,drift,exact,CONCERN_SEL_1511,36
+"i need help with awareness about behavioral patterns",CONCERN_SEL_1511,BEHAVIORAL_REFLECTION,drift,exact,CONCERN_SEL_1511,36
+"i struggle with identify personal growth areas",CONCERN_SEL_1528,GROWTH_MAPPING,drift,exact,CONCERN_SEL_1528,43
+"i have trouble with identify personal growth areas",CONCERN_SEL_1528,GROWTH_MAPPING,drift,exact,CONCERN_SEL_1528,43
+"i keep struggling with identify personal growth areas",CONCERN_SEL_1528,GROWTH_MAPPING,drift,exact,CONCERN_SEL_1528,37
+"i cannot manage identify personal growth areas",CONCERN_SEL_1528,GROWTH_MAPPING,drift,exact,CONCERN_SEL_1528,37
+"i need help with identify personal growth areas",CONCERN_SEL_1528,GROWTH_MAPPING,drift,exact,CONCERN_SEL_1528,37
+"i struggle with clarity about personal values",CONCERN_SEL_1541,IDENTITY_FORMATION,drift,exact,CONCERN_SEL_1541,37
+"i have trouble with clarity about personal values",CONCERN_SEL_1541,IDENTITY_FORMATION,drift,exact,CONCERN_SEL_1541,37
+"i keep struggling with clarity about personal values",CONCERN_SEL_1541,IDENTITY_FORMATION,drift,exact,CONCERN_SEL_1541,32
+"i cannot manage clarity about personal values",CONCERN_SEL_1541,IDENTITY_FORMATION,drift,exact,CONCERN_SEL_1541,32
+"i need help with clarity about personal values",CONCERN_SEL_1541,IDENTITY_FORMATION,drift,exact,CONCERN_SEL_1541,32
+"lack of ownership for personal growth",CONCERN_SEL_1545,ACCOUNTABILITY_DEVELOPMENT,drift,near,CONCERN_DEC_1436,41
+"i struggle with ownership for personal growth",CONCERN_SEL_1545,ACCOUNTABILITY_DEVELOPMENT,drift,failure,,0
+"i have trouble with ownership for personal growth",CONCERN_SEL_1545,ACCOUNTABILITY_DEVELOPMENT,drift,near,CONCERN_DEC_1436,38
+"i keep struggling with ownership for personal growth",CONCERN_SEL_1545,ACCOUNTABILITY_DEVELOPMENT,drift,near,CONCERN_DEC_1436,32
+"i cannot manage ownership for personal growth",CONCERN_SEL_1545,ACCOUNTABILITY_DEVELOPMENT,drift,near,CONCERN_DEC_1436,32
+"i need help with ownership for personal growth",CONCERN_SEL_1545,ACCOUNTABILITY_DEVELOPMENT,drift,near,CONCERN_DEC_1436,32
+"difficulty balancing ambition and wellbeing",CONCERN_SEL_1548,PERSONAL_SUSTAINABILITY,drift,exact,CONCERN_SEL_1548,41
+"i struggle with balancing ambition and wellbeing",CONCERN_SEL_1548,PERSONAL_SUSTAINABILITY,drift,exact,CONCERN_SEL_1548,40
+"i have trouble with balancing ambition and wellbeing",CONCERN_SEL_1548,PERSONAL_SUSTAINABILITY,drift,exact,CONCERN_SEL_1548,40
+"i keep struggling with balancing ambition and wellbeing",CONCERN_SEL_1548,PERSONAL_SUSTAINABILITY,drift,exact,CONCERN_SEL_1548,35
+"i cannot manage balancing ambition and wellbeing",CONCERN_SEL_1548,PERSONAL_SUSTAINABILITY,drift,exact,CONCERN_SEL_1548,35
+"i need help with balancing ambition and wellbeing",CONCERN_SEL_1548,PERSONAL_SUSTAINABILITY,drift,exact,CONCERN_SEL_1548,35
+"identity confusion during adolescence",CONCERN_SEL_1551,PERSONAL_IDENTITY,drift,exact,CONCERN_SEL_1551,50
+"i struggle with identity confusion during adolescence",CONCERN_SEL_1551,PERSONAL_IDENTITY,drift,exact,CONCERN_SEL_1551,42
+"i have trouble with identity confusion during adolescence",CONCERN_SEL_1551,PERSONAL_IDENTITY,drift,exact,CONCERN_SEL_1551,42
+"i keep struggling with identity confusion during adolescence",CONCERN_SEL_1551,PERSONAL_IDENTITY,drift,exact,CONCERN_SEL_1551,37
+"i cannot manage identity confusion during adolescence",CONCERN_SEL_1551,PERSONAL_IDENTITY,drift,exact,CONCERN_SEL_1551,37
+"i need help with identity confusion during adolescence",CONCERN_SEL_1551,PERSONAL_IDENTITY,drift,exact,CONCERN_SEL_1551,37
+"comparing career progress with peers",CONCERN_SEL_1564,CAREER_IDENTITY,drift,exact,CONCERN_SEL_1564,50
+"i struggle with comparing career progress with peers",CONCERN_SEL_1564,CAREER_IDENTITY,drift,exact,CONCERN_SEL_1564,42
+"i have trouble with comparing career progress with peers",CONCERN_SEL_1564,CAREER_IDENTITY,drift,exact,CONCERN_SEL_1564,42
+"i keep struggling with comparing career progress with peers",CONCERN_SEL_1564,CAREER_IDENTITY,drift,exact,CONCERN_SEL_1564,37
+"i cannot manage comparing career progress with peers",CONCERN_SEL_1564,CAREER_IDENTITY,drift,exact,CONCERN_SEL_1564,37
+"i need help with comparing career progress with peers",CONCERN_SEL_1564,CAREER_IDENTITY,drift,exact,CONCERN_SEL_1564,37
+"i struggle with revision consistency",CONCERN_SEL_2019,EXAMINATION_READINESS,drift,near,CONCERN_DIS_2406,35
+"i have trouble with revision consistency",CONCERN_SEL_2019,EXAMINATION_READINESS,drift,near,CONCERN_DIS_2406,35
+"i struggle with concept transfer across subjects",CONCERN_SEL_2036,INTERDISCIPLINARY_LEARNING,drift,exact,CONCERN_SEL_2036,42
+"i have trouble with concept transfer across subjects",CONCERN_SEL_2036,INTERDISCIPLINARY_LEARNING,drift,exact,CONCERN_SEL_2036,42
+"i keep struggling with concept transfer across subjects",CONCERN_SEL_2036,INTERDISCIPLINARY_LEARNING,drift,exact,CONCERN_SEL_2036,37
+"i cannot manage concept transfer across subjects",CONCERN_SEL_2036,INTERDISCIPLINARY_LEARNING,drift,exact,CONCERN_SEL_2036,37
+"i need help with concept transfer across subjects",CONCERN_SEL_2036,INTERDISCIPLINARY_LEARNING,drift,exact,CONCERN_SEL_2036,37
+"i struggle with awareness of emerging career opportunities",CONCERN_SEL_204,CAREER_READINESS,drift,near,CONCERN_CON_516,35
+"i have trouble with awareness of emerging career opportunities",CONCERN_SEL_204,CAREER_READINESS,drift,near,CONCERN_CON_516,35
+"i cannot manage supporting students with weak real-world application skills",CONCERN_SEL_2150,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_SEL_2150,34
+"weak emotional stability during career uncertainty",CONCERN_SEL_220,EXAMINATION_STRESS,drift,near,CONCERN_DIS_36,39
+"i struggle with emotional stability during career uncertainty",CONCERN_SEL_220,EXAMINATION_STRESS,drift,near,CONCERN_DIS_36,38
+"i have trouble with emotional stability during career uncertainty",CONCERN_SEL_220,EXAMINATION_STRESS,drift,near,CONCERN_DIS_36,38
+"i keep struggling with emotional stability during career uncertainty",CONCERN_SEL_220,EXAMINATION_STRESS,drift,near,CONCERN_DIS_36,31
+"i need help with emotional stability during career uncertainty",CONCERN_SEL_220,EXAMINATION_STRESS,drift,near,CONCERN_DIS_36,31
+"i keep struggling with helping students build independent revision strategies",CONCERN_SEL_2255,EXAMINATION_READINESS,drift,exact,CONCERN_SEL_2255,33
+"i cannot manage helping students build independent revision strategies",CONCERN_SEL_2255,EXAMINATION_READINESS,drift,exact,CONCERN_SEL_2255,33
+"i need help with helping students build independent revision strategies",CONCERN_SEL_2255,EXAMINATION_READINESS,drift,exact,CONCERN_SEL_2255,40
+"i cannot manage supporting students with weak numerical confidence",CONCERN_SEL_2265,STEM_LEARNING,drift,exact,CONCERN_SEL_2265,36
+"i keep struggling with managing students with weak collaborative problem-solving skills",CONCERN_SEL_2272,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_SEL_2272,31
+"i cannot manage managing students with weak collaborative problem-solving skills",CONCERN_SEL_2272,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_SEL_2272,31
+"i need help with managing students with weak collaborative problem-solving skills",CONCERN_SEL_2272,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_SEL_2272,31
+"i keep struggling with supporting students with weak academic transition readiness",CONCERN_SEL_2300,ADJUSTMENT_COPING,drift,failure,,0
+"i need help with supporting students with weak academic transition readiness",CONCERN_SEL_2300,ADJUSTMENT_COPING,drift,failure,,0
+"i cannot manage motivation during slow career growth",CONCERN_SOC_1097,MOTIVATION_VALUES,drift,failure,,0
+"i keep struggling with visibility into student self-learning capability",CONCERN_SOC_1314,COMPETENCY_DEVELOPMENT,drift,near,CONCERN_EMP_1238,35
+"i need help with visibility into student learning agility for future careers",CONCERN_SOC_1338,ADAPTIVE_LEARNING,drift,failure,,0
+"i struggle with resilience after setbacks",CONCERN_SOC_1515,RECOVERY_ORIENTATION,drift,near,CONCERN_PER_1411,39
+"i have trouble with resilience after setbacks",CONCERN_SOC_1515,RECOVERY_ORIENTATION,drift,near,CONCERN_PER_1411,39
+"i keep struggling with resilience after setbacks",CONCERN_SOC_1515,RECOVERY_ORIENTATION,drift,near,CONCERN_PER_1411,33
+"i cannot manage resilience after setbacks",CONCERN_SOC_1515,RECOVERY_ORIENTATION,drift,near,CONCERN_PER_1411,33
+"i need help with resilience after setbacks",CONCERN_SOC_1515,RECOVERY_ORIENTATION,drift,near,CONCERN_PER_1411,33
+"weak leadership initiative",CONCERN_SOC_1670,LEADERSHIP_OWNERSHIP,drift,exact,CONCERN_SOC_1670,39
+"emotional instability",CONCERN_SOC_1746,EXAMINATION_STRESS,drift,exact,CONCERN_SOC_1746,45
+"i have trouble with emotional instability",CONCERN_SOC_1746,EXAMINATION_STRESS,drift,exact,CONCERN_SOC_1746,33
+"loneliness",CONCERN_SOC_1757,ADJUSTMENT_COPING,drift,exact,CONCERN_SOC_1757,55
+"lack of leadership confidence",CONCERN_SOC_1846,LEADERSHIP_OWNERSHIP,drift,exact,CONCERN_SOC_1846,38
+"i have trouble with leadership confidence",CONCERN_SOC_1846,LEADERSHIP_OWNERSHIP,drift,exact,CONCERN_SOC_1846,33
+"weak adaptability to failure",CONCERN_SOC_1878,EXAMINATION_STRESS,drift,exact,CONCERN_SOC_1878,37
+"i have trouble with adaptability to failure",CONCERN_SOC_1878,EXAMINATION_STRESS,drift,exact,CONCERN_SOC_1878,35
+"i keep struggling with child becoming too emotionally sensitive online",CONCERN_SOC_1881,LIFESTYLE_PRESSURE,drift,exact,CONCERN_SOC_1881,34
+"i cannot manage child becoming too emotionally sensitive online",CONCERN_SOC_1881,LIFESTYLE_PRESSURE,drift,exact,CONCERN_SOC_1881,34
+"i need help with child becoming too emotionally sensitive online",CONCERN_SOC_1881,LIFESTYLE_PRESSURE,drift,exact,CONCERN_SOC_1881,34
+"i struggle with digitally distracted students",CONCERN_SOC_2143,LIFESTYLE_PRESSURE,drift,exact,CONCERN_SOC_2143,38
+"i have trouble with digitally distracted students",CONCERN_SOC_2143,LIFESTYLE_PRESSURE,drift,exact,CONCERN_SOC_2143,38
+"i keep struggling with digitally distracted students",CONCERN_SOC_2143,LIFESTYLE_PRESSURE,drift,exact,CONCERN_SOC_2143,33
+"i keep struggling with building academic independence",CONCERN_SOC_2330,ACADEMIC_IDENTITY,drift,exact,CONCERN_SOC_2330,37
+"i struggle with students struggling to express academic difficulties openly",CONCERN_SOC_2378,SOCIAL_EMOTIONAL,drift,failure,,0
+"i have trouble with students struggling to express academic difficulties openly",CONCERN_SOC_2378,SOCIAL_EMOTIONAL,drift,exact,CONCERN_SOC_2378,36
+"i keep struggling with students struggling to express academic difficulties openly",CONCERN_SOC_2378,SOCIAL_EMOTIONAL,drift,exact,CONCERN_SOC_2378,36
+"i keep struggling with emotional resilience during peer competition",CONCERN_SOC_2379,SOCIAL_EMOTIONAL,drift,exact,CONCERN_SOC_2379,36
+"i cannot manage emotional resilience during peer competition",CONCERN_SOC_2379,SOCIAL_EMOTIONAL,drift,exact,CONCERN_SOC_2379,35
+"students overreacting to minor academic setbacks",CONCERN_SOC_2384,SOCIAL_EMOTIONAL,drift,exact,CONCERN_SOC_2384,49
+"i struggle with students overreacting to minor academic setbacks",CONCERN_SOC_2384,SOCIAL_EMOTIONAL,drift,exact,CONCERN_SOC_2384,43
+"i have trouble with students overreacting to minor academic setbacks",CONCERN_SOC_2384,SOCIAL_EMOTIONAL,drift,exact,CONCERN_SOC_2384,43
+"i keep struggling with students overreacting to minor academic setbacks",CONCERN_SOC_2384,SOCIAL_EMOTIONAL,drift,exact,CONCERN_SOC_2384,36
+"i cannot manage students overreacting to minor academic setbacks",CONCERN_SOC_2384,SOCIAL_EMOTIONAL,drift,exact,CONCERN_SOC_2384,36
+"i need help with students overreacting to minor academic setbacks",CONCERN_SOC_2384,SOCIAL_EMOTIONAL,drift,exact,CONCERN_SOC_2384,36
+"i keep struggling with students avoiding leadership roles in group work",CONCERN_SOC_2386,SOCIAL_EMOTIONAL,drift,exact,CONCERN_SOC_2386,33
+"i cannot manage students avoiding leadership roles in group work",CONCERN_SOC_2386,SOCIAL_EMOTIONAL,drift,exact,CONCERN_SOC_2386,33
+"i need help with students avoiding leadership roles in group work",CONCERN_SOC_2386,SOCIAL_EMOTIONAL,drift,exact,CONCERN_SOC_2386,33
+"i struggle with pressure during placement season",CONCERN_SOC_375,EMOTIONAL_REGULATION,drift,exact,CONCERN_SOC_375,40
+"i have trouble with pressure during placement season",CONCERN_SOC_375,EMOTIONAL_REGULATION,drift,exact,CONCERN_SOC_375,40
+"i keep struggling with pressure during placement season",CONCERN_SOC_375,EMOTIONAL_REGULATION,drift,exact,CONCERN_SOC_375,35
+"i need help with pressure during placement season",CONCERN_SOC_375,EMOTIONAL_REGULATION,drift,exact,CONCERN_SOC_375,35
+"difficulty adjusting to corporate work culture",CONCERN_SOC_391,ADJUSTMENT_COPING,drift,exact,CONCERN_SOC_391,43
+"i struggle with adjusting to corporate work culture",CONCERN_SOC_391,ADJUSTMENT_COPING,drift,exact,CONCERN_SOC_391,42
+"i have trouble with adjusting to corporate work culture",CONCERN_SOC_391,ADJUSTMENT_COPING,drift,exact,CONCERN_SOC_391,42
+"i keep struggling with adjusting to corporate work culture",CONCERN_SOC_391,ADJUSTMENT_COPING,drift,exact,CONCERN_SOC_391,37
+"i cannot manage adjusting to corporate work culture",CONCERN_SOC_391,ADJUSTMENT_COPING,drift,exact,CONCERN_SOC_391,37
+"i need help with adjusting to corporate work culture",CONCERN_SOC_391,ADJUSTMENT_COPING,drift,exact,CONCERN_SOC_391,37
+"i keep struggling with unclear career growth during initial jobs",CONCERN_SOC_419,CAREER_READINESS,drift,exact,CONCERN_SOC_419,36
+"difficulty managing emotional exhaustion during long job searches",CONCERN_SOC_473,LIFESTYLE_PRESSURE,drift,exact,CONCERN_SOC_473,35
+"i keep struggling with emotional exhaustion during long job searches",CONCERN_SOC_473,LIFESTYLE_PRESSURE,drift,exact,CONCERN_SOC_473,33
+"i cannot manage emotional exhaustion during long job searches",CONCERN_SOC_473,LIFESTYLE_PRESSURE,drift,exact,CONCERN_SOC_473,33
+"i need help with emotional exhaustion during long job searches",CONCERN_SOC_473,LIFESTYLE_PRESSURE,drift,exact,CONCERN_SOC_473,33
+"i struggle with student goal clarity and direction",CONCERN_STA_1305,CAREER_IDENTITY,drift,exact,CONCERN_STA_1305,39
+"i have trouble with student goal clarity and direction",CONCERN_STA_1305,CAREER_IDENTITY,drift,exact,CONCERN_STA_1305,39
+"i keep struggling with student goal clarity and direction",CONCERN_STA_1305,CAREER_IDENTITY,drift,exact,CONCERN_STA_1305,34
+"i cannot manage student goal clarity and direction",CONCERN_STA_1305,CAREER_IDENTITY,drift,exact,CONCERN_STA_1305,34
+"i need help with student goal clarity and direction",CONCERN_STA_1305,CAREER_IDENTITY,drift,exact,CONCERN_STA_1305,34
+"i have trouble with learning agility",CONCERN_STE_1724,LEARNING_ADAPTABILITY,drift,exact,CONCERN_STE_1724,38
+"i need help with academic initiative after failure",CONCERN_STE_2038,CONFIDENCE_SELF,drift,exact,CONCERN_STE_2038,36
+"i need help with participating in academic competitions",CONCERN_STE_2094,COMPETITIVE_EXAM,drift,exact,CONCERN_STE_2094,41
+"i need help with supporting students with weak exam temperament",CONCERN_STE_2163,EXAMINATION_READINESS,drift,failure,,0
+"i cannot manage students who depend excessively on model answers",CONCERN_STE_2201,ACADEMIC_COGNITIVE,drift,exact,CONCERN_STE_2201,38
+"i keep struggling with managing students with weak participation in experiential learning",CONCERN_STE_2266,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_STE_2266,31
+"i need help with managing students with weak participation in experiential learning",CONCERN_STE_2266,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_STE_2266,31
+"i cannot manage handling students with weak academic confidence in english",CONCERN_STE_2456,COMMUNICATION_EXPRESSION,drift,failure,,0
+"i keep struggling with emotional pressure from social judgments",CONCERN_STR_1015,CONFIDENCE_SELF,drift,exact,CONCERN_STR_1015,35
+"i cannot manage emotional anxiety around age and reinvention",CONCERN_STR_1025,CONFIDENCE_SELF,drift,exact,CONCERN_STR_1025,37
+"difficulty managing emotional fatigue from continuous networking",CONCERN_STR_1037,SOCIAL_EMOTIONAL,drift,exact,CONCERN_STR_1037,38
+"i struggle with emotional fatigue from continuous networking",CONCERN_STR_1037,SOCIAL_EMOTIONAL,drift,exact,CONCERN_STR_1037,41
+"i have trouble with emotional fatigue from continuous networking",CONCERN_STR_1037,SOCIAL_EMOTIONAL,drift,exact,CONCERN_STR_1037,41
+"i keep struggling with emotional fatigue from continuous networking",CONCERN_STR_1037,SOCIAL_EMOTIONAL,drift,exact,CONCERN_STR_1037,35
+"i cannot manage emotional fatigue from continuous networking",CONCERN_STR_1037,SOCIAL_EMOTIONAL,drift,exact,CONCERN_STR_1037,35
+"i need help with emotional fatigue from continuous networking",CONCERN_STR_1037,SOCIAL_EMOTIONAL,drift,exact,CONCERN_STR_1037,35
+"difficulty managing emotional exhaustion during revision months",CONCERN_STR_135,LIFESTYLE_PRESSURE,drift,exact,CONCERN_STR_135,36
+"i keep struggling with emotional exhaustion during revision months",CONCERN_STR_135,LIFESTYLE_PRESSURE,drift,exact,CONCERN_STR_135,33
+"i cannot manage emotional exhaustion during revision months",CONCERN_STR_135,LIFESTYLE_PRESSURE,drift,exact,CONCERN_STR_135,33
+"i need help with emotional exhaustion during revision months",CONCERN_STR_135,LIFESTYLE_PRESSURE,drift,exact,CONCERN_STR_135,33
+"i need help with sustain long-term learning discipline",CONCERN_STR_310,DISCIPLINE_HABITS,drift,near,CONCERN_MOT_2231,30
+"i struggle with emotional burnout during placement season",CONCERN_STR_399,LIFESTYLE_PRESSURE,drift,exact,CONCERN_STR_399,41
+"i have trouble with emotional burnout during placement season",CONCERN_STR_399,LIFESTYLE_PRESSURE,drift,exact,CONCERN_STR_399,41
+"i cannot manage recovering from workplace criticism emotionally",CONCERN_STR_611,EMOTIONAL_RECOVERY,drift,exact,CONCERN_STR_611,37
+"difficulty handling workplace feedback emotionally",CONCERN_STR_667,EMOTIONAL_RECOVERY,drift,exact,CONCERN_STR_667,36
+"i have trouble with workplace feedback emotionally",CONCERN_STR_667,EMOTIONAL_RECOVERY,drift,exact,CONCERN_STR_667,38
+"i keep struggling with workplace feedback emotionally",CONCERN_STR_667,EMOTIONAL_RECOVERY,drift,exact,CONCERN_STR_667,32
+"difficulty handling workplace ambiguity during early projects",CONCERN_STR_687,WORKPLACE_ADAPTATION,drift,exact,CONCERN_STR_687,39
+"i keep struggling with workplace ambiguity during early projects",CONCERN_STR_687,WORKPLACE_ADAPTATION,drift,exact,CONCERN_STR_687,36
+"i cannot manage workplace ambiguity during early projects",CONCERN_STR_687,WORKPLACE_ADAPTATION,drift,exact,CONCERN_STR_687,36
+"i need help with workplace ambiguity during early projects",CONCERN_STR_687,WORKPLACE_ADAPTATION,drift,exact,CONCERN_STR_687,36
+"i keep struggling with emotional pressure during high visibility assignments",CONCERN_STR_739,EMOTIONAL_REGULATION,drift,failure,,0
+"i need help with emotional pressure during high visibility assignments",CONCERN_STR_739,EMOTIONAL_REGULATION,drift,exact,CONCERN_STR_739,33
+"i cannot manage team trust during difficult decisions",CONCERN_STR_785,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_STR_785,37
+"difficulty managing emotional fatigue from constant organizational visibility",CONCERN_STR_823,EMOTIONAL_REGULATION,drift,exact,CONCERN_STR_823,37
+"i keep struggling with emotional fatigue from constant organizational visibility",CONCERN_STR_823,EMOTIONAL_REGULATION,drift,exact,CONCERN_STR_823,35
+"i need help with emotional fatigue from constant organizational visibility",CONCERN_STR_823,EMOTIONAL_REGULATION,drift,exact,CONCERN_STR_823,35
+"i cannot manage handling board-level expectations",CONCERN_STR_870,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_STR_870,38
+"i need help with handling board-level expectations",CONCERN_STR_870,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_STR_870,39
+"weak ability to build leadership agility during rapid market changes",CONCERN_STR_930,LEADERSHIP_READINESS,drift,exact,CONCERN_STR_930,37
+"i cannot manage build leadership agility during rapid market changes",CONCERN_STR_930,LEADERSHIP_READINESS,drift,exact,CONCERN_STR_930,35
+"i need help with build leadership agility during rapid market changes",CONCERN_STR_930,LEADERSHIP_READINESS,drift,exact,CONCERN_STR_930,35
+"i keep struggling with emotional fatigue from continuous strategic planning",CONCERN_STR_937,STRATEGIC_LEADERSHIP,drift,exact,CONCERN_STR_937,34
+"i cannot manage emotional fatigue from continuous strategic planning",CONCERN_STR_937,STRATEGIC_LEADERSHIP,drift,exact,CONCERN_STR_937,34
+"i need help with emotional fatigue from continuous strategic planning",CONCERN_STR_937,STRATEGIC_LEADERSHIP,drift,exact,CONCERN_STR_937,34
+"i keep struggling with emotional pressure from family financial dependence",CONCERN_STR_999,LIFESTYLE_PRESSURE,drift,exact,CONCERN_STR_999,35
+"i cannot manage emotional pressure from family financial dependence",CONCERN_STR_999,LIFESTYLE_PRESSURE,drift,exact,CONCERN_STR_999,35
+"i need help with emotional pressure from family financial dependence",CONCERN_STR_999,LIFESTYLE_PRESSURE,drift,exact,CONCERN_STR_999,35
+"weak visibility into student motivation changes over time",CONCERN_STU_1288,MOTIVATION_VALUES,drift,exact,CONCERN_STU_1288,42
+"i struggle with visibility into student motivation changes over time",CONCERN_STU_1288,MOTIVATION_VALUES,drift,exact,CONCERN_STU_1288,41
+"i have trouble with visibility into student motivation changes over time",CONCERN_STU_1288,MOTIVATION_VALUES,drift,exact,CONCERN_STU_1288,41
+"i need help with visibility into student motivation changes over time",CONCERN_STU_1288,MOTIVATION_VALUES,drift,failure,,0
+"lack of interest in studies",CONCERN_STU_1353,ENGAGEMENT_MANAGEMENT,drift,exact,CONCERN_STU_1353,26
+"weak problem-solving ability",CONCERN_STU_1369,COGNITIVE_SKILLS,drift,exact,CONCERN_STU_1369,36
+"i cannot manage balancing academics and extracurriculars",CONCERN_STU_1373,STUDENT_BALANCE,drift,exact,CONCERN_STU_1373,39
+"lack of curiosity-driven learning",CONCERN_STU_1374,INNOVATION_READINESS,drift,exact,CONCERN_STU_1374,39
+"i have trouble with curiosity-driven learning",CONCERN_STU_1374,INNOVATION_READINESS,drift,exact,CONCERN_STU_1374,37
+"i have trouble with confidence in personal abilities",CONCERN_STU_1415,SELF_DEVELOPMENT,drift,exact,CONCERN_STU_1415,25
+"i need help with confidence in personal abilities",CONCERN_STU_1415,SELF_DEVELOPMENT,drift,failure,,0
+"weak problem-solving and practical thinking",CONCERN_STU_1421,CAPABILITY_DEVELOPMENT,drift,exact,CONCERN_STU_1421,40
+"i struggle with problem-solving and practical thinking",CONCERN_STU_1421,CAPABILITY_DEVELOPMENT,drift,exact,CONCERN_STU_1421,39
+"i have trouble with problem-solving and practical thinking",CONCERN_STU_1421,CAPABILITY_DEVELOPMENT,drift,exact,CONCERN_STU_1421,39
+"i keep struggling with problem-solving and practical thinking",CONCERN_STU_1421,CAPABILITY_DEVELOPMENT,drift,exact,CONCERN_STU_1421,34
+"i cannot manage problem-solving and practical thinking",CONCERN_STU_1421,CAPABILITY_DEVELOPMENT,drift,exact,CONCERN_STU_1421,34
+"i need help with problem-solving and practical thinking",CONCERN_STU_1421,CAPABILITY_DEVELOPMENT,drift,exact,CONCERN_STU_1421,34
+"i struggle with recover from poor academic performance",CONCERN_STU_1446,RECOVERY_BEHAVIOR,drift,exact,CONCERN_STU_1446,40
+"i have trouble with recover from poor academic performance",CONCERN_STU_1446,RECOVERY_BEHAVIOR,drift,exact,CONCERN_STU_1446,40
+"i keep struggling with recover from poor academic performance",CONCERN_STU_1446,RECOVERY_BEHAVIOR,drift,exact,CONCERN_STU_1446,35
+"i cannot manage recover from poor academic performance",CONCERN_STU_1446,RECOVERY_BEHAVIOR,drift,exact,CONCERN_STU_1446,35
+"i need help with recover from poor academic performance",CONCERN_STU_1446,RECOVERY_BEHAVIOR,drift,exact,CONCERN_STU_1446,35
+"i struggle with make decisions independently",CONCERN_STU_1469,DECISION_LEADERSHIP,drift,exact,CONCERN_STU_1469,43
+"i have trouble with make decisions independently",CONCERN_STU_1469,DECISION_LEADERSHIP,drift,exact,CONCERN_STU_1469,43
+"i keep struggling with make decisions independently",CONCERN_STU_1469,DECISION_LEADERSHIP,drift,exact,CONCERN_STU_1469,37
+"i cannot manage make decisions independently",CONCERN_STU_1469,DECISION_LEADERSHIP,drift,exact,CONCERN_STU_1469,37
+"i need help with make decisions independently",CONCERN_STU_1469,DECISION_LEADERSHIP,drift,exact,CONCERN_STU_1469,37
+"i keep struggling with detect student motivation collapse institutionally",CONCERN_TEA_1164,MOTIVATION_VALUES,drift,exact,CONCERN_TEA_1164,35
+"i cannot manage detect student motivation collapse institutionally",CONCERN_TEA_1164,MOTIVATION_VALUES,drift,exact,CONCERN_TEA_1164,35
+"i need help with detect student motivation collapse institutionally",CONCERN_TEA_1164,MOTIVATION_VALUES,drift,exact,CONCERN_TEA_1164,35
+"i keep struggling with visibility into student curiosity and inquiry levels",CONCERN_TEA_1170,INQUIRY_CURIOSITY,drift,exact,CONCERN_TEA_1170,36
+"i struggle with fear of failure in competitive exams",CONCERN_THI_103,EXAMINATION_STRESS,drift,exact,CONCERN_THI_103,41
+"i have trouble with fear of failure in competitive exams",CONCERN_THI_103,EXAMINATION_STRESS,drift,exact,CONCERN_THI_103,41
+"i keep struggling with fear of failure in competitive exams",CONCERN_THI_103,EXAMINATION_STRESS,drift,exact,CONCERN_THI_103,35
+"i cannot manage fear of failure in competitive exams",CONCERN_THI_103,EXAMINATION_STRESS,drift,exact,CONCERN_THI_103,35
+"i need help with fear of failure in competitive exams",CONCERN_THI_103,EXAMINATION_STRESS,drift,exact,CONCERN_THI_103,35
+"weak confidence in building long-term workplace stability",CONCERN_THI_1150,WORKPLACE_ADAPTATION,drift,exact,CONCERN_THI_1150,37
+"i have trouble with building long-term workplace stability",CONCERN_THI_1150,WORKPLACE_ADAPTATION,drift,exact,CONCERN_THI_1150,40
+"i keep struggling with building long-term workplace stability",CONCERN_THI_1150,WORKPLACE_ADAPTATION,drift,exact,CONCERN_THI_1150,34
+"i cannot manage building long-term workplace stability",CONCERN_THI_1150,WORKPLACE_ADAPTATION,drift,exact,CONCERN_THI_1150,34
+"i need help with building long-term workplace stability",CONCERN_THI_1150,WORKPLACE_ADAPTATION,drift,exact,CONCERN_THI_1150,34
+"i keep struggling with detecting hidden emotional distress in high performers",CONCERN_THI_1235,EMOTIONAL_REGULATION,drift,exact,CONCERN_THI_1235,38
+"weak ability to measure student ownership in collaborative learning",CONCERN_THI_1252,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_THI_1252,38
+"i keep struggling with measure student ownership in collaborative learning",CONCERN_THI_1252,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_THI_1252,36
+"i cannot manage measure student ownership in collaborative learning",CONCERN_THI_1252,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_THI_1252,36
+"i need help with measure student ownership in collaborative learning",CONCERN_THI_1252,COLLABORATION_OWNERSHIP,drift,exact,CONCERN_THI_1252,36
+"low academic confidence",CONCERN_THI_1652,CONFIDENCE_SELF,drift,exact,CONCERN_THI_1652,38
+"i have trouble with academic confidence",CONCERN_THI_1652,CONFIDENCE_SELF,drift,exact,CONCERN_THI_1652,32
+"difficulty handling competitive environments",CONCERN_THI_1682,EXAMINATION_STRESS,drift,exact,CONCERN_THI_1682,33
+"i struggle with competitive environments",CONCERN_THI_1682,EXAMINATION_STRESS,drift,exact,CONCERN_THI_1682,36
+"i have trouble with competitive environments",CONCERN_THI_1682,EXAMINATION_STRESS,drift,exact,CONCERN_THI_1682,36
+"i struggle with long study hours",CONCERN_THI_1714,EXAMINATION_STRESS,drift,exact,CONCERN_THI_1714,39
+"i have trouble with long study hours",CONCERN_THI_1714,EXAMINATION_STRESS,drift,exact,CONCERN_THI_1714,39
+"i keep struggling with long study hours",CONCERN_THI_1714,EXAMINATION_STRESS,drift,exact,CONCERN_THI_1714,34
+"i cannot manage long study hours",CONCERN_THI_1714,EXAMINATION_STRESS,drift,exact,CONCERN_THI_1714,34
+"i need help with long study hours",CONCERN_THI_1714,EXAMINATION_STRESS,drift,exact,CONCERN_THI_1714,34
+"fear of taking risks",CONCERN_THI_1798,CONFIDENCE_SELF,drift,exact,CONCERN_THI_1798,49
+"i struggle with fear of taking risks",CONCERN_THI_1798,CONFIDENCE_SELF,drift,exact,CONCERN_THI_1798,39
+"i have trouble with fear of taking risks",CONCERN_THI_1798,CONFIDENCE_SELF,drift,exact,CONCERN_THI_1798,39
+"i keep struggling with fear of taking risks",CONCERN_THI_1798,CONFIDENCE_SELF,drift,exact,CONCERN_THI_1798,34
+"i cannot manage fear of taking risks",CONCERN_THI_1798,CONFIDENCE_SELF,drift,exact,CONCERN_THI_1798,34
+"i need help with fear of taking risks",CONCERN_THI_1798,CONFIDENCE_SELF,drift,exact,CONCERN_THI_1798,34
+"difficulty adapting to change",CONCERN_THI_1814,ADJUSTMENT_COPING,drift,exact,CONCERN_THI_1814,37
+"i have trouble with adapting to change",CONCERN_THI_1814,ADJUSTMENT_COPING,drift,exact,CONCERN_THI_1814,36
+"i have trouble with learning agility",CONCERN_THI_1935,LEARNING_ADAPTABILITY,drift,near,CONCERN_STE_1724,38
+"lack of career awareness",CONCERN_THI_1966,ACADEMIC_IDENTITY,drift,near,CONCERN_EXA_1833,37
+"i have trouble with career awareness",CONCERN_THI_1966,ACADEMIC_IDENTITY,drift,near,CONCERN_EXA_1833,33
+"i keep struggling with emotional recovery after missing expected cutoffs",CONCERN_THI_198,EXAMINATION_STRESS,drift,exact,CONCERN_THI_198,34
+"i struggle with academic self-monitoring",CONCERN_THI_1983,SELF_REFLECTION,drift,exact,CONCERN_THI_1983,36
+"i cannot manage academic stress productively",CONCERN_THI_1999,EXAMINATION_STRESS,drift,near,CONCERN_EXA_2487,34
+"i need help with academic stress productively",CONCERN_THI_1999,EXAMINATION_STRESS,drift,near,CONCERN_EXA_2487,34
+"i cannot manage understanding teacher expectations",CONCERN_THI_2008,CLASSROOM_ENGAGEMENT,drift,exact,CONCERN_THI_2008,33
+"difficulty managing learning fatigue",CONCERN_THI_2017,EXAMINATION_STRESS,drift,exact,CONCERN_THI_2017,30
+"i have trouble with learning fatigue",CONCERN_THI_2017,EXAMINATION_STRESS,drift,exact,CONCERN_THI_2017,32
+"i struggle with group discussions",CONCERN_THI_2026,COMMUNICATION_EXPRESSION,drift,near,CONCERN_EMO_366,38
+"i have trouble with group discussions",CONCERN_THI_2026,COMMUNICATION_EXPRESSION,drift,near,CONCERN_EMO_366,38
+"i have trouble with academic reflection after exams",CONCERN_THI_2042,SELF_REFLECTION,drift,exact,CONCERN_THI_2042,39
+"i keep struggling with academic reflection after exams",CONCERN_THI_2042,SELF_REFLECTION,drift,exact,CONCERN_THI_2042,34
+"i cannot manage academic reflection after exams",CONCERN_THI_2042,SELF_REFLECTION,drift,exact,CONCERN_THI_2042,34
+"i need help with building long-term academic momentum",CONCERN_THI_2055,MOTIVATION_VALUES,drift,exact,CONCERN_THI_2055,35
+"i struggle with long-term academic pressure",CONCERN_THI_2069,EXAMINATION_STRESS,drift,failure,,0
+"i have trouble with long-term academic pressure",CONCERN_THI_2069,EXAMINATION_STRESS,drift,exact,CONCERN_THI_2069,34
+"i keep struggling with academic recovery after continuous failure",CONCERN_THI_2076,EXAMINATION_STRESS,drift,exact,CONCERN_THI_2076,33
+"i cannot manage academic recovery after continuous failure",CONCERN_THI_2076,EXAMINATION_STRESS,drift,exact,CONCERN_THI_2076,33
+"i need help with academic recovery after continuous failure",CONCERN_THI_2076,EXAMINATION_STRESS,drift,exact,CONCERN_THI_2076,33
+"i keep struggling with supporting students during academic burnout",CONCERN_THI_2138,EXAMINATION_STRESS,drift,failure,,0
+"i need help with supporting students during academic burnout",CONCERN_THI_2138,EXAMINATION_STRESS,drift,failure,,0
+"i keep struggling with handling students who avoid classroom responsibility",CONCERN_THI_2180,MOTIVATION_VALUES,drift,exact,CONCERN_THI_2180,34
+"i cannot manage handling students who avoid classroom responsibility",CONCERN_THI_2180,MOTIVATION_VALUES,drift,exact,CONCERN_THI_2180,34
+"i need help with handling students who avoid classroom responsibility",CONCERN_THI_2180,MOTIVATION_VALUES,drift,exact,CONCERN_THI_2180,34
+"i need help with handling students who panic during exams",CONCERN_THI_2186,EXAMINATION_STRESS,drift,exact,CONCERN_THI_2186,37
+"i need help with supporting students with weak learning consistency during holidays",CONCERN_THI_2262,DISCIPLINE_HABITS,drift,failure,,0
+"i keep struggling with students with weak academic curiosity in higher grades",CONCERN_THI_2275,MOTIVATION_VALUES,drift,exact,CONCERN_THI_2275,31
+"i need help with students with weak academic curiosity in higher grades",CONCERN_THI_2275,MOTIVATION_VALUES,drift,exact,CONCERN_THI_2275,31
+"i cannot manage exam strategy execution",CONCERN_THI_2351,THINKING_QUALITY,drift,exact,CONCERN_THI_2351,33
+"i keep struggling with students unable to recover after mistakes during exams",CONCERN_THI_2352,THINKING_QUALITY,drift,exact,CONCERN_THI_2352,34
+"i cannot manage students unable to recover after mistakes during exams",CONCERN_THI_2352,THINKING_QUALITY,drift,exact,CONCERN_THI_2352,34
+"i keep struggling with students showing high stress reactivity before exams",CONCERN_THI_2355,EXAMINATION_STRESS,drift,exact,CONCERN_THI_2355,36
+"i cannot manage students showing high stress reactivity before exams",CONCERN_THI_2355,EXAMINATION_STRESS,drift,exact,CONCERN_THI_2355,36
+"i need help with students showing high stress reactivity before exams",CONCERN_THI_2355,EXAMINATION_STRESS,drift,exact,CONCERN_THI_2355,36
+"i keep struggling with building career commitment after selection",CONCERN_THI_239,MOTIVATION_VALUES,drift,exact,CONCERN_THI_239,39
+"i struggle with academic self-monitoring",CONCERN_THI_2471,SELF_REFLECTION,drift,near,CONCERN_THI_1983,36
+"i struggle with academic-to-professional transition readiness",CONCERN_THI_38,CAREER_READINESS,drift,exact,CONCERN_THI_38,42
+"i keep struggling with academic-to-professional transition readiness",CONCERN_THI_38,CAREER_READINESS,drift,exact,CONCERN_THI_38,42
+"i cannot manage academic-to-professional transition readiness",CONCERN_THI_38,CAREER_READINESS,drift,exact,CONCERN_THI_38,41
+"difficulty understanding career growth pathways",CONCERN_THI_389,CAREER_READINESS,drift,exact,CONCERN_THI_389,42
+"i keep struggling with adapting to organizational restructuring",CONCERN_THI_771,WORKPLACE_ADAPTATION,drift,exact,CONCERN_THI_771,35
+"i need help with students lacking self-leadership discipline",CONCERN_VAL_1496,LEADERSHIP_FOUNDATIONS,drift,exact,CONCERN_VAL_1496,38
+"i keep struggling with students pursuing careers misaligned with personality",CONCERN_VOC_1400,PERSONALITY_CAREER,drift,exact,CONCERN_VOC_1400,37
+"i cannot manage students pursuing careers misaligned with personality",CONCERN_VOC_1400,PERSONALITY_CAREER,drift,exact,CONCERN_VOC_1400,37
+"i need help with students pursuing careers misaligned with personality",CONCERN_VOC_1400,PERSONALITY_CAREER,drift,exact,CONCERN_VOC_1400,37
+"i cannot manage emotional pressure from career downgrades",CONCERN_WOR_1027,CONFIDENCE_SELF,drift,exact,CONCERN_WOR_1027,39
+"i keep struggling with motivation during routine work cycles",CONCERN_WOR_1069,MOTIVATION_VALUES,drift,exact,CONCERN_WOR_1069,35
+"i cannot manage motivation during routine work cycles",CONCERN_WOR_1069,MOTIVATION_VALUES,drift,exact,CONCERN_WOR_1069,35
+"i need help with motivation during routine work cycles",CONCERN_WOR_1069,MOTIVATION_VALUES,drift,exact,CONCERN_WOR_1069,35
+"i struggle with handling leadership visibility",CONCERN_WOR_1116,LEADERSHIP_OWNERSHIP,drift,failure,,0
+"i have trouble with handling leadership visibility",CONCERN_WOR_1116,LEADERSHIP_OWNERSHIP,drift,exact,CONCERN_WOR_1116,38
+"i keep struggling with handling leadership visibility",CONCERN_WOR_1116,LEADERSHIP_OWNERSHIP,drift,exact,CONCERN_WOR_1116,32
+"i cannot manage handling leadership visibility",CONCERN_WOR_1116,LEADERSHIP_OWNERSHIP,drift,exact,CONCERN_WOR_1116,32
+"i need help with handling leadership visibility",CONCERN_WOR_1116,LEADERSHIP_OWNERSHIP,drift,failure,,0
+"i struggle with sustain learning momentum over time",CONCERN_WOR_1152,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_WOR_1152,42
+"i have trouble with sustain learning momentum over time",CONCERN_WOR_1152,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_WOR_1152,42
+"i keep struggling with sustain learning momentum over time",CONCERN_WOR_1152,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_WOR_1152,36
+"i cannot manage sustain learning momentum over time",CONCERN_WOR_1152,COMPETENCY_DEVELOPMENT,drift,exact,CONCERN_WOR_1152,36
+"i struggle with identifying silent academic underperformance",CONCERN_WOR_1187,ACADEMIC_RISK,drift,exact,CONCERN_WOR_1187,43
+"i keep struggling with identifying silent academic underperformance",CONCERN_WOR_1187,ACADEMIC_RISK,drift,exact,CONCERN_WOR_1187,42
+"i struggle with balance productivity and wellbeing",CONCERN_WOR_568,LIFESTYLE_PRESSURE,drift,exact,CONCERN_WOR_568,40
+"i have trouble with balance productivity and wellbeing",CONCERN_WOR_568,LIFESTYLE_PRESSURE,drift,exact,CONCERN_WOR_568,40
+"i keep struggling with balance productivity and wellbeing",CONCERN_WOR_568,LIFESTYLE_PRESSURE,drift,exact,CONCERN_WOR_568,35
+"i cannot manage balance productivity and wellbeing",CONCERN_WOR_568,LIFESTYLE_PRESSURE,drift,exact,CONCERN_WOR_568,35
+"i need help with balance productivity and wellbeing",CONCERN_WOR_568,LIFESTYLE_PRESSURE,drift,exact,CONCERN_WOR_568,35
+"i cannot manage emotional fatigue from constant meetings",CONCERN_WOR_623,ACADEMIC_COGNITIVE,drift,exact,CONCERN_WOR_623,36
+"i cannot manage managing high-visibility projects",CONCERN_WOR_634,LEADERSHIP_READINESS,drift,exact,CONCERN_WOR_634,38
+"i keep struggling with initial team interactions",CONCERN_WOR_662,COMMUNICATION_EXPRESSION,drift,exact,CONCERN_WOR_662,38
+"i cannot manage building confidence in professional communication",CONCERN_WOR_665,COMMUNICATION_EXPRESSION,drift,near,CONCERN_MOT_694,19
+"weak ability to handle professional criticism constructively",CONCERN_WOR_682,EMOTIONAL_RECOVERY,drift,exact,CONCERN_WOR_682,38
+"i struggle with handle professional criticism constructively",CONCERN_WOR_682,EMOTIONAL_RECOVERY,drift,exact,CONCERN_WOR_682,42
+"i have trouble with handle professional criticism constructively",CONCERN_WOR_682,EMOTIONAL_RECOVERY,drift,exact,CONCERN_WOR_682,42
+"i cannot manage handle professional criticism constructively",CONCERN_WOR_682,EMOTIONAL_RECOVERY,drift,exact,CONCERN_WOR_682,37
+"i need help with handle professional criticism constructively",CONCERN_WOR_682,EMOTIONAL_RECOVERY,drift,exact,CONCERN_WOR_682,37
+"i keep struggling with work motivation during routine tasks",CONCERN_WOR_745,MOTIVATION_VALUES,drift,exact,CONCERN_WOR_745,35
+"i cannot manage work motivation during routine tasks",CONCERN_WOR_745,MOTIVATION_VALUES,drift,exact,CONCERN_WOR_745,35
+"i need help with work motivation during routine tasks",CONCERN_WOR_745,MOTIVATION_VALUES,drift,exact,CONCERN_WOR_745,35
+"difficulty managing emotional anxiety about career relevance",CONCERN_WOR_793,EMPLOYABILITY,drift,exact,CONCERN_WOR_793,36
+"i struggle with emotional anxiety about career relevance",CONCERN_WOR_793,EMPLOYABILITY,drift,exact,CONCERN_WOR_793,38
+"i have trouble with emotional anxiety about career relevance",CONCERN_WOR_793,EMPLOYABILITY,drift,exact,CONCERN_WOR_793,38
+"i keep struggling with emotional anxiety about career relevance",CONCERN_WOR_793,EMPLOYABILITY,drift,exact,CONCERN_WOR_793,33
+"i cannot manage emotional anxiety about career relevance",CONCERN_WOR_793,EMPLOYABILITY,drift,exact,CONCERN_WOR_793,33
+"i need help with emotional anxiety about career relevance",CONCERN_WOR_793,EMPLOYABILITY,drift,exact,CONCERN_WOR_793,33
+"i struggle with transferable skill relevance",CONCERN_WOR_962,CONFIDENCE_SELF,drift,exact,CONCERN_WOR_962,41
+"i have trouble with transferable skill relevance",CONCERN_WOR_962,CONFIDENCE_SELF,drift,exact,CONCERN_WOR_962,41
+"i keep struggling with transferable skill relevance",CONCERN_WOR_962,CONFIDENCE_SELF,drift,exact,CONCERN_WOR_962,35
+"i cannot manage transferable skill relevance",CONCERN_WOR_962,CONFIDENCE_SELF,drift,exact,CONCERN_WOR_962,35
+"i need help with transferable skill relevance",CONCERN_WOR_962,CONFIDENCE_SELF,drift,exact,CONCERN_WOR_962,35
+"i have trouble with emotional stress from career uncertainty",CONCERN_WOR_987,EMOTIONAL_REGULATION,drift,exact,CONCERN_WOR_987,38
+"i need help with emotional stress from career uncertainty",CONCERN_WOR_987,EMOTIONAL_REGULATION,drift,exact,CONCERN_WOR_987,33

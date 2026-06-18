@@ -1,0 +1,234 @@
+{
+  "audit": "wc-c7",
+  "generated_at": "2026-06-10T09:23:04.546Z",
+  "phase": "AUDIT ONLY · READ ONLY · STOP FOR APPROVAL",
+  "substrate": {
+    "sessions_total": 27,
+    "sessions_completed": 9,
+    "journey_states": 9,
+    "outcome_states": 14,
+    "journey_routes": 6,
+    "journey_routes_real": 4,
+    "journey_routes_stub": 2,
+    "package_catalog_total": 13,
+    "package_catalog_priced": 13,
+    "subscriptions_active": 0,
+    "b2c_payments_total": 6,
+    "b2c_payments_paid": 0,
+    "b2c_payments_pending": 6,
+    "paying_identities": 0
+  },
+  "metrics": {
+    "upsell_readiness": {
+      "structural_capabilities": "5/7",
+      "structural_pct": "71.4%",
+      "trigger_built": "1/3",
+      "trigger_not_built_by_design": 2,
+      "activation": "not_measurable",
+      "activation_note": "0 paid identities — requires prior purchase to measure"
+    },
+    "expansion_readiness": {
+      "structural": "2/4",
+      "structural_pct": "50%",
+      "activation": "0/4",
+      "activation_pct": "0%",
+      "paths": [
+        {
+          "id": "b2c_ladder_upsell",
+          "label": "B2C ladder upsell (CAP_INS → GRW → MAS)",
+          "structural": true,
+          "activation": false,
+          "activation_reason": "no_paid_identities"
+        },
+        {
+          "id": "package_renewal",
+          "label": "Package subscription renewal",
+          "structural": true,
+          "activation": false,
+          "activation_reason": "no_subscriptions"
+        },
+        {
+          "id": "b2c_package_cross_sell",
+          "label": "B2C ladder ↔ package cross-sell",
+          "structural": false,
+          "activation": false,
+          "activation_reason": "identity_bridge_absent"
+        },
+        {
+          "id": "package_to_package_upgrade",
+          "label": "Package → package upgrade",
+          "structural": false,
+          "activation": false,
+          "activation_reason": "upgrade_path_not_defined"
+        }
+      ]
+    },
+    "upgrade_coverage": {
+      "completion_rate": "33.3%",
+      "routed_pct": "100%",
+      "routed_non_stub_pct": "88.9%",
+      "completed_sessions": 9,
+      "total_sessions": 27,
+      "fallback_dominance_pct": "66.7%"
+    },
+    "upgrade_confidence": {
+      "journey_high_conf": "2/9",
+      "journey_high_conf_pct": "22.2%",
+      "journey_fallback_dominant": 6,
+      "outcome_high_conf": "6/14",
+      "outcome_high_conf_pct": "42.9%",
+      "note": "Two separate labels — never blended. Fallback (mentoring 0.2) = correct engine behaviour."
+    },
+    "cross_sku_readiness": {
+      "structural": "ABSENT",
+      "structural_score": "0/1",
+      "activation": "not_applicable",
+      "reason": "Identity bridge absent: users table has no email column"
+    },
+    "revenue_expansion_readiness": {
+      "paid_conversion": "0%",
+      "paid_conversion_raw": "0/6",
+      "forecastable_series": "0%",
+      "forecastable_series_raw": "0/4",
+      "renewal_eligibility": "not_measurable",
+      "total_revenue_inr": 0,
+      "note": "3 sub-facts reported separately, never blended"
+    }
+  },
+  "engines": {
+    "upsell": {
+      "eligible_identities": 0,
+      "full_ladder_owners": 0,
+      "trigger_taxonomy": {
+        "built": [
+          "stage_ladder_progression"
+        ],
+        "not_built": [
+          "behavioural_at_risk",
+          "behavioural_power_user"
+        ]
+      },
+      "degraded": false
+    },
+    "revenue": {
+      "total": 6,
+      "paid": 0,
+      "rupees": 0,
+      "degraded": false
+    },
+    "forecast": {
+      "forecastable_count": 0,
+      "total_series": 4,
+      "series": [
+        {
+          "key": "paid_revenue",
+          "label": "Paid revenue by month",
+          "points": 0,
+          "forecastable": false,
+          "reason": "insufficient_data"
+        },
+        {
+          "key": "paid_count",
+          "label": "Paid transactions by month",
+          "points": 0,
+          "forecastable": false,
+          "reason": "insufficient_data"
+        },
+        {
+          "key": "new_subscriptions",
+          "label": "New package subscriptions by month",
+          "points": 0,
+          "forecastable": false,
+          "reason": "insufficient_data"
+        },
+        {
+          "key": "upcoming_expiries",
+          "label": "Subscription expiries by month",
+          "points": 0,
+          "forecastable": false,
+          "reason": "insufficient_data"
+        }
+      ],
+      "degraded": false
+    },
+    "lifecycle": {
+      "b2c_ladder": {
+        "total": 6,
+        "by_state": {
+          "pending": 6,
+          "fulfilled": 0,
+          "abandoned": 0
+        }
+      },
+      "package_subscriptions": {
+        "total": 0,
+        "by_state": {
+          "active": 0,
+          "expiring_soon": 0,
+          "expired": 0,
+          "cancelled": 0
+        }
+      },
+      "degraded": false
+    },
+    "renewal": {
+      "renewable_active": 0,
+      "due_soon": 0,
+      "in_grace": 0,
+      "degraded": false
+    },
+    "entitlement": {
+      "paying_identities": 0,
+      "entitled_identities": 0,
+      "active_package_grants": 0,
+      "degraded": false
+    }
+  },
+  "journey_route_distribution": {
+    "lbi": {
+      "count": 2,
+      "is_stub": false,
+      "product_label": "LBI Behavioural Intelligence"
+    },
+    "competitive_exam": {
+      "count": 1,
+      "is_stub": true,
+      "product_label": "Competitive Exam Intelligence"
+    },
+    "mentoring": {
+      "count": 6,
+      "is_stub": false,
+      "product_label": "Mentoring"
+    }
+  },
+  "expansion_paths": [
+    {
+      "id": "b2c_ladder_upsell",
+      "label": "B2C ladder upsell (CAP_INS → GRW → MAS)",
+      "structural": true,
+      "activation": false,
+      "activation_reason": "no_paid_identities"
+    },
+    {
+      "id": "package_renewal",
+      "label": "Package subscription renewal",
+      "structural": true,
+      "activation": false,
+      "activation_reason": "no_subscriptions"
+    },
+    {
+      "id": "b2c_package_cross_sell",
+      "label": "B2C ladder ↔ package cross-sell",
+      "structural": false,
+      "activation": false,
+      "activation_reason": "identity_bridge_absent"
+    },
+    {
+      "id": "package_to_package_upgrade",
+      "label": "Package → package upgrade",
+      "structural": false,
+      "activation": false,
+      "activation_reason": "upgrade_path_not_defined"
+    }
+  ]
+}

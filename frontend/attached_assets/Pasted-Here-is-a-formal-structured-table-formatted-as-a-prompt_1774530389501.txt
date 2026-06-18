@@ -1,0 +1,30 @@
+Here is a **formal, structured table formatted as a prompt** you can directly use in Replit (or any system design / JD generator context):
+
+---
+
+**Prompt: Generate Structured Job Profiles Table**
+
+Create a formal, structured table defining the following four roles in an academic/student support ecosystem: Subject Tutor, Psychological Counsellor, Exam Strategist, and Performance Coach.
+
+The table must include the following columns:
+
+1. Role Title
+2. Core Objective
+3. Key Responsibilities
+4. Required Qualifications
+5. Core Competencies
+6. Tools & Methods Used
+7. Key Performance Indicators (KPIs)
+8. Stakeholders Engaged
+9. Scope of Impact
+
+Populate the table with professional, concise, and industry-appropriate descriptions as follows:
+
+| Role Title               | Core Objective                                                                                             | Key Responsibilities                                                                                                                                | Required Qualifications                                                          | Core Competencies                                                                | Tools & Methods Used                                                       | Key Performance Indicators (KPIs)                                                 | Stakeholders Engaged                               | Scope of Impact                                         |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------- |
+| Subject Tutor            | Deliver subject-specific academic instruction to improve conceptual understanding and academic performance | Plan and deliver lessons; simplify complex concepts; conduct assessments; assign practice work; provide feedback                                    | Bachelor’s/Master’s degree in relevant subject; teaching certification preferred | Subject expertise; instructional ability; communication; patience                | Lesson plans; worksheets; assessments; digital learning platforms          | Improvement in grades; concept mastery; test performance                          | Students; parents; academic coordinators           | Academic achievement and subject proficiency            |
+| Psychological Counsellor | Support students’ mental health, emotional well-being, and behavioral development                          | Conduct counselling sessions; assess psychological concerns; provide coping strategies; maintain confidential records; coordinate with stakeholders | Master’s degree in Psychology/Counselling; relevant certification/licensure      | Empathy; active listening; emotional intelligence; ethical practice              | Psychometric tools; counselling frameworks (CBT, REBT); case documentation | Reduction in stress/anxiety; improved emotional stability; behavioral improvement | Students; parents; teachers; school administration | Emotional well-being and behavioral health              |
+| Exam Strategist          | Optimize student performance through structured exam planning and strategy                                 | Design study plans; analyze exam patterns; conduct mock tests; train in time management; provide performance analytics                              | Graduate/Postgraduate; experience in competitive exam coaching preferred         | Analytical thinking; planning; data interpretation; exam expertise               | Mock tests; analytics dashboards; past papers; study planners              | Score improvement; time efficiency; exam readiness                                | Students; tutors; academic planners                | Exam outcomes and performance optimization              |
+| Performance Coach        | Enhance overall student productivity, discipline, and goal achievement                                     | Set goals; build study routines; track progress; address procrastination; provide motivation and accountability                                     | Background in coaching/education/psychology; certification preferred             | Coaching skills; motivation techniques; behavioral insight; interpersonal skills | Goal-setting frameworks; habit trackers; review sessions; feedback tools   | Consistency in performance; productivity improvement; goal attainment             | Students; parents; mentors                         | Long-term performance, habits, and personal development |
+
+Ensure the tone is formal, precise, and suitable for institutional, HR, or program design documentation.

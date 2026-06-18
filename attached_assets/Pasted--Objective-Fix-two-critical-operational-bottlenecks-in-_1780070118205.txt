@@ -1,0 +1,37 @@
+# Objective
+Fix two critical operational bottlenecks in the CAPADEX engine simultaneously:
+1. Correct the layout rendering regression where ordinal Likert/impact scales (visible in "image_d535bf.png") are mistakenly treated as multi-select ranking items.
+2. Unblock the behavioral telemetry pipeline so that user interaction data flushes to the backend, resolving the current 0-row empty table state across tracking profiles.
+
+---
+
+## Technical Specification 1: Ordinal Scale Render Fix
+File: `frontend/src/components/assessment/phases/CapadexClarifyPhase.tsx`
+
+1. Locate the single-choice structural evaluator function: `isSingleChoiceQuestion(q)`. Ensure this function remains the single source of truth for the layout fork (`true` -> single-select tap-to-submit; `false` -> ordinal ranking). Do NOT add a parallel `isRankingApplicable()` predicate.
+2. Expand the `LIKERT_TOKENS` array inside this check to include exact option equality matching (gated at >= 60% presence) for the following intensity and emotional ladders:
+   - Impact Ladder: `['no impact', 'mild impact', 'moderate impact', 'major impact', 'severe impact']`
+   - Emotional Ladder: `['a little bit', 'somewhat', 'quite a bit', 'very much']`
+3. Widen the stem regex and prefix evaluations to force single-select routing if the question matches any of these criteria:
+   - Starts with: `"how emotionally"`, `"how stressful"`, `"how impactful"`, `"how difficult"`, `"how severe"`
+   - Contains phrases: `"feel to you"`, `"rate your level"`, `"on a scale of"`
+   - Is a categorical history stem: `/^what have you (already )?tried\b/i`
+   - Contains a leading option matching: `/^nothing yet\b/i`
+4. Verify Layout Behavior: When `isSingle === true`, drop the "Confirm selections" button and status footer. One option tap must fire `handleSingleTap(option)`, replace the alphabetical badges (A/B/C/D) with a checkmark, lock the input state, and trigger a 350ms rapid auto-advance translation sequence to minimize user click fatigue.
+
+---
+
+## Technical Specification 2: Frontend Telemetry Flush Connection
+File: `frontend/src/components/assessment/phases/CapadexClarifyPhase.tsx` (and its parent phase orchestrator)
+
+1. Create a defensive, asynchronous utility routine named `flushInteractionTelemetry()`.
+2. This routine must serialize the browser-side local interaction cache (`timings`) and transmit it via `POST /api/signals/ingest`.
+3. The JSON payload must strictly match the expected backend structure:
+```json
+   {
+     "session_id": "string (UUID format)",
+     "timings": [
+       { "item_id": "string", "response_time_ms": 1200, "backtrack_count": 0 }
+     ],
+     "stage_code": "string"
+   }

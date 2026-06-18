@@ -1,0 +1,30 @@
+Please write a comprehensive, production-grade database migration and structural data-engineering script in Python using pandas and regex. This script will act as a unified pipeline to clean, audit, and normalize our "concerns.xlsx" data before it is imported into our target system's 'capadex concern table'. 
+
+The script must sequentially handle all of the following file-handling and structural failure vectors within a clean try-except architecture:
+
+1. Flexible File Ingestion: 
+   - Implement an adaptive file loader. The file might be saved as a CSV named "concerns.xlsx - Sheet1.csv" or a standard Excel ".xlsx" file. 
+   - Try pd.read_csv() first, and automatically fall back to pd.read_excel() if that fails.
+
+2. Structural Schema Scrubbing:
+   - Detect and cleanly drop any accidental tracking or trailing empty columns (specifically target 'Unnamed: 19').
+   - Ensure the primary key column 'Concern ID' is cast strictly as a string and stripped of any leading/trailing whitespaces.
+   - Standardize categorical columns like 'Relevance in India', 'Severity', and 'CAPADEX Priority' to consistent Title Case formatting to eliminate duplicate metric groupings.
+
+3. Relational ID Bridge Creation:
+   - Address the broken join chain between our new Concern IDs (which use row counters like CONCERN_DOM_1) and legacy child records (like Clarity Questions or Atomic Signals which use static codes like CAREER_001).
+   - Generate a standardized column named 'Relational_Bridge_Tag' by parsing the 'Domain' text and mapping rows into clean composite category blocks (e.g., 'COLLEGE_ADAPT', 'CAREER_READINESS', 'DISCIPLINE_HABITS'). This ensures backend SQL joins don't return zero matches.
+
+4. Age Range Regex Normalization:
+   - Safely process the 'Typical Age Band' column which contains mixed, variable hyphen styles (standard hyphen '-', en-dash '–', and em-dash '—').
+   - Use regex to split the string regardless of the dash character type used.
+   - Extract and type-cast the bounds into two new explicit integer columns: 'age_min' and 'age_max'. 
+   - Completely drop the original string-based 'Typical Age Band' column to shield downstream JSON schema parsers from casting errors.
+
+5. Micro-Null Safeguards for Strict ORM Constraints:
+   - Scan strategic routing slots that cannot be null under strict backend database validation rules (specifically: 'Assessment Dimension', 'Root Cause Group', 'Intervention Lens', and 'Capability Mapping').
+   - Track any missing values in these columns and safely patch them with a definitive fallback string like 'UNASSIGNED_ROUTING_NODE' to prevent database insertions from halting mid-transaction.
+
+6. Verification & Ingestion Summary:
+   - At the end of execution, print an operational summary showing: total rows successfully processed vs initial count, verification that 'age_min' and 'age_max' are true integers, and a breakdown of how many null fields were fortified per routing column.
+   - Print the first 3 rows of the processed dataframe to verify schema alignment and save the final clean dataset as 'audited_capadex_concerns.csv'.

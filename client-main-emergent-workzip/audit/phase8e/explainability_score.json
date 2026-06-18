@@ -1,0 +1,18 @@
+{
+  "generated_at": "2026-06-03T18:26:48.321Z",
+  "score": 0.826221,
+  "band": "moderate",
+  "components": {
+    "support": 1,
+    "source_trace": 0.565553
+  },
+  "weights": {
+    "support": 0.6,
+    "source_trace": 0.4
+  },
+  "basis": {
+    "statements": 1167,
+    "supported": 1167,
+    "reaches_source": 660
+  }
+}

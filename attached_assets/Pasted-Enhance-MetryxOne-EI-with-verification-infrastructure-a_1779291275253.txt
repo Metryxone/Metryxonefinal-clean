@@ -1,0 +1,102 @@
+Enhance MetryxOne EI with verification infrastructure and trust-weighted intelligence.
+
+IMPORTANT:
+
+* Verification must be optional
+* Preserve backward compatibility
+* Preserve existing transparency model
+* Introduce capability vs trust separation
+
+====================================================
+PHASE 3 OBJECTIVES
+==================
+
+Build:
+
+1. Verification infrastructure
+2. Trust scoring engine
+3. Verified credential flows
+4. Consent management
+5. Trust-weighted EI
+
+====================================================
+DATABASE TABLES
+===============
+
+CREATE:
+
+1. verification_providers
+2. credential_verifications
+3. verification_events
+4. verification_consents
+5. trust_score_components
+
+====================================================
+VERIFICATION INTEGRATIONS
+=========================
+
+Implement architecture for:
+
+1. Credly OAuth
+2. Accredible
+3. DigiLocker readiness
+4. NAD readiness
+5. ICAI lookup
+6. ICSI lookup
+7. ICMAI lookup
+
+====================================================
+TRUST ENGINE
+============
+
+Separate:
+
+* Capability Score
+* Trust Score
+
+Example:
+
+* self-declared cert = trust 0.7
+* verified cert = trust 1.2
+
+====================================================
+EI FORMULA EVOLUTION
+====================
+
+Support:
+
+* capability scoring
+* trust multipliers
+* evidence confidence
+* verification bonuses
+
+====================================================
+PROFILE UI ENHANCEMENTS
+=======================
+
+Add:
+
+* Verified ✓ badges
+* Evidence confidence indicators
+* Verification provenance
+* Trust indicators
+
+====================================================
+CONSENT & COMPLIANCE
+====================
+
+Implement:
+
+* explicit verification consent logging
+* consent revocation support
+* audit trail for verification requests
+
+====================================================
+IMPORTANT CONSTRAINTS
+=====================
+
+* Verification optional
+* Existing users remain supported
+* EI remains explainable
+* No opaque scoring
+* All verification actions auditable

@@ -1,0 +1,401 @@
+import { useState, useEffect, useRef } from 'react';
+import { Download, Share2, Loader2, TrendingUp, TrendingDown, CheckCircle, AlertCircle, ArrowRight, Check, Copy } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
+import { ExamReadyHeader } from '../components/ExamReadyHeader';
+import { ExamReadyFooter } from '../components/ExamReadyFooter';
+import { BotWidget } from '../components/BotWidget';
+import { reportService } from '../services/apiClient';
+import type { ExamReadyReport } from '../types';
+
+interface Props {
+  attemptId: string;
+  onNavigate: (screen: string) => void;
+}
+
+const MOCK_REPORT: ExamReadyReport = {
+  attemptId: 'mock',
+  studentName: 'Student',
+  grade: 'Grade 10',
+  board: 'CBSE',
+  completedAt: new Date().toISOString(),
+  overallScore: 72,
+  readinessLevel: 'Moderate',
+  summary: 'Your child shows moderate psychological readiness for exams. They demonstrate good awareness of their study habits but would benefit from developing stronger stress management and emotional regulation strategies. The behavioral patterns indicate room for building exam resilience.',
+  sections: [
+    {
+      name: 'Stress & Anxiety Management',
+      score: 65,
+      maxScore: 100,
+      description: 'Measures ability to handle exam-related stress and anxiety',
+      strengths: ['Aware of personal stress triggers', 'Can identify when feeling anxious'],
+      areasToImprove: ['Develop proactive coping mechanisms', 'Practice relaxation techniques before high-pressure situations'],
+    },
+    {
+      name: 'Focus & Concentration',
+      score: 78,
+      maxScore: 100,
+      description: 'Evaluates sustained attention and mental focus during tasks',
+      strengths: ['Good ability to start focused work', 'Can maintain attention for moderate periods'],
+      areasToImprove: ['Building stamina for longer focused sessions', 'Reducing digital distractions during study time'],
+    },
+    {
+      name: 'Emotional Regulation',
+      score: 70,
+      maxScore: 100,
+      description: 'Assesses ability to manage emotions during challenging situations',
+      strengths: ['Generally positive outlook towards exams', 'Can bounce back from setbacks'],
+      areasToImprove: ['Managing frustration when stuck on difficult problems', 'Staying calm during time pressure'],
+    },
+    {
+      name: 'Study Habits & Self-Discipline',
+      score: 75,
+      maxScore: 100,
+      description: 'Evaluates consistency in study routines and self-motivation',
+      strengths: ['Has established some study routines', 'Takes ownership of learning'],
+      areasToImprove: ['Creating more consistent daily schedule', 'Breaking down large tasks into smaller goals'],
+    },
+    {
+      name: 'Confidence & Self-Efficacy',
+      score: 68,
+      maxScore: 100,
+      description: 'Measures belief in own abilities and exam performance',
+      strengths: ['Believes in ability to improve with effort'],
+      areasToImprove: ['Building confidence through practice successes', 'Developing positive self-talk patterns'],
+    },
+  ],
+  recommendations: [
+    'Practice box breathing (4-4-4-4 pattern) before study sessions to reduce anxiety',
+    'Create a pre-exam routine that includes 10 minutes of calming activities',
+    'Use the Pomodoro technique (25 min work, 5 min break) to build focus stamina',
+    'Keep a progress journal to build confidence by tracking small wins',
+    'Practice visualization of successful exam performance before sleeping',
+    'Establish a consistent sleep schedule of 8 hours during exam preparation',
+  ],
+};
+
+export function ReportViewPage({ attemptId, onNavigate }: Props) {
+  const [report, setReport] = useState<ExamReadyReport | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
+  const { toast } = useToast();
+  const reportRef = useRef<HTMLDivElement>(null);
+
+  const handleDownload = () => {
+    if (!report) return;
+    
+    const printContent = `
+ExamReadiness Index™ LBI Report
+=============================
+Student: ${report.studentName}
+Board: ${report.board} | Grade: ${report.grade}
+Date: ${new Date(report.completedAt).toLocaleDateString()}
+
+OVERALL READINESS SCORE: ${report.overallScore}/100
+Readiness Level: ${report.readinessLevel}
+
+SUMMARY
+-------
+${report.summary}
+
+DETAILED SECTIONS
+-----------------
+${report.sections.map(s => `
+${s.name} (${s.score}/${s.maxScore})
+${s.description}
+
+Strengths:
+${s.strengths.map(str => `  • ${str}`).join('\n')}
+
+Areas to Improve:
+${s.areasToImprove.map(area => `  • ${area}`).join('\n')}
+`).join('\n')}
+
+RECOMMENDATIONS
+---------------
+${report.recommendations.map((r, i) => `${i + 1}. ${r}`).join('\n')}
+
+---
+Generated by Metryx One | ExamReadiness Index™ Assessment
+    `;
+
+    const blob = new Blob([printContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `EXAM_READY_Report_${report.studentName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    toast({
+      title: "Report Downloaded",
+      description: "Your report has been downloaded successfully.",
+    });
+  };
+
+  const handleShare = async () => {
+    const shareData = {
+      title: 'ExamReadiness Index™ LBI Report',
+      text: `Check out this ExamReadiness Index™ behavioral assessment report. Overall readiness score: ${report?.overallScore}/100`,
+      url: window.location.href,
+    };
+
+    if (navigator.share && navigator.canShare?.(shareData)) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        if ((err as Error).name !== 'AbortError') {
+          copyToClipboard();
+        }
+      }
+    } else {
+      copyToClipboard();
+    }
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    toast({
+      title: "Link Copied",
+      description: "Report link copied to clipboard.",
+    });
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  useEffect(() => {
+    const loadReport = async () => {
+      try {
+        const data = await reportService.getReport(attemptId);
+        setReport(data);
+      } catch {
+        setReport(MOCK_REPORT);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadReport();
+  }, [attemptId]);
+
+  useEffect(() => {
+    const stored = sessionStorage.getItem('metryx_points_awarded');
+    if (stored) {
+      try {
+        const pts = JSON.parse(stored);
+        sessionStorage.removeItem('metryx_points_awarded');
+        setTimeout(() => {
+          toast({
+            title: `+${pts.xp} XP & +${pts.coins} Coins Earned!`,
+            description: 'Great job completing your behavioral assessment. Keep it up!',
+          });
+        }, 1000);
+      } catch {}
+    }
+  }, [toast]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Loader2 size={40} className="animate-spin text-[#0B3C5D]" />
+      </div>
+    );
+  }
+
+  if (!report) return null;
+
+  const getReadinessColor = (level: string) => {
+    switch (level) {
+      case 'High': return 'bg-[#4ECDC4] text-white';
+      case 'Moderate': return 'bg-amber-500 text-white';
+      case 'Needs Attention': return 'bg-red-500 text-white';
+      default: return 'bg-gray-500 text-white';
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <ExamReadyHeader 
+        showBack 
+        onBack={() => onNavigate('unified-parent-dashboard')} 
+        title="LBI Report"
+        showDashboardLink
+        onDashboard={() => onNavigate('unified-parent-dashboard')}
+      />
+
+      <main className="flex-1 py-8 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
+            <div>
+              <h1 className="text-2xl font-bold text-[#0B3C5D]">
+                ExamReadiness Index™ LBI Report
+              </h1>
+              <p className="text-gray-600">
+                Behavioral Readiness Assessment • {report.board} • {report.grade}
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={handleDownload} data-testid="btn-download">
+                <Download size={16} className="mr-2" />
+                Download Report
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleShare} data-testid="btn-share">
+                {copied ? <Check size={16} className="mr-2" /> : <Share2 size={16} className="mr-2" />}
+                {copied ? 'Copied!' : 'Share'}
+              </Button>
+            </div>
+          </div>
+
+          <Card className="mb-6 overflow-hidden">
+            <div className="bg-[#0B3C5D] text-white p-6">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm text-white/70 mb-1">Overall Readiness Score</p>
+                  <div className="flex items-center gap-4">
+                    <span className="text-3xl md:text-5xl font-bold">{report.overallScore}</span>
+                    <span className="text-base md:text-xl text-white/70">/ 100</span>
+                    <Badge className={getReadinessColor(report.readinessLevel)}>
+                      {report.readinessLevel}
+                    </Badge>
+                  </div>
+                </div>
+                <div className="w-32 h-32">
+                  <svg viewBox="0 0 100 100" className="transform -rotate-90">
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="40"
+                      fill="none"
+                      stroke="rgba(255,255,255,0.2)"
+                      strokeWidth="8"
+                    />
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="40"
+                      fill="none"
+                      stroke="#4ECDC4"
+                      strokeWidth="8"
+                      strokeDasharray={`${2 * Math.PI * 40 * report.overallScore / 100} ${2 * Math.PI * 40}`}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <CardContent className="p-6">
+              <h3 className="font-semibold text-[#0B3C5D] mb-2">Summary</h3>
+              <p className="text-gray-600">{report.summary}</p>
+            </CardContent>
+          </Card>
+
+          <div className="grid gap-6 mb-6">
+            {report.sections.map((section, idx) => (
+              <Card key={idx}>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-lg text-[#0B3C5D]">{section.name}</CardTitle>
+                      <p className="text-sm text-gray-500">{section.description}</p>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-2xl font-bold text-[#0B3C5D]">{section.score}</span>
+                      <span className="text-gray-500">/{section.maxScore}</span>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <Progress 
+                    value={(section.score / section.maxScore) * 100} 
+                    className="h-2 mb-4"
+                  />
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <div className="flex items-center gap-2 text-sm font-medium text-[#4ECDC4] mb-2">
+                        <TrendingUp size={16} />
+                        Strengths
+                      </div>
+                      <ul className="space-y-1">
+                        {section.strengths.map((s, i) => (
+                          <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                            <CheckCircle size={14} className="text-[#4ECDC4] shrink-0 mt-0.5" />
+                            {s}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 text-sm font-medium text-amber-600 mb-2">
+                        <TrendingDown size={16} />
+                        Areas to Improve
+                      </div>
+                      <ul className="space-y-1">
+                        {section.areasToImprove.map((a, i) => (
+                          <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                            <AlertCircle size={14} className="text-amber-500 shrink-0 mt-0.5" />
+                            {a}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg text-[#0B3C5D]">
+                Personalized Recommendations
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-3">
+                {report.recommendations.map((rec, idx) => (
+                  <li key={idx} className="flex items-start gap-3">
+                    <div className="h-6 w-6 rounded-full bg-[#4ECDC4]/10 flex items-center justify-center shrink-0">
+                      <ArrowRight size={14} className="text-[#4ECDC4]" />
+                    </div>
+                    <span className="text-gray-700">{rec}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+
+          <div className="mt-8 text-center">
+            <p className="text-gray-600 mb-4">
+              Have questions about this report? Talk to our guidance bot.
+            </p>
+            <div className="flex gap-4 justify-center">
+              <Button 
+                variant="outline"
+                className="border-[#0B3C5D] text-[#0B3C5D]"
+                onClick={() => onNavigate('unified-parent-dashboard')}
+                data-testid="btn-back-dashboard"
+              >
+                Back to Dashboard
+              </Button>
+              <Button 
+                className="bg-[#4ECDC4] hover:bg-[#4ECDC4]/90"
+                onClick={() => onNavigate('exam-ready')}
+                data-testid="btn-new-assessment"
+              >
+                Take New Assessment
+              </Button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <ExamReadyFooter onDisclaimerClick={() => onNavigate('exam-ready-disclaimer')} />
+      <BotWidget mode="post-purchase" attemptId={attemptId} />
+    </div>
+  );
+}

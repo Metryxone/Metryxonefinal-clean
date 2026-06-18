@@ -1,0 +1,14 @@
+id,productName,category,studentSegment,price,validityDays,questionCount,reportType,domainsCovered,isRecommended,isActive,sortOrder
+,Mini Learning Check,Entry (Micro Check),Any Class,499,180,15,Basic,Academic & Cognitive Effectiveness,true,true,1
+,Stress Check,Entry (Micro Check),Any Class,799,365,20,Basic,Examination Stress & Emotional Regulation,false,true,2
+,Snapshot Lite,Entry (Micro Check),Any Class,1299,180,30,Detailed,Academic & Cognitive|Confidence|Focus,true,true,3
+,Confidence Check,Entry (Micro Check),Class 8+,899,365,20,Basic,Confidence & Self-Belief,false,true,4
+,Habit Check,Entry (Micro Check),Class 6+,899,365,20,Basic,Habits & Discipline|Time Management,false,true,5
+,ExamReadiness Index™,Exam-Season Special,Class 10 Boards,1499,180,40,Comprehensive,Academic|Stress|Confidence|Time Management,true,true,6
+,ExamReadiness Index™,Exam-Season Special,Class 12 Boards + Entrance,1799,180,40,Comprehensive,Academic|Stress|Confidence|Time Management,true,true,7
+,Annual LBI Pro,Annual Core,Class 6–10,2999,365,80,Comprehensive,All 19 LBI Domains,false,true,8
+,Annual LBI Premium,Premium,Class 6–12,4999,365,97,Comprehensive,All 19 LBI Domains + 97 Subdomains,false,true,9
+,Post-Exam Reflection,Post-Exam,Any Class,599,90,15,Basic,Stress|Reflection|Recovery,false,true,10
+,Quick Behavioral Snapshot,Micro Check,Any Class,299,30,10,Basic,Quick Behavioral,false,true,11
+,LEARNING,Annual Core,Class 6–8,1999,365,60,Detailed,Academic|Cognitive|Habits,false,true,12
+,PERFORMANCE,Annual Core,Class 9–10,2499,365,70,Detailed,Performance|Stress|Focus,false,true,13

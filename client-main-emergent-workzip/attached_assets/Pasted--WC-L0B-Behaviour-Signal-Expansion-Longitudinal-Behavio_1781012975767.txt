@@ -1,0 +1,260 @@
+# WC-L0B — Behaviour Signal Expansion & Longitudinal Behaviour Intelligence
+
+Phase Type:
+IMPLEMENTATION + MEASUREMENT
+
+Priority:
+CRITICAL
+
+Reason:
+Behaviour Persistence and Longitudinal Intelligence are now the weakest parts of the CAPADEX intelligence lifecycle.
+
+Current State (Grounded)
+
+WC-L0 complete
+WC-L1 complete
+WC-L1B complete
+WC-11 complete
+
+Observed Reality:
+
+- Behaviour Graph coverage ≈ 22%
+- Only a small subset of completed sessions produce behaviour history
+- Trend Intelligence exists
+- Forecast Intelligence is blocked by weak behaviour history
+- Personalization is limited by sparse behavioural continuity
+
+This phase MUST strengthen the existing intelligence lifecycle.
+
+--------------------------------------------------
+
+OBJECTIVE
+
+Increase Behaviour Intelligence readiness from approximately:
+
+65%
+→
+90%+
+
+without introducing any new intelligence engines.
+
+Persist and trend existing behaviour outputs only.
+
+--------------------------------------------------
+
+STRICT RULES
+
+USE EXISTING ASSETS ONLY
+
+DO NOT CREATE:
+
+- New constructs
+- New behaviour dimensions
+- New ontology
+- New intelligence engines
+- New scoring models
+- New AI models
+
+REUSE:
+
+- Existing behaviour graph
+- Existing behaviour adapters
+- Existing behaviour dimensions
+- Existing trend engine
+- Existing user intelligence foundation
+- Existing longitudinal infrastructure
+
+Never fabricate behavioural signals.
+
+If data does not exist:
+report honestly.
+
+--------------------------------------------------
+
+TASK 1
+BEHAVIOUR SIGNAL AUDIT
+
+Measure actual coverage of:
+
+- Confidence
+- Curiosity
+- Motivation
+- Persistence
+- Consistency
+- Self Regulation
+
+Measure:
+
+- per session
+- per user
+- per concern
+- per age band
+- per product
+
+Deliverables:
+
+01_behaviour_coverage_report.md
+02_behaviour_dimension_report.md
+
+--------------------------------------------------
+
+TASK 2
+BEHAVIOUR HISTORY PERSISTENCE
+
+Persist existing behaviour outputs.
+
+For every completed session:
+
+capture:
+
+- user
+- session
+- timestamp
+- behaviour dimensions
+- confidence
+- source metadata
+
+Requirements:
+
+- additive only
+- idempotent
+- flag gated
+- non-blocking
+- never throws
+
+--------------------------------------------------
+
+TASK 3
+LONGITUDINAL BEHAVIOUR HISTORY
+
+Build history using existing outputs.
+
+User
+→ Session
+→ Behaviour State
+→ Historical Series
+
+NO FORECASTS.
+
+History only.
+
+Deliverables:
+
+03_behaviour_history_report.md
+
+--------------------------------------------------
+
+TASK 4
+BEHAVIOUR TREND ACTIVATION
+
+Reuse WC-L1 trend engine.
+
+Reuse:
+
+- slope logic
+- direction logic
+- confidence logic
+
+Generate:
+
+Improving
+Stable
+Declining
+
+for each behaviour dimension.
+
+DO NOT CREATE NEW TREND MATH.
+
+Deliverables:
+
+04_behaviour_trend_report.md
+
+--------------------------------------------------
+
+TASK 5
+MEASUREMENT
+
+Measure:
+
+1. Behaviour Coverage
+2. Behaviour Persistence Coverage
+3. Behaviour History Coverage
+4. Behaviour Trend Coverage
+5. Trend Confidence
+6. User Continuity
+7. Personalization Impact
+8. Longitudinal Readiness Impact
+
+Produce:
+
+05_measurement_report.md
+06_readiness_report.md
+
+--------------------------------------------------
+
+SUCCESS CRITERIA
+
+Behaviour Persistence Coverage:
+>80%
+
+Behaviour History Coverage:
+>80%
+
+Trend Coverage:
+>70%
+
+Personalization Readiness:
+>90%
+
+Longitudinal Readiness:
+>85%
+
+If targets are not achievable:
+
+DO NOT INFLATE.
+
+Report the true ceiling.
+
+--------------------------------------------------
+
+IMPLEMENTATION REQUIREMENTS
+
+Follow CAPADEX standards:
+
+- additive only
+- flag gated
+- byte identical when OFF
+- no breaking changes
+- no deployment
+- architect honesty pass mandatory
+- all numbers must be grounded in live data
+
+--------------------------------------------------
+
+OUTPUTS
+
+Code:
+- behaviour persistence service
+- backfill script
+- measurement script
+
+Reports:
+- 01_behaviour_coverage_report.md
+- 02_behaviour_dimension_report.md
+- 03_behaviour_history_report.md
+- 04_behaviour_trend_report.md
+- 05_measurement_report.md
+- 06_readiness_report.md
+
+--------------------------------------------------
+
+FINAL STEP
+
+Run architect honesty review.
+
+Fix all findings.
+
+STOP FOR APPROVAL.
+
+DO NOT DEPLOY.
+DO NOT START WC-L2.

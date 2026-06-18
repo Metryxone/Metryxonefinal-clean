@@ -1,0 +1,75 @@
+### STUDENT
+Overall coverage: 100.0%  (45/45 recommendations)
+Fully traceable: YES  ·  chain-complete recs: 0  ·  unresolved lineage hops: 2
+
+By category:
+  • career: 100%  (12/12)
+  • learning: 100%  (12/12)
+  • project: 100%  (16/16)
+  • development: 100%  (5/5)
+
+Lineage (Concern → … → Intervention):
+  ✓ Response → Signal
+  ✓ Signal → Concern
+  · Concern → Capability  (unresolved)
+  · Capability → Problem  (unresolved)
+  ✓ Problem → Behavior
+  ✓ Behavior → Archetype
+  ✓ Archetype → Intervention
+
+### PARENT
+Overall coverage: 100.0%  (45/45 recommendations)
+Fully traceable: YES  ·  chain-complete recs: 0  ·  unresolved lineage hops: 2
+
+By category:
+  • career: 100%  (12/12)
+  • learning: 100%  (12/12)
+  • project: 100%  (16/16)
+  • development: 100%  (5/5)
+
+Lineage (Concern → … → Intervention):
+  ✓ Response → Signal
+  ✓ Signal → Concern
+  · Concern → Capability  (unresolved)
+  · Capability → Problem  (unresolved)
+  ✓ Problem → Behavior
+  ✓ Behavior → Archetype
+  ✓ Archetype → Intervention
+
+### COUNSELOR
+Overall coverage: 100.0%  (45/45 recommendations)
+Fully traceable: YES  ·  chain-complete recs: 0  ·  unresolved lineage hops: 2
+
+By category:
+  • career: 100%  (12/12)
+  • learning: 100%  (12/12)
+  • project: 100%  (16/16)
+  • development: 100%  (5/5)
+
+Lineage (Concern → … → Intervention):
+  ✓ Response → Signal
+  ✓ Signal → Concern
+  · Concern → Capability  (unresolved)
+  · Capability → Problem  (unresolved)
+  ✓ Problem → Behavior
+  ✓ Behavior → Archetype
+  ✓ Archetype → Intervention
+
+### INSTITUTION
+Overall coverage: 100.0%  (45/45 recommendations)
+Fully traceable: YES  ·  chain-complete recs: 0  ·  unresolved lineage hops: 2
+
+By category:
+  • career: 100%  (12/12)
+  • learning: 100%  (12/12)
+  • project: 100%  (16/16)
+  • development: 100%  (5/5)
+
+Lineage (Concern → … → Intervention):
+  ✓ Response → Signal
+  ✓ Signal → Concern
+  · Concern → Capability  (unresolved)
+  · Capability → Problem  (unresolved)
+  ✓ Problem → Behavior
+  ✓ Behavior → Archetype
+  ✓ Archetype → Intervention

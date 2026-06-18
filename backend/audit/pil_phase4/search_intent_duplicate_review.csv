@@ -1,0 +1,357 @@
+kind,redundant,phrase_a,phrase_b,overlap,archetype_a,archetype_b,stakeholder_a,stakeholder_b
+stakeholder,false,what is low grades and exam results?,what causes low grades and exam results in children?,0.714,academic_achievement,academic_achievement,student,parent
+stakeholder,false,what is low grades and exam results?,what does low grades and exam results look like?,0.714,academic_achievement,academic_achievement,student,counselor
+stakeholder,false,what is low grades and exam results?,what is low grades and exam results at work?,0.833,academic_achievement,academic_achievement,student,professional
+stakeholder,false,what causes low grades and exam results in children?,what is low grades and exam results at work?,0.625,academic_achievement,academic_achievement,parent,professional
+stakeholder,false,what does low grades and exam results look like?,what is low grades and exam results at work?,0.625,academic_achievement,academic_achievement,counselor,professional
+stakeholder,false,why do I study hard but my grades stay low?,why does my child study hard but their grades stay low?,0.857,academic_achievement,academic_achievement,student,parent
+stakeholder,false,why do I study hard but my grades stay low?,why does a student study hard but their grades stay low?,0.857,academic_achievement,academic_achievement,student,teacher
+stakeholder,false,why do I study hard but my grades stay low?,why does a client study hard but their grades stay low?,0.857,academic_achievement,academic_achievement,student,counselor
+stakeholder,false,why do I study hard but my grades stay low?,why do I study hard but my grades stay low at work?,0.857,academic_achievement,academic_achievement,student,professional
+stakeholder,false,why does my child study hard but their grades stay low?,why does a student study hard but their grades stay low?,0.75,academic_achievement,academic_achievement,parent,teacher
+stakeholder,false,why does my child study hard but their grades stay low?,why does a client study hard but their grades stay low?,0.75,academic_achievement,academic_achievement,parent,counselor
+stakeholder,false,why does my child study hard but their grades stay low?,why do I study hard but my grades stay low at work?,0.75,academic_achievement,academic_achievement,parent,professional
+stakeholder,false,why does a student study hard but their grades stay low?,why does a client study hard but their grades stay low?,0.75,academic_achievement,academic_achievement,teacher,counselor
+stakeholder,false,why does a student study hard but their grades stay low?,why do I study hard but my grades stay low at work?,0.75,academic_achievement,academic_achievement,teacher,professional
+stakeholder,false,why does a client study hard but their grades stay low?,why do I study hard but my grades stay low at work?,0.75,academic_achievement,academic_achievement,counselor,professional
+stakeholder,false,I feel discouraged about low grades,I am worried my child is discouraged about low grades,0.6,academic_achievement,academic_achievement,student,parent
+stakeholder,false,I feel discouraged about low grades,my client feels discouraged about low grades,0.6,academic_achievement,academic_achievement,student,counselor
+stakeholder,false,I feel discouraged about low grades,at work I feel discouraged about low grades,0.75,academic_achievement,academic_achievement,student,professional
+stakeholder,false,how do I bring up low grades and results?,how to help my child bring up low grades and results,0.714,academic_achievement,academic_achievement,student,parent
+stakeholder,false,how do I bring up low grades and results?,how do I bring up low grades and results at work?,0.833,academic_achievement,academic_achievement,student,professional
+stakeholder,false,how to help my child bring up low grades and results,how do I bring up low grades and results at work?,0.625,academic_achievement,academic_achievement,parent,professional
+stakeholder,false,what is trouble coping with change?,what causes trouble coping with change in children?,0.667,adaptability_change,adaptability_change,student,parent
+stakeholder,false,what is trouble coping with change?,what does trouble coping with change look like?,0.667,adaptability_change,adaptability_change,student,counselor
+stakeholder,false,what is trouble coping with change?,what is trouble coping with change at work?,0.8,adaptability_change,adaptability_change,student,professional
+stakeholder,false,why do I get thrown when plans suddenly change?,why do I get thrown when plans suddenly change at work?,0.833,adaptability_change,adaptability_change,student,professional
+stakeholder,false,why does my child get thrown when routines change?,why does a student get thrown when routines change?,0.667,adaptability_change,adaptability_change,parent,teacher
+stakeholder,false,why does my child get thrown when routines change?,why does a client get thrown when routines change?,0.667,adaptability_change,adaptability_change,parent,counselor
+stakeholder,false,why does a student get thrown when routines change?,why does a client get thrown when routines change?,0.667,adaptability_change,adaptability_change,teacher,counselor
+stakeholder,false,I feel anxious when plans suddenly change,I am worried my child is anxious when plans suddenly change,0.667,adaptability_change,adaptability_change,student,parent
+stakeholder,false,I feel anxious when plans suddenly change,my client feels anxious when plans suddenly change,0.667,adaptability_change,adaptability_change,student,counselor
+stakeholder,false,I feel anxious when plans suddenly change,at work I feel anxious when plans suddenly change,0.8,adaptability_change,adaptability_change,student,professional
+stakeholder,false,how do I stay steady when things change?,how to help my child stay steady when things change,0.714,adaptability_change,adaptability_change,student,parent
+stakeholder,false,how do I stay steady when things change?,how do I stay steady when things change at work?,0.833,adaptability_change,adaptability_change,student,professional
+stakeholder,false,how to help my child stay steady when things change,how do I stay steady when things change at work?,0.625,adaptability_change,adaptability_change,parent,professional
+stakeholder,false,what is career confusion?,what causes career confusion in children?,0.6,career_professional_growth,career_professional_growth,student,parent
+stakeholder,false,what is career confusion?,what does career confusion look like?,0.6,career_professional_growth,career_professional_growth,student,counselor
+stakeholder,false,what is career confusion?,what is career confusion at work?,0.75,career_professional_growth,career_professional_growth,student,professional
+stakeholder,false,why do I feel stuck about my next career step?,why do I feel stuck about my next career step at work?,0.833,career_professional_growth,career_professional_growth,student,professional
+stakeholder,false,why does my child feel lost about which career to choose?,why does a student feel lost about which career to choose?,0.714,career_professional_growth,career_professional_growth,parent,teacher
+stakeholder,false,why does my child feel lost about which career to choose?,why does a client feel lost about which career to choose?,0.714,career_professional_growth,career_professional_growth,parent,counselor
+stakeholder,false,why does my child feel lost about which career to choose?,I feel lost about which career to choose,0.667,career_professional_growth,career_professional_growth,parent,student
+semantic,true,why does my child feel lost about which career to choose?,I am worried my child is lost about which career to choose,0.714,career_professional_growth,career_professional_growth,parent,parent
+stakeholder,false,why does a student feel lost about which career to choose?,why does a client feel lost about which career to choose?,0.714,career_professional_growth,career_professional_growth,teacher,counselor
+stakeholder,false,why does a student feel lost about which career to choose?,I feel lost about which career to choose,0.667,career_professional_growth,career_professional_growth,teacher,student
+semantic,true,why does a student feel lost about which career to choose?,my student seems lost about which career to choose in class,0.625,career_professional_growth,career_professional_growth,teacher,teacher
+stakeholder,false,why does a client feel lost about which career to choose?,I feel lost about which career to choose,0.667,career_professional_growth,career_professional_growth,counselor,student
+semantic,true,why does a client feel lost about which career to choose?,my client feels lost about which career to choose,0.714,career_professional_growth,career_professional_growth,counselor,counselor
+stakeholder,false,I feel lost about which career to choose,I am worried my child is lost about which career to choose,0.667,career_professional_growth,career_professional_growth,student,parent
+stakeholder,false,I feel lost about which career to choose,my client feels lost about which career to choose,0.667,career_professional_growth,career_professional_growth,student,counselor
+stakeholder,false,I feel lost about which career to choose,at work I feel lost about which career to choose,0.8,career_professional_growth,career_professional_growth,student,professional
+stakeholder,false,how do I find the right career direction?,how to help my child find the right career direction,0.714,career_professional_growth,career_professional_growth,student,parent
+stakeholder,false,how do I find the right career direction?,how do I find the right career direction at work?,0.833,career_professional_growth,career_professional_growth,student,professional
+stakeholder,false,how to help my child find the right career direction,how do I find the right career direction at work?,0.625,career_professional_growth,career_professional_growth,parent,professional
+stakeholder,false,what is trouble working in a team?,what causes trouble working in a team in children?,0.667,collaboration_teamwork,collaboration_teamwork,student,parent
+stakeholder,false,what is trouble working in a team?,what does trouble working in a team look like?,0.667,collaboration_teamwork,collaboration_teamwork,student,counselor
+stakeholder,false,what is trouble working in a team?,what is trouble working in a team at work?,0.8,collaboration_teamwork,collaboration_teamwork,student,professional
+semantic,true,what is trouble working in a team?,what is trouble leading a team?,0.6,collaboration_teamwork,leadership_influence,student,student
+semantic,true,what causes trouble working in a team in children?,what causes trouble leading a team in children?,0.714,collaboration_teamwork,leadership_influence,parent,parent
+semantic,true,signs of trouble working in a team in students,signs of trouble leading a team in students,0.667,collaboration_teamwork,leadership_influence,teacher,teacher
+semantic,true,what does trouble working in a team look like?,what does trouble leading a team look like?,0.714,collaboration_teamwork,leadership_influence,counselor,counselor
+semantic,true,what is trouble working in a team at work?,what is trouble leading a team at work?,0.667,collaboration_teamwork,leadership_influence,professional,professional
+stakeholder,false,why do I find it hard to work with others?,why do I find it hard to work with others at work?,1,collaboration_teamwork,collaboration_teamwork,student,professional
+stakeholder,false,why does my child struggle to work in a group?,why does a student struggle to work in a group?,0.667,collaboration_teamwork,collaboration_teamwork,parent,teacher
+stakeholder,false,why does my child struggle to work in a group?,why does a client struggle to work in a group?,0.667,collaboration_teamwork,collaboration_teamwork,parent,counselor
+stakeholder,false,why does a student struggle to work in a group?,why does a client struggle to work in a group?,0.667,collaboration_teamwork,collaboration_teamwork,teacher,counselor
+stakeholder,false,I feel frustrated and out of sync in a group,I am worried my child is frustrated and out of sync in a group,0.6,collaboration_teamwork,collaboration_teamwork,student,parent
+stakeholder,false,I feel frustrated and out of sync in a group,my client feels frustrated and out of sync in a group,0.6,collaboration_teamwork,collaboration_teamwork,student,counselor
+stakeholder,false,I feel frustrated and out of sync in a group,at work I feel frustrated and out of sync in a group,0.75,collaboration_teamwork,collaboration_teamwork,student,professional
+stakeholder,false,how do I collaborate well in a team?,how to help my child collaborate well in a team,0.667,collaboration_teamwork,collaboration_teamwork,student,parent
+stakeholder,false,how do I collaborate well in a team?,how do I collaborate well in a team at work?,0.8,collaboration_teamwork,collaboration_teamwork,student,professional
+stakeholder,false,what is trouble expressing thoughts clearly?,what causes trouble expressing thoughts clearly in children?,0.714,communication_expression,communication_expression,student,parent
+stakeholder,false,what is trouble expressing thoughts clearly?,what does trouble expressing thoughts clearly look like?,0.714,communication_expression,communication_expression,student,counselor
+stakeholder,false,what is trouble expressing thoughts clearly?,what is trouble expressing thoughts clearly at work?,0.833,communication_expression,communication_expression,student,professional
+stakeholder,false,what causes trouble expressing thoughts clearly in children?,what is trouble expressing thoughts clearly at work?,0.625,communication_expression,communication_expression,parent,professional
+stakeholder,false,what does trouble expressing thoughts clearly look like?,what is trouble expressing thoughts clearly at work?,0.625,communication_expression,communication_expression,counselor,professional
+stakeholder,false,why do I struggle to get my point across?,why do I struggle to get my point across at work?,0.75,communication_expression,communication_expression,student,professional
+stakeholder,false,why does my child struggle to put thoughts into words?,why does a student struggle to put thoughts into words?,0.75,communication_expression,communication_expression,parent,teacher
+stakeholder,false,why does my child struggle to put thoughts into words?,why does a client struggle to put thoughts into words?,0.75,communication_expression,communication_expression,parent,counselor
+stakeholder,false,why does a student struggle to put thoughts into words?,why does a client struggle to put thoughts into words?,0.75,communication_expression,communication_expression,teacher,counselor
+stakeholder,false,I feel frustrated and misunderstood when explaining things,I am worried my child is frustrated and misunderstood when explaining things,0.667,communication_expression,communication_expression,student,parent
+stakeholder,false,I feel frustrated and misunderstood when explaining things,my client feels frustrated and misunderstood when explaining things,0.667,communication_expression,communication_expression,student,counselor
+stakeholder,false,I feel frustrated and misunderstood when explaining things,at work I feel frustrated and misunderstood when explaining things,0.8,communication_expression,communication_expression,student,professional
+stakeholder,false,how do I express thoughts clearly and be understood?,how to help my child express thoughts clearly and be understood,0.714,communication_expression,communication_expression,student,parent
+stakeholder,false,how do I express thoughts clearly and be understood?,how do I express thoughts clearly and be understood at work?,0.833,communication_expression,communication_expression,student,professional
+stakeholder,false,how to help my child express thoughts clearly and be understood,how do I express thoughts clearly and be understood at work?,0.625,communication_expression,communication_expression,parent,professional
+stakeholder,false,what is low confidence and self-doubt?,what causes low confidence and self-doubt in children?,0.714,confidence_self_efficacy,confidence_self_efficacy,student,parent
+stakeholder,false,what is low confidence and self-doubt?,what does low confidence and self-doubt look like?,0.714,confidence_self_efficacy,confidence_self_efficacy,student,counselor
+stakeholder,false,what is low confidence and self-doubt?,what is low confidence and self-doubt at work?,0.833,confidence_self_efficacy,confidence_self_efficacy,student,professional
+stakeholder,false,what causes low confidence and self-doubt in children?,what is low confidence and self-doubt at work?,0.625,confidence_self_efficacy,confidence_self_efficacy,parent,professional
+stakeholder,false,what does low confidence and self-doubt look like?,what is low confidence and self-doubt at work?,0.625,confidence_self_efficacy,confidence_self_efficacy,counselor,professional
+stakeholder,false,why do I doubt myself and second-guess everything?,why do I doubt myself and second-guess everything at work?,0.857,confidence_self_efficacy,confidence_self_efficacy,student,professional
+stakeholder,false,why does my child doubt themselves and give up easily?,why does a student doubt themselves and give up easily?,0.714,confidence_self_efficacy,confidence_self_efficacy,parent,teacher
+stakeholder,false,why does my child doubt themselves and give up easily?,why does a client doubt themselves and give up easily?,0.714,confidence_self_efficacy,confidence_self_efficacy,parent,counselor
+stakeholder,false,why does a student doubt themselves and give up easily?,why does a client doubt themselves and give up easily?,0.714,confidence_self_efficacy,confidence_self_efficacy,teacher,counselor
+stakeholder,false,I feel full of self-doubt and never good enough,I am worried my child is full of self-doubt and never good enough,0.75,confidence_self_efficacy,confidence_self_efficacy,student,parent
+stakeholder,false,I feel full of self-doubt and never good enough,my student seems full of self-doubt and never good enough in class,0.667,confidence_self_efficacy,confidence_self_efficacy,student,teacher
+stakeholder,false,I feel full of self-doubt and never good enough,my client feels full of self-doubt and never good enough,0.75,confidence_self_efficacy,confidence_self_efficacy,student,counselor
+stakeholder,false,I feel full of self-doubt and never good enough,at work I feel full of self-doubt and never good enough,0.857,confidence_self_efficacy,confidence_self_efficacy,student,professional
+stakeholder,false,I am worried my child is full of self-doubt and never good enough,my client feels full of self-doubt and never good enough,0.6,confidence_self_efficacy,confidence_self_efficacy,parent,counselor
+stakeholder,false,I am worried my child is full of self-doubt and never good enough,at work I feel full of self-doubt and never good enough,0.667,confidence_self_efficacy,confidence_self_efficacy,parent,professional
+stakeholder,false,my student seems full of self-doubt and never good enough in class,at work I feel full of self-doubt and never good enough,0.6,confidence_self_efficacy,confidence_self_efficacy,teacher,professional
+stakeholder,false,my client feels full of self-doubt and never good enough,at work I feel full of self-doubt and never good enough,0.667,confidence_self_efficacy,confidence_self_efficacy,counselor,professional
+stakeholder,false,how do I build real confidence and self-belief?,how to help my child build real confidence and self-belief,0.75,confidence_self_efficacy,confidence_self_efficacy,student,parent
+stakeholder,false,how do I build real confidence and self-belief?,helping a student build real confidence and self-belief,0.625,confidence_self_efficacy,confidence_self_efficacy,student,teacher
+stakeholder,false,how do I build real confidence and self-belief?,how do I build real confidence and self-belief at work?,0.857,confidence_self_efficacy,confidence_self_efficacy,student,professional
+stakeholder,false,how to help my child build real confidence and self-belief,ways to help a client build real confidence and self-belief,0.6,confidence_self_efficacy,confidence_self_efficacy,parent,counselor
+stakeholder,false,how to help my child build real confidence and self-belief,how do I build real confidence and self-belief at work?,0.667,confidence_self_efficacy,confidence_self_efficacy,parent,professional
+semantic,true,how to build lasting confidence going forward,how to build lasting focus and attention going forward,0.625,confidence_self_efficacy,focus_attention,student,student
+semantic,true,how to build lasting confidence as my career grows,how to build lasting focus and attention as my career grows,0.625,confidence_self_efficacy,focus_attention,professional,professional
+stakeholder,false,what is trouble thinking things through?,what causes trouble thinking things through in children?,0.714,critical_reflective_thinking,critical_reflective_thinking,student,parent
+stakeholder,false,what is trouble thinking things through?,what does trouble thinking things through look like?,0.714,critical_reflective_thinking,critical_reflective_thinking,student,counselor
+stakeholder,false,what is trouble thinking things through?,what is trouble thinking things through at work?,0.833,critical_reflective_thinking,critical_reflective_thinking,student,professional
+stakeholder,false,what causes trouble thinking things through in children?,what is trouble thinking things through at work?,0.625,critical_reflective_thinking,critical_reflective_thinking,parent,professional
+stakeholder,false,what does trouble thinking things through look like?,what is trouble thinking things through at work?,0.625,critical_reflective_thinking,critical_reflective_thinking,counselor,professional
+stakeholder,false,why do I jump to conclusions without thinking?,why does my child jump to conclusions without thinking it through?,0.714,critical_reflective_thinking,critical_reflective_thinking,student,parent
+stakeholder,false,why do I jump to conclusions without thinking?,why does a student jump to conclusions without thinking it through?,0.714,critical_reflective_thinking,critical_reflective_thinking,student,teacher
+stakeholder,false,why do I jump to conclusions without thinking?,why does a client jump to conclusions without thinking it through?,0.714,critical_reflective_thinking,critical_reflective_thinking,student,counselor
+stakeholder,false,why do I jump to conclusions without thinking?,why do I jump to conclusions without thinking at work?,0.833,critical_reflective_thinking,critical_reflective_thinking,student,professional
+stakeholder,false,why does my child jump to conclusions without thinking it through?,why does a student jump to conclusions without thinking it through?,0.75,critical_reflective_thinking,critical_reflective_thinking,parent,teacher
+stakeholder,false,why does my child jump to conclusions without thinking it through?,why does a client jump to conclusions without thinking it through?,0.75,critical_reflective_thinking,critical_reflective_thinking,parent,counselor
+stakeholder,false,why does my child jump to conclusions without thinking it through?,why do I jump to conclusions without thinking at work?,0.625,critical_reflective_thinking,critical_reflective_thinking,parent,professional
+stakeholder,false,why does a student jump to conclusions without thinking it through?,why does a client jump to conclusions without thinking it through?,0.75,critical_reflective_thinking,critical_reflective_thinking,teacher,counselor
+stakeholder,false,why does a student jump to conclusions without thinking it through?,why do I jump to conclusions without thinking at work?,0.625,critical_reflective_thinking,critical_reflective_thinking,teacher,professional
+stakeholder,false,why does a client jump to conclusions without thinking it through?,why do I jump to conclusions without thinking at work?,0.625,critical_reflective_thinking,critical_reflective_thinking,counselor,professional
+stakeholder,false,I feel stuck repeating the same mistakes,I am worried my child is stuck repeating the same mistakes,0.667,critical_reflective_thinking,critical_reflective_thinking,student,parent
+stakeholder,false,I feel stuck repeating the same mistakes,my client feels stuck repeating the same mistakes,0.667,critical_reflective_thinking,critical_reflective_thinking,student,counselor
+stakeholder,false,I feel stuck repeating the same mistakes,at work I feel stuck repeating the same mistakes,0.8,critical_reflective_thinking,critical_reflective_thinking,student,professional
+stakeholder,false,how do I think clearly and question assumptions?,how to help my child think clearly and question assumptions,0.714,critical_reflective_thinking,critical_reflective_thinking,student,parent
+stakeholder,false,how do I think clearly and question assumptions?,how do I think clearly and question assumptions at work?,0.833,critical_reflective_thinking,critical_reflective_thinking,student,professional
+stakeholder,false,how to help my child think clearly and question assumptions,how do I think clearly and question assumptions at work?,0.625,critical_reflective_thinking,critical_reflective_thinking,parent,professional
+stakeholder,false,how to think things through before deciding going forward,how to think things through before deciding as my career grows,0.6,critical_reflective_thinking,critical_reflective_thinking,student,professional
+stakeholder,false,what is low curiosity and creativity?,what causes low curiosity and creativity in children?,0.667,curiosity_innovation,curiosity_innovation,student,parent
+stakeholder,false,what is low curiosity and creativity?,what does low curiosity and creativity look like?,0.667,curiosity_innovation,curiosity_innovation,student,counselor
+stakeholder,false,what is low curiosity and creativity?,what is low curiosity and creativity at work?,0.8,curiosity_innovation,curiosity_innovation,student,professional
+stakeholder,false,why do I feel short on new ideas and curiosity?,why do I feel short on new ideas and curiosity at work?,0.833,curiosity_innovation,curiosity_innovation,student,professional
+stakeholder,false,why does my child rarely explore or ask questions?,why does a student rarely explore or ask questions?,0.714,curiosity_innovation,curiosity_innovation,parent,teacher
+stakeholder,false,why does my child rarely explore or ask questions?,why does a client rarely explore or ask questions?,0.714,curiosity_innovation,curiosity_innovation,parent,counselor
+stakeholder,false,why does a student rarely explore or ask questions?,why does a client rarely explore or ask questions?,0.714,curiosity_innovation,curiosity_innovation,teacher,counselor
+stakeholder,false,I feel creatively stuck and out of fresh ideas,I am worried my child is creatively stuck and out of fresh ideas,0.667,curiosity_innovation,curiosity_innovation,student,parent
+stakeholder,false,I feel creatively stuck and out of fresh ideas,my client feels creatively stuck and out of fresh ideas,0.667,curiosity_innovation,curiosity_innovation,student,counselor
+stakeholder,false,I feel creatively stuck and out of fresh ideas,at work I feel creatively stuck and out of fresh ideas,0.8,curiosity_innovation,curiosity_innovation,student,professional
+stakeholder,false,how do I spark curiosity and creativity?,how to help my child spark curiosity and creativity,0.667,curiosity_innovation,curiosity_innovation,student,parent
+stakeholder,false,how do I spark curiosity and creativity?,how do I spark curiosity and creativity at work?,0.8,curiosity_innovation,curiosity_innovation,student,professional
+stakeholder,false,how to keep exploring and creating new ideas going forward,how to keep exploring and creating new ideas as my career grows,0.6,curiosity_innovation,curiosity_innovation,student,professional
+stakeholder,false,what is trouble making decisions?,what causes trouble making decisions in children?,0.667,decision_judgment,decision_judgment,student,parent
+stakeholder,false,what is trouble making decisions?,what does trouble making decisions look like?,0.667,decision_judgment,decision_judgment,student,counselor
+stakeholder,false,what is trouble making decisions?,what is trouble making decisions at work?,0.8,decision_judgment,decision_judgment,student,professional
+stakeholder,false,why do I keep changing my mind and regret choices?,why do I keep changing my mind and regret choices at work?,0.857,decision_judgment,decision_judgment,student,professional
+stakeholder,false,why does my child can not decide and keep changing their mind?,why does a student can not decide and keep changing their mind?,0.714,decision_judgment,decision_judgment,parent,teacher
+stakeholder,false,why does my child can not decide and keep changing their mind?,why does a client can not decide and keep changing their mind?,0.714,decision_judgment,decision_judgment,parent,counselor
+stakeholder,false,why does a student can not decide and keep changing their mind?,why does a client can not decide and keep changing their mind?,0.714,decision_judgment,decision_judgment,teacher,counselor
+stakeholder,false,I feel anxious and indecisive about every choice,I am worried my child is anxious and indecisive about every choice,0.667,decision_judgment,decision_judgment,student,parent
+stakeholder,false,I feel anxious and indecisive about every choice,my client feels anxious and indecisive about every choice,0.667,decision_judgment,decision_judgment,student,counselor
+stakeholder,false,I feel anxious and indecisive about every choice,at work I feel anxious and indecisive about every choice,0.8,decision_judgment,decision_judgment,student,professional
+stakeholder,false,how do I make decisions without second-guessing?,how to help my child make decisions without second-guessing,0.75,decision_judgment,decision_judgment,student,parent
+stakeholder,false,how do I make decisions without second-guessing?,helping a student make decisions without second-guessing,0.625,decision_judgment,decision_judgment,student,teacher
+stakeholder,false,how do I make decisions without second-guessing?,how do I make decisions without second-guessing at work?,0.857,decision_judgment,decision_judgment,student,professional
+stakeholder,false,how to help my child make decisions without second-guessing,ways to help a client make decisions without second-guessing,0.6,decision_judgment,decision_judgment,parent,counselor
+stakeholder,false,how to help my child make decisions without second-guessing,how do I make decisions without second-guessing at work?,0.667,decision_judgment,decision_judgment,parent,professional
+stakeholder,false,what is trouble controlling emotions?,what causes trouble controlling emotions in children?,0.667,emotional_regulation,emotional_regulation,student,parent
+stakeholder,false,what is trouble controlling emotions?,what does trouble controlling emotions look like?,0.667,emotional_regulation,emotional_regulation,student,counselor
+stakeholder,false,what is trouble controlling emotions?,what is trouble controlling emotions at work?,0.8,emotional_regulation,emotional_regulation,student,professional
+stakeholder,false,why do I get overwhelmed and snap over small things?,why do I get overwhelmed and snap over small things at work?,0.857,emotional_regulation,emotional_regulation,student,professional
+stakeholder,false,why does my child melt down over the smallest things?,why does a student melt down over the smallest things?,0.714,emotional_regulation,emotional_regulation,parent,teacher
+stakeholder,false,why does my child melt down over the smallest things?,why does a client melt down over the smallest things?,0.714,emotional_regulation,emotional_regulation,parent,counselor
+stakeholder,false,why does a student melt down over the smallest things?,why does a client melt down over the smallest things?,0.714,emotional_regulation,emotional_regulation,teacher,counselor
+stakeholder,false,I feel overwhelmed and close to losing control,I am worried my child is overwhelmed and close to losing control,0.667,emotional_regulation,emotional_regulation,student,parent
+stakeholder,false,I feel overwhelmed and close to losing control,my client feels overwhelmed and close to losing control,0.667,emotional_regulation,emotional_regulation,student,counselor
+stakeholder,false,I feel overwhelmed and close to losing control,at work I feel overwhelmed and close to losing control,0.8,emotional_regulation,emotional_regulation,student,professional
+stakeholder,false,how do I stay calm when overwhelmed?,how to help my child stay calm when overwhelmed,0.667,emotional_regulation,emotional_regulation,student,parent
+stakeholder,false,how do I stay calm when overwhelmed?,how do I stay calm when overwhelmed at work?,0.8,emotional_regulation,emotional_regulation,student,professional
+semantic,true,how to help my child stay calm when overwhelmed,how to help my child stay calm and focused in exams,0.625,emotional_regulation,performance_anxiety,parent,parent
+semantic,true,ways to help a client stay calm when overwhelmed,ways to help a client stay calm and focused in exams,0.625,emotional_regulation,performance_anxiety,counselor,counselor
+stakeholder,false,what is pressure to meet expectations?,what causes pressure to meet expectations in children?,0.667,expectations_pressure,expectations_pressure,student,parent
+stakeholder,false,what is pressure to meet expectations?,what does pressure to meet expectations look like?,0.667,expectations_pressure,expectations_pressure,student,counselor
+stakeholder,false,what is pressure to meet expectations?,what is pressure to meet expectations at work?,0.8,expectations_pressure,expectations_pressure,student,professional
+stakeholder,false,why do I feel crushed by everyone’s expectations?,why do I feel crushed by everyone’s expectations at work?,0.8,expectations_pressure,expectations_pressure,student,professional
+stakeholder,false,why does my child feel crushed by pressure to please everyone?,why does a student feel crushed by pressure to please everyone?,0.714,expectations_pressure,expectations_pressure,parent,teacher
+stakeholder,false,why does my child feel crushed by pressure to please everyone?,why does a client feel crushed by pressure to please everyone?,0.714,expectations_pressure,expectations_pressure,parent,counselor
+stakeholder,false,why does a student feel crushed by pressure to please everyone?,why does a client feel crushed by pressure to please everyone?,0.714,expectations_pressure,expectations_pressure,teacher,counselor
+stakeholder,false,I feel exhausted from pressure to please everyone,I am worried my child is exhausted from pressure to please everyone,0.714,expectations_pressure,expectations_pressure,student,parent
+stakeholder,false,I feel exhausted from pressure to please everyone,my student seems exhausted from pressure to please everyone in class,0.625,expectations_pressure,expectations_pressure,student,teacher
+stakeholder,false,I feel exhausted from pressure to please everyone,my client feels exhausted from pressure to please everyone,0.714,expectations_pressure,expectations_pressure,student,counselor
+stakeholder,false,I feel exhausted from pressure to please everyone,at work I feel exhausted from pressure to please everyone,0.833,expectations_pressure,expectations_pressure,student,professional
+stakeholder,false,I am worried my child is exhausted from pressure to please everyone,at work I feel exhausted from pressure to please everyone,0.625,expectations_pressure,expectations_pressure,parent,professional
+stakeholder,false,my client feels exhausted from pressure to please everyone,at work I feel exhausted from pressure to please everyone,0.625,expectations_pressure,expectations_pressure,counselor,professional
+stakeholder,false,how do I handle pressure without burning out?,how to help my child handle pressure without burning out,0.714,expectations_pressure,expectations_pressure,student,parent
+stakeholder,false,how do I handle pressure without burning out?,how do I handle pressure without burning out at work?,0.833,expectations_pressure,expectations_pressure,student,professional
+stakeholder,false,how to help my child handle pressure without burning out,how do I handle pressure without burning out at work?,0.625,expectations_pressure,expectations_pressure,parent,professional
+stakeholder,false,what is poor focus and concentration?,what causes poor focus and concentration in children?,0.667,focus_attention,focus_attention,student,parent
+stakeholder,false,what is poor focus and concentration?,what does poor focus and concentration look like?,0.667,focus_attention,focus_attention,student,counselor
+stakeholder,false,what is poor focus and concentration?,what is poor focus and concentration at work?,0.8,focus_attention,focus_attention,student,professional
+stakeholder,false,why do I lose focus and get distracted easily?,why do I lose focus and get distracted easily at work?,0.833,focus_attention,focus_attention,student,professional
+stakeholder,false,why does my child lose focus while studying?,why does a student lose focus while studying?,0.667,focus_attention,focus_attention,parent,teacher
+stakeholder,false,why does my child lose focus while studying?,why does a client lose focus while studying?,0.667,focus_attention,focus_attention,parent,counselor
+stakeholder,false,why does a student lose focus while studying?,why does a client lose focus while studying?,0.667,focus_attention,focus_attention,teacher,counselor
+stakeholder,false,I feel scattered and unable to concentrate,I am worried my child is scattered and unable to concentrate,0.6,focus_attention,focus_attention,student,parent
+stakeholder,false,I feel scattered and unable to concentrate,my client feels scattered and unable to concentrate,0.6,focus_attention,focus_attention,student,counselor
+stakeholder,false,I feel scattered and unable to concentrate,at work I feel scattered and unable to concentrate,0.75,focus_attention,focus_attention,student,professional
+stakeholder,false,how do I focus without getting distracted?,how to help my child focus without getting distracted,0.714,focus_attention,focus_attention,student,parent
+stakeholder,false,how do I focus without getting distracted?,how do I focus without getting distracted at work?,0.833,focus_attention,focus_attention,student,professional
+stakeholder,false,how to help my child focus without getting distracted,how do I focus without getting distracted at work?,0.625,focus_attention,focus_attention,parent,professional
+stakeholder,false,what is feeling lost about identity?,what causes feeling lost about identity in children?,0.667,identity_self_awareness,identity_self_awareness,student,parent
+stakeholder,false,what is feeling lost about identity?,what does feeling lost about identity look like?,0.667,identity_self_awareness,identity_self_awareness,student,counselor
+stakeholder,false,what is feeling lost about identity?,what is feeling lost about identity at work?,0.8,identity_self_awareness,identity_self_awareness,student,professional
+stakeholder,false,why do I feel lost about who I am?,why does my child seem lost about who they are?,0.6,identity_self_awareness,identity_self_awareness,student,parent
+stakeholder,false,why do I feel lost about who I am?,why does a student seem lost about who they are?,0.6,identity_self_awareness,identity_self_awareness,student,teacher
+stakeholder,false,why do I feel lost about who I am?,why does a client seem lost about who they are?,0.6,identity_self_awareness,identity_self_awareness,student,counselor
+stakeholder,false,why do I feel lost about who I am?,why do I feel lost about who I am at work?,0.75,identity_self_awareness,identity_self_awareness,student,professional
+stakeholder,false,why does my child seem lost about who they are?,why does a student seem lost about who they are?,0.667,identity_self_awareness,identity_self_awareness,parent,teacher
+stakeholder,false,why does my child seem lost about who they are?,why does a client seem lost about who they are?,0.667,identity_self_awareness,identity_self_awareness,parent,counselor
+stakeholder,false,why does a student seem lost about who they are?,why does a client seem lost about who they are?,0.667,identity_self_awareness,identity_self_awareness,teacher,counselor
+stakeholder,false,I feel lost about identity and purpose,I am worried my child is lost about identity and purpose,0.6,identity_self_awareness,identity_self_awareness,student,parent
+stakeholder,false,I feel lost about identity and purpose,my client feels lost about identity and purpose,0.6,identity_self_awareness,identity_self_awareness,student,counselor
+stakeholder,false,I feel lost about identity and purpose,at work I feel lost about identity and purpose,0.75,identity_self_awareness,identity_self_awareness,student,professional
+stakeholder,false,how do I build a clear sense of self and purpose?,how to help my child build a clear sense of self and purpose,0.75,identity_self_awareness,identity_self_awareness,student,parent
+stakeholder,false,how do I build a clear sense of self and purpose?,helping a student build a clear sense of self and purpose,0.625,identity_self_awareness,identity_self_awareness,student,teacher
+stakeholder,false,how do I build a clear sense of self and purpose?,how do I build a clear sense of self and purpose at work?,0.857,identity_self_awareness,identity_self_awareness,student,professional
+stakeholder,false,how to help my child build a clear sense of self and purpose,ways to help a client build a clear sense of self and purpose,0.6,identity_self_awareness,identity_self_awareness,parent,counselor
+stakeholder,false,how to help my child build a clear sense of self and purpose,how do I build a clear sense of self and purpose at work?,0.667,identity_self_awareness,identity_self_awareness,parent,professional
+stakeholder,false,what is trouble leading a team?,what causes trouble leading a team in children?,0.667,leadership_influence,leadership_influence,student,parent
+stakeholder,false,what is trouble leading a team?,what does trouble leading a team look like?,0.667,leadership_influence,leadership_influence,student,counselor
+stakeholder,false,what is trouble leading a team?,what is trouble leading a team at work?,0.8,leadership_influence,leadership_influence,student,professional
+stakeholder,false,why do I struggle to take charge of a group?,why do I struggle to take charge of a group at work?,0.833,leadership_influence,leadership_influence,student,professional
+stakeholder,false,why does my child hold back from leading a group?,why does a student hold back from leading a group?,0.75,leadership_influence,leadership_influence,parent,teacher
+stakeholder,false,why does my child hold back from leading a group?,why does a client hold back from leading a group?,0.75,leadership_influence,leadership_influence,parent,counselor
+stakeholder,false,why does a student hold back from leading a group?,why does a client hold back from leading a group?,0.75,leadership_influence,leadership_influence,teacher,counselor
+stakeholder,false,I feel unsure about leading others,I am worried my child is unsure about leading others,0.6,leadership_influence,leadership_influence,student,parent
+stakeholder,false,I feel unsure about leading others,my client feels unsure about leading others,0.6,leadership_influence,leadership_influence,student,counselor
+stakeholder,false,I feel unsure about leading others,at work I feel unsure about leading others,0.75,leadership_influence,leadership_influence,student,professional
+stakeholder,false,how do I lead a team with confidence?,how to help my child lead a team with confidence,0.667,leadership_influence,leadership_influence,student,parent
+stakeholder,false,how do I lead a team with confidence?,how do I lead a team with confidence at work?,0.8,leadership_influence,leadership_influence,student,professional
+stakeholder,false,what is trouble understanding study material?,what causes trouble understanding study material in children?,0.714,learning_comprehension,learning_comprehension,student,parent
+stakeholder,false,what is trouble understanding study material?,what does trouble understanding study material look like?,0.714,learning_comprehension,learning_comprehension,student,counselor
+stakeholder,false,what is trouble understanding study material?,what is trouble understanding study material at work?,0.833,learning_comprehension,learning_comprehension,student,professional
+stakeholder,false,what causes trouble understanding study material in children?,what is trouble understanding study material at work?,0.625,learning_comprehension,learning_comprehension,parent,professional
+stakeholder,false,what does trouble understanding study material look like?,what is trouble understanding study material at work?,0.625,learning_comprehension,learning_comprehension,counselor,professional
+stakeholder,false,why do I study for hours but forget everything?,why do I study for hours but forget everything at work?,0.833,learning_comprehension,learning_comprehension,student,professional
+stakeholder,false,why does my child study hard but forget everything?,why does a student study hard but forget everything?,0.714,learning_comprehension,learning_comprehension,parent,teacher
+stakeholder,false,why does my child study hard but forget everything?,why does a client study hard but forget everything?,0.714,learning_comprehension,learning_comprehension,parent,counselor
+stakeholder,false,why does a student study hard but forget everything?,why does a client study hard but forget everything?,0.714,learning_comprehension,learning_comprehension,teacher,counselor
+stakeholder,false,I feel frustrated that studying never sticks,I am worried my child is frustrated that studying never sticks,0.667,learning_comprehension,learning_comprehension,student,parent
+stakeholder,false,I feel frustrated that studying never sticks,my client feels frustrated that studying never sticks,0.667,learning_comprehension,learning_comprehension,student,counselor
+stakeholder,false,I feel frustrated that studying never sticks,at work I feel frustrated that studying never sticks,0.8,learning_comprehension,learning_comprehension,student,professional
+stakeholder,false,how do I understand and remember study material?,how to help my child understand and remember study material,0.714,learning_comprehension,learning_comprehension,student,parent
+stakeholder,false,how do I understand and remember study material?,how do I understand and remember study material at work?,0.833,learning_comprehension,learning_comprehension,student,professional
+stakeholder,false,how to help my child understand and remember study material,how do I understand and remember study material at work?,0.625,learning_comprehension,learning_comprehension,parent,professional
+stakeholder,false,what is low motivation and drive?,what causes low motivation and drive in children?,0.667,motivation_drive,motivation_drive,student,parent
+stakeholder,false,what is low motivation and drive?,what does low motivation and drive look like?,0.667,motivation_drive,motivation_drive,student,counselor
+stakeholder,false,what is low motivation and drive?,what is low motivation and drive at work?,0.8,motivation_drive,motivation_drive,student,professional
+stakeholder,false,why do I have no motivation to get started?,why do I have no motivation to get started at work?,0.75,motivation_drive,motivation_drive,student,professional
+stakeholder,false,why does my child have no motivation or drive?,why does a student have no motivation or drive?,0.6,motivation_drive,motivation_drive,parent,teacher
+stakeholder,false,why does my child have no motivation or drive?,why does a client have no motivation or drive?,0.6,motivation_drive,motivation_drive,parent,counselor
+stakeholder,false,why does a student have no motivation or drive?,why does a client have no motivation or drive?,0.6,motivation_drive,motivation_drive,teacher,counselor
+stakeholder,false,I feel drained of motivation and drive,I am worried my child is drained of motivation and drive,0.6,motivation_drive,motivation_drive,student,parent
+stakeholder,false,I feel drained of motivation and drive,my client feels drained of motivation and drive,0.6,motivation_drive,motivation_drive,student,counselor
+stakeholder,false,I feel drained of motivation and drive,at work I feel drained of motivation and drive,0.75,motivation_drive,motivation_drive,student,professional
+stakeholder,false,how do I find the motivation to follow through?,how to help my child find the motivation to follow through,0.714,motivation_drive,motivation_drive,student,parent
+stakeholder,false,how do I find the motivation to follow through?,how do I find the motivation to follow through at work?,0.833,motivation_drive,motivation_drive,student,professional
+stakeholder,false,how to help my child find the motivation to follow through,how do I find the motivation to follow through at work?,0.625,motivation_drive,motivation_drive,parent,professional
+stakeholder,false,what is trouble standing up for yourself?,what causes trouble standing up for yourself in children?,0.667,negotiation_advocacy,negotiation_advocacy,student,parent
+stakeholder,false,what is trouble standing up for yourself?,what does trouble standing up for yourself look like?,0.667,negotiation_advocacy,negotiation_advocacy,student,counselor
+stakeholder,false,what is trouble standing up for yourself?,what is trouble standing up for yourself at work?,0.8,negotiation_advocacy,negotiation_advocacy,student,professional
+stakeholder,false,why do I struggle to ask for what I deserve?,why do I struggle to ask for what I deserve at work?,0.833,negotiation_advocacy,negotiation_advocacy,student,professional
+stakeholder,false,why does my child struggle to stand up for themselves?,why does a student struggle to stand up for themselves?,0.667,negotiation_advocacy,negotiation_advocacy,parent,teacher
+stakeholder,false,why does my child struggle to stand up for themselves?,why does a client struggle to stand up for themselves?,0.667,negotiation_advocacy,negotiation_advocacy,parent,counselor
+stakeholder,false,why does a student struggle to stand up for themselves?,why does a client struggle to stand up for themselves?,0.667,negotiation_advocacy,negotiation_advocacy,teacher,counselor
+stakeholder,false,I feel walked over and unable to push back,I am worried my child is walked over and unable to push back,0.714,negotiation_advocacy,negotiation_advocacy,student,parent
+stakeholder,false,I feel walked over and unable to push back,my student seems walked over and unable to push back in class,0.625,negotiation_advocacy,negotiation_advocacy,student,teacher
+stakeholder,false,I feel walked over and unable to push back,my client feels walked over and unable to push back,0.714,negotiation_advocacy,negotiation_advocacy,student,counselor
+stakeholder,false,I feel walked over and unable to push back,at work I feel walked over and unable to push back,0.833,negotiation_advocacy,negotiation_advocacy,student,professional
+stakeholder,false,I am worried my child is walked over and unable to push back,at work I feel walked over and unable to push back,0.625,negotiation_advocacy,negotiation_advocacy,parent,professional
+stakeholder,false,my client feels walked over and unable to push back,at work I feel walked over and unable to push back,0.625,negotiation_advocacy,negotiation_advocacy,counselor,professional
+stakeholder,false,how do I stand up and negotiate confidently?,how to help my child stand up and negotiate confidently,0.667,negotiation_advocacy,negotiation_advocacy,student,parent
+stakeholder,false,how do I stand up and negotiate confidently?,how do I stand up and negotiate confidently at work?,0.8,negotiation_advocacy,negotiation_advocacy,student,professional
+stakeholder,false,what is trouble networking?,what causes trouble networking in children?,0.6,networking_relationships,networking_relationships,student,parent
+stakeholder,false,what is trouble networking?,what does trouble networking look like?,0.6,networking_relationships,networking_relationships,student,counselor
+stakeholder,false,what is trouble networking?,what is trouble networking at work?,0.75,networking_relationships,networking_relationships,student,professional
+stakeholder,false,why do I find it hard to reach out to new contacts?,why do I find it hard to reach out to new contacts at work?,0.857,networking_relationships,networking_relationships,student,professional
+stakeholder,false,why does my child find it hard to build connections?,why does a student find it hard to build connections?,0.714,networking_relationships,networking_relationships,parent,teacher
+stakeholder,false,why does my child find it hard to build connections?,why does a client find it hard to build connections?,0.714,networking_relationships,networking_relationships,parent,counselor
+stakeholder,false,why does a student find it hard to build connections?,why does a client find it hard to build connections?,0.714,networking_relationships,networking_relationships,teacher,counselor
+stakeholder,false,I feel awkward about networking and reaching out,I am worried my child is awkward about networking and reaching out,0.6,networking_relationships,networking_relationships,student,parent
+stakeholder,false,I feel awkward about networking and reaching out,my client feels awkward about networking and reaching out,0.6,networking_relationships,networking_relationships,student,counselor
+stakeholder,false,I feel awkward about networking and reaching out,at work I feel awkward about networking and reaching out,0.75,networking_relationships,networking_relationships,student,professional
+stakeholder,false,how do I build a network and reach out confidently?,how to help my child build a network and reach out confidently,0.714,networking_relationships,networking_relationships,student,parent
+stakeholder,false,how do I build a network and reach out confidently?,how do I build a network and reach out confidently at work?,0.833,networking_relationships,networking_relationships,student,professional
+stakeholder,false,how to help my child build a network and reach out confidently,how do I build a network and reach out confidently at work?,0.625,networking_relationships,networking_relationships,parent,professional
+stakeholder,false,what is test and exam anxiety?,what causes test and exam anxiety in children?,0.667,performance_anxiety,performance_anxiety,student,parent
+stakeholder,false,what is test and exam anxiety?,what does test and exam anxiety look like?,0.667,performance_anxiety,performance_anxiety,student,counselor
+stakeholder,false,what is test and exam anxiety?,what is test and exam anxiety at work?,0.8,performance_anxiety,performance_anxiety,student,professional
+stakeholder,false,why do I freeze up and go blank in exams?,why does my child freeze up and go blank in exams?,0.8,performance_anxiety,performance_anxiety,student,parent
+stakeholder,false,why do I freeze up and go blank in exams?,why does a student freeze up and go blank in exams?,0.8,performance_anxiety,performance_anxiety,student,teacher
+stakeholder,false,why do I freeze up and go blank in exams?,why does a client freeze up and go blank in exams?,0.8,performance_anxiety,performance_anxiety,student,counselor
+stakeholder,false,why do I freeze up and go blank in exams?,why do I freeze up and go blank in exams at work?,0.8,performance_anxiety,performance_anxiety,student,professional
+stakeholder,false,why does my child freeze up and go blank in exams?,why does a student freeze up and go blank in exams?,0.667,performance_anxiety,performance_anxiety,parent,teacher
+stakeholder,false,why does my child freeze up and go blank in exams?,why does a client freeze up and go blank in exams?,0.667,performance_anxiety,performance_anxiety,parent,counselor
+stakeholder,false,why does my child freeze up and go blank in exams?,why do I freeze up and go blank in exams at work?,0.667,performance_anxiety,performance_anxiety,parent,professional
+stakeholder,false,why does a student freeze up and go blank in exams?,why does a client freeze up and go blank in exams?,0.667,performance_anxiety,performance_anxiety,teacher,counselor
+stakeholder,false,why does a student freeze up and go blank in exams?,why do I freeze up and go blank in exams at work?,0.667,performance_anxiety,performance_anxiety,teacher,professional
+stakeholder,false,why does a client freeze up and go blank in exams?,why do I freeze up and go blank in exams at work?,0.667,performance_anxiety,performance_anxiety,counselor,professional
+stakeholder,false,I feel panicky and blank before every test,I am worried my child is panicky and blank before every test,0.714,performance_anxiety,performance_anxiety,student,parent
+stakeholder,false,I feel panicky and blank before every test,my student seems panicky and blank before every test in class,0.625,performance_anxiety,performance_anxiety,student,teacher
+stakeholder,false,I feel panicky and blank before every test,my client feels panicky and blank before every test,0.714,performance_anxiety,performance_anxiety,student,counselor
+stakeholder,false,I feel panicky and blank before every test,at work I feel panicky and blank before every test,0.833,performance_anxiety,performance_anxiety,student,professional
+stakeholder,false,I am worried my child is panicky and blank before every test,at work I feel panicky and blank before every test,0.625,performance_anxiety,performance_anxiety,parent,professional
+stakeholder,false,my client feels panicky and blank before every test,at work I feel panicky and blank before every test,0.625,performance_anxiety,performance_anxiety,counselor,professional
+stakeholder,false,how do I stay calm and focused in exams?,how to help my child stay calm and focused in exams,0.714,performance_anxiety,performance_anxiety,student,parent
+stakeholder,false,how do I stay calm and focused in exams?,how do I stay calm and focused in exams at work?,0.833,performance_anxiety,performance_anxiety,student,professional
+stakeholder,false,how to help my child stay calm and focused in exams,how do I stay calm and focused in exams at work?,0.625,performance_anxiety,performance_anxiety,parent,professional
+stakeholder,false,how to stay calm in future exams and interviews going forward,how to stay calm in future exams and interviews as my career grows,0.6,performance_anxiety,performance_anxiety,student,professional
+stakeholder,false,what is giving up after setbacks?,what causes giving up after setbacks in children?,0.667,resilience_recovery,resilience_recovery,student,parent
+stakeholder,false,what is giving up after setbacks?,what does giving up after setbacks look like?,0.667,resilience_recovery,resilience_recovery,student,counselor
+stakeholder,false,what is giving up after setbacks?,what is giving up after setbacks at work?,0.8,resilience_recovery,resilience_recovery,student,professional
+stakeholder,false,why do I fall apart and give up after a setback?,why do I fall apart and give up after a setback at work?,0.857,resilience_recovery,resilience_recovery,student,professional
+stakeholder,false,why does my child give up easily after a setback?,why does a student give up easily after a setback?,0.714,resilience_recovery,resilience_recovery,parent,teacher
+stakeholder,false,why does my child give up easily after a setback?,why does a client give up easily after a setback?,0.714,resilience_recovery,resilience_recovery,parent,counselor
+stakeholder,false,why does a student give up easily after a setback?,why does a client give up easily after a setback?,0.714,resilience_recovery,resilience_recovery,teacher,counselor
+stakeholder,false,I feel crushed and ready to give up after failure,I am worried my child is crushed and ready to give up after failure,0.714,resilience_recovery,resilience_recovery,student,parent
+stakeholder,false,I feel crushed and ready to give up after failure,my student seems crushed and ready to give up after failure in class,0.625,resilience_recovery,resilience_recovery,student,teacher
+stakeholder,false,I feel crushed and ready to give up after failure,my client feels crushed and ready to give up after failure,0.714,resilience_recovery,resilience_recovery,student,counselor
+stakeholder,false,I feel crushed and ready to give up after failure,at work I feel crushed and ready to give up after failure,0.833,resilience_recovery,resilience_recovery,student,professional
+stakeholder,false,I am worried my child is crushed and ready to give up after failure,at work I feel crushed and ready to give up after failure,0.625,resilience_recovery,resilience_recovery,parent,professional
+stakeholder,false,my client feels crushed and ready to give up after failure,at work I feel crushed and ready to give up after failure,0.625,resilience_recovery,resilience_recovery,counselor,professional
+stakeholder,false,how do I bounce back after failure?,how to help my child bounce back after failure,0.714,resilience_recovery,resilience_recovery,student,parent
+stakeholder,false,how do I bounce back after failure?,how do I bounce back after failure at work?,0.833,resilience_recovery,resilience_recovery,student,professional
+stakeholder,false,how to help my child bounce back after failure,how do I bounce back after failure at work?,0.625,resilience_recovery,resilience_recovery,parent,professional
+stakeholder,false,how to recover from setbacks and keep going going forward,how to recover from setbacks and keep going as my career grows,0.667,resilience_recovery,resilience_recovery,student,professional
+stakeholder,false,what is loneliness and not belonging?,what causes loneliness and not belonging in children?,0.6,social_connection_belonging,social_connection_belonging,student,parent
+stakeholder,false,what is loneliness and not belonging?,what does loneliness and not belonging look like?,0.6,social_connection_belonging,social_connection_belonging,student,counselor
+stakeholder,false,what is loneliness and not belonging?,what is loneliness and not belonging at work?,0.75,social_connection_belonging,social_connection_belonging,student,professional
+stakeholder,false,why do I feel lonely and like I do not belong?,why do I feel lonely and like I do not belong at work?,0.8,social_connection_belonging,social_connection_belonging,student,professional
+stakeholder,false,why does my child feel lonely and left out?,why does a student feel lonely and left out?,0.6,social_connection_belonging,social_connection_belonging,parent,teacher
+stakeholder,false,why does my child feel lonely and left out?,why does a client feel lonely and left out?,0.6,social_connection_belonging,social_connection_belonging,parent,counselor
+stakeholder,false,why does a student feel lonely and left out?,why does a client feel lonely and left out?,0.6,social_connection_belonging,social_connection_belonging,teacher,counselor
+stakeholder,false,I feel isolated and left out like an outsider,I am worried my child is isolated and left out like an outsider,0.667,social_connection_belonging,social_connection_belonging,student,parent
+stakeholder,false,I feel isolated and left out like an outsider,my client feels isolated and left out like an outsider,0.667,social_connection_belonging,social_connection_belonging,student,counselor
+stakeholder,false,I feel isolated and left out like an outsider,at work I feel isolated and left out like an outsider,0.8,social_connection_belonging,social_connection_belonging,student,professional
+stakeholder,false,how do I make friends and feel a sense of belonging?,how to help my child make friends and feel a sense of belonging,0.714,social_connection_belonging,social_connection_belonging,student,parent
+stakeholder,false,how do I make friends and feel a sense of belonging?,how do I make friends and feel a sense of belonging at work?,0.833,social_connection_belonging,social_connection_belonging,student,professional
+stakeholder,false,how to help my child make friends and feel a sense of belonging,how do I make friends and feel a sense of belonging at work?,0.625,social_connection_belonging,social_connection_belonging,parent,professional
+stakeholder,false,what is procrastination and poor time management?,what causes procrastination and poor time management in children?,0.714,time_self_discipline,time_self_discipline,student,parent
+stakeholder,false,what is procrastination and poor time management?,what does procrastination and poor time management look like?,0.714,time_self_discipline,time_self_discipline,student,counselor
+stakeholder,false,what is procrastination and poor time management?,what is procrastination and poor time management at work?,0.833,time_self_discipline,time_self_discipline,student,professional
+stakeholder,false,what causes procrastination and poor time management in children?,what is procrastination and poor time management at work?,0.625,time_self_discipline,time_self_discipline,parent,professional
+stakeholder,false,what does procrastination and poor time management look like?,what is procrastination and poor time management at work?,0.625,time_self_discipline,time_self_discipline,counselor,professional
+stakeholder,false,why do I procrastinate and leave things to the last minute?,why do I procrastinate and leave things to the last minute at work?,0.857,time_self_discipline,time_self_discipline,student,professional
+stakeholder,false,why does my child procrastinate and miss deadlines?,why does a student procrastinate and miss deadlines?,0.667,time_self_discipline,time_self_discipline,parent,teacher
+stakeholder,false,why does my child procrastinate and miss deadlines?,why does a client procrastinate and miss deadlines?,0.667,time_self_discipline,time_self_discipline,parent,counselor
+stakeholder,false,why does a student procrastinate and miss deadlines?,why does a client procrastinate and miss deadlines?,0.667,time_self_discipline,time_self_discipline,teacher,counselor
+stakeholder,false,I feel stressed from missing deadlines,I am worried my child is stressed from missing deadlines,0.667,time_self_discipline,time_self_discipline,student,parent
+stakeholder,false,I feel stressed from missing deadlines,my client feels stressed from missing deadlines,0.667,time_self_discipline,time_self_discipline,student,counselor
+stakeholder,false,I feel stressed from missing deadlines,at work I feel stressed from missing deadlines,0.8,time_self_discipline,time_self_discipline,student,professional
+stakeholder,false,how do I stop procrastinating and stick to a plan?,how to help my child stop procrastinating and stick to a plan,0.714,time_self_discipline,time_self_discipline,student,parent
+stakeholder,false,how do I stop procrastinating and stick to a plan?,how do I stop procrastinating and stick to a plan at work?,0.833,time_self_discipline,time_self_discipline,student,professional
+stakeholder,false,how to help my child stop procrastinating and stick to a plan,how do I stop procrastinating and stick to a plan at work?,0.625,time_self_discipline,time_self_discipline,parent,professional

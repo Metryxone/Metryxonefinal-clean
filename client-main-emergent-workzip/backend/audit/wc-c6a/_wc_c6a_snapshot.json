@@ -1,0 +1,695 @@
+{
+  "generated_at": "2026-06-10T08:50:05.250Z",
+  "audit": "WC-C6A Subscription Productization Audit",
+  "posture": {
+    "ff_overrides_present": [],
+    "razorpay_configured": false,
+    "note": "Run without FF_* overrides = deploy posture."
+  },
+  "degraded": false,
+  "engines": {
+    "lifecycle": {
+      "generated_at": "2026-06-10T08:50:05.084Z",
+      "degraded": false,
+      "expiring_soon_window_days": 14,
+      "b2c_ladder": {
+        "total": 6,
+        "by_state": {
+          "pending": 6,
+          "fulfilled": 0,
+          "abandoned": 0
+        }
+      },
+      "package_subscriptions": {
+        "total": 0,
+        "by_state": {
+          "active": 0,
+          "expiring_soon": 0,
+          "expired": 0,
+          "cancelled": 0
+        }
+      }
+    },
+    "renewal": {
+      "generated_at": "2026-06-10T08:50:05.094Z",
+      "degraded": false,
+      "b2c_ladder": {
+        "renewal_applicable": false,
+        "reason": "renewal_not_applicable_b2c"
+      },
+      "package_model": {
+        "renewal_applicable": true,
+        "due_soon_window_days": 14,
+        "grace_days": 7,
+        "renewable_active": 0,
+        "due_soon": 0,
+        "in_grace": 0
+      }
+    },
+    "forecast": {
+      "generated_at": "2026-06-10T08:50:05.219Z",
+      "degraded": false,
+      "min_points": 2,
+      "series": [
+        {
+          "key": "paid_revenue",
+          "label": "Paid revenue by month",
+          "points": 0,
+          "forecastable": false,
+          "reason": "insufficient_data"
+        },
+        {
+          "key": "paid_count",
+          "label": "Paid transactions by month",
+          "points": 0,
+          "forecastable": false,
+          "reason": "insufficient_data"
+        },
+        {
+          "key": "new_subscriptions",
+          "label": "New package subscriptions by month",
+          "points": 0,
+          "forecastable": false,
+          "reason": "insufficient_data"
+        },
+        {
+          "key": "upcoming_expiries",
+          "label": "Subscription expiries by month",
+          "points": 0,
+          "forecastable": false,
+          "reason": "insufficient_data"
+        }
+      ],
+      "forecastable_count": 0,
+      "total_series": 4
+    },
+    "entitlement": {
+      "generated_at": "2026-06-10T08:50:05.240Z",
+      "degraded": false,
+      "paying_identities": 0,
+      "entitled_identities": 0,
+      "coverage_pct": null,
+      "owned_stage_distribution": [],
+      "active_package_grants": 0
+    }
+  },
+  "runtime": {
+    "pkgTotal": 0,
+    "pkgActive": 0,
+    "pkgPriced": 0,
+    "pkgWithValidity": 0,
+    "parentSubsTable": false,
+    "subsTotal": 0,
+    "subsActive": 0,
+    "renewableActive": 0,
+    "paymentsTotal": 6,
+    "paymentsPaid": 0,
+    "paymentsPending": 6,
+    "payingIdentities": 0
+  },
+  "two_catalogs": {
+    "ladder_skus": [
+      {
+        "stage": "CAP_INS",
+        "price_inr": 499,
+        "features": [
+          "insight_report"
+        ]
+      },
+      {
+        "stage": "CAP_GRW",
+        "price_inr": 999,
+        "features": [
+          "growth_report",
+          "growth_plan"
+        ]
+      },
+      {
+        "stage": "CAP_MAS",
+        "price_inr": 1999,
+        "features": [
+          "mastery_report",
+          "mentor_access"
+        ]
+      }
+    ],
+    "package_catalog_rows": 0
+  },
+  "structural": {
+    "capabilities": [
+      {
+        "id": "ladder_catalog_skus",
+        "layer": "L1_catalog_definition",
+        "label": "Priced B2C ladder SKU catalog (CAP_INS/GRW/MAS)",
+        "tier": "real",
+        "subscription": false,
+        "catalog_family": "ladder",
+        "evidence": "STAGE_PRICES (₹499/₹999/₹1999) defined in capadex-payments.ts; 3 priced SKUs presented via the live B2C order route.",
+        "source": "WC-C1 SM3 b2c_ladder_catalog"
+      },
+      {
+        "id": "package_catalog_schema",
+        "layer": "L1_catalog_definition",
+        "label": "Package catalog schema + admin CRUD",
+        "tier": "real",
+        "subscription": true,
+        "catalog_family": "package",
+        "evidence": "subscription_packages table (category/segment/price/validity_days/question_count/report_type) + admin CRUD (seed/export/import/stats/PATCH/DELETE).",
+        "source": "schema.ts:3104 / routes.ts admin CRUD"
+      },
+      {
+        "id": "package_catalog_population",
+        "layer": "L1_catalog_definition",
+        "label": "Populated package catalog (live product rows)",
+        "tier": "absent",
+        "subscription": true,
+        "catalog_family": "package",
+        "evidence": "subscription_packages = 0 live rows. The renewable model has NO products defined. Required machinery for a subscription PRODUCT → counts against Structural.",
+        "source": "live count (this session)"
+      },
+      {
+        "id": "package_seed_completeness",
+        "layer": "L1_catalog_definition",
+        "label": "Package seed produces SELLABLE+renewable rows",
+        "tier": "stub",
+        "subscription": true,
+        "catalog_family": "package",
+        "evidence": "Seed (routes.ts:10029) inserts 13 packages with NO price / NO validity_days / NO question_count; schema leaves all 3 nullable (no default) → even if run, rows are UNPRICED + NULL-expiry → not sellable, not renewable. \"Run the seed\" is not a fix.",
+        "source": "routes.ts:10029-10042 + schema.ts:3111-3113 (verified this session)"
+      },
+      {
+        "id": "b2c_pricing_model",
+        "layer": "L2_pricing",
+        "label": "B2C ladder pricing model (lockstep constants)",
+        "tier": "real",
+        "subscription": false,
+        "evidence": "STAGE_PRICES used by the live order route; mirrored in subscription-engine.ts / entitlement-engine STAGE_FEATURES (kept in lockstep).",
+        "source": "capadex-payments.ts:17"
+      },
+      {
+        "id": "package_pricing_definition",
+        "layer": "L2_pricing",
+        "label": "Package pricing definition (price + validity actually set)",
+        "tier": "partial",
+        "subscription": true,
+        "evidence": "price/validity_days columns EXIST (schema real) but are nullable, never populated, and the seed omits them → no package price/validity is ever defined.",
+        "source": "schema.ts:3111-3113 / live (0 priced rows)"
+      },
+      {
+        "id": "pricing_tiers_discounting",
+        "layer": "L2_pricing",
+        "label": "Pricing tiers / discounting / proration / multi-currency",
+        "tier": "absent",
+        "subscription": false,
+        "evidence": "Single INR price per SKU; no discount/coupon/proration/currency engine anywhere.",
+        "source": "grep: no discount/coupon/proration engine"
+      },
+      {
+        "id": "stage_feature_map",
+        "layer": "L3_entitlement_packaging",
+        "label": "Stage→feature entitlement map (what a SKU unlocks)",
+        "tier": "real",
+        "subscription": false,
+        "evidence": "STAGE_FEATURES maps CAP_INS→insight_report, CAP_GRW→growth_report/growth_plan, CAP_MAS→mastery_report/mentor_access; entitlement is the UNION over owned stages.",
+        "source": "entitlement-engine.ts:23"
+      },
+      {
+        "id": "package_entitlement_map",
+        "layer": "L3_entitlement_packaging",
+        "label": "Package→entitlement/feature mapping",
+        "tier": "absent",
+        "subscription": true,
+        "evidence": "subscription_packages has NO feature column; grants are child/student-keyed (student_subscriptions), entitlement-DISJOINT from STAGE_FEATURES. A package purchase maps to nothing enforceable.",
+        "source": "WC-C2 entitlement-readiness"
+      },
+      {
+        "id": "entitlement_enforcement_gate",
+        "layer": "L3_entitlement_packaging",
+        "label": "Entitlement enforcement gate (access control)",
+        "tier": "gated_real",
+        "subscription": false,
+        "evidence": "WC-C4 requireEntitlement EXISTS over paid surfaces but flag commercialEntitlementEnforcement is OFF by default → dormant.",
+        "source": "WC-C4"
+      },
+      {
+        "id": "b2c_order_payment_flow",
+        "layer": "L4_sales_order",
+        "label": "B2C order + payment flow (Razorpay create-order/verify)",
+        "tier": "gated_real",
+        "subscription": false,
+        "evidence": "capadex-payments.ts create-order/verify is live (6 pending CAP_INS rows) but only the DEMO fallback has ever executed; the real Razorpay capture path is UNEXERCISED (keys unconfigured) → capped gated-real, never real. Matches WC-C1 order_creation gated-real precedent.",
+        "source": "capadex-payments.ts / WC-C1 SM4 order_creation (gated-real)"
+      },
+      {
+        "id": "package_grant_flow",
+        "layer": "L4_sales_order",
+        "label": "Package grant flow (creates the renewable population)",
+        "tier": "gated_real",
+        "subscription": true,
+        "evidence": "routes.ts assign/create inserts student_subscriptions with expiry from validity_days. EXISTS but 0 live rows → unexercised e2e → capped gated-real, never real.",
+        "source": "routes.ts:10111 / live (0 rows)"
+      },
+      {
+        "id": "self_serve_package_checkout",
+        "layer": "L4_sales_order",
+        "label": "Self-serve package checkout (buyer-initiated package purchase)",
+        "tier": "absent",
+        "subscription": true,
+        "evidence": "Package grants are admin/parent-keyed; there is NO self-serve Razorpay order path for a package SKU (only the B2C stage ladder has a buyer order path).",
+        "source": "grep: no package order route"
+      },
+      {
+        "id": "progressive_ladder",
+        "layer": "L5_ladder_upgrade",
+        "label": "Progressive ladder (CAP_CUR→INS→GRW→MAS)",
+        "tier": "real",
+        "subscription": false,
+        "evidence": "LADDER ordering in entitlement/subscription engines; each paid rung unlocks the next stage report.",
+        "source": "entitlement-engine.ts:28"
+      },
+      {
+        "id": "upgrade_offer_engine",
+        "layer": "L5_ladder_upgrade",
+        "label": "Upgrade path engine (next-rung offer)",
+        "tier": "gated_real",
+        "subscription": false,
+        "evidence": "offer-engine recommends the next ladder rung; gated by commercialActivation (OFF by default) and needs an owned current stage.",
+        "source": "offer-engine.ts (WC-7B)"
+      },
+      {
+        "id": "cross_package_upgrade",
+        "layer": "L5_ladder_upgrade",
+        "label": "Cross-package upgrade / proration",
+        "tier": "absent",
+        "subscription": true,
+        "evidence": "No package→package upgrade or proration path; packages are flat, unordered SKUs.",
+        "source": "grep: no package upgrade/proration"
+      },
+      {
+        "id": "renewal_candidate_engine",
+        "layer": "L6_renewal_recurring",
+        "label": "Renewal candidate identification (due_soon / in_grace)",
+        "tier": "real",
+        "subscription": true,
+        "evidence": "renewal-engine.ts buildRenewalPipeline (DUE_SOON 14d / GRACE 7d); read-only, NEVER auto-charges.",
+        "source": "WC-C5 d-renewal"
+      },
+      {
+        "id": "renewal_reminder_loop",
+        "layer": "L6_renewal_recurring",
+        "label": "Renewal reminder / notification loop",
+        "tier": "absent",
+        "subscription": true,
+        "evidence": "No reminder/cron/notification job wired to the renewal-engine output.",
+        "source": "WC-C5 (reminders MISSING)"
+      },
+      {
+        "id": "recurring_or_repurchase_loop",
+        "layer": "L6_renewal_recurring",
+        "label": "Recurring / auto-renew billing OR package-repurchase loop",
+        "tier": "absent",
+        "subscription": true,
+        "evidence": "Renewal-engine never auto-charges; B2C ladder is renewal_not_applicable_b2c by design; no repurchase route converts a candidate into a new paid term.",
+        "source": "WC-C5 / subscription-engine.ts"
+      },
+      {
+        "id": "consumer_offer_engine",
+        "layer": "L7_consumer_offer",
+        "label": "Consumer offer engine (offer_fit recommendation)",
+        "tier": "gated_real",
+        "subscription": false,
+        "evidence": "offer-engine offer_fit is directional and gated by commercialActivation (OFF by default).",
+        "source": "offer-engine.ts (WC-7C)"
+      }
+    ],
+    "tier_map": {
+      "real": 5,
+      "gated_real": 4,
+      "partial": 3,
+      "stub": 2,
+      "absent": 1
+    },
+    "productization_pct": 62,
+    "subscription_subset_pct": 45.5,
+    "subset_ids": [
+      "package_catalog_schema",
+      "package_catalog_population",
+      "package_seed_completeness",
+      "package_pricing_definition",
+      "package_entitlement_map",
+      "package_grant_flow",
+      "self_serve_package_checkout",
+      "cross_package_upgrade",
+      "renewal_candidate_engine",
+      "renewal_reminder_loop",
+      "recurring_or_repurchase_loop"
+    ]
+  },
+  "activation": {
+    "detail": [
+      {
+        "id": "ladder_catalog_skus",
+        "label": "Priced B2C ladder SKU catalog (CAP_INS/GRW/MAS)",
+        "subscription": false,
+        "fires": true,
+        "reason": "3 priced SKUs defined + B2C order route live (catalog is non-empty & presentable). NB: 0 paid, 6 pending (demo)."
+      },
+      {
+        "id": "package_catalog_schema",
+        "label": "Package catalog schema + admin CRUD",
+        "subscription": true,
+        "fires": false,
+        "reason": "0 catalog rows → nothing to serve"
+      },
+      {
+        "id": "package_catalog_population",
+        "label": "Populated package catalog (live product rows)",
+        "subscription": true,
+        "fires": false,
+        "reason": "0 active products → catalog empty"
+      },
+      {
+        "id": "package_seed_completeness",
+        "label": "Package seed produces SELLABLE+renewable rows",
+        "subscription": true,
+        "fires": false,
+        "reason": "seed never run AND would emit unpriced/null-validity rows → no sellable+renewable row exists"
+      },
+      {
+        "id": "b2c_pricing_model",
+        "label": "B2C ladder pricing model (lockstep constants)",
+        "subscription": false,
+        "fires": true,
+        "reason": "Prices defined and applied by the live order route."
+      },
+      {
+        "id": "package_pricing_definition",
+        "label": "Package pricing definition (price + validity actually set)",
+        "subscription": true,
+        "fires": false,
+        "reason": "0 priced products (price never set)"
+      },
+      {
+        "id": "pricing_tiers_discounting",
+        "label": "Pricing tiers / discounting / proration / multi-currency",
+        "subscription": false,
+        "fires": false,
+        "reason": "capability absent in code"
+      },
+      {
+        "id": "stage_feature_map",
+        "label": "Stage→feature entitlement map (what a SKU unlocks)",
+        "subscription": false,
+        "fires": false,
+        "reason": "0 paying identities → no stage features ever granted live"
+      },
+      {
+        "id": "package_entitlement_map",
+        "label": "Package→entitlement/feature mapping",
+        "subscription": true,
+        "fires": false,
+        "reason": "capability absent in code"
+      },
+      {
+        "id": "entitlement_enforcement_gate",
+        "label": "Entitlement enforcement gate (access control)",
+        "subscription": false,
+        "fires": false,
+        "reason": "flag commercialEntitlementEnforcement OFF by default → dormant"
+      },
+      {
+        "id": "b2c_order_payment_flow",
+        "label": "B2C order + payment flow (Razorpay create-order/verify)",
+        "subscription": false,
+        "fires": false,
+        "reason": "Razorpay keys NOT configured → demo posture; the 6 pending rows cannot capture real money (WC-C1 payments_demo=6)."
+      },
+      {
+        "id": "package_grant_flow",
+        "label": "Package grant flow (creates the renewable population)",
+        "subscription": true,
+        "fires": false,
+        "reason": "0 package subscriptions → grant flow never exercised"
+      },
+      {
+        "id": "self_serve_package_checkout",
+        "label": "Self-serve package checkout (buyer-initiated package purchase)",
+        "subscription": true,
+        "fires": false,
+        "reason": "capability absent in code"
+      },
+      {
+        "id": "progressive_ladder",
+        "label": "Progressive ladder (CAP_CUR→INS→GRW→MAS)",
+        "subscription": false,
+        "fires": false,
+        "reason": "0 paid climbs → ladder progression never fires commercially"
+      },
+      {
+        "id": "upgrade_offer_engine",
+        "label": "Upgrade path engine (next-rung offer)",
+        "subscription": false,
+        "fires": false,
+        "reason": "flag commercialActivation OFF + 0 owners to offer an upgrade to"
+      },
+      {
+        "id": "cross_package_upgrade",
+        "label": "Cross-package upgrade / proration",
+        "subscription": true,
+        "fires": false,
+        "reason": "capability absent in code"
+      },
+      {
+        "id": "renewal_candidate_engine",
+        "label": "Renewal candidate identification (due_soon / in_grace)",
+        "subscription": true,
+        "fires": false,
+        "reason": "0 renewable population → no due_soon/in_grace candidates"
+      },
+      {
+        "id": "renewal_reminder_loop",
+        "label": "Renewal reminder / notification loop",
+        "subscription": true,
+        "fires": false,
+        "reason": "capability absent in code"
+      },
+      {
+        "id": "recurring_or_repurchase_loop",
+        "label": "Recurring / auto-renew billing OR package-repurchase loop",
+        "subscription": true,
+        "fires": false,
+        "reason": "capability absent in code"
+      },
+      {
+        "id": "consumer_offer_engine",
+        "label": "Consumer offer engine (offer_fit recommendation)",
+        "subscription": false,
+        "fires": false,
+        "reason": "flag commercialActivation OFF → offer_fit dormant"
+      }
+    ],
+    "productization": {
+      "firing": 2,
+      "total": 20,
+      "pct": 10
+    },
+    "subscription_subset": {
+      "firing": 0,
+      "total": 11,
+      "pct": 0
+    }
+  },
+  "wcc1_subscription_readiness": {
+    "cells": [
+      {
+        "name": "b2c_ladder_catalog",
+        "tier": "real"
+      },
+      {
+        "name": "package_catalog",
+        "tier": "real"
+      },
+      {
+        "name": "package_persistence_expiry",
+        "tier": "real"
+      },
+      {
+        "name": "parent_plans",
+        "tier": "absent"
+      },
+      {
+        "name": "active_subscription_concept",
+        "tier": "gated_real"
+      },
+      {
+        "name": "admin_crud",
+        "tier": "real"
+      }
+    ],
+    "structural_pct": 83.3,
+    "activation_pct": 0,
+    "enablers": [
+      {
+        "name": "active packages defined > 0",
+        "present": false
+      },
+      {
+        "name": "package subscriptions > 0",
+        "present": false
+      },
+      {
+        "name": "live (active, unexpired) subscriptions > 0",
+        "present": false
+      },
+      {
+        "name": "parent_subscriptions table present",
+        "present": false
+      },
+      {
+        "name": "any paid ladder purchase > 0",
+        "present": false
+      }
+    ],
+    "denominator": "6 subscription-system cells"
+  },
+  "coverage": {
+    "package_catalog_population": {
+      "value": null,
+      "measurable": false,
+      "numerator": 0,
+      "denominator": 0,
+      "reason": "not_measurable: empty denominator (0/0)"
+    },
+    "package_priced_ratio": {
+      "value": null,
+      "measurable": false,
+      "numerator": 0,
+      "denominator": 0,
+      "reason": "not_measurable: empty denominator (0/0)"
+    },
+    "package_renewable_ratio": {
+      "value": null,
+      "measurable": false,
+      "numerator": 0,
+      "denominator": 0,
+      "reason": "not_measurable: empty denominator (0/0)"
+    },
+    "entitlement": {
+      "value": null,
+      "measurable": false,
+      "numerator": 0,
+      "denominator": 0,
+      "reason": "not_measurable: 0 paying identities"
+    },
+    "b2c_paid_conversion": {
+      "value": 0,
+      "measurable": true,
+      "numerator": 0,
+      "denominator": 6,
+      "reason": "measured"
+    },
+    "forecastable_revenue_series": {
+      "value": 0,
+      "measurable": true,
+      "numerator": 0,
+      "denominator": 4,
+      "reason": "measured"
+    }
+  },
+  "catalog_readiness": {
+    "ladder_catalog": {
+      "kind": "code-defined B2C ladder",
+      "sku_count": 3,
+      "priced": 3,
+      "live": true,
+      "structural": "real (3 priced SKUs in code)",
+      "coverage_count": "3 SKUs (all priced)",
+      "activation": "presentable; capture demo (Razorpay unconfigured)",
+      "confidence": "one-time model — cannot recur by design"
+    },
+    "package_catalog": {
+      "kind": "DB subscription_packages",
+      "product_count": 0,
+      "active": 0,
+      "priced": 0,
+      "with_validity": 0,
+      "structural": "real (schema + admin CRUD)",
+      "coverage_count": "0 products defined (EMPTY)",
+      "coverage_fractions": {
+        "populated": {
+          "value": null,
+          "measurable": false,
+          "numerator": 0,
+          "denominator": 0,
+          "reason": "not_measurable: empty denominator (0/0)"
+        },
+        "priced": {
+          "value": null,
+          "measurable": false,
+          "numerator": 0,
+          "denominator": 0,
+          "reason": "not_measurable: empty denominator (0/0)"
+        }
+      },
+      "activation": "cannot sell — 0 products; seed is a STUB (unpriced/null-validity rows)",
+      "confidence": "no catalog exists"
+    }
+  },
+  "confidence": {
+    "band": "VERY_LOW",
+    "n": {
+      "package_products": 0,
+      "priced_products": 0,
+      "package_subscriptions": 0,
+      "renewable_active": 0,
+      "paid_identities": 0,
+      "pending_demo_payments": 6
+    },
+    "rationale": "No subscription PRODUCT has ever been defined or sold (subscription_packages=0, student_subscriptions=0, paid stages=0). The only live SKUs (3 B2C ladder rungs) are one-time and have 0 real purchases (6 pending are demo; Razorpay unconfigured). With no ground truth, every productization/recurring inference is directional only."
+  },
+  "answers": {
+    "products_that_exist": [
+      "B2C stage ladder — 3 priced SKUs (CAP_INS ₹499 / CAP_GRW ₹999 / CAP_MAS ₹1999). REAL, live, ONE-TIME (renewal_not_applicable_b2c).",
+      "Package catalog (subscription_packages) — schema + admin CRUD REAL, but 0 products defined (EMPTY). The ONLY renewable-capable model.",
+      "Parent plans (basic/family/premium) — table ABSENT in live DB → non-functional / legacy stub (cross-server); NOT a live backend product."
+    ],
+    "which_are_sellable": "ONLY the B2C ladder rungs are sellable (priced SKUs + live order route) — though capture is demo (Razorpay unconfigured), 0 real purchases. Packages are NOT sellable (0 products + seed emits unpriced rows). Parent plans not sellable.",
+    "which_can_renew": "NONE live. Only the package model is renewal-CAPABLE by design (validity-window expiry), but it has 0 products and 0 subscriptions → 0 renewable population. The B2C ladder cannot renew by design.",
+    "which_can_upgrade": "B2C ladder: Structural YES (offer-engine next-rung path exists) / Activation NO (flag commercialActivation OFF + 0 owners). Packages: NO upgrade path (absent).",
+    "which_generate_recurring_revenue": "NONE. No recurring/auto-renew billing, no reminder→repurchase loop, renewable population = 0, and the earning ladder is one-time. Recurring revenue is not viable today.",
+    "productization_readiness": {
+      "structural_pct": 62,
+      "activation_pct": 10,
+      "activation": "2/20",
+      "denominator": "20 product-architecture capabilities",
+      "note": "Reported as a PAIR; never combined."
+    },
+    "subscription_model_readiness_wcc6a": {
+      "structural_pct": 45.5,
+      "activation_pct": 0,
+      "activation": "0/11",
+      "denominator": "11-capability SUBSET of Productization (renewable-model subset)",
+      "note": "DISTINCT from WC-C1 Subscription Readiness; shown side-by-side below."
+    },
+    "wcc1_subscription_readiness_recomputed": {
+      "structural_pct": 83.3,
+      "activation_pct": 0,
+      "denominator": "6 subscription-system cells (WC-C1 Success Metric 3, original denominator)",
+      "note": "Recomputed on WC-C1's OWN denominator for side-by-side comparison; NOT renamed/reused."
+    },
+    "catalog_readiness": "Reported as COUNTS + per-axis verdicts, NOT a third %. TWO catalogs: ladder (3 live SKUs) + package (0 products). See deliverable 07.",
+    "shortest_path_to_90pct_commercial_activation": {
+      "principle": "90% Activation is EARNED via real revenue (real keys + real paid rows + live renewable population + ≥2 monthly points), NOT engineering-grantable. Only Structural readiness is reachable by wiring. Path below is DESCRIBED, not executed (creating products/pricing is out of audit scope).",
+      "structural_path_described": [
+        "1. FIX the package seed to emit price + validity_days + question_count (current seed yields unpriced/null-expiry rows → unsellable + unrenewable). Seeding alone is NOT sufficient.",
+        "2. Populate the package catalog with priced, validity-bearing products (turns package_catalog_population absent→real).",
+        "3. Wire a self-serve package checkout (buyer Razorpay order → student_subscription grant with finite expiry).",
+        "4. Add a package→entitlement/feature mapping (packages are entitlement-disjoint today) and turn ON commercialEntitlementEnforcement.",
+        "5. Wire a renewal reminder → repurchase/recurring loop on the renewal-engine output.",
+        "6. Configure real Razorpay keys for capture (currently demo)."
+      ],
+      "activation_reality": "Even with all 6 wired, Activation% only climbs as real catalog rows are SOLD, RENEWED, and RECUR over time. The 6 pending B2C payments are demo/mock (WC-C1 payments_demo=6), NOT demand.",
+      "highest_leverage_first_move": "Define a SELLABLE+renewable package catalog (fix seed → populate). Every downstream subscription/renewal/recurring metric is currently zero-denominated by the empty, unpriced catalog."
+    }
+  }
+}

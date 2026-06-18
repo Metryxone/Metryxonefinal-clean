@@ -1,0 +1,94 @@
+Transform EXISTING Career Builder into an enterprise workforce intelligence platform.
+
+OBJECTIVE
+Build a multi-tenant enterprise intelligence operating system.
+
+========================================
+PHASE 5 SCOPE
+========================================
+
+BUILD:
+1. Workforce Intelligence Layer
+2. Organisation Analytics
+3. Governance & Compliance Framework
+4. Market Intelligence Expansion
+5. Enterprise Multi-Tenant Infrastructure
+6. Predictive Workforce Intelligence
+
+========================================
+ORGANISATION INTELLIGENCE
+========================================
+
+Build:
+- workforce heatmaps
+- capability gap analysis
+- leadership pipeline tracking
+- succession intelligence
+- mobility forecasting
+- learning ROI analytics
+
+========================================
+MARKET INTELLIGENCE
+========================================
+
+Ingest:
+- live job demand
+- salary shifts
+- AI disruption
+- emerging roles
+- macro labor trends
+
+========================================
+GOVERNANCE
+========================================
+
+Implement:
+- audit logs
+- explainability snapshots
+- fairness testing
+- bias monitoring
+- dispute workflows
+- human override
+- methodology versioning
+
+========================================
+MULTI-TENANT SUPPORT
+========================================
+
+Support:
+- enterprises
+- universities
+- skilling ecosystems
+- workforce agencies
+
+========================================
+PREDICTIVE INTELLIGENCE
+========================================
+
+Forecast:
+- skill obsolescence
+- workforce risk
+- role emergence
+- mobility pathways
+- AI disruption exposure
+
+========================================
+SECURITY
+========================================
+
+Implement:
+- RBAC
+- tenant isolation
+- audit security
+- enterprise auth
+- encrypted intelligence storage
+
+========================================
+SUCCESS CRITERIA
+========================================
+
+- Enterprise dashboards operational
+- Workforce forecasting operational
+- Governance fully auditable
+- Multi-tenant architecture stable
+- Career Builder evolves into workforce intelligence OS

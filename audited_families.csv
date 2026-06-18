@@ -1,0 +1,401 @@
+family_id,domain_id,Domain,family_name,family_purpose,key_behavioral_scope,relational_bridge_tag
+FAM_EMO_001,DOM_001,Emotional Intelligence,fear_signals,Measure fear-driven emotional reactions and insecurity patterns,"fear_of_failure, rejection_fear, uncertainty_fear",ADJUSTMENT_COPING
+FAM_EMO_002,DOM_001,Emotional Intelligence,anxiety_signals,Detect persistent anxiety and emotional tension patterns,"anxiety, nervousness, anticipatory stress",ADJUSTMENT_COPING
+FAM_EMO_003,DOM_001,Emotional Intelligence,overload_signals,Identify emotional overwhelm and cognitive-emotional flooding,"overwhelm, emotional saturation, stress overload",ADJUSTMENT_COPING
+FAM_EMO_004,DOM_001,Emotional Intelligence,confidence_signals,Assess emotional confidence and self-assurance stability,"self-confidence, emotional security",ADJUSTMENT_COPING
+FAM_EMO_005,DOM_001,Emotional Intelligence,shame_signals,Detect shame sensitivity and emotional suppression tendencies,"embarrassment, guilt, humiliation sensitivity",ADJUSTMENT_COPING
+FAM_EMO_006,DOM_001,Emotional Intelligence,hopelessness_signals,Measure emotional hopelessness and future pessimism,"helplessness, despair, emotional shutdown",ADJUSTMENT_COPING
+FAM_EMO_007,DOM_001,Emotional Intelligence,emotional_regulation_signals,Evaluate emotional self-regulation and recovery capability,"calming ability, emotional control",ADJUSTMENT_COPING
+FAM_EMO_008,DOM_001,Emotional Intelligence,emotional_reactivity_signals,Measure intensity of emotional reactions under stress,"impulsive reactions, emotional volatility",ADJUSTMENT_COPING
+FAM_EMO_009,DOM_001,Emotional Intelligence,emotional_suppression_signals,Detect hidden emotional masking and suppression behavior,"emotional hiding, emotional bottling",ADJUSTMENT_COPING
+FAM_EMO_010,DOM_001,Emotional Intelligence,emotional_resilience_signals,Assess emotional recovery after setbacks and failures,"bounce-back ability, emotional endurance",ADJUSTMENT_COPING
+FAM_EMO_011,DOM_001,Emotional Intelligence,vulnerability_signals,Measure emotional openness and vulnerability tolerance,"emotional sharing, openness to support",ADJUSTMENT_COPING
+FAM_EMO_012,DOM_001,Emotional Intelligence,self_soothing_signals,Assess ability to emotionally stabilize oneself independently,"self-comforting, emotional grounding",ADJUSTMENT_COPING
+FAM_EMO_013,DOM_001,Emotional Intelligence,frustration_signals,Detect frustration tolerance and irritation patterns,"impatience, emotional irritation",ADJUSTMENT_COPING
+FAM_EMO_014,DOM_001,Emotional Intelligence,emotional_fatigue_signals,Measure emotional exhaustion and depletion trends,"emotional tiredness, mental fatigue",ADJUSTMENT_COPING
+FAM_EMO_015,DOM_001,Emotional Intelligence,panic_response_signals,Detect panic-oriented reactions during uncertainty or pressure,"panic, emotional flooding, loss of control",ADJUSTMENT_COPING
+FAM_EMO_016,DOM_001,Emotional Intelligence,emotional_stability_signals,Measure consistency and steadiness of emotional state,"emotional steadiness, stability",ADJUSTMENT_COPING
+FAM_EMO_017,DOM_001,Emotional Intelligence,emotional_dependency_signals,Assess emotional reliance on external reassurance or support,"reassurance dependence, emotional reliance",ADJUSTMENT_COPING
+FAM_EMO_018,DOM_001,Emotional Intelligence,guilt_sensitivity_signals,Detect excessive guilt and self-blame tendencies,"self-blame, guilt burden",ADJUSTMENT_COPING
+FAM_EMO_019,DOM_001,Emotional Intelligence,emotional_awareness_signals,Measure awareness and recognition of internal emotional states,"emotional insight, self-awareness",ADJUSTMENT_COPING
+FAM_EMO_020,DOM_001,Emotional Intelligence,emotional_recovery_signals,Assess speed and quality of emotional recovery after stress,"recovery pace, emotional reset ability",ADJUSTMENT_COPING
+COG_FAM_001,DOM_002,Cognitive Intelligence,clarity_signals,Measure clarity of thinking and mental organization,"clarity, structured thinking, comprehension",GENERAL_CONCERN
+COG_FAM_002,DOM_002,Cognitive Intelligence,confusion_signals,Detect confusion and cognitive instability,"confusion, ambiguity, mental disorientation",GENERAL_CONCERN
+COG_FAM_003,DOM_002,Cognitive Intelligence,decision_signals,Assess decision quality and decisiveness,"indecision, commitment instability",GENERAL_CONCERN
+COG_FAM_004,DOM_002,Cognitive Intelligence,overthinking_signals,Measure excessive cognitive looping,"rumination, over-analysis, repetitive thinking",GENERAL_CONCERN
+COG_FAM_005,DOM_002,Cognitive Intelligence,reasoning_signals,Evaluate logical reasoning quality,"analytical thinking, reasoning consistency",GENERAL_CONCERN
+COG_FAM_006,DOM_002,Cognitive Intelligence,future_orientation_signals,Assess future thinking and long-term mental projection,"future planning, anticipation, vision clarity",GENERAL_CONCERN
+COG_FAM_007,DOM_002,Cognitive Intelligence,judgment_signals,Measure judgment stability under uncertainty,"judgment quality, cognitive balance",GENERAL_CONCERN
+COG_FAM_008,DOM_002,Cognitive Intelligence,complexity_handling_signals,Evaluate ability to handle complexity,"ambiguity tolerance, multi-variable thinking",GENERAL_CONCERN
+COG_FAM_009,DOM_002,Cognitive Intelligence,prioritization_signals,Measure prioritization effectiveness,"task prioritization, importance ranking",GENERAL_CONCERN
+COG_FAM_010,DOM_002,Cognitive Intelligence,mental_flexibility_signals,Assess adaptability in thinking patterns,"cognitive flexibility, perspective shifting",GENERAL_CONCERN
+COG_FAM_011,DOM_002,Cognitive Intelligence,problem_solving_signals,Measure problem-solving capability,"solution generation, issue resolution",GENERAL_CONCERN
+COG_FAM_012,DOM_002,Cognitive Intelligence,strategic_thinking_signals,Assess strategic planning and thinking depth,"long-term strategy, planning intelligence",GENERAL_CONCERN
+COG_FAM_013,DOM_002,Cognitive Intelligence,cognitive_stability_signals,Detect consistency of thought processes,"stability, mental coherence",GENERAL_CONCERN
+COG_FAM_014,DOM_002,Cognitive Intelligence,abstraction_signals,Measure abstract and conceptual thinking ability,"conceptualization, abstract reasoning",GENERAL_CONCERN
+COG_FAM_015,DOM_002,Cognitive Intelligence,cognitive_speed_signals,Assess mental processing speed,"response speed, mental agility",GENERAL_CONCERN
+COG_FAM_016,DOM_002,Cognitive Intelligence,attention_control_signals,Measure focus and attention management,"concentration, distraction control",GENERAL_CONCERN
+COG_FAM_017,DOM_002,Cognitive Intelligence,learning_processing_signals,Evaluate information processing effectiveness,"comprehension, retention, processing stability",GENERAL_CONCERN
+COG_FAM_018,DOM_002,Cognitive Intelligence,uncertainty_navigation_signals,Assess handling of uncertainty and ambiguity,"uncertainty tolerance, adaptive cognition",GENERAL_CONCERN
+COG_FAM_019,DOM_002,Cognitive Intelligence,self_reflection_signals,Measure reflective thinking and introspection,"self-analysis, reflective cognition",GENERAL_CONCERN
+COG_FAM_020,DOM_002,Cognitive Intelligence,cognitive_resilience_signals,Assess recovery and stability after cognitive overload,"recovery thinking, mental endurance",GENERAL_CONCERN
+FAM_BEH_001,DOM_003,Behavioral Intelligence,avoidance_signals,Detect behavioral avoidance patterns under stress or uncertainty,"opportunity avoidance, challenge escape, participation decline",ADJUSTMENT_COPING
+FAM_BEH_002,DOM_003,Behavioral Intelligence,execution_signals,Measure consistency in converting intent into action,"task execution, action reliability, implementation consistency",GENERAL_CONCERN
+FAM_BEH_003,DOM_003,Behavioral Intelligence,withdrawal_signals,Detect emotional and social withdrawal behavior,"disengagement, isolation, silent retreat",ADJUSTMENT_COPING
+FAM_BEH_004,DOM_003,Behavioral Intelligence,participation_signals,Assess willingness to actively engage in activities and discussions,"participation, involvement, contribution behavior",GENERAL_CONCERN
+FAM_BEH_005,DOM_003,Behavioral Intelligence,procrastination_signals,Measure delay-oriented behavioral patterns,"postponement, avoidance delay, execution lag",GENERAL_CONCERN
+FAM_BEH_006,DOM_003,Behavioral Intelligence,consistency_signals,Evaluate stability of routines and behavioral repetition,"habit consistency, behavioral predictability",DISCIPLINE_HABITS
+FAM_BEH_007,DOM_003,Behavioral Intelligence,accountability_signals,Assess ownership and responsibility-taking behavior,"responsibility acceptance, ownership mindset",GENERAL_CONCERN
+FAM_BEH_008,DOM_003,Behavioral Intelligence,initiative_behavior_signals,Measure proactive action-taking tendencies,"self-starting behavior, initiative, activation",GENERAL_CONCERN
+FAM_BEH_009,DOM_003,Behavioral Intelligence,persistence_behavior_signals,Detect sustained effort despite obstacles,"perseverance, effort continuity",GENERAL_CONCERN
+FAM_BEH_010,DOM_003,Behavioral Intelligence,engagement_signals,Measure emotional and behavioral engagement levels,"attentiveness, active involvement",ADJUSTMENT_COPING
+FAM_BEH_011,DOM_003,Behavioral Intelligence,discipline_signals,Assess self-discipline and behavioral control,"routine adherence, behavioral discipline",DISCIPLINE_HABITS
+FAM_BEH_012,DOM_003,Behavioral Intelligence,followthrough_signals,Measure ability to complete initiated actions,"completion consistency, commitment execution",GENERAL_CONCERN
+FAM_BEH_013,DOM_003,Behavioral Intelligence,responsiveness_signals,"Detect responsiveness to expectations, tasks, and feedback","reaction speed, adaptive response behavior",GENERAL_CONCERN
+FAM_BEH_014,DOM_003,Behavioral Intelligence,risk_avoidance_signals,Measure avoidance of uncertain or high-pressure situations,"fear-driven avoidance, hesitation behavior",ADJUSTMENT_COPING
+FAM_BEH_015,DOM_003,Behavioral Intelligence,adaptability_behavior_signals,Assess behavioral flexibility during changing situations,"situational adjustment, behavioral adaptation",ADJUSTMENT_COPING
+FAM_BEH_016,DOM_003,Behavioral Intelligence,dependency_behavior_signals,Detect over-reliance on others for action or decisions,"external dependency, approval reliance",GENERAL_CONCERN
+FAM_BEH_017,DOM_003,Behavioral Intelligence,impulsive_behavior_signals,Measure impulsive or poorly controlled actions,"impulsivity, reactive behavior",GENERAL_CONCERN
+FAM_BEH_018,DOM_003,Behavioral Intelligence,routine_stability_signals,Assess stability of productive behavioral routines,"structured habits, daily consistency",GENERAL_CONCERN
+FAM_BEH_019,DOM_003,Behavioral Intelligence,behavioral_recovery_signals,Measure recovery speed after behavioral setbacks,"comeback behavior, resilience in action",GENERAL_CONCERN
+FAM_BEH_020,DOM_003,Behavioral Intelligence,behavioral_resistance_signals,"Detect resistance toward change, guidance, or expectations","stubbornness, passive resistance, non-compliance",GENERAL_CONCERN
+FAM_MOT_001,DOM_004,Motivational Intelligence,burnout_signals,Detect emotional and motivational exhaustion,"burnout, exhaustion, emotional fatigue",ADJUSTMENT_COPING
+FAM_MOT_002,DOM_004,Motivational Intelligence,persistence_signals,Measure consistency of effort despite setbacks,"perseverance, sustained effort",GENERAL_CONCERN
+FAM_MOT_003,DOM_004,Motivational Intelligence,aspiration_signals,Assess ambition and future achievement orientation,"ambition, growth goals",GENERAL_CONCERN
+FAM_MOT_004,DOM_004,Motivational Intelligence,drive_signals,Measure intensity of internal motivation,"enthusiasm, energy, initiative",GENERAL_CONCERN
+FAM_MOT_005,DOM_004,Motivational Intelligence,disengagement_signals,Detect motivational withdrawal and detachment,"apathy, disinterest, disengagement",GENERAL_CONCERN
+FAM_MOT_006,DOM_004,Motivational Intelligence,achievement_orientation_signals,Measure desire for achievement and accomplishment,"success focus, achievement striving",GENERAL_CONCERN
+FAM_MOT_007,DOM_004,Motivational Intelligence,growth_orientation_signals,Assess openness toward growth and self-improvement,"growth mindset, self-development",GENERAL_CONCERN
+FAM_MOT_008,DOM_004,Motivational Intelligence,effort_stability_signals,Measure stability of effort over time,"consistency, discipline",DISCIPLINE_HABITS
+FAM_MOT_009,DOM_004,Motivational Intelligence,energy_sustainability_signals,Assess ability to maintain motivational energy,"stamina, sustainable effort",GENERAL_CONCERN
+FAM_MOT_010,DOM_004,Motivational Intelligence,goal_commitment_signals,Measure commitment toward long-term goals,"dedication, commitment stability",GENERAL_CONCERN
+FAM_MOT_011,DOM_004,Motivational Intelligence,reward_dependency_signals,Detect dependence on external rewards for motivation,"validation dependency, reward seeking",GENERAL_CONCERN
+FAM_MOT_012,DOM_004,Motivational Intelligence,initiative_activation_signals,Assess willingness to initiate action independently,"proactive engagement, initiative",GENERAL_CONCERN
+FAM_MOT_013,DOM_004,Motivational Intelligence,motivational_resilience_signals,Measure recovery of motivation after failure,bounce-back motivation,GENERAL_CONCERN
+FAM_MOT_014,DOM_004,Motivational Intelligence,ambition_stability_signals,Assess stability and sustainability of ambition,aspiration consistency,GENERAL_CONCERN
+FAM_MOT_015,DOM_004,Motivational Intelligence,self_activation_signals,Measure self-driven action tendencies,self-starting behavior,GENERAL_CONCERN
+FAM_MOT_016,DOM_004,Motivational Intelligence,learning_drive_signals,Assess motivation toward continuous learning,curiosity-driven learning,GENERAL_CONCERN
+FAM_MOT_017,DOM_004,Motivational Intelligence,performance_drive_signals,Measure motivation to perform under pressure,competitive motivation,GENERAL_CONCERN
+FAM_MOT_018,DOM_004,Motivational Intelligence,purpose_alignment_signals,Assess alignment between goals and personal meaning,meaningful engagement,GENERAL_CONCERN
+FAM_MOT_019,DOM_004,Motivational Intelligence,motivational_volatility_signals,Detect fluctuations in motivation levels,"inconsistency, unstable drive",GENERAL_CONCERN
+FAM_MOT_020,DOM_004,Motivational Intelligence,recovery_energy_signals,Measure restoration of energy after stress or burnout,"recovery readiness, energy restoration",ADJUSTMENT_COPING
+FAM_SOC_001,DOM_005,Social Intelligence,peer_comparison_signals,Measure comparison-driven emotional and behavioral reactions,"peer comparison, inferiority feelings, competitive insecurity",ADJUSTMENT_COPING
+FAM_SOC_002,DOM_005,Social Intelligence,approval_seeking_signals,Detect dependency on external validation and acceptance,"validation dependency, social approval needs",GENERAL_CONCERN
+FAM_SOC_003,DOM_005,Social Intelligence,belonging_signals,Assess emotional sense of inclusion and belonging,"belonging insecurity, exclusion sensitivity",ADJUSTMENT_COPING
+FAM_SOC_004,DOM_005,Social Intelligence,communication_comfort_signals,Measure comfort during interpersonal interactions,"social comfort, conversational ease",GENERAL_CONCERN
+FAM_SOC_005,DOM_005,Social Intelligence,social_confidence_signals,Assess confidence in social and public environments,"social confidence, visibility comfort",GENERAL_CONCERN
+FAM_SOC_006,DOM_005,Social Intelligence,interaction_quality_signals,Evaluate quality and consistency of interpersonal interactions,"interaction effectiveness, relationship stability",GENERAL_CONCERN
+FAM_SOC_007,DOM_005,Social Intelligence,judgment_fear_signals,Detect fear of criticism and social evaluation,"fear of judgment, embarrassment avoidance",ADJUSTMENT_COPING
+FAM_SOC_008,DOM_005,Social Intelligence,social_withdrawal_signals,Measure avoidance of social participation and engagement,"isolation, social disengagement",GENERAL_CONCERN
+FAM_SOC_009,DOM_005,Social Intelligence,visibility_anxiety_signals,Assess discomfort with attention and visibility,"stage fear, visibility hesitation",ADJUSTMENT_COPING
+FAM_SOC_010,DOM_005,Social Intelligence,networking_signals,Measure ability and willingness to build connections,"networking confidence, professional interaction",GENERAL_CONCERN
+FAM_SOC_011,DOM_005,Social Intelligence,relationship_trust_signals,Assess trust-building and emotional openness in relationships,"trust development, emotional openness",ADJUSTMENT_COPING
+FAM_SOC_012,DOM_005,Social Intelligence,empathy_signals,Measure emotional understanding and sensitivity toward others,"empathy, emotional responsiveness",ADJUSTMENT_COPING
+FAM_SOC_013,DOM_005,Social Intelligence,conflict_response_signals,Detect reactions and coping patterns during interpersonal conflict,"conflict handling, emotional regulation in disagreements",ADJUSTMENT_COPING
+FAM_SOC_014,DOM_005,Social Intelligence,collaboration_readiness_signals,Assess willingness to cooperate and work with others,"teamwork readiness, cooperative engagement",GENERAL_CONCERN
+FAM_SOC_015,DOM_005,Social Intelligence,influence_sensitivity_signals,Measure susceptibility to peer and social influence,"peer pressure, external influence dependency",GENERAL_CONCERN
+FAM_SOC_016,DOM_005,Social Intelligence,social_assertiveness_signals,Assess confidence in expressing opinions and boundaries,"assertiveness, boundary communication",GENERAL_CONCERN
+FAM_SOC_017,DOM_005,Social Intelligence,emotional_expression_signals,Measure openness and comfort in expressing emotions socially,"emotional disclosure, expression comfort",ADJUSTMENT_COPING
+FAM_SOC_018,DOM_005,Social Intelligence,group_participation_signals,Assess engagement quality in team and group settings,"group interaction, collaborative participation",GENERAL_CONCERN
+FAM_SOC_019,DOM_005,Social Intelligence,interpersonal_resilience_signals,Measure recovery ability after rejection or social setbacks,"rejection recovery, social resilience",GENERAL_CONCERN
+FAM_SOC_020,DOM_005,Social Intelligence,social_adaptation_signals,Assess adaptability across different social environments,"situational adjustment, social flexibility",ADJUSTMENT_COPING
+FAM_EXEC_001,DOM_006,Executive Function Intelligence,planning_signals,Measure planning ability and future task organization,"planning, scheduling, preparation",GENERAL_CONCERN
+FAM_EXEC_002,DOM_006,Executive Function Intelligence,prioritization_signals,Assess ability to prioritize tasks effectively,"priority management, decision sequencing",GENERAL_CONCERN
+FAM_EXEC_003,DOM_006,Executive Function Intelligence,task_completion_signals,Measure consistency in completing assigned tasks,"completion behavior, follow-through",GENERAL_CONCERN
+FAM_EXEC_004,DOM_006,Executive Function Intelligence,execution_consistency_signals,Detect consistency in execution quality,"reliability, execution stability",GENERAL_CONCERN
+FAM_EXEC_005,DOM_006,Executive Function Intelligence,organization_signals,Assess organizational discipline and structure,"organization, systematic behavior",DISCIPLINE_HABITS
+FAM_EXEC_006,DOM_006,Executive Function Intelligence,structure_signals,Measure dependence on routines and structure,"structure stability, routine management",DISCIPLINE_HABITS
+FAM_EXEC_007,DOM_006,Executive Function Intelligence,time_management_signals,Evaluate effective use of time and deadlines,"punctuality, scheduling discipline",DISCIPLINE_HABITS
+FAM_EXEC_008,DOM_006,Executive Function Intelligence,productivity_signals,Measure productive work behavior,"productivity, efficiency",GENERAL_CONCERN
+FAM_EXEC_009,DOM_006,Executive Function Intelligence,followthrough_signals,Assess persistence in finishing initiated work,"consistency, sustained execution",GENERAL_CONCERN
+FAM_EXEC_010,DOM_006,Executive Function Intelligence,operational_discipline_signals,Measure discipline in operational execution,"process adherence, disciplined action",DISCIPLINE_HABITS
+FAM_EXEC_011,DOM_006,Executive Function Intelligence,attention_control_signals,Evaluate focus and attention regulation,"focus stability, distraction control",GENERAL_CONCERN
+FAM_EXEC_012,DOM_006,Executive Function Intelligence,cognitive_control_signals,Assess regulation of impulses and thinking patterns,"impulse control, mental regulation",GENERAL_CONCERN
+FAM_EXEC_013,DOM_006,Executive Function Intelligence,workflow_management_signals,Measure workflow coordination and management,"workflow structure, process flow",GENERAL_CONCERN
+FAM_EXEC_014,DOM_006,Executive Function Intelligence,decision_execution_signals,Assess ability to convert decisions into action,"action initiation, execution activation",GENERAL_CONCERN
+FAM_EXEC_015,DOM_006,Executive Function Intelligence,consistency_signals,Measure behavioral and execution consistency,"stable performance, routine reliability",DISCIPLINE_HABITS
+FAM_EXEC_016,DOM_006,Executive Function Intelligence,deadline_management_signals,Assess handling of deadlines and pressure timelines,"deadline adherence, urgency handling",GENERAL_CONCERN
+FAM_EXEC_017,DOM_006,Executive Function Intelligence,multitasking_signals,Evaluate handling of multiple simultaneous tasks,"task switching, workload balancing",GENERAL_CONCERN
+FAM_EXEC_018,DOM_006,Executive Function Intelligence,execution_breakdown_signals,Detect failures in sustained execution,"execution collapse, incomplete tasks",GENERAL_CONCERN
+FAM_EXEC_019,DOM_006,Executive Function Intelligence,self_regulation_signals,Measure ability to regulate actions and routines,"discipline, behavioral regulation",DISCIPLINE_HABITS
+FAM_EXEC_020,DOM_006,Executive Function Intelligence,process_adherence_signals,Assess adherence to defined systems and processes,"compliance, systematic execution",GENERAL_CONCERN
+FAM_IDEN_001,DOM_007,Identity Intelligence,self_belief_signals,Measure internal belief in personal capability and competence,"self-confidence, capability belief, self-trust",GENERAL_CONCERN
+FAM_IDEN_002,DOM_007,Identity Intelligence,self_worth_signals,Assess perceived self-value and emotional worthiness,"self-esteem, inadequacy, worth instability",ADJUSTMENT_COPING
+FAM_IDEN_003,DOM_007,Identity Intelligence,identity_clarity_signals,Measure clarity and stability of personal identity,"self-definition, identity certainty",GENERAL_CONCERN
+FAM_IDEN_004,DOM_007,Identity Intelligence,purpose_signals,Assess sense of meaning and life direction,"purpose clarity, meaning orientation",GENERAL_CONCERN
+FAM_IDEN_005,DOM_007,Identity Intelligence,self_acceptance_signals,"Measure acceptance of strengths, weaknesses, and individuality","self-acceptance, emotional comfort with self",ADJUSTMENT_COPING
+FAM_IDEN_006,DOM_007,Identity Intelligence,authenticity_signals,Assess authenticity and alignment between inner self and external behavior,"genuineness, identity congruence",GENERAL_CONCERN
+FAM_IDEN_007,DOM_007,Identity Intelligence,identity_confusion_signals,Detect instability and confusion in self-concept,"uncertainty, role confusion",GENERAL_CONCERN
+FAM_IDEN_008,DOM_007,Identity Intelligence,self_respect_signals,Measure personal dignity and self-respect,"boundary protection, self-value",GENERAL_CONCERN
+FAM_IDEN_009,DOM_007,Identity Intelligence,personal_values_signals,Assess clarity and consistency of personal values,"ethics, principles, value alignment",GENERAL_CONCERN
+FAM_IDEN_010,DOM_007,Identity Intelligence,individuality_signals,Measure comfort in expressing individuality,"uniqueness expression, independent identity",GENERAL_CONCERN
+FAM_IDEN_011,DOM_007,Identity Intelligence,internal_validation_signals,Assess ability to self-validate without excessive external approval,"internal confidence, emotional independence",ADJUSTMENT_COPING
+FAM_IDEN_012,DOM_007,Identity Intelligence,identity_stability_signals,Measure consistency of self-perception across situations,"stable identity, emotional continuity",ADJUSTMENT_COPING
+FAM_IDEN_013,DOM_007,Identity Intelligence,self_awareness_signals,"Assess awareness of strengths, weaknesses, and emotional patterns","introspection, self-understanding",ADJUSTMENT_COPING
+FAM_IDEN_014,DOM_007,Identity Intelligence,aspiration_identity_signals,Measure alignment between ambitions and identity,"aspiration clarity, future self-image",GENERAL_CONCERN
+FAM_IDEN_015,DOM_007,Identity Intelligence,role_identity_signals,Assess comfort and clarity in social and professional roles,"role adaptation, role certainty",GENERAL_CONCERN
+FAM_IDEN_016,DOM_007,Identity Intelligence,self_expression_signals,Measure confidence in expressing personal thoughts and identity,"openness, emotional expression",ADJUSTMENT_COPING
+FAM_IDEN_017,DOM_007,Identity Intelligence,confidence_foundation_signals,Assess foundational emotional confidence independent of performance,"emotional stability, baseline confidence",ADJUSTMENT_COPING
+FAM_IDEN_018,DOM_007,Identity Intelligence,identity_resilience_signals,Measure ability to maintain self-identity during setbacks or criticism,"identity endurance, emotional resilience",ADJUSTMENT_COPING
+FAM_IDEN_019,DOM_007,Identity Intelligence,self_definition_signals,Assess clarity in describing and understanding oneself,"self-concept articulation, identity awareness",GENERAL_CONCERN
+FAM_IDEN_020,DOM_007,Identity Intelligence,belonging_identity_signals,Measure identity security within groups and social environments,"belonging confidence, social identity security",GENERAL_CONCERN
+FAM_ADAPT_001,DOM_008,Adaptive Intelligence,adaptability_signals,Measure overall adaptability to changing environments and uncertainty,"adaptability, adjustment capacity, flexibility",ADJUSTMENT_COPING
+FAM_ADAPT_002,DOM_008,Adaptive Intelligence,flexibility_signals,Assess cognitive and behavioral flexibility during transitions,"mental flexibility, behavioral adjustment",ADJUSTMENT_COPING
+FAM_ADAPT_003,DOM_008,Adaptive Intelligence,transition_signals,"Evaluate how individuals handle life, academic, or career transitions","transition handling, adaptation stress",CAREER_READINESS
+FAM_ADAPT_004,DOM_008,Adaptive Intelligence,uncertainty_navigation_signals,Measure comfort and functioning under uncertain situations,"uncertainty tolerance, ambiguity handling",GENERAL_CONCERN
+FAM_ADAPT_005,DOM_008,Adaptive Intelligence,change_acceptance_signals,Assess openness toward change and new environments,"change acceptance, resistance reduction",GENERAL_CONCERN
+FAM_ADAPT_006,DOM_008,Adaptive Intelligence,recovery_adaptation_signals,Measure ability to recover and re-adapt after setbacks,"recovery flexibility, adaptive recovery",GENERAL_CONCERN
+FAM_ADAPT_007,DOM_008,Adaptive Intelligence,learning_agility_signals,Evaluate speed and flexibility of learning new concepts or systems,"learning agility, rapid adaptation",GENERAL_CONCERN
+FAM_ADAPT_008,DOM_008,Adaptive Intelligence,situational_adjustment_signals,Assess behavioral adjustment across different contexts,"situational awareness, adaptive behavior",ADJUSTMENT_COPING
+FAM_ADAPT_009,DOM_008,Adaptive Intelligence,environmental_adaptation_signals,Measure adaptation to new environments and cultures,"environmental adjustment, adaptation comfort",ADJUSTMENT_COPING
+FAM_ADAPT_010,DOM_008,Adaptive Intelligence,ambiguity_tolerance_signals,Assess tolerance for unclear or incomplete information,"ambiguity tolerance, uncertainty resilience",GENERAL_CONCERN
+FAM_ADAPT_011,DOM_008,Adaptive Intelligence,resilience_transition_signals,Measure resilience during periods of instability or transition,"transitional resilience, stress recovery",ADJUSTMENT_COPING
+FAM_ADAPT_012,DOM_008,Adaptive Intelligence,experimentation_adaptation_signals,Evaluate willingness to experiment and adapt through trial-and-error,"experimentation, adaptive exploration",GENERAL_CONCERN
+FAM_ADAPT_013,DOM_008,Adaptive Intelligence,adaptive_problem_solving_signals,Assess problem-solving flexibility in changing conditions,"adaptive reasoning, flexible problem-solving",GENERAL_CONCERN
+FAM_ADAPT_014,DOM_008,Adaptive Intelligence,behavioral_shift_signals,Measure ability to intentionally shift behavior when required,"behavioral adjustment, response modification",ADJUSTMENT_COPING
+FAM_ADAPT_015,DOM_008,Adaptive Intelligence,adaptive_confidence_signals,Assess confidence while handling unfamiliar situations,"adaptive confidence, uncertainty handling",GENERAL_CONCERN
+FAM_ADAPT_016,DOM_008,Adaptive Intelligence,recovery_speed_signals,Measure speed of emotional and behavioral recovery after disruption,"bounce-back speed, adaptive recovery",ADJUSTMENT_COPING
+FAM_ADAPT_017,DOM_008,Adaptive Intelligence,adaptability_under_pressure_signals,Assess adaptability while experiencing stress or pressure,adaptive resilience under pressure,ADJUSTMENT_COPING
+FAM_ADAPT_018,DOM_008,Adaptive Intelligence,disruption_management_signals,Evaluate ability to manage disruptions without collapse,"disruption handling, stability maintenance",GENERAL_CONCERN
+FAM_ADAPT_019,DOM_008,Adaptive Intelligence,adaptive_decision_signals,Measure decision-making flexibility during uncertainty,"adaptive decisions, dynamic judgment",GENERAL_CONCERN
+FAM_ADAPT_020,DOM_008,Adaptive Intelligence,future_adjustment_signals,Assess preparedness and adaptability toward future uncertainty,"future readiness, anticipatory adaptation",GENERAL_CONCERN
+PERF_FAM_001,DOM_009,Performance Intelligence,performance_pressure_signals,Measure emotional and behavioral response under high-pressure situations,"stress handling, pressure tolerance, emotional stability",ADJUSTMENT_COPING
+PERF_FAM_002,DOM_009,Performance Intelligence,interview_performance_signals,Assess confidence and effectiveness during interviews,"interview anxiety, verbal confidence, response quality",ADJUSTMENT_COPING
+PERF_FAM_003,DOM_009,Performance Intelligence,competitive_stress_signals,Detect stress triggered by competition and comparison,"peer pressure, comparison anxiety, performance fear",ADJUSTMENT_COPING
+PERF_FAM_004,DOM_009,Performance Intelligence,achievement_drive_signals,Measure achievement orientation and goal pursuit intensity,"ambition, success orientation, goal focus",GENERAL_CONCERN
+PERF_FAM_005,DOM_009,Performance Intelligence,evaluation_anxiety_signals,Assess fear and anxiety during evaluation environments,"exam fear, judgment fear, evaluation stress",ADJUSTMENT_COPING
+PERF_FAM_006,DOM_009,Performance Intelligence,execution_under_pressure_signals,Measure execution quality during stressful conditions,"execution consistency, pressure execution",GENERAL_CONCERN
+PERF_FAM_007,DOM_009,Performance Intelligence,deadline_response_signals,Assess behavior and emotional response toward deadlines,"urgency handling, deadline panic, time pressure",DISCIPLINE_HABITS
+PERF_FAM_008,DOM_009,Performance Intelligence,perfectionism_signals,Detect perfection-driven performance behavior,"perfectionism, fear of mistakes, overcorrection",ADJUSTMENT_COPING
+PERF_FAM_009,DOM_009,Performance Intelligence,risk_taking_performance_signals,Measure willingness to take performance-related risks,"challenge acceptance, opportunity pursuit",GENERAL_CONCERN
+PERF_FAM_010,DOM_009,Performance Intelligence,presentation_confidence_signals,Assess confidence during presentations and public performance,"presentation comfort, stage confidence",GENERAL_CONCERN
+PERF_FAM_011,DOM_009,Performance Intelligence,rejection_response_signals,Measure emotional recovery after rejection or failure,"rejection handling, resilience after setbacks",ADJUSTMENT_COPING
+PERF_FAM_012,DOM_009,Performance Intelligence,consistency_under_pressure_signals,Detect stability of performance under sustained pressure,"sustained execution, consistency stability",GENERAL_CONCERN
+PERF_FAM_013,DOM_009,Performance Intelligence,adaptability_under_pressure_signals,Measure adaptability in changing or uncertain performance conditions,"flexibility, adaptive execution",GENERAL_CONCERN
+PERF_FAM_014,DOM_009,Performance Intelligence,multitasking_performance_signals,Assess ability to handle multiple demands simultaneously,"task balancing, cognitive load management",GENERAL_CONCERN
+PERF_FAM_015,DOM_009,Performance Intelligence,confidence_recovery_signals,Measure recovery of confidence after poor performance experiences,"bounce-back confidence, emotional recovery",ADJUSTMENT_COPING
+PERF_FAM_016,DOM_009,Performance Intelligence,competitive_participation_signals,Detect willingness to actively participate in competitive environments,"participation courage, visibility behavior",GENERAL_CONCERN
+PERF_FAM_017,DOM_009,Performance Intelligence,stress_reactivity_signals,Measure intensity of emotional reaction during performance stress,"emotional reactivity, panic response",ADJUSTMENT_COPING
+PERF_FAM_018,DOM_009,Performance Intelligence,focus_under_pressure_signals,Assess concentration stability during stressful tasks,"focus consistency, distraction resistance",GENERAL_CONCERN
+PERF_FAM_019,DOM_009,Performance Intelligence,performance_recovery_signals,Measure ability to recover after performance setbacks,"recovery speed, resilience stability",GENERAL_CONCERN
+PERF_FAM_020,DOM_009,Performance Intelligence,high_stakes_decision_signals,Assess decision-making quality during high-stakes performance situations,"pressure judgment, fast decision quality",GENERAL_CONCERN
+FAM_RES_001,DOM_010,Resilience Intelligence,recovery_signals,Measure emotional recovery capability after setbacks,"emotional bounce-back, recovery speed",ADJUSTMENT_COPING
+FAM_RES_002,DOM_010,Resilience Intelligence,coping_signals,Assess coping mechanisms under stress and pressure,"coping behavior, stress handling",ADJUSTMENT_COPING
+FAM_RES_003,DOM_010,Resilience Intelligence,endurance_signals,Measure emotional and psychological endurance,"emotional stamina, persistence under stress",ADJUSTMENT_COPING
+FAM_RES_004,DOM_010,Resilience Intelligence,resilience_stability_signals,Detect stability of resilience across situations,"resilience consistency, recovery sustainability",GENERAL_CONCERN
+FAM_RES_005,DOM_010,Resilience Intelligence,setback_response_signals,Assess reactions to failures and setbacks,"failure response, emotional adaptation",ADJUSTMENT_COPING
+FAM_RES_006,DOM_010,Resilience Intelligence,stress_tolerance_signals,Measure tolerance toward prolonged stress exposure,"pressure tolerance, stress endurance",ADJUSTMENT_COPING
+FAM_RES_007,DOM_010,Resilience Intelligence,relapse_risk_signals,Detect probability of emotional or behavioral relapse,"regression tendency, instability recurrence",ADJUSTMENT_COPING
+FAM_RES_008,DOM_010,Resilience Intelligence,emotional_regulation_signals,Assess ability to regulate emotions during adversity,"emotional control, emotional balance",ADJUSTMENT_COPING
+FAM_RES_009,DOM_010,Resilience Intelligence,recovery_momentum_signals,Measure momentum of improvement after disruption,"growth recovery, improvement acceleration",GENERAL_CONCERN
+FAM_RES_010,DOM_010,Resilience Intelligence,adaptability_recovery_signals,Assess adaptive recovery during uncertain transitions,"adaptability after setbacks, flexibility recovery",GENERAL_CONCERN
+FAM_RES_011,DOM_010,Resilience Intelligence,resilience_confidence_signals,Measure confidence in overcoming future challenges,"recovery confidence, self-trust",GENERAL_CONCERN
+FAM_RES_012,DOM_010,Resilience Intelligence,emotional_recovery_speed_signals,Detect speed of emotional stabilization after distress,emotional reset capability,ADJUSTMENT_COPING
+FAM_RES_013,DOM_010,Resilience Intelligence,adversity_management_signals,Assess ability to manage prolonged adversity,"adversity handling, persistence under hardship",GENERAL_CONCERN
+FAM_RES_014,DOM_010,Resilience Intelligence,mental_toughness_signals,Measure psychological toughness in high-pressure situations,"psychological endurance, mental strength",GENERAL_CONCERN
+FAM_RES_015,DOM_010,Resilience Intelligence,persistence_after_failure_signals,Detect persistence following failures or rejection,"retry behavior, comeback orientation",GENERAL_CONCERN
+FAM_RES_016,DOM_010,Resilience Intelligence,burnout_recovery_signals,Assess recovery capacity after burnout or exhaustion,"burnout rebound, recovery sustainability",GENERAL_CONCERN
+FAM_RES_017,DOM_010,Resilience Intelligence,emotional_stability_signals,Measure consistency of emotional functioning under stress,"emotional steadiness, emotional resilience",ADJUSTMENT_COPING
+FAM_RES_018,DOM_010,Resilience Intelligence,crisis_response_signals,Assess response behavior during high-intensity crises,"crisis handling, emergency emotional response",ADJUSTMENT_COPING
+FAM_RES_019,DOM_010,Resilience Intelligence,self_repair_signals,Measure ability to self-correct emotionally and behaviorally,"self-healing, behavioral recalibration",GENERAL_CONCERN
+FAM_RES_020,DOM_010,Resilience Intelligence,recovery_growth_signals,Assess whether adversity leads to growth and strengthening,"post-adversity growth, resilience evolution",GENERAL_CONCERN
+FAM_CAI_001,DOM_011,Career Intelligence,career_clarity_signals,Measure clarity and certainty regarding future career direction,"career confusion, future uncertainty, path clarity",CAREER_READINESS
+FAM_CAI_002,DOM_011,Career Intelligence,employability_signals,Assess perceived employability and job readiness,"employability confidence, industry preparedness",CAREER_READINESS
+FAM_CAI_003,DOM_011,Career Intelligence,direction_signals,Detect instability in career direction and planning,"indecision, career switching, lack of direction",CAREER_READINESS
+FAM_CAI_004,DOM_011,Career Intelligence,professional_identity_signals,Measure development of professional identity and self-concept,"professional identity, career self-image",CAREER_READINESS
+FAM_CAI_005,DOM_011,Career Intelligence,aspiration_signals,"Assess ambition, career aspiration, and growth orientation","ambition, achievement goals, future aspirations",CAREER_READINESS
+FAM_CAI_006,DOM_011,Career Intelligence,workplace_readiness_signals,Evaluate readiness for workplace environments and expectations,"workplace confidence, adaptation readiness",CAREER_READINESS
+FAM_CAI_007,DOM_011,Career Intelligence,placement_confidence_signals,Measure confidence in placement and recruitment situations,"placement anxiety, interview readiness",CAREER_READINESS
+FAM_CAI_008,DOM_011,Career Intelligence,industry_awareness_signals,"Assess awareness of industries, roles, and market expectations","career awareness, role understanding",CAREER_READINESS
+FAM_CAI_009,DOM_011,Career Intelligence,role_fit_signals,Evaluate perceived alignment between self and career roles,"role compatibility, fit awareness",CAREER_READINESS
+FAM_CAI_010,DOM_011,Career Intelligence,career_decision_signals,Measure confidence and quality in career-related decisions,"career decision-making, commitment stability",CAREER_READINESS
+FAM_CAI_011,DOM_011,Career Intelligence,professional_confidence_signals,Assess confidence in professional capability and growth potential,"professional self-belief, competence confidence",CAREER_READINESS
+FAM_CAI_012,DOM_011,Career Intelligence,future_planning_signals,"Measure ability to think, plan, and prepare for long-term career goals","future planning, preparation behavior",CAREER_READINESS
+FAM_CAI_013,DOM_011,Career Intelligence,opportunity_readiness_signals,Detect readiness to apply for and pursue opportunities,"application behavior, opportunity participation",CAREER_READINESS
+FAM_CAI_014,DOM_011,Career Intelligence,career_exploration_signals,Assess openness toward exploring multiple career pathways,"exploration behavior, curiosity toward careers",CAREER_READINESS
+FAM_CAI_015,DOM_011,Career Intelligence,networking_signals,Measure professional networking behavior and relationship-building,"networking confidence, professional interaction",CAREER_READINESS
+FAM_CAI_016,DOM_011,Career Intelligence,interview_adaptability_signals,Assess adaptability and comfort in interview and evaluation environments,adaptability under interview pressure,CAREER_READINESS
+FAM_CAI_017,DOM_011,Career Intelligence,practical_transition_signals,Evaluate ability to transition from academics to professional work,academic-to-workplace transition,CAREER_READINESS
+FAM_CAI_018,DOM_011,Career Intelligence,career_resilience_signals,Measure resilience after career setbacks or rejections,"rejection recovery, persistence after setbacks",CAREER_READINESS
+FAM_CAI_019,DOM_011,Career Intelligence,guidance_dependency_signals,Detect over-dependence on external guidance for career decisions,"dependency, external validation in career choices",CAREER_READINESS
+FAM_CAI_020,DOM_011,Career Intelligence,career_execution_signals,Assess consistency in executing career preparation activities,"preparation consistency, action orientation",CAREER_READINESS
+FAM_LRN_001,DOM_012,Learning Intelligence,learning_consistency_signals,Measure consistency and continuity in learning behavior,"study regularity, continuity, discipline",DISCIPLINE_HABITS
+FAM_LRN_002,DOM_012,Learning Intelligence,mastery_signals,Assess depth of understanding and mastery orientation,"conceptual mastery, deep learning",GENERAL_CONCERN
+FAM_LRN_003,DOM_012,Learning Intelligence,skill_gap_signals,Detect gaps between required and existing skills,"competency deficiencies, employability gaps",CAREER_READINESS
+FAM_LRN_004,DOM_012,Learning Intelligence,application_signals,Measure practical application of theoretical learning,"real-world execution, implementation ability",GENERAL_CONCERN
+FAM_LRN_005,DOM_012,Learning Intelligence,comprehension_signals,Assess comprehension and conceptual clarity,"understanding quality, concept absorption",GENERAL_CONCERN
+FAM_LRN_006,DOM_012,Learning Intelligence,retention_signals,Measure information retention and memory stability,"recall ability, long-term retention",GENERAL_CONCERN
+FAM_LRN_007,DOM_012,Learning Intelligence,curiosity_driven_learning_signals,Assess natural curiosity and self-driven exploration,"exploration tendency, intellectual curiosity",GENERAL_CONCERN
+FAM_LRN_008,DOM_012,Learning Intelligence,self_learning_signals,Measure independent learning behavior,"autonomous learning, self-study habits",GENERAL_CONCERN
+FAM_LRN_009,DOM_012,Learning Intelligence,adaptive_learning_signals,Assess ability to adapt learning strategies,"learning flexibility, adjustment capability",ADJUSTMENT_COPING
+FAM_LRN_010,DOM_012,Learning Intelligence,conceptual_clarity_signals,Measure conceptual understanding depth,"clarity of concepts, foundational understanding",GENERAL_CONCERN
+FAM_LRN_011,DOM_012,Learning Intelligence,practical_learning_signals,Assess practical and experiential learning orientation,"hands-on learning, experiential application",GENERAL_CONCERN
+FAM_LRN_012,DOM_012,Learning Intelligence,learning_engagement_signals,Measure active engagement during learning,"attentiveness, participation, involvement",GENERAL_CONCERN
+FAM_LRN_013,DOM_012,Learning Intelligence,academic_confidence_signals,Assess confidence in academic and learning capability,"academic self-belief, learning confidence",COLLEGE_ADAPT
+FAM_LRN_014,DOM_012,Learning Intelligence,learning_resilience_signals,Measure persistence after academic setbacks,"recovery after failure, persistence",COLLEGE_ADAPT
+FAM_LRN_015,DOM_012,Learning Intelligence,structured_learning_signals,Assess structured and organized learning approaches,"planning, organized studying",GENERAL_CONCERN
+FAM_LRN_016,DOM_012,Learning Intelligence,learning_focus_signals,Measure sustained attention during learning,"concentration, focus stability",GENERAL_CONCERN
+FAM_LRN_017,DOM_012,Learning Intelligence,knowledge_application_signals,Assess transfer of knowledge across situations,"contextual application, transferable learning",GENERAL_CONCERN
+FAM_LRN_018,DOM_012,Learning Intelligence,learning_agility_signals,Measure speed and flexibility of learning new concepts,"adaptability, rapid learning",GENERAL_CONCERN
+FAM_LRN_019,DOM_012,Learning Intelligence,reflective_learning_signals,Assess reflective thinking and self-evaluation in learning,"self-assessment, reflective improvement",EXAM_STRESS
+FAM_LRN_020,DOM_012,Learning Intelligence,collaborative_learning_signals,Measure effectiveness in group-based learning environments,"peer learning, collaborative understanding",GENERAL_CONCERN
+FAM_COM_001,DOM_013,Communication Intelligence,articulation_signals,Measure clarity and structure of verbal communication,"articulation clarity, sentence framing, verbal precision",GENERAL_CONCERN
+FAM_COM_002,DOM_013,Communication Intelligence,speaking_confidence_signals,Assess confidence while speaking in public or groups,"speaking anxiety, confidence stability, presentation comfort",ADJUSTMENT_COPING
+FAM_COM_003,DOM_013,Communication Intelligence,interaction_signals,Evaluate quality of interpersonal interactions,"conversational comfort, interaction flow, responsiveness",GENERAL_CONCERN
+FAM_COM_004,DOM_013,Communication Intelligence,expression_signals,Measure emotional and verbal self-expression capability,"emotional expression, verbal openness, communication ease",ADJUSTMENT_COPING
+FAM_COM_005,DOM_013,Communication Intelligence,listening_signals,Assess active listening and comprehension behavior,"attentive listening, response understanding, engagement quality",GENERAL_CONCERN
+FAM_COM_006,DOM_013,Communication Intelligence,presentation_signals,Measure effectiveness in formal presentations,"presentation delivery, stage comfort, audience engagement",GENERAL_CONCERN
+FAM_COM_007,DOM_013,Communication Intelligence,public_speaking_signals,Detect confidence and stability during public speaking,"stage fear, audience anxiety, speech confidence",ADJUSTMENT_COPING
+FAM_COM_008,DOM_013,Communication Intelligence,interpersonal_clarity_signals,Assess clarity while communicating with others,"communication precision, misunderstanding reduction",GENERAL_CONCERN
+FAM_COM_009,DOM_013,Communication Intelligence,social_expression_signals,Measure comfort expressing thoughts socially,"openness, discussion participation, expression confidence",GENERAL_CONCERN
+FAM_COM_010,DOM_013,Communication Intelligence,assertiveness_signals,Assess ability to communicate needs and opinions confidently,"assertiveness, boundary communication, self-advocacy",GENERAL_CONCERN
+FAM_COM_011,DOM_013,Communication Intelligence,persuasion_signals,Measure persuasion and influence communication ability,"convincing ability, influence patterns, negotiation behavior",GENERAL_CONCERN
+FAM_COM_012,DOM_013,Communication Intelligence,negotiation_signals,Assess negotiation and conflict communication quality,"compromise ability, negotiation stability",GENERAL_CONCERN
+FAM_COM_013,DOM_013,Communication Intelligence,feedback_response_signals,Measure response quality toward feedback and criticism,"feedback acceptance, defensive communication",GENERAL_CONCERN
+FAM_COM_014,DOM_013,Communication Intelligence,communication_anxiety_signals,Detect anxiety related to communication situations,"speaking fear, interaction stress, communication hesitation",ADJUSTMENT_COPING
+FAM_COM_015,DOM_013,Communication Intelligence,verbal_fluency_signals,Assess smoothness and continuity of verbal communication,"speech flow, fluency consistency, hesitation frequency",GENERAL_CONCERN
+FAM_COM_016,DOM_013,Communication Intelligence,nonverbal_communication_signals,Measure effectiveness of body language and nonverbal cues,"eye contact, posture, facial expressions",GENERAL_CONCERN
+FAM_COM_017,DOM_013,Communication Intelligence,professional_communication_signals,Assess workplace and professional communication readiness,"workplace articulation, professional tone, email communication",GENERAL_CONCERN
+FAM_COM_018,DOM_013,Communication Intelligence,group_discussion_signals,Measure participation quality during group discussions,"discussion participation, collaborative speaking",GENERAL_CONCERN
+FAM_COM_019,DOM_013,Communication Intelligence,emotional_communication_signals,Assess emotional sensitivity and empathy in communication,"empathy, emotional responsiveness, supportive communication",ADJUSTMENT_COPING
+FAM_COM_020,DOM_013,Communication Intelligence,digital_communication_signals,Measure communication effectiveness across digital platforms,"online communication clarity, digital etiquette, responsiveness",GENERAL_CONCERN
+FAM_DEC_001,DOM_014,Decision Intelligence,decisiveness_signals,Measure ability to make timely and confident decisions,"decisiveness, commitment stability, action initiation",GENERAL_CONCERN
+FAM_DEC_002,DOM_014,Decision Intelligence,judgment_signals,Assess quality of judgment under normal and stressful situations,"reasoning quality, judgment stability",GENERAL_CONCERN
+FAM_DEC_003,DOM_014,Decision Intelligence,commitment_signals,Measure consistency in sticking to decisions and plans,"commitment consistency, follow-through",GENERAL_CONCERN
+FAM_DEC_004,DOM_014,Decision Intelligence,risk_assessment_signals,Evaluate ability to assess risks before acting,"risk evaluation, consequence awareness",EXAM_STRESS
+FAM_DEC_005,DOM_014,Decision Intelligence,indecision_signals,Detect hesitation and inability to choose between options,"indecision, hesitation, confusion",GENERAL_CONCERN
+FAM_DEC_006,DOM_014,Decision Intelligence,impulsive_decision_signals,Measure tendency to make rushed or emotionally driven decisions,"impulsivity, reactive choices",GENERAL_CONCERN
+FAM_DEC_007,DOM_014,Decision Intelligence,dependency_decision_signals,Assess reliance on others while making decisions,"external dependency, approval reliance",GENERAL_CONCERN
+FAM_DEC_008,DOM_014,Decision Intelligence,analytical_decision_signals,Measure structured analytical thinking during decisions,"analysis quality, logical evaluation",EXAM_STRESS
+FAM_DEC_009,DOM_014,Decision Intelligence,overthinking_decision_signals,Detect excessive thinking before decision-making,"rumination, paralysis by analysis",GENERAL_CONCERN
+FAM_DEC_010,DOM_014,Decision Intelligence,confidence_decision_signals,Assess confidence while making important choices,"confidence stability, certainty",GENERAL_CONCERN
+FAM_DEC_011,DOM_014,Decision Intelligence,uncertainty_handling_signals,Measure ability to make decisions under uncertainty,"ambiguity tolerance, adaptability",GENERAL_CONCERN
+FAM_DEC_012,DOM_014,Decision Intelligence,priority_decision_signals,Assess prioritization quality during competing demands,"prioritization, strategic selection",GENERAL_CONCERN
+FAM_DEC_013,DOM_014,Decision Intelligence,ethical_decision_signals,Measure ethical reasoning during difficult choices,"moral judgment, ethical consistency",GENERAL_CONCERN
+FAM_DEC_014,DOM_014,Decision Intelligence,emotional_decision_signals,Assess emotional influence on decision quality,"emotional reactivity, emotional bias",ADJUSTMENT_COPING
+FAM_DEC_015,DOM_014,Decision Intelligence,long_term_decision_signals,Measure future-oriented thinking during decision-making,"long-term planning, future impact awareness",GENERAL_CONCERN
+FAM_DEC_016,DOM_014,Decision Intelligence,adaptive_decision_signals,Assess flexibility in revising decisions when needed,"adaptability, decision flexibility",GENERAL_CONCERN
+FAM_DEC_017,DOM_014,Decision Intelligence,pressure_decision_signals,Measure decision quality under pressure and deadlines,"stress handling, high-pressure judgment",ADJUSTMENT_COPING
+FAM_DEC_018,DOM_014,Decision Intelligence,strategic_decision_signals,Assess strategic and goal-oriented decision capability,"strategic thinking, outcome orientation",GENERAL_CONCERN
+FAM_DEC_019,DOM_014,Decision Intelligence,accountability_decision_signals,Measure ownership and responsibility after decisions,"accountability, ownership behavior",GENERAL_CONCERN
+FAM_DEC_020,DOM_014,Decision Intelligence,execution_alignment_signals,Assess alignment between decisions and execution behavior,"execution consistency, action alignment",GENERAL_CONCERN
+FAM_WELL_001,DOM_015,Wellbeing Intelligence,wellness_balance_signals,"Measure overall balance between mental, emotional, and physical wellbeing","balance, stability, wellness regulation",ADJUSTMENT_COPING
+FAM_WELL_002,DOM_015,Wellbeing Intelligence,fatigue_signals,Detect physical and mental exhaustion patterns,"fatigue, exhaustion, low energy",GENERAL_CONCERN
+FAM_WELL_003,DOM_015,Wellbeing Intelligence,stress_management_signals,Assess ability to manage stress effectively,"stress handling, pressure regulation",ADJUSTMENT_COPING
+FAM_WELL_004,DOM_015,Wellbeing Intelligence,self_care_signals,Measure consistency of self-care and recovery behaviors,"self-care habits, recovery practices",GENERAL_CONCERN
+FAM_WELL_005,DOM_015,Wellbeing Intelligence,sleep_health_signals,Evaluate sleep quality and sleep consistency impact,"sleep quality, sleep deprivation",GENERAL_CONCERN
+FAM_WELL_006,DOM_015,Wellbeing Intelligence,emotional_balance_signals,Measure emotional stability and emotional equilibrium,"emotional fluctuations, emotional steadiness",ADJUSTMENT_COPING
+FAM_WELL_007,DOM_015,Wellbeing Intelligence,energy_regulation_signals,Assess daily energy sustainability and burnout tendency,"energy cycles, depletion patterns",GENERAL_CONCERN
+FAM_WELL_008,DOM_015,Wellbeing Intelligence,lifestyle_stability_signals,Measure routine consistency and healthy lifestyle structure,"routine balance, lifestyle discipline",DISCIPLINE_HABITS
+FAM_WELL_009,DOM_015,Wellbeing Intelligence,burnout_prevention_signals,Detect early burnout risk indicators,"overload, exhaustion, burnout escalation",GENERAL_CONCERN
+FAM_WELL_010,DOM_015,Wellbeing Intelligence,recovery_quality_signals,Assess quality of emotional and physical recovery,"rest effectiveness, recovery sustainability",ADJUSTMENT_COPING
+FAM_WELL_011,DOM_015,Wellbeing Intelligence,health_awareness_signals,Measure awareness and attention toward personal health,"health consciousness, wellbeing awareness",GENERAL_CONCERN
+FAM_WELL_012,DOM_015,Wellbeing Intelligence,work_life_balance_signals,Evaluate balance between responsibilities and personal wellbeing,"imbalance, overcommitment",GENERAL_CONCERN
+FAM_WELL_013,DOM_015,Wellbeing Intelligence,relaxation_signals,Assess ability to relax and mentally disengage from stress,"relaxation ability, mental calmness",ADJUSTMENT_COPING
+FAM_WELL_014,DOM_015,Wellbeing Intelligence,emotional_recovery_signals,Measure recovery speed after emotional setbacks,"emotional resilience, emotional rebound",ADJUSTMENT_COPING
+FAM_WELL_015,DOM_015,Wellbeing Intelligence,physical_wellbeing_signals,Assess physical wellness impact on overall functioning,"physical vitality, body wellness",GENERAL_CONCERN
+FAM_WELL_016,DOM_015,Wellbeing Intelligence,mental_wellbeing_signals,Measure cognitive and emotional mental wellness,"mental stability, mental strain",ADJUSTMENT_COPING
+FAM_WELL_017,DOM_015,Wellbeing Intelligence,stress_reactivity_signals,Detect intensity of reaction to stressful situations,"emotional reactivity, stress sensitivity",ADJUSTMENT_COPING
+FAM_WELL_018,DOM_015,Wellbeing Intelligence,resilience_recovery_signals,Assess resilience sustainability after repeated pressure,"endurance, recovery persistence",GENERAL_CONCERN
+FAM_WELL_019,DOM_015,Wellbeing Intelligence,wellness_consistency_signals,Measure long-term consistency of wellness behaviors,healthy habit continuity,DISCIPLINE_HABITS
+FAM_WELL_020,DOM_015,Wellbeing Intelligence,holistic_health_signals,"Evaluate integrated physical, emotional, and psychological wellbeing","holistic wellness, integrated health functioning",ADJUSTMENT_COPING
+FAM_EMP_001,DOM_016,Employability Intelligence,workplace_readiness_signals,Measure readiness to function effectively in professional environments,"workplace adaptation, professional preparedness",CAREER_READINESS
+FAM_EMP_002,DOM_016,Employability Intelligence,employability_gap_signals,Detect gaps affecting employability and placement success,"skill deficiencies, employability instability",CAREER_READINESS
+FAM_EMP_003,DOM_016,Employability Intelligence,professional_competency_signals,Assess practical competency required for industry roles,"technical capability, execution quality",CAREER_READINESS
+FAM_EMP_004,DOM_016,Employability Intelligence,practical_exposure_signals,Measure exposure to real-world work environments and industry practices,"internships, workplace familiarity",CAREER_READINESS
+FAM_EMP_005,DOM_016,Employability Intelligence,interview_readiness_signals,Evaluate preparation and confidence for interviews and evaluations,"interview preparedness, response confidence",CAREER_READINESS
+FAM_EMP_006,DOM_016,Employability Intelligence,communication_for_employability_signals,Assess workplace communication effectiveness,"professional communication, articulation",CAREER_READINESS
+FAM_EMP_007,DOM_016,Employability Intelligence,workplace_adaptability_signals,Measure ability to adjust to organizational and workplace demands,"adaptability, transition flexibility",CAREER_READINESS
+FAM_EMP_008,DOM_016,Employability Intelligence,execution_reliability_signals,Assess consistency in task execution and delivery,"accountability, task completion",CAREER_READINESS
+FAM_EMP_009,DOM_016,Employability Intelligence,professional_confidence_signals,Measure confidence in handling professional responsibilities,"workplace confidence, self-belief",CAREER_READINESS
+FAM_EMP_010,DOM_016,Employability Intelligence,career_transition_signals,Evaluate readiness for transition from academics to industry,"transition preparedness, adjustment capability",CAREER_READINESS
+FAM_EMP_011,DOM_016,Employability Intelligence,workplace_behavior_signals,Assess professional behavior and workplace discipline,"punctuality, professionalism",CAREER_READINESS
+FAM_EMP_012,DOM_016,Employability Intelligence,industry_alignment_signals,Measure alignment between skills and market expectations,"industry relevance, role-fit awareness",CAREER_READINESS
+FAM_EMP_013,DOM_016,Employability Intelligence,learning_agility_signals,Assess ability to learn quickly in changing work environments,"rapid learning, adaptability",CAREER_READINESS
+FAM_EMP_014,DOM_016,Employability Intelligence,problem_solving_signals,Measure workplace problem-solving capability,"analytical thinking, solution orientation",CAREER_READINESS
+FAM_EMP_015,DOM_016,Employability Intelligence,collaboration_for_workplace_signals,Assess teamwork readiness in professional environments,"collaboration, team participation",CAREER_READINESS
+FAM_EMP_016,DOM_016,Employability Intelligence,accountability_for_work_signals,Measure ownership and responsibility in work execution,"ownership, responsibility handling",CAREER_READINESS
+FAM_EMP_017,DOM_016,Employability Intelligence,workplace_resilience_signals,Assess ability to sustain performance under workplace pressure,"resilience, pressure tolerance",CAREER_READINESS
+FAM_EMP_018,DOM_016,Employability Intelligence,employability_motivation_signals,Measure motivation toward employability and career preparation,"placement drive, professional ambition",CAREER_READINESS
+FAM_EMP_019,DOM_016,Employability Intelligence,professional_identity_signals,Assess development of professional self-concept and identity,"professional self-image, career identity",CAREER_READINESS
+FAM_EMP_020,DOM_016,Employability Intelligence,workplace_ethics_signals,Measure ethical behavior and integrity in professional settings,"ethics, workplace trustworthiness",CAREER_READINESS
+FAM_LEAD_001,DOM_017,Leadership Intelligence,initiative_signals,Measure proactive behavior and willingness to take action,"initiative, self-starting behavior, proactive execution",GENERAL_CONCERN
+FAM_LEAD_002,DOM_017,Leadership Intelligence,ownership_signals,Assess accountability and responsibility-taking patterns,"accountability, ownership, responsibility acceptance",GENERAL_CONCERN
+FAM_LEAD_003,DOM_017,Leadership Intelligence,leadership_presence_signals,Evaluate confidence and influence in leadership situations,"presence, visibility, authority projection",GENERAL_CONCERN
+FAM_LEAD_004,DOM_017,Leadership Intelligence,influence_signals,Measure ability to positively influence others,"persuasion, motivation, social influence",GENERAL_CONCERN
+FAM_LEAD_005,DOM_017,Leadership Intelligence,decision_leadership_signals,Assess decision-making ability under responsibility,"leadership judgment, decisive action",GENERAL_CONCERN
+FAM_LEAD_006,DOM_017,Leadership Intelligence,accountability_execution_signals,Measure consistency in delivering commitments,"reliability, execution ownership",GENERAL_CONCERN
+FAM_LEAD_007,DOM_017,Leadership Intelligence,team_guidance_signals,Assess ability to guide and support teams,"mentoring, direction-setting, support behavior",GENERAL_CONCERN
+FAM_LEAD_008,DOM_017,Leadership Intelligence,conflict_leadership_signals,Measure leadership during conflicts and disagreements,"mediation, conflict resolution, stability",GENERAL_CONCERN
+FAM_LEAD_009,DOM_017,Leadership Intelligence,strategic_thinking_signals,Assess long-term leadership thinking capability,"planning, strategic foresight, vision orientation",GENERAL_CONCERN
+FAM_LEAD_010,DOM_017,Leadership Intelligence,motivational_leadership_signals,Measure ability to inspire and energize others,"inspiration, encouragement, morale-building",GENERAL_CONCERN
+FAM_LEAD_011,DOM_017,Leadership Intelligence,delegation_signals,Assess delegation and task distribution effectiveness,"delegation, coordination, trust distribution",GENERAL_CONCERN
+FAM_LEAD_012,DOM_017,Leadership Intelligence,adaptability_leadership_signals,Measure flexibility during uncertainty and change,"adaptability, transition leadership",GENERAL_CONCERN
+FAM_LEAD_013,DOM_017,Leadership Intelligence,ethical_leadership_signals,Assess ethical consistency in leadership decisions,"integrity, fairness, ethical judgment",GENERAL_CONCERN
+FAM_LEAD_014,DOM_017,Leadership Intelligence,execution_leadership_signals,Measure ability to convert plans into outcomes,"execution discipline, delivery focus",DISCIPLINE_HABITS
+FAM_LEAD_015,DOM_017,Leadership Intelligence,confidence_projection_signals,Assess leadership confidence in high-pressure environments,"confidence projection, authority stability",GENERAL_CONCERN
+FAM_LEAD_016,DOM_017,Leadership Intelligence,responsibility_acceptance_signals,Measure willingness to accept difficult responsibilities,"responsibility tolerance, accountability readiness",GENERAL_CONCERN
+FAM_LEAD_017,DOM_017,Leadership Intelligence,resilience_leadership_signals,Assess recovery and composure during setbacks,"resilience, emotional steadiness",ADJUSTMENT_COPING
+FAM_LEAD_018,DOM_017,Leadership Intelligence,communication_leadership_signals,Measure leadership communication effectiveness,"articulation, clarity, persuasive communication",GENERAL_CONCERN
+FAM_LEAD_019,DOM_017,Leadership Intelligence,vision_alignment_signals,Assess ability to align people around shared goals,"alignment, mission focus, collective direction",GENERAL_CONCERN
+FAM_LEAD_020,DOM_017,Leadership Intelligence,growth_leadership_signals,Measure commitment toward continuous leadership improvement,"self-development, feedback acceptance, growth mindset",GENERAL_CONCERN
+FAM_COL_001,DOM_018,Collaboration Intelligence,teamwork_signals,Measure effectiveness in working within teams,"team participation, contribution quality, shared responsibility",GENERAL_CONCERN
+FAM_COL_002,DOM_018,Collaboration Intelligence,cooperation_signals,Assess willingness to cooperate and support others,"cooperation, supportiveness, adaptability in teams",GENERAL_CONCERN
+FAM_COL_003,DOM_018,Collaboration Intelligence,conflict_management_signals,Evaluate ability to handle disagreements constructively,"conflict resolution, emotional control, negotiation",ADJUSTMENT_COPING
+FAM_COL_004,DOM_018,Collaboration Intelligence,trust_building_signals,Measure capability to build trust within teams,"reliability, openness, trust formation",GENERAL_CONCERN
+FAM_COL_005,DOM_018,Collaboration Intelligence,communication_alignment_signals,Assess clarity and alignment in collaborative communication,"communication consistency, understanding, alignment",GENERAL_CONCERN
+FAM_COL_006,DOM_018,Collaboration Intelligence,peer_support_signals,Measure emotional and operational support toward peers,"encouragement, assistance, peer engagement",ADJUSTMENT_COPING
+FAM_COL_007,DOM_018,Collaboration Intelligence,accountability_in_team_signals,Assess ownership and accountability within group tasks,"responsibility, ownership, follow-through",GENERAL_CONCERN
+FAM_COL_008,DOM_018,Collaboration Intelligence,participation_balance_signals,Measure balance between over-dominance and under-participation,"participation balance, inclusiveness",GENERAL_CONCERN
+FAM_COL_009,DOM_018,Collaboration Intelligence,group_engagement_signals,Evaluate engagement level during collaborative activities,"active involvement, attentiveness, initiative",GENERAL_CONCERN
+FAM_COL_010,DOM_018,Collaboration Intelligence,listening_behavior_signals,Assess active listening and receptiveness to others,"listening quality, receptiveness, empathy",GENERAL_CONCERN
+FAM_COL_011,DOM_018,Collaboration Intelligence,collaborative_problem_solving_signals,Measure effectiveness in solving problems collectively,"idea integration, solution-building, coordination",GENERAL_CONCERN
+FAM_COL_012,DOM_018,Collaboration Intelligence,empathy_in_collaboration_signals,Assess empathy and emotional awareness within teamwork,"empathy, emotional sensitivity, social understanding",ADJUSTMENT_COPING
+FAM_COL_013,DOM_018,Collaboration Intelligence,adaptability_in_teams_signals,Measure adaptability to changing team dynamics,"flexibility, role adjustment, openness to change",ADJUSTMENT_COPING
+FAM_COL_014,DOM_018,Collaboration Intelligence,feedback_acceptance_signals,Evaluate openness to receiving and using feedback,"feedback handling, improvement orientation",GENERAL_CONCERN
+FAM_COL_015,DOM_018,Collaboration Intelligence,feedback_delivery_signals,Assess ability to provide constructive feedback respectfully,"communication maturity, constructive criticism",GENERAL_CONCERN
+FAM_COL_016,DOM_018,Collaboration Intelligence,coordination_signals,Measure coordination and synchronization with team processes,"workflow coordination, timing, collaboration efficiency",GENERAL_CONCERN
+FAM_COL_017,DOM_018,Collaboration Intelligence,inclusiveness_signals,Assess inclusiveness and fairness within group interactions,"inclusivity, equal participation, acceptance",GENERAL_CONCERN
+FAM_COL_018,DOM_018,Collaboration Intelligence,dependency_balance_signals,Measure healthy balance between independence and dependence in teams,"autonomy, collaboration balance",GENERAL_CONCERN
+FAM_COL_019,DOM_018,Collaboration Intelligence,group_confidence_signals,Assess confidence while functioning in collaborative settings,"collaborative confidence, social comfort",GENERAL_CONCERN
+FAM_COL_020,DOM_018,Collaboration Intelligence,collaborative_resilience_signals,Measure resilience and stability during difficult team situations,"persistence, emotional stability, recovery in teams",ADJUSTMENT_COPING
+FAM_CRE_001,DOM_019,Creativity Intelligence,curiosity_signals,Measure intellectual curiosity and exploration tendency,"curiosity, exploration, questioning behavior",GENERAL_CONCERN
+FAM_CRE_002,DOM_019,Creativity Intelligence,ideation_signals,Assess idea generation capability,"idea creation, brainstorming, originality",GENERAL_CONCERN
+FAM_CRE_003,DOM_019,Creativity Intelligence,experimentation_signals,Measure willingness to experiment and try new approaches,"experimentation, trial behavior, innovation attempts",GENERAL_CONCERN
+FAM_CRE_004,DOM_019,Creativity Intelligence,innovation_signals,Evaluate innovation orientation and creative problem-solving,"innovation, solution creation, inventive thinking",GENERAL_CONCERN
+FAM_CRE_005,DOM_019,Creativity Intelligence,divergent_thinking_signals,Assess ability to think in multiple directions,"divergent thinking, idea flexibility",GENERAL_CONCERN
+FAM_CRE_006,DOM_019,Creativity Intelligence,imagination_signals,Measure imaginative thinking and conceptual visualization,"imagination, conceptual thinking",GENERAL_CONCERN
+FAM_CRE_007,DOM_019,Creativity Intelligence,creative_confidence_signals,Evaluate confidence in expressing creative ideas,"creative confidence, idea sharing",GENERAL_CONCERN
+FAM_CRE_008,DOM_019,Creativity Intelligence,originality_signals,Assess uniqueness and originality in thought patterns,"originality, uniqueness",GENERAL_CONCERN
+FAM_CRE_009,DOM_019,Creativity Intelligence,problem_reframing_signals,Measure ability to reinterpret problems creatively,"reframing, alternative perspectives",GENERAL_CONCERN
+FAM_CRE_010,DOM_019,Creativity Intelligence,exploration_drive_signals,Assess intrinsic drive toward discovery and experimentation,"exploration drive, curiosity motivation",GENERAL_CONCERN
+FAM_CRE_011,DOM_019,Creativity Intelligence,creative_risk_taking_signals,Measure willingness to take creative and unconventional risks,"risk-taking, unconventional thinking",GENERAL_CONCERN
+FAM_CRE_012,DOM_019,Creativity Intelligence,adaptive_ideation_signals,Assess flexibility in generating ideas under changing situations,"adaptive ideation, flexible creativity",GENERAL_CONCERN
+FAM_CRE_013,DOM_019,Creativity Intelligence,conceptual_linking_signals,Measure ability to connect unrelated concepts creatively,"association building, conceptual linking",GENERAL_CONCERN
+FAM_CRE_014,DOM_019,Creativity Intelligence,innovation_execution_signals,Assess ability to convert ideas into actionable outcomes,"creative execution, innovation implementation",GENERAL_CONCERN
+FAM_CRE_015,DOM_019,Creativity Intelligence,creative_persistence_signals,Measure persistence in solving problems creatively,"creative endurance, persistence",GENERAL_CONCERN
+FAM_CRE_016,DOM_019,Creativity Intelligence,experimentation_resilience_signals,Assess recovery after failed experiments or rejected ideas,"resilience after failure, iteration mindset",GENERAL_CONCERN
+FAM_CRE_017,DOM_019,Creativity Intelligence,artistic_expression_signals,Measure expressive and artistic communication patterns,"artistic expression, emotional creativity",ADJUSTMENT_COPING
+FAM_CRE_018,DOM_019,Creativity Intelligence,curiosity_depth_signals,Assess depth and intensity of intellectual curiosity,"deep inquiry, analytical curiosity",GENERAL_CONCERN
+FAM_CRE_019,DOM_019,Creativity Intelligence,future_visioning_signals,Measure ability to imagine future possibilities and scenarios,"future imagination, visionary thinking",GENERAL_CONCERN
+FAM_CRE_020,DOM_019,Creativity Intelligence,unconventional_thinking_signals,Assess tendency to challenge norms and think differently,"unconventional thinking, norm disruption",GENERAL_CONCERN
+FAM_EII_001,DOM_020,Ethical & Integrity Intelligence,integrity_signals,Measure ethical consistency and honesty in behavior,"honesty, ethical consistency, moral stability",GENERAL_CONCERN
+FAM_EII_002,DOM_020,Ethical & Integrity Intelligence,accountability_signals,Assess accountability and responsibility ownership,"responsibility, accountability, ownership",GENERAL_CONCERN
+FAM_EII_003,DOM_020,Ethical & Integrity Intelligence,ethical_judgment_signals,Measure ethical reasoning and moral decision quality,"ethical reasoning, moral evaluation",EXAM_STRESS
+FAM_EII_004,DOM_020,Ethical & Integrity Intelligence,trustworthiness_signals,Detect reliability and credibility in behavior,"dependability, credibility, trustworthiness",GENERAL_CONCERN
+FAM_EII_005,DOM_020,Ethical & Integrity Intelligence,transparency_signals,Assess openness and transparency in actions and communication,"openness, honesty in communication",GENERAL_CONCERN
+FAM_EII_006,DOM_020,Ethical & Integrity Intelligence,value_alignment_signals,Measure alignment between values and behavior,"principle alignment, value consistency",GENERAL_CONCERN
+FAM_EII_007,DOM_020,Ethical & Integrity Intelligence,fairness_signals,Detect fairness and unbiased decision-making,"fairness, impartiality, equal treatment",GENERAL_CONCERN
+FAM_EII_008,DOM_020,Ethical & Integrity Intelligence,responsibility_commitment_signals,Assess commitment toward duties and obligations,"responsibility fulfillment, commitment reliability",GENERAL_CONCERN
+FAM_EII_009,DOM_020,Ethical & Integrity Intelligence,rule_adherence_signals,Measure adherence to ethical rules and systems,"compliance, discipline, ethical boundaries",DISCIPLINE_HABITS
+FAM_EII_010,DOM_020,Ethical & Integrity Intelligence,honesty_under_pressure_signals,Detect integrity stability during stressful situations,"pressure ethics, truthfulness under stress",ADJUSTMENT_COPING
+FAM_EII_011,DOM_020,Ethical & Integrity Intelligence,moral_courage_signals,Assess willingness to stand for ethical principles,"ethical courage, standing against wrong behavior",GENERAL_CONCERN
+FAM_EII_012,DOM_020,Ethical & Integrity Intelligence,ethical_conflict_resolution_signals,Measure handling of ethical conflicts and dilemmas,"ethical decision resolution, moral balancing",GENERAL_CONCERN
+FAM_EII_013,DOM_020,Ethical & Integrity Intelligence,consistency_of_values_signals,Detect stability of ethical behavior across contexts,"behavioral consistency, value stability",GENERAL_CONCERN
+FAM_EII_014,DOM_020,Ethical & Integrity Intelligence,social_responsibility_signals,Assess awareness toward social and collective responsibility,"social ethics, collective accountability",GENERAL_CONCERN
+FAM_EII_015,DOM_020,Ethical & Integrity Intelligence,professional_ethics_signals,Measure workplace and professional ethical standards,"workplace ethics, professional responsibility",GENERAL_CONCERN
+FAM_EII_016,DOM_020,Ethical & Integrity Intelligence,ethical_self_regulation_signals,Assess self-control against unethical impulses,"impulse control, ethical restraint",GENERAL_CONCERN
+FAM_EII_017,DOM_020,Ethical & Integrity Intelligence,confidentiality_respect_signals,Measure respect for confidentiality and privacy,"trust protection, confidentiality handling",GENERAL_CONCERN
+FAM_EII_018,DOM_020,Ethical & Integrity Intelligence,authenticity_signals,Detect genuineness and authenticity in behavior,"authenticity, genuine self-expression",GENERAL_CONCERN
+FAM_EII_019,DOM_020,Ethical & Integrity Intelligence,integrity_under_observation_signals,Assess whether ethical behavior changes under supervision,"consistency under monitoring, authentic integrity",GENERAL_CONCERN
+FAM_EII_020,DOM_020,Ethical & Integrity Intelligence,ethical_leadership_signals,Measure ethical influence and responsible leadership behavior,"ethical influence, principled leadership",GENERAL_CONCERN

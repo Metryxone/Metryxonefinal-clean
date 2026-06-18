@@ -1,0 +1,122 @@
+CAPADEX PIL Phase 1 Validation Audit
+
+Perform a complete validation audit of the Phase 1 concern classification output.
+
+Objective
+
+Determine whether the classification reflects the true semantic meaning of concerns or merely mirrors concern-category naming conventions.
+
+Audit Tasks
+1. Random Sampling
+
+Take random samples:
+
+100 Problem
+100 Capability
+100 Trait
+100 Behavior
+100 Outcome
+49 Risk
+
+For each sample:
+
+Display:
+
+Concern ID	Concern Name	Concern Category	Assigned Classification	Confidence
+2. Semantic Validation
+
+Evaluate whether the assigned classification matches the actual concern meaning.
+
+Return:
+
+Correct
+Questionable
+Incorrect
+
+for every sample.
+
+3. Misclassification Analysis
+
+Identify patterns causing errors.
+
+Examples:
+
+Category suffix bias
+Weak tie-break logic
+Duplicate concern naming
+Ambiguous wording
+4. Concern Distribution Audit
+
+Produce:
+
+Domain	Capability	Problem	Behavior	Trait	Outcome	Risk
+
+This is critical.
+
+A healthy human-development framework should not have entire domains classified as Problems.
+
+5. Concern Polarity Audit
+
+Classify concerns as:
+
+Positive
+Negative
+Neutral
+
+Report:
+
+Polarity	Count
+6. Capability Gap Audit
+
+Identify concerns likely misclassified as Problems but actually representing:
+
+Strengths
+Growth Mindsets
+Positive Traits
+Competencies
+
+Produce a review list.
+
+7. Final Accuracy Estimate
+
+Estimate:
+
+Classification Accuracy %
+
+by category.
+
+8. Recommendation
+
+Return one of:
+
+Approve Phase 1
+Approve With Minor Corrections
+Reclassify Before Phase 2
+
+STOP.
+
+Do not start Phase 2.
+
+What I expect
+
+One of two outcomes:
+
+Scenario A
+
+Audit shows:
+
+92–95% accurate
+
+Then approve Phase 2.
+
+Scenario B (more likely)
+
+Audit shows:
+
+15–25% of Problem labels
+should actually be
+Capability / Trait / Outcome
+
+Then you refine the classifier before moving to archetypes.
+
+My recommendation: Run the Validation Audit first. Phase 1 classification is built, but I would not yet consider it validated enough to become the foundation for the entire Problem Intelligence Layer.

@@ -1,0 +1,52 @@
+{
+  "phase": "C-2",
+  "name": "Question Semantic Enrichment — Context + Archetype (executed)",
+  "approved_on": "C-1A QDA architecture",
+  "mode": "additive_reversible_evidence_based",
+  "writes": {"new_table": "capadex_question_enrichment", "rows": 30638, "original_metadata_mutated": 0, "question_text_mutated": 0, "reversible_by": "DROP TABLE capadex_question_enrichment"},
+  "scope_note": "Executed the two dimensions C-1 found at 0% coverage (Context, Archetype). Deviated from blueprint order (did these before signal/capability) because they are purely additive, highest-confidence (derivable from existing structured fields), and the new differentiators. Signal backfill (C-2.1) + per-question capability/behavior (C-2.4) remain follow-on sub-phases (higher fabrication risk; need ontology mapping infra).",
+  "derivation": {
+    "evidence_sources": ["narrative_style", "response_type", "question text phrasing", "master_bridge_tag semantics"],
+    "quality_gate": "UNCLASSIFIED (confidence 0) when no evidence resolves — never fabricated",
+    "single_source_of_truth": "backend/scripts/audit/c2-enrichment-classifier.mjs"
+  },
+  "quality": {
+    "archetype": {"unclassified_pct": 0.31, "avg_confidence": 0.806,
+      "source_mix": {"narrative_style": 27687, "text": 2763, "response_type": 49, "narrative_style+text": 44, "none": 95},
+      "distribution": {"Situational": 13084, "Reflective": 9551, "Behavioral": 4630, "Future-Oriented": 3077, "Historical": 128, "UNCLASSIFIED": 95, "Preference-Based": 40, "Decision-Based": 32, "Evidence-Based": 1}},
+    "context": {"unclassified_pct": 15.98, "avg_confidence": 0.619, "with_secondary": 7361,
+      "distribution": {"Personal Development": 7989, "UNCLASSIFIED": 4895, "Academic": 3985, "Career": 3651, "Learning": 3171, "Employment": 2214, "Leadership": 1682, "Skill Development": 1369, "Social": 1362, "Competitive Exams": 134, "Entrepreneurship": 66, "Digital Literacy": 59, "Financial": 47, "Family": 14}}
+  },
+  "differentiation_before_after": {
+    "method": "realized = 1 - tag-size-weighted within-tag HHI; repository = mean realized across dims; contribution% = realized / Σrealized",
+    "same_basis_8dim": {
+      "note": "PRIMARY comparator — both sides on the same 8-dimension frame; Context+Archetype simply = 0 before they existed. Avoids the 6-vs-8 denominator shift.",
+      "before": 0.0721, "after": 0.1505, "rel_pct": 108.7,
+      "sum_realized_before": 0.5770, "sum_realized_after": 1.2043, "sum_rel_pct": 108.7
+    },
+    "framework_shifted_6dim_vs_8dim": {"before_6dim_repo": 0.0962, "after_8dim_repo": 0.1505,
+      "note": "secondary framing — mixes a /6 and /8 denominator; quoted for continuity with C-1A's 0.096."},
+    "before_6dim": {
+      "repository_differentiability": 0.0962,
+      "per_dim_realized": {"dev_stage": 0.562, "persona_primary": 0.015, "age_band": 0.0, "primary_behavior": 0.0, "primary_capability": 0.0, "signal_family": 0.0},
+      "top_dim_contribution_pct": 97.4,
+      "effective_differentiating_dims": 1
+    },
+    "after_8dim": {
+      "repository_differentiability": 0.1505,
+      "per_dim_realized": {"dev_stage": 0.562, "archetype": 0.5487, "context_primary": 0.0786, "persona_primary": 0.015, "age_band": 0.0, "primary_behavior": 0.0, "primary_capability": 0.0, "signal_family": 0.0},
+      "contribution_pct": {"dev_stage": 46.7, "archetype": 45.6, "context_primary": 6.5, "persona_primary": 1.2, "age_band": 0.0, "primary_behavior": 0.0, "primary_capability": 0.0, "signal_family": 0.0},
+      "top_dim_contribution_pct": 46.7,
+      "effective_differentiating_dims": 2
+    },
+    "delta": {"repository_abs": 0.0543, "repository_rel_pct": 56.4, "single_dimensionality_broken": true,
+      "interpretation": "Archetype is now co-dominant with dev_stage; differentiation is no longer carried by a single 5-value dimension. Context adds little WITHIN-tag (tag largely determines domain) — its value is cross-tag ROUTING, measured separately from this within-tag index."}
+  },
+  "honest_limitations": [
+    "Context within-tag realized is low (0.079) by nature — a bridge tag mostly maps to one life-domain; context pays off in routing/relevance, not within-pool spread.",
+    "Context UNCLASSIFIED 16% are honest no-evidence rows, not fabricated.",
+    "primary_capability / primary_behavior still 0% (uniformity) and signal_family still 0% / 55.8% coverage — these are the deeper C-2.4 / C-2.1 sub-phases, not attempted here.",
+    "Projected post-full-C2 differentiability (~0.40-0.55, from C-1A) remains a projection; this phase delivers a MEASURED +56% from two dimensions only."
+  ],
+  "go_no_go_next": "GO to C-2.1 (signal coverage backfill) + C-2.4 (per-question capability/behavior) — but each needs the ontology semantic-mapping path and a fabrication quality gate; recommend a dedicated follow-on with the same additive/reversible/measured discipline."
+}

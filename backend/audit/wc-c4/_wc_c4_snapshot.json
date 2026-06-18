@@ -1,0 +1,154 @@
+{
+  "generated_at": "2026-06-10T07:29:55.423Z",
+  "flag": {
+    "key": "commercialEntitlementEnforcement",
+    "env": "FF_COMMERCIAL_ENTITLEMENT_ENFORCEMENT",
+    "default": false,
+    "off_state": false,
+    "on_state": true
+  },
+  "surface": {
+    "canonical": 14,
+    "guarded": 14,
+    "gaps": [],
+    "detail": [
+      {
+        "method": "GET",
+        "path": "/api/capadex/report/:session_id",
+        "param": "session_id",
+        "guarded": true,
+        "line": 3370
+      },
+      {
+        "method": "GET",
+        "path": "/api/capadex/report/:session_id/pdf",
+        "param": "session_id",
+        "guarded": true,
+        "line": 3558
+      },
+      {
+        "method": "POST",
+        "path": "/api/capadex/report/:session_id/send-email",
+        "param": "session_id",
+        "guarded": true,
+        "line": 3758
+      },
+      {
+        "method": "GET",
+        "path": "/api/capadex/session/:id/explain",
+        "param": "id",
+        "guarded": true,
+        "line": 2613
+      },
+      {
+        "method": "GET",
+        "path": "/api/capadex/session/:id/grounding",
+        "param": "id",
+        "guarded": true,
+        "line": 2654
+      },
+      {
+        "method": "GET",
+        "path": "/api/capadex/session/:id/guidance",
+        "param": "id",
+        "guarded": true,
+        "line": 2631
+      },
+      {
+        "method": "GET",
+        "path": "/api/capadex/session/:id/omega-x",
+        "param": "id",
+        "guarded": true,
+        "line": 2574
+      },
+      {
+        "method": "GET",
+        "path": "/api/assessment/session/:id/omega-x",
+        "param": "id",
+        "guarded": true,
+        "line": 2577
+      },
+      {
+        "method": "GET",
+        "path": "/api/capadex/session/:id/patterns",
+        "param": "id",
+        "guarded": true,
+        "line": 2600
+      },
+      {
+        "method": "GET",
+        "path": "/api/capadex/session/:id/pipeline",
+        "param": "id",
+        "guarded": true,
+        "line": 2721
+      },
+      {
+        "method": "GET",
+        "path": "/api/capadex/session/:id/report",
+        "param": "id",
+        "guarded": true,
+        "line": 3047
+      },
+      {
+        "method": "GET",
+        "path": "/api/capadex/session/:id/reports",
+        "param": "id",
+        "guarded": true,
+        "line": 3088
+      },
+      {
+        "method": "GET",
+        "path": "/api/capadex/session/:id/signals",
+        "param": "id",
+        "guarded": true,
+        "line": 2590
+      },
+      {
+        "method": "GET",
+        "path": "/api/capadex/session/:id/stage",
+        "param": "id",
+        "guarded": true,
+        "line": 2744
+      }
+    ]
+  },
+  "rollback": {
+    "flag_off_outcome": "next",
+    "db_queries_when_off": 0,
+    "pass": true
+  },
+  "enforcement_projection": {
+    "total_sessions": 27,
+    "tally": {
+      "allow_free": 23,
+      "allow_entitled": 0,
+      "block_402": 4,
+      "fail_503": 0
+    },
+    "stage_distribution": {
+      "CAP_CUR": 23,
+      "CAP_INS": 4
+    },
+    "blocked_session_status": {
+      "replaced": 3,
+      "in_progress": 1
+    }
+  },
+  "monetization": {
+    "paid_ledger_rows": 0,
+    "pending_ledger_rows": 6,
+    "paying_identities": 0,
+    "entitled_identities": 0,
+    "coverage_pct": null,
+    "active_package_grants": 0,
+    "degraded": false,
+    "paid_stage_sessions": 4,
+    "sessions_blocked": 4
+  },
+  "stage_report_feature": {
+    "CAP_INS": "insight_report",
+    "CAP_GRW": "growth_report",
+    "CAP_MAS": "mastery_report"
+  },
+  "verdict_pass": true
+}

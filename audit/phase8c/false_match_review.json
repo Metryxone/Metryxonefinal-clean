@@ -1,0 +1,41 @@
+{
+  "generated_at": "2026-06-03T17:46:51.455Z",
+  "method": "category_jaccard",
+  "hub_degree_threshold": 50,
+  "rule": "a match whose shared neighbours are ALL hubs (degree ≥ threshold) is flagged for review (weak/coincidental) — flagged, never deleted",
+  "false_match_rate": 0.6931,
+  "hub_only_matches": 29597,
+  "total_matches": 42704,
+  "per_category": [
+    {
+      "category": "concern",
+      "hub_only_matches": 24187,
+      "hub_only_rate": 0.9725
+    },
+    {
+      "category": "behavior",
+      "hub_only_matches": 0,
+      "hub_only_rate": 0
+    },
+    {
+      "category": "problem",
+      "hub_only_matches": 130,
+      "hub_only_rate": 1
+    },
+    {
+      "category": "archetype",
+      "hub_only_matches": 0,
+      "hub_only_rate": 0
+    },
+    {
+      "category": "intervention",
+      "hub_only_matches": 5280,
+      "hub_only_rate": 0.7451
+    },
+    {
+      "category": "recommendation",
+      "hub_only_matches": 0,
+      "hub_only_rate": 0
+    }
+  ]
+}

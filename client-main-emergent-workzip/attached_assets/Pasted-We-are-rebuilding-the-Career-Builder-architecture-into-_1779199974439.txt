@@ -1,0 +1,126 @@
+We are rebuilding the Career Builder architecture into a scalable modular intelligence platform.
+
+IMPORTANT:
+Do NOT redesign the UI completely.
+Do NOT break existing functionality.
+Do NOT remove current business logic.
+
+GOAL:
+Refactor the current monolithic CareerBuilderPage.tsx into a domain-driven modular architecture while preserving all existing features.
+
+PHASE 1 OBJECTIVES:
+
+1. Create module-based folder structure:
+
+frontend/src/modules/career-builder/
+
+Modules:
+- dashboard
+- profile
+- resume
+- competency
+- intelligence
+- future-map
+- pathways
+- development
+- learning
+- recruiter
+- jobs
+- interview
+- goals
+- fresher
+
+2. Move each tab into isolated module components.
+
+3. Create shared UI system:
+
+frontend/src/components/career/
+
+Reusable components:
+- SectionCard
+- MetricCard
+- EIGauge
+- SkillBar
+- RadarChart
+- ProgressTimeline
+- CompetencyHeatmap
+- TabLayout
+- EmptyState
+- LoadingState
+
+4. Introduce Zustand state management.
+
+Create stores:
+- profileStore
+- competencyStore
+- careerIntelligenceStore
+- jobTrackerStore
+- uiStore
+
+5. Create service layer:
+
+frontend/src/lib/services/
+
+Services:
+- profileService
+- competencyService
+- fitmentService
+- visibilityService
+- idpService
+- benchmarkService
+
+6. Create intelligence engine layer:
+
+frontend/src/lib/engines/
+
+Engines:
+- competencyEngine
+- fitmentEngine
+- switchabilityEngine
+- employabilityEngine
+- recommendationEngine
+- scoringEngine
+
+7. Preserve ALL current calculations and formulas exactly as they currently work.
+
+8. Move hardcoded catalogs into structured catalog files:
+
+frontend/src/data/catalogs/
+
+Catalogs:
+- competencies
+- roles
+- pathways
+- interventions
+- benchmarks
+
+9. Add TypeScript interfaces for all entities.
+
+10. Add lazy loading for heavy tabs.
+
+11. Improve render performance:
+- memoization
+- split rendering
+- avoid unnecessary rerenders
+
+12. Keep existing routes and APIs functional.
+
+13. Ensure architecture is future-ready for:
+- simulations
+- workforce intelligence
+- AI copilots
+- benchmark intelligence
+
+DO NOT:
+- change business logic
+- rewrite scoring formulas
+- redesign the product
+- remove any current tabs
+
+SUCCESS CRITERIA:
+- all tabs functional
+- modular architecture
+- reusable intelligence engines
+- reusable UI system
+- stable state management
+- scalable Replit-friendly structure

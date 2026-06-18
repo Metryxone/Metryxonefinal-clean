@@ -1,0 +1,89 @@
+We are implementing Phase 4:
+AI Simulation & Behavioral Intelligence Ecosystem.
+
+GOAL:
+Build adaptive workplace simulations with behavioral intelligence extraction.
+
+IMPLEMENT:
+
+====================================================
+1. SIMULATION ENGINE
+====================================================
+
+Create:
+frontend/src/lib/simulations/
+
+Modules:
+- scenarioEngine
+- npcEngine
+- decisionEngine
+- consequenceEngine
+- behavioralSignalEngine
+
+====================================================
+2. AI NPC SYSTEM
+====================================================
+
+Create adaptive stakeholders:
+- managers
+- executives
+- clients
+- coworkers
+- difficult stakeholders
+
+Support:
+- personality profiles
+- emotional escalation
+- persuasion styles
+- adaptive reactions
+
+====================================================
+3. BEHAVIORAL SIGNAL EXTRACTION
+====================================================
+
+Capture:
+- hesitation
+- ambiguity tolerance
+- empathy
+- confidence
+- prioritization quality
+- stress handling
+- communication structure
+
+====================================================
+4. SIMULATION TYPES
+====================================================
+
+Implement:
+- leadership simulations
+- strategic simulations
+- conflict simulations
+- operational simulations
+- emotional intelligence simulations
+- negotiation simulations
+
+====================================================
+5. EXPLAINABLE BEHAVIORAL SCORING
+====================================================
+
+Generate:
+- behavioral insights
+- emotional intelligence signals
+- leadership indicators
+- competency mapping
+
+====================================================
+6. REFLECTION ENGINE
+====================================================
+
+Require users to explain:
+- reasoning
+- tradeoffs
+- decisions
+- priorities
+
+SUCCESS CRITERIA:
+- adaptive simulations operational
+- behavioral intelligence extraction operational
+- explainable behavioral scoring active
+- reusable simulation architecture complete

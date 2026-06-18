@@ -1,0 +1,52 @@
+Act as a Staff Full-Stack Software Engineer. We are deploying a 100% final, airtight root-level fix for our Capadex diagnostic assessment pipeline. Currently, users face repeating clarity questions, non-apt options, and an incorrect ranking UI layout forced onto single-select/Likert items (as documented in "image_e3d0e2.png").
+
+Apply these precise, non-breaking, schema-safe updates across the backend router and frontend phase component immediately.
+
+---
+
+### STEP 1: FIX REPETITION & IMPLEMENT RUNTIME HISTORY PASS
+File to modify: `backend/routes/capadex-concern-intelligence.ts`
+
+Refactor the question selection controller to read the session's answered state dynamically from the request cycle to eliminate the stateless memory leak:
+1. READ REQUEST HISTORY: Ensure the handler explicitly checks for an array called `answeredIds` inside the incoming request body (`req.body.answeredIds`).
+2. HISTORICAL EXCLUSION MASK: Before slicing the next questions to return, run a strict filter against our master array:
+   const availableQuestions = allMasterQuestions.filter(q => !req.body.answeredIds?.includes(q.id));
+3. FORCE DYNAMIC VARIETY: If `availableQuestions` is empty, fall back to the full list. Otherwise, apply a clean array randomization/shuffle over the eligible question pool before returning them to ensure unique question routing on every execution loop:
+   const shuffled = availableQuestions.sort(() => 0.5 - Math.random());
+4. ROUTE TRANSITION SAFELY: For users flagged under career transitions, stop falling back to hardcoded, static generic scales. Route them directly to our main master clarity picker function so that highly contextual questions are always paired with their actual, specific option arrays. Preserve the final payload option contract exactly as a flat string array (`string[]`).
+
+---
+
+### STEP 2: DYNAMIC LAYOUT APPLICABILITY & UI HYDRATION
+File to modify: `frontend/src/components/assessment/phases/CapadexClarifyPhase.tsx`
+
+We need to fix the visual regression highlighted in "image_e3d0e2.png" where single-select items are locked into a ranking loop. Refactor the component state machinery using these exact rules:
+
+1. DEFINE AN AUTOMATIC APPLICABILITY CHECKER:
+Inside the component, introduce a deterministic function to evaluate whether ranking or single-select layout is applicable for the `currentQuestion`:
+```typescript
+const isRankingApplicable = (): boolean => {
+  // Guard A: Use explicit properties if defined in our current schema variants
+  if ((currentQuestion as any).evaluation_type === 'LIKERT') return false;
+  if ((currentQuestion as any).isSingle === true) return false;
+
+  // Guard B: Inspect the textual phrasing of the question string
+  const text = (currentQuestion.question_text || currentQuestion.question || "").toLowerCase();
+  if (
+    text.startsWith("how confident") || 
+    text.startsWith("how often") ||
+    text.includes("rate your") ||
+    text.startsWith("what have you already tried")
+  ) {
+    return false;
+  }
+
+  // Guard C: Structural check on first option text as a fallback
+  const firstOpt = (currentQuestion.options?.[0] || "").toLowerCase();
+  const commonSingleSelectKeywords = ['agree', 'disagree', 'confident', 'always', 'never', 'nothing yet'];
+  if (commonSingleSelectKeywords.some(keyword => firstOpt.includes(keyword))) {
+    return false;
+  }
+
+  return true; // Default to ranking layout only for open prioritization vectors
+};

@@ -1,0 +1,525 @@
+concern_id,concern,domain,persona,severity,priority,bridge_tag,resolves_to,route
+CONCERN_ENG_1354,retaining learned concepts,Cognitive Development,Academic Counsellor,Medium,P3,COGNITIVE_DEVELOPMENT,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_CLA_1364,note-taking and study methods,Learning Skills,Academic Counsellor,Medium,P3,LEARNING_SKILLS,remapped:LEARNING_ADAPTABILITY,keyword
+CONCERN_STU_1367,confidence during viva and presentations,Communication Development,Academic Counsellor,Medium,P3,COMMUNICATION_DEVELOPMENT,remapped:COMMUNICATION_EXPRESSION,keyword
+CONCERN_STU_1373,balancing academics and extracurriculars,Student Balance,Academic Counsellor,Medium,P3,STUDENT_BALANCE,remapped:STUDENT_SUCCESS,keyword
+CONCERN_STU_1374,curiosity-driven learning,Innovation Readiness,Academic Counsellor,Medium,P3,INNOVATION_READINESS,remapped:CAREER_READINESS,keyword
+CONCERN_WOR_1391,clarity about career progression ladders,Career Development,Career Counsellor,Medium,P3,CAREER_DEVELOPMENT,remapped:CAREER_READINESS,keyword
+CONCERN_CAR_1394,networking and mentorship access,Career Ecosystem Support,Career Counsellor,Medium,P3,CAREER_ECOSYSTEM,remapped:CAREER_READINESS,keyword
+CONCERN_CAR_1399,awareness about vocational careers,Vocational Guidance,Career Counsellor,Medium,P3,VOCATIONAL_GUIDANCE,remapped:CAREER_READINESS,keyword
+CONCERN_CAR_1403,understanding of entrepreneurship pathways,Entrepreneurship Guidance,Career Counsellor,Medium,P3,ENTREPRENEURSHIP_GUIDANCE,remapped:CAREER_READINESS,keyword
+CONCERN_PRO_1417,communication and interpersonal behaviour,Social Capability,Student Mentor,Medium,P3,SOCIAL_CAPABILITY,remapped:COMPETENCY_DEVELOPMENT,keyword
+CONCERN_SOC_1418,initiative and proactive behaviour,Leadership Development,Student Mentor,Medium,P3,LEADERSHIP_DEVELOPMENT,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_CAP_1422,Fear of taking responsibility,Maturity Development,Student Mentor,Medium,P3,MATURITY_DEVELOPMENT,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_CHA_1427,recover from social rejection,Emotional Resilience,Student Mentor,Medium,P3,EMOTIONAL_RESILIENCE,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_EMO_1428,curiosity and self-driven learning,Intellectual Growth,Student Mentor,Medium,P3,INTELLECTUAL_GROWTH,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_BEH_1449,emotional control during feedback,Feedback Adaptation,Behavioral Mentor,Medium,P3,FEEDBACK_ADAPTATION,GENERAL_CONCERN (generic catch-all),general
+CONCERN_FEE_1450,collaboration in group activities,Social Learning,Behavioral Mentor,Medium,P3,SOCIAL_LEARNING,remapped:LEARNING_ADAPTABILITY,keyword
+CONCERN_GRO_1453,balancing academics and personal routines,Lifestyle Adaptation,Behavioral Mentor,Medium,P3,LIFESTYLE_ADAPTATION,remapped:LIFESTYLE_PRESSURE,keyword
+CONCERN_LIF_1454,curiosity-driven engagement,Learning Mindset,Behavioral Mentor,Medium,P3,LEARNING_MINDSET,remapped:LEARNING_ADAPTABILITY,keyword
+CONCERN_LEA_1455,Fear of public speaking and participation,Communication Behavior,Behavioral Mentor,Medium,P3,COMMUNICATION_BEHAVIOR,remapped:COMMUNICATION_EXPRESSION,keyword
+CONCERN_COM_1456,Inconsistent behavior across environments,Behavioral Stability,Behavioral Mentor,Medium,P3,BEHAVIORAL_STABILITY,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_TRA_1460,patience for long-term goals,Persistence Development,Behavioral Mentor,Medium,P3,PERSISTENCE_DEVELOPMENT,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_EMO_1463,self-reflection and introspection habits,Self-Awareness Development,Behavioral Mentor,Medium,P3,SELF_AWARENESS,remapped:SELF_PERCEPTION,keyword
+CONCERN_SEL_1464,Resistance to behavioral feedback from teachers,Behavior Correction,Behavioral Mentor,Medium,P3,BEHAVIOR_CORRECTION,GENERAL_CONCERN (generic catch-all),general
+CONCERN_DEC_1470,confidence in peer interactions,Social Leadership,Leadership Coach,Medium,P3,SOCIAL_LEADERSHIP,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_LEA_1473,influencing or motivating peers,Team Leadership,Leadership Coach,Medium,P3,TEAM_LEADERSHIP,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_PER_1476,conflict management among student leaders,Leadership Dynamics,Leadership Coach,Medium,P3,LEADERSHIP_DYNAMICS,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_INC_1484,Students struggling with networking confidence,Professional Leadership,Leadership Coach,Medium,P3,PROFESSIONAL_LEADERSHIP,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_STR_1486,authority and responsibility together,Leadership Maturity,Leadership Coach,Medium,P3,LEADERSHIP_MATURITY,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_LEA_1487,adaptability in multicultural or diverse teams,Inclusive Leadership,Leadership Coach,Medium,P3,INCLUSIVE_LEADERSHIP,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_INC_1488,listening skills affecting leadership growth,Communication Leadership,Leadership Coach,Medium,P3,COMMUNICATION_LEADERSHIP,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_LEA_1491,innovation and initiative mindset,Entrepreneurial Leadership,Leadership Coach,Medium,P3,ENTREPRENEURIAL_LEADERSHIP,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_EMO_1494,balancing humility and confidence,Personal Branding,Leadership Coach,Medium,P3,PERSONAL_BRANDING,GENERAL_CONCERN (generic catch-all),general
+CONCERN_EMO_1502,understanding personality traits,Personality Exploration,Self Discovery,Medium,P3,PERSONALITY_EXPLORATION,remapped:SELF_PERCEPTION,keyword
+CONCERN_IDE_1508,curiosity about self-growth,Growth Orientation,Self Discovery,Medium,P3,GROWTH_ORIENTATION,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_GRO_1509,understanding personal values,Values Exploration,Self Discovery,Medium,P3,VALUES_EXPLORATION,GENERAL_CONCERN (generic catch-all),general
+CONCERN_SEL_1511,awareness about behavioral patterns,Behavioral Reflection,Self Discovery,Medium,P3,BEHAVIORAL_REFLECTION,remapped:THINKING_QUALITY,keyword
+CONCERN_PER_1514,understanding social strengths and weaknesses,Social Self-Awareness,Self Discovery,Medium,P3,SOCIAL_SELF,remapped:SOCIAL_EMOTIONAL,keyword
+CONCERN_IDE_1517,Confusion between skill and identity,Personal Positioning,Self Discovery,Medium,P3,PERSONAL_POSITIONING,GENERAL_CONCERN (generic catch-all),general
+CONCERN_ADA_1519,identifying motivational drivers,Motivation Mapping,Self Discovery,Medium,P3,MOTIVATION_MAPPING,remapped:MOTIVATION_VALUES,keyword
+CONCERN_PER_1533,recognize behavioral patterns,Behavioral Awareness,Self Exploration User,Medium,P3,BEHAVIORAL_AWARENESS,GENERAL_CONCERN (generic catch-all),general
+CONCERN_EMO_1537,awareness about hidden potential,Potential Discovery,Self Exploration User,Medium,P3,POTENTIAL_DISCOVERY,remapped:COMPETENCY_DEVELOPMENT,keyword
+CONCERN_POT_1538,personal progress objectively,Growth Measurement,Self Exploration User,Medium,P3,GROWTH_MEASUREMENT,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_IDE_1542,identifying personal blind spots,Reflective Development,Self Exploration User,Medium,P3,REFLECTIVE_DEVELOPMENT,remapped:THINKING_QUALITY,keyword
+CONCERN_ADA_1544,articulating strengths confidently,Self-Expression,Self Exploration User,Medium,P3,SELF_EXPRESSION,remapped:COMMUNICATION_EXPRESSION,keyword
+CONCERN_REC_1550,curiosity about self-development,Self-Growth Engagement,Self Exploration User,Medium,P3,SELF_GROWTH,remapped:SELF_PERCEPTION,keyword
+CONCERN_COG_1554,emotional resilience in social situations,Social Self-Development,Self Exploration User,Medium,P3,SOCIAL_SELF,remapped:SOCIAL_EMOTIONAL,keyword
+CONCERN_CAR_1563,Confusion between passion and hobby,Self-Discovery,Self Exploration User,Medium,P3,SELF_DISCOVERY,remapped:SELF_PERCEPTION,keyword
+CONCERN_ALT_1570,define personal career values,Career Prioritization,Self Exploration User,Medium,P3,CAREER_PRIORITIZATION,remapped:CAREER_READINESS,keyword
+CONCERN_CAR_1577,Feeling lost despite academic success,Identity Reflection,Self Exploration User,Medium,P3,IDENTITY_REFLECTION,remapped:THINKING_QUALITY,keyword
+CONCERN_PUR_1585,Uncertainty about balancing work-life priorities,Lifestyle-Career Reflection,Self Exploration User,Medium,P3,LIFESTYLE_CAREER,remapped:CAREER_READINESS,keyword
+CONCERN_LEA_1594,understanding personal motivation triggers,Self Motivation Awareness,Learner,Medium,P3,SELF_MOTIVATION,remapped:MOTIVATION_VALUES,keyword
+CONCERN_PER_1600,awareness of cognitive fatigue,Cognitive Wellness,Learner,Medium,P3,COGNITIVE_WELLNESS,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_LEA_1602,identifying preferred learning environments,Learning Optimization,Learner,Medium,P3,LEARNING_OPTIMIZATION,remapped:LEARNING_ADAPTABILITY,keyword
+CONCERN_GRO_1606,track personal improvement trends,Self Progress Awareness,Learner,Medium,P3,SELF_PROGRESS,remapped:SELF_PERCEPTION,keyword
+CONCERN_SEL_1607,understanding of multitasking limitations,Attention Reflection,Learner,Medium,P3,ATTENTION_REFLECTION,remapped:THINKING_QUALITY,keyword
+CONCERN_SEL_1609,awareness about communication strengths,Personal Development,Learner,Medium,P3,PERSONAL_DEVELOPMENT,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_LEA_1613,reflecting on collaborative learning skills,Team Learning Reflection,Learner,Medium,P3,TEAM_LEARNING,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_GRO_1619,Overestimating personal performance,Self-Evaluation,Performance Reflection,Medium,P3,SELF_EVALUATION,remapped:SELF_PERCEPTION,keyword
+CONCERN_REF_1622,measurable personal growth tracking,Personal Development,Performance Reflection,Medium,P3,PERSONAL_DEVELOPMENT,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_MOT_1625,recognize behavioral patterns,Self-Observation,Performance Reflection,Medium,P3,SELF_OBSERVATION,remapped:SELF_PERCEPTION,keyword
+CONCERN_EMO_1633,tracking behavioral improvement over time,Behavioral Growth,Performance Reflection,Medium,P3,BEHAVIORAL_GROWTH,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_PRO_1635,Fear of self-reflection due to insecurity,Personal Insight,Performance Reflection,Medium,P3,PERSONAL_INSIGHT,GENERAL_CONCERN (generic catch-all),general
+CONCERN_PER_1636,recognizing personal progress milestones,Growth Recognition,Performance Reflection,Medium,P3,GROWTH_RECOGNITION,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_ACC_1639,reflection on communication and relationships,Social Reflection,Performance Reflection,Medium,P3,SOCIAL_REFLECTION,remapped:THINKING_QUALITY,keyword
+CONCERN_ADA_1641,consistency between goals and actions,Integrity Reflection,Performance Reflection,Medium,P3,INTEGRITY_REFLECTION,remapped:THINKING_QUALITY,keyword
+CONCERN_GRO_1644,Overfocus on weaknesses ignoring strengths,Balanced Reflection,Performance Reflection,Medium,P3,BALANCED_REFLECTION,remapped:THINKING_QUALITY,keyword
+CONCERN_BAL_1645,structured self-review mechanisms,Reflective Systems,Performance Reflection,Medium,P3,REFLECTIVE_SYSTEMS,remapped:THINKING_QUALITY,keyword
+CONCERN_SEL_2063,Organizing Revision Materials,Examination Readiness,Student,Medium,P3,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_EMP_27,Collaborating in Team Projects,Collaboration & Ownership,Campus Student,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_EMP_29,Financial Independence in College,Lifestyle & Adjustment,Campus Student,Medium,P2,LIFESTYLE_ADJUSTMENT,remapped:ADJUSTMENT_COPING,keyword
+CONCERN_EXA_63,Building Practical Team Collaboration in Projects,Collaboration & Ownership,Campus Student,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_CAR_82,Research Orientation for Higher Education,Academic & Career Readiness,Campus Student,Medium,P2,ACADEMIC_CAREER,remapped:CAREER_READINESS,keyword
+CONCERN_CON_168,Transition from Learning to Testing Mode,Examination Readiness,Competitive Aspirant,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_EXA_184,Last-Minute Revision Effectiveness,Examination Readiness,Competitive Aspirant,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_STR_318,Adaptability to New Learning Technologies,Adaptive Learning,Skill Development Learner,Medium,P2,ADAPTIVE_LEARNING,remapped:LEARNING_ADAPTABILITY,override
+CONCERN_LIF_323,Building Competency Through Collaborative Learning,Collaboration & Ownership,Skill Development Learner,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_COL_324,Real-Time Skill Assessments,Examination Readiness,Skill Development Learner,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_EMO_350,Adapt Learning Strategies During Failure,Adaptive Learning,Skill Development Learner,Medium,P2,ADAPTIVE_LEARNING,remapped:LEARNING_ADAPTABILITY,override
+CONCERN_CAR_380,Workplace Collaboration,Collaboration & Ownership,Early Career Learner,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_COM_410,Handle Professional Conflict Constructively,Collaboration & Ownership,Early Career Learner,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_EMO_424,Cross-Functional Collaboration,Collaboration & Ownership,Early Career Learner,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_COM_434,Manage Workplace Priorities Without Supervision,Ownership & Accountability,Early Career Learner,Medium,P2,OWNERSHIP_ACCOUNTABILITY,GENERAL_CONCERN (generic catch-all),general
+CONCERN_CON_448,Awareness of Long-Term Financial Planning After Employment,Financial Readiness,Early Career Learner,Medium,P2,FINANCIAL_READINESS,GENERAL_CONCERN (generic catch-all),general
+CONCERN_STU_1356,time management before exams,Academic Readiness,Academic Counsellor,Medium,P2,ACADEMIC_READINESS,remapped:ACADEMIC_COGNITIVE,keyword
+CONCERN_EMO_482,Position Transferable Skills,Career Transition,Job Seeker,Medium,P2,CAREER_TRANSITION,remapped:CAREER_GROWTH,override
+CONCERN_CAR_505,Explaining Frequent Job Changes Professionally,Career Transition,Job Seeker,Medium,P2,CAREER_TRANSITION,remapped:CAREER_GROWTH,override
+CONCERN_CON_510,Understanding of Industry Salary Benchmarks,Financial Readiness,Job Seeker,Medium,P2,FINANCIAL_READINESS,GENERAL_CONCERN (generic catch-all),general
+CONCERN_CAR_517,Building a Strategic Long-Term Career Narrative,Career Planning,Job Seeker,Medium,P2,CAREER_PLANNING,remapped:CAREER_READINESS,keyword
+CONCERN_CON_522,Reposition Experience for New Job Markets,Career Transition,Job Seeker,Medium,P2,CAREER_TRANSITION,remapped:CAREER_GROWTH,override
+CONCERN_EMO_534,Position Career Breaks Positively,Career Transition,Job Seeker,Medium,P2,CAREER_TRANSITION,remapped:CAREER_GROWTH,override
+CONCERN_EMO_550,Build Credibility in New Domains Quickly,Career Transition,Job Seeker,Medium,P2,CAREER_TRANSITION,remapped:CAREER_GROWTH,override
+CONCERN_LIF_569,Adapting to Rapid Workplace Changes,Adaptive Learning,Working Professional,Medium,P2,ADAPTIVE_LEARNING,remapped:LEARNING_ADAPTABILITY,override
+CONCERN_THI_571,Team Collaboration Conflicts,Collaboration & Ownership,Working Professional,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_WOR_582,Cross-Functional Collaboration,Collaboration & Ownership,Working Professional,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_COM_609,Passive Workplace Conflict,Collaboration & Ownership,Working Professional,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_EMO_664,Understand Workplace Expectations Quickly,Workplace Performance,Early Career Professional,Medium,P2,WORKPLACE_PERFORMANCE,remapped:WORKPLACE_ADAPTATION,override
+CONCERN_CON_672,Adapt to Fast-Paced Work Environments,Workplace Performance,Early Career Professional,Medium,P2,WORKPLACE_PERFORMANCE,remapped:WORKPLACE_ADAPTATION,override
+CONCERN_COM_689,Balancing Speed and Quality at Work,Workplace Performance,Early Career Professional,Medium,P2,WORKPLACE_PERFORMANCE,remapped:WORKPLACE_ADAPTATION,override
+CONCERN_CON_702,Handle Workplace Multitasking,Workplace Performance,Early Career Professional,Medium,P2,WORKPLACE_PERFORMANCE,remapped:WORKPLACE_ADAPTATION,override
+CONCERN_EMO_734,Cross-Team Collaboration,Collaboration & Ownership,Early Career Professional,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_EMO_744,Learn Organizational Processes Quickly,Workplace Performance,Early Career Professional,Medium,P2,WORKPLACE_PERFORMANCE,remapped:WORKPLACE_ADAPTATION,override
+CONCERN_COM_767,Team Conflicts Emotionally,Collaboration & Ownership,Mid-Career Professional,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_ACA_779,Cross-Generational Team Dynamics,Collaboration & Ownership,Mid-Career Professional,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_EMO_784,Driving Organizational Change,Strategic Leadership,Mid-Career Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_STR_785,Team Trust During Difficult Decisions,Collaboration & Ownership,Mid-Career Professional,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_COG_1355,Frequent absenteeism linked to academics,Student Risk Monitoring,Academic Counsellor,High,P2,STUDENT_RISK,remapped:STUDENT_SUCCESS,keyword
+CONCERN_EMO_790,Build Strategic Thinking Across Teams,Strategic Leadership,Mid-Career Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_EMO_796,Build Cross-Functional Alignment at Scale,Collaboration & Ownership,Mid-Career Professional,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_LEA_802,Build Strategic Influence Beyond Functional Expertise,Strategic Leadership,Mid-Career Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_LEA_805,Team Morale During High Pressure Phases,Collaboration & Ownership,Mid-Career Professional,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_THI_812,Leading High-Visibility Strategic Initiatives,Strategic Leadership,Mid-Career Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_LEA_818,Transition from Functional to Enterprise Thinking,Strategic Leadership,Mid-Career Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_LEA_822,Handle Executive-Level Ambiguity Calmly,Strategic Leadership,Mid-Career Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_EMO_828,Managing Global or Cross-Cultural Teams,Collaboration & Ownership,Mid-Career Professional,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_LIF_830,Build Strategic Alignment During Rapid Growth,Strategic Leadership,Mid-Career Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_LEA_833,Organizational Resistance to Change Initiatives,Strategic Leadership,Mid-Career Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_CAR_841,Emotional Pressure During Succession Discussions,Leadership Transition,Mid-Career Professional,Medium,P2,LEADERSHIP_TRANSITION,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_LEA_845,Team Emotional Dynamics During Crisis,Collaboration & Ownership,Mid-Career Professional,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_COL_846,Build Enterprise-Wide Collaboration Cultures,Collaboration & Ownership,Mid-Career Professional,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_EMO_850,Driving Long-Term Organizational Vision,Strategic Leadership,Mid-Career Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_LEA_869,Transitioning from Tactical Thinking to Enterprise Thinking,Strategic Leadership,Leadership Track Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_WOR_872,Build Organizational Alignment Around Vision,Strategic Leadership,Leadership Track Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_LIF_878,Build Trust Across Diverse Leadership Teams,Collaboration & Ownership,Leadership Track Professional,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_HOL_881,Executive-Level Decision Fatigue,Strategic Leadership,Leadership Track Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_LEA_883,Balancing Innovation with Operational Stability,Strategic Leadership,Leadership Track Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_EMO_886,Build Leadership Alignment Across Geographies,Collaboration & Ownership,Leadership Track Professional,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_EMO_890,Driving Enterprise-Wide Strategic Alignment,Strategic Leadership,Leadership Track Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_LEA_892,Build Organizational Agility During Change,Strategic Leadership,Leadership Track Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_THI_894,Build Trust During Organizational Restructuring,Collaboration & Ownership,Leadership Track Professional,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_COM_897,Balancing Short-Term Results with Long-Term Strategy,Strategic Leadership,Leadership Track Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_HOL_901,Sustaining Strategic Focus During Rapid Business Expansion,Strategic Leadership,Leadership Track Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_COM_905,Balancing Organizational Innovation with Risk Control,Strategic Leadership,Leadership Track Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_CON_992,Adapt Quickly to New Industry Workflows,Workplace Performance,Career Transition Professional,Medium,P2,WORKPLACE_PERFORMANCE,remapped:WORKPLACE_ADAPTATION,override
+CONCERN_LEA_910,Build Enterprise Collaboration Ecosystems,Collaboration & Ownership,Leadership Track Professional,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_COL_911,Emotional Pressure During Succession Transitions,Leadership Transition,Leadership Track Professional,Medium,P2,LEADERSHIP_TRANSITION,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_LEA_912,Build Strategic Adaptability Across Leadership Teams,Strategic Leadership,Leadership Track Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_EMO_914,Leading High-Uncertainty Strategic Initiatives,Strategic Leadership,Leadership Track Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_CON_918,Build Long-Term Strategic Culture,Strategic Leadership,Leadership Track Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_STR_922,Build Cross-Business Strategic Alignment,Collaboration & Ownership,Leadership Track Professional,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_EMO_924,Leading Enterprise Innovation Programs,Strategic Leadership,Leadership Track Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_COM_929,Strategic Drift During Organizational Expansion,Strategic Leadership,Leadership Track Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_EMO_932,Integrate Long-Term Vision into Daily Leadership Decisions,Strategic Leadership,Leadership Track Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_STR_937,Emotional Fatigue from Continuous Strategic Planning,Strategic Leadership,Leadership Track Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_LEA_940,Build Strategic Partnerships Internally and Externally,Collaboration & Ownership,Leadership Track Professional,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_COL_941,Emotional Anxiety Around Succession Relevance,Leadership Transition,Leadership Track Professional,Medium,P2,LEADERSHIP_TRANSITION,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_LEA_949,Organizational Fear During Crisis Situations,Collaboration & Ownership,Leadership Track Professional,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_COL_950,Integrate Emotional Intelligence into Enterprise Strategy,Strategic Leadership,Leadership Track Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_ACA_953,Balancing Enterprise Expansion with Leadership Stability,Strategic Leadership,Leadership Track Professional,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_EMO_1074,Cross-Functional Collaboration,Collaboration & Ownership,Professional Employee,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_COM_1113,Balancing Team Expectations with Personal Capacity,Collaboration & Ownership,Professional Employee,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_CAR_1130,Navigating Complex Team Dynamics,Collaboration & Ownership,Professional Employee,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_EMO_1137,Emotional Pressure from Team Dependencies,Collaboration & Ownership,Professional Employee,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_MOT_1146,Managing Multi-Stakeholder Expectations,Collaboration & Ownership,Professional Employee,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_EMO_1169,Aligning Teaching Practices Across Faculty,Teaching Quality,Principal / Leadership,Medium,P2,TEACHING_QUALITY,remapped:INSTRUCTIONAL_QUALITY,keyword
+CONCERN_TEA_1170,Visibility into Student Curiosity and Inquiry Levels,Inquiry & Curiosity,Principal / Leadership,Medium,P2,INQUIRY_CURIOSITY,remapped:THINKING_QUALITY,override
+CONCERN_SUB_1360,reading comprehension skills,Language Development,Academic Counsellor,Medium,P2,LANGUAGE_DEVELOPMENT,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_ACA_1174,Visibility into Classroom Engagement Patterns,Student Engagement,Principal / Leadership,Medium,P2,STUDENT_ENGAGEMENT,remapped:STUDENT_SUCCESS,keyword
+CONCERN_EMO_1182,Visibility into Teacher Burnout and Instructional Fatigue,Faculty Effectiveness,Principal / Leadership,Medium,P2,FACULTY_EFFECTIVENESS,remapped:INSTRUCTIONAL_QUALITY,keyword
+CONCERN_ACA_1188,Measure Collaborative Competencies Institutionally,Collaboration & Ownership,Principal / Leadership,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_ACA_1198,Visibility into Teacher Competency Growth Needs,Faculty Development,Principal / Leadership,Medium,P2,FACULTY_DEVELOPMENT,remapped:INSTRUCTIONAL_QUALITY,keyword
+CONCERN_EMO_1202,Visibility into Real Classroom Participation Equity,Collaboration & Ownership,Principal / Leadership,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_CON_1205,Institutional Creativity and Innovation Levels,Inquiry & Curiosity,Principal / Leadership,Medium,P2,INQUIRY_CURIOSITY,remapped:THINKING_QUALITY,override
+CONCERN_LEA_1209,Teacher Adaptability to New Pedagogies,Faculty Development,Principal / Leadership,Medium,P2,FACULTY_DEVELOPMENT,remapped:INSTRUCTIONAL_QUALITY,keyword
+CONCERN_EMP_1214,Visibility into Institutional Collaboration Culture,Collaboration & Ownership,Principal / Leadership,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_ACA_1217,Detecting Faculty Motivation Decline Early,Faculty Sustainability,Principal / Leadership,Medium,P2,FACULTY_SUSTAINABILITY,remapped:INSTRUCTIONAL_QUALITY,keyword
+CONCERN_ACA_1224,Measure Institutional Adaptability Readiness,Organizational Development,Principal / Leadership,Medium,P2,ORGANIZATIONAL_DEVELOPMENT,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_MOT_1227,Faculty Collaboration and Knowledge Sharing,Collaboration & Ownership,Principal / Leadership,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_LEA_1229,Institutional Innovation Readiness,Inquiry & Curiosity,Principal / Leadership,Medium,P2,INQUIRY_CURIOSITY,remapped:THINKING_QUALITY,override
+CONCERN_ACA_1232,Build Institutional Reflective Teaching Practices,Faculty Development,Principal / Leadership,Medium,P2,FACULTY_DEVELOPMENT,remapped:INSTRUCTIONAL_QUALITY,keyword
+CONCERN_ACA_1249,Faculty Emotional Wellbeing Institutionally,Faculty Sustainability,Principal / Leadership,Medium,P2,FACULTY_SUSTAINABILITY,remapped:INSTRUCTIONAL_QUALITY,keyword
+CONCERN_FAC_1250,Visibility into Student Adaptability During Curriculum Changes,Adaptive Learning,Principal / Leadership,Medium,P2,ADAPTIVE_LEARNING,remapped:LEARNING_ADAPTABILITY,override
+CONCERN_THI_1252,Measure Student Ownership in Collaborative Learning,Collaboration & Ownership,Principal / Leadership,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_COL_1253,Institutional Curiosity Suppression Patterns,Inquiry & Curiosity,Principal / Leadership,Medium,P2,INQUIRY_CURIOSITY,remapped:THINKING_QUALITY,override
+CONCERN_LEA_1358,Inconsistent performance across subjects,Performance Analysis,Academic Counsellor,Medium,P2,PERFORMANCE_ANALYSIS,GENERAL_CONCERN (generic catch-all),general
+CONCERN_ACA_1264,Measure Classroom Engagement Quality,Student Engagement,Academic Operations Leadership,Medium,P2,STUDENT_ENGAGEMENT,remapped:STUDENT_SUCCESS,keyword
+CONCERN_ACA_1267,Faculty Delivery Consistency,Faculty Effectiveness,Academic Operations Leadership,Medium,P2,FACULTY_EFFECTIVENESS,remapped:INSTRUCTIONAL_QUALITY,keyword
+CONCERN_ACA_1269,Active Learning Environments,Inquiry & Curiosity,Academic Operations Leadership,Medium,P2,INQUIRY_CURIOSITY,remapped:THINKING_QUALITY,override
+CONCERN_ASS_1272,Measure Student Participation Equity,Collaboration & Ownership,Academic Operations Leadership,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_COL_1273,Instructional Adaptability Across Teachers,Adaptive Learning,Academic Operations Leadership,Medium,P2,ADAPTIVE_LEARNING,remapped:LEARNING_ADAPTABILITY,override
+CONCERN_EMO_1278,Visibility into Learning Delivery Bottlenecks,Organizational Effectiveness,Academic Operations Leadership,Medium,P2,ORGANIZATIONAL_EFFECTIVENESS,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_LEA_1283,Instructional Quality During Faculty Turnover,Faculty Effectiveness,Academic Operations Leadership,Medium,P2,FACULTY_EFFECTIVENESS,remapped:INSTRUCTIONAL_QUALITY,keyword
+CONCERN_ACA_1285,Academic Delivery Fatigue Among Teachers,Faculty Sustainability,Academic Operations Leadership,Medium,P2,FACULTY_SUSTAINABILITY,remapped:INSTRUCTIONAL_QUALITY,keyword
+CONCERN_FAC_1286,Visibility into Student Learning Pace Differences,Adaptive Diagnostics,Academic Operations Leadership,Medium,P2,ADAPTIVE_DIAGNOSTICS,GENERAL_CONCERN (generic catch-all),general
+CONCERN_HOL_1292,Visibility into Student Attendance Pattern Risks,Behavioral Stability,Student Success Office,Medium,P2,BEHAVIORAL_STABILITY,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_CON_1295,Coordinating Multi-Layer Student Interventions,Organizational Effectiveness,Student Success Office,Medium,P2,ORGANIZATIONAL_EFFECTIVENESS,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_LAN_1361,academic goal clarity,Career-Academic Alignment,Academic Counsellor,Medium,P2,CAREER_ACADEMIC,remapped:CAREER_READINESS,keyword
+CONCERN_SOC_1299,Tracking Student Adaptability During Transitions,Adaptive Learning,Student Success Office,Medium,P2,ADAPTIVE_LEARNING,remapped:LEARNING_ADAPTABILITY,override
+CONCERN_ACA_1302,Personalize Student Intervention Pathways,Student Support,Student Success Office,Medium,P2,STUDENT_SUPPORT,remapped:STUDENT_SUCCESS,keyword
+CONCERN_EMO_1304,Visibility into Parent Engagement Effectiveness,Stakeholder Alignment,Student Success Office,Medium,P2,STAKEHOLDER_ALIGNMENT,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_COM_1311,Tracking Institutional Effectiveness of Student Interventions,Intervention Intelligence,Student Success Office,Medium,P2,INTERVENTION_INTELLIGENCE,GENERAL_CONCERN (generic catch-all),general
+CONCERN_PLA_1325,Student Adaptability for Dynamic Careers,Adaptive Learning,Placement & Career Cell,Medium,P2,ADAPTIVE_LEARNING,remapped:LEARNING_ADAPTABILITY,override
+CONCERN_EMO_1328,Monitor Student Resume and Profile Quality,Career Branding,Placement & Career Cell,Medium,P2,CAREER_BRANDING,remapped:CAREER_READINESS,keyword
+CONCERN_COM_1335,Detecting Students with Hidden High Employability Potential,Talent Identification,Placement & Career Cell,Medium,P2,TALENT_IDENTIFICATION,remapped:COMPETENCY_DEVELOPMENT,keyword
+CONCERN_ADA_1339,Placement Preparation Effectiveness Institutionally,Placement Operations,Placement & Career Cell,Medium,P2,PLACEMENT_OPERATIONS,remapped:WORKPLACE_ADAPTATION,keyword
+CONCERN_EMO_1341,Student Readiness for Entrepreneurial Careers,Innovation & Entrepreneurship,Placement & Career Cell,Medium,P2,INNOVATION_ENTREPRENEURSHIP,remapped:CAREER_READINESS,keyword
+CONCERN_EMO_1345,Long-Term Career Sustainability Readiness,Career Sustainability,Placement & Career Cell,Medium,P2,CAREER_SUSTAINABILITY,remapped:CAREER_READINESS,keyword
+CONCERN_ACA_1348,concentration during classes,Learning Intervention,Academic Counsellor,High,P2,LEARNING_INTERVENTION,remapped:LEARNING_ADAPTABILITY,keyword
+CONCERN_STU_1350,complete syllabus on time,Academic Planning,Academic Counsellor,Medium,P2,ACADEMIC_PLANNING,remapped:ACADEMIC_COGNITIVE,keyword
+CONCERN_STU_1353,interest in studies,Engagement Management,Academic Counsellor,Medium,P2,ENGAGEMENT_MANAGEMENT,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_COM_1368,Peer comparison affecting motivation,Student Psychology,Academic Counsellor,Medium,P2,STUDENT_PSYCHOLOGY,remapped:STUDENT_SUCCESS,keyword
+CONCERN_LEA_1371,academic stamina during long exams,Exam Readiness,Academic Counsellor,Medium,P2,EXAM_READINESS,remapped:EXAMINATION_STRESS,keyword
+CONCERN_CAR_1379,understanding of emerging careers,Future Career Readiness,Career Counsellor,Medium,P2,FUTURE_CAREER,remapped:CAREER_READINESS,keyword
+CONCERN_CAR_1381,Confusion between passion and employability,Career Alignment,Career Counsellor,Medium,P2,CAREER_ALIGNMENT,remapped:CAREER_READINESS,keyword
+CONCERN_DEC_1385,confidence in non-traditional careers,Alternative Career Guidance,Career Counsellor,Medium,P2,ALTERNATIVE_CAREER,remapped:CAREER_READINESS,keyword
+CONCERN_HIG_1388,career planning timeline management,Career Execution,Career Counsellor,Medium,P2,CAREER_EXECUTION,remapped:CAREER_READINESS,keyword
+CONCERN_CAR_1390,Students preparing for oversaturated career paths,Workforce Trends,Career Counsellor,Medium,P2,WORKFORCE_TRENDS,remapped:WORKPLACE_ADAPTATION,keyword
+CONCERN_CAR_1392,communication impacting career opportunities,Employability Development,Career Counsellor,High,P2,EMPLOYABILITY_DEVELOPMENT,remapped:EMPLOYABILITY,keyword
+CONCERN_SEL_1396,Confusion between degree and career outcomes,Career Mapping,Career Counsellor,Medium,P2,CAREER_MAPPING,remapped:CAREER_READINESS,keyword
+CONCERN_CAR_1397,resilience after career setbacks,Career Recovery,Career Counsellor,High,P2,CAREER_RECOVERY,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_CAR_1398,balancing passion and financial stability,Career Sustainability,Career Counsellor,Medium,P2,CAREER_SUSTAINABILITY,remapped:CAREER_READINESS,keyword
+CONCERN_VOC_1400,Students pursuing careers misaligned with personality,Personality-Career Fit,Career Counsellor,Medium,P2,PERSONALITY_CAREER,remapped:CAREER_READINESS,keyword
+CONCERN_FUT_1402,Students lacking portfolio and profile development,Career Branding,Career Counsellor,Medium,P2,CAREER_BRANDING,remapped:CAREER_READINESS,keyword
+CONCERN_ENT_1404,career adaptability during market shifts,Career Flexibility,Career Counsellor,High,P2,CAREER_FLEXIBILITY,remapped:CAREER_READINESS,keyword
+CONCERN_STU_1408,accountability toward academic commitments,Performance Coaching,Student Mentor,High,P2,PERFORMANCE_COACHING,GENERAL_CONCERN (generic catch-all),general
+CONCERN_GRO_1410,Excessive dependence on parents for decisions,Personal Growth,Student Mentor,Medium,P2,PERSONAL_GROWTH,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_EMO_1412,peer influence management,Social Development,Student Mentor,Medium,P2,SOCIAL_DEVELOPMENT,remapped:SOCIAL_EMOTIONAL,keyword
+CONCERN_PER_1414,emotional regulation during conflicts,Student Behaviour,Student Mentor,Medium,P2,STUDENT_BEHAVIOUR,remapped:STUDENT_SUCCESS,keyword
+CONCERN_STU_1415,confidence in personal abilities,Self-Development,Student Mentor,High,P2,SELF_DEVELOPMENT,remapped:SELF_PERCEPTION,keyword
+CONCERN_LEA_1419,adaptability to changing expectations,Adaptability Coaching,Student Mentor,Medium,P2,ADAPTABILITY_COACHING,GENERAL_CONCERN (generic catch-all),general
+CONCERN_ADA_1420,balance academics and personal life,Student Wellness,Student Mentor,High,P2,STUDENT_WELLNESS,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_STU_1421,problem-solving and practical thinking,Capability Development,Student Mentor,Medium,P2,CAPABILITY_DEVELOPMENT,remapped:COMPETENCY_DEVELOPMENT,keyword
+CONCERN_MAT_1423,long-term personal vision,Future Orientation,Student Mentor,Medium,P2,FUTURE_ORIENTATION,GENERAL_CONCERN (generic catch-all),general
+CONCERN_FUT_1424,criticism and feedback,Growth Mindset,Student Mentor,Medium,P2,GROWTH_MINDSET,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_PER_1426,ethical judgment and integrity awareness,Character Development,Student Mentor,High,P2,CHARACTER_DEVELOPMENT,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_PER_1431,self-awareness about strengths and weaknesses,Personal Insight,Student Mentor,Medium,P2,PERSONAL_INSIGHT,GENERAL_CONCERN (generic catch-all),general
+CONCERN_EMO_1433,digital behaviour and online discipline,Digital Responsibility,Student Mentor,High,P2,DIGITAL_RESPONSIBILITY,remapped:DISCIPLINE_HABITS,keyword
+CONCERN_DIG_1434,transitioning into adulthood responsibilities,Life Readiness,Student Mentor,Medium,P2,LIFE_READINESS,GENERAL_CONCERN (generic catch-all),general
+CONCERN_LIF_1435,decision-making under uncertainty,Decision Coaching,Student Mentor,Medium,P2,DECISION_COACHING,remapped:THINKING_QUALITY,keyword
+CONCERN_PER_1440,Emotional outbursts during academic stress,Student Regulation,Behavioral Mentor,High,P2,STUDENT_REGULATION,remapped:STUDENT_SUCCESS,keyword
+CONCERN_STU_1441,Dependency on constant external motivation,Motivation Development,Behavioral Mentor,Medium,P2,MOTIVATION_DEVELOPMENT,remapped:MOTIVATION_VALUES,keyword
+CONCERN_MOT_1442,Fear of asking doubts in class,Classroom Adaptation,Behavioral Mentor,Medium,P2,CLASSROOM_ADAPTATION,remapped:CLASSROOM_ENGAGEMENT,keyword
+CONCERN_CLA_1443,adaptation to changing academic expectations,Adaptability Guidance,Behavioral Mentor,Medium,P2,ADAPTABILITY_GUIDANCE,GENERAL_CONCERN (generic catch-all),general
+CONCERN_LEA_1445,Frequent comparison with peers,Student Psychology,Behavioral Mentor,Medium,P2,STUDENT_PSYCHOLOGY,remapped:STUDENT_SUCCESS,keyword
+CONCERN_REC_1447,ownership toward learning,Responsibility Development,Behavioral Mentor,Medium,P2,RESPONSIBILITY_DEVELOPMENT,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_SOC_1451,confidence in independent learning,Self-Learning Development,Behavioral Mentor,Medium,P2,SELF_LEARNING,remapped:LEARNING_ADAPTABILITY,keyword
+CONCERN_SEL_1452,Avoidance of challenging tasks,Growth Behavior,Behavioral Mentor,Medium,P2,GROWTH_BEHAVIOR,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_BEH_1457,Excessive dependency on parental supervision,Independence Development,Behavioral Mentor,Medium,P2,INDEPENDENCE_DEVELOPMENT,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_COM_1459,transitioning between academic stages,Transition Adaptation,Behavioral Mentor,Medium,P2,TRANSITION_ADAPTATION,remapped:TRANSITION_READINESS,keyword
+CONCERN_PER_1461,academic uncertainty,Psychological Adaptation,Behavioral Mentor,Medium,P2,PSYCHOLOGICAL_ADAPTATION,GENERAL_CONCERN (generic catch-all),general
+CONCERN_PSY_1462,Overreaction to minor academic setbacks,Emotional Response,Behavioral Mentor,Medium,P2,EMOTIONAL_RESPONSE,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_BEH_1465,initiative in academic and extracurricular tasks,Engagement Behavior,Behavioral Mentor,Medium,P2,ENGAGEMENT_BEHAVIOR,GENERAL_CONCERN (generic catch-all),general
+CONCERN_LEA_1468,Fear of taking leadership responsibilities,Student Leadership,Leadership Coach,Medium,P2,STUDENT_LEADERSHIP,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_STU_1469,make decisions independently,Decision Leadership,Leadership Coach,High,P2,DECISION_LEADERSHIP,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_SOC_1471,Students unable to handle criticism constructively,Emotional Leadership,Leadership Coach,Medium,P2,EMOTIONAL_LEADERSHIP,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_CON_1475,assertiveness in academic and social settings,Personal Leadership,Leadership Coach,Medium,P2,PERSONAL_LEADERSHIP,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_ADA_1479,Students lacking ownership and accountability,Leadership Accountability,Leadership Coach,High,P2,LEADERSHIP_ACCOUNTABILITY,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_SEL_1481,communication during presentations and interviews,Executive Communication,Leadership Coach,High,P2,EXECUTIVE_COMMUNICATION,remapped:COMMUNICATION_EXPRESSION,keyword
+CONCERN_EXE_1482,teams during projects,Team Management,Leadership Coach,Medium,P2,TEAM_MANAGEMENT,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_TEA_1483,confidence among first-generation learners,Inclusion & Leadership,Leadership Coach,Medium,P2,INCLUSION_LEADERSHIP,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_PRO_1485,vision and long-term thinking,Strategic Leadership,Leadership Coach,Medium,P2,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_CON_1490,adaptability during failures or setbacks,Leadership Recovery,Leadership Coach,High,P2,LEADERSHIP_RECOVERY,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_LEA_1493,Emotional impulsiveness affecting leadership image,Emotional Maturity,Leadership Coach,Medium,P2,EMOTIONAL_MATURITY,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_PER_1495,ethical leadership orientation,Values-Based Leadership,Leadership Coach,High,P2,VALUES_BASED,GENERAL_CONCERN (generic catch-all),general
+CONCERN_SEL_1498,identify personal interests,Self Exploration,Self Discovery,Medium,P2,SELF_EXPLORATION,remapped:SELF_PERCEPTION,keyword
+CONCERN_SEL_1499,Confusion between passion and temporary excitement,Identity Formation,Self Discovery,Medium,P2,IDENTITY_FORMATION,remapped:SELF_PERCEPTION,keyword
+CONCERN_PER_1501,Overdependence on external validation,Emotional Development,Self Discovery,High,P2,EMOTIONAL_DEVELOPMENT,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_PER_1503,Fear of expressing authentic identity,Identity Confidence,Self Discovery,High,P2,IDENTITY_CONFIDENCE,remapped:CONFIDENCE_SELF,keyword
+CONCERN_ASP_1505,emotional self-awareness,Emotional Literacy,Self Discovery,Medium,P2,EMOTIONAL_LITERACY,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_EMO_1506,identifying natural talents,Talent Discovery,Self Discovery,Medium,P2,TALENT_DISCOVERY,remapped:COMPETENCY_DEVELOPMENT,keyword
+CONCERN_VAL_1510,Excessive comparison reducing individuality,Self Identity,Self Discovery,High,P2,SELF_IDENTITY,remapped:SELF_PERCEPTION,keyword
+CONCERN_BEH_1512,Fear of failure preventing self-exploration,Exploration Inhibition,Self Discovery,High,P2,EXPLORATION_INHIBITION,GENERAL_CONCERN (generic catch-all),general
+CONCERN_EXP_1513,decision-making confidence,Personal Decision Making,Self Discovery,Medium,P2,PERSONAL_DECISION,remapped:THINKING_QUALITY,keyword
+CONCERN_REC_1516,Students unable to articulate who they are,Identity Expression,Self Discovery,Medium,P2,IDENTITY_EXPRESSION,remapped:COMMUNICATION_EXPRESSION,keyword
+CONCERN_PER_1518,adaptability to changing environments,Adaptive Development,Self Discovery,High,P2,ADAPTIVE_DEVELOPMENT,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_EMO_1521,personal mission or purpose,Purpose Discovery,Self Discovery,High,P2,PURPOSE_DISCOVERY,remapped:MOTIVATION_VALUES,keyword
+CONCERN_PUR_1522,self-discipline and accountability,Personal Effectiveness,Self Discovery,Medium,P2,PERSONAL_EFFECTIVENESS,GENERAL_CONCERN (generic catch-all),general
+CONCERN_HOL_1524,recognizing limiting beliefs,Cognitive Self-Awareness,Self Discovery,Medium,P2,COGNITIVE_SELF,remapped:SELF_PERCEPTION,keyword
+CONCERN_COG_1525,ownership over personal growth,Self Leadership,Self Discovery,High,P2,SELF_LEADERSHIP,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_SEL_1528,identify personal growth areas,Growth Mapping,Self Exploration User,Medium,P2,GROWTH_MAPPING,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_GRO_1529,Confusion about long-term personal trajectory,Personal Development,Self Exploration User,High,P2,PERSONAL_DEVELOPMENT,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_EMO_1531,understanding natural learning style,Cognitive Mapping,Self Exploration User,Medium,P2,COGNITIVE_MAPPING,GENERAL_CONCERN (generic catch-all),general
+CONCERN_COG_1532,self-confidence despite capability,Personal Effectiveness,Self Exploration User,High,P2,PERSONAL_EFFECTIVENESS,GENERAL_CONCERN (generic catch-all),general
+CONCERN_BEH_1534,clarity about intrinsic motivations,Motivation Mapping,Self Exploration User,Medium,P2,MOTIVATION_MAPPING,remapped:MOTIVATION_VALUES,keyword
+CONCERN_MOT_1535,Fear of acknowledging weaknesses,Emotional Maturity,Self Exploration User,Medium,P2,EMOTIONAL_MATURITY,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_EMO_1536,understanding of emotional triggers,Emotional Self-Awareness,Self Exploration User,High,P2,EMOTIONAL_SELF,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_SEL_1540,Underestimating capabilities due to comparison,Self-Worth Development,Self Exploration User,High,P2,SELF_WORTH,remapped:SELF_PERCEPTION,keyword
+CONCERN_SEL_1541,clarity about personal values,Identity Formation,Self Exploration User,Medium,P2,IDENTITY_FORMATION,remapped:SELF_PERCEPTION,keyword
+CONCERN_REF_1543,adaptability during life transitions,Adaptive Growth,Self Exploration User,High,P2,ADAPTIVE_GROWTH,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_SEL_1545,ownership for personal growth,Accountability Development,Self Exploration User,Medium,P2,ACCOUNTABILITY_DEVELOPMENT,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_ACC_1546,Fear of stepping outside comfort zone,Personal Expansion,Self Exploration User,Medium,P2,PERSONAL_EXPANSION,GENERAL_CONCERN (generic catch-all),general
+CONCERN_PER_1547,Inconsistent self-discipline affecting growth,Self-Management,Self Exploration User,High,P2,SELF_MANAGEMENT,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_SEL_1548,balancing ambition and wellbeing,Personal Sustainability,Self Exploration User,High,P2,PERSONAL_SUSTAINABILITY,remapped:LIFESTYLE_PRESSURE,keyword
+CONCERN_PER_1552,aligning actions with goals,Goal Alignment,Self Exploration User,Medium,P2,GOAL_ALIGNMENT,remapped:MOTIVATION_VALUES,keyword
+CONCERN_GOA_1553,Overthinking personal decisions constantly,Cognitive-Emotional Balance,Self Exploration User,Medium,P2,COGNITIVE_EMOTIONAL,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_SOC_1555,clarity about future personal identity,Future Self Mapping,Self Exploration User,Medium,P2,FUTURE_SELF,remapped:SELF_PERCEPTION,keyword
+CONCERN_CAR_1558,Choosing careers based only on salary expectations,Career Decision Analysis,Self Exploration User,Medium,P2,CAREER_DECISION,remapped:CAREER_READINESS,keyword
+CONCERN_STR_1560,Career interests changing frequently,Career Stability Analysis,Self Exploration User,Medium,P2,CAREER_STABILITY,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_CAR_1566,awareness about emerging career possibilities,Career Exploration,Self Exploration User,Medium,P2,CAREER_EXPLORATION,remapped:CAREER_READINESS,keyword
+CONCERN_CAR_1567,connecting personality with career fit,Personality Alignment,Self Exploration User,Medium,P2,PERSONALITY_ALIGNMENT,remapped:SELF_PERCEPTION,keyword
+CONCERN_CAR_1569,confidence in pursuing creative careers,Alternative Career Reflection,Self Exploration User,Medium,P2,ALTERNATIVE_CAREER,remapped:CAREER_READINESS,keyword
+CONCERN_ACA_1572,visualizing future self and goals,Future Orientation,Self Exploration User,Medium,P2,FUTURE_ORIENTATION,GENERAL_CONCERN (generic catch-all),general
+CONCERN_DEC_1574,Career confusion due to social media influence,Aspirational Clarity,Self Exploration User,Medium,P2,ASPIRATIONAL_CLARITY,remapped:MOTIVATION_VALUES,keyword
+CONCERN_ASP_1575,balancing passion and financial security,Career Tradeoff Reflection,Self Exploration User,Medium,P2,CAREER_TRADEOFF,remapped:CAREER_READINESS,keyword
+CONCERN_CAR_1576,confidence after repeated failures,Career Recovery Reflection,Self Exploration User,High,P2,CAREER_RECOVERY,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_IDE_1578,evaluating personal career readiness,Career Preparedness Reflection,Self Exploration User,Medium,P2,CAREER_PREPAREDNESS,remapped:CAREER_READINESS,keyword
+CONCERN_CAR_1579,self-discipline impacting career goals,Career Execution Reflection,Self Exploration User,Medium,P2,CAREER_EXECUTION,remapped:CAREER_READINESS,keyword
+CONCERN_CAR_1580,Feeling disconnected from chosen academic path,Academic-Career Misfit,Self Exploration User,Medium,P2,ACADEMIC_CAREER,remapped:CAREER_READINESS,keyword
+CONCERN_MUL_1582,Fear of lagging behind peers in career progress,Career Timeline Anxiety,Self Exploration User,Medium,P2,CAREER_TIMELINE,remapped:CAREER_READINESS,keyword
+CONCERN_WOR_1584,aligning career with personal purpose,Purpose Alignment,Self Exploration User,Medium,P2,PURPOSE_ALIGNMENT,remapped:MOTIVATION_VALUES,keyword
+CONCERN_LEA_1590,reflect on learning mistakes,Metacognitive Development,Learner,Medium,P2,METACOGNITIVE_DEVELOPMENT,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_MET_1591,understanding of attention span limitations,Cognitive Reflection,Learner,Medium,P2,COGNITIVE_REFLECTION,remapped:THINKING_QUALITY,keyword
+CONCERN_COG_1592,awareness about effective revision methods,Study Strategy Reflection,Learner,Medium,P2,STUDY_STRATEGY,remapped:ACADEMIC_COGNITIVE,keyword
+CONCERN_SEL_1596,awareness about learning blockers,Self-Diagnostic Reflection,Learner,Medium,P2,SELF_DIAGNOSTIC,remapped:SELF_PERCEPTION,keyword
+CONCERN_ACA_1598,awareness of personal stress responses,Emotional Reflection,Learner,Medium,P2,EMOTIONAL_REFLECTION,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_COG_1601,Dependence on external validation for learning confidence,Learning Psychology,Learner,Medium,P2,LEARNING_PSYCHOLOGY,remapped:LEARNING_ADAPTABILITY,keyword
+CONCERN_LEA_1603,curiosity-driven self-learning,Exploratory Learning,Learner,Medium,P2,EXPLORATORY_LEARNING,remapped:LEARNING_ADAPTABILITY,keyword
+CONCERN_EXP_1604,understanding personal problem-solving style,Cognitive Awareness,Learner,Medium,P2,COGNITIVE_AWARENESS,GENERAL_CONCERN (generic catch-all),general
+CONCERN_ATT_1608,differentiating interest from competency,Self Discovery,Learner,Medium,P2,SELF_DISCOVERY,remapped:SELF_PERCEPTION,keyword
+CONCERN_PER_1610,identifying emotional impact on learning,Emotional Learning Reflection,Learner,Medium,P2,EMOTIONAL_LEARNING,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_TEA_1614,awareness about procrastination triggers,Productivity Reflection,Learner,High,P2,PRODUCTIVITY_REFLECTION,remapped:THINKING_QUALITY,keyword
+CONCERN_SEL_1618,identifying improvement areas,Growth Tracking,Performance Reflection,Medium,P2,GROWTH_TRACKING,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_EMO_1621,Failure to learn from past mistakes,Reflective Learning,Performance Reflection,High,P2,REFLECTIVE_LEARNING,remapped:THINKING_QUALITY,keyword
+CONCERN_SEL_1626,reflection after exam performance,Academic Reflection,Performance Reflection,Medium,P2,ACADEMIC_REFLECTION,remapped:THINKING_QUALITY,keyword
+CONCERN_ACA_1627,setting realistic personal goals,Goal Reflection,Performance Reflection,Medium,P2,GOAL_REFLECTION,remapped:THINKING_QUALITY,keyword
+CONCERN_GOA_1628,sustain self-improvement routines,Habit Development,Performance Reflection,Medium,P2,HABIT_DEVELOPMENT,remapped:DISCIPLINE_HABITS,keyword
+CONCERN_PER_1631,accepting weaknesses constructively,Self-Acceptance,Performance Reflection,Medium,P2,SELF_ACCEPTANCE,remapped:SELF_PERCEPTION,keyword
+CONCERN_SEL_1632,awareness of emotional triggers,Emotional Reflection,Performance Reflection,High,P2,EMOTIONAL_REFLECTION,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_BEH_1634,distinguish effort from effectiveness,Productivity Reflection,Performance Reflection,Medium,P2,PRODUCTIVITY_REFLECTION,remapped:THINKING_QUALITY,keyword
+CONCERN_EMO_1638,ownership for personal performance,Accountability Reflection,Performance Reflection,Medium,P2,ACCOUNTABILITY_REFLECTION,remapped:THINKING_QUALITY,keyword
+CONCERN_SOC_1640,adapting after poor performance outcomes,Adaptive Reflection,Performance Reflection,High,P2,ADAPTIVE_REFLECTION,remapped:THINKING_QUALITY,keyword
+CONCERN_INT_1642,understanding of personal learning style,Learning Reflection,Performance Reflection,Medium,P2,LEARNING_REFLECTION,remapped:THINKING_QUALITY,keyword
+CONCERN_LEA_1643,motivation during slow progress,Growth Persistence,Performance Reflection,Medium,P2,GROWTH_PERSISTENCE,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_REF_1646,connect personal growth with future goals,Purpose Reflection,Performance Reflection,High,P2,PURPOSE_REFLECTION,remapped:THINKING_QUALITY,keyword
+CONCERN_ACA_1664,Revising Effectively,Examination Readiness,Student,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_ACA_1707,Tracking Academic Progress,Academic Performance,Student,Medium,P2,ACADEMIC_PERFORMANCE,remapped:ACADEMIC_COGNITIVE,override
+CONCERN_COM_1712,Interpreting Graphs and Data,Analytical Development,Student,Medium,P2,ANALYTICAL_DEVELOPMENT,remapped:THINKING_QUALITY,keyword
+CONCERN_EXA_1715,Academic Endurance,Academic Performance,Student,Medium,P2,ACADEMIC_PERFORMANCE,remapped:ACADEMIC_COGNITIVE,override
+CONCERN_ANA_1719,Verbal Reasoning Skills,Analytical Development,Student,Medium,P2,ANALYTICAL_DEVELOPMENT,remapped:THINKING_QUALITY,keyword
+CONCERN_ACA_1722,Linking Concepts Across Subjects,Interdisciplinary Learning,Student,Medium,P2,INTERDISCIPLINARY_LEARNING,remapped:LEARNING_ADAPTABILITY,override
+CONCERN_COM_1961,Exam Strategy,Examination Readiness,Parent,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_LEA_1987,Preparedness for Surprise Tests,Examination Readiness,Student,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_DIS_2011,Revising Without Guidance,Examination Readiness,Student,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_ACA_2014,Exam Writing Speed,Examination Readiness,Student,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_SEL_2019,Revision Consistency,Examination Readiness,Student,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_ACA_2031,Attention During Revision,Examination Readiness,Student,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_SEL_2036,Concept Transfer Across Subjects,Interdisciplinary Learning,Student,Medium,P2,INTERDISCIPLINARY_LEARNING,remapped:LEARNING_ADAPTABILITY,override
+CONCERN_ACA_2045,Structuring Revision Priorities,Examination Readiness,Student,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_LEA_2048,Learning Ownership During Group Tasks,Collaboration & Ownership,Student,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_MOT_2056,Academic Prioritization During Exams,Examination Readiness,Student,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_EXA_2061,Consistency Across Subjects,Academic Performance,Student,Medium,P2,ACADEMIC_PERFORMANCE,remapped:ACADEMIC_COGNITIVE,override
+CONCERN_ACA_2067,Understanding Examination Patterns,Examination Readiness,Student,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_EXA_2070,Strategic Guessing Ability in MCQs,Examination Readiness,Student,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_LEA_2096,Understanding Interdisciplinary Concepts,Interdisciplinary Learning,Student,Medium,P2,INTERDISCIPLINARY_LEARNING,remapped:LEARNING_ADAPTABILITY,override
+CONCERN_EXA_2112,Subject Integration Across Curriculum,Interdisciplinary Learning,Student,Medium,P2,INTERDISCIPLINARY_LEARNING,remapped:LEARNING_ADAPTABILITY,override
+CONCERN_CON_2140,Supporting Students with Weak Exam Strategy,Examination Readiness,Teacher,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_ACA_2147,Building Collaborative Learning Culture,Collaboration & Ownership,Teacher,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_ACA_2156,Students with Poor Revision Habits,Examination Readiness,Teacher,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_EXA_2157,Supporting Students with Weak Conceptual Integration,Interdisciplinary Learning,Teacher,Medium,P2,INTERDISCIPLINARY_LEARNING,remapped:LEARNING_ADAPTABILITY,override
+CONCERN_MOT_2181,Students with Weak Writing Speed,Examination Readiness,Teacher,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_DIS_2194,Handling Students with Weak Exam Writing Structure,Examination Readiness,Teacher,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_COM_2197,Students Who Avoid Group Work,Collaboration & Ownership,Teacher,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_CON_2204,Managing Students with Weak Collaborative Communication,Collaboration & Ownership,Teacher,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_DIS_2208,Managing Students with Weak Focus During Revision Sessions,Examination Readiness,Teacher,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_ADJ_2216,Supporting Students with Weak Subject Integration Skills,Interdisciplinary Learning,Teacher,Medium,P2,INTERDISCIPLINARY_LEARNING,remapped:LEARNING_ADAPTABILITY,override
+CONCERN_EXA_2278,Managing Students with Weak Conceptual Recall During Viva,Examination Readiness,Teacher,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_CON_2234,Handling Students with Weak Concept Revision Methods,Examination Readiness,Teacher,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_ACA_2240,Handling Students with Weak Subject Prioritization During Exams,Examination Readiness,Teacher,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_EXA_2241,Supporting Students with Weak Peer Collaboration,Collaboration & Ownership,Teacher,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_DIS_2252,Handling Students with Weak Concept Transfer Skills,Interdisciplinary Learning,Teacher,Medium,P2,INTERDISCIPLINARY_LEARNING,remapped:LEARNING_ADAPTABILITY,override
+CONCERN_EXA_2258,Handling Students with Weak Academic Ownership During Projects,Collaboration & Ownership,Teacher,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_SEL_2272,Managing Students with Weak Collaborative Problem-Solving Skills,Collaboration & Ownership,Teacher,Medium,P2,COLLABORATION_OWNERSHIP,remapped:LEADERSHIP_OWNERSHIP,override
+CONCERN_LEA_2285,Helping Students Sustain Revision Momentum,Examination Readiness,Teacher,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_COM_2290,Managing Students with Weak Interdisciplinary Thinking Skills,Interdisciplinary Learning,Teacher,Medium,P2,INTERDISCIPLINARY_LEARNING,remapped:LEARNING_ADAPTABILITY,override
+CONCERN_HOL_2302,Students Realizing Errors Too Late During Exams,Metacognition & Self-Regulation,Parent,Medium,P2,METACOGNITION_SELF,remapped:SELF_PERCEPTION,keyword
+CONCERN_HEL_2304,Child Avoiding Teacher Guidance Due to Fear,Help-Seeking & Support Utilization,Parent,Medium,P2,HELP_SEEKING,remapped:ADJUSTMENT_COPING,override
+CONCERN_HEL_2305,Response to Corrective Feedback,Help-Seeking & Support Utilization,Parent,Medium,P2,HELP_SEEKING,remapped:ADJUSTMENT_COPING,override
+CONCERN_ACA_2311,Adapting to Academic Changes,Transition & Change Adaptability,Parent,Medium,P2,TRANSITION_CHANGE,remapped:TRANSITION_READINESS,keyword
+CONCERN_TRA_2312,Child Unable to Handle Sudden Routine Changes,Transition & Change Adaptability,Parent,Medium,P2,TRANSITION_CHANGE,remapped:TRANSITION_READINESS,keyword
+CONCERN_TRA_2313,Slow Adaptation After School or Coaching Transition,Transition & Change Adaptability,Parent,Medium,P2,TRANSITION_CHANGE,remapped:TRANSITION_READINESS,keyword
+CONCERN_ACA_2324,Academic Recovery After Long Vacations,Academic Planning & Recovery Intelligence,Parent,Medium,P2,ACADEMIC_PLANNING,remapped:ACADEMIC_COGNITIVE,keyword
+CONCERN_MOT_2464,Managing Students with Weak Understanding of Exam Expectations,Examination Readiness,Teacher,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_LEA_2475,Preparedness for Surprise Tests,Examination Readiness,Student,Medium,P2,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_DOM_1,Adapting to College Academic Structure,College Adaptation,Campus Student,High,P1,COLLEGE_ADAPTATION,GENERAL_CONCERN (generic catch-all),general
+CONCERN_COL_2,Self-Directed Learning Skills,Employability & Academic Readiness,Campus Student,High,P1,EMPLOYABILITY_ACADEMIC,remapped:EMPLOYABILITY,keyword
+CONCERN_SOC_118,Time Allocation During Competitive Exams,Examination Readiness,Competitive Aspirant,Critical,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_CON_138,Test-Taking Strategy in Competitive Exams,Examination Readiness,Competitive Aspirant,Critical,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_EXA_166,Attempt Strategy Decisions,Examination Readiness,Competitive Aspirant,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_EXA_196,Revision Completion Before Exams,Examination Readiness,Competitive Aspirant,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_CON_261,Identifying Core Skill Gaps,Skill Development,Skill Development Learner,High,P1,SKILL_DEVELOPMENT,remapped:COMPETENCY_DEVELOPMENT,keyword
+CONCERN_COM_370,Technical Assessments,Examination Readiness,Early Career Learner,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_COM_463,Explaining Career Gaps Professionally,Career Transition,Job Seeker,High,P1,CAREER_TRANSITION,remapped:CAREER_GROWTH,override
+CONCERN_CAR_465,Transitioning Into New Industries,Career Transition,Job Seeker,High,P1,CAREER_TRANSITION,remapped:CAREER_GROWTH,override
+CONCERN_THI_476,Switching Careers Midway,Career Transition,Job Seeker,High,P1,CAREER_TRANSITION,remapped:CAREER_GROWTH,override
+CONCERN_DIS_488,Handle Technical Assessments Under Pressure,Examination Readiness,Job Seeker,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_MOT_496,Rejoining Workforce After Career Breaks,Career Transition,Job Seeker,High,P1,CAREER_TRANSITION,remapped:CAREER_GROWTH,override
+CONCERN_LIF_538,Returning After Maternity or Caregiving Breaks,Career Transition,Job Seeker,High,P1,CAREER_TRANSITION,remapped:CAREER_GROWTH,override
+CONCERN_LEA_553,Balancing Pragmatic Choices with Career Aspirations,Career Planning,Job Seeker,High,P1,CAREER_PLANNING,remapped:CAREER_READINESS,keyword
+CONCERN_HOL_561,Consistent Workplace Performance,Workplace Performance,Working Professional,High,P1,WORKPLACE_PERFORMANCE,remapped:WORKPLACE_ADAPTATION,override
+CONCERN_HOL_621,Sustaining High Performance Without Burnout,Workplace Performance,Working Professional,High,P1,WORKPLACE_PERFORMANCE,remapped:WORKPLACE_ADAPTATION,override
+CONCERN_MOT_639,Pressure from Unrealistic Workplace Timelines,Workplace Performance,Working Professional,High,P1,WORKPLACE_PERFORMANCE,remapped:WORKPLACE_ADAPTATION,override
+CONCERN_HOL_861,Transitioning from Functional Expert to Strategic Leader,Strategic Leadership,Leadership Track Professional,High,P1,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_LEA_865,Balancing Strategic Vision with Operational Execution,Strategic Leadership,Leadership Track Professional,High,P1,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_HOL_921,Enterprise Leadership Confidence During Market Volatility,Strategic Leadership,Leadership Track Professional,High,P1,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_COM_943,Balancing Investor Expectations with Employee Stability,Strategic Leadership,Leadership Track Professional,High,P1,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_LEA_957,Strategic Anxiety During Economic Instability,Strategic Leadership,Leadership Track Professional,High,P1,STRATEGIC_LEADERSHIP,remapped:ADAPTIVE_LEADERSHIP,override
+CONCERN_COM_1163,Teacher Impact on Student Growth,Teaching Quality,Principal / Leadership,High,P1,TEACHING_QUALITY,remapped:INSTRUCTIONAL_QUALITY,keyword
+CONCERN_MOT_1165,Building School-Wide Competency Culture,Organizational Development,Principal / Leadership,High,P1,ORGANIZATIONAL_DEVELOPMENT,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_INQ_1171,Detecting Hidden High-Potential Students,Talent Identification,Principal / Leadership,High,P1,TALENT_IDENTIFICATION,remapped:COMPETENCY_DEVELOPMENT,keyword
+CONCERN_TAL_1172,Measure Future Readiness Institutionally,Employability & Future Skills,Principal / Leadership,High,P1,EMPLOYABILITY_FUTURE,remapped:EMPLOYABILITY,keyword
+CONCERN_HOL_1177,Identifying Students at Risk of Academic Decline,Academic Risk Intelligence,Principal / Leadership,High,P1,ACADEMIC_RISK,remapped:ACADEMIC_COGNITIVE,keyword
+CONCERN_ACA_1178,Measure Institutional Learning Effectiveness,Organizational Effectiveness,Principal / Leadership,High,P1,ORGANIZATIONAL_EFFECTIVENESS,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_FAC_1183,Aligning Institutional Vision with Classroom Execution,Organizational Development,Principal / Leadership,High,P1,ORGANIZATIONAL_DEVELOPMENT,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_WOR_1187,Identifying Silent Academic Underperformance,Academic Risk Intelligence,Principal / Leadership,High,P1,ACADEMIC_RISK,remapped:ACADEMIC_COGNITIVE,keyword
+CONCERN_EMO_1193,Identifying Institutional Learning Inequality Across Sections,Academic Equity,Principal / Leadership,High,P1,ACADEMIC_EQUITY,remapped:ACADEMIC_COGNITIVE,keyword
+CONCERN_ACA_1194,Visibility into Future Career Readiness Across Students,Employability & Future Skills,Principal / Leadership,High,P1,EMPLOYABILITY_FUTURE,remapped:EMPLOYABILITY,keyword
+CONCERN_COL_1203,Aligning Parent Expectations with Institutional Competency Goals,Organizational Development,Principal / Leadership,High,P1,ORGANIZATIONAL_DEVELOPMENT,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_ACA_1211,Holistic School Effectiveness Beyond Academic Results,Organizational Effectiveness,Principal / Leadership,Critical,P1,ORGANIZATIONAL_EFFECTIVENESS,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_EMO_1213,Identifying Institutional Skill Readiness Gaps,Employability & Future Skills,Principal / Leadership,High,P1,EMPLOYABILITY_FUTURE,remapped:EMPLOYABILITY,keyword
+CONCERN_SOC_1338,Visibility into Student Learning Agility for Future Careers,Adaptive Learning,Placement & Career Cell,High,P1,ADAPTIVE_LEARNING,remapped:LEARNING_ADAPTABILITY,override
+CONCERN_LEA_1237,Institutional Readiness for Future Careers,Employability & Future Skills,Principal / Leadership,High,P1,EMPLOYABILITY_FUTURE,remapped:EMPLOYABILITY,keyword
+CONCERN_HOL_1261,Consistent Learning Quality Across Classrooms,Academic Operations,Academic Operations Leadership,Critical,P1,ACADEMIC_OPERATIONS,remapped:ACADEMIC_COGNITIVE,keyword
+CONCERN_FAC_1268,Detect Learning Gaps Early in Academic Cycles,Academic Risk Intelligence,Academic Operations Leadership,High,P1,ACADEMIC_RISK,remapped:ACADEMIC_COGNITIVE,keyword
+CONCERN_ACA_1271,Aligning Assessment Practices with Actual Learning,Assessment Intelligence,Academic Operations Leadership,High,P1,ASSESSMENT_INTELLIGENCE,GENERAL_CONCERN (generic catch-all),general
+CONCERN_ACA_1275,Balancing Academic Rigor with Learning Absorption,Learning Sustainability,Academic Operations Leadership,High,P1,LEARNING_SUSTAINABILITY,remapped:LEARNING_ADAPTABILITY,keyword
+CONCERN_ORG_1279,Long-Term Learning Progression,Academic Growth,Academic Operations Leadership,High,P1,ACADEMIC_GROWTH,remapped:ACADEMIC_COGNITIVE,keyword
+CONCERN_HOL_1281,Detecting Learning Delivery Delays Across Academic Cycles,Academic Operations,Academic Operations Leadership,High,P1,ACADEMIC_OPERATIONS,remapped:ACADEMIC_COGNITIVE,keyword
+CONCERN_EMO_1290,Identify High-Risk Students for Timely Intervention,Student Risk Intelligence,Student Success Office,Critical,P1,STUDENT_RISK,remapped:STUDENT_SUCCESS,keyword
+CONCERN_EMO_1301,Longitudinal Student Growth Consistency,Academic Growth,Student Success Office,High,P1,ACADEMIC_GROWTH,remapped:ACADEMIC_COGNITIVE,keyword
+CONCERN_CAR_1362,Excessive parental pressure affecting learning,Parent-School Dynamics,Academic Counsellor,High,P1,PARENT_SCHOOL,remapped:SOCIAL_EMOTIONAL,keyword
+CONCERN_INT_1312,Detect Future Readiness Gaps Across Students,Employability & Future Skills,Student Success Office,High,P1,EMPLOYABILITY_FUTURE,remapped:EMPLOYABILITY,keyword
+CONCERN_HOL_1317,Real Employability Readiness Across Students,Employability & Future Skills,Placement & Career Cell,Critical,P1,EMPLOYABILITY_FUTURE,remapped:EMPLOYABILITY,keyword
+CONCERN_PER_1359,Fear of mathematics and science,Subject Anxiety,Academic Counsellor,High,P1,SUBJECT_ANXIETY,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_THI_1323,Aligning Student Skills with Market Demand Trends,Employability & Future Skills,Placement & Career Cell,High,P1,EMPLOYABILITY_FUTURE,remapped:EMPLOYABILITY,keyword
+CONCERN_EMP_1324,Detect Students at Risk of Placement Failure,Placement Risk Intelligence,Placement & Career Cell,High,P1,PLACEMENT_RISK,remapped:WORKPLACE_ADAPTATION,keyword
+CONCERN_CAR_1333,Tracking Longitudinal Employability Growth,Employability Development,Placement & Career Cell,High,P1,EMPLOYABILITY_DEVELOPMENT,remapped:EMPLOYABILITY,keyword
+CONCERN_TAL_1336,Measure Real Workplace Readiness Beyond Academics,Workplace Readiness,Placement & Career Cell,High,P1,WORKPLACE_READINESS,remapped:WORKPLACE_ADAPTATION,keyword
+CONCERN_THI_1343,Detecting Institutional Employability Gaps Across Departments,Organizational Intelligence,Placement & Career Cell,High,P1,ORGANIZATIONAL_INTELLIGENCE,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_HOL_1347,Declining academic performance despite effort,Academic Counselling,Academic Counsellor,High,P1,ACADEMIC_COUNSELLING,remapped:ACADEMIC_COGNITIVE,keyword
+CONCERN_LEA_1349,Exam anxiety impacting outcomes,Student Wellbeing,Academic Counsellor,High,P1,STUDENT_WELLBEING,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_ACA_1351,conceptual clarity in STEM subjects,Subject Intervention,Academic Counsellor,High,P1,SUBJECT_INTERVENTION,remapped:ACADEMIC_COGNITIVE,keyword
+CONCERN_SUB_1352,Student burnout from excessive academic load,Student Wellness,Academic Counsellor,High,P1,STUDENT_WELLNESS,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_ACA_1366,Digital addiction reducing study efficiency,Student Behaviour,Academic Counsellor,High,P1,STUDENT_BEHAVIOUR,remapped:STUDENT_SUCCESS,keyword
+CONCERN_STU_1369,problem-solving ability,Cognitive Skills,Academic Counsellor,High,P1,COGNITIVE_SKILLS,remapped:COMPETENCY_DEVELOPMENT,keyword
+CONCERN_EXA_1372,Emotional breakdown after poor results,Student Recovery,Academic Counsellor,High,P1,STUDENT_RECOVERY,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_INN_1375,decision-making regarding subject streams,Academic Decision Support,Academic Counsellor,High,P1,ACADEMIC_DECISION,remapped:THINKING_QUALITY,keyword
+CONCERN_ACA_1376,Fear of failure leading to academic avoidance,Academic Risk Behaviour,Academic Counsellor,High,P1,ACADEMIC_RISK,remapped:ACADEMIC_COGNITIVE,keyword
+CONCERN_ACA_1377,career clarity after Class 10/12,Career Guidance,Career Counsellor,High,P1,CAREER_GUIDANCE,remapped:CAREER_READINESS,keyword
+CONCERN_CAR_1378,Choosing streams based on parental pressure,Career Decision Support,Career Counsellor,High,P1,CAREER_DECISION,remapped:CAREER_READINESS,keyword
+CONCERN_CAR_1383,awareness about skill requirements,Career Preparedness,Career Counsellor,High,P1,CAREER_PREPAREDNESS,remapped:CAREER_READINESS,keyword
+CONCERN_CAR_1384,Fear of choosing the wrong career,Decision Anxiety,Career Counsellor,High,P1,DECISION_ANXIETY,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_CAR_1389,aptitude-career alignment,Career Suitability,Career Counsellor,High,P1,CAREER_SUITABILITY,remapped:CAREER_READINESS,keyword
+CONCERN_EMP_1393,Fear of competitive exams and failure,Career Competition Readiness,Career Counsellor,High,P1,CAREER_COMPETITION,remapped:CAREER_READINESS,keyword
+CONCERN_CAR_1395,Students unable to identify strengths and interests,Self-Discovery,Career Counsellor,High,P1,SELF_DISCOVERY,remapped:SELF_PERCEPTION,keyword
+CONCERN_PER_1401,Uncertainty about future-proof careers,Future Workforce Readiness,Career Counsellor,High,P1,FUTURE_WORKFORCE,remapped:WORKPLACE_ADAPTATION,keyword
+CONCERN_TRA_1407,self-discipline in daily routines,Student Development,Student Mentor,High,P1,STUDENT_DEVELOPMENT,remapped:STUDENT_SUCCESS,keyword
+CONCERN_PER_1409,motivation to pursue long-term goals,Growth Mentoring,Student Mentor,High,P1,GROWTH_MENTORING,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_PER_1411,resilience after setbacks,Emotional Development,Student Mentor,High,P1,EMOTIONAL_DEVELOPMENT,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_SOC_1413,consistency in effort and execution,Personal Effectiveness,Student Mentor,High,P1,PERSONAL_EFFECTIVENESS,GENERAL_CONCERN (generic catch-all),general
+CONCERN_SEL_1416,distractions,Productivity Coaching,Student Mentor,High,P1,PRODUCTIVITY_COACHING,remapped:DISCIPLINE_HABITS,keyword
+CONCERN_GRO_1425,persistence in difficult situations,Perseverance Coaching,Student Mentor,High,P1,PERSEVERANCE_COACHING,remapped:MOTIVATION_VALUES,keyword
+CONCERN_LEA_1430,stress management under pressure,Performance Resilience,Student Mentor,High,P1,PERFORMANCE_RESILIENCE,GENERAL_CONCERN (generic catch-all),general
+CONCERN_PER_1432,Excessive comparison with peers,Emotional Wellbeing,Student Mentor,High,P1,EMOTIONAL_WELLBEING,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_DEC_1436,ownership for personal growth,Growth Accountability,Student Mentor,High,P1,GROWTH_ACCOUNTABILITY,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_GRO_1437,classroom attention span,Learning Behavior,Behavioral Mentor,High,P1,LEARNING_BEHAVIOR,remapped:LEARNING_ADAPTABILITY,keyword
+CONCERN_LEA_1438,study discipline,Academic Behavior,Behavioral Mentor,High,P1,ACADEMIC_BEHAVIOR,remapped:ACADEMIC_COGNITIVE,keyword
+CONCERN_ACA_1439,Excessive procrastination before exams,Performance Behavior,Behavioral Mentor,High,P1,PERFORMANCE_BEHAVIOR,GENERAL_CONCERN (generic catch-all),general
+CONCERN_ADA_1444,persistence in difficult subjects,Learning Persistence,Behavioral Mentor,High,P1,LEARNING_PERSISTENCE,remapped:LEARNING_ADAPTABILITY,keyword
+CONCERN_STU_1446,recover from poor academic performance,Recovery Behavior,Behavioral Mentor,High,P1,RECOVERY_BEHAVIOR,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_RES_1448,Digital addiction affecting learning habits,Behavioral Regulation,Behavioral Mentor,High,P1,BEHAVIORAL_REGULATION,GENERAL_CONCERN (generic catch-all),general
+CONCERN_IND_1458,resilience under competitive environments,Competitive Adaptation,Behavioral Mentor,High,P1,COMPETITIVE_ADAPTATION,GENERAL_CONCERN (generic catch-all),general
+CONCERN_LON_1467,self-confidence during public speaking,Leadership Development,Leadership Coach,High,P1,LEADERSHIP_DEVELOPMENT,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_LEA_1477,emotional resilience under pressure,Leadership Endurance,Leadership Coach,High,P1,LEADERSHIP_ENDURANCE,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_LEA_1480,Excessive dependence on external validation,Self-Leadership,Leadership Coach,High,P1,SELF_LEADERSHIP,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_VAL_1496,Students lacking self-leadership discipline,Leadership Foundations,Leadership Coach,High,P1,LEADERSHIP_FOUNDATIONS,remapped:LEADERSHIP_OWNERSHIP,keyword
+CONCERN_LEA_1497,awareness about personal strengths,Self Discovery,Self Discovery,High,P1,SELF_DISCOVERY,remapped:SELF_PERCEPTION,keyword
+CONCERN_IDE_1500,self-confidence despite capability,Personal Development,Self Discovery,High,P1,PERSONAL_DEVELOPMENT,remapped:HOLISTIC_DEVELOPMENT,keyword
+CONCERN_IDE_1504,clarity about long-term goals,Aspirational Development,Self Discovery,High,P1,ASPIRATIONAL_DEVELOPMENT,remapped:MOTIVATION_VALUES,keyword
+CONCERN_TAL_1507,Internal conflict between personal desire and family expectations,Identity Conflict,Self Discovery,High,P1,IDENTITY_CONFLICT,remapped:SELF_PERCEPTION,keyword
+CONCERN_SOC_1515,resilience after setbacks,Recovery Orientation,Self Discovery,High,P1,RECOVERY_ORIENTATION,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_IDE_1527,awareness about personal strengths,Self Exploration,Self Exploration User,High,P1,SELF_EXPLORATION,remapped:SELF_PERCEPTION,keyword
+CONCERN_PER_1530,Dependence on external validation for confidence,Emotional Development,Self Exploration User,High,P1,EMOTIONAL_DEVELOPMENT,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_PER_1549,resilience after setbacks,Recovery Capability,Self Exploration User,High,P1,RECOVERY_CAPABILITY,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_SEL_1551,Identity confusion during adolescence,Personal Identity Formation,Self Exploration User,High,P1,PERSONAL_IDENTITY,remapped:SELF_PERCEPTION,keyword
+CONCERN_LON_1557,Uncertainty about long-term career direction,Career Reflection,Self Exploration User,High,P1,CAREER_REFLECTION,remapped:CAREER_READINESS,keyword
+CONCERN_CAR_1559,identifying personal strengths,Strength Discovery,Self Exploration User,High,P1,STRENGTH_DISCOVERY,remapped:COMPETENCY_DEVELOPMENT,keyword
+CONCERN_CAR_1561,Fear of making irreversible career decisions,Decision Confidence,Self Exploration User,High,P1,DECISION_CONFIDENCE,remapped:THINKING_QUALITY,keyword
+CONCERN_DEC_1562,alignment between interests and chosen stream,Career Alignment,Self Exploration User,High,P1,CAREER_ALIGNMENT,remapped:CAREER_READINESS,keyword
+CONCERN_CAR_1565,Feeling pressured to pursue conventional careers,Career Autonomy,Self Exploration User,High,P1,CAREER_AUTONOMY,remapped:CAREER_READINESS,keyword
+CONCERN_PER_1568,Fear of failure influencing career choices,Career Risk Analysis,Self Exploration User,High,P1,CAREER_RISK,remapped:CAREER_READINESS,keyword
+CONCERN_CAR_1571,Confusion after poor academic performance,Academic-Career Identity,Self Exploration User,High,P1,ACADEMIC_CAREER,remapped:CAREER_READINESS,keyword
+CONCERN_FUT_1573,Overdependence on parental approval for decisions,Decision Independence,Self Exploration User,High,P1,DECISION_INDEPENDENCE,remapped:THINKING_QUALITY,keyword
+CONCERN_LIF_1586,Feeling overwhelmed by too many career choices,Career Decision Overload,Self Exploration User,High,P1,CAREER_DECISION,remapped:CAREER_READINESS,keyword
+CONCERN_CAR_1587,awareness about personal learning style,Self Exploration,Learner,High,P1,SELF_EXPLORATION,remapped:SELF_PERCEPTION,keyword
+CONCERN_SEL_1588,identifying academic strengths and weaknesses,Learning Reflection,Learner,High,P1,LEARNING_REFLECTION,remapped:THINKING_QUALITY,keyword
+CONCERN_STU_1593,Confusion between hard work and smart learning,Learning Effectiveness,Learner,High,P1,LEARNING_EFFECTIVENESS,remapped:LEARNING_ADAPTABILITY,keyword
+CONCERN_SEL_1597,recognizing conceptual understanding gaps,Academic Reflection,Learner,High,P1,ACADEMIC_REFLECTION,remapped:THINKING_QUALITY,keyword
+CONCERN_COG_1605,reflection after failures and setbacks,Growth Reflection,Learner,High,P1,GROWTH_REFLECTION,remapped:THINKING_QUALITY,keyword
+CONCERN_ACA_1616,Absence of structured self-reflection habits,Reflective Development,Learner,High,P1,REFLECTIVE_DEVELOPMENT,remapped:THINKING_QUALITY,keyword
+CONCERN_REF_1617,accurately evaluate personal strengths,Self Exploration,Performance Reflection,High,P1,SELF_EXPLORATION,remapped:SELF_PERCEPTION,keyword
+CONCERN_SEL_1620,confidence despite strong capability,Emotional Reflection,Performance Reflection,High,P1,EMOTIONAL_REFLECTION,remapped:EMOTIONAL_REGULATION,keyword
+CONCERN_PER_1623,Emotional breakdown after negative feedback,Self-Regulation,Performance Reflection,High,P1,SELF_REGULATION,remapped:SELF_PERCEPTION,keyword
+CONCERN_SEL_1624,Dependence on external validation for motivation,Motivation Psychology,Performance Reflection,High,P1,MOTIVATION_PSYCHOLOGY,remapped:MOTIVATION_VALUES,keyword
+CONCERN_HAB_1629,Comparing personal progress unfairly with peers,Self-Identity Reflection,Performance Reflection,High,P1,SELF_IDENTITY,remapped:SELF_PERCEPTION,keyword
+CONCERN_DIS_1662,Consistency in Performance,Academic Performance,Student,High,P1,ACADEMIC_PERFORMANCE,remapped:ACADEMIC_COGNITIVE,override
+CONCERN_EXA_1666,Exam Preparation Strategy,Examination Readiness,Student,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_LEA_1673,Digital Learning Discipline,Digital Learning,Student,High,P1,DIGITAL_LEARNING,remapped:LEARNING_ADAPTABILITY,keyword
+CONCERN_FOU_1675,Independent Learning Ability,Self Learning,Student,High,P1,SELF_LEARNING,remapped:LEARNING_ADAPTABILITY,keyword
+CONCERN_COM_1684,Multiple Subjects,Academic Performance,Student,High,P1,ACADEMIC_PERFORMANCE,remapped:ACADEMIC_COGNITIVE,override
+CONCERN_COM_1701,Framing Answers in Exams,Examination Readiness,Student,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_CLA_1706,Academic Planning Skills,Academic Planning & Recovery Intelligence,Student,High,P1,ACADEMIC_PLANNING,remapped:ACADEMIC_COGNITIVE,keyword
+CONCERN_ACA_1708,Maintain Revision Schedules,Examination Readiness,Student,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_ACA_1716,Revising Large Syllabus,Examination Readiness,Student,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_COM_1718,Aptitude in Quantitative Reasoning,Analytical Development,Student,High,P1,ANALYTICAL_DEVELOPMENT,remapped:THINKING_QUALITY,keyword
+CONCERN_DIS_1971,Memory Recall During Exams,Examination Readiness,Parent,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_COM_2004,Focus During Long Exams,Examination Readiness,Student,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_COM_2027,Balancing Speed and Accuracy,Examination Readiness,Student,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_LEA_2059,Simultaneous Exam Preparation,Examination Readiness,Student,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_INT_2097,Strategic Preparation for Exams,Examination Readiness,Student,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_FOU_2102,Accuracy in Objective-Type Exams,Examination Readiness,Student,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_LEA_2111,Continuous Assessments,Examination Readiness,Student,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_STE_2163,Supporting Students with Weak Exam Temperament,Examination Readiness,Teacher,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_COM_2183,Helping Students Interpret Questions Correctly,Examination Readiness,Teacher,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_EXA_2195,Helping Students Handle Time-Bound Assessments,Examination Readiness,Teacher,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_MOT_2220,Supporting Students with Weak Exam Strategy Skills,Examination Readiness,Teacher,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_THI_2237,Helping Students Build Exam Confidence,Examination Readiness,Teacher,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_ACA_2245,Students with Weak Performance Consistency Across Subjects,Academic Performance,Teacher,High,P1,ACADEMIC_PERFORMANCE,remapped:ACADEMIC_COGNITIVE,override
+CONCERN_THI_2250,Supporting Students with Weak Question Interpretation Skills,Examination Readiness,Teacher,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_SEL_2255,Helping Students Build Independent Revision Strategies,Examination Readiness,Teacher,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_CON_2282,Handling Students with Weak Time Allocation During Exams,Examination Readiness,Teacher,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_EXA_2286,Supporting Students with Weak Interpretation of Case-Based Questions,Examination Readiness,Teacher,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_MET_2303,Hesitation in Asking for Academic Help,Help-Seeking & Support Utilization,Parent,High,P1,HELP_SEEKING,remapped:ADJUSTMENT_COPING,override
+CONCERN_TRA_2314,Persistent Disengagement After Academic Failure,Transition & Change Adaptability,Parent,High,P1,TRANSITION_CHANGE,remapped:TRANSITION_READINESS,keyword
+CONCERN_CON_2462,Handling Students with Weak Time Allocation During Exams,Examination Readiness,Teacher,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override
+CONCERN_CLA_2486,Accuracy Under Time Pressure,Examination Readiness,Student,High,P1,EXAMINATION_READINESS,remapped:EXAMINATION_STRESS,override

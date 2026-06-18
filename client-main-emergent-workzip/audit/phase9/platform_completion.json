@@ -1,0 +1,47 @@
+{
+  "generated_at": "2026-06-03T19:12:15.234Z",
+  "layers": [
+    {
+      "name": "Evidence → Signal (runtime)",
+      "status": "present",
+      "note": "Signal activation runtime persists session signals."
+    },
+    {
+      "name": "Signal → Concept spine (KG)",
+      "status": "present",
+      "note": "7-hop lineage materialized in pil_kg_*."
+    },
+    {
+      "name": "Descriptive reports",
+      "status": "present",
+      "note": "Stakeholder + institution reports with readiness."
+    },
+    {
+      "name": "Recommendations",
+      "status": "present",
+      "note": "Active-construct-anchored, chain-traced."
+    },
+    {
+      "name": "Predictive readiness",
+      "status": "present",
+      "note": "4 dimensions, deterministic + traced."
+    },
+    {
+      "name": "Intervention impact prediction",
+      "status": "present",
+      "note": "Library expected_impact × confidence × severity."
+    },
+    {
+      "name": "Outcome attribution (realized)",
+      "status": "absent",
+      "note": "No realized longitudinal outcomes captured yet — empirical calibration pending."
+    }
+  ],
+  "descriptive_complete": true,
+  "predictive_complete": true,
+  "completion_score": 0.8571,
+  "honest_gaps": [
+    "No realized outcomes → empirical accuracy not yet measurable.",
+    "10 session(s) degraded (partial chain) — predictions emitted at lower confidence."
+  ]
+}

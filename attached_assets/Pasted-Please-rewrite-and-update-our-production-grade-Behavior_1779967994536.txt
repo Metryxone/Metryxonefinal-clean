@@ -1,0 +1,25 @@
+Please rewrite and update our production-grade Behavioral Intelligence Signal Ontology data engineering pipeline in Python (modifying scripts/import_signal_ontology.py) to shift our structural framework entirely over to the newly uploaded version 2 data matrices. 
+
+The updated script must explicitly parse "Domain List_2.xlsx", "Family List_2.xlsx", "Signal lList_2.xlsx", and "Atomic Signal_2.xlsx" while satisfying these strict architectural guidelines and data defenses:
+
+1. High-Fidelity Spreadsheet Ingestion:
+   - Target the new version 2 files exactly: "Domain List_2.xlsx", "Family List_2.xlsx", "Signal lList_2.xlsx", and "Atomic Signal_2.xlsx".
+   - Use 'latin1' or 'utf-8-sig' text encoding safeguards during DataFrame creation to prevent any hidden smart-quote (\x93) character decoding crashes from breaking execution.
+   - Run a string-trimming sweep across all columns and cell values to eliminate leading/trailing whitespace noise.
+
+2. Quality Control & Spreadsheet Artifact Suppression:
+   - Automatically intercept and drop Excel artifact rows where the data row values literally duplicate the string column headers.
+   - Repair common typo variations dynamically across relational keys (e.g., scan the 15,970+ leaf node table and systematically strip accidental extra leading characters like 'FFAM_' back down to clean relational 'FAM_' pointers to protect foreign key lookups).
+
+3. Unique Modifiers & Suffix Splicing:
+   - Track and assert absolute uniqueness on primary keys: 'domain_id', 'family_id', 'signal_id', and 'atomic_signal_id'.
+   - If row collisions or identical duplicate string keys are discovered, preserve the first instance and append an incremental numerical suffix (e.g., '_v2', '_v3') to subsequent rows to guarantee primary index uniqueness and protect frontend served-ID local state tracking.
+
+4. Age Splitting & Null Safeguards:
+   - Use a regular expression supporting all dash formats (-, –, —) to extract the 'age_applicability' ranges into two new structured integer columns: 'age_min' and 'age_max'. Automatically default corrupted or missing bounds to 17 and 24, and drop the original text string column.
+   - Force Title Case formatting across all operational weights and categories ('Severity', 'Priority', 'adaptive_importance', 'signal_status'). Map blank routing entries to the token 'UNASSIGNED_ROUTING_NODE' to prevent Drizzle ORM .notNull() parameters from failing.
+
+5. Bridge Matrix Alignment & Verification Output:
+   - Re-evaluate and compute the 'Relational_Bridge_Tag' for all new rows, assigning them to their respective lifecycle buckets ('CAREER_READINESS', 'COLLEGE_ADAPT', 'DISCIPLINE_HABITS', 'ADJUSTMENT_COPING', 'EXAM_STRESS', or 'GENERAL_CONCERN') based on text-token matching.
+   - Overwrite the production tracking payloads: 'audited_domains.csv', 'audited_families.csv', 'audited_signals.csv', and 'audited_atomic_signals.csv'.
+   - Print a complete execution telemetry report displaying final row metrics, a breakdown of updated bridge-tag distributions, and verification that foreign key constraint structures remain perfectly unbroken.

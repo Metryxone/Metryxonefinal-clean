@@ -1,0 +1,20 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "a6OTgNp8oWrXc9H5ySCPU"
+uri = "file://artifacts/mockup-sandbox/public/images/student-hero-1.png"
+type = "image"
+title = "Happy Indian young man smiling"
+
+[[generated]]
+id = "k7v9yKGhUfW6S0r-DOghf"
+uri = "file://artifacts/mockup-sandbox/public/images/student-hero-2.png"
+type = "image"
+title = "Happy Indian young woman laughing"
+
+[[generated]]
+id = "GCF3wpmZrNNacm8T5ozen"
+uri = "file://artifacts/mockup-sandbox/public/images/student-hero-3.png"
+type = "image"
+title = "Indian college student with books"

@@ -1,0 +1,186 @@
+# CAPADEX DC-2 — Decision Prioritization Audit
+
+## Objective
+
+Prioritize all decisions identified in DC-1 and determine which decisions should be activated first to maximize:
+
+* User Impact
+* Business Impact
+* Revenue Impact
+* Future Readiness
+* Product Utilization
+* Subscription Conversion
+
+This is a DESIGN + AUDIT phase only.
+
+No implementation.
+
+No schema changes.
+
+No migrations.
+
+No code changes.
+
+STOP FOR APPROVAL.
+
+---
+
+# Background
+
+Completed:
+
+* AQ-1 Metadata Reconstruction
+* AQ-2 Metadata Intelligence
+* WC-1 through WC-6
+* L5A Stage Intelligence
+* L5B Context Intelligence
+* DC-1 Decision Catalog
+
+Current State:
+
+CAPADEX can derive:
+
+Concern
+↓
+Stage
+↓
+Context
+↓
+Outcome
+↓
+Journey
+↓
+Decision Catalog
+
+The next challenge is determining:
+
+Which decisions should be activated first.
+
+---
+
+# Decision Inventory
+
+Use:
+
+* DC-1 Decision Catalog
+* Top 50 Decisions
+* Decision Taxonomy
+* Product Matrix
+* Growth Plan Matrix
+* Mentor Matrix
+* Subscription Matrix
+
+---
+
+# Scoring Framework
+
+For every decision calculate:
+
+1. User Impact Score
+2. Business Impact Score
+3. Revenue Impact Score
+4. Future Relevance Score
+5. Technical Readiness Score
+6. Product Readiness Score
+7. Growth Plan Readiness Score
+8. Mentor Readiness Score
+9. Subscription Readiness Score
+10. CAPADEX Strategic Importance Score
+
+---
+
+# Context Prioritization
+
+Pay special attention to:
+
+* AI Job Disruption
+* Employability
+* Career Transition
+* Entrepreneurship
+* Competitive Exams
+* Family Pressure
+* Placement Anxiety
+* Career Clarity
+* Leadership
+* Digital Behaviour
+
+---
+
+# Segment Prioritization
+
+Evaluate separately for:
+
+* School Students
+* College Students
+* Job Seekers
+* Competitive Exam Aspirants
+* Parents
+* Teachers
+* Counselors
+* Institutions
+
+---
+
+# Classification
+
+Classify decisions as:
+
+## Tier 1
+
+Can activate immediately using existing assets.
+
+## Tier 2
+
+Requires orchestration but no new products.
+
+## Tier 3
+
+Requires new products or significant platform expansion.
+
+---
+
+# Future Readiness Overlay
+
+For every decision calculate:
+
+* AI-Era Relevance
+* Future Workforce Relevance
+* Employability Impact
+* Entrepreneurship Impact
+* Long-Term Strategic Value
+
+---
+
+# Outputs
+
+1. Decision Priority Matrix
+2. Tier 1 Decision Inventory
+3. Tier 2 Decision Inventory
+4. Tier 3 Decision Inventory
+5. Top 20 Decisions To Activate First
+6. Revenue Opportunity Matrix
+7. Future Readiness Matrix
+8. Segment Impact Matrix
+9. CAPADEX Decision Activation Roadmap
+10. Executive Summary
+
+For every recommendation provide:
+
+* Current State
+* Target State
+* Gap
+* User Impact
+* Business Impact
+* Revenue Impact
+* Technical Difficulty
+* Priority
+
+Estimate:
+
+* Expected DIS Improvement
+* Expected Product Activation Lift
+* Expected Subscription Lift
+
+STOP
+
+WAIT FOR APPROVAL.

@@ -1,0 +1,54 @@
+Download the Apollo DevTools for a better development experience: https://chrome.google.com/webstore/detail/apollo-client-developer-t/jdkknkkbebbapilgoeccciglkfbmbnfm
+0wavzx4wm.ylw.js:21 [LaunchDarkly] LaunchDarkly client initialized
+0i8wy8tbht2ow.js:2 Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+C @ 0i8wy8tbht2ow.js:2Understand this error
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'ambient-light-sensor'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'battery'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'execution-while-not-rendered'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'execution-while-out-of-viewport'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'layout-animations'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'legacy-image-formats'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'navigation-override'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'oversized-images'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'publickey-credentials'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'speaker-selection'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'unoptimized-images'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'unsized-media'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'pointer-lock'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Allow attribute will take precedence over 'allowfullscreen'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Allow attribute will take precedence over 'allowpaymentrequest'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0j210tspwt3vr.js:9 Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('https://4c083e9f-70e1-41af-a18a-32340aa00d64-00-319ffibm54v8n.sisko.replit.dev') does not match the recipient window's origin ('https://replit.com').
+w @ 0j210tspwt3vr.js:9Understand this warning
+workspace_iframe.html?initialPath=%2F&id=default-start-application:32 Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.Understand this error
+workspace_iframe.html?initialPath=%2F&id=default-start-application:32 Unrecognized feature: 'ambient-light-sensor'.Understand this warning
+workspace_iframe.html?initialPath=%2F&id=default-start-application:32 Unrecognized feature: 'battery'.Understand this warning
+workspace_iframe.html?initialPath=%2F&id=default-start-application:32 Unrecognized feature: 'execution-while-not-rendered'.Understand this warning
+workspace_iframe.html?initialPath=%2F&id=default-start-application:32 Unrecognized feature: 'execution-while-out-of-viewport'.Understand this warning
+workspace_iframe.html?initialPath=%2F&id=default-start-application:32 Unrecognized feature: 'layout-animations'.Understand this warning
+workspace_iframe.html?initialPath=%2F&id=default-start-application:32 Unrecognized feature: 'legacy-image-formats'.Understand this warning
+workspace_iframe.html?initialPath=%2F&id=default-start-application:32 Unrecognized feature: 'navigation-override'.Understand this warning
+workspace_iframe.html?initialPath=%2F&id=default-start-application:32 Unrecognized feature: 'oversized-images'.Understand this warning
+workspace_iframe.html?initialPath=%2F&id=default-start-application:32 Unrecognized feature: 'publickey-credentials'.Understand this warning
+workspace_iframe.html?initialPath=%2F&id=default-start-application:32 Unrecognized feature: 'speaker-selection'.Understand this warning
+workspace_iframe.html?initialPath=%2F&id=default-start-application:32 Unrecognized feature: 'unoptimized-images'.Understand this warning
+workspace_iframe.html?initialPath=%2F&id=default-start-application:32 Unrecognized feature: 'unsized-media'.Understand this warning
+workspace_iframe.html?initialPath=%2F&id=default-start-application:32 Allow attribute will take precedence over 'allowfullscreen'.Understand this warning
+workspace_iframe.html?initialPath=%2F&id=default-start-application:32 Allow attribute will take precedence over 'allowpaymentrequest'.Understand this warning
+injected.js:37 🌐 i18next is made possible by our own product, Locize — consider powering your project with managed localization (AI, CDN, integrations): https://locize.com 💙
+4c083e9f-70e1-41af-a18a-32340aa00d64-00-319ffibm54v8n.sisko.replit.dev/api/user/theme:1  Failed to load resource: the server responded with a status of 404 (Not Found)Understand this error
+stallwart.build.js:1 stallwart: failed ping 1

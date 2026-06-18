@@ -1,0 +1,69 @@
+Let's choose Option 3: Keep our current database schema completely intact, but let's aggressively harden the existing `rephraseForProxy` function to fix the pronoun string traps without causing down-stream regressions.
+
+Apply this precise implementation to the reframer:
+
+1. PROTECT THE SCHEMA OPTIONS: Ensure that the substitution algorithm strictly clones the question object and ONLY executes text modifications on the `question` (or `question_text`) string property. Do not touch, iterate over, or run regex against the `options` array or any identifier keys.
+
+2. FIX THE COMPOUND PRONOUN TRAP: Rewrite the pronoun swapping logic so that it only replaces the VERY FIRST occurrence of a second-person pronoun with the Subject Name. All subsequent pronouns in that specific string must gracefully degrade to singular third-person pronouns (they / their / them).
+
+Here is the exact algorithmic execution pattern to use:
+
+```typescript
+export function rephraseForProxy(spec: any, subjectName: string): any {
+  // Deep clone to guarantee structural isolation of options and keys
+  const cloned = JSON.parse(JSON.stringify(spec));
+  let text = cloned.question || cloned.question_text;
+  if (!text) return spec;
+
+  // Track if we have already injected the subject's primary name anchor
+  let nameInjected = false;
+
+  // Split string into words to prevent partial-match corruptions
+  const words = text.split(/\b/);
+
+  for (let i = 0; i < words.length; i++) {
+    const lowerWord = words[i].toLowerCase();
+
+    // 1. Handle Subject Pronoun ("you")
+    if (lowerWord === 'you') {
+      if (!nameInjected) {
+        words[i] = subjectName;
+        nameInjected = true;
+        
+        // Handle immediate verb conjugation helper for the primary name
+        if (i + 2 < words.length && words[i + 2].toLowerCase() === 'are') {
+          words[i + 2] = 'is';
+        } else if (i + 2 < words.length && words[i + 2].toLowerCase() === 'do') {
+          words[i + 2] = 'does';
+        } else if (i + 2 < words.length && words[i + 2].toLowerCase() === 'have') {
+          words[i + 2] = 'has';
+        }
+      } else {
+        // Subsequent references degrade gracefully
+        words[i] = 'they';
+      }
+    }
+    // 2. Handle Possessive Pronouns ("your" / "yours")
+    else if (lowerWord === 'your') {
+      words[i] = 'their';
+    } else if (lowerWord === 'yours') {
+      words[i] = 'theirs';
+    } else if (lowerWord === 'yourself') {
+      words[i] = 'themselves';
+    }
+  }
+
+  // Reconstruct text safely
+  let processedText = words.join('');
+
+  // 3. Final clean sweep for syntax/grammar safety anomalies
+  processedText = processedText.replace(/\bis is\b/gi, "is");
+  processedText = processedText.replace(/\bdoes feel\b/gi, "feels");
+  processedText = processedText.replace(/\bthey is\b/gi, "they are");
+  processedText = processedText.replace(/\bthey has\b/gi, "they have");
+
+  if (cloned.question) cloned.question = processedText;
+  if (cloned.question_text) cloned.question_text = processedText;
+
+  return cloned;
+}

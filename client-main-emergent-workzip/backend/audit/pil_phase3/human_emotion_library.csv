@@ -1,0 +1,221 @@
+archetype_key,archetype_name,emotion_type,statement,realism_pass,aligned,is_duplicate
+academic_achievement,Academic Achievement & Exam Performance,frustration,It's frustrating to work this hard for grades that won't budge.,true,true,false
+academic_achievement,Academic Achievement & Exam Performance,frustration,I'm sick of my results not matching the effort I put in.,true,true,false
+academic_achievement,Academic Achievement & Exam Performance,fear,I'm scared bad grades will close doors to my future.,true,true,false
+academic_achievement,Academic Achievement & Exam Performance,fear,I worry one bad exam will define me.,true,true,false
+academic_achievement,Academic Achievement & Exam Performance,motivation,I want to finally see my hard work show up on my report card.,true,true,false
+academic_achievement,Academic Achievement & Exam Performance,motivation,I'd love to walk out of an exam knowing I did well.,true,true,false
+academic_achievement,Academic Achievement & Exam Performance,growth_signal,My last set of marks finally started moving in the right direction.,true,true,false
+academic_achievement,Academic Achievement & Exam Performance,growth_signal,I've changed how I revise and it's helping a little.,true,true,false
+academic_achievement,Academic Achievement & Exam Performance,success_indicator,I got the grade I'd been working toward all term.,true,true,false
+academic_achievement,Academic Achievement & Exam Performance,success_indicator,My exam results finally matched the effort I put in.,true,true,false
+adaptability_change,Adaptability & Change Navigation,frustration,It's frustrating that I can't just roll with changes like others do.,true,true,false
+adaptability_change,Adaptability & Change Navigation,frustration,I'm annoyed at how rattled I get when plans shift.,true,true,false
+adaptability_change,Adaptability & Change Navigation,fear,I'm scared of what happens when everything changes at once.,true,true,false
+adaptability_change,Adaptability & Change Navigation,fear,I worry I won't be able to handle the unknown.,true,true,false
+adaptability_change,Adaptability & Change Navigation,motivation,I want to handle change without it knocking me over.,true,true,false
+adaptability_change,Adaptability & Change Navigation,motivation,I'd love to feel okay even when things are uncertain.,true,true,false
+adaptability_change,Adaptability & Change Navigation,growth_signal,I rolled with a sudden change last week instead of panicking.,true,true,false
+adaptability_change,Adaptability & Change Navigation,growth_signal,I'm getting a bit more comfortable when plans shift.,true,true,false
+adaptability_change,Adaptability & Change Navigation,success_indicator,A big change came up and I adjusted without falling apart.,true,true,false
+adaptability_change,Adaptability & Change Navigation,success_indicator,I handled an unpredictable week and stayed on my feet.,true,true,false
+career_professional_growth,Career Growth & Professional Identity,frustration,It's frustrating to keep working hard and still feel like I'm going nowhere.,true,false,false
+career_professional_growth,Career Growth & Professional Identity,frustration,I'm tired of watching others get promoted while I stay in the same place.,true,true,false
+career_professional_growth,Career Growth & Professional Identity,fear,I'm scared I'll wake up in ten years stuck in a job I never chose.,true,true,false
+career_professional_growth,Career Growth & Professional Identity,fear,I worry I've already fallen behind everyone my age.,true,false,false
+career_professional_growth,Career Growth & Professional Identity,motivation,"I want a career that actually feels like mine, not just a paycheck.",true,true,false
+career_professional_growth,Career Growth & Professional Identity,motivation,I'd love to finally have a clear direction to work toward.,true,false,false
+career_professional_growth,Career Growth & Professional Identity,growth_signal,I've started mapping out the skills I'd need for the role I want.,true,true,false
+career_professional_growth,Career Growth & Professional Identity,growth_signal,I recently asked my manager about a path to promotion.,true,true,false
+career_professional_growth,Career Growth & Professional Identity,success_indicator,I landed a role that lines up with where I want to go.,true,true,false
+career_professional_growth,Career Growth & Professional Identity,success_indicator,I can now describe my next career step in one clear sentence.,true,true,false
+collaboration_teamwork,Collaboration & Teamwork,frustration,It's frustrating when the team doesn't pull its weight.,true,true,false
+collaboration_teamwork,Collaboration & Teamwork,frustration,I'm tired of feeling like I have to carry the whole group.,true,true,false
+collaboration_teamwork,Collaboration & Teamwork,fear,I'm afraid to rely on others in case they let me down.,true,true,false
+collaboration_teamwork,Collaboration & Teamwork,fear,I worry I don't fit in with the team.,true,true,false
+collaboration_teamwork,Collaboration & Teamwork,motivation,I want to work with others without it being a struggle.,true,true,false
+collaboration_teamwork,Collaboration & Teamwork,motivation,I'd love to feel like a real part of a team.,true,true,false
+collaboration_teamwork,Collaboration & Teamwork,growth_signal,I let a teammate handle their part instead of taking over.,true,true,false
+collaboration_teamwork,Collaboration & Teamwork,growth_signal,I spoke up and contributed in our group this week.,true,true,false
+collaboration_teamwork,Collaboration & Teamwork,success_indicator,Our team worked together smoothly and I played my part.,true,true,false
+collaboration_teamwork,Collaboration & Teamwork,success_indicator,I collaborated on something and we got there together.,true,true,false
+communication_expression,Communication & Expression,frustration,It's frustrating to have the idea and fumble the words.,true,true,false
+communication_expression,Communication & Expression,frustration,I hate being misunderstood when I know what I mean.,true,true,false
+communication_expression,Communication & Expression,fear,I'm scared of going blank when all eyes are on me.,true,false,false
+communication_expression,Communication & Expression,fear,I worry I'll say it wrong and look foolish.,true,true,false
+communication_expression,Communication & Expression,motivation,I want to say what I mean clearly and confidently.,true,true,false
+communication_expression,Communication & Expression,motivation,I'd love to speak up without dreading it.,true,true,false
+communication_expression,Communication & Expression,growth_signal,I shared my idea in a meeting and it came out clearly.,true,true,false
+communication_expression,Communication & Expression,growth_signal,I'm getting better at explaining things in my own words.,true,true,false
+communication_expression,Communication & Expression,success_indicator,I gave a presentation and actually got my point across.,true,true,false
+communication_expression,Communication & Expression,success_indicator,I spoke up clearly and people understood exactly what I meant.,true,true,false
+confidence_self_efficacy,Confidence & Self-Efficacy,frustration,It's frustrating to hold myself back when I know I could try.,true,false,false
+confidence_self_efficacy,Confidence & Self-Efficacy,frustration,I'm tired of doubting myself at every turn.,true,true,false
+confidence_self_efficacy,Confidence & Self-Efficacy,fear,I'm afraid I'll prove that I'm not good enough.,true,false,false
+confidence_self_efficacy,Confidence & Self-Efficacy,fear,I worry everyone will see that I don't belong.,true,true,false
+confidence_self_efficacy,Confidence & Self-Efficacy,motivation,I want to trust myself enough to just go for it.,true,true,false
+confidence_self_efficacy,Confidence & Self-Efficacy,motivation,I'd love to back myself the way others back me.,true,true,false
+confidence_self_efficacy,Confidence & Self-Efficacy,growth_signal,I volunteered for something instead of talking myself out of it.,true,false,false
+confidence_self_efficacy,Confidence & Self-Efficacy,growth_signal,I'm starting to believe I can handle hard things.,true,true,false
+confidence_self_efficacy,Confidence & Self-Efficacy,success_indicator,I took on a challenge and proved to myself I could do it.,true,true,false
+confidence_self_efficacy,Confidence & Self-Efficacy,success_indicator,I made a decision and didn't second-guess it.,true,true,false
+critical_reflective_thinking,Critical & Reflective Thinking,frustration,It's frustrating to keep repeating mistakes I never stop to examine.,true,true,false
+critical_reflective_thinking,Critical & Reflective Thinking,frustration,I'm annoyed that I accept things without digging deeper.,true,false,false
+critical_reflective_thinking,Critical & Reflective Thinking,fear,I'm afraid I'm being led along because I don't question enough.,true,true,false
+critical_reflective_thinking,Critical & Reflective Thinking,fear,I worry I'll make a big call without really thinking it over.,true,true,false
+critical_reflective_thinking,Critical & Reflective Thinking,motivation,I want to think things through properly instead of rushing.,true,true,false
+critical_reflective_thinking,Critical & Reflective Thinking,motivation,I'd love to understand the reasons behind what I do.,true,true,false
+critical_reflective_thinking,Critical & Reflective Thinking,growth_signal,I caught myself questioning an assumption before acting on it.,true,true,false
+critical_reflective_thinking,Critical & Reflective Thinking,growth_signal,I've started asking why instead of taking things as given.,true,true,false
+critical_reflective_thinking,Critical & Reflective Thinking,success_indicator,I worked through a tricky problem by weighing every side.,true,true,false
+critical_reflective_thinking,Critical & Reflective Thinking,success_indicator,I reflected on a mistake and figured out how to avoid it next time.,true,true,false
+curiosity_innovation,Curiosity & Innovation,frustration,It's frustrating to feel stuck doing the same thing over and over.,true,false,false
+curiosity_innovation,Curiosity & Innovation,frustration,I'm annoyed that I never let myself explore new ideas.,true,true,false
+curiosity_innovation,Curiosity & Innovation,fear,I'm afraid my ideas will be laughed at if I try something different.,true,true,false
+curiosity_innovation,Curiosity & Innovation,fear,I worry I'm too boring to ever be creative.,true,true,false
+curiosity_innovation,Curiosity & Innovation,motivation,I want to explore and try things just to see what happens.,true,true,false
+curiosity_innovation,Curiosity & Innovation,motivation,I'd love to come up with ideas that excite me.,true,true,false
+curiosity_innovation,Curiosity & Innovation,growth_signal,I tried a new approach instead of the usual one this week.,true,false,false
+curiosity_innovation,Curiosity & Innovation,growth_signal,I've started asking more questions about how things work.,true,true,false
+curiosity_innovation,Curiosity & Innovation,success_indicator,I came up with a fresh idea and actually ran with it.,true,true,false
+curiosity_innovation,Curiosity & Innovation,success_indicator,I experimented with something new and it paid off.,true,true,false
+decision_judgment,Decision-Making & Judgment,frustration,It's frustrating to waste so much time stuck between options.,true,true,false
+decision_judgment,Decision-Making & Judgment,frustration,I'm tired of second-guessing every choice I make.,true,true,false
+decision_judgment,Decision-Making & Judgment,fear,I'm scared of making the wrong call and regretting it.,true,true,false
+decision_judgment,Decision-Making & Judgment,fear,I worry that one bad decision will ruin everything.,true,true,false
+decision_judgment,Decision-Making & Judgment,motivation,I want to make decisions and stick with them.,true,true,false
+decision_judgment,Decision-Making & Judgment,motivation,I'd love to choose with confidence instead of dread.,true,true,false
+decision_judgment,Decision-Making & Judgment,growth_signal,I made a quick decision and didn't take it back.,true,true,false
+decision_judgment,Decision-Making & Judgment,growth_signal,I'm getting faster at choosing without overthinking.,true,true,false
+decision_judgment,Decision-Making & Judgment,success_indicator,I made a tough call under pressure and stood by it.,true,true,false
+decision_judgment,Decision-Making & Judgment,success_indicator,I decided and moved on without looking back.,true,true,false
+emotional_regulation,Emotional Regulation & Coping,frustration,I'm frustrated that I can't keep my cool when it matters.,true,true,false
+emotional_regulation,Emotional Regulation & Coping,frustration,It's exhausting feeling everything so intensely all the time.,true,false,false
+emotional_regulation,Emotional Regulation & Coping,fear,I'm scared of pushing people away when I lose control.,true,true,false
+emotional_regulation,Emotional Regulation & Coping,fear,I worry my emotions will get the better of me at the worst moment.,true,true,false
+emotional_regulation,Emotional Regulation & Coping,motivation,I want to feel steady instead of being thrown around by my moods.,true,true,false
+emotional_regulation,Emotional Regulation & Coping,motivation,I'd love to handle a hard moment without falling apart.,true,false,false
+emotional_regulation,Emotional Regulation & Coping,growth_signal,I managed to step away and breathe before reacting the other day.,true,true,false
+emotional_regulation,Emotional Regulation & Coping,growth_signal,I'm starting to notice what sets me off before it happens.,true,false,false
+emotional_regulation,Emotional Regulation & Coping,success_indicator,I stayed calm through a stressful day that would've wrecked me before.,true,true,false
+emotional_regulation,Emotional Regulation & Coping,success_indicator,I felt myself getting upset and let it pass without blowing up.,true,true,false
+expectations_pressure,Expectations & External Pressure,frustration,It's exhausting trying to meet expectations that are never satisfied.,true,true,false
+expectations_pressure,Expectations & External Pressure,frustration,I'm sick of measuring myself against everyone else.,true,false,false
+expectations_pressure,Expectations & External Pressure,fear,I'm afraid of disappointing the people I'm trying to please.,true,true,false
+expectations_pressure,Expectations & External Pressure,fear,I worry I'll never be enough in their eyes.,true,true,false
+expectations_pressure,Expectations & External Pressure,motivation,"I want to live for myself, not other people's approval.",true,true,false
+expectations_pressure,Expectations & External Pressure,motivation,I'd love to stop comparing and just be okay as I am.,true,true,false
+expectations_pressure,Expectations & External Pressure,growth_signal,"I made a choice for me, not to please anyone else.",true,true,false
+expectations_pressure,Expectations & External Pressure,growth_signal,I caught myself comparing and let it go.,true,true,false
+expectations_pressure,Expectations & External Pressure,success_indicator,I did something for myself without needing anyone's approval.,true,true,false
+expectations_pressure,Expectations & External Pressure,success_indicator,I stopped measuring my day by how I stack up to others.,true,true,false
+focus_attention,Focus & Attention Regulation,frustration,It's frustrating to lose my focus the second I start.,true,true,false
+focus_attention,Focus & Attention Regulation,frustration,I'm sick of my attention scattering everywhere.,true,true,false
+focus_attention,Focus & Attention Regulation,fear,I'm scared my distraction is holding me back from everything.,true,true,false
+focus_attention,Focus & Attention Regulation,fear,I worry I'll never be able to focus when it really counts.,true,true,false
+focus_attention,Focus & Attention Regulation,motivation,I want to sit down and actually stay on task.,true,true,false
+focus_attention,Focus & Attention Regulation,motivation,I'd love to get into the zone and stay there.,true,true,false
+focus_attention,Focus & Attention Regulation,growth_signal,I worked for a solid stretch without reaching for my phone.,true,true,false
+focus_attention,Focus & Attention Regulation,growth_signal,I’m catching myself when my mind starts to wander.,true,true,false
+focus_attention,Focus & Attention Regulation,success_indicator,I focused for an hour straight and finished what I started.,true,false,false
+focus_attention,Focus & Attention Regulation,success_indicator,I got deep into a task and barely noticed the time.,true,true,false
+identity_self_awareness,Identity & Self-Awareness,frustration,It's frustrating to feel lost about what I even want.,true,true,false
+identity_self_awareness,Identity & Self-Awareness,frustration,I'm tired of feeling like a different person depending on who's around.,true,false,false
+identity_self_awareness,Identity & Self-Awareness,fear,I'm scared I'll spend my life chasing the wrong things.,true,false,false
+identity_self_awareness,Identity & Self-Awareness,fear,I worry I'll never figure out what really matters to me.,true,true,false
+identity_self_awareness,Identity & Self-Awareness,motivation,I want to feel like I'm living as the real me.,true,true,false
+identity_self_awareness,Identity & Self-Awareness,motivation,I'd love to know what I truly value.,true,true,false
+identity_self_awareness,Identity & Self-Awareness,growth_signal,I said no to something that didn't feel like me.,true,false,false
+identity_self_awareness,Identity & Self-Awareness,growth_signal,I'm getting clearer on what actually matters to me.,true,true,false
+identity_self_awareness,Identity & Self-Awareness,success_indicator,I made a choice that felt completely true to who I am.,true,true,false
+identity_self_awareness,Identity & Self-Awareness,success_indicator,I can finally describe what I value and want.,true,true,false
+leadership_influence,Leadership & Influence,frustration,It's frustrating to have a vision and not be able to rally people behind it.,true,true,false
+leadership_influence,Leadership & Influence,frustration,I'm tired of doing everything myself because I can't delegate.,true,true,false
+leadership_influence,Leadership & Influence,fear,I'm afraid people won't respect me if I take charge.,true,true,false
+leadership_influence,Leadership & Influence,fear,I worry I'll lead badly and let the whole team down.,true,true,false
+leadership_influence,Leadership & Influence,motivation,I want to be the kind of leader people actually want to follow.,true,true,false
+leadership_influence,Leadership & Influence,motivation,I'd love to guide a team toward something we're proud of.,true,true,false
+leadership_influence,Leadership & Influence,growth_signal,I handed off a task to a teammate instead of doing it all myself.,true,true,false
+leadership_influence,Leadership & Influence,growth_signal,I spoke up and set the direction in our last meeting.,true,true,false
+leadership_influence,Leadership & Influence,success_indicator,My team rallied behind a plan I laid out.,true,true,false
+leadership_influence,Leadership & Influence,success_indicator,I led a project from start to finish and people followed my lead.,true,true,false
+learning_comprehension,Learning & Comprehension,frustration,It's maddening to put in the hours and still not understand it.,true,true,false
+learning_comprehension,Learning & Comprehension,frustration,I hate re-reading the same page over and over with nothing sinking in.,true,true,false
+learning_comprehension,Learning & Comprehension,fear,I'm afraid I'm just not smart enough to keep up.,true,false,false
+learning_comprehension,Learning & Comprehension,fear,I worry I'll forget it all the moment I need it.,true,true,false
+learning_comprehension,Learning & Comprehension,motivation,I really want things to finally click when I learn them.,true,true,false
+learning_comprehension,Learning & Comprehension,motivation,I want to be able to explain ideas in my own words.,true,true,false
+learning_comprehension,Learning & Comprehension,growth_signal,I've started teaching topics to a friend to check if I really get them.,true,true,false
+learning_comprehension,Learning & Comprehension,growth_signal,I'm beginning to connect new ideas to things I already know.,true,true,false
+learning_comprehension,Learning & Comprehension,success_indicator,I explained a tough topic to someone else without my notes.,true,true,false
+learning_comprehension,Learning & Comprehension,success_indicator,What I studied last week actually stayed with me this time.,true,true,false
+motivation_drive,Motivation & Drive,frustration,It's frustrating to want to want something and just feel nothing.,true,true,false
+motivation_drive,Motivation & Drive,frustration,I'm annoyed at myself for wasting days doing nothing.,true,true,false
+motivation_drive,Motivation & Drive,fear,I'm scared I've lost the spark I used to have.,true,true,false
+motivation_drive,Motivation & Drive,fear,I worry I'll never get my drive back.,true,true,false
+motivation_drive,Motivation & Drive,motivation,I want to feel excited about my goals again.,true,true,false
+motivation_drive,Motivation & Drive,motivation,I'd love to wake up actually wanting to get started.,true,true,false
+motivation_drive,Motivation & Drive,growth_signal,I felt a flicker of interest in a project this week.,true,true,false
+motivation_drive,Motivation & Drive,growth_signal,I set one small goal and actually followed through.,true,true,false
+motivation_drive,Motivation & Drive,success_indicator,I've been getting up energized to chase something that matters to me.,true,true,false
+motivation_drive,Motivation & Drive,success_indicator,I finished something I started purely because I wanted to.,true,true,false
+negotiation_advocacy,Negotiation & Advocacy,frustration,It's frustrating to stay silent and then resent it later.,true,false,false
+negotiation_advocacy,Negotiation & Advocacy,frustration,I'm tired of letting people take advantage of me.,true,false,false
+negotiation_advocacy,Negotiation & Advocacy,fear,I'm scared that standing up for myself will start a fight.,true,true,false
+negotiation_advocacy,Negotiation & Advocacy,fear,I worry people won't like me if I push back.,true,true,false
+negotiation_advocacy,Negotiation & Advocacy,motivation,I want to ask for what I deserve without apologizing for it.,true,true,false
+negotiation_advocacy,Negotiation & Advocacy,motivation,I'd love to hold my ground when it matters.,true,true,false
+negotiation_advocacy,Negotiation & Advocacy,growth_signal,I spoke up about something unfair instead of staying quiet.,true,true,false
+negotiation_advocacy,Negotiation & Advocacy,growth_signal,I set a boundary and stuck to it this week.,true,true,false
+negotiation_advocacy,Negotiation & Advocacy,success_indicator,I negotiated for what I wanted and got it.,true,true,false
+negotiation_advocacy,Negotiation & Advocacy,success_indicator,I stood my ground in a tough conversation and felt good about it.,true,true,false
+networking_relationships,Networking & Relationship Building,frustration,It's frustrating to watch opportunities pass because I don't know the right people.,true,true,false
+networking_relationships,Networking & Relationship Building,frustration,I'm annoyed at myself for never keeping in touch.,true,false,false
+networking_relationships,Networking & Relationship Building,fear,I'm afraid I'll come across as fake if I reach out.,true,true,false
+networking_relationships,Networking & Relationship Building,fear,I worry I'm falling behind because I have no network.,true,true,false
+networking_relationships,Networking & Relationship Building,motivation,I want to build relationships that actually help me grow.,true,true,false
+networking_relationships,Networking & Relationship Building,motivation,I'd love to find a mentor I can learn from.,true,true,false
+networking_relationships,Networking & Relationship Building,growth_signal,I reached out to someone in my field this week.,true,true,false
+networking_relationships,Networking & Relationship Building,growth_signal,I followed up with a contact instead of letting it slide.,true,true,false
+networking_relationships,Networking & Relationship Building,success_indicator,I built a connection that led to a real opportunity.,true,true,false
+networking_relationships,Networking & Relationship Building,success_indicator,I found a mentor who's helping me move forward.,true,true,false
+performance_anxiety,Performance Anxiety & Pressure Response,frustration,It's so frustrating to know the answer but lose it the second it counts.,true,false,false
+performance_anxiety,Performance Anxiety & Pressure Response,frustration,I hate that all my preparation disappears the moment people are watching.,true,false,false
+performance_anxiety,Performance Anxiety & Pressure Response,fear,I'm terrified of choking and embarrassing myself in front of everyone.,true,true,false
+performance_anxiety,Performance Anxiety & Pressure Response,fear,I dread being judged and proven that I'm not good enough.,true,true,false
+performance_anxiety,Performance Anxiety & Pressure Response,motivation,I just want to walk into a test feeling calm and ready.,true,true,false
+performance_anxiety,Performance Anxiety & Pressure Response,motivation,I want to show what I actually know without my nerves getting in the way.,true,true,false
+performance_anxiety,Performance Anxiety & Pressure Response,growth_signal,Lately I managed to slow my breathing and get through a presentation without panicking.,true,true,false
+performance_anxiety,Performance Anxiety & Pressure Response,growth_signal,I'm starting to catch my worried thoughts before they spiral.,true,true,false
+performance_anxiety,Performance Anxiety & Pressure Response,success_indicator,I sat my last exam feeling nervous but stayed in control the whole time.,true,true,false
+performance_anxiety,Performance Anxiety & Pressure Response,success_indicator,I spoke up in a big meeting and my voice didn't shake once.,true,true,false
+resilience_recovery,Resilience & Failure Recovery,frustration,It's frustrating that one setback wipes out all my momentum.,true,true,false
+resilience_recovery,Resilience & Failure Recovery,frustration,I hate how long it takes me to bounce back.,true,true,false
+resilience_recovery,Resilience & Failure Recovery,fear,I'm afraid of failing because I don't know if I'll recover.,true,true,false
+resilience_recovery,Resilience & Failure Recovery,fear,I worry the next knock will be the one I can't come back from.,true,true,false
+resilience_recovery,Resilience & Failure Recovery,motivation,I want to be able to fail and get straight back up.,true,true,false
+resilience_recovery,Resilience & Failure Recovery,motivation,I'd love to treat setbacks as something I can move past.,true,true,false
+resilience_recovery,Resilience & Failure Recovery,growth_signal,I got knocked back and tried again the very next day.,true,true,false
+resilience_recovery,Resilience & Failure Recovery,growth_signal,I'm bouncing back from disappointments a little faster now.,true,false,false
+resilience_recovery,Resilience & Failure Recovery,success_indicator,I failed at something and came back stronger.,true,true,false
+resilience_recovery,Resilience & Failure Recovery,success_indicator,A rejection that used to crush me barely slowed me down.,true,true,false
+social_connection_belonging,Social Connection & Belonging,frustration,It's frustrating to want friends and not know how to get there.,true,true,false
+social_connection_belonging,Social Connection & Belonging,frustration,I'm tired of always feeling left out.,true,true,false
+social_connection_belonging,Social Connection & Belonging,fear,I'm scared of being rejected if I reach out.,true,false,false
+social_connection_belonging,Social Connection & Belonging,fear,I worry I'll always be the one on the outside.,true,true,false
+social_connection_belonging,Social Connection & Belonging,motivation,I want to feel like I genuinely belong somewhere.,true,true,false
+social_connection_belonging,Social Connection & Belonging,motivation,I'd love to have people I can really connect with.,true,true,false
+social_connection_belonging,Social Connection & Belonging,growth_signal,I started a conversation with someone new this week.,true,true,false
+social_connection_belonging,Social Connection & Belonging,growth_signal,I'm beginning to feel more at ease around people.,true,false,false
+social_connection_belonging,Social Connection & Belonging,success_indicator,I made a real friend and felt like I belonged.,true,true,false
+social_connection_belonging,Social Connection & Belonging,success_indicator,I felt part of the group for the first time in ages.,true,false,false
+time_self_discipline,Time Management & Self-Discipline,frustration,I'm frustrated that I keep sabotaging myself by waiting too long.,true,false,false
+time_self_discipline,Time Management & Self-Discipline,frustration,It's exhausting always racing the clock because I started late.,true,true,false
+time_self_discipline,Time Management & Self-Discipline,fear,I'm scared my procrastination will cost me something big.,true,true,false
+time_self_discipline,Time Management & Self-Discipline,fear,I worry people see me as unreliable.,true,true,false
+time_self_discipline,Time Management & Self-Discipline,motivation,I want to get things done early and stop the last-minute panic.,true,true,false
+time_self_discipline,Time Management & Self-Discipline,motivation,I'd love to actually stick to a routine for once.,true,true,false
+time_self_discipline,Time Management & Self-Discipline,growth_signal,I started a task days before it was due for the first time in ages.,true,true,false
+time_self_discipline,Time Management & Self-Discipline,growth_signal,I've kept to my schedule three days in a row.,true,true,false
+time_self_discipline,Time Management & Self-Discipline,success_indicator,I finished a project ahead of the deadline with time to spare.,true,true,false
+time_self_discipline,Time Management & Self-Discipline,success_indicator,I stuck to my plan all week without falling behind.,true,true,false

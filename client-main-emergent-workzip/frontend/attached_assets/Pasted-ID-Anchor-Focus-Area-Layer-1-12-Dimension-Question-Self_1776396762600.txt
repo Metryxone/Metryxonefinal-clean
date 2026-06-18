@@ -1,0 +1,121 @@
+ID	Anchor	Focus Area	Layer (1-12)	Dimension	Question (Self-Assessment)	Response	Polarity	Wt	Logic	Age Band	Stage 
+FSA-01	Yes	Deep Cognitive	1: Duration	Sustained Focus	How long can you study one topic before needing a break?	<15m to 1h+	(+)	1.5	Linear (1-5)	11-18	Curiosity
+FSA-02	No	High-Impact Behavioral	3: Impulse	Digital Control	Do you check your phone the moment it lights up?	Always to Never	(-)	1.2	Inverted (5-1)	11-18	Curiosity
+FSA-03	No	High-Impact Behavioral	2: Physical	Restlessness	Do you feel "fidgety" if you sit still for 10 mins?	Always to Never	(-)	1	Inverted (5-1)	11-14	Curiosity
+FSA-04	No	Deep Cognitive	4: Recovery	Recovery Speed	After a distraction, how quickly is your brain "back"?	15m+ to <1m	(+)	1.5	Linear (1-5)	15-18	Curiosity
+FSA-05	No	High-Impact Behavioral	10: Exec	Task Completion	Do you have 3+ half-finished chapters right now?	Yes / No	(-)	1.3	Yes=1, No=5	11-18	Curiosity
+FSA-06	No	Deep Cognitive	1: Duration	Cognitive Fatigue	Does your brain feel "foggy" after 20 mins of reading?	Always to Never	(-)	1.1	Inverted (5-1)	15-18	Curiosity
+FSA-07	No	Deep Cognitive	2: Physical	Internal Drift	In silence, do your own thoughts pull you away?	Daily to Never	(-)	1.4	Inverted (5-1)	15-18	Curiosity
+FSA-08	No	High-Impact Behavioral	5: Sensory	Sensory Control	Does a small noise (fan/hum) stop you from working?	Always to Never	(-)	1.2	Inverted (5-1)	11-14	Curiosity
+FSA-09	No	Emotional/Anxiety	11: Meta	Focus Anxiety	Do you panic that you aren't finishing fast enough?	Always to Never	(-)	1.1	Inverted (5-1)	15-18	Curiosity
+FSA-10	Yes	Hyper-focus Paradox	6: Diagnostic	Hyper-focus	Can you play games for 1hr but not study for 15m?	Always to Never	(-)	1.6	Inverted (5-1)	11-18	Curiosity
+FSA-11	No	High-Impact Behavioral	10: Exec	Preparation	Do you clear your desk before you start studying?	Always to Never	(+)	1	Linear (1-5)	11-14	Curiosity
+FSA-12	No	Emotional/Anxiety	12: Core	Self-Belief	I think my focus is weaker than my friends'.	Agree to Disagree	(-)	1	Inverted (5-1)	15-18	Curiosity
+FSA-13	No	Deep Cognitive	8: Precision	Reading Track	Do you "read" a page but forget it immediately?	Always to Never	(-)	1.5	Inverted (5-1)	11-18	Curiosity
+FSA-14	No	High-Impact Behavioral	3: Impulse	Multitasking	How many tabs/apps are open during homework?	5+ to 1	(-)	1.2	1=5, 5+=1	11-18	Curiosity
+FSA-15	No	Emotional/Anxiety	11: Meta	Frustration	Do you get angry when you realize you've drifted?	Always to Never	(-)	1.1	Inverted (5-1)	11-18	Curiosity
+FSA-16	No	Deep Cognitive	5: Sensory	Auditory Capture	People say your name twice for your attention?	Always to Never	(-)	1.3	Inverted (5-1)	11-14	Curiosity
+FSA-17	No	High-Impact Behavioral	3: Impulse	Digital Hunger	Feel an "itch" to check social media while working?	Always to Never	(-)	1.4	Inverted (5-1)	11-18	Curiosity
+FSA-18	No	Deep Cognitive	1: Duration	Mental Stamina	Can you handle two difficult subjects back-to-back?	Yes / No	(+)	1.5	Yes=5, No=1	15-18	Curiosity
+FSA-19	No	High-Impact Behavioral	10: Exec	Note-Taking	Do you stop writing if the teacher speaks too fast?	Always to Never	(-)	1.2	Inverted (5-1)	11-18	Curiosity
+FSA-20	No	Emotional/Anxiety	11: Meta	Boredom Threshold	If a topic isn't "fun," do you stop paying attention?	Always to Never	(-)	1.3	Inverted (5-1)	11-14	Curiosity
+FSA-21	No	Deep Cognitive	8: Precision	Visual Search	Struggle to find a specific word in a paragraph?	Always to Never	(-)	1.2	Inverted (5-1)	11-14	Curiosity
+FSA-22	No	Hyper-focus Paradox	10: Exec	Deadline Drive	Do you only focus when the deadline is 1 hour away?	Always to Never	(-)	1.4	Inverted (5-1)	15-18	Curiosity
+FSA-23	No	Hyper-focus Paradox	2: Physical	Night Focus	Do you find it easier to focus at night than day?	Yes / No	(±)	1	Neutral (3)	15-18	Curiosity
+FSA-24	No	High-Impact Behavioral	8: Precision	Instructions	Do you skip reading the "instructions" on a test?	Always to Never	(-)	1.4	Inverted (5-1)	11-14	Curiosity
+FSA-25	No	Emotional/Anxiety	12: Core	External Blame	I can only focus if the teacher/parent is watching.	Always to Never	(-)	1.3	Inverted (5-1)	11-14	Curiosity
+FSA-26	No	Deep Cognitive	9: Synthesis	Sequential Logic	Lose track of the steps in a long Math problem?	Always to Never	(-)	1.5	Inverted (5-1)	11-18	Curiosity
+FSA-27	No	Hyper-focus Paradox	5: Sensory	Notification Ghost	"Hear" your phone vibrate even when it didn't?	Yes / No	(-)	1.4	Yes=1, No=5	11-18	Curiosity
+FSA-28	No	High-Impact Behavioral	5: Sensory	Env. Shift	Does studying in a new place (library/cafe) help?	Yes / No	(+)	1.1	Yes=5, No=1	15-18	Curiosity
+FSA-29	No	Emotional/Anxiety	11: Meta	Peer Comparison	Feel behind when you see others finishing fast?	Always to Never	(-)	1.1	Inverted (5-1)	11-18	Curiosity
+FSA-30	No	Hyper-focus Paradox	4: Recovery	Task Switching	Hard to switch from "gaming" to "study" brain?	Always to Never	(-)	1.4	Inverted (5-1)	11-18	Curiosity
+FSA-31	No	High-Impact Behavioral	2: Physical	Eye Fatigue	Do your eyes feel tired after 15 mins of screen study?	Always to Never	(-)	1.2	Inverted (5-1)	11-18	Curiosity
+FSA-32	No	High-Impact Behavioral	10: Exec	Doodling	Do you draw or scribble while listening to a lecture?	Always to Never	(-)	1.1	Inverted (5-1)	11-14	Curiosity
+FSA-33	No	Deep Cognitive	5: Sensory	Mental Rewind	How often do you have to ask "What did you say?"	Always to Never	(-)	1.3	Inverted (5-1)	11-14	Curiosity
+FSA-34	No	High-Impact Behavioral	3: Impulse	App Switching	Switch between YouTube/Instagram while studying?	Always to Never	(-)	1.5	Inverted (5-1)	11-18	Curiosity
+FSA-35	No	Emotional/Anxiety	12: Core	Success Fear	Avoid hard tasks due to fear of failure?	Always to Never	(-)	1.4	Inverted (5-1)	15-18	Curiosity
+FSA-36	Yes	Deep Cognitive	6: Diagnostic	Detail Miss	Lose marks for missing "Not" or "Except" in questions?	Always to Never	(-)	1.6	Inverted (5-1)	15-18	Curiosity
+FSA-37	No	High-Impact Behavioral	5: Sensory	Background Music	Do you need music or white noise to focus?	Yes / No	(±)	1.1	Neutral (3)	11-18	Curiosity
+FSA-38	No	High-Impact Behavioral	2: Physical	Sleep Impact	If you sleep <6 hours, is your focus "zero" next day?	Always to Never	(-)	1.3	Inverted (5-1)	15-18	Curiosity
+FSA-39	No	High-Impact Behavioral	10: Exec	Choice Paralysis	Spend 20 mins just "deciding" what to study?	Always to Never	(-)	1.2	Inverted (5-1)	15-18	Curiosity
+FSA-40	No	Deep Cognitive	7: Memory	Working Memory	Remember a 5-step instruction without writing it?	Yes / No	(+)	1.5	Yes=5, No=1	11-14	Curiosity
+FSA-41	No	High-Impact Behavioral	3: Impulse	Screen Time	Is your phone screen time over 4 hours daily?	Yes / No	(-)	1.5	Yes=1, No=5	11-18	Curiosity
+FSA-42	No	High-Impact Behavioral	5: Sensory	Physical Comfort	Does a slightly hot room make it impossible to study?	Always to Never	(-)	1.1	Inverted (5-1)	11-18	Curiosity
+FSA-43	No	Emotional/Anxiety	11: Meta	Academic Dread	Just looking at your textbook makes you feel tired.	Always to Never	(-)	1.4	Inverted (5-1)	11-18	Curiosity
+FSA-44	No	Deep Cognitive	9: Synthesis	Oral vs Written	Are you better at explaining things than writing them?	Yes / No	(±)	1.2	Neutral (3)	11-18	Curiosity
+FSA-45	No	High-Impact Behavioral	8: Precision	Self-Correction	Do you double-check your work for focus errors?	Always to Never	(+)	1.3	Linear (1-5)	15-18	Curiosity
+FSA-46	No	High-Impact Behavioral	2: Physical	Caffeine/Sugar	Need soda/coffee/snacks to start studying?	Always to Never	(-)	1.2	Inverted (5-1)	15-18	Curiosity
+FSA-47	No	Deep Cognitive	4: Recovery	Mental Imagery	See "movies" in your head when you should focus?	Always to Never	(-)	1.3	Inverted (5-1)	11-18	Curiosity
+FSA-48	No	High-Impact Behavioral	10: Exec	Goal Clarity	Do you know exactly what you will finish in 1 hour?	Always to Never	(+)	1.4	Linear (1-5)	15-18	Curiosity
+FSA-49	No	Emotional/Anxiety	11: Meta	Social FOMO	Worry about what friends are doing while you study?	Always to Never	(-)	1.3	Inverted (5-1)	11-18	Curiosity
+FSA-50	No	Deep Cognitive	1: Duration	Endurance	Can you maintain focus during a 3-hour mock exam?	Always to Never	(+)	1.6	Linear (1-5)	15-18	Curiosity
+FSA-51	No	High-Impact Behavioral	5: Sensory	Messy Desk	Does a cluttered room distract you mentally?	Always to Never	(-)	1.1	Inverted (5-1)	11-18	Curiosity
+FSA-52	No	High-Impact Behavioral	3: Impulse	Rapid Speech	Do you talk faster than you can think?	Always to Never	(-)	1.2	Inverted (5-1)	11-14	Curiosity
+FSA-53	No	High-Impact Behavioral	3: Impulse	Tab Hopping	While searching for one topic, do you end up on another?	Always to Never	(-)	1.4	Inverted (5-1)	11-18	Curiosity
+FSA-54	No	Emotional/Anxiety	11: Meta	Motivation Gap	Do you only focus on subjects you "like"?	Always to Never	(-)	1.3	Inverted (5-1)	11-14	Curiosity
+FSA-55	No	Deep Cognitive	10: Exec	Time Blindness	Do you underestimate how long a task will take?	Always to Never	(-)	1.5	Inverted (5-1)	11-18	Curiosity
+FSA-56	No	High-Impact Behavioral	11: Meta	Group Study	Do you actually study in a group, or just talk?	Study / Talk	(-)	1.2	S=5, T=1	15-18	Curiosity
+FSA-57	No	Emotional/Anxiety	11: Meta	Parent Pressure	Does a parent sitting nearby help or hurt focus?	Yes / No	(-)	1.2	Yes=1, No=5	11-14	Curiosity
+FSA-58	No	Deep Cognitive	8: Precision	Reading Speed	Do you have to re-read the same sentence 3 times?	Always to Never	(-)	1.5	Inverted (5-1)	11-18	Curiosity
+FSA-59	No	High-Impact Behavioral	3: Impulse	Notify Mute	Put your phone in another room while studying?	Always to Never	(+)	1.6	Linear (1-5)	15-18	Curiosity
+FSA-60	No	Emotional/Anxiety	11: Meta	Result Anxiety	Worry about marks even before starting the chapter?	Always to Never	(-)	1.3	Inverted (5-1)	15-18	Curiosity
+FSA-61	No	Deep Cognitive	4: Recovery	Mental Lock	Brain "freeze" when you see a hard problem?	Always to Never	(-)	1.5	Inverted (5-1)	11-18	Curiosity
+FSA-62	No	High-Impact Behavioral	10: Exec	Pomodoro Use	Do you use a timer to track study intervals?	Yes / No	(+)	1.1	Yes=5, No=1	15-18	Curiosity
+FSA-63	No	High-Impact Behavioral	10: Exec	Subject Switch	Do you jump between 3 subjects in one hour?	Always to Never	(-)	1.3	Inverted (5-1)	11-14	Curiosity
+FSA-64	No	High-Impact Behavioral	2: Physical	Afternoon Slump	Do you find it impossible to focus after lunch?	Always to Never	(-)	1.1	Inverted (5-1)	11-18	Curiosity
+FSA-65	No	Emotional/Anxiety	11: Meta	Exam Silence	Does the silence of an exam hall make you nervous?	Always to Never	(-)	1.4	Inverted (5-1)	15-18	Curiosity
+FSA-66	No	High-Impact Behavioral	5: Sensory	Voice Quality	Do you read out loud to stay focused?	Always to Never	(+)	1.1	Linear (1-5)	11-14	Curiosity
+FSA-67	No	Emotional/Anxiety	11: Meta	Guilt Cycle	Spend your "break" feeling guilty for not studying?	Always to Never	(-)	1.2	Inverted (5-1)	15-18	Curiosity
+FSA-68	No	High-Impact Behavioral	8: Precision	Note Quality	Are your notes disorganized or missing key parts?	Always to Never	(-)	1.4	Inverted (5-1)	11-18	Curiosity
+FSA-69	No	High-Impact Behavioral	3: Impulse	Rabbit Hole	Does a "quick search" turn into 1 hour of browsing?	Always to Never	(-)	1.5	Inverted (5-1)	11-18	Curiosity
+FSA-70	No	Hyper-focus Paradox	11: Meta	Comp. Focus	Do you focus better if it's a competition/game?	Yes / No	(+)	1.2	Yes=5, No=1	11-14	Curiosity
+FSA-71	No	High-Impact Behavioral	2: Physical	Handwriting	Does your handwriting get messier as you continue?	Always to Never	(-)	1.3	Inverted (5-1)	11-14	Curiosity
+FSA-72	No	High-Impact Behavioral	10: Exec	Desk Rituals	Do you need everything "perfect" before you start?	Always to Never	(-)	1.2	Inverted (5-1)	15-18	Curiosity
+FSA-73	No	Emotional/Anxiety	11: Meta	Teacher Rapport	If you don't like the teacher, do you stop focusing?	Always to Never	(-)	1.4	Inverted (5-1)	11-14	Curiosity
+FSA-74	No	Deep Cognitive	9: Synthesis	Abstract Think	Struggle to focus on things you can't "see"?	Always to Never	(-)	1.3	Inverted (5-1)	11-18	Curiosity
+FSA-75	Yes	High-Impact Behavioral	10: Exec	Planning/Doing	Do you spend more time "planning" than doing?	Always to Never	(-)	1.5	Inverted (5-1)	15-18	Curiosity
+FSA-76	No	High-Impact Behavioral	5: Sensory	Headphone Use	Feel "shielded" from the world with headphones?	Always to Never	(+)	1.1	Linear (1-5)	15-18	Curiosity
+FSA-77	No	Deep Cognitive	12: Core	Mindful Aware	Catch yourself the moment your mind wanders?	Always to Never	(+)	1.6	Linear (1-5)	15-18	Curiosity
+FSA-78	No	Deep Cognitive	9: Synthesis	Complex Inst.	Do you get confused by multi-part exam questions?	Always to Never	(-)	1.4	Inverted (5-1)	15-18	Curiosity
+FSA-79	No	Hyper-focus Paradox	11: Meta	Reward Dep.	Only focus if there is a reward (game/food)?	Always to Never	(-)	1.3	Inverted (5-1)	11-14	Curiosity
+FSA-80	Yes	Deep Cognitive	12: Core	Self-Knowledge	I know exactly what distracts me most.	Agree to Disagree	(+)	1.5	Linear (1-5)	11-18	Curiosity
+FSA-81	No	High-Impact Behavioral	10: Exec	Task Initiation	Hard to start a task even when you know it's easy?	Always to Never	(-)	1.4	Inverted (5-1)	15-18	Curiosity
+FSA-82	No	Emotional/Anxiety	10: Exec	Cog. Flexibility	Upset if your study plan changes unexpectedly?	Always to Never	(-)	1.2	Inverted (5-1)	11-18	Curiosity
+FSA-83	No	Deep Cognitive	9: Synthesis	Info Filter	Struggle to find the "Main Idea" in a long text?	Always to Never	(-)	1.5	Inverted (5-1)	11-18	Curiosity
+FSA-84	No	High-Impact Behavioral	3: Impulse	App Loop	Do you open apps without even thinking why?	Daily to Never	(-)	1.6	Inverted (5-1)	15-18	Curiosity
+FSA-85	No	Emotional/Anxiety	12: Core	Perfectionism	Restart a whole page if you make one small mistake?	Always to Never	(-)	1.3	Inverted (5-1)	11-18	Curiosity
+FSA-86	No	Deep Cognitive	1: Duration	Mental Saturation	Feel "full" and unable to learn more after 2 hours?	Always to Never	(-)	1.4	Inverted (5-1)	15-18	Curiosity
+FSA-87	No	Deep Cognitive	7: Memory	Working Memory	Forget start of a sentence before reaching the end?	Always to Never	(-)	1.5	Inverted (5-1)	11-18	Curiosity
+FSA-88	No	High-Impact Behavioral	5: Sensory	Env. Anchor	Have a "favorite spot" where you focus 2x better?	Yes / No	(+)	1.1	Yes=5, No=1	11-18	Curiosity
+FSA-89	No	Deep Cognitive	4: Recovery	Processing Speed	Feel others "get the concept" faster than you?	Always to Never	(-)	1.3	Inverted (5-1)	11-18	Curiosity
+FSA-90	No	High-Impact Behavioral	3: Impulse	Impulse Inhibition	Shout out answers before teacher finishes question?	Always to Never	(-)	1.4	Inverted (5-1)	11-14	Curiosity
+FSA-91	No	Deep Cognitive	4: Recovery	Context Switch	Take 10+ minutes to "settle in" to a new subject?	Always to Never	(-)	1.3	Inverted (5-1)	15-18	Curiosity
+FSA-92	No	Emotional/Anxiety	11: Meta	Emotional Reg.	Does a small bad mood ruin your entire study day?	Always to Never	(-)	1.5	Inverted (5-1)	15-18	Curiosity
+FSA-93	No	High-Impact Behavioral	5: Sensory	Visual Distraction	People walking past make you lose your thought?	Always to Never	(-)	1.2	Inverted (5-1)	11-14	Curiosity
+FSA-94	No	Deep Cognitive	1: Duration	Reading Stamina	Can you read 10 pages of non-fiction in one go?	Yes / No	(+)	1.6	Yes=5, No=1	15-18	Curiosity
+FSA-95	No	Emotional/Anxiety	12: Core	Feedback Sens.	Stop working if someone criticizes your progress?	Always to Never	(-)	1.4	Inverted (5-1)	11-18	Curiosity
+FSA-96	No	High-Impact Behavioral	2: Physical	Mental Refresh	Feel more focused after a 5-minute walk/stretch?	Yes / No	(+)	1.2	Yes=5, No=1	11-18	Curiosity
+FSA-97	No	Deep Cognitive	9: Synthesis	Concept Linkage	Relate today’s lesson to last week’s easily?	Always to Never	(+)	1.4	Linear (1-5)	15-18	Curiosity
+FSA-98	No	Deep Cognitive	10: Exec	Decision Fatigue	Give up on hard problems at the end of the day?	Always to Never	(-)	1.3	Inverted (5-1)	15-18	Curiosity
+FSA-99	No	High-Impact Behavioral	2: Physical	Physical Health	Do you focus better on days you played sports?	Yes / No	(+)	1.1	Yes=5, No=1	11-18	Curiosity
+FSA-100	No	Deep Cognitive	12: Core	Meta-Awareness	Ability to "watch" your thoughts during a test.	1-10 Scale	(+)	1.7	Scale/2 (Max 5)	15-18	Curiosity
+FSA-101	No	Deep Cognitive	5: Sensory	A/V Sync	Need to see a speaker’s face to understand them?	Always to Never	(-)	1.2	Inverted (5-1)	11-18	Curiosity
+FSA-102	No	High-Impact Behavioral	10: Exec	Procrastination	Clean room just to avoid starting an essay?	Always to Never	(-)	1.4	Inverted (5-1)	11-18	Curiosity
+FSA-103	No	Deep Cognitive	7: Memory	Retrieval Recall	Often have the "word on the tip of my tongue"?	Always to Never	(-)	1.3	Inverted (5-1)	11-18	Curiosity
+FSA-104	No	Deep Cognitive	10: Exec	Goal Breakdown	Can you turn a "Big Project" into 5 small tasks?	Always to Never	(+)	1.5	Linear (1-5)	15-18	Curiosity
+FSA-105	No	Emotional/Anxiety	11: Meta	Stress Response	Does "pressure" make you focus better or shut down?	Focus / Shut	(±)	1.4	F=5, S=1	11-18	Curiosity
+FSA-106	No	Deep Cognitive	6: Diagnostic	Pattern Mastery	Can you spot the pattern in a sequence alone?	Always to Never	(+)	1.5	Linear (1-5)	11-18	Curiosity
+FSA-107	No	Deep Cognitive	2: Physical	Alertness Window	Wake up feeling "ready to learn"?	Always to Never	(+)	1.3	Linear (1-5)	15-18	Curiosity
+FSA-108	No	Deep Cognitive	1: Duration	Digital Fatigue	Brain feel "fried" after 1 hour of scrolling?	Always to Never	(-)	1.4	Inverted (5-1)	11-18	Curiosity
+FSA-109	No	Emotional/Anxiety	11: Meta	Authority Bias	Focus better if a teacher you respect is teaching?	Always to Never	(-)	1.2	Inverted (5-1)	11-14	Curiosity
+FSA-110	No	Deep Cognitive	12: Core	Summarize	List the 3 most important things learned today?	Always to Never	(+)	1.6	Linear (1-5)	15-18	Curiosity
+FSA-111	No	Deep Cognitive	9: Synthesis	Spatial Awareness	Struggle with maps, diagrams, or spatial orientation?	Always to Never	(-)	1.2	Inverted (5-1)	11-18	Curiosity
+FSA-112	No	Hyper-focus Paradox	10: Exec	Reward Delay	Finish work now to have a "bigger fun" later?	Always to Never	(+)	1.5	Linear (1-5)	11-18	Curiosity
+FSA-113	No	Deep Cognitive	2: Physical	Wakefulness	Sharpest within 1 hour of waking up?	Yes / No	(+)	1.1	Yes=5, No=1	15-18	Curiosity
+FSA-114	No	Deep Cognitive	7: Memory	Visual Recall	Remember where on the page you wrote a note?	Always to Never	(+)	1.3	Linear (1-5)	11-18	Curiosity
+FSA-115	No	Deep Cognitive	9: Synthesis	Argument Logic	Do you notice when an argument doesn't make sense?	Always to Never	(+)	1.5	Linear (1-5)	15-18	Curiosity
+FSA-116	No	Deep Cognitive	8: Precision	Self-Correction	Do you catch your own typos while writing?	Always to Never	(+)	1.4	Linear (1-5)	11-18	Curiosity
+FSA-117	No	Deep Cognitive	2: Physical	Hunger Focus	Does being slightly hungry make focus impossible?	Always to Never	(-)	1.2	Inverted (5-1)	11-18	Curiosity
+FSA-118	No	Hyper-focus Paradox	12: Core	Tutoring	Do you like explaining hard topics to your friends?	Always to Never	(+)	1.4	Linear (1-5)	15-18	Curiosity
+FSA-119	No	Deep Cognitive	7: Memory	Mental Math	Can you do two-digit multiplication in your head?	Yes / No	(+)	1.5	Yes=5, No=1	11-18	Curiosity
+FSA-120	No	Deep Cognitive	12: Core	Future Vision	"See" yourself succeeding 5 years from now?	Always to Never	(+)	1.6	Linear (1-5)	15-18	Curiosity

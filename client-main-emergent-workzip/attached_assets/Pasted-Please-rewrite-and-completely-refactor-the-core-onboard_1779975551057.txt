@@ -1,0 +1,42 @@
+Please rewrite and completely refactor the core onboarding and search interface inside 'frontend/src/components/FreeAssessmentModal.tsx' (including its nested intro stage sub-components). The current implementation fails to surface or click concerns because it relies on legacy keys that do not align with our 2026-05-28 data models and schemas. 
+
+Refactor the component by implementing these precise engineering specifications:
+
+1. CANONICAL DATA MAPPING & ONTOLOGY ENGINE BINDING
+   - Re-engineer the search indexing layer to pull data directly using the strict casing and schema headers from our master file: 'Concern ID', 'Domain', 'Concern Cluster', 'Typical Age Band', and 'Common Indian Context'.
+   - Implement a 300ms debounced search lookup that cross-references user text entry across BOTH the 'Concern Cluster' and 'Common Indian Context' string arrays. This ensures localized search phrases (e.g., "JEE", "NEET", "scrolling", "placement readiness") return exact, rapid matches.
+
+2. STATE RESTORATION FOR CLICKABLE ONTOLOGY PILLS
+   - Fix the 'addConcern()' click listener on the rounded-full ontology pills. When clicked, it must safely append the concern object to our selected collection without breaking the strict system 3-concern selection limit.
+   - Every selected pill must build and push an explicit object that satisfies our backend search resolution and 'resolveCapadexConcern()' fallback routing keys:
+     {
+       concern_id: item['Concern ID'],
+       domain_name: item['Domain'],
+       concern_cluster: item['Concern Cluster'],
+       is_proxy: isProxyState,
+       target_age_band: selectedAgeBand
+     }
+
+3. PROXY TRACKING & CONDITIONAL ACCORDION LAYOUT
+   - Introduce an explicit 'is_proxy' boolean state variable to cleanly separate direct self-exploration trackers from assessments taken on behalf of others. 
+   - Wire this to our 3 Macro-Tracks using our defined 11-sub-persona architecture:
+     * THE LEARNER TRACK (is_proxy = false): Maps to 'Campus Student', 'Competitive Aspirant', 'Career Explorer', 'Skill Development Learner'.
+     * THE PROFESSIONAL TRACK (is_proxy = false): Maps to 'Early Career Professional', 'Mid-Career Professional', 'Career Transition Professional'.
+     * THE PROXY TRACK (is_proxy = true): Maps to 'Parent', 'Teacher / Educator', 'Academic Counsellor', 'Placement & Career Cell'.
+   - Dynamically morph field titles and layouts based on this flag. If 'is_proxy' is true, require target metadata placeholders ('assessee_name', 'contextual_anchor' tracking institution/school). If 'is_proxy' is false, change fields to point to self-exploration labels ("Your Name", "Your Industry/Role").
+
+4. UX DESIGN SYSTEM & AGE BAND CONSTRAINTS
+   - Enforce standard sentence-case copy across all new dynamically swapped labels and sub-captions.
+   - Replace open text fields for age with a strict 5-bracket dropdown selector matching our core tokens: '6-14', '14-17', '17-24', '24-45', '45+'. Map the selected band's mathematical midpoint back to our legacy 'userAge' state to protect downstream API calculation parameters.
+   - Fix the primary call-to-action button state. Keep it in a disabled grey layout ("Describe your concern to begin") until all required fields are filled. When valid, transition it smoothly using a weighted Indigo or Deep Slate token displaying: "Launch Clarity Journey →".
+
+5. API INGESTION HANDSHAKE HARDENING
+   - On submission, intercept default form actions and cleanly format our data payload to interface flawlessly with our '/api/capadex/concern/analyze' endpoint and runtime-context manager ('persistRuntimeContext()'):
+     {
+       "primary_persona": string,     // Current sub-persona label (e.g., 'Competitive Aspirant')
+       "is_proxy": boolean,           // Evaluated proxy indicator state
+       "target_age_band": string,     // Selected band string (e.g., '17–24')
+       "assessee_name": string,       // Collected identifier string
+       "contextual_anchor": string,   // Synced school, grade, section, or company context 
+       "raw_concern_text": string     // Textarea search/narrative input string
+     }

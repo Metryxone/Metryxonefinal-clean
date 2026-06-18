@@ -1,0 +1,13 @@
+{
+  "generated_at": "2026-06-03T18:26:48.321Z",
+  "all_passed": true,
+  "results": [
+    {
+      "name": "No Unsupported Statements",
+      "total_statements": 1167,
+      "unsupported": 0,
+      "unsupported_ids": [],
+      "passed": true
+    }
+  ]
+}

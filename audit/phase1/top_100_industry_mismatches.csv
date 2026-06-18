@@ -1,0 +1,101 @@
+question_id,concern_id,bridge_tag,concern_persona,industry_terms,term_count,question_text
+Q_PRACTICAL_001_001,PRACTICAL_001,COMPETENCY_DEVELOPMENT,Skill Development Learner,classroom,1,"When you try to apply classroom knowledge in real situations, how confident do you usually feel?"
+Q_PRACTICAL_001_017,PRACTICAL_001,COMPETENCY_DEVELOPMENT,Skill Development Learner,classroom,1,How often do you actively practice skills outside regular classroom learning?
+Q_INTERVIEW_001_011,INTERVIEW_001,EMPLOYABILITY,Campus Student,coding,1,How often do you delay mock interviews or coding practice because you feel underprepared?
+Q_INTERVIEW_001_015,INTERVIEW_001,EMPLOYABILITY,Campus Student,coding,1,"After seeing others perform well in coding rounds, how discouraged do you usually feel?"
+Q_TIME_001_006,TIME_001,DISCIPLINE_HABITS,Student,coding,1,"How stressful do extreme time limits feel during exams, coding rounds, or interviews?"
+Q_CONCEPT_001_009,CONCEPT_001,ACADEMIC_COGNITIVE,Student,classroom,1,How strongly do classroom or peer discussions make you feel conceptually behind?
+Q_WORK_001_002_v2,WORK_001,WORKPLACE_ADAPTATION,Professional Employee,classroom,1,How often do you feel that classroom learning is not directly useful for real job tasks?
+Q_WORK_001_011_v2,WORK_001,WORKPLACE_ADAPTATION,Professional Employee,classroom,1,How often do you try to apply classroom concepts in real mini-projects or internships?
+Q_TECH_001_002,TECH_001,COMPETENCY_DEVELOPMENT,Skill Development Learner,coding,1,How often do you feel unsure of your answers during coding or technical tests?
+Q_TECH_001_013,TECH_001,COMPETENCY_DEVELOPMENT,Skill Development Learner,coding,1,"During coding problems, how often do you feel overwhelmed by complexity?"
+Q_GROWTH_001_006,GROWTH_001,CAREER_GROWTH,Career Transition Professional,coding,1,"How stressed do you feel when trying to balance multiple skills (coding, projects, communication, etc.)?"
+Q_CULT_001_002,CULT_001,WORKPLACE_ADAPTATION,Professional Employee,coding,1,"How often do students around you actively discuss skills like coding, communication, or projects?"
+Q_CULT_001_003,CULT_001,WORKPLACE_ADAPTATION,Professional Employee,classroom,1,How common is it for students to work on real projects outside of classroom requirements?
+Q_CULT_001_018,CULT_001,WORKPLACE_ADAPTATION,Professional Employee,coding,1,"How much do students compete in skills (coding, design, speaking) rather than just marks?"
+Q_ECOSYS_001_005_v2,VIS_001,ADJUSTMENT_COPING,Parent,classroom,1,How easy is it for you to identify opportunities for growth beyond classroom learning?
+Q_ECOSYS_001_014_v2,VIS_001,ADJUSTMENT_COPING,Parent,classroom,1,How often do you interact with faculty or mentors beyond classroom teaching?
+Q_LEARN_001_012_v2,LEARN_001,LEARNING_ADAPTABILITY,Student,classroom,1,How often do you feel classroom discussions help you clarify doubts effectively?
+Q_LCQ_001_008,LCQ_001,LEARNING_QUALITY,Academic Operations Leadership,classroom,1,How much pressure do you feel to ensure every classroom performs equally well in learning outcomes?
+Q_LCQ_001_011,LCQ_001,LEARNING_QUALITY,Academic Operations Leadership,classroom,1,How often do you feel that one classroom performs significantly better or worse than others under your instruction?
+Q_LCQ_001_016,LCQ_001,LEARNING_QUALITY,Academic Operations Leadership,classroom,1,"When classroom conditions differ, how effectively can you maintain similar learning outcomes?"
+Q_LCQ_001_019,LCQ_001,LEARNING_QUALITY,Academic Operations Leadership,classroom,1,"After identifying gaps in classroom performance, how quickly can you adjust your teaching strategy effectively?"
+Q_LCQ_001_024,LCQ_001,LEARNING_QUALITY,Academic Operations Leadership,classroom,1,"If given one improvement technique for classroom consistency, how likely are you to apply it regularly?"
+Q_LCQ_001_025,LCQ_001,LEARNING_QUALITY,Academic Operations Leadership,classroom,1,"Even if classroom performance varies now, how hopeful are you that you can achieve consistent learning quality in the future?"
+Q_LEARN_001_002_v2,LEARN_001,LEARNING_ADAPTABILITY,Student,classroom,1,How often do you feel that classroom teaching does not match your ability to apply the concepts practically?
+Q_LEARN_001_007_v2,LEARN_001,LEARNING_ADAPTABILITY,Student,classroom,1,How much do classroom notes help you understand concepts on your own later?
+Q_LEARN_001_009_v2,LEARN_001,LEARNING_ADAPTABILITY,Student,classroom,1,How confident are you that classroom learning prepares you for real-world problems?
+Q_LEARN_001_015_v2,LEARN_001,LEARNING_ADAPTABILITY,Student,classroom,1,How often do you feel classroom teaching is more about attendance than actual learning?
+Q_LEARN_001_018_v2,LEARN_001,LEARNING_ADAPTABILITY,Student,classroom,1,"How often do you use external resources (videos, notes, internet) to understand classroom topics better?"
+Q_LEARN_001_023_v2,LEARN_001,LEARNING_ADAPTABILITY,Student,classroom,1,How strongly do you believe classroom learning should focus on understanding rather than exams?
+Q_CURR_001_001,CURR_001,COMPETENCY_INTELLIGENCE,Principal / Leadership,classroom,1,How well do you feel your classroom learning translates into real-world job skills?
+Q_CURR_001_006,CURR_001,COMPETENCY_INTELLIGENCE,Principal / Leadership,classroom,1,How frustrated do you feel when classroom concepts dont seem useful in real life?
+Q_CURR_001_007,CURR_001,COMPETENCY_INTELLIGENCE,Principal / Leadership,classroom,1,How often do you feel classroom learning does not help in practical problem solving?
+Q_CURR_001_010,CURR_001,COMPETENCY_INTELLIGENCE,Principal / Leadership,classroom,1,How different is classroom learning from real workplace tasks?
+Q_CURR_001_012,CURR_001,COMPETENCY_INTELLIGENCE,Principal / Leadership,classroom,1,How often do you rely on online courses instead of classroom teaching for skill development?
+Q_CURR_001_013,CURR_001,COMPETENCY_INTELLIGENCE,Principal / Leadership,classroom,1,How confident are you in applying classroom concepts to real projects?
+Q_CURR_001_004_v2,CURR_001,COMPETENCY_INTELLIGENCE,Principal / Leadership,classroom,1,How often do classroom learning experiences feel relevant to real-world skills and competencies?
+Q_CURR_001_008_v2,CURR_001,COMPETENCY_INTELLIGENCE,Principal / Leadership,classroom,1,How much does the current curriculum fail to motivate you to actively explore beyond classroom content?
+Q_CURR_001_009_v2,CURR_001,COMPETENCY_INTELLIGENCE,Principal / Leadership,classroom,1,How strongly do you feel that students around you are also disengaged from classroom learning?
+Q_CURR_001_011_v2,CURR_001,COMPETENCY_INTELLIGENCE,Principal / Leadership,classroom,1,"How often do you rely on external sources (YouTube, notes, etc.) because classroom teaching feels insufficient?"
+Q_CURR_001_014_v2,CURR_001,COMPETENCY_INTELLIGENCE,Principal / Leadership,classroom,1,How likely are you to skip deeper learning because classroom delivery does not motivate you?
+Q_CURR_001_017_v2,CURR_001,COMPETENCY_INTELLIGENCE,Principal / Leadership,classroom,1,How often do you actively revise or practice topics because classroom delivery alone is not enough?
+Q_CURR_001_021_v2,CURR_001,COMPETENCY_INTELLIGENCE,Principal / Leadership,classroom,1,How ready are you to actively engage in improving your own learning effectiveness beyond classroom teaching?
+Q_CONCENTRATION_001_021,CONCENTRATION_001,DISCIPLINE_HABITS,Student,classroom,1,How ready are you to actively work on improving your classroom concentration and attention span?
+Q_CONCENTRATION_001_024,CONCENTRATION_001,DISCIPLINE_HABITS,Student,classroom,1,"If you received one practical technique today to improve classroom focus, how likely are you to use it seriously?"
+Q_ATT_001_001,ATT_001,DISCIPLINE_HABITS,Student,classroom,1,How well are you able to maintain attention throughout a full classroom lecture?
+Q_ATT_001_007,ATT_001,DISCIPLINE_HABITS,Student,classroom,1,How often do you feel mentally tired or bored during classroom lectures?
+Q_ATT_001_009,ATT_001,DISCIPLINE_HABITS,Student,classroom,1,How strongly do external distractions affect your ability to focus in a classroom environment?
+Q_ATT_001_012,ATT_001,DISCIPLINE_HABITS,Student,teacher,1,How often do you lose track of what the teacher is explaining during lectures?
+Q_ATT_001_020,ATT_001,DISCIPLINE_HABITS,Student,classroom,1,How confident are you that you can improve your classroom attention span over time?
+Q_CONV_001_001,CONV_001,COMMUNICATION_EXPRESSION,Early Career Learner,engineering,1,"How much pressure do you feel to choose a conventional career path (e.g., engineering, medicine, government jobs) even if it may not match your interests?"
+Q_CONF_ACAD_001_013,CONF_ACAD_001,CONFIDENCE_SELF,Parent,teacher,1,"After failure, how difficult is it to understand teacher feedback?"
+Q_STUDY_001_002_v2,STUDY_001,DISCIPLINE_HABITS,Student,teacher,1,"When a teacher explains a concept once, how often do you feel confused afterward?"
+Q_CONCEPT_001_008_v4,CONCEPT_001,ACADEMIC_COGNITIVE,Student,classroom,1,How often do you need additional self-study beyond classroom teaching to understand basic concepts?
+Q_SDL_001_022,SDL_001,LEARNING_ADAPTABILITY,Student,patient,1,"When you dont get immediate answers, how patient are you in figuring things out yourself?"
+Q_EMP_CONF_001_004,EMP_CONF_001,EMPLOYABILITY,Campus Student,hr,1,Do you feel nervous when thinking about interviews or HR rounds?
+Q_INT_001_006_v2,INT_001,EMPLOYABILITY,Campus Student,coding,1,How frequently do you stick to daily practice goals for coding or interview topics?
+Q_PSC_001_005,PSC_001,CONFIDENCE_DEVELOPMENT,Leadership Coach,finance,1,"If faced with a real-world issue (workplace, finance, or daily life), how ready would you feel to solve it effectively?"
+Q_ANALYTICS_001_010,ANALYTICS_001,COMPETENCY_DEVELOPMENT,Skill Development Learner,coding,1,"In hackathons or coding problems, how quickly do you lose direction?"
+Q_ACA_PLAC_008,ACA_PLAC_001,ACADEMIC_COGNITIVE,Student,coding,1,How much does academic pressure reduce your time for skill-building or coding practice?
+Q_CODE_001_001,CODE_001,COMPETENCY_DEVELOPMENT,Skill Development Learner,coding,1,"During coding contests, how emotionally stable do you feel when solving hard problems?"
+Q_CODE_001_006,CODE_001,COMPETENCY_DEVELOPMENT,Skill Development Learner,coding,1,How stressed do you feel during live coding contests?
+Q_CODE_001_018,CODE_001,COMPETENCY_DEVELOPMENT,Skill Development Learner,coding,1,How often do you use breathing/mental techniques during coding stress?
+Q_CODE_001_023,CODE_001,COMPETENCY_DEVELOPMENT,Skill Development Learner,coding,1,Do you believe emotional control is as important as coding skill in contests?
+Q_CODE_001_025,CODE_001,COMPETENCY_DEVELOPMENT,Skill Development Learner,coding,1,How hopeful are you that you can improve emotional stability in coding contests?
+Q_REAL_001_002,REAL_001,CAREER_EXPOSURE,Career Counsellor,classroom,1,How often do you feel that classroom learning does not reflect real industry work?
+Q_DECISION_001_005_v2,DECISION_001,THINKING_QUALITY,Student,coding,1,"During interviews or coding tests, how confident are you in making instant decisions without overthinking?"
+Q_DECISION_001_011_v2,DECISION_001,THINKING_QUALITY,Student,coding,1,"During coding contests or exams, how often do you get stuck on one question for too long?"
+Q_CAREER_ALT_001,CAREER_ALT,CAREER_READINESS,Campus Student,engineering,1,How confident are you about pursuing a career that is not considered traditional (like engineering or government jobs)?
+Q_CAREER_ALT_011,CAREER_ALT,CAREER_READINESS,Campus Student,startup,1,How likely are you to explore startup or freelance opportunities during college?
+Q_CAREER_ALT_024,CAREER_ALT,CAREER_READINESS,Campus Student,startup,1,"If you had a chance to try a startup internship, how likely are you to take it?"
+Q_THEOPROJ_001_017,THEOPROJ_001,STEM_LEARNING,Teacher,coding,1,How often do you actively experiment or practice coding/building while learning theory?
+Q_SELFRELIANCE_001_001,SELFRELIANCE_001,CONFIDENCE_SELF,Parent,coding,1,How confident are you in solving coding or academic problems without relying on tutorials or step-by-step guides?
+Q_EXP_001_010,EXP_001,CAREER_EXPOSURE,Career Counsellor,classroom,1,How often do you struggle to apply classroom concepts in real situations?
+Q_INT_001_008_v5,INT_001,EMPLOYABILITY,Campus Student,coding,1,How much does your internship experience help you solve placement-style coding/interview problems?
+Q_PLACEMENT_001_003_v3,PLACEMENT_001,EMPLOYABILITY,Campus Student,coding,1,"Do you feel emotionally overwhelmed when balancing multiple placement tasks like coding, aptitude, and interviews?"
+Q_HR_001_001_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,How confident do you feel about handling anxiety during HR interview rounds?
+Q_HR_001_002_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,How often do you feel nervous before or during HR interviews?
+Q_HR_001_003_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,Do you feel anxious when answering personal or behavioral questions in HR rounds?
+Q_HR_001_004_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,"Compared to your peers, how confident do you feel in HR interviews?"
+Q_HR_001_005_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,"If you attend an HR round tomorrow, how prepared would you feel to stay calm and answer confidently?"
+Q_HR_001_006_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,How stressful do HR interviews feel to you overall?
+Q_HR_001_007_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,How often do you experience overthinking before HR interviews?
+Q_HR_001_008_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,How much does anxiety affect your ability to express yourself clearly in HR rounds?
+Q_HR_001_009_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,How strongly do you feel pressure to perform perfectly in HR interviews?
+Q_HR_001_010_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,"Compared to last year, how much more anxious do you feel about HR interviews now?"
+Q_HR_001_011_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,How often do you avoid HR interview practice because of fear or anxiety?
+Q_HR_001_012_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,How often do you struggle to maintain eye contact or confidence during HR interactions?
+Q_HR_001_013_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,"During HR interviews, how comfortable are you expressing your thoughts clearly?"
+Q_HR_001_014_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,How likely are you to forget prepared answers due to nervousness in HR rounds?
+Q_HR_001_015_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,How often do you feel your performance is affected by self-doubt in HR interviews?
+Q_HR_001_016_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,"When you feel anxious in HR rounds, how effectively can you calm yourself and respond clearly?"
+Q_HR_001_017_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,How often do you practice HR interview questions or mock interviews to reduce anxiety?
+Q_HR_001_018_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,How often do you pause or withdraw during HR answers due to nervousness?
+Q_HR_001_019_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,"After completing an HR interview, how quickly do you recover from nervousness or stress?"
+Q_HR_001_020_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,How confident are you that you can eventually manage HR interview anxiety effectively?
+Q_HR_001_021_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,How ready are you to actively work on reducing your anxiety during HR interviews?
+Q_HR_001_022_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,"If guided practice was available, how willing would you be to participate in mock HR interviews?"
+Q_HR_001_023_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,How strongly do you believe confidence in HR interviews can be improved through practice?
+Q_HR_001_024_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,"If given one strategy to reduce HR anxiety, how likely are you to apply it consistently?"
+Q_HR_001_025_v3,HR_001,CAREER_READINESS,Campus Student,hr,1,"Even if HR interviews feel stressful now, how hopeful are you that you can become confident over time?"

@@ -1,0 +1,290 @@
+{
+  "generated_at": "2026-06-04T05:49:45.464Z",
+  "grounded_seed_cap": 8,
+  "tags": [
+    {
+      "concern_id": "CONCERN_COM_1718",
+      "tag": "ANALYTICAL_DEVELOPMENT",
+      "resolved_tag_from_concern_id": "ANALYTICAL_DEVELOPMENT",
+      "resolver_consistent": true,
+      "summary": {
+        "bridge_tag": "ANALYTICAL_DEVELOPMENT",
+        "grounded": true,
+        "grounded_signal_count": 40,
+        "grounded_family_count": 1,
+        "mean_similarity": 0.2288
+      },
+      "rank_tokens": [
+        "evidence",
+        "based",
+        "decisioning",
+        "analytical",
+        "decision",
+        "logical",
+        "tradeoff",
+        "evaluation"
+      ],
+      "rank_token_count": 8,
+      "seed_def_count": 8,
+      "seed_defs_sample": [
+        {
+          "signal_key": "evidence_based_decisioning",
+          "confidence": 0.13727999999999999
+        },
+        {
+          "signal_key": "logical_tradeoff_evaluation",
+          "confidence": 0.13727999999999999
+        },
+        {
+          "signal_key": "structured_problem_breakdown",
+          "confidence": 0.13727999999999999
+        },
+        {
+          "signal_key": "risk_reward_reasoning",
+          "confidence": 0.13727999999999999
+        },
+        {
+          "signal_key": "data_pattern_interpretation",
+          "confidence": 0.13727999999999999
+        }
+      ],
+      "seed_conf_min": 0.13727999999999999,
+      "seed_conf_max": 0.13727999999999999,
+      "lineage_family_count": 1,
+      "lineage_signal_count": 25
+    },
+    {
+      "concern_id": "CONCERN_SEL_1618",
+      "tag": "GROWTH_TRACKING",
+      "resolved_tag_from_concern_id": "GROWTH_TRACKING",
+      "resolver_consistent": true,
+      "summary": {
+        "bridge_tag": "GROWTH_TRACKING",
+        "grounded": true,
+        "grounded_signal_count": 40,
+        "grounded_family_count": 1,
+        "mean_similarity": 0.2498
+      },
+      "rank_tokens": [
+        "growth",
+        "mindset",
+        "adoption",
+        "orientation",
+        "development",
+        "drive",
+        "feedback",
+        "learning"
+      ],
+      "rank_token_count": 8,
+      "seed_def_count": 8,
+      "seed_defs_sample": [
+        {
+          "signal_key": "growth_mindset_adoption",
+          "confidence": 0.14987999999999999
+        },
+        {
+          "signal_key": "self_development_drive",
+          "confidence": 0.14987999999999999
+        },
+        {
+          "signal_key": "feedback_learning_openness",
+          "confidence": 0.14987999999999999
+        },
+        {
+          "signal_key": "challenge_acceptance",
+          "confidence": 0.14987999999999999
+        },
+        {
+          "signal_key": "continuous_learning_orientation",
+          "confidence": 0.14987999999999999
+        }
+      ],
+      "seed_conf_min": 0.14987999999999999,
+      "seed_conf_max": 0.14987999999999999,
+      "lineage_family_count": 1,
+      "lineage_signal_count": 25
+    },
+    {
+      "concern_id": "CONCERN_ACA_1086",
+      "tag": "LEADERSHIP_OWNERSHIP",
+      "resolved_tag_from_concern_id": "LEADERSHIP_OWNERSHIP",
+      "resolver_consistent": true,
+      "summary": {
+        "bridge_tag": "LEADERSHIP_OWNERSHIP",
+        "grounded": true,
+        "grounded_signal_count": 200,
+        "grounded_family_count": 3,
+        "mean_similarity": 0.25206
+      },
+      "rank_tokens": [
+        "workplace",
+        "task",
+        "confidence",
+        "professional",
+        "meeting",
+        "participation",
+        "decision",
+        "making"
+      ],
+      "rank_token_count": 8,
+      "seed_def_count": 8,
+      "seed_defs_sample": [
+        {
+          "signal_key": "workplace_task_confidence",
+          "confidence": 0.17484
+        },
+        {
+          "signal_key": "meeting_participation_confidence",
+          "confidence": 0.17484
+        },
+        {
+          "signal_key": "decision_making_confidence",
+          "confidence": 0.17484
+        },
+        {
+          "signal_key": "professional_self_belief",
+          "confidence": 0.17484
+        },
+        {
+          "signal_key": "workplace_adaptability_confidence",
+          "confidence": 0.17484
+        }
+      ],
+      "seed_conf_min": 0.17484,
+      "seed_conf_max": 0.17484,
+      "lineage_family_count": 3,
+      "lineage_signal_count": 25
+    },
+    {
+      "concern_id": "CONCERN_EMP_17",
+      "tag": "EXAMINATION_STRESS",
+      "resolved_tag_from_concern_id": "EXAMINATION_STRESS",
+      "resolver_consistent": true,
+      "summary": {
+        "bridge_tag": "EXAMINATION_STRESS",
+        "grounded": true,
+        "grounded_signal_count": 160,
+        "grounded_family_count": 3,
+        "mean_similarity": 0.254775
+      },
+      "rank_tokens": [
+        "setback",
+        "recovery",
+        "speed",
+        "learning",
+        "resilience",
+        "academic",
+        "persistence",
+        "strength"
+      ],
+      "rank_token_count": 8,
+      "seed_def_count": 8,
+      "seed_defs_sample": [
+        {
+          "signal_key": "setback_recovery_speed",
+          "confidence": 0.16002
+        },
+        {
+          "signal_key": "academic_persistence_strength",
+          "confidence": 0.16002
+        },
+        {
+          "signal_key": "failure_reframing_ability",
+          "confidence": 0.16002
+        },
+        {
+          "signal_key": "exam_comeback_capacity",
+          "confidence": 0.16002
+        },
+        {
+          "signal_key": "emotional_stability_after_failure",
+          "confidence": 0.16002
+        }
+      ],
+      "seed_conf_min": 0.16002,
+      "seed_conf_max": 0.16002,
+      "lineage_family_count": 3,
+      "lineage_signal_count": 25
+    },
+    {
+      "concern_id": "CONCERN_CAR_6",
+      "tag": "EMPLOYABILITY",
+      "resolved_tag_from_concern_id": "EMPLOYABILITY",
+      "resolver_consistent": true,
+      "summary": {
+        "bridge_tag": "EMPLOYABILITY",
+        "grounded": true,
+        "grounded_signal_count": 140,
+        "grounded_family_count": 3,
+        "mean_similarity": 0.3666285714285714
+      },
+      "rank_tokens": [
+        "role",
+        "awareness",
+        "industry",
+        "alignment",
+        "market",
+        "skill",
+        "employability",
+        "recognition"
+      ],
+      "rank_token_count": 8,
+      "seed_def_count": 8,
+      "seed_defs_sample": [
+        {
+          "signal_key": "role_fit_awareness",
+          "confidence": 0.23196
+        },
+        {
+          "signal_key": "market_skill_awareness",
+          "confidence": 0.23196
+        },
+        {
+          "signal_key": "employability_gap_recognition",
+          "confidence": 0.23196
+        },
+        {
+          "signal_key": "industry_trend_alignment",
+          "confidence": 0.23196
+        },
+        {
+          "signal_key": "practical_skill_alignment",
+          "confidence": 0.23196
+        }
+      ],
+      "seed_conf_min": 0.23196,
+      "seed_conf_max": 0.23196,
+      "lineage_family_count": 3,
+      "lineage_signal_count": 25
+    }
+  ],
+  "ontology_health": {
+    "grounded_tags": 182,
+    "total_grounding_rows": 14402,
+    "family_grounding_rows": 351,
+    "master_distinct_tags": 328,
+    "grounded_tag_coverage_pct": 55.5,
+    "master_concerns_on_grounded_tag": 1184,
+    "provenance_total": 14402,
+    "provenance_wc1a_green": 14402,
+    "atomic_signals_per_tag": {
+      "min": 20,
+      "max": 200,
+      "avg": 79.1,
+      "median": 80
+    },
+    "seed_cap": 8
+  },
+  "unknown_tag_check": {
+    "tag": "__NOT_A_REAL_TAG__",
+    "summary": {
+      "bridge_tag": "__NOT_A_REAL_TAG__",
+      "grounded": false,
+      "grounded_signal_count": 0,
+      "grounded_family_count": 0,
+      "mean_similarity": 0
+    },
+    "rank_tokens": [],
+    "seed_defs": 0
+  }
+}

@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { Screen } from '../App';
 
-import { Menu, RefreshCw, Search, Settings, Target, Brain, FileCheck, Database, Package, Calculator, Users, BookOpen, Network, Layers, Activity, Building2, Briefcase, Users2, UserCircle2, Map, BarChart2, BarChart3, GitBranch, Sparkles, PieChart, TrendingUp, AlertTriangle, MessageCircle, Bot, FileDown } from 'lucide-react';
+import { Menu, RefreshCw, Search, Settings, Target, Brain, FileCheck, Database, Package, Calculator, Users, BookOpen, Network, Layers, Activity, Building2, Briefcase, Users2, UserCircle2, Map, BarChart2, BarChart3, GitBranch, Sparkles, PieChart, TrendingUp, AlertTriangle, MessageCircle, Bot, FileDown, CreditCard, Shield, FlaskConical, ClipboardList, Cpu, Award, Gauge, Zap, Sliders, Shuffle, Timer, LineChart, ClipboardCheck } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import SuperAdminLogin from './SuperAdminLogin';
@@ -84,7 +84,9 @@ import CompetencyAdminPage from '../pages/CompetencyAdminPage';
 const ActiveAgeBandsReflection = lazy(() => import('./superadmin/ActiveAgeBandsReflection'));
 import AssessmentModulesManagement from './AssessmentModulesManagement';
 import FrameworkPanel from '@/components/admin/FrameworkPanel';
+import AdminTabbedShell from '@/components/admin/AdminTabbedShell';
 import { LBI_CONFIG, COMPETENCY_CONFIG, SDI_CONFIG } from '@/components/admin/framework-configs';
+import { useQuery } from '@tanstack/react-query';
 import NotificationCenter from '@/components/NotificationCenter';
 
 const FeatureFlagsPanel = lazy(() => import('./superadmin/FeatureFlagsPanel'));
@@ -229,6 +231,20 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
     getStatusBadge, formatEntityType, getSettingValue, getSettingBool, updateSetting,
     navGroups, labsOpen, setLabsOpen, menuItems,
   } = ctx;
+
+  // Simulation harness flag — gates the "Simulation & Validation" tab inside the
+  // CAPADEX framework (mirrors the nav-level gate in useAdminDashboardState).
+  // Same queryKey as the hook so react-query dedupes (no extra fetch).
+  const { data: simHarnessEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/admin/simulation/config', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/simulation/config', { credentials: 'include' });
+      if (!res.ok) return false;
+      const j = await res.json().catch(() => null);
+      return !!j?.enabled;
+    },
+    enabled: isAuthenticated,
+  });
 
   // ── Global ⌘K / Ctrl+K command palette (additive jump-to-screen) ──
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -440,12 +456,43 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               {/* Intelligence Framework Tabs — each framework direct from sidebar */}
               {activeTab === 'lbi-fw' && (
                 <div className="p-6">
-                  <FrameworkPanel config={LBI_CONFIG} />
+                  <FrameworkPanel
+                    config={LBI_CONFIG}
+                    extraTabs={[
+                      { id: 'cc-lbi',           label: 'Command Center', icon: Brain, node: <ProductCommandCenter productKey="lbi" /> },
+                      { id: 'lbi-intelligence', label: 'LBI Engine',     icon: Brain, node: <div className="h-full overflow-hidden flex flex-col"><LBIPanel /></div> },
+                    ]}
+                  />
                 </div>
               )}
               {activeTab === 'capadex-fw' && (
                 <div className="p-6 h-full overflow-y-auto">
-                  <FrameworkPanel config={SDI_CONFIG} />
+                  <FrameworkPanel
+                    config={SDI_CONFIG}
+                    extraTabs={[
+                      { id: 'cc-capadex',                label: 'Command Center',         icon: Sparkles,      node: <ProductCommandCenter productKey="capadex" /> },
+                      { id: 'signal-intelligence',       label: 'Signal Intelligence',    icon: Activity,      node: <div className="h-full overflow-hidden flex flex-col"><SignalIntelligencePanel /></div> },
+                      { id: 'intelligence-pipeline',     label: 'Intelligence Pipeline',  icon: Layers,        node: <div className="h-full overflow-y-auto"><IntelligencePipelinePanel /></div> },
+                      { id: 'runtime-intelligence',      label: 'Runtime Intelligence',   icon: Layers,        node: <div className="h-full overflow-auto p-6"><GovernancePanel /></div> },
+                      { id: 'concern-intelligence',      label: 'Concern Engine',         icon: Sparkles,      node: <div className="h-full overflow-auto"><ConcernIntelligencePanel /></div> },
+                      { id: 'csi-intelligence',          label: 'CSI Profiles',           icon: TrendingUp,    node: <div className="h-full overflow-hidden flex flex-col"><CSIPanel /></div> },
+                      { id: 'capadex-analytics',         label: 'CAPADEX Analytics',      icon: BarChart3,     node: <div className="h-full overflow-y-auto"><CapadexAnalyticsPanel /></div> },
+                      { id: 'capadex-reports',           label: 'CAPADEX Reports',        icon: BarChart2,     node: <div className="h-full overflow-hidden flex flex-col"><CapadexReportsPanel /></div> },
+                      { id: 'capadex-users',             label: 'Users & Journeys',       icon: Users,         node: <div className="h-full overflow-y-auto"><CapadexUsersPanel /></div> },
+                      { id: 'capadex-interventions',     label: 'Risk & Interventions',   icon: Shield,        node: <div className="h-full overflow-y-auto"><CapadexInterventionsPanel /></div> },
+                      { id: 'capadex-pricing',           label: 'Upgrade Pricing',        icon: CreditCard,    node: <div className="h-full overflow-y-auto"><CapadexPricingPanel /></div> },
+                      { id: 'concern-signal-map',        label: 'Concern → Signal Map',   icon: Network,       node: <div className="h-full overflow-hidden flex flex-col"><ConcernSignalMapPanel /></div> },
+                      { id: 'ontology-matrix',           label: 'Ontology Matrix',        icon: GitBranch,     node: <OntologyMatrixPanel /> },
+                      { id: 'coverage-dashboard',        label: 'Bridge-Tag Coverage',    icon: Map,           node: <div className="h-full overflow-hidden flex flex-col"><CoverageDashboardPanel /></div> },
+                      { id: 'question-registry',         label: 'Question Registry',      icon: ClipboardList, node: <div className="h-full overflow-hidden flex flex-col"><QuestionRegistryPanel /></div> },
+                      { id: 'archetype-intelligence',    label: 'Archetype Intelligence', icon: Layers,        node: <div className="h-full overflow-hidden flex flex-col"><ArchetypeIntelligencePanel /></div> },
+                      { id: 'human-intelligence',        label: 'Human Intelligence',     icon: MessageCircle, node: <div className="h-full overflow-hidden flex flex-col"><HumanIntelligencePanel /></div> },
+                      { id: 'intervention-intelligence', label: 'Intervention Intel',     icon: Target,        node: <div className="h-full overflow-hidden flex flex-col"><InterventionIntelligencePanel /></div> },
+                      { id: 'search-intent',             label: 'Search Intent',          icon: Search,        node: <div className="h-full overflow-hidden flex flex-col"><SearchIntentPanel /></div> },
+                      { id: 'conv-quality',              label: 'Conversational Quality', icon: Layers,        node: <div className="h-full overflow-hidden flex flex-col"><ConversationalQualityPanel /></div> },
+                      ...(simHarnessEnabled ? [{ id: 'simulation-validation', label: 'Simulation & Validation', icon: FlaskConical, node: <div className="h-full overflow-hidden flex flex-col"><SimulationDashboard /></div> }] : []),
+                    ]}
+                  />
                 </div>
               )}
               {activeTab === 'capadex-users' && (
@@ -779,6 +826,78 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       { id: 'ont-import-export',        label: 'Import / Export',          icon: FileDown,      node: <OntologyImportExportPanel /> },
                     ]}
                   />
+                </div>
+              )}
+
+              {/* ─── Collapsed domain-framework hosts (tabbed shells) ───────────── */}
+              {activeTab === 'career-builder-fw' && (
+                <div className="p-6">
+                  <AdminTabbedShell color={BRAND.primary} tabs={[
+                    { id: 'cc-career',                label: 'Command Center',                icon: Network,    node: <ProductCommandCenter productKey="career" /> },
+                    { id: 'career-graph-admin',       label: 'Career Graph Intelligence',     icon: Network,    node: <div className="h-full overflow-hidden flex flex-col"><CareerGraphPanel /></div> },
+                    { id: 'career-pathway-analytics', label: 'Pathway Analytics',             icon: Map,        node: <div className="h-full overflow-auto"><CareerPathwayAnalyticsPanel /></div> },
+                    { id: 'occupation-analytics',     label: 'Occupation Analytics',          icon: Briefcase,  node: <div className="h-full overflow-auto"><OccupationAnalyticsPanel /></div> },
+                    { id: 'recommendation-analytics', label: 'Recommendation Analytics',      icon: Sparkles,   node: <div className="h-full overflow-auto"><RecommendationAnalyticsPanel /></div> },
+                    { id: 'forecast-analytics',       label: 'Forecast Analytics',            icon: TrendingUp, node: <div className="h-full overflow-auto"><ForecastAnalyticsPanel /></div> },
+                    { id: 'transition-analytics',     label: 'Transition Analytics',          icon: GitBranch,  node: <div className="h-full overflow-auto"><TransitionAnalyticsPanel /></div> },
+                    { id: 'lip-admin',                label: 'Learning Intelligence Platform',icon: BookOpen,   node: <div className="h-full overflow-auto"><LIPDesignPanel /></div> },
+                    { id: 'learning',                 label: 'Learning Plans',                icon: BookOpen,   node: <LearningPlansPanel /> },
+                  ]} />
+                </div>
+              )}
+              {activeTab === 'employer-fw' && (
+                <div className="p-6">
+                  <AdminTabbedShell color={BRAND.primary} tabs={[
+                    { id: 'cc-employer',                 label: 'Command Center',          icon: Building2,     node: <ProductCommandCenter productKey="employer" /> },
+                    { id: 'talent-signal-master',        label: 'Talent Signal Master',    icon: Activity,      node: <div className="h-full overflow-auto"><TalentSignalMasterPanel /></div> },
+                    { id: 'talent-scoring',              label: 'Talent Scoring',          icon: BarChart2,     node: <div className="h-full overflow-auto p-4"><TalentScoringPanel /></div> },
+                    { id: 'talent-gaps',                 label: 'Gap Intelligence',        icon: AlertTriangle, node: <div className="h-full overflow-auto p-4"><TalentGapPanel /></div> },
+                    { id: 'talent-pipeline',             label: 'Pipeline Analytics',      icon: TrendingUp,    node: <div className="h-full overflow-auto p-4"><TalentPipelinePanel /></div> },
+                    { id: 'talent-concern-intelligence', label: 'Concern Intelligence (D4)', icon: AlertTriangle, node: <div className="h-full overflow-auto"><TalentConcernIntelligencePanel /></div> },
+                    { id: 'talent-competency-dna',       label: 'Competency DNA (D5)',     icon: Database,      node: <div className="h-full overflow-auto"><TalentCompetencyDNAPanel /></div> },
+                    { id: 'talent-readiness-engine',     label: 'Readiness Engine (D9)',   icon: TrendingUp,    node: <div className="h-full overflow-auto"><TalentReadinessEnginePanel /></div> },
+                    { id: 'talent-digital-twin-admin',   label: 'Digital Twin (D14)',      icon: Cpu,           node: <div className="h-full overflow-auto"><TalentDigitalTwinAdminPanel /></div> },
+                    { id: 'talent-outcome-prediction',   label: 'Outcome Prediction (D15)',icon: Sparkles,      node: <div className="h-full overflow-auto"><TalentOutcomePredictionPanel /></div> },
+                    { id: 'talent-benchmark-engine',     label: 'Benchmark Engine (D17)',  icon: BarChart3,     node: <div className="h-full overflow-auto"><TalentBenchmarkEnginePanel /></div> },
+                    { id: 'talent-measurement-science',  label: 'Scoring Formulas (D8)',   icon: Calculator,    node: <div className="h-full overflow-auto"><TalentMeasurementSciencePanel /></div> },
+                    { id: 'talent-analytics-warehouse',  label: 'Analytics Warehouse (D20)', icon: BarChart2,   node: <div className="h-full overflow-auto"><TalentAnalyticsWarehousePanel /></div> },
+                    { id: 'talent-learning-catalog',     label: 'Learning Catalog (D12)',  icon: Award,         node: <div className="h-full overflow-auto"><TalentLearningCatalogPanel /></div> },
+                    { id: 'passport-stats-admin',        label: 'Passport Stats & Governance', icon: Award,     node: <div className="h-full overflow-auto"><PassportStatsPanel /></div> },
+                    { id: 'predictive-intelligence',     label: 'Predictive Intelligence', icon: TrendingUp,    node: <div className="h-full overflow-hidden flex flex-col"><PredictiveIntelligencePanel /></div> },
+                  ]} />
+                </div>
+              )}
+              {activeTab === 'employability-fw' && (
+                <div className="p-6">
+                  <AdminTabbedShell color={BRAND.primary} tabs={[
+                    { id: 'cc-employability',     label: 'Command Center',       icon: TrendingUp, node: <ProductCommandCenter productKey="employability" /> },
+                    { id: 'ei-health',            label: 'EI Health & Analytics',icon: TrendingUp, node: <div className="h-full overflow-auto p-6 space-y-10"><EIOperationsPanel /><div className="border-t pt-8"><EIHealthPanel /></div></div> },
+                    { id: 'career-evidence',      label: 'Outcome Evidence Loop',icon: Award,      node: <div className="h-full overflow-auto p-6"><CareerEvidencePanel /></div> },
+                    { id: 'readiness-dashboards', label: 'Readiness Dashboards', icon: Gauge,      node: <ReadinessDashboardsPanel /> },
+                    { id: 'mei-v2-design',        label: 'MEI v2 Design',        icon: BarChart3,  node: <div className="h-full overflow-auto"><MEIDesignPanel /></div> },
+                  ]} />
+                </div>
+              )}
+              {activeTab === 'future-readiness-fw' && (
+                <div className="p-6">
+                  <AdminTabbedShell color={BRAND.primary} tabs={[
+                    { id: 'frp-admin',             label: 'Future Readiness Platform', icon: Zap,    node: <div className="h-full overflow-auto"><FRPDesignPanel /></div> },
+                    { id: 'talent-frp-enrichment', label: 'FRP Enrichment (D13)',      icon: Target, node: <div className="h-full overflow-auto"><TalentFRPEnrichmentPanel /></div> },
+                  ]} />
+                </div>
+              )}
+              {activeTab === 'assessment-factory-fw' && (
+                <div className="p-6">
+                  <AdminTabbedShell color={BRAND.primary} tabs={[
+                    { id: 'caf-question-bank',      label: 'CAF Question Bank',   icon: Database,       node: <div className="h-full overflow-auto"><CAFQuestionBankPanel /></div> },
+                    { id: 'caf-scenarios',          label: 'Scenario Framework',  icon: ClipboardList,  node: <div className="h-full overflow-auto"><CAFScenarioPanel /></div> },
+                    { id: 'caf-difficulty-level',   label: 'Difficulty & Levels', icon: Sliders,        node: <div className="h-full overflow-auto"><CAFDifficultyLevelPanel /></div> },
+                    { id: 'caf-assessment-builder', label: 'Assessment Builder',  icon: Cpu,            node: <div className="h-full overflow-auto"><CAFAssessmentBuilderPanel /></div> },
+                    { id: 'caf-randomization',      label: 'Randomization Engine',icon: Shuffle,        node: <div className="h-full overflow-auto"><CAFRandomizationPanel /></div> },
+                    { id: 'caf-sessions',           label: 'CAF Sessions',        icon: Timer,          node: <div className="h-full overflow-auto"><CAFSessionsPanel /></div> },
+                    { id: 'caf-scoring',            label: 'CAF Scoring Engine',  icon: ClipboardCheck, node: <div className="h-full overflow-auto"><CAFScoringPanel /></div> },
+                    { id: 'caf-analytics',          label: 'CAF Analytics',       icon: LineChart,      node: <div className="h-full overflow-auto"><CAFAnalyticsPanel /></div> },
+                  ]} />
                 </div>
               )}
               {activeTab === 'career-graph-admin' && (

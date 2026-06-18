@@ -2662,28 +2662,9 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
     {
       label: 'CAPADEX',
       items: [
-        { id: 'cc-capadex',                icon: Sparkles,      label: 'CAPADEX Command Center' },
-        { id: 'signal-intelligence',       icon: Activity,      label: 'Signal Intelligence' },
-        { id: 'intelligence-pipeline',     icon: Layers,        label: 'Intelligence Pipeline' },
-        { id: 'runtime-intelligence',      icon: Layers,        label: 'Runtime Intelligence' },
-        { id: 'concern-intelligence',      icon: Sparkles,      label: 'Concern Engine' },
-        { id: 'csi-intelligence',          icon: TrendingUp,    label: 'CSI Profiles' },
-        { id: 'capadex-analytics',         icon: BarChart3,     label: 'CAPADEX Analytics' },
-        { id: 'capadex-reports',           icon: BarChart2,     label: 'CAPADEX Reports' },
-        { id: 'capadex-users',             icon: Users,         label: 'CAPADEX Users & Journeys' },
-        { id: 'capadex-interventions',     icon: Shield,        label: 'Risk & Interventions' },
-        { id: 'capadex-pricing',           icon: CreditCard,    label: 'CAPADEX Upgrade Pricing' },
-        { id: 'capadex-fw',                icon: Sparkles,      label: 'CAPADEX Framework' },
-        { id: 'concern-signal-map',        icon: Network,       label: 'Concern → Signal Map' },
-        { id: 'ontology-matrix',           icon: GitBranch,     label: 'Ontology Matrix' },
-        { id: 'coverage-dashboard',        icon: Map,           label: 'Bridge-Tag Coverage' },
-        { id: 'question-registry',         icon: ClipboardList, label: 'Question Registry' },
-        { id: 'archetype-intelligence',    icon: Layers,        label: 'Archetype Intelligence' },
-        { id: 'human-intelligence',        icon: MessageCircle, label: 'Human Intelligence' },
-        { id: 'intervention-intelligence', icon: Target,        label: 'Intervention Intelligence' },
-        { id: 'search-intent',             icon: Search,        label: 'Search Intent' },
-        { id: 'conv-quality',              icon: Layers,        label: 'Conversational Quality' },
-        { id: 'simulation-validation',     icon: FlaskConical,  label: 'Simulation & Validation' },
+        // Collapsed: all CAPADEX tools live as inner tabs of the CAPADEX framework
+        // (capadex-fw → FrameworkPanel extraTabs in SuperAdminDashboard).
+        { id: 'capadex-fw', icon: Sparkles, label: 'CAPADEX Framework' },
       ]
     },
     // ── Competency — single entry; all tools live as tabs inside the framework ─
@@ -2698,14 +2679,9 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
       label: 'Assessment Factory',
       isLabs: true,
       items: [
-        { id: 'caf-question-bank',      icon: Database,       label: 'CAF Question Bank' },
-        { id: 'caf-scenarios',          icon: ClipboardList,  label: 'Scenario Framework' },
-        { id: 'caf-difficulty-level',   icon: Sliders,        label: 'Difficulty & Levels' },
-        { id: 'caf-assessment-builder', icon: Cpu,            label: 'Assessment Builder' },
-        { id: 'caf-randomization',      icon: Shuffle,        label: 'Randomization Engine' },
-        { id: 'caf-sessions',           icon: Timer,          label: 'CAF Sessions' },
-        { id: 'caf-scoring',            icon: ClipboardCheck, label: 'CAF Scoring Engine' },
-        { id: 'caf-analytics',          icon: LineChart,      label: 'CAF Analytics' },
+        // Collapsed: CAF tools live as inner tabs of the Assessment Factory shell
+        // (assessment-factory-fw → AdminTabbedShell in SuperAdminDashboard).
+        { id: 'assessment-factory-fw', icon: Database, label: 'Assessment Factory' },
       ]
     },
     // ── Competency Ontology — folded into Competency Framework tabs (see competency-fw extraTabs in SuperAdminDashboard) ──
@@ -2713,65 +2689,45 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
     {
       label: 'LBI',
       items: [
-        { id: 'cc-lbi',           icon: Brain, label: 'LBI Command Center' },
-        { id: 'lbi-fw',           icon: Brain, label: 'LBI Framework' },
-        { id: 'lbi-intelligence', icon: Brain, label: 'LBI Engine' },
+        // Collapsed: LBI command center & engine live as inner tabs of the LBI
+        // framework (lbi-fw → FrameworkPanel extraTabs in SuperAdminDashboard).
+        { id: 'lbi-fw', icon: Brain, label: 'LBI Framework' },
       ]
     },
     // ── Employability & Readiness ───────────────────────────────────────────
     {
       label: 'Employability & Readiness',
       items: [
-        { id: 'cc-employability',     icon: TrendingUp, label: 'Employability Intelligence' },
-        { id: 'ei-health',            icon: TrendingUp, label: 'EI Health & Analytics' },
-        { id: 'career-evidence',      icon: Award,      label: 'Outcome Evidence Loop' },
-        { id: 'readiness-dashboards', icon: Gauge,      label: 'Readiness Dashboards' },
-        { id: 'mei-v2-design',        icon: BarChart3,  label: 'MEI v2 Design' },
+        // Collapsed: all employability tools live as inner tabs of the framework
+        // shell (employability-fw → AdminTabbedShell in SuperAdminDashboard).
+        { id: 'employability-fw', icon: TrendingUp, label: 'Employability Framework' },
       ]
     },
     // ── Career Builder — command center & analytics ─────────────────────────
     {
       label: 'Career Builder',
       items: [
-        { id: 'cc-career',                icon: Network,    label: 'Career Builder Command Center' },
-        { id: 'career-graph-admin',       icon: Network,    label: 'Career Graph Intelligence' },
-        { id: 'career-pathway-analytics', icon: Map,        label: 'Pathway Analytics' },
-        { id: 'occupation-analytics',     icon: Briefcase,  label: 'Occupation Analytics' },
-        { id: 'recommendation-analytics', icon: Sparkles,   label: 'Recommendation Analytics' },
-        { id: 'forecast-analytics',       icon: TrendingUp, label: 'Forecast Analytics' },
-        { id: 'transition-analytics',     icon: GitBranch,  label: 'Transition Analytics' },
-        { id: 'lip-admin',                icon: BookOpen,   label: 'Learning Intelligence Platform' },
-        { id: 'learning',                 icon: BookOpen,   label: 'Learning Plans' },
+        // Collapsed: all Career Builder tools live as inner tabs of the framework
+        // shell (career-builder-fw → AdminTabbedShell in SuperAdminDashboard).
+        { id: 'career-builder-fw', icon: Network, label: 'Career Builder Framework' },
       ]
     },
     // ── Employer & Talent Intelligence ──────────────────────────────────────
     {
       label: 'Employer & Talent',
       items: [
-        { id: 'cc-employer',                 icon: Building2,     label: 'Employer Intelligence OS' },
-        { id: 'talent-signal-master',        icon: Activity,      label: 'Talent Signal Master' },
-        { id: 'talent-scoring',              icon: BarChart2,     label: 'Talent Scoring' },
-        { id: 'talent-gaps',                 icon: AlertTriangle, label: 'Gap Intelligence' },
-        { id: 'talent-pipeline',             icon: TrendingUp,    label: 'Pipeline Analytics' },
-        { id: 'talent-concern-intelligence', icon: AlertTriangle, label: 'Concern Intelligence (D4)' },
-        { id: 'talent-competency-dna',       icon: Database,      label: 'Competency DNA (D5)' },
-        { id: 'talent-readiness-engine',     icon: TrendingUp,    label: 'Readiness Engine (D9)' },
-        { id: 'talent-digital-twin-admin',   icon: Cpu,           label: 'Digital Twin (D14)' },
-        { id: 'talent-outcome-prediction',   icon: Sparkles,      label: 'Outcome Prediction (D15)' },
-        { id: 'talent-benchmark-engine',     icon: BarChart3,     label: 'Benchmark Engine (D17)' },
-        { id: 'talent-measurement-science',  icon: Calculator,    label: 'Scoring Formulas (D8)' },
-        { id: 'talent-analytics-warehouse',  icon: BarChart2,     label: 'Analytics Warehouse (D20)' },
-        { id: 'talent-learning-catalog',     icon: Award,         label: 'Learning Catalog (D12)' },
-        { id: 'passport-stats-admin',        icon: Award,         label: 'Passport Stats & Governance' },
-        { id: 'predictive-intelligence',     icon: TrendingUp,    label: 'Predictive Intelligence' },
+        // Collapsed: all employer/talent tools live as inner tabs of the framework
+        // shell (employer-fw → AdminTabbedShell in SuperAdminDashboard).
+        { id: 'employer-fw', icon: Building2, label: 'Employer & Talent Framework' },
       ]
     },
     // ── Future Readiness ────────────────────────────────────────────────────
     {
       label: 'Future Readiness',
       items: [
-        { id: 'frp-admin',             icon: Zap,    label: 'Future Readiness Platform' },
-        { id: 'talent-frp-enrichment', icon: Target, label: 'FRP Enrichment (D13)' },
+        // Collapsed: FRP tools live as inner tabs of the framework shell
+        // (future-readiness-fw → AdminTabbedShell in SuperAdminDashboard).
+        { id: 'future-readiness-fw', icon: Zap, label: 'Future Readiness Framework' },
       ]
     },
     // ── Organizations ───────────────────────────────────────────────────────

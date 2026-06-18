@@ -71,6 +71,29 @@ async function safeRows<T = any>(pool: Pool, sql: string, params: unknown[] = []
   }
 }
 
+/** Like safeRows but distinguishes a failed read (unknown) from an empty table. */
+async function safeQuery<T = any>(
+  pool: Pool,
+  sql: string,
+  params: unknown[] = [],
+): Promise<{ rows: T[]; read_status: 'ok' | 'unknown' }> {
+  try {
+    const { rows } = await pool.query(sql, params);
+    return { rows: rows as T[], read_status: 'ok' };
+  } catch {
+    return { rows: [], read_status: 'unknown' };
+  }
+}
+
+/** Wrap an ontology-service list call so a failed read is honestly distinguishable from empty. */
+async function safeList<T = unknown>(fn: () => Promise<T[]>): Promise<{ records: T[]; read_status: 'ok' | 'unknown' }> {
+  try {
+    return { records: await fn(), read_status: 'ok' };
+  } catch {
+    return { records: [], read_status: 'unknown' };
+  }
+}
+
 // --------------------------------------------------------------------------
 // Master views — compose the canonical genome + attached operational data.
 // --------------------------------------------------------------------------
@@ -160,46 +183,103 @@ export async function getRoleRequirements(pool: Pool, roleInput: string): Promis
  */
 export async function getCompetencyLevels(pool: Pool) {
   const svc = createOntologyService(pool);
-  let proficiencyLevels: unknown[] = [];
-  let layers: unknown[] = [];
-  try { proficiencyLevels = await svc.listProficiencyLevels(); } catch { proficiencyLevels = []; }
-  try { layers = await svc.listLayers(); } catch { layers = []; }
+  const prof = await safeList(() => svc.listProficiencyLevels());
+  const layers = await safeList(() => svc.listLayers());
+  // Actual anchor RECORDS (not a count) so downstream systems can read the
+  // observable behavioural anchors per competency × proficiency level.
+  const anchors = await safeQuery(
+    pool,
+    `SELECT id, competency_code, competency_name, proficiency_level, level_number,
+            score_band_min, score_band_max, behavioural_anchors, sample_evidence, learning_actions
+       FROM ont_competency_level_anchors
+      WHERE is_active = true
+      ORDER BY competency_code, level_number`,
+  );
   return {
-    proficiency_levels: { namespace: 'onto_*', table: 'onto_proficiency_levels', items: proficiencyLevels },
-    organizational_layers: { namespace: 'onto_*', table: 'onto_layers', items: layers },
+    proficiency_levels: { namespace: 'onto_*', table: 'onto_proficiency_levels', read_status: prof.read_status, items: prof.records },
+    organizational_layers: { namespace: 'onto_*', table: 'onto_layers', read_status: layers.read_status, items: layers.records },
     competency_level_anchors: {
       namespace: 'ont_*',
       table: 'ont_competency_level_anchors',
-      count: await safeCount(pool, 'ont_competency_level_anchors'),
+      read_status: anchors.read_status,
+      count: anchors.read_status === 'ok' ? anchors.rows.length : null,
+      anchors: anchors.rows,
     },
+  };
+}
+
+export interface IndicatorsResult {
+  namespace: 'ont_*';
+  table: string;
+  read_status: 'ok' | 'unknown';
+  count: number | null;
+  indicators: unknown[];
+}
+
+/**
+ * Behavioural INDICATOR records (the observable signals that measure a
+ * competency). Returns actual rows with provenance; absent/failed read →
+ * empty + read_status:'unknown' (never fabricated), empty table → count 0.
+ */
+export async function getIndicators(pool: Pool): Promise<IndicatorsResult> {
+  const q = await safeQuery(
+    pool,
+    `SELECT id, code, label, concern_bridge_tag, signal_type, polarity, weight, status
+       FROM ont_indicators
+      WHERE is_active = true
+      ORDER BY code`,
+  );
+  return {
+    namespace: 'ont_*',
+    table: 'ont_indicators',
+    read_status: q.read_status,
+    count: q.read_status === 'ok' ? q.rows.length : null,
+    indicators: q.rows,
   };
 }
 
 export interface TaxonomyTierResult {
   tier: string;
-  onto: { namespace: 'onto_*'; table: string; count: number | null };
+  // The canonical hierarchy RECORDS (onto_*), read through the ontology service.
+  onto: { namespace: 'onto_*'; table: string; read_status: 'ok' | 'unknown'; count: number | null; records: unknown[] };
+  // The attached operational namespace (ont_*), reported as coverage provenance.
   ont: { namespace: 'ont_*'; table: string; count: number | null };
 }
 
 /**
- * The Industry → Function → Department → Role-Family → Role taxonomy, reporting
- * BOTH namespaces side-by-side with honest counts. (`onto_*` calls the
+ * The Industry → Function → Department → Role-Family → Role taxonomy. Returns
+ * the ACTUAL canonical (onto_*) hierarchical records per tier, with the attached
+ * ont_* namespace reported alongside as coverage provenance. (`onto_*` calls the
  * Department tier "subfunction"; `ont_*` calls it "department" — the same tier
- * under two names.)
+ * under two names.) Failed reads → empty + read_status:'unknown', never invented.
  */
 export async function getTaxonomy(pool: Pool): Promise<{ tiers: TaxonomyTierResult[] }> {
-  const tiers: { tier: string; ontoTable: string; ontTable: string }[] = [
-    { tier: 'industry', ontoTable: 'onto_industries', ontTable: 'ont_industries' },
-    { tier: 'function', ontoTable: 'onto_functions', ontTable: 'ont_functions' },
-    { tier: 'department', ontoTable: 'onto_subfunctions', ontTable: 'ont_departments' },
-    { tier: 'role_family', ontoTable: 'onto_role_families', ontTable: 'ont_role_families' },
-    { tier: 'role', ontoTable: 'onto_roles', ontTable: 'ont_roles' },
+  const svc = createOntologyService(pool);
+  const industries = await safeList(() => svc.listIndustries());
+  const functions = await safeList(() => svc.listFunctions());
+  const subfunctions = await safeList(() => svc.listSubfunctions());
+  const roleFamilies = await safeList(() => svc.listRoleFamilies());
+  const roles = await safeList(() => svc.listRoles({}));
+
+  const spec: { tier: string; ontoTable: string; ontTable: string; r: { records: unknown[]; read_status: 'ok' | 'unknown' } }[] = [
+    { tier: 'industry', ontoTable: 'onto_industries', ontTable: 'ont_industries', r: industries },
+    { tier: 'function', ontoTable: 'onto_functions', ontTable: 'ont_functions', r: functions },
+    { tier: 'department', ontoTable: 'onto_subfunctions', ontTable: 'ont_departments', r: subfunctions },
+    { tier: 'role_family', ontoTable: 'onto_role_families', ontTable: 'ont_role_families', r: roleFamilies },
+    { tier: 'role', ontoTable: 'onto_roles', ontTable: 'ont_roles', r: roles },
   ];
+
   const out: TaxonomyTierResult[] = [];
-  for (const t of tiers) {
+  for (const t of spec) {
     out.push({
       tier: t.tier,
-      onto: { namespace: 'onto_*', table: t.ontoTable, count: await safeCount(pool, t.ontoTable) },
+      onto: {
+        namespace: 'onto_*',
+        table: t.ontoTable,
+        read_status: t.r.read_status,
+        count: t.r.read_status === 'ok' ? t.r.records.length : null,
+        records: t.r.records,
+      },
       ont: { namespace: 'ont_*', table: t.ontTable, count: await safeCount(pool, t.ontTable) },
     });
   }
@@ -363,6 +443,32 @@ const ASSESSMENT_DOMAINS: { code: string; label: string }[] = [
   { code: 'EIQ', label: 'Emotional & Social Intelligence' },
 ];
 
+// Future Readiness (FRP) FRI signal keys — defined in routes/frp.ts +
+// frp_user_readiness columns (NOT the DB competency tables). Enumerated here so
+// the crosswalk reports their canonical coverage instead of deferring them.
+const FRP_FRI_SIGNALS: { id: string; label: string }[] = [
+  { id: 'skill_durability', label: 'Skill Durability' },
+  { id: 'market_alignment', label: 'Market Alignment' },
+  { id: 'adaptability', label: 'Adaptability' },
+  { id: 'learning_velocity', label: 'Learning Velocity' },
+  { id: 'role_resilience', label: 'Role Resilience' },
+];
+
+// Employability Index (EI) 8-dimension scoring keys — defined in the frontend
+// engine (lib/engines/employabilityEngine.ts EIBreakdown). Most are profile
+// attributes (experience/education/etc.), NOT competencies, so most honestly do
+// not map to a canonical competency — that absence is the finding, not a bug.
+const EI_DIMENSIONS: { id: string; label: string }[] = [
+  { id: 'assessmentScore', label: 'Assessment (validated competency)' },
+  { id: 'experienceScore', label: 'Experience' },
+  { id: 'educationScore', label: 'Education' },
+  { id: 'technicalScore', label: 'Technical Skills' },
+  { id: 'certScore', label: 'Certifications' },
+  { id: 'softScore', label: 'Soft Skills' },
+  { id: 'projectScore', label: 'Projects' },
+  { id: 'completenessScore', label: 'Profile Completeness' },
+];
+
 /**
  * Token-overlap match between an assessment-domain label and a canonical onto
  * domain name. Honest: requires a real shared meaningful token, never forces a
@@ -383,6 +489,64 @@ function matchDomainByName(
     if (shared > bestScore) { bestScore = shared; best = { id: d.id, name: d.name }; }
   }
   return bestScore > 0 ? best : null;
+}
+
+/**
+ * Match a code-defined identifier label to the canonical spine: first an exact
+ * normalized competency-name hit, else a canonical domain by shared token.
+ * Returns null (honest unmatched) when nothing maps — never forces a mapping.
+ */
+function matchCanonical(
+  label: string,
+  canonByNorm: Map<string, { id: string; name: string }>,
+  domains: { id: string; name: string }[],
+): { id: string; name: string; via: 'name' | 'domain_name' } | null {
+  const exact = canonByNorm.get(normalize(label));
+  if (exact) return { id: exact.id, name: exact.name, via: 'name' };
+  const dom = matchDomainByName(label, domains);
+  if (dom) return { id: dom.id, name: dom.name, via: 'domain_name' };
+  return null;
+}
+
+/**
+ * Build a crosswalk id-space from a STATIC list of code-defined source ids,
+ * matching each to the canonical spine. Pushes per-id entries and returns the
+ * id-space summary with honest matched/unmatched counts. When the canonical
+ * reference reads failed entirely, reports read_status:'unknown' (counts null).
+ */
+function buildCodeIdSpace(
+  space: string,
+  description: string,
+  items: { id: string; label: string }[],
+  canonByNorm: Map<string, { id: string; name: string }>,
+  domains: { id: string; name: string }[],
+  refOk: boolean,
+  entries: CrosswalkEntry[],
+): CrosswalkIdSpace {
+  let matched = 0;
+  const unmatchedSamples: { source_id: string; source_label: string }[] = [];
+  for (const it of items) {
+    const hit = refOk ? matchCanonical(it.label, canonByNorm, domains) : null;
+    if (hit) matched += 1;
+    else if (unmatchedSamples.length < 10) unmatchedSamples.push({ source_id: it.id, source_label: it.label });
+    entries.push({
+      source_space: space,
+      source_id: it.id,
+      source_label: it.label,
+      canonical_id: hit ? hit.id : null,
+      canonical_label: hit ? hit.name : null,
+      match_type: hit ? hit.via : 'unmatched',
+    });
+  }
+  return {
+    space,
+    description,
+    total: refOk ? items.length : null,
+    matched: refOk ? matched : null,
+    unmatched: refOk ? items.length - matched : null,
+    read_status: refOk ? 'ok' : 'unknown',
+    sample_unmatched: refOk ? unmatchedSamples : [],
+  };
 }
 
 /**
@@ -488,10 +652,39 @@ export async function buildCompetencyCrosswalk(pool: Pool): Promise<CrosswalkRes
     });
   }
 
-  // --- Consumer namespaces (identifiers live in CODE) — declared, Phase 2 ----
+  // --- ID space 4: FRP FRI signal keys (code-defined) → canonical ------------
+  // Matching depends on the canonical reference reads (competencies + domains).
+  const refOk = canonicalOk || domainsOk;
+  idSpaces.push(
+    buildCodeIdSpace(
+      'frp_fri_signal',
+      'Future Readiness FRI signal keys (skill_durability/market_alignment/adaptability/learning_velocity/role_resilience), defined in routes/frp.ts → canonical onto competency/domain by name.',
+      FRP_FRI_SIGNALS,
+      canonByNorm,
+      domains,
+      refOk,
+      entries,
+    ),
+  );
+
+  // --- ID space 5: EI 8-dimension scoring keys (code-defined) → canonical ----
+  idSpaces.push(
+    buildCodeIdSpace(
+      'ei_dimension',
+      'Employability Index 8-dimension scoring keys (frontend employabilityEngine EIBreakdown) → canonical onto competency/domain by name. Most dimensions are profile attributes, not competencies, so unmatched is expected and honest.',
+      EI_DIMENSIONS,
+      canonByNorm,
+      domains,
+      refOk,
+      entries,
+    ),
+  );
+
+  // --- Consumer namespaces (identifiers NOT a discrete enumerable id list) ----
+  // These consume competency data through multi-source aggregation rather than a
+  // fixed key set, so they are declared as Phase-2 consumer migrations (no
+  // fabricated mapping). The enumerable code-defined spaces (EI, FRP) are above.
   const consumer_namespaces: ConsumerNamespace[] = [
-    { consumer: 'Employability Index (EI)', identifier_space: 'employabilityEngine 8-dimension keys', status: 'crosswalk_pending_phase_2', note: 'Dimension labels are defined in code, not the DB; mapping to canonical competencies is Phase 2 (no fabricated mapping in Phase 1).' },
-    { consumer: 'Future Readiness (FRP)', identifier_space: 'frp skill keys', status: 'crosswalk_pending_phase_2', note: 'Skill keys are hardcoded in routes/frp.ts; their crosswalk requires a real skill taxonomy (Phase 2).' },
     { consumer: 'Career Builder', identifier_space: 'useCareerBrain competency aggregation', status: 'crosswalk_pending_phase_2', note: 'Consumes multiple sources; canonical adoption is a Phase 2 consumer migration.' },
     { consumer: 'Career Passport', identifier_space: 'passport competency snapshot', status: 'crosswalk_pending_phase_2', note: 'Snapshot keys are derived per-platform; canonical adoption is Phase 2.' },
     { consumer: 'Employer / Talent Intelligence (TIG)', identifier_space: 'cra_scores / lbi_scores competency codes', status: 'crosswalk_pending_phase_2', note: 'Scores keyed on the assessment domain codes; bridged via the assessment_domain_code id space, full migration Phase 2.' },

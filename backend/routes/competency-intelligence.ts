@@ -12,8 +12,9 @@
  *   GET /api/competency-intelligence/spine          — canonical spine decision
  *   GET /api/competency-intelligence/competencies   — canonical 300-genome
  *   GET /api/competency-intelligence/role-requirements?role=... — role → competencies
- *   GET /api/competency-intelligence/levels         — proficiency levels / anchors / layers
- *   GET /api/competency-intelligence/taxonomy       — Industry→…→Role (both namespaces)
+ *   GET /api/competency-intelligence/levels         — proficiency levels / anchor records / layers
+ *   GET /api/competency-intelligence/indicators     — behavioural indicator records (ont_indicators)
+ *   GET /api/competency-intelligence/taxonomy       — Industry→…→Role records (both namespaces)
  *   GET /api/competency-intelligence/crosswalk      — id-space crosswalk registry
  *
  * Admin (superadmin) report:
@@ -29,6 +30,7 @@ import {
   getMasterCompetencies,
   getRoleRequirements,
   getCompetencyLevels,
+  getIndicators,
   getTaxonomy,
   buildCompetencyCrosswalk,
   getFrameworkReadiness,
@@ -81,6 +83,8 @@ export function registerCompetencyFrameworkIntelligenceRoutes(
   ));
 
   app.get('/api/competency-intelligence/levels', gate, requireAuth, wrap(async () => getCompetencyLevels(pool)));
+
+  app.get('/api/competency-intelligence/indicators', gate, requireAuth, wrap(async () => getIndicators(pool)));
 
   app.get('/api/competency-intelligence/taxonomy', gate, requireAuth, wrap(async () => getTaxonomy(pool)));
 

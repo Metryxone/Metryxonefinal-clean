@@ -4,7 +4,7 @@ import { db, pool } from "../storage";
 import { propagateModuleUpdate } from "../services/competency-intelligence-orchestrator";
 import { ADAPTIVE_EVENTS } from "../services/adaptive-event-bus";
 import { calculateAndPersistLBI } from "./lbi-engine";
-import { onGoalCompleted } from "./career-evidence";
+import { onGoalCompleted, onJobStageChanged } from "./career-evidence";
 
 // ─── Completeness scoring (mirrors cv-parser weights) ───────────────────────
 const CORE_WEIGHTS: Record<string, number> = {
@@ -249,6 +249,8 @@ export function registerCareerSeekerRoutes(app: Express): void {
       `);
       const row = (r.rows ?? r)[0];
       void propagateModuleUpdate({ source: ADAPTIVE_EVENTS.APPLICATION_UPDATED, userId: u.id, pool, payload: { jobId: row.id, status: row.status, op: "create" } }).catch(() => {});
+      const jobSrc = String((row.data ?? {}).source ?? "");
+      void onJobStageChanged(pool, { userId: u.id, jobId: row.id, status: row.status, isDemo: /demo/i.test(jobSrc) }).catch(() => {});
       return res.json({ success: true, job: { ...(row.data ?? {}), _id: row.id, status: row.status, updatedAt: row.updated_at } });
     } catch (err) {
       console.error("[career-seeker] create job error:", err);
@@ -276,6 +278,8 @@ export function registerCareerSeekerRoutes(app: Express): void {
       const row = (upd.rows ?? upd)[0];
       if (!row) return res.status(404).json({ success: false, message: "Job not found" });
       void propagateModuleUpdate({ source: ADAPTIVE_EVENTS.APPLICATION_UPDATED, userId: u.id, pool, payload: { jobId: row.id, status: row.status, op: "update" } }).catch(() => {});
+      const jobSrc = String((row.data ?? {}).source ?? "");
+      void onJobStageChanged(pool, { userId: u.id, jobId: row.id, status: row.status, isDemo: /demo/i.test(jobSrc) }).catch(() => {});
       return res.json({ success: true, job: { ...(row.data ?? {}), _id: row.id, status: row.status, updatedAt: row.updated_at } });
     } catch (err) {
       console.error("[career-seeker] update job error:", err);

@@ -203,6 +203,47 @@ export default function CareerEvidencePanel() {
         <MetricCard icon={Users} label="Distinct real users" value={summary.data?.distinctRealUsers ?? '—'} />
       </div>
 
+      {/* Per outcome-type validation (real cohort, prior readiness) */}
+      {Array.isArray(summary.data?.validations) && summary.data.validations.length > 0 && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4 text-[#344E86]" />
+              Outcome types — honest evidence state
+            </CardTitle>
+            <CardDescription>
+              Every captured outcome type linked to prior readiness, each with its own real sample size and
+              validation status. New job-tracker milestones (interview reached, offer received) appear here as
+              they accrue.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-left text-gray-500 border-b">
+                    <th className="py-2 pr-4 font-medium">Outcome type</th>
+                    <th className="py-2 pr-4 font-medium">Prior score</th>
+                    <th className="py-2 pr-4 font-medium">Real n</th>
+                    <th className="py-2 pr-4 font-medium">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {summary.data.validations.map((v: { outcomeType: string; priorScoreType: string; n: number; status: string }) => (
+                    <tr key={v.outcomeType} className="border-b last:border-0">
+                      <td className="py-2 pr-4 font-medium text-gray-900">{v.outcomeType}</td>
+                      <td className="py-2 pr-4 text-gray-600">{v.priorScoreType}</td>
+                      <td className="py-2 pr-4 font-semibold text-gray-900">{v.n}</td>
+                      <td className="py-2 pr-4"><StatusBadge status={v.status} /></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Cohorts */}
       <div className="grid grid-cols-1 gap-4">
         <CohortCard title="Real cohort — prior readiness → goal achieved" isDemo={false} result={real} />

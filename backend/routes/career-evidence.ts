@@ -17,7 +17,7 @@ import type { Pool } from 'pg';
 import fs from 'fs';
 import path from 'path';
 import { isCareerOutcomeEvidenceEnabled } from '../config/feature-flags';
-import { computeEvidence, MIN_VALIDATION_N, type OutcomePair } from '../services/career-evidence-engine';
+import { computeEvidence, MIN_VALIDATION_N, type OutcomePair, type EvidenceResult } from '../services/career-evidence-engine';
 
 type Auth = (req: Request, res: Response, next: NextFunction) => void;
 
@@ -46,8 +46,24 @@ function resolveUserId(req: Request): string | null {
   return null;
 }
 
-const VALID_TYPES = new Set(['goal_achieved', 'ei_lift', 'role_change', 'promotion', 'hire']);
+const VALID_TYPES = new Set([
+  'goal_achieved', 'ei_lift', 'role_change', 'promotion', 'hire',
+  'interview_reached', 'offer_received',
+]);
 const CONTINUOUS_TYPES = new Set(['ei_lift']);
+
+/**
+ * Canonical Career Builder job-tracker stages in pipeline order. Reaching a stage
+ * implies every earlier stage was passed, so a job that lands on 'Offer' also
+ * counts as 'interview_reached'. 'Rejected' is terminal/negative -> no positive
+ * milestone is inferred from it (we only ever captured milestones the job actually
+ * passed through on earlier updates).
+ */
+const JOB_STAGE_ORDER: Record<string, number> = {
+  Wishlist: 0, Applied: 1, Screening: 2, Interview: 3, Assessment: 4, Offer: 5, Accepted: 6,
+};
+const INTERVIEW_MILESTONE = JOB_STAGE_ORDER.Interview;
+const OFFER_MILESTONE = JOB_STAGE_ORDER.Offer;
 
 /** Resolve the most-recent prior score for a user (readiness preferred, then EI). */
 async function resolvePriorScore(
@@ -153,6 +169,88 @@ export async function onGoalCompleted(
   }
 }
 
+/**
+ * Hook invoked when a job-tracker entry is created/updated. Records real, naturally
+ * occurring career milestones — `interview_reached` and `offer_received` — derived
+ * from the job's pipeline stage, each stamped with the user's prior score and keyed
+ * (idempotent) on the job id so a job contributes at most one of each milestone.
+ * Marked demo when the originating job is itself demo-seeded so it never pollutes
+ * the validated cohort. Never throws (fire-and-forget from the route handler).
+ */
+export async function onJobStageChanged(
+  pool: Pool,
+  args: { userId: string; jobId: string; status?: string | null; source?: string; isDemo?: boolean },
+): Promise<void> {
+  if (!isCareerOutcomeEvidenceEnabled()) return;
+  const ord = JOB_STAGE_ORDER[String(args.status ?? '')];
+  if (ord == null) return; // unknown / Rejected / Wishlist-pre-interview -> nothing to capture
+  const milestones: Array<{ type: 'interview_reached' | 'offer_received' }> = [];
+  if (ord >= INTERVIEW_MILESTONE) milestones.push({ type: 'interview_reached' });
+  if (ord >= OFFER_MILESTONE) milestones.push({ type: 'offer_received' });
+  if (!milestones.length) return;
+  try {
+    const prior = await resolvePriorScore(pool, args.userId);
+    for (const m of milestones) {
+      await captureCareerOutcome(pool, {
+        userId: args.userId,
+        outcomeType: m.type,
+        outcomeValue: 1,
+        outcomeKind: 'binary',
+        priorScoreType: prior?.type ?? null,
+        priorScoreValue: prior?.value ?? null,
+        priorScoreAt: prior?.at ?? null,
+        source: args.source ?? 'job_stage_hook',
+        isDemo: args.isDemo ?? false,
+        refId: args.jobId,
+        detail: { capturedBy: 'job_stage_hook', stage: args.status ?? null },
+      });
+    }
+  } catch (err) {
+    console.warn('[career-evidence] onJobStageChanged:', err instanceof Error ? err.message : String(err));
+  }
+}
+
+/**
+ * Compute the honest evidence result for one (outcome_type, prior_score_type) pair.
+ * Shared by the per-type validation endpoint and the summary so every outcome_type
+ * — including the new job-tracker milestones — reports its own honest n + status.
+ */
+async function computeValidationForType(
+  pool: Pool,
+  outcomeType: string,
+  priorScoreType: string,
+): Promise<EvidenceResult> {
+  const kind: 'binary' | 'continuous' = CONTINUOUS_TYPES.has(outcomeType) ? 'continuous' : 'binary';
+  const rows = await pool.query(
+    `SELECT outcome_value, prior_score_value, is_demo FROM career_outcomes
+     WHERE outcome_type = $1 AND prior_score_type = $2 AND prior_score_value IS NOT NULL`,
+    [outcomeType, priorScoreType],
+  );
+  const realPairs: OutcomePair[] = [];
+  for (const r of rows.rows as Array<{ outcome_value: string; prior_score_value: string; is_demo: boolean }>) {
+    if (r.is_demo) continue;
+    realPairs.push({ priorScore: Number(r.prior_score_value), outcomeValue: Number(r.outcome_value) });
+  }
+  if (kind === 'binary') {
+    const control = await pool.query(
+      `SELECT rd.user_id, rd.readiness_score AS v
+       FROM cg_user_role_readiness rd
+       WHERE rd.readiness_score IS NOT NULL
+         AND rd.user_id NOT ILIKE 'demo%'
+         AND rd.user_id NOT ILIKE '%@example.com'
+         AND rd.user_id NOT IN (
+           SELECT user_id FROM career_outcomes
+           WHERE outcome_type = $1 AND is_demo = false
+         )`,
+      [outcomeType],
+    ).catch(() => ({ rows: [] as Array<{ user_id: string; v: string }> }));
+    for (const c of control.rows as Array<{ user_id: string; v: string }>) {
+      realPairs.push({ priorScore: Number(c.v), outcomeValue: 0 });
+    }
+  }
+  return computeEvidence(realPairs, kind, true);
+}
+
 const adminCache = new Map<string, { ts: number; data: unknown }>();
 function adminCached<T>(key: string, bust: boolean, fn: () => Promise<T>): Promise<T> {
   const e = adminCache.get(key);
@@ -241,12 +339,32 @@ export function registerCareerEvidenceRoutes(
            GROUP BY outcome_type, is_demo ORDER BY outcome_type`,
         );
         const users = await pool.query('SELECT count(DISTINCT user_id)::int n FROM career_outcomes WHERE is_demo = false');
+        // Per outcome_type honest validation (n + status) against the default
+        // 'readiness' prior score, so every captured type — including the new
+        // job-tracker milestones — surfaces its own evidence state, not just counts.
+        const typesRes = await pool.query(
+          `SELECT DISTINCT outcome_type FROM career_outcomes ORDER BY outcome_type`,
+        );
+        const validations: Array<{
+          outcomeType: string; priorScoreType: string; n: number; validated: boolean; status: string;
+        }> = [];
+        for (const t of typesRes.rows as Array<{ outcome_type: string }>) {
+          const ev = await computeValidationForType(pool, t.outcome_type, 'readiness');
+          validations.push({
+            outcomeType: t.outcome_type,
+            priorScoreType: 'readiness',
+            n: ev.n,
+            validated: ev.validated,
+            status: ev.status,
+          });
+        }
         return {
           totalOutcomes: total.rows[0].n,
           realOutcomes: real.rows[0].n,
           demoOutcomes: demo.rows[0].n,
           distinctRealUsers: users.rows[0].n,
           byType: byType.rows,
+          validations,
         };
       });
       res.json({ ok: true, ...data });
@@ -303,40 +421,15 @@ export function registerCareerEvidenceRoutes(
       const bust = req.query.refresh === '1';
 
       const data = await adminCached(`val:${outcomeType}:${priorScoreType}`, bust, async () => {
-        const rows = await pool.query(
-          `SELECT outcome_value, prior_score_value, is_demo FROM career_outcomes
-           WHERE outcome_type = $1 AND prior_score_type = $2 AND prior_score_value IS NOT NULL`,
+        const demoRows = await pool.query(
+          `SELECT outcome_value, prior_score_value FROM career_outcomes
+           WHERE outcome_type = $1 AND prior_score_type = $2 AND prior_score_value IS NOT NULL AND is_demo = true`,
           [outcomeType, priorScoreType],
         );
-        const realPairs: OutcomePair[] = [];
-        const demoPairs: OutcomePair[] = [];
-        for (const r of rows.rows as Array<{ outcome_value: string; prior_score_value: string; is_demo: boolean }>) {
-          const pair = { priorScore: Number(r.prior_score_value), outcomeValue: Number(r.outcome_value) };
-          (r.is_demo ? demoPairs : realPairs).push(pair);
-        }
-        // For a binary outcome, "not achieved" subjects also count: derive them from
-        // the scored population that has NO achieved outcome of this type. This keeps
-        // the cohort honest (achievers vs a real control), not just positive events.
-        if (kind === 'binary') {
-          const control = await pool.query(
-            `SELECT rd.user_id, rd.readiness_score AS v
-             FROM cg_user_role_readiness rd
-             WHERE rd.readiness_score IS NOT NULL
-               -- exclude obvious demo/seed identities so the REAL cohort stays real
-               AND rd.user_id NOT ILIKE 'demo%'
-               AND rd.user_id NOT ILIKE '%@example.com'
-               AND rd.user_id NOT IN (
-                 SELECT user_id FROM career_outcomes
-                 WHERE outcome_type = $1 AND is_demo = false
-               )`,
-            [outcomeType],
-          ).catch(() => ({ rows: [] as Array<{ user_id: string; v: string }> }));
-          for (const c of control.rows as Array<{ user_id: string; v: string }>) {
-            realPairs.push({ priorScore: Number(c.v), outcomeValue: 0 });
-          }
-        }
+        const demoPairs: OutcomePair[] = (demoRows.rows as Array<{ outcome_value: string; prior_score_value: string }>)
+          .map((r) => ({ priorScore: Number(r.prior_score_value), outcomeValue: Number(r.outcome_value) }));
 
-        const real = computeEvidence(realPairs, kind, true);
+        const real = await computeValidationForType(pool, outcomeType, priorScoreType);
         const demo = computeEvidence(demoPairs, kind, false);
         return {
           outcomeType,

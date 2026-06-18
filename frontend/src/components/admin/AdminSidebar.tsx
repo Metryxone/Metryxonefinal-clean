@@ -130,6 +130,16 @@ export function AdminSidebar(props: AdminSidebarProps) {
     setOpenGroups(new Set(navGroups.filter(g => g.label && !g.isLabs).map(g => g.label as string)));
   const collapseAll = () => setOpenGroups(new Set());
 
+  // External platform quick-links — rendered inside the scrollable nav (as a
+  // collapsible section) so they never crowd out the menu options.
+  const platformLinks = [
+    { icon: UserCheck, label: 'Mentor Marketplace', screen: 'mentor-marketplace' },
+    { icon: Brain, label: 'LBI Assessment', screen: 'parent-lbi' },
+    { icon: UserCircle2, label: 'Parent Portal', screen: 'unified-parent-dashboard' },
+    { icon: Baby, label: 'Student Portal', screen: 'student-dashboard' },
+  ] as const;
+  const PLATFORM_KEY = '__platform_access__';
+
   // When searching, filter items by label across every group (incl. Labs).
   const visibleGroups: NavGroup[] = useMemo(() => {
     if (!searching) return navGroups;
@@ -307,35 +317,44 @@ export function AdminSidebar(props: AdminSidebarProps) {
               </div>
             );
           })}
-        </nav>
 
-        {/* Platform Access Quick Links */}
-        <div className="flex-shrink-0 px-3 pb-2 border-t border-white/10 pt-2">
-          {!sidebarCollapsed && (
-            <p className="px-3 mb-1 text-[10px] font-semibold uppercase tracking-widest text-white/40 select-none">Platform Access</p>
+          {/* Platform Access quick-links — collapsible, inside the scroll area so it never crowds the menu */}
+          {!searching && (
+            <div className="mt-3">
+              {!sidebarCollapsed ? (
+                <button
+                  onClick={() => toggleGroup(PLATFORM_KEY)}
+                  aria-expanded={openGroups.has(PLATFORM_KEY)}
+                  className="w-full flex items-center gap-2 px-3 mb-1 py-1.5 rounded-lg text-white/40 hover:text-white/70 hover:bg-white/5 transition-all"
+                >
+                  <span className="text-[10px] font-semibold uppercase tracking-widest flex-1 text-left select-none">Platform Access</span>
+                  <span className="text-[10px] text-white/25">{platformLinks.length}</span>
+                  <ChevronDown className={`h-3 w-3 flex-shrink-0 transition-transform ${openGroups.has(PLATFORM_KEY) ? 'rotate-180' : ''}`} />
+                </button>
+              ) : (
+                <div className="my-2 border-t border-white/10" />
+              )}
+              {(sidebarCollapsed || openGroups.has(PLATFORM_KEY)) && (
+                <div className="space-y-0.5">
+                  {platformLinks.map(link => (
+                    <button
+                      key={link.screen}
+                      onClick={() => onNavigate?.(link.screen)}
+                      title={link.label}
+                      className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-white/60 hover:bg-white/10 hover:text-white transition-all"
+                    >
+                      <link.icon className="h-4 w-4 flex-shrink-0" />
+                      {!sidebarCollapsed && (
+                        <span className="text-xs font-medium flex-1 text-left truncate">{link.label}</span>
+                      )}
+                      {!sidebarCollapsed && <ExternalIcon />}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           )}
-          <div className="space-y-0.5">
-            {([
-              { icon: UserCheck, label: 'Mentor Marketplace', screen: 'mentor-marketplace' },
-              { icon: Brain, label: 'LBI Assessment', screen: 'parent-lbi' },
-              { icon: UserCircle2, label: 'Parent Portal', screen: 'unified-parent-dashboard' },
-              { icon: Baby, label: 'Student Portal', screen: 'student-dashboard' },
-            ] as const).map(link => (
-              <button
-                key={link.screen}
-                onClick={() => onNavigate?.(link.screen)}
-                title={link.label}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-white/60 hover:bg-white/10 hover:text-white transition-all"
-              >
-                <link.icon className="h-4 w-4 flex-shrink-0" />
-                {!sidebarCollapsed && (
-                  <span className="text-xs font-medium flex-1 text-left truncate">{link.label}</span>
-                )}
-                {!sidebarCollapsed && <ExternalIcon />}
-              </button>
-            ))}
-          </div>
-        </div>
+        </nav>
 
         {/* Logout */}
         <div className="flex-shrink-0 p-3 border-t border-white/10">

@@ -27,6 +27,7 @@ import {
   profToLevel,
   PROFICIENCY_TO_LEVEL,
   bridgeOnetDerivedWeights,
+  buildCompetencyMatcher,
 } from '../services/onet-onto-weight-bridge';
 
 // ── Layer A: pure proficiency → level mapping ───────────────────────────────
@@ -44,6 +45,37 @@ test('profToLevel maps every O*NET band to its onto level', () => {
   assert.equal(profToLevel(undefined), 3);
   assert.equal(profToLevel('not-a-band'), 3);
   assert.equal(Object.keys(PROFICIENCY_TO_LEVEL).length, 5);
+});
+
+// ── Layer A: pure competency name matcher (casing/punctuation + synonyms) ────
+
+test('buildCompetencyMatcher tolerates casing/punctuation and known synonyms', () => {
+  const onto = [
+    { id: 'C_LISTEN', canonical_name: 'Listening' },
+    { id: 'C_PROBLEM', canonical_name: 'Problem Solving' },
+    { id: 'C_MATH', canonical_name: 'Mathematics' },
+    { id: 'C_PROG', canonical_name: 'Programming' },
+  ];
+  const match = buildCompetencyMatcher(onto);
+
+  // Exact, but case / whitespace / punctuation insensitive (the OLD bridge's
+  // lower(btrim(...)) would miss the hyphen variant).
+  assert.equal(match('Listening')?.id, 'C_LISTEN');
+  assert.equal(match('  listening ')?.id, 'C_LISTEN');
+  assert.equal(match('Problem-Solving')?.id, 'C_PROBLEM');
+  assert.equal(match('PROBLEM SOLVING')?.matchType, 'exact');
+
+  // Known synonyms: the O*NET element name → curated competency.
+  const al = match('Active Listening');
+  assert.equal(al?.id, 'C_LISTEN');
+  assert.equal(al?.matchType, 'synonym');
+  assert.equal(match('Complex Problem Solving')?.id, 'C_PROBLEM');
+  assert.equal(match('Numeracy')?.id, 'C_MATH');
+  assert.equal(match('coding')?.id, 'C_PROG');
+
+  // No genuine match → null (an honest gap, never fabricated).
+  assert.equal(match('Underwater Basket Weaving'), null);
+  assert.equal(match(''), null);
 });
 
 // ── Layer B: live-DB bridge inside a ROLLBACK-only transaction ──────────────
@@ -134,6 +166,167 @@ test('bridgeOnetDerivedWeights brings O*NET-derived links into onto_role_weights
       assert.equal(stillCurated.rows[0].source, 'curated', 'curated row not overwritten');
       assert.equal(stillCurated.rows[0].weight, cur.weight, 'curated weight preserved');
     }
+  } finally {
+    await client.query('ROLLBACK').catch(() => {});
+    client.release();
+    await pool.end();
+  }
+});
+
+// ── Layer B: synonym/fuzzy matching + honest unmatched reporting ─────────────
+
+test('bridgeOnetDerivedWeights bridges across naming differences and reports gaps', async (t) => {
+  if (!process.env.DATABASE_URL) {
+    t.skip('no DATABASE_URL — skipping live-DB bridge test');
+    return;
+  }
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    const target = await client.query(`
+      SELECT oro.id AS role_id, oro.title, p.id AS profile_id, oc.id AS comp_id, oc.canonical_name
+        FROM onto_roles oro
+        JOIN onto_dna_profiles p ON p.role_id = oro.id AND p.is_current = TRUE
+        JOIN onto_competencies oc ON oc.deprecated = FALSE
+       WHERE oro.deprecated = FALSE
+         AND NOT EXISTS (SELECT 1 FROM onto_role_weights w
+                          WHERE w.dna_profile_id = p.id AND w.competency_id = oc.id)
+       LIMIT 1`);
+    if (!target.rows.length) {
+      t.skip('no eligible onto role/competency fixture in this DB');
+      return;
+    }
+    const { title, profile_id, comp_id, canonical_name } = target.rows[0];
+
+    // Stand up the ont_* side with NAMING DIFFERENCES the old exact-match bridge
+    // (lower(btrim(...)) only) would have silently dropped: the role title is
+    // upper-cased with trailing punctuation, and the competency name is
+    // upper-cased with a hyphen swapped for a space. normalize() makes both
+    // resolve, proving the matching is now tolerant of minor naming differences.
+    const fuzzyTitle = `  ${String(title).toUpperCase()}. `;
+    const fuzzyComp = String(canonical_name).toUpperCase().replace(/ /g, '-');
+    assert.notEqual(fuzzyComp.toLowerCase().trim(), String(canonical_name).toLowerCase().trim(),
+      'fixture must actually differ from the canonical name (else it is not testing fuzziness)');
+
+    const ontRole = await client.query(
+      `INSERT INTO ont_roles (code, title, status, is_active)
+       VALUES ('TEST_FUZZY_ROLE', $1, 'published', true) RETURNING id`, [fuzzyTitle]);
+    const ontComp = await client.query(
+      `INSERT INTO ont_competencies (code, name, category, competency_type, is_active, status)
+       VALUES ('TEST_FUZZY_COMP', $1, 'behavioral', 'behavioral', true, 'published') RETURNING id`,
+      [fuzzyComp]);
+    await client.query(
+      `INSERT INTO map_role_competency (role_id, competency_id, importance_tier, weight, target_proficiency, source, is_active)
+       VALUES ($1, $2, 'core', 1.0, 'proficient', 'onet_derived', true)`,
+      [ontRole.rows[0].id, ontComp.rows[0].id]);
+
+    const r = await bridgeOnetDerivedWeights(client as unknown as Pool);
+    assert.equal(r.ok, true);
+
+    // The fuzzily-named derived link landed on the right curated pair.
+    const got = await client.query(
+      `SELECT source, expected_level FROM onto_role_weights
+        WHERE dna_profile_id = $1 AND competency_id = $2`, [profile_id, comp_id]);
+    assert.equal(got.rows.length, 1, 'derived weight bridged despite naming differences');
+    assert.equal(got.rows[0].source, 'onet_derived');
+    assert.equal(got.rows[0].expected_level, 3, 'proficient band → level 3');
+
+    // Honest reporting fields are populated so coverage gaps stay visible.
+    assert.ok((r.rolesMatched ?? 0) >= 1, 'at least the fixture role matched');
+    assert.equal(typeof r.rolesUnmatched, 'number');
+    assert.ok(Array.isArray(r.unmatchedRoles), 'unmatched roles reported as an array');
+    assert.equal(typeof r.competenciesMatched, 'number');
+    assert.equal(typeof r.competenciesUnmatched, 'number');
+    assert.ok(Array.isArray(r.unmatchedCompetencies), 'unmatched competencies reported as an array');
+  } finally {
+    await client.query('ROLLBACK').catch(() => {});
+    client.release();
+    await pool.end();
+  }
+});
+
+// ── Layer B: ambiguous role resolution — prefer the role that actually has the
+//    O*NET-derived links over an exact-title role that has none ──────────────
+
+test('bridgeOnetDerivedWeights prefers the linkable role when an exact-title role has no derived links', async (t) => {
+  if (!process.env.DATABASE_URL) {
+    t.skip('no DATABASE_URL — skipping live-DB bridge test');
+    return;
+  }
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    const target = await client.query(`
+      SELECT oro.title, p.id AS profile_id, oc.id AS comp_id, oc.canonical_name
+        FROM onto_roles oro
+        JOIN onto_dna_profiles p ON p.role_id = oro.id AND p.is_current = TRUE
+        JOIN onto_competencies oc ON oc.deprecated = FALSE
+       WHERE oro.deprecated = FALSE
+         AND NOT EXISTS (SELECT 1 FROM onto_role_weights w
+                          WHERE w.dna_profile_id = p.id AND w.competency_id = oc.id)
+       LIMIT 1`);
+    if (!target.rows.length) {
+      t.skip('no eligible onto role/competency fixture in this DB');
+      return;
+    }
+    const { title, profile_id, comp_id, canonical_name } = target.rows[0];
+    if (String(title).trim().length < 4) {
+      t.skip('fixture role title too short for a partial-title match');
+      return;
+    }
+
+    // Two ont_* roles resolve from the SAME curated title:
+    //   A — EXACT title, but its only link is a NON-derived (manual) one, so it
+    //       carries NO O*NET-derived estimates.
+    //   B — a partial-title synonym ("<title> Specialist"), carrying the real
+    //       onet_derived link we want bridged.
+    // The crosswalk's "best" pick favours A (exact_title + has links), so the
+    // naive approach would select A and bridge nothing. The fix must instead
+    // pick B because it is the linkable role.
+    const exactRole = await client.query(
+      `INSERT INTO ont_roles (code, title, status, is_active)
+       VALUES ('TEST_AMBIG_EXACT', $1, 'published', true) RETURNING id`, [title]);
+    const partialRole = await client.query(
+      `INSERT INTO ont_roles (code, title, status, is_active)
+       VALUES ('TEST_AMBIG_PARTIAL', $1, 'published', true) RETURNING id`,
+      [`${title} Specialist`]);
+
+    // Competency that the derived link (on role B) targets — matches the curated
+    // competency by name so it can bridge.
+    const derivedComp = await client.query(
+      `INSERT INTO ont_competencies (code, name, category, competency_type, is_active, status)
+       VALUES ('TEST_AMBIG_COMP', $1, 'behavioral', 'behavioral', true, 'published') RETURNING id`,
+      [canonical_name]);
+    // A throwaway competency for role A's NON-derived link (so A has links, just
+    // none that are onet_derived).
+    const manualComp = await client.query(
+      `INSERT INTO ont_competencies (code, name, category, competency_type, is_active, status)
+       VALUES ('TEST_AMBIG_MANUAL', 'Test Ambig Manual Skill', 'behavioral', 'behavioral', true, 'published') RETURNING id`);
+
+    await client.query(
+      `INSERT INTO map_role_competency (role_id, competency_id, importance_tier, weight, target_proficiency, source, is_active)
+       VALUES ($1, $2, 'core', 1.0, 'proficient', 'manual', true)`,
+      [exactRole.rows[0].id, manualComp.rows[0].id]);
+    await client.query(
+      `INSERT INTO map_role_competency (role_id, competency_id, importance_tier, weight, target_proficiency, source, is_active)
+       VALUES ($1, $2, 'core', 1.0, 'advanced', 'onet_derived', true)`,
+      [partialRole.rows[0].id, derivedComp.rows[0].id]);
+
+    const r = await bridgeOnetDerivedWeights(client as unknown as Pool);
+    assert.equal(r.ok, true);
+
+    // The derived link from role B WAS bridged onto the curated pair — proving
+    // we chose the linkable role, not the exact-title role with no estimates.
+    const got = await client.query(
+      `SELECT source, expected_level FROM onto_role_weights
+        WHERE dna_profile_id = $1 AND competency_id = $2`, [profile_id, comp_id]);
+    assert.equal(got.rows.length, 1, 'derived weight bridged from the linkable (partial-title) role');
+    assert.equal(got.rows[0].source, 'onet_derived');
+    assert.equal(got.rows[0].expected_level, 4, 'advanced band → level 4');
   } finally {
     await client.query('ROLLBACK').catch(() => {});
     client.release();

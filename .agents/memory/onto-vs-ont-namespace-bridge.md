@@ -26,8 +26,22 @@ user pages (`source === 'onet_derived'`) could never fire — `getRoleDNA` /
   `ensureOntoRoleWeightSourceColumn` — referencing `w.source` before the column
   exists throws, so BOTH read paths await the ensure first).
 - `bridgeOnetDerivedWeights(pool)` maps `onet_derived` links across the two
-  namespaces — **role by identical title, competency by identical name** — and
-  writes them into `onto_role_weights` stamped `source='onet_derived'`.
+  namespaces and writes them into `onto_role_weights` stamped
+  `source='onet_derived'`. Matching tolerates synonyms/minor naming differences
+  (the original required identical title AND identical competency name, silently
+  dropping any spelling/casing/phrasing diff): roles reuse the shared role
+  crosswalk; competencies use normalize + a curated synonym map. Unmatched
+  roles/competencies are counted + logged so coverage gaps stay visible. Only
+  genuine matches bridge — no match ⇒ no row, never fabricated.
+- **Role-selection trap:** a curated title can resolve to SEVERAL library roles
+  (an exact-title seeded role AND an alias/synonym O*NET role). The crosswalk's
+  "best" pick favours `exact_title` + total competency count — which can select a
+  seeded role that has NO `onet_derived` estimates while a synonym role has them,
+  bridging nothing. **Fix:** among a title's ranked candidates, prefer the
+  best-ranked one whose `id` is in the set of roles that actually carry active
+  `source='onet_derived'` links; only fall back to the top match otherwise.
+  **Why:** the goal is to surface ESTIMATES; picking the role by name-rank alone
+  ignores whether that role has anything to bridge.
 - It is **additive** (`NOT EXISTS` + `ON CONFLICT DO NOTHING` ⇒ a curated
   `(profile,competency)` weight ALWAYS wins), **idempotent** (deletes only
   `source='onet_derived'` rows then rebuilds; never touches curated), and

@@ -60,7 +60,7 @@ export interface RoleCompetency {
 }
 
 /** Lowercase, strip punctuation/diacritics, collapse whitespace. */
-function normalize(s: string): string {
+export function normalize(s: string): string {
   return (s ?? '')
     .toString()
     .normalize('NFKD')

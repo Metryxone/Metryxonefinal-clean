@@ -2645,11 +2645,12 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
   // =============================================================================
   type NavGroup = { label: string | null; items: NavItem[]; isLabs?: boolean };
 
-  // Sidebar menu items — practical IA: operational groups first, intelligence
-  // engines next, ontology/assessment builders, then admin & system, Labs last.
+  // Sidebar menu items — clean IA in priority order:
+  //   Overview (always visible) → Frameworks → People & Orgs → Operations →
+  //   Reports → Commercial → Governance → Platform → Developer Mode (Labs, last).
   // Every tab id is preserved and reachable (menuItems derives from this list).
   const navGroups: NavGroup[] = [
-    // ── Mission Control (always visible, no header) ─────────────────────────
+    // ── Overview (always visible, no header) ────────────────────────────────
     {
       label: null,
       items: [
@@ -2658,82 +2659,25 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
         { id: 'overview',               icon: PieChart,        label: 'Overview' },
       ]
     },
-    // ── CAPADEX — single straight entry (no redundant group header); all tools
-    //    live as inner tabs of the CAPADEX framework (capadex-fw → FrameworkPanel
-    //    extraTabs in SuperAdminDashboard). label:null → renders item directly. ──
+    // ── Frameworks — every product framework; each opens a tabbed shell whose
+    //    own tools live as inner tabs (FrameworkPanel / AdminTabbedShell in
+    //    SuperAdminDashboard). One header for many items (not redundant). ──────
     {
-      label: null,
+      label: 'Frameworks',
       items: [
-        { id: 'capadex-fw', icon: Sparkles, label: 'CAPADEX Framework' },
+        { id: 'capadex-fw',           icon: Sparkles,    label: 'CAPADEX Framework' },
+        { id: 'competency-fw',        icon: Target,      label: 'Competency Framework' },
+        { id: 'assessment-factory-fw', icon: Database,   label: 'Assessment Factory' },
+        { id: 'lbi-fw',               icon: Brain,       label: 'LBI Framework' },
+        { id: 'employability-fw',     icon: TrendingUp,  label: 'Employability Framework' },
+        { id: 'career-builder-fw',    icon: Network,     label: 'Career Builder Framework' },
+        { id: 'employer-fw',          icon: Building2,   label: 'Employer & Talent Framework' },
+        { id: 'future-readiness-fw',  icon: Zap,         label: 'Future Readiness Framework' },
       ]
     },
-    // ── Competency — single straight entry (no redundant group header); all
-    //    tools live as tabs inside the framework. label:null → renders the item
-    //    directly with no collapsible "Competency" wrapper (see AdminSidebar). ──
+    // ── People & Orgs — users, parents, students, institutions, mentors ──────
     {
-      label: null,
-      items: [
-        { id: 'competency-fw', icon: Target, label: 'Competency Framework' },
-      ]
-    },
-    // ── Assessment Factory (CAF) — single straight entry; CAF tools live as
-    //    inner tabs of the Assessment Factory shell (assessment-factory-fw →
-    //    AdminTabbedShell in SuperAdminDashboard). label:null → renders direct. ──
-    {
-      label: null,
-      items: [
-        { id: 'assessment-factory-fw', icon: Database, label: 'Assessment Factory' },
-      ]
-    },
-    // ── Competency Ontology — folded into Competency Framework tabs (see competency-fw extraTabs in SuperAdminDashboard) ──
-    // ── LBI — single straight entry; LBI command center & engine live as inner
-    //    tabs of the LBI framework (lbi-fw → FrameworkPanel extraTabs in
-    //    SuperAdminDashboard). label:null → renders the item directly. ──────────
-    {
-      label: null,
-      items: [
-        { id: 'lbi-fw', icon: Brain, label: 'LBI Framework' },
-      ]
-    },
-    // ── Employability & Readiness — single straight entry; all tools live as
-    //    inner tabs of the framework shell (employability-fw → AdminTabbedShell
-    //    in SuperAdminDashboard). label:null → renders the item directly. ───────
-    {
-      label: null,
-      items: [
-        { id: 'employability-fw', icon: TrendingUp, label: 'Employability Framework' },
-      ]
-    },
-    // ── Career Builder — single straight entry; all Career Builder tools live as
-    //    inner tabs of the framework shell (career-builder-fw → AdminTabbedShell
-    //    in SuperAdminDashboard). label:null → renders the item directly. ───────
-    {
-      label: null,
-      items: [
-        { id: 'career-builder-fw', icon: Network, label: 'Career Builder Framework' },
-      ]
-    },
-    // ── Employer & Talent Intelligence — single straight entry; all tools live
-    //    as inner tabs of the framework shell (employer-fw → AdminTabbedShell in
-    //    SuperAdminDashboard). label:null → renders the item directly. ──────────
-    {
-      label: null,
-      items: [
-        { id: 'employer-fw', icon: Building2, label: 'Employer & Talent Framework' },
-      ]
-    },
-    // ── Future Readiness — single straight entry; FRP tools live as inner tabs
-    //    of the framework shell (future-readiness-fw → AdminTabbedShell in
-    //    SuperAdminDashboard). label:null → renders the item directly. ──────────
-    {
-      label: null,
-      items: [
-        { id: 'future-readiness-fw', icon: Zap, label: 'Future Readiness Framework' },
-      ]
-    },
-    // ── Organizations ───────────────────────────────────────────────────────
-    {
-      label: 'Organizations',
+      label: 'People & Orgs',
       items: [
         { id: 'usermgmt',            icon: Users,         label: 'User Management' },
         { id: 'parents',             icon: UserCircle2,   label: 'Parents' },
@@ -2755,9 +2699,9 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
         { id: 'rie-escalations',        icon: AlertTriangle,  label: 'Crisis Escalations', badge: crisisPending, badgeColor: '#DC2626' },
       ]
     },
-    // ── Reports & Analytics ─────────────────────────────────────────────────
+    // ── Reports ─────────────────────────────────────────────────────────────
     {
-      label: 'Reports & Analytics',
+      label: 'Reports',
       items: [
         { id: 'reports',              icon: BarChart2, label: 'Unified Reports' },
         { id: 'enterprise-analytics', icon: BarChart3, label: 'Enterprise Analytics' },

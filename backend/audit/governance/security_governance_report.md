@@ -1,6 +1,6 @@
 # Security & Governance Report
 
-_Generated: 2026-06-18T03:36:52.153Z · flag FF_GOVERNANCE_RBAC_V2=ON_
+_Generated: 2026-06-18T04:01:39.872Z · flag FF_GOVERNANCE_RBAC_V2=ON_
 
 > Structural = approval engine, admin lifecycle, security-center aggregator and
 > flag-change log all exist and are wired. Activation = governance actions have

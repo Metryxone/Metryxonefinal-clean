@@ -2686,21 +2686,11 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
         { id: 'simulation-validation',     icon: FlaskConical,  label: 'Simulation & Validation' },
       ]
     },
-    // ── Competency — command center, frameworks & question config ────────────
+    // ── Competency — single entry; all tools live as tabs inside the framework ─
     {
       label: 'Competency',
       items: [
-        { id: 'cc-competency',                 icon: Target,     label: 'Competency Command Center' },
-        { id: 'competency-intelligence-admin', icon: Brain,      label: 'Competency Intelligence' },
-        { id: 'competency-fw',                 icon: Target,     label: 'Competency Framework' },
-        { id: 'competency-questions',          icon: FileCheck,  label: 'Competency Questions' },
-        { id: 'questionbank',                  icon: Database,   label: 'Question Bank' },
-        { id: 'custom-modules',                icon: Package,    label: 'Custom Modules' },
-        { id: 'scoring',                       icon: Calculator, label: 'Norms & Scoring' },
-        { id: 'role-families',                 icon: Users,      label: 'Role Families' },
-        { id: 'competency-blueprints',         icon: BookOpen,   label: 'Competency Blueprints' },
-        { id: 'blueprint-mappings',            icon: Network,    label: 'Blueprint Mappings' },
-        { id: 'level-profiles',                icon: Layers,     label: 'Level Profiles' },
+        { id: 'competency-fw', icon: Target, label: 'Competency Framework' },
       ]
     },
     // ── Assessment Factory (CAF) — collapsed by default ─────────────────────

@@ -3,7 +3,7 @@
  * (LBI, Professional Competency, SDI). Config-driven so the tab
  * structure, labels and API paths differ but the layout is identical.
  */
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -58,9 +58,12 @@ const ALL_PANEL_TABS: { id: PanelTab; label: string; icon: any; requiresConfig?:
   { id: 'versions',        label: 'Versions',          icon: History,        requiresConfig: 'versionsApi'               },
 ];
 
+// ─── Extra (host-supplied) tabs ──────────────────────────────────────────────
+export type FrameworkExtraTab = { id: string; label: string; icon: any; node: ReactNode };
+
 // ─── Main Panel ────────────────────────────────────────────────────────────
-export default function FrameworkPanel({ config, initialTab }: { config: FwConfig; initialTab?: PanelTab }) {
-  const [tab, setTab] = useState<PanelTab>(initialTab ?? 'overview');
+export default function FrameworkPanel({ config, initialTab, extraTabs }: { config: FwConfig; initialTab?: PanelTab; extraTabs?: FrameworkExtraTab[] }) {
+  const [tab, setTab] = useState<string>(initialTab ?? 'overview');
 
   const tabs = ALL_PANEL_TABS
     .filter(t => !t.requiresConfig || !!config[t.requiresConfig])
@@ -69,11 +72,22 @@ export default function FrameworkPanel({ config, initialTab }: { config: FwConfi
       label: t.id === 'sub' ? config.subLabel : t.label,
     }));
 
+  const allTabs = [
+    ...tabs.map(t => ({ id: t.id as string, label: t.label, icon: t.icon })),
+    ...(extraTabs ?? []).map(t => ({ id: t.id, label: t.label, icon: t.icon })),
+  ];
+
+  if (import.meta.env.DEV) {
+    const ids = allTabs.map(t => t.id);
+    const dup = ids.find((id, i) => ids.indexOf(id) !== i);
+    if (dup) console.warn(`[FrameworkPanel] duplicate tab id "${dup}" — an extraTab collides with a built-in tab`);
+  }
+
   return (
     <div className="space-y-4">
       {/* Inner tab bar */}
       <div className="flex flex-wrap gap-1 border-b pb-0">
-        {tabs.map(t => {
+        {allTabs.map(t => {
           const active = tab === t.id;
           const Icon = t.icon;
           return (
@@ -207,6 +221,8 @@ export default function FrameworkPanel({ config, initialTab }: { config: FwConfi
             summaryPath={config.summaryApi}
           />
         )}
+
+        {extraTabs?.map(et => (tab === et.id ? <div key={et.id}>{et.node}</div> : null))}
       </div>
     </div>
   );

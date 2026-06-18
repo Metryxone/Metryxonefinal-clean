@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { Screen } from '../App';
 
-import { Menu, RefreshCw, Search, Settings } from 'lucide-react';
+import { Menu, RefreshCw, Search, Settings, Target, Brain, FileCheck, Database, Package, Calculator, Users, BookOpen, Network, Layers } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import SuperAdminLogin from './SuperAdminLogin';
@@ -743,7 +743,21 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               )}
               {activeTab === 'competency-fw' && (
                 <div className="p-6">
-                  <FrameworkPanel config={COMPETENCY_CONFIG} />
+                  <FrameworkPanel
+                    config={COMPETENCY_CONFIG}
+                    extraTabs={[
+                      { id: 'cmp-command-center',     label: 'Command Center',     icon: Target,     node: <ProductCommandCenter productKey="competency" /> },
+                      { id: 'cmp-intelligence',       label: 'Intelligence',       icon: Brain,      node: <CompetencyIntelligenceAdminPanel /> },
+                      { id: 'cmp-questions',          label: 'Questions',          icon: FileCheck,  node: <CompetencyQuestionsPanel /> },
+                      { id: 'cmp-questionbank',       label: 'Question Bank',      icon: Database,   node: <QuestionBankPanel /> },
+                      { id: 'cmp-custom-modules',     label: 'Custom Modules',     icon: Package,    node: <AssessmentModulesManagement onNavigate={onNavigate} modulesOnly /> },
+                      { id: 'cmp-scoring',            label: 'Norms & Scoring',    icon: Calculator, node: <ScoringPanel /> },
+                      { id: 'cmp-role-families',      label: 'Role Families',      icon: Users,      node: <RoleFamilyPanel /> },
+                      { id: 'cmp-blueprints',         label: 'Blueprints',         icon: BookOpen,   node: <CompetencyBlueprintPanel /> },
+                      { id: 'cmp-blueprint-mappings', label: 'Blueprint Mappings', icon: Network,    node: <BlueprintMappingPanel /> },
+                      { id: 'cmp-level-profiles',     label: 'Level Profiles',     icon: Layers,     node: <LevelProfilePanel /> },
+                    ]}
+                  />
                 </div>
               )}
               {activeTab === 'career-graph-admin' && (

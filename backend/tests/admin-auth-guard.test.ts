@@ -112,6 +112,12 @@ const ADMIN_NON_PREFIXED = new Set([
   '/api/competency/versions',
   '/api/competency/engine-summary',
   '/api/competency/items/:id',
+  // Admin-only payment endpoints under /api/commercial/razorpay (outside an
+  // `/admin` segment, so the prefix scan alone would miss them). Both carry the
+  // `...admin` = [requireAuth, requireSuperAdmin] guards; a forgotten guard here
+  // would expose plan-creation / refund admin actions.
+  '/api/commercial/razorpay/plan',
+  '/api/commercial/razorpay/refund',
 ]);
 
 // ── Intentionally-public framework reads (assessment flow, not an admin page).
@@ -122,6 +128,12 @@ const PUBLIC_ALLOWLIST = new Set([
   '/api/sdi/items',
   '/api/lbi/clusters',
   '/api/sdi/clusters',
+  // Buyer-facing Razorpay routes — public by design, gated only by rzpGate (the
+  // commercial_razorpay_recurring feature flag), NOT by a super-admin guard.
+  '/api/commercial/razorpay/subscribe',
+  '/api/commercial/razorpay/payment-link',
+  '/api/commercial/razorpay/verify',
+  '/api/commercial/razorpay/webhook',
 ]);
 
 function isInScope(path: string): boolean {

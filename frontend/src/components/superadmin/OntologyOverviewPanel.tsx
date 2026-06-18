@@ -26,6 +26,7 @@ interface Stats {
   // Mappings
   map_ind_fn: number; map_role_layer: number; map_layer_cluster: number;
   map_cluster_comp: number; map_role_comp: number;
+  map_role_comp_derived?: number; map_role_comp_native?: number;
   map_micro_concern: number; map_concern_ind: number; map_ind_q: number;
   map_micro_q: number; map_comp_fs: number;
   // Reference
@@ -406,6 +407,20 @@ export default function OntologyOverviewPanel() {
               <MappingRow label={m.label} actual={stats[m.field] as number} target={m.target} />
             </div>
           ))}
+          {stats.map_role_comp > 0 && (
+            <div className="px-4 py-2.5 flex items-center gap-3 flex-wrap">
+              <span className="text-sm text-gray-600 flex-1">Role ↔ Competency</span>
+              <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-medium">
+                {stats.map_role_comp_native ?? stats.map_role_comp} O*NET / curated
+              </span>
+              {(stats.map_role_comp_derived ?? 0) > 0 && (
+                <span className="text-xs px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 font-medium">
+                  {stats.map_role_comp_derived} estimated / inherited
+                </span>
+              )}
+              <span className="text-sm font-medium w-16 text-right text-gray-700">{stats.map_role_comp}</span>
+            </div>
+          )}
         </div>
       </div>
 

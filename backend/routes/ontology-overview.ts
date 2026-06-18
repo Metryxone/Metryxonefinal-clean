@@ -51,6 +51,8 @@ export function registerOntologyOverviewRoutes(
           (SELECT COUNT(*)::int FROM map_layer_cluster           WHERE is_active=true)  AS map_layer_cluster,
           (SELECT COUNT(*)::int FROM map_cluster_competency      WHERE is_active=true)  AS map_cluster_comp,
           (SELECT COUNT(*)::int FROM map_role_competency         WHERE is_active=true)  AS map_role_comp,
+          (SELECT COUNT(*)::int FROM map_role_competency         WHERE is_active=true AND source='onet_derived') AS map_role_comp_derived,
+          (SELECT COUNT(*)::int FROM map_role_competency         WHERE is_active=true AND source<>'onet_derived') AS map_role_comp_native,
           (SELECT COUNT(*)::int FROM map_micro_concern           WHERE is_active=true)  AS map_micro_concern,
           (SELECT COUNT(*)::int FROM map_concern_indicator       WHERE is_active=true)  AS map_concern_ind,
           (SELECT COUNT(*)::int FROM map_indicator_question      WHERE is_active=true)  AS map_ind_q,

@@ -684,7 +684,8 @@ function StatsBar() {
     { label: 'Clusters', value: s.clusters_total, pub: s.clusters_published, color: 'text-blue-700 bg-blue-50' },
     { label: 'Competencies', value: s.competencies_total, pub: s.competencies_published, color: 'text-green-700 bg-green-50' },
     { label: 'Micro Competencies', value: s.micros_total, pub: s.micros_published, color: 'text-orange-700 bg-orange-50' },
-    { label: 'Role Links', value: s.role_comp_links, pub: null, color: 'text-gray-700 bg-gray-50' },
+    { label: 'Role Links', value: s.role_comp_links, pub: null, color: 'text-gray-700 bg-gray-50',
+      sub: s.role_comp_links_derived != null ? `${s.role_comp_links_native ?? 0} O*NET · ${s.role_comp_links_derived} estimated` : null },
   ];
   return (
     <div className="flex gap-3 flex-wrap mb-4">
@@ -692,6 +693,7 @@ function StatsBar() {
         <div key={i.label} className={`px-4 py-2 rounded-xl ${i.color} text-xs`}>
           <div className="font-bold text-base">{i.value}</div>
           <div className="opacity-70">{i.label}{i.pub !== null ? ` · ${i.pub} published` : ''}</div>
+          {(i as any).sub && <div className="opacity-60 mt-0.5">{(i as any).sub}</div>}
         </div>
       ))}
     </div>

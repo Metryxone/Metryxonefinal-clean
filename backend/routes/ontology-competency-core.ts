@@ -680,6 +680,25 @@ export function registerOntologyCompetencyCoreRoutes(
     } catch (err) { return res.status(500).json({ error: 'Failed to remove layer from role' }); }
   });
 
+  // Role competencies (read). Each row carries its `source` so callers can
+  // distinguish native O*NET ratings ('onet') / curated seed ('seeded') from
+  // estimated rows inherited from sibling SOC codes ('onet_derived').
+  app.get('/api/ontology/roles/:id/competencies', requireAuth, requireSuperAdmin, async (req: Request, res: Response) => {
+    try {
+      await ensure();
+      const id = parseId(req.params.id);
+      if (!id) return res.status(400).json({ error: 'Invalid id' });
+      const { rows } = await pool.query(
+        `SELECT c.id, c.code, c.name, c.category, c.competency_type,
+                rc.importance_tier, rc.weight, rc.min_proficiency, rc.target_proficiency, rc.source
+         FROM map_role_competency rc JOIN ont_competencies c ON c.id=rc.competency_id
+         WHERE rc.role_id=$1 AND rc.is_active=true
+         ORDER BY (rc.source='onet_derived'), rc.weight DESC, c.name`, [id]);
+      const derived = rows.filter(r => r.source === 'onet_derived').length;
+      return res.json({ items: rows, total: rows.length, native: rows.length - derived, derived });
+    } catch (err) { return res.status(500).json({ error: 'Failed to fetch role competencies' }); }
+  });
+
   // ── STATS ────────────────────────────────────────────────────────────────────
 
   app.get('/api/ontology/competency-core/stats', requireAuth, requireSuperAdmin, async (req: Request, res: Response) => {
@@ -696,7 +715,9 @@ export function registerOntologyCompetencyCoreRoutes(
           (SELECT COUNT(*)::int FROM ont_micro_competencies WHERE is_active=true) AS micros_total,
           (SELECT COUNT(*)::int FROM ont_micro_competencies WHERE status='published') AS micros_published,
           (SELECT COUNT(*)::int FROM map_cluster_competency WHERE is_active=true) AS cluster_comp_links,
-          (SELECT COUNT(*)::int FROM map_role_competency WHERE is_active=true) AS role_comp_links
+          (SELECT COUNT(*)::int FROM map_role_competency WHERE is_active=true) AS role_comp_links,
+          (SELECT COUNT(*)::int FROM map_role_competency WHERE is_active=true AND source='onet_derived') AS role_comp_links_derived,
+          (SELECT COUNT(*)::int FROM map_role_competency WHERE is_active=true AND source<>'onet_derived') AS role_comp_links_native
       `);
       return res.json({ stats });
     } catch (err) { return res.status(500).json({ error: 'Failed to fetch stats' }); }

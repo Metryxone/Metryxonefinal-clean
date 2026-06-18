@@ -260,7 +260,7 @@ export function AdminSidebar(props: AdminSidebarProps) {
                       title={`${tierLabel} — lower-frequency screens`}
                     >
                       <FlaskConical className="h-4 w-4 flex-shrink-0" />
-                      <span className="text-[13px] font-semibold lowercase flex-1 text-left">{tierLabel}</span>
+                      <span className="text-[13px] font-semibold capitalize flex-1 text-left">{tierLabel}</span>
                       {tierBadge > 0 && (
                         <span className="text-[10px] font-bold text-white bg-red-600 rounded-full min-w-[16px] h-[16px] flex items-center justify-center px-1">
                           {tierBadge > 99 ? '99+' : tierBadge}
@@ -303,7 +303,7 @@ export function AdminSidebar(props: AdminSidebarProps) {
                     aria-expanded={open}
                     className="w-full flex items-center gap-2 px-3 mb-1 py-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/5 transition-all"
                   >
-                    <span className="text-[13px] font-semibold lowercase flex-1 text-left select-none">{group.label}</span>
+                    <span className="text-[13px] font-semibold capitalize flex-1 text-left select-none">{group.label}</span>
                     {!searching && (
                       <>
                         <span className="text-[10px] text-white/25">{group.items.length}</span>
@@ -327,7 +327,7 @@ export function AdminSidebar(props: AdminSidebarProps) {
                   aria-expanded={openGroups.has(PLATFORM_KEY)}
                   className="w-full flex items-center gap-2 px-3 mb-1 py-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/5 transition-all"
                 >
-                  <span className="text-[13px] font-semibold lowercase flex-1 text-left select-none">Platform Access</span>
+                  <span className="text-[13px] font-semibold capitalize flex-1 text-left select-none">Platform Access</span>
                   <span className="text-[10px] text-white/25">{platformLinks.length}</span>
                   <ChevronDown className={`h-3 w-3 flex-shrink-0 transition-transform ${openGroups.has(PLATFORM_KEY) ? 'rotate-180' : ''}`} />
                 </button>

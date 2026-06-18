@@ -94,6 +94,7 @@ const GovernancePanel = lazy(() => import('./superadmin/GovernancePanel'));
 const OverviewPanel = lazy(() => import('./superadmin/OverviewPanel'));
 const UserMgmtPanel = lazy(() => import('./superadmin/UserMgmtPanel'));
 const EIHealthPanel = lazy(() => import('./superadmin/EIHealthPanel'));
+const CompetencyFrameworkIntelligencePanel = lazy(() => import('./superadmin/CompetencyFrameworkIntelligencePanel'));
 const CareerEvidencePanel = lazy(() => import('./superadmin/CareerEvidencePanel'));
 const MEIDesignPanel = lazy(() => import('./superadmin/MEIDesignPanel'));
 const EIOperationsPanel = lazy(() => import('./superadmin/EIOperationsPanel'));
@@ -242,6 +243,17 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
       if (!res.ok) return false;
       const j = await res.json().catch(() => null);
       return !!j?.enabled;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // ── Competency Framework Intelligence flag probe (file-registry flag).
+  //    Flag OFF → gate returns 503 → tab is omitted entirely (byte-identical UI). ──
+  const { data: cfiEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/competency-intelligence/spine', 'cfi-enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/competency-intelligence/spine', { credentials: 'include' });
+      return res.ok;
     },
     enabled: isAuthenticated,
   });
@@ -795,6 +807,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                     extraTabs={[
                       { id: 'cmp-command-center',     label: 'Command Center',     icon: Target,     node: <ProductCommandCenter productKey="competency" /> },
                       { id: 'cmp-intelligence',       label: 'Intelligence',       icon: Brain,      node: <CompetencyIntelligenceAdminPanel /> },
+                      ...(cfiEnabled ? [{ id: 'cmp-framework-intel', label: 'Framework Intelligence', icon: Network, node: <CompetencyFrameworkIntelligencePanel /> }] : []),
                       { id: 'cmp-questions',          label: 'Questions',          icon: FileCheck,  node: <CompetencyQuestionsPanel /> },
                       { id: 'cmp-questionbank',       label: 'Question Bank',      icon: Database,   node: <QuestionBankPanel /> },
                       { id: 'cmp-custom-modules',     label: 'Custom Modules',     icon: Package,    node: <AssessmentModulesManagement onNavigate={onNavigate} modulesOnly /> },

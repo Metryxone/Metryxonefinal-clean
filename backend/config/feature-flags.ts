@@ -554,6 +554,22 @@ export const FEATURE_FLAGS = {
    *  503, no career_outcomes table is created and the SuperAdmin panel hides → byte-identical
    *  legacy. Env: `FF_CAREER_OUTCOME_EVIDENCE`. */
   careerOutcomeEvidence: true,
+  /** Competency Framework Intelligence Foundation (Phase 1). When ON, an additive,
+   *  read-only "Competency Intelligence" service + API treats the EXISTING competency
+   *  framework as ONE master spine by COMPOSING the two disjoint namespaces (the curated
+   *  `onto_*` 300-competency genome + Role DNA as the canonical library; the operational
+   *  `ont_*`/O*NET taxonomy/levels/indicators that attach to it) — exposing unified master
+   *  views (`GET /api/competency-intelligence/*`), a crosswalk registry mapping the app's
+   *  fragmented competency identifiers (assessment 7-domain codes, `onto_*` ids, `ont_*`
+   *  ids) to one canonical id with honest matched/unmatched gaps, and an admin framework
+   *  readiness/gap report (`GET /api/admin/competency-intelligence/readiness`) that flags
+   *  populated-and-consumable vs empty-pending-import assets. Reports Coverage (data exists)
+   *  and Confidence (trustworthy) as SEPARATE axes. Strictly additive + read-only: composes
+   *  already-computed data only, never mutates competency content, never fabricates rows, no
+   *  new schema/DDL. flag OFF → all routes return 503 + the SuperAdmin panel hides →
+   *  byte-identical legacy behaviour. Phase 1 = FOUNDATION only; no consumer is rewritten to
+   *  read from it yet. Env: `FF_COMPETENCY_FRAMEWORK_INTELLIGENCE`. */
+  competencyFrameworkIntelligence: false,
   /** CAPADEX — Richer Behavioural Signal Capture (Task #22). Augments the evidence
    *  extractor so each answered item can emit an ADDITIONAL genuine concern signal
    *  keyed on its authored behavioural facet (sdi_items.dimension/subdomain_code),
@@ -886,6 +902,10 @@ export function isInvoiceGstEngineEnabled(): boolean {
 
 export function isCareerOutcomeEvidenceEnabled(): boolean {
   return isFlagEnabled('careerOutcomeEvidence');
+}
+
+export function isCompetencyFrameworkIntelligenceEnabled(): boolean {
+  return isFlagEnabled('competencyFrameworkIntelligence');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

@@ -457,8 +457,8 @@ export function registerFrameworkParityRoutes(app: Express, pool: Pool, requireA
     } catch (err) { next(err); }
   });
 
-  // SDI engine summary — public read (counts only, no sensitive data)
-  app.get('/api/sdi/admin/engine-summary', async (_req, res, next) => {
+  // SDI engine summary — counts only, but admin-gated to match sibling /api/sdi/admin/* routes
+  app.get('/api/sdi/admin/engine-summary', requireAuth, requireSuperAdmin, async (_req, res, next) => {
     try {
       const r = await pool.query(`SELECT
         (SELECT count(*) FROM sdi_domains)::int AS domains,

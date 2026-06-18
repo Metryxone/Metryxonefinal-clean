@@ -208,9 +208,9 @@ export function registerCompetencyCohortRoutes(
     } catch (err) { next(err); }
   });
 
-  // ─── Engine summary (public, counts only) ─────────────────────────────
+  // ─── Engine summary (counts only, admin-gated to match sibling admin routes) ───
 
-  app.get('/api/competency/engine-summary', async (_req, res, next) => {
+  app.get('/api/competency/engine-summary', requireAuth, requireSuperAdmin, async (_req, res, next) => {
     try {
       const r = await pool.query(`
         SELECT

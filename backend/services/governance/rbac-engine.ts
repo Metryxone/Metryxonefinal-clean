@@ -160,6 +160,24 @@ export async function getPermissionMatrix(pool: Pool): Promise<any> {
 
 // Grant / revoke a permission to a role. Fail-closed (throws on bad input);
 // audited as a permission_change.
+// Validate that a role and permission both exist before any write. Fail-closed:
+// invalid ids throw an explicit error so callers (routes) surface it, and we never
+// write an orphan grant (role_permissions has no FK, so this is the integrity gate).
+async function assertRoleAndPermissionExist(
+  pool: Pool,
+  roleId: string,
+  permissionId: string
+): Promise<void> {
+  const { rows } = await pool.query(
+    `SELECT
+       (SELECT 1 FROM role_definitions       WHERE id = $1) AS role_ok,
+       (SELECT 1 FROM permission_definitions  WHERE id = $2) AS perm_ok`,
+    [roleId, permissionId]
+  );
+  if (!rows[0]?.role_ok) throw new Error(`role '${roleId}' does not exist`);
+  if (!rows[0]?.perm_ok) throw new Error(`permission '${permissionId}' does not exist`);
+}
+
 export async function grantPermission(
   pool: Pool,
   roleId: string,
@@ -167,6 +185,7 @@ export async function grantPermission(
   actor: { id?: string | null }
 ): Promise<void> {
   await ensureGovernanceSchema(pool);
+  await assertRoleAndPermissionExist(pool, roleId, permissionId);
   await pool.query(
     `INSERT INTO role_permissions (role_id, permission_id, granted_by)
      VALUES ($1,$2,$3) ON CONFLICT (role_id, permission_id) DO NOTHING`,
@@ -188,6 +207,7 @@ export async function revokePermission(
   actor: { id?: string | null }
 ): Promise<void> {
   await ensureGovernanceSchema(pool);
+  await assertRoleAndPermissionExist(pool, roleId, permissionId);
   await pool.query(`DELETE FROM role_permissions WHERE role_id=$1 AND permission_id=$2`, [roleId, permissionId]);
   await recordGovernanceAudit(pool, {
     category: "permission_change",

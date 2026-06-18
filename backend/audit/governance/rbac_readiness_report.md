@@ -1,6 +1,6 @@
 # RBAC Readiness Report
 
-_Generated: 2026-06-18T02:16:47.975Z · flag FF_GOVERNANCE_RBAC_V2=ON_
+_Generated: 2026-06-18T03:36:52.153Z · flag FF_GOVERNANCE_RBAC_V2=ON_
 
 > **Honesty contract.** Structural (code/table/route exists) and Activation (real
 > config rows present) are reported as separate axes. RBAC roles/permissions/grants/

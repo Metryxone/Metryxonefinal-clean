@@ -1,6 +1,6 @@
 # Audit Logging Readiness
 
-_Generated: 2026-06-18T02:16:47.975Z · flag FF_GOVERNANCE_RBAC_V2=ON_
+_Generated: 2026-06-18T03:36:52.153Z · flag FF_GOVERNANCE_RBAC_V2=ON_
 
 > Structural = the capture path is wired (tables + helpers + login/logout/failed-login
 > hooks). Activation = events have actually been recorded. A fresh dev DB with the

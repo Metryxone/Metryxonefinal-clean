@@ -42,7 +42,7 @@ export default function CAFSessionsPanel() {
 
   const { data: responses=[] } = useQuery({
     queryKey:['caf-session-responses', expanded],
-    queryFn:()=>expanded ? fetch(`/api/caf/sessions/${expanded}/responses`).then(r=>r.json()) : Promise.resolve([]),
+    queryFn:()=>expanded ? fetch(`/api/caf/sessions/${expanded}/responses`).then(r=>r.json()).then(d=>Array.isArray(d)?d:[]) : Promise.resolve([]),
     enabled:expanded!==null,
   });
 

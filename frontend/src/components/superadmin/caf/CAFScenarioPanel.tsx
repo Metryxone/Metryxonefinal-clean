@@ -29,12 +29,16 @@ export default function CAFScenarioPanel() {
 
   const { data: scenarios=[], isLoading } = useQuery<Scenario[]>({
     queryKey: ['caf-scenarios', search, type, status],
-    queryFn: () => fetch(`/api/caf/scenarios?search=${encodeURIComponent(search)}&type=${type}&status=${status}`).then(r=>r.json()),
+    queryFn: () => fetch(`/api/caf/scenarios?search=${encodeURIComponent(search)}&type=${type}&status=${status}`)
+      .then(r=>r.json())
+      .then(d=>Array.isArray(d) ? d : []),
   });
 
   const { data: branches=[] } = useQuery({
     queryKey: ['caf-branches', expanded],
-    queryFn: () => expanded ? fetch(`/api/caf/scenarios/${expanded}/branches`).then(r=>r.json()) : Promise.resolve([]),
+    queryFn: () => expanded
+      ? fetch(`/api/caf/scenarios/${expanded}/branches`).then(r=>r.json()).then(d=>Array.isArray(d) ? d : [])
+      : Promise.resolve([]),
     enabled: expanded !== null,
   });
 

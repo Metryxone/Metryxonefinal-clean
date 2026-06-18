@@ -27,7 +27,7 @@ export default function CAFAnalyticsPanel() {
   });
   const { data: calibrations=[] } = useQuery<Psychometric[]>({
     queryKey:['caf-psychometric'],
-    queryFn:()=>fetch('/api/caf/analytics/psychometric').then(r=>r.json()),
+    queryFn:()=>fetch('/api/caf/analytics/psychometric').then(r=>r.json()).then(d=>Array.isArray(d)?d:[]),
     enabled:activeTab==='psychometric',
   });
   const { data: assessments=[] } = useQuery<Assessment[]>({

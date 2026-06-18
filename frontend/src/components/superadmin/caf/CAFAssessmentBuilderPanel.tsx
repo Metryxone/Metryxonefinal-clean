@@ -45,7 +45,7 @@ export default function CAFAssessmentBuilderPanel() {
 
   const { data: sectionQs=[] } = useQuery<SectionQ[]>({
     queryKey:['caf-section-qs', activeSectionId],
-    queryFn:()=>activeSectionId ? fetch(`/api/caf/sections/${activeSectionId}/questions`).then(r=>r.json()) : Promise.resolve([]),
+    queryFn:()=>activeSectionId ? fetch(`/api/caf/sections/${activeSectionId}/questions`).then(r=>r.json()).then(d=>Array.isArray(d)?d:[]) : Promise.resolve([]),
     enabled:!!activeSectionId,
   });
 

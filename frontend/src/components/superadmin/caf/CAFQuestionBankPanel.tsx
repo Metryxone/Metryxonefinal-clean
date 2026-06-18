@@ -55,7 +55,7 @@ export default function CAFQuestionBankPanel() {
 
   const { data: optionsData } = useQuery({
     queryKey: ['caf-q-options', expanded],
-    queryFn: () => expanded ? fetch(`/api/caf/questions/${expanded}/options`).then(r => r.json()) : Promise.resolve([]),
+    queryFn: () => expanded ? fetch(`/api/caf/questions/${expanded}/options`).then(r => r.json()).then(d => Array.isArray(d) ? d : []) : Promise.resolve([]),
     enabled: expanded !== null,
   });
 

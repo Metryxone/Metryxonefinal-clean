@@ -37,11 +37,11 @@ export default function CAFDifficultyLevelPanel() {
   const [selectedFW, setSelectedFW] = useState<LevelFW|null>(null);
   const [anchorForm, setAnchorForm] = useState({ level_code:'L3', competency_domain:'', anchor_statement:'', sort_order:0 });
 
-  const { data: calibrations=[] } = useQuery<DiffCal[]>({ queryKey:['caf-diff-cals'], queryFn:()=>fetch('/api/caf/difficulty-calibrations').then(r=>r.json()) });
-  const { data: frameworks=[] } = useQuery<LevelFW[]>({ queryKey:['caf-level-fws'], queryFn:()=>fetch('/api/caf/level-frameworks').then(r=>r.json()) });
+  const { data: calibrations=[] } = useQuery<DiffCal[]>({ queryKey:['caf-diff-cals'], queryFn:()=>fetch('/api/caf/difficulty-calibrations').then(r=>r.json()).then(d=>Array.isArray(d)?d:[]) });
+  const { data: frameworks=[] } = useQuery<LevelFW[]>({ queryKey:['caf-level-fws'], queryFn:()=>fetch('/api/caf/level-frameworks').then(r=>r.json()).then(d=>Array.isArray(d)?d:[]) });
   const { data: anchors=[] } = useQuery<LevelAnchor[]>({
     queryKey:['caf-anchors', selectedFW?.id],
-    queryFn:()=>selectedFW ? fetch(`/api/caf/level-anchors?framework_id=${selectedFW.id}`).then(r=>r.json()) : Promise.resolve([]),
+    queryFn:()=>selectedFW ? fetch(`/api/caf/level-anchors?framework_id=${selectedFW.id}`).then(r=>r.json()).then(d=>Array.isArray(d)?d:[]) : Promise.resolve([]),
     enabled:!!selectedFW,
   });
 

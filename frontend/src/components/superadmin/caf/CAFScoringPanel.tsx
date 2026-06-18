@@ -36,7 +36,7 @@ export default function CAFScoringPanel() {
 
   const { data: rules=[] } = useQuery<ScoreRule[]>({
     queryKey:['caf-score-rules', selectedId],
-    queryFn:()=>selectedId ? fetch(`/api/caf/score-rules?assessment_id=${selectedId}`).then(r=>r.json()) : Promise.resolve([]),
+    queryFn:()=>selectedId ? fetch(`/api/caf/score-rules?assessment_id=${selectedId}`).then(r=>r.json()).then(d=>Array.isArray(d)?d:[]) : Promise.resolve([]),
     enabled:!!selectedId,
   });
 

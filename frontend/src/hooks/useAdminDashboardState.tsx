@@ -2667,9 +2667,11 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
         { id: 'capadex-fw', icon: Sparkles, label: 'CAPADEX Framework' },
       ]
     },
-    // ── Competency — single entry; all tools live as tabs inside the framework ─
+    // ── Competency — single straight entry (no redundant group header); all
+    //    tools live as tabs inside the framework. label:null → renders the item
+    //    directly with no collapsible "Competency" wrapper (see AdminSidebar). ──
     {
-      label: 'Competency',
+      label: null,
       items: [
         { id: 'competency-fw', icon: Target, label: 'Competency Framework' },
       ]

@@ -1,9 +1,15 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import metryxLogo from '@/assets/metryx-logo-transparent.png';
 import {
   FlaskConical, UserCheck, Brain, UserCircle2, Baby, LogOut, Search, X, ChevronDown,
+  PanelLeftClose, PanelLeftOpen,
 } from 'lucide-react';
 import { BRAND } from '@/lib/behavioural-insights';
+
+// Drag-resize bounds for the expanded sidebar (must stay in sync with SuperAdminDashboard).
+const SIDEBAR_MIN = 208;
+const SIDEBAR_MAX = 420;
+const SIDEBAR_DEFAULT = 256;
 
 type NavItem = {
   id: string;
@@ -23,6 +29,10 @@ type NavGroup = {
 type AdminSidebarProps = {
   sidebarCollapsed: boolean;
   setSidebarCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
+  sidebarWidth: number;
+  setSidebarWidth: React.Dispatch<React.SetStateAction<number>>;
+  sidebarResizing: boolean;
+  setSidebarResizing: React.Dispatch<React.SetStateAction<boolean>>;
   activeTab: string;
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
   navGroups: NavGroup[];
@@ -41,9 +51,47 @@ const ExternalIcon = () => (
 
 export function AdminSidebar(props: AdminSidebarProps) {
   const {
-    sidebarCollapsed, activeTab, setActiveTab,
+    sidebarCollapsed, setSidebarCollapsed,
+    sidebarWidth, setSidebarWidth, sidebarResizing, setSidebarResizing,
+    activeTab, setActiveTab,
     navGroups, labsOpen, setLabsOpen, handleLogout, onNavigate,
   } = props;
+
+  // Drag the right edge to resize; persistence is handled by the parent.
+  // Holds the active drag's teardown so we can always release listeners/body
+  // styles — even if pointerup is missed (released off-window, cancelled, or
+  // the component unmounts mid-drag).
+  const endResizeRef = useRef<(() => void) | null>(null);
+  const startResize = (e: React.PointerEvent) => {
+    if (sidebarCollapsed) return;
+    e.preventDefault();
+    const startX = e.clientX;
+    const startW = sidebarWidth;
+    setSidebarResizing(true);
+    document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'col-resize';
+    const onMove = (ev: PointerEvent) => {
+      const next = Math.min(SIDEBAR_MAX, Math.max(SIDEBAR_MIN, startW + (ev.clientX - startX)));
+      setSidebarWidth(next);
+    };
+    const end = () => {
+      setSidebarResizing(false);
+      document.body.style.userSelect = '';
+      document.body.style.cursor = '';
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', end);
+      window.removeEventListener('pointercancel', end);
+      window.removeEventListener('blur', end);
+      endResizeRef.current = null;
+    };
+    endResizeRef.current = end;
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', end);
+    window.addEventListener('pointercancel', end);
+    window.addEventListener('blur', end);
+  };
+  // Safety net: always release an in-flight drag on unmount.
+  useEffect(() => () => endResizeRef.current?.(), []);
 
   const [query, setQuery] = useState('');
   const q = query.trim().toLowerCase();
@@ -122,14 +170,22 @@ export function AdminSidebar(props: AdminSidebarProps) {
   return (
     <>
       <aside
-        className={`fixed left-0 top-0 h-full z-40 transition-all duration-300 flex flex-col ${sidebarCollapsed ? 'w-20' : 'w-64'}`}
-        style={{ backgroundColor: BRAND.primary }}
+        className={`fixed left-0 top-0 h-full z-40 flex flex-col ${sidebarResizing ? '' : 'transition-all duration-300'}`}
+        style={{ width: sidebarCollapsed ? 80 : sidebarWidth, backgroundColor: BRAND.primary }}
       >
-        {/* Logo */}
-        <div className="p-4 border-b border-white/10 flex-shrink-0">
-          <div className="flex items-center gap-3">
-            <img src={metryxLogo} alt="MetryxOne" className={sidebarCollapsed ? "h-10 object-contain rounded" : "h-12 object-contain rounded"} />
-          </div>
+        {/* Logo + collapse/expand toggle */}
+        <div className={`p-4 border-b border-white/10 flex-shrink-0 flex items-center gap-2 ${sidebarCollapsed ? 'flex-col' : ''}`}>
+          <img src={metryxLogo} alt="MetryxOne" className={sidebarCollapsed ? "h-9 object-contain rounded" : "h-12 object-contain rounded"} />
+          {!sidebarCollapsed && <div className="flex-1" />}
+          <button
+            onClick={() => setSidebarCollapsed(v => !v)}
+            title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            data-testid="button-sidebar-toggle"
+            className="p-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors flex-shrink-0"
+          >
+            {sidebarCollapsed ? <PanelLeftOpen className="h-5 w-5" /> : <PanelLeftClose className="h-5 w-5" />}
+          </button>
         </div>
 
         {/* Search + bulk controls (expanded mode only) */}
@@ -292,6 +348,25 @@ export function AdminSidebar(props: AdminSidebarProps) {
             {!sidebarCollapsed && <span className="text-sm font-medium">Logout</span>}
           </button>
         </div>
+
+        {/* Drag-resize handle (expanded mode only) */}
+        {!sidebarCollapsed && (
+          <div
+            onPointerDown={startResize}
+            onDoubleClick={() => setSidebarWidth(SIDEBAR_DEFAULT)}
+            title="Drag to resize · double-click to reset"
+            role="separator"
+            aria-orientation="vertical"
+            aria-label="Resize sidebar"
+            aria-valuemin={SIDEBAR_MIN}
+            aria-valuemax={SIDEBAR_MAX}
+            aria-valuenow={sidebarWidth}
+            data-testid="sidebar-resize-handle"
+            className="group absolute top-0 right-0 h-full w-1.5 cursor-col-resize z-50"
+          >
+            <div className={`absolute inset-y-0 right-0 w-px transition-colors ${sidebarResizing ? 'bg-white/50' : 'bg-white/10 group-hover:bg-white/40'}`} />
+          </div>
+        )}
       </aside>
     </>
   );

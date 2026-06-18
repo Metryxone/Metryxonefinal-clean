@@ -243,6 +243,21 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  // ── Resizable + collapsible sidebar width (persisted across sessions) ──
+  const SIDEBAR_MIN = 208;
+  const SIDEBAR_MAX = 420;
+  const SIDEBAR_DEFAULT = 256;
+  const [sidebarWidth, setSidebarWidth] = useState<number>(() => {
+    if (typeof window === 'undefined') return SIDEBAR_DEFAULT;
+    const raw = window.localStorage.getItem('admin.sidebarWidth');
+    const n = raw ? parseInt(raw, 10) : NaN;
+    return Number.isFinite(n) ? Math.min(SIDEBAR_MAX, Math.max(SIDEBAR_MIN, n)) : SIDEBAR_DEFAULT;
+  });
+  const [sidebarResizing, setSidebarResizing] = useState(false);
+  useEffect(() => {
+    window.localStorage.setItem('admin.sidebarWidth', String(sidebarWidth));
+  }, [sidebarWidth]);
+
   // Auth gate
   if (isCheckingAuth) {
     return (
@@ -266,6 +281,10 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
         <AdminSidebar
           sidebarCollapsed={sidebarCollapsed}
           setSidebarCollapsed={setSidebarCollapsed}
+          sidebarWidth={sidebarWidth}
+          setSidebarWidth={setSidebarWidth}
+          sidebarResizing={sidebarResizing}
+          setSidebarResizing={setSidebarResizing}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           navGroups={navGroups}
@@ -277,7 +296,10 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
         />
 
       {/* Main Content */}
-      <main className={`flex-1 transition-all duration-300 ${sidebarCollapsed ? 'ml-20' : 'ml-64'}`}>
+      <main
+        className={`flex-1 ${sidebarResizing ? '' : 'transition-all duration-300'}`}
+        style={{ marginLeft: sidebarCollapsed ? 80 : sidebarWidth }}
+      >
         {/* Sticky top region: header + additive shell bar pinned together */}
         <div className="sticky top-0 z-30">
         {/* Header */}

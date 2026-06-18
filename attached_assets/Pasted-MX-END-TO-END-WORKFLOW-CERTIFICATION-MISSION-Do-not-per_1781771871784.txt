@@ -1,0 +1,707 @@
+MX-END-TO-END-WORKFLOW-CERTIFICATION
+
+MISSION
+
+Do not perform a module audit.
+
+Do not perform a code audit.
+
+Do not perform a database audit.
+
+Execute the complete MetryxOne user ecosystem.
+
+Validate every workflow, feature, dependency, automation, notification, persistence layer, recommendation engine, status update, and user action.
+
+Objective:
+
+If MetryxOne launches tomorrow, identify every workflow that breaks.
+
+Focus on:
+
+Competency Assessment
+
+Employability Index
+
+Career Builder
+
+Career Passport
+
+Employer Portal
+
+Institution Portal
+
+Job Ecosystem
+
+Application Management
+
+Notifications
+
+Commercial Flows
+
+SuperAdmin Operations
+
+====================================================
+
+GLOBAL RULE
+
+A workflow is successful only if:
+
+Input
+→ Validation
+→ Processing
+→ Persistence
+→ Intelligence
+→ Recommendation
+→ Notification
+→ Status Update
+→ Reporting
+→ Tracking
+→ User Action
+
+all work successfully.
+
+Any failure is a defect.
+
+====================================================
+
+JOURNEY 1
+
+CANDIDATE REGISTRATION
+
+Validate:
+
+Registration
+
+OTP
+
+Login
+
+Forgot Password
+
+Profile Creation
+
+Profile Completion
+
+Resume Upload
+
+Profile Update
+
+Profile Visibility
+
+Profile Persistence
+
+Notifications
+
+Status Updates
+
+====================================================
+
+JOURNEY 2
+
+COMPETENCY ASSESSMENT
+
+Validate:
+
+Assessment Discovery
+
+Assessment Launch
+
+Question Loading
+
+Question Navigation
+
+Question Submission
+
+Auto Save
+
+Assessment Completion
+
+Assessment Scoring
+
+Assessment Persistence
+
+Assessment History
+
+Assessment Reports
+
+Notifications
+
+Status Tracking
+
+Retake Workflow
+
+Benchmarking
+
+====================================================
+
+JOURNEY 3
+
+CAPADEX
+
+Validate:
+
+Assessment Launch
+
+Question Flow
+
+Completion
+
+Scoring
+
+Concern Detection
+
+Recommendations
+
+Reports
+
+Persistence
+
+History
+
+Notifications
+
+Status Updates
+
+====================================================
+
+JOURNEY 4
+
+EMPLOYABILITY INDEX
+
+Validate:
+
+Score Generation
+
+Score Calculation
+
+Score Persistence
+
+Score Updates
+
+Industry Readiness
+
+Role Readiness
+
+Future Readiness
+
+Benchmark Comparison
+
+Score Visibility
+
+Score Explainability
+
+Notifications
+
+====================================================
+
+JOURNEY 5
+
+CAREER BUILDER
+
+Validate:
+
+Career Recommendations
+
+Career Matching
+
+Career Pathways
+
+Career Roadmaps
+
+Career Goals
+
+Development Plans
+
+Skill Gap Analysis
+
+Future Readiness
+
+Recommendation Persistence
+
+Recommendation Refresh
+
+Recommendation History
+
+Notifications
+
+====================================================
+
+JOURNEY 6
+
+CAREER PASSPORT
+
+Validate:
+
+Passport Generation
+
+Passport Updates
+
+Passport Sharing
+
+Passport Download
+
+Passport Visibility
+
+Passport Verification
+
+Employer Consumption
+
+Passport Analytics
+
+====================================================
+
+JOURNEY 7
+
+LEARNING RECOMMENDATIONS
+
+Validate:
+
+Learning Recommendations
+
+Certification Recommendations
+
+Project Recommendations
+
+Development Recommendations
+
+Course Recommendations
+
+Progress Tracking
+
+Completion Tracking
+
+====================================================
+
+JOURNEY 8
+
+JOB DISCOVERY
+
+Validate:
+
+Job Search
+
+Job Filters
+
+Job Recommendations
+
+Job Matching
+
+Saved Jobs
+
+Job Alerts
+
+Job Visibility
+
+Job Details
+
+====================================================
+
+JOURNEY 9
+
+APPLICATION MANAGEMENT
+
+Validate:
+
+Application Submission
+
+Resume Submission
+
+Passport Submission
+
+Application Tracking
+
+Status Updates
+
+Shortlisting
+
+Interview Scheduling
+
+Offer Management
+
+Hiring Status
+
+Notifications
+
+====================================================
+
+JOURNEY 10
+
+WORKING PROFESSIONAL
+
+Validate:
+
+Career Growth
+
+Promotion Readiness
+
+Future Readiness
+
+Skill Gap Analysis
+
+Career Transition
+
+Learning Plans
+
+Development Plans
+
+Job Discovery
+
+Applications
+
+====================================================
+
+JOURNEY 11
+
+CAREER SWITCHER
+
+Validate:
+
+Transferable Skills
+
+Transition Recommendations
+
+Gap Analysis
+
+Learning Plans
+
+Career Pathways
+
+Job Matching
+
+Applications
+
+====================================================
+
+JOURNEY 12
+
+COUNSELOR
+
+Validate:
+
+Candidate Review
+
+Assessment Review
+
+Report Review
+
+Recommendation Review
+
+Development Planning
+
+Intervention Planning
+
+Progress Tracking
+
+Outcome Tracking
+
+====================================================
+
+JOURNEY 13
+
+INSTITUTION ADMIN
+
+Validate:
+
+Institution Setup
+
+Student Import
+
+Student Management
+
+Assessment Campaign
+
+Campaign Tracking
+
+Batch Analytics
+
+Department Analytics
+
+Placement Readiness
+
+Outcome Tracking
+
+====================================================
+
+JOURNEY 14
+
+PLACEMENT OFFICER
+
+Validate:
+
+Student Readiness
+
+Placement Readiness
+
+Job Distribution
+
+Application Monitoring
+
+Employer Engagement
+
+Placement Tracking
+
+Outcome Tracking
+
+====================================================
+
+JOURNEY 15
+
+EMPLOYER ONBOARDING
+
+Validate:
+
+Employer Registration
+
+Organization Setup
+
+Team Setup
+
+Subscription
+
+Permissions
+
+Notifications
+
+Status Updates
+
+====================================================
+
+JOURNEY 16
+
+EMPLOYER PORTAL
+
+Validate:
+
+Job Posting
+
+Job Publishing
+
+Job Management
+
+Candidate Discovery
+
+Candidate Search
+
+Filters
+
+Talent Intelligence
+
+Competency Intelligence
+
+Employability Intelligence
+
+Career Intelligence
+
+Candidate Comparison
+
+Shortlisting
+
+Hiring Workflow
+
+====================================================
+
+JOURNEY 17
+
+RECRUITER
+
+Validate:
+
+Search
+
+Filters
+
+Matching
+
+Comparison
+
+Shortlisting
+
+Interview Scheduling
+
+Offer Management
+
+Hiring Workflow
+
+====================================================
+
+JOURNEY 18
+
+COMMERCIAL
+
+Validate:
+
+Plan Selection
+
+Subscription
+
+Trial
+
+Payments
+
+Invoices
+
+GST
+
+Receipts
+
+Entitlements
+
+Usage Tracking
+
+Renewals
+
+Upgrades
+
+Downgrades
+
+Cancellations
+
+====================================================
+
+JOURNEY 19
+
+NOTIFICATIONS
+
+Validate:
+
+Email Notifications
+
+In-App Notifications
+
+Assessment Alerts
+
+Recommendation Alerts
+
+Job Alerts
+
+Application Alerts
+
+Interview Alerts
+
+Employer Alerts
+
+Institution Alerts
+
+Payment Alerts
+
+Reminder Workflows
+
+====================================================
+
+JOURNEY 20
+
+WORKFLOW AUTOMATION
+
+Validate:
+
+Assessment
+→ Score
+
+Score
+→ EI
+
+EI
+→ Recommendations
+
+Recommendations
+→ Career Builder
+
+Career Builder
+→ Passport
+
+Passport
+→ Job Matching
+
+Job Matching
+→ Applications
+
+Applications
+→ Employer Workflow
+
+Employer Workflow
+→ Hiring
+
+Hiring
+→ Outcome Tracking
+
+====================================================
+
+JOURNEY 21
+
+SUPERADMIN
+
+Validate:
+
+Candidate Monitoring
+
+Employer Monitoring
+
+Institution Monitoring
+
+Assessment Monitoring
+
+Commercial Monitoring
+
+Issue Resolution
+
+Audit Trails
+
+RBAC
+
+Support Operations
+
+====================================================
+
+OUTPUT
+
+Generate:
+
+workflow_failures.md
+
+workflow_breakpoints.md
+
+launch_blockers.md
+
+critical_defects.md
+
+high_priority_defects.md
+
+quick_wins.md
+
+founder_execution_plan.md
+
+====================================================
+
+FINAL OUTPUT
+
+Provide:
+
+Top 50 Broken Workflows
+
+Top 50 Missing Functionalities
+
+Top 50 Automation Failures
+
+Top 50 Notification Failures
+
+Top 50 User Experience Failures
+
+Top 50 Launch Blockers
+
+Top 25 Must Fix Before Launch
+
+Top 25 Quick Wins
+
+Most Important Question:
+
+If 10,000 candidates, 1,000 employers, and 100 institutions use MetryxOne tomorrow, exactly where will they fail?
+
+Provide implementation fixes only.
+
+Do not audit modules.
+
+Do not score modules.
+
+Do not generate readiness percentages.
+
+Focus entirely on workflow execution and launch success.

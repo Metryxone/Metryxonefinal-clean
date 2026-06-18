@@ -488,7 +488,7 @@ export default function LBIPanel() {
           ) : activationData ? (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {[activationData.consumption, activationData.activation].map((axis: any) => (
+                {[activationData.consumption, activationData.activation].filter(Boolean).map((axis: any) => (
                   <Card key={axis.label} className="border shadow-sm">
                     <CardContent className="p-5">
                       <div className="flex items-center justify-between mb-3">

@@ -5,7 +5,7 @@ import {
   ArrowLeft, RefreshCw, ChevronDown, ChevronUp, Award,
   AlertTriangle, CheckCircle, XCircle, Clock, ArrowRight,
   BookOpen, Briefcase, Users, Star, Zap, Activity, Shield,
-  GraduationCap, MessageSquare, ExternalLink
+  GraduationCap, MessageSquare, ExternalLink, Info
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
@@ -198,6 +198,17 @@ export default function CompetencyDashboard({ onNavigate }: { onNavigate?: (scre
     queryFn: () => apiFetch(API(`/interventions/${userId}`)),
     enabled: !!userId && activeTab === 'reco',
   });
+
+  // Role library: resolves the user's target role to the bigger O*NET-backed
+  // competency library so roles outside the legacy hardcoded set still surface
+  // their required competencies. Read-only and honest — an unresolved role or a
+  // role with no ratings returns a `note` rather than fabricated requirements.
+  const roleLibQuery = useQuery({
+    queryKey: ['comp-role-library', userId],
+    queryFn: () => apiFetch(API(`/role-library/${userId}`)),
+    enabled: !!userId,
+  });
+  const roleLib = roleLibQuery.data?.data;
 
   const [profileForm, setProfileForm] = useState({ currentRole: '', targetRole: '', industry: '', careerStage: '', experienceYears: 0 });
   const [editingProfile, setEditingProfile] = useState(false);
@@ -935,6 +946,83 @@ export default function CompetencyDashboard({ onNavigate }: { onNavigate?: (scre
                       <Button size="sm" onClick={() => saveProfileMutation.mutate()} disabled={saveProfileMutation.isPending} style={{ backgroundColor: BRAND.primary }} className="text-white">
                         {saveProfileMutation.isPending ? 'Saving...' : 'Save Profile'}
                       </Button>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Role library — required competencies from the bigger O*NET-backed library */}
+              <Card className="mt-6 border border-gray-200 shadow-none">
+                <CardHeader className="py-3 px-4 border-b border-gray-100">
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <CardTitle className="text-sm flex items-center gap-2">
+                      <Award className="h-3.5 w-3.5" style={{ color: BRAND.primary }} />
+                      Required Competencies for Your Target Role
+                    </CardTitle>
+                    {roleLib?.resolved && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] text-gray-400">
+                          {roleLib.resolved.title}
+                        </span>
+                        <Badge variant="outline" className="text-[10px]">
+                          {roleLib.resolved.source === 'onet' ? 'O*NET data' : 'Curated library'}
+                        </Badge>
+                        {roleLib.counts?.total > 0 && (
+                          <Badge variant="outline" className="text-[10px]">
+                            {roleLib.counts.total} competencies
+                          </Badge>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </CardHeader>
+                <CardContent className="p-4">
+                  {roleLibQuery.isLoading ? (
+                    <div className="flex items-center gap-2 text-xs text-gray-400 py-2">
+                      <div className="w-3.5 h-3.5 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: `${BRAND.accent} transparent transparent transparent` }} />
+                      Resolving your role against the competency library...
+                    </div>
+                  ) : !roleLib || !roleLib.resolved || (roleLib.requiredCompetencies?.length ?? 0) === 0 ? (
+                    <div className="flex items-start gap-2 rounded-lg bg-gray-50 border border-gray-100 p-3">
+                      <Info className="h-3.5 w-3.5 text-gray-400 mt-0.5 flex-shrink-0" />
+                      <p className="text-xs text-gray-500 leading-relaxed">
+                        {roleLib?.note ?? 'Add a target role to your profile to see the competencies it requires.'}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      {roleLib.requiredCompetencies.map((c: any) => {
+                        const isCore = c.importanceTier === 'core';
+                        return (
+                          <div key={c.code} className="rounded-lg border border-gray-200 p-3">
+                            <div className="flex items-start justify-between gap-2 mb-1.5">
+                              <div>
+                                <p className="text-xs font-semibold text-gray-700">{c.name}</p>
+                                {c.category && <p className="text-[10px] text-gray-400">{c.category}</p>}
+                              </div>
+                              <span
+                                className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-full whitespace-nowrap"
+                                style={isCore
+                                  ? { backgroundColor: `${BRAND.primary}15`, color: BRAND.primary }
+                                  : { backgroundColor: '#f1f5f9', color: '#64748b' }}
+                              >
+                                {isCore ? 'Core' : 'Secondary'}
+                              </span>
+                            </div>
+                            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-gray-500">
+                              <span>Weight: <strong className="text-gray-700">{c.weight}</strong></span>
+                              {(c.minProficiency || c.targetProficiency) && (
+                                <span>
+                                  Proficiency:{' '}
+                                  <strong className="text-gray-700">
+                                    {c.minProficiency ?? '—'} → {c.targetProficiency ?? '—'}
+                                  </strong>
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </CardContent>

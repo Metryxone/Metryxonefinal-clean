@@ -1,0 +1,74 @@
+MX-LAUNCH-READINESS-01 — a comprehensive go/no-go audit across 10 areas × 7 readiness dimensions × 4 launch tiers. I have deep fresh evidence on the 5 intelligence products from the just-completed work (and the #17–#28 activation merges), so I'll reuse that and gather new evidence on the commercial, support, runtime, deployment, and operational surfaces.
+
+Let me set up the plan and kick off parallel evidence-gathering.
+
+
+6 actions
+Found a prior June 8 launch-readiness audit (different file scheme); I'll produce the four newly-named deliverables as a fresh, comprehensive pass. While the four explorers run, let me pull the activation-state DB evidence.
+
+
+3 actions
+Commercial explorer confirms: Razorpay wired but demo-mode default (no prod keys), both commercial flags OFF, entitlement enforcement is a pass-through, zero real revenue. Let me re-run the DB counts guarding for missing tables.
+
+
+3 actions
+All four explorers returned, and the DB counts surface a critical honesty finding: the activation merges (#17/#18/#19) shipped code but their data backfills ran in the isolated task-agent environments — the shared/live DB is still un-activated (mei_scores=0, ont_competencies=0, cg_user_recommendations=8, subscription_packages=0, capadex_payments=0). The scripts exist but have not been run against the live database.
+
+I now have comprehensive evidence across all 10 areas. Writing the session plan, then the deliverables.
+
+
+Proposed plan
+
+Planning report and deliverable sequencing
+The two mockup-sandbox failures are pre-existing dev tooling — unrelated. Writing the deliverables now, starting with the main report.
+
+
+2 actions
+Writing the remaining three deliverables.
+
+
+4 actions
+All four deliverables are written. Now the architect honesty review (T006).
+
+Loaded code_review skill
+Running the architect honesty review on the four deliverables.
+
+
+3 actions
+Architect: PASS with three corrections. Fixing them now.
+
+
+4 actions
+Corrections applied. The two mockup-sandbox failures are pre-existing dev tooling, unrelated to this docs-only task. Let me record one durable, non-obvious lesson to memory and write the commit message.
+
+
+3 actions
+The audit is complete. All four deliverables are written, the architect honesty review passed (corrections applied), and the durable lesson is recorded to memory.
+
+The MX-LAUNCH-READINESS-01 audit is complete and the work is already merged.
+
+Summary
+I produced the four launch-readiness deliverables in backend/audit/launch-readiness/:
+
+launch_readiness_report.md — narrative, verdicts, 10 areas, 7 dimensions, cross-cutting blockers
+launch_scorecard.md — area×level, dimension×level, tier×verdict matrices
+launch_gap_analysis.md — P0/P1/P2 blockers with evidence and a blocker→tier matrix
+launch_roadmap.md — sequenced path (Phase 0–3) to each tier
+Final verdicts
+Tier	Verdict
+Institution Pilot	CONDITIONAL GO
+Commercial Pilot	NO GO
+Enterprise Launch	NO GO
+Public Launch	NO GO
+What's actually blocking you
+The single most important honest finding: the recent "activation" merges (#17/#18/#19) shipped code, but their data backfills ran inside isolated task environments — your live shared database is still un-activated (mei_scores=0, ont_competencies=0, cg_user_recommendations=8, comm_*=0, capadex_payments=0). The seed/backfill scripts exist but must be re-run against the production DB and verified.
+
+The other pilot-gating blockers:
+
+Safety — crisis/self-harm detection runs but notifies no human.
+Email is a login single-point-of-failure — if Zoho is down/unverified in prod, the whole user base (incl. super-admin) is locked out of OTP/MFA login.
+Production DB isolation must be confirmed (dev/prod currently share DATABASE_URL).
+Commercial is dormant — Razorpay is in demo mode, both commercial flags are off, entitlement is a pass-through, zero revenue.
+The shortest path to your first real "GO" is a concierge Institution Pilot (or a narrow Employer usage pilot — the Employer runtime is your most launch-ready surface), once the four Phase-0 conditions clear.
+
+The architect honesty review passed; I fixed the flagged consistency issues (roadmap tier count, the 4th Institution gate, and softening claims not in the primary evidence). Per your standing preference, I have not deployed — this is for your approval.

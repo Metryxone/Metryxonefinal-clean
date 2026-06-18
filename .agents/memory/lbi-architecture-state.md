@@ -138,6 +138,31 @@ Norms derive only from real responses with a kMin gate + `is_provisional`/`sourc
 provenance; synthetic defaults are stamped and never yield a real percentile. A
 raw-rescale `(raw/5)*100` is NOT a percentile — only norm-referenced values are.
 
+## "Show real LBI scores" spans TWO scoring systems (don't conflate)
+
+A "real LBI report" is fed by TWO independent systems, each with its own table,
+route, and "real vs preview" gate — proving the pipeline means proving BOTH:
+- **System A overall** — `lbi_score_history.overall_lbi` (+5 dims), computed by
+  `calculateAndPersistLBI` from `capadex_sessions`. This is what `/api/ai-reports/generate`
+  reads; it stays on the preview banner until a row exists that passes
+  `source<>'demo'` AND `NOT ILIKE '%@example.com'`.
+- **System B norms** — `lbi_session_responses` → `computeLbiNorms` → `lbi_subdomain_norms`
+  → `/api/lbi/calculate-score` returns norm-referenced subdomain percentiles + a raw
+  `overallScorePct`. `percentileBasis='norm_referenced'` only when norms exist; otherwise
+  `subdomain_norms_only`/raw-rescale (NOT a percentile).
+On a fresh DB the System-B framework tables (`lbi_age_bands/domains/subdomains/response_scales/
+questions/assessment_sessions/session_responses`) may not exist at all — `seed-lbi-data.sql`
+seeds only domains/subdomains/age_bands/modules, NOT questions/scales/sessions/responses.
+`lbi_subdomain_norms` ships missing its newer cols (`mean_score/sd_score/sample_size/
+is_provisional/source/computed_at`); `ensureLbiNormsSchema` ALTERs them in at compute time.
+
+**Validation harness:** `backend/scripts/lbi-validate-real-scores.ts` (idempotent;
+`--purge`) seeds a CLEARLY-MARKED non-demo cohort (age band `VAL_B`, `*VAL*` codes,
+`lbi.real.validation@metryxone.io`) — responses are seed inputs but every score/percentile
+is engine-computed — then exercises both systems and asserts established(≥30)/provisional(<30)
+norms. Dev super-admin login is MFA-gated; an HTTP smoke test can complete it by reading the
+`mfa_codes.code` for the `attempt_token` straight from the DB (Zoho email absent in dev).
+
 ## Two security traps when wiring real LBI data into a route
 
 - **Admin-gate prefix trap:** the global `app.use('/api/admin', auth→superadmin)` gate

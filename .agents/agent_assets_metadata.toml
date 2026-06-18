@@ -654,3 +654,51 @@ id = "HOQQu61n6yQW1jzbvrwgX"
 uri = "file://competency_quality_report.md"
 type = "text"
 title = "Competency Data Quality Review (Phase 1.3)"
+
+[[outputs]]
+id = "5r30RPh9XgFcOQ3C_-O_1"
+uri = "file://backend/audit/phase-1/founder_summary.md"
+type = "text"
+title = "Founder Summary — Phase 1"
+
+[[outputs]]
+id = "5ZZdPqeW2gr2HNTZzskH6"
+uri = "file://backend/audit/phase-1/competency_transformation_report.md"
+type = "text"
+title = "Competency Transformation Report"
+
+[[outputs]]
+id = "tYoMdpk6kzCj6DYNA7Z31"
+uri = "file://backend/audit/phase-1/competency_classification_report.md"
+type = "text"
+title = "Competency Classification Report"
+
+[[outputs]]
+id = "KXhXBAE_v3pFos1Iv-2LL"
+uri = "file://backend/audit/phase-1/competency_quality_report.md"
+type = "text"
+title = "Competency Quality Report"
+
+[[outputs]]
+id = "vVMFh2d4GYhGTKak59MCn"
+uri = "file://backend/audit/phase-1/micro_competency_report.md"
+type = "text"
+title = "Micro-Competency Report"
+
+[[outputs]]
+id = "_MuJOaX0mDZ_J89sJnPE8"
+uri = "file://backend/audit/phase-1/role_competency_profile_report.md"
+type = "text"
+title = "Role Competency Profile Report"
+
+[[outputs]]
+id = "xhZtIYQlrnBTU6iwHELkg"
+uri = "file://backend/audit/phase-1/assessment_mapping_report.md"
+type = "text"
+title = "Assessment Mapping Report"
+
+[[outputs]]
+id = "GD9LH8ZHK24RcEwh6n3zh"
+uri = "file://backend/audit/phase-1/superadmin_validation_report.md"
+type = "text"
+title = "Super Admin Validation Report"

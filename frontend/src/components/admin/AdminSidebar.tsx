@@ -163,7 +163,7 @@ export function AdminSidebar(props: AdminSidebarProps) {
         data-testid={`nav-${item.id}`}
       >
         <item.icon className={`${small ? 'h-4 w-4 opacity-70' : 'h-5 w-5'} flex-shrink-0`} />
-        {!sidebarCollapsed && <span className={`${small ? 'text-xs' : 'text-sm'} font-medium flex-1 text-left`}>{item.label}</span>}
+        {!sidebarCollapsed && <span className="text-[13px] font-medium flex-1 text-left">{item.label}</span>}
         {!sidebarCollapsed && item.badge != null && item.badge > 0 && (
           <span
             className="text-[10px] font-bold text-white rounded-full min-w-[16px] h-[16px] flex items-center justify-center px-1"
@@ -209,7 +209,7 @@ export function AdminSidebar(props: AdminSidebarProps) {
                 placeholder="Search menu…"
                 aria-label="Search menu options"
                 data-testid="input-nav-search"
-                className="w-full pl-8 pr-8 py-2 rounded-lg bg-white/10 text-white text-sm placeholder-white/40 outline-none focus:bg-white/15 focus:ring-1 focus:ring-white/25"
+                className="w-full pl-8 pr-8 py-2 rounded-lg bg-white/10 text-white text-[13px] placeholder-white/40 outline-none focus:bg-white/15 focus:ring-1 focus:ring-white/25"
               />
               {query && (
                 <button
@@ -237,7 +237,7 @@ export function AdminSidebar(props: AdminSidebarProps) {
         {/* Navigation */}
         <nav className="p-3 overflow-y-auto flex-1">
           {searching && visibleGroups.length === 0 && (
-            <p className="px-3 py-6 text-center text-xs text-white/40">No menu options match “{query}”.</p>
+            <p className="px-3 py-6 text-center text-[13px] text-white/40">No menu options match “{query}”.</p>
           )}
 
           {visibleGroups.map((group, gi) => {
@@ -260,7 +260,7 @@ export function AdminSidebar(props: AdminSidebarProps) {
                       title={`${tierLabel} — lower-frequency screens`}
                     >
                       <FlaskConical className="h-4 w-4 flex-shrink-0" />
-                      <span className="text-[10px] font-semibold lowercase tracking-widest flex-1 text-left">{tierLabel}</span>
+                      <span className="text-[11px] font-semibold lowercase tracking-widest flex-1 text-left">{tierLabel}</span>
                       {tierBadge > 0 && (
                         <span className="text-[10px] font-bold text-white bg-red-600 rounded-full min-w-[16px] h-[16px] flex items-center justify-center px-1">
                           {tierBadge > 99 ? '99+' : tierBadge}
@@ -303,7 +303,7 @@ export function AdminSidebar(props: AdminSidebarProps) {
                     aria-expanded={open}
                     className="w-full flex items-center gap-2 px-3 mb-1 py-1.5 rounded-lg text-white/40 hover:text-white/70 hover:bg-white/5 transition-all"
                   >
-                    <span className="text-[10px] font-semibold lowercase tracking-widest flex-1 text-left select-none">{group.label}</span>
+                    <span className="text-[11px] font-semibold lowercase tracking-widest flex-1 text-left select-none">{group.label}</span>
                     {!searching && (
                       <>
                         <span className="text-[10px] text-white/25">{group.items.length}</span>
@@ -327,7 +327,7 @@ export function AdminSidebar(props: AdminSidebarProps) {
                   aria-expanded={openGroups.has(PLATFORM_KEY)}
                   className="w-full flex items-center gap-2 px-3 mb-1 py-1.5 rounded-lg text-white/40 hover:text-white/70 hover:bg-white/5 transition-all"
                 >
-                  <span className="text-[10px] font-semibold lowercase tracking-widest flex-1 text-left select-none">Platform Access</span>
+                  <span className="text-[11px] font-semibold lowercase tracking-widest flex-1 text-left select-none">Platform Access</span>
                   <span className="text-[10px] text-white/25">{platformLinks.length}</span>
                   <ChevronDown className={`h-3 w-3 flex-shrink-0 transition-transform ${openGroups.has(PLATFORM_KEY) ? 'rotate-180' : ''}`} />
                 </button>
@@ -345,7 +345,7 @@ export function AdminSidebar(props: AdminSidebarProps) {
                     >
                       <link.icon className="h-4 w-4 flex-shrink-0" />
                       {!sidebarCollapsed && (
-                        <span className="text-xs font-medium flex-1 text-left truncate">{link.label}</span>
+                        <span className="text-[13px] font-medium flex-1 text-left truncate">{link.label}</span>
                       )}
                       {!sidebarCollapsed && <ExternalIcon />}
                     </button>
@@ -364,7 +364,7 @@ export function AdminSidebar(props: AdminSidebarProps) {
             data-testid="button-logout"
           >
             <LogOut className="h-5 w-5 flex-shrink-0" />
-            {!sidebarCollapsed && <span className="text-sm font-medium">Logout</span>}
+            {!sidebarCollapsed && <span className="text-[13px] font-medium">Logout</span>}
           </button>
         </div>
 

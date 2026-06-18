@@ -40,6 +40,11 @@ import {
   getCompetencyTypeMap,
   getClassificationReport,
 } from '../services/competency-type-classification.js';
+import {
+  getCompetencyMaster,
+  updateCompetencyMaster,
+  getCompetencyMasterSummary,
+} from '../services/competency-master.js';
 
 export function registerCompetencyFrameworkIntelligenceRoutes(
   app: Express,
@@ -125,5 +130,57 @@ export function registerCompetencyFrameworkIntelligenceRoutes(
     requireAuth,
     requireSuperAdmin,
     wrap(async () => getClassificationReport(pool)),
+  );
+
+  // ---- Phase 1.2: Competency Master Enhancement (additive eligibility axis) -
+  // The enhanced competency entity (code · name · type · description · status +
+  // six module-eligibility flags). Read-only list; the extension is produced by
+  // the idempotent seed (scripts/seed-competency-master.ts) and never mutates the
+  // genome nor creates duplicate competencies.
+  app.get('/api/competency-intelligence/master', gate, requireAuth, wrap(async (req) =>
+    getCompetencyMaster(pool, {
+      search: req.query.q ? String(req.query.q) : undefined,
+      typeKey: req.query.type ? String(req.query.type) : undefined,
+      status: req.query.status ? String(req.query.status) : undefined,
+      limit: req.query.limit ? Math.max(1, parseInt(String(req.query.limit), 10) || 0) : undefined,
+    }),
+  ));
+
+  // Admin summary (coverage · status breakdown · per-module eligibility ·
+  // curated-vs-default provenance · honest findings). Literal path registered
+  // before the `/master/:id` param handler.
+  app.get(
+    '/api/admin/competency-intelligence/master-summary',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async () => getCompetencyMasterSummary(pool)),
+  );
+
+  // Admin edit — update status + eligibility flags for ONE existing competency.
+  // Never creates a competency (404 if the id is unknown); stamps source=curated.
+  app.patch(
+    '/api/admin/competency-intelligence/master/:id',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req, res) => {
+      const body = (req.body ?? {}) as Record<string, unknown>;
+      const result = await updateCompetencyMaster(pool, String(req.params.id), {
+        status: body.status as string | undefined,
+        assessment_eligible: body.assessment_eligible as boolean | undefined,
+        ei_eligible: body.ei_eligible as boolean | undefined,
+        career_builder_eligible: body.career_builder_eligible as boolean | undefined,
+        employer_eligible: body.employer_eligible as boolean | undefined,
+        learning_eligible: body.learning_eligible as boolean | undefined,
+        future_ready_eligible: body.future_ready_eligible as boolean | undefined,
+      });
+      if (!result.ok) {
+        const code = result.error === 'competency_not_found' ? 404 : 400;
+        res.status(code).json({ ok: false, error: result.error });
+        return undefined;
+      }
+      return result.row;
+    }),
   );
 }

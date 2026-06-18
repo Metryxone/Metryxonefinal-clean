@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { Screen } from '../App';
 
-import { Menu, RefreshCw, Search, Settings, Target, Brain, FileCheck, Database, Package, Calculator, Users, BookOpen, Network, Layers, Activity, Building2, Briefcase, Users2, UserCircle2, Map, BarChart2, BarChart3, GitBranch, Sparkles, PieChart, TrendingUp, AlertTriangle, MessageCircle, Bot, FileDown, CreditCard, Shield, FlaskConical, ClipboardList, Cpu, Award, Gauge, Zap, Sliders, Shuffle, Timer, LineChart, ClipboardCheck } from 'lucide-react';
+import { Menu, RefreshCw, Search, Settings, Target, Brain, FileCheck, Database, Package, Calculator, Users, BookOpen, Network, Layers, Activity, Building2, Briefcase, Users2, UserCircle2, Map, BarChart2, BarChart3, GitBranch, Sparkles, PieChart, TrendingUp, AlertTriangle, MessageCircle, Bot, FileDown, CreditCard, Shield, FlaskConical, ClipboardList, Cpu, Award, Gauge, Zap, Sliders, Shuffle, Timer, LineChart, ClipboardCheck, Boxes } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import SuperAdminLogin from './SuperAdminLogin';
@@ -95,6 +95,7 @@ const OverviewPanel = lazy(() => import('./superadmin/OverviewPanel'));
 const UserMgmtPanel = lazy(() => import('./superadmin/UserMgmtPanel'));
 const EIHealthPanel = lazy(() => import('./superadmin/EIHealthPanel'));
 const CompetencyFrameworkIntelligencePanel = lazy(() => import('./superadmin/CompetencyFrameworkIntelligencePanel'));
+const CompetencyMasterPanel = lazy(() => import('./superadmin/CompetencyMasterPanel'));
 const CareerEvidencePanel = lazy(() => import('./superadmin/CareerEvidencePanel'));
 const MEIDesignPanel = lazy(() => import('./superadmin/MEIDesignPanel'));
 const EIOperationsPanel = lazy(() => import('./superadmin/EIOperationsPanel'));
@@ -808,6 +809,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       { id: 'cmp-command-center',     label: 'Command Center',     icon: Target,     node: <ProductCommandCenter productKey="competency" /> },
                       { id: 'cmp-intelligence',       label: 'Intelligence',       icon: Brain,      node: <CompetencyIntelligenceAdminPanel /> },
                       ...(cfiEnabled ? [{ id: 'cmp-framework-intel', label: 'Framework Intelligence', icon: Network, node: <CompetencyFrameworkIntelligencePanel /> }] : []),
+                      ...(cfiEnabled ? [{ id: 'cmp-master', label: 'Competency Master', icon: Boxes, node: <CompetencyMasterPanel /> }] : []),
                       { id: 'cmp-questions',          label: 'Questions',          icon: FileCheck,  node: <CompetencyQuestionsPanel /> },
                       { id: 'cmp-questionbank',       label: 'Question Bank',      icon: Database,   node: <QuestionBankPanel /> },
                       { id: 'cmp-custom-modules',     label: 'Custom Modules',     icon: Package,    node: <AssessmentModulesManagement onNavigate={onNavigate} modulesOnly /> },

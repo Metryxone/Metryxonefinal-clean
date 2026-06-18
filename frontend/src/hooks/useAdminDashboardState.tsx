@@ -2658,12 +2658,12 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
         { id: 'overview',               icon: PieChart,        label: 'Overview' },
       ]
     },
-    // ── CAPADEX — command center, intelligence pipeline, ops & framework ─────
+    // ── CAPADEX — single straight entry (no redundant group header); all tools
+    //    live as inner tabs of the CAPADEX framework (capadex-fw → FrameworkPanel
+    //    extraTabs in SuperAdminDashboard). label:null → renders item directly. ──
     {
-      label: 'CAPADEX',
+      label: null,
       items: [
-        // Collapsed: all CAPADEX tools live as inner tabs of the CAPADEX framework
-        // (capadex-fw → FrameworkPanel extraTabs in SuperAdminDashboard).
         { id: 'capadex-fw', icon: Sparkles, label: 'CAPADEX Framework' },
       ]
     },
@@ -2676,59 +2676,58 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
         { id: 'competency-fw', icon: Target, label: 'Competency Framework' },
       ]
     },
-    // ── Assessment Factory (CAF) — collapsed by default ─────────────────────
+    // ── Assessment Factory (CAF) — single straight entry; CAF tools live as
+    //    inner tabs of the Assessment Factory shell (assessment-factory-fw →
+    //    AdminTabbedShell in SuperAdminDashboard). label:null → renders direct. ──
     {
-      label: 'Assessment Factory',
-      isLabs: true,
+      label: null,
       items: [
-        // Collapsed: CAF tools live as inner tabs of the Assessment Factory shell
-        // (assessment-factory-fw → AdminTabbedShell in SuperAdminDashboard).
         { id: 'assessment-factory-fw', icon: Database, label: 'Assessment Factory' },
       ]
     },
     // ── Competency Ontology — folded into Competency Framework tabs (see competency-fw extraTabs in SuperAdminDashboard) ──
-    // ── LBI — command center, framework & engine ────────────────────────────
+    // ── LBI — single straight entry; LBI command center & engine live as inner
+    //    tabs of the LBI framework (lbi-fw → FrameworkPanel extraTabs in
+    //    SuperAdminDashboard). label:null → renders the item directly. ──────────
     {
-      label: 'LBI',
+      label: null,
       items: [
-        // Collapsed: LBI command center & engine live as inner tabs of the LBI
-        // framework (lbi-fw → FrameworkPanel extraTabs in SuperAdminDashboard).
         { id: 'lbi-fw', icon: Brain, label: 'LBI Framework' },
       ]
     },
-    // ── Employability & Readiness ───────────────────────────────────────────
+    // ── Employability & Readiness — single straight entry; all tools live as
+    //    inner tabs of the framework shell (employability-fw → AdminTabbedShell
+    //    in SuperAdminDashboard). label:null → renders the item directly. ───────
     {
-      label: 'Employability & Readiness',
+      label: null,
       items: [
-        // Collapsed: all employability tools live as inner tabs of the framework
-        // shell (employability-fw → AdminTabbedShell in SuperAdminDashboard).
         { id: 'employability-fw', icon: TrendingUp, label: 'Employability Framework' },
       ]
     },
-    // ── Career Builder — command center & analytics ─────────────────────────
+    // ── Career Builder — single straight entry; all Career Builder tools live as
+    //    inner tabs of the framework shell (career-builder-fw → AdminTabbedShell
+    //    in SuperAdminDashboard). label:null → renders the item directly. ───────
     {
-      label: 'Career Builder',
+      label: null,
       items: [
-        // Collapsed: all Career Builder tools live as inner tabs of the framework
-        // shell (career-builder-fw → AdminTabbedShell in SuperAdminDashboard).
         { id: 'career-builder-fw', icon: Network, label: 'Career Builder Framework' },
       ]
     },
-    // ── Employer & Talent Intelligence ──────────────────────────────────────
+    // ── Employer & Talent Intelligence — single straight entry; all tools live
+    //    as inner tabs of the framework shell (employer-fw → AdminTabbedShell in
+    //    SuperAdminDashboard). label:null → renders the item directly. ──────────
     {
-      label: 'Employer & Talent',
+      label: null,
       items: [
-        // Collapsed: all employer/talent tools live as inner tabs of the framework
-        // shell (employer-fw → AdminTabbedShell in SuperAdminDashboard).
         { id: 'employer-fw', icon: Building2, label: 'Employer & Talent Framework' },
       ]
     },
-    // ── Future Readiness ────────────────────────────────────────────────────
+    // ── Future Readiness — single straight entry; FRP tools live as inner tabs
+    //    of the framework shell (future-readiness-fw → AdminTabbedShell in
+    //    SuperAdminDashboard). label:null → renders the item directly. ──────────
     {
-      label: 'Future Readiness',
+      label: null,
       items: [
-        // Collapsed: FRP tools live as inner tabs of the framework shell
-        // (future-readiness-fw → AdminTabbedShell in SuperAdminDashboard).
         { id: 'future-readiness-fw', icon: Zap, label: 'Future Readiness Framework' },
       ]
     },

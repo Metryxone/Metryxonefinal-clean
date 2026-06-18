@@ -53,6 +53,16 @@ import {
   updateMicroRelationship,
   deleteMicroRelationship,
 } from '../services/micro-competency.js';
+import {
+  getRoleProfiles,
+  getRoleProfile,
+  getRoleCompetencyMatrix,
+  getRoleReadiness,
+  getRoleCompetencyProfileSummary,
+  createRoleCompetencyProfile,
+  updateRoleCompetencyProfile,
+  deleteRoleCompetencyProfile,
+} from '../services/role-competency-profile.js';
 
 export function registerCompetencyFrameworkIntelligenceRoutes(
   app: Express,
@@ -281,6 +291,140 @@ export function registerCompetencyFrameworkIntelligenceRoutes(
       const result = await deleteMicroRelationship(pool, id);
       if (!result.ok) {
         res.status(result.error === 'relationship_not_found' ? 404 : 400).json({ ok: false, error: result.error });
+        return undefined;
+      }
+      return { deleted: true, id };
+    }),
+  );
+
+  // ---- Phase 1.5: Role Competency Profile Engine ---------------------------
+  // Additive role -> competency requirement layer (required level · weight ·
+  // criticality) over the genome. Powers three deliverables: the Role Competency
+  // Profile, the Role Competency Matrix, and the Role Readiness Framework. Both
+  // ids always reference EXISTING rows; onto_roles/onto_competencies untouched.
+
+  // Nested role -> competency requirement profiles (the "Role Competency Profile").
+  app.get('/api/competency-intelligence/role-profiles', gate, requireAuth, wrap(async (req) =>
+    getRoleProfiles(pool, {
+      roleId: req.query.role_id ? String(req.query.role_id) : undefined,
+      search: req.query.q ? String(req.query.q) : undefined,
+      activeOnly: String(req.query.active ?? '') === '1' || req.query.active === 'true',
+    }),
+  ));
+
+  // Role Competency Matrix — roles x competencies grid.
+  app.get('/api/competency-intelligence/role-matrix', gate, requireAuth, wrap(async (req) =>
+    getRoleCompetencyMatrix(pool, {
+      activeOnly: String(req.query.active ?? '') === '1' || req.query.active === 'true',
+    }),
+  ));
+
+  // Role Readiness Framework — weighted gap of actual vs required. Optional
+  // actual levels passed as `?actuals=comp_id:level,comp_id:level` (read-only;
+  // no actuals => required structure only, readiness honestly unmeasured).
+  app.get('/api/competency-intelligence/role-readiness/:roleId', gate, requireAuth, wrap(async (req, res) => {
+    const actuals: Record<string, number> = {};
+    const raw = req.query.actuals ? String(req.query.actuals) : '';
+    if (raw) {
+      for (const pair of raw.split(',')) {
+        const [cid, lvl] = pair.split(':');
+        const n = Number(lvl);
+        if (cid && Number.isFinite(n)) actuals[cid.trim()] = n;
+      }
+    }
+    const result = await getRoleReadiness(pool, String(req.params.roleId), actuals);
+    if (!result) { res.status(404).json({ ok: false, error: 'role_not_found' }); return undefined; }
+    return result;
+  }));
+
+  // Admin summary (coverage · weight integrity · criticality mix · findings).
+  // Literal path registered BEFORE the `/role-profiles/:id` param handlers.
+  app.get(
+    '/api/admin/competency-intelligence/role-profiles/summary',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async () => getRoleCompetencyProfileSummary(pool)),
+  );
+
+  // Single role profile (admin convenience; returns honest empty profile if the
+  // role exists with no requirements yet, 404 only when the role is unknown).
+  app.get(
+    '/api/admin/competency-intelligence/role-profiles/role/:roleId',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req, res) => {
+      const result = await getRoleProfile(pool, String(req.params.roleId));
+      if (!result) { res.status(404).json({ ok: false, error: 'role_not_found' }); return undefined; }
+      return result;
+    }),
+  );
+
+  // Admin create — one role-competency requirement. Validates role AND
+  // competency EXIST; never creates either.
+  app.post(
+    '/api/admin/competency-intelligence/role-profiles',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req, res) => {
+      const body = (req.body ?? {}) as Record<string, unknown>;
+      const result = await createRoleCompetencyProfile(pool, {
+        role_id: String(body.role_id ?? ''),
+        competency_id: String(body.competency_id ?? ''),
+        required_level: body.required_level != null ? Number(body.required_level) : NaN,
+        weight: body.weight != null ? Number(body.weight) : undefined,
+        criticality: body.criticality != null ? String(body.criticality) : undefined,
+        rationale: body.rationale != null ? String(body.rationale) : null,
+      });
+      if (!result.ok) {
+        const notFound = result.error === 'role_not_found' || result.error === 'competency_not_found';
+        const conflict = result.error === 'duplicate_requirement';
+        res.status(notFound ? 404 : conflict ? 409 : 400).json({ ok: false, error: result.error });
+        return undefined;
+      }
+      return result.row;
+    }),
+  );
+
+  // Admin update — edit level / weight / criticality / rationale / active.
+  app.patch(
+    '/api/admin/competency-intelligence/role-profiles/:id',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req, res) => {
+      const id = parseInt(String(req.params.id), 10);
+      if (!Number.isFinite(id)) { res.status(400).json({ ok: false, error: 'invalid_id' }); return undefined; }
+      const body = (req.body ?? {}) as Record<string, unknown>;
+      const result = await updateRoleCompetencyProfile(pool, id, {
+        required_level: body.required_level != null ? Number(body.required_level) : undefined,
+        weight: body.weight != null ? Number(body.weight) : undefined,
+        criticality: body.criticality != null ? String(body.criticality) : undefined,
+        rationale: body.rationale !== undefined ? (body.rationale === null ? null : String(body.rationale)) : undefined,
+        active: body.active as boolean | undefined,
+      });
+      if (!result.ok) {
+        res.status(result.error === 'requirement_not_found' ? 404 : 400).json({ ok: false, error: result.error });
+        return undefined;
+      }
+      return result.row;
+    }),
+  );
+
+  // Admin delete — remove one requirement (reversible; genome untouched).
+  app.delete(
+    '/api/admin/competency-intelligence/role-profiles/:id',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req, res) => {
+      const id = parseInt(String(req.params.id), 10);
+      if (!Number.isFinite(id)) { res.status(400).json({ ok: false, error: 'invalid_id' }); return undefined; }
+      const result = await deleteRoleCompetencyProfile(pool, id);
+      if (!result.ok) {
+        res.status(result.error === 'requirement_not_found' ? 404 : 400).json({ ok: false, error: result.error });
         return undefined;
       }
       return { deleted: true, id };

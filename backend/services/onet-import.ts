@@ -22,6 +22,12 @@
  * refreshes in place and never duplicates. Additive: the curated starter rows
  * (ROLE_*, C_*) use disjoint code namespaces and are left untouched.
  *
+ * Unrated occupations: O*NET only rates a subset of its occupations; aggregate
+ * SOC codes (e.g. 15-1252.00 "Software Developers") import with zero links. A
+ * final derive step (see deriveUnratedRoleCompetencies) inherits a competency set
+ * for those roles from their closest rated SOC relatives, stamped
+ * source='onet_derived' so it is never mistaken for a native O*NET rating.
+ *
  * Data files: tab-delimited O*NET text exports in `backend/data/onet/`. If a file
  * is missing the importer downloads it from onetcenter.org (override with the
  * ONET_DB_BASE_URL env var; skip with download:false).
@@ -40,7 +46,19 @@ export interface OnetImportOptions {
   download?: boolean;
   /** Keep only occupation↔element links at or above this importance (1-5). Default 3.0. */
   importanceThreshold?: number;
+  /**
+   * After importing native O*NET ratings, derive a competency set for the
+   * occupations O*NET leaves unrated (aggregate SOC codes) by inheriting from
+   * their rated SOC relatives. Derived rows are stamped source='onet_derived'.
+   * Default true.
+   */
+  deriveUnrated?: boolean;
 }
+
+// Marker stamped on competency links synthesised for unrated occupations. Kept
+// distinct from native 'onet' rows so the derived/curated nature stays auditable
+// and is never represented as a genuine O*NET rating.
+const DERIVED_SOURCE = 'onet_derived';
 
 export interface OnetImportResult {
   counts: Record<string, number>;
@@ -345,9 +363,219 @@ export async function runOnetImport(pool: Pool, opts: OnetImportOptions = {}): P
       counts.links_skipped_below_threshold = skipped;
     }
 
+    // ── 5. DERIVE COMPETENCIES FOR UNRATED OCCUPATIONS ─────────────────────
+    if (opts.deriveUnrated ?? true) {
+      const derived = await deriveUnratedRoleCompetencies(pool);
+      counts.roles_unrated = derived.rolesUnrated;
+      counts.roles_derived = derived.rolesDerived;
+      counts.map_role_competency_derived = derived.linksDerived;
+    }
+
     return { counts, ok: true };
   } catch (err: any) {
     console.error('[onet-import] error:', err);
     return { counts, ok: false, error: err?.message ?? 'Unknown error' };
   }
+}
+
+// ───────────────────────────────────────────────────────────────────────────
+// Derived competency inheritance for unrated occupations
+// ───────────────────────────────────────────────────────────────────────────
+//
+// O*NET 29.0 publishes Skills/Abilities/Knowledge/Work-Styles ratings for only a
+// subset of its occupations; the remainder (aggregate SOC codes such as
+// 15-1252.00 "Software Developers") import with ZERO competency links — an honest
+// data gap. This step gives those roles a usable, clearly-labelled competency set
+// by inheriting from their closest *rated* SOC relatives.
+//
+// A SOC code is XX-MBBDD (major=2, minor=1, broad=2, detailed=2 digits). For each
+// unrated role we walk outward through SOC-prefix tiers — same detailed base
+// (.01/.02 siblings) → broad group → minor group → major group — and stop at the
+// first tier that has rated relatives. We then aggregate those relatives'
+// competency links: a competency is adopted when it appears in a majority of the
+// relatives (consensus), topped up to a minimum / capped at a maximum so every
+// unrated role ends with a reasonable set. Weight is the mean of the relatives'
+// weights; the target proficiency band is their modal band.
+//
+// Every derived row is stamped source='onet_derived' so it is never mistaken for
+// a native O*NET rating. The step is idempotent: derived rows for a role that has
+// since gained native ratings are removed, and re-runs UPSERT in place.
+
+const DERIVE_MAJORITY = 0.5;   // adopt competencies present in ≥ half the relatives
+const DERIVE_MIN_COMPETENCIES = 8;   // top up to at least this many (by frequency)
+const DERIVE_MAX_COMPETENCIES = 25;  // never exceed this many derived links per role
+
+interface NativeLink {
+  competencyId: number;
+  weight: number;
+  targetProficiency: string | null;
+}
+
+// SOC base ("15-1252") from an ont_roles code ("ONET_15-1252.00").
+function socBaseFromCode(code: string): string | null {
+  if (!code.startsWith('ONET_')) return null;
+  const soc = code.slice('ONET_'.length);
+  const base = soc.split('.')[0].trim();
+  return base.length >= 2 ? base : null;
+}
+
+// SOC-prefix tiers from tightest (detailed base) to loosest (major group).
+function socPrefixTiers(base: string): string[] {
+  return [
+    base,             // detailed base — .01/.02 siblings sharing 15-1252
+    base.slice(0, 6), // broad group   — 15-125
+    base.slice(0, 4), // minor group   — 15-1
+    base.slice(0, 2), // major group   — 15
+  ].filter((p, i, a) => p.length >= 2 && a.indexOf(p) === i);
+}
+
+function modal<T>(values: T[]): T | null {
+  if (values.length === 0) return null;
+  const freq = new Map<T, number>();
+  for (const v of values) freq.set(v, (freq.get(v) ?? 0) + 1);
+  let best: T | null = null;
+  let bestN = -1;
+  for (const [v, n] of freq) if (n > bestN) { best = v; bestN = n; }
+  return best;
+}
+
+export interface DeriveResult {
+  rolesUnrated: number;
+  rolesDerived: number;
+  linksDerived: number;
+}
+
+/**
+ * Synthesise competency links for O*NET occupations that import with no native
+ * ratings, inheriting from their closest rated SOC relatives. Stamped
+ * source='onet_derived'. Idempotent. Returns 0s when there is nothing to derive.
+ */
+export async function deriveUnratedRoleCompetencies(pool: Pool): Promise<DeriveResult> {
+  // Drop stale derived rows for any role that has since gained native ratings,
+  // so derived data never lingers alongside real O*NET ratings.
+  await pool.query(`
+    DELETE FROM map_role_competency d
+    WHERE d.source = $1
+      AND EXISTS (
+        SELECT 1 FROM map_role_competency n
+        WHERE n.role_id = d.role_id AND n.source = 'onet'
+      )
+  `, [DERIVED_SOURCE]);
+
+  // All O*NET roles with their SOC code.
+  const { rows: roleRows } = await pool.query(
+    `SELECT id, code FROM ont_roles WHERE code LIKE 'ONET_%'`,
+  );
+  // Native O*NET links only — the basis for inheritance.
+  const { rows: linkRows } = await pool.query(
+    `SELECT role_id, competency_id, weight, target_proficiency
+       FROM map_role_competency WHERE source = 'onet'`,
+  );
+
+  const nativeByRole = new Map<number, NativeLink[]>();
+  for (const r of linkRows) {
+    const arr = nativeByRole.get(r.role_id) ?? [];
+    arr.push({
+      competencyId: r.competency_id,
+      weight: Number(r.weight),
+      targetProficiency: r.target_proficiency ?? null,
+    });
+    nativeByRole.set(r.role_id, arr);
+  }
+
+  // Rated roles grouped by SOC base, for relative lookup.
+  const ratedByBase = new Map<string, number[]>();
+  const baseByRole = new Map<number, string>();
+  for (const r of roleRows) {
+    const base = socBaseFromCode(r.code);
+    if (!base) continue;
+    baseByRole.set(r.id, base);
+    if (nativeByRole.has(r.id)) {
+      const arr = ratedByBase.get(base) ?? [];
+      arr.push(r.id);
+      ratedByBase.set(base, arr);
+    }
+  }
+
+  const unratedRoles = roleRows.filter((r: any) => !nativeByRole.has(r.id));
+
+  const flat: unknown[] = [];
+  let rolesDerived = 0;
+  let linksDerived = 0;
+
+  for (const role of unratedRoles) {
+    const base = baseByRole.get(role.id);
+    if (!base) continue;
+
+    // Find the tightest SOC tier that has rated relatives (excluding self).
+    let relatives: number[] = [];
+    for (const prefix of socPrefixTiers(base)) {
+      const found: number[] = [];
+      for (const [rbase, ids] of ratedByBase) {
+        if (rbase.startsWith(prefix)) {
+          for (const id of ids) if (id !== role.id) found.push(id);
+        }
+      }
+      if (found.length > 0) { relatives = found; break; }
+    }
+    if (relatives.length === 0) continue; // no rated relative anywhere — leave honest gap
+
+    // Aggregate relatives' competency links: frequency, mean weight, modal band.
+    const agg = new Map<number, { count: number; weightSum: number; bands: string[] }>();
+    for (const relId of relatives) {
+      for (const lk of nativeByRole.get(relId) ?? []) {
+        const a = agg.get(lk.competencyId) ?? { count: 0, weightSum: 0, bands: [] };
+        a.count += 1;
+        a.weightSum += lk.weight;
+        if (lk.targetProficiency) a.bands.push(lk.targetProficiency);
+        agg.set(lk.competencyId, a);
+      }
+    }
+    if (agg.size === 0) continue;
+
+    // Rank by consensus (frequency) then mean weight; adopt the majority set,
+    // topped up to a minimum and capped at a maximum.
+    const ranked = [...agg.entries()]
+      .map(([competencyId, a]) => ({
+        competencyId,
+        freq: a.count / relatives.length,
+        meanWeight: a.weightSum / a.count,
+        band: modal(a.bands),
+      }))
+      .sort((x, y) => (y.freq - x.freq) || (y.meanWeight - x.meanWeight));
+
+    let chosen = ranked.filter(r => r.freq >= DERIVE_MAJORITY);
+    if (chosen.length < DERIVE_MIN_COMPETENCIES) {
+      chosen = ranked.slice(0, DERIVE_MIN_COMPETENCIES);
+    }
+    if (chosen.length > DERIVE_MAX_COMPETENCIES) {
+      chosen = chosen.slice(0, DERIVE_MAX_COMPETENCIES);
+    }
+    if (chosen.length === 0) continue;
+
+    for (const c of chosen) {
+      const weight = Math.min(1.5, Math.max(0.5, Math.round(c.meanWeight * 1000) / 1000));
+      // weight = importance / 3.5 ⇒ core when implied importance ≥ 3.75.
+      const tier = weight * 3.5 >= 3.75 ? 'core' : 'secondary';
+      const target = c.band ?? 'proficient';
+      const minP = oneBandBelow(target);
+      flat.push(role.id, c.competencyId, tier, weight, minP, target, DERIVED_SOURCE);
+      linksDerived++;
+    }
+    rolesDerived++;
+  }
+
+  if (flat.length > 0) {
+    await chunkedInsert(
+      pool,
+      (rows) => `INSERT INTO map_role_competency (role_id, competency_id, importance_tier, weight, min_proficiency, target_proficiency, source) VALUES ${
+        Array.from({ length: rows }, (_, i) => `($${i * 7 + 1},$${i * 7 + 2},$${i * 7 + 3},$${i * 7 + 4},$${i * 7 + 5},$${i * 7 + 6},$${i * 7 + 7})`).join(',')
+      } ON CONFLICT (role_id, competency_id) DO UPDATE SET importance_tier=EXCLUDED.importance_tier,
+          weight=EXCLUDED.weight, min_proficiency=EXCLUDED.min_proficiency,
+          target_proficiency=EXCLUDED.target_proficiency, source=EXCLUDED.source, updated_at=NOW()`,
+      flat, 7,
+    );
+  }
+
+  return { rolesUnrated: unratedRoles.length, rolesDerived, linksDerived };
 }

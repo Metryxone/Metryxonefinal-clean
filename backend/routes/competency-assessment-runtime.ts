@@ -28,6 +28,7 @@
  */
 import type { Express, NextFunction, Request, Response } from 'express';
 import type { Pool } from 'pg';
+import { resolveBestOntRole, getRoleCompetencies } from '../services/role-crosswalk.js';
 
 type RequireAuth = (req: Request, res: Response, next: NextFunction) => void;
 
@@ -616,6 +617,77 @@ export function registerCompetencyAssessmentRuntime(opts: { app: Express; pool: 
     } catch (e: any) {
       console.error('[cra] interventions failed:', e);
       res.status(500).json({ success: false, error: e?.message ?? 'interventions_failed' });
+    }
+  });
+
+  // ── GET /api/competency/role-library/:userId ─────────────────────────────
+  // Crosswalk surface: resolve the caller's target role (or ?role= override) to
+  // the shared ontology role library (ont_roles) and return the competencies it
+  // requires, sourced from O*NET / curated starter rows via map_role_competency.
+  //
+  // The legacy ROLE_PRIORITIES map above only covers 10 hardcoded role labels;
+  // every other target role previously surfaced ZERO role-specific competencies.
+  // This endpoint draws competencies straight from the bigger imported library
+  // (1016 O*NET occupations + curated starter roles) so any resolvable role —
+  // not just the hardcoded ten — gets a real competency profile. Read-only and
+  // honest: an unresolved role returns resolved:null; a rated-gap role returns
+  // an empty competency list rather than fabricated requirements.
+  app.get('/api/competency/role-library/:userId', requireAuth, async (req: Request, res: Response) => {
+    try {
+      await gate();
+      const auth = callerId(req);
+      if (!auth) return res.status(401).json({ success: false, error: 'unauthenticated' });
+      if (req.params.userId && req.params.userId !== auth) {
+        return res.status(403).json({ success: false, error: 'forbidden' });
+      }
+      const userId = auth;
+
+      // Role to resolve: explicit ?role= wins, else profile target, else current.
+      const queryRole = typeof req.query.role === 'string' ? req.query.role.trim() : '';
+      const profile = await getProfile(pool, userId);
+      const requestedRole = queryRole || profile.target_role || profile.current_role || '';
+
+      if (!requestedRole) {
+        return res.json(envelope({
+          requestedRole: null,
+          resolved: null,
+          requiredCompetencies: [],
+          counts: { total: 0, core: 0, secondary: 0 },
+          note: 'No target/current role on profile and no ?role= provided.',
+        }));
+      }
+
+      const match = await resolveBestOntRole(pool, requestedRole);
+      if (!match) {
+        return res.json(envelope({
+          requestedRole,
+          resolved: null,
+          requiredCompetencies: [],
+          counts: { total: 0, core: 0, secondary: 0 },
+          note: 'Role did not resolve to any role in the ontology library.',
+        }));
+      }
+
+      const competencies = await getRoleCompetencies(pool, match.code);
+      const core = competencies.filter(c => c.importanceTier === 'core').length;
+
+      res.json(envelope({
+        requestedRole,
+        resolved: {
+          code: match.code,
+          title: match.title,
+          matchType: match.matchType,
+          source: match.source,
+        },
+        requiredCompetencies: competencies,
+        counts: { total: competencies.length, core, secondary: competencies.length - core },
+        note: competencies.length === 0
+          ? 'Role resolved but carries no competency ratings in the library (O*NET coverage gap).'
+          : undefined,
+      }));
+    } catch (e: any) {
+      console.error('[cra] role-library failed:', e);
+      res.status(500).json({ success: false, error: e?.message ?? 'role_library_failed' });
     }
   });
 }

@@ -176,6 +176,49 @@ Each layer has a `status` lifecycle: `draft → in_review → approved → publi
 | GET/POST/PATCH/DELETE | `/governance/quality-rules` | Quality gate CRUD |
 | GET | `/governance/stats` | Governance dashboard stats |
 
+### Role Crosswalk — `/api/competency/`
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| GET | `/role-library/:userId` | Resolve the caller's target/current role (or `?role=` override) to the ontology role library and return its required competencies, sourced from O*NET / curated starter rows. |
+
+---
+
+## 4.5 Role Crosswalk (app role → `ont_roles.code`)
+
+User-facing flows key off their **own** role identifiers — free-text labels on
+the profile (`cra_profiles.target_role_label` / `current_role_label`), legacy
+career-intelligence catalog ids (`'swe'`, `'ml-eng'`, `'pm'`, …), or ontology
+codes already (`ROLE_*`, `ONET_*`). The crosswalk in
+`backend/services/role-crosswalk.ts` bridges any of those to a canonical
+`ont_roles.code` so the large imported library (1016 O*NET occupations + ~24
+curated starter roles) is actually consumed instead of sitting idle.
+
+**Resolver** — `resolveOntRole(pool, input)` returns ranked `RoleMatch[]`;
+`resolveBestOntRole(pool, input)` returns the single best (biased toward a role
+that actually carries competencies). Resolution order:
+
+1. **`code`** — input is a literal `ONET_*` / `ROLE_*` code.
+2. **`exact_title`** — normalized title equals the input (or its legacy-id title).
+3. **`alias`** — bridged via legacy-id→title or a title synonym (e.g.
+   "Software Engineer" → O*NET "Software Developers").
+4. **`partial_title`** — substring/token overlap.
+
+Within a rank tier, the role with the most `map_role_competency` links wins, so a
+resolved role is useful rather than an empty shell.
+
+**Competencies** — `getRoleCompetencies(pool, roleCode)` joins
+`map_role_competency ⋈ ont_competencies` (core tier + higher weight first) and
+returns the per-competency tier / weight / proficiency targets with provenance
+(`source` = `onet` or `seeded`).
+
+**Honest by construction:** an unresolved role returns `resolved: null`; a role
+that resolves but carries no ratings (the O*NET coverage gap — 137 aggregate
+occupations have no element ratings) returns an empty competency list with a
+`note`, never fabricated requirements. Before the crosswalk only the 10
+hard-coded labels in `competency-assessment-runtime.ts` `ROLE_PRIORITIES` had any
+role-specific competencies; every other role now draws from the shared library.
+
 ---
 
 ## 5. CAPADEX Bridging Rules

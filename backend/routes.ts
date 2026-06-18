@@ -165,6 +165,7 @@ import { registerNHDAGovernanceRoutes } from "./routes/nhda-governance";
 import { registerMEIV2Routes } from "./routes/mei-v2";
 import { registerCareerGraphRoutes } from "./routes/career-graph";
 import { registerCareerPathwaysIntelligenceRoutes } from "./routes/career-pathways-intelligence";
+import { registerCareerEvidenceRoutes } from "./routes/career-evidence";
 import { registerTalentFoundationRoutes } from "./routes/talent-foundation";
 import { registerTalentLevelProfileRoutes } from "./routes/talent-level-profiles";
 import { registerTalentScoringRoutes } from "./routes/talent-scoring";
@@ -13465,6 +13466,8 @@ Rules:
   registerCareerGraphRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Career Pathways Intelligence (CPI) — pathway forecast, growth plans, transitions ─
   registerCareerPathwaysIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  // ── Career Builder — First Outcome Evidence Loop (score -> real outcome -> validated claim) ─
+  registerCareerEvidenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Talent Foundation — Role Families, Competency Blueprints, Mappings ───────
   registerTalentFoundationRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Talent Foundation Phase 2: Role Level Profiles ───────────────────────────

@@ -546,6 +546,14 @@ export const FEATURE_FLAGS = {
    *  existing single super_admin gate on /api/admin/* remains the live enforcement path; RBAC grants are
    *  advisory definitions, never silently swapped in. Env: `FF_GOVERNANCE_RBAC_V2`. */
   governanceRbacV2: false,
+  /** Career Builder — First Outcome Evidence Loop. Captures real observed outcomes (goal
+   *  achieved, EI lift, role change) per subject alongside the prior score that preceded them,
+   *  and exposes a read-only validation engine that links score -> real outcome with honest n
+   *  and confidence (never presenting demo/synthetic data as validated). Flag OFF → the goal
+   *  completion hook is a no-op, /api/career/outcomes* and /api/admin/career-evidence/* routes
+   *  503, no career_outcomes table is created and the SuperAdmin panel hides → byte-identical
+   *  legacy. Env: `FF_CAREER_OUTCOME_EVIDENCE`. */
+  careerOutcomeEvidence: true,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -860,6 +868,10 @@ export function isCommercialRazorpayRecurringEnabled(): boolean {
 
 export function isInvoiceGstEngineEnabled(): boolean {
   return isFlagEnabled('invoiceGstEngine');
+}
+
+export function isCareerOutcomeEvidenceEnabled(): boolean {
+  return isFlagEnabled('careerOutcomeEvidence');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

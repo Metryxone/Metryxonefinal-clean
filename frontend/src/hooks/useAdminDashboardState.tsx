@@ -2678,6 +2678,7 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
         { id: 'intelligence-pipeline',         icon: Layers,     label: 'Intelligence Pipeline' },
         { id: 'runtime-intelligence',          icon: Layers,     label: 'Runtime Intelligence' },
         { id: 'ei-health',                     icon: TrendingUp, label: 'EI Health & Analytics' },
+        { id: 'career-evidence',               icon: Award,      label: 'Outcome Evidence Loop' },
         { id: 'frp-admin',                     icon: Zap,        label: 'Future Readiness Platform' },
         { id: 'readiness-dashboards',          icon: Gauge,      label: 'Readiness Dashboards' },
       ]

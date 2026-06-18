@@ -92,6 +92,7 @@ const GovernancePanel = lazy(() => import('./superadmin/GovernancePanel'));
 const OverviewPanel = lazy(() => import('./superadmin/OverviewPanel'));
 const UserMgmtPanel = lazy(() => import('./superadmin/UserMgmtPanel'));
 const EIHealthPanel = lazy(() => import('./superadmin/EIHealthPanel'));
+const CareerEvidencePanel = lazy(() => import('./superadmin/CareerEvidencePanel'));
 const MEIDesignPanel = lazy(() => import('./superadmin/MEIDesignPanel'));
 const EIOperationsPanel = lazy(() => import('./superadmin/EIOperationsPanel'));
 const CareerGraphPanel = lazy(() => import('./superadmin/CareerGraphPanel'));
@@ -901,6 +902,11 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               {activeTab === 'frp-admin' && (
                 <div className="h-full overflow-auto">
                   <FRPDesignPanel />
+                </div>
+              )}
+              {activeTab === 'career-evidence' && (
+                <div className="h-full overflow-auto p-6">
+                  <CareerEvidencePanel />
                 </div>
               )}
               {activeTab === 'passport-stats-admin' && (

@@ -4,6 +4,7 @@ import { db, pool } from "../storage";
 import { propagateModuleUpdate } from "../services/competency-intelligence-orchestrator";
 import { ADAPTIVE_EVENTS } from "../services/adaptive-event-bus";
 import { calculateAndPersistLBI } from "./lbi-engine";
+import { onGoalCompleted } from "./career-evidence";
 
 // ─── Completeness scoring (mirrors cv-parser weights) ───────────────────────
 const CORE_WEIGHTS: Record<string, number> = {
@@ -328,6 +329,10 @@ export function registerCareerSeekerRoutes(app: Express): void {
       `);
       const row = (r.rows ?? r)[0];
       void propagateModuleUpdate({ source: ADAPTIVE_EVENTS.GOAL_UPDATED, userId: u.id, pool, payload: { goalId: row.id, completed: row.completed, op: "create" } }).catch(() => {});
+      if (row.completed) {
+        const goalSrc = String((row.data ?? {}).source ?? "");
+        void onGoalCompleted(pool, { userId: u.id, goalId: row.id, isDemo: /demo/i.test(goalSrc) }).catch(() => {});
+      }
       return res.json({ success: true, goal: { ...(row.data ?? {}), _id: row.id, completed: row.completed, updatedAt: row.updated_at } });
     } catch (err) {
       console.error("[career-seeker] create goal error:", err);
@@ -355,6 +360,11 @@ export function registerCareerSeekerRoutes(app: Express): void {
       `);
       const row = (upd.rows ?? upd)[0];
       void propagateModuleUpdate({ source: ADAPTIVE_EVENTS.GOAL_UPDATED, userId: u.id, pool, payload: { goalId: row.id, completed: row.completed, op: "update" } }).catch(() => {});
+      // First Outcome Evidence Loop: capture a real goal_achieved outcome on transition into completed.
+      if (row.completed && !existingRow.completed) {
+        const goalSrc = String((row.data ?? {}).source ?? "");
+        void onGoalCompleted(pool, { userId: u.id, goalId: row.id, isDemo: /demo/i.test(goalSrc) }).catch(() => {});
+      }
       return res.json({ success: true, goal: { ...(row.data ?? {}), _id: row.id, completed: row.completed, updatedAt: row.updated_at } });
     } catch (err) {
       console.error("[career-seeker] update goal error:", err);

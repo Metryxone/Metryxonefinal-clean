@@ -35,6 +35,11 @@ import {
   buildCompetencyCrosswalk,
   getFrameworkReadiness,
 } from '../services/competency-framework-intelligence.js';
+import {
+  getCompetencyTypes,
+  getCompetencyTypeMap,
+  getClassificationReport,
+} from '../services/competency-type-classification.js';
 
 export function registerCompetencyFrameworkIntelligenceRoutes(
   app: Express,
@@ -90,6 +95,19 @@ export function registerCompetencyFrameworkIntelligenceRoutes(
 
   app.get('/api/competency-intelligence/crosswalk', gate, requireAuth, wrap(async () => buildCompetencyCrosswalk(pool)));
 
+  // ---- Phase 1.1: Competency Type classification (additive axis) -----------
+  // The Type Master (5-row reference) + full mapping of every canonical
+  // competency. Read-only; the mapping is produced by the idempotent seed
+  // (scripts/seed-competency-types.ts) and never mutates the genome.
+  app.get('/api/competency-intelligence/types', gate, requireAuth, wrap(async () => getCompetencyTypes(pool)));
+
+  app.get('/api/competency-intelligence/type-map', gate, requireAuth, wrap(async (req) =>
+    getCompetencyTypeMap(pool, {
+      typeKey: req.query.type ? String(req.query.type) : undefined,
+      needsReviewOnly: String(req.query.needs_review ?? '') === '1' || req.query.needs_review === 'true',
+    }),
+  ));
+
   // ---- Admin (superadmin) framework readiness / gap report ----------------
   app.get(
     '/api/admin/competency-intelligence/readiness',
@@ -97,5 +115,15 @@ export function registerCompetencyFrameworkIntelligenceRoutes(
     requireAuth,
     requireSuperAdmin,
     wrap(async () => getFrameworkReadiness(pool)),
+  );
+
+  // Admin classification validation report (coverage · distribution ·
+  // confidence · needs_review · honest findings).
+  app.get(
+    '/api/admin/competency-intelligence/classification-report',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async () => getClassificationReport(pool)),
   );
 }

@@ -1,0 +1,89 @@
+I'm in Build mode with Task #57. Let me read the Task #56 surfaces I'll extend, plus the existing onto schema/seed patterns, in parallel.
+
+
+4 actions
+Let me see how onto schema/migrations and the route registration are wired, plus the tail of the service file.
+
+
+6 actions
+Now I have all the patterns. Before writing the seed, let me run my classification cascade against the live DB to validate the real distribution and needs_review set — honesty first.
+
+
+3 actions
+The table renderer mangles JSON. Let me query the key subsets directly (small results parse fine) to lock down the lexicon-driven classification.
+
+
+3 actions
+Confirmed and important for honesty:
+
+Future Skills: 0 name matches — the genome genuinely has none. Honest gap, will report as such (not fabricate).
+Technical: only the 2 fam_technical_adoption members. The name-token "Networking" is actually stakeholder influence (behavioral) — a false positive I must NOT pull into Technical.
+So Technical detection will lean on the curated family (reliable) plus precise phrase allow-lists; ambiguous keyword hits get needs_review. Now let me build it. Migration first, then the classifier service.
+
+
+2 actions
+Now the classifier service.
+
+
+2 actions
+Now the seed script, then wire up the 3 routes.
+
+
+2 actions
+Let me run the dry-run to validate the classification against live data before wiring routes.
+
+
+2 actions
+Classification confirmed: 189 behavioral / 66 cognitive / 42 functional / 2 technical / 0 future_skills, all high-confidence, 0 needs-review, coverage 299/299 = 100%. Exactly the honest picture. Now let me apply the seed and wire up routes + readiness assets in parallel.
+
+
+5 actions
+Seed applied (coverage 100%), routes wired, backend reloaded. Now extend the panel with a Classification view.
+
+
+4 actions
+Now add the classification query and render section. Let me add the query after the existing one.
+
+
+2 actions
+Now add the Classification render block before the footer.
+
+
+2 actions
+Backend picked up changes. Let me restart it to be safe and smoke-test the new routes.
+
+
+Restarted Backend API
+Now let me smoke-test the new routes (auth-gated, so 401 = route exists + flag ON; 503 would mean flag off / wrong).
+
+
+Ran cd
+All three routes return 401 (auth required) — confirming the routes exist and the flag is ON (would be 503 if off). Now let me verify the flag-OFF byte-identical behavior and run the production build, plus confirm the data persisted correctly.
+
+
+4 actions
+All honesty checks pass: flag-OFF → 503 on all routes, type master = 5 rows, coverage 299/299 = 100%, scientific_type still has its original 3 values (untouched). Now the real launch gate — vite build.
+
+
+2 actions
+Build passed. Now let me run the required code review and read the follow-up-tasks skill in parallel.
+
+
+2 actions
+Now let me run the architect code review on the completed work.
+
+
+4 actions
+Architect returned PASS with no blocking issues. Suggestion #3 (refresh both datasets together) is a quick inline improvement — let me apply it.
+
+
+3 actions
+Let me re-run the build to confirm the post-review edit compiles, and write the commit message in parallel.
+
+
+Ran cd
+Build passes. Now let me propose follow-ups and mark the task complete.
+
+
+2 actions
+All deliverables complete and verified. Marking the task complete.

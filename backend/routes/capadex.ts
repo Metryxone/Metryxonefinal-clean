@@ -1549,10 +1549,15 @@ export function registerCapadexRoutes(app: Express, pool: Pool) {
         // ontology bucket at write time (Phase 1 Step 2). For SAQ we LEFT JOIN
         // concern_areas to surface a human-readable label; for sdi_items the
         // row already carries concern_name.
-        let item: { weight: number | string; polarity: string; concern_label: string | null } | null = null;
+        let item: {
+          weight: number | string; polarity: string; concern_label: string | null;
+          dimension?: string | null; subdomain?: string | null;
+        } | null = null;
         let itemKind: EvidenceInput['kind'] = 'unknown';
         const sdiRes = await pool.query(
-          'SELECT weight, polarity, concern_name AS concern_label FROM sdi_items WHERE id::text = $1',
+          `SELECT weight, polarity, concern_name AS concern_label,
+                  dimension, subdomain_code AS subdomain
+             FROM sdi_items WHERE id::text = $1`,
           [itemIdStr]
         );
         if (sdiRes.rows[0]) { item = sdiRes.rows[0]; itemKind = 'assessment'; }
@@ -1591,6 +1596,11 @@ export function registerCapadexRoutes(app: Express, pool: Pool) {
           answer_changed: Boolean(r.answer_changed),
           bucket: itemBucket,
           kind: itemKind,
+          // Task #22 — authored behavioural facet for the dimension signal
+          // (consumed only when FF_RICH_BEHAVIORAL_SIGNALS is ON).
+          dimension: item.dimension ?? null,
+          subdomain: item.subdomain ?? null,
+          polarity,
         });
 
         const { rawNorm, weighted } = computeItemScore(

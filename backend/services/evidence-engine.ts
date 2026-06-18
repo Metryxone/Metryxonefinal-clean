@@ -25,6 +25,8 @@
  * the canonical DDL also lives in `migrations/20261025_evidence_signal_runtime.sql`).
  */
 import type { Pool, PoolClient } from 'pg';
+import { classifyDimensionSignal } from './behavioral-dimension-signals';
+import { isRichBehavioralSignalsEnabled } from '../config/feature-flags';
 
 /** Either the pool or a checked-out client (so callers can run inside a txn). */
 export type Db = Pick<Pool, 'query'> | Pick<PoolClient, 'query'>;
@@ -72,11 +74,24 @@ export interface EvidenceInput {
   answer_changed?: boolean;
   bucket: string | null;
   kind: 'assessment' | 'short_assessment' | 'clarity' | 'unknown';
+  /**
+   * Authored per-item behavioural facet from `sdi_items` (Task #22). Used to
+   * emit an ADDITIONAL genuine concern signal keyed on the facet, so a session
+   * yields ≥2 distinct co-active signals. Optional — absent (legacy / no
+   * metadata) → no dimension signal emitted (byte-identical legacy).
+   */
+  dimension?: string | null;
+  subdomain?: string | null;
+  polarity?: string | null;
 }
 
 function clamp01(n: number): number {
   if (!Number.isFinite(n)) return 0;
   return n < 0 ? 0 : n > 1 ? 1 : n;
+}
+
+function round4(n: number): number {
+  return Math.round(n * 10_000) / 10_000;
 }
 
 /** Map a raw answer value onto a bounded 0..1 strength. */
@@ -102,6 +117,9 @@ export function extractEvidence(
 ): EvidenceObject[] {
   const anchor = session?.primary_construct_key || 'GENERAL_CONCERN';
   const out: EvidenceObject[] = [];
+  // Task #22 — read once. Flag OFF → the dimension-signal branch is skipped
+  // entirely, so the emitted evidence set is byte-identical to legacy.
+  const richSignalsOn = isRichBehavioralSignalsEnabled();
 
   for (const it of inputs) {
     if (!it || it.item_id == null || it.response_value == null) continue;
@@ -119,6 +137,40 @@ export function extractEvidence(
       confidence: 0.6,
       metadata: { kind: it.kind, raw_value: value, bucket },
     });
+
+    // 1b) Dimension evidence (Task #22, flag-gated) → an ADDITIONAL genuine
+    // concern signal keyed on the item's authored behavioural facet. This is the
+    // second co-active signal the composite engine needs (ABSOLUTE_MIN_COUNT=2).
+    // Flag OFF, or no faithful classification, or below-candidate distress →
+    // nothing emitted (byte-identical legacy). The facet is real authored
+    // metadata; its polarity-adjusted distress is the honest, concern-diagnostic
+    // strength — never fabricated, never derived from raw signal magnitude.
+    if (richSignalsOn) {
+      const dim = classifyDimensionSignal({
+        dimension: it.dimension,
+        subdomain: it.subdomain,
+        polarity: it.polarity,
+        value,
+      });
+      if (dim) {
+        out.push({
+          source_type: answerSource(it.kind),
+          source_id: sourceId,
+          answer_value: String(it.response_value),
+          evidence_key: dim.token,
+          strength: clamp01(dim.strength),
+          confidence: 0.55,
+          metadata: {
+            source: 'dimension_signal',
+            dimension: it.dimension ?? null,
+            subdomain: it.subdomain ?? null,
+            polarity: it.polarity ?? null,
+            distress: round4(dim.strength),
+            bucket,
+          },
+        });
+      }
+    }
 
     // 2) Answer-changed mutation → behavioural volatility evidence.
     if (it.answer_changed) {

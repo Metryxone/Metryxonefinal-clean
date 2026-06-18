@@ -46,6 +46,20 @@ Running the pipeline backfill produces **0 composites and 0 patterns when every 
 
 **How to apply:** When asked to "activate" the CAPADEX pattern layer, first check `MAX(n) FROM (SELECT count(*) n FROM capadex_session_signals GROUP BY session_id)`. If it's 1, report the data-density ceiling honestly; don't seed/fabricate to force rows.
 
+## UPDATE — the "1 signal/session" ceiling was a wiring gap, not a data ceiling (rich behavioural signals)
+
+The earlier "honest data-density ceiling" conclusion was **only half right**. The true limiter was that `extractEvidence` keyed ALL ~10 answers of a session on the SAME concern bucket, so they collapsed to one signal. But `sdi_items` carries **genuine authored** per-item metadata — `dimension` + `subdomain_code` + `polarity` — that is a real, distinct concern-diagnostic facet per question. Mapping each item's facet to the existing `capadex_signals` cluster vocab yields **≥2 GENUINE distinct signals per session with zero fabrication**.
+
+- Gated behind `FF_RICH_BEHAVIORAL_SIGNALS` (`isRichBehavioralSignalsEnabled()`); **default OFF → byte-identical legacy** (the dimension branch in `extractEvidence` is skipped entirely).
+- Classifier: `services/behavioral-dimension-signals.ts` — ordered regex RULES map dimension/subdomain → canonical cluster token; only emits tokens that exist in the `capadex_signals` cluster vocab (else `null` = honest UNCLASSIFIED, never invented). Distress is **polarity-adjusted** (matches `computeItemScore`: `(+)` distress `=(5-v)/4`, `(-)` `=(v-1)/4`); healthy answers fall below `minDistress` and emit nothing.
+- Wiring: `/respond` handler (`routes/capadex.ts`) now SELECTs `dimension, subdomain_code` and threads `dimension/subdomain/polarity` into each `EvidenceInput`; `extractEvidence` emits an extra evidence object per matched facet (`metadata.source='dimension_signal'`, confidence 0.55).
+- Backfill: `scripts/run-rich-signal-backfill.ts` — **REFUSES `--apply` unless the flag is ON** (so a backfill cannot diverge from live capture); reconstructs `EvidenceInput` from persisted `capadex_responses ⋈ sdi_items` (telemetry irrecoverable → OMITTED, never fabricated), re-runs the EXISTING `runEvidenceRuntime`, stamps `signal_value.rich_signal_backfill=true`.
+- Result (dev, 58 completed sessions, flag ON): **30 sessions formed ≥1 composite; 38 composites + 73 patterns written.** The remaining 28 had signals but no co-active cluster pair clearing strength — that is the **real** honest residual (not every session clusters), distinct from the old false "everything is capped at 1".
+
+**Why:** A "ceiling" finding must distinguish a genuine upstream data limit from a downstream extractor that throws away available authored signal. Here the signal was always present in `sdi_items`; the extractor just wasn't reading it.
+
+**How to apply:** Before declaring a "1 signal/session data ceiling", check whether the items being answered carry MORE authored concern-diagnostic facets than the extractor consumes. If yes, the fix is wiring (read the existing facet), not fabrication or seeding.
+
 ## Backfill
 
 `backend/scripts/run-backfill.ts` — one-shot idempotent script. Run via:

@@ -554,6 +554,16 @@ export const FEATURE_FLAGS = {
    *  503, no career_outcomes table is created and the SuperAdmin panel hides → byte-identical
    *  legacy. Env: `FF_CAREER_OUTCOME_EVIDENCE`. */
   careerOutcomeEvidence: true,
+  /** CAPADEX — Richer Behavioural Signal Capture (Task #22). Augments the evidence
+   *  extractor so each answered item can emit an ADDITIONAL genuine concern signal
+   *  keyed on its authored behavioural facet (sdi_items.dimension/subdomain_code),
+   *  with polarity-adjusted distress. This gives a session ≥2 distinct co-active
+   *  signals so the composite/pattern intelligence layer can finally form clusters
+   *  (it needs ABSOLUTE_MIN_COUNT=2). Flag OFF → extractEvidence emits the exact
+   *  legacy evidence set (concern-bucket answer + mutation + timing only) and the
+   *  rich-signal backfill REFUSES to write → byte-identical legacy. No new table,
+   *  no schema change. Env: `FF_RICH_BEHAVIORAL_SIGNALS`. */
+  richBehavioralSignals: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -824,6 +834,10 @@ export function isBehaviourNamespaceAlignmentEnabled(): boolean {
 
 export function isBehaviourSignalBackfillEnabled(): boolean {
   return isFlagEnabled('behaviourSignalBackfill');
+}
+
+export function isRichBehavioralSignalsEnabled(): boolean {
+  return isFlagEnabled('richBehavioralSignals');
 }
 
 export function isWc3ReportPersonalizationEnabled(): boolean {

@@ -17,7 +17,7 @@ export function registerCompetencyCohortRoutes(
 ) {
   // ─── Cohorts ──────────────────────────────────────────────────────────
 
-  app.get('/api/competency/cohorts', async (_req, res, next) => {
+  app.get('/api/competency/cohorts', requireAuth, requireSuperAdmin, async (_req, res, next) => {
     try {
       const r = await pool.query(
         `SELECT id, name, role_code, role_name, experience_min, experience_max,

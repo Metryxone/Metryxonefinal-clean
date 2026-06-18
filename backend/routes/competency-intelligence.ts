@@ -63,6 +63,22 @@ import {
   updateRoleCompetencyProfile,
   deleteRoleCompetencyProfile,
 } from '../services/role-competency-profile.js';
+import {
+  getBlueprints,
+  getBlueprint,
+  createBlueprint,
+  updateBlueprint,
+  deleteBlueprint,
+  addBlueprintCompetency,
+  deleteBlueprintCompetency,
+  getRoleAssessmentMap,
+  createRoleAssessment,
+  deleteRoleAssessment,
+  getCompetencyQuestionMap,
+  createCompetencyQuestion,
+  deleteCompetencyQuestion,
+  getAssessmentFoundationSummary,
+} from '../services/assessment-foundation-mapping.js';
 
 export function registerCompetencyFrameworkIntelligenceRoutes(
   app: Express,
@@ -425,6 +441,235 @@ export function registerCompetencyFrameworkIntelligenceRoutes(
       const result = await deleteRoleCompetencyProfile(pool, id);
       if (!result.ok) {
         res.status(result.error === 'requirement_not_found' ? 404 : 400).json({ ok: false, error: result.error });
+        return undefined;
+      }
+      return { deleted: true, id };
+    }),
+  );
+
+  // ---- Phase 1.6: Assessment Foundation Mapping ---------------------------
+  // Additive foundational mappings that connect the genome to the assessment
+  // surface WITHOUT redesigning any assessment workflow. Three deliverables:
+  //   1. Competency → Question  (onto_competency_question_map)
+  //   2. Role → Assessment      (onto_role_assessment_map → onto_assessment_blueprints)
+  //   3. Competency Profile → Blueprint (onto_assessment_blueprints + onto_blueprint_competency_map)
+  // Every id references EXISTING rows; the genome and question bank are untouched.
+
+  // --- Deliverable 3: Assessment Blueprint Relationships ---
+  app.get('/api/competency-intelligence/blueprints', gate, requireAuth, wrap(async (req) =>
+    getBlueprints(pool, {
+      search: req.query.q ? String(req.query.q) : undefined,
+      activeOnly: String(req.query.active ?? '') === '1' || req.query.active === 'true',
+    }),
+  ));
+
+  // --- Deliverable 2: Role Assessment Mapping ---
+  app.get('/api/competency-intelligence/role-assessments', gate, requireAuth, wrap(async (req) =>
+    getRoleAssessmentMap(pool, {
+      roleId: req.query.role_id ? String(req.query.role_id) : undefined,
+      activeOnly: String(req.query.active ?? '') === '1' || req.query.active === 'true',
+    }),
+  ));
+
+  // --- Deliverable 1: Competency Question Mapping ---
+  app.get('/api/competency-intelligence/competency-questions', gate, requireAuth, wrap(async (req) =>
+    getCompetencyQuestionMap(pool, {
+      competencyId: req.query.competency_id ? String(req.query.competency_id) : undefined,
+      search: req.query.q ? String(req.query.q) : undefined,
+      activeOnly: String(req.query.active ?? '') === '1' || req.query.active === 'true',
+    }),
+  ));
+
+  // Single blueprint detail (literal `/blueprints/summary` registered before this param handler).
+  app.get(
+    '/api/admin/competency-intelligence/assessment-foundation/summary',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async () => getAssessmentFoundationSummary(pool)),
+  );
+
+  app.get('/api/competency-intelligence/blueprints/:id', gate, requireAuth, wrap(async (req, res) => {
+    const result = await getBlueprint(pool, String(req.params.id));
+    if (!result) { res.status(404).json({ ok: false, error: 'blueprint_not_found' }); return undefined; }
+    return result;
+  }));
+
+  // Admin write — create / update / delete a blueprint.
+  app.post(
+    '/api/admin/competency-intelligence/blueprints',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req, res) => {
+      const body = (req.body ?? {}) as Record<string, unknown>;
+      const result = await createBlueprint(pool, {
+        id: body.id != null ? String(body.id) : undefined,
+        blueprint_key: body.blueprint_key != null ? String(body.blueprint_key) : undefined,
+        name: body.name != null ? String(body.name) : undefined,
+        description: body.description !== undefined ? (body.description === null ? null : String(body.description)) : undefined,
+        source_role_id: body.source_role_id != null ? String(body.source_role_id) : null,
+      });
+      if (!result.ok) {
+        const notFound = result.error === 'role_not_found';
+        const conflict = result.error === 'duplicate_blueprint';
+        res.status(notFound ? 404 : conflict ? 409 : 400).json({ ok: false, error: result.error });
+        return undefined;
+      }
+      return { id: result.id };
+    }),
+  );
+
+  app.patch(
+    '/api/admin/competency-intelligence/blueprints/:id',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req, res) => {
+      const body = (req.body ?? {}) as Record<string, unknown>;
+      const result = await updateBlueprint(pool, String(req.params.id), {
+        name: body.name != null ? String(body.name) : undefined,
+        description: body.description !== undefined ? (body.description === null ? null : String(body.description)) : undefined,
+        active: body.active as boolean | undefined,
+      });
+      if (!result.ok) {
+        res.status(result.error === 'blueprint_not_found' ? 404 : 400).json({ ok: false, error: result.error });
+        return undefined;
+      }
+      return { id: result.id };
+    }),
+  );
+
+  app.delete(
+    '/api/admin/competency-intelligence/blueprints/:id',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req, res) => {
+      const result = await deleteBlueprint(pool, String(req.params.id));
+      if (!result.ok) {
+        res.status(result.error === 'blueprint_not_found' ? 404 : 400).json({ ok: false, error: result.error });
+        return undefined;
+      }
+      return { deleted: true, id: result.id };
+    }),
+  );
+
+  // Admin write — add / remove a competency relationship on a blueprint.
+  app.post(
+    '/api/admin/competency-intelligence/blueprint-competencies',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req, res) => {
+      const body = (req.body ?? {}) as Record<string, unknown>;
+      const result = await addBlueprintCompetency(pool, {
+        blueprint_id: String(body.blueprint_id ?? ''),
+        competency_id: String(body.competency_id ?? ''),
+        required_level: body.required_level != null ? Number(body.required_level) : NaN,
+        weight: body.weight != null ? Number(body.weight) : undefined,
+        criticality: body.criticality != null ? String(body.criticality) : undefined,
+      });
+      if (!result.ok) {
+        const notFound = result.error === 'blueprint_not_found' || result.error === 'competency_not_found';
+        const conflict = result.error === 'duplicate_blueprint_competency';
+        res.status(notFound ? 404 : conflict ? 409 : 400).json({ ok: false, error: result.error });
+        return undefined;
+      }
+      return { id: result.id };
+    }),
+  );
+
+  app.delete(
+    '/api/admin/competency-intelligence/blueprint-competencies/:id',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req, res) => {
+      const id = parseInt(String(req.params.id), 10);
+      if (!Number.isFinite(id)) { res.status(400).json({ ok: false, error: 'invalid_id' }); return undefined; }
+      const result = await deleteBlueprintCompetency(pool, id);
+      if (!result.ok) {
+        res.status(result.error === 'mapping_not_found' ? 404 : 400).json({ ok: false, error: result.error });
+        return undefined;
+      }
+      return { deleted: true, id };
+    }),
+  );
+
+  // Admin write — map / unmap a role to an assessment blueprint.
+  app.post(
+    '/api/admin/competency-intelligence/role-assessments',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req, res) => {
+      const body = (req.body ?? {}) as Record<string, unknown>;
+      const result = await createRoleAssessment(pool, {
+        role_id: String(body.role_id ?? ''),
+        blueprint_id: String(body.blueprint_id ?? ''),
+        is_primary: body.is_primary as boolean | undefined,
+      });
+      if (!result.ok) {
+        const notFound = result.error === 'role_not_found' || result.error === 'blueprint_not_found';
+        const conflict = result.error === 'duplicate_role_assessment';
+        res.status(notFound ? 404 : conflict ? 409 : 400).json({ ok: false, error: result.error });
+        return undefined;
+      }
+      return { id: result.id };
+    }),
+  );
+
+  app.delete(
+    '/api/admin/competency-intelligence/role-assessments/:id',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req, res) => {
+      const id = parseInt(String(req.params.id), 10);
+      if (!Number.isFinite(id)) { res.status(400).json({ ok: false, error: 'invalid_id' }); return undefined; }
+      const result = await deleteRoleAssessment(pool, id);
+      if (!result.ok) {
+        res.status(result.error === 'mapping_not_found' ? 404 : 400).json({ ok: false, error: result.error });
+        return undefined;
+      }
+      return { deleted: true, id };
+    }),
+  );
+
+  // Admin write — map / unmap a competency to an existing question.
+  app.post(
+    '/api/admin/competency-intelligence/competency-questions',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req, res) => {
+      const body = (req.body ?? {}) as Record<string, unknown>;
+      const result = await createCompetencyQuestion(pool, {
+        competency_id: String(body.competency_id ?? ''),
+        question_id: String(body.question_id ?? ''),
+      });
+      if (!result.ok) {
+        const notFound = result.error === 'competency_not_found' || result.error === 'question_not_found';
+        const conflict = result.error === 'duplicate_question_mapping';
+        res.status(notFound ? 404 : conflict ? 409 : 400).json({ ok: false, error: result.error });
+        return undefined;
+      }
+      return { id: result.id };
+    }),
+  );
+
+  app.delete(
+    '/api/admin/competency-intelligence/competency-questions/:id',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req, res) => {
+      const id = parseInt(String(req.params.id), 10);
+      if (!Number.isFinite(id)) { res.status(400).json({ ok: false, error: 'invalid_id' }); return undefined; }
+      const result = await deleteCompetencyQuestion(pool, id);
+      if (!result.ok) {
+        res.status(result.error === 'mapping_not_found' ? 404 : 400).json({ ok: false, error: result.error });
         return undefined;
       }
       return { deleted: true, id };

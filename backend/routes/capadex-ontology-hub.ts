@@ -16,19 +16,15 @@
  */
 import type { Express, Request, Response, RequestHandler } from 'express';
 import type { Pool } from 'pg';
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { ensureSignalOntologySchema } from '../services/signal-ontology-schema';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname  = path.dirname(__filename);
-const DDL_PATH   = path.resolve(__dirname, '../migrations/20260528_signal_ontology_tables.sql');
-let _ddlApplied = false;
+// Delegates to the shared canonical mirror of
+// `backend/migrations/20260528_signal_ontology_tables.sql` so the panel,
+// the signals seeder and the concern→signal mapping engine all bootstrap the
+// 4-tier ontology tables from one idempotent, cached source (no runtime
+// dependency on the .sql file being present on disk).
 async function ensureTables(pool: Pool): Promise<void> {
-  if (_ddlApplied) return;
-  const ddl = fs.readFileSync(DDL_PATH, 'utf8');
-  await pool.query(ddl);
-  _ddlApplied = true;
+  await ensureSignalOntologySchema(pool);
 }
 
 // ─── Per-resource config (whitelist-driven; never trusts caller input) ─────

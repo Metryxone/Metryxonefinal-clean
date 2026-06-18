@@ -29,6 +29,7 @@
  */
 import type { Pool, PoolClient } from 'pg';
 import { coreToken, loadCompositeRuntime } from './composite-signal-engine';
+import { ensureSignalOntologySchema } from './signal-ontology-schema';
 
 // ── Tunables ────────────────────────────────────────────────────────────────
 const STRONG_SCORE = 1.5;   // raw score at/above this → a primary (strong/moderate) match
@@ -153,6 +154,11 @@ export async function loadMappingOntology(pool: Pool): Promise<MappingOntology> 
   const tier3: Tier3SignalDef[] = [];
   const atomicByTag = new Map<string, AtomicBridgeAgg>();
   const compositeKeys = new Set<string>();
+
+  // Self-bootstrap the 4-tier ontology tables so the Tier-3 / atomic reads below
+  // can't throw "relation does not exist" on a fresh DB that never ran the
+  // signal-ontology migration. Empty tables simply yield an empty ontology.
+  await ensureSignalOntologySchema(pool);
 
   const sig = await pool.query<{
     signal_id: string; signal_name: string; domain: string | null; relational_bridge_tag: string | null;

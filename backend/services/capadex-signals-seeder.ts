@@ -28,6 +28,7 @@
  */
 import type { Pool } from 'pg';
 import { loadCompositeRuntime } from './composite-signal-engine';
+import { ensureSignalOntologySchema } from './signal-ontology-schema';
 
 let seededOnce = false;
 
@@ -345,57 +346,6 @@ const SEED_ROWS: SeedRow[] = [
     behavioral_meaning:          'Reduced capacity to recover from stressors or setbacks',
   },
 ];
-
-/**
- * Ensure the `capadex_signals` ontology table exists before any insert.
- *
- * WHY THIS EXISTS
- * ──────────────
- * The seeder is INSERT-only; on a fresh DB where no prior migration created
- * `capadex_signals`, every insert would throw, the catch would swallow it as
- * non-fatal, `seededOnce` would stay false, and the ontology would silently
- * never exist → `loadCompositeRuntime` returns 0 definitions → composites = 0.
- *
- * This CREATE TABLE IF NOT EXISTS mirrors the canonical migration
- * (`backend/migrations/20260528_signal_ontology_tables.sql`, Tier 3) so the
- * column shape matches what the seeder writes and what
- * `composite-signal-engine.ts` reads.  Idempotent — safe to call on every
- * startup; a no-op when the table already exists.
- */
-async function ensureSignalOntologySchema(pool: Pool): Promise<void> {
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS capadex_signals (
-      id                          SERIAL PRIMARY KEY,
-      signal_id                   TEXT NOT NULL UNIQUE,
-      signal_name                 TEXT NOT NULL,
-      domain                      TEXT NOT NULL DEFAULT '',
-      signal_family               TEXT NOT NULL DEFAULT '',
-      category                    TEXT NOT NULL DEFAULT 'UNASSIGNED_ROUTING_NODE',
-      detection_type              TEXT NOT NULL DEFAULT 'UNASSIGNED_ROUTING_NODE',
-      source_types                TEXT NOT NULL DEFAULT '',
-      severity_weight             REAL,
-      confidence_weight           REAL,
-      persistence_weight          REAL,
-      volatility                  TEXT NOT NULL DEFAULT 'UNASSIGNED_ROUTING_NODE',
-      adaptive_importance         TEXT NOT NULL DEFAULT 'UNASSIGNED_ROUTING_NODE',
-      intervention_priority       TEXT NOT NULL DEFAULT 'UNASSIGNED_ROUTING_NODE',
-      behavioral_meaning          TEXT NOT NULL DEFAULT '',
-      hidden_pattern_contribution TEXT NOT NULL DEFAULT '',
-      amplification_rules         TEXT NOT NULL DEFAULT '',
-      contradiction_links         TEXT NOT NULL DEFAULT '',
-      related_signals             TEXT NOT NULL DEFAULT '',
-      recovery_indicator          TEXT NOT NULL DEFAULT '',
-      longitudinal_impact         TEXT NOT NULL DEFAULT '',
-      risk_mapping                TEXT NOT NULL DEFAULT '',
-      relational_bridge_tag       TEXT NOT NULL DEFAULT 'GENERAL_CONCERN',
-      created_at                  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      updated_at                  TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    );
-    CREATE INDEX IF NOT EXISTS idx_capadex_signals_signal_id ON capadex_signals (signal_id);
-    CREATE INDEX IF NOT EXISTS idx_capadex_signals_bridge    ON capadex_signals (relational_bridge_tag);
-    CREATE INDEX IF NOT EXISTS idx_capadex_signals_category  ON capadex_signals (category);
-  `);
-}
 
 /**
  * Seed missing capadex_signals rows.  Safe to call on every startup — the

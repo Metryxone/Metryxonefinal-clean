@@ -11101,6 +11101,7 @@ Requirements:
 
   // Calculate LBI score from responses
   const lbiResponseSchema = z.object({
+    ageBandCode: z.string().optional(),
     responses: z.array(z.object({
       questionId: z.string(),
       rawScore: z.number().min(1).max(5),
@@ -11114,7 +11115,7 @@ Requirements:
         return res.status(400).json({ message: "Invalid request", errors: validation.error.issues });
       }
       
-      const { responses } = validation.data;
+      const { responses, ageBandCode } = validation.data;
       
       const domainScores: Record<string, { total: number; count: number; items: any[] }> = {};
       const subdomainScores: Record<string, { total: number; count: number; domainId: string }> = {};
@@ -11177,14 +11178,18 @@ Requirements:
         const domainInfo = await db.execute(sql`SELECT * FROM lbi_domains WHERE id = ${domainId}`);
         const domain = domainInfo.rows[0];
         const rawScore = data.total / data.count;
-        const percentile = Math.round((rawScore / 5) * 100);
+        // scorePct is the raw scale percentage (rawScore/5*100). It is NOT a
+        // percentile (rank vs a population) — percentiles require norms below.
+        const scorePct = Math.round((rawScore / 5) * 100);
         
         domainResults.push({
           domainId,
           domainCode: domain?.domain_code,
           domainName: domain?.domain_name,
           rawScore: Math.round(rawScore * 100) / 100,
-          percentile,
+          scorePct,
+          percentile: null,
+          percentileBasis: 'subdomain_norms_only',
           weightage: domain?.weightage || 1,
           itemCount: data.count,
         });
@@ -11194,12 +11199,55 @@ Requirements:
         overallCount += weightage;
       }
       
-      const overallLBI = Math.round((overallTotal / overallCount / 5) * 100);
+      // Norm-referenced subdomain percentiles (only when an age band is supplied
+      // AND real computed norms exist for that band/subdomain). Otherwise null.
+      const subdomainResults: any[] = [];
+      let normsAvailable = false;
+      try {
+        const { percentileFromNorms } = await import('./services/lbi-norms-engine');
+        const subIds = Object.keys(subdomainScores);
+        for (const subId of subIds) {
+          const sd = subdomainScores[subId];
+          const sdRaw = sd.total / sd.count;
+          const sdPct = Math.round((sdRaw / 5) * 100);
+          const sdInfo = await db.execute(sql`SELECT subdomain_code, subdomain_name FROM lbi_subdomains WHERE id = ${subId}`);
+          const subdomainCode = sdInfo.rows[0]?.subdomain_code as string | undefined;
+          let norm: any = { percentile: null, basis: 'no_norms', is_provisional: false, sample_size: null };
+          if (ageBandCode && subdomainCode) {
+            norm = await percentileFromNorms(concernsPool, ageBandCode, subdomainCode, sdPct);
+            if (norm.percentile != null) normsAvailable = true;
+          }
+          subdomainResults.push({
+            subdomainId: subId,
+            subdomainCode,
+            subdomainName: sdInfo.rows[0]?.subdomain_name,
+            rawScore: Math.round(sdRaw * 100) / 100,
+            scorePct: sdPct,
+            percentile: norm.percentile,
+            percentileBasis: norm.basis,
+            percentileProvisional: norm.is_provisional,
+            normSampleSize: norm.sample_size,
+            itemCount: sd.count,
+          });
+        }
+      } catch (e) {
+        console.error('[lbi] subdomain percentile error:', e);
+      }
+      
+      // Overall raw aggregate (0..100 scale). Labelled scorePct, not a percentile.
+      const overallScorePct = Math.round((overallTotal / overallCount / 5) * 100);
       
       res.json({
         domainScores: domainResults,
-        overallLBI,
-        interpretation: getLBIInterpretation(overallLBI),
+        subdomainScores: subdomainResults,
+        overallLBI: overallScorePct,
+        overallScorePct,
+        overallPercentile: null,
+        normReferenced: normsAvailable,
+        percentileNote: normsAvailable
+          ? 'Subdomain percentiles are norm-referenced from real assessment data.'
+          : 'No norms available for this age band yet — scores are raw scale percentages, not percentiles.',
+        interpretation: getLBIInterpretation(overallScorePct),
         timestamp: new Date().toISOString(),
       });
     } catch (error) {
@@ -11303,8 +11351,74 @@ Requirements:
     }
   });
 
-  // AI-Powered Reports Generation Endpoint
-  app.post('/api/ai-reports/generate', async (req, res, next) => {
+  // Resolve REAL (non-demo) LBI scores from the auditable engine history for a single
+  // AUTHORIZED subject email. The caller MUST pre-verify that the principal is allowed
+  // to see this subject (see /api/ai-reports/generate). Demo / @example.com rows are
+  // excluded so fabricated seed data can never surface as real.
+  async function resolveRealLbiScore(
+    p: pg.Pool,
+    email: string | null
+  ): Promise<any | null> {
+    if (!email) return null;
+    try {
+      const r = await p.query(
+        `SELECT overall_lbi, consistency_score, persistence_score, attention_score,
+                adaptability_score, velocity_score, learning_style, sessions_analyzed, calculated_at
+         FROM lbi_score_history
+         WHERE LOWER(user_email) = LOWER($1)
+           AND COALESCE(source,'') <> 'demo'
+           AND user_email NOT ILIKE '%@example.com'
+         ORDER BY calculated_at DESC LIMIT 1`,
+        [email]
+      );
+      return r.rows[0] || null;
+    } catch { /* history table may be absent in some envs */ }
+    return null;
+  }
+
+  // Resolve the subject email a principal is AUTHORIZED to pull real scores for.
+  // Rules: super_admin → any childId (resolved via users/children); a parent → only a
+  // child they OWN (storage.getChild enforces ownership) returns 403 otherwise; no
+  // childId → the authenticated principal's own email. Never trusts a client email.
+  async function resolveAuthorizedSubjectEmail(
+    p: pg.Pool,
+    principal: any,
+    childId: string | null
+  ): Promise<{ email: string | null } | { forbidden: true }> {
+    const isSuper = principal?.role === 'super_admin';
+    if (!childId) {
+      return { email: principal?.email || null };
+    }
+    if (isSuper) {
+      try {
+        const u = await p.query('SELECT email FROM users WHERE id = $1 LIMIT 1', [childId]);
+        if (u.rows[0]?.email) return { email: u.rows[0].email };
+      } catch { /* best-effort */ }
+      try {
+        const c = await p.query('SELECT student_user_id FROM children WHERE id = $1 LIMIT 1', [childId]);
+        const sid = c.rows[0]?.student_user_id;
+        if (sid) {
+          const su = await p.query('SELECT email FROM users WHERE id = $1 LIMIT 1', [sid]);
+          if (su.rows[0]?.email) return { email: su.rows[0].email };
+        }
+      } catch { /* best-effort */ }
+      return { email: null };
+    }
+    // Non-superadmin: childId must be a child OWNED by this principal.
+    let child: any = null;
+    try { child = await storage.getChild(childId, principal.id); } catch { /* absent table → undefined */ }
+    if (!child) return { forbidden: true };
+    if (child.studentUserId) {
+      try {
+        const su = await p.query('SELECT email FROM users WHERE id = $1 LIMIT 1', [child.studentUserId]);
+        if (su.rows[0]?.email) return { email: su.rows[0].email };
+      } catch { /* best-effort */ }
+    }
+    return { email: null };
+  }
+
+  // AI-Powered Reports Generation Endpoint — AUTH REQUIRED (returns real LBI data).
+  app.post('/api/ai-reports/generate', requireAuth, async (req, res, next) => {
     try {
       const reportSchema = z.object({
         reportType: z.enum(['learning-analysis', 'behavioral-insights', 'performance-prediction', 'exam-readiness', 'lbi-comprehensive']),
@@ -11330,97 +11444,64 @@ Requirements:
         baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
       });
 
-      const reportPrompts: Record<string, string> = {
-        'learning-analysis': `You are an expert educational psychologist. Generate a comprehensive Learning Analysis Report for a student.
-Student: ${childName || 'Student'}, Age: ${childAge || 'N/A'}, Grade: ${childGrade || 'N/A'}.
-Provide a JSON response with:
-{
-  "title": "Learning Analysis Report",
-  "summary": "2-3 sentence executive summary",
-  "overallScore": number between 60-95,
-  "sections": [
-    {"name": "Cognitive Strengths", "score": number, "findings": ["finding1", "finding2", "finding3"], "recommendation": "text"},
-    {"name": "Learning Style Profile", "score": number, "findings": ["finding1", "finding2", "finding3"], "recommendation": "text"},
-    {"name": "Knowledge Retention", "score": number, "findings": ["finding1", "finding2", "finding3"], "recommendation": "text"},
-    {"name": "Critical Thinking", "score": number, "findings": ["finding1", "finding2", "finding3"], "recommendation": "text"}
-  ],
-  "keyInsights": ["insight1", "insight2", "insight3"],
-  "actionPlan": ["action1", "action2", "action3"]
-}`,
-        'behavioral-insights': `You are an expert in child behavioral psychology and educational development. Generate a Behavioral Insights Report for a student.
-Student: ${childName || 'Student'}, Age: ${childAge || 'N/A'}, Grade: ${childGrade || 'N/A'}.
-Provide a JSON response with:
-{
-  "title": "Behavioral Insights Report",
-  "summary": "2-3 sentence executive summary",
-  "overallScore": number between 60-95,
-  "sections": [
-    {"name": "Emotional Regulation", "score": number, "findings": ["finding1", "finding2", "finding3"], "recommendation": "text"},
-    {"name": "Social Interaction", "score": number, "findings": ["finding1", "finding2", "finding3"], "recommendation": "text"},
-    {"name": "Motivation & Drive", "score": number, "findings": ["finding1", "finding2", "finding3"], "recommendation": "text"},
-    {"name": "Discipline & Habits", "score": number, "findings": ["finding1", "finding2", "finding3"], "recommendation": "text"}
-  ],
-  "keyInsights": ["insight1", "insight2", "insight3"],
-  "actionPlan": ["action1", "action2", "action3"]
-}`,
-        'performance-prediction': `You are an expert educational data analyst. Generate a Performance Prediction Report for a student.
-Student: ${childName || 'Student'}, Age: ${childAge || 'N/A'}, Grade: ${childGrade || 'N/A'}.
-Provide a JSON response with:
-{
-  "title": "Performance Prediction Report",
-  "summary": "2-3 sentence executive summary",
-  "overallScore": number between 60-95,
-  "sections": [
-    {"name": "Academic Trajectory", "score": number, "findings": ["finding1", "finding2", "finding3"], "recommendation": "text"},
-    {"name": "Subject-Wise Forecast", "score": number, "findings": ["finding1", "finding2", "finding3"], "recommendation": "text"},
-    {"name": "Risk Indicators", "score": number, "findings": ["finding1", "finding2", "finding3"], "recommendation": "text"},
-    {"name": "Growth Opportunities", "score": number, "findings": ["finding1", "finding2", "finding3"], "recommendation": "text"}
-  ],
-  "keyInsights": ["insight1", "insight2", "insight3"],
-  "actionPlan": ["action1", "action2", "action3"]
-}`,
-        'exam-readiness': `You are an expert in exam preparation and student readiness assessment. Generate an Exam Readiness Report for a student.
-Student: ${childName || 'Student'}, Age: ${childAge || 'N/A'}, Grade: ${childGrade || 'N/A'}.
-Provide a JSON response with:
-{
-  "title": "Exam Readiness Report",
-  "summary": "2-3 sentence executive summary",
-  "overallScore": number between 60-95,
-  "sections": [
-    {"name": "Content Mastery", "score": number, "findings": ["finding1", "finding2", "finding3"], "recommendation": "text"},
-    {"name": "Test-Taking Skills", "score": number, "findings": ["finding1", "finding2", "finding3"], "recommendation": "text"},
-    {"name": "Stress Management", "score": number, "findings": ["finding1", "finding2", "finding3"], "recommendation": "text"},
-    {"name": "Time Management", "score": number, "findings": ["finding1", "finding2", "finding3"], "recommendation": "text"}
-  ],
-  "keyInsights": ["insight1", "insight2", "insight3"],
-  "actionPlan": ["action1", "action2", "action3"]
-}`,
-        'lbi-comprehensive': `You are an expert in Learning Behavior Index assessment. Generate a comprehensive LBI Report for a student covering all 19 domains.
-Student: ${childName || 'Student'}, Age: ${childAge || 'N/A'}, Grade: ${childGrade || 'N/A'}.
-Provide a JSON response with:
-{
-  "title": "LBI Comprehensive Report",
-  "summary": "2-3 sentence executive summary",
-  "overallScore": number between 60-95,
-  "sections": [
-    {"name": "Academic & Cognitive Effectiveness (D01)", "score": number, "findings": ["finding1", "finding2"], "recommendation": "text"},
-    {"name": "Thinking Quality Under Pressure (D02)", "score": number, "findings": ["finding1", "finding2"], "recommendation": "text"},
-    {"name": "Exam Stress & Emotional Regulation (D03)", "score": number, "findings": ["finding1", "finding2"], "recommendation": "text"},
-    {"name": "Confidence & Self-Concept (D04)", "score": number, "findings": ["finding1", "finding2"], "recommendation": "text"},
-    {"name": "Adjustment & Coping (D05)", "score": number, "findings": ["finding1", "finding2"], "recommendation": "text"},
-    {"name": "Social & Emotional Intelligence (D06)", "score": number, "findings": ["finding1", "finding2"], "recommendation": "text"}
-  ],
-  "keyInsights": ["insight1", "insight2", "insight3", "insight4"],
-  "actionPlan": ["action1", "action2", "action3", "action4"]
-}`
-      };
+      // ── Resolve REAL LBI scores from the deterministic engine (never the LLM) ──
+      // Scores come ONLY from the auditable engine (lbi_score_history / lbi_scores),
+      // excluding fabricated demo rows. The subject is resolved from the AUTHENTICATED
+      // principal's authorization (own self / owned child / superadmin) — a client-
+      // supplied email is NEVER trusted. If none resolve, the report is returned as a
+      // clearly-marked PREVIEW with no numbers — the LLM only ever writes narrative.
+      const subject = await resolveAuthorizedSubjectEmail(concernsPool, req.user as any, childId || null);
+      if ('forbidden' in subject) {
+        return res.status(403).json({ error: 'Not authorized to generate a report for this subject' });
+      }
+      const realScore = await resolveRealLbiScore(concernsPool, subject.email);
 
-      const prompt = reportPrompts[reportType] || reportPrompts['learning-analysis'];
+      const sectionDefs: Record<string, string[]> = {
+        'learning-analysis': ['Cognitive Strengths', 'Learning Style Profile', 'Knowledge Retention', 'Critical Thinking'],
+        'behavioral-insights': ['Emotional Regulation', 'Social Interaction', 'Motivation & Drive', 'Discipline & Habits'],
+        'performance-prediction': ['Academic Trajectory', 'Subject-Wise Forecast', 'Risk Indicators', 'Growth Opportunities'],
+        'exam-readiness': ['Content Mastery', 'Test-Taking Skills', 'Stress Management', 'Time Management'],
+        'lbi-comprehensive': [
+          'Academic & Cognitive Effectiveness (D01)', 'Thinking Quality Under Pressure (D02)',
+          'Exam Stress & Emotional Regulation (D03)', 'Confidence & Self-Concept (D04)',
+          'Adjustment & Coping (D05)', 'Social & Emotional Intelligence (D06)',
+        ],
+      };
+      const titles: Record<string, string> = {
+        'learning-analysis': 'Learning Analysis Report',
+        'behavioral-insights': 'Behavioral Insights Report',
+        'performance-prediction': 'Performance Prediction Report',
+        'exam-readiness': 'Exam Readiness Report',
+        'lbi-comprehensive': 'LBI Comprehensive Report',
+      };
+      const sections = sectionDefs[reportType] || sectionDefs['learning-analysis'];
+
+      // Prompts request ONLY qualitative narrative. No scores, ratings, or percentages.
+      const dataContext = realScore
+        ? `This student has REAL Learning Behaviour Index results from completed assessments. Overall LBI: ${realScore.overall_lbi}/100. Behavioural dimensions (0-100): consistency ${realScore.consistency_score}, persistence ${realScore.persistence_score}, attention ${realScore.attention_score}, adaptability ${realScore.adaptability_score}, velocity ${realScore.velocity_score}. Dominant learning style: ${realScore.learning_style || 'unspecified'}. Base your narrative on these measured results.`
+        : `No measured assessment data is available for this student yet. Write GENERAL developmental guidance appropriate to the age/grade and frame it as preliminary. Do NOT invent specific results or pretend an assessment was taken.`;
+
+      const prompt = `You are an expert educational psychologist generating the qualitative narrative for a "${titles[reportType]}".
+Student: ${childName || 'Student'}, Age: ${childAge || 'N/A'}, Grade: ${childGrade || 'N/A'}.
+${dataContext}
+
+CRITICAL: Do NOT output any numeric scores, ratings, percentages, grades, or made-up measurements anywhere. Numbers are supplied separately by an auditable scoring engine — your job is qualitative analysis ONLY.
+
+Respond with valid JSON only (no markdown), using EXACTLY these section names in order: ${JSON.stringify(sections)}.
+{
+  "title": "${titles[reportType]}",
+  "summary": "2-3 sentence executive summary (no numbers)",
+  "sections": [
+    { "name": "<one of the section names above>", "findings": ["finding1", "finding2", "finding3"], "recommendation": "text" }
+  ],
+  "keyInsights": ["insight1", "insight2", "insight3"],
+  "actionPlan": ["action1", "action2", "action3"]
+}`;
 
       const response = await openaiClient.chat.completions.create({
         model: 'gpt-4o',
         messages: [
-          { role: 'system', content: 'You are an expert educational analyst. Always respond with valid JSON only, no markdown formatting.' },
+          { role: 'system', content: 'You are an expert educational analyst. Respond with valid JSON only, no markdown. Never include numeric scores, ratings, or percentages — qualitative narrative only.' },
           { role: 'user', content: prompt }
         ],
         response_format: { type: 'json_object' },
@@ -11428,10 +11509,40 @@ Provide a JSON response with:
       });
 
       const reportContent = JSON.parse(response.choices[0]?.message?.content || '{}');
-      
+
+      // Strip any stray numeric fields the model may have produced — scores are
+      // authoritative ONLY from the engine.
+      if (reportContent && typeof reportContent === 'object') {
+        delete (reportContent as any).overallScore;
+        if (Array.isArray((reportContent as any).sections)) {
+          (reportContent as any).sections = (reportContent as any).sections.map((s: any) => {
+            if (s && typeof s === 'object') { const { score, ...rest } = s; return rest; }
+            return s;
+          });
+        }
+      }
+
+      const dimensions = realScore ? [
+        { key: 'consistency', label: 'Consistency', score: realScore.consistency_score },
+        { key: 'persistence', label: 'Persistence', score: realScore.persistence_score },
+        { key: 'attention', label: 'Attention', score: realScore.attention_score },
+        { key: 'adaptability', label: 'Adaptability', score: realScore.adaptability_score },
+        { key: 'velocity', label: 'Velocity', score: realScore.velocity_score },
+      ] : null;
+
       res.json({
         ...reportContent,
         reportType,
+        overallScore: realScore ? realScore.overall_lbi : null,
+        dimensions,
+        learningStyle: realScore?.learning_style ?? null,
+        sessionsAnalyzed: realScore?.sessions_analyzed ?? null,
+        dataAvailable: !!realScore,
+        preview: !realScore,
+        scoreSource: realScore ? 'lbi_engine' : null,
+        disclaimer: realScore
+          ? null
+          : 'Preview — this report contains qualitative guidance only. Numeric LBI scores appear once the student completes a measured Learning Behaviour Index assessment.',
         generatedAt: new Date().toISOString(),
         childId: childId || null,
         childName: childName || null,

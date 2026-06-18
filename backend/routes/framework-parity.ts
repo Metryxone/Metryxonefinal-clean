@@ -194,8 +194,8 @@ export function registerFrameworkParityRoutes(app: Express, pool: Pool, requireA
     } catch (err) { next(err); }
   });
 
-  // LBI engine summary — public read (counts only, no sensitive data)
-  app.get('/api/lbi/admin/engine-summary', async (_req, res, next) => {
+  // LBI engine summary — counts only, but admin-gated to match sibling /api/lbi/admin/* routes
+  app.get('/api/lbi/admin/engine-summary', requireAuth, requireSuperAdmin, async (_req, res, next) => {
     try {
       const r = await pool.query(`SELECT
         (SELECT count(*) FROM lbi_domains)::int AS domains,
@@ -480,6 +480,14 @@ export function registerFrameworkParityRoutes(app: Express, pool: Pool, requireA
   // ─── GENERATE DEFAULTS: LBI norms + weights ─────────────────────────────
   app.post('/api/lbi/admin/generate-defaults', requireAuth, requireSuperAdmin, async (_req, res, next) => {
     try {
+      // These are SYNTHETIC placeholder norms (arbitrary anchors), NOT computed
+      // from real responses. They are stamped source='synthetic_default' and
+      // is_provisional=true so the percentile engine never treats them as a real
+      // norm-referenced distribution. Use POST /api/admin/lbi/compute-norms to
+      // derive genuine norms once real assessment data exists.
+      const { ensureLbiNormsSchema } = await import('../services/lbi-norms-engine');
+      await ensureLbiNormsSchema(pool);
+
       const bandsR = await pool.query('SELECT band_code, row_number() OVER (ORDER BY min_age) AS ord FROM lbi_age_bands');
       const bands = bandsR.rows;
       if (bands.length === 0) return res.status(400).json({ error: 'No age bands defined. Add age bands first.' });
@@ -494,8 +502,8 @@ export function registerFrameworkParityRoutes(app: Express, pool: Pool, requireA
         const top10   = +(80 + (+b.ord) * 1.5).toFixed(1);
         for (const s of subs) {
           const nr = await pool.query(
-            `INSERT INTO lbi_subdomain_norms (age_band_code, subdomain_code, min_score, median_score, top10_score)
-             VALUES ($1,$2,$3,$4,$5) ON CONFLICT (age_band_code, subdomain_code) DO NOTHING`,
+            `INSERT INTO lbi_subdomain_norms (age_band_code, subdomain_code, min_score, median_score, top10_score, source, is_provisional)
+             VALUES ($1,$2,$3,$4,$5,'synthetic_default',true) ON CONFLICT (age_band_code, subdomain_code) DO NOTHING`,
             [b.band_code, s.subdomain_code, minScore, medScore, top10]
           );
           normsAdded += nr.rowCount ?? 0;

@@ -126,3 +126,27 @@ Activation: **~45%** (limited by 3 test users + 1 snapshot each — grows with r
 ```bash
 POST /api/admin/lbi/backfill-intelligence   # (superadmin auth)
 ```
+
+---
+
+## Score honesty policy (no LLM numbers)
+
+LBI scores are a PRODUCT INVARIANT: never let the LLM emit numbers. Real numbers come
+only from the auditable engine (`lbi_score_history`, **excluding `source='demo'` and
+`@example.com`**); absent → explicit preview/null + disclaimer, never a fabricated value.
+Norms derive only from real responses with a kMin gate + `is_provisional`/`source`
+provenance; synthetic defaults are stamped and never yield a real percentile. A
+raw-rescale `(raw/5)*100` is NOT a percentile — only norm-referenced values are.
+
+## Two security traps when wiring real LBI data into a route
+
+- **Admin-gate prefix trap:** the global `app.use('/api/admin', auth→superadmin)` gate
+  covers ONLY `/api/admin/*`. Sibling admin routes under a DIFFERENT prefix
+  (`/api/lbi/admin/*`, `/api/sdi/admin/*`, `/api/competency/*`) are NOT covered and need
+  their own per-route guards. The counts-only `engine-summary` endpoints were left
+  unauthenticated under this trap.
+- **IDOR when an endpoint starts returning per-subject LBI data:** an endpoint that was
+  fine while returning generic/LLM content becomes a data-leak the moment it returns real
+  scores. Require auth AND resolve the subject from the authenticated principal only
+  (self / owned-child via `storage.getChild(childId, principalId)` / superadmin) — never
+  from a client-supplied `childId`/`email`. `/api/ai-reports/generate` had this exact bug.

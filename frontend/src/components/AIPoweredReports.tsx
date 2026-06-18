@@ -46,21 +46,34 @@ const brand = {
 
 interface ReportSection {
   name: string;
-  score: number;
+  score?: number;
   findings: string[];
   recommendation: string;
+}
+
+interface ReportDimension {
+  key: string;
+  label: string;
+  score: number;
 }
 
 interface AIReport {
   title: string;
   summary: string;
-  overallScore: number;
+  overallScore: number | null;
   sections: ReportSection[];
   keyInsights: string[];
   actionPlan: string[];
   reportType: string;
   generatedAt: string;
   childName?: string;
+  dimensions?: ReportDimension[] | null;
+  learningStyle?: string | null;
+  sessionsAnalyzed?: number | null;
+  dataAvailable?: boolean;
+  preview?: boolean;
+  scoreSource?: string | null;
+  disclaimer?: string | null;
 }
 
 interface ReportType {
@@ -985,21 +998,50 @@ export function AIPoweredReports({ childName, childAge, childGrade, childId, rol
           </CardContent>
         </Card>
 
+        {generatedReport.preview && (
+          <Card className="border shadow-sm" style={{ borderColor: '#f59e0b66', backgroundColor: '#fffbeb' }}>
+            <CardContent className="py-3.5 flex items-start gap-2.5">
+              <AlertTriangle size={16} className="mt-0.5 shrink-0" style={{ color: '#b45309' }} />
+              <div>
+                <p className="text-xs font-semibold" style={{ color: '#92400e' }}>Preview — no measured scores yet</p>
+                <p className="text-[11px] mt-0.5" style={{ color: '#92400e' }}>
+                  {generatedReport.disclaimer ||
+                    'This report contains qualitative guidance only. Numeric LBI scores appear once a measured assessment is completed.'}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card className="border shadow-sm">
             <CardContent className="py-5 text-center">
-              <div
-                className="h-16 w-16 rounded-full mx-auto flex items-center justify-center mb-3"
-                style={{ backgroundColor: `${getScoreColor(generatedReport.overallScore)}15` }}
-              >
-                <span className="text-2xl font-bold" style={{ color: getScoreColor(generatedReport.overallScore) }}>
-                  {generatedReport.overallScore}
-                </span>
-              </div>
-              <p className="text-xs font-medium" style={{ color: getScoreColor(generatedReport.overallScore) }}>
-                {getScoreLabel(generatedReport.overallScore)}
-              </p>
-              <p className="text-[10px] text-muted-foreground mt-1">Overall Score</p>
+              {typeof generatedReport.overallScore === 'number' ? (
+                <>
+                  <div
+                    className="h-16 w-16 rounded-full mx-auto flex items-center justify-center mb-3"
+                    style={{ backgroundColor: `${getScoreColor(generatedReport.overallScore)}15` }}
+                  >
+                    <span className="text-2xl font-bold" style={{ color: getScoreColor(generatedReport.overallScore) }}>
+                      {generatedReport.overallScore}
+                    </span>
+                  </div>
+                  <p className="text-xs font-medium" style={{ color: getScoreColor(generatedReport.overallScore) }}>
+                    {getScoreLabel(generatedReport.overallScore)}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground mt-1">
+                    Overall LBI Score{generatedReport.scoreSource === 'lbi_engine' ? ' · measured' : ''}
+                  </p>
+                </>
+              ) : (
+                <>
+                  <div className="h-16 w-16 rounded-full mx-auto flex items-center justify-center mb-3 bg-muted">
+                    <span className="text-2xl font-bold text-muted-foreground">—</span>
+                  </div>
+                  <p className="text-xs font-medium text-muted-foreground">Not yet measured</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">Overall LBI Score</p>
+                </>
+              )}
             </CardContent>
           </Card>
           <Card className="border shadow-sm md:col-span-2">
@@ -1009,6 +1051,36 @@ export function AIPoweredReports({ childName, childAge, childGrade, childId, rol
             </CardContent>
           </Card>
         </div>
+
+        {generatedReport.dimensions && generatedReport.dimensions.length > 0 && (
+          <Card className="border shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold flex items-center gap-2" style={{ color: brand.primary }}>
+                <BarChart3 size={16} style={{ color: brand.accent }} /> Measured Behavioural Dimensions
+                <Badge className="text-[9px] h-5 px-1.5 bg-emerald-100 text-emerald-700">auditable engine</Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {generatedReport.dimensions.map((dim) => (
+                  <div key={dim.key}>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-medium" style={{ color: brand.primary }}>{dim.label}</span>
+                      <span className="text-xs font-bold" style={{ color: getScoreColor(dim.score) }}>{dim.score}/100</span>
+                    </div>
+                    <Progress value={dim.score} className="h-1.5" />
+                  </div>
+                ))}
+              </div>
+              {generatedReport.learningStyle && (
+                <p className="text-[11px] text-muted-foreground mt-3">
+                  Dominant learning style: <span className="font-medium">{generatedReport.learningStyle}</span>
+                  {typeof generatedReport.sessionsAnalyzed === 'number' && ` · ${generatedReport.sessionsAnalyzed} session(s) analysed`}
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         <Card className="border shadow-sm">
           <CardHeader className="pb-2">
@@ -1022,22 +1094,24 @@ export function AIPoweredReports({ childName, childAge, childGrade, childId, rol
                 <div key={idx} className="border rounded-lg p-4" data-testid={`report-section-${idx}`}>
                   <div className="flex items-center justify-between mb-3">
                     <h5 className="text-sm font-semibold" style={{ color: brand.primary }}>{section.name}</h5>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold" style={{ color: getScoreColor(section.score) }}>
-                        {section.score}/100
-                      </span>
-                      <Badge
-                        className="text-[9px] h-5 px-1.5"
-                        style={{
-                          backgroundColor: `${getScoreColor(section.score)}15`,
-                          color: getScoreColor(section.score),
-                        }}
-                      >
-                        {getScoreLabel(section.score)}
-                      </Badge>
-                    </div>
+                    {typeof section.score === 'number' && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold" style={{ color: getScoreColor(section.score) }}>
+                          {section.score}/100
+                        </span>
+                        <Badge
+                          className="text-[9px] h-5 px-1.5"
+                          style={{
+                            backgroundColor: `${getScoreColor(section.score)}15`,
+                            color: getScoreColor(section.score),
+                          }}
+                        >
+                          {getScoreLabel(section.score)}
+                        </Badge>
+                      </div>
+                    )}
                   </div>
-                  <Progress value={section.score} className="h-1.5 mb-3" />
+                  {typeof section.score === 'number' && <Progress value={section.score} className="h-1.5 mb-3" />}
                   <div className="space-y-1.5 mb-3">
                     {section.findings.map((finding, fIdx) => (
                       <div key={fIdx} className="flex items-start gap-2">
@@ -1116,13 +1190,18 @@ export function AIPoweredReports({ childName, childAge, childGrade, childId, rol
                     `Generated for: ${generatedReport.childName || childName || 'Student'}`,
                     `Report Type: ${generatedReport.reportType}`,
                     `Date: ${new Date(generatedReport.generatedAt).toLocaleString()}`,
-                    `Overall Score: ${generatedReport.overallScore}/100 (${getScoreLabel(generatedReport.overallScore)})`,
+                    typeof generatedReport.overallScore === 'number'
+                      ? `Overall LBI Score: ${generatedReport.overallScore}/100 (${getScoreLabel(generatedReport.overallScore)})`
+                      : `Overall LBI Score: Not yet measured (preview — qualitative guidance only)`,
+                    ...(generatedReport.dimensions && generatedReport.dimensions.length > 0
+                      ? ['', '--- Measured Behavioural Dimensions ---', ...generatedReport.dimensions.map(d => `${d.label}: ${d.score}/100`)]
+                      : []),
                     '',
                     '--- Executive Summary ---',
                     generatedReport.summary,
                     '',
                     '--- Detailed Analysis ---',
-                    ...generatedReport.sections.flatMap(s => [`\n${s.name}: ${s.score}/100 (${getScoreLabel(s.score)})`, ...s.findings.map(f => `  - ${f}`), `  Recommendation: ${s.recommendation}`]),
+                    ...generatedReport.sections.flatMap(s => [`\n${s.name}${typeof s.score === 'number' ? `: ${s.score}/100 (${getScoreLabel(s.score)})` : ''}`, ...s.findings.map(f => `  - ${f}`), `  Recommendation: ${s.recommendation}`]),
                     '',
                     '--- Key Insights ---',
                     ...generatedReport.keyInsights.map((k, i) => `${i + 1}. ${k}`),

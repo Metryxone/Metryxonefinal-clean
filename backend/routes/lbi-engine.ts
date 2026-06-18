@@ -251,6 +251,45 @@ export function registerLBIEngineRoutes(
     console.error('[lbi] ensureLbiReportTypesSchema error:', e)
   );
 
+  // Norms engine: compute subdomain norms from REAL responses (no fabrication).
+  app.post('/api/admin/lbi/compute-norms', ...chain, async (req, res) => {
+    try {
+      const { computeLbiNorms } = await import('../services/lbi-norms-engine');
+      const kMin = req.body?.kMin ? parseInt(String(req.body.kMin), 10) : undefined;
+      const result = await computeLbiNorms(pool, Number.isFinite(kMin as number) ? { kMin } : {});
+      res.json(result);
+    } catch (err) {
+      console.error('[lbi] compute-norms error:', err);
+      res.status(500).json({ error: 'norm computation failed' });
+    }
+  });
+
+  app.get('/api/admin/lbi/norms', ...chain, async (_req, res) => {
+    try {
+      const { ensureLbiNormsSchema } = await import('../services/lbi-norms-engine');
+      await ensureLbiNormsSchema(pool);
+      const rows = await pool.query(
+        `SELECT age_band_code, subdomain_code, min_score, median_score, top10_score,
+                mean_score, sd_score, sample_size, is_provisional, source, computed_at
+         FROM lbi_subdomain_norms
+         ORDER BY age_band_code, subdomain_code`
+      );
+      const summary = await pool.query(
+        `SELECT
+           COUNT(*)::int AS total,
+           COUNT(*) FILTER (WHERE source='computed')::int AS computed,
+           COUNT(*) FILTER (WHERE source='computed' AND is_provisional = false)::int AS established,
+           COUNT(*) FILTER (WHERE source='computed' AND is_provisional = true)::int AS provisional,
+           COUNT(*) FILTER (WHERE source <> 'computed')::int AS synthetic
+         FROM lbi_subdomain_norms`
+      );
+      res.json({ summary: summary.rows[0], norms: rows.rows });
+    } catch (err) {
+      console.error('[lbi] norms list error:', err);
+      res.status(500).json({ error: 'norms fetch failed' });
+    }
+  });
+
   app.post('/api/lbi/calculate', ...authOnly, async (req, res) => {
     const { email } = req.body;
     if (!email) return res.status(400).json({ error: 'email required' });

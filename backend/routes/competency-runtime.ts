@@ -47,6 +47,13 @@ import {
   buildQuestionBlueprint,
   getQuestionBlueprint,
 } from '../services/question-blueprint.js';
+import {
+  generateAssembledAssessment,
+  buildAssessment,
+  validateAssessment,
+  getAssembledAssessment,
+  type AssembledQuestion,
+} from '../services/assessment-assembly.js';
 
 export function registerCompetencyRuntimeRoutes(
   app: Express,
@@ -243,5 +250,68 @@ export function registerCompetencyRuntimeRoutes(
     const row = await getQuestionBlueprint(pool, String(req.params.competencyId));
     if (!row.competency_found) { res.status(404).json({ ok: false, error: 'competency_not_found' }); return undefined; }
     return row;
+  }));
+
+  // ===== Phase 2.3 — Assessment Assembly Engine ===========================
+  //   Role → Assessment Blueprint → Question Selection → Assessment Generation.
+  //   No duplicate questions · competency coverage · blueprint coverage ·
+  //   difficulty balancing · question randomization.
+
+  // ---- 16. Assemble (build → validate → persist) an assessment ------------
+  app.post('/api/competency-runtime/blueprints/:blueprintId/assemble', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const b = req.body ?? {};
+    const result = await generateAssembledAssessment(pool, String(req.params.blueprintId), {
+      total: b.total != null ? Number(b.total) : null,
+      seed: b.seed != null ? Number(b.seed) : null,
+      persist: b.persist !== false,
+      tolerancePct: b.tolerance_pct != null ? Number(b.tolerance_pct) : undefined,
+    });
+    if (!result.ok) {
+      const code = result.error === 'blueprint_not_found' ? 404 : 400;
+      res.status(code).json({ ok: false, error: result.error });
+      return undefined;
+    }
+    return result;
+  }));
+
+  // ---- 17. Preview an assessment (build + validate, NO persist) -----------
+  app.post('/api/competency-runtime/blueprints/:blueprintId/assessment-preview', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const b = req.body ?? {};
+    const result = await generateAssembledAssessment(pool, String(req.params.blueprintId), {
+      total: b.total != null ? Number(b.total) : null,
+      seed: b.seed != null ? Number(b.seed) : null,
+      persist: false,
+      tolerancePct: b.tolerance_pct != null ? Number(b.tolerance_pct) : undefined,
+    });
+    if (!result.ok) {
+      const code = result.error === 'blueprint_not_found' ? 404 : 400;
+      res.status(code).json({ ok: false, error: result.error });
+      return undefined;
+    }
+    return result;
+  }));
+
+  // ---- 18. Read a stored assembled assessment ----------------------------
+  app.get('/api/competency-runtime/assembled-assessments/:assessmentId', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const row = await getAssembledAssessment(pool, String(req.params.assessmentId));
+    if (!row) { res.status(404).json({ ok: false, error: 'assessment_not_found' }); return undefined; }
+    return row;
+  }));
+
+  // ---- 19. Re-validate a stored assembled assessment ---------------------
+  app.post('/api/competency-runtime/assembled-assessments/:assessmentId/validate', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const b = req.body ?? {};
+    const row = await getAssembledAssessment(pool, String(req.params.assessmentId));
+    if (!row) { res.status(404).json({ ok: false, error: 'assessment_not_found' }); return undefined; }
+    const questions: AssembledQuestion[] = Array.isArray(row.questions) ? row.questions : [];
+    const result = await validateAssessment(pool, String(row.blueprint_id), questions, {
+      tolerancePct: b.tolerance_pct != null ? Number(b.tolerance_pct) : undefined,
+    });
+    if (!result.ok) {
+      const code = result.error === 'blueprint_not_found' ? 404 : 400;
+      res.status(code).json({ ok: false, error: result.error });
+      return undefined;
+    }
+    return { assessment_id: row.id, blueprint_id: row.blueprint_id, total_questions: questions.length, validation: result.validation };
   }));
 }

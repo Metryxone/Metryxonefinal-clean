@@ -46,6 +46,7 @@ import {
   computeBenchmarkEngine,
   computeBenchmarkComparison,
   computeBenchmarkDashboard,
+  computeRuntimeValidation,
 } from '../services/competency-runtime.js';
 import {
   runCompetencyTypeSeed,
@@ -236,6 +237,18 @@ export function registerCompetencyRuntimeRoutes(
   // ---- 7.3 Benchmark dashboard (composed read + rollup) ---------------------
   app.get('/api/competency-runtime/benchmark-dashboard/:subjectId', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
     const result = await computeBenchmarkDashboard(pool, String(req.params.subjectId));
+    if (!result.ok) { res.status(400).json({ ok: false, error: result.error }); return undefined; }
+    return result;
+  }));
+
+  // ===== Phase 2.10 — Super-Admin Runtime Validation ======================
+  // Read-only, never-throws end-to-end validator across the full chain
+  // (blueprint → mapping → generation → scoring → profile → readiness → gap →
+  // signal → benchmark) + audit-log coverage + permission posture. COMPOSES the
+  // live engines; never mutates; reports honest pass/gap/fail per stage.
+  // ---- 8.1 Runtime validation (per-subject chain validation) ----------------
+  app.get('/api/competency-runtime/validation/:subjectId', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const result = await computeRuntimeValidation(pool, String(req.params.subjectId));
     if (!result.ok) { res.status(400).json({ ok: false, error: result.error }); return undefined; }
     return result;
   }));

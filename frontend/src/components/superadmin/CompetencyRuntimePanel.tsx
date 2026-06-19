@@ -149,6 +149,17 @@ const BENCH_COMP_STATUS_LABELS: Record<string, string> = {
   unevaluable: 'Unevaluable',
 };
 
+const VALIDATION_STATUS_COLORS: Record<string, string> = {
+  pass: 'bg-emerald-100 text-emerald-800',
+  gap: 'bg-amber-100 text-amber-800',
+  fail: 'bg-red-100 text-red-800',
+};
+const VALIDATION_STATUS_LABELS: Record<string, string> = {
+  pass: 'Pass',
+  gap: 'Gap',
+  fail: 'Fail',
+};
+
 interface TypeBucket {
   type_key: string;
   competency_count: number;
@@ -280,6 +291,22 @@ interface BenchmarkDashboard {
   notes?: string[];
 }
 
+interface ValidationStage {
+  key: string;
+  label: string;
+  status: 'pass' | 'gap' | 'fail';
+  detail: string;
+  evidence: Record<string, unknown>;
+}
+interface RuntimeValidation {
+  subject_id: string;
+  generated_at: string;
+  flag_enabled: boolean;
+  stages: ValidationStage[];
+  summary: { total: number; pass: number; gap: number; fail: number };
+  notes?: string[];
+}
+
 export default function CompetencyRuntimePanel() {
   const [blueprintId, setBlueprintId] = useState('bp_pm_v1');
   const [questions, setQuestions] = useState<AssembledQuestion[]>([]);
@@ -368,15 +395,17 @@ export default function CompetencyRuntimePanel() {
   const [gapEngine, setGapEngine] = useState<GapEngine | null>(null);
   const [signalEngine, setSignalEngine] = useState<SignalEngine | null>(null);
   const [benchmark, setBenchmark] = useState<BenchmarkDashboard | null>(null);
+  const [validation, setValidation] = useState<RuntimeValidation | null>(null);
   const [profileBusy, setProfileBusy] = useState(false);
   const [profileError, setProfileError] = useState<string | null>(null);
 
   const loadDashboard = async (subject: string) => {
-    const [dRes, gRes, sRes, bRes] = await Promise.all([
+    const [dRes, gRes, sRes, bRes, vRes] = await Promise.all([
       fetch(`/api/competency-runtime/profiles/${encodeURIComponent(subject)}/dashboard`, { credentials: 'include' }),
       fetch(`/api/competency-runtime/gap-engine/${encodeURIComponent(subject)}`, { credentials: 'include' }),
       fetch(`/api/competency-runtime/signal-engine/${encodeURIComponent(subject)}`, { credentials: 'include' }),
       fetch(`/api/competency-runtime/benchmark-dashboard/${encodeURIComponent(subject)}`, { credentials: 'include' }),
+      fetch(`/api/competency-runtime/validation/${encodeURIComponent(subject)}`, { credentials: 'include' }),
     ]);
     const d = await dRes.json();
     if (!dRes.ok || !d.ok) throw new Error(d.error || `Dashboard failed (${dRes.status})`);
@@ -387,6 +416,8 @@ export default function CompetencyRuntimePanel() {
     setSignalEngine(sRes.ok && s.ok ? (s.data as SignalEngine) : null);
     const b = await bRes.json();
     setBenchmark(bRes.ok && b.ok ? (b.data as BenchmarkDashboard) : null);
+    const v = await vRes.json();
+    setValidation(vRes.ok && v.ok ? (v.data as RuntimeValidation) : null);
   };
 
   const loadProfile = async () => {
@@ -901,6 +932,43 @@ export default function CompetencyRuntimePanel() {
                 </div>
                 <p className="text-[11px] text-gray-500 mt-2">
                   Percentiles are EMPIRICAL (cohort samples ≤ candidate score / n), suppressed below k-anonymity. A dimension activates only when the candidate's membership is actually captured — never inferred. Standing vs a peer cohort is a developmental signal only, never a hiring, promotion, or suitability prediction.
+                </p>
+              </div>
+            )}
+
+            {/* Phase 2.10 — Super-Admin Runtime Validation */}
+            {validation && (
+              <div>
+                <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                  Runtime Validation
+                  <span className="text-xs font-normal text-gray-500">Phase 2.10</span>
+                </h4>
+                <div className="flex flex-wrap gap-2 mb-3 items-center">
+                  <Badge className="bg-emerald-100 text-emerald-800">{validation.summary.pass} pass</Badge>
+                  <Badge className="bg-amber-100 text-amber-800">{validation.summary.gap} gap</Badge>
+                  <Badge className={validation.summary.fail > 0 ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-500'}>
+                    {validation.summary.fail} fail
+                  </Badge>
+                  <span className="text-[11px] text-gray-400">across {validation.summary.total} stages</span>
+                  <Badge className={validation.flag_enabled ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-500'}>
+                    Flag {validation.flag_enabled ? 'enabled' : 'OFF'}
+                  </Badge>
+                </div>
+                <div className="space-y-2">
+                  {validation.stages.map((st) => (
+                    <div key={st.key} className="rounded-xl border bg-white p-3">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
+                        <span className="text-sm font-semibold text-gray-900">{st.label}</span>
+                        <Badge className={VALIDATION_STATUS_COLORS[st.status] || 'bg-gray-100'}>
+                          {VALIDATION_STATUS_LABELS[st.status] || st.status}
+                        </Badge>
+                      </div>
+                      <p className="text-[11px] text-gray-600 mt-1.5">{st.detail}</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-[11px] text-gray-500 mt-2">
+                  Read-only end-to-end chain validation. A "gap" is an honest empty state (mechanism present, no data yet) — never a failure and never inflated to a pass. Audit-log coverage for competency-runtime mutations is an honest gap (admin audit middleware scope is /api/admin only).
                 </p>
               </div>
             )}

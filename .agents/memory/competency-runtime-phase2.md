@@ -141,3 +141,31 @@ chain, then DELETEs every demo row (shared dev/prod DB → must be purgeable).
   comp_ambiguity_tolerance=no_benchmark (no bench row), comp_agile_collaboration=unevaluable
   (unscored); Function/Industry context_unavailable; Department/Institution dimension_unsupported.
   Unmeasured subject → measured=false, total=0, all dims honest. That spread IS the honest output.
+
+## Phase 2.10 — Super-Admin Runtime Validation
+- `computeRuntimeValidation(pool, subjectId)` (section 12 of `backend/services/competency-runtime.ts`):
+  read-only, never-throws end-to-end validator over 11 stages (blueprint_creation, question_mapping,
+  assessment_generation, scoring, competency_profile, readiness_calculation, gap_analysis,
+  signal_generation, benchmarks, audit_logs, permissions). COMPOSES same-file engines (getProfile,
+  computeGapAnalysis, computeRoleReadinessForSubject, computeCompetencySignalEngine,
+  computeBenchmarkDashboard) + raw COUNT via local `safeCount` (returns null on error, NEVER coerced
+  to 0). Each stage wrapped in a `run()` try/catch so one broken link can't abort the report.
+- HONESTY-SEMANTICS RULE (architect-corrected, the key lesson): map status precisely —
+  `pass` = mechanism present AND real evidence; `gap` = mechanism present but NO data (honest empty,
+  NOT a failure, NEVER inflated to pass); `fail` = mechanism BROKEN. A composed engine returning
+  `ok:false` is a BROKEN mechanism → MUST be `fail`, never `gap`. First pass wrongly mapped engine
+  `!ok` to gap for readiness/gap/signal — that under-reports breakage. Reserve `gap` strictly for
+  ok:true-but-empty. (computeRoleReadinessForSubject never returns ok:false — always ok:true w/ null
+  readiness for empty; computeGapAnalysis DOES return ok:false on blueprint_not_found = real fail.)
+- Signal engine SHAPE TRAP: `computeCompetencySignalEngine` returns {ok, measured, summary, signals}
+  at TOP LEVEL, NOT wrapped under `.data` (unlike the route's wrap()). Reading `s.data.summary`
+  throws → mis-reports a working stage as fail. Read `s.summary`/`s.measured` directly.
+- Two PERMANENT honest gaps for demo_subj_pm (9 pass / 2 gap / 0 fail): Question Mapping (empty
+  onto_competency_question_map, Phase 2.2) and Audit Logs (COVERAGE BOUNDARY — admin audit middleware
+  `createAdminAuditMiddleware` mounted ONLY on app.use('/api/admin'), so /api/competency-runtime/*
+  mutations are NOT auto-captured; report honestly, do not paper over).
+- Route `GET /api/competency-runtime/validation/:subjectId` (gate→requireAuth→requireSuperAdmin,
+  wrap .data). Frontend Validation section in `CompetencyRuntimePanel.tsx` fetched in loadDashboard
+  Promise.all (null-tolerant → 503 hides section); per-stage cards w/ pass/gap/fail badges + summary.
+- Only new cross-import added: `isCompetencyRuntimeEnabled` from config/feature-flags (permissions
+  stage reports live flag state). Avoided importing blueprint-builder etc. (circular risk).

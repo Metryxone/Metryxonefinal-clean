@@ -71,3 +71,21 @@ No UI/HTTP-ON path in dev (workflow leaves flag OFF). Exercise the engine via a
 tsx script that sets `process.env.FF_COMPETENCY_RUNTIME='1'`, seeds demo `approved`
 templates (`template_key LIKE 'demo_phase2_%'`) against `blueprint_pm`, runs the
 chain, then DELETEs every demo row (shared dev/prod DB → must be purgeable).
+
+## Phase 2.7 — Competency Gap Analysis (additive over computeGapAnalysis)
+- `prioritizeGap(GapRow)` is PURE: matrix critical&gap>0→high(0); important gap≥2→high(1)
+  else medium(10); desirable gap≥2→medium(11) else low(20); optional gap≥1→low(21);
+  gap≤0→none(80); unmeasurable/unscored→unprioritized(90). Sort rank,gap,weight.
+  unmeasurable/unscored NEVER get a fabricated priority — that IS the honesty contract.
+- `computeCompetencyGapEngine()` COMPOSES `computeGapAnalysis()` (never recomputes gaps),
+  reshapes each row to canon Required/Current/Gap/Priority/Development Need via
+  `developmentNeed()` deterministic templates (raise / maintain / cannot-be-measured /
+  not-scored). `computeGapDashboard()` = engine + readiness + coverage rollup.
+- Routes `GET /api/competency-runtime/gap-engine/:subjectId` + `/gap-dashboard/:subjectId`,
+  `gate, requireAuth, requireSuperAdmin` (gate FIRST = byte-identical OFF). Responses wrap
+  under `.data` ({ok,version,data:{...}}).
+- Frontend: gap table (Required/Current/Gap/Priority/Development Need) + priority-summary
+  badges in `CompetencyRuntimePanel.tsx`, fetched alongside dashboard in `loadDashboard`
+  (Promise.all); gapEngine null-tolerant so a 503 just hides the table.
+- Demo subject `demo_subj_pm` meets/exceeds all reqs → all 'none'/'unprioritized', 0 dev
+  needs. That's the HONEST output, not a bug (no High/Med/Low fires without a real gap).

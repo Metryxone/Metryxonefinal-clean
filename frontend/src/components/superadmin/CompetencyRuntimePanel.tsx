@@ -81,6 +81,22 @@ const BAND_COLORS: Record<string, string> = {
   early: 'bg-red-100 text-red-700',
 };
 
+const GAP_PRIORITY_COLORS: Record<string, string> = {
+  high: 'bg-red-100 text-red-800',
+  medium: 'bg-amber-100 text-amber-800',
+  low: 'bg-yellow-100 text-yellow-800',
+  none: 'bg-emerald-100 text-emerald-800',
+  unprioritized: 'bg-gray-100 text-gray-600',
+};
+
+const GAP_PRIORITY_LABELS: Record<string, string> = {
+  high: 'High',
+  medium: 'Medium',
+  low: 'Low',
+  none: 'Met',
+  unprioritized: 'Unprioritized',
+};
+
 interface TypeBucket {
   type_key: string;
   competency_count: number;
@@ -132,6 +148,26 @@ interface Dashboard {
     count: number;
     history: { instance_id: string; overall_score: number | null; overall_level: number | null; created_at: string | null }[];
   };
+}
+
+interface PrioritizedGapRow {
+  competency_id: string;
+  competency_name: string | null;
+  required_level: number;
+  current_level: number | null;
+  gap: number | null;
+  criticality: string;
+  priority: 'high' | 'medium' | 'low' | 'none' | 'unprioritized';
+  development_need: string;
+  measurement: 'domain_proxy' | 'unmeasurable';
+}
+
+interface GapEngine {
+  measured: boolean;
+  coverage_pct: number | null;
+  summary: { high: number; medium: number; low: number; none: number; unprioritized: number; development_needs: number };
+  gaps: PrioritizedGapRow[];
+  notes?: string[];
 }
 
 export default function CompetencyRuntimePanel() {
@@ -219,16 +255,20 @@ export default function CompetencyRuntimePanel() {
 
   const [profileSubject, setProfileSubject] = useState('demo_subj_pm');
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
+  const [gapEngine, setGapEngine] = useState<GapEngine | null>(null);
   const [profileBusy, setProfileBusy] = useState(false);
   const [profileError, setProfileError] = useState<string | null>(null);
 
   const loadDashboard = async (subject: string) => {
-    const r = await fetch(`/api/competency-runtime/profiles/${encodeURIComponent(subject)}/dashboard`, {
-      credentials: 'include',
-    });
-    const d = await r.json();
-    if (!r.ok || !d.ok) throw new Error(d.error || `Dashboard failed (${r.status})`);
+    const [dRes, gRes] = await Promise.all([
+      fetch(`/api/competency-runtime/profiles/${encodeURIComponent(subject)}/dashboard`, { credentials: 'include' }),
+      fetch(`/api/competency-runtime/gap-engine/${encodeURIComponent(subject)}`, { credentials: 'include' }),
+    ]);
+    const d = await dRes.json();
+    if (!dRes.ok || !d.ok) throw new Error(d.error || `Dashboard failed (${dRes.status})`);
     setDashboard(d.data as Dashboard);
+    const g = await gRes.json();
+    setGapEngine(gRes.ok && g.ok ? (g.data as GapEngine) : null);
   };
 
   const loadProfile = async () => {
@@ -575,6 +615,62 @@ export default function CompetencyRuntimePanel() {
                 );
               })()}
             </div>
+
+            {/* Phase 2.7 — Competency Gap Analysis (prioritized) */}
+            {gapEngine && (
+              <div>
+                <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                  Competency Gap Analysis
+                  <span className="text-xs font-normal text-gray-500">Phase 2.7</span>
+                </h4>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  <Badge className="bg-red-100 text-red-800">High {gapEngine.summary.high}</Badge>
+                  <Badge className="bg-amber-100 text-amber-800">Medium {gapEngine.summary.medium}</Badge>
+                  <Badge className="bg-yellow-100 text-yellow-800">Low {gapEngine.summary.low}</Badge>
+                  <Badge className="bg-emerald-100 text-emerald-800">Met {gapEngine.summary.none}</Badge>
+                  <Badge className="bg-gray-100 text-gray-700">Unprioritized {gapEngine.summary.unprioritized}</Badge>
+                  <Badge className="bg-blue-100 text-blue-800">{gapEngine.summary.development_needs} development need(s)</Badge>
+                </div>
+                <div className="overflow-x-auto rounded-xl border bg-white">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="border-b bg-gray-50 text-gray-500 text-left">
+                        <th className="px-3 py-2 font-semibold">Competency</th>
+                        <th className="px-3 py-2 font-semibold text-center">Required</th>
+                        <th className="px-3 py-2 font-semibold text-center">Current</th>
+                        <th className="px-3 py-2 font-semibold text-center">Gap</th>
+                        <th className="px-3 py-2 font-semibold text-center">Priority</th>
+                        <th className="px-3 py-2 font-semibold">Development Need</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {gapEngine.gaps.map((g) => (
+                        <tr key={g.competency_id} className="border-b last:border-0 align-top">
+                          <td className="px-3 py-2 text-gray-900">
+                            {g.competency_name}
+                            {g.measurement === 'unmeasurable' && (
+                              <span className="ml-1 text-[10px] text-gray-400">(unmeasurable)</span>
+                            )}
+                          </td>
+                          <td className="px-3 py-2 text-center font-mono text-gray-700">L{g.required_level}</td>
+                          <td className="px-3 py-2 text-center font-mono text-gray-700">{g.current_level != null ? `L${g.current_level}` : '—'}</td>
+                          <td className="px-3 py-2 text-center font-mono text-gray-700">{g.gap != null ? (g.gap > 0 ? `+${g.gap}` : g.gap) : '—'}</td>
+                          <td className="px-3 py-2 text-center">
+                            <Badge className={GAP_PRIORITY_COLORS[g.priority] || 'bg-gray-100'}>{GAP_PRIORITY_LABELS[g.priority]}</Badge>
+                          </td>
+                          <td className="px-3 py-2 text-gray-600 max-w-md">{g.development_need}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {gapEngine.summary.unprioritized > 0 && (
+                  <p className="text-[11px] text-gray-500 mt-2">
+                    Unprioritized competencies are unmeasurable or not yet scored — surfaced honestly, never assigned a fabricated priority.
+                  </p>
+                )}
+              </div>
+            )}
 
             {/* History */}
             <div>

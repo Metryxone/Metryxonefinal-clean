@@ -917,3 +917,209 @@ export async function computeDashboard(pool: Pool, subjectId: string): Promise<a
     history,
   };
 }
+
+// ============================================================================
+// 9. COMPETENCY GAP ENGINE + PRIORITIZATION (Phase 2.7)
+// ----------------------------------------------------------------------------
+// Strictly additive composition over computeGapAnalysis (NEVER recomputes the
+// gap math). Produces the canonical Phase-2.7 view per competency:
+//   Required Competency · Current Competency · Gap · Priority · Development Need
+// plus a priority rollup (gap_prioritization_engine).
+//
+// Honesty contract:
+//   - Priority is DERIVED deterministically from criticality x gap magnitude —
+//     never tuned, never randomised. The matrix is published below.
+//   - UNMEASURABLE competencies (no question-bank coverage) and not-yet-scored
+//     measurable competencies are 'unprioritized' with a reason — never assigned
+//     a fabricated priority or development need.
+//   - Met-or-exceeded competencies are priority 'none' (maintain, no dev need).
+//   - Development Need text is a deterministic template over EXISTING fields
+//     (name / required / current / gap / criticality) — no fabricated content.
+// ============================================================================
+export type GapPriority = 'high' | 'medium' | 'low' | 'none' | 'unprioritized';
+
+export interface PrioritizedGapRow {
+  competency_id: string;
+  competency_name: string | null;
+  onto_domain: string | null;
+  required_level: number;       // Required Competency (1..5)
+  current_level: number | null; // Current Competency (1..5), null when unmeasured
+  current_score: number | null; // proxied scaled score 0..100
+  gap: number | null;           // Gap = required - current (levels)
+  severity: GapSeverity;
+  criticality: string;
+  weight: number;
+  blocking: boolean;            // critical & below required
+  priority: GapPriority;        // Priority (high/medium/low/none/unprioritized)
+  priority_rank: number;        // numeric — lower = act first (stable UX sort)
+  development_need: string;     // Development Need (deterministic guidance)
+  measurement: 'domain_proxy' | 'unmeasurable';
+}
+
+// Priority matrix (criticality x gap magnitude). Lower rank acts first.
+//   critical   & gap>0          -> high   (always blocking)
+//   important  & gap>=2         -> high   ; gap==1 -> medium
+//   desirable  & gap>=2         -> medium ; gap==1 -> low
+//   optional   & gap>=1         -> low
+//   gap<=0 (met/exceeded)       -> none
+//   unmeasurable / unscored     -> unprioritized
+export function prioritizeGap(g: GapRow): { priority: GapPriority; rank: number } {
+  if (g.measurement === 'unmeasurable' || g.measured_level == null || g.gap == null) {
+    return { priority: 'unprioritized', rank: 90 };
+  }
+  if (g.gap <= 0) return { priority: 'none', rank: 80 };
+  switch (g.criticality) {
+    case 'critical':  return { priority: 'high',   rank: 0 };
+    case 'important': return g.gap >= 2 ? { priority: 'high',   rank: 1 } : { priority: 'medium', rank: 10 };
+    case 'desirable': return g.gap >= 2 ? { priority: 'medium', rank: 11 } : { priority: 'low', rank: 20 };
+    default:          return { priority: 'low', rank: 21 }; // optional (gap>0)
+  }
+}
+
+// Deterministic development-need guidance over EXISTING fields only.
+export function developmentNeed(g: GapRow): string {
+  const name = g.competency_name ?? g.competency_id;
+  if (g.measurement === 'unmeasurable') {
+    return `${name} cannot be measured yet (no question-bank coverage for its onto-domain). Establish measurement before planning development — gap is unmeasured, not assumed.`;
+  }
+  if (g.measured_level == null || g.gap == null) {
+    return `${name} has not been scored yet. Assess this competency before planning development.`;
+  }
+  if (g.gap <= 0) {
+    return `${name} meets or exceeds the required level ${g.required_level} (current ${g.measured_level}). Maintain — no development gap.`;
+  }
+  const plural = g.gap === 1 ? 'level' : 'levels';
+  const critWord = g.criticality === 'critical'
+    ? 'Critical role competency — close this gap first.'
+    : g.criticality === 'important'
+      ? 'Important competency — prioritise after critical gaps.'
+      : g.criticality === 'desirable'
+        ? 'Desirable competency — address once higher-criticality gaps are closed.'
+        : 'Optional competency — develop opportunistically.';
+  return `Raise ${name} from level ${g.measured_level} to required level ${g.required_level} (gap of ${g.gap} ${plural}). ${critWord}`;
+}
+
+export interface GapPrioritySummary {
+  high: number;
+  medium: number;
+  low: number;
+  none: number;
+  unprioritized: number;
+  development_needs: number; // high + medium + low (actionable gaps)
+}
+
+export interface CompetencyGapEngineResult {
+  ok: boolean;
+  error?: string;
+  subject_id?: string;
+  blueprint_id?: string | null;
+  role_id?: string | null;
+  measured?: boolean;
+  total_competencies?: number;
+  measurable_competencies?: number;
+  unmeasurable_competencies?: number;
+  coverage_pct?: number | null;
+  summary?: GapPrioritySummary;
+  gaps?: PrioritizedGapRow[];
+  role_readiness?: ReadinessResult | null;
+  notes?: string[];
+}
+
+export async function computeCompetencyGapEngine(pool: Pool, subjectId: string): Promise<CompetencyGapEngineResult> {
+  // Reuse the existing gap analysis verbatim — this layer only re-shapes + prioritizes.
+  const base = await computeGapAnalysis(pool, subjectId);
+  if (!base.ok) return { ok: false, error: base.error, subject_id: base.subject_id };
+
+  const rows: PrioritizedGapRow[] = (base.gaps ?? []).map((g) => {
+    const { priority, rank } = prioritizeGap(g);
+    return {
+      competency_id: g.competency_id,
+      competency_name: g.competency_name,
+      onto_domain: g.onto_domain,
+      required_level: g.required_level,
+      current_level: g.measured_level,
+      current_score: g.measured_score,
+      gap: g.gap,
+      severity: g.severity,
+      criticality: g.criticality,
+      weight: g.weight,
+      blocking: g.blocking,
+      priority,
+      priority_rank: rank,
+      development_need: developmentNeed(g),
+      measurement: g.measurement,
+    };
+  });
+
+  // Sort by priority rank, then larger gap, then heavier weight (stable, explainable).
+  rows.sort((a, b) =>
+    a.priority_rank - b.priority_rank ||
+    (b.gap ?? -99) - (a.gap ?? -99) ||
+    b.weight - a.weight);
+
+  const summary: GapPrioritySummary = {
+    high: rows.filter((r) => r.priority === 'high').length,
+    medium: rows.filter((r) => r.priority === 'medium').length,
+    low: rows.filter((r) => r.priority === 'low').length,
+    none: rows.filter((r) => r.priority === 'none').length,
+    unprioritized: rows.filter((r) => r.priority === 'unprioritized').length,
+    development_needs: rows.filter((r) => r.priority === 'high' || r.priority === 'medium' || r.priority === 'low').length,
+  };
+
+  const notes = [...(base.notes ?? [])];
+  if (summary.development_needs === 0 && (base.measured ?? false)) {
+    notes.push('No actionable development gaps — all measured competencies meet or exceed required levels.');
+  }
+  if (summary.unprioritized > 0) {
+    notes.push(`${summary.unprioritized} competenc${summary.unprioritized === 1 ? 'y is' : 'ies are'} unprioritized (unmeasurable or not yet scored) — surfaced honestly, never assigned a fabricated priority.`);
+  }
+
+  return {
+    ok: true,
+    subject_id: base.subject_id,
+    blueprint_id: base.blueprint_id,
+    role_id: base.role_id,
+    measured: base.measured,
+    total_competencies: base.total_competencies,
+    measurable_competencies: base.measurable_competencies,
+    unmeasurable_competencies: base.unmeasurable_competencies,
+    coverage_pct: base.coverage_pct,
+    summary,
+    gaps: rows,
+    role_readiness: base.role_readiness ?? null,
+    notes,
+  };
+}
+
+// gap_dashboard — composed read: prioritized gap engine + role readiness band +
+// the highest-priority development needs surfaced for a quick console view.
+export async function computeGapDashboard(pool: Pool, subjectId: string): Promise<any> {
+  const sid = String(subjectId ?? '').trim();
+  const [engine, profile] = await Promise.all([
+    computeCompetencyGapEngine(pool, sid),
+    getProfile(pool, sid),
+  ]);
+  if (!engine.ok) return { ok: false, error: engine.error, subject_id: sid };
+
+  const topPriorities = (engine.gaps ?? [])
+    .filter((g) => g.priority === 'high' || g.priority === 'medium' || g.priority === 'low')
+    .slice(0, 5);
+
+  return {
+    ok: true,
+    subject_id: sid,
+    version: COMPETENCY_RUNTIME_VERSION,
+    measured: engine.measured ?? false,
+    role_id: engine.role_id ?? null,
+    blueprint_id: engine.blueprint_id ?? null,
+    overall_score: profile.overall_score,
+    overall_level: profile.overall_level,
+    coverage_pct: engine.coverage_pct ?? null,
+    summary: engine.summary,
+    readiness_band: engine.role_readiness?.readiness_band ?? null,
+    role_fit: engine.role_readiness?.role_fit ?? null,
+    top_priorities: topPriorities,
+    gaps: engine.gaps ?? [],
+    notes: engine.notes ?? [],
+  };
+}

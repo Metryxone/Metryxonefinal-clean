@@ -36,6 +36,8 @@ import {
   listProfileHistory,
   computeRoleReadinessForSubject,
   computeDashboard,
+  computeCompetencyGapEngine,
+  computeGapDashboard,
 } from '../services/competency-runtime.js';
 import {
   runCompetencyTypeSeed,
@@ -148,6 +150,30 @@ export function registerCompetencyRuntimeRoutes(
   // ---- 5. Gap analysis ------------------------------------------------------
   app.get('/api/competency-runtime/gap-analysis/:subjectId', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
     const result = await computeGapAnalysis(pool, String(req.params.subjectId));
+    if (!result.ok) {
+      const code = result.error === 'blueprint_not_found' ? 404 : 400;
+      res.status(code).json({ ok: false, error: result.error });
+      return undefined;
+    }
+    return result;
+  }));
+
+  // ===== Phase 2.7 — Competency Gap Engine + Prioritization ==================
+  // Additive composition over gap-analysis: Required/Current/Gap/Priority/Need.
+  // ---- 5.1 Prioritized gap engine -------------------------------------------
+  app.get('/api/competency-runtime/gap-engine/:subjectId', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const result = await computeCompetencyGapEngine(pool, String(req.params.subjectId));
+    if (!result.ok) {
+      const code = result.error === 'blueprint_not_found' ? 404 : 400;
+      res.status(code).json({ ok: false, error: result.error });
+      return undefined;
+    }
+    return result;
+  }));
+
+  // ---- 5.2 Gap dashboard (composed read) ------------------------------------
+  app.get('/api/competency-runtime/gap-dashboard/:subjectId', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const result = await computeGapDashboard(pool, String(req.params.subjectId));
     if (!result.ok) {
       const code = result.error === 'blueprint_not_found' ? 404 : 400;
       res.status(code).json({ ok: false, error: result.error });

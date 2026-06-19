@@ -35,10 +35,14 @@
 
 import type { Pool } from 'pg';
 import { isCompetencyRuntimeEnabled } from '../config/feature-flags.js';
+import { computeBehaviouralEvidence } from './competency-behavioural-evidence.js';
 import { getBlueprint } from './assessment-foundation-mapping.js';
 import { getRoleReadiness, type ReadinessResult } from './role-competency-profile.js';
 import { COMPETENCY_TYPES, type CompetencyTypeKey } from './competency-type-classification.js';
+import { chooseBranch, type BranchDecision } from './adaptive-branching-engine.js';
 import { resolveCohort, benchmarkCompetency, type CohortRef } from './adaptive-benchmark.js';
+import { cronbachAlpha, pearsonR, variance } from './psychometric-intelligence-engine.js';
+import { leastSquaresSlope, directionOf } from './wc3/longitudinal-consumption.js';
 
 export const COMPETENCY_RUNTIME_VERSION = 'phase-2';
 
@@ -419,9 +423,21 @@ export async function scoreAssessment(pool: Pool, input: ScoreInput): Promise<Sc
   const questions: RuntimeQuestion[] = Array.isArray(inst.questions) ? inst.questions : [];
   const byIndex = new Map<number, RuntimeQuestion>(questions.map((q) => [q.index, q]));
 
+  // Adaptive mode (T5): when the caller submits no responses, finalize from the
+  // responses already persisted incrementally (submitSingleResponse). Batch
+  // callers still pass responses explicitly => byte-identical legacy path.
+  let responsesIn = input.responses ?? [];
+  if (responsesIn.length === 0) {
+    const persisted = await pool.query(
+      `SELECT question_index, selected_index FROM onto_assessment_responses WHERE instance_id = $1 ORDER BY question_index`,
+      [instanceId],
+    );
+    responsesIn = (persisted.rows as any[]).map((r) => ({ index: Number(r.question_index), selected_index: Number(r.selected_index) }));
+  }
+
   // Resolve each response to its authored option score. Unknown index/option => skip (never fabricate).
   const accepted: { q: RuntimeQuestion; selected: number; score: number }[] = [];
-  for (const r of input.responses ?? []) {
+  for (const r of responsesIn) {
     const q = byIndex.get(Number(r.index));
     if (!q) continue;
     const sel = Number(r.selected_index);
@@ -551,6 +567,464 @@ export async function scoreAssessment(pool: Pool, input: ScoreInput): Promise<Sc
   } finally {
     client.release();
   }
+}
+
+// ============================================================================
+// 2b. ADAPTIVE SERVING (T5) — flag-gated, additive, falls back to batch.
+// ============================================================================
+// The instance already carries the FULL candidate question set (generated up
+// front). Adaptive mode does NOT change what can be asked — it only changes the
+// ORDER in which the already-generated questions are served, using the pure
+// `chooseBranch` decision engine over the responses captured so far. Responses
+// are captured incrementally (submitSingleResponse); final scoring is unchanged
+// (scoreAssessment reads the persisted responses). On ANY failure the next
+// question falls back to the next sequential unanswered item (batch order), so
+// the assessment can always complete.
+
+export interface SingleResponseResult {
+  ok: boolean;
+  error?: string;
+  instance_id?: string;
+  question_index?: number;
+  answered?: number;
+  total_questions?: number;
+}
+
+// Capture ONE response into onto_assessment_responses (idempotent upsert on the
+// (instance_id, question_index) unique key). Never fabricates: an out-of-range
+// option or unknown index is rejected, not coerced.
+export async function submitSingleResponse(
+  pool: Pool,
+  input: { instanceId: string; index: number; selected_index: number },
+): Promise<SingleResponseResult> {
+  await ensureCompetencyRuntimeSchema(pool);
+  const instanceId = String(input.instanceId ?? '').trim();
+  if (!instanceId) return { ok: false, error: 'instance_required' };
+
+  const instRes = await pool.query(
+    `SELECT id, questions FROM onto_assessment_instances WHERE id = $1`,
+    [instanceId],
+  );
+  if (instRes.rowCount === 0) return { ok: false, error: 'instance_not_found' };
+  const questions: RuntimeQuestion[] = Array.isArray(instRes.rows[0].questions) ? instRes.rows[0].questions : [];
+  const q = questions.find((x) => x.index === Number(input.index));
+  if (!q) return { ok: false, error: 'question_not_found' };
+  const sel = Number(input.selected_index);
+  if (!Number.isInteger(sel) || sel < 0 || sel >= q.options.length) return { ok: false, error: 'invalid_option' };
+
+  const score = Number(q.options[sel].score);
+  await pool.query(
+    `INSERT INTO onto_assessment_responses (instance_id, question_index, template_id, code, onto_domain, selected_index, score)
+     VALUES ($1,$2,$3,$4,$5,$6,$7)
+     ON CONFLICT (instance_id, question_index)
+     DO UPDATE SET selected_index = EXCLUDED.selected_index, score = EXCLUDED.score, created_at = now()`,
+    [instanceId, q.index, q.template_id, q.code, q.onto_domain, sel, score],
+  );
+  await pool.query(`UPDATE onto_assessment_instances SET status='in_progress', updated_at=now() WHERE id=$1 AND status='generated'`, [instanceId]);
+
+  const cnt = await pool.query(`SELECT COUNT(*)::int AS n FROM onto_assessment_responses WHERE instance_id = $1`, [instanceId]);
+  return {
+    ok: true,
+    instance_id: instanceId,
+    question_index: q.index,
+    answered: Number(cnt.rows[0]?.n ?? 0),
+    total_questions: questions.length,
+  };
+}
+
+export interface NextQuestionResult {
+  ok: boolean;
+  error?: string;
+  instance_id?: string;
+  done?: boolean;
+  answered?: number;
+  total_questions?: number;
+  question?: RuntimeQuestion | null;
+  branch?: BranchDecision & { fallback?: boolean };
+}
+
+// Quality proxy: map a 0..100 authored option score to chooseBranch's 0..1 scale.
+function qualityFromScore(score: number): number {
+  const n = Number(score);
+  if (!Number.isFinite(n)) return 0;
+  return Math.max(0, Math.min(1, n / 100));
+}
+
+// Decide + return the NEXT question to serve for an adaptive instance. Pure
+// selection over the already-generated pool; deterministic; never throws (any
+// internal failure degrades to next-sequential with branch.fallback=true).
+export async function nextAdaptiveQuestion(pool: Pool, instanceIdRaw: string): Promise<NextQuestionResult> {
+  await ensureCompetencyRuntimeSchema(pool);
+  const instanceId = String(instanceIdRaw ?? '').trim();
+  if (!instanceId) return { ok: false, error: 'instance_required' };
+
+  const instRes = await pool.query(
+    `SELECT id, questions FROM onto_assessment_instances WHERE id = $1`,
+    [instanceId],
+  );
+  if (instRes.rowCount === 0) return { ok: false, error: 'instance_not_found' };
+  const questions: RuntimeQuestion[] = Array.isArray(instRes.rows[0].questions) ? instRes.rows[0].questions : [];
+  const total = questions.length;
+
+  const respRes = await pool.query(
+    `SELECT question_index, code, onto_domain, score FROM onto_assessment_responses WHERE instance_id = $1 ORDER BY question_index`,
+    [instanceId],
+  );
+  const responses = respRes.rows as { question_index: number; code: string; onto_domain: string; score: number }[];
+  const answeredIdx = new Set(responses.map((r) => Number(r.question_index)));
+  const remaining = questions.filter((q) => !answeredIdx.has(q.index));
+
+  if (total === 0) return { ok: true, instance_id: instanceId, done: true, answered: 0, total_questions: 0, question: null };
+  if (remaining.length === 0) {
+    return { ok: true, instance_id: instanceId, done: true, answered: responses.length, total_questions: total, question: null };
+  }
+
+  // Sequential fallback target (batch order) — also used on any failure.
+  const sequentialNext = [...remaining].sort((a, b) => a.index - b.index)[0];
+
+  let decision: BranchDecision & { fallback?: boolean };
+  let chosen: RuntimeQuestion = sequentialNext;
+  try {
+    const last = responses.length > 0 ? responses[responses.length - 1] : null;
+    // Priority list = the bank codes present in this instance, in first-seen order.
+    const priority: string[] = [];
+    for (const q of questions) if (!priority.includes(q.code)) priority.push(q.code);
+    // Coverage = answered count per bank code.
+    const coverage: Record<string, number> = {};
+    for (const r of responses) coverage[r.code] = (coverage[r.code] ?? 0) + 1;
+    // Honest signal proxy: distinct onto-domains answered (this runtime has no
+    // separate cognitive-signal capture, so we use literal domain breadth).
+    const domainsAnswered = new Set(responses.map((r) => r.onto_domain)).size;
+
+    decision = chooseBranch({
+      currentCompetencyId: last ? last.code : priority[0],
+      currentDepthLevel: 1,
+      lastQualityScore: last ? qualityFromScore(last.score) : undefined,
+      pendingContradictions: 0,
+      cognitiveSignalsCovered: domainsAnswered,
+      competencyCoverage: coverage,
+      competencyPriority: priority,
+      minCoveragePerCompetency: 2,
+    });
+
+    // Realize the decision against the remaining pool. shift_focus targets the
+    // next competency; everything else stays on the current competency. If the
+    // targeted competency has no remaining items, degrade to sequential.
+    const targetCode = decision.nextCompetencyId ?? (last ? last.code : priority[0]);
+    const inTarget = remaining.filter((q) => q.code === targetCode).sort((a, b) => a.index - b.index);
+    chosen = inTarget.length > 0 ? inTarget[0] : sequentialNext;
+  } catch (err) {
+    console.warn('[competency-runtime] adaptive branch failed, falling back to batch order:', (err as Error).message);
+    decision = {
+      policy: 'maintain', reasonCode: 'no_signal', nextDepthLevel: 1,
+      engineVersion: 'fallback', fallback: true,
+    };
+    chosen = sequentialNext;
+  }
+
+  // NOTE: we intentionally do NOT persist to adaptive_question_branches here.
+  // That table is FK-bound to the dynamic_question_sessions domain; a competency
+  // runtime instance is not a row there, so writing it would require fabricating
+  // a session. The branch decision is instead surfaced in full on the response
+  // (`branch`), giving the caller complete, honest provenance with no fabrication.
+  return {
+    ok: true,
+    instance_id: instanceId,
+    done: false,
+    answered: responses.length,
+    total_questions: total,
+    question: chosen,
+    branch: decision,
+  };
+}
+
+// ============================================================================
+// T6 — Item-level psychometrics (classical test theory, data-permitting)
+// ============================================================================
+// Computed read-only from REAL persisted responses (onto_assessment_responses).
+// Coverage (n respondents) and Confidence (sufficiency) are reported as SEPARATE
+// axes; statistics are emitted directionally below the sufficiency threshold and
+// flagged insufficient — never fabricated, never suppressed.
+export const PSYCHO_MIN_RESPONDENTS = 30; // sufficiency (confidence) threshold
+
+export interface ItemPsychometric {
+  item_key: string;            // stable item identity: template_id, else code:index
+  code: string;
+  template_id: string | null;
+  onto_domain: string | null;
+  n: number;                   // respondents who answered this item
+  difficulty: number | null;   // p-value: mean(score)/100, 0..1 (null if n<1)
+  difficulty_label: 'high_mean' | 'moderate_mean' | 'low_mean' | 'insufficient';
+  discrimination: number | null; // corrected item-total correlation (null if undefined)
+  discrimination_label: 'good' | 'fair' | 'weak' | 'negative' | 'insufficient';
+  sufficient: boolean;         // n >= PSYCHO_MIN_RESPONDENTS
+}
+
+export interface ItemPsychometricsResult {
+  ok: boolean;
+  error?: string;
+  blueprint_id?: string;
+  respondents?: number;          // distinct instances with >=1 recorded response
+  complete_respondents?: number; // instances answering ALL observed items
+  reliability?: {
+    alpha: number | null;
+    n_items: number;
+    n_complete: number;
+    sufficient: boolean;
+    note: string;
+  };
+  items?: ItemPsychometric[];
+  sufficient?: boolean;          // overall (respondents >= threshold)
+  min_respondents?: number;
+  notes?: string[];
+}
+
+function difficultyLabel(p: number | null): ItemPsychometric['difficulty_label'] {
+  if (p === null) return 'insufficient';
+  if (p >= 0.75) return 'high_mean';
+  if (p >= 0.4) return 'moderate_mean';
+  return 'low_mean';
+}
+
+function discriminationLabel(d: number | null): ItemPsychometric['discrimination_label'] {
+  if (d === null) return 'insufficient';
+  if (d < 0) return 'negative';
+  if (d >= 0.3) return 'good';
+  if (d >= 0.15) return 'fair';
+  return 'weak';
+}
+
+const mean = (xs: number[]): number => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
+
+export async function computeItemPsychometrics(pool: Pool, blueprintId: string): Promise<ItemPsychometricsResult> {
+  const bp = (blueprintId || '').trim();
+  if (!bp) return { ok: false, error: 'blueprint_required' };
+  await ensureCompetencyRuntimeSchema(pool);
+
+  const { rows } = await pool.query(
+    `SELECT r.instance_id, r.question_index, r.template_id, r.code, r.onto_domain, r.score::float8 AS score
+       FROM onto_assessment_responses r
+       JOIN onto_assessment_instances i ON i.id = r.instance_id
+      WHERE i.blueprint_id = $1`,
+    [bp],
+  );
+
+  const notes: string[] = [
+    'difficulty = mean(item score) / 100 (proportion of max competency level, not "correctness").',
+    'discrimination = corrected item-total correlation (item excluded from total).',
+    `sufficiency threshold = ${PSYCHO_MIN_RESPONDENTS} respondents; values below are directional only.`,
+  ];
+
+  if (rows.length === 0) {
+    return {
+      ok: true,
+      blueprint_id: bp,
+      respondents: 0,
+      complete_respondents: 0,
+      reliability: { alpha: null, n_items: 0, n_complete: 0, sufficient: false, note: 'insufficient_data: no responses recorded for this blueprint yet' },
+      items: [],
+      sufficient: false,
+      min_respondents: PSYCHO_MIN_RESPONDENTS,
+      notes,
+    };
+  }
+
+  // Per-instance map: instanceId -> { itemKey -> score }; plus item metadata.
+  const perInstance = new Map<string, Map<string, number>>();
+  const itemMeta = new Map<string, { code: string; template_id: string | null; onto_domain: string | null }>();
+  for (const r of rows) {
+    const itemKey: string = r.template_id ? String(r.template_id) : `${r.code}:${r.question_index}`;
+    if (!itemMeta.has(itemKey)) {
+      itemMeta.set(itemKey, { code: r.code, template_id: r.template_id ?? null, onto_domain: r.onto_domain ?? null });
+    }
+    let inst = perInstance.get(r.instance_id);
+    if (!inst) { inst = new Map<string, number>(); perInstance.set(r.instance_id, inst); }
+    // If a respondent somehow has the same itemKey twice, keep the first (idempotent capture already dedupes by question_index).
+    if (!inst.has(itemKey)) inst.set(itemKey, Number(r.score));
+  }
+
+  const respondents = perInstance.size;
+  const itemKeys = Array.from(itemMeta.keys());
+
+  // Per-item difficulty + corrected item-total discrimination.
+  const items: ItemPsychometric[] = itemKeys.map((itemKey) => {
+    const meta = itemMeta.get(itemKey)!;
+    const itemScores: number[] = [];
+    const correctedTotals: number[] = []; // total of the respondent's OTHER items
+    for (const inst of perInstance.values()) {
+      if (!inst.has(itemKey)) continue;
+      const s = inst.get(itemKey)!;
+      let other = 0;
+      for (const [k, v] of inst) if (k !== itemKey) other += v;
+      itemScores.push(s);
+      correctedTotals.push(other);
+    }
+    const n = itemScores.length;
+    const difficulty = n >= 1 ? Math.max(0, Math.min(1, mean(itemScores) / 100)) : null;
+    let discrimination: number | null = null;
+    if (n >= 2 && variance(itemScores) > 0 && variance(correctedTotals) > 0) {
+      discrimination = Math.max(-1, Math.min(1, pearsonR(itemScores, correctedTotals)));
+    }
+    return {
+      item_key: itemKey,
+      code: meta.code,
+      template_id: meta.template_id,
+      onto_domain: meta.onto_domain,
+      n,
+      difficulty,
+      difficulty_label: difficultyLabel(difficulty),
+      discrimination,
+      discrimination_label: discriminationLabel(discrimination),
+      sufficient: n >= PSYCHO_MIN_RESPONDENTS,
+    };
+  }).sort((a, b) => a.code.localeCompare(b.code) || a.item_key.localeCompare(b.item_key));
+
+  // Cronbach alpha over the COMPLETE-respondent matrix (respondents answering every observed item).
+  const completeInstances = Array.from(perInstance.values()).filter((inst) => itemKeys.every((k) => inst.has(k)));
+  const nComplete = completeInstances.length;
+  let alpha: number | null = null;
+  if (itemKeys.length >= 2 && nComplete >= 2) {
+    const itemVariances = itemKeys.map((k) => variance(completeInstances.map((inst) => inst.get(k)!)));
+    const totalScores = completeInstances.map((inst) => itemKeys.reduce((acc, k) => acc + inst.get(k)!, 0));
+    const totalVar = variance(totalScores);
+    alpha = totalVar > 0 ? cronbachAlpha(itemVariances, totalVar) : null;
+  }
+  const reliabilitySufficient = nComplete >= PSYCHO_MIN_RESPONDENTS && itemKeys.length >= 2;
+
+  return {
+    ok: true,
+    blueprint_id: bp,
+    respondents,
+    complete_respondents: nComplete,
+    reliability: {
+      alpha,
+      n_items: itemKeys.length,
+      n_complete: nComplete,
+      sufficient: reliabilitySufficient,
+      note: reliabilitySufficient
+        ? 'sufficient'
+        : `insufficient_data: ${nComplete} complete respondent(s) over ${itemKeys.length} item(s) (need >= ${PSYCHO_MIN_RESPONDENTS})`,
+    },
+    items,
+    sufficient: respondents >= PSYCHO_MIN_RESPONDENTS,
+    min_respondents: PSYCHO_MIN_RESPONDENTS,
+    notes,
+  };
+}
+
+// ============================================================================
+// T7 — Longitudinal growth tracking (trend across re-assessments)
+// ============================================================================
+// Read-only over the APPEND-ONLY onto_competency_profiles snapshots. NULL=missing
+// is NEVER coerced to 0 (a domain absent from a snapshot is a gap, not a zero
+// score); a trend needs >= 2 observed datapoints, else direction='insufficient_data'.
+export type GrowthDirection = 'improving' | 'declining' | 'stable' | 'insufficient_data';
+
+export interface TrendPoint {
+  instance_id: string;
+  blueprint_id: string | null;
+  value: number | null; // NULL = not measured in this snapshot (never 0)
+  level: number | null;
+  at: string;
+}
+
+export interface MetricTrend {
+  key: string;          // 'overall' or an onto_domain
+  label: string;
+  points: TrendPoint[]; // chronological
+  n_observed: number;   // non-null datapoints
+  first: number | null;
+  latest: number | null;
+  delta: number | null; // latest - first (null if < 2 observed)
+  slope: number | null; // points per re-assessment (null if < 2 observed)
+  direction: GrowthDirection;
+}
+
+export interface ProfileTrendsResult {
+  ok: boolean;
+  subject_id: string;
+  snapshots: number;
+  overall: MetricTrend;
+  domains: MetricTrend[];
+  note: string;
+}
+
+function buildTrend(key: string, label: string, points: TrendPoint[]): MetricTrend {
+  const observed = points.filter((p) => p.value !== null) as Array<TrendPoint & { value: number }>;
+  const n = observed.length;
+  const first = n >= 1 ? observed[0].value : null;
+  const latest = n >= 1 ? observed[n - 1].value : null;
+  const delta = n >= 2 ? Math.round((latest! - first!) * 10) / 10 : null;
+  const slope = n >= 2 ? Math.round(leastSquaresSlope(observed.map((p) => p.value)) * 1000) / 1000 : null;
+  const direction: GrowthDirection = n < 2 ? 'insufficient_data' : directionOf(slope!);
+  return { key, label, points, n_observed: n, first, latest, delta, slope, direction };
+}
+
+export async function computeProfileTrends(pool: Pool, subjectId: string): Promise<ProfileTrendsResult> {
+  const sid = (subjectId || '').trim();
+  await ensureCompetencyRuntimeSchema(pool);
+  const { rows } = await pool.query(
+    `SELECT instance_id::text AS instance_id, blueprint_id, overall_score, overall_level, profile, created_at
+       FROM onto_competency_profiles
+      WHERE subject_id = $1
+      ORDER BY created_at ASC, id ASC`,
+    [sid],
+  );
+
+  // Overall series (NULL preserved — overall_score is null when no domain was measured).
+  const overallPoints: TrendPoint[] = rows.map((r: any) => ({
+    instance_id: r.instance_id,
+    blueprint_id: r.blueprint_id ?? null,
+    value: r.overall_score === null || r.overall_score === undefined ? null : Number(r.overall_score),
+    level: r.overall_level === null || r.overall_level === undefined ? null : Number(r.overall_level),
+    at: r.created_at instanceof Date ? r.created_at.toISOString() : String(r.created_at),
+  }));
+
+  // Per-domain series: a domain absent from a snapshot's profile = NULL (gap), never 0.
+  const domainKeys = new Set<string>();
+  const domainLabels = new Map<string, string>();
+  const perSnapshotDomains: Array<Map<string, { score: number | null; level: number | null }>> = [];
+  for (const r of rows as any[]) {
+    const arr: any[] = Array.isArray(r.profile) ? r.profile : [];
+    const m = new Map<string, { score: number | null; level: number | null }>();
+    for (const d of arr) {
+      const k = d?.onto_domain;
+      if (!k) continue;
+      domainKeys.add(k);
+      if (d?.label) domainLabels.set(k, d.label);
+      const sc = d?.scaled_score;
+      m.set(k, {
+        score: sc === null || sc === undefined ? null : Number(sc),
+        level: d?.level === null || d?.level === undefined ? null : Number(d.level),
+      });
+    }
+    perSnapshotDomains.push(m);
+  }
+
+  const domains: MetricTrend[] = Array.from(domainKeys).sort().map((k) => {
+    const points: TrendPoint[] = rows.map((r: any, i: number) => {
+      const hit = perSnapshotDomains[i].get(k);
+      return {
+        instance_id: r.instance_id,
+        blueprint_id: r.blueprint_id ?? null,
+        value: hit ? hit.score : null, // absent → null (missing), never 0
+        level: hit ? hit.level : null,
+        at: r.created_at instanceof Date ? r.created_at.toISOString() : String(r.created_at),
+      };
+    });
+    return buildTrend(k, domainLabels.get(k) ?? k, points);
+  });
+
+  return {
+    ok: true,
+    subject_id: sid,
+    snapshots: rows.length,
+    overall: buildTrend('overall', 'Overall score', overallPoints),
+    domains,
+    note: rows.length < 2
+      ? `insufficient_data: ${rows.length} re-assessment(s) — at least 2 snapshots are needed to compute a trend`
+      : 'trend computed over append-only profile snapshots; NULL = not measured in that snapshot (never 0)',
+  };
 }
 
 // ============================================================================
@@ -972,13 +1446,24 @@ export async function computeRoleReadinessForSubject(pool: Pool, subjectId: stri
 export async function computeDashboard(pool: Pool, subjectId: string): Promise<any> {
   await ensureCompetencyRuntimeSchema(pool);
   const sid = String(subjectId ?? '').trim();
-  const [profile, typeProfile, gap, readiness, history] = await Promise.all([
+  const [profile, typeProfile, gap, readiness, history, trends] = await Promise.all([
     getProfile(pool, sid),
     computeTypeProfile(pool, sid),
     computeGapAnalysis(pool, sid),
     computeRoleReadinessForSubject(pool, sid),
     listProfileHistory(pool, sid),
+    computeProfileTrends(pool, sid),
   ]);
+
+  // T9 · CAPADEX behavioural-signal evidence → dom_behavioral (additive, flag-gated).
+  // Concern-DIAGNOSTIC: it may only LOWER/flag the behavioural dimension as risk,
+  // never raise it. Persisted scores are NEVER mutated — we surface an EFFECTIVE
+  // (only-decreasing) behavioural dimension alongside the base. Flag-OFF → omitted
+  // entirely (byte-identical legacy dashboard).
+  const behaviouralDimension = isCompetencyRuntimeEnabled()
+    ? await buildBehaviouralDimension(pool, sid, profile)
+    : undefined;
+
   return {
     ok: true,
     subject_id: sid,
@@ -988,7 +1473,68 @@ export async function computeDashboard(pool: Pool, subjectId: string): Promise<a
     gap_analysis: gap,
     role_readiness: readiness,
     history,
+    trends,
+    ...(behaviouralDimension ? { behavioural_dimension: behaviouralDimension } : {}),
   };
+}
+
+// ── T9 · Behavioural dimension (CAPADEX concern-diagnostic lowering) ──────────
+// Read-only, never-throws. Composes computeBehaviouralEvidence over the existing
+// CAPADEX behaviour bridge and applies it to the BEHAVIOURAL onto-domain
+// (dom_behavioral) as a downward-only adjustment. Returns null on any failure so
+// the dashboard degrades to its prior (un-adjusted) behavioural standing.
+export interface BehaviouralDimension {
+  onto_domain: 'dom_behavioral';
+  base_score: number | null;        // measured proxy score from the profile (unchanged)
+  effective_score: number | null;   // base lowered by behavioural risk (never raised); null when not measured
+  risk_deficit: number;             // total points removed by concern-diagnostic risks
+  applied: boolean;                 // true only when a measured base AND risk evidence both exist
+  evidence: Awaited<ReturnType<typeof computeBehaviouralEvidence>>;
+  note: string;
+}
+
+async function buildBehaviouralDimension(
+  pool: Pool,
+  subjectId: string,
+  profile: ProfileView,
+): Promise<BehaviouralDimension | null> {
+  try {
+    const evidence = await computeBehaviouralEvidence(pool, subjectId);
+    const behRow = profile.domain_scores.find((d) => d.onto_domain === 'dom_behavioral');
+    const baseScore = behRow ? Number(behRow.scaled_score) : null;
+
+    // Total deficit only when risk evidence is actually present (else 0, never fabricated).
+    const riskDeficit = evidence.available
+      ? evidence.risk_signals.reduce((a, r) => a + (r.deficit ?? 0), 0)
+      : 0;
+
+    // Effective score can ONLY decrease. With no measured base or no risk evidence
+    // it equals the base (unchanged) — CAPADEX signals never raise the dimension.
+    const applied = baseScore != null && evidence.available && riskDeficit > 0;
+    const effectiveScore = baseScore == null
+      ? null
+      : applied
+        ? Math.max(0, Math.round((baseScore - riskDeficit) * 10) / 10)
+        : baseScore;
+
+    const note = baseScore == null
+      ? 'No measured behavioural proxy score yet — behavioural risk evidence is reported but cannot adjust an unmeasured dimension (never assumed).'
+      : applied
+        ? `Behavioural proxy lowered ${baseScore} → ${effectiveScore} by ${riskDeficit} point(s) of concern-diagnostic CAPADEX risk. Risk can only lower this dimension, never raise it.`
+        : 'No concern-diagnostic behavioural risk linked — behavioural dimension is unchanged from its measured proxy (signals never raise it).';
+
+    return {
+      onto_domain: 'dom_behavioral',
+      base_score: baseScore,
+      effective_score: effectiveScore,
+      risk_deficit: riskDeficit,
+      applied,
+      evidence,
+      note,
+    };
+  } catch {
+    return null;
+  }
 }
 
 // ============================================================================

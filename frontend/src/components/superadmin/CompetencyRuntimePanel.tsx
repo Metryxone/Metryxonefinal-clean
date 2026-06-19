@@ -9,6 +9,30 @@ interface BlueprintListItem {
   source_role_title: string | null;
 }
 
+interface ItemPsychometricRow {
+  item_key: string;
+  code: string;
+  template_id: string | null;
+  onto_domain: string | null;
+  n: number;
+  difficulty: number | null;
+  difficulty_label: string;
+  discrimination: number | null;
+  discrimination_label: string;
+  sufficient: boolean;
+}
+
+interface ItemPsychometrics {
+  blueprint_id: string;
+  respondents: number;
+  complete_respondents: number;
+  reliability: { alpha: number | null; n_items: number; n_complete: number; sufficient: boolean; note: string };
+  items: ItemPsychometricRow[];
+  sufficient: boolean;
+  min_respondents: number;
+  notes: string[];
+}
+
 const LEVEL_COLORS: Record<number, string> = {
   5: 'bg-emerald-100 text-emerald-800',
   4: 'bg-green-100 text-green-800',
@@ -212,6 +236,27 @@ interface Dashboard {
     count: number;
     history: { instance_id: string; overall_score: number | null; overall_level: number | null; created_at: string | null }[];
   };
+  trends?: ProfileTrends;
+}
+
+type GrowthDirection = 'improving' | 'declining' | 'stable' | 'insufficient_data';
+
+interface MetricTrend {
+  key: string;
+  label: string;
+  n_observed: number;
+  first: number | null;
+  latest: number | null;
+  delta: number | null;
+  slope: number | null;
+  direction: GrowthDirection;
+}
+
+interface ProfileTrends {
+  snapshots: number;
+  overall: MetricTrend;
+  domains: MetricTrend[];
+  note: string;
 }
 
 interface PrioritizedGapRow {
@@ -320,6 +365,8 @@ export default function CompetencyRuntimePanel() {
   const [assembling, setAssembling] = useState(false);
   const [scoring, setScoring] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [psycho, setPsycho] = useState<ItemPsychometrics | null>(null);
+  const [psychoBusy, setPsychoBusy] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -350,6 +397,26 @@ export default function CompetencyRuntimePanel() {
     return () => { cancelled = true; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // T6 — item psychometrics auto-load when the selected blueprint changes.
+  useEffect(() => {
+    if (!blueprintId) { setPsycho(null); return; }
+    let cancelled = false;
+    setPsychoBusy(true);
+    (async () => {
+      try {
+        const r = await fetch(`/api/competency-runtime/item-psychometrics/${encodeURIComponent(blueprintId)}`, { credentials: 'include' });
+        const d = await r.json();
+        if (cancelled) return;
+        setPsycho(r.ok && d.ok && d.data ? (d.data as ItemPsychometrics) : null);
+      } catch {
+        if (!cancelled) setPsycho(null);
+      } finally {
+        if (!cancelled) setPsychoBusy(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [blueprintId]);
 
   const assemble = async () => {
     setAssembling(true);
@@ -551,6 +618,79 @@ export default function CompetencyRuntimePanel() {
             ? 'Persist ON — the assembled assessment and score run are saved to the database.'
             : 'Preview mode — nothing is saved (read-only validation). Enable “Persist run” to store results.'}
         </p>
+      </div>
+
+      {/* T6: Item-level psychometrics (read-only, classical test theory) */}
+      <div className="bg-white border rounded-xl p-5 shadow-sm">
+        <div className="flex items-center gap-2 mb-3">
+          <h3 className="font-semibold text-gray-800">Item psychometrics</h3>
+          <span className="text-xs text-gray-400">classical test theory · {blueprintId}</span>
+          {psychoBusy && <span className="text-xs text-gray-400">Loading…</span>}
+        </div>
+        {!psycho && !psychoBusy && (
+          <p className="text-xs text-gray-400">No data.</p>
+        )}
+        {psycho && (
+          <>
+            <div className="flex flex-wrap gap-4 text-xs text-gray-600 mb-3">
+              <span><span className="font-semibold text-gray-800">{psycho.respondents}</span> respondents (coverage)</span>
+              <span><span className="font-semibold text-gray-800">{psycho.complete_respondents}</span> answered every item</span>
+              <span>
+                Reliability (Cronbach α):{' '}
+                <span className="font-semibold text-gray-800">
+                  {psycho.reliability.alpha === null ? '—' : psycho.reliability.alpha.toFixed(2)}
+                </span>{' '}
+                <Badge variant="outline" className={psycho.reliability.sufficient ? 'text-emerald-700 border-emerald-300' : 'text-amber-700 border-amber-300'}>
+                  {psycho.reliability.sufficient ? 'sufficient' : 'insufficient data'}
+                </Badge>
+              </span>
+              <span className="text-gray-400">confidence threshold: ≥{psycho.min_respondents} respondents</span>
+            </div>
+            {psycho.items.length === 0 ? (
+              <p className="text-xs text-amber-600">No responses recorded for this blueprint yet (honest empty — answer assessments to populate).</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="text-left text-gray-500 border-b">
+                      <th className="py-1.5 pr-3">Item</th>
+                      <th className="py-1.5 pr-3">Domain</th>
+                      <th className="py-1.5 pr-3 text-right">n</th>
+                      <th className="py-1.5 pr-3 text-right">Difficulty</th>
+                      <th className="py-1.5 pr-3 text-right">Discrimination</th>
+                      <th className="py-1.5 pr-3">Confidence</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {psycho.items.map((it) => (
+                      <tr key={it.item_key} className="border-b last:border-0">
+                        <td className="py-1.5 pr-3 font-mono text-gray-700">{it.code}</td>
+                        <td className="py-1.5 pr-3 text-gray-500">{it.onto_domain ?? '—'}</td>
+                        <td className="py-1.5 pr-3 text-right">{it.n}</td>
+                        <td className="py-1.5 pr-3 text-right">
+                          {it.difficulty === null ? '—' : it.difficulty.toFixed(2)}
+                          <span className="text-gray-400 ml-1">{it.difficulty_label.replace('_', ' ')}</span>
+                        </td>
+                        <td className="py-1.5 pr-3 text-right">
+                          {it.discrimination === null ? '—' : it.discrimination.toFixed(2)}
+                          <span className="text-gray-400 ml-1">{it.discrimination_label}</span>
+                        </td>
+                        <td className="py-1.5 pr-3">
+                          <Badge variant="outline" className={it.sufficient ? 'text-emerald-700 border-emerald-300' : 'text-amber-700 border-amber-300'}>
+                            {it.sufficient ? 'sufficient' : `n<${psycho.min_respondents}`}
+                          </Badge>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            <ul className="mt-3 space-y-0.5 text-[11px] text-gray-400 list-disc list-inside">
+              {psycho.notes.map((nt, i) => <li key={i}>{nt}</li>)}
+            </ul>
+          </>
+        )}
       </div>
 
       {error && (
@@ -1023,6 +1163,62 @@ export default function CompetencyRuntimePanel() {
                 ))}
               </div>
             </div>
+
+            {dashboard.trends && (() => {
+              const t = dashboard.trends!;
+              const dirBadge = (d: GrowthDirection) => {
+                const map: Record<GrowthDirection, string> = {
+                  improving: 'text-emerald-700 border-emerald-300',
+                  declining: 'text-rose-700 border-rose-300',
+                  stable: 'text-gray-600 border-gray-300',
+                  insufficient_data: 'text-amber-700 border-amber-300',
+                };
+                const label = d === 'insufficient_data' ? 'insufficient data' : d;
+                return <Badge variant="outline" className={`${map[d]} text-[10px]`}>{label}</Badge>;
+              };
+              const fmtDelta = (n: number | null) => (n == null ? '—' : `${n > 0 ? '+' : ''}${n}`);
+              const rows = [t.overall, ...t.domains];
+              return (
+                <div className="mt-4">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-1">Longitudinal growth</h4>
+                  <div className="flex items-center gap-3 text-[11px] text-gray-500 mb-2">
+                    <span><span className="font-semibold text-gray-800">{t.snapshots}</span> re-assessments (coverage)</span>
+                    <span className="text-gray-400">trend needs ≥2 snapshots (confidence)</span>
+                  </div>
+                  {t.snapshots < 2 ? (
+                    <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded p-2">{t.note}</p>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-xs">
+                        <thead>
+                          <tr className="text-gray-400 text-left border-b">
+                            <th className="py-1 pr-2 font-medium">Metric</th>
+                            <th className="py-1 px-2 font-medium text-right">First</th>
+                            <th className="py-1 px-2 font-medium text-right">Latest</th>
+                            <th className="py-1 px-2 font-medium text-right">Δ</th>
+                            <th className="py-1 px-2 font-medium text-right">n</th>
+                            <th className="py-1 pl-2 font-medium">Trend</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {rows.map((m) => (
+                            <tr key={m.key} className="border-b last:border-0 text-gray-600">
+                              <td className="py-1.5 pr-2">{m.label}</td>
+                              <td className="py-1.5 px-2 text-right">{m.first ?? '—'}</td>
+                              <td className="py-1.5 px-2 text-right">{m.latest ?? '—'}</td>
+                              <td className="py-1.5 px-2 text-right font-mono">{fmtDelta(m.delta)}</td>
+                              <td className="py-1.5 px-2 text-right text-gray-400">{m.n_observed}</td>
+                              <td className="py-1.5 pl-2">{dirBadge(m.direction)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      <p className="text-[10px] text-gray-400 mt-1.5">{t.note}</p>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
           </div>
         )}
       </div>

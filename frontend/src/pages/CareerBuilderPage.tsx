@@ -7066,6 +7066,59 @@ function AssessmentTab({ userId, profile, onTabChange }: {
           ))}
         </div>
 
+        {/* Coverage vs Confidence — honesty axes (T8, flag-gated; absent => not shown) */}
+        {cs.reliability && (() => {
+          const rel = cs.reliability;
+          const cov = rel.coverage || {};
+          const conf = rel.confidence || {};
+          const confBandColor = conf.band === 'high' ? BRAND.green
+            : conf.band === 'moderate' ? BRAND.accent
+            : conf.band === 'low' ? BRAND.orange : '#9ca3af';
+          return (
+            <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+              <h3 className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                <Brain size={14} style={{ color: BRAND.primary }} /> How to read this result
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Coverage */}
+                <div className="rounded-xl border border-gray-100 p-4">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs font-semibold text-gray-700">Coverage</span>
+                    <span className="text-lg font-bold" style={{ color: BRAND.primary }}>{cov.coverage_pct ?? 0}%</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-gray-100 overflow-hidden mb-2">
+                    <div className="h-full rounded-full transition-all duration-700"
+                      style={{ width: `${cov.coverage_pct ?? 0}%`, backgroundColor: BRAND.primary }} />
+                  </div>
+                  <p className="text-[11px] text-gray-500">
+                    {cov.competencies_scored ?? 0}/{cov.total_competencies ?? 0} competencies ·
+                    {' '}{cov.domains_covered ?? 0}/{cov.total_domains ?? 0} domains measured.
+                  </p>
+                  <p className="text-[10px] text-gray-400 mt-1">{cov.label}</p>
+                </div>
+                {/* Confidence */}
+                <div className="rounded-xl border border-gray-100 p-4">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs font-semibold text-gray-700">Confidence</span>
+                    <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full capitalize"
+                      style={{ backgroundColor: `${confBandColor}1a`, color: confBandColor }}>
+                      {conf.band === 'unmeasured' ? 'unmeasured' : conf.band}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-gray-500">
+                    {conf.mean == null ? 'Not yet measured.' : `Mean response confidence ${Math.round((conf.mean ?? 0) * 100)}%.`}
+                  </p>
+                  <p className="text-[10px] text-gray-400 mt-1">{conf.note}</p>
+                </div>
+              </div>
+              <p className="text-[10px] text-gray-400 mt-3">
+                Coverage and Confidence are separate: a high score over few competencies is broad-but-shallow,
+                and a wide assessment can still carry low confidence. We report both honestly.
+              </p>
+            </div>
+          );
+        })()}
+
         {/* Domain scores */}
         {domains.length > 0 && (
           <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">

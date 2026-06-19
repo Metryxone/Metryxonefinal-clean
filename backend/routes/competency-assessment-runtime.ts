@@ -29,6 +29,7 @@
 import type { Express, NextFunction, Request, Response } from 'express';
 import type { Pool } from 'pg';
 import { resolveBestOntRole, getRoleCompetencies } from '../services/role-crosswalk.js';
+import { isCompetencyRuntimeEnabled } from '../config/feature-flags.js';
 
 type RequireAuth = (req: Request, res: Response, next: NextFunction) => void;
 
@@ -71,6 +72,50 @@ const COMPETENCY_META: Record<string, { name: string; domainCode: string; domain
 
 const metaFor = (code: string) =>
   COMPETENCY_META[code] ?? { name: code, domainCode: code.slice(0, 3), domainName: 'Other' };
+
+// Real (non-fabricated) taxonomy denominators for the Coverage axis.
+const TAXONOMY_TOTAL_COMPETENCIES = Object.keys(COMPETENCY_META).length;
+const TAXONOMY_TOTAL_DOMAINS = new Set(Object.values(COMPETENCY_META).map((m) => m.domainCode)).size;
+
+// T8 — end-user honesty axes. Coverage (breadth measured) and Confidence
+// (trustworthiness) are SEPARATE axes (never composited). Both are derived
+// honestly from real data; nothing is fabricated. NULL/unmeasured is never 0.
+function buildReliability(scores: ScoreRow[]) {
+  const competenciesScored = scores.length;
+  const domainsCovered = new Set(scores.map((s) => metaFor(s.competency_code).domainCode)).size;
+  const coveragePct = TAXONOMY_TOTAL_COMPETENCIES > 0
+    ? Math.round((competenciesScored / TAXONOMY_TOTAL_COMPETENCIES) * 100)
+    : 0;
+  const meanConfidence = competenciesScored > 0
+    ? Math.round(
+        (scores.reduce((a, s) => a + (Number.isFinite(s.confidence) ? s.confidence : 0), 0) /
+          competenciesScored) * 100,
+      ) / 100
+    : null; // null = not measured (never 0)
+  let confidenceBand: 'high' | 'moderate' | 'low' | 'unmeasured' = 'unmeasured';
+  if (meanConfidence != null) {
+    confidenceBand = meanConfidence >= 0.8 ? 'high' : meanConfidence >= 0.6 ? 'moderate' : 'low';
+  }
+  return {
+    coverage: {
+      competencies_scored: competenciesScored,
+      total_competencies: TAXONOMY_TOTAL_COMPETENCIES,
+      domains_covered: domainsCovered,
+      total_domains: TAXONOMY_TOTAL_DOMAINS,
+      coverage_pct: coveragePct,
+      label: 'How much of the competency framework your assessment actually measured.',
+    },
+    confidence: {
+      mean: meanConfidence,
+      band: confidenceBand,
+      basis: 'response_confidence_captured_at_submission',
+      label: 'How trustworthy those measurements are.',
+      note: meanConfidence == null
+        ? 'No competencies measured yet — confidence is unmeasured, not zero.'
+        : 'Confidence reflects response confidence captured during the assessment, not external psychometric validation.',
+    },
+  };
+}
 
 // Per-stage anchor — what a competent person at this stage typically scores.
 const STAGE_ANCHOR: Record<string, number> = {
@@ -337,12 +382,16 @@ export function registerCompetencyAssessmentRuntime(opts: { app: Express; pool: 
         careerStage: profile.career_stage,
         industry: profile.industry,
       };
+      // T8 — flag-gated honesty axes (Coverage vs Confidence). Flag OFF =>
+      // field omitted entirely => byte-identical legacy payload.
+      const reliability = isCompetencyRuntimeEnabled() ? buildReliability(scores) : undefined;
       if (scores.length === 0) {
         return res.json({
           overallScore: 0,
           totalCompetencies: 0,
           profile: profileCamel,
           domains: [],
+          ...(reliability ? { reliability } : {}),
         });
       }
 
@@ -377,6 +426,7 @@ export function registerCompetencyAssessmentRuntime(opts: { app: Express; pool: 
         totalCompetencies: scores.length,
         profile: profileCamel,
         domains,
+        ...(reliability ? { reliability } : {}),
       });
     } catch (e: any) {
       console.error('[cra] compute-score failed:', e);

@@ -31,6 +31,8 @@ import {
   computeTrajectory,
   type HistoryPoint,
 } from '../services/longitudinal-engine';
+import { computeBehaviouralEvidence } from '../services/competency-behavioural-evidence.js';
+import { isCompetencyRuntimeEnabled } from '../config/feature-flags.js';
 
 type AuthMiddleware = (req: Request, res: Response, next: NextFunction) => void;
 
@@ -813,6 +815,13 @@ export function registerCompetencyIntelligenceRoutes(
       const outcomes = buildOutcomes(series, latestScores, profile, targetCritical);
       const interventions = await buildInterventions(pool, outcomes.gap_priority);
 
+      // T9 — CAPADEX behavioural-signal evidence for the behavioural dimension.
+      // Gated by `competencyRuntime` (flag OFF => field omitted => byte-identical).
+      // Concern-diagnostic only: risk/neutral, capped, never a strength.
+      const behaviouralEvidence = isCompetencyRuntimeEnabled()
+        ? await computeBehaviouralEvidence(pool, userId).catch(() => null)
+        : null;
+
       // Persist snapshots fire-and-forget
       persistSnapshots(pool, userId, series).catch(() => {});
 
@@ -835,6 +844,7 @@ export function registerCompetencyIntelligenceRoutes(
         forecasts,
         ...outcomes,
         interventions,
+        ...(behaviouralEvidence ? { behavioural_evidence: behaviouralEvidence } : {}),
         _explain: explainEnvelope(sessionCount, forecasts.length > 0),
       });
     } catch (err: any) {

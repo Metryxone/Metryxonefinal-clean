@@ -196,6 +196,17 @@ interface CIESummary {
     assessed_competencies?: number;
   };
   interventions?: any[];
+  behavioural_evidence?: {
+    available?: boolean;
+    domain?: string;
+    polarity?: string;
+    evidence_score?: number | null;
+    neutral_ceiling?: number;
+    risk_signals?: { risk_key: string; type: string; severity: string; description: string | null; deficit: number }[];
+    coverage?: { has_graph?: boolean; risks_observed?: number; signals_observed?: number };
+    confidence?: { band?: string; basis?: string; note?: string };
+    note?: string;
+  };
 }
 
 interface SessionData {
@@ -517,8 +528,12 @@ export function IntelligenceLayers({
           // E5 · strengths from positive_factors
           const strengths: any[] = session.patterns?.positive_factors ?? [];
           const criticalGaps = rankedGaps.filter((g: any) => ['critical', 'high'].includes(g.gap_level));
+          // T9 · CAPADEX behavioural-signal evidence for the behavioural dimension
+          // (concern-diagnostic: risk/neutral only, capped, never a strength).
+          const behEv = cie.behavioural_evidence;
+          const behEvAvailable = !!behEv?.available;
 
-          if (!loading && !behavioralPatterns.length && !composites.length && !strengths.length && !criticalGaps.length) {
+          if (!loading && !behavioralPatterns.length && !composites.length && !strengths.length && !criticalGaps.length && !behEvAvailable) {
             const totalAssessed = cie.meta?.assessed_competencies ?? 0;
             return (
               <LayerEmpty icon={Brain}
@@ -538,6 +553,63 @@ export function IntelligenceLayers({
           return (
             <div className="space-y-5">
               {loading && <Spinner />}
+
+              {/* T9 · Behavioural-signal evidence (concern-diagnostic; risk/neutral only, never a strength) */}
+              {behEvAvailable && behEv && (
+                <div>
+                  <SectionHeader label="Behavioural Evidence (Concern-Diagnostic)" />
+                  <div className="rounded-xl border p-3.5"
+                    style={{ borderColor: '#DC262630', background: '#FEF2F2' }}>
+                    <div className="flex items-start gap-2.5">
+                      <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+                        style={{ background: '#DC262620' }}>
+                        <AlertTriangle className="w-3.5 h-3.5" style={{ color: '#DC2626' }} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2 mb-1">
+                          <p className="text-[11px] font-semibold text-gray-800 leading-snug">
+                            Behavioural dimension signal
+                          </p>
+                          {behEv.evidence_score != null && (
+                            <span className="text-[9px] px-1.5 py-0.5 rounded-full font-bold shrink-0"
+                              style={{ background: '#DC262615', color: '#DC2626' }}>
+                              {behEv.evidence_score} / {behEv.neutral_ceiling ?? 50}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[10px] text-gray-600 leading-relaxed mb-2">
+                          {behEv.note}
+                        </p>
+                        {(behEv.risk_signals ?? []).length > 0 && (
+                          <div className="space-y-1.5 mb-2">
+                            {(behEv.risk_signals ?? []).map((r, i) => (
+                              <div key={i} className="flex items-start justify-between gap-2 rounded-lg bg-white/60 px-2 py-1.5">
+                                <div className="min-w-0">
+                                  <p className="text-[10px] font-medium text-gray-800 capitalize truncate">
+                                    {(r.type ?? '').replace(/_/g, ' ')}
+                                    <span className="ml-1.5 text-[9px] font-bold uppercase"
+                                      style={{ color: GAP_META[r.severity]?.color ?? '#DC2626' }}>
+                                      {r.severity}
+                                    </span>
+                                  </p>
+                                  {r.description && (
+                                    <p className="text-[9px] text-gray-500 leading-snug">{r.description}</p>
+                                  )}
+                                </div>
+                                <span className="text-[9px] text-gray-400 shrink-0">−{r.deficit}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[9px] text-gray-500">
+                          <span>Coverage: {behEv.coverage?.risks_observed ?? 0} risk{(behEv.coverage?.risks_observed ?? 0) === 1 ? '' : 's'} · {behEv.coverage?.signals_observed ?? 0} signal{(behEv.coverage?.signals_observed ?? 0) === 1 ? '' : 's'}</span>
+                          <span>Confidence: {behEv.confidence?.band ?? 'unmeasured'}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Composite signals — co-activation clusters (burnout, hesitation, etc.) */}
               {composites.length > 0 && (

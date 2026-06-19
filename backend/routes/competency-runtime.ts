@@ -29,11 +29,14 @@ import {
   COMPETENCY_RUNTIME_VERSION,
   generateAssessment,
   scoreAssessment,
+  submitSingleResponse,
+  nextAdaptiveQuestion,
   getInstance,
   getProfile,
   computeGapAnalysis,
   computeTypeProfile,
   listProfileHistory,
+  computeProfileTrends,
   computeRoleReadinessForSubject,
   computeDashboard,
   computeCompetencyGapEngine,
@@ -47,6 +50,7 @@ import {
   computeBenchmarkComparison,
   computeBenchmarkDashboard,
   computeRuntimeValidation,
+  computeItemPsychometrics,
 } from '../services/competency-runtime.js';
 import {
   runCompetencyTypeSeed,
@@ -152,6 +156,49 @@ export function registerCompetencyRuntimeRoutes(
     if (!result.ok) {
       const code = result.error === 'instance_not_found' ? 404 : 400;
       res.status(code).json({ ok: false, error: result.error });
+      return undefined;
+    }
+    return result;
+  }));
+
+  // ---- 3b. Adaptive: capture ONE response incrementally (T5) ---------------
+  //   Literal /:id sub-paths — registered alongside /score (same param depth).
+  app.post('/api/competency-runtime/assessment-instances/:id/respond', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const b = req.body ?? {};
+    const result = await submitSingleResponse(pool, {
+      instanceId: String(req.params.id),
+      index: Number(b.index),
+      selected_index: Number(b.selected_index ?? b.selectedIndex),
+    });
+    if (!result.ok) {
+      const code = result.error === 'instance_not_found' || result.error === 'question_not_found' ? 404
+        : result.error === 'invalid_option' || result.error === 'instance_required' ? 400
+        : 400;
+      res.status(code).json({ ok: false, error: result.error });
+      return undefined;
+    }
+    return result;
+  }));
+
+  // ---- 3c. Adaptive: decide + serve the NEXT question (T5) ------------------
+  //   Pure re-ordering of the already-generated pool; never throws; degrades to
+  //   sequential (batch order) on any internal failure.
+  app.get('/api/competency-runtime/assessment-instances/:id/next', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const result = await nextAdaptiveQuestion(pool, String(req.params.id));
+    if (!result.ok) {
+      const code = result.error === 'instance_not_found' ? 404 : 400;
+      res.status(code).json({ ok: false, error: result.error });
+      return undefined;
+    }
+    return result;
+  }));
+
+  // ---- T6. Item-level psychometrics (read-only; classical test theory) ------
+  // Distinct literal prefix (`item-psychometrics`) — no collision with /:id.
+  app.get('/api/competency-runtime/item-psychometrics/:blueprintId', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const result = await computeItemPsychometrics(pool, String(req.params.blueprintId));
+    if (!result.ok) {
+      res.status(400).json({ ok: false, error: result.error });
       return undefined;
     }
     return result;
@@ -271,6 +318,11 @@ export function registerCompetencyRuntimeRoutes(
   // ---- 5b. Append-only profile history --------------------------------------
   app.get('/api/competency-runtime/profiles/:subjectId/history', gate, requireAuth, requireSuperAdmin, wrap(async (req) =>
     listProfileHistory(pool, String(req.params.subjectId)),
+  ));
+
+  // ---- T7. Longitudinal growth trends (read-only over append-only snapshots) -
+  app.get('/api/competency-runtime/profiles/:subjectId/trends', gate, requireAuth, requireSuperAdmin, wrap(async (req) =>
+    computeProfileTrends(pool, String(req.params.subjectId)),
   ));
 
   // ---- 5c. Composed profile dashboard ---------------------------------------

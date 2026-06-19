@@ -1,0 +1,173 @@
+Phase 2.10 is a validation phase across the full competency-runtime chain. Let me first map all the existing endpoints and infrastructure for each stage before building the validation harness. Let me explore in parallel:
+
+
+2 actions
+Let me map the audit-log and permissions infrastructure, plus the gate/auth definitions:
+
+
+2 actions
+Let me find the audit-log table/function and how scoring persists, so the validation harness checks real audit rows:
+
+
+2 actions
+The global admin audit middleware is on /api/admin/* — competency-runtime routes live at /api/competency-runtime/*, so they're likely NOT covered. That's a key honest finding to verify. Let me check the audit scope and the service signatures I'll compose:
+
+
+2 actions
+I have enough on the architecture. Key honest finding confirmed: the audit middleware is scoped to /api/admin/*, so /api/competency-runtime/* mutations are outside its coverage — that's a real gap to report, not paper over. Let me read how subject→role→blueprint resolves so the validation is subject-aware:
+
+
+2 actions
+Profile resolves blueprint_id and role_id directly — good. Now let me ground the harness in real table names and current row counts via one DB introspection, so the validation never references a non-existent table:
+
+
+2 actions
+Now I have full ground truth. Honest findings to encode: onto_blueprint_dimension_mix=0 (derived on-demand), onto_competency_question_map=0 (empty bank — honest gap per Phase 2.2), audit_logs=0 AND competency-runtime is outside the /api/admin audit-middleware scope (coverage boundary), everything else has real data. Let me check the service's existing imports and a couple remaining counts:
+
+
+2 actions
+Complete ground truth in hand. Note: the one score run is for smoke_subject_1 while the profile is demo_subj_pm (score 75) — the harness must report global scoring mechanism + subject-level profile honestly. Let me read the tail of the service to append section 12:
+
+
+2 actions
+Now I'll add the validation harness (section 12) to the service. First the import for the flag check, then the harness:
+
+
+Edited competency-runtime.ts
+Now the validation harness as section 12, appended at the end of the service:
+
+
+2 actions
+Now I'll append the validation harness. The mockup-sandbox workflow failures are pre-existing/unrelated. Appending section 12:
+
+
+Edited competency-runtime.ts
+Now the route. Let me add the import and register the validation route:
+
+
+Edited competency-runtime.ts
+Now register the validation route near the benchmark routes:
+
+
+Edited competency-runtime.ts
+Backend code in. Let me restart the Backend API and smoke-test the validation route plus the live permission probes (503 flag-off would require a restart, but 401 no-auth is testable now):
+
+
+Restarted Backend API
+Backend restarted. Now smoke-test the validation route and the live permission probes:
+
+
+2 actions
+The harness works and honestly reports 8 pass / 2 gap / 1 fail. The one FAIL is a real bug in my harness — I assumed the signal engine wraps under .data, but it returns fields at top level. Let me verify its shape:
+
+
+Ran cd
+The signal engine returns fields at top level (not under .data). Let me fix the harness:
+
+
+3 actions
+The displayed session plan is the stale Phase 2.9 one (already complete). I'm on Phase 2.10. The signal fix is in — let me restart and re-smoke to confirm the FAIL is resolved:
+
+
+2 actions
+All 11 stages now resolve honestly: 9 pass / 2 gap (Question Mapping empty bank, Audit Logs coverage boundary) / 0 fail. Backend is solid. Now the frontend Validation section. Let me read the relevant parts of the panel:
+
+
+Ran cd
+Now let me find the benchmark UI section and the interface definitions to add the Validation section. Let me locate where benchmark renders and find the BenchmarkDashboard interface:
+
+
+3 actions
+Now I'll add the Validation interface, status maps, state, fetch, and UI. First the interface and status maps near the other interfaces:
+
+
+Edited CompetencyRuntimePanel.tsx
+Now add the status color maps near the other maps and the state + fetch. Let me add the validation status maps after BENCH_COMP_STATUS_LABELS:
+
+
+Edited CompetencyRuntimePanel.tsx
+Now add the validation state and fetch into loadDashboard. Let me update the state declarations and the Promise.all:
+
+
+Edited CompetencyRuntimePanel.tsx
+Now the UI section. Let me view the benchmark render block end to place the Validation section after it:
+
+
+Opened CompetencyRuntimePanel.tsx
+Now I'll insert the Validation section after the benchmark block (after line 937):
+
+
+Edited CompetencyRuntimePanel.tsx
+Now let me run the production build to confirm the frontend compiles clean. The mockup-sandbox failures are pre-existing/unrelated:
+
+
+Restarted build
+Build is running. Let me check its output:
+
+
+Ran sleep
+Build succeeded (✓ built in 21.57s), no errors. The mockup-sandbox failures are pre-existing/unrelated. Now let me run the architect code review:
+
+
+Ran cd
+Now the architect code review per the code_review skill:
+
+Loaded code_review skill
+Now let me run the architect review via code execution:
+
+
+2 actions
+Valid finding — engine !ok (broken mechanism) must map to fail, not gap. Let me check what ok:false means for each composed engine before fixing:
+
+
+2 actions
+Now I understand the semantics. computeRoleReadinessForSubject never returns ok:false (always ok:true with null readiness for empty), but I'll guard defensively. computeGapAnalysis returns ok:false for blueprint_not_found (genuinely broken). Let me fix all the !ok→fail mappings and the question_mapping null-detail bug:
+
+
+Edited competency-runtime.ts
+Now the readiness, gap, and signal stages — map !ok → fail:
+
+
+Edited competency-runtime.ts
+Now the gap and signal stages:
+
+
+Edited competency-runtime.ts
+Now the signal stage:
+
+
+Edited competency-runtime.ts
+All three honesty-semantics fixes are in. Let me restart Backend API and re-smoke to confirm the corrected classification still yields 9 pass / 2 gap / 0 fail (genuine !ok would now correctly show fail):
+
+
+3 actions
+Corrected classification holds: 9 pass / 2 gap / 0 fail, with genuine engine !ok now correctly mapping to fail. The honesty-semantics fixes were backend-only, so the frontend build remains valid. Now let me update memory and append the Phase 2.10 lesson:
+
+
+Ran cd
+Now let me append the Phase 2.10 lesson to the memory file:
+
+
+2 actions
+Phase 2.10 (Super Admin Runtime Validation) is complete. Per your preference, I'm stopping for approval before any deploy.
+
+What was built
+A read-only, never-throws end-to-end validator across all 11 areas of the competency-runtime chain, reporting honest pass / gap / fail per stage — additive, flag-gated (competencyRuntime; flag-OFF → 503 + UI hidden), no fabrication.
+
+Backend (competency-runtime.ts §12 + route)
+
+computeRuntimeValidation(pool, subjectId) composes the existing engines (profile, gap, readiness, signal, benchmark) + raw COUNT checks via a safeCount helper that returns null on error (never coerced to 0). Each stage is try/catch-wrapped so one broken link can't abort the report.
+Route GET /api/competency-runtime/validation/:subjectId — gate → requireAuth → requireSuperAdmin.
+Frontend — Validation section in CompetencyRuntimePanel.tsx, null-tolerant (collapses when 503/flag-off), per-stage badges + summary.
+
+Live result for demo_subj_pm: 9 pass / 2 gap / 0 fail
+The two gaps are honest, permanent findings — not failures:
+
+Question Mapping — onto_competency_question_map is empty (the Phase 2.2 empty-bank gap).
+Audit Logs — coverage boundary: the admin audit middleware is mounted on /api/admin only, so /api/competency-runtime/* mutations aren't auto-captured. Reported honestly rather than papered over.
+Review & fixes
+Architect review caught a real honesty-semantics bug: composed-engine !ok (a broken mechanism) was mapped to gap instead of fail. Fixed for readiness / gap / signal stages so gap is now strictly reserved for "mechanism present, no data yet." Also fixed a signal-engine shape mismatch (.data vs top-level) and a null-detail edge case. Re-smoked clean.
+
+Frontend prod build passed (✓ built in 21.57s); no-auth probe returns 401. Memory updated. (The mockup-sandbox workflow failures are pre-existing and unrelated to this work.)
+
+Ready for your approval to checkpoint/merge.

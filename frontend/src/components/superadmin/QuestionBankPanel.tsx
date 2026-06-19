@@ -210,6 +210,11 @@ export default function QuestionBankPanel() {
     toast, queryClient, saveScoringDomains, saveScoringNorms, saveScoringParams, saveScoringModules,
     updateSetting, seedDefaultSettings, handleLogout, getSettingValue, getSettingBool,
     BRAND, formatDate, formatDateTime, formatCurrency, getStatusBadge, formatEntityType,
+    qbSubTab, setQbSubTab, qbBoardFilter, setQbBoardFilter, qbClassFilter, setQbClassFilter,
+    qbSubjectFilter, setQbSubjectFilter, blueprintData, setBlueprintData,
+    generatingPaper, setGeneratingPaper, generatedPaper, setGeneratedPaper,
+    questionBankQuestions, refetchQuestions,
+    setBlueprintDialog, setAiGenerateDialog, setCurriculumImportDialog, setQbUploadDialog,
   } = p;
 
   return (

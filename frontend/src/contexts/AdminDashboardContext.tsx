@@ -372,6 +372,22 @@ export interface AdminDashboardContextValue {
   setPsychoQuestionFilter: React.Dispatch<React.SetStateAction<string>>;
   lbiQuestionFilter: string;
   setLbiQuestionFilter: React.Dispatch<React.SetStateAction<string>>;
+  qbSubTab: 'questions' | 'blueprints';
+  setQbSubTab: React.Dispatch<React.SetStateAction<'questions' | 'blueprints'>>;
+  qbBoardFilter: string;
+  setQbBoardFilter: React.Dispatch<React.SetStateAction<string>>;
+  qbClassFilter: string;
+  setQbClassFilter: React.Dispatch<React.SetStateAction<string>>;
+  qbSubjectFilter: string;
+  setQbSubjectFilter: React.Dispatch<React.SetStateAction<string>>;
+  blueprintData: any;
+  setBlueprintData: React.Dispatch<React.SetStateAction<any>>;
+  generatingPaper: boolean;
+  setGeneratingPaper: React.Dispatch<React.SetStateAction<boolean>>;
+  generatedPaper: any;
+  setGeneratedPaper: React.Dispatch<React.SetStateAction<any>>;
+  questionBankQuestions: unknown[];
+  refetchQuestions: () => void;
   // Booking/assignment state
   bookingSearch: string;
   setBookingSearch: React.Dispatch<React.SetStateAction<string>>;

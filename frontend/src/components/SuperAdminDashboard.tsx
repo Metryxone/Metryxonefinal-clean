@@ -184,6 +184,7 @@ const VXLaborMarketIntelligencePanel = lazy(() => import('./superadmin/VXLaborMa
 const VXEvidenceIntelligencePanel = lazy(() => import('./superadmin/VXEvidenceIntelligencePanel'));
 const VXTenantConfigurationPanel = lazy(() => import('./superadmin/VXTenantConfigurationPanel'));
 const VXAssessmentRuntimePanel = lazy(() => import('./superadmin/VXAssessmentRuntimePanel'));
+const CompetencyRuntimePanel = lazy(() => import('./superadmin/CompetencyRuntimePanel'));
 const VXCompetencyScienceCouncilPanel = lazy(() => import('./superadmin/VXCompetencyScienceCouncilPanel'));
 const VXWorkforceKnowledgeGraphPanel = lazy(() => import('./superadmin/VXWorkforceKnowledgeGraphPanel'));
 const VXIRTEnginePanel = lazy(() => import('./superadmin/VXIRTEnginePanel'));
@@ -1051,6 +1052,11 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               {activeTab === 'vx-assessment-runtime' && (
                 <div className="h-full overflow-auto">
                   <VXAssessmentRuntimePanel />
+                </div>
+              )}
+              {activeTab === 'competency-runtime' && (
+                <div className="h-full overflow-auto">
+                  <CompetencyRuntimePanel />
                 </div>
               )}
               {activeTab === 'vx-competency-science-council' && (

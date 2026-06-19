@@ -10,6 +10,10 @@ Flag `competencyRuntime` (default OFF → 503 before any DB/auth). Engine in
 tables `onto_assessment_instances/responses/competency_scores/competency_profiles`
 (profile append-only).
 
+## Phase 2.4 Competency Scoring Engine — shares Phase 2.3's substrate
+`services/competency-scoring.ts` (version `phase-2.4`) depends on the EXACT same substrate as Phase 2.3 assembly: `onto_question_competency_mapping`, `competency_question_templates.status='approved'`, and the `competencyRuntime` flag (env `FF_COMPETENCY_RUNTIME`). Once 2.3 was activated, 2.4 needed ZERO new fixes.
+Chain: deriveRawScore (Q→raw; correct→100/0, or Likert ladder) → computeCompetencyScores (difficulty-weighted sum, ordinal foundational=1..expert=5) → normalizeScore (weighted %, or cohort T-score ONLY when real cohort n≥30, never fabricated) → calculateCompetencyLevel (≥80/60/40/20 → L5..L2 else L1; null→unmeasurable, never floored to 1). Empty/unscoreable responses → status `scoring_empty` + null overall. Persists to `onto_competency_score_runs`; reads level labels from `onto_proficiency_levels` (5 rows). Routes: POST /score, POST /score-preview (run_id null = not persisted), GET /score-runs/:runId.
+
 ## Domain-proxy measurement (the honesty crux)
 - Question bank `competency_question_templates` is keyed by **7 codes**
   (COG/COM/LEA/EXE/ADP/TEC/EIQ); the genome taxonomy has **5 onto-domains**.

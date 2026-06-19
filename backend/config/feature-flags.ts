@@ -570,6 +570,19 @@ export const FEATURE_FLAGS = {
    *  byte-identical legacy behaviour. Phase 1 = FOUNDATION only; no consumer is rewritten to
    *  read from it yet. Env: `FF_COMPETENCY_FRAMEWORK_INTELLIGENCE`. */
   competencyFrameworkIntelligence: false,
+  /** Competency Runtime (Phase 2) — operationalizes the live competency chain:
+   *  Role → Assessment Blueprint → Assessment Generation → Competency Scoring →
+   *  Competency Profile → Competency Gap Analysis. Strictly additive + flag-gated:
+   *  flag OFF → all `/api/competency-runtime/*` routes return 503 `feature_disabled`
+   *  and no schema/DDL runs → byte-identical legacy behaviour. Reuses the existing
+   *  blueprint/role-assessment maps, the `competency_question_templates` bank
+   *  (each option carries its own 0-100 score), and `getRoleReadiness`; never
+   *  fabricates scores. Measurement is at the genome's 5 onto-domain grain
+   *  (the 7 question-domain codes crosswalk down to it) — a per-competency
+   *  domain-PROXY with honest coverage reporting until `onto_competency_question_map`
+   *  is populated, at which point precise per-competency scoring activates with no
+   *  rework. Env: `FF_COMPETENCY_RUNTIME`. */
+  competencyRuntime: false,
   /** CAPADEX — Richer Behavioural Signal Capture (Task #22). Augments the evidence
    *  extractor so each answered item can emit an ADDITIONAL genuine concern signal
    *  keyed on its authored behavioural facet (sdi_items.dimension/subdomain_code),
@@ -906,6 +919,10 @@ export function isCareerOutcomeEvidenceEnabled(): boolean {
 
 export function isCompetencyFrameworkIntelligenceEnabled(): boolean {
   return isFlagEnabled('competencyFrameworkIntelligence');
+}
+
+export function isCompetencyRuntimeEnabled(): boolean {
+  return isFlagEnabled('competencyRuntime');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

@@ -67,6 +67,7 @@ import { registerEIDemoSeedRoute } from "./routes/ei-demo-seed";
 import { registerPeerBenchmarkRoutes } from "./routes/peer-benchmark";
 import { registerCompetencyOntologyRoutes } from "./routes/competency-ontology";
 import { registerCompetencyFrameworkIntelligenceRoutes } from "./routes/competency-intelligence";
+import { registerCompetencyRuntimeRoutes } from "./routes/competency-runtime";
 import { registerAdaptiveBenchmarkRoutes } from "./routes/adaptive-benchmark";
 import { registerMobilityRoutes } from "./routes/mobility";
 import { registerCareerStageGuidanceRoutes } from "./routes/career-stage-guidance";
@@ -13433,6 +13434,7 @@ Rules:
   registerPeerBenchmarkRoutes({ app, pool: concernsPool });
   registerCompetencyOntologyRoutes({ app, pool: concernsPool });
   registerCompetencyFrameworkIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerCompetencyRuntimeRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerAdaptiveBenchmarkRoutes({ app, pool: concernsPool });
   registerMobilityRoutes({ app, pool: concernsPool });
   registerCompetencyAssessmentRuntime({ app, pool: concernsPool, requireAuth });

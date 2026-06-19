@@ -38,6 +38,13 @@ import {
   getDimensionConfig,
   computeEmployabilityDimensions,
 } from '../services/competency-ei-dimensions.js';
+import {
+  computeEmployabilityScore,
+  persistScoringRun,
+  listScoringRuns,
+  getScoringRun,
+  ensureScoringRunSchema,
+} from '../services/employability-scoring-engine.js';
 
 export function registerCompetencyEiRoutes(
   app: Express,
@@ -150,6 +157,47 @@ export function registerCompetencyEiRoutes(
     }),
   );
 
+  // ==========================================================================
+  // Phase 3.3 — Employability Scoring Engine
+  //   chain: competency_scores → dimension_scores → ei_score (traced + audited)
+  // ==========================================================================
+
+  // ---- Compute the full scoring chain (read-only; never writes) -------------
+  app.get(
+    '/api/competency-ei/scoring/:subject',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => computeEmployabilityScore(pool, String(req.params.subject))),
+  );
+
+  // ---- Compute + persist an audit run (explicit write path) ----------------
+  app.post(
+    '/api/competency-ei/scoring/:subject/run',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => persistScoringRun(pool, String(req.params.subject))),
+  );
+
+  // ---- Scoring run history for a subject (read-only; probe + degrade) -------
+  app.get(
+    '/api/competency-ei/scoring/:subject/runs',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => listScoringRuns(pool, String(req.params.subject))),
+  );
+
+  // ---- Fetch one persisted run with full trace (admin; read-only) ----------
+  app.get(
+    '/api/competency-ei/admin/scoring/runs/:runId',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => getScoringRun(pool, String(req.params.runId))),
+  );
+
   // Auto-provision defaults at boot ONLY when the flag is ON — keeps flag-OFF
   // byte-identical (no DDL, no seed) while making the read endpoints usable
   // without a manual sync step in the activated environment.
@@ -160,5 +208,9 @@ export function registerCompetencyEiRoutes(
         // eslint-disable-next-line no-console
         console.error('[competency-ei] dimension seed failed:', err?.message ?? err);
       });
+    ensureScoringRunSchema(pool).catch((err) => {
+      // eslint-disable-next-line no-console
+      console.error('[competency-ei] scoring-run schema ensure failed:', err?.message ?? err);
+    });
   }
 }

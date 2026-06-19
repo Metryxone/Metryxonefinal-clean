@@ -36,12 +36,25 @@
 
 import type { Pool } from 'pg';
 import { getProfile, type ProfileView } from './competency-runtime.js';
+import {
+  DEFAULT_BAND_THRESHOLDS,
+  LANGUAGE_POLICY,
+  type DimensionComponent,
+  type DimensionConfidence,
+  type DimensionScoringRule,
+  emptyConfidence,
+} from './competency-ei-scoring-shared.js';
+import { scoreDimension, type ScoredDimension } from './dimension-scoring-engine.js';
+import { calculateEi } from './ei-calculation-engine.js';
+
+// Re-export shared types for backward compatibility with prior importers.
+export type { DimensionComponent, DimensionConfidence } from './competency-ei-scoring-shared.js';
 
 export const COMPETENCY_EI_DIMENSIONS_VERSION = 'phase-3.2';
 export const DIMENSION_WEIGHTS_VERSION = 'cei-dim-w1';
 export const DIMENSION_CALC_VERSION = 'cei-dim-calc-v1';
 
-const DEFAULT_DOMAIN_PROXY_CONFIDENCE_CAP = 60;
+export const DEFAULT_DOMAIN_PROXY_CONFIDENCE_CAP = 60;
 
 // ----------------------------------------------------------------------------
 // Default seed — EI dimension registry
@@ -433,40 +446,8 @@ export async function getDimensionConfig(pool: Pool): Promise<DimensionConfig> {
 // Compute per-subject employability dimensions (read-only, never throws)
 // ----------------------------------------------------------------------------
 
-function clamp(n: number, lo = 0, hi = 100): number {
-  return Math.max(lo, Math.min(hi, n));
-}
 function round1(n: number): number {
   return Math.round(n * 10) / 10;
-}
-
-function bandFor(score: number, t: Record<string, number>): string {
-  const ex = Number(t.excellent ?? 80);
-  const st = Number(t.strong ?? 65);
-  const dv = Number(t.developing ?? 50);
-  const em = Number(t.emerging ?? 35);
-  if (score >= ex) return 'Excellent';
-  if (score >= st) return 'Strong';
-  if (score >= dv) return 'Developing';
-  if (score >= em) return 'Emerging';
-  return 'Early';
-}
-
-export interface DimensionComponent {
-  competency_id: string;
-  competency_name: string | null;
-  onto_domain: string | null;
-  contribution_weight: number;
-  proxy_score: number | null; // domain-proxy score (null when its domain was not measured)
-  measured: boolean;
-}
-
-export interface DimensionConfidence {
-  score: number;
-  band: 'High' | 'Moderate' | 'Limited' | 'Low' | 'None';
-  measurement: string;
-  caps: string[];
-  factors: string[];
 }
 
 export interface EmployabilityDimension {
@@ -513,56 +494,25 @@ export interface EmployabilityDimensionsResult {
   notes: string[];
 }
 
-const LANGUAGE_POLICY = {
-  intent: 'developmental_signal_only',
-  allowed_terms: ['employability readiness', 'readiness dimension', 'growth areas', 'strengths', 'coverage', 'confidence'],
-  disallowed_terms: ['hire', 'do not hire', 'reject', 'suitability', 'rank candidates', 'pass', 'fail', 'promotion decision'],
-  disclaimer:
-    'Employability readiness dimensions are developmental signals composed from competency assessment. ' +
-    'NOT a hiring, promotion, or suitability prediction.',
-};
-
-function emptyConfidence(measurement: string, reason: string): DimensionConfidence {
-  return { score: 0, band: 'None', measurement, caps: [], factors: [reason] };
+/**
+ * Loaded, ready-to-score inputs for one subject. SHARED by the 3.2 dimensions
+ * endpoint and the 3.3 employability-scoring engine so both consume identical
+ * components, rules and measurement basis (single source of truth). Never throws.
+ */
+export interface ScoringInputs {
+  provisioned: boolean;
+  profile_measured: boolean;
+  measurement: string;
+  role_id: string | null;
+  rules: DimensionScoringRule[];
+  components_by_dim: Map<string, DimensionComponent[]>;
+  domain_scores: { onto_domain: string; scaled_score: number }[];
+  notes: string[];
 }
 
-function dimensionConfidence(
-  measurement: string,
-  coveragePct: number,
-  cap: number,
-): DimensionConfidence {
-  const caps: string[] = [];
-  const factors: string[] = [];
-  let ceiling = 100;
-  let score = 100;
-
-  if (measurement === 'domain_proxy') {
-    ceiling = cap;
-    caps.push(`measurement is domain_proxy → confidence capped at ${cap}`);
-  }
-  if (coveragePct < 100) {
-    const pen = Math.min(40, Math.round((100 - coveragePct) * 0.4));
-    score -= pen;
-    factors.push(`${round1(coveragePct)}% mapped-competency coverage (−${pen})`);
-  }
-  score = clamp(Math.min(score, ceiling));
-
-  let band: DimensionConfidence['band'];
-  if (score >= 75) band = 'High';
-  else if (score >= 50) band = 'Moderate';
-  else if (score >= 25) band = 'Limited';
-  else band = 'Low';
-
-  return { score: round1(score), band, measurement, caps, factors };
-}
-
-export async function computeEmployabilityDimensions(
-  pool: Pool,
-  subjectId: string,
-): Promise<EmployabilityDimensionsResult> {
+export async function loadScoringInputs(pool: Pool, subjectId: string): Promise<ScoringInputs> {
   const notes: string[] = [];
 
-  // Config (read-only). Not provisioned => honest empty (flag may be ON but seed not yet run).
   const config = await getDimensionConfig(pool).catch((err) => {
     notes.push(`config_read_error: ${err?.message ?? err}`);
     return { provisioned: false, dimensions: [], total_mappings: 0 } as DimensionConfig;
@@ -577,160 +527,129 @@ export async function computeEmployabilityDimensions(
 
   const measurement = profile?.measurement ?? 'domain_proxy';
   const roleId = profile?.role_id ?? null;
+  const profileMeasured = profile?.measured === true;
 
-  if (!config.provisioned) {
-    notes.push('employability-dimension config not provisioned — POST /api/competency-ei/dimensions/sync to seed defaults');
-    return notMeasurableResult(subjectId, roleId, measurement, false, notes);
-  }
-  if (!profile || profile.measured !== true) {
-    notes.push('subject has no measured competency profile — employability dimensions are not measurable');
-    return notMeasurableResult(subjectId, roleId, measurement, true, notes);
-  }
+  const rules: DimensionScoringRule[] = config.dimensions
+    .filter((d) => d.active)
+    .map((d) => ({
+      ei_dimension_id: d.ei_dimension_id,
+      dimension_name: d.dimension_name,
+      description: d.description,
+      rollup_weight: d.rollup_weight,
+      min_components: d.min_components,
+      min_coverage_pct: d.min_coverage_pct,
+      domain_proxy_confidence_cap: d.domain_proxy_confidence_cap,
+      band_thresholds: d.band_thresholds ?? DEFAULT_BAND_THRESHOLDS,
+      aggregation_method: d.aggregation_method,
+      score_source: d.score_source,
+    }));
 
   // Domain-proxy score lookup keyed by onto_domain.
   const domainScore = new Map<string, number>();
-  for (const d of profile.domain_scores ?? []) {
-    if (d?.onto_domain != null && d?.scaled_score != null) domainScore.set(String(d.onto_domain), Number(d.scaled_score));
-  }
-
-  // Load the active edges + each competency's parent domain in one query.
-  // Never-throws: a read failure here degrades to an honest non-measurable payload.
-  let edges: { rows: any[] };
-  try {
-    edges = await pool.query(
-      `SELECT m.ei_dimension_id, m.competency_id, m.contribution_weight,
-              oc.canonical_name, oc.domain_id
-         FROM competency_ei_mapping m
-         JOIN onto_competencies oc ON oc.id = m.competency_id AND oc.deprecated = false
-        WHERE m.active
-        ORDER BY m.ei_dimension_id, m.contribution_weight DESC, oc.canonical_name`,
-      [],
-    );
-  } catch (err: any) {
-    notes.push(`edges_read_error: ${err?.message ?? err}`);
-    return notMeasurableResult(subjectId, roleId, measurement, true, notes);
-  }
-
-  const edgesByDim = new Map<string, any[]>();
-  for (const e of edges.rows) {
-    const arr = edgesByDim.get(String(e.ei_dimension_id)) ?? [];
-    arr.push(e);
-    edgesByDim.set(String(e.ei_dimension_id), arr);
-  }
-
-  const dims: EmployabilityDimension[] = [];
-  for (const cfg of config.dimensions) {
-    if (!cfg.active) continue;
-    const dimEdges = edgesByDim.get(cfg.ei_dimension_id) ?? [];
-
-    const components: DimensionComponent[] = dimEdges.map((e) => {
-      const dom = e.domain_id != null ? String(e.domain_id) : null;
-      const proxy = dom != null && domainScore.has(dom) ? domainScore.get(dom)! : null;
-      return {
-        competency_id: String(e.competency_id),
-        competency_name: e.canonical_name ?? null,
-        onto_domain: dom,
-        contribution_weight: Number(e.contribution_weight),
-        proxy_score: proxy != null ? round1(proxy) : null,
-        measured: proxy != null,
-      };
-    });
-
-    const total = components.length;
-    const measuredComps = components.filter((c) => c.measured);
-    const coveragePct = total > 0 ? round1((measuredComps.length / total) * 100) : 0;
-
-    const enoughComponents = measuredComps.length >= cfg.min_components;
-    const enoughCoverage = coveragePct >= cfg.min_coverage_pct;
-
-    if (total === 0 || !enoughComponents || !enoughCoverage) {
-      dims.push({
-        ei_dimension_id: cfg.ei_dimension_id,
-        dimension_name: cfg.dimension_name,
-        description: cfg.description,
-        measurable: false,
-        score: null,
-        band: null,
-        rollup_weight: cfg.rollup_weight,
-        components_total: total,
-        components_measured: measuredComps.length,
-        coverage_pct: coveragePct,
-        confidence: emptyConfidence(
-          measurement,
-          total === 0
-            ? 'no competencies mapped to this dimension'
-            : `insufficient measured competencies (${measuredComps.length}/${total}, need ${cfg.min_components} and ≥${cfg.min_coverage_pct}% coverage)`,
-        ),
-        components,
-        reason:
-          total === 0
-            ? 'no_mapped_competencies'
-            : !enoughComponents
-              ? 'below_min_components'
-              : 'below_min_coverage',
-      });
-      continue;
+  const domainScores: { onto_domain: string; scaled_score: number }[] = [];
+  for (const d of profile?.domain_scores ?? []) {
+    if (d?.onto_domain != null && d?.scaled_score != null) {
+      domainScore.set(String(d.onto_domain), Number(d.scaled_score));
+      domainScores.push({ onto_domain: String(d.onto_domain), scaled_score: round1(Number(d.scaled_score)) });
     }
-
-    // Weighted mean over MEASURED components only (never impute unmeasured).
-    let num = 0;
-    let den = 0;
-    for (const c of measuredComps) {
-      num += (c.proxy_score as number) * c.contribution_weight;
-      den += c.contribution_weight;
-    }
-    const score = den > 0 ? round1(clamp(num / den)) : null;
-
-    dims.push({
-      ei_dimension_id: cfg.ei_dimension_id,
-      dimension_name: cfg.dimension_name,
-      description: cfg.description,
-      measurable: score != null,
-      score,
-      band: score != null ? bandFor(score, cfg.band_thresholds) : null,
-      rollup_weight: cfg.rollup_weight,
-      components_total: total,
-      components_measured: measuredComps.length,
-      coverage_pct: coveragePct,
-      confidence: dimensionConfidence(measurement, coveragePct, cfg.domain_proxy_confidence_cap),
-      components,
-    });
   }
 
-  // Overall roll-up over measurable dimensions only (re-normalised over available).
-  const measurable = dims.filter((d) => d.measurable && d.score != null);
-  let overallScore: number | null = null;
-  if (measurable.length > 0) {
-    let num = 0;
-    let den = 0;
-    for (const d of measurable) {
-      num += (d.score as number) * d.rollup_weight;
-      den += d.rollup_weight;
+  const componentsByDim = new Map<string, DimensionComponent[]>();
+  if (config.provisioned && profileMeasured) {
+    // Load the active edges + each competency's parent domain in one query.
+    try {
+      const edges = await pool.query(
+        `SELECT m.ei_dimension_id, m.competency_id, m.contribution_weight,
+                oc.canonical_name, oc.domain_id
+           FROM competency_ei_mapping m
+           JOIN onto_competencies oc ON oc.id = m.competency_id AND oc.deprecated = false
+          WHERE m.active
+          ORDER BY m.ei_dimension_id, m.contribution_weight DESC, oc.canonical_name`,
+        [],
+      );
+      for (const e of edges.rows) {
+        const dom = e.domain_id != null ? String(e.domain_id) : null;
+        const proxy = dom != null && domainScore.has(dom) ? domainScore.get(dom)! : null;
+        const comp: DimensionComponent = {
+          competency_id: String(e.competency_id),
+          competency_name: e.canonical_name ?? null,
+          onto_domain: dom,
+          contribution_weight: Number(e.contribution_weight),
+          proxy_score: proxy != null ? round1(proxy) : null,
+          measured: proxy != null,
+        };
+        const arr = componentsByDim.get(String(e.ei_dimension_id)) ?? [];
+        arr.push(comp);
+        componentsByDim.set(String(e.ei_dimension_id), arr);
+      }
+    } catch (err: any) {
+      notes.push(`edges_read_error: ${err?.message ?? err}`);
     }
-    overallScore = den > 0 ? round1(clamp(num / den)) : null;
   }
-  const overallCoverage = dims.length > 0 ? round1((measurable.length / dims.length) * 100) : 0;
-  const defaultBands = { excellent: 80, strong: 65, developing: 50, emerging: 35 };
+
+  return {
+    provisioned: config.provisioned,
+    profile_measured: profileMeasured,
+    measurement,
+    role_id: roleId,
+    rules,
+    components_by_dim: componentsByDim,
+    domain_scores: domainScores,
+    notes,
+  };
+}
+
+export async function computeEmployabilityDimensions(
+  pool: Pool,
+  subjectId: string,
+): Promise<EmployabilityDimensionsResult> {
+  const inp = await loadScoringInputs(pool, subjectId);
+  const notes = [...inp.notes];
+
+  if (!inp.provisioned) {
+    notes.push('employability-dimension config not provisioned — POST /api/competency-ei/dimensions/sync to seed defaults');
+    return notMeasurableResult(subjectId, inp.role_id, inp.measurement, false, notes);
+  }
+  if (!inp.profile_measured) {
+    notes.push('subject has no measured competency profile — employability dimensions are not measurable');
+    return notMeasurableResult(subjectId, inp.role_id, inp.measurement, true, notes);
+  }
+  if (notes.some((n) => n.startsWith('edges_read_error'))) {
+    return notMeasurableResult(subjectId, inp.role_id, inp.measurement, true, notes);
+  }
+
+  // Delegate to the SAME engines used by the Phase 3.3 scoring engine, then
+  // project the traced result onto the legacy dimensions shape (no trace).
+  const scored: ScoredDimension[] = inp.rules.map((rule) =>
+    scoreDimension(rule, inp.components_by_dim.get(rule.ei_dimension_id) ?? [], inp.measurement),
+  );
+  const ei = calculateEi(scored, {
+    measurement: inp.measurement,
+    confidence_cap: DEFAULT_DOMAIN_PROXY_CONFIDENCE_CAP,
+    band_thresholds: DEFAULT_BAND_THRESHOLDS,
+  });
+
+  const dimensions: EmployabilityDimension[] = scored.map(({ trace: _trace, ...rest }) => rest);
 
   return {
     ok: true,
     subject_id: subjectId,
-    role_id: roleId,
+    role_id: inp.role_id,
     ei_version: COMPETENCY_EI_DIMENSIONS_VERSION,
     weights_version: DIMENSION_WEIGHTS_VERSION,
     provisioned: true,
-    measurable: overallScore != null,
-    measurement,
+    measurable: ei.measurable,
+    measurement: inp.measurement,
     overall: {
-      measurable: overallScore != null,
-      index_score: overallScore,
-      band: overallScore != null ? bandFor(overallScore, defaultBands) : null,
-      dimensions_total: dims.length,
-      dimensions_measurable: measurable.length,
-      coverage_pct: overallCoverage,
-      confidence: dimensionConfidence(measurement, overallCoverage, DEFAULT_DOMAIN_PROXY_CONFIDENCE_CAP),
+      measurable: ei.measurable,
+      index_score: ei.ei_score,
+      band: ei.band,
+      dimensions_total: ei.dimensions_total,
+      dimensions_measurable: ei.dimensions_measurable,
+      coverage_pct: ei.coverage_pct,
+      confidence: ei.confidence,
     },
-    dimensions: dims,
+    dimensions,
     language_policy: LANGUAGE_POLICY,
     notes,
   };

@@ -43,6 +43,9 @@ import {
   SIGNAL_RULES,
   SIGNAL_LOW_LEVEL_MAX,
   SIGNAL_HIGH_LEVEL_MIN,
+  computeBenchmarkEngine,
+  computeBenchmarkComparison,
+  computeBenchmarkDashboard,
 } from '../services/competency-runtime.js';
 import {
   runCompetencyTypeSeed,
@@ -208,6 +211,32 @@ export function registerCompetencyRuntimeRoutes(
       res.status(code).json({ ok: false, error: result.error });
       return undefined;
     }
+    return result;
+  }));
+
+  // ===== Phase 2.9 — Competency Benchmark Foundation =======================
+  // Candidate vs Role / Department / Function / Industry / Institution.
+  // COMPOSES the existing benchmark substrate (bench_cohorts /
+  // bench_competency_benchmarks via adaptive-benchmark) + computeGapAnalysis.
+  // Read-only, honesty-preserving (dimension/comparison statuses never fabricated).
+  // ---- 7.1 Benchmark engine (which dimensions are honestly available) -------
+  app.get('/api/competency-runtime/benchmark-engine/:subjectId', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const result = await computeBenchmarkEngine(pool, String(req.params.subjectId));
+    if (!result.ok) { res.status(400).json({ ok: false, error: result.error }); return undefined; }
+    return result;
+  }));
+
+  // ---- 7.2 Comparison engine (per-competency candidate vs cohort) -----------
+  app.get('/api/competency-runtime/benchmark-comparison/:subjectId', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const result = await computeBenchmarkComparison(pool, String(req.params.subjectId));
+    if (!result.ok) { res.status(400).json({ ok: false, error: result.error }); return undefined; }
+    return result;
+  }));
+
+  // ---- 7.3 Benchmark dashboard (composed read + rollup) ---------------------
+  app.get('/api/competency-runtime/benchmark-dashboard/:subjectId', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const result = await computeBenchmarkDashboard(pool, String(req.params.subjectId));
+    if (!result.ok) { res.status(400).json({ ok: false, error: result.error }); return undefined; }
     return result;
   }));
 

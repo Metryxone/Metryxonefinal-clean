@@ -120,6 +120,35 @@ const SIGNAL_COND_COLORS: Record<string, string> = {
   unevaluable: 'text-slate-400',
 };
 
+const BENCH_DIM_STATUS_COLORS: Record<string, string> = {
+  available: 'bg-emerald-100 text-emerald-800',
+  context_unavailable: 'bg-amber-100 text-amber-800',
+  dimension_unsupported: 'bg-gray-100 text-gray-500',
+  no_cohort: 'bg-gray-100 text-gray-500',
+};
+const BENCH_DIM_STATUS_LABELS: Record<string, string> = {
+  available: 'Available',
+  context_unavailable: 'Context unavailable',
+  dimension_unsupported: 'Unsupported',
+  no_cohort: 'No cohort',
+};
+const BENCH_COMP_STATUS_COLORS: Record<string, string> = {
+  above: 'bg-emerald-100 text-emerald-800',
+  at: 'bg-blue-100 text-blue-800',
+  below: 'bg-amber-100 text-amber-800',
+  no_benchmark: 'bg-gray-100 text-gray-500',
+  suppressed: 'bg-slate-100 text-slate-500',
+  unevaluable: 'bg-slate-100 text-slate-500',
+};
+const BENCH_COMP_STATUS_LABELS: Record<string, string> = {
+  above: 'Above peers',
+  at: 'At peers',
+  below: 'Below peers',
+  no_benchmark: 'No benchmark',
+  suppressed: 'Suppressed (k)',
+  unevaluable: 'Unevaluable',
+};
+
 interface TypeBucket {
   type_key: string;
   competency_count: number;
@@ -220,6 +249,37 @@ interface SignalEngine {
   notes?: string[];
 }
 
+interface BenchmarkComparison {
+  competency_id: string;
+  competency_name: string | null;
+  user_score: number | null;
+  percentile: number | null;
+  band: string | null;
+  status: 'above' | 'at' | 'below' | 'no_benchmark' | 'suppressed' | 'unevaluable';
+  cohort_n: number | null;
+  reason?: string;
+}
+interface BenchmarkDimension {
+  key: string;
+  label: string;
+  status: 'available' | 'context_unavailable' | 'dimension_unsupported' | 'no_cohort';
+  cohort: { id: string; name: string; type: string; k_min: number } | null;
+  comparisons: BenchmarkComparison[];
+  summary: { compared: number; above: number; at: number; below: number; no_benchmark: number; suppressed: number; unevaluable: number };
+  aggregate_percentile: number | null;
+}
+interface BenchmarkDashboard {
+  measured: boolean;
+  summary: {
+    dimensions_total: number;
+    dimensions_available: number;
+    total_comparisons: number;
+    primary: { dimension: string; cohort: string | null; aggregate_percentile: number | null; compared: number; above: number; at: number; below: number } | null;
+  };
+  comparison: { dimensions: BenchmarkDimension[]; notes?: string[] };
+  notes?: string[];
+}
+
 export default function CompetencyRuntimePanel() {
   const [blueprintId, setBlueprintId] = useState('bp_pm_v1');
   const [questions, setQuestions] = useState<AssembledQuestion[]>([]);
@@ -307,14 +367,16 @@ export default function CompetencyRuntimePanel() {
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
   const [gapEngine, setGapEngine] = useState<GapEngine | null>(null);
   const [signalEngine, setSignalEngine] = useState<SignalEngine | null>(null);
+  const [benchmark, setBenchmark] = useState<BenchmarkDashboard | null>(null);
   const [profileBusy, setProfileBusy] = useState(false);
   const [profileError, setProfileError] = useState<string | null>(null);
 
   const loadDashboard = async (subject: string) => {
-    const [dRes, gRes, sRes] = await Promise.all([
+    const [dRes, gRes, sRes, bRes] = await Promise.all([
       fetch(`/api/competency-runtime/profiles/${encodeURIComponent(subject)}/dashboard`, { credentials: 'include' }),
       fetch(`/api/competency-runtime/gap-engine/${encodeURIComponent(subject)}`, { credentials: 'include' }),
       fetch(`/api/competency-runtime/signal-engine/${encodeURIComponent(subject)}`, { credentials: 'include' }),
+      fetch(`/api/competency-runtime/benchmark-dashboard/${encodeURIComponent(subject)}`, { credentials: 'include' }),
     ]);
     const d = await dRes.json();
     if (!dRes.ok || !d.ok) throw new Error(d.error || `Dashboard failed (${dRes.status})`);
@@ -323,6 +385,8 @@ export default function CompetencyRuntimePanel() {
     setGapEngine(gRes.ok && g.ok ? (g.data as GapEngine) : null);
     const s = await sRes.json();
     setSignalEngine(sRes.ok && s.ok ? (s.data as SignalEngine) : null);
+    const b = await bRes.json();
+    setBenchmark(bRes.ok && b.ok ? (b.data as BenchmarkDashboard) : null);
   };
 
   const loadProfile = async () => {
@@ -769,6 +833,74 @@ export default function CompetencyRuntimePanel() {
                 </div>
                 <p className="text-[11px] text-gray-500 mt-2">
                   Signals fire only when every contributing competency is measured (low ≤ L2, high ≥ L4). Unevaluable = a contributing competency is absent or not yet scored — never fired from missing data. Developmental framing only.
+                </p>
+              </div>
+            )}
+
+            {/* Phase 2.9 — Competency Benchmark Foundation */}
+            {benchmark && (
+              <div>
+                <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                  Benchmark Foundation
+                  <span className="text-xs font-normal text-gray-500">Phase 2.9</span>
+                </h4>
+                {benchmark.summary.primary ? (
+                  <div className="flex flex-wrap gap-2 mb-3 items-center">
+                    <Badge className="bg-emerald-100 text-emerald-800">
+                      Primary: {benchmark.summary.primary.cohort || benchmark.summary.primary.dimension}
+                    </Badge>
+                    {benchmark.summary.primary.aggregate_percentile != null && (
+                      <Badge className="bg-blue-100 text-blue-800">
+                        ~P{benchmark.summary.primary.aggregate_percentile} overall
+                      </Badge>
+                    )}
+                    <Badge className="bg-gray-100 text-gray-600">Compared {benchmark.summary.primary.compared}</Badge>
+                    <Badge className="bg-gray-100 text-gray-500">
+                      {benchmark.summary.dimensions_available}/{benchmark.summary.dimensions_total} dimensions available
+                    </Badge>
+                  </div>
+                ) : (
+                  <p className="text-xs text-amber-700 mb-3">
+                    No benchmark dimension is currently available for this candidate — comparison is honestly unavailable, never fabricated.
+                  </p>
+                )}
+                <div className="space-y-2">
+                  {benchmark.comparison.dimensions.map((dim) => (
+                    <div key={dim.key} className="rounded-xl border bg-white p-3">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-semibold text-gray-900">{dim.label}</span>
+                          {dim.cohort && <span className="text-[11px] text-gray-400">{dim.cohort.name} (k≥{dim.cohort.k_min})</span>}
+                        </div>
+                        <Badge className={BENCH_DIM_STATUS_COLORS[dim.status] || 'bg-gray-100'}>{BENCH_DIM_STATUS_LABELS[dim.status] || dim.status}</Badge>
+                      </div>
+                      {dim.status === 'available' && dim.comparisons.length > 0 ? (
+                        <div className="mt-2 space-y-0.5">
+                          {dim.comparisons.map((c) => (
+                            <div key={c.competency_id} className="text-[11px] flex items-center justify-between gap-2 border-b last:border-0 py-1">
+                              <span className="font-medium text-gray-700 truncate">{c.competency_name || c.competency_id}</span>
+                              <div className="flex items-center gap-2 shrink-0">
+                                {c.user_score != null && <span className="text-gray-400">{c.user_score}/100</span>}
+                                {c.percentile != null && <span className="text-gray-500">P{Math.round(c.percentile)}</span>}
+                                <Badge className={`${BENCH_COMP_STATUS_COLORS[c.status] || 'bg-gray-100'} text-[10px]`}>{BENCH_COMP_STATUS_LABELS[c.status] || c.status}</Badge>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        dim.comparisons.length === 0 && (
+                          <p className="text-[11px] text-gray-400 mt-1">
+                            {dim.status === 'context_unavailable'
+                              ? 'Cohorts exist but this candidate has no membership captured for this dimension.'
+                              : 'No benchmark cohort population exists for this dimension yet.'}
+                          </p>
+                        )
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <p className="text-[11px] text-gray-500 mt-2">
+                  Percentiles are EMPIRICAL (cohort samples ≤ candidate score / n), suppressed below k-anonymity. A dimension activates only when the candidate's membership is actually captured — never inferred. Standing vs a peer cohort is a developmental signal only, never a hiring, promotion, or suitability prediction.
                 </p>
               </div>
             )}

@@ -113,3 +113,31 @@ chain, then DELETEs every demo row (shared dev/prod DB → must be purgeable).
   2 not_fired risks (stakeholder_disconnect/disengagement — evaluable, comps high), 2 unevaluable
   (workplace_communication_risk: Comm/Presentation absent + Agile Collaboration unmeasured;
   innovation_potential: Problem Solving/Systems Thinking absent). That spread IS the honest output.
+
+## Phase 2.9 — Benchmark Foundation (Candidate vs Role/Dept/Function/Industry/Institution)
+- COMPOSES the EXISTING benchmark substrate — never reinvent percentile math. Real infra:
+  `bench_cohorts` (cohort_type ∈ global/industry/function/role/layer, k_min=30) +
+  `bench_competency_benchmarks` (sorted_samples, n). Engine = `services/adaptive-benchmark.ts`
+  (resolveCohort, benchmarkCompetency w/ k-anonymity) + `empirical-percentile.ts`
+  (count ≤ candidate / n, never Gaussian). Candidate per-comp score = `computeGapAnalysis`
+  GapRow.measured_score (0-100 domain-proxy) — composed, not recomputed.
+- Dimension honesty matrix is the whole point (NEVER fabricate membership):
+  Role=available (profile.role_id→cohort, e.g. role_pm→coh_role_pm n=340); Function/Industry=
+  context_unavailable (cohorts EXIST but candidate has NO function_id/industry_id captured —
+  honest, not inferred); Department/Institution=dimension_unsupported (no bench cohort_type at all).
+- Per-competency status precedence: unscored→`unevaluable`; no bench row for that competency_id→
+  `no_benchmark`; cohort n<k_min→`suppressed` (delegated to benchmarkCompetency, never expose raw
+  peers); else empirical band vs cohort → above/at/below. bandToStatus: top/upper→above, mid→at,
+  lower/bottom→below.
+- 3 fns in section 11 of `backend/services/competency-runtime.ts`: computeBenchmarkEngine
+  (dimension resolution + cohort ref/n/k), computeBenchmarkComparison (per available cohort,
+  benchmarkCompetency each scored comp + per-dim summary), computeBenchmarkDashboard (rollup +
+  primary dim). Routes `/benchmark-engine|comparison|dashboard/:subjectId`, all
+  `gate, requireAuth, requireSuperAdmin` (gate FIRST = byte-identical OFF 503). Responses wrap `.data`.
+- Frontend: Benchmark Foundation section in `CompetencyRuntimePanel.tsx`, fetched in loadDashboard
+  Promise.all (null-tolerant → 503 hides section); per-dimension cards w/ status badges +
+  per-competency percentile/band table for available dim only.
+- Demo `demo_subj_pm`: Role available, 4 compared (all 'at', mid band, aggregate P46),
+  comp_ambiguity_tolerance=no_benchmark (no bench row), comp_agile_collaboration=unevaluable
+  (unscored); Function/Industry context_unavailable; Department/Institution dimension_unsupported.
+  Unmeasured subject → measured=false, total=0, all dims honest. That spread IS the honest output.

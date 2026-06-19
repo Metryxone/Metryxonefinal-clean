@@ -37,6 +37,7 @@ import type { Pool } from 'pg';
 import { getBlueprint } from './assessment-foundation-mapping.js';
 import { getRoleReadiness, type ReadinessResult } from './role-competency-profile.js';
 import { COMPETENCY_TYPES, type CompetencyTypeKey } from './competency-type-classification.js';
+import { resolveCohort, benchmarkCompetency, type CohortRef } from './adaptive-benchmark.js';
 
 export const COMPETENCY_RUNTIME_VERSION = 'phase-2';
 
@@ -1456,5 +1457,370 @@ export async function computeCompetencySignalEngine(pool: Pool, subjectId: strin
     summary,
     signals,
     notes,
+  };
+}
+
+// ============================================================================
+// 11. COMPETENCY BENCHMARK FOUNDATION (Phase 2.9)
+// Enables comparison: Candidate vs Role / Department / Function / Industry /
+// Institution. COMPOSES the existing real benchmark substrate
+// (services/adaptive-benchmark.ts: resolveCohort + benchmarkCompetency, with
+// empirical-percentile k-anonymity over bench_cohorts/bench_competency_benchmarks)
+// and computeGapAnalysis (candidate per-competency measured_score, a 0..100
+// domain-proxy). Strictly additive, read-only, NEVER fabricates a candidate's
+// dimension membership and NEVER reinvents percentile math.
+//
+// Honesty contract:
+//   - A dimension is 'available' only when a real bench cohort backs it AND the
+//     candidate's membership for that dimension is actually captured.
+//   - Function/Industry cohorts EXIST but the runtime subject model carries no
+//     function/industry membership -> 'context_unavailable' (not fabricated).
+//   - Department/Institution have NO bench cohort population -> 'dimension_unsupported'.
+//   - Per-competency comparison: 'unevaluable' (candidate unscored), 'no_benchmark'
+//     (no bench row for that competency_id), 'suppressed' (cohort n < k_min), else
+//     above/at/below the cohort from the empirical band.
+// ============================================================================
+
+export type BenchmarkDimensionKey = 'role' | 'department' | 'function' | 'industry' | 'institution';
+export type BenchmarkDimensionStatus = 'available' | 'context_unavailable' | 'dimension_unsupported' | 'no_cohort';
+export type ComparisonStatus = 'above' | 'at' | 'below' | 'no_benchmark' | 'suppressed' | 'unevaluable';
+
+interface BenchmarkDimensionDef {
+  key: BenchmarkDimensionKey;
+  label: string;
+  cohort_type: 'role' | 'function' | 'industry' | null; // bench cohort_type backing it; null = no population
+  context_field: 'role_id' | 'function_id' | 'industry_id' | null; // candidate attr that places them in a cohort
+}
+
+// Ordered as requested: Role, Department, Function, Industry, Institution.
+export const BENCHMARK_DIMENSIONS: BenchmarkDimensionDef[] = [
+  { key: 'role',        label: 'Role',        cohort_type: 'role',     context_field: 'role_id' },
+  { key: 'department',  label: 'Department',  cohort_type: null,       context_field: null },
+  { key: 'function',    label: 'Function',    cohort_type: 'function', context_field: 'function_id' },
+  { key: 'industry',    label: 'Industry',    cohort_type: 'industry', context_field: 'industry_id' },
+  { key: 'institution', label: 'Institution', cohort_type: null,       context_field: null },
+];
+
+export interface CandidateBenchmarkContext {
+  role_id: string | null;
+  function_id: string | null;
+  industry_id: string | null;
+}
+
+export interface BenchmarkDimensionResult {
+  key: BenchmarkDimensionKey;
+  label: string;
+  status: BenchmarkDimensionStatus;
+  reason: string;
+  cohort: { id: string; name: string; type: string; k_min: number } | null;
+  benchmarked_competencies: number | null; // how many competencies have a bench row in this cohort
+}
+
+export interface BenchmarkEngineResult {
+  ok: boolean;
+  error?: string;
+  subject_id?: string;
+  role_id?: string | null;
+  measured?: boolean;
+  candidate_context?: CandidateBenchmarkContext;
+  dimensions?: BenchmarkDimensionResult[];
+  summary?: {
+    total_dimensions: number;
+    available: number;
+    context_unavailable: number;
+    dimension_unsupported: number;
+    no_cohort: number;
+  };
+  notes?: string[];
+}
+
+/**
+ * benchmark_engine — resolve which comparison dimensions are honestly available
+ * for a subject, and which bench cohort backs each. Read-only; never fabricates
+ * a candidate's dimension membership.
+ */
+export async function computeBenchmarkEngine(pool: Pool, subjectId: string): Promise<BenchmarkEngineResult> {
+  await ensureCompetencyRuntimeSchema(pool);
+  const sid = String(subjectId ?? '').trim();
+  if (!sid) return { ok: false, error: 'subject_required' };
+
+  const profile = await getProfile(pool, sid);
+  // The runtime subject model only captures role_id. Function/industry membership
+  // is NOT modelled here -> honestly null (never derived from the role by guesswork).
+  const ctx: CandidateBenchmarkContext = {
+    role_id: profile.role_id ?? null,
+    function_id: null,
+    industry_id: null,
+  };
+
+  const dimensions: BenchmarkDimensionResult[] = [];
+  for (const d of BENCHMARK_DIMENSIONS) {
+    if (d.cohort_type === null) {
+      dimensions.push({
+        key: d.key, label: d.label, status: 'dimension_unsupported',
+        reason: `No benchmark cohort population exists for the ${d.label} dimension yet — comparison is honestly unsupported, never fabricated.`,
+        cohort: null, benchmarked_competencies: null,
+      });
+      continue;
+    }
+    const ctxVal = d.context_field ? ctx[d.context_field] : null;
+    if (!ctxVal) {
+      dimensions.push({
+        key: d.key, label: d.label, status: 'context_unavailable',
+        reason: `${d.label} cohorts exist, but this candidate has no ${d.label.toLowerCase()} membership captured — cannot be placed in a ${d.label.toLowerCase()} cohort.`,
+        cohort: null, benchmarked_competencies: null,
+      });
+      continue;
+    }
+    const cohort = await resolveCohort(pool, { role_id: ctx.role_id ?? undefined, function_id: ctx.function_id ?? undefined, industry_id: ctx.industry_id ?? undefined } as never, d.cohort_type);
+    if (!cohort) {
+      dimensions.push({
+        key: d.key, label: d.label, status: 'no_cohort',
+        reason: `No active ${d.label.toLowerCase()} cohort matches this candidate's ${d.context_field} = ${ctxVal}.`,
+        cohort: null, benchmarked_competencies: null,
+      });
+      continue;
+    }
+    let benchCount: number | null = null;
+    try {
+      const { rows } = await pool.query<{ c: string }>(
+        `SELECT count(DISTINCT competency_id)::text AS c FROM bench_competency_benchmarks WHERE cohort_id = $1`,
+        [cohort.id]);
+      benchCount = rows[0] ? Number(rows[0].c) : 0;
+    } catch { benchCount = null; }
+    dimensions.push({
+      key: d.key, label: d.label, status: 'available',
+      reason: `Backed by cohort ${cohort.name} (k_min ${cohort.k_min}).`,
+      cohort: { id: cohort.id, name: cohort.name, type: cohort.cohort_type, k_min: cohort.k_min },
+      benchmarked_competencies: benchCount,
+    });
+  }
+
+  const summary = {
+    total_dimensions: dimensions.length,
+    available: dimensions.filter((d) => d.status === 'available').length,
+    context_unavailable: dimensions.filter((d) => d.status === 'context_unavailable').length,
+    dimension_unsupported: dimensions.filter((d) => d.status === 'dimension_unsupported').length,
+    no_cohort: dimensions.filter((d) => d.status === 'no_cohort').length,
+  };
+
+  const notes: string[] = [];
+  notes.push('Comparison dimensions are resolved from REAL benchmark cohorts only; a dimension activates only when the candidate\'s membership for it is actually captured (never inferred).');
+  if (!profile.measured) notes.push('No scored profile for this subject yet — dimensions may resolve, but no competency comparison can run until an assessment is scored.');
+  if (summary.context_unavailable > 0) notes.push(`${summary.context_unavailable} dimension(s) have cohorts but no captured candidate membership — surfaced as context_unavailable, never fabricated.`);
+  if (summary.dimension_unsupported > 0) notes.push(`${summary.dimension_unsupported} dimension(s) have no benchmark cohort population — honestly unsupported.`);
+
+  return {
+    ok: true,
+    subject_id: sid,
+    role_id: profile.role_id ?? null,
+    measured: profile.measured,
+    candidate_context: ctx,
+    dimensions,
+    summary,
+    notes,
+  };
+}
+
+export interface CompetencyComparison {
+  competency_id: string;
+  competency_name: string | null;
+  user_score: number | null;
+  percentile: number | null;
+  band: string | null;
+  status: ComparisonStatus;
+  cohort_n: number | null;
+  reason?: string;
+}
+
+export interface ComparisonDimensionResult {
+  key: BenchmarkDimensionKey;
+  label: string;
+  status: BenchmarkDimensionStatus;
+  cohort: { id: string; name: string; type: string; k_min: number } | null;
+  comparisons: CompetencyComparison[];
+  summary: {
+    compared: number; above: number; at: number; below: number;
+    no_benchmark: number; suppressed: number; unevaluable: number;
+  };
+  aggregate_percentile: number | null; // mean of compared percentiles
+}
+
+export interface BenchmarkComparisonResult {
+  ok: boolean;
+  error?: string;
+  subject_id?: string;
+  role_id?: string | null;
+  measured?: boolean;
+  total_competencies?: number;
+  dimensions?: ComparisonDimensionResult[];
+  notes?: string[];
+}
+
+function bandToStatus(band: string | null): ComparisonStatus {
+  if (band === 'top' || band === 'upper') return 'above';
+  if (band === 'mid') return 'at';
+  if (band === 'lower' || band === 'bottom') return 'below';
+  return 'at';
+}
+
+/**
+ * comparison_engine — compare a candidate's measured competencies against each
+ * AVAILABLE benchmark dimension via the existing empirical-percentile engine
+ * (k-anonymity enforced inside benchmarkCompetency). Honest per-competency status.
+ */
+export async function computeBenchmarkComparison(pool: Pool, subjectId: string): Promise<BenchmarkComparisonResult> {
+  const sid = String(subjectId ?? '').trim();
+  if (!sid) return { ok: false, error: 'subject_required' };
+
+  const [gap, engine] = await Promise.all([
+    computeGapAnalysis(pool, sid),
+    computeBenchmarkEngine(pool, sid),
+  ]);
+  if (!gap.ok) return { ok: false, error: gap.error ?? 'gap_failed', subject_id: sid };
+  if (!engine.ok) return { ok: false, error: engine.error ?? 'engine_failed', subject_id: sid };
+
+  const candidateComps = (gap.gaps ?? []).map((g) => ({
+    competency_id: g.competency_id,
+    competency_name: g.competency_name,
+    user_score: g.measured_score, // 0..100 domain-proxy, or null when unscored
+  }));
+
+  const dimensions: ComparisonDimensionResult[] = [];
+  for (const dim of engine.dimensions ?? []) {
+    const cohortRef: CohortRef | null = dim.cohort
+      ? { id: dim.cohort.id, cohort_type: dim.cohort.type, name: dim.cohort.name, k_min: dim.cohort.k_min }
+      : null;
+
+    const comparisons: CompetencyComparison[] = [];
+    if (dim.status === 'available' && cohortRef) {
+      for (const c of candidateComps) {
+        if (typeof c.user_score !== 'number') {
+          comparisons.push({
+            competency_id: c.competency_id, competency_name: c.competency_name,
+            user_score: null, percentile: null, band: null, status: 'unevaluable',
+            cohort_n: null, reason: 'Candidate competency is not scored yet — comparison is unevaluable (never assumed).',
+          });
+          continue;
+        }
+        const res = await benchmarkCompetency(pool, { cohort: cohortRef, competency_id: c.competency_id, user_score: c.user_score });
+        if (!res) {
+          comparisons.push({
+            competency_id: c.competency_id, competency_name: c.competency_name,
+            user_score: c.user_score, percentile: null, band: null, status: 'no_benchmark',
+            cohort_n: null, reason: 'No benchmark distribution exists for this competency in the cohort.',
+          });
+          continue;
+        }
+        if ((res as { suppressed?: boolean }).suppressed) {
+          comparisons.push({
+            competency_id: c.competency_id, competency_name: c.competency_name,
+            user_score: c.user_score, percentile: null, band: null, status: 'suppressed',
+            cohort_n: (res.cohort_aggregates as { n?: number })?.n ?? null,
+            reason: 'Cohort below k-anonymity threshold — percentile suppressed.',
+          });
+          continue;
+        }
+        comparisons.push({
+          competency_id: c.competency_id, competency_name: c.competency_name,
+          user_score: c.user_score, percentile: res.percentile, band: res.band,
+          status: bandToStatus(res.band),
+          cohort_n: (res.cohort_aggregates as { n?: number })?.n ?? null,
+        });
+      }
+    }
+
+    const compared = comparisons.filter((x) => x.percentile != null);
+    const aggregate = compared.length
+      ? Math.round(compared.reduce((s, x) => s + (x.percentile ?? 0), 0) / compared.length)
+      : null;
+    dimensions.push({
+      key: dim.key, label: dim.label, status: dim.status, cohort: dim.cohort,
+      comparisons,
+      summary: {
+        compared: compared.length,
+        above: comparisons.filter((x) => x.status === 'above').length,
+        at: comparisons.filter((x) => x.status === 'at').length,
+        below: comparisons.filter((x) => x.status === 'below').length,
+        no_benchmark: comparisons.filter((x) => x.status === 'no_benchmark').length,
+        suppressed: comparisons.filter((x) => x.status === 'suppressed').length,
+        unevaluable: comparisons.filter((x) => x.status === 'unevaluable').length,
+      },
+      aggregate_percentile: aggregate,
+    });
+  }
+
+  const notes: string[] = [...(engine.notes ?? [])];
+  notes.push('Percentiles are EMPIRICAL (count of cohort samples <= candidate score / n) via the shared benchmark engine — never Gaussian-assumed.');
+  notes.push('Comparison is DEVELOPMENTAL framing only — a percentile is standing vs a peer cohort, never a hiring, promotion, or suitability prediction.');
+
+  return {
+    ok: true,
+    subject_id: sid,
+    role_id: engine.role_id ?? null,
+    measured: gap.measured ?? false,
+    total_competencies: candidateComps.length,
+    dimensions,
+    notes,
+  };
+}
+
+export interface BenchmarkDashboardResult {
+  ok: boolean;
+  error?: string;
+  subject_id?: string;
+  role_id?: string | null;
+  measured?: boolean;
+  summary?: {
+    dimensions_total: number;
+    dimensions_available: number;
+    total_comparisons: number;
+    primary: {
+      dimension: BenchmarkDimensionKey;
+      cohort: string | null;
+      aggregate_percentile: number | null;
+      compared: number; above: number; at: number; below: number;
+    } | null;
+  };
+  comparison?: BenchmarkComparisonResult;
+  notes?: string[];
+}
+
+/**
+ * benchmark_dashboard — composed read: the full comparison plus a top-level
+ * rollup (primary dimension = the first AVAILABLE one, i.e. Role when present).
+ */
+export async function computeBenchmarkDashboard(pool: Pool, subjectId: string): Promise<BenchmarkDashboardResult> {
+  const comparison = await computeBenchmarkComparison(pool, subjectId);
+  if (!comparison.ok) return { ok: false, error: comparison.error, subject_id: String(subjectId ?? '').trim() };
+
+  const dims = comparison.dimensions ?? [];
+  const available = dims.filter((d) => d.status === 'available');
+  const primaryDim = available[0] ?? null;
+  const totalComparisons = available.reduce((s, d) => s + d.summary.compared, 0);
+
+  return {
+    ok: true,
+    subject_id: comparison.subject_id,
+    role_id: comparison.role_id ?? null,
+    measured: comparison.measured ?? false,
+    summary: {
+      dimensions_total: dims.length,
+      dimensions_available: available.length,
+      total_comparisons: totalComparisons,
+      primary: primaryDim
+        ? {
+            dimension: primaryDim.key,
+            cohort: primaryDim.cohort?.name ?? null,
+            aggregate_percentile: primaryDim.aggregate_percentile,
+            compared: primaryDim.summary.compared,
+            above: primaryDim.summary.above,
+            at: primaryDim.summary.at,
+            below: primaryDim.summary.below,
+          }
+        : null,
+    },
+    comparison,
+    notes: comparison.notes,
   };
 }

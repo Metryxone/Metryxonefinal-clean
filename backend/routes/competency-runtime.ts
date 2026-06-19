@@ -38,6 +38,15 @@ import {
   getDimensionMix,
   validateDimensionMix,
 } from '../services/blueprint-builder.js';
+import {
+  getDifficultyFramework,
+  validateQuestionBlueprintInput,
+  mapQuestion,
+  getQuestionMapping,
+  getQuestionPool,
+  buildQuestionBlueprint,
+  getQuestionBlueprint,
+} from '../services/question-blueprint.js';
 
 export function registerCompetencyRuntimeRoutes(
   app: Express,
@@ -153,6 +162,86 @@ export function registerCompetencyRuntimeRoutes(
   app.get('/api/competency-runtime/blueprints/:blueprintId/dimension-mix', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
     const row = await getDimensionMix(pool, String(req.params.blueprintId));
     if (!row.blueprint_found) { res.status(404).json({ ok: false, error: 'blueprint_not_found' }); return undefined; }
+    return row;
+  }));
+
+  // ===== Phase 2.2 — Question Blueprint Engine =============================
+  //   Competency → Question Pool · Question → Competency / Micro Competency
+  //   / Difficulty Level / Question Type.
+
+  // ---- 9. Difficulty framework + supported question types (reference) ------
+  app.get('/api/competency-runtime/question-difficulty-framework', gate, requireAuth, requireSuperAdmin, wrap(async () =>
+    getDifficultyFramework(pool),
+  ));
+
+  // ---- 10. Validate a candidate question blueprint (no persist; LITERAL) ---
+  app.post('/api/competency-runtime/question-blueprints/validate', gate, requireAuth, requireSuperAdmin, wrap(async (req) => {
+    const b = req.body ?? {};
+    return validateQuestionBlueprintInput({
+      pool_target: b.pool_target ?? b.poolTarget,
+      difficulty_distribution: b.difficulty_distribution ?? b.difficultyDistribution,
+      type_distribution: b.type_distribution ?? b.typeDistribution,
+    });
+  }));
+
+  // ---- 11. Map a bank question → competency (+ micro / difficulty / type) --
+  app.post('/api/competency-runtime/questions/:questionId/mapping', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const b = req.body ?? {};
+    const result = await mapQuestion(pool, {
+      questionId: String(req.params.questionId),
+      competencyId: String(b.competency_id ?? b.competencyId ?? ''),
+      microCompetencyId: b.micro_competency_id ?? b.microCompetencyId ?? null,
+      difficultyLevel: b.difficulty_level ?? b.difficultyLevel ?? null,
+      questionType: b.question_type ?? b.questionType ?? null,
+      source: b.source,
+    });
+    if (!result.ok) {
+      const code = result.error === 'question_not_found' || result.error === 'competency_not_found' ? 404
+        : result.error === 'micro_competency_mismatch' ? 422
+        : 400;
+      res.status(code).json({ ok: false, error: result.error, detail: (result as any).detail });
+      return undefined;
+    }
+    return result;
+  }));
+
+  // ---- 12. Read a question's competency mappings --------------------------
+  app.get('/api/competency-runtime/questions/:questionId/mapping', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const row = await getQuestionMapping(pool, String(req.params.questionId));
+    if (!row.question_found) { res.status(404).json({ ok: false, error: 'question_not_found' }); return undefined; }
+    return row;
+  }));
+
+  // ---- 13. Competency → Question Pool -------------------------------------
+  app.get('/api/competency-runtime/competencies/:competencyId/question-pool', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const result = await getQuestionPool(pool, String(req.params.competencyId));
+    if (!result.competency_found) { res.status(404).json({ ok: false, error: 'competency_not_found' }); return undefined; }
+    return result;
+  }));
+
+  // ---- 14. Build (derive or author) a competency's question blueprint -----
+  app.post('/api/competency-runtime/competencies/:competencyId/question-blueprint', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const b = req.body ?? {};
+    const result = await buildQuestionBlueprint(pool, String(req.params.competencyId), {
+      poolTarget: b.pool_target ?? b.poolTarget,
+      difficultyDistribution: b.difficulty_distribution ?? b.difficultyDistribution,
+      typeDistribution: b.type_distribution ?? b.typeDistribution,
+      source: b.source,
+    });
+    if (!result.ok) {
+      const code = result.error === 'competency_not_found' ? 404
+        : result.error === 'invalid_blueprint' ? 400
+        : 400;
+      res.status(code).json({ ok: false, error: result.error, validation: (result as any).validation });
+      return undefined;
+    }
+    return result;
+  }));
+
+  // ---- 15. Read a competency's question blueprint -------------------------
+  app.get('/api/competency-runtime/competencies/:competencyId/question-blueprint', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const row = await getQuestionBlueprint(pool, String(req.params.competencyId));
+    if (!row.competency_found) { res.status(404).json({ ok: false, error: 'competency_not_found' }); return undefined; }
     return row;
   }));
 }

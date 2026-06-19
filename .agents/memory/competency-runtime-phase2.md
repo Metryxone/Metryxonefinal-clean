@@ -40,6 +40,32 @@ caller's own identity). All five routes are `gate → requireAuth → requireSup
 A `requireAuth`-only version is an IDOR (any user reads/scores any subject) — a code
 review caught exactly this. Reuses `getRoleReadiness` for gap analysis.
 
+## Phase 2.5 Profile Engine + Phase 2.6 Role Readiness
+- TWO DISTINCT scoring paths feed the chain — do not confuse:
+  1. **Phase 2 generate→score** (7-letter codes COG/COM/LEA/EXE/ADP/TEC/EIQ,
+     `question_type='likert'`) writes `onto_competency_profiles`. This is what 2.5/2.6
+     READ.
+  2. **Phase 2.3/2.4 assemble→/score** (comp_* ids) writes `onto_competency_score_runs`
+     (the existing panel Steps 1–3). Separate substrate.
+- `computeTypeProfile()` buckets each blueprint competency into 5 onto-TYPES
+  (behavioral/cognitive/functional/technical/future_skills) via `onto_competency_type_map`;
+  UNCLASSIFIED when the map has no row (never fabricate). Buckets carry score/level/count;
+  `classification_coverage_pct` is a separate axis from score.
+- `computeRoleReadinessForSubject` → `getRoleReadiness` returns `null` ONLY when no
+  role profile exists (honest "unmeasured"). Do NOT wrap it in `.catch(()=>null)` — that
+  masks real DB errors as business-state absence; let them propagate to a 500.
+- `roleFit()` adds `strengths` (attainment ≥100% met-or-exceeded), `gap_areas`,
+  `critical_gaps`, and a `role_fit` band to readiness output.
+- Seeded demo: `onto_role_competency_profiles` blueprint_derived rows;
+  `onto_competency_type_map` via competency-types seed (confidence 'high' + evidence,
+  needs_review). Demo Likert bank `template_key LIKE 'demo7_<CODE>_<n>'`.
+
+## Flag-gated admin tab (frontend hide when OFF)
+Tab `competency-runtime` in `useAdminDashboardState.tsx` is gated by probing a gated GET
+(`/api/competency-runtime/competency-types/report` → `res.ok`) into `competencyRuntimeEnabled`,
+then a `.map` that filters the nav item out when false (mirrors simHarness/governance pattern).
+Flag OFF → routes 503 + tab hidden = byte-identical to legacy.
+
 ## Testing
 No UI/HTTP-ON path in dev (workflow leaves flag OFF). Exercise the engine via a
 tsx script that sets `process.env.FF_COMPETENCY_RUNTIME='1'`, seeds demo `approved`

@@ -59,6 +59,81 @@ function levelBadge(level: number | null, label: string | null, status: string) 
   return <Badge className={LEVEL_COLORS[level] || 'bg-gray-100'}>L{level} · {label}</Badge>;
 }
 
+const TYPE_LABELS: Record<string, string> = {
+  behavioral: 'Behavioral',
+  cognitive: 'Cognitive',
+  functional: 'Functional',
+  technical: 'Technical',
+  future_skills: 'Future Skills',
+};
+
+const FIT_COLORS: Record<string, string> = {
+  strong: 'bg-emerald-100 text-emerald-800',
+  good: 'bg-green-100 text-green-800',
+  partial: 'bg-amber-100 text-amber-800',
+  low: 'bg-red-100 text-red-700',
+};
+
+const BAND_COLORS: Record<string, string> = {
+  ready: 'bg-emerald-100 text-emerald-800',
+  nearly_ready: 'bg-green-100 text-green-800',
+  developing: 'bg-amber-100 text-amber-800',
+  early: 'bg-red-100 text-red-700',
+};
+
+interface TypeBucket {
+  type_key: string;
+  competency_count: number;
+  measured_count: number;
+  avg_score: number | null;
+  avg_level: number | null;
+}
+
+interface ReadinessComp {
+  competency_id: string;
+  competency_name: string;
+  required_level: number;
+  actual_level: number | null;
+  weight: number;
+  criticality: string;
+  attainment: number | null;
+  gap: number | null;
+}
+
+interface Dashboard {
+  subject_id: string;
+  profile: { measured: boolean; overall_score: number | null; overall_level: number | null };
+  type_profile: {
+    measured?: boolean;
+    total_competencies: number;
+    classified_competencies: number;
+    classification_coverage_pct: number | null;
+    buckets: TypeBucket[];
+    unclassified: { competency_count: number };
+    notes?: string[];
+  };
+  role_readiness: {
+    role_id: string | null;
+    readiness: {
+      role_title: string;
+      readiness_score: number;
+      readiness_band: string;
+      readiness_label: string;
+      coverage_pct: number;
+      role_fit: { band: string; label: string; score: number; capped_by_critical: boolean };
+      strengths: ReadinessComp[];
+      gap_areas: ReadinessComp[];
+      critical_gaps: ReadinessComp[];
+      notes?: string[];
+    } | null;
+    notes: string[];
+  };
+  history: {
+    count: number;
+    history: { instance_id: string; overall_score: number | null; overall_level: number | null; created_at: string | null }[];
+  };
+}
+
 export default function CompetencyRuntimePanel() {
   const [blueprintId, setBlueprintId] = useState('bp_pm_v1');
   const [questions, setQuestions] = useState<AssembledQuestion[]>([]);
@@ -139,6 +214,67 @@ export default function CompetencyRuntimePanel() {
       setError(e?.message || 'Network error');
     } finally {
       setScoring(false);
+    }
+  };
+
+  const [profileSubject, setProfileSubject] = useState('demo_subj_pm');
+  const [dashboard, setDashboard] = useState<Dashboard | null>(null);
+  const [profileBusy, setProfileBusy] = useState(false);
+  const [profileError, setProfileError] = useState<string | null>(null);
+
+  const loadDashboard = async (subject: string) => {
+    const r = await fetch(`/api/competency-runtime/profiles/${encodeURIComponent(subject)}/dashboard`, {
+      credentials: 'include',
+    });
+    const d = await r.json();
+    if (!r.ok || !d.ok) throw new Error(d.error || `Dashboard failed (${r.status})`);
+    setDashboard(d.data as Dashboard);
+  };
+
+  const loadProfile = async () => {
+    setProfileBusy(true);
+    setProfileError(null);
+    try {
+      await loadDashboard(profileSubject);
+    } catch (e: any) {
+      setProfileError(e?.message || 'Network error');
+    } finally {
+      setProfileBusy(false);
+    }
+  };
+
+  // Run the Phase-2 generate→score path (feeds onto_competency_profiles, which
+  // the Phase 2.5/2.6 engines read), then load the dashboard.
+  const runProfileAssessment = async () => {
+    setProfileBusy(true);
+    setProfileError(null);
+    try {
+      const gen = await fetch('/api/competency-runtime/assessment-instances', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ blueprint_id: blueprintId, subject_id: profileSubject }),
+      });
+      const gd = await gen.json();
+      if (!gen.ok || !gd.ok) throw new Error(gd.error || `Generate failed (${gen.status})`);
+      const instanceId = gd.data?.instance_id;
+      const total = Number(gd.data?.total_questions ?? 0);
+      if (!instanceId || total === 0) throw new Error('No questions generated for this blueprint (empty 7-code bank).');
+      // Auto-answer "Agree" (index 3) for every item — a deterministic demo response set.
+      const responses = Array.from({ length: total }, (_, i) => ({ index: i, selected_index: 3 }));
+      const sc = await fetch(`/api/competency-runtime/assessment-instances/${instanceId}/score`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ responses }),
+      });
+      const sd = await sc.json();
+      if (!sc.ok || !sd.ok) throw new Error(sd.error || `Score failed (${sc.status})`);
+      await loadDashboard(profileSubject);
+    } catch (e: any) {
+      setProfileError(e?.message || 'Network error');
+    } finally {
+      setProfileBusy(false);
     }
   };
 
@@ -289,6 +425,172 @@ export default function CompetencyRuntimePanel() {
           </div>
         </div>
       )}
+
+      {/* Phase 2.5 · 2.6 — Profile & Role Readiness */}
+      <div className="bg-white border rounded-xl p-5 shadow-sm">
+        <div className="flex items-center gap-2 mb-1">
+          <h3 className="font-semibold text-gray-800">Competency Profile & Role Readiness</h3>
+          <span className="text-xs font-normal text-gray-500">Phase 2.5 · 2.6</span>
+        </div>
+        <p className="text-xs text-gray-500 mb-4">
+          5-TYPE competency profile (curated classification) · append-only history · role readiness
+          (Readiness % · Role Fit · Strengths · Gaps · Critical Gaps). Reads the domain-proxy profile;
+          UNCLASSIFIED / unmeasured is reported honestly, never fabricated.
+        </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <input
+            value={profileSubject}
+            onChange={(e) => setProfileSubject(e.target.value)}
+            placeholder="subject_id"
+            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm font-mono w-56"
+          />
+          <span className="text-xs text-gray-400">role from blueprint: <span className="font-mono">{blueprintId}</span></span>
+          <div className="flex-1" />
+          <Button variant="outline" size="sm" onClick={loadProfile} disabled={profileBusy || !profileSubject.trim()}>
+            {profileBusy ? 'Loading…' : 'Load profile'}
+          </Button>
+          <Button size="sm" onClick={runProfileAssessment} disabled={profileBusy || !profileSubject.trim()}>
+            {profileBusy ? 'Running…' : 'Run profile assessment'}
+          </Button>
+        </div>
+
+        {profileError && (
+          <div className="mt-3 bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-2 text-sm">{profileError}</div>
+        )}
+
+        {dashboard && !dashboard.profile?.measured && (
+          <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            No scored profile for <span className="font-mono">{dashboard.subject_id}</span> yet. Click
+            “Run profile assessment” to generate and score one.
+          </div>
+        )}
+
+        {dashboard && dashboard.profile?.measured && (
+          <div className="mt-5 space-y-5">
+            {/* Overall profile */}
+            <div className="rounded-xl border bg-gradient-to-br from-indigo-50 to-white p-4 flex items-center justify-between flex-wrap gap-3">
+              <div>
+                <div className="text-xs uppercase tracking-wide text-gray-500">Overall profile</div>
+                <div className="text-2xl font-bold text-gray-900">
+                  {dashboard.profile.overall_score != null ? `${dashboard.profile.overall_score}/100` : '—'}
+                </div>
+              </div>
+              {levelBadge(dashboard.profile.overall_level, dashboard.profile.overall_level != null ? `Level ${dashboard.profile.overall_level}` : null, 'measured')}
+            </div>
+
+            {/* Type profile buckets */}
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <h4 className="text-sm font-semibold text-gray-700">5-TYPE Profile</h4>
+                <span className="text-xs text-gray-400">
+                  classification coverage {dashboard.type_profile.classification_coverage_pct ?? 0}% ·
+                  {' '}{dashboard.type_profile.classified_competencies}/{dashboard.type_profile.total_competencies} classified
+                </span>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+                {dashboard.type_profile.buckets.map((b) => (
+                  <div key={b.type_key} className="rounded-lg border border-gray-200 bg-gray-50 p-3">
+                    <div className="text-xs font-medium text-gray-700">{TYPE_LABELS[b.type_key] || b.type_key}</div>
+                    <div className="text-lg font-bold text-gray-900 mt-0.5">
+                      {b.avg_score != null ? `${b.avg_score}` : <span className="text-gray-400 text-sm">unmeasured</span>}
+                    </div>
+                    <div className="text-[11px] text-gray-500 mt-1">
+                      {b.measured_count}/{b.competency_count} measured
+                    </div>
+                    <div className="mt-1">
+                      {b.avg_level != null
+                        ? <Badge className={`${LEVEL_COLORS[b.avg_level] || 'bg-gray-100'} text-[10px]`}>L{b.avg_level}</Badge>
+                        : <Badge className="bg-gray-100 text-gray-500 text-[10px]">—</Badge>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {dashboard.type_profile.unclassified.competency_count > 0 && (
+                <p className="text-xs text-gray-500 mt-2">
+                  {dashboard.type_profile.unclassified.competency_count} competency(ies) UNCLASSIFIED (no type mapping — honest, not force-bucketed).
+                </p>
+              )}
+            </div>
+
+            {/* Role readiness */}
+            <div>
+              <h4 className="text-sm font-semibold text-gray-700 mb-2">Role Readiness (Phase 2.6)</h4>
+              {!dashboard.role_readiness.readiness && (
+                <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                  {dashboard.role_readiness.notes?.[0] || 'Readiness unmeasured for this subject.'}
+                </div>
+              )}
+              {dashboard.role_readiness.readiness && (() => {
+                const rr = dashboard.role_readiness.readiness!;
+                return (
+                  <div className="space-y-3">
+                    <div className="rounded-xl border bg-white p-4 flex items-center justify-between flex-wrap gap-3">
+                      <div>
+                        <div className="text-xs uppercase tracking-wide text-gray-500">{rr.role_title}</div>
+                        <div className="text-2xl font-bold text-gray-900">{rr.readiness_score}%</div>
+                        <div className="text-xs text-gray-500 mt-0.5">coverage {rr.coverage_pct}% of role weight</div>
+                      </div>
+                      <div className="flex flex-col items-end gap-1.5">
+                        <Badge className={BAND_COLORS[rr.readiness_band] || 'bg-gray-100'}>{rr.readiness_label}</Badge>
+                        <Badge className={FIT_COLORS[rr.role_fit.band] || 'bg-gray-100'}>Fit: {rr.role_fit.label}</Badge>
+                        {rr.role_fit.capped_by_critical && (
+                          <span className="text-[10px] text-red-600">capped by critical gap</span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3">
+                        <div className="text-xs font-semibold text-emerald-800 mb-1.5">Strengths ({rr.strengths.length})</div>
+                        {rr.strengths.length === 0 && <div className="text-xs text-emerald-700/70">None met-or-exceeded.</div>}
+                        {rr.strengths.map((c) => (
+                          <div key={c.competency_id} className="text-xs text-emerald-900 flex justify-between gap-2 py-0.5">
+                            <span className="truncate">{c.competency_name}</span>
+                            <span className="font-mono shrink-0">L{c.actual_level}/{c.required_level}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
+                        <div className="text-xs font-semibold text-amber-800 mb-1.5">Gap Areas ({rr.gap_areas.length})</div>
+                        {rr.gap_areas.length === 0 && <div className="text-xs text-amber-700/70">No gaps.</div>}
+                        {rr.gap_areas.map((c) => (
+                          <div key={c.competency_id} className="text-xs text-amber-900 flex justify-between gap-2 py-0.5">
+                            <span className="truncate">{c.competency_name}</span>
+                            <span className="font-mono shrink-0">{c.actual_level != null ? `L${c.actual_level}` : '—'}/{c.required_level}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="rounded-lg border border-red-200 bg-red-50 p-3">
+                        <div className="text-xs font-semibold text-red-800 mb-1.5">Critical Gaps ({rr.critical_gaps.length})</div>
+                        {rr.critical_gaps.length === 0 && <div className="text-xs text-red-700/70">None blocking.</div>}
+                        {rr.critical_gaps.map((c) => (
+                          <div key={c.competency_id} className="text-xs text-red-900 flex justify-between gap-2 py-0.5">
+                            <span className="truncate">{c.competency_name}</span>
+                            <span className="font-mono shrink-0">{c.actual_level != null ? `L${c.actual_level}` : '—'}/{c.required_level}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+
+            {/* History */}
+            <div>
+              <h4 className="text-sm font-semibold text-gray-700 mb-2">Profile History ({dashboard.history.count})</h4>
+              <div className="space-y-1">
+                {dashboard.history.history.slice(0, 8).map((h, i) => (
+                  <div key={h.instance_id + i} className="flex items-center justify-between text-xs text-gray-600 border-b last:border-0 py-1.5">
+                    <span className="font-mono text-gray-400">{h.created_at ? new Date(h.created_at).toLocaleString() : '—'}</span>
+                    <span>{h.overall_score != null ? `${h.overall_score}/100` : '—'} {h.overall_level != null && <Badge className={`${LEVEL_COLORS[h.overall_level] || 'bg-gray-100'} text-[10px] ml-1`}>L{h.overall_level}</Badge>}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

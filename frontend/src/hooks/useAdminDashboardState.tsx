@@ -548,6 +548,17 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
     enabled: isAuthenticated,
   });
 
+  // Competency Runtime flag (competencyRuntime) — when OFF the gated routes 503
+  // and the nav item self-hides, keeping the flag-OFF UI byte-identical to legacy.
+  const { data: competencyRuntimeEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/competency-runtime/competency-types/report', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/competency-runtime/competency-types/report', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
   // Fetch platform settings
   const { data: platformSettingsData = [], refetch: refetchSettings } = useQuery<any[]>({
     queryKey: ['/api/admin/platform-settings'],
@@ -2754,7 +2765,7 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
         { id: 'vx-evidence-intelligence',       icon: Shield,     label: 'VX: Evidence (D7)' },
         { id: 'vx-tenant-configuration',        icon: Building2,  label: 'VX: Tenant Config (D11)' },
         { id: 'vx-assessment-runtime',          icon: Cpu,        label: 'VX: Assessment Runtime (D18)' },
-        { id: 'competency-runtime',             icon: Zap,        label: 'Competency Runtime (P2.3–2.4)' },
+        { id: 'competency-runtime',             icon: Zap,        label: 'Competency Runtime (P2.3–2.6)' },
         { id: 'vx-competency-science-council',  icon: Users2,     label: 'VX: Science Council (D19)' },
         { id: 'vx-workforce-knowledge-graph',   icon: GitBranch,  label: 'VX: Workforce Graph (D1)' },
         { id: 'vx-irt-engine',                  icon: Scale,      label: 'VX: IRT & Adaptive (D9)' },
@@ -2812,6 +2823,11 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
       governanceEnabled
         ? group
         : { ...group, items: group.items.filter(it => it.id !== 'governance-security') }
+    )
+    .map(group =>
+      competencyRuntimeEnabled
+        ? group
+        : { ...group, items: group.items.filter(it => it.id !== 'competency-runtime') }
     )
     .filter(group => group.items.length > 0);
   const menuItems = navGroups.flatMap(g => g.items);

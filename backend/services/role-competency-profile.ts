@@ -53,6 +53,28 @@ export function readinessBand(score: number): { band: string; label: string } {
   return { band: 'not_ready', label: 'Not Ready' };
 }
 
+// Role Fit (Phase 2.6) — a fit classification derived from the readiness score.
+// Critical (blocking) gaps CAP the fit: a candidate with an unmet critical
+// competency can never read as a "Strong Fit" regardless of the overall score.
+export interface RoleFit {
+  band: 'strong' | 'good' | 'partial' | 'low' | 'unmeasured';
+  label: string;
+  score: number | null;
+  capped_by_critical: boolean;
+}
+
+export function roleFit(score: number | null, blockingGaps: number): RoleFit {
+  if (score == null) return { band: 'unmeasured', label: 'Unmeasured', score: null, capped_by_critical: false };
+  let band: RoleFit['band'] = score >= 85 ? 'strong' : score >= 70 ? 'good' : score >= 50 ? 'partial' : 'low';
+  let capped = false;
+  if (blockingGaps > 0 && (band === 'strong' || band === 'good')) {
+    band = 'partial';
+    capped = true;
+  }
+  const label = band === 'strong' ? 'Strong Fit' : band === 'good' ? 'Good Fit' : band === 'partial' ? 'Partial Fit' : 'Low Fit';
+  return { band, label, score, capped_by_critical: capped };
+}
+
 export interface RoleCompetencyRow {
   id: number;
   role_id: string;
@@ -309,6 +331,10 @@ export interface ReadinessResult {
   weight_assessed: number;
   blocking_gaps: number;            // count of critical competencies below required
   gaps: ReadinessGap[];
+  strengths: ReadinessGap[];        // assessed competencies met or exceeded (gap <= 0)
+  gap_areas: ReadinessGap[];        // assessed competencies below required (gap > 0)
+  critical_gaps: ReadinessGap[];    // blocking gaps (critical & below required)
+  role_fit: RoleFit;                // fit classification (capped by critical gaps)
   notes: string[];
 }
 
@@ -384,6 +410,10 @@ export async function getRoleReadiness(
     weight_assessed: Math.round(weightAssessed * 100) / 100,
     blocking_gaps: blocking,
     gaps,
+    strengths: gaps.filter((g) => g.gap != null && g.gap <= 0).sort((a, b) => (a.gap ?? 0) - (b.gap ?? 0)),
+    gap_areas: gaps.filter((g) => g.gap != null && g.gap > 0).sort((a, b) => (b.gap ?? 0) - (a.gap ?? 0)),
+    critical_gaps: gaps.filter((g) => g.blocking),
+    role_fit: roleFit(score, blocking),
     notes,
   };
 }

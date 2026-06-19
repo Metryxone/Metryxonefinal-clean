@@ -36,6 +36,7 @@
 import type { Pool } from 'pg';
 import { getBlueprint } from './assessment-foundation-mapping.js';
 import { getRoleReadiness, type ReadinessResult } from './role-competency-profile.js';
+import { COMPETENCY_TYPES, type CompetencyTypeKey } from './competency-type-classification.js';
 
 export const COMPETENCY_RUNTIME_VERSION = 'phase-2';
 
@@ -674,5 +675,245 @@ export async function computeGapAnalysis(pool: Pool, subjectId: string): Promise
     gaps,
     role_readiness: readiness,
     notes,
+  };
+}
+
+// ============================================================================
+// 5. COMPETENCY PROFILE — 5-TYPE VIEW (Phase 2.5)
+// Buckets the measured profile into the five canonical competency TYPES
+// (behavioral · cognitive · functional · technical · future_skills) using the
+// curated Phase-1.1 classification (onto_competency_type_map). A competency
+// inherits its onto-domain PROXY score; the TYPE view is an additive grouping.
+// Honest: competencies with no type mapping land in `unclassified` (never
+// force-bucketed); when the map is unseeded every competency is unclassified.
+// ============================================================================
+export interface TypeBucketCompetency {
+  competency_id: string;
+  competency_name: string | null;
+  onto_domain: string | null;
+  measured_level: number | null;
+  measured_score: number | null;
+  measurement: 'domain_proxy' | 'unmeasurable';
+}
+
+export interface TypeBucket {
+  type_key: CompetencyTypeKey | 'unclassified';
+  label: string;
+  competency_count: number;
+  measured_count: number;
+  avg_score: number | null;   // mean proxied score over measured competencies
+  avg_level: number | null;   // mean proxied level over measured competencies
+  competencies: TypeBucketCompetency[];
+}
+
+export interface TypeProfileResult {
+  ok: boolean;
+  subject_id: string;
+  measured: boolean;
+  instance_id: string | null;
+  blueprint_id: string | null;
+  role_id: string | null;
+  total_competencies: number;
+  classified_competencies: number;
+  classification_coverage_pct: number | null;
+  buckets: TypeBucket[];           // always the 5 canonical types, in order
+  unclassified: TypeBucket;        // competencies with no type mapping yet
+  notes: string[];
+}
+
+function emptyBucket(type_key: CompetencyTypeKey | 'unclassified', label: string): TypeBucket {
+  return { type_key, label, competency_count: 0, measured_count: 0, avg_score: null, avg_level: null, competencies: [] };
+}
+
+function finalizeBucket(b: TypeBucket): void {
+  const measured = b.competencies.filter((c) => c.measured_level != null);
+  b.competency_count = b.competencies.length;
+  b.measured_count = measured.length;
+  if (measured.length > 0) {
+    b.avg_score = Math.round((measured.reduce((s, c) => s + (c.measured_score ?? 0), 0) / measured.length) * 10) / 10;
+    b.avg_level = Math.round((measured.reduce((s, c) => s + (c.measured_level ?? 0), 0) / measured.length) * 10) / 10;
+  }
+}
+
+export async function computeTypeProfile(pool: Pool, subjectId: string): Promise<TypeProfileResult> {
+  await ensureCompetencyRuntimeSchema(pool);
+  const sid = String(subjectId ?? '').trim();
+  const mkBuckets = () => COMPETENCY_TYPES.map((t) => emptyBucket(t.type_key, t.label));
+
+  const profile = await getProfile(pool, sid);
+  if (!profile.measured || !profile.blueprint_id) {
+    const buckets = mkBuckets();
+    return {
+      ok: true, subject_id: sid, measured: false, instance_id: profile.instance_id,
+      blueprint_id: profile.blueprint_id, role_id: profile.role_id,
+      total_competencies: 0, classified_competencies: 0, classification_coverage_pct: null,
+      buckets, unclassified: emptyBucket('unclassified', 'Unclassified'),
+      notes: ['No scored profile for this subject yet — generate and score an assessment first. Types are unmeasured (not assumed).'],
+    };
+  }
+
+  const blueprint = await getBlueprint(pool, profile.blueprint_id);
+  const comps = blueprint ? blueprint.competencies.filter((c) => c.active) : [];
+  const domByComp = await competencyDomains(pool, comps.map((c) => c.competency_id));
+
+  // competency_id -> measured onto-domain level/score (from the profile snapshot).
+  const domLevel = new Map<string, { level: number; score: number }>();
+  for (const d of profile.domain_scores) domLevel.set(d.onto_domain, { level: d.level, score: d.scaled_score });
+
+  // competency_id -> type_key (curated Phase-1.1 map; absent = unclassified).
+  const typeByComp = new Map<string, string>();
+  if (comps.length > 0) {
+    const { rows } = await pool.query(
+      `SELECT competency_id, type_key FROM onto_competency_type_map WHERE competency_id = ANY($1::text[])`,
+      [comps.map((c) => c.competency_id)],
+    );
+    for (const r of rows as any[]) typeByComp.set(r.competency_id, r.type_key);
+  }
+
+  const bucketByKey = new Map<string, TypeBucket>();
+  const buckets = mkBuckets();
+  for (const b of buckets) bucketByKey.set(b.type_key, b);
+  const unclassified = emptyBucket('unclassified', 'Unclassified');
+
+  let classified = 0;
+  for (const c of comps) {
+    const dom = domByComp.get(c.competency_id) ?? null;
+    const isMeasurable = !!(dom && MEASURABLE_ONTO_DOMAINS.has(dom));
+    const m = dom ? domLevel.get(dom) : undefined;
+    const row: TypeBucketCompetency = {
+      competency_id: c.competency_id,
+      competency_name: c.competency_name,
+      onto_domain: dom,
+      measured_level: m ? m.level : null,
+      measured_score: m ? m.score : null,
+      measurement: isMeasurable ? 'domain_proxy' : 'unmeasurable',
+    };
+    const tk = typeByComp.get(c.competency_id);
+    if (tk && bucketByKey.has(tk)) { bucketByKey.get(tk)!.competencies.push(row); classified += 1; }
+    else unclassified.competencies.push(row);
+  }
+
+  for (const b of buckets) finalizeBucket(b);
+  finalizeBucket(unclassified);
+
+  const coverage = comps.length > 0 ? Math.round((classified / comps.length) * 1000) / 10 : null;
+  const notes: string[] = [];
+  notes.push('Each competency inherits its onto-domain PROXY score; the TYPE view is an additive grouping over the curated Phase-1.1 classification.');
+  if (classified === 0 && comps.length > 0) {
+    notes.push('No competencies are type-classified yet — run the competency-type seed (POST /api/competency-runtime/competency-types/seed). All competencies are reported UNCLASSIFIED until then (never force-bucketed).');
+  } else if (coverage != null && coverage < 100) {
+    notes.push(`${Math.round(100 - coverage)}% of competencies have no type mapping yet — reported as UNCLASSIFIED, never force-bucketed.`);
+  }
+
+  return {
+    ok: true,
+    subject_id: sid,
+    measured: true,
+    instance_id: profile.instance_id,
+    blueprint_id: profile.blueprint_id,
+    role_id: profile.role_id,
+    total_competencies: comps.length,
+    classified_competencies: classified,
+    classification_coverage_pct: coverage,
+    buckets,
+    unclassified,
+    notes,
+  };
+}
+
+// ============================================================================
+// 6. PROFILE HISTORY (Phase 2.5) — append-only snapshot list for a subject.
+// ============================================================================
+export interface ProfileHistoryRow {
+  instance_id: string | null;
+  blueprint_id: string | null;
+  role_id: string | null;
+  overall_score: number | null;
+  overall_level: number | null;
+  created_at: string | null;
+}
+
+export async function listProfileHistory(pool: Pool, subjectId: string): Promise<{ ok: boolean; subject_id: string; count: number; history: ProfileHistoryRow[] }> {
+  await ensureCompetencyRuntimeSchema(pool);
+  const sid = String(subjectId ?? '').trim();
+  const { rows } = await pool.query(
+    `SELECT instance_id, blueprint_id, role_id, overall_score, overall_level, created_at
+       FROM onto_competency_profiles WHERE subject_id = $1 ORDER BY created_at DESC, id DESC`,
+    [sid],
+  );
+  const history: ProfileHistoryRow[] = rows.map((r: any) => ({
+    instance_id: r.instance_id,
+    blueprint_id: r.blueprint_id,
+    role_id: r.role_id,
+    overall_score: r.overall_score != null ? Number(r.overall_score) : null,
+    overall_level: r.overall_level != null ? Number(r.overall_level) : null,
+    created_at: r.created_at,
+  }));
+  return { ok: true, subject_id: sid, count: history.length, history };
+}
+
+// ============================================================================
+// 7. ROLE READINESS FOR SUBJECT (Phase 2.6) — candidate profile vs role profile.
+// Builds the per-competency actuals from the subject's profile (domain proxy),
+// then runs the role-readiness engine (Readiness % · Strengths · Gaps · Critical
+// Gaps · Role Fit). Returns measured=false honestly when no profile/role exists.
+// ============================================================================
+export async function computeRoleReadinessForSubject(pool: Pool, subjectId: string): Promise<{ ok: boolean; subject_id: string; role_id: string | null; readiness: ReadinessResult | null; notes: string[] }> {
+  await ensureCompetencyRuntimeSchema(pool);
+  const sid = String(subjectId ?? '').trim();
+  const profile = await getProfile(pool, sid);
+  if (!profile.measured || !profile.blueprint_id) {
+    return { ok: true, subject_id: sid, role_id: profile.role_id, readiness: null, notes: ['No scored profile for this subject yet — generate and score an assessment first.'] };
+  }
+  if (!profile.role_id) {
+    return { ok: true, subject_id: sid, role_id: null, readiness: null, notes: ['This profile has no linked role — readiness compares against a role competency profile, which is absent here.'] };
+  }
+
+  const blueprint = await getBlueprint(pool, profile.blueprint_id);
+  const comps = blueprint ? blueprint.competencies.filter((c) => c.active) : [];
+  const domByComp = await competencyDomains(pool, comps.map((c) => c.competency_id));
+  const domLevel = new Map<string, { level: number; score: number }>();
+  for (const d of profile.domain_scores) domLevel.set(d.onto_domain, { level: d.level, score: d.scaled_score });
+
+  const actuals: Record<string, number> = {};
+  for (const c of comps) {
+    const dom = domByComp.get(c.competency_id) ?? null;
+    const m = dom ? domLevel.get(dom) : undefined;
+    if (m) actuals[c.competency_id] = m.level;
+  }
+
+  // getRoleReadiness returns null ONLY when no role competency profile exists
+  // (honest "unmeasured"); real DB/runtime errors propagate so the route surfaces
+  // a 500 instead of masquerading a failure as business-state absence.
+  const readiness = await getRoleReadiness(pool, profile.role_id, actuals);
+  const notes: string[] = [];
+  if (!readiness) notes.push(`No role competency profile defined for role '${profile.role_id}' — define one (onto_role_competency_profiles) before measuring readiness. Readiness is unmeasured, not assumed.`);
+  return { ok: true, subject_id: sid, role_id: profile.role_id, readiness, notes };
+}
+
+// ============================================================================
+// 8. PROFILE DASHBOARD (Phase 2.5) — composed read of profile + type buckets +
+// gap analysis + readiness + history for one subject. Pure composition; the
+// individual engines remain the source of truth.
+// ============================================================================
+export async function computeDashboard(pool: Pool, subjectId: string): Promise<any> {
+  await ensureCompetencyRuntimeSchema(pool);
+  const sid = String(subjectId ?? '').trim();
+  const [profile, typeProfile, gap, readiness, history] = await Promise.all([
+    getProfile(pool, sid),
+    computeTypeProfile(pool, sid),
+    computeGapAnalysis(pool, sid),
+    computeRoleReadinessForSubject(pool, sid),
+    listProfileHistory(pool, sid),
+  ]);
+  return {
+    ok: true,
+    subject_id: sid,
+    version: COMPETENCY_RUNTIME_VERSION,
+    profile,
+    type_profile: typeProfile,
+    gap_analysis: gap,
+    role_readiness: readiness,
+    history,
   };
 }

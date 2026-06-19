@@ -32,7 +32,15 @@ import {
   getInstance,
   getProfile,
   computeGapAnalysis,
+  computeTypeProfile,
+  listProfileHistory,
+  computeRoleReadinessForSubject,
+  computeDashboard,
 } from '../services/competency-runtime.js';
+import {
+  runCompetencyTypeSeed,
+  getClassificationReport,
+} from '../services/competency-type-classification.js';
 import {
   buildBlueprint,
   getDimensionMix,
@@ -147,6 +155,41 @@ export function registerCompetencyRuntimeRoutes(
     }
     return result;
   }));
+
+  // ===== Phase 2.5 — Competency Profile Engine (5-TYPE view · history · dashboard)
+  // Literal sub-paths (/type-profile, /history, /dashboard) are distinct segment
+  // counts from /profiles/:subjectId so route order is unambiguous.
+
+  // ---- 5a. Type-bucketed profile (behavioral/cognitive/functional/technical/future_skills)
+  app.get('/api/competency-runtime/profiles/:subjectId/type-profile', gate, requireAuth, requireSuperAdmin, wrap(async (req) =>
+    computeTypeProfile(pool, String(req.params.subjectId)),
+  ));
+
+  // ---- 5b. Append-only profile history --------------------------------------
+  app.get('/api/competency-runtime/profiles/:subjectId/history', gate, requireAuth, requireSuperAdmin, wrap(async (req) =>
+    listProfileHistory(pool, String(req.params.subjectId)),
+  ));
+
+  // ---- 5c. Composed profile dashboard ---------------------------------------
+  app.get('/api/competency-runtime/profiles/:subjectId/dashboard', gate, requireAuth, requireSuperAdmin, wrap(async (req) =>
+    computeDashboard(pool, String(req.params.subjectId)),
+  ));
+
+  // ---- 5d. Competency-type classification: seed + report --------------------
+  // Seed classifies the genome (onto_competencies) into the 5 TYPES and persists
+  // onto_competency_type_map (needs_review per classifier). Idempotent upsert.
+  app.post('/api/competency-runtime/competency-types/seed', gate, requireAuth, requireSuperAdmin, wrap(async () =>
+    runCompetencyTypeSeed(pool),
+  ));
+  app.get('/api/competency-runtime/competency-types/report', gate, requireAuth, requireSuperAdmin, wrap(async () =>
+    getClassificationReport(pool),
+  ));
+
+  // ===== Phase 2.6 — Role Readiness Engine (candidate profile vs role profile)
+  // ---- 5e. Role readiness for a subject (readiness % · strengths · gaps · fit)
+  app.get('/api/competency-runtime/role-readiness/:subjectId', gate, requireAuth, requireSuperAdmin, wrap(async (req) =>
+    computeRoleReadinessForSubject(pool, String(req.params.subjectId)),
+  ));
 
   // ===== Phase 2.1 — Assessment Blueprint Engine (dimension mix) =============
   // Role -> Assessment Blueprint: the 5-dimension % allocation (= onto_competency_types).

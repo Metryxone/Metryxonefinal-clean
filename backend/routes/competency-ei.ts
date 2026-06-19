@@ -32,6 +32,12 @@ import {
   computeEiValidation,
   computeAdminOverview,
 } from '../services/competency-employability-engine.js';
+import {
+  ensureEiDimensionSchema,
+  seedEiDimensionDefaults,
+  getDimensionConfig,
+  computeEmployabilityDimensions,
+} from '../services/competency-ei-dimensions.js';
 
 export function registerCompetencyEiRoutes(
   app: Express,
@@ -109,4 +115,50 @@ export function registerCompetencyEiRoutes(
     requireSuperAdmin,
     wrap(async () => computeAdminOverview(pool)),
   );
+
+  // ==========================================================================
+  // Phase 3.2 — Competency → EI dimension mapping
+  // ==========================================================================
+
+  // ---- Per-subject employability dimensions (read-only; degrades when unprovisioned)
+  app.get(
+    '/api/competency-ei/dimensions/:subject',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => computeEmployabilityDimensions(pool, String(req.params.subject))),
+  );
+
+  // ---- Dimension mapping config (admin read; to_regclass probe + degrade) ----
+  app.get(
+    '/api/competency-ei/admin/dimensions',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async () => getDimensionConfig(pool)),
+  );
+
+  // ---- Seed / re-sync the default mapping (explicit write path; idempotent) --
+  app.post(
+    '/api/competency-ei/dimensions/sync',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async () => {
+      await ensureEiDimensionSchema(pool);
+      return seedEiDimensionDefaults(pool);
+    }),
+  );
+
+  // Auto-provision defaults at boot ONLY when the flag is ON — keeps flag-OFF
+  // byte-identical (no DDL, no seed) while making the read endpoints usable
+  // without a manual sync step in the activated environment.
+  if (isCompetencyEiEnabled()) {
+    ensureEiDimensionSchema(pool)
+      .then(() => seedEiDimensionDefaults(pool))
+      .catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error('[competency-ei] dimension seed failed:', err?.message ?? err);
+      });
+  }
 }

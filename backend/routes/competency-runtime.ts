@@ -54,6 +54,12 @@ import {
   getAssembledAssessment,
   type AssembledQuestion,
 } from '../services/assessment-assembly.js';
+import {
+  scoreAssessmentRun,
+  getScoreRun,
+  type ScoreResponseInput,
+  type CohortRef,
+} from '../services/competency-scoring.js';
 
 export function registerCompetencyRuntimeRoutes(
   app: Express,
@@ -313,5 +319,59 @@ export function registerCompetencyRuntimeRoutes(
       return undefined;
     }
     return { assessment_id: row.id, blueprint_id: row.blueprint_id, total_questions: questions.length, validation: result.validation };
+  }));
+
+  // ====================================================================
+  // Phase 2.4 — Competency Scoring Engine
+  //   Question -> Raw Score -> Competency Score -> Normalized Score -> Level
+  // ====================================================================
+  const parseScoreBody = (b: any): { responses: ScoreResponseInput[]; cohorts: Record<string, CohortRef> | undefined } => {
+    const responses: ScoreResponseInput[] = Array.isArray(b?.responses) ? b.responses : [];
+    let cohorts: Record<string, CohortRef> | undefined;
+    if (b?.cohorts && typeof b.cohorts === 'object') {
+      cohorts = {};
+      for (const [k, v] of Object.entries(b.cohorts as Record<string, any>)) {
+        if (v && Number.isFinite(Number(v.mean)) && Number.isFinite(Number(v.sd)) && Number.isFinite(Number(v.n))) {
+          cohorts[k] = { mean: Number(v.mean), sd: Number(v.sd), n: Number(v.n) };
+        }
+      }
+    }
+    return { responses, cohorts };
+  };
+
+  // ---- 20. Score a set of responses (compute + persist) ------------------
+  app.post('/api/competency-runtime/score', gate, requireAuth, requireSuperAdmin, wrap(async (req) => {
+    const b = req.body ?? {};
+    const { responses, cohorts } = parseScoreBody(b);
+    return scoreAssessmentRun(pool, {
+      responses,
+      assessment_id: b.assessment_id != null ? String(b.assessment_id) : null,
+      blueprint_id: b.blueprint_id != null ? String(b.blueprint_id) : null,
+      subject_id: b.subject_id != null ? String(b.subject_id) : null,
+      cohorts,
+      persist: b.persist !== false,
+      source: b.source != null ? String(b.source) : undefined,
+    });
+  }));
+
+  // ---- 21. Score preview (compute, NO persist) ---------------------------
+  app.post('/api/competency-runtime/score-preview', gate, requireAuth, requireSuperAdmin, wrap(async (req) => {
+    const b = req.body ?? {};
+    const { responses, cohorts } = parseScoreBody(b);
+    return scoreAssessmentRun(pool, {
+      responses,
+      assessment_id: b.assessment_id != null ? String(b.assessment_id) : null,
+      blueprint_id: b.blueprint_id != null ? String(b.blueprint_id) : null,
+      subject_id: b.subject_id != null ? String(b.subject_id) : null,
+      cohorts,
+      persist: false,
+    });
+  }));
+
+  // ---- 22. Read a stored scoring run -------------------------------------
+  app.get('/api/competency-runtime/score-runs/:runId', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const row = await getScoreRun(pool, String(req.params.runId));
+    if (!row) { res.status(404).json({ ok: false, error: 'score_run_not_found' }); return undefined; }
+    return row;
   }));
 }

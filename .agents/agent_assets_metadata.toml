@@ -702,3 +702,63 @@ id = "GD9LH8ZHK24RcEwh6n3zh"
 uri = "file://backend/audit/phase-1/superadmin_validation_report.md"
 type = "text"
 title = "Super Admin Validation Report"
+
+[[outputs]]
+id = "_ojXLPi9PHB3_Qn5Oy7E-"
+uri = "file://backend/audit/phase-2/founder_summary.md"
+type = "text"
+title = "Founder Summary — Phase 2"
+
+[[outputs]]
+id = "xTBpeH6Z7Q4YigTl3xl8k"
+uri = "file://backend/audit/phase-2/assessment_factory_report.md"
+type = "text"
+title = "Assessment Factory Report"
+
+[[outputs]]
+id = "LN1PSugp13nXeI7FxdE_y"
+uri = "file://backend/audit/phase-2/question_blueprint_report.md"
+type = "text"
+title = "Question Blueprint & Mapping Report"
+
+[[outputs]]
+id = "wo9n0djzfsqw2e1lpdgMZ"
+uri = "file://backend/audit/phase-2/competency_scoring_report.md"
+type = "text"
+title = "Competency Scoring Report"
+
+[[outputs]]
+id = "CpXPFqOv5EnR1BTkYMGyj"
+uri = "file://backend/audit/phase-2/competency_profile_report.md"
+type = "text"
+title = "Competency Profile Report"
+
+[[outputs]]
+id = "ATHoXUAkZ2imbRUUC7PhK"
+uri = "file://backend/audit/phase-2/role_readiness_report.md"
+type = "text"
+title = "Role Readiness Report"
+
+[[outputs]]
+id = "I0EpLlUia-PHSnlvfS3lp"
+uri = "file://backend/audit/phase-2/competency_gap_report.md"
+type = "text"
+title = "Competency Gap Analysis Report"
+
+[[outputs]]
+id = "qhoMONzO_Z43iOy3h17T_"
+uri = "file://backend/audit/phase-2/signal_engine_report.md"
+type = "text"
+title = "Signal Engine Report"
+
+[[outputs]]
+id = "jq7VdAQ7ATVefr_Bfun-B"
+uri = "file://backend/audit/phase-2/benchmark_report.md"
+type = "text"
+title = "Benchmark Foundation Report"
+
+[[outputs]]
+id = "ujVh4t3Ee3Xj2KN7qSgml"
+uri = "file://backend/audit/phase-2/superadmin_validation_report.md"
+type = "text"
+title = "SuperAdmin Validation Report"

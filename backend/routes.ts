@@ -467,6 +467,18 @@ export async function registerRoutes(
       const isSuperAdmin = userRoles.includes('super_admin') || fullUser?.role === 'super_admin';
       
       if (isSuperAdmin) {
+        // Dev bypass: skip MFA when ZOHO_EMAIL is not configured (no email delivery available)
+        const mfaDisabledInDev = process.env.NODE_ENV !== 'production' && !process.env.ZOHO_EMAIL;
+        if (mfaDisabledInDev) {
+          return new Promise<void>((resolve) => {
+            req.login(fullUser!, (err) => {
+              if (err) { next(err); resolve(); return; }
+              const { password: _pwd, ...safeUser } = fullUser as any;
+              res.json({ ...safeUser, mfaBypassed: true });
+              resolve();
+            });
+          });
+        }
         try {
           const code = String(100000 + (randomBytes(4).readUInt32BE(0) % 900000));
           const expiresAt = new Date(Date.now() + 5 * 60 * 1000);

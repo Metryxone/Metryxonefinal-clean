@@ -97,6 +97,29 @@ const GAP_PRIORITY_LABELS: Record<string, string> = {
   unprioritized: 'Unprioritized',
 };
 
+const SIGNAL_STATUS_COLORS: Record<string, string> = {
+  fired: 'bg-indigo-100 text-indigo-800',
+  not_fired: 'bg-gray-100 text-gray-600',
+  unevaluable: 'bg-slate-100 text-slate-500',
+};
+
+const SIGNAL_STATUS_LABELS: Record<string, string> = {
+  fired: 'Fired',
+  not_fired: 'Not fired',
+  unevaluable: 'Unevaluable',
+};
+
+const SIGNAL_POLARITY_COLORS: Record<string, string> = {
+  risk: 'bg-red-100 text-red-800',
+  potential: 'bg-emerald-100 text-emerald-800',
+};
+
+const SIGNAL_COND_COLORS: Record<string, string> = {
+  met: 'text-emerald-700',
+  unmet: 'text-gray-500',
+  unevaluable: 'text-slate-400',
+};
+
 interface TypeBucket {
   type_key: string;
   competency_count: number;
@@ -167,6 +190,33 @@ interface GapEngine {
   coverage_pct: number | null;
   summary: { high: number; medium: number; low: number; none: number; unprioritized: number; development_needs: number };
   gaps: PrioritizedGapRow[];
+  notes?: string[];
+}
+
+interface EvaluatedSignalCondition {
+  label: string;
+  direction: 'low' | 'high';
+  status: 'met' | 'unmet' | 'unevaluable';
+  matched_competency: { competency_id: string; competency_name: string; level: number | null } | null;
+  reason: string;
+}
+
+interface SignalResult {
+  signal_id: string;
+  name: string;
+  polarity: 'risk' | 'potential';
+  category: string;
+  description: string;
+  interpretation: string;
+  status: 'fired' | 'not_fired' | 'unevaluable';
+  conditions: EvaluatedSignalCondition[];
+  triggered_by: { competency_id: string; competency_name: string; level: number | null }[];
+}
+
+interface SignalEngine {
+  measured: boolean;
+  summary: { total_signals: number; fired: number; risk_fired: number; potential_fired: number; not_fired: number; unevaluable: number };
+  signals: SignalResult[];
   notes?: string[];
 }
 
@@ -256,19 +306,23 @@ export default function CompetencyRuntimePanel() {
   const [profileSubject, setProfileSubject] = useState('demo_subj_pm');
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
   const [gapEngine, setGapEngine] = useState<GapEngine | null>(null);
+  const [signalEngine, setSignalEngine] = useState<SignalEngine | null>(null);
   const [profileBusy, setProfileBusy] = useState(false);
   const [profileError, setProfileError] = useState<string | null>(null);
 
   const loadDashboard = async (subject: string) => {
-    const [dRes, gRes] = await Promise.all([
+    const [dRes, gRes, sRes] = await Promise.all([
       fetch(`/api/competency-runtime/profiles/${encodeURIComponent(subject)}/dashboard`, { credentials: 'include' }),
       fetch(`/api/competency-runtime/gap-engine/${encodeURIComponent(subject)}`, { credentials: 'include' }),
+      fetch(`/api/competency-runtime/signal-engine/${encodeURIComponent(subject)}`, { credentials: 'include' }),
     ]);
     const d = await dRes.json();
     if (!dRes.ok || !d.ok) throw new Error(d.error || `Dashboard failed (${dRes.status})`);
     setDashboard(d.data as Dashboard);
     const g = await gRes.json();
     setGapEngine(gRes.ok && g.ok ? (g.data as GapEngine) : null);
+    const s = await sRes.json();
+    setSignalEngine(sRes.ok && s.ok ? (s.data as SignalEngine) : null);
   };
 
   const loadProfile = async () => {
@@ -669,6 +723,53 @@ export default function CompetencyRuntimePanel() {
                     Unprioritized competencies are unmeasurable or not yet scored — surfaced honestly, never assigned a fabricated priority.
                   </p>
                 )}
+              </div>
+            )}
+
+            {/* Phase 2.8 — Competency Signal Engine */}
+            {signalEngine && (
+              <div>
+                <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                  Competency Signals
+                  <span className="text-xs font-normal text-gray-500">Phase 2.8</span>
+                </h4>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  <Badge className="bg-indigo-100 text-indigo-800">Fired {signalEngine.summary.fired}</Badge>
+                  <Badge className="bg-red-100 text-red-800">Risk {signalEngine.summary.risk_fired}</Badge>
+                  <Badge className="bg-emerald-100 text-emerald-800">Potential {signalEngine.summary.potential_fired}</Badge>
+                  <Badge className="bg-gray-100 text-gray-600">Not fired {signalEngine.summary.not_fired}</Badge>
+                  <Badge className="bg-slate-100 text-slate-500">Unevaluable {signalEngine.summary.unevaluable}</Badge>
+                </div>
+                <div className="space-y-2">
+                  {signalEngine.signals.map((s) => (
+                    <div key={s.signal_id} className="rounded-xl border bg-white p-3">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-semibold text-gray-900">{s.name}</span>
+                          <Badge className={`${SIGNAL_POLARITY_COLORS[s.polarity] || 'bg-gray-100'} text-[10px]`}>{s.polarity}</Badge>
+                          <span className="text-[11px] text-gray-400">{s.category}</span>
+                        </div>
+                        <Badge className={SIGNAL_STATUS_COLORS[s.status] || 'bg-gray-100'}>{SIGNAL_STATUS_LABELS[s.status]}</Badge>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">{s.description}</p>
+                      <div className="mt-2 space-y-0.5">
+                        {s.conditions.map((c, i) => (
+                          <div key={i} className={`text-[11px] flex gap-2 ${SIGNAL_COND_COLORS[c.status] || 'text-gray-500'}`}>
+                            <span className="shrink-0">{c.status === 'met' ? '✓' : c.status === 'unmet' ? '·' : '?'}</span>
+                            <span className="font-medium shrink-0">{c.label}</span>
+                            <span className="text-gray-400">— {c.reason}</span>
+                          </div>
+                        ))}
+                      </div>
+                      {s.status === 'fired' && (
+                        <p className="text-[11px] text-indigo-700 mt-1.5">{s.interpretation}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <p className="text-[11px] text-gray-500 mt-2">
+                  Signals fire only when every contributing competency is measured (low ≤ L2, high ≥ L4). Unevaluable = a contributing competency is absent or not yet scored — never fired from missing data. Developmental framing only.
+                </p>
               </div>
             )}
 

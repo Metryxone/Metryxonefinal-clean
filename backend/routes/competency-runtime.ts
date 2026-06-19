@@ -38,6 +38,11 @@ import {
   computeDashboard,
   computeCompetencyGapEngine,
   computeGapDashboard,
+  computeCompetencySignalEngine,
+  SIGNAL_LIBRARY,
+  SIGNAL_RULES,
+  SIGNAL_LOW_LEVEL_MAX,
+  SIGNAL_HIGH_LEVEL_MIN,
 } from '../services/competency-runtime.js';
 import {
   runCompetencyTypeSeed,
@@ -174,6 +179,30 @@ export function registerCompetencyRuntimeRoutes(
   // ---- 5.2 Gap dashboard (composed read) ------------------------------------
   app.get('/api/competency-runtime/gap-dashboard/:subjectId', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
     const result = await computeGapDashboard(pool, String(req.params.subjectId));
+    if (!result.ok) {
+      const code = result.error === 'blueprint_not_found' ? 404 : 400;
+      res.status(code).json({ ok: false, error: result.error });
+      return undefined;
+    }
+    return result;
+  }));
+
+  // ===== Phase 2.8 — Competency Signal Engine ===============================
+  // Derives behavioural signals (risk/potential) from MEASURED competency
+  // combinations via a curated signal_library + deterministic signal_rules.
+  // ---- 6.1 Signal library + rules (catalog transparency) --------------------
+  // Literal path — registered BEFORE /signal-engine/:subjectId (distinct segment).
+  app.get('/api/competency-runtime/signal-library', gate, requireAuth, requireSuperAdmin, wrap(async (_req, _res) => {
+    return {
+      thresholds: { low_level_max: SIGNAL_LOW_LEVEL_MAX, high_level_min: SIGNAL_HIGH_LEVEL_MIN },
+      library: SIGNAL_LIBRARY,
+      rules: SIGNAL_RULES,
+    };
+  }));
+
+  // ---- 6.2 Signal engine (per-subject evaluation) ---------------------------
+  app.get('/api/competency-runtime/signal-engine/:subjectId', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const result = await computeCompetencySignalEngine(pool, String(req.params.subjectId));
     if (!result.ok) {
       const code = result.error === 'blueprint_not_found' ? 404 : 400;
       res.status(code).json({ ok: false, error: result.error });

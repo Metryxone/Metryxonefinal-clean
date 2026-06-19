@@ -1123,3 +1123,338 @@ export async function computeGapDashboard(pool: Pool, subjectId: string): Promis
     notes: engine.notes ?? [],
   };
 }
+
+// ============================================================================
+// 10. COMPETENCY SIGNAL ENGINE (Phase 2.8)
+// Derives higher-order behavioural SIGNALS from combinations of MEASURED
+// competency states, via a curated signal_library + deterministic signal_rules.
+//   e.g.  Low Communication + Low Collaboration + Low Presentation
+//           -> "Workplace Communication Risk"  (risk)
+//         High Problem Solving + High Systems Thinking
+//           -> "Innovation Potential"          (potential)
+//
+// Honesty contract:
+//   - A signal FIRES only when EVERY condition is satisfied by a MEASURED
+//     competency. If any contributing competency is absent from the subject's
+//     blueprint OR not yet scored, the signal is 'unevaluable' — never fired
+//     (and never silently suppressed) from missing data.
+//   - Thresholds are fixed + published (low = level <= 2, high = level >= 4);
+//     level 3 satisfies neither direction. No tuning, no randomness.
+//   - signal_library + signal_rules are a STATIC curated catalog; the engine
+//     only matches them against competencies the subject actually has. Every
+//     fired signal carries the exact competencies that triggered it (full
+//     traceability), and every condition carries a reason string.
+//   - Signals are DEVELOPMENTAL framing only — never hiring/promotion/
+//     suitability predictions.
+// ============================================================================
+export type SignalPolarity = 'risk' | 'potential';
+export type SignalDirection = 'low' | 'high';
+export type SignalStatus = 'fired' | 'not_fired' | 'unevaluable';
+export type SignalConditionStatus = 'met' | 'unmet' | 'unevaluable';
+
+export const SIGNAL_LOW_LEVEL_MAX = 2;   // level <= 2  => "low"
+export const SIGNAL_HIGH_LEVEL_MIN = 4;  // level >= 4  => "high"
+
+export interface SignalCondition {
+  label: string;            // human label, e.g. "Low Communication"
+  keywords: string[];       // competency-name tokens (lowercased substring match)
+  direction: SignalDirection;
+}
+
+// signal_library — catalog metadata (one row per derivable signal).
+export interface SignalLibraryEntry {
+  signal_id: string;
+  name: string;
+  polarity: SignalPolarity;
+  category: string;
+  description: string;
+  interpretation: string;   // developmental reading — never predictive
+}
+
+// signal_rules — the deterministic firing rule for each signal (conditions).
+export interface SignalRule {
+  signal_id: string;
+  logic: 'all';             // every condition must hold (conservative)
+  conditions: SignalCondition[];
+}
+
+export const SIGNAL_LIBRARY: SignalLibraryEntry[] = [
+  {
+    signal_id: 'workplace_communication_risk',
+    name: 'Workplace Communication Risk',
+    polarity: 'risk',
+    category: 'Communication & Influence',
+    description: 'A cluster of low communication-facing competencies that, together, can impede day-to-day workplace effectiveness.',
+    interpretation: 'Developmental flag — suggests communication-skills support may help. Not a judgement of the person or a performance prediction.',
+  },
+  {
+    signal_id: 'innovation_potential',
+    name: 'Innovation Potential',
+    polarity: 'potential',
+    category: 'Problem Solving',
+    description: 'Strong analytical and systems-level thinking combine into a capacity to generate and structure novel solutions.',
+    interpretation: 'Developmental strength — a good area to stretch with ambiguous, open-ended problems.',
+  },
+  {
+    signal_id: 'stakeholder_disconnect_risk',
+    name: 'Stakeholder Disconnect Risk',
+    polarity: 'risk',
+    category: 'Communication & Influence',
+    description: 'Low stakeholder management combined with low active listening can lead to misaligned expectations.',
+    interpretation: 'Developmental flag — structured stakeholder and listening practices may help. Not a performance prediction.',
+  },
+  {
+    signal_id: 'change_resilience_potential',
+    name: 'Change Resilience Potential',
+    polarity: 'potential',
+    category: 'Adaptability',
+    description: 'High adaptability paired with comfort in ambiguity indicates resilience through change and uncertainty.',
+    interpretation: 'Developmental strength — well suited to evolving or loosely-defined contexts.',
+  },
+  {
+    signal_id: 'ownership_potential',
+    name: 'Ownership Potential',
+    polarity: 'potential',
+    category: 'Drive & Ownership',
+    description: 'High accountability combined with high adaptability points to dependable ownership under changing conditions.',
+    interpretation: 'Developmental strength — reliable in taking and adjusting ownership of outcomes.',
+  },
+  {
+    signal_id: 'collaborative_leadership_potential',
+    name: 'Collaborative Leadership Potential',
+    polarity: 'potential',
+    category: 'Leadership',
+    description: 'High stakeholder management combined with strong active listening indicates a collaborative, people-centred leadership lean.',
+    interpretation: 'Developmental strength — a foundation to build facilitative leadership on.',
+  },
+  {
+    signal_id: 'disengagement_risk',
+    name: 'Disengagement Risk',
+    polarity: 'risk',
+    category: 'Drive & Ownership',
+    description: 'Low accountability combined with low adaptability can indicate reduced engagement or drive.',
+    interpretation: 'Developmental flag — motivation and ownership coaching may help. Not a performance prediction.',
+  },
+];
+
+export const SIGNAL_RULES: SignalRule[] = [
+  {
+    signal_id: 'workplace_communication_risk',
+    logic: 'all',
+    conditions: [
+      { label: 'Low Communication', keywords: ['communication'], direction: 'low' },
+      { label: 'Low Collaboration', keywords: ['collaboration', 'teamwork'], direction: 'low' },
+      { label: 'Low Presentation', keywords: ['presentation', 'presenting'], direction: 'low' },
+    ],
+  },
+  {
+    signal_id: 'innovation_potential',
+    logic: 'all',
+    conditions: [
+      { label: 'High Problem Solving', keywords: ['problem solving', 'problem-solving'], direction: 'high' },
+      { label: 'High Systems Thinking', keywords: ['systems thinking', 'systems'], direction: 'high' },
+    ],
+  },
+  {
+    signal_id: 'stakeholder_disconnect_risk',
+    logic: 'all',
+    conditions: [
+      { label: 'Low Stakeholder Management', keywords: ['stakeholder'], direction: 'low' },
+      { label: 'Low Active Listening', keywords: ['active listening', 'listening'], direction: 'low' },
+    ],
+  },
+  {
+    signal_id: 'change_resilience_potential',
+    logic: 'all',
+    conditions: [
+      { label: 'High Adaptability', keywords: ['adaptability', 'adaptive'], direction: 'high' },
+      { label: 'High Ambiguity Tolerance', keywords: ['ambiguity'], direction: 'high' },
+    ],
+  },
+  {
+    signal_id: 'ownership_potential',
+    logic: 'all',
+    conditions: [
+      { label: 'High Accountability', keywords: ['accountability', 'ownership'], direction: 'high' },
+      { label: 'High Adaptability', keywords: ['adaptability', 'adaptive'], direction: 'high' },
+    ],
+  },
+  {
+    signal_id: 'collaborative_leadership_potential',
+    logic: 'all',
+    conditions: [
+      { label: 'High Stakeholder Management', keywords: ['stakeholder'], direction: 'high' },
+      { label: 'High Active Listening', keywords: ['active listening', 'listening'], direction: 'high' },
+    ],
+  },
+  {
+    signal_id: 'disengagement_risk',
+    logic: 'all',
+    conditions: [
+      { label: 'Low Accountability', keywords: ['accountability', 'ownership'], direction: 'low' },
+      { label: 'Low Adaptability', keywords: ['adaptability', 'adaptive'], direction: 'low' },
+    ],
+  },
+];
+
+interface SignalSubjectComp {
+  competency_id: string;
+  competency_name: string;
+  name_lc: string;
+  level: number | null;
+  score: number | null;
+  measurement: 'domain_proxy' | 'unmeasurable';
+}
+
+export interface EvaluatedSignalCondition {
+  label: string;
+  direction: SignalDirection;
+  keywords: string[];
+  status: SignalConditionStatus;
+  matched_competency: { competency_id: string; competency_name: string; level: number | null; score: number | null } | null;
+  reason: string;
+}
+
+export interface SignalResult {
+  signal_id: string;
+  name: string;
+  polarity: SignalPolarity;
+  category: string;
+  description: string;
+  interpretation: string;
+  status: SignalStatus;
+  conditions: EvaluatedSignalCondition[];
+  triggered_by: { competency_id: string; competency_name: string; level: number | null }[];
+}
+
+export interface SignalEngineSummary {
+  total_signals: number;
+  fired: number;
+  risk_fired: number;
+  potential_fired: number;
+  not_fired: number;
+  unevaluable: number;
+}
+
+export interface CompetencySignalEngineResult {
+  ok: boolean;
+  error?: string;
+  subject_id?: string;
+  blueprint_id?: string | null;
+  role_id?: string | null;
+  measured?: boolean;
+  summary?: SignalEngineSummary;
+  signals?: SignalResult[];
+  notes?: string[];
+}
+
+// Evaluate ONE condition against the subject's competencies.
+function evaluateSignalCondition(cond: SignalCondition, comps: SignalSubjectComp[]): EvaluatedSignalCondition {
+  const base = { label: cond.label, direction: cond.direction, keywords: cond.keywords };
+  const matched = comps.filter((c) => cond.keywords.some((k) => c.name_lc.includes(k)));
+  if (matched.length === 0) {
+    return { ...base, status: 'unevaluable', matched_competency: null,
+      reason: `No competency in this blueprint matches "${cond.label}" — cannot evaluate (absent, not assumed).` };
+  }
+  const measured = matched.filter((c) => c.level != null);
+  if (measured.length === 0) {
+    const m = [...matched].sort((a, b) => a.competency_id.localeCompare(b.competency_id))[0];
+    return { ...base, status: 'unevaluable',
+      matched_competency: { competency_id: m.competency_id, competency_name: m.competency_name, level: m.level, score: m.score },
+      reason: `${m.competency_name} matches "${cond.label}" but is not yet scored — cannot evaluate.` };
+  }
+  // Representative = the strongest evidence in the condition's direction
+  // (lowest level for 'low', highest for 'high'); tie-break by competency_id.
+  const rep = measured.reduce((best, c) => {
+    if (cond.direction === 'low') {
+      if (c.level! < best.level!) return c;
+    } else if (c.level! > best.level!) return c;
+    if (c.level! === best.level! && c.competency_id.localeCompare(best.competency_id) < 0) return c;
+    return best;
+  });
+  const met = cond.direction === 'low' ? rep.level! <= SIGNAL_LOW_LEVEL_MAX : rep.level! >= SIGNAL_HIGH_LEVEL_MIN;
+  const want = cond.direction === 'low' ? `<= ${SIGNAL_LOW_LEVEL_MAX}` : `>= ${SIGNAL_HIGH_LEVEL_MIN}`;
+  return { ...base, status: met ? 'met' : 'unmet',
+    matched_competency: { competency_id: rep.competency_id, competency_name: rep.competency_name, level: rep.level, score: rep.score },
+    reason: `${rep.competency_name} is at level ${rep.level} (${cond.direction} requires level ${want}) — condition ${met ? 'met' : 'not met'}.` };
+}
+
+export async function computeCompetencySignalEngine(pool: Pool, subjectId: string): Promise<CompetencySignalEngineResult> {
+  // Reuse the existing gap analysis verbatim — this layer only reads its measured states.
+  const base = await computeGapAnalysis(pool, subjectId);
+  if (!base.ok) return { ok: false, error: base.error, subject_id: base.subject_id };
+
+  const comps: SignalSubjectComp[] = (base.gaps ?? []).map((g) => ({
+    competency_id: g.competency_id,
+    competency_name: g.competency_name ?? g.competency_id,
+    name_lc: (g.competency_name ?? g.competency_id).toLowerCase(),
+    level: g.measured_level,
+    score: g.measured_score,
+    measurement: g.measurement,
+  }));
+
+  const libById = new Map(SIGNAL_LIBRARY.map((s) => [s.signal_id, s]));
+
+  const signals: SignalResult[] = SIGNAL_RULES.map((rule) => {
+    const lib = libById.get(rule.signal_id)!;
+    const conditions = rule.conditions.map((c) => evaluateSignalCondition(c, comps));
+    let status: SignalStatus;
+    if (conditions.some((c) => c.status === 'unevaluable')) {
+      status = 'unevaluable';
+    } else if (conditions.every((c) => c.status === 'met')) {
+      status = 'fired';
+    } else {
+      status = 'not_fired';
+    }
+    const triggered_by = status === 'fired'
+      ? conditions.map((c) => ({
+          competency_id: c.matched_competency!.competency_id,
+          competency_name: c.matched_competency!.competency_name,
+          level: c.matched_competency!.level,
+        }))
+      : [];
+    return {
+      signal_id: lib.signal_id, name: lib.name, polarity: lib.polarity, category: lib.category,
+      description: lib.description, interpretation: lib.interpretation,
+      status, conditions, triggered_by,
+    };
+  });
+
+  // Sort: fired first, then not_fired, then unevaluable; risks before potentials; then name.
+  const statusRank: Record<SignalStatus, number> = { fired: 0, not_fired: 1, unevaluable: 2 };
+  const polRank: Record<SignalPolarity, number> = { risk: 0, potential: 1 };
+  signals.sort((a, b) =>
+    statusRank[a.status] - statusRank[b.status] ||
+    polRank[a.polarity] - polRank[b.polarity] ||
+    a.name.localeCompare(b.name));
+
+  const summary: SignalEngineSummary = {
+    total_signals: signals.length,
+    fired: signals.filter((s) => s.status === 'fired').length,
+    risk_fired: signals.filter((s) => s.status === 'fired' && s.polarity === 'risk').length,
+    potential_fired: signals.filter((s) => s.status === 'fired' && s.polarity === 'potential').length,
+    not_fired: signals.filter((s) => s.status === 'not_fired').length,
+    unevaluable: signals.filter((s) => s.status === 'unevaluable').length,
+  };
+
+  const notes: string[] = [];
+  notes.push(`Signals derive from MEASURED competency combinations only (low = level <= ${SIGNAL_LOW_LEVEL_MAX}, high = level >= ${SIGNAL_HIGH_LEVEL_MIN}). A signal fires only when every contributing competency is measured.`);
+  if (!base.measured) {
+    notes.push('No scored profile for this subject yet — every signal is unevaluable until an assessment is scored.');
+  }
+  if (summary.unevaluable > 0) {
+    notes.push(`${summary.unevaluable} signal(s) are unevaluable — a contributing competency is absent from this blueprint or not yet scored. Surfaced honestly, never fired from missing data.`);
+  }
+  notes.push('Signals are DEVELOPMENTAL framing only — never hiring, promotion, or suitability predictions.');
+
+  return {
+    ok: true,
+    subject_id: base.subject_id,
+    blueprint_id: base.blueprint_id,
+    role_id: base.role_id,
+    measured: base.measured,
+    summary,
+    signals,
+    notes,
+  };
+}

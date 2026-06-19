@@ -89,3 +89,27 @@ chain, then DELETEs every demo row (shared dev/prod DB → must be purgeable).
   (Promise.all); gapEngine null-tolerant so a 503 just hides the table.
 - Demo subject `demo_subj_pm` meets/exceeds all reqs → all 'none'/'unprioritized', 0 dev
   needs. That's the HONEST output, not a bug (no High/Med/Low fires without a real gap).
+
+## Phase 2.8 — Competency Signal Engine (additive over computeGapAnalysis)
+- Higher-order behavioural SIGNALS from COMBINATIONS of measured competency states (e.g.
+  Low Comm+Low Collab+Low Presentation→Workplace Communication Risk; High Problem Solving+
+  High Systems Thinking→Innovation Potential). `SIGNAL_LIBRARY` (7 metadata entries) +
+  `SIGNAL_RULES` (7 keyword-condition rules) are STATIC curated catalogs in section 10 of
+  `backend/services/competency-runtime.ts`. Thresholds FIXED/published: low ≤ L2, high ≥ L4.
+- `evaluateSignalCondition()` matches by keyword SUBSTRING on competency NAME; rep = strongest
+  evidence in direction (tie-break competency_id asc). Honesty status precedence is the whole
+  point: no matched competency in blueprint OR matched-but-none-scored → condition
+  'unevaluable'; then ANY unevaluable condition → signal 'unevaluable'; else all met → 'fired';
+  else 'not_fired'. A signal CANNOT fire from missing/unscored data — that IS the contract.
+- `computeCompetencySignalEngine()` COMPOSES `computeGapAnalysis()` (never recomputes scores).
+  Per-condition output carries status + matched_competency(or null) + reason; fired signals
+  carry triggered_by[]. summary = {total,fired,risk_fired,potential_fired,not_fired,unevaluable}.
+- Routes `GET /api/competency-runtime/signal-library` (literal, MUST be registered BEFORE the
+  param route) + `/signal-engine/:subjectId`, both `gate, requireAuth, requireSuperAdmin`
+  (gate FIRST = byte-identical OFF, 503). Responses wrap under `.data`.
+- Frontend: Signals section in `CompetencyRuntimePanel.tsx`, fetched in `loadDashboard`
+  Promise.all (null-tolerant → 503 hides section); fired/not_fired/unevaluable + polarity badges.
+- Demo `demo_subj_pm`: 3 fired potentials (change_resilience/ownership/collaborative_leadership),
+  2 not_fired risks (stakeholder_disconnect/disengagement — evaluable, comps high), 2 unevaluable
+  (workplace_communication_risk: Comm/Presentation absent + Agile Collaboration unmeasured;
+  innovation_potential: Problem Solving/Systems Thinking absent). That spread IS the honest output.

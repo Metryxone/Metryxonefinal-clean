@@ -153,6 +153,9 @@ export default function CompetencyEIPanel() {
         </button>
       </div>
 
+      {/* Phase 3.2 — Employability Readiness Dimensions (competency → EI mapping) */}
+      <EmployabilityDimensions subject={subject} />
+
       {intel.isLoading && <div className="text-gray-500 text-sm">Loading…</div>}
       {intel.isError && <div className="text-red-600 text-sm">Failed to load intelligence.</div>}
 
@@ -347,6 +350,199 @@ function MeterRow({ label, pct }: { label: string; pct: number | null }) {
         {pct != null && <div className="h-full rounded" style={{ width: `${pct}%`, backgroundColor: BRAND.accent }} />}
       </div>
       <div className="w-12 text-right text-gray-600">{pct != null ? `${pct}%` : 'n/a'}</div>
+    </div>
+  );
+}
+
+/* ---------------------------------------------------------------------------
+ * Phase 3.2 — Employability Readiness Dimensions (competency → EI mapping)
+ *
+ * Read-only view over `/api/competency-ei/dimensions/:subject` (per-subject
+ * computed dimensions) and `/api/competency-ei/admin/dimensions` (mapping
+ * config). Composes Phase-2 domain-proxy scores into 5 readiness dimensions.
+ * Coverage (how much is mapped+measured) and Confidence (how trustworthy,
+ * capped under domain_proxy) are shown as SEPARATE axes. A dimension below its
+ * gate shows "Not measurable" + reason — never a fabricated 0.
+ * ------------------------------------------------------------------------- */
+
+interface DimConfidence { score: number; band: string; measurement: string; caps: string[]; factors: string[]; }
+interface DimensionRow {
+  ei_dimension_id: string; dimension_name: string; description?: string;
+  measurable: boolean; score: number | null; band: string | null;
+  rollup_weight: number; components_total: number; components_measured: number;
+  coverage_pct: number; confidence: DimConfidence; reason?: string;
+}
+interface DimensionsResult {
+  provisioned: boolean; subject_id: string; role_id: string | null;
+  ei_version?: string; weights_version?: string; measurable: boolean; measurement: string;
+  overall?: {
+    measurable: boolean; index_score: number | null; band: string | null;
+    dimensions_total: number; dimensions_measurable: number; coverage_pct: number;
+    confidence: DimConfidence;
+  };
+  dimensions: DimensionRow[];
+  language_policy?: { disclaimer: string };
+  notes: string[];
+}
+interface DimConfigRow {
+  ei_dimension_id: string; dimension_name: string;
+  mapped_competencies: number; domain_proxy_confidence_cap: number; min_components: number;
+}
+interface DimConfig { provisioned: boolean; dimensions: DimConfigRow[]; total_mappings: number; }
+
+function EmployabilityDimensions({ subject }: { subject: string }) {
+  const dims = useQuery<{ data: DimensionsResult }>({
+    queryKey: ['/api/competency-ei/dimensions', subject],
+    queryFn: () => getJSON(`/api/competency-ei/dimensions/${encodeURIComponent(subject)}`),
+    enabled: !!subject,
+  });
+  const cfg = useQuery<{ data: DimConfig }>({
+    queryKey: ['/api/competency-ei/admin/dimensions'],
+    queryFn: () => getJSON('/api/competency-ei/admin/dimensions'),
+  });
+
+  const r = dims.data?.data;
+  const c = cfg.data?.data;
+  const capByDim: Record<string, number> = {};
+  (c?.dimensions ?? []).forEach((d) => { capByDim[d.ei_dimension_id] = d.domain_proxy_confidence_cap; });
+
+  return (
+    <div className="bg-white rounded-xl border p-5 space-y-4">
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <h2 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
+          <Layers className="h-4 w-4" /> Employability Readiness Dimensions
+          <span className="text-[10px] uppercase tracking-wide text-gray-400 font-normal">Phase 3.2 · competency → EI</span>
+        </h2>
+        {c && (
+          <div className="text-xs text-gray-500 flex items-center gap-3">
+            <span>{c.dimensions.length} dimensions</span>
+            <span>{c.total_mappings} competency mappings</span>
+            {!c.provisioned && <span className="text-amber-600">config not seeded</span>}
+          </div>
+        )}
+      </div>
+
+      {dims.isLoading && <div className="text-gray-500 text-sm">Loading dimensions…</div>}
+      {dims.isError && <div className="text-red-600 text-sm">Failed to load dimensions.</div>}
+
+      {r && !r.provisioned && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-2">
+          <Info className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
+          <p className="text-sm text-amber-700">
+            {r.notes?.[0] ?? 'Dimension config not provisioned. Seed defaults via POST /api/competency-ei/dimensions/sync.'}
+          </p>
+        </div>
+      )}
+
+      {r && r.provisioned && !r.measurable && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-2">
+          <Info className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
+          <p className="text-sm text-amber-700">
+            {r.notes?.[0] ?? 'No measurable employability dimensions for this subject.'}
+          </p>
+        </div>
+      )}
+
+      {r && r.provisioned && r.overall && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="rounded-lg border p-4 text-center">
+            <div className="flex items-center justify-center gap-1.5 text-xs uppercase tracking-wide text-gray-500 mb-1.5">
+              <Gauge className="h-4 w-4" /> Overall Readiness
+            </div>
+            <div className="text-4xl font-bold" style={{ color: BAND_COLOR[r.overall.band ?? ''] ?? BRAND.primary }}>
+              {r.overall.index_score ?? '—'}
+            </div>
+            <div className="text-sm font-medium mt-0.5" style={{ color: BAND_COLOR[r.overall.band ?? ''] ?? '#6b7280' }}>
+              {r.overall.band ?? 'n/a'}
+            </div>
+          </div>
+          <div className="rounded-lg border p-4">
+            <div className="flex items-center gap-1.5 text-xs uppercase tracking-wide text-gray-500 mb-2">
+              <Layers className="h-4 w-4" /> Coverage <span className="text-gray-300">(how much measured)</span>
+            </div>
+            <MeterRow label="Dimensions" pct={r.overall.coverage_pct} />
+            <div className="text-xs text-gray-500 mt-1">
+              {r.overall.dimensions_measurable}/{r.overall.dimensions_total} dimensions measurable
+            </div>
+          </div>
+          <ConfidenceCard conf={r.overall.confidence} />
+        </div>
+      )}
+
+      {r && r.provisioned && r.dimensions.length > 0 && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          {r.dimensions.map((d) => (
+            <div key={d.ei_dimension_id} className="rounded-lg border p-4">
+              <div className="flex items-center justify-between gap-2">
+                <div className="text-sm font-semibold text-gray-800">{d.dimension_name}</div>
+                {d.measurable && d.score != null ? (
+                  <div className="text-2xl font-bold" style={{ color: BAND_COLOR[d.band ?? ''] ?? BRAND.primary }}>
+                    {d.score}
+                    <span className="text-xs font-medium ml-1.5">{d.band}</span>
+                  </div>
+                ) : (
+                  <div className="text-xs font-medium text-gray-400 italic">Not measurable</div>
+                )}
+              </div>
+
+              {d.measurable && d.score != null ? (
+                <>
+                  <div className="mt-2">
+                    <MeterRow label="Coverage" pct={d.coverage_pct} />
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-gray-500 mt-1">
+                    <span>{d.components_measured}/{d.components_total} competencies measured</span>
+                    <span
+                      className="font-medium"
+                      style={{ color: CONF_COLOR[d.confidence.band] ?? '#6b7280' }}
+                      title={d.confidence.caps.concat(d.confidence.factors).join(' · ')}
+                    >
+                      conf {d.confidence.score} {d.confidence.band}
+                    </span>
+                  </div>
+                  {capByDim[d.ei_dimension_id] != null && (
+                    <div className="text-[10px] text-gray-400 mt-0.5">
+                      domain-proxy confidence cap {capByDim[d.ei_dimension_id]}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="text-xs text-amber-700 mt-2 flex items-start gap-1">
+                  <AlertTriangle className="h-3 w-3 mt-0.5 shrink-0" />
+                  {d.reason ?? `insufficient measured competencies (${d.components_measured}/${d.components_total})`}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {r?.language_policy?.disclaimer && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-start gap-2">
+          <CheckCircle2 className="h-4 w-4 text-blue-600 mt-0.5 shrink-0" />
+          <p className="text-xs text-blue-800">{r.language_policy.disclaimer}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ConfidenceCard({ conf }: { conf: DimConfidence }) {
+  return (
+    <div className="rounded-lg border p-4">
+      <div className="flex items-center gap-1.5 text-xs uppercase tracking-wide text-gray-500 mb-2">
+        <ShieldAlert className="h-4 w-4" /> Confidence <span className="text-gray-300">(how trustworthy)</span>
+      </div>
+      <div className="text-2xl font-bold" style={{ color: CONF_COLOR[conf.band] ?? '#6b7280' }}>
+        {conf.score}
+        <span className="text-sm font-medium ml-2">{conf.band}</span>
+      </div>
+      <div className="text-xs text-gray-400 mt-0.5">measurement: {conf.measurement}</div>
+      {conf.caps.map((cap, i) => (
+        <div key={i} className="text-xs text-amber-700 mt-1 flex items-start gap-1">
+          <AlertTriangle className="h-3 w-3 mt-0.5 shrink-0" /> {cap}
+        </div>
+      ))}
     </div>
   );
 }

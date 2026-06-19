@@ -559,6 +559,17 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
     enabled: isAuthenticated,
   });
 
+  // Competency Employability Intelligence flag (competencyEi) — when OFF the
+  // gated routes 503 and the nav item self-hides, keeping flag-OFF byte-identical.
+  const { data: competencyEiEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/competency-ei/admin/overview', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/competency-ei/admin/overview', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
   // Fetch platform settings
   const { data: platformSettingsData = [], refetch: refetchSettings } = useQuery<any[]>({
     queryKey: ['/api/admin/platform-settings'],
@@ -2766,6 +2777,7 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
         { id: 'vx-tenant-configuration',        icon: Building2,  label: 'VX: Tenant Config (D11)' },
         { id: 'vx-assessment-runtime',          icon: Cpu,        label: 'VX: Assessment Runtime (D18)' },
         { id: 'competency-runtime',             icon: Zap,        label: 'Competency Runtime (P2.3–2.6)' },
+        { id: 'competency-ei',                  icon: Activity,   label: 'Employability Intelligence (P3)' },
         { id: 'vx-competency-science-council',  icon: Users2,     label: 'VX: Science Council (D19)' },
         { id: 'vx-workforce-knowledge-graph',   icon: GitBranch,  label: 'VX: Workforce Graph (D1)' },
         { id: 'vx-irt-engine',                  icon: Scale,      label: 'VX: IRT & Adaptive (D9)' },
@@ -2828,6 +2840,11 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
       competencyRuntimeEnabled
         ? group
         : { ...group, items: group.items.filter(it => it.id !== 'competency-runtime') }
+    )
+    .map(group =>
+      competencyEiEnabled
+        ? group
+        : { ...group, items: group.items.filter(it => it.id !== 'competency-ei') }
     )
     .filter(group => group.items.length > 0);
   const menuItems = navGroups.flatMap(g => g.items);

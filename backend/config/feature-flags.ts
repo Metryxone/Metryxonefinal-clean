@@ -583,6 +583,21 @@ export const FEATURE_FLAGS = {
    *  is populated, at which point precise per-competency scoring activates with no
    *  rework. Env: `FF_COMPETENCY_RUNTIME`. */
   competencyRuntime: false,
+  /** Phase 3 — Competency Employability Intelligence (CEI). When ON, the
+   *  competency-anchored Employability Intelligence engine
+   *  (services/competency-employability-engine.ts) is exposed at
+   *  `/api/competency-ei/*`. It COMPOSES the Phase 2 competency-runtime outputs
+   *  (profile / role-readiness / gap / signals / benchmark) into an
+   *  employability-intelligence envelope: an Employability Index re-normalised
+   *  over AVAILABLE component weights, drivers, positive-only strengths, gap-led
+   *  development priorities, fired-risk flags, and Coverage vs Confidence as two
+   *  SEPARATE axes (domain-proxy measurement caps confidence). Strictly additive
+   *  + read-only (snapshots are explicit POST captures): flag OFF => every route
+   *  503 BEFORE any DB touch => byte-identical legacy. Composes already-computed
+   *  competency data only — never recomputes scores, never fabricates. DISTINCT
+   *  from the legacy profile-based Employability Index (/api/ei/*). Env:
+   *  `FF_COMPETENCY_EI`. */
+  competencyEi: false,
   /** CAPADEX — Richer Behavioural Signal Capture (Task #22). Augments the evidence
    *  extractor so each answered item can emit an ADDITIONAL genuine concern signal
    *  keyed on its authored behavioural facet (sdi_items.dimension/subdomain_code),
@@ -923,6 +938,10 @@ export function isCompetencyFrameworkIntelligenceEnabled(): boolean {
 
 export function isCompetencyRuntimeEnabled(): boolean {
   return isFlagEnabled('competencyRuntime');
+}
+
+export function isCompetencyEiEnabled(): boolean {
+  return isFlagEnabled('competencyEi');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

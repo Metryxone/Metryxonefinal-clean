@@ -1941,18 +1941,38 @@ export async function computeRuntimeValidation(pool: Pool, subjectId: string): P
   });
 
   // --- 4. Scoring ------------------------------------------------------------
+  // Two scoring ledgers coexist and BOTH count as a scoring run:
+  //   • onto_competency_score_runs — the rich normalized scorer (competency-scoring.ts).
+  //   • onto_competency_profiles   — the runtime generate→score path (scoreInstance) writes
+  //     exactly ONE append-only profile snapshot per scoring run; the rich-ledger row is NOT
+  //     written on this path, so attribution must union both or a scored subject reads as
+  //     "none for this subject" even though it was genuinely scored.
   await run('scoring', 'Scoring', async () => {
-    const totalRuns = await safeCount(pool, 'onto_competency_score_runs');
-    const subjectRuns = await safeCount(pool, 'onto_competency_score_runs', 'subject_id = $1', [sid]);
+    const ledgerTotal = await safeCount(pool, 'onto_competency_score_runs');
+    const ledgerSubject = await safeCount(pool, 'onto_competency_score_runs', 'subject_id = $1', [sid]);
+    const runtimeTotal = await safeCount(pool, 'onto_competency_profiles');
+    const runtimeSubject = await safeCount(pool, 'onto_competency_profiles', 'subject_id = $1', [sid]);
     const responses = await safeCount(pool, 'onto_assessment_responses');
-    const status: ValidationStatus = totalRuns && totalRuns > 0 ? 'pass' : totalRuns === 0 ? 'gap' : 'fail';
+    const bothUnreadable = ledgerTotal == null && runtimeTotal == null;
+    const totalRuns = (ledgerTotal ?? 0) + (runtimeTotal ?? 0);
+    const subjectRuns = (ledgerSubject ?? 0) + (runtimeSubject ?? 0);
+    const status: ValidationStatus = bothUnreadable ? 'fail' : totalRuns > 0 ? 'pass' : 'gap';
     return {
       status,
-      detail:
-        (totalRuns ?? 0) === 0
+      detail: bothUnreadable
+        ? 'Scoring ledgers unreadable — scoring cannot be verified.'
+        : totalRuns === 0
           ? 'No scoring runs recorded — scoring mechanism present, never exercised.'
-          : `${totalRuns} scoring run(s) recorded platform-wide${(subjectRuns ?? 0) > 0 ? `, ${subjectRuns} for this subject` : ' (none for this subject — its profile may derive from a prior run)'}. Recorded responses: ${responses ?? 'n/a'}.`,
-      evidence: { total_score_runs: totalRuns, subject_score_runs: subjectRuns, assessment_responses: responses },
+          : `${totalRuns} scoring run(s) recorded platform-wide (${ledgerTotal ?? 0} normalized-ledger + ${runtimeTotal ?? 0} runtime domain-proxy)${subjectRuns > 0 ? `, ${subjectRuns} for this subject` : ' (none for this subject)'}. Recorded responses: ${responses ?? 'n/a'}.`,
+      evidence: {
+        total_score_runs: totalRuns,
+        subject_score_runs: subjectRuns,
+        normalized_ledger_runs: ledgerTotal,
+        normalized_ledger_subject_runs: ledgerSubject,
+        runtime_proxy_runs: runtimeTotal,
+        runtime_proxy_subject_runs: runtimeSubject,
+        assessment_responses: responses,
+      },
     };
   });
 

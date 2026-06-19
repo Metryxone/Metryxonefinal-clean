@@ -33,6 +33,11 @@ import {
   getProfile,
   computeGapAnalysis,
 } from '../services/competency-runtime.js';
+import {
+  buildBlueprint,
+  getDimensionMix,
+  validateDimensionMix,
+} from '../services/blueprint-builder.js';
 
 export function registerCompetencyRuntimeRoutes(
   app: Express,
@@ -119,5 +124,35 @@ export function registerCompetencyRuntimeRoutes(
       return undefined;
     }
     return result;
+  }));
+
+  // ===== Phase 2.1 — Assessment Blueprint Engine (dimension mix) =============
+  // Role -> Assessment Blueprint: the 5-dimension % allocation (= onto_competency_types).
+
+  // ---- 6. Validate a candidate mix (no persist; LITERAL before the :param) --
+  app.post('/api/competency-runtime/blueprints/dimension-mix/validate', gate, requireAuth, requireSuperAdmin, wrap(async (req) =>
+    validateDimensionMix((req.body ?? {}) as Record<string, unknown>),
+  ));
+
+  // ---- 7. Build (derive or author) a blueprint's dimension mix -------------
+  app.post('/api/competency-runtime/blueprints/:blueprintId/dimension-mix', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const b = req.body ?? {};
+    const weights = b.weights && typeof b.weights === 'object' ? b.weights : undefined;
+    const result = await buildBlueprint(pool, String(req.params.blueprintId), weights);
+    if (!result.ok) {
+      const code = result.error === 'blueprint_not_found' ? 404
+        : result.error === 'insufficient_typing' ? 422
+        : 400;
+      res.status(code).json({ ok: false, error: result.error, coverage: (result as any).coverage, validation: (result as any).validation });
+      return undefined;
+    }
+    return result;
+  }));
+
+  // ---- 8. Read a blueprint's current dimension mix -------------------------
+  app.get('/api/competency-runtime/blueprints/:blueprintId/dimension-mix', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const row = await getDimensionMix(pool, String(req.params.blueprintId));
+    if (!row.blueprint_found) { res.status(404).json({ ok: false, error: 'blueprint_not_found' }); return undefined; }
+    return row;
   }));
 }

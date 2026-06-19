@@ -1,0 +1,83 @@
+k" — I'll build the SuperAdmin UI panel (the recommended option). Let me first understand the exact API contract and the existing panel/registration pattern so the new panel matches conventions.
+
+I'll read the relevant files with correct parameters and explore the panel registration pattern in parallel.
+
+
+3 actions
+Let me read the reference panel, the assemble endpoint shape, and the scoring return shape in parallel.
+
+
+4 actions
+I have the API contract. Let me check for a blueprint-list endpoint and confirm the assemble response wrapping (ok/data), then build the panel.
+
+
+7 actions
+I have the full contract. Now let me build the panel. Creating CompetencyRuntimePanel.tsx:
+
+
+2 actions
+Now wire it into the dashboard. Let me find the exact insertion points for the lazy import, nav item, and render block.
+
+
+Ran cd
+Let me look at the nav context and the render block context to insert correctly.
+
+
+3 actions
+The mockup-sandbox failures are unrelated (canvas artifact). Let me wire the panel with three parallel edits — lazy import, render block, and nav item:
+
+
+4 actions
+Let me verify the Zap icon is imported, and check that the icon won't break the build:
+
+
+Ran cd
+Everything is wired correctly. Now let me verify the frontend build passes and take a screenshot to confirm the panel renders. Let me build first:
+
+
+2 actions
+The build command exited without output, but the build workflow shows finished. Let me check its logs and the browser console:
+
+
+2 actions
+Build passed (✓ built in 24.50s) — my new panel compiled cleanly. The competency_stage_norms 500 is a pre-existing unrelated route (competency-cohorts.ts), and the mockup-sandbox failures are unrelated canvas artifact workflows.
+
+Now let me run the required code review on my changes. Let me read the skill and invoke the architect:
+
+Loaded code_review skill
+Now let me run the code review via the architect:
+
+
+3 actions
+Good — PASS with one valid caveat: defaulting to persist creates data noise on every validation. That conflicts with the additive/read-only preference, so I'll default to preview (non-persist) mode with an opt-in "Persist run" toggle.
+
+
+Edited CompetencyRuntimePanel.tsx
+Now update the score call to pass persist and add the toggle UI:
+
+
+3 actions
+Now let me verify the build still passes with these changes:
+
+
+3 actions
+Build passes with the updated panel (build finished, new logs). The validation panel is complete.
+
+Done — "Competency Runtime" validation panel
+You can now validate the competency engine by clicking, no API/curl needed.
+
+How to use it:
+
+Log into the SuperAdmin dashboard
+In the sidebar, open Competency Runtime (P2.3–2.4) (lightning-bolt icon, just below "VX: Assessment Runtime")
+Step 1 — pick a role blueprint (Product Manager / Backend Engineer / Senior Backend Engineer) and click Assemble
+Step 2 — the assembled questions appear; each is toggleable Correct/Wrong (defaults to a realistic 2-of-3-correct spread, with "All correct" / "All wrong" shortcuts). Click Score
+Step 3 — see the full chain rendered: each competency's raw points → normalized score → level band (L1–L5), plus an overall score and level
+Honesty-preserving details:
+
+Defaults to Preview mode (nothing saved) — it's a read-only validation tool by default. There's a "Persist run" toggle (off by default) if you actually want to store the assessment + score run.
+Unmeasurable results render honestly as "Unmeasurable" / "—" rather than being floored to a fake L1.
+It only calls the existing requireSuperAdmin-gated endpoints; no existing behavior was touched (purely additive — new component + lazy import + nav item + render branch).
+Verification done: architect code review returned PASS (I applied its one caveat — the preview-by-default change above), and the production frontend build compiles clean.
+
+I did not deploy (your standing preference is stop-for-approval before deploy). Want me to move on to Phase 2.5, or is there anything you'd like adjusted on this panel first?

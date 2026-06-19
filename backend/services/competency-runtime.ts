@@ -109,12 +109,23 @@ const LIKERT_OPTIONS = [
   { label: 'Agree', score: 75 },
   { label: 'Strongly Agree', score: 100 },
 ];
-function deriveOptions(questionType: string, body: any): { label: string; score: number }[] {
-  const isLikert = !(questionType === 'mcq' || questionType === 'sjt' || questionType === 'scenario' ||
+function isLikertType(questionType: string): boolean {
+  return !(questionType === 'mcq' || questionType === 'sjt' || questionType === 'scenario' ||
     questionType === 'case' || questionType === 'simulation' || questionType === 'behavioral' ||
     questionType === 'communication');
+}
+function deriveOptions(questionType: string, body: any): { label: string; score: number }[] {
+  const isLikert = isLikertType(questionType);
   const hasAuthored = Array.isArray(body?.options) && body.options.length > 0;
-  if (isLikert || !hasAuthored) return LIKERT_OPTIONS.map((o) => ({ ...o }));
+  // Reverse-keyed (negative-polarity) items: only meaningful for Likert scales,
+  // where agreement maps to a graded score. Invert each score across the 0..100
+  // scale so "Strongly Agree" on a negative-polarity item scores LOW. Authored
+  // best-answer items (mcq/sjt/...) have a single correct answer — polarity is
+  // not meaningful there, so the flag is ignored (legacy byte-identical).
+  const reverse = body?.reverse_scored === true;
+  if (isLikert || !hasAuthored) {
+    return LIKERT_OPTIONS.map((o) => ({ label: o.label, score: reverse ? 100 - o.score : o.score }));
+  }
   const best = Number.isFinite(body.best_option) ? Number(body.best_option) : -1;
   return (body.options as string[]).map((label, i) => {
     let score = 20;
@@ -202,6 +213,7 @@ export interface RuntimeQuestion {
   type: string;
   text: string;
   options: { label: string; score: number }[];
+  reverse_scored?: boolean;     // negative-polarity (reverse-keyed) Likert item
 }
 
 export interface InstanceCoverage {
@@ -322,6 +334,7 @@ export async function generateAssessment(
         type: t.question_type,
         text: body.prompt || '',
         options: deriveOptions(t.question_type, body),
+        reverse_scored: body.reverse_scored === true && isLikertType(t.question_type) ? true : undefined,
       });
       advanced = true;
     }
@@ -370,6 +383,14 @@ export async function generateAssessment(
 // ============================================================================
 export interface ScoreInput { instanceId: string; responses: { index: number; selected_index: number }[] }
 export interface DomainScore { onto_domain: string; label: string; scaled_score: number; level: number; question_count: number }
+export interface CompetencyScore {
+  competency_id: string;
+  competency_name: string | null;
+  scaled_score: number;
+  level: number;
+  question_count: number;
+  measurement: 'precise';
+}
 export interface ScoreResult {
   ok: boolean;
   error?: string;
@@ -379,8 +400,9 @@ export interface ScoreResult {
   overall_score?: number | null;
   overall_level?: number | null;
   domain_scores?: DomainScore[];
+  competency_scores?: CompetencyScore[];
   coverage?: any;
-  measurement?: 'domain_proxy';
+  measurement?: 'domain_proxy' | 'precise' | 'hybrid';
 }
 
 export async function scoreAssessment(pool: Pool, input: ScoreInput): Promise<ScoreResult> {
@@ -444,6 +466,52 @@ export async function scoreAssessment(pool: Pool, input: ScoreInput): Promise<Sc
     }
     domainScores.sort((a, b) => a.onto_domain.localeCompare(b.onto_domain));
 
+    // --- Precise per-competency layer (additive) ----------------------------
+    // When onto_competency_question_map has active edges for the answered
+    // questions, score those competencies DIRECTLY off their mapped items
+    // (not the 7→5 domain crosswalk). Empty map => byte-identical domain_proxy.
+    // Never fabricates: a competency only appears if a mapped answered item exists.
+    const competencyScores: CompetencyScore[] = [];
+    const templateIds = [...new Set(accepted.map((a) => a.q.template_id).filter(Boolean) as string[])];
+    if (templateIds.length > 0) {
+      const mapRes = await client.query(
+        `SELECT m.competency_id, m.question_id::text AS question_id, c.canonical_name AS competency_name
+           FROM onto_competency_question_map m
+           LEFT JOIN onto_competencies c ON c.id = m.competency_id
+          WHERE m.active = true AND m.question_id = ANY($1::uuid[])`,
+        [templateIds],
+      );
+      if (mapRes.rowCount && mapRes.rowCount > 0) {
+        const scoresByTemplate = new Map<string, number[]>();
+        for (const a of accepted) {
+          if (!a.q.template_id) continue;
+          (scoresByTemplate.get(a.q.template_id) ?? scoresByTemplate.set(a.q.template_id, []).get(a.q.template_id)!).push(a.score);
+        }
+        const byComp = new Map<string, { name: string | null; scores: number[] }>();
+        for (const row of mapRes.rows as any[]) {
+          const scores = scoresByTemplate.get(row.question_id) ?? [];
+          if (scores.length === 0) continue;
+          const e = byComp.get(row.competency_id) ?? byComp.set(row.competency_id, { name: row.competency_name ?? null, scores: [] }).get(row.competency_id)!;
+          e.scores.push(...scores);
+        }
+        for (const [cid, e] of byComp) {
+          const mean = e.scores.reduce((s, v) => s + v, 0) / e.scores.length;
+          const scaled = Math.round(mean * 10) / 10;
+          competencyScores.push({
+            competency_id: cid,
+            competency_name: e.name,
+            scaled_score: scaled,
+            level: scoreToLevel(scaled),
+            question_count: e.scores.length,
+            measurement: 'precise',
+          });
+        }
+        competencyScores.sort((a, b) => a.competency_id.localeCompare(b.competency_id));
+      }
+    }
+    const measurement: 'domain_proxy' | 'precise' | 'hybrid' =
+      competencyScores.length === 0 ? 'domain_proxy' : (domainScores.length > 0 ? 'hybrid' : 'precise');
+
     const measured = domainScores.length > 0;
     const overall = measured
       ? Math.round((domainScores.reduce((s, d) => s + d.scaled_score, 0) / domainScores.length) * 10) / 10
@@ -471,8 +539,11 @@ export async function scoreAssessment(pool: Pool, input: ScoreInput): Promise<Sc
       overall_score: overall,
       overall_level: overallLevel,
       domain_scores: domainScores,
+      // Additive: only present when at least one precise mapping contributed.
+      // Empty map => field omitted entirely => byte-identical legacy payload.
+      ...(competencyScores.length > 0 ? { competency_scores: competencyScores } : {}),
       coverage: inst.coverage ?? {},
-      measurement: 'domain_proxy',
+      measurement,
     };
   } catch (e) {
     await client.query('ROLLBACK').catch(() => {});

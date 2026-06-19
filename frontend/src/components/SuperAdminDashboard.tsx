@@ -80,6 +80,7 @@ const RIEOpportunityPanel = lazy(() => import('./superadmin/RIEOpportunityPanel'
 const CounsellorDirectoryPanel = lazy(() => import('./superadmin/CounsellorDirectoryPanel'));
 const ShortAssessmentsPanel = lazy(() => import('./superadmin/ShortAssessmentsPanel'));
 const CompetencyQuestionsPanel = lazy(() => import('./superadmin/CompetencyQuestionsPanel'));
+const CompetencyQuestionMapPanel = lazy(() => import('./superadmin/CompetencyQuestionMapPanel'));
 import CompetencyAdminPage from '../pages/CompetencyAdminPage';
 const ActiveAgeBandsReflection = lazy(() => import('./superadmin/ActiveAgeBandsReflection'));
 import AssessmentModulesManagement from './AssessmentModulesManagement';
@@ -821,6 +822,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       ...(cfiEnabled ? [{ id: 'cmp-assessment-mapping', label: 'Assessment Foundation Mapping', icon: ClipboardList, node: <AssessmentFoundationMappingPanel /> }] : []),
                       ...(cfiEnabled ? [{ id: 'cmp-search-discovery', label: 'Search & Discovery', icon: Search, node: <CompetencySearchPanel /> }] : []),
                       { id: 'cmp-questions',          label: 'Questions',          icon: FileCheck,  node: <CompetencyQuestionsPanel /> },
+                      { id: 'cmp-question-map',       label: 'Question Mapping',   icon: Network,    node: <CompetencyQuestionMapPanel /> },
                       { id: 'cmp-questionbank',       label: 'Question Bank',      icon: Database,   node: <QuestionBankPanel /> },
                       { id: 'cmp-custom-modules',     label: 'Custom Modules',     icon: Package,    node: <AssessmentModulesManagement onNavigate={onNavigate} modulesOnly /> },
                       { id: 'cmp-scoring',            label: 'Norms & Scoring',    icon: Calculator, node: <ScoringPanel /> },

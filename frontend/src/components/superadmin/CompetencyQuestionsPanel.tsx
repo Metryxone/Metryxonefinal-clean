@@ -16,6 +16,7 @@ type Row = {
     prompt?: string;
     options?: string[];
     best_option?: number;
+    reverse_scored?: boolean;
     depth?: string;
     role_tags?: string[];
     industry_tags?: string[];
@@ -104,6 +105,7 @@ export default function CompetencyQuestionsPanel() {
         prompt: row.template_body.prompt,
         options: cleanOpts,
         best_option: bestOption,
+        reverse_scored: row.template_body.reverse_scored === true,
         depth: row.template_body.depth || 'standard',
         role_tags: row.template_body.role_tags || [],
         industry_tags: row.template_body.industry_tags || [],
@@ -319,6 +321,15 @@ export default function CompetencyQuestionsPanel() {
               <button onClick={() => setEditing({ ...editing, template_body: { ...editing.template_body, options: [...(editing.template_body.options || []), ''] } })}
                 className="text-xs text-indigo-700">+ Add option</button>
             </div>
+            <label className="flex items-start gap-2 text-xs text-slate-700">
+              <input type="checkbox" className="mt-0.5"
+                checked={editing.template_body.reverse_scored === true}
+                onChange={(e) => setEditing({ ...editing, template_body: { ...editing.template_body, reverse_scored: e.target.checked } })} />
+              <span>
+                Reverse-scored (negative polarity)
+                <span className="block text-[11px] text-slate-500">Likert only — inverts the scale so agreement scores low. Ignored for best-answer types.</span>
+              </span>
+            </label>
             <div className="grid grid-cols-2 gap-3">
               {(['role_tags', 'industry_tags', 'stage_tags', 'function_tags'] as const).map((k) => (
                 <label key={k} className="text-xs text-slate-600">{k.replace('_', ' ')} (comma-separated)

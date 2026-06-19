@@ -336,6 +336,7 @@ export function registerCompetencyQuestionRoutes(
         prompt: String(b.prompt),
         options: Array.isArray(b.options) ? b.options : [],
         best_option: typeof b.best_option === 'number' ? b.best_option : 0,
+        reverse_scored: b.reverse_scored === true,
         depth: b.depth || 'standard',
         pool_key: b.pool_key || `${b.competency_code.toLowerCase()}_${b.question_type}_${b.difficulty_band || 'med'}`,
         role_tags: b.role_tags || [],
@@ -374,7 +375,7 @@ export function registerCompetencyQuestionRoutes(
       if (cur.rows.length === 0) return res.status(404).json({ ok: false, error: 'not_found' });
       const row = cur.rows[0];
       const body = { ...(row.template_body || {}) };
-      ['prompt', 'options', 'best_option', 'depth', 'role_tags', 'industry_tags', 'stage_tags', 'function_tags', 'pool_key'].forEach((k) => {
+      ['prompt', 'options', 'best_option', 'reverse_scored', 'depth', 'role_tags', 'industry_tags', 'stage_tags', 'function_tags', 'pool_key'].forEach((k) => {
         if (b[k] !== undefined) (body as any)[k] = b[k];
       });
       const status = b.status ?? row.status;

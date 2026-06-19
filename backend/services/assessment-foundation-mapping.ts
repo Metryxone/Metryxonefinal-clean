@@ -523,6 +523,146 @@ export async function createCompetencyQuestion(
   return { ok: true, id: ins.rows[0].id };
 }
 
+// Grid data for the bulk-mapping tool: the question bank (each row carrying the
+// competency_ids it is currently mapped to) plus the competency catalogue to map
+// against. Read-only; never throws on empty (honest empty arrays).
+export interface MappingGridQuestion {
+  question_id: string;
+  template_key: string;
+  competency_code: string | null;
+  question_type: string;
+  status: string;
+  mapped_competency_ids: string[];
+}
+export interface MappingGridCompetency {
+  id: string;
+  canonical_name: string;
+  domain_id: string | null;
+}
+export async function getMappingGrid(
+  pool: Pool,
+  opts: { search?: string; status?: string; limit?: number } = {},
+): Promise<{ questions: MappingGridQuestion[]; competencies: MappingGridCompetency[]; total_questions: number; total_mapped: number }> {
+  await ensureAssessmentFoundationSchema(pool);
+  const where: string[] = [];
+  const params: any[] = [];
+  if (opts.status) { params.push(opts.status); where.push(`q.status = $${params.length}`); }
+  if (opts.search) {
+    params.push(`%${opts.search.toLowerCase()}%`);
+    where.push(`(LOWER(q.template_key) LIKE $${params.length} OR LOWER(COALESCE(q.competency_code,'')) LIKE $${params.length})`);
+  }
+  const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
+  const limit = Math.min(Math.max(Number(opts.limit) || 500, 1), 2000);
+  params.push(limit);
+  const qRes = await pool.query(
+    `SELECT q.id::text AS question_id, q.template_key, q.competency_code, q.question_type, q.status,
+            COALESCE(
+              (SELECT array_agg(m.competency_id ORDER BY m.competency_id)
+                 FROM onto_competency_question_map m
+                WHERE m.question_id = q.id AND m.active = true),
+              '{}'
+            ) AS mapped_competency_ids
+       FROM competency_question_templates q
+       ${whereSql}
+      ORDER BY q.template_key
+      LIMIT $${params.length}`,
+    params,
+  );
+  const cRes = await pool.query(
+    `SELECT id, canonical_name, domain_id FROM onto_competencies WHERE deprecated = false ORDER BY canonical_name`,
+  );
+  const questions: MappingGridQuestion[] = (qRes.rows as any[]).map((r) => ({
+    question_id: r.question_id,
+    template_key: r.template_key,
+    competency_code: r.competency_code ?? null,
+    question_type: r.question_type,
+    status: r.status,
+    mapped_competency_ids: Array.isArray(r.mapped_competency_ids) ? r.mapped_competency_ids : [],
+  }));
+  const total_mapped = questions.filter((q) => q.mapped_competency_ids.length > 0).length;
+  return {
+    questions,
+    competencies: (cRes.rows as any[]).map((r) => ({ id: r.id, canonical_name: r.canonical_name, domain_id: r.domain_id ?? null })),
+    total_questions: questions.length,
+    total_mapped,
+  };
+}
+
+// Bulk-map many question->competency pairs in one transaction. Validates each
+// side exists (never fabricates an edge to a missing competency/question), and
+// upserts on the (competency_id, question_id) unique key so re-running is safe
+// and reactivates any soft-deleted edge. Returns the mapped count plus a per-row
+// skip ledger (honesty: missing/duplicate rows are reported, not silently dropped).
+export async function bulkMapCompetencyQuestions(
+  pool: Pool,
+  input: { pairs: { competency_id: string; question_id: string }[]; source?: string },
+): Promise<{ ok: boolean; mapped: number; reactivated: number; skipped: { competency_id: string; question_id: string; reason: string }[]; error?: string }> {
+  await ensureAssessmentFoundationSchema(pool);
+  const source = String(input.source ?? 'curated').trim() || 'curated';
+  const raw = Array.isArray(input.pairs) ? input.pairs : [];
+  // Normalise + dedupe.
+  const seen = new Set<string>();
+  const pairs: { competency_id: string; question_id: string }[] = [];
+  for (const p of raw) {
+    const cid = String(p?.competency_id ?? '').trim();
+    const qid = String(p?.question_id ?? '').trim();
+    if (!cid || !qid) continue;
+    const key = `${cid}::${qid}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    pairs.push({ competency_id: cid, question_id: qid });
+  }
+  if (pairs.length === 0) return { ok: false, error: 'no_valid_pairs', mapped: 0, reactivated: 0, skipped: [] };
+
+  // Pre-validate question_id UUID format BEFORE the ::uuid[] cast — a malformed
+  // string would otherwise throw at the DB and surface as a generic 500 instead
+  // of a deterministic skip-ledger entry.
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const skipped: { competency_id: string; question_id: string; reason: string }[] = [];
+  const validPairs = pairs.filter((p) => {
+    if (!UUID_RE.test(p.question_id)) { skipped.push({ ...p, reason: 'invalid_question_id' }); return false; }
+    return true;
+  });
+
+  const compIds = [...new Set(validPairs.map((p) => p.competency_id))];
+  const qIds = [...new Set(validPairs.map((p) => p.question_id))];
+  const compRes = await pool.query(`SELECT id FROM onto_competencies WHERE id = ANY($1::text[])`, [compIds]);
+  const qRes = await pool.query(`SELECT id::text AS id FROM competency_question_templates WHERE id = ANY($1::uuid[])`, [qIds]);
+  const validComp = new Set((compRes.rows as any[]).map((r) => r.id));
+  const validQ = new Set((qRes.rows as any[]).map((r) => r.id));
+
+  const toWrite = validPairs.filter((p) => {
+    if (!validComp.has(p.competency_id)) { skipped.push({ ...p, reason: 'competency_not_found' }); return false; }
+    if (!validQ.has(p.question_id))     { skipped.push({ ...p, reason: 'question_not_found' }); return false; }
+    return true;
+  });
+
+  let mapped = 0;
+  let reactivated = 0;
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    for (const p of toWrite) {
+      const r = await client.query(
+        `INSERT INTO onto_competency_question_map (competency_id, question_id, source, active)
+         VALUES ($1,$2,$3,true)
+         ON CONFLICT (competency_id, question_id)
+         DO UPDATE SET active = true, source = EXCLUDED.source, updated_at = now()
+         RETURNING (xmax = 0) AS inserted`,
+        [p.competency_id, p.question_id, source],
+      );
+      if ((r.rows[0] as any)?.inserted) mapped += 1; else reactivated += 1;
+    }
+    await client.query('COMMIT');
+  } catch (e) {
+    await client.query('ROLLBACK').catch(() => {});
+    throw e;
+  } finally {
+    client.release();
+  }
+  return { ok: true, mapped, reactivated, skipped };
+}
+
 export async function deleteCompetencyQuestion(pool: Pool, id: number): Promise<WriteResult> {
   await ensureAssessmentFoundationSchema(pool);
   const res = await pool.query(`DELETE FROM onto_competency_question_map WHERE id = $1`, [id]);

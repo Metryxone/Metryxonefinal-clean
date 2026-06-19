@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
-const BLUEPRINTS = [
-  { id: 'bp_pm_v1', label: 'Product Manager' },
-  { id: 'bp_be_v1', label: 'Backend Engineer' },
-  { id: 'bp_srbe_v1', label: 'Senior Backend Engineer' },
-];
+interface BlueprintListItem {
+  id: string;
+  label: string;
+  competency_count: number;
+  source_role_title: string | null;
+}
 
 const LEVEL_COLORS: Record<number, string> = {
   5: 'bg-emerald-100 text-emerald-800',
@@ -309,6 +310,8 @@ interface RuntimeValidation {
 
 export default function CompetencyRuntimePanel() {
   const [blueprintId, setBlueprintId] = useState('bp_pm_v1');
+  const [blueprints, setBlueprints] = useState<BlueprintListItem[]>([]);
+  const [blueprintsLoading, setBlueprintsLoading] = useState(true);
   const [questions, setQuestions] = useState<AssembledQuestion[]>([]);
   const [assessmentId, setAssessmentId] = useState<string | null>(null);
   const [correctMap, setCorrectMap] = useState<Record<string, boolean>>({});
@@ -317,6 +320,36 @@ export default function CompetencyRuntimePanel() {
   const [assembling, setAssembling] = useState(false);
   const [scoring, setScoring] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setBlueprintsLoading(true);
+      try {
+        const r = await fetch('/api/competency-runtime/blueprints', { credentials: 'include' });
+        const d = await r.json();
+        if (cancelled) return;
+        if (r.ok && d.ok && Array.isArray(d.data)) {
+          const list: BlueprintListItem[] = d.data.map((b: any) => ({
+            id: b.id,
+            label: b.name || b.source_role_title || b.id,
+            competency_count: b.competency_count ?? 0,
+            source_role_title: b.source_role_title ?? null,
+          }));
+          setBlueprints(list);
+          if (list.length && !list.some((b) => b.id === blueprintId)) {
+            setBlueprintId(list[0].id);
+          }
+        }
+      } catch {
+        /* leave list empty; UI shows honest empty state */
+      } finally {
+        if (!cancelled) setBlueprintsLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const assemble = async () => {
     setAssembling(true);
@@ -489,12 +522,17 @@ export default function CompetencyRuntimePanel() {
           <h3 className="font-semibold text-gray-800">Assemble assessment</h3>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          {BLUEPRINTS.map((b) => (
+          {blueprintsLoading && <span className="text-xs text-gray-400">Loading blueprints…</span>}
+          {!blueprintsLoading && blueprints.length === 0 && (
+            <span className="text-xs text-amber-600">No blueprints found (honest empty — seed a role blueprint to populate this list).</span>
+          )}
+          {blueprints.map((b) => (
             <Button
               key={b.id}
               variant={blueprintId === b.id ? 'default' : 'outline'}
               size="sm"
               onClick={() => setBlueprintId(b.id)}
+              title={`${b.competency_count} competencies`}
             >
               {b.label}
             </Button>

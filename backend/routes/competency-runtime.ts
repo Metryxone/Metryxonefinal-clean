@@ -79,6 +79,12 @@ import {
   type ScoreResponseInput,
   type CohortRef,
 } from '../services/competency-scoring.js';
+import {
+  getBlueprints,
+  getMappingGrid,
+  bulkMapCompetencyQuestions,
+  getCompetencyQuestionMap,
+} from '../services/assessment-foundation-mapping.js';
 
 export function registerCompetencyRuntimeRoutes(
   app: Express,
@@ -291,6 +297,14 @@ export function registerCompetencyRuntimeRoutes(
   // ===== Phase 2.1 — Assessment Blueprint Engine (dimension mix) =============
   // Role -> Assessment Blueprint: the 5-dimension % allocation (= onto_competency_types).
 
+  // ---- 5b. Blueprint catalogue (read-only list for dynamic UI) -------------
+  // LITERAL /blueprints registered before any /blueprints/:blueprintId/* param routes.
+  app.get('/api/competency-runtime/blueprints', gate, requireAuth, requireSuperAdmin, wrap(async (req) => {
+    const search = typeof req.query.search === 'string' && req.query.search.trim() ? req.query.search.trim() : undefined;
+    const activeOnly = req.query.active === '1' || req.query.active === 'true';
+    return getBlueprints(pool, { search, activeOnly });
+  }));
+
   // ---- 6. Validate a candidate mix (no persist; LITERAL before the :param) --
   app.post('/api/competency-runtime/blueprints/dimension-mix/validate', gate, requireAuth, requireSuperAdmin, wrap(async (req) =>
     validateDimensionMix((req.body ?? {}) as Record<string, unknown>),
@@ -363,6 +377,37 @@ export function registerCompetencyRuntimeRoutes(
     const row = await getQuestionMapping(pool, String(req.params.questionId));
     if (!row.question_found) { res.status(404).json({ ok: false, error: 'question_not_found' }); return undefined; }
     return row;
+  }));
+
+  // ---- 12b. Bulk-mapping grid data (question bank + competency catalogue) --
+  //   LITERAL paths — registered before the /:questionId & /:competencyId params.
+  app.get('/api/competency-runtime/mapping-grid', gate, requireAuth, requireSuperAdmin, wrap(async (req) =>
+    getMappingGrid(pool, {
+      search: req.query.search ? String(req.query.search) : undefined,
+      status: req.query.status ? String(req.query.status) : undefined,
+      limit: req.query.limit ? Number(req.query.limit) : undefined,
+    }),
+  ));
+
+  // ---- 12c. Read the current competency→question map (grouped) ------------
+  app.get('/api/competency-runtime/competency-map', gate, requireAuth, requireSuperAdmin, wrap(async (req) =>
+    getCompetencyQuestionMap(pool, {
+      competencyId: req.query.competency_id ? String(req.query.competency_id) : undefined,
+      search: req.query.search ? String(req.query.search) : undefined,
+      activeOnly: req.query.active_only === '1' || req.query.active_only === 'true',
+    }),
+  ));
+
+  // ---- 12d. Bulk-map many question→competency pairs at once ---------------
+  app.post('/api/competency-runtime/competency-map/bulk', gate, requireAuth, requireSuperAdmin, wrap(async (req, res) => {
+    const b = req.body ?? {};
+    const pairs = Array.isArray(b.pairs) ? b.pairs.map((p: any) => ({
+      competency_id: String(p?.competency_id ?? p?.competencyId ?? ''),
+      question_id: String(p?.question_id ?? p?.questionId ?? ''),
+    })) : [];
+    const result = await bulkMapCompetencyQuestions(pool, { pairs, source: b.source });
+    if (!result.ok) { res.status(400).json(result); return undefined; }
+    return result;
   }));
 
   // ---- 13. Competency → Question Pool -------------------------------------

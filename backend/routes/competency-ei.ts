@@ -56,6 +56,10 @@ import {
   computeIndustryReadiness,
   listIndustryReadiness,
 } from '../services/industry-readiness-engine.js';
+import {
+  computeFunctionReadiness,
+  listFunctionReadiness,
+} from '../services/function-readiness-engine.js';
 
 export function registerCompetencyEiRoutes(
   app: Express,
@@ -294,6 +298,32 @@ export function registerCompetencyEiRoutes(
     requireAuth,
     requireSuperAdmin,
     wrap(async (req) => listIndustryReadiness(pool, String(req.params.subject))),
+  );
+
+  // ==========================================================================
+  // Phase 3.7 — Function Readiness Engine (extends readiness to the function)
+  //   Function Readiness · Function Fit · Function Gap. Requirements are
+  //   derived by aggregating role competency profiles across the function's
+  //   roles (curated taxonomy); honest 'unavailable' when a function is unseeded.
+  // ==========================================================================
+
+  // ---- Single function for a subject (read-only). Two-segment param sits
+  //      below the one-segment :subject route; no literal collision.
+  app.get(
+    '/api/competency-ei/function-readiness/:subject/:function',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => computeFunctionReadiness(pool, String(req.params.subject), String(req.params.function))),
+  );
+
+  // ---- All seeded functions for a subject (read-only) -----------------------
+  app.get(
+    '/api/competency-ei/function-readiness/:subject',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => listFunctionReadiness(pool, String(req.params.subject))),
   );
 
   // Auto-provision defaults at boot ONLY when the flag is ON — keeps flag-OFF

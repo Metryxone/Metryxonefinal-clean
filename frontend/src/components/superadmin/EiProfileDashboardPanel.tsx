@@ -104,6 +104,22 @@ interface IndustryReadinessList {
   subject_id: string; version: string; industries: IndustryReadiness[]; notes: string[];
 }
 
+interface FunctionReadiness {
+  ok: boolean; subject_id: string; function_id: string; function_name: string | null;
+  industry_id: string | null; version: string; available: boolean; measurable: boolean;
+  requirement_source: string; role_count: number; competency_count: number;
+  readiness: { measured: boolean; score: number | null; band: string | null; label: string | null; coverage_pct: number | null };
+  function_fit: { fit_band: string; label: string; score: number | null; capped_by_critical: boolean };
+  function_gap: {
+    top_gap: { competency_id: string; competency_name: string | null; required_level: number; actual_level: number | null; gap: number; criticality: string; blocking: boolean } | null;
+    gap_areas: any[]; critical_gaps: any[]; blocking_gaps: number;
+  };
+  notes: string[];
+}
+interface FunctionReadinessList {
+  subject_id: string; version: string; functions: FunctionReadiness[]; notes: string[];
+}
+
 async function getJSON(url: string) {
   const res = await fetch(url, { credentials: 'include' });
   if (!res.ok) throw new Error(`${res.status}`);
@@ -128,6 +144,11 @@ export default function EiProfileDashboardPanel() {
   const industries = useQuery<{ data: IndustryReadinessList }>({
     queryKey: ['/api/competency-ei/industry-readiness', subject],
     queryFn: () => getJSON(`/api/competency-ei/industry-readiness/${encodeURIComponent(subject)}`),
+    enabled: !!subject,
+  });
+  const functions = useQuery<{ data: FunctionReadinessList }>({
+    queryKey: ['/api/competency-ei/function-readiness', subject],
+    queryFn: () => getJSON(`/api/competency-ei/function-readiness/${encodeURIComponent(subject)}`),
     enabled: !!subject,
   });
   const history = useQuery<{ data: any[] }>({
@@ -160,7 +181,7 @@ export default function EiProfileDashboardPanel() {
           <p className="text-sm text-gray-500 mt-1">
             Composes the employability scoring chain into a candidate profile (Overall EI, dimensions,
             strengths, development areas, critical risks, growth potential), a five-component role view,
-            and industry readiness. Read-only · additive · flag-gated. <span className="text-gray-400">Phase 3.4 + 3.5 + 3.6</span>
+            and industry & function readiness. Read-only · additive · flag-gated. <span className="text-gray-400">Phase 3.4 + 3.5 + 3.6 + 3.7</span>
           </p>
         </div>
       </div>
@@ -450,6 +471,77 @@ export default function EiProfileDashboardPanel() {
                           </div>
                         </div>
                       ) : <Empty text="No gaps — industry demand met." />}
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* ============ Phase 3.7 — Function Readiness ============ */}
+      <div className="border-t pt-5">
+        <h2 className="text-lg font-bold flex items-center gap-2 mb-1" style={{ color: BRAND.primary }}>
+          <Layers className="h-5 w-5" /> Function Readiness <span className="text-[11px] uppercase tracking-wide text-gray-400 font-normal">Phase 3.7</span>
+        </h2>
+        <p className="text-xs text-gray-500 mb-3">
+          Readiness, fit, and gaps against each function's aggregated competency demand (derived from its roles).
+          Coverage and readiness are separate axes; unseeded functions are reported as unavailable, never assumed.
+        </p>
+        {functions.isLoading && <div className="text-gray-500 text-sm">Loading function readiness…</div>}
+        {functions.isError && <div className="text-red-600 text-sm">Failed to load function readiness.</div>}
+
+        {functions.data?.data && (
+          <>
+            {functions.data.data.functions.length === 0 && (
+              <Empty text={functions.data.data.notes?.[0] ?? 'No functions available.'} />
+            )}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {functions.data.data.functions.map((fn) => (
+                <div key={fn.function_id} className="bg-white rounded-xl border p-5">
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <div className="text-sm font-bold text-gray-800">{fn.function_name ?? fn.function_id}</div>
+                    <span className="text-[10px] uppercase tracking-wide font-medium px-2 py-0.5 rounded-full"
+                      style={{ color: FIT_COLOR[fn.function_fit.fit_band] ?? '#6b7280', backgroundColor: (FIT_COLOR[fn.function_fit.fit_band] ?? '#6b7280') + '1a' }}>
+                      {fn.function_fit.label}
+                    </span>
+                  </div>
+
+                  {!fn.available && (
+                    <div className="text-xs text-amber-700 flex items-start gap-1.5">
+                      <Info className="h-3.5 w-3.5 mt-0.5 shrink-0" /> {fn.notes?.find((n) => /unavailable|no role|not in the curated/i.test(n)) ?? fn.notes?.[fn.notes.length - 1] ?? 'Unavailable.'}
+                    </div>
+                  )}
+
+                  {fn.available && !fn.measurable && (
+                    <div className="text-xs text-amber-700 flex items-start gap-1.5">
+                      <Info className="h-3.5 w-3.5 mt-0.5 shrink-0" /> Requirements derived from {fn.role_count} role(s) · {fn.competency_count} competencies — but this subject has no scores covering them (unmeasured, not assumed).
+                    </div>
+                  )}
+
+                  {fn.available && fn.measurable && (
+                    <>
+                      <div className="grid grid-cols-3 gap-3 mb-2">
+                        <V2Card label="Readiness" value={fn.readiness.score} suffix="%" sub={fn.readiness.label ?? fn.readiness.band ?? ''} color={BAND_COLOR[fn.readiness.band ?? ''] ?? BRAND.primary} />
+                        <V2Card label="Coverage" value={fn.readiness.coverage_pct} suffix="%" sub={`${fn.competency_count} comp · ${fn.role_count} roles`} color={BRAND.accent} />
+                        <V2Card label="Critical Gaps" value={fn.function_gap.blocking_gaps} sub={fn.function_gap.blocking_gaps > 0 ? 'blocking' : 'none'} color={fn.function_gap.blocking_gaps > 0 ? '#dc2626' : '#16a34a'} />
+                      </div>
+                      {fn.readiness.coverage_pct != null && fn.readiness.coverage_pct < 100 && (
+                        <div className="text-xs text-amber-700 flex items-center gap-1.5 mb-2">
+                          <AlertTriangle className="h-3.5 w-3.5" /> {Math.round(100 - fn.readiness.coverage_pct)}% of function demand unassessed — readiness is provisional.
+                        </div>
+                      )}
+                      {fn.function_gap.top_gap ? (
+                        <div className="border-l-2 border-amber-400 pl-3 py-1">
+                          <div className="text-[11px] uppercase tracking-wide text-gray-400">Top Gap</div>
+                          <div className="text-sm font-medium text-gray-800">{fn.function_gap.top_gap.competency_name ?? fn.function_gap.top_gap.competency_id}</div>
+                          <div className="text-xs text-gray-500">
+                            {fn.function_gap.top_gap.actual_level ?? '?'} → {fn.function_gap.top_gap.required_level} · gap {fn.function_gap.top_gap.gap}
+                            {fn.function_gap.top_gap.blocking && <span className="text-red-600"> · critical</span>}
+                          </div>
+                        </div>
+                      ) : <Empty text="No gaps — function demand met." />}
                     </>
                   )}
                 </div>

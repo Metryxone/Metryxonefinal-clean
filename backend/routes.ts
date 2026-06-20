@@ -77,6 +77,7 @@ import { registerCareerDevelopmentRoutes } from "./routes/career-development";
 import { registerCareerRecommendationRoutes } from "./routes/career-recommendation";
 import { registerCareerSimulationEngineRoutes } from "./routes/career-simulation";
 import { registerCareerPassportFoundationRoutes } from "./routes/career-passport-foundation";
+import { registerCareerSignalRoutes } from "./routes/career-signal";
 import { registerAdaptiveBenchmarkRoutes } from "./routes/adaptive-benchmark";
 import { registerMobilityRoutes } from "./routes/mobility";
 import { registerCareerStageGuidanceRoutes } from "./routes/career-stage-guidance";
@@ -13464,6 +13465,7 @@ Rules:
   registerCareerRecommendationRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCareerSimulationEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCareerPassportFoundationRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerCareerSignalRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerAdaptiveBenchmarkRoutes({ app, pool: concernsPool });
   registerMobilityRoutes({ app, pool: concernsPool });
   registerCompetencyAssessmentRuntime({ app, pool: concernsPool, requireAuth });

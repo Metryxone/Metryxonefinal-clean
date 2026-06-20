@@ -712,6 +712,19 @@ export const FEATURE_FLAGS = {
    *  competency-runtime schema before composing it, never CREATEs); the only
    *  write path is POST /:subject/snapshot. Env: `FF_CAREER_PASSPORT_FOUNDATION`. */
   careerPassportFoundation: false,
+
+  /** PHASE 4.10 — Career Signal Engine (additive, compose-only, read-only).
+   *  NEW base /api/career-signal/*. Composes the already-built competency
+   *  runtime, EI profile, Phase-4.3 career readiness and Phase-4.4 career gap
+   *  engines into seven DEVELOPMENTAL signals (Career/Leadership/Technical/
+   *  Growth/Promotion Potential + Career/Stagnation Risk) — NEVER recomputes a
+   *  score, NEVER fabricates. Coverage and Confidence are reported as separate
+   *  axes. Config-as-data: career_signal_library + career_signal_rules override
+   *  the in-code defaults when present (admin CRUD is the only write/DDL path).
+   *  Flag OFF => every /api/career-signal/* route 503s BEFORE any DB touch and
+   *  NO schema is ensured (byte-identical legacy). GET is read-only (probes the
+   *  competency-runtime + config schema, never CREATEs). Env: `FF_CAREER_SIGNAL`. */
+  careerSignal: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1078,6 +1091,10 @@ export function isCareerSimulationEnabled(): boolean {
 
 export function isCareerPassportFoundationEnabled(): boolean {
   return isFlagEnabled('careerPassportFoundation');
+}
+
+export function isCareerSignalEnabled(): boolean {
+  return isFlagEnabled('careerSignal');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

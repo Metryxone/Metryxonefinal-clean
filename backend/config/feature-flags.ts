@@ -738,6 +738,24 @@ export const FEATURE_FLAGS = {
    *  strictly read-only (history-table to_regclass probes only, no engine, no
    *  DDL); the POST snapshot is the ONLY write/DDL path. Env: `FF_CAREER_PROGRESSION`. */
   careerProgression: false,
+
+  /** PHASE 4.12 — Super Admin Career Validation. A read-only honesty/invariant
+   *  harness a super-admin runs for ONE subject. It COMPOSES every Phase-4.x
+   *  career engine (Architecture / Matching / Readiness / Gaps / Roadmaps /
+   *  Development / Recommendations / Simulations / Passport / Signals / Tracking)
+   *  plus platform Audit-Log and Permission probes and asserts structural
+   *  invariants across THIRTEEN areas — it performs NO new scoring. Three
+   *  statuses: PASS (checked & valid) · WARN (honest absence / not measurable —
+   *  e.g. Career Matching (4.2) is not yet built, an empty graph, or no measured
+   *  profile — NEVER a failure) · FAIL (a real invariant violation: out-of-bounds
+   *  score, band/score incoherence, count mismatch, fabricated fire, or an
+   *  existing-but-unreadable table). never-throws: a thrown engine error is a FAIL
+   *  for THAT area only, never a 500. Flag OFF => the /api/career-validation/*
+   *  routes 503 BEFORE any DB touch (byte-identical legacy). GET is strictly
+   *  read-only: zero DDL (to_regclass probes + competencyRuntimeReady gating so a
+   *  composed engine's lazy ensure-schema never fires on a read). Env:
+   *  `FF_CAREER_VALIDATION`. */
+  careerValidation: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1112,6 +1130,10 @@ export function isCareerSignalEnabled(): boolean {
 
 export function isCareerProgressionEnabled(): boolean {
   return isFlagEnabled('careerProgression');
+}
+
+export function isCareerValidationEnabled(): boolean {
+  return isFlagEnabled('careerValidation');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

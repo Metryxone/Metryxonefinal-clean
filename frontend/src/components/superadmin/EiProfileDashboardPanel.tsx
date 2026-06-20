@@ -43,6 +43,15 @@ const RISK_COLOR: Record<string, string> = {
 const FIT_COLOR: Record<string, string> = {
   strong: '#15803d', good: '#16a34a', partial: '#ca8a04', low: '#dc2626', unmeasured: '#6b7280',
 };
+const SIGNAL_STATUS_COLOR: Record<string, string> = {
+  fired: '#16a34a', not_met: '#dc2626', indeterminate: '#ca8a04', unmeasured: '#6b7280',
+};
+const SIGNAL_STATUS_LABEL: Record<string, string> = {
+  fired: 'Fired', not_met: 'Not Met', indeterminate: 'Indeterminate', unmeasured: 'Unmeasured',
+};
+const SIGNAL_STATE_COLOR: Record<string, string> = {
+  strong: '#16a34a', moderate: '#ca8a04', low: '#dc2626', unmeasured: '#6b7280',
+};
 
 interface ConfidenceShape { score: number; band: string; measurement: string; caps: string[]; factors: string[]; }
 interface DimensionScore {
@@ -120,6 +129,29 @@ interface FunctionReadinessList {
   subject_id: string; version: string; functions: FunctionReadiness[]; notes: string[];
 }
 
+interface SignalCondition {
+  competency_id: string; competency_name: string | null; onto_domain: string | null;
+  direction: 'strong' | 'low'; actual_score: number | null; actual_band: string | null;
+  state: 'strong' | 'moderate' | 'low' | 'unmeasured'; satisfied: boolean | null;
+}
+interface EvaluatedSignal {
+  signal_id: string; name: string; description: string; polarity: 'positive' | 'risk'; category: string;
+  status: 'fired' | 'not_met' | 'indeterminate' | 'unmeasured'; fired: boolean;
+  conditions: SignalCondition[]; conditions_total: number; conditions_measured: number;
+  coverage_pct: number; distinct_domains: string[];
+  confidence_band: 'measured' | 'provisional' | 'unmeasured'; rationale: string; notes: string[];
+}
+interface EmployabilitySignals {
+  ok: boolean; subject_id: string; version: string; available: boolean; measurable: boolean;
+  signals_fired: EvaluatedSignal[]; signals: EvaluatedSignal[];
+  summary: {
+    total_signals: number; fired: number; positive_fired: number; risk_fired: number;
+    indeterminate: number; unmeasured: number; conditions_total: number;
+    conditions_measured: number; coverage_pct: number | null;
+  };
+  notes: string[];
+}
+
 async function getJSON(url: string) {
   const res = await fetch(url, { credentials: 'include' });
   if (!res.ok) throw new Error(`${res.status}`);
@@ -149,6 +181,11 @@ export default function EiProfileDashboardPanel() {
   const functions = useQuery<{ data: FunctionReadinessList }>({
     queryKey: ['/api/competency-ei/function-readiness', subject],
     queryFn: () => getJSON(`/api/competency-ei/function-readiness/${encodeURIComponent(subject)}`),
+    enabled: !!subject,
+  });
+  const signals = useQuery<{ data: EmployabilitySignals }>({
+    queryKey: ['/api/competency-ei/employability-signals', subject],
+    queryFn: () => getJSON(`/api/competency-ei/employability-signals/${encodeURIComponent(subject)}`),
     enabled: !!subject,
   });
   const history = useQuery<{ data: any[] }>({
@@ -181,7 +218,7 @@ export default function EiProfileDashboardPanel() {
           <p className="text-sm text-gray-500 mt-1">
             Composes the employability scoring chain into a candidate profile (Overall EI, dimensions,
             strengths, development areas, critical risks, growth potential), a five-component role view,
-            and industry & function readiness. Read-only · additive · flag-gated. <span className="text-gray-400">Phase 3.4 + 3.5 + 3.6 + 3.7</span>
+            industry & function readiness, and employability signals. Read-only · additive · flag-gated. <span className="text-gray-400">Phase 3.4 + 3.5 + 3.6 + 3.7 + 3.8</span>
           </p>
         </div>
       </div>
@@ -543,6 +580,76 @@ export default function EiProfileDashboardPanel() {
                         </div>
                       ) : <Empty text="No gaps — function demand met." />}
                     </>
+                  )}
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* ============ Phase 3.8 — Employability Signals ============ */}
+      <div className="border-t pt-5">
+        <h2 className="text-lg font-bold flex items-center gap-2 mb-1" style={{ color: BRAND.primary }}>
+          <Gauge className="h-5 w-5" /> Employability Signals <span className="text-[11px] uppercase tracking-wide text-gray-400 font-normal">Phase 3.8</span>
+        </h2>
+        <p className="text-xs text-gray-500 mb-3">
+          Higher-order signals composed from measured competency strengths/weaknesses against a curated rule library.
+          A signal fires only when every contributing competency is measured and satisfies the rule — never on partial
+          evidence (shown as indeterminate). Developmental signals only, never hiring/promotion verdicts.
+        </p>
+        {signals.isLoading && <div className="text-gray-500 text-sm">Loading employability signals…</div>}
+        {signals.isError && <div className="text-red-600 text-sm">Failed to load employability signals.</div>}
+
+        {signals.data?.data && (
+          <>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+              <V2Card label="Signals Fired" value={signals.data.data.summary.fired} sub={`of ${signals.data.data.summary.total_signals}`} color={BRAND.primary} />
+              <V2Card label="Positive" value={signals.data.data.summary.positive_fired} sub="potential" color="#16a34a" />
+              <V2Card label="Risk" value={signals.data.data.summary.risk_fired} sub="to support" color="#dc2626" />
+              <V2Card label="Coverage" value={signals.data.data.summary.coverage_pct} suffix="%" sub="conditions measured" color={BRAND.accent} />
+            </div>
+            {!signals.data.data.measurable && (
+              <div className="text-xs text-amber-700 flex items-start gap-1.5 mb-2">
+                <Info className="h-3.5 w-3.5 mt-0.5 shrink-0" /> {signals.data.data.notes?.find((n) => /unmeasured|no scored|no measurable/i.test(n)) ?? signals.data.data.notes?.[1] ?? 'Unmeasured.'}
+              </div>
+            )}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {signals.data.data.signals.map((sig) => (
+                <div key={sig.signal_id} className="bg-white rounded-xl border p-5">
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <div className="text-sm font-bold text-gray-800">{sig.name}</div>
+                    <span className="text-[10px] uppercase tracking-wide font-medium px-2 py-0.5 rounded-full"
+                      style={{ color: SIGNAL_STATUS_COLOR[sig.status] ?? '#6b7280', backgroundColor: (SIGNAL_STATUS_COLOR[sig.status] ?? '#6b7280') + '1a' }}>
+                      {SIGNAL_STATUS_LABEL[sig.status] ?? sig.status}
+                    </span>
+                  </div>
+                  <div className="text-xs text-gray-500 mb-2">{sig.description}</div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full font-medium"
+                      style={{ color: sig.polarity === 'risk' ? '#dc2626' : '#16a34a', backgroundColor: (sig.polarity === 'risk' ? '#dc2626' : '#16a34a') + '1a' }}>
+                      {sig.polarity}
+                    </span>
+                    <span className="text-[11px] text-gray-400">Coverage {sig.coverage_pct}% · {sig.confidence_band}</span>
+                  </div>
+                  <div className="space-y-1">
+                    {sig.conditions.map((c) => (
+                      <div key={c.competency_id} className="flex items-center justify-between gap-2 text-xs">
+                        <span className="text-gray-600">
+                          {c.direction === 'low' ? 'Low' : 'Strong'} {c.competency_name ?? c.competency_id}
+                        </span>
+                        <span className="font-medium shrink-0" style={{ color: SIGNAL_STATE_COLOR[c.state] ?? '#6b7280' }}>
+                          {c.actual_score != null ? `${c.actual_score} ${c.actual_band ?? ''}` : 'unmeasured'}
+                          {c.satisfied === true && ' ✓'}
+                          {c.satisfied === false && ' ✕'}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  {sig.distinct_domains.length > 0 && sig.distinct_domains.length < sig.conditions_total && (
+                    <div className="text-[11px] text-amber-700 flex items-start gap-1.5 mt-2">
+                      <Info className="h-3 w-3 mt-0.5 shrink-0" /> {sig.conditions_total} competencies resolve through {sig.distinct_domains.length} domain proxy(ies) — they currently share a score.
+                    </div>
                   )}
                 </div>
               ))}

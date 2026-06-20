@@ -60,6 +60,10 @@ import {
   computeFunctionReadiness,
   listFunctionReadiness,
 } from '../services/function-readiness-engine.js';
+import {
+  computeEmployabilitySignals,
+  getSignalCatalog,
+} from '../services/employability-signal-engine.js';
 
 export function registerCompetencyEiRoutes(
   app: Express,
@@ -324,6 +328,32 @@ export function registerCompetencyEiRoutes(
     requireAuth,
     requireSuperAdmin,
     wrap(async (req) => listFunctionReadiness(pool, String(req.params.subject))),
+  );
+
+  // ==========================================================================
+  // Phase 3.8 — Employability Signal Engine
+  //   Composes measured competency strengths/weaknesses against a curated signal
+  //   library (Leadership Potential, Innovation Potential, Career Risk Signal).
+  //   Read-only; never fires on partial evidence (honest 'indeterminate').
+  // ==========================================================================
+
+  // ---- Curated catalog (read-only, no DB touch). Literal sub-path; sits below
+  //      no param route at this base so there is no collision.
+  app.get(
+    '/api/competency-ei/signal-catalog',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async () => getSignalCatalog()),
+  );
+
+  // ---- Employability signals for a subject (read-only) ----------------------
+  app.get(
+    '/api/competency-ei/employability-signals/:subject',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => computeEmployabilitySignals(pool, String(req.params.subject))),
   );
 
   // Auto-provision defaults at boot ONLY when the flag is ON — keeps flag-OFF

@@ -187,6 +187,7 @@ const VXTenantConfigurationPanel = lazy(() => import('./superadmin/VXTenantConfi
 const VXAssessmentRuntimePanel = lazy(() => import('./superadmin/VXAssessmentRuntimePanel'));
 const CompetencyRuntimePanel = lazy(() => import('./superadmin/CompetencyRuntimePanel'));
 const CompetencyEIPanel = lazy(() => import('./superadmin/CompetencyEIPanel'));
+const EiProfileDashboardPanel = lazy(() => import('./superadmin/EiProfileDashboardPanel'));
 const VXCompetencyScienceCouncilPanel = lazy(() => import('./superadmin/VXCompetencyScienceCouncilPanel'));
 const VXWorkforceKnowledgeGraphPanel = lazy(() => import('./superadmin/VXWorkforceKnowledgeGraphPanel'));
 const VXIRTEnginePanel = lazy(() => import('./superadmin/VXIRTEnginePanel'));
@@ -1065,6 +1066,11 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               {activeTab === 'competency-ei' && (
                 <div className="h-full overflow-auto">
                   <CompetencyEIPanel />
+                </div>
+              )}
+              {activeTab === 'ei-profile' && (
+                <div className="h-full overflow-auto">
+                  <EiProfileDashboardPanel />
                 </div>
               )}
               {activeTab === 'vx-competency-science-council' && (

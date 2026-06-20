@@ -45,6 +45,13 @@ import {
   getScoringRun,
   ensureScoringRunSchema,
 } from '../services/employability-scoring-engine.js';
+import { buildEiProfile } from '../services/ei-profile-engine.js';
+import {
+  persistEiProfile,
+  listEiProfileHistory,
+  getEiProfileSnapshot,
+} from '../services/ei-profile-history.js';
+import { computeRoleReadinessV2 } from '../services/role-readiness-v2.js';
 
 export function registerCompetencyEiRoutes(
   app: Express,
@@ -196,6 +203,67 @@ export function registerCompetencyEiRoutes(
     requireAuth,
     requireSuperAdmin,
     wrap(async (req) => getScoringRun(pool, String(req.params.runId))),
+  );
+
+  // ==========================================================================
+  // Phase 3.4 — EI Profile Engine (candidate Employability Profile + history)
+  //   COMPOSES the 3.3 scoring artifact: Overall EI · Dimension Scores ·
+  //   Strength Areas · Development Areas · Critical Risks · Growth Potential.
+  // ==========================================================================
+
+  // ---- Build the candidate profile (read-only; never writes) ---------------
+  app.get(
+    '/api/competency-ei/profile/:subject',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => buildEiProfile(pool, String(req.params.subject))),
+  );
+
+  // ---- Build + append a profile snapshot (explicit write path) -------------
+  app.post(
+    '/api/competency-ei/profile/:subject/snapshot',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => {
+      const profile = await buildEiProfile(pool, String(req.params.subject));
+      const capturedBy = (req as any).user?.email ?? null;
+      const snapshot = await persistEiProfile(pool, profile, capturedBy);
+      return { snapshot, profile };
+    }),
+  );
+
+  // ---- Profile snapshot history for a subject (read-only; probe + degrade) --
+  app.get(
+    '/api/competency-ei/profile/:subject/history',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => listEiProfileHistory(pool, String(req.params.subject))),
+  );
+
+  // ---- Fetch one persisted profile snapshot (admin; read-only) -------------
+  app.get(
+    '/api/competency-ei/admin/profile/snapshots/:snapshotId',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => getEiProfileSnapshot(pool, Number(req.params.snapshotId))),
+  );
+
+  // ==========================================================================
+  // Phase 3.5 — Role Readiness Engine V2 (extends Phase 2 role readiness)
+  //   Role Readiness · Role Match · Role Gap · Role Risk · Role Potential.
+  // ==========================================================================
+
+  // ---- Composed V2 role readiness view for a subject (read-only) ------------
+  app.get(
+    '/api/competency-ei/role-readiness-v2/:subject',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => computeRoleReadinessV2(pool, String(req.params.subject))),
   );
 
   // Auto-provision defaults at boot ONLY when the flag is ON — keeps flag-OFF

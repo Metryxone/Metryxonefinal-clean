@@ -2778,6 +2778,7 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
         { id: 'vx-assessment-runtime',          icon: Cpu,        label: 'VX: Assessment Runtime (D18)' },
         { id: 'competency-runtime',             icon: Zap,        label: 'Competency Runtime (P2.3–2.6)' },
         { id: 'competency-ei',                  icon: Activity,   label: 'Employability Intelligence (P3)' },
+        { id: 'ei-profile',                     icon: UserCheck,  label: 'Employability Profile (P3.4–3.5)' },
         { id: 'vx-competency-science-council',  icon: Users2,     label: 'VX: Science Council (D19)' },
         { id: 'vx-workforce-knowledge-graph',   icon: GitBranch,  label: 'VX: Workforce Graph (D1)' },
         { id: 'vx-irt-engine',                  icon: Scale,      label: 'VX: IRT & Adaptive (D9)' },
@@ -2845,6 +2846,11 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
       competencyEiEnabled
         ? group
         : { ...group, items: group.items.filter(it => it.id !== 'competency-ei') }
+    )
+    .map(group =>
+      competencyEiEnabled
+        ? group
+        : { ...group, items: group.items.filter(it => it.id !== 'ei-profile') }
     )
     .filter(group => group.items.length > 0);
   const menuItems = navGroups.flatMap(g => g.items);

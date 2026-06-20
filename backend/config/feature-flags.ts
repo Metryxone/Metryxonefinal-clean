@@ -690,6 +690,16 @@ export const FEATURE_FLAGS = {
    *  read-only (composition delegates DDL-gating to the development chain; config/
    *  history use to_regclass probes). Env: `FF_CAREER_RECOMMENDATION`. */
   careerRecommendation: false,
+
+  /** PHASE 4.8 — Career Simulation Engine ("What-If Analysis"). Additive,
+   *  read-only composition of the role-readiness scorer + competency profile +
+   *  longitudinal trend engine: "if capability X improves to level N, which
+   *  roles become available?". Flag OFF => every /api/career-simulation/* route
+   *  503s BEFORE any DB touch and NO schema is ensured (byte-identical legacy).
+   *  GET is read-only (probes competency-runtime + role-profile schemas, never
+   *  CREATEs); the only write path is POST /:subject/snapshot (append-only
+   *  career_simulation_runs). Env: `FF_CAREER_SIMULATION`. */
+  careerSimulation: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1048,6 +1058,10 @@ export function isCareerDevelopmentEnabled(): boolean {
 
 export function isCareerRecommendationEnabled(): boolean {
   return isFlagEnabled('careerRecommendation');
+}
+
+export function isCareerSimulationEnabled(): boolean {
+  return isFlagEnabled('careerSimulation');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

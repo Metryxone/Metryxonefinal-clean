@@ -228,7 +228,7 @@ export const COMPETENCY_RUNTIME_RELATIONS = [
  * to_regclass so a missing relation degrades to `false` instead of throwing —
  * never DDLs.
  */
-async function competencyRuntimeReady(pool: Pool): Promise<boolean> {
+export async function competencyRuntimeReady(pool: Pool): Promise<boolean> {
   const probe = await pool
     .query(
       `SELECT count(*)::int AS n

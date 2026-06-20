@@ -725,6 +725,19 @@ export const FEATURE_FLAGS = {
    *  NO schema is ensured (byte-identical legacy). GET is read-only (probes the
    *  competency-runtime + config schema, never CREATEs). Env: `FF_CAREER_SIGNAL`. */
   careerSignal: false,
+
+  /** PHASE 4.11 — Career Progression Tracking. Additive, read-only layer that
+   *  COMPOSES the already-accrued Phase-4.3 readiness history plus this phase's
+   *  own append-only growth_tracking + career_history tables into five
+   *  longitudinal progression dimensions (Career/Readiness/Competency Growth +
+   *  Career Movement + Role Evolution) — it NEVER recomputes an upstream score
+   *  and NEVER fabricates a trend (growth needs ≥2 datapoints over time).
+   *  Coverage (datapoints) and Confidence (longitudinal strength) are reported
+   *  as separate axes. Flag OFF => every /api/career-progression/* route 503s
+   *  BEFORE any DB touch and NO schema is ensured (byte-identical legacy). GET is
+   *  strictly read-only (history-table to_regclass probes only, no engine, no
+   *  DDL); the POST snapshot is the ONLY write/DDL path. Env: `FF_CAREER_PROGRESSION`. */
+  careerProgression: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1095,6 +1108,10 @@ export function isCareerPassportFoundationEnabled(): boolean {
 
 export function isCareerSignalEnabled(): boolean {
   return isFlagEnabled('careerSignal');
+}
+
+export function isCareerProgressionEnabled(): boolean {
+  return isFlagEnabled('careerProgression');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

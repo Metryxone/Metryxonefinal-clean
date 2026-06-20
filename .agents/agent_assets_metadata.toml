@@ -762,3 +762,69 @@ id = "ujVh4t3Ee3Xj2KN7qSgml"
 uri = "file://backend/audit/phase-2/superadmin_validation_report.md"
 type = "text"
 title = "SuperAdmin Validation Report"
+
+[[outputs]]
+id = "F2tHOj-NNJGGXiU64GSwL"
+uri = "file://backend/audit/phase-3-final/founder_summary.md"
+type = "text"
+title = "Founder Summary — Phase 3"
+
+[[outputs]]
+id = "hrBi1VNmjQ76N4j54xQnO"
+uri = "file://backend/audit/phase-3-final/employability_framework_report.md"
+type = "text"
+title = "Employability Framework Report"
+
+[[outputs]]
+id = "liEX1QFnPgVmJN0WB5FLx"
+uri = "file://backend/audit/phase-3-final/competency_mapping_report.md"
+type = "text"
+title = "Competency → EI Mapping Report"
+
+[[outputs]]
+id = "Z6bm6vKv0TD36m1Ttq_7y"
+uri = "file://backend/audit/phase-3-final/ei_scoring_report.md"
+type = "text"
+title = "EI Scoring Report"
+
+[[outputs]]
+id = "PRVm8k1WnQDaVyC_zppRM"
+uri = "file://backend/audit/phase-3-final/ei_profile_report.md"
+type = "text"
+title = "EI Profile Report"
+
+[[outputs]]
+id = "Gr9ZJdnLhC5cLr3lNmOYa"
+uri = "file://backend/audit/phase-3-final/role_readiness_v2_report.md"
+type = "text"
+title = "Role Readiness v2 Report"
+
+[[outputs]]
+id = "vCVCNaWDnb5m37891KRlB"
+uri = "file://backend/audit/phase-3-final/industry_readiness_report.md"
+type = "text"
+title = "Industry Readiness Report"
+
+[[outputs]]
+id = "cqtOCF9cMVOc-EVO8dKQ8"
+uri = "file://backend/audit/phase-3-final/function_readiness_report.md"
+type = "text"
+title = "Function Readiness Report"
+
+[[outputs]]
+id = "5iNLz-l4-W7cDR9Chazux"
+uri = "file://backend/audit/phase-3-final/employability_signal_report.md"
+type = "text"
+title = "Employability Signal Report"
+
+[[outputs]]
+id = "B0RVrHeBa-vrL6BtCARLg"
+uri = "file://backend/audit/phase-3-final/recommendation_report.md"
+type = "text"
+title = "Recommendation Report"
+
+[[outputs]]
+id = "bXhHliHWeI8l79JAhPSeF"
+uri = "file://backend/audit/phase-3-final/superadmin_validation_report.md"
+type = "text"
+title = "Super Admin Validation Report"

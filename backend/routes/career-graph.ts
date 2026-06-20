@@ -13,6 +13,7 @@ import * as path from 'path';
 import type { Express, Request, Response } from 'express';
 import type { Pool } from 'pg';
 import type { CgRole } from '../services/career-graph-engine';
+import { attachCareerIntelligence } from './career-intelligence-enrich.js';
 import {
   listRoles, getRoleById, getNeighbours, getPaths, listTracks,
   findTracksForRole, buildGraphCache,
@@ -234,7 +235,8 @@ export function registerCareerGraphRoutes(
       }
 
       const bundle = await generateRecommendations(pool, userId, currentRole, g, readinessMap);
-      res.json({ ok: true, ...bundle });
+      res.json(await attachCareerIntelligence(pool, req, userId, { ok: true, ...bundle },
+        e => ({ measurable: e.measurable, axes: e.axes, career_development: e.career_development })));
     } catch (err) {
       res.status(500).json({ ok: false, error: String((err as Error).message) });
     }
@@ -359,7 +361,7 @@ export function registerCareerGraphRoutes(
         data_sources: bundle.data_sources,
       };
 
-      res.json({ ok: true, report });
+      res.json(await attachCareerIntelligence(pool, req, userId, { ok: true, report }));
     } catch (err) {
       res.status(500).json({ ok: false, error: String((err as Error).message) });
     }
@@ -411,7 +413,8 @@ export function registerCareerGraphRoutes(
       const gap = await computeSkillGaps(pool, userId, roleId);
       const readiness = await computeReadiness(pool, userId, roleId, gap);
       const cohort = await readinessCohortStats(pool, roleId);
-      res.json({ ok: true, readiness, cohort });
+      res.json(await attachCareerIntelligence(pool, req, userId, { ok: true, readiness, cohort },
+        e => ({ measurable: e.measurable, axes: e.axes, career_readiness: e.career_readiness })));
     } catch (err) {
       res.status(500).json({ ok: false, error: String((err as Error).message) });
     }

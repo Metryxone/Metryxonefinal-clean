@@ -10,6 +10,8 @@
 
 import type { Express, Request, Response } from 'express';
 import type { Pool } from 'pg';
+import { attachCareerIntelligence } from './career-intelligence-enrich.js';
+import { resolveEffectiveUserId } from './behavioural-memory.js';
 
 const FLAG = 'FF_CAREER_GRAPH';
 const flagOn = () => process.env[FLAG] === '1';
@@ -119,7 +121,10 @@ export function registerCareerPathwaysIntelligenceRoutes(
   // ── GET /api/career/pi/pathway-intelligence/:userId ────────────────────────
   // Compose adaptive pathway intelligence from EI + LBI + UCIP + career graph.
   app.get('/api/career/pi/pathway-intelligence/:userId', requireAuth, async (req: Request, res: Response) => {
-    const userId = req.params.userId;
+    const resolved = resolveEffectiveUserId(req, req.params.userId);
+    if (resolved.forbidden) return res.status(403).json({ ok: false, error: 'Forbidden' });
+    if (!resolved.userId) return res.status(401).json({ ok: false, error: 'Unauthenticated' });
+    const userId = resolved.userId;
     try {
       // 1. Career graph recommendations (real data)
       const recsRow = await pool.query<{
@@ -213,7 +218,7 @@ export function registerCareerPathwaysIntelligenceRoutes(
         ? Math.round(recommendations.reduce((s, r) => s + r.readiness_score, 0) / recommendations.length)
         : 0;
 
-      res.json({
+      res.json(await attachCareerIntelligence(pool, req, userId, {
         ok: true,
         user_id: userId,
         intelligence_summary: {
@@ -227,7 +232,7 @@ export function registerCareerPathwaysIntelligenceRoutes(
         },
         recommendations,
         generated_at: new Date().toISOString(),
-      });
+      }, e => ({ measurable: e.measurable, axes: e.axes, career_pathways: e.career_pathways })));
     } catch (err: any) {
       res.status(500).json({ ok: false, error: String(err.message) });
     }
@@ -235,7 +240,10 @@ export function registerCareerPathwaysIntelligenceRoutes(
 
   // ── GET /api/career/pi/growth-plan/:userId ─────────────────────────────────
   app.get('/api/career/pi/growth-plan/:userId', requireAuth, async (req: Request, res: Response) => {
-    const userId = req.params.userId;
+    const resolved = resolveEffectiveUserId(req, req.params.userId);
+    if (resolved.forbidden) return res.status(403).json({ ok: false, error: 'Forbidden' });
+    if (!resolved.userId) return res.status(401).json({ ok: false, error: 'Unauthenticated' });
+    const userId = resolved.userId;
     try {
       await ensureSchema(pool);
       const rows = await pool.query<{
@@ -262,7 +270,8 @@ export function registerCareerPathwaysIntelligenceRoutes(
         total_hours: rows.rows.reduce((s, r) => s + r.hours, 0),
       };
 
-      res.json({ ok: true, user_id: userId, items: rows.rows, stats });
+      res.json(await attachCareerIntelligence(pool, req, userId, { ok: true, user_id: userId, items: rows.rows, stats },
+        e => ({ measurable: e.measurable, axes: e.axes, career_planning: e.career_planning, career_growth: e.career_growth })));
     } catch (err: any) {
       res.status(500).json({ ok: false, error: String(err.message) });
     }
@@ -271,7 +280,10 @@ export function registerCareerPathwaysIntelligenceRoutes(
   // ── POST /api/career/pi/growth-plan/:userId/sync ───────────────────────────
   // Sync IDP items from the frontend engine into the DB (upsert).
   app.post('/api/career/pi/growth-plan/:userId/sync', requireAuth, async (req: Request, res: Response) => {
-    const userId = req.params.userId;
+    const resolved = resolveEffectiveUserId(req, req.params.userId);
+    if (resolved.forbidden) return res.status(403).json({ ok: false, error: 'Forbidden' });
+    if (!resolved.userId) return res.status(401).json({ ok: false, error: 'Unauthenticated' });
+    const userId = resolved.userId;
     const { items, role_id } = req.body as {
       items: Array<{
         item_id: string; title: string; type: string;
@@ -301,7 +313,11 @@ export function registerCareerPathwaysIntelligenceRoutes(
 
   // ── PATCH /api/career/pi/growth-plan/:userId/item/:itemId ─────────────────
   app.patch('/api/career/pi/growth-plan/:userId/item/:itemId', requireAuth, async (req: Request, res: Response) => {
-    const { userId, itemId } = req.params;
+    const resolved = resolveEffectiveUserId(req, req.params.userId);
+    if (resolved.forbidden) return res.status(403).json({ ok: false, error: 'Forbidden' });
+    if (!resolved.userId) return res.status(401).json({ ok: false, error: 'Unauthenticated' });
+    const userId = resolved.userId;
+    const { itemId } = req.params;
     const { status, notes } = req.body as { status?: string; notes?: string };
     if (!status) return res.status(400).json({ ok: false, error: 'status required' });
     const allowed = ['planned', 'in_progress', 'completed', 'skipped'];

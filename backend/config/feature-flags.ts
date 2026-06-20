@@ -622,6 +622,17 @@ export const FEATURE_FLAGS = {
    *  fabricated. Outputs are developmental signals only — never hiring/promotion/
    *  suitability predictions. Env: `FF_CAREER_INTELLIGENCE`. */
   careerIntelligence: false,
+
+  /* PHASE 4.3 — Career Readiness Engine. Additive + read-only layer that COMPOSES
+   *  the already-built readiness engines (Current = EI overall, Future = FRP/FRI,
+   *  Role = role-readiness-v2, Growth = EI growth potential) into ONE unified
+   *  career-readiness envelope, plus an append-only `career_readiness_history`
+   *  snapshot. Flag OFF => every /api/career-readiness/* route 503s BEFORE any DB
+   *  touch and NO schema is ensured (byte-identical). Coverage and Confidence are
+   *  SEPARATE axes; the FRP default-score fabrication risk is neutralised (a block
+   *  with zero real-data confidence is reported unmeasured, never a default 40).
+   *  Env: `FF_CAREER_READINESS`. */
+  careerReadiness: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -960,6 +971,10 @@ export function isCompetencyEiEnabled(): boolean {
 
 export function isCareerIntelligenceEnabled(): boolean {
   return isFlagEnabled('careerIntelligence');
+}
+
+export function isCareerReadinessEnabled(): boolean {
+  return isFlagEnabled('careerReadiness');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

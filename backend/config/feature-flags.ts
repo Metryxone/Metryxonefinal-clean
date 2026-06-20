@@ -634,6 +634,23 @@ export const FEATURE_FLAGS = {
    *  Env: `FF_CAREER_READINESS`. */
   careerReadiness: false,
 
+  /* PHASE 4.2 — Career Match Engine. Additive + read-only layer that COMPOSES the
+   *  already-built competency profile (getProfile), EI profile (buildEiProfile),
+   *  Phase-4.3 career readiness (buildCareerReadiness) and role-readiness-v2's
+   *  anchor-role requirement fit, and RANKS the live `cg_roles` catalog into the
+   *  subject's top role MATCHES — each with a `match_percentage`, a SEPARATE
+   *  `match_confidence` band and a templated `match_explanation`. The catalog has
+   *  no per-role competency requirements, so a requirement-backed fit is real ONLY
+   *  for the anchor role; every other match is 'Provisional' (capability supply +
+   *  categorical alignment) — Match% and Confidence stay SEPARATE axes, never
+   *  composited, never a hiring/suitability prediction. Config-as-data lives in an
+   *  OPTIONAL `career_matching_rules` override + an append-only `career_match_history`
+   *  snapshot. Flag OFF => every /api/career-match/* route 503s BEFORE any DB touch
+   *  and NO schema is ensured (byte-identical). GET-never-writes: all composition
+   *  runs only when competencyRuntimeReady(); config/history reads use to_regclass.
+   *  Env: `FF_CAREER_MATCH`. */
+  careerMatch: false,
+
   /* PHASE 4.4 — Career Gap Engine. Additive + read-only layer that COMPOSES the
    *  canonical role-readiness gaps (role-readiness-v2) and buckets each gapped
    *  competency into the five competency TYPES — Skill (technical), Behavioral,
@@ -1098,6 +1115,10 @@ export function isCareerIntelligenceEnabled(): boolean {
 
 export function isCareerReadinessEnabled(): boolean {
   return isFlagEnabled('careerReadiness');
+}
+
+export function isCareerMatchEnabled(): boolean {
+  return isFlagEnabled('careerMatch');
 }
 
 export function isCareerGapEnabled(): boolean {

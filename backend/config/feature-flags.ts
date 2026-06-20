@@ -661,6 +661,22 @@ export const FEATURE_FLAGS = {
    *  read-only (the composed role-readiness path is gated by a competency-runtime
    *  probe so no DDL ever runs on a read). Env: `FF_CAREER_ROADMAP`. */
   careerRoadmap: false,
+
+  /* PHASE 4.6 — Career Development Engine. Additive + read-only layer that
+   *  COMPOSES the already-built Career Roadmap engine (Phase 4.5 → 4.4 gaps → 4.3
+   *  readiness) into PERSONALIZED DEVELOPMENT PLANS organized into development
+   *  STREAMS by competency TYPE — Behavioral, Technical, Cognitive, Functional and
+   *  Future Skills Development — plus longitudinal development TRACKING (gap-points
+   *  closing / widening per stream vs the most recent prior snapshot) and an
+   *  append-only `career_development_history` snapshot. The platform ontology has
+   *  NO standalone "Leadership" TYPE, so leadership development is represented
+   *  THROUGH the behavioral/cognitive/functional streams (surfaced via taxonomy_note)
+   *  rather than fabricated. Flag OFF => every /api/career-development/* route 503s
+   *  BEFORE any DB touch and NO schema is ensured (byte-identical). It never
+   *  recomputes a score and never fabricates a development action; GET is read-only
+   *  (composition delegates DDL-gating to the roadmap engine; history uses a
+   *  to_regclass probe). Env: `FF_CAREER_DEVELOPMENT`. */
+  careerDevelopment: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1011,6 +1027,10 @@ export function isCareerGapEnabled(): boolean {
 
 export function isCareerRoadmapEnabled(): boolean {
   return isFlagEnabled('careerRoadmap');
+}
+
+export function isCareerDevelopmentEnabled(): boolean {
+  return isFlagEnabled('careerDevelopment');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

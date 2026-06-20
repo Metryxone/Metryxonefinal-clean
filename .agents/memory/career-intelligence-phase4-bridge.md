@@ -1,6 +1,6 @@
 ---
 name: Career Intelligence Phase 4 additive bridge
-description: How the flag-gated Career Intelligence enrichment is wired into existing career surfaces, and the IDOR trap that rejected two prior completions.
+description: How the flag-gated Career Intelligence enrichment is wired into existing career surfaces, and the IDOR trap where additive enrichment leaves the underlying :userId core query unguarded.
 ---
 
 # Career Intelligence Phase 4 — additive bridge wiring
@@ -19,7 +19,7 @@ user-facing career routes by enriching their `res.json` payload.
 - Honest axes: the envelope reports Coverage and Confidence as SEPARATE objects; a subject
   with no EI data returns `measurable:false` (never fabricated).
 
-## The IDOR trap (rejected TWO completions)
+## The IDOR trap (enrichment-only gating leaves the core query open)
 Gating only the ENRICHMENT with `resolveEffectiveUserId` is NOT enough. The underlying
 route handlers (e.g. `GET /api/career/pi/pathway-intelligence/:userId`, `GET/POST/PATCH
 /api/career/pi/growth-plan/:userId...`) queried `req.params.userId` directly under only

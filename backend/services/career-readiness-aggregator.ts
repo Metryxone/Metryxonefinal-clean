@@ -246,7 +246,7 @@ function buildCurrentBlock(profile: EiProfile | null): ReadinessBlock {
  * — we never surface FRP's default ~40 composite as a real score. This re-derives
  * only the Coverage/Confidence axes; the composite itself stays FRP's, unchanged.
  */
-function friRealSignalCount(prov: Record<string, unknown>): number {
+export function friRealSignalCount(prov: Record<string, unknown>): number {
   const s = (k: string) => String(prov?.[k] ?? '');
   let n = 0;
   if (s('skill_durability') === 'frp_user_skill_profile') n++;

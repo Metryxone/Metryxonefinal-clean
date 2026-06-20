@@ -633,6 +633,19 @@ export const FEATURE_FLAGS = {
    *  with zero real-data confidence is reported unmeasured, never a default 40).
    *  Env: `FF_CAREER_READINESS`. */
   careerReadiness: false,
+
+  /* PHASE 4.4 — Career Gap Engine. Additive + read-only layer that COMPOSES the
+   *  canonical role-readiness gaps (role-readiness-v2) and buckets each gapped
+   *  competency into the five competency TYPES — Skill (technical), Behavioral,
+   *  Cognitive, Functional, Future Skill — via `onto_competency_type_map`, with
+   *  FRP/FRI as a separate forward-looking signal for the Future-Skill bucket.
+   *  Adds a career_gap_dashboard projection + deterministic career_gap_prioritization
+   *  + an append-only `career_gap_history` snapshot. Flag OFF => every
+   *  /api/career-gap/* route 503s BEFORE any DB touch and NO schema is ensured
+   *  (byte-identical). Type classification is never fabricated: unmapped competencies
+   *  fall into an honest `unclassified` bucket and lower the classified-coverage axis.
+   *  Env: `FF_CAREER_GAP`. */
+  careerGap: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -975,6 +988,10 @@ export function isCareerIntelligenceEnabled(): boolean {
 
 export function isCareerReadinessEnabled(): boolean {
   return isFlagEnabled('careerReadiness');
+}
+
+export function isCareerGapEnabled(): boolean {
+  return isFlagEnabled('careerGap');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

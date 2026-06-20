@@ -76,6 +76,7 @@ import {
 import { buildEiHistory } from '../services/ei-history-engine.js';
 import { buildProgression } from '../services/progression-engine.js';
 import { computeEiTrend } from '../services/trend-engine.js';
+import { runSuperAdminValidation } from '../services/super-admin-validation-engine.js';
 
 export function registerCompetencyEiRoutes(
   app: Express,
@@ -143,6 +144,19 @@ export function registerCompetencyEiRoutes(
     requireAuth,
     requireSuperAdmin,
     wrap(async (req) => computeEiValidation(pool, String(req.params.subject))),
+  );
+
+  // ---- Super-admin validation (Phase 3.12) -----------------------------------
+  // Comprehensive 10-area honesty/invariant harness. DISTINCT literal prefix
+  // (`super-validation`) so it never collides with the narrow chain-validation
+  // route above. Composes every prior EI engine + platform governance probes;
+  // read-only, never-throws, zero DDL.
+  app.get(
+    '/api/competency-ei/super-validation/:subject',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => runSuperAdminValidation(pool, String(req.params.subject))),
   );
 
   // ---- Admin overview --------------------------------------------------------

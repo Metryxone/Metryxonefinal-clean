@@ -24,6 +24,7 @@ import {
   UserCheck, Gauge, ShieldAlert, Sparkles, Target, TrendingUp, Camera,
   AlertTriangle, CheckCircle2, Info, History as HistoryIcon, Search, Layers, Building2,
   LayoutDashboard, Activity, ArrowUp, ArrowDown, Minus,
+  ShieldCheck, XCircle, ChevronDown, ChevronRight,
 } from 'lucide-react';
 
 const BRAND = { primary: '#344E86', accent: '#5B7BD5' };
@@ -261,6 +262,13 @@ export default function EiProfileDashboardPanel() {
     enabled: !!subject,
   });
 
+  // Phase 3.12 — Super Admin Validation (read-only 10-area honesty/invariant harness).
+  const superValidation = useQuery<{ data: any }>({
+    queryKey: ['/api/competency-ei/super-validation', subject],
+    queryFn: () => getJSON(`/api/competency-ei/super-validation/${encodeURIComponent(subject)}`),
+    enabled: !!subject,
+  });
+
   const snapshot = useMutation({
     mutationFn: () =>
       fetch(`/api/competency-ei/profile/${encodeURIComponent(subject)}/snapshot`, {
@@ -286,8 +294,9 @@ export default function EiProfileDashboardPanel() {
             Composes the employability scoring chain into a candidate profile (Overall EI, dimensions,
             strengths, development areas, critical risks, growth potential), a five-component role view,
             industry & function readiness, employability signals, recommendations, and a consolidated
-            audience-scoped EI Dashboard with Trend Analysis, and a History &amp; Progression view
-            (assessment history, EI history, growth / improvement / decline). Read-only · additive · flag-gated. <span className="text-gray-400">Phase 3.4 + 3.5 + 3.6 + 3.7 + 3.8 + 3.9 + 3.10 + 3.11</span>
+            audience-scoped EI Dashboard with Trend Analysis, a History &amp; Progression view
+            (assessment history, EI history, growth / improvement / decline), and a 10-area Super Admin
+            Validation harness. Read-only · additive · flag-gated. <span className="text-gray-400">Phase 3.4 + 3.5 + 3.6 + 3.7 + 3.8 + 3.9 + 3.10 + 3.11 + 3.12</span>
           </p>
         </div>
       </div>
@@ -570,6 +579,9 @@ export default function EiProfileDashboardPanel() {
           </div>
         );
       })()}
+
+      {/* ============== Phase 3.12 — Super Admin Validation ============== */}
+      {subject && <SuperValidationSection query={superValidation} />}
 
       {profile.isLoading && <div className="text-gray-500 text-sm">Loading profile…</div>}
       {profile.isError && <div className="text-red-600 text-sm">Failed to load profile.</div>}
@@ -1149,6 +1161,144 @@ function MeterRow({ label, pct }: { label: string; pct: number | null }) {
         {pct != null && <div className="h-full rounded" style={{ width: `${pct}%`, backgroundColor: BRAND.accent }} />}
       </div>
       <div className="w-12 text-right text-gray-600">{pct != null ? `${pct}%` : 'n/a'}</div>
+    </div>
+  );
+}
+
+// ---- Phase 3.12 — Super Admin Validation ------------------------------------
+
+type ValStatus = 'pass' | 'warn' | 'fail';
+
+const VAL_STYLE: Record<ValStatus, { bg: string; fg: string; border: string; label: string }> = {
+  pass: { bg: '#ecfdf5', fg: '#047857', border: '#a7f3d0', label: 'PASS' },
+  warn: { bg: '#fffbeb', fg: '#b45309', border: '#fde68a', label: 'WARN' },
+  fail: { bg: '#fef2f2', fg: '#b91c1c', border: '#fecaca', label: 'FAIL' },
+};
+
+function ValStatusIcon({ status }: { status: ValStatus }) {
+  if (status === 'pass') return <CheckCircle2 className="h-4 w-4" style={{ color: VAL_STYLE.pass.fg }} />;
+  if (status === 'warn') return <AlertTriangle className="h-4 w-4" style={{ color: VAL_STYLE.warn.fg }} />;
+  return <XCircle className="h-4 w-4" style={{ color: VAL_STYLE.fail.fg }} />;
+}
+
+function ValBadge({ status }: { status: ValStatus }) {
+  const s = VAL_STYLE[status];
+  return (
+    <span
+      className="text-[10px] font-bold px-2 py-0.5 rounded-full border"
+      style={{ backgroundColor: s.bg, color: s.fg, borderColor: s.border }}
+    >
+      {s.label}
+    </span>
+  );
+}
+
+function ValAreaCard({ area }: { area: any }) {
+  const [open, setOpen] = useState(false);
+  const status: ValStatus = area.status;
+  const s = VAL_STYLE[status];
+  const counts = {
+    pass: area.checks.filter((c: any) => c.status === 'pass').length,
+    warn: area.checks.filter((c: any) => c.status === 'warn').length,
+    fail: area.checks.filter((c: any) => c.status === 'fail').length,
+  };
+  return (
+    <div className="border rounded-lg overflow-hidden" style={{ borderColor: s.border }}>
+      <button
+        className="w-full flex items-center gap-2 px-3 py-2 text-left"
+        style={{ backgroundColor: s.bg }}
+        onClick={() => setOpen((o) => !o)}
+        data-testid={`button-supervalidation-area-${area.id}`}
+      >
+        {open ? <ChevronDown className="h-3.5 w-3.5 text-gray-400" /> : <ChevronRight className="h-3.5 w-3.5 text-gray-400" />}
+        <ValStatusIcon status={status} />
+        <span className="font-medium text-sm text-gray-800 flex-1 truncate">{area.label}</span>
+        <span className="text-[10px] uppercase tracking-wide text-gray-400">{area.scope}</span>
+        <span className="text-[11px] text-gray-500">
+          {counts.pass}✓ {counts.warn}⚠ {counts.fail}✕
+        </span>
+        <ValBadge status={status} />
+      </button>
+      {open && (
+        <div className="px-3 py-2 bg-white space-y-1.5">
+          {area.checks.map((c: any) => (
+            <div key={c.id} className="flex items-start gap-2 text-xs">
+              <ValStatusIcon status={c.status} />
+              <div className="flex-1">
+                <div className="text-gray-700 font-medium">{c.label}</div>
+                <div className="text-gray-500">{c.detail}</div>
+              </div>
+            </div>
+          ))}
+          {area.notes?.map((n: string, i: number) => (
+            <div key={i} className="text-[11px] text-gray-400 italic flex items-start gap-1 pt-1">
+              <Info className="h-3 w-3 mt-0.5 shrink-0" /> {n}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SuperValidationSection({ query }: { query: any }) {
+  const result = query.data?.data;
+  const summary = result?.summary;
+
+  return (
+    <div className="bg-white rounded-xl border p-5 space-y-4">
+      <div className="flex items-center gap-2 flex-wrap">
+        <h2 className="text-lg font-semibold flex items-center gap-2" style={{ color: BRAND.primary }}>
+          <ShieldCheck className="h-5 w-5" /> Super Admin Validation
+        </h2>
+        <span className="text-xs font-normal text-gray-400">(Phase 3.12 · read-only · composes every EI engine)</span>
+        {result && (
+          <span className="ml-auto">
+            <ValBadge status={result.ok ? 'pass' : 'fail'} />
+          </span>
+        )}
+      </div>
+
+      <p className="text-xs text-gray-500">
+        Ten honesty &amp; structural invariants across the EI chain and platform governance. A <b>WARN</b> is an
+        honest absence (not measurable / insufficient data / empty taxonomy) — never a failure. A <b>FAIL</b> is a
+        real invariant break (out-of-bounds score, band/score mismatch, fabricated fire or recommendation).
+      </p>
+
+      {query.isLoading && <div className="text-gray-500 text-sm">Running validation…</div>}
+      {query.isError && <div className="text-red-600 text-sm">Failed to run validation.</div>}
+
+      {summary && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {([
+            ['Areas passed', summary.areas_pass, 'pass'],
+            ['Areas warned', summary.areas_warn, 'warn'],
+            ['Areas failed', summary.areas_fail, 'fail'],
+            ['Checks', `${summary.checks_pass}✓ / ${summary.checks_warn}⚠ / ${summary.checks_fail}✕`, summary.checks_fail > 0 ? 'fail' : summary.checks_warn > 0 ? 'warn' : 'pass'],
+          ] as [string, any, ValStatus][]).map(([label, value, st]) => {
+            const s = VAL_STYLE[st];
+            return (
+              <div key={label} className="rounded-lg border p-3" style={{ backgroundColor: s.bg, borderColor: s.border }}>
+                <div className="text-[11px] uppercase tracking-wide text-gray-500">{label}</div>
+                <div className="text-lg font-bold mt-0.5" style={{ color: s.fg }}>{value}</div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {result?.areas && (
+        <div className="space-y-2">
+          {result.areas.map((a: any) => <ValAreaCard key={a.id} area={a} />)}
+        </div>
+      )}
+
+      {result && (
+        <div className="text-[11px] text-gray-400">
+          Subject <span className="font-mono">{result.subject_id || '—'}</span> · v{result.version} ·{' '}
+          {result.generated_at ? new Date(result.generated_at).toLocaleString() : ''}
+        </div>
+      )}
     </div>
   );
 }

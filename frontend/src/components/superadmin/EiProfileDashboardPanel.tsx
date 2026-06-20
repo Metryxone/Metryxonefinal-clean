@@ -23,6 +23,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   UserCheck, Gauge, ShieldAlert, Sparkles, Target, TrendingUp, Camera,
   AlertTriangle, CheckCircle2, Info, History as HistoryIcon, Search, Layers, Building2,
+  LayoutDashboard, Activity, ArrowUp, ArrowDown, Minus,
 } from 'lucide-react';
 
 const BRAND = { primary: '#344E86', accent: '#5B7BD5' };
@@ -239,6 +240,15 @@ export default function EiProfileDashboardPanel() {
     enabled: !!subject,
   });
 
+  // Phase 3.10 — consolidated EI Dashboard (audience-scoped projection).
+  const [audience, setAudience] = useState<'candidate' | 'admin'>('admin');
+  const dashboard = useQuery<{ data: any }>({
+    queryKey: ['/api/competency-ei/dashboard', subject, audience],
+    queryFn: () =>
+      getJSON(`/api/competency-ei/${audience}-dashboard/${encodeURIComponent(subject)}`),
+    enabled: !!subject,
+  });
+
   const snapshot = useMutation({
     mutationFn: () =>
       fetch(`/api/competency-ei/profile/${encodeURIComponent(subject)}/snapshot`, {
@@ -263,7 +273,8 @@ export default function EiProfileDashboardPanel() {
           <p className="text-sm text-gray-500 mt-1">
             Composes the employability scoring chain into a candidate profile (Overall EI, dimensions,
             strengths, development areas, critical risks, growth potential), a five-component role view,
-            industry & function readiness, and employability signals. Read-only · additive · flag-gated. <span className="text-gray-400">Phase 3.4 + 3.5 + 3.6 + 3.7 + 3.8 + 3.9</span>
+            industry & function readiness, employability signals, recommendations, and a consolidated
+            audience-scoped EI Dashboard with Trend Analysis. Read-only · additive · flag-gated. <span className="text-gray-400">Phase 3.4 + 3.5 + 3.6 + 3.7 + 3.8 + 3.9 + 3.10</span>
           </p>
         </div>
       </div>
@@ -296,6 +307,150 @@ export default function EiProfileDashboardPanel() {
           <Camera className="h-4 w-4" /> {snapshot.isPending ? 'Capturing…' : 'Capture Snapshot'}
         </button>
       </div>
+
+      {/* ===================== Phase 3.10 — EI Dashboard ===================== */}
+      {(() => {
+        const d = dashboard.data?.data;
+        const overallScore = d?.overall_ei?.ei_score ?? d?.headline?.overall_ei ?? null;
+        const overallBand = d?.overall_ei?.band ?? d?.headline?.band ?? null;
+        const roleBand = d?.role_readiness?.readiness?.band ?? d?.role_readiness?.band ?? null;
+        const roleTitle = d?.role_readiness?.role_title ?? null;
+        const industryBest = d?.industry_readiness?.best ?? d?.industry_best ?? null;
+        const functionBest = d?.function_readiness?.best ?? d?.function_best ?? null;
+        const signalsFired = d?.signals?.summary?.fired ?? d?.supportive_signals?.length ?? null;
+        const recsCount = d?.recommendations?.summary?.emitted
+          ?? (Array.isArray(d?.recommendations) ? d.recommendations.length : null);
+        const t = d?.trend;
+        const dirColor = t?.direction === 'improving' ? '#16a34a'
+          : t?.direction === 'declining' ? '#dc2626' : '#6b7280';
+        const DirIcon = t?.direction === 'improving' ? ArrowUp
+          : t?.direction === 'declining' ? ArrowDown : Minus;
+        const maxScore = Math.max(1, ...(t?.points ?? []).map((p: any) => p.ei_score ?? 0));
+
+        return (
+          <div className="bg-white rounded-xl border p-5 space-y-4">
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <h2 className="text-lg font-semibold flex items-center gap-2" style={{ color: BRAND.primary }}>
+                <LayoutDashboard className="h-5 w-5" /> EI Dashboard
+                <span className="text-xs font-normal text-gray-400">(Phase 3.10 · composed)</span>
+              </h2>
+              <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+                {(['candidate', 'admin'] as const).map((a) => (
+                  <button
+                    key={a}
+                    className="px-3 py-1 rounded-md text-xs font-medium capitalize transition-colors"
+                    style={audience === a
+                      ? { backgroundColor: BRAND.primary, color: '#fff' }
+                      : { color: '#6b7280' }}
+                    onClick={() => setAudience(a)}
+                    data-testid={`button-eidash-audience-${a}`}
+                  >{a}</button>
+                ))}
+              </div>
+            </div>
+
+            {dashboard.isLoading && <div className="text-gray-500 text-sm">Loading dashboard…</div>}
+            {dashboard.isError && <div className="text-red-600 text-sm">Failed to load dashboard.</div>}
+
+            {d && d.status === 'unmeasured' && (
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-700">
+                {d.headline?.summary ?? 'Not yet measured — complete an assessment to generate this dashboard.'}
+              </div>
+            )}
+
+            {d && d.status !== 'unmeasured' && (
+              <>
+                {/* Consolidated headline cards */}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                  {[
+                    { label: 'Overall EI', value: overallScore ?? '—', sub: overallBand ?? 'n/a', color: BAND_COLOR[overallBand ?? ''] ?? BRAND.primary },
+                    { label: 'Role Readiness', value: roleBand ?? '—', sub: roleTitle ?? 'no role', color: BAND_COLOR[roleBand ?? ''] ?? '#6b7280' },
+                    { label: 'Industry (best)', value: industryBest?.band ?? '—', sub: industryBest?.name ?? industryBest?.id ?? 'unmeasured', color: BAND_COLOR[industryBest?.band ?? ''] ?? '#6b7280' },
+                    { label: 'Function (best)', value: functionBest?.band ?? '—', sub: functionBest?.name ?? functionBest?.id ?? 'unmeasured', color: BAND_COLOR[functionBest?.band ?? ''] ?? '#6b7280' },
+                    { label: 'Signals fired', value: signalsFired ?? '—', sub: 'developmental', color: BRAND.primary },
+                    { label: 'Recommendations', value: recsCount ?? '—', sub: 'emitted', color: BRAND.primary },
+                  ].map((c) => (
+                    <div key={c.label} className="border rounded-lg p-3 text-center">
+                      <div className="text-[11px] uppercase tracking-wide text-gray-500">{c.label}</div>
+                      <div className="text-xl font-bold mt-1 truncate" style={{ color: c.color }}>{c.value}</div>
+                      <div className="text-[11px] text-gray-400 truncate" title={String(c.sub)}>{c.sub}</div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Trend Analysis */}
+                <div className="border rounded-lg p-4">
+                  <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
+                    <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                      <Activity className="h-4 w-4" /> Trend Analysis
+                    </div>
+                    {t?.available && (
+                      <div className="flex items-center gap-1.5 text-sm font-medium" style={{ color: dirColor }}>
+                        <DirIcon className="h-4 w-4" />
+                        {t.direction}
+                        {t.delta != null && <span>({t.delta > 0 ? '+' : ''}{t.delta} pts)</span>}
+                      </div>
+                    )}
+                  </div>
+
+                  {!t?.available ? (
+                    <div className="text-sm text-gray-500 bg-gray-50 rounded-lg p-3">
+                      {t?.message ?? 'Trend unavailable.'}
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-end gap-2 h-24">
+                        {(t.points ?? []).filter((pt: any) => pt.ei_score != null).map((pt: any, i: number) => (
+                          <div key={i} className="flex-1 flex flex-col items-center justify-end gap-1" title={`${pt.ei_score} (${pt.band ?? 'n/a'}) · ${new Date(pt.captured_at).toLocaleDateString()}`}>
+                            <div className="text-[10px] text-gray-500">{pt.ei_score}</div>
+                            <div
+                              className="w-full rounded-t"
+                              style={{ height: `${Math.max(6, ((pt.ei_score ?? 0) / maxScore) * 72)}px`, backgroundColor: BAND_COLOR[pt.band ?? ''] ?? BRAND.accent }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      <div className="text-xs text-gray-400 mt-2">
+                        {t.message} {t.snapshots_measured}/{t.snapshots_total} snapshots measured.
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {/* Admin-only honesty diagnostics */}
+                {audience === 'admin' && d.diagnostics && (
+                  <div className="border rounded-lg p-4 bg-gray-50">
+                    <div className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
+                      Honesty diagnostics (Coverage vs firing are separate axes)
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5 text-xs text-gray-600">
+                      {(d.diagnostics.data_availability ?? []).map((s: any) => (
+                        <div key={s.section} className="flex items-center gap-2">
+                          {s.available
+                            ? <CheckCircle2 className="h-3.5 w-3.5 text-green-600" />
+                            : <Info className="h-3.5 w-3.5 text-gray-400" />}
+                          <span className="font-medium">{s.section}</span>
+                          <span className="text-gray-400">— {s.available ? 'available' : (s.reason ?? 'unavailable')}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="text-[11px] text-gray-400 mt-2">
+                      Recommendations: {d.diagnostics.recommendations?.emitted ?? 0} emitted ·{' '}
+                      {d.diagnostics.recommendations?.not_applicable ?? 0} not needed ·{' '}
+                      {d.diagnostics.recommendations?.withheld ?? 0} withheld ·{' '}
+                      profile coverage {d.diagnostics.profile?.coverage_pct ?? 0}%.
+                    </div>
+                  </div>
+                )}
+
+                {audience === 'candidate' && d.disclaimer && (
+                  <div className="text-[11px] text-gray-400 italic">{d.disclaimer}</div>
+                )}
+              </>
+            )}
+          </div>
+        );
+      })()}
 
       {profile.isLoading && <div className="text-gray-500 text-sm">Loading profile…</div>}
       {profile.isError && <div className="text-red-600 text-sm">Failed to load profile.</div>}

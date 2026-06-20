@@ -68,6 +68,11 @@ import {
   computeEmployabilityRecommendations,
   getRecommendationCatalog,
 } from '../services/ei-recommendation-engine.js';
+import {
+  buildEiDashboard,
+  buildCandidateEiDashboard,
+  buildAdminEiDashboard,
+} from '../services/ei-dashboard-engine.js';
 
 export function registerCompetencyEiRoutes(
   app: Express,
@@ -384,6 +389,39 @@ export function registerCompetencyEiRoutes(
     requireAuth,
     requireSuperAdmin,
     wrap(async (req) => computeEmployabilityRecommendations(pool, String(req.params.subject))),
+  );
+
+  // ---------------------------------------------------------------------------
+  // Phase 3.10 — EI Dashboard (consolidated; composes every prior engine once
+  //   plus Trend Analysis, projected into candidate / admin audience views).
+  //   Deliverables: ei_dashboard · candidate_ei_dashboard · admin_ei_dashboard.
+  // ---------------------------------------------------------------------------
+
+  // ---- Neutral / full composed dashboard for a subject (read-only) ----------
+  app.get(
+    '/api/competency-ei/dashboard/:subject',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => buildEiDashboard(pool, String(req.params.subject))),
+  );
+
+  // ---- Candidate-facing dashboard projection (read-only) --------------------
+  app.get(
+    '/api/competency-ei/candidate-dashboard/:subject',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => buildCandidateEiDashboard(pool, String(req.params.subject))),
+  );
+
+  // ---- Admin dashboard projection (full + honesty diagnostics; read-only) ---
+  app.get(
+    '/api/competency-ei/admin-dashboard/:subject',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => buildAdminEiDashboard(pool, String(req.params.subject))),
   );
 
   // Auto-provision defaults at boot ONLY when the flag is ON — keeps flag-OFF

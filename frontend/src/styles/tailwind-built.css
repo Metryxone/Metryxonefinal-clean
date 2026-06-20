@@ -6525,6 +6525,12 @@
   .text-emerald-700 {
     color: var(--color-emerald-700);
   }
+  .text-emerald-700\/70 {
+    color: color-mix(in srgb, oklch(50.8% 0.118 165.612) 70%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-emerald-700) 70%, transparent);
+    }
+  }
   .text-emerald-800 {
     color: var(--color-emerald-800);
   }
@@ -6701,6 +6707,12 @@
   }
   .text-red-700 {
     color: var(--color-red-700);
+  }
+  .text-red-700\/70 {
+    color: color-mix(in srgb, oklch(50.5% 0.213 27.518) 70%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-red-700) 70%, transparent);
+    }
   }
   .text-red-800 {
     color: var(--color-red-800);

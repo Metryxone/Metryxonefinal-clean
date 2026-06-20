@@ -787,6 +787,20 @@ export const FEATURE_FLAGS = {
    *  Super-admin gated (operator-supplied org/candidate ids => IDOR guard). Env:
    *  `FF_TALENT_INTELLIGENCE`. */
   talentIntelligence: false,
+
+  /** PHASE 5.1 + 5.2 — Talent Foundation (Employer Foundation + Job Architecture).
+   *  Additive, read-only surfacing of the canonical foundation deliverables
+   *  (employer_master / organization_master / employer_rbac / employer_profiles /
+   *  job_architecture / job_role_framework / job_templates). These deliverable
+   *  names are exposed as compatibility VIEWS over single canonical source tables
+   *  (no duplicate data) + one thin additive table (job_templates, genuine gap).
+   *  The aggregator COMPOSES (never recomputes / never fabricates): it probes each
+   *  deliverable (to_regclass + SELECT) and reports honest Coverage (data present?)
+   *  and Confidence (sufficient?) as SEPARATE axes. Flag OFF => the
+   *  /api/talent-foundation/* routes 503 BEFORE any DB touch (byte-identical
+   *  legacy). GET is strictly read-only (zero DDL). Super-admin gated
+   *  (operator-supplied employer ids => IDOR guard). Env: `FF_TALENT_FOUNDATION`. */
+  talentFoundation: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1173,6 +1187,10 @@ export function isCareerValidationEnabled(): boolean {
 
 export function isTalentIntelligenceEnabled(): boolean {
   return isFlagEnabled('talentIntelligence');
+}
+
+export function isTalentFoundationEnabled(): boolean {
+  return isFlagEnabled('talentFoundation');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

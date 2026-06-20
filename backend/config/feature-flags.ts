@@ -773,6 +773,20 @@ export const FEATURE_FLAGS = {
    *  composed engine's lazy ensure-schema never fires on a read). Env:
    *  `FF_CAREER_VALIDATION`. */
   careerValidation: false,
+
+  /** PHASE 5 — Talent Intelligence & Hiring Platform consolidation surface. A
+   *  strictly additive, read-only aggregator that COMPOSES the already-built
+   *  Phase-5 components (Employer / Recruiter / Job-Architecture / Talent-Matching
+   *  / Assessment-led-Hiring / Hiring-Intelligence / Workforce-Intelligence) into
+   *  ONE coherent "Talent Intelligence" read surface. It NEVER recomputes a score
+   *  and NEVER fabricates — it probes the underlying tables (to_regclass + SELECT)
+   *  and reports honest Coverage (data present?) and Confidence (sufficient /
+   *  calibrated?) per component as SEPARATE axes. Flag OFF => the
+   *  /api/talent-intelligence/* routes 503 BEFORE any DB touch (byte-identical
+   *  legacy). GET is strictly read-only (zero DDL — to_regclass probes only).
+   *  Super-admin gated (operator-supplied org/candidate ids => IDOR guard). Env:
+   *  `FF_TALENT_INTELLIGENCE`. */
+  talentIntelligence: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1155,6 +1169,10 @@ export function isCareerProgressionEnabled(): boolean {
 
 export function isCareerValidationEnabled(): boolean {
   return isFlagEnabled('careerValidation');
+}
+
+export function isTalentIntelligenceEnabled(): boolean {
+  return isFlagEnabled('talentIntelligence');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

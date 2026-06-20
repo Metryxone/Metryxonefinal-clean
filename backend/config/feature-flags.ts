@@ -700,6 +700,18 @@ export const FEATURE_FLAGS = {
    *  CREATEs); the only write path is POST /:subject/snapshot (append-only
    *  career_simulation_runs). Env: `FF_CAREER_SIMULATION`. */
   careerSimulation: false,
+  /** Phase 4.9 — Career Passport Foundation. Read-only COMPOSITION of already-
+   *  computed engine outputs (competency-runtime profile, EI profile, Phase-4.3
+   *  readiness) plus the subject's career_seeker_profiles record and append-only
+   *  history into SIX passport components (competency / EI / career profile /
+   *  readiness / achievements / journey). DISTINCT from the existing Career
+   *  Passport (cp_* tables, flag `careerPassport`, /api/passport/*): NEW base
+   *  /api/career-passport/*, NEW append-only table career_passport_snapshots.
+   *  Flag OFF => every /api/career-passport/* route 503s BEFORE any DB touch and
+   *  NO schema is ensured (byte-identical legacy). GET is read-only (probes the
+   *  competency-runtime schema before composing it, never CREATEs); the only
+   *  write path is POST /:subject/snapshot. Env: `FF_CAREER_PASSPORT_FOUNDATION`. */
+  careerPassportFoundation: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1062,6 +1074,10 @@ export function isCareerRecommendationEnabled(): boolean {
 
 export function isCareerSimulationEnabled(): boolean {
   return isFlagEnabled('careerSimulation');
+}
+
+export function isCareerPassportFoundationEnabled(): boolean {
+  return isFlagEnabled('careerPassportFoundation');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

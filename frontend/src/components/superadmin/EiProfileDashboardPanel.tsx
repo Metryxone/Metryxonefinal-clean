@@ -52,6 +52,19 @@ const SIGNAL_STATUS_LABEL: Record<string, string> = {
 const SIGNAL_STATE_COLOR: Record<string, string> = {
   strong: '#16a34a', moderate: '#ca8a04', low: '#dc2626', unmeasured: '#6b7280',
 };
+const REC_STATUS_COLOR: Record<string, string> = {
+  emitted: '#16a34a', not_applicable: '#6b7280', withheld: '#ca8a04',
+};
+const REC_STATUS_LABEL: Record<string, string> = {
+  emitted: 'Recommended', not_applicable: 'Not Needed', withheld: 'Withheld',
+};
+const REC_PRIORITY_COLOR: Record<string, string> = {
+  high: '#dc2626', medium: '#ca8a04', low: '#16a34a',
+};
+const REC_CATEGORY_LABEL: Record<string, string> = {
+  development: 'Development', certification: 'Certification', project: 'Project',
+  experience: 'Experience', behavioral: 'Behavioral',
+};
 
 interface ConfidenceShape { score: number; band: string; measurement: string; caps: string[]; factors: string[]; }
 interface DimensionScore {
@@ -152,6 +165,33 @@ interface EmployabilitySignals {
   notes: string[];
 }
 
+interface RecTriggerEval {
+  kind: 'domain_state' | 'signal';
+  onto_domain?: string; domain_label?: string; direction?: 'below_strong' | 'low';
+  actual_score?: number | null; actual_band?: string | null;
+  signal_id?: string; signal_status?: string;
+  measured: boolean; satisfied: boolean | null; summary: string;
+}
+interface EvaluatedRecommendation {
+  recommendation_id: string; category: string; title: string; description: string;
+  status: 'emitted' | 'not_applicable' | 'withheld';
+  priority: 'high' | 'medium' | 'low' | null;
+  confidence_band: 'measured' | 'provisional' | 'unmeasured';
+  trigger: RecTriggerEval; rationale: string; notes: string[];
+}
+interface EmployabilityRecommendations {
+  ok: boolean; subject_id: string; version: string; available: boolean; measurable: boolean;
+  recommendations: EvaluatedRecommendation[];
+  not_applicable: EvaluatedRecommendation[]; withheld: EvaluatedRecommendation[];
+  summary: {
+    total_rules: number; emitted: number; not_applicable: number; withheld: number;
+    coverage_pct: number | null;
+    by_category: Record<string, number>;
+    by_priority: { high: number; medium: number; low: number };
+  };
+  notes: string[];
+}
+
 async function getJSON(url: string) {
   const res = await fetch(url, { credentials: 'include' });
   if (!res.ok) throw new Error(`${res.status}`);
@@ -188,6 +228,11 @@ export default function EiProfileDashboardPanel() {
     queryFn: () => getJSON(`/api/competency-ei/employability-signals/${encodeURIComponent(subject)}`),
     enabled: !!subject,
   });
+  const recommendations = useQuery<{ data: EmployabilityRecommendations }>({
+    queryKey: ['/api/competency-ei/recommendations', subject],
+    queryFn: () => getJSON(`/api/competency-ei/recommendations/${encodeURIComponent(subject)}`),
+    enabled: !!subject,
+  });
   const history = useQuery<{ data: any[] }>({
     queryKey: ['/api/competency-ei/profile', subject, 'history'],
     queryFn: () => getJSON(`/api/competency-ei/profile/${encodeURIComponent(subject)}/history`),
@@ -218,7 +263,7 @@ export default function EiProfileDashboardPanel() {
           <p className="text-sm text-gray-500 mt-1">
             Composes the employability scoring chain into a candidate profile (Overall EI, dimensions,
             strengths, development areas, critical risks, growth potential), a five-component role view,
-            industry & function readiness, and employability signals. Read-only · additive · flag-gated. <span className="text-gray-400">Phase 3.4 + 3.5 + 3.6 + 3.7 + 3.8</span>
+            industry & function readiness, and employability signals. Read-only · additive · flag-gated. <span className="text-gray-400">Phase 3.4 + 3.5 + 3.6 + 3.7 + 3.8 + 3.9</span>
           </p>
         </div>
       </div>
@@ -654,6 +699,84 @@ export default function EiProfileDashboardPanel() {
                 </div>
               ))}
             </div>
+          </>
+        )}
+      </div>
+
+      {/* ============ Phase 3.9 — Employability Recommendations ============ */}
+      <div className="border-t pt-5">
+        <h2 className="text-lg font-bold flex items-center gap-2 mb-1" style={{ color: BRAND.primary }}>
+          <Gauge className="h-5 w-5" /> Employability Recommendations <span className="text-[11px] uppercase tracking-wide text-gray-400 font-normal">Phase 3.9</span>
+        </h2>
+        <p className="text-xs text-gray-500 mb-3">
+          Actionable recommendations composed from measured capability gaps/strengths and Phase-3.8 signals against a
+          curated rule library (Development · Certification · Project · Experience · Behavioral). A recommendation is
+          surfaced only when its trigger is measured and satisfied; an unmeasured trigger is withheld (never recommended
+          on absent evidence) and a measured-but-untriggered one is shown as Not Needed. Developmental suggestions only,
+          never hiring/promotion verdicts.
+        </p>
+        {recommendations.isLoading && <div className="text-gray-500 text-sm">Loading recommendations…</div>}
+        {recommendations.isError && <div className="text-red-600 text-sm">Failed to load recommendations.</div>}
+
+        {recommendations.data?.data && (
+          <>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+              <V2Card label="Recommended" value={recommendations.data.data.summary.emitted} sub={`of ${recommendations.data.data.summary.total_rules} rules`} color={BRAND.primary} />
+              <V2Card label="High Priority" value={recommendations.data.data.summary.by_priority.high} sub="urgent" color="#dc2626" />
+              <V2Card label="Withheld" value={recommendations.data.data.summary.withheld} sub="unmeasured" color="#ca8a04" />
+              <V2Card label="Coverage" value={recommendations.data.data.summary.coverage_pct} suffix="%" sub="triggers measured" color={BRAND.accent} />
+            </div>
+            {!recommendations.data.data.measurable && (
+              <div className="text-xs text-amber-700 flex items-start gap-1.5 mb-2">
+                <Info className="h-3.5 w-3.5 mt-0.5 shrink-0" /> {recommendations.data.data.notes?.find((n) => /no scored|no measurable|withheld/i.test(n)) ?? recommendations.data.data.notes?.[1] ?? 'Unmeasured.'}
+              </div>
+            )}
+            {recommendations.data.data.recommendations.length > 0 && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-3">
+                {recommendations.data.data.recommendations.map((rec) => (
+                  <div key={rec.recommendation_id} className="bg-white rounded-xl border p-5">
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                      <div className="text-sm font-bold text-gray-800">{rec.title}</div>
+                      {rec.priority && (
+                        <span className="text-[10px] uppercase tracking-wide font-medium px-2 py-0.5 rounded-full"
+                          style={{ color: REC_PRIORITY_COLOR[rec.priority] ?? '#6b7280', backgroundColor: (REC_PRIORITY_COLOR[rec.priority] ?? '#6b7280') + '1a' }}>
+                          {rec.priority}
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-xs text-gray-500 mb-2">{rec.description}</div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full font-medium"
+                        style={{ color: BRAND.accent, backgroundColor: BRAND.accent + '1a' }}>
+                        {REC_CATEGORY_LABEL[rec.category] ?? rec.category}
+                      </span>
+                      <span className="text-[11px] text-gray-400">{rec.confidence_band}</span>
+                    </div>
+                    <div className="text-xs text-gray-600">{rec.trigger.summary}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {recommendations.data.data.measurable && recommendations.data.data.recommendations.length === 0 && (
+              <div className="text-xs text-gray-500 flex items-start gap-1.5 mb-3">
+                <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 shrink-0 text-green-600" /> No recommendations are triggered for this subject — measured capabilities are at or above the relevant thresholds and no risk signal fired.
+              </div>
+            )}
+            {(recommendations.data.data.not_applicable.length > 0 || recommendations.data.data.withheld.length > 0) && (
+              <div className="bg-gray-50 rounded-xl border p-4">
+                <div className="text-[11px] uppercase tracking-wide text-gray-400 font-medium mb-2">Not surfaced (honesty ledger)</div>
+                <div className="space-y-1">
+                  {[...recommendations.data.data.not_applicable, ...recommendations.data.data.withheld].map((rec) => (
+                    <div key={rec.recommendation_id} className="flex items-center justify-between gap-2 text-xs">
+                      <span className="text-gray-600">{REC_CATEGORY_LABEL[rec.category] ?? rec.category} · {rec.title}</span>
+                      <span className="font-medium shrink-0" style={{ color: REC_STATUS_COLOR[rec.status] ?? '#6b7280' }}>
+                        {REC_STATUS_LABEL[rec.status] ?? rec.status}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>

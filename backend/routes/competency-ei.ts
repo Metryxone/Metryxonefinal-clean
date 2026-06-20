@@ -64,6 +64,10 @@ import {
   computeEmployabilitySignals,
   getSignalCatalog,
 } from '../services/employability-signal-engine.js';
+import {
+  computeEmployabilityRecommendations,
+  getRecommendationCatalog,
+} from '../services/ei-recommendation-engine.js';
 
 export function registerCompetencyEiRoutes(
   app: Express,
@@ -354,6 +358,32 @@ export function registerCompetencyEiRoutes(
     requireAuth,
     requireSuperAdmin,
     wrap(async (req) => computeEmployabilitySignals(pool, String(req.params.subject))),
+  );
+
+  // ==========================================================================
+  // Phase 3.9 — Employability Recommendation Engine
+  //   Composes measured capability gaps/strengths + Phase-3.8 signals against a
+  //   curated recommendation library (development / certification / project /
+  //   experience / behavioral). Read-only; never recommends on unmeasured
+  //   evidence (honest 'withheld'); measured-but-not-triggered -> 'not_applicable'.
+  // ==========================================================================
+
+  // ---- Curated catalog (read-only, no DB touch). Literal sub-path; no collision.
+  app.get(
+    '/api/competency-ei/recommendation-catalog',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async () => getRecommendationCatalog()),
+  );
+
+  // ---- Recommendations for a subject (read-only) ----------------------------
+  app.get(
+    '/api/competency-ei/recommendations/:subject',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => computeEmployabilityRecommendations(pool, String(req.params.subject))),
   );
 
   // Auto-provision defaults at boot ONLY when the flag is ON — keeps flag-OFF

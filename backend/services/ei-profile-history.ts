@@ -155,6 +155,30 @@ export async function listEiProfileHistory(pool: Pool, subjectId: string, limit 
   return (rows as any[]).map(mapHeadline);
 }
 
+/**
+ * List snapshots WITH their full profile JSON (oldest-first by default for
+ * timeline/progression use). Read-only; probe + degrade; NEVER issues DDL.
+ */
+export async function listEiProfileSnapshotsWithProfile(
+  pool: Pool,
+  subjectId: string,
+  limit = 100,
+): Promise<(EiProfileSnapshotRow & { profile: EiProfile })[]> {
+  if (!(await tableExists(pool))) return [];
+  const cap = Math.max(1, Math.min(200, Number(limit) || 100));
+  const { rows } = await pool.query(
+    `SELECT id, subject_id, role_id, measurable, ei_score, ei_band, coverage_pct,
+            confidence_score, confidence_band, strength_count, development_count,
+            risk_count, growth_level, engine_version, captured_by, created_at, profile
+       FROM ei_profile_snapshots
+      WHERE subject_id = $1
+      ORDER BY created_at ASC, id ASC
+      LIMIT ${cap}`,
+    [String(subjectId ?? '').trim()],
+  );
+  return (rows as any[]).map((r) => ({ ...mapHeadline(r), profile: r.profile as EiProfile }));
+}
+
 /** Fetch one full snapshot (headline + stored profile JSON). Read-only; no DDL. */
 export async function getEiProfileSnapshot(
   pool: Pool,

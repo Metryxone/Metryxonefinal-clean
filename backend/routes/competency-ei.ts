@@ -73,6 +73,9 @@ import {
   buildCandidateEiDashboard,
   buildAdminEiDashboard,
 } from '../services/ei-dashboard-engine.js';
+import { buildEiHistory } from '../services/ei-history-engine.js';
+import { buildProgression } from '../services/progression-engine.js';
+import { computeEiTrend } from '../services/trend-engine.js';
 
 export function registerCompetencyEiRoutes(
   app: Express,
@@ -422,6 +425,41 @@ export function registerCompetencyEiRoutes(
     requireAuth,
     requireSuperAdmin,
     wrap(async (req) => buildAdminEiDashboard(pool, String(req.params.subject))),
+  );
+
+  // ---------------------------------------------------------------------------
+  // Phase 3.11 — History & Progression (read-only; composes persisted history).
+  //   Deliverables: ei_history · progression_engine · trend_engine.
+  // ---------------------------------------------------------------------------
+
+  // ---- Unified history: assessment runs + EI snapshots + dimension series ---
+  app.get(
+    '/api/competency-ei/history/:subject',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => buildEiHistory(pool, String(req.params.subject))),
+  );
+
+  // ---- Progression: overall + per-dimension growth / improvement / decline --
+  app.get(
+    '/api/competency-ei/progression/:subject',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => buildProgression(pool, String(req.params.subject))),
+  );
+
+  // ---- EI trend over captured snapshots (trend_engine; read-only) -----------
+  app.get(
+    '/api/competency-ei/trends/:subject',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => {
+      const history = await listEiProfileHistory(pool, String(req.params.subject)).catch(() => []);
+      return computeEiTrend(history);
+    }),
   );
 
   // Auto-provision defaults at boot ONLY when the flag is ON — keeps flag-OFF

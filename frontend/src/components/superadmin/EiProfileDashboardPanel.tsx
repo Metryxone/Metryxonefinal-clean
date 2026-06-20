@@ -249,6 +249,18 @@ export default function EiProfileDashboardPanel() {
     enabled: !!subject,
   });
 
+  // Phase 3.11 — History & Progression (read-only; composes persisted history).
+  const progression = useQuery<{ data: any }>({
+    queryKey: ['/api/competency-ei/progression', subject],
+    queryFn: () => getJSON(`/api/competency-ei/progression/${encodeURIComponent(subject)}`),
+    enabled: !!subject,
+  });
+  const eiHistory = useQuery<{ data: any }>({
+    queryKey: ['/api/competency-ei/history', subject],
+    queryFn: () => getJSON(`/api/competency-ei/history/${encodeURIComponent(subject)}`),
+    enabled: !!subject,
+  });
+
   const snapshot = useMutation({
     mutationFn: () =>
       fetch(`/api/competency-ei/profile/${encodeURIComponent(subject)}/snapshot`, {
@@ -274,7 +286,8 @@ export default function EiProfileDashboardPanel() {
             Composes the employability scoring chain into a candidate profile (Overall EI, dimensions,
             strengths, development areas, critical risks, growth potential), a five-component role view,
             industry & function readiness, employability signals, recommendations, and a consolidated
-            audience-scoped EI Dashboard with Trend Analysis. Read-only · additive · flag-gated. <span className="text-gray-400">Phase 3.4 + 3.5 + 3.6 + 3.7 + 3.8 + 3.9 + 3.10</span>
+            audience-scoped EI Dashboard with Trend Analysis, and a History &amp; Progression view
+            (assessment history, EI history, growth / improvement / decline). Read-only · additive · flag-gated. <span className="text-gray-400">Phase 3.4 + 3.5 + 3.6 + 3.7 + 3.8 + 3.9 + 3.10 + 3.11</span>
           </p>
         </div>
       </div>
@@ -448,6 +461,112 @@ export default function EiProfileDashboardPanel() {
                 )}
               </>
             )}
+          </div>
+        );
+      })()}
+
+      {/* ============== Phase 3.11 — History & Progression ============== */}
+      {(() => {
+        const prog = progression.data?.data;
+        const hist = eiHistory.data?.data;
+        const ov = prog?.overall;
+        const ready = ov?.status === 'ready';
+        const dir = ov?.direction as ('growth' | 'decline' | 'stable' | null) | undefined;
+        const dirColor = dir === 'growth' ? '#16a34a' : dir === 'decline' ? '#dc2626' : '#6b7280';
+        const DirIcon = dir === 'growth' ? ArrowUp : dir === 'decline' ? ArrowDown : Minus;
+        const growth = prog?.rollup?.growth_areas ?? [];
+        const decline = prog?.rollup?.decline_areas ?? [];
+        const assessRuns = hist?.assessment_history?.runs ?? [];
+        const eiSnaps = hist?.ei_history?.snapshots ?? [];
+
+        return (
+          <div className="bg-white rounded-xl border p-5 space-y-4">
+            <div className="flex items-center gap-2">
+              <h2 className="text-lg font-semibold flex items-center gap-2" style={{ color: BRAND.primary }}>
+                <Activity className="h-5 w-5" /> History &amp; Progression
+              </h2>
+              <span className="text-xs font-normal text-gray-400">(Phase 3.11 · composed)</span>
+            </div>
+
+            {(progression.isLoading || eiHistory.isLoading) && (
+              <div className="text-gray-500 text-sm">Loading history…</div>
+            )}
+
+            {/* Overall progression headline */}
+            {ready ? (
+              <div className="flex items-center gap-4 flex-wrap">
+                <div className="flex items-center gap-2 px-3 py-2 rounded-lg" style={{ backgroundColor: `${dirColor}14` }}>
+                  <DirIcon className="h-5 w-5" style={{ color: dirColor }} />
+                  <span className="font-semibold capitalize" style={{ color: dirColor }}>{dir}</span>
+                  <span className="text-sm text-gray-600">
+                    net {ov.net_delta >= 0 ? '+' : ''}{ov.net_delta} pts across {ov.snapshots_measured} measured snapshot(s)
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-gray-50 border rounded-lg p-3 text-sm text-gray-600 flex items-start gap-2">
+                <Info className="h-4 w-4 text-gray-400 mt-0.5" />
+                <span>{ov?.message ?? 'Not enough measured snapshots to assess progression yet (at least two are required).'}</span>
+              </div>
+            )}
+
+            {/* Growth / Improvement / Decline rollup */}
+            {ready && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="border rounded-lg p-3">
+                  <div className="text-[11px] uppercase tracking-wide text-gray-500 flex items-center gap-1 mb-2">
+                    <ArrowUp className="h-3.5 w-3.5 text-green-600" /> Growth / Improvement
+                  </div>
+                  {growth.length ? growth.map((g: any) => (
+                    <div key={g.ei_dimension_id} className="flex justify-between text-sm py-0.5">
+                      <span className="truncate">{g.dimension_name ?? g.ei_dimension_id}</span>
+                      <span className="text-green-600 font-medium">+{g.net_delta}</span>
+                    </div>
+                  )) : <div className="text-xs text-gray-400 italic">No dimension improvements measured.</div>}
+                </div>
+                <div className="border rounded-lg p-3">
+                  <div className="text-[11px] uppercase tracking-wide text-gray-500 flex items-center gap-1 mb-2">
+                    <ArrowDown className="h-3.5 w-3.5 text-red-600" /> Decline
+                  </div>
+                  {decline.length ? decline.map((g: any) => (
+                    <div key={g.ei_dimension_id} className="flex justify-between text-sm py-0.5">
+                      <span className="truncate">{g.dimension_name ?? g.ei_dimension_id}</span>
+                      <span className="text-red-600 font-medium">{g.net_delta}</span>
+                    </div>
+                  )) : <div className="text-xs text-gray-400 italic">No dimension declines measured.</div>}
+                </div>
+              </div>
+            )}
+
+            {prog?.rollup?.improvement_summary && (
+              <div className="text-xs text-gray-500 italic">{prog.rollup.improvement_summary}</div>
+            )}
+
+            {/* History timelines */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+              <div className="border rounded-lg p-3">
+                <div className="text-[11px] uppercase tracking-wide text-gray-500 mb-2">
+                  Assessment History ({hist?.assessment_history?.count ?? 0})
+                </div>
+                {assessRuns.length ? assessRuns.slice(0, 8).map((run: any) => (
+                  <div key={run.id} className="flex justify-between text-xs py-0.5 text-gray-600">
+                    <span>{new Date(run.created_at).toLocaleDateString()}</span>
+                    <span>{run.ei_score ?? '—'} {run.ei_band ? `(${run.ei_band})` : ''}</span>
+                  </div>
+                )) : <div className="text-xs text-gray-400 italic">No scoring runs captured yet.</div>}
+              </div>
+              <div className="border rounded-lg p-3">
+                <div className="text-[11px] uppercase tracking-wide text-gray-500 mb-2">
+                  EI History ({hist?.ei_history?.count ?? 0})
+                </div>
+                {eiSnaps.length ? eiSnaps.slice(0, 8).map((s: any) => (
+                  <div key={s.id} className="flex justify-between text-xs py-0.5 text-gray-600">
+                    <span>{new Date(s.created_at).toLocaleDateString()}</span>
+                    <span>{s.ei_score ?? '—'} {s.ei_band ? `(${s.ei_band})` : ''}</span>
+                  </div>
+                )) : <div className="text-xs text-gray-400 italic">No EI snapshots captured yet.</div>}
+              </div>
+            </div>
           </div>
         );
       })()}

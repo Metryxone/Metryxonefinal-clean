@@ -35,123 +35,17 @@ import { computeEmployabilitySignals } from './employability-signal-engine.js';
 import { computeEmployabilityRecommendations } from './ei-recommendation-engine.js';
 import { listEiProfileHistory, type EiProfileSnapshotRow } from './ei-profile-history.js';
 import { LANGUAGE_POLICY } from './competency-ei-scoring-shared.js';
+// Trend math is owned by the canonical trend engine (Phase 3.11) so there is a
+// single implementation shared by the dashboard and the history/progression
+// engines. Re-exported below for back-compat with existing dashboard consumers.
+import { computeEiTrend, type EiTrend, type EiTrendPoint } from './trend-engine.js';
+
+export { computeEiTrend };
+export type { EiTrend, EiTrendPoint };
 
 export const EI_DASHBOARD_ENGINE_VERSION = '3.10.0';
 
 const round1 = (n: number) => Math.round(n * 10) / 10;
-const STABLE_BAND = 1.0; // points of EI movement considered "stable" (no real change)
-
-// ---------------------------------------------------------------------------
-// Trend Analysis sub-engine (PURE — composes the EI profile snapshot history)
-// ---------------------------------------------------------------------------
-
-export interface EiTrendPoint {
-  snapshot_id: number;
-  captured_at: string;
-  ei_score: number | null;
-  band: string | null;
-  confidence_score: number | null;
-  strength_count: number;
-  development_count: number;
-  risk_count: number;
-}
-
-export interface EiTrend {
-  available: boolean;
-  status: 'ready' | 'insufficient_history' | 'unavailable';
-  direction: 'improving' | 'declining' | 'stable' | null;
-  delta: number | null; // latest.ei_score - first.ei_score (measured points only)
-  confidence_delta: number | null;
-  strength_delta: number | null;
-  development_delta: number | null;
-  risk_delta: number | null; // a rising risk count is a concern (not inverted here; raw)
-  first: { captured_at: string; ei_score: number | null; band: string | null } | null;
-  latest: { captured_at: string; ei_score: number | null; band: string | null } | null;
-  snapshots_total: number;
-  snapshots_measured: number;
-  points: EiTrendPoint[];
-  message: string;
-}
-
-/**
- * computeEiTrend — pure trend derivation over snapshot rows.
- * Snapshots are user-captured (explicit POST), so this reflects captured
- * history, not a continuous stream. We disclose that and never fabricate a
- * slope from fewer than two MEASURED points.
- */
-export function computeEiTrend(rows: EiProfileSnapshotRow[]): EiTrend {
-  const all = Array.isArray(rows) ? [...rows] : [];
-  // Sort ascending by capture time (history endpoint returns newest-first).
-  all.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
-
-  const points: EiTrendPoint[] = all.map((r) => ({
-    snapshot_id: r.id,
-    captured_at: r.created_at,
-    ei_score: r.ei_score, // already null-preserving in mapHeadline
-    band: r.ei_band,
-    confidence_score: r.confidence_score,
-    strength_count: r.strength_count,
-    development_count: r.development_count,
-    risk_count: r.risk_count,
-  }));
-
-  // Only MEASURED points (ei_score present) can anchor a trend. NULL stays NULL.
-  const measured = points.filter((p) => p.ei_score != null);
-
-  if (measured.length < 2) {
-    return {
-      available: false,
-      status: 'insufficient_history',
-      direction: null,
-      delta: null,
-      confidence_delta: null,
-      strength_delta: null,
-      development_delta: null,
-      risk_delta: null,
-      first: measured[0]
-        ? { captured_at: measured[0].captured_at, ei_score: measured[0].ei_score, band: measured[0].band }
-        : null,
-      latest: measured[0]
-        ? { captured_at: measured[0].captured_at, ei_score: measured[0].ei_score, band: measured[0].band }
-        : null,
-      snapshots_total: points.length,
-      snapshots_measured: measured.length,
-      points,
-      message:
-        measured.length === 0
-          ? 'No measured snapshots captured yet — trend is unavailable (not fabricated). Capture profile snapshots over time to build a trend.'
-          : 'Only one measured snapshot captured — at least two are required to establish a trend (not fabricated).',
-    };
-  }
-
-  const first = measured[0];
-  const latest = measured[measured.length - 1];
-  const delta = round1((latest.ei_score as number) - (first.ei_score as number));
-  const direction: EiTrend['direction'] =
-    delta > STABLE_BAND ? 'improving' : delta < -STABLE_BAND ? 'declining' : 'stable';
-
-  const confidence_delta =
-    first.confidence_score != null && latest.confidence_score != null
-      ? round1(latest.confidence_score - first.confidence_score)
-      : null;
-
-  return {
-    available: true,
-    status: 'ready',
-    direction,
-    delta,
-    confidence_delta,
-    strength_delta: latest.strength_count - first.strength_count,
-    development_delta: latest.development_count - first.development_count,
-    risk_delta: latest.risk_count - first.risk_count,
-    first: { captured_at: first.captured_at, ei_score: first.ei_score, band: first.band },
-    latest: { captured_at: latest.captured_at, ei_score: latest.ei_score, band: latest.band },
-    snapshots_total: points.length,
-    snapshots_measured: measured.length,
-    points,
-    message: `EI ${direction} by ${Math.abs(delta)} point(s) across ${measured.length} measured snapshot(s) (captured history, not continuous).`,
-  };
-}
 
 // ---------------------------------------------------------------------------
 // Composed dashboard (the ei_dashboard deliverable)

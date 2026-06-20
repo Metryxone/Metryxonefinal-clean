@@ -677,6 +677,19 @@ export const FEATURE_FLAGS = {
    *  (composition delegates DDL-gating to the roadmap engine; history uses a
    *  to_regclass probe). Env: `FF_CAREER_DEVELOPMENT`. */
   careerDevelopment: false,
+
+  /** PHASE 4.7 — Career Recommendation engine. Additive, read-only aggregator that
+   *  COMPOSES the Career Development chain (4.6 → 4.5 → 4.4 → 4.3) with the live
+   *  `cg_roles` catalog into SIX recommendation kinds (role / career / industry /
+   *  function / future_role / alternative_career), driven by a config-as-data
+   *  library + rules (inline defaults; admin-editable tables). It never recomputes
+   *  a score and never fabricates a role/industry/function/number; Coverage and
+   *  Confidence stay SEPARATE (personalized recs inherit the chain band, market-
+   *  catalog-only recs are 'Provisional'). Flag OFF => every /api/career-recommendation/*
+   *  route 503s BEFORE any DB touch and NO schema is ensured (byte-identical). GET is
+   *  read-only (composition delegates DDL-gating to the development chain; config/
+   *  history use to_regclass probes). Env: `FF_CAREER_RECOMMENDATION`. */
+  careerRecommendation: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1031,6 +1044,10 @@ export function isCareerRoadmapEnabled(): boolean {
 
 export function isCareerDevelopmentEnabled(): boolean {
   return isFlagEnabled('careerDevelopment');
+}
+
+export function isCareerRecommendationEnabled(): boolean {
+  return isFlagEnabled('careerRecommendation');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

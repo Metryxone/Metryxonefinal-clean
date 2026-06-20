@@ -828,3 +828,75 @@ id = "bXhHliHWeI8l79JAhPSeF"
 uri = "file://backend/audit/phase-3-final/superadmin_validation_report.md"
 type = "text"
 title = "Super Admin Validation Report"
+
+[[outputs]]
+id = "lDjFrbeu1Jdf8UC_MS8vp"
+uri = "file://backend/audit/phase-4/founder_summary.md"
+type = "text"
+title = "Founder Summary — Phase 4 (start here)"
+
+[[outputs]]
+id = "oOUJv9lAVY5TSaxZguktu"
+uri = "file://backend/audit/phase-4/career_architecture_report.md"
+type = "text"
+title = "Career Architecture Report (4.1 + overview)"
+
+[[outputs]]
+id = "hrTwzIpfduASVoxKR5AUL"
+uri = "file://backend/audit/phase-4/career_matching_report.md"
+type = "text"
+title = "Career Matching Report (4.2)"
+
+[[outputs]]
+id = "eDAp3X2-vwSpil2e5GqqE"
+uri = "file://backend/audit/phase-4/career_readiness_report.md"
+type = "text"
+title = "Career Readiness Report (4.3)"
+
+[[outputs]]
+id = "tlc2v-TB96fpbQRWxakJg"
+uri = "file://backend/audit/phase-4/career_gap_report.md"
+type = "text"
+title = "Career Gap Report (4.4)"
+
+[[outputs]]
+id = "PiNTDBKrYL6eKY67XusvJ"
+uri = "file://backend/audit/phase-4/career_roadmap_report.md"
+type = "text"
+title = "Career Roadmap Report (4.5)"
+
+[[outputs]]
+id = "GyOlhR4gVFwqFQDG3V1xb"
+uri = "file://backend/audit/phase-4/career_development_report.md"
+type = "text"
+title = "Career Development Report (4.6)"
+
+[[outputs]]
+id = "9txtGdl1upVIsFfdrWzH9"
+uri = "file://backend/audit/phase-4/career_recommendation_report.md"
+type = "text"
+title = "Career Recommendation Report (4.7)"
+
+[[outputs]]
+id = "ju0xzSs5zB_RAgITrq6cr"
+uri = "file://backend/audit/phase-4/career_simulation_report.md"
+type = "text"
+title = "Career Simulation Report (4.8)"
+
+[[outputs]]
+id = "1939XcBXiYvhj28XEMYGZ"
+uri = "file://backend/audit/phase-4/career_passport_report.md"
+type = "text"
+title = "Career Passport Report (4.9)"
+
+[[outputs]]
+id = "cbr1b2E8GsCacghldOqID"
+uri = "file://backend/audit/phase-4/career_signal_report.md"
+type = "text"
+title = "Career Signal Report (4.10)"
+
+[[outputs]]
+id = "I_vXY8ZYVBh-9H4ANVNtM"
+uri = "file://backend/audit/phase-4/superadmin_validation_report.md"
+type = "text"
+title = "Super-Admin Validation Report (4.12)"

@@ -608,6 +608,20 @@ export const FEATURE_FLAGS = {
    *  rich-signal backfill REFUSES to write → byte-identical legacy. No new table,
    *  no schema change. Env: `FF_RICH_BEHAVIORAL_SIGNALS`. */
   richBehavioralSignals: false,
+  /** PHASE 4 — Career Intelligence Layer. Master flag for the additive, read-only
+   *  bridge that COMPOSES the Phase 3 Competency-EI engines (EI profile, dimensions,
+   *  role / industry / function readiness, signals, recommendations, history) into
+   *  one career-intelligence envelope, surfaced across the six career deliverables
+   *  (Career Builder, Pathways, Readiness, Planning, Growth Intelligence,
+   *  Development Intelligence). REUSES existing career infra (cg_* graph, pathway
+   *  intelligence, M5 growth plans, career_seeker_goals) — never rebuilds it.
+   *  Strictly additive + read-only: flag OFF => the bridge route 503s BEFORE any DB
+   *  touch and every existing career screen/route is byte-identical legacy. Coverage
+   *  (data exists) and Confidence (trustworthy) are reported as SEPARATE axes; the
+   *  domain-proxy confidence cap is disclosed; absent data is reported absent, never
+   *  fabricated. Outputs are developmental signals only — never hiring/promotion/
+   *  suitability predictions. Env: `FF_CAREER_INTELLIGENCE`. */
+  careerIntelligence: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -942,6 +956,10 @@ export function isCompetencyRuntimeEnabled(): boolean {
 
 export function isCompetencyEiEnabled(): boolean {
   return isFlagEnabled('competencyEi');
+}
+
+export function isCareerIntelligenceEnabled(): boolean {
+  return isFlagEnabled('careerIntelligence');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

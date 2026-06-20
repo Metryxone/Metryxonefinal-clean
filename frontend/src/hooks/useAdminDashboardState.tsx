@@ -13,6 +13,7 @@ import {
   BarChart2, BarChart3, Building2, UserCircle2, Map, ClipboardList, MessageCircle,
   Search, Sliders, Timer, ClipboardCheck, Shuffle, LineChart, FileDown, Users2,
   Zap, Award, FileText, Route, Star, ArrowRight, LayoutDashboard, Gauge, HeartPulse,
+  Compass,
 } from 'lucide-react';
 
 // Shared formatting utilities (co-located with state to avoid import cycles)
@@ -565,6 +566,17 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
     queryKey: ['/api/competency-ei/admin/overview', 'enabled'],
     queryFn: async () => {
       const res = await fetch('/api/competency-ei/admin/overview', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // Career Intelligence flag (careerIntelligence) — when OFF the gated probe
+  // 503s and the nav item self-hides, keeping flag-OFF byte-identical.
+  const { data: careerIntelligenceEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/career-intelligence/_meta/status', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/career-intelligence/_meta/status', { credentials: 'include' });
       return res.ok;
     },
     enabled: isAuthenticated,
@@ -2778,6 +2790,7 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
         { id: 'vx-assessment-runtime',          icon: Cpu,        label: 'VX: Assessment Runtime (D18)' },
         { id: 'competency-runtime',             icon: Zap,        label: 'Competency Runtime (P2.3–2.6)' },
         { id: 'competency-ei',                  icon: Activity,   label: 'Employability Intelligence (P3)' },
+        { id: 'career-intelligence',            icon: Compass,    label: 'Career Intelligence (P4)' },
         { id: 'ei-profile',                     icon: UserCheck,  label: 'Employability Profile (P3.4–3.5)' },
         { id: 'vx-competency-science-council',  icon: Users2,     label: 'VX: Science Council (D19)' },
         { id: 'vx-workforce-knowledge-graph',   icon: GitBranch,  label: 'VX: Workforce Graph (D1)' },
@@ -2851,6 +2864,11 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
       competencyEiEnabled
         ? group
         : { ...group, items: group.items.filter(it => it.id !== 'ei-profile') }
+    )
+    .map(group =>
+      careerIntelligenceEnabled
+        ? group
+        : { ...group, items: group.items.filter(it => it.id !== 'career-intelligence') }
     )
     .filter(group => group.items.length > 0);
   const menuItems = navGroups.flatMap(g => g.items);

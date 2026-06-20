@@ -69,6 +69,7 @@ import { registerCompetencyOntologyRoutes } from "./routes/competency-ontology";
 import { registerCompetencyFrameworkIntelligenceRoutes } from "./routes/competency-intelligence";
 import { registerCompetencyRuntimeRoutes } from "./routes/competency-runtime";
 import { registerCompetencyEiRoutes } from "./routes/competency-ei";
+import { registerCareerIntelligenceRoutes } from "./routes/career-intelligence";
 import { registerAdaptiveBenchmarkRoutes } from "./routes/adaptive-benchmark";
 import { registerMobilityRoutes } from "./routes/mobility";
 import { registerCareerStageGuidanceRoutes } from "./routes/career-stage-guidance";
@@ -220,7 +221,6 @@ import { registerInterventionEngineRoutes }  from "./routes/intervention-engine"
 import { registerOmegaReportRoutes }         from "./routes/omega-report";
 import { registerPragatiRoutes }             from "./routes/pragati";
 import { registerCareerProfileRoutes }      from "./routes/career-profile";
-import { registerCareerIntelligenceRoutes } from "./routes/career-intelligence";
 import { registerCareerBenchmarkRoutes }    from "./routes/career-benchmark";
 import { registerCareerWorkforceRoutes }    from "./routes/career-workforce";
 import { registerCareerGenomeRoutes }       from "./routes/career-genome";
@@ -13449,6 +13449,7 @@ Rules:
   registerCompetencyFrameworkIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCompetencyRuntimeRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCompetencyEiRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerCareerIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerAdaptiveBenchmarkRoutes({ app, pool: concernsPool });
   registerMobilityRoutes({ app, pool: concernsPool });
   registerCompetencyAssessmentRuntime({ app, pool: concernsPool, requireAuth });
@@ -13580,7 +13581,6 @@ Rules:
   registerOmegaReportRoutes(app, concernsPool);
   registerPragatiRoutes(app);
   registerCareerProfileRoutes(app);
-  registerCareerIntelligenceRoutes(app);
   registerCareerBenchmarkRoutes(app);
   registerCareerWorkforceRoutes(app);
   registerCareerGenomeRoutes(app);

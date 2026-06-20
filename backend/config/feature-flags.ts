@@ -646,6 +646,21 @@ export const FEATURE_FLAGS = {
    *  fall into an honest `unclassified` bucket and lower the classified-coverage axis.
    *  Env: `FF_CAREER_GAP`. */
   careerGap: false,
+
+  /* PHASE 4.5 — Career Roadmap Engine. Additive + read-only layer that COMPOSES
+   *  the already-built Career Gap engine (Phase 4.4 — competencies required +
+   *  deterministic now/next/later prioritization) and the Career Readiness
+   *  aggregator (Phase 4.3 — current/target readiness) into ONE Current → Target
+   *  career roadmap: phased Milestones, the Competencies Required per milestone, a
+   *  derived Development Plan, and a transparent Estimated Timeline (gap-points ×
+   *  a published weeks-per-level heuristic — an ESTIMATE, never a prediction), plus
+   *  an append-only `career_roadmap_history` snapshot. Flag OFF => every
+   *  /api/career-roadmap/* route 503s BEFORE any DB touch and NO schema is ensured
+   *  (byte-identical). It never recomputes a score, never fabricates a milestone or
+   *  a course; development actions are DERIVED from the gap data only. GET is
+   *  read-only (the composed role-readiness path is gated by a competency-runtime
+   *  probe so no DDL ever runs on a read). Env: `FF_CAREER_ROADMAP`. */
+  careerRoadmap: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -992,6 +1007,10 @@ export function isCareerReadinessEnabled(): boolean {
 
 export function isCareerGapEnabled(): boolean {
   return isFlagEnabled('careerGap');
+}
+
+export function isCareerRoadmapEnabled(): boolean {
+  return isFlagEnabled('careerRoadmap');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

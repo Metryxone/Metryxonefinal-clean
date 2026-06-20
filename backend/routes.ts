@@ -72,6 +72,7 @@ import { registerCompetencyEiRoutes } from "./routes/competency-ei";
 import { registerCareerIntelligenceRoutes } from "./routes/career-intelligence";
 import { registerCareerReadinessRoutes } from "./routes/career-readiness";
 import { registerCareerGapRoutes } from "./routes/career-gap";
+import { registerCareerRoadmapRoutes } from "./routes/career-roadmap";
 import { registerAdaptiveBenchmarkRoutes } from "./routes/adaptive-benchmark";
 import { registerMobilityRoutes } from "./routes/mobility";
 import { registerCareerStageGuidanceRoutes } from "./routes/career-stage-guidance";
@@ -13454,6 +13455,7 @@ Rules:
   registerCareerIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCareerReadinessRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCareerGapRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerCareerRoadmapRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerAdaptiveBenchmarkRoutes({ app, pool: concernsPool });
   registerMobilityRoutes({ app, pool: concernsPool });
   registerCompetencyAssessmentRuntime({ app, pool: concernsPool, requireAuth });

@@ -52,6 +52,10 @@ import {
   getEiProfileSnapshot,
 } from '../services/ei-profile-history.js';
 import { computeRoleReadinessV2 } from '../services/role-readiness-v2.js';
+import {
+  computeIndustryReadiness,
+  listIndustryReadiness,
+} from '../services/industry-readiness-engine.js';
 
 export function registerCompetencyEiRoutes(
   app: Express,
@@ -264,6 +268,32 @@ export function registerCompetencyEiRoutes(
     requireAuth,
     requireSuperAdmin,
     wrap(async (req) => computeRoleReadinessV2(pool, String(req.params.subject))),
+  );
+
+  // ==========================================================================
+  // Phase 3.6 — Industry Readiness Engine (extends readiness to the industry)
+  //   Industry Readiness · Industry Fit · Industry Gap. Requirements are
+  //   derived by aggregating role competency profiles across the industry's
+  //   roles (curated taxonomy); honest 'unavailable' when an industry is unseeded.
+  // ==========================================================================
+
+  // ---- Single industry for a subject (read-only). Two-segment param sits
+  //      below the one-segment :subject route; no literal collision.
+  app.get(
+    '/api/competency-ei/industry-readiness/:subject/:industry',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => computeIndustryReadiness(pool, String(req.params.subject), String(req.params.industry))),
+  );
+
+  // ---- All seeded industries for a subject (read-only) ----------------------
+  app.get(
+    '/api/competency-ei/industry-readiness/:subject',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => listIndustryReadiness(pool, String(req.params.subject))),
   );
 
   // Auto-provision defaults at boot ONLY when the flag is ON — keeps flag-OFF

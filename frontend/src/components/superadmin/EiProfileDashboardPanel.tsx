@@ -22,7 +22,7 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   UserCheck, Gauge, ShieldAlert, Sparkles, Target, TrendingUp, Camera,
-  AlertTriangle, CheckCircle2, Info, History as HistoryIcon, Search, Layers,
+  AlertTriangle, CheckCircle2, Info, History as HistoryIcon, Search, Layers, Building2,
 } from 'lucide-react';
 
 const BRAND = { primary: '#344E86', accent: '#5B7BD5' };
@@ -39,6 +39,9 @@ const LEVEL_COLOR: Record<string, string> = {
 };
 const RISK_COLOR: Record<string, string> = {
   Low: '#16a34a', Medium: '#ca8a04', High: '#dc2626', Unmeasured: '#6b7280',
+};
+const FIT_COLOR: Record<string, string> = {
+  strong: '#15803d', good: '#16a34a', partial: '#ca8a04', low: '#dc2626', unmeasured: '#6b7280',
 };
 
 interface ConfidenceShape { score: number; band: string; measurement: string; caps: string[]; factors: string[]; }
@@ -85,6 +88,22 @@ interface RoleReadinessV2 {
   notes: string[];
 }
 
+interface IndustryReadiness {
+  ok: boolean; subject_id: string; industry_id: string; industry_name: string | null;
+  version: string; available: boolean; measurable: boolean;
+  requirement_source: string; role_count: number; competency_count: number;
+  readiness: { measured: boolean; score: number | null; band: string | null; label: string | null; coverage_pct: number | null };
+  industry_fit: { fit_band: string; label: string; score: number | null; capped_by_critical: boolean };
+  industry_gap: {
+    top_gap: { competency_id: string; competency_name: string | null; required_level: number; actual_level: number | null; gap: number; criticality: string; blocking: boolean } | null;
+    gap_areas: any[]; critical_gaps: any[]; blocking_gaps: number;
+  };
+  notes: string[];
+}
+interface IndustryReadinessList {
+  subject_id: string; version: string; industries: IndustryReadiness[]; notes: string[];
+}
+
 async function getJSON(url: string) {
   const res = await fetch(url, { credentials: 'include' });
   if (!res.ok) throw new Error(`${res.status}`);
@@ -104,6 +123,11 @@ export default function EiProfileDashboardPanel() {
   const v2 = useQuery<{ data: RoleReadinessV2 }>({
     queryKey: ['/api/competency-ei/role-readiness-v2', subject],
     queryFn: () => getJSON(`/api/competency-ei/role-readiness-v2/${encodeURIComponent(subject)}`),
+    enabled: !!subject,
+  });
+  const industries = useQuery<{ data: IndustryReadinessList }>({
+    queryKey: ['/api/competency-ei/industry-readiness', subject],
+    queryFn: () => getJSON(`/api/competency-ei/industry-readiness/${encodeURIComponent(subject)}`),
     enabled: !!subject,
   });
   const history = useQuery<{ data: any[] }>({
@@ -135,8 +159,8 @@ export default function EiProfileDashboardPanel() {
           </h1>
           <p className="text-sm text-gray-500 mt-1">
             Composes the employability scoring chain into a candidate profile (Overall EI, dimensions,
-            strengths, development areas, critical risks, growth potential) and a five-component role view.
-            Read-only · additive · flag-gated. <span className="text-gray-400">Phase 3.4 + 3.5</span>
+            strengths, development areas, critical risks, growth potential), a five-component role view,
+            and industry readiness. Read-only · additive · flag-gated. <span className="text-gray-400">Phase 3.4 + 3.5 + 3.6</span>
           </p>
         </div>
       </div>
@@ -361,6 +385,77 @@ export default function EiProfileDashboardPanel() {
               </Section>
             </div>
           </div>
+        )}
+      </div>
+
+      {/* ============ Phase 3.6 — Industry Readiness ============ */}
+      <div className="border-t pt-5">
+        <h2 className="text-lg font-bold flex items-center gap-2 mb-1" style={{ color: BRAND.primary }}>
+          <Building2 className="h-5 w-5" /> Industry Readiness <span className="text-[11px] uppercase tracking-wide text-gray-400 font-normal">Phase 3.6</span>
+        </h2>
+        <p className="text-xs text-gray-500 mb-3">
+          Readiness, fit, and gaps against each industry's aggregated competency demand (derived from its roles).
+          Coverage and readiness are separate axes; unseeded industries are reported as unavailable, never assumed.
+        </p>
+        {industries.isLoading && <div className="text-gray-500 text-sm">Loading industry readiness…</div>}
+        {industries.isError && <div className="text-red-600 text-sm">Failed to load industry readiness.</div>}
+
+        {industries.data?.data && (
+          <>
+            {industries.data.data.industries.length === 0 && (
+              <Empty text={industries.data.data.notes?.[0] ?? 'No industries available.'} />
+            )}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {industries.data.data.industries.map((ind) => (
+                <div key={ind.industry_id} className="bg-white rounded-xl border p-5">
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <div className="text-sm font-bold text-gray-800">{ind.industry_name ?? ind.industry_id}</div>
+                    <span className="text-[10px] uppercase tracking-wide font-medium px-2 py-0.5 rounded-full"
+                      style={{ color: FIT_COLOR[ind.industry_fit.fit_band] ?? '#6b7280', backgroundColor: (FIT_COLOR[ind.industry_fit.fit_band] ?? '#6b7280') + '1a' }}>
+                      {ind.industry_fit.label}
+                    </span>
+                  </div>
+
+                  {!ind.available && (
+                    <div className="text-xs text-amber-700 flex items-start gap-1.5">
+                      <Info className="h-3.5 w-3.5 mt-0.5 shrink-0" /> {ind.notes?.find((n) => /unavailable|no role|not in the curated/i.test(n)) ?? ind.notes?.[ind.notes.length - 1] ?? 'Unavailable.'}
+                    </div>
+                  )}
+
+                  {ind.available && !ind.measurable && (
+                    <div className="text-xs text-amber-700 flex items-start gap-1.5">
+                      <Info className="h-3.5 w-3.5 mt-0.5 shrink-0" /> Requirements derived from {ind.role_count} role(s) · {ind.competency_count} competencies — but this subject has no scores covering them (unmeasured, not assumed).
+                    </div>
+                  )}
+
+                  {ind.available && ind.measurable && (
+                    <>
+                      <div className="grid grid-cols-3 gap-3 mb-2">
+                        <V2Card label="Readiness" value={ind.readiness.score} suffix="%" sub={ind.readiness.label ?? ind.readiness.band ?? ''} color={BAND_COLOR[ind.readiness.band ?? ''] ?? BRAND.primary} />
+                        <V2Card label="Coverage" value={ind.readiness.coverage_pct} suffix="%" sub={`${ind.competency_count} comp · ${ind.role_count} roles`} color={BRAND.accent} />
+                        <V2Card label="Critical Gaps" value={ind.industry_gap.blocking_gaps} sub={ind.industry_gap.blocking_gaps > 0 ? 'blocking' : 'none'} color={ind.industry_gap.blocking_gaps > 0 ? '#dc2626' : '#16a34a'} />
+                      </div>
+                      {ind.readiness.coverage_pct != null && ind.readiness.coverage_pct < 100 && (
+                        <div className="text-xs text-amber-700 flex items-center gap-1.5 mb-2">
+                          <AlertTriangle className="h-3.5 w-3.5" /> {Math.round(100 - ind.readiness.coverage_pct)}% of industry demand unassessed — readiness is provisional.
+                        </div>
+                      )}
+                      {ind.industry_gap.top_gap ? (
+                        <div className="border-l-2 border-amber-400 pl-3 py-1">
+                          <div className="text-[11px] uppercase tracking-wide text-gray-400">Top Gap</div>
+                          <div className="text-sm font-medium text-gray-800">{ind.industry_gap.top_gap.competency_name ?? ind.industry_gap.top_gap.competency_id}</div>
+                          <div className="text-xs text-gray-500">
+                            {ind.industry_gap.top_gap.actual_level ?? '?'} → {ind.industry_gap.top_gap.required_level} · gap {ind.industry_gap.top_gap.gap}
+                            {ind.industry_gap.top_gap.blocking && <span className="text-red-600"> · critical</span>}
+                          </div>
+                        </div>
+                      ) : <Empty text="No gaps — industry demand met." />}
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
 

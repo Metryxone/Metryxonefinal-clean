@@ -844,6 +844,14 @@ export const FEATURE_FLAGS = {
    *  gated, read-only (no client-supplied identity trusted). Env:
    *  `FF_TALENT_MATCHING`. */
   talentMatching: false,
+
+  /** PHASE 5.6 — Employability Matching Engine. Composes the EI Profile, Career
+   *  Profile and Readiness Profile into three developmental employability signals
+   *  (Hiring Readiness, Job Readiness, Employer Fit). Additive, read-only
+   *  (composes loadPassportContext; ZERO DDL), compose-never-recompute,
+   *  never-throws. Outputs are developmental signals only — NEVER hiring/
+   *  suitability predictions. Super-admin gated. Env: `FF_EMPLOYABILITY_MATCHING`. */
+  employabilityMatching: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1242,6 +1250,10 @@ export function isJobPostingEngineEnabled(): boolean {
 
 export function isTalentMatchingEnabled(): boolean {
   return isFlagEnabled('talentMatching');
+}
+
+export function isEmployabilityMatchingEnabled(): boolean {
+  return isFlagEnabled('employabilityMatching');
 }
 
 export function isTalentDiscoveryEnabled(): boolean {

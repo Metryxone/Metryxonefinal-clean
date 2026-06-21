@@ -18,3 +18,4 @@ The table was created with `user_id` as the PK (foreign-keyed to `users.id`). Sc
 - Any new service that reads career profiles → always use `WHERE user_id = $1`
 - Any backfill/script → always `SELECT DISTINCT user_id FROM career_seeker_profiles`
 - The `data` column is JSONB with profile payload; `completeness` (integer 0-100) and timestamps are top-level cols
+- `user_id` has a real FK to `users.id` (a **uuid**, default `gen_random_uuid()`). To seed a profile in a smoke/test you must FIRST insert a parent `users` row (required cols: `username`, `password`; `id` accepts a uuid) — an arbitrary email string as `user_id` violates the FK. Mark demo via `@example.com` and clean up both rows.

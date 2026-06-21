@@ -593,6 +593,19 @@ export const FEATURE_FLAGS = {
    *  and the opt-in tenant-scope guard activates. OFF → arming is blocked and no query path is rewritten
    *  → byte-identical. Env: `FF_TENANT_ISOLATION_ENFORCEMENT`. */
   tenantIsolationEnforcement: false,
+  /** Phase 6.13 — Automation Engine console. Gates the read-only super-admin console that composes the
+   *  existing substrate (eios_campaigns, competency_reassessment_reminders, employer_pool_outreach,
+   *  capadex_sessions, employer_candidates, comm/student_subscriptions) into automation posture across
+   *  the 7 process types (Assessment Campaigns, Career Reviews, Employer Outreach, Student Follow-ups,
+   *  Placement Drives, Subscription Renewals, Customer Success Actions) plus workflow & campaign engines.
+   *  Flag OFF → GET /api/admin/automation/console/* routes 503 and the SuperAdmin Automation Engine tab
+   *  is hidden → byte-identical legacy (no DDL on read). Env: `FF_AUTOMATION_ENGINE`. */
+  automationEngine: false,
+  /** Phase 6.13 sub-flag — opt-in automation EXECUTION. Default OFF. When ON, the console may enqueue
+   *  intent-only automation runs (records WHAT would fire into automation_runs; never dispatches emails or
+   *  external actions, executed_count stays 0). OFF → enqueue is blocked → byte-identical.
+   *  Env: `FF_AUTOMATION_EXECUTION`. */
+  automationExecution: false,
   /** Critical Gaps #2 & #3 — operational RBAC + Audit Trail + Governance/Security Center. Gates the
    *  whole governance subsystem: role/permission framework + hierarchies + permission groups, admin
    *  lifecycle (activate/suspend/terminate), categorized audit logging, generalized approval workflows,
@@ -1306,6 +1319,14 @@ export function isTenantManagementConsoleEnabled(): boolean {
 
 export function isTenantIsolationEnforcementEnabled(): boolean {
   return isFlagEnabled('tenantIsolationEnforcement');
+}
+
+export function isAutomationEngineEnabled(): boolean {
+  return isFlagEnabled('automationEngine');
+}
+
+export function isAutomationExecutionEnabled(): boolean {
+  return isFlagEnabled('automationExecution');
 }
 
 export function isCommercialEntitlementEnabled(): boolean {

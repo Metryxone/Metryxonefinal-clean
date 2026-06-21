@@ -593,6 +593,17 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
     enabled: isAuthenticated,
   });
 
+  // Phase 6.13 Automation Engine console flag — when OFF the /console/ping probe
+  // 503s and the "Automation Engine" nav item self-hides, keeping flag-OFF byte-identical.
+  const { data: automationEngineEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/admin/automation/console/ping', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/automation/console/ping', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
   // Governance & Security (RBAC/Audit) flag — when OFF the route 503s and the
   // nav item self-hides, keeping the flag-OFF UI byte-identical to legacy.
   const { data: governanceEnabled = false } = useQuery<boolean>({
@@ -2840,6 +2851,7 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
       items: [
         { id: 'platform-intelligence',  icon: TrendingUp, label: 'Platform Intelligence' },
         { id: 'multi-tenant-architecture', icon: Building2, label: 'Multi-Tenant Architecture' },
+        { id: 'automation-engine',      icon: Zap,       label: 'Automation Engine' },
         { id: 'documents',              icon: FileCheck, label: 'Documents' },
         { id: 'settings',               icon: Settings,  label: 'Settings' },
         { id: 'content',                icon: Play,      label: 'Content Manager' },
@@ -2946,6 +2958,11 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
       tenantArchitectureEnabled
         ? group
         : { ...group, items: group.items.filter(it => it.id !== 'multi-tenant-architecture') }
+    )
+    .map(group =>
+      automationEngineEnabled
+        ? group
+        : { ...group, items: group.items.filter(it => it.id !== 'automation-engine') }
     )
     .map(group =>
       competencyRuntimeEnabled

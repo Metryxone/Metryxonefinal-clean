@@ -13756,6 +13756,10 @@ Rules:
 
   const { registerMultiTenantArchitectureRoutes } = await import('./routes/multi-tenant-architecture');
   registerMultiTenantArchitectureRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+
+  // ── Phase 6.13 Automation Engine console (flag automationEngine, default OFF) ─
+  const { registerAutomationEngineRoutes } = await import('./routes/automation-engine');
+  registerAutomationEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Employer Intelligence Operating System (EP-98) ───────────────────────────
   registerEmployerPortalRoutes(app, concernsPool, requireAuth);
   // ── Super-Admin Employer Onboarding (create org + admin login) ───────────────

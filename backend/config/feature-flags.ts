@@ -374,6 +374,17 @@ export const FEATURE_FLAGS = {
    *  byte-identical legacy behaviour at every protected surface. Distinct from `commercialEntitlement`
    *  (the admin read overview). Env: `FF_COMMERCIAL_ENTITLEMENT_ENFORCEMENT`. */
   commercialEntitlementEnforcement: false,
+  /** Phase 6.4 — Entitlement (Module Access) Engine. When ON, the per-module access-control
+   *  middleware (`requireModuleAccess`) GATES the 7 product surfaces (Competency Assessments, EI,
+   *  Career Builder, Career Passport, Employer Portal, Analytics, Workforce Intelligence) using the
+   *  EXISTING commercial entitlement substrate (comm_plan_entitlements + comm_entitlement_grants).
+   *  Identity is the authenticated email (server-derived); super-admins bypass; declared public paths
+   *  stay open. Unentitled non-super-admin → 402 `module_access_required`; an entitlement-ledger fault
+   *  → 503 `module_access_unavailable` (a fault is never read as "unentitled"). Strictly additive +
+   *  reversible: flag OFF → the middleware is a SYNCHRONOUS pass-through (`next()` before any await),
+   *  the /api/entitlement/* routes return 503, and NO schema is created → byte-identical legacy. Env:
+   *  `FF_MODULE_ACCESS_CONTROL`. */
+  moduleAccessControl: false,
   /** Commercial Wave 2 — Renewal. When ON, the admin section `renewal` returns the read-only renewal
    *  pipeline (due_soon / in_grace) over the validity-window package model (`student_subscriptions`).
    *  The B2C stage ladder has NO renewal (`renewal_not_applicable_b2c`). Never auto-charges. Additive +
@@ -1195,6 +1206,10 @@ export function isCommercialActivationEnabled(): boolean {
 
 export function isCommercialEntitlementEnforcementEnabled(): boolean {
   return isFlagEnabled('commercialEntitlementEnforcement');
+}
+
+export function isModuleAccessControlEnabled(): boolean {
+  return isFlagEnabled('moduleAccessControl');
 }
 
 export function isCommercialValidationEnabled(): boolean {

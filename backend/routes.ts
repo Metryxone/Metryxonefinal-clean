@@ -259,6 +259,7 @@ import { registerCareerMemoryRoutes }       from "./routes/career-memory";
 import { registerCareerSimulationRoutes }  from "./routes/career-simulations";
 import { registerCareerIntelligenceHubRoutes } from "./routes/career-intelligence-hub";
 import { registerEmployerPortalRoutes }        from "./routes/employer-portal";
+import { requireModuleAccess } from "./services/wc7c/require-module-access";
 
 declare global {
   namespace Express {
@@ -13475,6 +13476,18 @@ Rules:
   registerPeerBenchmarkRoutes({ app, pool: concernsPool });
   registerCompetencyOntologyRoutes({ app, pool: concernsPool });
   registerCompetencyFrameworkIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  // ── Phase 6.4 Entitlement Engine — per-module access gates (flag moduleAccessControl, default OFF) ──
+  // FLAG-OFF: each gate is a SYNCHRONOUS pass-through (next() before any await) → byte-identical legacy.
+  // Mounted BEFORE the 7 protected surface registrations below so flag-ON enforcement covers them.
+  // Identity is the SERVER-side authenticated principal; super-admins bypass; declared publicPaths stay open.
+  app.use('/api/competency', requireModuleAccess(concernsPool, { module: 'competency_assessments', publicPaths: ['/questions/select'] }));
+  app.use('/api/competency-ei', requireModuleAccess(concernsPool, { module: 'employability_index' }));
+  app.use('/api/career/intelligence', requireModuleAccess(concernsPool, { module: 'career_builder' }));
+  app.use('/api/passport', requireModuleAccess(concernsPool, { module: 'career_passport', publicPaths: ['/shared/'] }));
+  app.use('/api/employer', requireModuleAccess(concernsPool, { module: 'employer_portal', publicPaths: ['/public/', '/register'] }));
+  app.use('/api/analytics', requireModuleAccess(concernsPool, { module: 'analytics' }));
+  app.use('/api/workforce-intelligence', requireModuleAccess(concernsPool, { module: 'workforce_intelligence' }));
+
   registerCompetencyRuntimeRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCompetencyEiRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCareerIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
@@ -13722,6 +13735,9 @@ Rules:
   // ── Entitlement Bridge ────────────────────────────────────────────────────────
   const { registerEntitlementRoutes } = await import('./routes/entitlement');
   registerEntitlementRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  // ── Phase 6.4 Entitlement Engine — module access control (flag moduleAccessControl, default OFF) ─
+  const { registerEntitlementEngineRoutes } = await import('./routes/entitlement-engine');
+  registerEntitlementEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Task #7 Usage Metering (flag commercialUsageMetering, default OFF) ───────────
   const { registerCommercialMeteringRoutes } = await import('./routes/commercial-metering');
   registerCommercialMeteringRoutes(app, concernsPool, requireAuth, requireSuperAdmin);

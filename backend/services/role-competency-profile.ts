@@ -214,11 +214,35 @@ function buildProfiles(rows: RoleCompetencyRow[]): RoleProfile[] {
 }
 
 /** Nested role -> competency requirement profiles (the "Role Competency Profile"). */
+/**
+ * Read-only existence probe (to_regclass) for the role-competency substrate.
+ * Lets a GET-never-writes caller compose these getters WITHOUT triggering the
+ * lazy ensure-schema DDL — degrade honestly when the tables are absent.
+ */
+export async function roleCompetencyProfileTablesReady(pool: Pool): Promise<boolean> {
+  try {
+    const { rows } = await pool.query(
+      `SELECT to_regclass('public.onto_role_competency_profiles') AS a,
+              to_regclass('public.onto_roles') AS b,
+              to_regclass('public.onto_competencies') AS c`,
+    );
+    return !!(rows[0]?.a && rows[0]?.b && rows[0]?.c);
+  } catch {
+    return false;
+  }
+}
+
 export async function getRoleProfiles(
   pool: Pool,
-  opts: { roleId?: string; search?: string; activeOnly?: boolean } = {},
+  opts: { roleId?: string; search?: string; activeOnly?: boolean; readOnly?: boolean } = {},
 ): Promise<RoleProfile[]> {
-  await ensureRoleCompetencyProfileSchema(pool);
+  // readOnly callers (GET-never-writes) skip the lazy ensure-schema DDL and
+  // degrade to an empty result when the substrate is absent.
+  if (opts.readOnly) {
+    if (!(await roleCompetencyProfileTablesReady(pool))) return [];
+  } else {
+    await ensureRoleCompetencyProfileSchema(pool);
+  }
   const where: string[] = [];
   const params: any[] = [];
   if (opts.roleId) { params.push(opts.roleId); where.push(`rcp.role_id = $${params.length}`); }
@@ -237,8 +261,14 @@ export async function getRoleProfiles(
   return buildProfiles((rows as any[]).map(mapRow));
 }
 
-export async function getRoleProfile(pool: Pool, roleId: string): Promise<RoleProfile | null> {
-  const profiles = await getRoleProfiles(pool, { roleId });
+export async function getRoleProfile(
+  pool: Pool,
+  roleId: string,
+  opts: { readOnly?: boolean } = {},
+): Promise<RoleProfile | null> {
+  // readOnly callers degrade to null when the substrate is absent (no DDL).
+  if (opts.readOnly && !(await roleCompetencyProfileTablesReady(pool))) return null;
+  const profiles = await getRoleProfiles(pool, { roleId, readOnly: opts.readOnly });
   if (profiles.length > 0) return profiles[0];
   // Role exists but has no requirements yet → return an honest empty profile.
   const r = await pool.query(`SELECT id, title, role_family_id FROM onto_roles WHERE id = $1`, [roleId]);
@@ -342,8 +372,9 @@ export async function getRoleReadiness(
   pool: Pool,
   roleId: string,
   actuals: Record<string, number> = {},
+  opts: { readOnly?: boolean } = {},
 ): Promise<ReadinessResult | null> {
-  const profile = await getRoleProfile(pool, roleId);
+  const profile = await getRoleProfile(pool, roleId, { readOnly: opts.readOnly });
   if (!profile) return null;
 
   const reqs = profile.competencies.filter((c) => c.active);

@@ -834,6 +834,16 @@ export const FEATURE_FLAGS = {
    *  so pools/shortlists can never hold phantom members. Env:
    *  `FF_TALENT_DISCOVERY`. */
   talentDiscovery: false,
+
+  /** Phase 5.5 — Competency Matching Engine. OFF => every route 503 before any
+   *  auth/DB touch (byte-identical legacy). Pure read-only compute over EXISTING
+   *  substrates (employer_candidates + onto_role_competency_profiles); composes
+   *  the canonical getRoleReadiness and adds ZERO net-new tables / ZERO DDL.
+   *  Produces Match/Fit/Gap/Readiness/Confidence as separate honest axes;
+   *  keyword-inferred evidence never masquerades as a measured level. Super-admin
+   *  gated, read-only (no client-supplied identity trusted). Env:
+   *  `FF_TALENT_MATCHING`. */
+  talentMatching: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1228,6 +1238,10 @@ export function isTalentFoundationEnabled(): boolean {
 
 export function isJobPostingEngineEnabled(): boolean {
   return isFlagEnabled('jobPostingEngine');
+}
+
+export function isTalentMatchingEnabled(): boolean {
+  return isFlagEnabled('talentMatching');
 }
 
 export function isTalentDiscoveryEnabled(): boolean {

@@ -199,6 +199,7 @@ import { registerTalentIntelligenceRoutes } from "./routes/talent-intelligence";
 import { registerTalentFoundationV52Routes } from "./routes/talent-foundation-v52";
 import { registerJobPostingEngineRoutes } from "./routes/job-posting-engine";
 import { registerTalentDiscoveryEngineRoutes } from "./routes/talent-discovery-engine";
+import { registerTalentMatchingEngineRoutes } from "./routes/talent-matching-engine";
 import { registerVXCapabilityArchitectureRoutes } from "./routes/vx-capability-architecture";
 import { registerVXLaborMarketIntelligenceRoutes } from "./routes/vx-labor-market-intelligence";
 import { registerVXEvidenceIntelligenceRoutes } from "./routes/vx-evidence-intelligence";
@@ -13478,6 +13479,7 @@ Rules:
   registerTalentFoundationV52Routes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerJobPostingEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerTalentDiscoveryEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerTalentMatchingEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCareerProgressionRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCareerValidationRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerAdaptiveBenchmarkRoutes({ app, pool: concernsPool });

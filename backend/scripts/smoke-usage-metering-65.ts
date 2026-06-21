@@ -90,6 +90,15 @@ async function main() {
   const after = await checkQuota(pool, EMAIL, 'assessments');
   ok('refused event NOT written (still 3)', after.used === 3, after);
 
+  // Crossing-limit in a SINGLE write must fail closed: candidates limit=2, used=1; a quantity=5 write
+  // would project to 6 (>2) and must be refused. A quantity=1 write (1+1=2, at cap) is allowed.
+  const cross = await recordUsage(pool, { email: EMAIL, usageType: 'candidates', quantity: 5 });
+  ok('single over-quantity write refused (1+5 > 2)', cross.recorded === false && cross.quota.reason === 'quota_exceeded', cross.quota);
+  const candAfterCross = await checkQuota(pool, EMAIL, 'candidates');
+  ok('refused over-quantity event NOT written (still 1)', candAfterCross.used === 1, candAfterCross);
+  const candToCap = await recordUsage(pool, { email: EMAIL, usageType: 'candidates', quantity: 1 });
+  ok('write up to cap allowed (1+1 = 2)', candToCap.recorded === true && candToCap.quota.used === 2, candToCap.quota);
+
   // ── 3. Storage LEVEL semantics (limit = 100; latest reading is the usage) ───────────────────────
   console.log('\n[3] storage level semantics (quota = 100)');
   await recordUsage(pool, { email: EMAIL, usageType: 'storage', quantity: 40 });

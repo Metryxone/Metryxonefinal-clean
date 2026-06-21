@@ -193,10 +193,12 @@ export async function recordUsage(pool: Pool, input: RecordUsageInput): Promise<
         await client.query('ROLLBACK');
         return { recorded: false, quota: { ...pre, allowed: false, reason: 'quota_exceeded' } };
       }
-    } else if (!pre.allowed) {
-      // PERIOD_COUNT: over a declared quota → refuse (do not write). Unmetered (limit null) → allowed.
+    } else if (pre.limit != null && pre.used + quantity > pre.limit) {
+      // PERIOD_COUNT: refuse when the PROJECTED usage (already-used + this quantity) would cross the
+      // declared quota — not just when already at/over the cap. A single large quantity must not be able
+      // to bypass the limit. Unmetered (limit null) → allowed.
       await client.query('ROLLBACK');
-      return { recorded: false, quota: pre };
+      return { recorded: false, quota: { ...pre, allowed: false, reason: 'quota_exceeded' } };
     }
 
     const { rows } = await client.query(

@@ -23,8 +23,22 @@ import {
 } from './tenant-relationship-schema';
 import { isTenantIsolationEnforcementEnabled } from '../../config/feature-flags';
 
-// Only tables carrying a literal `tenant_id` column can take the tenant-scoping policy.
-const RLS_TABLES = ['tenant_category_assignments', 'tenant_partner_agreements'] as const;
+// All FOUR additive relationship tables are armable. Their tenant-scoping column differs per table, so
+// each carries its own predicate-builder: the two single-tenant tables match `tenant_id`, while the
+// hierarchy / referral tables match EITHER of their two tenant FKs (so a tenant sees a row it is on
+// either side of). `s` is the SQL expression for the current app.tenant_id setting.
+const RLS_TABLES = [
+  { table: 'tenant_category_assignments', predicate: (s: string) => `tenant_id::text = ${s}` },
+  { table: 'tenant_partner_agreements', predicate: (s: string) => `tenant_id::text = ${s}` },
+  {
+    table: 'tenant_relationships',
+    predicate: (s: string) => `(parent_tenant_id::text = ${s} OR child_tenant_id::text = ${s})`,
+  },
+  {
+    table: 'tenant_channel_referrals',
+    predicate: (s: string) => `(channel_partner_tenant_id::text = ${s} OR referred_tenant_id::text = ${s})`,
+  },
+] as const;
 const POLICY = (t: string) => `tenant_scope_${t}`;
 
 export interface EnforcementStatus {
@@ -58,7 +72,7 @@ export async function getEnforcementStatus(pool: pg.Pool): Promise<EnforcementSt
   const flag = isTenantIsolationEnforcementEnabled();
   const tables: EnforcementStatus['tables'] = [];
 
-  for (const t of RLS_TABLES) {
+  for (const { table: t } of RLS_TABLES) {
     const present = await exists(pool, t);
     let rlsEnabled = false;
     let rlsForced = false;
@@ -109,17 +123,18 @@ export async function armTenantIsolationEnforcement(pool: pg.Pool): Promise<Enfo
     throw new Error('tenantIsolationEnforcement sub-flag is OFF — refusing to arm.');
   }
   await ensureTenantRelationshipSchema(pool);
-  for (const t of RLS_TABLES) {
+  const setting = `current_setting('app.tenant_id', true)`;
+  for (const { table: t, predicate } of RLS_TABLES) {
     const ident = '"' + t.replace(/"/g, '""') + '"';
     await pool.query(`ALTER TABLE ${ident} ENABLE ROW LEVEL SECURITY`);
-    // Idempotent: drop-then-create the canonical tenant-scope policy.
+    // Idempotent: drop-then-create the canonical tenant-scope policy (per-table tenant column predicate).
     await pool.query(`DROP POLICY IF EXISTS ${POLICY(t)} ON ${ident}`);
     await pool.query(`
       CREATE POLICY ${POLICY(t)} ON ${ident}
       USING (
-        current_setting('app.tenant_id', true) IS NULL
-        OR current_setting('app.tenant_id', true) = ''
-        OR tenant_id::text = current_setting('app.tenant_id', true)
+        ${setting} IS NULL
+        OR ${setting} = ''
+        OR ${predicate(setting)}
       )`);
   }
   return getEnforcementStatus(pool);
@@ -127,7 +142,7 @@ export async function armTenantIsolationEnforcement(pool: pg.Pool): Promise<Enfo
 
 /** POST-path only. Reverses arming (drops policies + disables RLS) — restores byte-identical posture. */
 export async function disarmTenantIsolationEnforcement(pool: pg.Pool): Promise<EnforcementStatus> {
-  for (const t of RLS_TABLES) {
+  for (const { table: t } of RLS_TABLES) {
     const present = await exists(pool, t);
     if (!present) continue;
     const ident = '"' + t.replace(/"/g, '""') + '"';

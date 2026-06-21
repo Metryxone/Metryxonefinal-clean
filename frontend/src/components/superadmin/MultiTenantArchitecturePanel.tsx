@@ -90,6 +90,16 @@ interface TenantConfiguration {
   notes: string[];
 }
 
+interface EnforcementStatus {
+  generated_at: string;
+  enforcement_flag: boolean;
+  guard_available: boolean;
+  tables: { table: string; exists: boolean; rls_enabled: boolean; rls_forced: boolean; policies: string[]; armed: boolean }[];
+  armed_count: number;
+  armable_count: number;
+  notes: string[];
+}
+
 type Status = 'PASS' | 'WARN' | 'FAIL';
 interface TenantValidation {
   generated_at: string;
@@ -173,6 +183,15 @@ export default function MultiTenantArchitecturePanel() {
       return res.json();
     },
     enabled: view === 'configuration',
+  });
+  const enforcement = useQuery<EnforcementStatus>({
+    queryKey: ['/api/admin/tenant-architecture/console/enforcement'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/tenant-architecture/console/enforcement', { credentials: 'include' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    },
+    enabled: view === 'isolation',
   });
   const validation = useQuery<TenantValidation>({
     queryKey: ['/api/admin/tenant-architecture/console/validation'],
@@ -397,6 +416,68 @@ export default function MultiTenantArchitecturePanel() {
             </CardContent>
           </Card>
           {isolation.data.notes.length > 0 && <NoteCard notes={isolation.data.notes} />}
+
+          {/* Enforcement posture (opt-in RLS). Separate axis from the coverage audit above. */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-base"><Lock className="h-4 w-4" /> Enforcement Posture</CardTitle>
+              <CardDescription>
+                Opt-in RLS arming on the additive relationship tables. Armed status is distinct from
+                isolation coverage — nothing is rewritten on the legacy path.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-0">
+              {enforcement.isLoading && <p className="text-sm text-gray-500">Loading enforcement status…</p>}
+              {enforcement.isError && (
+                <p className="flex items-center gap-2 text-sm text-red-600"><AlertTriangle className="h-4 w-4" /> Could not load enforcement status.</p>
+              )}
+              {enforcement.data && (
+                <>
+                  <div className="mb-3 flex flex-wrap items-center gap-2">
+                    <Badge variant="outline" className={enforcement.data.enforcement_flag ? 'border-emerald-200 text-emerald-700' : 'border-gray-200 text-gray-500'}>
+                      Enforcement flag: {enforcement.data.enforcement_flag ? 'ON' : 'OFF'}
+                    </Badge>
+                    <Badge variant="outline" className="border-gray-200 text-gray-600">
+                      Armed {formatNum(enforcement.data.armed_count)} / {formatNum(enforcement.data.armable_count)}
+                    </Badge>
+                    <Badge variant="outline" className={enforcement.data.guard_available ? 'border-emerald-200 text-emerald-700' : 'border-gray-200 text-gray-400'}>
+                      Scope guard: {enforcement.data.guard_available ? 'available' : 'unavailable'}
+                    </Badge>
+                  </div>
+                  <Table>
+                    <TableHeader><TableRow>
+                      <TableHead>Table</TableHead><TableHead>Present</TableHead><TableHead>RLS</TableHead>
+                      <TableHead>Forced</TableHead><TableHead className="text-right">Policies</TableHead><TableHead>Armed</TableHead>
+                    </TableRow></TableHeader>
+                    <TableBody>
+                      {enforcement.data.tables.map((t) => (
+                        <TableRow key={t.table}>
+                          <TableCell className="font-mono text-xs">{t.table}</TableCell>
+                          <TableCell>{t.exists ? 'yes' : 'no'}</TableCell>
+                          <TableCell>{t.rls_enabled ? 'enabled' : 'disabled'}</TableCell>
+                          <TableCell>{t.rls_forced ? 'forced' : 'no'}</TableCell>
+                          <TableCell className="text-right">{formatNum(t.policies.length)}</TableCell>
+                          <TableCell>
+                            <span className={`rounded-full border px-2 py-0.5 text-xs font-medium ${
+                              t.armed ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-gray-100 text-gray-500 border-gray-200'
+                            }`}>{t.armed ? 'Armed' : 'Not armed'}</span>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                  {enforcement.data.notes.length > 0 && (
+                    <div className="mt-3 space-y-1">
+                      {enforcement.data.notes.map((n, i) => (
+                        <p key={i} className="flex items-start gap-1.5 text-xs text-gray-500"><Info className="mt-0.5 h-3 w-3 shrink-0" /> {n}</p>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+            </CardContent>
+          </Card>
+
           <GeneratedAt at={isolation.data.generated_at} />
         </>
       )}

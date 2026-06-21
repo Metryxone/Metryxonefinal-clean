@@ -67,6 +67,14 @@ export interface TenantManagement {
     channel_referrals: number;
   };
   categories: { category: string; tenants: number; active: number; seats: number; active_users: number }[];
+  entity_counts: {
+    tenant_partitioned: boolean;
+    source: string;
+    employers: number | null;
+    institutes: number | null;
+    users: number | null;
+    sessions: number | null;
+  };
   tenants: {
     id: number;
     tenant_code: string;
@@ -111,6 +119,11 @@ export async function buildTenantManagement(pool: pg.Pool): Promise<TenantManage
         seat_utilization_pct: null, relationships: 0, partner_agreements: 0, channel_referrals: 0,
       },
       categories: CATEGORIES.map((c) => ({ category: c, tenants: 0, active: 0, seats: 0, active_users: 0 })),
+      entity_counts: {
+        tenant_partitioned: false,
+        source: 'employer_company_profiles · institutes · users · capadex_sessions (platform-wide)',
+        employers: null, institutes: null, users: null, sessions: null,
+      },
       tenants: [],
       relationships: [],
       notes: ['tenants table not present — no tenant substrate to manage yet.'],
@@ -242,6 +255,35 @@ export async function buildTenantManagement(pool: pg.Pool): Promise<TenantManage
   const totalSeats = tenants.reduce((s, t) => s + t.max_users, 0);
   const activeUsers = tenants.reduce((s, t) => s + t.active_users, 0);
 
+  // Composed entity counts (employers/institutes/users/sessions). HONEST PROVENANCE: the core entity
+  // tables carry NO tenant_id in the current substrate, so these are real PLATFORM-WIDE totals — never
+  // fabricated per-tenant attribution. Each count is null when its source table is absent/unreadable.
+  const countTable = async (table: string): Promise<number | null> => {
+    if (!(await exists(pool, table))) return null;
+    try {
+      const r = await pool.query(`SELECT COUNT(*)::int AS n FROM ${table}`);
+      return N(r.rows[0]?.n);
+    } catch {
+      degraded = true;
+      return null;
+    }
+  };
+  const [employers, institutes, users, sessions] = await Promise.all([
+    countTable('employer_company_profiles'),
+    countTable('institutes'),
+    countTable('users'),
+    countTable('capadex_sessions'),
+  ]);
+  const entity_counts = {
+    tenant_partitioned: false,
+    source: 'employer_company_profiles · institutes · users · capadex_sessions (platform-wide)',
+    employers,
+    institutes,
+    users,
+    sessions,
+  };
+  notes.push('Entity counts (employers/institutes/users/sessions) are PLATFORM-WIDE totals — the core entity tables carry no tenant_id in the current substrate, so per-tenant attribution is not available and is NOT fabricated.');
+
   return {
     generated_at,
     degraded,
@@ -258,6 +300,7 @@ export async function buildTenantManagement(pool: pg.Pool): Promise<TenantManage
     categories: CATEGORIES.map((c) => ({ category: c, ...catMap.get(c)! })),
     tenants,
     relationships,
+    entity_counts,
     notes,
   };
 }

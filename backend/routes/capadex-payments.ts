@@ -296,11 +296,25 @@ export function registerCapadexPaymentRoutes(app: Express, pool: Pool) {
   app.post('/api/capadex/payment/webhook', async (req: Request, res: Response, next: NextFunction) => {
     try {
       const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
-      if (webhookSecret) {
-        const signature = req.headers['x-razorpay-signature'] as string;
-        const body      = JSON.stringify(req.body);
-        const digest    = createHmac('sha256', webhookSecret).update(body).digest('hex');
-        if (signature !== digest) {
+      const configured    = !!getRazorpay();
+      // HMAC over the EXACT received bytes (req.rawBody, captured in index.ts). Re-serializing
+      // req.body re-orders/normalizes keys and breaks Razorpay signature verification.
+      const raw = (req as any).rawBody instanceof Buffer
+        ? (req as any).rawBody.toString('utf8')
+        : JSON.stringify(req.body ?? {});
+      if (configured) {
+        // Live Razorpay traffic MUST be signed — fail CLOSED (never process forged paid-confirmations).
+        if (!webhookSecret) return res.status(503).json({ error: 'webhook_secret_not_configured' });
+        const signature = req.headers['x-razorpay-signature'] as string | undefined;
+        const digest    = createHmac('sha256', webhookSecret).update(raw).digest('hex');
+        if (!signature || signature !== digest) {
+          return res.status(400).json({ error: 'Invalid webhook signature' });
+        }
+      } else if (webhookSecret) {
+        // Keyless/demo mode but a secret is set → still verify when a signature is present.
+        const signature = req.headers['x-razorpay-signature'] as string | undefined;
+        const digest    = createHmac('sha256', webhookSecret).update(raw).digest('hex');
+        if (!signature || signature !== digest) {
           return res.status(400).json({ error: 'Invalid webhook signature' });
         }
       }

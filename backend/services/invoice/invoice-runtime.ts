@@ -82,7 +82,7 @@ function normalizeSeller(r: any): SellerConfig & { id: string } {
 
 // ── Source resolution ────────────────────────────────────────────────────────────────────────
 
-export type SourceType = 'capadex_payment' | 'comm_subscription' | 'refund';
+export type SourceType = 'capadex_payment' | 'comm_subscription' | 'refund' | 'comm_refund';
 
 /**
  * Strict doc-type → allowed source-type map. `sourceType` is client-supplied, so it must NEVER be
@@ -97,12 +97,12 @@ const ALLOWED_SOURCE_TYPES: Record<DocType, SourceType[]> = {
   proforma: ['capadex_payment', 'comm_subscription'],
   debit_note: ['capadex_payment', 'comm_subscription'],
   payment_receipt: ['capadex_payment', 'comm_subscription'],
-  credit_note: ['capadex_payment', 'refund'],
-  refund_receipt: ['capadex_payment', 'refund'],
+  credit_note: ['capadex_payment', 'refund', 'comm_refund'],
+  refund_receipt: ['capadex_payment', 'refund', 'comm_refund'],
 };
 
 interface ResolvedSource {
-  source_type: 'capadex_payment' | 'comm_subscription' | 'refund';
+  source_type: 'capadex_payment' | 'comm_subscription' | 'refund' | 'comm_refund';
   source_id: string;
   customer_email: string | null;
   customer_name: string | null;
@@ -164,6 +164,44 @@ async function resolveSource(
       amount_paise: amount,
       description: desc,
       is_refund: wantsRefund,
+    };
+  }
+
+  // comm_refund — the subscription refund ledger (the refund evidence comm_subscriptions lack). Only
+  // reachable for credit_note / refund_receipt via the allow-map above, so it can never flip a
+  // non-refund doc's status semantics.
+  if (sourceType === 'comm_refund') {
+    const { rows } = await pool.query(
+      `SELECT r.id, r.amount_paise, r.currency, r.status, r.reason,
+              c.email AS customer_email, c.name AS customer_name,
+              p.name AS plan_name
+       FROM comm_refunds r
+       JOIN comm_customers c ON c.id = r.customer_id
+       LEFT JOIN comm_subscriptions s ON s.id = r.subscription_id
+       LEFT JOIN comm_plans p ON p.id = s.plan_id
+       WHERE r.id = $1 LIMIT 1`,
+      [sourceId],
+    );
+    if (!rows.length) throw new AbstainError('source refund not found', 404);
+    const r = rows[0];
+    const rStatus = String(r.status ?? '').toLowerCase();
+    if (rStatus !== 'processed') {
+      throw new AbstainError(`refund is '${r.status}', not 'processed' — cannot issue ${DOC_TYPE_LABEL[docType]}`);
+    }
+    const amount = Number(r.amount_paise);
+    if (!Number.isFinite(amount) || amount <= 0) {
+      throw new AbstainError('source refund has no usable amount');
+    }
+    const desc = `${r.plan_name ? `${r.plan_name} subscription` : 'Subscription'} refund`;
+    return {
+      source_type: 'comm_refund',
+      source_id: String(r.id),
+      customer_email: r.customer_email ?? null,
+      customer_name: r.customer_name ?? null,
+      currency: r.currency || 'INR',
+      amount_paise: amount,
+      description: desc,
+      is_refund: true,
     };
   }
 

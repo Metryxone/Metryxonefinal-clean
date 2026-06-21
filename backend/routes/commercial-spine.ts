@@ -27,10 +27,13 @@ import { resolveDiscount, type CouponRow } from '../services/commercial/discount
 import {
   upsertCustomer, createSubscription, activateSubscription, renewSubscription,
   changePlan, cancelSubscription, expireSubscription, recordPaymentEvent,
-  markPastDue, sweepGraceExpirations,
+  markPastDue, sweepGraceExpirations, refundSubscription,
   getLinkedStagePayments, isSegment,
   type Segment, type BillingInterval,
 } from '../services/commercial/subscription-lifecycle-runtime';
+import {
+  getCreditBalance, listCreditEntries, issueCredit, applyCredit,
+} from '../services/commercial/credit-ledger-runtime';
 import { withIdempotency } from '../services/commercial/idempotency';
 import {
   getRazorpayCreds, isRazorpayConfigured, verifyPaymentSignature, verifySubscriptionSignature,
@@ -444,6 +447,100 @@ export function registerCommercialSpineRoutes(
     } catch (e) { next(e); }
   });
 
+  // ── Phase 6.3 — customer credit wallet ("Credits") ──────────────────────────────────────────
+  // Distinct two-segment paths (/customers/:id/credit-*) — no collision with /customers/:id.
+  app.get('/api/commercial/admin/customers/:id/credit-balance', subsGate, ...admin, async (req, res, next) => {
+    try {
+      const c = await pool.query(`SELECT id FROM comm_customers WHERE id=$1 LIMIT 1`, [req.params.id]);
+      if (!c.rows.length) return res.status(404).json({ error: 'customer not found' });
+      const balance_paise = await getCreditBalance(pool, req.params.id);
+      res.json({ customer_id: req.params.id, balance_paise, currency: 'INR' });
+    } catch (e) { next(e); }
+  });
+
+  app.get('/api/commercial/admin/customers/:id/credit-ledger', subsGate, ...admin, async (req, res, next) => {
+    try {
+      const c = await pool.query(`SELECT id FROM comm_customers WHERE id=$1 LIMIT 1`, [req.params.id]);
+      if (!c.rows.length) return res.status(404).json({ error: 'customer not found' });
+      const limit = asInt(req.query.limit, 100);
+      const rows = await listCreditEntries(pool, req.params.id, { limit });
+      const balance_paise = await getCreditBalance(pool, req.params.id);
+      res.json({ customer_id: req.params.id, balance_paise, rows });
+    } catch (e) { next(e); }
+  });
+
+  app.post('/api/commercial/admin/customers/:id/credit/issue', subsGate, ...admin, async (req, res, next) => {
+    try {
+      const b = req.body || {};
+      const amount = asInt(b.amount_paise);
+      if (amount <= 0) return res.status(400).json({ error: 'amount_paise must be > 0' });
+      const out = await issueCredit(pool, {
+        customer_id: req.params.id, amount_paise: amount,
+        reason: asStr(b.reason), ref_type: asStr(b.ref_type), ref_id: asStr(b.ref_id),
+      });
+      if (out == null) return res.status(404).json({ error: 'customer not found' });
+      res.status(201).json(out);
+    } catch (e: any) {
+      if (e?.status === 400) return res.status(400).json({ error: e.message });
+      next(e);
+    }
+  });
+
+  app.post('/api/commercial/admin/customers/:id/credit/apply', subsGate, ...admin, async (req, res, next) => {
+    try {
+      const b = req.body || {};
+      const amount = asInt(b.amount_paise);
+      if (amount <= 0) return res.status(400).json({ error: 'amount_paise must be > 0' });
+      const out = await applyCredit(pool, {
+        customer_id: req.params.id, amount_paise: amount,
+        reason: asStr(b.reason), ref_type: asStr(b.ref_type), ref_id: asStr(b.ref_id),
+      });
+      if (out == null) return res.status(404).json({ error: 'customer not found' });
+      res.status(201).json(out);
+    } catch (e: any) {
+      // Fail-closed: an over-draw surfaces as 400 with the current balance, never a silent overdraft.
+      if (e?.status === 400) {
+        return res.status(400).json({ error: e.message, balance_paise: e.balance_paise });
+      }
+      next(e);
+    }
+  });
+
+  // ── Phase 6.3 — subscription refund (writes the append-only comm_refunds ledger; status unchanged) ──
+  // Two-segment literal path; no collision with /subscriptions/:id. Idempotent via Idempotency-Key.
+  app.post('/api/commercial/admin/subscriptions/:id/refund', subsGate, ...admin, async (req, res, next) => {
+    try {
+      const b = req.body || {};
+      const amount_paise = b.amount_paise != null ? asInt(b.amount_paise) : null;
+      const reason = asStr(b.reason);
+      const razorpay_payment_id = asStr(b.razorpay_payment_id);
+      const idemKey = asStr(req.get('Idempotency-Key'));
+      const run = () => refundSubscription(pool, req.params.id, {
+        amount_paise, reason: reason ?? undefined, razorpay_payment_id,
+      });
+
+      if (idemKey) {
+        const outcome = await withIdempotency(pool, `sub:refund:${req.params.id}:${idemKey}`, 'sub_refund', async () => {
+          const out = await run();
+          return out ?? { __not_found: true };
+        });
+        if (outcome.replayed && outcome.response == null) {
+          return res.status(409).json({ error: 'refund_in_progress', retry: true });
+        }
+        if ((outcome.response as any)?.__not_found) return res.status(404).json({ error: 'subscription not found' });
+        return res.status(201).json({ ...(outcome.response as any), replayed: outcome.replayed });
+      }
+
+      const out = await run();
+      if (out == null) return res.status(404).json({ error: 'subscription not found' });
+      res.status(201).json(out);
+    } catch (e: any) {
+      // Abstain (no resolvable refund amount) surfaces as 400 — never a fabricated refund.
+      if (e?.status === 400) return res.status(400).json({ error: e.message });
+      next(e);
+    }
+  });
+
   app.get('/api/commercial/admin/subscriptions', subsGate, ...admin, async (req, res, next) => {
     try {
       const status = asStr(req.query.status); const segment = asStr(req.query.segment);
@@ -688,7 +785,11 @@ export function registerCommercialSpineRoutes(
   app.post('/api/commercial/razorpay/webhook', rzpGate, async (req, res, next) => {
     try {
       const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
-      const raw = JSON.stringify(req.body ?? {});
+      // HMAC over the EXACT received bytes (req.rawBody, captured in index.ts) — re-serializing
+      // req.body re-orders/normalizes keys and breaks signature verification.
+      const raw = (req as any).rawBody instanceof Buffer
+        ? (req as any).rawBody.toString('utf8')
+        : JSON.stringify(req.body ?? {});
       const configured = isRazorpayConfigured();
       if (configured) {
         // Real Razorpay traffic MUST be signed — fail CLOSED if the secret is missing or the

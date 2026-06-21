@@ -201,6 +201,45 @@ async function createSchema(pool: Pool): Promise<void> {
       updated_at             TIMESTAMPTZ NOT NULL DEFAULT now()
     );
 
+    -- ── Payment Engine (Phase 6.3) — subscription refund ledger + customer credit wallet ──
+    -- comm_subscriptions carry no refund ledger; comm_refunds is the append-only refund evidence
+    -- (a refund is a financial event, NOT a lifecycle status change — no comm_subscription_events row).
+    CREATE TABLE IF NOT EXISTS comm_refunds (
+      id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      subscription_id     UUID NOT NULL REFERENCES comm_subscriptions(id) ON DELETE CASCADE,
+      customer_id         UUID NOT NULL REFERENCES comm_customers(id)     ON DELETE CASCADE,
+      amount_paise        INTEGER NOT NULL CHECK (amount_paise > 0),
+      currency            TEXT NOT NULL DEFAULT 'INR',
+      reason              TEXT,
+      status              TEXT NOT NULL DEFAULT 'processed'
+        CHECK (status IN ('processed','pending','failed')),
+      razorpay_payment_id TEXT,
+      razorpay_refund_id  TEXT,
+      is_demo             BOOLEAN NOT NULL DEFAULT FALSE,
+      metadata            JSONB,
+      created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+
+    -- Append-only customer credit wallet. Balance is DERIVED (SUM of credit − debit); never a stored
+    -- mutable column. Each row snapshots balance_after_paise for an auditable running ledger.
+    CREATE TABLE IF NOT EXISTS comm_credit_ledger (
+      id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      customer_id         UUID NOT NULL REFERENCES comm_customers(id) ON DELETE CASCADE,
+      entry_type          TEXT NOT NULL CHECK (entry_type IN ('credit','debit')),
+      amount_paise        INTEGER NOT NULL CHECK (amount_paise > 0),
+      currency            TEXT NOT NULL DEFAULT 'INR',
+      reason              TEXT,
+      ref_type            TEXT,
+      ref_id              TEXT,
+      balance_after_paise INTEGER NOT NULL,
+      metadata            JSONB,
+      created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_comm_refunds_sub            ON comm_refunds(subscription_id);
+    CREATE INDEX IF NOT EXISTS idx_comm_refunds_customer       ON comm_refunds(customer_id);
+    CREATE INDEX IF NOT EXISTS idx_comm_credit_ledger_customer ON comm_credit_ledger(customer_id, created_at);
+
     CREATE INDEX IF NOT EXISTS idx_comm_products_segment        ON comm_products(segment);
     CREATE INDEX IF NOT EXISTS idx_comm_plans_product           ON comm_plans(product_id);
     CREATE INDEX IF NOT EXISTS idx_comm_bundle_items_bundle     ON comm_bundle_items(bundle_id);

@@ -10,6 +10,7 @@
  * Every transition appends a row to comm_subscription_events (append-only — never mutated in place).
  */
 import type { Pool } from 'pg';
+import { createRazorpayRefund, isRazorpayConfigured } from './razorpay-client';
 
 export type Segment = 'career_builder' | 'employer' | 'institution' | 'enterprise' | 'government';
 export type SubStatus = 'trial' | 'active' | 'past_due' | 'cancelled' | 'expired';
@@ -490,6 +491,96 @@ export async function recordPaymentEvent(
     event_type: args.succeeded ? 'payment_succeeded' : 'payment_failed',
     amount_paise: args.amount_paise ?? null, metadata: args.metadata ?? null,
   });
+}
+
+export interface RefundResult {
+  refund: {
+    id: string; subscription_id: string; customer_id: string;
+    amount_paise: number; currency: string; reason: string | null;
+    status: string; razorpay_payment_id: string | null; razorpay_refund_id: string | null;
+    is_demo: boolean; created_at: string;
+  };
+  razorpay_configured: boolean;
+  demo: boolean;
+}
+
+/**
+ * Phase 6.3 — refund a subscription into the append-only comm_refunds ledger.
+ *
+ * Amount resolution (NEVER fabricated): explicit override → last `payment_succeeded` event amount →
+ * plan price → ABSTAIN (throws 400). The gateway refund runs via createRazorpayRefund (demo fallback
+ * when keyless). A refund is a FINANCIAL event, not a lifecycle transition, so the subscription status
+ * is left unchanged and no comm_subscription_events row is written (its CHECK has no 'refunded').
+ *
+ * Returns null when the subscription does not exist.
+ */
+export async function refundSubscription(
+  pool: Pool,
+  subscriptionId: string,
+  opts: { amount_paise?: number | null; reason?: string; razorpay_payment_id?: string | null } = {},
+): Promise<RefundResult | null> {
+  const sub = await loadSub(pool, subscriptionId);
+  if (!sub) return null;
+
+  // Resolve amount + the original gateway payment id from the last recorded successful payment.
+  let amount: number | null =
+    opts.amount_paise != null && Number.isFinite(Number(opts.amount_paise)) ? Math.trunc(Number(opts.amount_paise)) : null;
+  let paymentId: string | null = opts.razorpay_payment_id ?? null;
+
+  if (amount == null || paymentId == null) {
+    const { rows } = await pool.query(
+      `SELECT amount_paise, metadata FROM comm_subscription_events
+       WHERE subscription_id=$1 AND event_type='payment_succeeded'
+       ORDER BY created_at DESC LIMIT 1`,
+      [subscriptionId],
+    );
+    if (rows.length) {
+      if (amount == null && rows[0].amount_paise != null) amount = Number(rows[0].amount_paise);
+      if (paymentId == null) {
+        const md = (rows[0].metadata ?? {}) as Record<string, unknown>;
+        paymentId = (md.razorpay_payment_id as string | undefined) ?? null;
+      }
+    }
+  }
+
+  // Plan price + currency (also the last-resort amount when no payment was recorded).
+  let currency = 'INR';
+  if (sub.plan_id) {
+    const { rows } = await pool.query(`SELECT price_paise, currency FROM comm_plans WHERE id=$1 LIMIT 1`, [sub.plan_id]);
+    if (rows.length) {
+      currency = rows[0].currency || 'INR';
+      if (amount == null && rows[0].price_paise != null) amount = Number(rows[0].price_paise);
+    }
+  }
+
+  if (amount == null || !Number.isFinite(amount) || amount <= 0) {
+    // Abstain rather than invent a refund amount.
+    throw Object.assign(new Error('no recorded payment amount to refund; supply amount_paise'), { status: 400 });
+  }
+
+  // Gateway refund. With a real payment id + configured keys this hits Razorpay; otherwise a demo /
+  // internal refund id is recorded — the ledger row is real either way (is_demo flags the difference).
+  let razorpayRefundId: string;
+  let configured = isRazorpayConfigured();
+  let demo = true;
+  if (paymentId) {
+    const r = await createRazorpayRefund({ paymentId, amountPaise: amount, notes: { subscription_id: subscriptionId } });
+    razorpayRefundId = r.data.id;
+    configured = r.configured;
+    demo = r.demo;
+  } else {
+    razorpayRefundId = `MANUAL_RFND_${Date.now()}`;
+    demo = true; // no gateway payment to reverse — manual/internal refund
+  }
+
+  const { rows } = await pool.query(
+    `INSERT INTO comm_refunds
+       (subscription_id, customer_id, amount_paise, currency, reason, status, razorpay_payment_id, razorpay_refund_id, is_demo, metadata)
+     VALUES ($1,$2,$3,$4,$5,'processed',$6,$7,$8,$9::jsonb) RETURNING *`,
+    [sub.id, sub.customer_id, amount, currency, opts.reason ?? null, paymentId, razorpayRefundId, demo,
+     JSON.stringify({ razorpay_configured: configured })],
+  );
+  return { refund: rows[0], razorpay_configured: configured, demo };
 }
 
 /** Read-only: bridge a customer to prior B2C stage purchases via EMAIL (never id-coerced). */

@@ -31,6 +31,14 @@ args = "build"
 task = "workflow.run"
 args = "Upload Service"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "metering-smoke"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "metering-safety"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -77,6 +85,28 @@ waitForPort = 8000
 
 [workflows.workflow.metadata]
 outputType = "console"
+
+[[workflows.workflow]]
+name = "metering-smoke"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx scripts/smoke-usage-metering-65.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "metering-safety"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx scripts/smoke-usage-metering-safety-65.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
 
 [[ports]]
 localPort = 5000

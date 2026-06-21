@@ -553,6 +553,16 @@ export const FEATURE_FLAGS = {
    *  nothing, and writes nothing. Flag OFF → every /api/commercial-validation/* route returns 503 BEFORE
    *  any DB touch → byte-identical legacy behaviour. Env: `FF_COMMERCIAL_VALIDATION`. */
   commercialValidation: false,
+  /** Phase 6.1 — Commercial Architecture. Net-new ADDITIVE catalog layer over the EXISTING comm_*
+   *  spine: the SKU layer (comm_skus = sku_master), Add-ons (comm_addons + comm_sku_addons), and a
+   *  first-class Entitlement Framework (comm_features + comm_plan_entitlements) that promotes the
+   *  code-only FEATURE_CLASSES vocabulary (services/commercial/plan-features.ts) to catalog DATA.
+   *  Structure: Product → Plan → SKU/Add-ons → Entitlements → Usage. Flag OFF → every
+   *  /api/commercial-architecture/* route returns 503 BEFORE any DB touch AND the lazy ensure-schema
+   *  never runs, so NO comm_skus / comm_addons / comm_sku_addons / comm_features /
+   *  comm_plan_entitlements table is created → byte-identical legacy. Composes the existing catalog
+   *  only — never a second ledger. Env: `FF_COMMERCIAL_ARCHITECTURE`. */
+  commercialArchitecture: false,
   /** Career Builder — First Outcome Evidence Loop. Captures real observed outcomes (goal
    *  achieved, EI lift, role change) per subject alongside the prior score that preceded them,
    *  and exposes a read-only validation engine that links score -> real outcome with honest n
@@ -1189,6 +1199,10 @@ export function isCommercialEntitlementEnforcementEnabled(): boolean {
 
 export function isCommercialValidationEnabled(): boolean {
   return isFlagEnabled('commercialValidation');
+}
+
+export function isCommercialArchitectureEnabled(): boolean {
+  return isFlagEnabled('commercialArchitecture');
 }
 
 export function isDecisionPersistenceEnabled(): boolean {

@@ -227,7 +227,62 @@ export async function runCommercialPlatformValidation(pool: Pool): Promise<Comme
         checks.push(check('coupon_redemption_cap', 'Coupon redeemed_count ≤ max_redemptions', overRedeemed === 0 ? 'pass' : 'fail',
           overRedeemed === 0 ? 'no coupon over its redemption cap.' : `${overRedeemed} coupon(s) over redemption cap.`));
       }
-      return area('commercial_layer', 'Commercial Layer', measurable, checks);
+
+      // ── Phase 6.1 Commercial Architecture layer (SKUs / Add-ons / Entitlement Framework). ──
+      // Each table is probed first; absent (flag never enabled) → skipped → byte-identical output.
+      if (await tableExists(pool, 'comm_skus')) {
+        const skus = await num(pool, 'SELECT COUNT(*)::int n FROM comm_skus');
+        checks.push(check('sku_coverage', 'SKU layer populated (Coverage axis)', skus > 0 ? 'pass' : 'warn',
+          skus > 0 ? `${skus} SKU(s).` : 'no SKUs seeded yet (Coverage gap, not a failure).'));
+        if (skus > 0) {
+          const negSku = await num(pool, 'SELECT COUNT(*)::int n FROM comm_skus WHERE price_paise IS NOT NULL AND price_paise < 0');
+          checks.push(check('sku_price_non_negative', 'SKU price_paise non-negative (when overridden)', negSku === 0 ? 'pass' : 'fail',
+            negSku === 0 ? 'all SKU prices non-negative.' : `${negSku} SKU(s) with negative price.`));
+          if (await tableExists(pool, 'comm_products')) {
+            const orphanSku = await num(pool,
+              'SELECT COUNT(*)::int n FROM comm_skus s WHERE s.product_id IS NOT NULL AND NOT EXISTS (SELECT 1 FROM comm_products pr WHERE pr.id = s.product_id)');
+            checks.push(check('sku_product_fk', 'Every SKU references an existing product', orphanSku === 0 ? 'pass' : 'fail',
+              orphanSku === 0 ? 'no orphan SKU→product.' : `${orphanSku} SKU(s) reference a missing product.`));
+          }
+        }
+      }
+      if (await tableExists(pool, 'comm_addons')) {
+        const addons = await num(pool, 'SELECT COUNT(*)::int n FROM comm_addons');
+        checks.push(check('addon_coverage', 'Add-on catalog populated (Coverage axis)', addons > 0 ? 'pass' : 'warn',
+          addons > 0 ? `${addons} add-on(s).` : 'no add-ons seeded yet (Coverage gap, not a failure).'));
+        if (addons > 0) {
+          const negAddon = await num(pool, 'SELECT COUNT(*)::int n FROM comm_addons WHERE price_paise IS NOT NULL AND price_paise < 0');
+          checks.push(check('addon_price_non_negative', 'Add-on price_paise non-negative', negAddon === 0 ? 'pass' : 'fail',
+            negAddon === 0 ? 'all add-on prices non-negative.' : `${negAddon} add-on(s) with negative price.`));
+        }
+      }
+      if (await tableExists(pool, 'comm_features')) {
+        const features = await num(pool, 'SELECT COUNT(*)::int n FROM comm_features');
+        checks.push(check('feature_framework_coverage', 'Entitlement-framework features defined (Coverage axis)', features > 0 ? 'pass' : 'warn',
+          features > 0 ? `${features} feature(s) in the framework.` : 'no features defined yet (Coverage gap, not a failure).'));
+        // Entitlement mapping invariants — guard the dependent tables.
+        if (await tableExists(pool, 'comm_plan_entitlements')) {
+          const ents = await num(pool, 'SELECT COUNT(*)::int n FROM comm_plan_entitlements');
+          if (ents > 0) {
+            const negQuota = await num(pool, 'SELECT COUNT(*)::int n FROM comm_plan_entitlements WHERE quota IS NOT NULL AND quota < 0');
+            checks.push(check('entitlement_quota_non_negative', 'Plan-entitlement quota non-negative (NULL = unlimited)', negQuota === 0 ? 'pass' : 'fail',
+              negQuota === 0 ? 'all entitlement quotas non-negative.' : `${negQuota} entitlement(s) with negative quota.`));
+            const orphanFeat = await num(pool,
+              'SELECT COUNT(*)::int n FROM comm_plan_entitlements pe WHERE NOT EXISTS (SELECT 1 FROM comm_features f WHERE f.code = pe.feature_code)');
+            checks.push(check('entitlement_feature_fk', 'Every plan-entitlement references an existing feature', orphanFeat === 0 ? 'pass' : 'fail',
+              orphanFeat === 0 ? 'no orphan entitlement→feature.' : `${orphanFeat} entitlement(s) reference a missing feature.`));
+            if (await tableExists(pool, 'comm_plans')) {
+              const orphanPlanEnt = await num(pool,
+                'SELECT COUNT(*)::int n FROM comm_plan_entitlements pe WHERE NOT EXISTS (SELECT 1 FROM comm_plans p WHERE p.id = pe.plan_id)');
+              checks.push(check('entitlement_plan_fk', 'Every plan-entitlement references an existing plan', orphanPlanEnt === 0 ? 'pass' : 'fail',
+                orphanPlanEnt === 0 ? 'no orphan entitlement→plan.' : `${orphanPlanEnt} entitlement(s) reference a missing plan.`));
+            }
+          }
+        }
+      }
+
+      return area('commercial_layer', 'Commercial Layer', measurable, checks,
+        ['Includes the Phase-6.1 architecture layer (SKUs / Add-ons / Entitlement Framework) when those tables exist; absent tables are skipped (byte-identical when the flag was never enabled).']);
     }),
   );
 

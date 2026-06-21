@@ -9,7 +9,7 @@ description: How MetryxOne actually builds/runs in prod, and why a backend tsc g
 - `run = cd backend && NODE_ENV=production npx tsx index.ts`
 - `build = cd frontend && npm run build && cp dist/. → backend/public/`
 
-So the **only** real launch gate is the frontend `vite build` (passes, ~35s). The backend is type-erased at runtime by tsx/esbuild — it is **never type-checked**.
+So the **only** real launch gate is the frontend `vite build` (passes; **takes >120s** — see "Running the frontend build as a gate" below). The backend is type-erased at runtime by tsx/esbuild — it is **never type-checked**.
 
 ## Do NOT try to "fix" the backend build into a tsc gate
 - `backend/package.json` `build:server` → `tsc -p server/tsconfig.build.json` (**file doesn't exist**) and `build:client` → `vite build` (no vite app in backend). The whole backend `npm run build` is vestigial/broken and unused by deploy.

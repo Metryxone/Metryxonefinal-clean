@@ -801,6 +801,21 @@ export const FEATURE_FLAGS = {
    *  legacy). GET is strictly read-only (zero DDL). Super-admin gated
    *  (operator-supplied employer ids => IDOR guard). Env: `FF_TALENT_FOUNDATION`. */
   talentFoundation: false,
+
+  /** PHASE 5.3 — Job Posting Engine (posting + management + approval workflow).
+   *  Additive engine over the EXISTING but previously-unconsumed lifecycle spine
+   *  (`job_postings` + `job_approval_logs` + `job_distributions`). Adds the three
+   *  deliverable engines as ONE coherent surface: job_posting_engine (Create /
+   *  Edit / Publish), job_management_engine (Pause / Close / Archive / Visibility),
+   *  and job_workflows (the HR -> Legal -> Leadership approval state machine, every
+   *  transition logged to job_approval_logs). NO new tables (one additive
+   *  `visibility` column). Flag OFF => the /api/job-posting-engine/* routes 503
+   *  BEFORE any DB touch (byte-identical legacy — no schema, no read, no write).
+   *  Writes happen ONLY on explicit POST/PUT; GET is read-only (to_regclass probe,
+   *  never DDL). Super-admin gated (operator-supplied ids => IDOR guard). State
+   *  transitions are validated (illegal transition => 409, never a throw). Env:
+   *  `FF_JOB_POSTING_ENGINE`. */
+  jobPostingEngine: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1191,6 +1206,10 @@ export function isTalentIntelligenceEnabled(): boolean {
 
 export function isTalentFoundationEnabled(): boolean {
   return isFlagEnabled('talentFoundation');
+}
+
+export function isJobPostingEngineEnabled(): boolean {
+  return isFlagEnabled('jobPostingEngine');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

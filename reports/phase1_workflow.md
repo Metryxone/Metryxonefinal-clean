@@ -235,6 +235,64 @@ each sub-phase tables ──get*Summary()──▶ per-phase admin report (cover
 
 ---
 
+## Module Reference — Functionality · How to manage · How to access
+
+**Access prerequisites (apply to every module):**
+- **Flag:** `FF_COMPETENCY_FRAMEWORK_INTELLIGENCE=1` must be set (it already is, in the `Backend API` workflow). Flag OFF → all endpoints 503 and the UI panels hide.
+- **Public reads (`/api/competency-intelligence/*`):** require a logged-in session (`requireAuth`). No session → 401.
+- **Admin endpoints (`/api/admin/competency-intelligence/*`):** require a **super-admin** session (`requireAuth` + `requireSuperAdmin`). Log in as `support@metryxone.com` (2FA-gated; in dev read the code from the `mfa_codes` table).
+- **UI home:** SuperAdmin Dashboard → the Competency Framework Intelligence area. Each module has its own panel under `frontend/src/components/superadmin/`.
+- **Manage via seed:** run from the repo as `cd backend && npx tsx scripts/<seed>.ts`. Seeds are **idempotent and additive** (safe to re-run; never mutate or duplicate the genome). Restart `Backend API` after a new route is added (not needed after a seed).
+
+### Phase 1 — Foundation (spine)
+- **Functionality:** governs and exposes the 299-competency genome + taxonomy (domain→family→competency), proficiency levels, indicators, aliases and the crosswalk as a single read-only "canonical spine" every other module hangs off.
+- **How to manage:** the genome is curated via SQL migration (the `onto_*` library; there is no runtime genome seed and no genome edit endpoint — it is read-only by design). Content changes go through a migration. The admin **readiness report** is how you monitor it.
+- **How to access:** `GET /api/competency-intelligence/{spine,competencies,role-requirements,levels,indicators,taxonomy,crosswalk}` · admin `GET /api/admin/competency-intelligence/readiness`. **UI:** `CompetencyFrameworkIntelligencePanel.tsx`.
+
+### Phase 1.1 — Competency Type Classification
+- **Functionality:** assigns each of the 299 competencies one of 5 types (behavioral · cognitive · functional · technical · future_skills) using deterministic family/lexicon rules, flagging low-confidence rows for review.
+- **How to manage:** `npx tsx scripts/seed-competency-types.ts` (re-run to re-classify after rule/genome changes). There is no per-row edit endpoint — classification is seed-driven; review quality through the classification report (`needs_review`).
+- **How to access:** `GET /types`, `GET /type-map?type=&needs_review=1` · admin `GET /api/admin/competency-intelligence/classification-report`. **UI:** surfaced inside the CFI panel.
+
+### Phase 1.2 — Competency Master Enhancement
+- **Functionality:** adds a status (active/inactive/deprecated) and 6 product-eligibility flags (assessment / EI / career-builder / employer / learning / future-ready) to each competency, controlling which downstream products may consume it.
+- **How to manage:** seed defaults with `npx tsx scripts/seed-competency-master.ts`, then curate each competency via `PATCH /api/admin/competency-intelligence/master/:id` (stamps `source=curated`; 404 if the id is unknown — never creates a competency). Easiest in the panel.
+- **How to access:** `GET /master?q&type&status&limit` · admin `GET .../master-summary`, `PATCH .../master/:id`. **UI:** `CompetencyMasterPanel.tsx`.
+
+### Phase 1.4 — Micro Competency Framework
+- **Functionality:** builds a parent→child (micro) hierarchy over the genome; a child is either a linked existing competency or a named-only micro (honestly flagged).
+- **How to manage:** seed with `npx tsx scripts/seed-micro-competency.ts`; then add/edit relationships via admin `POST` (create — validates parent & linked child exist), `PATCH /:id` (toggle active / reorder / relabel), `DELETE /:id`. All reversible; genome untouched.
+- **How to access:** `GET /micro-framework?parent_id&q&active`, `GET /micro-mapping` · admin `GET .../micro-framework/summary` + POST/PATCH/DELETE. **UI:** `CompetencyMicroFrameworkPanel.tsx`.
+
+### Phase 1.5 — Role Competency Profile Engine
+- **Functionality:** defines per-role competency requirements (required level · weight · criticality) and computes Role Profile, Role Competency Matrix, and weighted Role Readiness (actual vs required).
+- **How to manage:** seed with `npx tsx scripts/seed-role-competency-profile.ts`; then manage requirements via admin `POST` (validates role AND competency exist), `PATCH /:id` (level/weight/criticality/rationale/active), `DELETE /:id`.
+- **How to access:** `GET /role-profiles?role_id&q&active`, `GET /role-matrix`, `GET /role-readiness/:roleId?actuals=comp:level,...` · admin `GET .../role-profiles/summary`, `.../role-profiles/role/:roleId` + CRUD. **UI:** `RoleCompetencyProfilePanel.tsx`.
+
+### Phase 1.6 — Assessment Foundation Mapping
+- **Functionality:** connects the genome to the assessment surface via 3 mappings — Profile→Blueprint, Role→Assessment, Competency→Question — without redesigning any assessment flow.
+- **How to manage:** seed with `npx tsx scripts/seed-assessment-foundation-mapping.ts` (auto-derives blueprints from Phase 1.5 profiles, and competency→question links once real questions exist in `competency_question_templates`). Then admin-manage blueprints, blueprint-competencies, role-assessments and competency-questions via their CRUD endpoints (and bulk-map). Blueprint weights are validated to sum to 100 but **never auto-normalised**.
+- **How to access:** `GET /blueprints`, `/blueprints/:id`, `/role-assessments`, `/competency-questions` · admin `GET .../assessment-foundation/summary` + full CRUD (blueprints, blueprint-competencies, role-assessments, competency-questions). **UI:** `AssessmentFoundationMappingPanel.tsx`.
+
+### Phase 1.7 — Search & Discovery
+- **Functionality:** faceted search and bulk operations across all the layers above (genome + type + master + micro + role taxonomy), with facet counts and an "untyped" filter.
+- **How to manage:** no seed of its own (it reads the other modules); admins run cross-cutting actions via `bulkOperation` over a result set.
+- **How to access:** the search/facets functions (`searchCompetencies`, `getSearchFacets`, `searchMicroCompetencies`, `getSearchSummary`) power the search boxes embedded in the CFI panels. **UI:** search inputs within the CFI / panel surfaces.
+
+### Access at a glance
+
+| Module | UI panel (`components/superadmin/`) | Public read base `/api/competency-intelligence` | Admin base `/api/admin/competency-intelligence` | Seed script (`backend/scripts/`) |
+|---|---|---|---|---|
+| Foundation | `CompetencyFrameworkIntelligencePanel` | `/spine`, `/competencies`, `/taxonomy`, `/levels`, `/indicators`, `/crosswalk` | `/readiness` | (SQL migration — no runtime seed) |
+| 1.1 Type | (in CFI panel) | `/types`, `/type-map` | `/classification-report` | `seed-competency-types.ts` |
+| 1.2 Master | `CompetencyMasterPanel` | `/master` | `/master-summary`, `PATCH /master/:id` | `seed-competency-master.ts` |
+| 1.4 Micro | `CompetencyMicroFrameworkPanel` | `/micro-framework`, `/micro-mapping` | `/micro-framework/summary` + CRUD | `seed-micro-competency.ts` |
+| 1.5 Role Profile | `RoleCompetencyProfilePanel` | `/role-profiles`, `/role-matrix`, `/role-readiness/:roleId` | `/role-profiles/summary` + CRUD | `seed-role-competency-profile.ts` |
+| 1.6 Assessment Foundation | `AssessmentFoundationMappingPanel` | `/blueprints`, `/role-assessments`, `/competency-questions` | `/assessment-foundation/summary` + CRUD | `seed-assessment-foundation-mapping.ts` |
+| 1.7 Search | (search in CFI panels) | search/facets functions | `bulkOperation` | (none — reads other modules) |
+
+---
+
 ## End-to-end runtime sequence (how an assessment actually flows)
 
 The Phase 1 foundations are consumed downstream by the live assessment runtime:

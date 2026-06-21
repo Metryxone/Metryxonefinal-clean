@@ -816,6 +816,24 @@ export const FEATURE_FLAGS = {
    *  transitions are validated (illegal transition => 409, never a throw). Env:
    *  `FF_JOB_POSTING_ENGINE`. */
   jobPostingEngine: false,
+
+  /** PHASE 5.4 — Talent Discovery Engine (search + filter + curation surfaces).
+   *  Additive engine surfacing the three deliverables as ONE coherent surface:
+   *  candidate_search_engine (Search / Filter Candidates over the EXISTING
+   *  `employer_candidates` substrate), talent_discovery_engine (Talent
+   *  Segmentation read-only aggregation + Shortlists + Saved Searches) and
+   *  talent_pools (membership management). Candidate reads are strictly
+   *  read-only; FOUR new additive tables back the curation surfaces
+   *  (talent_pools + talent_pool_members, talent_shortlists +
+   *  talent_shortlist_members, talent_saved_searches). Flag OFF => the
+   *  /api/talent-discovery-engine/* routes 503 BEFORE any DB touch
+   *  (byte-identical legacy — no schema, no read, no write). DDL is created
+   *  lazily on the WRITE path only; GET is read-only (to_regclass probe, never
+   *  DDL). Super-admin gated; created_by/added_by are the authenticated
+   *  principal (IDOR guard). Membership is validated against employer_candidates
+   *  so pools/shortlists can never hold phantom members. Env:
+   *  `FF_TALENT_DISCOVERY`. */
+  talentDiscovery: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1210,6 +1228,10 @@ export function isTalentFoundationEnabled(): boolean {
 
 export function isJobPostingEngineEnabled(): boolean {
   return isFlagEnabled('jobPostingEngine');
+}
+
+export function isTalentDiscoveryEnabled(): boolean {
+  return isFlagEnabled('talentDiscovery');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

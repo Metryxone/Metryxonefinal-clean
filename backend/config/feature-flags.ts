@@ -546,6 +546,13 @@ export const FEATURE_FLAGS = {
    *  existing single super_admin gate on /api/admin/* remains the live enforcement path; RBAC grants are
    *  advisory definitions, never silently swapped in. Env: `FF_GOVERNANCE_RBAC_V2`. */
   governanceRbacV2: false,
+  /** Phase 6 — Commercial Platform Validation. A read-only, compose-only super-admin honesty/invariant
+   *  harness across the eight commercial subsystems (Commercial Layer, Institution Layer, Subscription,
+   *  Entitlement, Revenue, Platform Governance, Customer Success, Enterprise Readiness). It re-reads
+   *  already-recorded commercial data and composes existing pure read engines; it runs ZERO DDL, charges
+   *  nothing, and writes nothing. Flag OFF → every /api/commercial-validation/* route returns 503 BEFORE
+   *  any DB touch → byte-identical legacy behaviour. Env: `FF_COMMERCIAL_VALIDATION`. */
+  commercialValidation: false,
   /** Career Builder — First Outcome Evidence Loop. Captures real observed outcomes (goal
    *  achieved, EI lift, role change) per subject alongside the prior score that preceded them,
    *  and exposes a read-only validation engine that links score -> real outcome with honest n
@@ -1178,6 +1185,10 @@ export function isCommercialActivationEnabled(): boolean {
 
 export function isCommercialEntitlementEnforcementEnabled(): boolean {
   return isFlagEnabled('commercialEntitlementEnforcement');
+}
+
+export function isCommercialValidationEnabled(): boolean {
+  return isFlagEnabled('commercialValidation');
 }
 
 export function isDecisionPersistenceEnabled(): boolean {

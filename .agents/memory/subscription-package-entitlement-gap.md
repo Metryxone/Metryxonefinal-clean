@@ -4,7 +4,11 @@ description: Why package subscriptions are permanently entitlement-disjoint from
 ---
 
 ## The rule
-Package subscriptions (`student_subscriptions`) are child-keyed (`children.id`). CAPADEX entitlement resolves by `guest_email` (from `capadex_payments`). The `users` table has **no email column** (7 cols live-DB-matched: id / username / password / fullName / role / roles / createdAt — `schema.ts:88`). The identity bridge `guest_email → users.email → children.studentUserId → children.id → student_subscriptions.childId` is **structurally impossible** without a migration adding `email` to `users` or a new linking table.
+Package subscriptions (`student_subscriptions`) are child-keyed (`children.id`). CAPADEX entitlement resolves by `guest_email` (from `capadex_payments`).
+
+⚠️ **CORRECTION (Phase-6, 2026-06-21):** the **live** `users` table DOES carry `email` (cols: id, username, password, full_name, role, roles, created_at, **email, phone, account_type**) — drifted ahead of `schema.ts:88` (which may still declare only 7). So the *commercial* (`comm_*`) identity bridge is **email-resolvable today**: `users.email ↔ comm_customers.email ↔ comm_entitlement_grants.email`/`comm_usage_events.email`/`capadex_payments.email`, with `comm_subscriptions.customer_id → comm_customers.id` (and `comm_customers.user_id` for a hard FK). No migration needed for the comm path.
+
+The remaining gap is **package-specific**: the `guest_email → users.email → children.studentUserId → children.id → student_subscriptions.childId` chain still needs the `children` linkage; package subs are not email-keyed.
 
 **Why:** The CAPADEX B2C flow is free-flow (no registration required; `guest_email` is client-asserted). Package subscriptions are B2B (parent purchases for child via `POST /api/parent/assign-package`). These two identity spaces have never been wired.
 

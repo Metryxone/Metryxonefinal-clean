@@ -693,8 +693,23 @@ function PartnerEcosystemView() {
   const [rfAmount, setRfAmount] = useState('');
   const [rfDeal, setRfDeal] = useState('');
 
-  function exportCsv(path: string) {
-    window.open(`${P_BASE}${path}`, '_blank');
+  // Export filter state (optional — date range + status; empty = full export, byte-identical to before)
+  const [fltFrom, setFltFrom] = useState('');
+  const [fltTo, setFltTo] = useState('');
+  const [fltAgStatus, setFltAgStatus] = useState('');
+  const [fltRfStatus, setFltRfStatus] = useState('');
+
+  function buildExportQuery(status: string) {
+    const params = new URLSearchParams();
+    if (fltFrom) params.set('from', fltFrom);
+    if (fltTo) params.set('to', fltTo);
+    if (status) params.set('status', status);
+    const qs = params.toString();
+    return qs ? `?${qs}` : '';
+  }
+
+  function exportCsv(path: string, status = '') {
+    window.open(`${P_BASE}${path}${buildExportQuery(status)}`, '_blank');
   }
 
   async function post(path: string, body: any) {
@@ -739,6 +754,41 @@ function PartnerEcosystemView() {
         </Card>
       )}
 
+      {/* Export filters (optional — apply to the CSV exports below; empty = full export) */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-base"><Download className="h-4 w-4" /> Export filters</CardTitle>
+          <CardDescription>Optional reporting window + status applied to the CSV exports below. Leave blank to export everything.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap items-end gap-3">
+            <Field label="From (date)">
+              <input type="date" className="h-8 rounded border border-gray-300 px-2 text-sm" value={fltFrom} onChange={(e) => setFltFrom(e.target.value)} />
+            </Field>
+            <Field label="To (date)">
+              <input type="date" className="h-8 rounded border border-gray-300 px-2 text-sm" value={fltTo} onChange={(e) => setFltTo(e.target.value)} />
+            </Field>
+            <Field label="Agreement status">
+              <select className="h-8 rounded border border-gray-300 px-2 text-sm" value={fltAgStatus} onChange={(e) => setFltAgStatus(e.target.value)}>
+                <option value="">All</option>
+                {(m?.agreement_statuses ?? []).map((s) => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </Field>
+            <Field label="Referral status">
+              <select className="h-8 rounded border border-gray-300 px-2 text-sm" value={fltRfStatus} onChange={(e) => setFltRfStatus(e.target.value)}>
+                <option value="">All</option>
+                {(m?.referral_statuses ?? []).map((s) => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </Field>
+            {(fltFrom || fltTo || fltAgStatus || fltRfStatus) && (
+              <Button size="sm" variant="ghost" className="h-8" onClick={() => { setFltFrom(''); setFltTo(''); setFltAgStatus(''); setFltRfStatus(''); }}>
+                Clear
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Headline */}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <PStat label="Agreements" value={d.headline.total_agreements} icon={Handshake} />
@@ -756,7 +806,7 @@ function PartnerEcosystemView() {
               <CardDescription>Lifecycle: draft → active → suspended/expired → terminated.</CardDescription>
             </div>
             <Button size="sm" variant="outline" disabled={d.agreements.length === 0}
-              onClick={() => exportCsv('/agreements/export.csv')}>
+              onClick={() => exportCsv('/agreements/export.csv', fltAgStatus)}>
               <Download className="mr-1 h-3.5 w-3.5" /> Export CSV
             </Button>
           </div>
@@ -821,7 +871,7 @@ function PartnerEcosystemView() {
               <CardDescription>Attribution from a channel-partner tenant to a referred tenant; status drives payouts.</CardDescription>
             </div>
             <Button size="sm" variant="outline" disabled={d.referrals.length === 0}
-              onClick={() => exportCsv('/referrals/export.csv')}>
+              onClick={() => exportCsv('/referrals/export.csv', fltRfStatus)}>
               <Download className="mr-1 h-3.5 w-3.5" /> Export CSV
             </Button>
           </div>
@@ -912,7 +962,7 @@ function PartnerEcosystemView() {
               <CardDescription>Read-only. Earned = sum of converted-referral amounts — explicit, or auto-derived as commission&nbsp;%&nbsp;×&nbsp;deal&nbsp;value. Converted referrals with neither an amount nor a linkable deal value are an explicit coverage gap, never inferred.</CardDescription>
             </div>
             <Button size="sm" variant="outline" disabled={d.payouts.length === 0}
-              onClick={() => exportCsv('/payouts/export.csv')}>
+              onClick={() => exportCsv('/payouts/export.csv', fltRfStatus)}>
               <Download className="mr-1 h-3.5 w-3.5" /> Export CSV
             </Button>
           </div>

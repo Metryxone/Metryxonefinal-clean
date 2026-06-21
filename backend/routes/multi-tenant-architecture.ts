@@ -29,7 +29,7 @@ import {
 } from '../services/tenant/tenant-isolation-enforcement';
 import { ensureTenantRelationshipSchema } from '../services/tenant/tenant-relationship-schema';
 import { ensurePartnerEcosystemSchema } from '../services/tenant/partner-ecosystem-schema';
-import { buildPartnerEcosystem } from '../services/tenant/partner-ecosystem-engine';
+import { buildPartnerEcosystem, type PartnerEcosystemFilter } from '../services/tenant/partner-ecosystem-engine';
 import { buildPartnerEcosystemValidation } from '../services/tenant/partner-ecosystem-validation';
 import {
   upsertPartnerAgreement,
@@ -212,9 +212,17 @@ export function registerMultiTenantArchitectureRoutes(
   });
 
   // ── CSV exports (literal sub-paths — MUST be registered before /agreements/:id and /referrals/:id) ──
-  app.get('/api/admin/tenant-architecture/console/partner-ecosystem/agreements/export.csv', ...partnerChain, async (_req: any, res) => {
+  // Optional, additive query params ?from=YYYY-MM-DD&to=YYYY-MM-DD&status=... filter rows for periodic
+  // reporting. Absent params = full export (byte-identical to before). Read-only — never fabricates.
+  const exportFilter = (req: any): PartnerEcosystemFilter => ({
+    from: typeof req.query?.from === 'string' ? req.query.from : null,
+    to: typeof req.query?.to === 'string' ? req.query.to : null,
+    status: typeof req.query?.status === 'string' ? req.query.status : null,
+  });
+
+  app.get('/api/admin/tenant-architecture/console/partner-ecosystem/agreements/export.csv', ...partnerChain, async (req: any, res) => {
     try {
-      const eco = await buildPartnerEcosystem(pool);
+      const eco = await buildPartnerEcosystem(pool, exportFilter(req));
       const header = ['id', 'agreement_code', 'tenant_id', 'tenant_name', 'tenant_code', 'partner_type',
         'status', 'commission_pct', 'start_date', 'end_date', 'updated_at'];
       sendCsv(res, `partner_agreements_${csvStamp()}.csv`, header, eco.agreements);
@@ -223,9 +231,9 @@ export function registerMultiTenantArchitectureRoutes(
     }
   });
 
-  app.get('/api/admin/tenant-architecture/console/partner-ecosystem/referrals/export.csv', ...partnerChain, async (_req: any, res) => {
+  app.get('/api/admin/tenant-architecture/console/partner-ecosystem/referrals/export.csv', ...partnerChain, async (req: any, res) => {
     try {
-      const eco = await buildPartnerEcosystem(pool);
+      const eco = await buildPartnerEcosystem(pool, exportFilter(req));
       const header = ['id', 'referral_code', 'channel_partner_tenant_id', 'channel_partner_name',
         'referred_tenant_id', 'referred_tenant_name', 'status', 'commission_pct', 'commission_amount',
         'currency', 'referred_at', 'converted_at'];
@@ -235,9 +243,9 @@ export function registerMultiTenantArchitectureRoutes(
     }
   });
 
-  app.get('/api/admin/tenant-architecture/console/partner-ecosystem/payouts/export.csv', ...partnerChain, async (_req: any, res) => {
+  app.get('/api/admin/tenant-architecture/console/partner-ecosystem/payouts/export.csv', ...partnerChain, async (req: any, res) => {
     try {
-      const eco = await buildPartnerEcosystem(pool);
+      const eco = await buildPartnerEcosystem(pool, exportFilter(req));
       const header = ['channel_partner_tenant_id', 'channel_partner_name', 'referrals_total', 'converted',
         'pending', 'expired', 'rejected', 'earned_commission', 'currencies', 'converted_without_amount'];
       const rows = eco.payouts.map((p) => ({ ...p, currencies: p.currencies.join('/') }));

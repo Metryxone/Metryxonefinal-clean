@@ -45,6 +45,52 @@ async function columnExists(pool: pg.Pool, table: string, column: string): Promi
   }
 }
 
+/**
+ * Optional, additive export filter. Absent/empty fields behave exactly as before (full export):
+ *   - from/to: inclusive YYYY-MM-DD reporting window (UTC; `to` covers the whole day).
+ *   - status: exact status match (applies to agreement.status / referral.status).
+ * Read-only — only ever REMOVES rows from the result; never fabricates or back-fills.
+ */
+export interface PartnerEcosystemFilter {
+  from?: string | null;
+  to?: string | null;
+  status?: string | null;
+}
+
+interface NormalizedFilter {
+  status: string;
+  fromMs: number | null;
+  toMs: number | null;
+  hasDate: boolean;
+  active: boolean;
+}
+
+function parseDateBound(s: string | null | undefined, endOfDay: boolean): number | null {
+  if (s == null) return null;
+  const trimmed = String(s).trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) return null;
+  const t = Date.parse(`${trimmed}T${endOfDay ? '23:59:59.999' : '00:00:00.000'}Z`);
+  return Number.isFinite(t) ? t : null;
+}
+
+function normalizeFilter(f?: PartnerEcosystemFilter | null): NormalizedFilter {
+  const status = f?.status ? String(f.status).trim() : '';
+  const fromMs = parseDateBound(f?.from, false);
+  const toMs = parseDateBound(f?.to, true);
+  const hasDate = fromMs != null || toMs != null;
+  return { status, fromMs, toMs, hasDate, active: !!status || hasDate };
+}
+
+/** True when an ISO/date string falls inside [fromMs, toMs] (either bound may be null = open). */
+function tsInRange(iso: string | null, fromMs: number | null, toMs: number | null): boolean {
+  if (iso == null) return false;
+  const t = Date.parse(iso);
+  if (!Number.isFinite(t)) return false;
+  if (fromMs != null && t < fromMs) return false;
+  if (toMs != null && t > toMs) return false;
+  return true;
+}
+
 export interface PartnerAgreementRow {
   id: number;
   tenant_id: number;
@@ -117,10 +163,14 @@ export interface PartnerEcosystem {
   notes: string[];
 }
 
-export async function buildPartnerEcosystem(pool: pg.Pool): Promise<PartnerEcosystem> {
+export async function buildPartnerEcosystem(
+  pool: pg.Pool,
+  filter?: PartnerEcosystemFilter | null,
+): Promise<PartnerEcosystem> {
   const notes: string[] = [];
   let degraded = false;
   const generated_at = new Date().toISOString();
+  const nf = normalizeFilter(filter);
 
   const hasAgreements = await exists(pool, 'tenant_partner_agreements');
   const hasReferrals = await exists(pool, 'tenant_channel_referrals');
@@ -141,7 +191,10 @@ export async function buildPartnerEcosystem(pool: pg.Pool): Promise<PartnerEcosy
   }
 
   // ── Agreements ─────────────────────────────────────────────────────────────
-  const agreements: PartnerAgreementRow[] = [];
+  // Filtering is applied AFTER mapping (read-only — only removes rows). An agreement matches the
+  // date window if any of its dates (start_date / end_date / updated_at) falls inside [from, to];
+  // status (when given) must match exactly. With no filter, every row is kept (byte-identical).
+  let agreements: PartnerAgreementRow[] = [];
   const agreementsByStatus: Record<string, number> = {};
   if (hasAgreements) {
     try {
@@ -154,7 +207,6 @@ export async function buildPartnerEcosystem(pool: pg.Pool): Promise<PartnerEcosy
          ORDER BY a.updated_at DESC NULLS LAST, a.id DESC`);
       for (const row of r.rows) {
         const status = String(row.status ?? 'unknown');
-        agreementsByStatus[status] = (agreementsByStatus[status] ?? 0) + 1;
         agreements.push({
           id: N(row.id),
           tenant_id: N(row.tenant_id),
@@ -169,6 +221,22 @@ export async function buildPartnerEcosystem(pool: pg.Pool): Promise<PartnerEcosy
           updated_at: row.updated_at ? new Date(row.updated_at).toISOString() : null,
         });
       }
+      if (nf.active) {
+        agreements = agreements.filter((a) => {
+          if (nf.status && a.status !== nf.status) return false;
+          if (nf.hasDate) {
+            const inWindow =
+              tsInRange(a.start_date, nf.fromMs, nf.toMs) ||
+              tsInRange(a.end_date, nf.fromMs, nf.toMs) ||
+              tsInRange(a.updated_at, nf.fromMs, nf.toMs);
+            if (!inWindow) return false;
+          }
+          return true;
+        });
+      }
+      for (const a of agreements) {
+        agreementsByStatus[a.status] = (agreementsByStatus[a.status] ?? 0) + 1;
+      }
     } catch (e) {
       degraded = true;
       notes.push('tenant_partner_agreements unreadable — degraded.');
@@ -180,7 +248,9 @@ export async function buildPartnerEcosystem(pool: pg.Pool): Promise<PartnerEcosy
   // Probe once and SELECT a NULL fallback so a legacy DB reads cleanly instead of degrading.
   const hasDealCols = hasReferrals && (await columnExists(pool, 'tenant_channel_referrals', 'deal_value'));
 
-  const referrals: ReferralRow[] = [];
+  // A referral matches the date window if referred_at OR converted_at falls inside [from, to];
+  // status (when given) must match exactly. Payouts (below) are derived from the FILTERED referrals.
+  let referrals: ReferralRow[] = [];
   const referralsByStatus: Record<string, number> = {};
   if (hasReferrals) {
     try {
@@ -197,7 +267,6 @@ export async function buildPartnerEcosystem(pool: pg.Pool): Promise<PartnerEcosy
          ORDER BY cr.referred_at DESC NULLS LAST, cr.id DESC`);
       for (const row of r.rows) {
         const status = String(row.status ?? 'unknown');
-        referralsByStatus[status] = (referralsByStatus[status] ?? 0) + 1;
         referrals.push({
           id: N(row.id),
           channel_partner_tenant_id: N(row.channel_partner_tenant_id),
@@ -215,6 +284,21 @@ export async function buildPartnerEcosystem(pool: pg.Pool): Promise<PartnerEcosy
           referred_at: row.referred_at ? new Date(row.referred_at).toISOString() : null,
           converted_at: row.converted_at ? new Date(row.converted_at).toISOString() : null,
         });
+      }
+      if (nf.active) {
+        referrals = referrals.filter((r2) => {
+          if (nf.status && r2.status !== nf.status) return false;
+          if (nf.hasDate) {
+            const inWindow =
+              tsInRange(r2.referred_at, nf.fromMs, nf.toMs) ||
+              tsInRange(r2.converted_at, nf.fromMs, nf.toMs);
+            if (!inWindow) return false;
+          }
+          return true;
+        });
+      }
+      for (const r2 of referrals) {
+        referralsByStatus[r2.status] = (referralsByStatus[r2.status] ?? 0) + 1;
       }
     } catch (e) {
       degraded = true;
@@ -285,6 +369,13 @@ export async function buildPartnerEcosystem(pool: pg.Pool): Promise<PartnerEcosy
   }
   if (hasReferrals && totalReferrals === 0) notes.push('No channel referrals recorded yet.');
   if (hasAgreements && agreements.length === 0) notes.push('No partner agreements recorded yet.');
+  if (nf.active) {
+    const parts: string[] = [];
+    if (nf.fromMs != null) parts.push(`from ${new Date(nf.fromMs).toISOString().slice(0, 10)}`);
+    if (nf.toMs != null) parts.push(`to ${new Date(nf.toMs).toISOString().slice(0, 10)}`);
+    if (nf.status) parts.push(`status=${nf.status}`);
+    notes.push(`Filtered export: ${parts.join(', ')} (read-only — rows outside the window are excluded, nothing fabricated).`);
+  }
 
   return {
     generated_at, degraded, substrate,

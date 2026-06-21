@@ -172,6 +172,22 @@ export function registerMultiTenantArchitectureRoutes(
     return res.status(500).json({ error: `${label} failed` });
   };
 
+  // CSV serialization helper — neutralises spreadsheet formula injection + quotes special chars.
+  const csvEscape = (v: unknown): string => {
+    if (v === null || v === undefined) return '';
+    let s = String(v);
+    if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`;
+    return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  const sendCsv = (res: any, filename: string, header: string[], rows: any[]) => {
+    const lines = [header.map(csvEscape).join(',')];
+    for (const r of rows) lines.push(header.map((h) => csvEscape(r[h])).join(','));
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.send(lines.join('\n'));
+  };
+  const csvStamp = () => new Date().toISOString().slice(0, 10);
+
   // ── Reads (literal sub-paths registered before any /:id param routes) ──────────
   app.get('/api/admin/tenant-architecture/console/partner-ecosystem/ping', ...partnerChain, (_req: any, res) => {
     res.json({ enabled: true });
@@ -192,6 +208,42 @@ export function registerMultiTenantArchitectureRoutes(
       res.json(await buildPartnerEcosystemValidation(pool));
     } catch (err) {
       handlePartnerError(err, res, 'validation');
+    }
+  });
+
+  // ── CSV exports (literal sub-paths — MUST be registered before /agreements/:id and /referrals/:id) ──
+  app.get('/api/admin/tenant-architecture/console/partner-ecosystem/agreements/export.csv', ...partnerChain, async (_req: any, res) => {
+    try {
+      const eco = await buildPartnerEcosystem(pool);
+      const header = ['id', 'agreement_code', 'tenant_id', 'tenant_name', 'tenant_code', 'partner_type',
+        'status', 'commission_pct', 'start_date', 'end_date', 'updated_at'];
+      sendCsv(res, `partner_agreements_${csvStamp()}.csv`, header, eco.agreements);
+    } catch (err) {
+      handlePartnerError(err, res, 'agreements export');
+    }
+  });
+
+  app.get('/api/admin/tenant-architecture/console/partner-ecosystem/referrals/export.csv', ...partnerChain, async (_req: any, res) => {
+    try {
+      const eco = await buildPartnerEcosystem(pool);
+      const header = ['id', 'referral_code', 'channel_partner_tenant_id', 'channel_partner_name',
+        'referred_tenant_id', 'referred_tenant_name', 'status', 'commission_pct', 'commission_amount',
+        'currency', 'referred_at', 'converted_at'];
+      sendCsv(res, `partner_referrals_${csvStamp()}.csv`, header, eco.referrals);
+    } catch (err) {
+      handlePartnerError(err, res, 'referrals export');
+    }
+  });
+
+  app.get('/api/admin/tenant-architecture/console/partner-ecosystem/payouts/export.csv', ...partnerChain, async (_req: any, res) => {
+    try {
+      const eco = await buildPartnerEcosystem(pool);
+      const header = ['channel_partner_tenant_id', 'channel_partner_name', 'referrals_total', 'converted',
+        'pending', 'expired', 'rejected', 'earned_commission', 'currencies', 'converted_without_amount'];
+      const rows = eco.payouts.map((p) => ({ ...p, currencies: p.currencies.join('/') }));
+      sendCsv(res, `partner_payouts_${csvStamp()}.csv`, header, rows);
+    } catch (err) {
+      handlePartnerError(err, res, 'payouts export');
     }
   });
 

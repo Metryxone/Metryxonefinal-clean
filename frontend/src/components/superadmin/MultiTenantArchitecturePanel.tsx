@@ -13,7 +13,7 @@ import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Building2, ShieldCheck, Settings, CheckCircle2, AlertTriangle, RefreshCw, Info,
-  Network, Users, Layers, Lock, Handshake, Wallet, GitBranch, Plus,
+  Network, Users, Layers, Lock, Handshake, Wallet, GitBranch, Plus, Download,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Badge } from '../ui/badge';
@@ -690,6 +690,10 @@ function PartnerEcosystemView() {
   const [rfPct, setRfPct] = useState('');
   const [rfAmount, setRfAmount] = useState('');
 
+  function exportCsv(path: string) {
+    window.open(`${P_BASE}${path}`, '_blank');
+  }
+
   async function post(path: string, body: any) {
     setBusy(true); setErr(null);
     try {
@@ -743,8 +747,16 @@ function PartnerEcosystemView() {
       {/* Agreements */}
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-base"><Handshake className="h-4 w-4" /> Partner Agreements</CardTitle>
-          <CardDescription>Lifecycle: draft → active → suspended/expired → terminated.</CardDescription>
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <CardTitle className="flex items-center gap-2 text-base"><Handshake className="h-4 w-4" /> Partner Agreements</CardTitle>
+              <CardDescription>Lifecycle: draft → active → suspended/expired → terminated.</CardDescription>
+            </div>
+            <Button size="sm" variant="outline" disabled={d.agreements.length === 0}
+              onClick={() => exportCsv('/agreements/export.csv')}>
+              <Download className="mr-1 h-3.5 w-3.5" /> Export CSV
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* New agreement form */}
@@ -800,8 +812,16 @@ function PartnerEcosystemView() {
       {/* Referrals */}
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-base"><GitBranch className="h-4 w-4" /> Channel Referrals</CardTitle>
-          <CardDescription>Attribution from a channel-partner tenant to a referred tenant; status drives payouts.</CardDescription>
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <CardTitle className="flex items-center gap-2 text-base"><GitBranch className="h-4 w-4" /> Channel Referrals</CardTitle>
+              <CardDescription>Attribution from a channel-partner tenant to a referred tenant; status drives payouts.</CardDescription>
+            </div>
+            <Button size="sm" variant="outline" disabled={d.referrals.length === 0}
+              onClick={() => exportCsv('/referrals/export.csv')}>
+              <Download className="mr-1 h-3.5 w-3.5" /> Export CSV
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap items-end gap-2 rounded-md border border-gray-100 bg-gray-50 p-3">
@@ -856,8 +876,16 @@ function PartnerEcosystemView() {
       {/* Payouts */}
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-base"><Wallet className="h-4 w-4" /> Commission Payouts</CardTitle>
-          <CardDescription>Read-only. Earned = sum of converted-referral amounts; converted referrals without an amount are an explicit coverage gap, never inferred.</CardDescription>
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <CardTitle className="flex items-center gap-2 text-base"><Wallet className="h-4 w-4" /> Commission Payouts</CardTitle>
+              <CardDescription>Read-only. Earned = sum of converted-referral amounts; converted referrals without an amount are an explicit coverage gap, never inferred.</CardDescription>
+            </div>
+            <Button size="sm" variant="outline" disabled={d.payouts.length === 0}
+              onClick={() => exportCsv('/payouts/export.csv')}>
+              <Download className="mr-1 h-3.5 w-3.5" /> Export CSV
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           {d.payouts.length === 0 ? (

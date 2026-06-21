@@ -972,3 +972,9 @@ id = "olM4Ioij1o5Pty2mIlnUa"
 uri = "file://reports/founder_dashboard_report.md"
 type = "text"
 title = "Founder Control Center Report"
+
+[[outputs]]
+id = "Q-25RdPkph13xXzY-erL0"
+uri = "file://reports/phase1_competency_assessment_completeness.md"
+type = "text"
+title = "Phase 1 Competency Assessment — Completeness Analysis"

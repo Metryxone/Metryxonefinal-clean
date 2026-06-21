@@ -865,6 +865,20 @@ export const FEATURE_FLAGS = {
    *  ranking — NEVER a hire/suitability verdict. Super-admin gated. Env:
    *  `FF_HIRING_ASSESSMENT`. */
   hiringAssessment: false,
+
+  /** PHASE 5.8 — Candidate Comparison (candidate_comparison_engine). Compares two
+   *  or more employer candidates for a job across six developmental dimensions
+   *  (Competencies, EI, Career Readiness, Signals, Strengths, Gaps) by COMPOSING
+   *  existing read-only engines — nothing is re-scored. Subject-keyed dimensions
+   *  (readiness/signals/gaps) are gated behind competencyRuntimeReady() so a GET
+   *  never runs DDL; absent evidence is reported unmeasured, never fabricated.
+   *  Reads are GET-never-writes (to_regclass probe + degrade); the two net-new
+   *  tables (comparison_dashboard, comparison_reports) are created ONLY on the POST
+   *  write path while the flag is ON, so OFF is byte-identical legacy (every route
+   *  503 before any auth/DB/DDL touch). The output is a DEVELOPMENTAL comparison —
+   *  NEVER a hire/reject/suitability verdict. Super-admin gated. Env:
+   *  `FF_CANDIDATE_COMPARISON`. */
+  candidateComparison: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1271,6 +1285,10 @@ export function isEmployabilityMatchingEnabled(): boolean {
 
 export function isHiringAssessmentEnabled(): boolean {
   return isFlagEnabled('hiringAssessment');
+}
+
+export function isCandidateComparisonEnabled(): boolean {
+  return isFlagEnabled('candidateComparison');
 }
 
 export function isTalentDiscoveryEnabled(): boolean {

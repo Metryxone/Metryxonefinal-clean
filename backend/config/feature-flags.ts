@@ -907,6 +907,22 @@ export const FEATURE_FLAGS = {
    *  strictly belongs to job; feedback/scores scoped to a valid interview).
    *  Env: `FF_INTERVIEW_INTELLIGENCE`. */
   interviewIntelligence: false,
+
+  /** PHASE 5.11 — Hiring Intelligence. A PURE READ / compose layer over the Phase 5.10
+   *  interview substrate (interview_schedules/scores/feedback/decisions) + employer_candidates
+   *  operator columns (match_score/assessment_score/ei_score/rating/stage). Three engines
+   *  (hiring_intelligence_engine, success_prediction_engine, talent_potential_engine) fold
+   *  this OPERATOR-RECORDED evidence into six coverage-gated DEVELOPMENTAL indices: Hiring
+   *  Probability, Hiring Risk, Success Potential, Retention Potential, Leadership Potential,
+   *  Growth Potential. compose-never-recompute: deterministic weighted folds with an explicit
+   *  Coverage axis; unmeasured signals abstain (null), NEVER 0. These are directional
+   *  development signals — NOT predictions and NOT an algorithmic hiring/promotion/suitability
+   *  verdict (disclaimer + provenance on every output). GET-never-writes by construction: the
+   *  layer creates NO tables and writes NO rows (no POST, no ensure-schema); reads use a
+   *  to_regclass probe + degrade, so OFF is byte-identical legacy (every route 503 before any
+   *  auth/DB touch). Super-admin gated + IDOR job-scoped (candidate strictly belongs to job).
+   *  Env: `FF_HIRING_INTELLIGENCE`. */
+  hiringIntelligence: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1325,6 +1341,10 @@ export function isShortlistingEnabled(): boolean {
 
 export function isInterviewIntelligenceEnabled(): boolean {
   return isFlagEnabled('interviewIntelligence');
+}
+
+export function isHiringIntelligenceEnabled(): boolean {
+  return isFlagEnabled('hiringIntelligence');
 }
 
 export function isTalentDiscoveryEnabled(): boolean {

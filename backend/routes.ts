@@ -205,6 +205,7 @@ import { registerHiringAssessmentEngineRoutes } from "./routes/hiring-assessment
 import { registerCandidateComparisonEngineRoutes } from "./routes/candidate-comparison-engine";
 import { registerShortlistingEngineRoutes } from "./routes/shortlisting-engine";
 import { registerInterviewIntelligenceRoutes } from "./routes/interview-intelligence";
+import { registerHiringIntelligenceEngineRoutes } from "./routes/hiring-intelligence";
 import { registerVXCapabilityArchitectureRoutes } from "./routes/vx-capability-architecture";
 import { registerVXLaborMarketIntelligenceRoutes } from "./routes/vx-labor-market-intelligence";
 import { registerVXEvidenceIntelligenceRoutes } from "./routes/vx-evidence-intelligence";
@@ -13490,6 +13491,7 @@ Rules:
   registerCandidateComparisonEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerShortlistingEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerInterviewIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerHiringIntelligenceEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCareerProgressionRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCareerValidationRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerAdaptiveBenchmarkRoutes({ app, pool: concernsPool });

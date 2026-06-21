@@ -879,6 +879,18 @@ export const FEATURE_FLAGS = {
    *  NEVER a hire/reject/suitability verdict. Super-admin gated. Env:
    *  `FF_CANDIDATE_COMPARISON`. */
   candidateComparison: false,
+
+  /** PHASE 5.9 — Shortlisting Engine. Operator-driven candidate hiring pipeline
+   *  over employer_candidates for a job: status management (review/shortlist/hold/
+   *  interview/offer/hire/reject) + append-only workflow tracking governed by a
+   *  workflow state-machine. Additive + compose-never-recompute: the engine RECORDS
+   *  human pipeline decisions and enforces valid transitions — it makes NO algorithmic
+   *  shortlisting/ranking/suitability verdict. GET-never-writes (to_regclass probe +
+   *  degrade); the two net-new tables (candidate_pipeline, workflow_transitions) are
+   *  created ONLY on the POST write path while the flag is ON, so OFF is byte-identical
+   *  legacy (every route 503 before any auth/DB/DDL touch). Super-admin gated + IDOR
+   *  job-scoped (strict equality). Env: `FF_SHORTLISTING`. */
+  shortlisting: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1289,6 +1301,10 @@ export function isHiringAssessmentEnabled(): boolean {
 
 export function isCandidateComparisonEnabled(): boolean {
   return isFlagEnabled('candidateComparison');
+}
+
+export function isShortlistingEnabled(): boolean {
+  return isFlagEnabled('shortlisting');
 }
 
 export function isTalentDiscoveryEnabled(): boolean {

@@ -774,6 +774,18 @@ export const FEATURE_FLAGS = {
    *  `FF_CAREER_VALIDATION`. */
   careerValidation: false,
 
+  /** PHASE 5.15 — Super Admin Validation. The EMPLOYER analog of 4.12: a read-only,
+   *  compose-only honesty/invariant harness a super-admin runs for ONE employer
+   *  subject across fourteen areas (Employer Setup … Audit Logs). It re-reads
+   *  already-recorded employer/talent data and composes the 0-DDL pure engines
+   *  (Notifications 5.14, Workforce 5.12); it performs NO new scoring. never-throws:
+   *  each area's failure is isolated to that area, never a 500. Flag OFF => the
+   *  /api/employer-validation/* routes 503 BEFORE any DB touch (byte-identical
+   *  legacy). GET is strictly read-only: zero DDL (to_regclass probes + pure
+   *  SELECT; no composed engine with a lazy ensure-schema is exercised). Env:
+   *  `FF_EMPLOYER_VALIDATION`. */
+  employerValidation: false,
+
   /** PHASE 5 — Talent Intelligence & Hiring Platform consolidation surface. A
    *  strictly additive, read-only aggregator that COMPOSES the already-built
    *  Phase-5 components (Employer / Recruiter / Job-Architecture / Talent-Matching
@@ -1342,6 +1354,10 @@ export function isCareerProgressionEnabled(): boolean {
 
 export function isCareerValidationEnabled(): boolean {
   return isFlagEnabled('careerValidation');
+}
+
+export function isEmployerValidationEnabled(): boolean {
+  return isFlagEnabled('employerValidation');
 }
 
 export function isTalentIntelligenceEnabled(): boolean {

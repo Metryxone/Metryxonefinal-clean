@@ -31,3 +31,11 @@ GET must stay byte-identical when columns are absent: it probes `columnExists` a
 SELECTs `NULL::numeric`/`NULL::text` fallbacks rather than reaching ensure-schema
 (DDL lives only on the POST/setup path). MTAPanel.tsx convert button uses a
 window.prompt: number=explicit, blank=link_deal auto-resolve, "none"=no value.
+
+**Historical backfill** (`scripts/partner-deal-value-backfill.ts`): fills pre-feature
+converted rows. It must call `ensurePartnerEcosystemSchema` FIRST — the deal_value /
+*_source columns are write-path lazy and absent until some POST runs. Re-runnable
+because the candidate WHERE only selects `status='converted' AND referred_tenant_id
+IS NOT NULL AND commission_amount IS NULL AND deal_value IS NULL` (filled rows drop
+out); the UPDATE re-asserts the NULL guard. Task-agent runs only touch the ISOLATED
+env — re-run against prod DATABASE_URL to actually shrink the live gap.

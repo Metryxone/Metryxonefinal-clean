@@ -15,7 +15,12 @@
  *     refuses (429) and does NOT write the over-quota event.
  */
 import type { Pool } from 'pg';
-import { parsePlanFeatures, isUsageType, type UsageType } from './plan-features';
+import { parsePlanFeatures, isUsageType, usageTypeKind, type UsageType } from './plan-features';
+import { getCreditBalance, applyCredit, type CreditMutationResult } from './credit-ledger-runtime';
+
+// A pool OR a transaction client — both expose .query. Reads accept either so they can run inside the
+// serialized record transaction (see recordUsage) without a second connection.
+type Queryable = Pick<Pool, 'query'>;
 
 export interface RecordUsageInput {
   email: string;
@@ -48,8 +53,14 @@ interface ActiveQuotaWindow {
  * Resolve the binding quota window for an identity + usage type from its ACTIVE subscriptions.
  * Most-generous (MAX) declared limit wins; its plan's current period defines the counting window.
  */
-async function resolveQuotaWindow(pool: Pool, email: string, usageType: UsageType): Promise<ActiveQuotaWindow> {
-  const { rows } = await pool.query(
+async function resolveQuotaWindow(db: Queryable, email: string, usageType: UsageType): Promise<ActiveQuotaWindow> {
+  // GET-never-writes: probe the catalog before reading; an absent substrate is an honest
+  // "no active subscription" state, never a thrown error and never a lazy schema bootstrap.
+  const probe = await db.query(`SELECT to_regclass('comm_subscriptions') AS oid`);
+  if (probe.rows[0]?.oid == null) {
+    return { limit: null, period_start: null, period_end: null, reason: 'no_active_subscription' };
+  }
+  const { rows } = await db.query(
     `SELECT p.metadata, s.current_period_start, s.current_period_end
        FROM comm_subscriptions s
        JOIN comm_customers c ON c.id = s.customer_id
@@ -82,15 +93,37 @@ async function resolveQuotaWindow(pool: Pool, email: string, usageType: UsageTyp
   return best;
 }
 
-/** Count usage events for an identity + type within a period window (calendar month when no window). */
+/**
+ * Resolve the current "used" reading for an identity + type, honouring the dimension's counting kind:
+ *   - period_count : SUM of event quantities since the period window start (calendar month default).
+ *   - level        : the LATEST recorded absolute reading (a gauge) — NOT a running sum. Storage is a
+ *                    current level, so summing every reading would double-count; the most recent row IS
+ *                    the current usage. Period-independent by design.
+ */
 async function countUsage(
-  pool: Pool,
+  db: Queryable,
   email: string,
   usageType: UsageType,
   periodStart: Date | null,
 ): Promise<number> {
+  // GET-never-writes: absent ledger → honest 0, never a bootstrap.
+  const probe = await db.query(`SELECT to_regclass('comm_usage_events') AS oid`);
+  if (probe.rows[0]?.oid == null) return 0;
+  if (usageTypeKind(usageType) === 'level') {
+    const { rows } = await db.query(
+      `SELECT quantity
+         FROM comm_usage_events
+        WHERE lower(email) = lower($1)
+          AND usage_type = $2
+        ORDER BY occurred_at DESC, created_at DESC
+        LIMIT 1`,
+      [email, usageType],
+    );
+    return Number(rows[0]?.quantity ?? 0);
+  }
+
   const start = periodStart ?? null;
-  const { rows } = await pool.query(
+  const { rows } = await db.query(
     `SELECT COALESCE(SUM(quantity), 0) AS used
        FROM comm_usage_events
       WHERE lower(email) = lower($1)
@@ -102,9 +135,9 @@ async function countUsage(
 }
 
 /** Evaluate a quota WITHOUT recording. Fail-closed when a declared limit is reached. */
-export async function checkQuota(pool: Pool, email: string, usageType: UsageType): Promise<QuotaState> {
-  const win = await resolveQuotaWindow(pool, email, usageType);
-  const used = await countUsage(pool, email, usageType, win.period_start);
+export async function checkQuota(db: Queryable, email: string, usageType: UsageType): Promise<QuotaState> {
+  const win = await resolveQuotaWindow(db, email, usageType);
+  const used = await countUsage(db, email, usageType, win.period_start);
 
   if (win.limit == null) {
     return {
@@ -137,32 +170,61 @@ export interface RecordResult {
  */
 export async function recordUsage(pool: Pool, input: RecordUsageInput): Promise<RecordResult> {
   const quantity = Math.max(1, Math.trunc(Number(input.quantity ?? 1)) || 1);
-  const pre = await checkQuota(pool, input.email, input.usageType);
+  const isLevel = usageTypeKind(input.usageType) === 'level';
 
-  // Over a declared quota → refuse (do not write). Unmetered (limit null) is always allowed.
-  if (!pre.allowed) {
-    return { recorded: false, quota: pre };
+  // Fail-closed must hold under CONCURRENCY: a plain read-then-insert lets two writers both pass the
+  // pre-check and overrun the limit. We serialize records for the SAME identity + usage_type with a
+  // transaction-scoped advisory lock so the pre-check and the insert are atomic. The lock releases on
+  // COMMIT/ROLLBACK and never blocks a DIFFERENT identity/type.
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query('SELECT pg_advisory_xact_lock(hashtext($1), hashtext($2))', [
+      input.email.toLowerCase(),
+      input.usageType,
+    ]);
+
+    const pre = await checkQuota(client, input.email, input.usageType);
+    if (isLevel) {
+      // LEVEL (storage): `quantity` is the NEW absolute reading, not an increment. Fail closed when the
+      // new level would exceed a declared limit (a level AT the limit is allowed). No declared limit →
+      // unmetered, always recorded.
+      if (pre.limit != null && quantity > pre.limit) {
+        await client.query('ROLLBACK');
+        return { recorded: false, quota: { ...pre, allowed: false, reason: 'quota_exceeded' } };
+      }
+    } else if (!pre.allowed) {
+      // PERIOD_COUNT: over a declared quota → refuse (do not write). Unmetered (limit null) → allowed.
+      await client.query('ROLLBACK');
+      return { recorded: false, quota: pre };
+    }
+
+    const { rows } = await client.query(
+      `INSERT INTO comm_usage_events (email, subscription_id, usage_type, quantity, metadata)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING id, email, usage_type, quantity, occurred_at`,
+      [input.email, input.subscriptionId ?? null, input.usageType, quantity, input.metadata ?? null],
+    );
+
+    const post = await checkQuota(client, input.email, input.usageType);
+    await client.query('COMMIT');
+    return {
+      recorded: true,
+      event: {
+        id: String(rows[0].id),
+        email: String(rows[0].email),
+        usage_type: rows[0].usage_type as UsageType,
+        quantity: Number(rows[0].quantity),
+        occurred_at: new Date(rows[0].occurred_at).toISOString(),
+      },
+      quota: post,
+    };
+  } catch (err) {
+    await client.query('ROLLBACK').catch(() => {});
+    throw err;
+  } finally {
+    client.release();
   }
-
-  const { rows } = await pool.query(
-    `INSERT INTO comm_usage_events (email, subscription_id, usage_type, quantity, metadata)
-     VALUES ($1, $2, $3, $4, $5)
-     RETURNING id, email, usage_type, quantity, occurred_at`,
-    [input.email, input.subscriptionId ?? null, input.usageType, quantity, input.metadata ?? null],
-  );
-
-  const post = await checkQuota(pool, input.email, input.usageType);
-  return {
-    recorded: true,
-    event: {
-      id: String(rows[0].id),
-      email: String(rows[0].email),
-      usage_type: rows[0].usage_type as UsageType,
-      quantity: Number(rows[0].quantity),
-      occurred_at: new Date(rows[0].occurred_at).toISOString(),
-    },
-    quota: post,
-  };
 }
 
 export interface UsageOverview {
@@ -225,6 +287,98 @@ export async function buildUsageOverview(pool: Pool): Promise<UsageOverview> {
       events: Number(r.events ?? 0),
       quantity: Number(r.quantity ?? 0),
     })),
+  };
+}
+
+// ── Credits dimension ──────────────────────────────────────────────────────────────────────────
+// The "Credits" business dimension is a CONSUMABLE BALANCE, not a period count — it is backed by the
+// append-only credit ledger (comm_credit_ledger), keyed by comm_customers.id. The metering layer is
+// keyed by email, so we bridge email → customer_id. We NEVER fabricate a balance: no customer row is a
+// distinct honest state (balance 0, can't spend), not a silent zero-allowance.
+
+/** Resolve a metering email to its commercial customer id (null when the customer does not exist). */
+export async function resolveCustomerId(pool: Pool, email: string): Promise<string | null> {
+  const { rows } = await pool.query(
+    `SELECT id FROM comm_customers WHERE lower(email) = lower($1) LIMIT 1`,
+    [email],
+  );
+  return rows.length ? String(rows[0].id) : null;
+}
+
+export interface CreditDimensionState {
+  email: string;
+  dimension: 'credits';
+  customer_id: string | null;
+  balance: number;       // consumable units remaining (paise on the credit ledger)
+  reason: string;        // has_customer | no_customer
+}
+
+/** Read the current credit balance for an identity WITHOUT mutating. No customer → honest 0. */
+export async function checkCreditDimension(pool: Pool, email: string): Promise<CreditDimensionState> {
+  const customerId = await resolveCustomerId(pool, email);
+  if (!customerId) {
+    return { email, dimension: 'credits', customer_id: null, balance: 0, reason: 'no_customer' };
+  }
+  const balance = await getCreditBalance(pool, customerId);
+  return { email, dimension: 'credits', customer_id: customerId, balance, reason: 'has_customer' };
+}
+
+export interface CreditSpendResult {
+  spent: boolean;
+  amount: number;
+  state: CreditDimensionState;
+  reason: string; // spent | no_customer | insufficient_balance | invalid_amount
+}
+
+/**
+ * Spend (draw down) credits for an identity. FAIL CLOSED: rejects when the customer does not exist or
+ * the balance is insufficient — never overdraws and never fabricates allowance. Append-only (a debit
+ * row) via the credit ledger's serialized writer.
+ */
+export async function spendCredits(
+  pool: Pool,
+  email: string,
+  amount: number,
+  opts: { reason?: string | null; refType?: string | null; refId?: string | null; metadata?: Record<string, unknown> | null } = {},
+): Promise<CreditSpendResult> {
+  const amt = Math.trunc(Number(amount));
+  const customerId = await resolveCustomerId(pool, email);
+  if (!customerId) {
+    return { spent: false, amount: 0, state: { email, dimension: 'credits', customer_id: null, balance: 0, reason: 'no_customer' }, reason: 'no_customer' };
+  }
+  if (!Number.isFinite(amt) || amt <= 0) {
+    const balance = await getCreditBalance(pool, customerId);
+    return { spent: false, amount: 0, state: { email, dimension: 'credits', customer_id: customerId, balance, reason: 'has_customer' }, reason: 'invalid_amount' };
+  }
+
+  let result: CreditMutationResult | null;
+  try {
+    result = await applyCredit(pool, {
+      customer_id: customerId,
+      amount_paise: amt,
+      reason: opts.reason ?? 'usage_metering_spend',
+      ref_type: opts.refType ?? 'metering',
+      ref_id: opts.refId ?? null,
+      metadata: opts.metadata ?? null,
+    });
+  } catch (err: any) {
+    // applyCredit throws (status 400) when the balance is insufficient — fail closed, do not overdraw.
+    const balance = await getCreditBalance(pool, customerId);
+    if (err?.message === 'insufficient_credit_balance') {
+      return { spent: false, amount: amt, state: { email, dimension: 'credits', customer_id: customerId, balance, reason: 'has_customer' }, reason: 'insufficient_balance' };
+    }
+    throw err;
+  }
+
+  // result is null only when the customer disappeared mid-flight (already resolved above) — treat as no_customer.
+  if (!result) {
+    return { spent: false, amount: amt, state: { email, dimension: 'credits', customer_id: null, balance: 0, reason: 'no_customer' }, reason: 'no_customer' };
+  }
+  return {
+    spent: true,
+    amount: amt,
+    state: { email, dimension: 'credits', customer_id: customerId, balance: result.balance_paise, reason: 'has_customer' },
+    reason: 'spent',
   };
 }
 

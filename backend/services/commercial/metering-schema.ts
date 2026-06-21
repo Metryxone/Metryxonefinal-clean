@@ -16,13 +16,18 @@ import type { Pool } from 'pg';
 let schemaPromise: Promise<void> | null = null;
 
 async function createSchema(pool: Pool): Promise<void> {
+  // Fresh DBs get the full Phase 6.5 vocabulary in the CHECK. Existing DBs created with the original
+  // 7-type CHECK are widened idempotently by the DO-block below (CREATE TABLE IF NOT EXISTS is a no-op
+  // there). The DO-block only ALTERs when the new vocabulary is not yet present, so it is cheap after
+  // the first run and never drops/recreates the constraint on every request.
   await pool.query(`
     CREATE TABLE IF NOT EXISTS comm_usage_events (
       id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       email           TEXT NOT NULL,
       subscription_id UUID,
       usage_type      TEXT NOT NULL
-        CHECK (usage_type IN ('views','searches','unlocks','assessments','downloads','exports','api')),
+        CHECK (usage_type IN ('views','searches','unlocks','assessments','downloads','exports','api',
+                              'candidates','jobs','employers','institutions','storage')),
       quantity        INTEGER NOT NULL DEFAULT 1 CHECK (quantity > 0),
       metadata        JSONB,
       occurred_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -32,6 +37,21 @@ async function createSchema(pool: Pool): Promise<void> {
     CREATE INDEX IF NOT EXISTS idx_comm_usage_type       ON comm_usage_events(usage_type);
     CREATE INDEX IF NOT EXISTS idx_comm_usage_occurred   ON comm_usage_events(occurred_at);
     CREATE INDEX IF NOT EXISTS idx_comm_usage_email_type ON comm_usage_events(lower(email), usage_type);
+
+    DO $$
+    BEGIN
+      IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint
+         WHERE conrelid = 'comm_usage_events'::regclass
+           AND conname  = 'comm_usage_events_usage_type_check'
+           AND pg_get_constraintdef(oid) LIKE '%institutions%'
+      ) THEN
+        ALTER TABLE comm_usage_events DROP CONSTRAINT IF EXISTS comm_usage_events_usage_type_check;
+        ALTER TABLE comm_usage_events ADD CONSTRAINT comm_usage_events_usage_type_check
+          CHECK (usage_type IN ('views','searches','unlocks','assessments','downloads','exports','api',
+                                'candidates','jobs','employers','institutions','storage'));
+      END IF;
+    END $$;
   `);
 }
 

@@ -16,7 +16,12 @@
 import type { Express } from 'express';
 import pg from 'pg';
 import { ensureMeteringSchema } from '../services/commercial/metering-schema';
-import { recordUsage, checkQuota, buildUsageOverview, isUsageType } from '../services/commercial/metering-engine';
+import { ensureCommercialSchema } from '../services/commercial/catalog-schema';
+import {
+  recordUsage, checkQuota, buildUsageOverview, isUsageType,
+  checkCreditDimension, spendCredits,
+} from '../services/commercial/metering-engine';
+import { buildIdentityConsumption, buildDimensionOverview } from '../services/commercial/consumption-engine';
 import {
   isCommercialUsageMeteringEnabled,
   isCommercialEntitlementEnforcementEnabled,
@@ -48,8 +53,21 @@ export function registerCommercialMeteringRoutes(
       res.status(503).json({ error: 'schema_unavailable' });
     }
   };
+  // Write chains bootstrap the ledger schema (write path). Read chains do NOT — GET-never-writes:
+  // consumption/balance/overview probe table existence and degrade to honest empties instead of DDL.
+  const ensureCreditSchema: GuardMW = async (_req, res, next) => {
+    try {
+      await ensureCommercialSchema(pool);
+      next();
+    } catch (err) {
+      console.error('[metering credit schema]', err);
+      res.status(503).json({ error: 'schema_unavailable' });
+    }
+  };
   const userChain = [requireAuth, requireMeteringFlag, ensureSchema];
-  const adminChain = [requireAuth, requireSuperAdmin, requireMeteringFlag, ensureSchema];
+  const userReadChain = [requireAuth, requireMeteringFlag];
+  const adminReadChain = [requireAuth, requireSuperAdmin, requireMeteringFlag];
+  const creditWriteChain = [requireAuth, requireMeteringFlag, ensureCreditSchema];
 
   const isSuperAdmin = (req: any): boolean => {
     const roles = req.user?.roles || [];
@@ -100,7 +118,7 @@ export function registerCommercialMeteringRoutes(
     }
   });
 
-  app.get('/api/commercial/metering/check', ...userChain, async (req: any, res) => {
+  app.get('/api/commercial/metering/check', ...userReadChain, async (req: any, res) => {
     try {
       const email = resolveEmail(req, req.query?.email);
       const usageType = String(req.query?.usage_type ?? '').trim();
@@ -114,13 +132,75 @@ export function registerCommercialMeteringRoutes(
     }
   });
 
-  app.get('/api/admin/commercial/metering/overview', ...adminChain, async (_req: any, res) => {
+  app.get('/api/admin/commercial/metering/overview', ...adminReadChain, async (_req: any, res) => {
     try {
       const overview = await buildUsageOverview(pool);
       res.json(overview);
     } catch (err) {
       console.error('[metering overview]', err);
       res.status(500).json({ error: 'overview failed' });
+    }
+  });
+
+  // ── Credits dimension (consumable balance via the credit ledger) ───────────────────────────────
+  // Spend (draw down) credits. FAIL CLOSED on no customer / insufficient balance (never overdraws).
+  app.post('/api/commercial/metering/credits/spend', ...creditWriteChain, async (req: any, res) => {
+    try {
+      const email = resolveEmail(req, req.body?.email);
+      if (!email) return res.status(400).json({ error: 'email required' });
+      const amount = Number(req.body?.amount);
+      if (!Number.isFinite(amount) || amount <= 0) return res.status(400).json({ error: 'amount must be a positive number' });
+      const result = await spendCredits(pool, email, amount, {
+        reason: typeof req.body?.reason === 'string' ? req.body.reason : null,
+        refType: typeof req.body?.ref_type === 'string' ? req.body.ref_type : null,
+        refId: typeof req.body?.ref_id === 'string' ? req.body.ref_id : null,
+        metadata: req.body?.metadata ?? null,
+      });
+      if (!result.spent) {
+        const status = result.reason === 'insufficient_balance' ? 402 : 400;
+        return res.status(status).json({ error: result.reason, state: result.state });
+      }
+      res.status(201).json(result);
+    } catch (err) {
+      console.error('[metering credits spend]', err);
+      res.status(500).json({ error: 'spend failed' });
+    }
+  });
+
+  // Read the current credit balance WITHOUT mutating (read-only: no schema bootstrap).
+  app.get('/api/commercial/metering/credits/balance', ...userReadChain, async (req: any, res) => {
+    try {
+      const email = resolveEmail(req, req.query?.email);
+      if (!email) return res.status(400).json({ error: 'email required' });
+      const state = await checkCreditDimension(pool, email);
+      res.json(state);
+    } catch (err) {
+      console.error('[metering credits balance]', err);
+      res.status(500).json({ error: 'balance failed' });
+    }
+  });
+
+  // ── Consumption view (all eight dimensions, read-only) ─────────────────────────────────────────
+  app.get('/api/commercial/metering/consumption', ...userReadChain, async (req: any, res) => {
+    try {
+      const email = resolveEmail(req, req.query?.email);
+      if (!email) return res.status(400).json({ error: 'email required' });
+      const consumption = await buildIdentityConsumption(pool, email);
+      res.json(consumption);
+    } catch (err) {
+      console.error('[metering consumption]', err);
+      res.status(500).json({ error: 'consumption failed' });
+    }
+  });
+
+  // System-wide consumption overview by business dimension (super-admin, read-only).
+  app.get('/api/admin/commercial/metering/dimensions', ...adminReadChain, async (_req: any, res) => {
+    try {
+      const overview = await buildDimensionOverview(pool);
+      res.json(overview);
+    } catch (err) {
+      console.error('[metering dimensions overview]', err);
+      res.status(500).json({ error: 'dimensions overview failed' });
     }
   });
 }

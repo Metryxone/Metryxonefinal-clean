@@ -20,17 +20,62 @@ export const FEATURE_CLASSES = [
 ] as const;
 export type FeatureClass = (typeof FEATURE_CLASSES)[number];
 
-/** Usage types METERED (what a subscription CONSUMES). Quotas are keyed by these. */
+/**
+ * Usage types METERED (what a subscription CONSUMES). Quotas are keyed by these.
+ *
+ * Phase 6.5 broadened this vocabulary to the eight business dimensions the product meters. The
+ * original action types (views/searches/unlocks/downloads/exports) remain; `assessments` + `api` were
+ * already present; `candidates`/`jobs`/`employers`/`institutions`/`storage` are added here. `credits`
+ * is NOT a usage_type — it is a consumable balance handled by the credit ledger (see below).
+ */
 export const USAGE_TYPES = [
   'views', 'searches', 'unlocks', 'assessments', 'downloads', 'exports', 'api',
+  'candidates', 'jobs', 'employers', 'institutions', 'storage',
 ] as const;
 export type UsageType = (typeof USAGE_TYPES)[number];
+
+/**
+ * The eight BUSINESS DIMENSIONS Phase 6.5 meters. Seven are backed by the usage-event ledger
+ * (`comm_usage_events`); `credits` is backed by the append-only credit ledger (`comm_credit_ledger`).
+ */
+export const BUSINESS_DIMENSIONS = [
+  'assessments', 'candidates', 'jobs', 'employers', 'institutions', 'api', 'storage', 'credits',
+] as const;
+export type BusinessDimension = (typeof BUSINESS_DIMENSIONS)[number];
+
+/**
+ * Counting semantics — tracked honestly per dimension (they are NOT all event counts):
+ *   - period_count : SUM of event quantities in the current billing period (assessments, candidates,
+ *                    jobs, employers, institutions, api — and the legacy action types).
+ *   - level        : a current absolute reading (a gauge), not a running total — the LATEST recorded
+ *                    value is the usage (storage).
+ *   - credit_balance: a consumable balance drawn down by spending (credits → credit ledger).
+ */
+export type UsageKind = 'period_count' | 'level';
+export type DimensionKind = UsageKind | 'credit_balance';
+
+const LEVEL_USAGE_TYPES: ReadonlySet<UsageType> = new Set(['storage']);
+
+/** Counting kind for a usage_type recorded to the event ledger. */
+export function usageTypeKind(t: UsageType): UsageKind {
+  return LEVEL_USAGE_TYPES.has(t) ? 'level' : 'period_count';
+}
+
+/** Counting kind for one of the eight business dimensions. */
+export function dimensionKind(d: BusinessDimension): DimensionKind {
+  if (d === 'credits') return 'credit_balance';
+  if (d === 'storage') return 'level';
+  return 'period_count';
+}
 
 export function isFeatureClass(v: unknown): v is FeatureClass {
   return typeof v === 'string' && (FEATURE_CLASSES as readonly string[]).includes(v);
 }
 export function isUsageType(v: unknown): v is UsageType {
   return typeof v === 'string' && (USAGE_TYPES as readonly string[]).includes(v);
+}
+export function isBusinessDimension(v: unknown): v is BusinessDimension {
+  return typeof v === 'string' && (BUSINESS_DIMENSIONS as readonly string[]).includes(v);
 }
 
 export interface PlanFeatures {

@@ -120,6 +120,17 @@ async function main() {
   const noCust = await spendCredits(pool, 'nobody-65@example.com', 10);
   ok('spend for non-customer rejected (no_customer)', noCust.spent === false && noCust.reason === 'no_customer', noCust);
 
+  // GET-never-writes / honest degrade: with the credit substrate absent, the read path must NOT throw
+  // or bootstrap schema — it returns an honest no_substrate state. Simulate absence with a fake db whose
+  // to_regclass probe reports the tables missing.
+  const absentDb = { query: async () => ({ rows: [{ customers: null, ledger: null }] }) } as any;
+  let degradeThrew = false;
+  let degradeState: any = null;
+  try { degradeState = await checkCreditDimension(absentDb, EMAIL); } catch { degradeThrew = true; }
+  ok('credit read on absent substrate does not throw (non-500)', degradeThrew === false, degradeState);
+  ok('credit read on absent substrate → honest no_substrate, balance 0',
+    degradeState?.reason === 'no_substrate' && degradeState?.balance === 0, degradeState);
+
   // ── 6. Consumption view (all 8 dimensions) ─────────────────────────────────────────────────────
   console.log('\n[6] consumption view');
   const cons = await buildIdentityConsumption(pool, EMAIL);

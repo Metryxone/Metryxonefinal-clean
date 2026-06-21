@@ -297,7 +297,7 @@ export async function buildUsageOverview(pool: Pool): Promise<UsageOverview> {
 // distinct honest state (balance 0, can't spend), not a silent zero-allowance.
 
 /** Resolve a metering email to its commercial customer id (null when the customer does not exist). */
-export async function resolveCustomerId(pool: Pool, email: string): Promise<string | null> {
+export async function resolveCustomerId(pool: Queryable, email: string): Promise<string | null> {
   const { rows } = await pool.query(
     `SELECT id FROM comm_customers WHERE lower(email) = lower($1) LIMIT 1`,
     [email],
@@ -310,16 +310,26 @@ export interface CreditDimensionState {
   dimension: 'credits';
   customer_id: string | null;
   balance: number;       // consumable units remaining (paise on the credit ledger)
-  reason: string;        // has_customer | no_customer
+  reason: string;        // has_customer | no_customer | no_substrate
 }
 
-/** Read the current credit balance for an identity WITHOUT mutating. No customer → honest 0. */
-export async function checkCreditDimension(pool: Pool, email: string): Promise<CreditDimensionState> {
-  const customerId = await resolveCustomerId(pool, email);
+/**
+ * Read the current credit balance for an identity WITHOUT mutating. GET-never-writes: probe the
+ * substrate with to_regclass and degrade honestly (no_substrate) when the commercial tables are
+ * absent, rather than throwing or bootstrapping schema. No customer → honest 0.
+ */
+export async function checkCreditDimension(db: Queryable, email: string): Promise<CreditDimensionState> {
+  const probe = await db.query(
+    `SELECT to_regclass('comm_customers') AS customers, to_regclass('comm_credit_ledger') AS ledger`,
+  );
+  if (!probe.rows[0]?.customers || !probe.rows[0]?.ledger) {
+    return { email, dimension: 'credits', customer_id: null, balance: 0, reason: 'no_substrate' };
+  }
+  const customerId = await resolveCustomerId(db, email);
   if (!customerId) {
     return { email, dimension: 'credits', customer_id: null, balance: 0, reason: 'no_customer' };
   }
-  const balance = await getCreditBalance(pool, customerId);
+  const balance = await getCreditBalance(db as Pool, customerId);
   return { email, dimension: 'credits', customer_id: customerId, balance, reason: 'has_customer' };
 }
 

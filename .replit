@@ -47,6 +47,10 @@ args = "metering-concurrency"
 task = "workflow.run"
 args = "credits-concurrency"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "credits-issue-concurrency"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -134,6 +138,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx scripts/smoke-credits-spend-concurrency-65.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "credits-issue-concurrency"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx scripts/smoke-credits-issue-concurrency-28.ts"
 
 [workflows.workflow.metadata]
 isValidation = true

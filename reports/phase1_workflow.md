@@ -194,6 +194,47 @@ competency ──deriveCompetencyQuestionMap / bulkMap──▶ onto_competency_
 
 ---
 
+## Reporting Layer (admin analytics — every sub-phase has one)
+
+Reporting is **not a separate phase** — each sub-phase ships its own read-only report function, and Phase 1's `getFrameworkReadiness` is the **master roll-up** across all of them. Every report follows the same honesty contract: **Coverage (does data exist) and Confidence (is it trustworthy/sufficient) are reported as SEPARATE axes**, every report returns plain-language `findings[]`, empty tables produce an explicit "run the seed …" instruction (never a fabricated number or placeholder).
+
+### Master report — Framework Readiness (roll-up)
+**Module:** `getFrameworkReadiness` (Phase 1 foundation) · **Endpoint:** `GET /api/admin/competency-intelligence/readiness`
+**Output:** `{ generated_at, spine, assets[], totals }` where each **asset** = `{ spec, coverage_rows, status }` and `status ∈ consumable | empty_pending_import | unknown` (derived from live row count). `totals = { total_assets, consumable, empty_pending_import, unknown }`.
+**Workflow:** `safeCount` each declared framework table → derive a per-asset status → aggregate. This is the one call that tells an admin *which sub-phases are data-active vs empty* (e.g. it flags 1.2 / 1.4 as `empty_pending_import` today).
+
+### Per-sub-phase reports
+
+| Phase | Module | Endpoint | Reports |
+|---|---|---|---|
+| **1.1** | `getClassificationReport` | `/admin/.../classification-report` | coverage · type distribution · classifier confidence · `needs_review` count · honest findings |
+| **1.2** | `getCompetencyMasterSummary` | `/admin/.../master-summary` | coverage · status breakdown · per-module eligibility counts (6 flags) · curated-vs-default provenance · findings |
+| **1.4** | `getMicroFrameworkSummary` | `/admin/.../micro-framework/summary` | coverage · linked-vs-named-only provenance · findings |
+| **1.5** | `getRoleCompetencyProfileSummary` | `/admin/.../role-profiles/summary` | coverage · weight integrity · criticality mix · findings |
+| **1.6** | `getAssessmentFoundationSummary` | `/admin/.../assessment-foundation/summary` | `blueprints_total`, `blueprint_competencies_total`, `unbalanced_blueprints` + `blueprint_integrity[]` (weights sum to 100 ±0.5, **reported as-is, never auto-normalised**), `roles_total/roles_mapped/role_coverage_pct`, competency-question links across N distinct competencies vs `questions_available`, source provenance, findings |
+| **1.7** | `getSearchSummary` | search summary | `competencies_total/active/deprecated`, `typed` vs `untyped`, domains/families, `micro_competencies`, taxonomy (industries/functions/departments/roles), `type_breakdown[]`, findings |
+
+### How the reports behave honestly (examples pulled from the code)
+- **1.6 empty blueprints →** finding: *"No assessment blueprints yet — run the seed to derive blueprints from the Phase 1.5 role competency profiles."*
+- **1.6 empty question bank →** finding: *"Competency question mapping is EMPTY because no questions exist in `competency_question_templates` yet — the mapping is infrastructure only; it is never seeded with placeholder questions."*
+- **1.6 unbalanced weights →** counted and listed, *"reported as-is, never auto-normalised."*
+- **1.7 untyped competencies →** surfaced under an "untyped" filter rather than force-classified.
+- **1.4 no micros →** *"No micro-competencies defined yet — micro search returns empty (honest, never seeded with placeholders)."*
+
+### Reporting data flow
+```
+each sub-phase tables ──get*Summary()──▶ per-phase admin report (coverage/confidence/findings)
+                                              │
+   onto_* table row counts ──safeCount──▶ getFrameworkReadiness ──▶ master readiness roll-up
+                                              │
+                                              ▼
+                  SuperAdmin UI (CFI tab / RoleCompetencyProfilePanel) renders the reports
+```
+
+**Live reporting state:** all report endpoints are live (401-gated). The readiness roll-up currently reports **1.2 (`onto_competency_master_ext`) and 1.4 (`onto_competency_hierarchy`) as empty/pending**, and 1.6 as active-but-thin (7 distinct competencies mapped) — i.e. the reporting layer itself already tells the honest activation story.
+
+---
+
 ## End-to-end runtime sequence (how an assessment actually flows)
 
 The Phase 1 foundations are consumed downstream by the live assessment runtime:

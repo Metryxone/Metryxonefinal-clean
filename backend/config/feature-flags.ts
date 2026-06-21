@@ -555,6 +555,13 @@ export const FEATURE_FLAGS = {
    *  Flag OFF → GET /api/admin/commercial/revenue/* routes 503 and the SuperAdmin Revenue tab is
    *  hidden → byte-identical legacy. Env: `FF_COMMERCIAL_REVENUE_INTELLIGENCE`. */
   commercialRevenueIntelligence: false,
+  /** Phase 6.8 Customer Success Intelligence — read-only admin analytics COMPOSING existing product
+   *  substrate into Adoption / Engagement / Assessment Completion / EI Usage / Career Builder Usage /
+   *  Employer Usage / Retention Risk / Expansion Opportunity, plus a transparent health index.
+   *  Never recomputes, never writes schema, never fabricates (honest no_substrate vs empty). Flag OFF
+   *  → GET /api/admin/commercial/success/* routes 503 and the SuperAdmin Customer Success tab is
+   *  hidden → byte-identical legacy. Env: `FF_COMMERCIAL_CUSTOMER_SUCCESS`. */
+  commercialCustomerSuccess: false,
   /** Critical Gaps #2 & #3 — operational RBAC + Audit Trail + Governance/Security Center. Gates the
    *  whole governance subsystem: role/permission framework + hierarchies + permission groups, admin
    *  lifecycle (activate/suspend/terminate), categorized audit logging, generalized approval workflows,
@@ -1248,6 +1255,10 @@ export function isCommercialRecurringRevenueEnabled(): boolean {
 
 export function isCommercialRevenueIntelligenceEnabled(): boolean {
   return isFlagEnabled('commercialRevenueIntelligence');
+}
+
+export function isCommercialCustomerSuccessEnabled(): boolean {
+  return isFlagEnabled('commercialCustomerSuccess');
 }
 
 export function isCommercialEntitlementEnabled(): boolean {

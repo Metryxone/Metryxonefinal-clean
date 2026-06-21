@@ -923,6 +923,20 @@ export const FEATURE_FLAGS = {
    *  auth/DB touch). Super-admin gated + IDOR job-scoped (candidate strictly belongs to job).
    *  Env: `FF_HIRING_INTELLIGENCE`. */
   hiringIntelligence: false,
+
+  /** PHASE 5.12 — Workforce Intelligence Foundation. A PURE read/compose layer that aggregates the
+   *  OPERATOR-RECORDED employer substrate (employer_jobs + employer_candidates operator columns +
+   *  skills / competency_profile JSONB) at the EMPLOYER → department / role level into coverage-gated
+   *  DEVELOPMENTAL workforce outputs: Team Competency Profile, Department Readiness, Skill Inventory,
+   *  Capability Heatmaps, Talent Distribution. compose-never-recompute: deterministic folds with an
+   *  explicit Coverage axis; unmeasured signals abstain (null), NEVER 0. These are directional
+   *  development signals — NOT predictions and NOT an algorithmic hiring/promotion/suitability verdict
+   *  (disclaimer + provenance on every output). GET-never-writes by construction: the layer creates NO
+   *  tables and writes NO rows (no POST, no ensure-schema); reads use a to_regclass probe + degrade, so
+   *  OFF is byte-identical legacy (every route 503 before any auth/DB touch). Super-admin gated + IDOR
+   *  employer-scoped (every read strictly scoped by employer_id; cross-employer rows never leak).
+   *  Env: `FF_WORKFORCE_INTELLIGENCE`. */
+  workforceIntelligence: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1345,6 +1359,10 @@ export function isInterviewIntelligenceEnabled(): boolean {
 
 export function isHiringIntelligenceEnabled(): boolean {
   return isFlagEnabled('hiringIntelligence');
+}
+
+export function isWorkforceIntelligenceEnabled(): boolean {
+  return isFlagEnabled('workforceIntelligence');
 }
 
 export function isTalentDiscoveryEnabled(): boolean {

@@ -900,3 +900,75 @@ id = "I_vXY8ZYVBh-9H4ANVNtM"
 uri = "file://backend/audit/phase-4/superadmin_validation_report.md"
 type = "text"
 title = "Super-Admin Validation Report (4.12)"
+
+[[outputs]]
+id = "rvTy9TfJurB9Ieaq4986S"
+uri = "file://reports/commercial_os_report.md"
+type = "text"
+title = "Commercial OS Report"
+
+[[outputs]]
+id = "JeRwoCkQ9dehG6LRIHRib"
+uri = "file://reports/subscription_report.md"
+type = "text"
+title = "Subscription Management Report"
+
+[[outputs]]
+id = "33IGx5YxCwTZYLhrA9-al"
+uri = "file://reports/payment_report.md"
+type = "text"
+title = "Payment Management Report"
+
+[[outputs]]
+id = "exUWHxHoX_6Tvq5VocIDM"
+uri = "file://reports/entitlement_report.md"
+type = "text"
+title = "Entitlement Engine Report"
+
+[[outputs]]
+id = "riMQWvju0yIDWFhF_WWum"
+uri = "file://reports/usage_metering_report.md"
+type = "text"
+title = "Usage Metering Report"
+
+[[outputs]]
+id = "8-GTrLmblcdyHic75mpKe"
+uri = "file://reports/revenue_intelligence_report.md"
+type = "text"
+title = "Revenue Intelligence Report"
+
+[[outputs]]
+id = "yczKBzGd1cMCcFiJNKqzK"
+uri = "file://reports/institution_os_report.md"
+type = "text"
+title = "Institution OS Report"
+
+[[outputs]]
+id = "4AVi4Y2AOClcOLQHFFAKR"
+uri = "file://reports/customer_success_report.md"
+type = "text"
+title = "Customer Success Report"
+
+[[outputs]]
+id = "_apx9ic4h91GO4-pEy-WN"
+uri = "file://reports/enterprise_governance_report.md"
+type = "text"
+title = "Enterprise Governance Report"
+
+[[outputs]]
+id = "TCwy9U7PrGX3zGdnXBl7v"
+uri = "file://reports/platform_intelligence_report.md"
+type = "text"
+title = "Platform Intelligence Report"
+
+[[outputs]]
+id = "HmQzU3enEJqTGhNefV7ix"
+uri = "file://reports/superadmin_command_center_report.md"
+type = "text"
+title = "SuperAdmin Command Center Report"
+
+[[outputs]]
+id = "olM4Ioij1o5Pty2mIlnUa"
+uri = "file://reports/founder_dashboard_report.md"
+type = "text"
+title = "Founder Control Center Report"

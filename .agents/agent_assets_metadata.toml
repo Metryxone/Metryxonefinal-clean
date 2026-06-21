@@ -978,3 +978,9 @@ id = "Q-25RdPkph13xXzY-erL0"
 uri = "file://reports/phase1_competency_assessment_completeness.md"
 type = "text"
 title = "Phase 1 Competency Assessment — Completeness Analysis"
+
+[[outputs]]
+id = "NBBAdbOcbaomEXSYPkkRu"
+uri = "file://reports/phase1_workflow.md"
+type = "text"
+title = "Competency Assessment — Phase 1 → 1.7 Detailed Workflow & Modules"

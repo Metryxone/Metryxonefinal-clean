@@ -13,6 +13,7 @@
  * papered over with a fabricated number).
  */
 import pg from 'pg';
+import { resolveReferredTenantDealValue } from './partner-ecosystem-actions';
 
 const N = (v: unknown): number => {
   const n = Number(v);
@@ -121,6 +122,31 @@ export interface ReferralRow {
   deal_value_source: string | null;
   /** How commission_amount was obtained ('explicit'|'derived'), or null when there is no amount. */
   commission_amount_source: string | null;
+  /**
+   * The earned amount that ACTUALLY feeds the payout totals for this referral, and how it was obtained.
+   * This is the single source of truth shared by the payout surface and the per-referral breakdown so the
+   * two can never disagree. Only CONVERTED referrals earn a commission:
+   *   - 'explicit'        — operator-typed commission_amount.
+   *   - 'derived_persisted' — commission_amount baked at write-time as pct × deal_value (source 'derived').
+   *   - 'derived_runtime' — no stored amount, derived here at read-time as commission_pct × deal_value.
+   *   - 'none'            — converted but neither an amount nor a derivable deal value (coverage gap).
+   * For non-converted referrals both fields are null (nothing is earned yet).
+   */
+  effective_commission_amount: number | null;
+  effective_commission_source: 'explicit' | 'derived_persisted' | 'derived_runtime' | 'none' | null;
+  /**
+   * Recurring vs one-time split of a LEDGER-sourced deal value, re-resolved read-only at request time
+   * (the split is computed at write time but never persisted). null for manually-typed deal values, or
+   * when the referred tenant's ledgers no longer resolve. `resolved_total` is the live sum of the
+   * components; `reconciles` is true when it still matches the stored deal_value (the split faithfully
+   * explains the recorded amount; false signals the ledgers have drifted since conversion).
+   */
+  deal_value_components: {
+    recurring: number;
+    onetime: number;
+    resolved_total: number;
+    reconciles: boolean;
+  } | null;
   currency: string;
   referred_at: string | null;
   converted_at: string | null;
@@ -280,6 +306,9 @@ export async function buildPartnerEcosystem(
           deal_value: numOrNull(row.deal_value),
           deal_value_source: row.deal_value_source ?? null,
           commission_amount_source: row.commission_amount_source ?? null,
+          effective_commission_amount: null,
+          effective_commission_source: null,
+          deal_value_components: null,
           currency: String(row.currency ?? 'INR'),
           referred_at: row.referred_at ? new Date(row.referred_at).toISOString() : null,
           converted_at: row.converted_at ? new Date(row.converted_at).toISOString() : null,
@@ -304,6 +333,30 @@ export async function buildPartnerEcosystem(
       degraded = true;
       notes.push('tenant_channel_referrals unreadable — degraded.');
     }
+  }
+
+  // ── Deal-value component breakdown (read-only re-resolution) ─────────────────
+  // The recurring vs one-time split is computed at write time (resolveReferredTenantDealValue) but never
+  // persisted, so to surface it we re-resolve from the live ledgers. Only ledger-sourced deal values have
+  // a breakdown — manually-typed deal values do not. resolveReferredTenantDealValue is read-only
+  // (to_regclass probes, no DDL), never throws, and returns null (honest gap) when nothing resolves.
+  const LEDGER_DEAL_SOURCES = new Set(['comm_subscriptions', 'capadex_payments', 'linked_ledger']);
+  for (const ref of referrals) {
+    if (ref.deal_value == null || ref.referred_tenant_id == null) continue;
+    if (!ref.deal_value_source || !LEDGER_DEAL_SOURCES.has(ref.deal_value_source)) continue;
+    try {
+      const resolved = await resolveReferredTenantDealValue(pool, ref.referred_tenant_id);
+      if (resolved) {
+        const resolvedTotal =
+          Math.round((resolved.components.recurring + resolved.components.onetime) * 100) / 100;
+        ref.deal_value_components = {
+          recurring: resolved.components.recurring,
+          onetime: resolved.components.onetime,
+          resolved_total: resolvedTotal,
+          reconciles: Math.abs(resolvedTotal - ref.deal_value) < 0.01,
+        };
+      }
+    } catch { /* honest: leave the split null rather than fabricate one */ }
   }
 
   // ── Payouts (read-only, honest) ──────────────────────────────────────────────
@@ -336,10 +389,16 @@ export async function buildPartnerEcosystem(
       let amt = ref.commission_amount;
       // Persisted-derived (baked at write-time) OR read-time derived both count as auto-derived.
       let derived = ref.commission_amount_source === 'derived';
+      let source: 'explicit' | 'derived_persisted' | 'derived_runtime' | 'none' =
+        amt != null ? (derived ? 'derived_persisted' : 'explicit') : 'none';
       if (amt == null && ref.deal_value != null && ref.commission_pct != null) {
         amt = Math.round((ref.commission_pct / 100) * ref.deal_value * 100) / 100;
         derived = true;
+        source = 'derived_runtime';
       }
+      // Stamp the per-referral effective amount so the breakdown UI mirrors payout truth exactly.
+      ref.effective_commission_amount = amt;
+      ref.effective_commission_source = source;
       if (amt != null) {
         p.earned_commission += amt;
         if (!p.currencies.includes(ref.currency)) p.currencies.push(ref.currency);

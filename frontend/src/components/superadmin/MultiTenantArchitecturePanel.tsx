@@ -14,6 +14,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Building2, ShieldCheck, Settings, CheckCircle2, AlertTriangle, RefreshCw, Info,
   Network, Users, Layers, Lock, Handshake, Wallet, GitBranch, Plus, Download,
+  ChevronRight, ChevronDown,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Badge } from '../ui/badge';
@@ -624,6 +625,11 @@ interface PReferral {
   referred_tenant_id: number | null; referred_tenant_name: string | null; referral_code: string;
   status: string; commission_pct: number | null; commission_amount: number | null; currency: string;
   deal_value: number | null; deal_value_source: string | null; commission_amount_source: string | null;
+  effective_commission_amount: number | null;
+  effective_commission_source: 'explicit' | 'derived_persisted' | 'derived_runtime' | 'none' | null;
+  deal_value_components: {
+    recurring: number; onetime: number; resolved_total: number; reconciles: boolean;
+  } | null;
   referred_at: string | null; converted_at: string | null;
 }
 interface PPayout {
@@ -657,6 +663,89 @@ const REFERRAL_BADGE: Record<string, string> = {
   expired: 'bg-gray-100 text-gray-500 border-gray-200',
   rejected: 'bg-red-50 text-red-700 border-red-200',
 };
+
+// Expandable per-referral commission breakdown: exactly how the earned amount was reached
+// (deal-value source, recurring vs one-time split, commission %, explicit/derived provenance).
+function ReferralBreakdown({ r }: { r: PReferral }) {
+  const c = r.deal_value_components;
+  const cur = r.currency;
+  const fmt = (n: number) => `${n} ${cur}`;
+  const computed =
+    r.commission_pct != null && r.deal_value != null
+      ? Math.round((r.commission_pct / 100) * r.deal_value * 100) / 100
+      : null;
+  const eff = r.effective_commission_amount;
+  const effSrc = r.effective_commission_source;
+
+  const Row = ({ label, children }: { label: string; children: React.ReactNode }) => (
+    <div className="flex items-baseline gap-2">
+      <span className="w-40 shrink-0 text-xs font-medium uppercase tracking-wide text-gray-400">{label}</span>
+      <span className="text-sm text-gray-700">{children}</span>
+    </div>
+  );
+
+  return (
+    <div className="space-y-2 rounded-md border border-gray-200 bg-white p-3">
+      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Commission breakdown</p>
+
+      <Row label="Deal value">
+        {r.deal_value == null
+          ? <span className="text-gray-400">No deal value recorded — commission cannot be derived.</span>
+          : <>{fmt(r.deal_value)} <span className="text-xs text-gray-400">via {r.deal_value_source ?? 'unknown source'}</span></>}
+      </Row>
+
+      <Row label="Components">
+        {c == null
+          ? <span className="text-gray-400">
+              {r.deal_value_source === 'manual'
+                ? 'Manually-entered value — no recurring / one-time split.'
+                : 'No ledger breakdown available.'}
+            </span>
+          : <span className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+              <span>Recurring: <strong>{fmt(c.recurring)}</strong></span>
+              <span>One-time: <strong>{fmt(c.onetime)}</strong></span>
+              <span className="text-xs text-gray-400">ledger total {fmt(c.resolved_total)}</span>
+              {!c.reconciles && (
+                <span className="text-xs text-amber-600">
+                  ⚠ live ledger differs from recorded deal value (may have changed since conversion)
+                </span>
+              )}
+            </span>}
+      </Row>
+
+      <Row label="Commission %">
+        {r.commission_pct == null ? <span className="text-gray-400">—</span> : `${r.commission_pct}%`}
+      </Row>
+
+      <Row label="Earned amount">
+        {r.status !== 'converted'
+          ? <span className="text-gray-400">Not earned yet — referral is {r.status}, not converted.</span>
+          : effSrc === 'none' || eff == null
+            ? <span className="text-gray-400">Not recorded — coverage gap, not inferred.</span>
+            : <>
+                <strong>{fmt(eff)}</strong>{' '}
+                {effSrc === 'derived_runtime'
+                  ? <span className="text-xs text-blue-600">
+                      auto-derived at read time{r.commission_pct != null && r.deal_value != null
+                        ? ` = ${r.commission_pct}% × ${fmt(r.deal_value)}`
+                        : ''}
+                    </span>
+                  : effSrc === 'derived_persisted'
+                    ? <span className="text-xs text-blue-600">
+                        auto-derived{r.commission_pct != null && r.deal_value != null
+                          ? ` = ${r.commission_pct}% × ${fmt(r.deal_value)}`
+                          : ''}
+                      </span>
+                    : <span className="text-xs text-gray-500">
+                        explicit{computed != null && Math.abs(computed - eff) > 0.01
+                          ? ` (computed ${r.commission_pct}% × deal = ${fmt(computed)})`
+                          : ''}
+                      </span>}
+              </>}
+      </Row>
+    </div>
+  );
+}
 
 function PartnerEcosystemView() {
   const qc = useQueryClient();
@@ -692,6 +781,14 @@ function PartnerEcosystemView() {
   const [rfPct, setRfPct] = useState('');
   const [rfAmount, setRfAmount] = useState('');
   const [rfDeal, setRfDeal] = useState('');
+  // Which referral rows have their commission breakdown expanded.
+  const [expandedRefs, setExpandedRefs] = useState<Set<number>>(new Set());
+  const toggleRef = (id: number) =>
+    setExpandedRefs((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
 
   // Export filter state (optional — date range + status; empty = full export, byte-identical to before)
   const [fltFrom, setFltFrom] = useState('');
@@ -900,13 +997,24 @@ function PartnerEcosystemView() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-8"></TableHead>
                   <TableHead>Code</TableHead><TableHead>Partner</TableHead><TableHead>Referred</TableHead>
                   <TableHead>Deal value</TableHead><TableHead>Amount</TableHead><TableHead>Status</TableHead><TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {d.referrals.map((r) => (
-                  <TableRow key={r.id}>
+                  <React.Fragment key={r.id}>
+                  <TableRow>
+                    <TableCell className="py-2">
+                      <button
+                        type="button"
+                        aria-label={expandedRefs.has(r.id) ? 'Collapse breakdown' : 'Expand breakdown'}
+                        className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+                        onClick={() => toggleRef(r.id)}>
+                        {expandedRefs.has(r.id) ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                      </button>
+                    </TableCell>
                     <TableCell className="font-mono text-xs">{r.referral_code}</TableCell>
                     <TableCell className="text-sm">{r.channel_partner_name || `#${r.channel_partner_tenant_id}`}</TableCell>
                     <TableCell className="text-sm">{r.referred_tenant_name || (r.referred_tenant_id ? `#${r.referred_tenant_id}` : '—')}</TableCell>
@@ -946,6 +1054,15 @@ function PartnerEcosystemView() {
                       </div>
                     </TableCell>
                   </TableRow>
+                  {expandedRefs.has(r.id) && (
+                    <TableRow className="bg-gray-50/70 hover:bg-gray-50/70">
+                      <TableCell></TableCell>
+                      <TableCell colSpan={7} className="py-3">
+                        <ReferralBreakdown r={r} />
+                      </TableCell>
+                    </TableRow>
+                  )}
+                  </React.Fragment>
                 ))}
               </TableBody>
             </Table>

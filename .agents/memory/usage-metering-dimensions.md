@@ -38,3 +38,17 @@ Probe with `to_regclass` and degrade (empty/0) when the table is absent. Keep
 ensure-schema strictly on POST/write chains. Easy miss: pre-existing legacy GET
 routes (`/check`, `/overview`) that still ran ensure-schema — move them to a
 read-only middleware chain.
+
+## HTTP-level metering test must auth as super-admin + override email
+The deserialized passport session user carries NO email (serializeUser stores only
+`user.id`; deserializeUser rebuilds id/username/role/roles — never email). So
+`resolveEmail` (req.user.email ?? req.session.email) is null for a normal logged-in
+user ⇒ `POST /api/commercial/metering/record` returns 400. The ONLY authenticated
+HTTP path that can meter a chosen identity is a **super-admin passing the `email`
+override** (acting-on-behalf). For an HTTP concurrency regression: seed a
+super_admin @example.com user, login (dev MFA is auto-bypassed when `ZOHO_EMAIL` is
+unset + `NODE_ENV!=='production'`), then POST with `{email: <metered id>, ...}`.
+**How to apply:** the test spawns its own Backend API on a private PORT with
+`FF_COMMERCIAL_USAGE_METERING=1` (validation runs without a live workflow), polls an
+auth-guarded GET for 401-readiness, and asserts the HTTP 429 mapping + ledger
+no-overrun — things the engine-level test (direct `recordUsage`) cannot see.

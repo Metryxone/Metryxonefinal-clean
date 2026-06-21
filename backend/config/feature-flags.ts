@@ -614,6 +614,15 @@ export const FEATURE_FLAGS = {
    *  503 and the SuperAdmin Command Center tab is hidden → byte-identical legacy (no DDL on read).
    *  Env: `FF_COMMAND_CENTER`. */
   commandCenter: false,
+  /** Phase 6.15 — Founder Control Center. Executive-grade read-only console that composes the live
+   *  platform substrate into 9 founder domains — Revenue, Growth, Adoption, Retention (founder_dashboard);
+   *  Customer / Institution / Employer / Platform Health (executive_intelligence); and Risk Indicators
+   *  + derived strategic insights (strategic_insights). COMPOSE-never-recompute (reuses the Phase 6.14
+   *  Global Monitoring engine), GET-never-writes, never-fabricate (absent source → null, unmeasurable
+   *  health → no score). Flag OFF → GET/POST /api/admin/founder-control-center/console/* routes 503 and
+   *  the Founder Control Center tab is hidden → byte-identical legacy (no DDL on read).
+   *  Env: `FF_FOUNDER_CONTROL_CENTER`. */
+  founderControlCenter: false,
   /** Phase 6.12 — Partner Ecosystem portal. Turns the read-only Phase 6.11 relationship tables into a
    *  working partner program: partner-agreement lifecycle (draft → active → suspended → terminated)
    *  editable from the SuperAdmin console (persisted to tenant_partner_agreements), channel-referral
@@ -1348,6 +1357,10 @@ export function isAutomationExecutionEnabled(): boolean {
 
 export function isCommandCenterEnabled(): boolean {
   return isFlagEnabled('commandCenter');
+}
+
+export function isFounderControlCenterEnabled(): boolean {
+  return isFlagEnabled('founderControlCenter');
 }
 
 export function isPartnerEcosystemEnabled(): boolean {

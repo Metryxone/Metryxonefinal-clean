@@ -538,6 +538,17 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
     enabled: isAuthenticated,
   });
 
+  // Phase 6.6 Revenue Intelligence flag — when OFF the /ping probe 503s and the
+  // "Revenue" nav item self-hides, keeping the flag-OFF UI byte-identical to legacy.
+  const { data: revenueIntelEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/admin/commercial/revenue/ping', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/commercial/revenue/ping', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
   // Governance & Security (RBAC/Audit) flag — when OFF the route 503s and the
   // nav item self-hides, keeping the flag-OFF UI byte-identical to legacy.
   const { data: governanceEnabled = false } = useQuery<boolean>({
@@ -2748,6 +2759,7 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
       items: [
         { id: 'pricing',    icon: CreditCard, label: 'Pricing & Packages' },
         { id: 'financials', icon: Wallet,     label: 'Financials' },
+        { id: 'revenue',    icon: TrendingUp, label: 'Revenue Intelligence' },
       ]
     },
     // ── Governance ──────────────────────────────────────────────────────────
@@ -2849,6 +2861,11 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
       governanceEnabled
         ? group
         : { ...group, items: group.items.filter(it => it.id !== 'governance-security') }
+    )
+    .map(group =>
+      revenueIntelEnabled
+        ? group
+        : { ...group, items: group.items.filter(it => it.id !== 'revenue') }
     )
     .map(group =>
       competencyRuntimeEnabled

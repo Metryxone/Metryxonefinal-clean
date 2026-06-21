@@ -549,6 +549,12 @@ export const FEATURE_FLAGS = {
    *  returns {enabled:false} and the existing revenue-intelligence route is untouched → byte-identical
    *  legacy. Env: `FF_COMMERCIAL_RECURRING_REVENUE`. */
   commercialRecurringRevenue: false,
+  /** Phase 6.6 Revenue Intelligence — composite revenue analytics: COMPOSES the recurring engine
+   *  (MRR/ARR/collections/renewals/forecast) and adds revenue-by-dimension breakdowns (product,
+   *  customer, segment, institution, employer, geography). READ-ONLY, never-throws, NO new tables.
+   *  Flag OFF → GET /api/admin/commercial/revenue/* routes 503 and the SuperAdmin Revenue tab is
+   *  hidden → byte-identical legacy. Env: `FF_COMMERCIAL_REVENUE_INTELLIGENCE`. */
+  commercialRevenueIntelligence: false,
   /** Critical Gaps #2 & #3 — operational RBAC + Audit Trail + Governance/Security Center. Gates the
    *  whole governance subsystem: role/permission framework + hierarchies + permission groups, admin
    *  lifecycle (activate/suspend/terminate), categorized audit logging, generalized approval workflows,
@@ -1238,6 +1244,10 @@ export function isCommercialUsageMeteringEnabled(): boolean {
 
 export function isCommercialRecurringRevenueEnabled(): boolean {
   return isFlagEnabled('commercialRecurringRevenue');
+}
+
+export function isCommercialRevenueIntelligenceEnabled(): boolean {
+  return isFlagEnabled('commercialRevenueIntelligence');
 }
 
 export function isCommercialEntitlementEnabled(): boolean {

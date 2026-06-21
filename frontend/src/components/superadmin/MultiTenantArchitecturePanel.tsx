@@ -10,10 +10,10 @@
  * data; absent substrate renders honest "not provisioned / not measurable" states — never fabricated.
  */
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Building2, ShieldCheck, Settings, CheckCircle2, AlertTriangle, RefreshCw, Info,
-  Network, Users, Layers, Lock,
+  Network, Users, Layers, Lock, Handshake, Wallet, GitBranch, Plus,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Badge } from '../ui/badge';
@@ -152,10 +152,20 @@ function SeatBadge({ status }: { status: string }) {
   return <span className={`rounded-full border px-2 py-0.5 text-xs font-medium ${m.cls}`}>{m.label}</span>;
 }
 
-type ViewKey = 'management' | 'isolation' | 'configuration' | 'validation';
+type ViewKey = 'management' | 'isolation' | 'configuration' | 'validation' | 'partner';
 
 export default function MultiTenantArchitecturePanel() {
   const [view, setView] = useState<ViewKey>('management');
+
+  // Phase 6.12 — Partner Ecosystem sub-tab gate. The partner routes have their own flag; when OFF the
+  // ping 503s and the tab self-hides → byte-identical to the 6.11 panel.
+  const { data: partnerEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/admin/tenant-architecture/console/partner-ecosystem/ping', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/tenant-architecture/console/partner-ecosystem/ping', { credentials: 'include' });
+      return res.ok;
+    },
+  });
 
   const management = useQuery<TenantManagement>({
     queryKey: ['/api/admin/tenant-architecture/console/management'],
@@ -204,11 +214,12 @@ export default function MultiTenantArchitecturePanel() {
   });
 
   const active = view === 'management' ? management : view === 'isolation' ? isolation
-    : view === 'configuration' ? configuration : validation;
+    : view === 'configuration' ? configuration : view === 'validation' ? validation : management;
   const tabs: { key: ViewKey; label: string; icon: any }[] = [
     { key: 'management', label: 'Management', icon: Building2 },
     { key: 'isolation', label: 'Isolation Audit', icon: ShieldCheck },
     { key: 'configuration', label: 'Configuration', icon: Settings },
+    ...(partnerEnabled ? [{ key: 'partner' as ViewKey, label: 'Partner Ecosystem', icon: Handshake }] : []),
     { key: 'validation', label: 'Validation', icon: CheckCircle2 },
   ];
 
@@ -584,7 +595,323 @@ export default function MultiTenantArchitecturePanel() {
           <GeneratedAt at={validation.data.generated_at} />
         </>
       )}
+
+      {/* ── Partner Ecosystem (Phase 6.12) ───────────────────────────────────── */}
+      {view === 'partner' && <PartnerEcosystemView />}
     </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════════
+// Phase 6.12 — Partner Ecosystem sub-view (agreement lifecycle · referral attribution · payouts).
+// ════════════════════════════════════════════════════════════════════════════════
+const P_BASE = '/api/admin/tenant-architecture/console/partner-ecosystem';
+
+interface PartnerMeta {
+  partner_types: string[];
+  agreement_statuses: string[];
+  agreement_transitions: Record<string, string[]>;
+  referral_statuses: string[];
+  referral_transitions: Record<string, string[]>;
+}
+interface PAgreement {
+  id: number; tenant_id: number; tenant_name: string | null; tenant_code: string | null;
+  partner_type: string; agreement_code: string; status: string; commission_pct: number | null;
+  start_date: string | null; end_date: string | null; updated_at: string | null;
+}
+interface PReferral {
+  id: number; channel_partner_tenant_id: number; channel_partner_name: string | null;
+  referred_tenant_id: number | null; referred_tenant_name: string | null; referral_code: string;
+  status: string; commission_pct: number | null; commission_amount: number | null; currency: string;
+  referred_at: string | null; converted_at: string | null;
+}
+interface PPayout {
+  channel_partner_tenant_id: number; channel_partner_name: string | null; referrals_total: number;
+  converted: number; pending: number; expired: number; rejected: number; earned_commission: number;
+  currencies: string[]; converted_without_amount: number;
+}
+interface PartnerEco {
+  generated_at: string; degraded: boolean;
+  substrate: { agreements_table: boolean; referrals_table: boolean; events_table: boolean };
+  headline: {
+    total_agreements: number; agreements_by_status: Record<string, number>; total_referrals: number;
+    referrals_by_status: Record<string, number>; conversion_rate_pct: number | null;
+    total_earned_commission: number; partners_with_payouts: number; converted_without_amount: number;
+  };
+  agreements: PAgreement[]; referrals: PReferral[]; payouts: PPayout[]; notes: string[];
+}
+
+const AGREEMENT_BADGE: Record<string, string> = {
+  draft: 'bg-gray-100 text-gray-600 border-gray-200',
+  active: 'bg-green-50 text-green-700 border-green-200',
+  suspended: 'bg-amber-50 text-amber-700 border-amber-200',
+  expired: 'bg-gray-100 text-gray-500 border-gray-200',
+  terminated: 'bg-red-50 text-red-700 border-red-200',
+  pending: 'bg-blue-50 text-blue-700 border-blue-200',
+};
+const REFERRAL_BADGE: Record<string, string> = {
+  pending: 'bg-blue-50 text-blue-700 border-blue-200',
+  converted: 'bg-green-50 text-green-700 border-green-200',
+  expired: 'bg-gray-100 text-gray-500 border-gray-200',
+  rejected: 'bg-red-50 text-red-700 border-red-200',
+};
+
+function PartnerEcosystemView() {
+  const qc = useQueryClient();
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  const eco = useQuery<PartnerEco>({
+    queryKey: [P_BASE],
+    queryFn: async () => {
+      const r = await fetch(P_BASE, { credentials: 'include' });
+      if (!r.ok) throw new Error('failed to load partner ecosystem');
+      return r.json();
+    },
+  });
+  const meta = useQuery<PartnerMeta>({
+    queryKey: [`${P_BASE}/meta`],
+    queryFn: async () => {
+      const r = await fetch(`${P_BASE}/meta`, { credentials: 'include' });
+      if (!r.ok) throw new Error('failed to load meta');
+      return r.json();
+    },
+  });
+
+  // New-agreement form state
+  const [agTenant, setAgTenant] = useState('');
+  const [agType, setAgType] = useState('channel');
+  const [agCode, setAgCode] = useState('');
+  const [agPct, setAgPct] = useState('');
+  // New-referral form state
+  const [rfPartner, setRfPartner] = useState('');
+  const [rfReferred, setRfReferred] = useState('');
+  const [rfCode, setRfCode] = useState('');
+  const [rfPct, setRfPct] = useState('');
+  const [rfAmount, setRfAmount] = useState('');
+
+  async function post(path: string, body: any) {
+    setBusy(true); setErr(null);
+    try {
+      const r = await fetch(`${P_BASE}${path}`, {
+        method: 'POST', credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok) { setErr(data?.message || data?.error || `request failed (${r.status})`); return false; }
+      await qc.invalidateQueries({ queryKey: [P_BASE] });
+      return true;
+    } catch (e: any) {
+      setErr(e?.message || 'request failed'); return false;
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (eco.isLoading) return <p className="text-sm text-gray-500">Loading partner ecosystem…</p>;
+  if (eco.isError || !eco.data) return <p className="text-sm text-red-600">Failed to load partner ecosystem.</p>;
+  const d = eco.data;
+  const m = meta.data;
+  const noSubstrate = !d.substrate.agreements_table && !d.substrate.referrals_table;
+
+  return (
+    <div className="space-y-5">
+      {err && (
+        <div className="flex items-start gap-2 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0" /> {err}
+        </div>
+      )}
+
+      {noSubstrate && (
+        <Card>
+          <CardContent className="flex items-center justify-between p-4">
+            <p className="text-sm text-gray-600">Partner substrate not provisioned yet.</p>
+            <Button size="sm" disabled={busy} onClick={() => post('/setup', {})}>Provision tables</Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Headline */}
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <PStat label="Agreements" value={d.headline.total_agreements} icon={Handshake} />
+        <PStat label="Referrals" value={d.headline.total_referrals} icon={GitBranch} />
+        <PStat label="Conversion" value={d.headline.conversion_rate_pct == null ? '—' : `${d.headline.conversion_rate_pct}%`} icon={CheckCircle2} />
+        <PStat label="Earned commission" value={d.headline.total_earned_commission} icon={Wallet} />
+      </div>
+
+      {/* Agreements */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-base"><Handshake className="h-4 w-4" /> Partner Agreements</CardTitle>
+          <CardDescription>Lifecycle: draft → active → suspended/expired → terminated.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* New agreement form */}
+          <div className="flex flex-wrap items-end gap-2 rounded-md border border-gray-100 bg-gray-50 p-3">
+            <Field label="Tenant ID"><input className="h-8 rounded border border-gray-300 px-2 text-sm" value={agTenant} onChange={(e) => setAgTenant(e.target.value)} placeholder="e.g. 1" /></Field>
+            <Field label="Type">
+              <select className="h-8 rounded border border-gray-300 px-2 text-sm" value={agType} onChange={(e) => setAgType(e.target.value)}>
+                {(m?.partner_types ?? ['channel']).map((t) => <option key={t} value={t}>{t}</option>)}
+              </select>
+            </Field>
+            <Field label="Agreement code"><input className="h-8 rounded border border-gray-300 px-2 text-sm" value={agCode} onChange={(e) => setAgCode(e.target.value)} placeholder="AGR-001" /></Field>
+            <Field label="Commission %"><input className="h-8 w-24 rounded border border-gray-300 px-2 text-sm" value={agPct} onChange={(e) => setAgPct(e.target.value)} placeholder="10" /></Field>
+            <Button size="sm" disabled={busy || !agTenant || !agCode} onClick={async () => {
+              const ok = await post('/agreements', { tenant_id: agTenant, partner_type: agType, agreement_code: agCode, commission_pct: agPct || null });
+              if (ok) { setAgCode(''); setAgPct(''); }
+            }}><Plus className="mr-1 h-3.5 w-3.5" /> Save (draft)</Button>
+          </div>
+
+          {d.agreements.length === 0 ? (
+            <p className="text-sm text-gray-500">No agreements yet.</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Code</TableHead><TableHead>Tenant</TableHead><TableHead>Type</TableHead>
+                  <TableHead>Commission</TableHead><TableHead>Status</TableHead><TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {d.agreements.map((a) => (
+                  <TableRow key={a.id}>
+                    <TableCell className="font-mono text-xs">{a.agreement_code}</TableCell>
+                    <TableCell className="text-sm">{a.tenant_name || `#${a.tenant_id}`}</TableCell>
+                    <TableCell className="text-sm">{a.partner_type}</TableCell>
+                    <TableCell className="text-sm">{a.commission_pct == null ? '—' : `${a.commission_pct}%`}</TableCell>
+                    <TableCell><span className={`rounded-full border px-2 py-0.5 text-xs font-medium ${AGREEMENT_BADGE[a.status] ?? 'bg-gray-100 text-gray-600'}`}>{a.status}</span></TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1">
+                        {(m?.agreement_transitions[a.status] ?? []).map((to) => (
+                          <Button key={to} size="sm" variant="outline" className="h-6 px-2 text-xs" disabled={busy}
+                            onClick={() => post(`/agreements/${a.id}/transition`, { status: to })}>→ {to}</Button>
+                        ))}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Referrals */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-base"><GitBranch className="h-4 w-4" /> Channel Referrals</CardTitle>
+          <CardDescription>Attribution from a channel-partner tenant to a referred tenant; status drives payouts.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex flex-wrap items-end gap-2 rounded-md border border-gray-100 bg-gray-50 p-3">
+            <Field label="Partner tenant ID"><input className="h-8 rounded border border-gray-300 px-2 text-sm" value={rfPartner} onChange={(e) => setRfPartner(e.target.value)} placeholder="1" /></Field>
+            <Field label="Referred tenant ID"><input className="h-8 rounded border border-gray-300 px-2 text-sm" value={rfReferred} onChange={(e) => setRfReferred(e.target.value)} placeholder="(optional)" /></Field>
+            <Field label="Referral code"><input className="h-8 rounded border border-gray-300 px-2 text-sm" value={rfCode} onChange={(e) => setRfCode(e.target.value)} placeholder="REF-001" /></Field>
+            <Field label="Commission %"><input className="h-8 w-24 rounded border border-gray-300 px-2 text-sm" value={rfPct} onChange={(e) => setRfPct(e.target.value)} placeholder="5" /></Field>
+            <Field label="Amount"><input className="h-8 w-28 rounded border border-gray-300 px-2 text-sm" value={rfAmount} onChange={(e) => setRfAmount(e.target.value)} placeholder="(optional)" /></Field>
+            <Button size="sm" disabled={busy || !rfPartner || !rfCode} onClick={async () => {
+              const ok = await post('/referrals', {
+                channel_partner_tenant_id: rfPartner, referred_tenant_id: rfReferred || null,
+                referral_code: rfCode, commission_pct: rfPct || null, commission_amount: rfAmount || null,
+              });
+              if (ok) { setRfCode(''); setRfPct(''); setRfAmount(''); setRfReferred(''); }
+            }}><Plus className="mr-1 h-3.5 w-3.5" /> Add referral</Button>
+          </div>
+
+          {d.referrals.length === 0 ? (
+            <p className="text-sm text-gray-500">No referrals yet.</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Code</TableHead><TableHead>Partner</TableHead><TableHead>Referred</TableHead>
+                  <TableHead>Amount</TableHead><TableHead>Status</TableHead><TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {d.referrals.map((r) => (
+                  <TableRow key={r.id}>
+                    <TableCell className="font-mono text-xs">{r.referral_code}</TableCell>
+                    <TableCell className="text-sm">{r.channel_partner_name || `#${r.channel_partner_tenant_id}`}</TableCell>
+                    <TableCell className="text-sm">{r.referred_tenant_name || (r.referred_tenant_id ? `#${r.referred_tenant_id}` : '—')}</TableCell>
+                    <TableCell className="text-sm">{r.commission_amount == null ? '—' : `${r.commission_amount} ${r.currency}`}</TableCell>
+                    <TableCell><span className={`rounded-full border px-2 py-0.5 text-xs font-medium ${REFERRAL_BADGE[r.status] ?? 'bg-gray-100 text-gray-600'}`}>{r.status}</span></TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1">
+                        {(m?.referral_transitions[r.status] ?? []).map((to) => (
+                          <Button key={to} size="sm" variant="outline" className="h-6 px-2 text-xs" disabled={busy}
+                            onClick={() => post(`/referrals/${r.id}/transition`, { status: to })}>→ {to}</Button>
+                        ))}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Payouts */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-base"><Wallet className="h-4 w-4" /> Commission Payouts</CardTitle>
+          <CardDescription>Read-only. Earned = sum of converted-referral amounts; converted referrals without an amount are an explicit coverage gap, never inferred.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {d.payouts.length === 0 ? (
+            <p className="text-sm text-gray-500">No payouts to compute yet.</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Partner</TableHead><TableHead>Referrals</TableHead><TableHead>Converted</TableHead>
+                  <TableHead>Earned</TableHead><TableHead>Gap</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {d.payouts.map((p) => (
+                  <TableRow key={p.channel_partner_tenant_id}>
+                    <TableCell className="text-sm">{p.channel_partner_name || `#${p.channel_partner_tenant_id}`}</TableCell>
+                    <TableCell className="text-sm">{p.referrals_total}</TableCell>
+                    <TableCell className="text-sm">{p.converted}</TableCell>
+                    <TableCell className="text-sm font-medium">{p.earned_commission}{p.currencies.length ? ` ${p.currencies.join('/')}` : ''}</TableCell>
+                    <TableCell className="text-sm">{p.converted_without_amount > 0 ? <span className="text-amber-600">{p.converted_without_amount} no amount</span> : '—'}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      {d.notes.length > 0 && <NoteCard notes={d.notes} />}
+      <GeneratedAt at={d.generated_at} />
+    </div>
+  );
+}
+
+function PStat({ label, value, icon: Icon }: { label: string; value: any; icon: any }) {
+  return (
+    <Card>
+      <CardContent className="flex items-center gap-3 p-4">
+        <div className="rounded-md bg-gray-100 p-2"><Icon className="h-4 w-4 text-gray-600" /></div>
+        <div>
+          <p className="text-xs text-gray-500">{label}</p>
+          <p className="text-lg font-semibold text-gray-800">{value}</p>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="flex flex-col gap-1">
+      <span className="text-xs text-gray-500">{label}</span>
+      {children}
+    </label>
   );
 }
 

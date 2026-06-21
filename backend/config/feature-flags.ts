@@ -614,6 +614,15 @@ export const FEATURE_FLAGS = {
    *  503 and the SuperAdmin Command Center tab is hidden → byte-identical legacy (no DDL on read).
    *  Env: `FF_COMMAND_CENTER`. */
   commandCenter: false,
+  /** Phase 6.12 — Partner Ecosystem portal. Turns the read-only Phase 6.11 relationship tables into a
+   *  working partner program: partner-agreement lifecycle (draft → active → suspended → terminated)
+   *  editable from the SuperAdmin console (persisted to tenant_partner_agreements), channel-referral
+   *  attribution + status tracking (tenant_channel_referrals), and a read-only commission/payout
+   *  computation surface (honest, never fabricated). ADDITIVE + flag-gated: OFF → every
+   *  /api/admin/tenant-architecture/console/partner-ecosystem/* route 503s, NO DDL runs (the lifecycle
+   *  ensure-schema is gated too) and the Partner Ecosystem sub-tab self-hides → byte-identical legacy.
+   *  GET-never-writes; requireAuth + requireSuperAdmin. Env: `FF_PARTNER_ECOSYSTEM`. */
+  partnerEcosystem: false,
   /** Critical Gaps #2 & #3 — operational RBAC + Audit Trail + Governance/Security Center. Gates the
    *  whole governance subsystem: role/permission framework + hierarchies + permission groups, admin
    *  lifecycle (activate/suspend/terminate), categorized audit logging, generalized approval workflows,
@@ -1339,6 +1348,10 @@ export function isAutomationExecutionEnabled(): boolean {
 
 export function isCommandCenterEnabled(): boolean {
   return isFlagEnabled('commandCenter');
+}
+
+export function isPartnerEcosystemEnabled(): boolean {
+  return isFlagEnabled('partnerEcosystem');
 }
 
 export function isCommercialEntitlementEnabled(): boolean {

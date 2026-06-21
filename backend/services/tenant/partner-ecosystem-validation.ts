@@ -107,10 +107,16 @@ export async function buildPartnerEcosystemValidation(pool: pg.Pool): Promise<Pa
   {
     const checks: Check[] = [];
     // Re-derive earned per partner from the converted referrals and compare to the engine's payout totals.
+    // Mirror the engine's earned-amount logic: stored commission_amount, else pct × deal_value when both present.
     const derived = new Map<number, number>();
     for (const r of eco.referrals) {
-      if (r.status === 'converted' && r.commission_amount != null) {
-        derived.set(r.channel_partner_tenant_id, (derived.get(r.channel_partner_tenant_id) ?? 0) + r.commission_amount);
+      if (r.status !== 'converted') continue;
+      let amt = r.commission_amount;
+      if (amt == null && r.deal_value != null && r.commission_pct != null) {
+        amt = Math.round((r.commission_pct / 100) * r.deal_value * 100) / 100;
+      }
+      if (amt != null) {
+        derived.set(r.channel_partner_tenant_id, (derived.get(r.channel_partner_tenant_id) ?? 0) + amt);
       }
     }
     let drift = 0;

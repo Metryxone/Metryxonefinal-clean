@@ -623,12 +623,13 @@ interface PReferral {
   id: number; channel_partner_tenant_id: number; channel_partner_name: string | null;
   referred_tenant_id: number | null; referred_tenant_name: string | null; referral_code: string;
   status: string; commission_pct: number | null; commission_amount: number | null; currency: string;
+  deal_value: number | null; deal_value_source: string | null; commission_amount_source: string | null;
   referred_at: string | null; converted_at: string | null;
 }
 interface PPayout {
   channel_partner_tenant_id: number; channel_partner_name: string | null; referrals_total: number;
   converted: number; pending: number; expired: number; rejected: number; earned_commission: number;
-  currencies: string[]; converted_without_amount: number;
+  currencies: string[]; converted_without_amount: number; auto_derived: number;
 }
 interface PartnerEco {
   generated_at: string; degraded: boolean;
@@ -637,6 +638,7 @@ interface PartnerEco {
     total_agreements: number; agreements_by_status: Record<string, number>; total_referrals: number;
     referrals_by_status: Record<string, number>; conversion_rate_pct: number | null;
     total_earned_commission: number; partners_with_payouts: number; converted_without_amount: number;
+    auto_derived_count: number;
   };
   agreements: PAgreement[]; referrals: PReferral[]; payouts: PPayout[]; notes: string[];
 }
@@ -689,6 +691,7 @@ function PartnerEcosystemView() {
   const [rfCode, setRfCode] = useState('');
   const [rfPct, setRfPct] = useState('');
   const [rfAmount, setRfAmount] = useState('');
+  const [rfDeal, setRfDeal] = useState('');
 
   function exportCsv(path: string) {
     window.open(`${P_BASE}${path}`, '_blank');
@@ -830,12 +833,14 @@ function PartnerEcosystemView() {
             <Field label="Referral code"><input className="h-8 rounded border border-gray-300 px-2 text-sm" value={rfCode} onChange={(e) => setRfCode(e.target.value)} placeholder="REF-001" /></Field>
             <Field label="Commission %"><input className="h-8 w-24 rounded border border-gray-300 px-2 text-sm" value={rfPct} onChange={(e) => setRfPct(e.target.value)} placeholder="5" /></Field>
             <Field label="Amount"><input className="h-8 w-28 rounded border border-gray-300 px-2 text-sm" value={rfAmount} onChange={(e) => setRfAmount(e.target.value)} placeholder="(optional)" /></Field>
+            <Field label="Deal value"><input className="h-8 w-28 rounded border border-gray-300 px-2 text-sm" value={rfDeal} onChange={(e) => setRfDeal(e.target.value)} placeholder="(optional)" /></Field>
             <Button size="sm" disabled={busy || !rfPartner || !rfCode} onClick={async () => {
               const ok = await post('/referrals', {
                 channel_partner_tenant_id: rfPartner, referred_tenant_id: rfReferred || null,
                 referral_code: rfCode, commission_pct: rfPct || null, commission_amount: rfAmount || null,
+                deal_value: rfDeal || null,
               });
-              if (ok) { setRfCode(''); setRfPct(''); setRfAmount(''); setRfReferred(''); }
+              if (ok) { setRfCode(''); setRfPct(''); setRfAmount(''); setRfReferred(''); setRfDeal(''); }
             }}><Plus className="mr-1 h-3.5 w-3.5" /> Add referral</Button>
           </div>
 
@@ -846,7 +851,7 @@ function PartnerEcosystemView() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Code</TableHead><TableHead>Partner</TableHead><TableHead>Referred</TableHead>
-                  <TableHead>Amount</TableHead><TableHead>Status</TableHead><TableHead>Actions</TableHead>
+                  <TableHead>Deal value</TableHead><TableHead>Amount</TableHead><TableHead>Status</TableHead><TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -855,13 +860,38 @@ function PartnerEcosystemView() {
                     <TableCell className="font-mono text-xs">{r.referral_code}</TableCell>
                     <TableCell className="text-sm">{r.channel_partner_name || `#${r.channel_partner_tenant_id}`}</TableCell>
                     <TableCell className="text-sm">{r.referred_tenant_name || (r.referred_tenant_id ? `#${r.referred_tenant_id}` : '—')}</TableCell>
-                    <TableCell className="text-sm">{r.commission_amount == null ? '—' : `${r.commission_amount} ${r.currency}`}</TableCell>
+                    <TableCell className="text-sm">
+                      {r.deal_value == null ? '—' : <span>{r.deal_value} {r.currency}{r.deal_value_source ? <span className="ml-1 text-xs text-gray-400">({r.deal_value_source})</span> : null}</span>}
+                    </TableCell>
+                    <TableCell className="text-sm">
+                      {r.commission_amount == null ? '—' : <span>{r.commission_amount} {r.currency}{r.commission_amount_source === 'derived' ? <span className="ml-1 text-xs text-blue-500">(auto)</span> : null}</span>}
+                    </TableCell>
                     <TableCell><span className={`rounded-full border px-2 py-0.5 text-xs font-medium ${REFERRAL_BADGE[r.status] ?? 'bg-gray-100 text-gray-600'}`}>{r.status}</span></TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {(m?.referral_transitions[r.status] ?? []).map((to) => (
                           <Button key={to} size="sm" variant="outline" className="h-6 px-2 text-xs" disabled={busy}
-                            onClick={() => post(`/referrals/${r.id}/transition`, { status: to })}>→ {to}</Button>
+                            onClick={() => {
+                              if (to === 'converted') {
+                                const raw = window.prompt(
+                                  'Deal value for this conversion (currency units).\n' +
+                                  '• Enter a number to set it explicitly.\n' +
+                                  '• Leave blank to auto-link from the referred tenant\'s subscriptions/payments.\n' +
+                                  '• Enter 0 (or "none") to record no deal value.',
+                                  '',
+                                );
+                                if (raw === null) return; // cancelled
+                                const trimmed = raw.trim();
+                                if (trimmed === '') { post(`/referrals/${r.id}/transition`, { status: to, link_deal: true }); return; }
+                                if (trimmed.toLowerCase() === 'none') { post(`/referrals/${r.id}/transition`, { status: to }); return; }
+                                const num = Number(trimmed);
+                                if (!Number.isFinite(num) || num < 0) { setErr('Deal value must be a non-negative number.'); return; }
+                                if (num === 0) { post(`/referrals/${r.id}/transition`, { status: to }); return; } // 0 == no deal value
+                                post(`/referrals/${r.id}/transition`, { status: to, deal_value: num });
+                                return;
+                              }
+                              post(`/referrals/${r.id}/transition`, { status: to });
+                            }}>→ {to}</Button>
                         ))}
                       </div>
                     </TableCell>
@@ -879,7 +909,7 @@ function PartnerEcosystemView() {
           <div className="flex items-start justify-between gap-2">
             <div>
               <CardTitle className="flex items-center gap-2 text-base"><Wallet className="h-4 w-4" /> Commission Payouts</CardTitle>
-              <CardDescription>Read-only. Earned = sum of converted-referral amounts; converted referrals without an amount are an explicit coverage gap, never inferred.</CardDescription>
+              <CardDescription>Read-only. Earned = sum of converted-referral amounts — explicit, or auto-derived as commission&nbsp;%&nbsp;×&nbsp;deal&nbsp;value. Converted referrals with neither an amount nor a linkable deal value are an explicit coverage gap, never inferred.</CardDescription>
             </div>
             <Button size="sm" variant="outline" disabled={d.payouts.length === 0}
               onClick={() => exportCsv('/payouts/export.csv')}>
@@ -895,7 +925,7 @@ function PartnerEcosystemView() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Partner</TableHead><TableHead>Referrals</TableHead><TableHead>Converted</TableHead>
-                  <TableHead>Earned</TableHead><TableHead>Gap</TableHead>
+                  <TableHead>Earned</TableHead><TableHead>Auto-derived</TableHead><TableHead>Gap</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -905,6 +935,7 @@ function PartnerEcosystemView() {
                     <TableCell className="text-sm">{p.referrals_total}</TableCell>
                     <TableCell className="text-sm">{p.converted}</TableCell>
                     <TableCell className="text-sm font-medium">{p.earned_commission}{p.currencies.length ? ` ${p.currencies.join('/')}` : ''}</TableCell>
+                    <TableCell className="text-sm">{p.auto_derived > 0 ? <span className="text-blue-600">{p.auto_derived}</span> : '—'}</TableCell>
                     <TableCell className="text-sm">{p.converted_without_amount > 0 ? <span className="text-amber-600">{p.converted_without_amount} no amount</span> : '—'}</TableCell>
                   </TableRow>
                 ))}

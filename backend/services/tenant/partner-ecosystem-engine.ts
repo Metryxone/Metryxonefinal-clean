@@ -33,6 +33,18 @@ async function exists(pool: pg.Pool, table: string): Promise<boolean> {
   }
 }
 
+async function columnExists(pool: pg.Pool, table: string, column: string): Promise<boolean> {
+  try {
+    const r = await pool.query(
+      `SELECT 1 FROM information_schema.columns WHERE table_name = $1 AND column_name = $2 LIMIT 1`,
+      [table, column],
+    );
+    return r.rowCount! > 0;
+  } catch {
+    return false;
+  }
+}
+
 export interface PartnerAgreementRow {
   id: number;
   tenant_id: number;
@@ -57,6 +69,12 @@ export interface ReferralRow {
   status: string;
   commission_pct: number | null;
   commission_amount: number | null;
+  /** Realized deal/transaction value the commission is computed against (currency units), or null. */
+  deal_value: number | null;
+  /** Where deal_value came from ('manual'|'comm_subscriptions'|'capadex_payments'|'linked_ledger'), or null. */
+  deal_value_source: string | null;
+  /** How commission_amount was obtained ('explicit'|'derived'), or null when there is no amount. */
+  commission_amount_source: string | null;
   currency: string;
   referred_at: string | null;
   converted_at: string | null;
@@ -73,6 +91,8 @@ export interface PayoutRow {
   earned_commission: number;
   currencies: string[];
   converted_without_amount: number;
+  /** Of the converted referrals, how many earned an amount auto-derived as commission_pct × deal_value. */
+  auto_derived: number;
 }
 
 export interface PartnerEcosystem {
@@ -88,6 +108,8 @@ export interface PartnerEcosystem {
     total_earned_commission: number;
     partners_with_payouts: number;
     converted_without_amount: number;
+    /** How many converted referrals earned an auto-derived (pct × deal_value) commission. */
+    auto_derived_count: number;
   };
   agreements: PartnerAgreementRow[];
   referrals: ReferralRow[];
@@ -112,6 +134,7 @@ export async function buildPartnerEcosystem(pool: pg.Pool): Promise<PartnerEcosy
       headline: {
         total_agreements: 0, agreements_by_status: {}, total_referrals: 0, referrals_by_status: {},
         conversion_rate_pct: null, total_earned_commission: 0, partners_with_payouts: 0, converted_without_amount: 0,
+        auto_derived_count: 0,
       },
       agreements: [], referrals: [], payouts: [], notes,
     };
@@ -153,6 +176,10 @@ export async function buildPartnerEcosystem(pool: pg.Pool): Promise<PartnerEcosy
   }
 
   // ── Referrals ──────────────────────────────────────────────────────────────
+  // Deal-value columns are additive; on a substrate provisioned before this phase they may be absent.
+  // Probe once and SELECT a NULL fallback so a legacy DB reads cleanly instead of degrading.
+  const hasDealCols = hasReferrals && (await columnExists(pool, 'tenant_channel_referrals', 'deal_value'));
+
   const referrals: ReferralRow[] = [];
   const referralsByStatus: Record<string, number> = {};
   if (hasReferrals) {
@@ -160,6 +187,9 @@ export async function buildPartnerEcosystem(pool: pg.Pool): Promise<PartnerEcosy
       const r = await pool.query(`
         SELECT cr.id, cr.channel_partner_tenant_id, cr.referred_tenant_id, cr.referral_code, cr.status,
                cr.commission_pct, cr.commission_amount, cr.currency, cr.referred_at, cr.converted_at,
+               ${hasDealCols
+                 ? 'cr.deal_value, cr.deal_value_source, cr.commission_amount_source'
+                 : 'NULL::numeric AS deal_value, NULL::text AS deal_value_source, NULL::text AS commission_amount_source'},
                cp.tenant_name AS channel_partner_name, rt.tenant_name AS referred_tenant_name
           FROM tenant_channel_referrals cr
           LEFT JOIN tenants cp ON cp.id = cr.channel_partner_tenant_id
@@ -178,6 +208,9 @@ export async function buildPartnerEcosystem(pool: pg.Pool): Promise<PartnerEcosy
           status,
           commission_pct: numOrNull(row.commission_pct),
           commission_amount: numOrNull(row.commission_amount),
+          deal_value: numOrNull(row.deal_value),
+          deal_value_source: row.deal_value_source ?? null,
+          commission_amount_source: row.commission_amount_source ?? null,
           currency: String(row.currency ?? 'INR'),
           referred_at: row.referred_at ? new Date(row.referred_at).toISOString() : null,
           converted_at: row.converted_at ? new Date(row.converted_at).toISOString() : null,
@@ -190,11 +223,14 @@ export async function buildPartnerEcosystem(pool: pg.Pool): Promise<PartnerEcosy
   }
 
   // ── Payouts (read-only, honest) ──────────────────────────────────────────────
-  // Per channel-partner tenant: earned_commission = SUM(commission_amount) over CONVERTED referrals that
-  // actually carry an amount. Converted referrals with no amount are an explicit coverage gap, never
-  // back-filled from commission_pct (there is no deal value in the model to multiply against).
+  // Per channel-partner tenant: earned_commission = SUM(earned amount) over CONVERTED referrals. The earned
+  // amount is the stored commission_amount, OR — when absent but a deal_value + commission_pct are both
+  // present — it is derived at read-time as commission_pct × deal_value (back-stop for rows linked before a
+  // writer baked the amount). Converted referrals with neither an amount nor a derivable deal value remain
+  // an explicit coverage gap, never fabricated.
   const payoutMap = new Map<number, PayoutRow>();
   let convertedWithoutAmountTotal = 0;
+  let autoDerivedTotal = 0;
   for (const ref of referrals) {
     const pid = ref.channel_partner_tenant_id;
     let p = payoutMap.get(pid);
@@ -203,7 +239,7 @@ export async function buildPartnerEcosystem(pool: pg.Pool): Promise<PartnerEcosy
         channel_partner_tenant_id: pid,
         channel_partner_name: ref.channel_partner_name,
         referrals_total: 0, converted: 0, pending: 0, expired: 0, rejected: 0,
-        earned_commission: 0, currencies: [], converted_without_amount: 0,
+        earned_commission: 0, currencies: [], converted_without_amount: 0, auto_derived: 0,
       };
       payoutMap.set(pid, p);
     }
@@ -213,9 +249,17 @@ export async function buildPartnerEcosystem(pool: pg.Pool): Promise<PartnerEcosy
     else if (ref.status === 'expired') p.expired += 1;
     else if (ref.status === 'rejected') p.rejected += 1;
     if (ref.status === 'converted') {
-      if (ref.commission_amount != null) {
-        p.earned_commission += ref.commission_amount;
+      let amt = ref.commission_amount;
+      // Persisted-derived (baked at write-time) OR read-time derived both count as auto-derived.
+      let derived = ref.commission_amount_source === 'derived';
+      if (amt == null && ref.deal_value != null && ref.commission_pct != null) {
+        amt = Math.round((ref.commission_pct / 100) * ref.deal_value * 100) / 100;
+        derived = true;
+      }
+      if (amt != null) {
+        p.earned_commission += amt;
         if (!p.currencies.includes(ref.currency)) p.currencies.push(ref.currency);
+        if (derived) { p.auto_derived += 1; autoDerivedTotal += 1; }
       } else {
         p.converted_without_amount += 1;
         convertedWithoutAmountTotal += 1;
@@ -233,8 +277,11 @@ export async function buildPartnerEcosystem(pool: pg.Pool): Promise<PartnerEcosy
   const converted = referralsByStatus['converted'] ?? 0;
   const conversionRate = totalReferrals > 0 ? Math.round((converted / totalReferrals) * 1000) / 10 : null;
 
+  if (autoDerivedTotal > 0) {
+    notes.push(`${autoDerivedTotal} converted referral(s) earned a commission auto-derived as commission_pct × deal_value (no explicit amount typed).`);
+  }
   if (convertedWithoutAmountTotal > 0) {
-    notes.push(`${convertedWithoutAmountTotal} converted referral(s) carry no commission_amount — excluded from earned totals (no deal value in the model to derive one). Coverage gap, not fabricated.`);
+    notes.push(`${convertedWithoutAmountTotal} converted referral(s) carry neither a commission_amount nor a linkable deal value — excluded from earned totals. Coverage gap, not fabricated.`);
   }
   if (hasReferrals && totalReferrals === 0) notes.push('No channel referrals recorded yet.');
   if (hasAgreements && agreements.length === 0) notes.push('No partner agreements recorded yet.');
@@ -250,6 +297,7 @@ export async function buildPartnerEcosystem(pool: pg.Pool): Promise<PartnerEcosy
       total_earned_commission: totalEarned,
       partners_with_payouts: partnersWithPayouts,
       converted_without_amount: convertedWithoutAmountTotal,
+      auto_derived_count: autoDerivedTotal,
     },
     agreements, referrals, payouts, notes,
   };

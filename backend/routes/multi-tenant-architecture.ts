@@ -308,10 +308,12 @@ export function registerMultiTenantArchitectureRoutes(
     const id = Number(req.params.id);
     if (!Number.isInteger(id)) return res.status(400).json({ error: 'invalid_id' });
     try {
-      const { status, commission_amount, referred_tenant_id } = req.body ?? {};
+      const { status, commission_amount, referred_tenant_id, deal_value, link_deal } = req.body ?? {};
       res.json(await transitionReferral(pool, id, String(status ?? ''), {
         commission_amount: commission_amount === undefined ? undefined : commission_amount,
         referred_tenant_id: referred_tenant_id === undefined ? undefined : referred_tenant_id,
+        deal_value: deal_value === undefined ? undefined : deal_value,
+        link_deal: link_deal === true,
       }));
     } catch (err) {
       handlePartnerError(err, res, 'transition referral');

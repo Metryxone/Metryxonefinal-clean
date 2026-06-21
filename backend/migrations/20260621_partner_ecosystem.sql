@@ -29,3 +29,18 @@ CREATE TABLE IF NOT EXISTS tenant_partner_agreement_events (
 );
 CREATE INDEX IF NOT EXISTS idx_tenant_partner_agreement_events_agreement
   ON tenant_partner_agreement_events(agreement_id);
+
+-- 3. Deal-value capture on a converted referral so a payout can be computed as commission_pct ×
+--    deal_value (instead of requiring a manually-typed commission_amount). All additive + nullable →
+--    legacy rows and the flag-OFF path are byte-identical. deal_value is in CURRENCY UNITS (rupees),
+--    matching commission_amount. Mirrored by ensurePartnerEcosystemSchema().
+--      • deal_value               — the real deal/transaction value the commission is computed against.
+--      • deal_value_source        — provenance ('manual'|'comm_subscriptions'|'capadex_payments'|'linked_ledger').
+--      • commission_amount_source — 'explicit' (operator typed it) | 'derived' (pct × deal_value).
+ALTER TABLE tenant_channel_referrals
+  ADD COLUMN IF NOT EXISTS deal_value NUMERIC(14,2)
+    CHECK (deal_value IS NULL OR deal_value >= 0);
+ALTER TABLE tenant_channel_referrals
+  ADD COLUMN IF NOT EXISTS deal_value_source TEXT;
+ALTER TABLE tenant_channel_referrals
+  ADD COLUMN IF NOT EXISTS commission_amount_source TEXT;

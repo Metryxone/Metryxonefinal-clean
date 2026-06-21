@@ -581,6 +581,18 @@ export const FEATURE_FLAGS = {
    *  /api/admin/platform/console/* routes 503 and the SuperAdmin Platform Intelligence tab is hidden →
    *  byte-identical legacy. Env: `FF_PLATFORM_INTELLIGENCE_CONSOLE`. */
   platformIntelligenceConsole: false,
+  /** Phase 6.11 — Multi-Tenant Architecture console. Gates the read-only super-admin console for
+   *  tenant_management (5 categories: Institutions/Employers/Partners/Franchise/Channel Partners),
+   *  tenant_isolation audit, tenant_configuration, the new relationship models, and the PASS/WARN/FAIL
+   *  validation harness. Flag OFF → GET /api/admin/tenant-architecture/console/* routes 503 and the
+   *  SuperAdmin Multi-Tenant Architecture tab is hidden → byte-identical legacy (no DDL on read).
+   *  Env: `FF_TENANT_MANAGEMENT_CONSOLE`. */
+  tenantManagementConsole: false,
+  /** Phase 6.11 sub-flag — opt-in tenant isolation ENFORCEMENT. Default OFF. When ON, the console may
+   *  arm/disarm RLS policies on the FOUR additive relationship tables ONLY (never the legacy substrate)
+   *  and the opt-in tenant-scope guard activates. OFF → arming is blocked and no query path is rewritten
+   *  → byte-identical. Env: `FF_TENANT_ISOLATION_ENFORCEMENT`. */
+  tenantIsolationEnforcement: false,
   /** Critical Gaps #2 & #3 — operational RBAC + Audit Trail + Governance/Security Center. Gates the
    *  whole governance subsystem: role/permission framework + hierarchies + permission groups, admin
    *  lifecycle (activate/suspend/terminate), categorized audit logging, generalized approval workflows,
@@ -1286,6 +1298,14 @@ export function isEnterpriseGovernanceConsoleEnabled(): boolean {
 
 export function isPlatformIntelligenceConsoleEnabled(): boolean {
   return isFlagEnabled('platformIntelligenceConsole');
+}
+
+export function isTenantManagementConsoleEnabled(): boolean {
+  return isFlagEnabled('tenantManagementConsole');
+}
+
+export function isTenantIsolationEnforcementEnabled(): boolean {
+  return isFlagEnabled('tenantIsolationEnforcement');
 }
 
 export function isCommercialEntitlementEnabled(): boolean {

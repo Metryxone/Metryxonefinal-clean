@@ -13753,6 +13753,9 @@ Rules:
   // ── Phase 6.10 Platform Intelligence console (flag platformIntelligenceConsole, default OFF) ──────
   const { registerPlatformIntelligenceRoutes } = await import('./routes/platform-intelligence');
   registerPlatformIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+
+  const { registerMultiTenantArchitectureRoutes } = await import('./routes/multi-tenant-architecture');
+  registerMultiTenantArchitectureRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Employer Intelligence Operating System (EP-98) ───────────────────────────
   registerEmployerPortalRoutes(app, concernsPool, requireAuth);
   // ── Super-Admin Employer Onboarding (create org + admin login) ───────────────

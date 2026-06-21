@@ -126,6 +126,7 @@ const UsageMeteringPanel = lazy(() => import('./superadmin/UsageMeteringPanel'))
 const CustomerSuccessPanel = lazy(() => import('./superadmin/CustomerSuccessPanel'));
 const EnterpriseGovernancePanel = lazy(() => import('./superadmin/EnterpriseGovernancePanel'));
 const PlatformIntelligencePanel = lazy(() => import('./superadmin/PlatformIntelligencePanel'));
+const MultiTenantArchitecturePanel = lazy(() => import('./superadmin/MultiTenantArchitecturePanel'));
 const ParentsPanel = lazy(() => import('./superadmin/ParentsPanel'));
 const StudentsPanel = lazy(() => import('./superadmin/StudentsPanel'));
 const InstitutionsPanel = lazy(() => import('./superadmin/InstitutionsPanel'));
@@ -445,6 +446,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               {activeTab === 'customer-success' && <CustomerSuccessPanel />}
               {activeTab === 'enterprise-governance' && <EnterpriseGovernancePanel />}
               {activeTab === 'platform-intelligence' && <PlatformIntelligencePanel />}
+              {activeTab === 'multi-tenant-architecture' && <MultiTenantArchitecturePanel />}
               {activeTab === 'parents'          && <ParentsPanel />}
               {activeTab === 'students'         && <StudentsPanel />}
               {activeTab === 'institutions'     && <InstitutionsPanel />}

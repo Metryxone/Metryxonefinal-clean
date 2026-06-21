@@ -582,6 +582,17 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
     enabled: isAuthenticated,
   });
 
+  // Phase 6.11 Multi-Tenant Architecture console flag — when OFF the /console/ping probe
+  // 503s and the "Multi-Tenant Architecture" nav item self-hides, keeping flag-OFF byte-identical.
+  const { data: tenantArchitectureEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/admin/tenant-architecture/console/ping', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/tenant-architecture/console/ping', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
   // Governance & Security (RBAC/Audit) flag — when OFF the route 503s and the
   // nav item self-hides, keeping the flag-OFF UI byte-identical to legacy.
   const { data: governanceEnabled = false } = useQuery<boolean>({
@@ -2828,6 +2839,7 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
       label: 'Platform',
       items: [
         { id: 'platform-intelligence',  icon: TrendingUp, label: 'Platform Intelligence' },
+        { id: 'multi-tenant-architecture', icon: Building2, label: 'Multi-Tenant Architecture' },
         { id: 'documents',              icon: FileCheck, label: 'Documents' },
         { id: 'settings',               icon: Settings,  label: 'Settings' },
         { id: 'content',                icon: Play,      label: 'Content Manager' },
@@ -2929,6 +2941,11 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
       platformIntelligenceEnabled
         ? group
         : { ...group, items: group.items.filter(it => it.id !== 'platform-intelligence') }
+    )
+    .map(group =>
+      tenantArchitectureEnabled
+        ? group
+        : { ...group, items: group.items.filter(it => it.id !== 'multi-tenant-architecture') }
     )
     .map(group =>
       competencyRuntimeEnabled

@@ -950,6 +950,16 @@ export const FEATURE_FLAGS = {
    *  touch). Super-admin gated + IDOR employer-scoped (every read strictly scoped by employer_id;
    *  cross-employer rows never leak). Env: `FF_EMPLOYER_DASHBOARDS`. */
   employerDashboards: false,
+
+  /** PHASE 5.14 — Notifications & Workflows. A PURE READ / compose-never-recompute layer that DERIVES
+   *  operational notification items (Job / Application / Interview / Offer / Employer / Recruiter
+   *  alerts + Status Changes), workflow next-actions, and message previews from operator-recorded
+   *  evidence. It composes the 5.13 dashboard evidence (→ 5.12 workforce evidence) + a scoped
+   *  candidate/job timestamp read. It creates NO tables, writes NO rows, and SENDS NOTHING (no
+   *  email/SMS/push; no POST, no ensure-schema); reads use a to_regclass probe + degrade, so OFF is
+   *  byte-identical legacy (every route 503 before any auth/DB touch). Super-admin gated + IDOR
+   *  employer-scoped. Env: `FF_NOTIFICATION_ENGINE`. */
+  notificationEngine: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1380,6 +1390,10 @@ export function isWorkforceIntelligenceEnabled(): boolean {
 
 export function isEmployerDashboardsEnabled(): boolean {
   return isFlagEnabled('employerDashboards');
+}
+
+export function isNotificationEngineEnabled(): boolean {
+  return isFlagEnabled('notificationEngine');
 }
 
 export function isTalentDiscoveryEnabled(): boolean {

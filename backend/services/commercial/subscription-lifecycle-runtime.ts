@@ -29,9 +29,50 @@ const INTERVAL_MS: Record<Exclude<BillingInterval, 'one_time' | 'trial'>, number
   annual: 365 * 86_400_000,
 };
 
+/**
+ * Grace window (days) a subscription stays recoverable AFTER its paid-through boundary lapses
+ * before the lifecycle moves it to `expired`. Matches the read-only renewal-engine's GRACE_DAYS so
+ * the two surfaces agree on the window length. Grace is NOT a status value (the comm_subscriptions
+ * CHECK has no 'grace') — it is a DERIVED window over the `past_due` state.
+ */
+export const GRACE_DAYS = 7;
+
 function periodEnd(interval: BillingInterval, from: Date): Date | null {
   if (interval === 'one_time' || interval === 'trial') return null;
   return new Date(from.getTime() + INTERVAL_MS[interval]);
+}
+
+export interface GraceState {
+  /** the paid-through boundary (current_period_end ?? trial_end) has lapsed. */
+  period_overdue: boolean;
+  /** deterministic grace deadline = boundary + GRACE_DAYS (null when there is no finite boundary). */
+  grace_until: Date | null;
+  /** sub is `past_due` and still inside its grace window — recoverable. */
+  in_grace: boolean;
+  /** sub is `past_due` and its grace window has fully elapsed — eligible for expiry. */
+  grace_elapsed: boolean;
+}
+
+/**
+ * PURE derivation of the grace window for a subscription. Grace is a window over `past_due`, not a
+ * status value. The boundary is the paid-through date (`current_period_end`) or, for a never-activated
+ * trial, `trial_end`. With no finite boundary the window is undefined (never auto-expires via sweep).
+ */
+export function graceState(
+  sub: Pick<SubscriptionRow, 'status' | 'current_period_end' | 'trial_end'>,
+  now: Date = new Date(),
+): GraceState {
+  const boundary = sub.current_period_end
+    ? new Date(sub.current_period_end)
+    : sub.trial_end
+      ? new Date(sub.trial_end)
+      : null;
+  const graceUntil = boundary ? new Date(boundary.getTime() + GRACE_DAYS * 86_400_000) : null;
+  const periodOverdue = !!boundary && boundary.getTime() <= now.getTime();
+  const isPastDue = sub.status === 'past_due';
+  const inGrace = isPastDue && !!graceUntil && now.getTime() < graceUntil.getTime();
+  const graceElapsed = isPastDue && !!graceUntil && now.getTime() >= graceUntil.getTime();
+  return { period_overdue: periodOverdue, grace_until: graceUntil, in_grace: inGrace, grace_elapsed: graceElapsed };
 }
 
 const norm = (email: string) => email.trim().toLowerCase();
@@ -213,7 +254,84 @@ export async function renewSubscription(
   return rows[0] as SubscriptionRow;
 }
 
-/** Change plan up or down. `direction` decides the event_type; both keep status active. */
+/** Read a plan's list price in paise. Returns null when the plan is absent/unpriced (never throws). */
+async function planPricePaise(pool: Pool, planId: string | null): Promise<number | null> {
+  if (!planId) return null;
+  const { rows } = await pool
+    .query(`SELECT price_paise FROM comm_plans WHERE id=$1 LIMIT 1`, [planId])
+    .catch(() => ({ rows: [] as Array<{ price_paise: unknown }> }));
+  if (!rows.length || rows[0].price_paise == null) return null;
+  const n = Number(rows[0].price_paise);
+  return Number.isFinite(n) ? Math.trunc(n) : null;
+}
+
+export interface ProrationBreakdown {
+  from_price_paise: number | null;
+  to_price_paise: number | null;
+  /** fraction of the current period still unused at the change instant (0..1). */
+  remaining_fraction: number;
+  period_days: number | null;
+  remaining_days: number | null;
+  /** unused value of the OLD plan over the remaining period (a credit). */
+  unused_credit_paise: number;
+  /** cost of the NEW plan over the remaining period. */
+  new_charge_paise: number;
+  /** net = new_charge − unused_credit (>0 customer owes, <0 customer is credited). */
+  net_paise: number;
+  /** the billing interval changed, so the period was re-anchored to a fresh cycle. */
+  interval_changed: boolean;
+}
+
+/**
+ * DETERMINISTIC proration for a mid-cycle plan change. Computes the unused credit of the current plan
+ * and the prorated charge of the new plan over the SAME remaining period, from the live comm_plans
+ * prices (never fabricated — a missing/unpriced plan contributes 0 to that leg). Period handling:
+ *   • same interval  → preserve the paid-through window (keep current_period_start/end).
+ *   • interval change → re-anchor to a fresh cycle (now .. now+interval); proration still credits the
+ *     unused remainder of the old window.
+ */
+export function computeProration(
+  args: {
+    from_price_paise: number | null;
+    to_price_paise: number | null;
+    period_start: Date | null;
+    period_end: Date | null;
+    interval_changed: boolean;
+    now: Date;
+  },
+): ProrationBreakdown {
+  let remainingFraction = 0;
+  let periodDays: number | null = null;
+  let remainingDays: number | null = null;
+  const { period_start: start, period_end: end, now } = args;
+  if (start && end && end.getTime() > start.getTime()) {
+    const total = end.getTime() - start.getTime();
+    const remaining = Math.min(total, Math.max(0, end.getTime() - now.getTime()));
+    remainingFraction = remaining / total;
+    periodDays = Math.round(total / 86_400_000);
+    remainingDays = Math.round(remaining / 86_400_000);
+  }
+  const unusedCredit = args.from_price_paise != null ? Math.round(args.from_price_paise * remainingFraction) : 0;
+  const newCharge = args.to_price_paise != null ? Math.round(args.to_price_paise * remainingFraction) : 0;
+  return {
+    from_price_paise: args.from_price_paise,
+    to_price_paise: args.to_price_paise,
+    remaining_fraction: Math.round(remainingFraction * 1e6) / 1e6,
+    period_days: periodDays,
+    remaining_days: remainingDays,
+    unused_credit_paise: unusedCredit,
+    new_charge_paise: newCharge,
+    net_paise: newCharge - unusedCredit,
+    interval_changed: args.interval_changed,
+  };
+}
+
+/**
+ * Change plan up or down. `direction` decides the event_type; both keep status active. Computes
+ * DETERMINISTIC proration from the live plan prices (recorded in event metadata + amount_paise; an
+ * explicit `amount_paise` override always wins). Preserves the paid-through period for a same-interval
+ * change, re-anchors a fresh cycle when the billing interval changes.
+ */
 export async function changePlan(
   pool: Pool,
   subscriptionId: string,
@@ -223,19 +341,38 @@ export async function changePlan(
   if (!sub) return null;
   const now = args.now ?? new Date();
   const interval = args.to_billing_interval ?? sub.billing_interval;
-  const end = periodEnd(interval, now);
+  const intervalChanged = interval !== sub.billing_interval;
+
+  const curStart = sub.current_period_start ? new Date(sub.current_period_start) : null;
+  const curEnd = sub.current_period_end ? new Date(sub.current_period_end) : null;
+
+  const [fromPrice, toPrice] = await Promise.all([
+    planPricePaise(pool, sub.plan_id),
+    planPricePaise(pool, args.to_plan_id),
+  ]);
+  const proration = computeProration({
+    from_price_paise: fromPrice, to_price_paise: toPrice,
+    period_start: curStart, period_end: curEnd, interval_changed: intervalChanged, now,
+  });
+
+  // Same interval: keep the paid-through window. Interval change: re-anchor a fresh cycle.
+  const newStart = intervalChanged ? now : (curStart ?? now);
+  const newEnd = intervalChanged ? periodEnd(interval, now) : (curEnd ?? periodEnd(interval, now));
+
   const { rows } = await pool.query(
     `UPDATE comm_subscriptions
        SET plan_id=$2, billing_interval=$3, status='active',
            current_period_start=$4, current_period_end=$5, updated_at=now()
      WHERE id=$1 RETURNING *`,
-    [subscriptionId, args.to_plan_id, interval, now, end],
+    [subscriptionId, args.to_plan_id, interval, newStart, newEnd],
   );
+  const amount = args.amount_paise != null ? args.amount_paise : proration.net_paise;
   await appendEvent(pool, {
     subscription_id: sub.id, customer_id: sub.customer_id,
     event_type: args.direction === 'upgrade' ? 'upgraded' : 'downgraded',
     from_status: sub.status, to_status: 'active',
-    from_plan_id: sub.plan_id, to_plan_id: args.to_plan_id, amount_paise: args.amount_paise ?? null,
+    from_plan_id: sub.plan_id, to_plan_id: args.to_plan_id, amount_paise: amount,
+    metadata: { proration, amount_source: args.amount_paise != null ? 'explicit' : 'computed' },
   });
   return rows[0] as SubscriptionRow;
 }
@@ -288,6 +425,57 @@ export async function expireSubscription(
     from_status: sub.status, to_status: 'expired',
   });
   return rows[0] as SubscriptionRow;
+}
+
+/**
+ * Lapse a subscription into `past_due` when a renewal is missed/failed (active|trial → past_due).
+ * Idempotent: a subscription not in active/trial is returned unchanged (no duplicate event). Records a
+ * `payment_failed` event (no dedicated past_due event_type exists) carrying the derived grace deadline.
+ */
+export async function markPastDue(
+  pool: Pool, subscriptionId: string, opts: { reason?: string; now?: Date } = {},
+): Promise<SubscriptionRow | null> {
+  const sub = await loadSub(pool, subscriptionId);
+  if (!sub) return null;
+  if (sub.status !== 'active' && sub.status !== 'trial') return sub; // only a live sub can lapse
+  const now = opts.now ?? new Date();
+  const { rows } = await pool.query(
+    `UPDATE comm_subscriptions SET status='past_due', updated_at=now() WHERE id=$1 RETURNING *`,
+    [subscriptionId],
+  );
+  const updated = rows[0] as SubscriptionRow;
+  const g = graceState(updated, now);
+  await appendEvent(pool, {
+    subscription_id: sub.id, customer_id: sub.customer_id, event_type: 'payment_failed',
+    from_status: sub.status, to_status: 'past_due',
+    metadata: { reason: opts.reason ?? 'renewal_due', grace_until: g.grace_until?.toISOString() ?? null, grace_days: GRACE_DAYS },
+  });
+  return updated;
+}
+
+/**
+ * Deterministic grace sweep: expire every `past_due` subscription whose grace window has fully elapsed
+ * (`graceState.grace_elapsed`). Subscriptions still inside grace, or with no finite boundary, are left
+ * untouched. Drives the existing `expireSubscription` (append-only `expired` event). Read-bounded by
+ * `limit`. Returns the scanned count and the ids expired.
+ */
+export async function sweepGraceExpirations(
+  pool: Pool, opts: { now?: Date; limit?: number } = {},
+): Promise<{ scanned: number; expired: string[] }> {
+  const now = opts.now ?? new Date();
+  const limit = Math.max(1, Math.min(5000, opts.limit ?? 500));
+  const { rows } = await pool.query(
+    `SELECT * FROM comm_subscriptions WHERE status='past_due' ORDER BY updated_at ASC LIMIT $1`,
+    [limit],
+  );
+  const expired: string[] = [];
+  for (const r of rows as SubscriptionRow[]) {
+    if (graceState(r, now).grace_elapsed) {
+      await expireSubscription(pool, r.id, { now });
+      expired.push(r.id);
+    }
+  }
+  return { scanned: rows.length, expired };
 }
 
 /** Record a payment outcome against a subscription (append-only; does not change status by itself). */

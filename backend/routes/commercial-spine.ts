@@ -27,6 +27,7 @@ import { resolveDiscount, type CouponRow } from '../services/commercial/discount
 import {
   upsertCustomer, createSubscription, activateSubscription, renewSubscription,
   changePlan, cancelSubscription, expireSubscription, recordPaymentEvent,
+  markPastDue, sweepGraceExpirations,
   getLinkedStagePayments, isSegment,
   type Segment, type BillingInterval,
 } from '../services/commercial/subscription-lifecycle-runtime';
@@ -501,12 +502,37 @@ export function registerCommercialSpineRoutes(
     } catch (e) { next(e); }
   });
 
+  // Grace sweep (literal) MUST register BEFORE the `:id/...` transitions below, or `subscriptions/grace`
+  // would be captured by the `:id` param. Expires every past_due subscription whose grace window elapsed.
+  app.post('/api/commercial/admin/subscriptions/grace/sweep', subsGate, ...admin, async (req, res, next) => {
+    try {
+      const limit = req.body?.limit != null ? asInt(req.body.limit) : undefined;
+      const out = await sweepGraceExpirations(pool, { limit });
+      res.json(out);
+    } catch (e) { next(e); }
+  });
+
+  // Each lifecycle transition is exposed as a flag-gated, super-admin, fail-closed POST. Supplying an
+  // `Idempotency-Key` header makes the transition exactly-once (a duplicate replays the stored result),
+  // reusing the same comm_idempotency_keys guard as the Razorpay verify/webhook paths.
   const transition = (
     path: string,
     fn: (id: string, body: any) => Promise<unknown | null>,
   ) => {
     app.post(`/api/commercial/admin/subscriptions/:id/${path}`, subsGate, ...admin, async (req, res, next) => {
       try {
+        const idemKey = asStr(req.get('Idempotency-Key'));
+        if (idemKey) {
+          const outcome = await withIdempotency(pool, `sub:${path}:${req.params.id}:${idemKey}`, `sub_${path}`, async () => {
+            const out = await fn(req.params.id, req.body || {});
+            return out == null ? { __not_found: true } : out;
+          });
+          if (outcome.replayed && outcome.response == null) {
+            return res.status(409).json({ error: 'transition_in_progress', retry: true });
+          }
+          if ((outcome.response as any)?.__not_found) return res.status(404).json({ error: 'subscription not found' });
+          return res.json({ ...(outcome.response as any), replayed: outcome.replayed });
+        }
         const out = await fn(req.params.id, req.body || {});
         if (out == null) return res.status(404).json({ error: 'subscription not found' });
         res.json(out);
@@ -524,6 +550,7 @@ export function registerCommercialSpineRoutes(
     const interval: BillingInterval | undefined = INTERVALS.includes(b.billing_interval) ? b.billing_interval : undefined;
     return changePlan(pool, id, { to_plan_id: toPlan, to_billing_interval: interval, direction, amount_paise: b.amount_paise != null ? asInt(b.amount_paise) : null });
   });
+  transition('past-due', (id, b) => markPastDue(pool, id, { reason: asStr(b.reason) || undefined }));
 
   // ════════════════════════════════════════════════════════════════════════════════════════
   //  RAZORPAY (recurring + payment links + idempotent verify/webhook)  — gated by commercialRazorpayRecurring

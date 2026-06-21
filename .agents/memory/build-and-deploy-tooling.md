@@ -18,6 +18,10 @@ So the **only** real launch gate is the frontend `vite build` (passes, ~35s). Th
 - **Why it's a trap:** enabling `tsc` surfaces an unbounded volume of never-checked errors across 13k+ line files + drizzle `node_modules` lib noise (no effective `skipLibCheck`). It has zero runtime/deploy benefit. Document as tech debt; don't hot-patch in a validation/small task.
 - **How to apply (if ever asked to add a gate):** make a self-contained config (`skipLibCheck:true`, `module/moduleResolution: ESNext/Bundler` to tolerate extensionless imports, `noEmit:true`), exclude dead `backend/exam-ready.v1.routes.ts`, and treat the first error dump as a backlog — not a launch blocker.
 
+## Running the frontend build as a gate
+- `vite build` takes **>120s** here (the max bash tool timeout), so a foreground `npx vite build` call always times out, and **background/`nohup`/`setsid` builds get reaped** when the tool call returns (their log stays empty). Don't keep retrying those.
+- **How to apply:** restart the configured **`build` workflow** (`cd frontend && npx vite build`) — it's workflow-managed so it survives, runs to completion, and you verify success by checking `frontend/dist/index.html` mtime + `dist/assets` chunk count (it may report "didn't open a port" since a build exits; that's expected, not a failure).
+
 ## Other durable facts
 - Schema is bootstrapped **lazily** (`ensure*Schema()` on first request); there is **no migration runner**. Tables can exist in one env and not another (observed: `capadex_behavioural_memory` absent while `career_memory_snapshots` present). Prod≡dev is not guaranteed.
 - Full validation write-up lives at `docs/PRODUCTION_VALIDATION.md` (Launch Readiness 84/100, GO with fast-follow).

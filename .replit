@@ -59,6 +59,10 @@ args = "credits-issue-idempotency"
 task = "workflow.run"
 args = "test-referral-deal-value"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "referral-deal-value-livedb"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -179,6 +183,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx --test tests/partner-ecosystem-referral-deal-value.test.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "referral-deal-value-livedb"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx scripts/smoke-referral-deal-value-resolver.ts"
 
 [workflows.workflow.metadata]
 isValidation = true

@@ -85,35 +85,57 @@ export function registerCommercialArchitectureRoutes(
     next();
   };
 
-  // ── Lazy ensure-schema — runs ONLY when the flag is ON (no DDL when OFF). ──
-  app.use('/api/commercial-architecture', (req: Request, res: Response, next: NextFunction) => {
-    if (!isCommercialArchitectureEnabled()) return next(); // gate on each route emits the 503
+  // ── Ensure-schema runs ONLY on WRITE paths, and ONLY after auth — never on a
+  //    read. GETs stay DDL-free (to_regclass probe + degrade) so no read request
+  //    can ever create a table. With the flag OFF the gate already 503s first. ──
+  const ensureSchemaMw: RequestHandler = (_req: Request, res: Response, next: NextFunction) => {
     ensureArchitectureSchema(pool).then(() => next()).catch((err) => {
       console.error('[commercial-architecture] ensure-schema failed:', err instanceof Error ? err.message : String(err));
       res.status(503).json({ error: 'schema_unavailable' });
     });
-  });
+  };
 
-  const admin: RequestHandler[] = [gate, requireAuth, requireSuperAdmin];
+  // Read-path existence probe — DDL-free. Returns true only when every net-new
+  // table is provisioned (i.e. at least one write has bootstrapped the schema).
+  const archReady = async (): Promise<boolean> => {
+    const r = await pool.query(
+      `SELECT to_regclass('comm_skus') a, to_regclass('comm_addons') b,
+              to_regclass('comm_sku_addons') c, to_regclass('comm_features') d,
+              to_regclass('comm_plan_entitlements') e`,
+    );
+    const row = r.rows[0] || {};
+    return !!(row.a && row.b && row.c && row.d && row.e);
+  };
+
+  const admin: RequestHandler[] = [gate, requireAuth, requireSuperAdmin];       // reads
+  const adminWrite: RequestHandler[] = [...admin, ensureSchemaMw];               // writes bootstrap schema post-auth
 
   // ════════════════════════════════════════════════════════════════════════════
   //  PUBLIC catalog (active rows only — drafts hidden)
   // ════════════════════════════════════════════════════════════════════════════
   app.get('/api/commercial-architecture/catalog', gate, async (_req, res, next) => {
     try {
-      const [products, plans, skus, addons, features, entitlements] = await Promise.all([
+      // Spine tables (products/plans) exist from the commercial-spine migration;
+      // the net-new layer degrades to empty until a write bootstraps the schema.
+      const [products, plans] = await Promise.all([
         pool.query(`SELECT * FROM comm_products WHERE is_active=true ORDER BY sort_order, name`),
         pool.query(`SELECT * FROM comm_plans WHERE is_active=true ORDER BY sort_order, name`),
-        pool.query(`SELECT * FROM comm_skus WHERE is_active=true ORDER BY sort_order, name`),
-        pool.query(`SELECT * FROM comm_addons WHERE is_active=true ORDER BY sort_order, name`),
-        pool.query(`SELECT * FROM comm_features WHERE is_active=true ORDER BY sort_order, name`),
-        pool.query(`SELECT pe.* FROM comm_plan_entitlements pe
-                      JOIN comm_plans p ON p.id = pe.plan_id AND p.is_active=true`),
       ]);
+      let skus: any[] = [], addons: any[] = [], features: any[] = [], entitlements: any[] = [];
+      if (await archReady()) {
+        const [s, a, f, e] = await Promise.all([
+          pool.query(`SELECT * FROM comm_skus WHERE is_active=true ORDER BY sort_order, name`),
+          pool.query(`SELECT * FROM comm_addons WHERE is_active=true ORDER BY sort_order, name`),
+          pool.query(`SELECT * FROM comm_features WHERE is_active=true ORDER BY sort_order, name`),
+          pool.query(`SELECT pe.* FROM comm_plan_entitlements pe
+                        JOIN comm_plans p ON p.id = pe.plan_id AND p.is_active=true`),
+        ]);
+        skus = s.rows; addons = a.rows; features = f.rows; entitlements = e.rows;
+      }
       res.json({
         ok: true,
-        products: products.rows, plans: plans.rows, skus: skus.rows,
-        addons: addons.rows, features: features.rows, plan_entitlements: entitlements.rows,
+        products: products.rows, plans: plans.rows, skus,
+        addons, features, plan_entitlements: entitlements,
       });
     } catch (e) { next(e); }
   });
@@ -123,6 +145,7 @@ export function registerCommercialArchitectureRoutes(
   // ════════════════════════════════════════════════════════════════════════════
   app.get('/api/commercial-architecture/admin/skus', ...admin, async (req, res, next) => {
     try {
+      if (!await archReady()) return res.json({ rows: [] });
       const productId = asStr(req.query.product_id);
       const { rows } = await pool.query(
         `SELECT * FROM comm_skus ${productId ? 'WHERE product_id=$1' : ''} ORDER BY sort_order, name`,
@@ -131,7 +154,7 @@ export function registerCommercialArchitectureRoutes(
       res.json({ rows });
     } catch (e) { next(e); }
   });
-  app.post('/api/commercial-architecture/admin/skus', ...admin, async (req, res, next) => {
+  app.post('/api/commercial-architecture/admin/skus', ...adminWrite, async (req, res, next) => {
     try {
       const b = req.body || {};
       const sku_code = asStr(b.sku_code); const name = asStr(b.name);
@@ -152,7 +175,7 @@ export function registerCommercialArchitectureRoutes(
       next(e);
     }
   });
-  app.patch('/api/commercial-architecture/admin/skus/:id', ...admin, async (req, res, next) => {
+  app.patch('/api/commercial-architecture/admin/skus/:id', ...adminWrite, async (req, res, next) => {
     try {
       const b = req.body || {};
       if (badEnum(b.segment, isSegment)) return res.status(400).json({ error: `invalid segment; allowed: ${SEGMENTS.join(', ')}` });
@@ -176,7 +199,7 @@ export function registerCommercialArchitectureRoutes(
       next(e);
     }
   });
-  app.delete('/api/commercial-architecture/admin/skus/:id', ...admin, async (req, res, next) => {
+  app.delete('/api/commercial-architecture/admin/skus/:id', ...adminWrite, async (req, res, next) => {
     try {
       const { rows } = await pool.query(
         `UPDATE comm_skus SET is_active=false, updated_at=now() WHERE id=$1 RETURNING id`, [req.params.id]);
@@ -190,11 +213,12 @@ export function registerCommercialArchitectureRoutes(
   // ════════════════════════════════════════════════════════════════════════════
   app.get('/api/commercial-architecture/admin/addons', ...admin, async (_req, res, next) => {
     try {
+      if (!await archReady()) return res.json({ rows: [] });
       const { rows } = await pool.query(`SELECT * FROM comm_addons ORDER BY sort_order, name`);
       res.json({ rows });
     } catch (e) { next(e); }
   });
-  app.post('/api/commercial-architecture/admin/addons', ...admin, async (req, res, next) => {
+  app.post('/api/commercial-architecture/admin/addons', ...adminWrite, async (req, res, next) => {
     try {
       const b = req.body || {};
       const code = asStr(b.code); const name = asStr(b.name);
@@ -217,7 +241,7 @@ export function registerCommercialArchitectureRoutes(
       next(e);
     }
   });
-  app.patch('/api/commercial-architecture/admin/addons/:id', ...admin, async (req, res, next) => {
+  app.patch('/api/commercial-architecture/admin/addons/:id', ...adminWrite, async (req, res, next) => {
     try {
       const b = req.body || {};
       if (badEnum(b.addon_type, isAddonType)) return res.status(400).json({ error: `invalid addon_type; allowed: ${ADDON_TYPES.join(', ')}` });
@@ -241,7 +265,7 @@ export function registerCommercialArchitectureRoutes(
       res.json(rows[0]);
     } catch (e) { next(e); }
   });
-  app.delete('/api/commercial-architecture/admin/addons/:id', ...admin, async (req, res, next) => {
+  app.delete('/api/commercial-architecture/admin/addons/:id', ...adminWrite, async (req, res, next) => {
     try {
       const { rows } = await pool.query(
         `UPDATE comm_addons SET is_active=false, updated_at=now() WHERE id=$1 RETURNING id`, [req.params.id]);
@@ -253,6 +277,7 @@ export function registerCommercialArchitectureRoutes(
   // ── SKU ↔ add-on links ──
   app.get('/api/commercial-architecture/admin/sku-addons', ...admin, async (req, res, next) => {
     try {
+      if (!await archReady()) return res.json({ rows: [] });
       const skuId = asStr(req.query.sku_id);
       const { rows } = await pool.query(
         `SELECT sa.*, a.code AS addon_code, a.name AS addon_name, a.price_paise AS addon_price_paise
@@ -263,7 +288,7 @@ export function registerCommercialArchitectureRoutes(
       res.json({ rows });
     } catch (e) { next(e); }
   });
-  app.post('/api/commercial-architecture/admin/sku-addons', ...admin, async (req, res, next) => {
+  app.post('/api/commercial-architecture/admin/sku-addons', ...adminWrite, async (req, res, next) => {
     try {
       const b = req.body || {};
       const sku_id = asStr(b.sku_id); const addon_id = asStr(b.addon_id);
@@ -281,7 +306,7 @@ export function registerCommercialArchitectureRoutes(
       next(e);
     }
   });
-  app.delete('/api/commercial-architecture/admin/sku-addons/:id', ...admin, async (req, res, next) => {
+  app.delete('/api/commercial-architecture/admin/sku-addons/:id', ...adminWrite, async (req, res, next) => {
     try {
       const { rows } = await pool.query(`DELETE FROM comm_sku_addons WHERE id=$1 RETURNING id`, [req.params.id]);
       if (!rows.length) return res.status(404).json({ error: 'not found' });
@@ -294,11 +319,12 @@ export function registerCommercialArchitectureRoutes(
   // ════════════════════════════════════════════════════════════════════════════
   app.get('/api/commercial-architecture/admin/features', ...admin, async (_req, res, next) => {
     try {
+      if (!await archReady()) return res.json({ rows: [], feature_classes: FEATURE_CLASSES });
       const { rows } = await pool.query(`SELECT * FROM comm_features ORDER BY sort_order, name`);
       res.json({ rows, feature_classes: FEATURE_CLASSES });
     } catch (e) { next(e); }
   });
-  app.post('/api/commercial-architecture/admin/features', ...admin, async (req, res, next) => {
+  app.post('/api/commercial-architecture/admin/features', ...adminWrite, async (req, res, next) => {
     try {
       const b = req.body || {};
       const code = asStr(b.code); const name = asStr(b.name);
@@ -318,7 +344,7 @@ export function registerCommercialArchitectureRoutes(
       next(e);
     }
   });
-  app.patch('/api/commercial-architecture/admin/features/:id', ...admin, async (req, res, next) => {
+  app.patch('/api/commercial-architecture/admin/features/:id', ...adminWrite, async (req, res, next) => {
     try {
       const b = req.body || {};
       const fc = b.feature_class === undefined ? null
@@ -343,7 +369,7 @@ export function registerCommercialArchitectureRoutes(
       res.json(rows[0]);
     } catch (e) { next(e); }
   });
-  app.delete('/api/commercial-architecture/admin/features/:id', ...admin, async (req, res, next) => {
+  app.delete('/api/commercial-architecture/admin/features/:id', ...adminWrite, async (req, res, next) => {
     try {
       const { rows } = await pool.query(
         `UPDATE comm_features SET is_active=false, updated_at=now() WHERE id=$1 RETURNING id`, [req.params.id]);
@@ -355,6 +381,7 @@ export function registerCommercialArchitectureRoutes(
   // ── Plan → feature(+quota) entitlement mapping ──
   app.get('/api/commercial-architecture/admin/plan-entitlements', ...admin, async (req, res, next) => {
     try {
+      if (!await archReady()) return res.json({ rows: [] });
       const planId = asStr(req.query.plan_id);
       const { rows } = await pool.query(
         `SELECT pe.*, f.name AS feature_name, f.feature_class
@@ -365,7 +392,7 @@ export function registerCommercialArchitectureRoutes(
       res.json({ rows });
     } catch (e) { next(e); }
   });
-  app.post('/api/commercial-architecture/admin/plan-entitlements', ...admin, async (req, res, next) => {
+  app.post('/api/commercial-architecture/admin/plan-entitlements', ...adminWrite, async (req, res, next) => {
     try {
       const b = req.body || {};
       const plan_id = asStr(b.plan_id); const feature_code = asStr(b.feature_code);
@@ -384,7 +411,7 @@ export function registerCommercialArchitectureRoutes(
       next(e);
     }
   });
-  app.patch('/api/commercial-architecture/admin/plan-entitlements/:id', ...admin, async (req, res, next) => {
+  app.patch('/api/commercial-architecture/admin/plan-entitlements/:id', ...adminWrite, async (req, res, next) => {
     try {
       const b = req.body || {};
       if (badEnum(b.quota_period, isInterval)) return res.status(400).json({ error: `invalid quota_period; allowed: ${INTERVALS.join(', ')}` });
@@ -401,7 +428,7 @@ export function registerCommercialArchitectureRoutes(
       res.json(rows[0]);
     } catch (e) { next(e); }
   });
-  app.delete('/api/commercial-architecture/admin/plan-entitlements/:id', ...admin, async (req, res, next) => {
+  app.delete('/api/commercial-architecture/admin/plan-entitlements/:id', ...adminWrite, async (req, res, next) => {
     try {
       const { rows } = await pool.query(`DELETE FROM comm_plan_entitlements WHERE id=$1 RETURNING id`, [req.params.id]);
       if (!rows.length) return res.status(404).json({ error: 'not found' });

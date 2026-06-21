@@ -937,6 +937,19 @@ export const FEATURE_FLAGS = {
    *  employer-scoped (every read strictly scoped by employer_id; cross-employer rows never leak).
    *  Env: `FF_WORKFORCE_INTELLIGENCE`. */
   workforceIntelligence: false,
+
+  /** PHASE 5.13 — Employer Dashboards. Read-only, role-scoped dashboards (employer_dashboard,
+   *  recruiter_dashboard, talent_dashboard) that COMPOSE the Phase 5.12 workforce engines + the
+   *  operator-recorded employer substrate into 8 widgets (Open Jobs, Applications, Hiring Funnel,
+   *  Talent Pool, Readiness, Competency / Assessment / Hiring Analytics). compose-never-recompute:
+   *  deterministic, coverage-gated folds; unmeasured signals abstain (null), NEVER 0. These are
+   *  operational + developmental views — NOT predictions and NOT an algorithmic hiring/promotion/
+   *  suitability verdict (disclaimer + provenance on every output). GET-never-writes by construction:
+   *  the layer creates NO tables and writes NO rows (no POST, no ensure-schema); reads use a
+   *  to_regclass probe + degrade, so OFF is byte-identical legacy (every route 503 before any auth/DB
+   *  touch). Super-admin gated + IDOR employer-scoped (every read strictly scoped by employer_id;
+   *  cross-employer rows never leak). Env: `FF_EMPLOYER_DASHBOARDS`. */
+  employerDashboards: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1363,6 +1376,10 @@ export function isHiringIntelligenceEnabled(): boolean {
 
 export function isWorkforceIntelligenceEnabled(): boolean {
   return isFlagEnabled('workforceIntelligence');
+}
+
+export function isEmployerDashboardsEnabled(): boolean {
+  return isFlagEnabled('employerDashboards');
 }
 
 export function isTalentDiscoveryEnabled(): boolean {

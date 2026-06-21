@@ -606,6 +606,14 @@ export const FEATURE_FLAGS = {
    *  external actions, executed_count stays 0). OFF → enqueue is blocked → byte-identical.
    *  Env: `FF_AUTOMATION_EXECUTION`. */
   automationExecution: false,
+  /** Phase 6.14 — Super Admin Command Center. Default OFF. Composes the platform's 12 operational
+   *  domains (Institutions, Employers, Students, Candidates, Assessments, EI, Career Builder, Jobs,
+   *  Revenue, Subscriptions, Partners, Support) into one unified read-only view plus a platform
+   *  control tower (pending actions / freshness / capacity) and global monitoring (alerts / 24h
+   *  activity / subsystem status). Flag OFF → GET/POST /api/admin/command-center/console/* routes
+   *  503 and the SuperAdmin Command Center tab is hidden → byte-identical legacy (no DDL on read).
+   *  Env: `FF_COMMAND_CENTER`. */
+  commandCenter: false,
   /** Critical Gaps #2 & #3 — operational RBAC + Audit Trail + Governance/Security Center. Gates the
    *  whole governance subsystem: role/permission framework + hierarchies + permission groups, admin
    *  lifecycle (activate/suspend/terminate), categorized audit logging, generalized approval workflows,
@@ -1327,6 +1335,10 @@ export function isAutomationEngineEnabled(): boolean {
 
 export function isAutomationExecutionEnabled(): boolean {
   return isFlagEnabled('automationExecution');
+}
+
+export function isCommandCenterEnabled(): boolean {
+  return isFlagEnabled('commandCenter');
 }
 
 export function isCommercialEntitlementEnabled(): boolean {

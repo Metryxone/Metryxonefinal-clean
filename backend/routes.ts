@@ -13760,6 +13760,10 @@ Rules:
   // ── Phase 6.13 Automation Engine console (flag automationEngine, default OFF) ─
   const { registerAutomationEngineRoutes } = await import('./routes/automation-engine');
   registerAutomationEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+
+  // Phase 6.14 — Super Admin Command Center (flag `commandCenter`, default OFF → routes 503).
+  const { registerCommandCenterRoutes } = await import('./routes/superadmin-command-center');
+  registerCommandCenterRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Employer Intelligence Operating System (EP-98) ───────────────────────────
   registerEmployerPortalRoutes(app, concernsPool, requireAuth);
   // ── Super-Admin Employer Onboarding (create org + admin login) ───────────────

@@ -12,7 +12,7 @@ import {
   FlaskConical, GitBranch, Archive, Scale, Bot, AlertTriangle, Network,
   BarChart2, BarChart3, Building2, UserCircle2, Map, ClipboardList, MessageCircle,
   Search, Sliders, Timer, ClipboardCheck, Shuffle, LineChart, FileDown, Users2,
-  Zap, Award, FileText, Route, Star, ArrowRight, LayoutDashboard, Gauge, HeartPulse,
+  Zap, Award, FileText, Route, Star, ArrowRight, LayoutDashboard, LayoutGrid, Gauge, HeartPulse,
   Compass,
 } from 'lucide-react';
 
@@ -599,6 +599,17 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
     queryKey: ['/api/admin/automation/console/ping', 'enabled'],
     queryFn: async () => {
       const res = await fetch('/api/admin/automation/console/ping', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // Phase 6.14 Command Center console flag — when OFF the /console/ping probe
+  // 503s and the "Command Center" nav item self-hides, keeping flag-OFF byte-identical.
+  const { data: commandCenterEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/admin/command-center/console/ping', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/command-center/console/ping', { credentials: 'include' });
       return res.ok;
     },
     enabled: isAuthenticated,
@@ -2852,6 +2863,7 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
         { id: 'platform-intelligence',  icon: TrendingUp, label: 'Platform Intelligence' },
         { id: 'multi-tenant-architecture', icon: Building2, label: 'Multi-Tenant Architecture' },
         { id: 'automation-engine',      icon: Zap,       label: 'Automation Engine' },
+        { id: 'command-center',         icon: LayoutGrid, label: 'Command Center' },
         { id: 'documents',              icon: FileCheck, label: 'Documents' },
         { id: 'settings',               icon: Settings,  label: 'Settings' },
         { id: 'content',                icon: Play,      label: 'Content Manager' },
@@ -2963,6 +2975,11 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
       automationEngineEnabled
         ? group
         : { ...group, items: group.items.filter(it => it.id !== 'automation-engine') }
+    )
+    .map(group =>
+      commandCenterEnabled
+        ? group
+        : { ...group, items: group.items.filter(it => it.id !== 'command-center') }
     )
     .map(group =>
       competencyRuntimeEnabled

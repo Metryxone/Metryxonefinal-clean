@@ -29,8 +29,18 @@ unpriced conversion was a coverage gap.
 and `partner-ecosystem-validation.ts` reconciliation — or payouts drift. The engine
 GET must stay byte-identical when columns are absent: it probes `columnExists` and
 SELECTs `NULL::numeric`/`NULL::text` fallbacks rather than reaching ensure-schema
-(DDL lives only on the POST/setup path). MTAPanel.tsx convert button uses a
-window.prompt: number=explicit, blank=link_deal auto-resolve, "none"=no value.
+(DDL lives only on the POST/setup path).
+
+**Auto-resolution is the DEFAULT on conversion** (changed): when a referral converts
+with a `referred_tenant_id` and no explicit `deal_value`, the writers run
+`resolveReferredTenantDealValue` automatically. `link_deal` is now a TRI-STATE
+opt-OUT, not an opt-in: `undefined` → auto-resolve (default), `false` → skip
+(record no value), `true` → force. **Trap:** the transition route used to coerce
+`link_deal: link_deal === true`, which turns an absent flag into `false` and would
+disable the new default — pass it through as tri-state
+(`undefined ? undefined : === true`). MTAPanel.tsx convert prompt: number=explicit,
+blank=auto-resolve (sends nothing), "none"/0=opt out (sends `link_deal:false`). When
+the resolver returns null the row stays an honest gap (never fabricated), as before.
 
 **Historical backfill** (`scripts/partner-deal-value-backfill.ts`): fills pre-feature
 converted rows. It must call `ensurePartnerEcosystemSchema` FIRST — the deal_value /

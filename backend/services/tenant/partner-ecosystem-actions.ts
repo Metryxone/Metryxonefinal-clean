@@ -346,7 +346,9 @@ export async function createChannelReferral(pool: pg.Pool, input: CreateReferral
     if (input.deal_value != null && input.deal_value !== '') {
       dealValue = asAmount(input.deal_value);
       dealSource = 'manual';
-    } else if (input.link_deal && referredId != null) {
+    } else if (input.link_deal !== false && referredId != null) {
+      // Auto-resolution is the DEFAULT on a converted-at-creation referral with a referred tenant; pass
+      // link_deal === false to opt out. resolveReferredTenantDealValue returns null (honest gap) when nothing real is found.
       const resolved = await resolveReferredTenantDealValue(pool, referredId);
       if (resolved) { dealValue = resolved.value; dealSource = resolved.source; }
     }
@@ -440,15 +442,18 @@ export async function transitionReferral(
   // ── Deal value (only meaningful on conversion) ──────────────────────────────
   // Capture the REAL deal value so the payout can be derived as commission_pct × deal_value. Precedence:
   //   1. explicit deal_value (operator-supplied),
-  //   2. link_deal → auto-resolve from the referred tenant's realized ledgers,
+  //   2. auto-resolve from the referred tenant's realized ledgers — the DEFAULT on conversion whenever a
+  //      referred tenant is present, so a forgotten link never silently reopens the deal-value gap,
   //   3. otherwise leave deal_value untouched.
+  // Auto-resolution can be explicitly opted out of by passing link_deal === false (e.g. "record no deal
+  // value"); when null is found the row stays an honest gap, exactly as before.
   let dealValue: number | null | undefined;
   let dealSource: string | null | undefined;
   if (toConverted) {
     if (opts.deal_value !== undefined && opts.deal_value !== null && opts.deal_value !== '') {
       dealValue = asAmount(opts.deal_value);
       dealSource = 'manual';
-    } else if (opts.link_deal && effectiveReferredId != null) {
+    } else if (opts.link_deal !== false && effectiveReferredId != null) {
       const resolved = await resolveReferredTenantDealValue(pool, effectiveReferredId);
       if (resolved) {
         dealValue = resolved.value;

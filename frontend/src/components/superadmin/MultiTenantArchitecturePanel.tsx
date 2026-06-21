@@ -926,17 +926,17 @@ function PartnerEcosystemView() {
                                 const raw = window.prompt(
                                   'Deal value for this conversion (currency units).\n' +
                                   '• Enter a number to set it explicitly.\n' +
-                                  '• Leave blank to auto-link from the referred tenant\'s subscriptions/payments.\n' +
+                                  '• Leave blank to auto-link from the referred tenant\'s subscriptions/payments (default).\n' +
                                   '• Enter 0 (or "none") to record no deal value.',
                                   '',
                                 );
                                 if (raw === null) return; // cancelled
                                 const trimmed = raw.trim();
-                                if (trimmed === '') { post(`/referrals/${r.id}/transition`, { status: to, link_deal: true }); return; }
-                                if (trimmed.toLowerCase() === 'none') { post(`/referrals/${r.id}/transition`, { status: to }); return; }
+                                if (trimmed === '') { post(`/referrals/${r.id}/transition`, { status: to }); return; } // auto-link is the default
+                                if (trimmed.toLowerCase() === 'none') { post(`/referrals/${r.id}/transition`, { status: to, link_deal: false }); return; } // opt out of auto-link
                                 const num = Number(trimmed);
                                 if (!Number.isFinite(num) || num < 0) { setErr('Deal value must be a non-negative number.'); return; }
-                                if (num === 0) { post(`/referrals/${r.id}/transition`, { status: to }); return; } // 0 == no deal value
+                                if (num === 0) { post(`/referrals/${r.id}/transition`, { status: to, link_deal: false }); return; } // 0 == no deal value, opt out of auto-link
                                 post(`/referrals/${r.id}/transition`, { status: to, deal_value: num });
                                 return;
                               }

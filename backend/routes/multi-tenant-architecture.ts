@@ -321,7 +321,8 @@ export function registerMultiTenantArchitectureRoutes(
         commission_amount: commission_amount === undefined ? undefined : commission_amount,
         referred_tenant_id: referred_tenant_id === undefined ? undefined : referred_tenant_id,
         deal_value: deal_value === undefined ? undefined : deal_value,
-        link_deal: link_deal === true,
+        // Tri-state: undefined → auto-resolve (the default on conversion); false → explicit opt-out; true → force.
+        link_deal: link_deal === undefined ? undefined : link_deal === true,
       }));
     } catch (err) {
       handlePartnerError(err, res, 'transition referral');

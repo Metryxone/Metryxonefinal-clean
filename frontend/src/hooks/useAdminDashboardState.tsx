@@ -593,6 +593,17 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
     enabled: isAuthenticated,
   });
 
+  // Usage Metering flag (commercialUsageMetering) — when OFF the gated admin
+  // route 503s and the nav item self-hides, keeping flag-OFF byte-identical.
+  const { data: usageMeteringEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/admin/commercial/metering/dimensions', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/commercial/metering/dimensions', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
   // Fetch platform settings
   const { data: platformSettingsData = [], refetch: refetchSettings } = useQuery<any[]>({
     queryKey: ['/api/admin/platform-settings'],
@@ -2757,9 +2768,10 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
     {
       label: 'Commercial',
       items: [
-        { id: 'pricing',    icon: CreditCard, label: 'Pricing & Packages' },
-        { id: 'financials', icon: Wallet,     label: 'Financials' },
-        { id: 'revenue',    icon: TrendingUp, label: 'Revenue Intelligence' },
+        { id: 'pricing',       icon: CreditCard, label: 'Pricing & Packages' },
+        { id: 'financials',    icon: Wallet,     label: 'Financials' },
+        { id: 'revenue',       icon: TrendingUp, label: 'Revenue Intelligence' },
+        { id: 'usage-credits', icon: Gauge,      label: 'Usage & Credits' },
       ]
     },
     // ── Governance ──────────────────────────────────────────────────────────
@@ -2886,6 +2898,11 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
       careerIntelligenceEnabled
         ? group
         : { ...group, items: group.items.filter(it => it.id !== 'career-intelligence') }
+    )
+    .map(group =>
+      usageMeteringEnabled
+        ? group
+        : { ...group, items: group.items.filter(it => it.id !== 'usage-credits') }
     )
     .filter(group => group.items.length > 0);
   const menuItems = navGroups.flatMap(g => g.items);

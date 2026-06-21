@@ -891,6 +891,22 @@ export const FEATURE_FLAGS = {
    *  legacy (every route 503 before any auth/DB/DDL touch). Super-admin gated + IDOR
    *  job-scoped (strict equality). Env: `FF_SHORTLISTING`. */
   shortlisting: false,
+
+  /** PHASE 5.10 — Interview Intelligence. Operator-driven interview management over
+   *  employer_jobs/employer_candidates for a job: interview scheduling + lifecycle FSM
+   *  (scheduled/completed/cancelled/no_show/rescheduled) + decision tracking
+   *  (interview_engine), panelist feedback + panel reviews (interview_feedback_engine),
+   *  and interview scoring + evaluation (evaluation_engine). Additive +
+   *  compose-never-recompute: the engines RECORD operator scheduling/decisions/feedback/
+   *  scores and fold them into operator-recorded aggregates (panel review, evaluation) —
+   *  they make NO algorithmic interview/scoring/suitability verdict. GET-never-writes
+   *  (to_regclass probe + degrade); the net-new tables (interview_schedules,
+   *  interview_decisions, interview_feedback, interview_scores) are created ONLY on the
+   *  POST write path while the flag is ON, so OFF is byte-identical legacy (every route
+   *  503 before any auth/DB/DDL touch). Super-admin gated + IDOR job-scoped (candidate
+   *  strictly belongs to job; feedback/scores scoped to a valid interview).
+   *  Env: `FF_INTERVIEW_INTELLIGENCE`. */
+  interviewIntelligence: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1305,6 +1321,10 @@ export function isCandidateComparisonEnabled(): boolean {
 
 export function isShortlistingEnabled(): boolean {
   return isFlagEnabled('shortlisting');
+}
+
+export function isInterviewIntelligenceEnabled(): boolean {
+  return isFlagEnabled('interviewIntelligence');
 }
 
 export function isTalentDiscoveryEnabled(): boolean {

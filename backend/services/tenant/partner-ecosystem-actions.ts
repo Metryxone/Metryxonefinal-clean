@@ -145,6 +145,51 @@ export async function resolveReferredTenantDealValue(
   };
 }
 
+export type ReferralLinkReason = 'no_referred_tenant' | 'no_email' | 'no_realized_revenue' | 'linkable';
+
+export interface ReferralLinkDiagnosis {
+  referred_tenant_id: number | null;
+  /** True when the referred tenant carries a non-empty contact_email (the join key into the ledgers). */
+  has_email: boolean;
+  /** Why the conversion is (or is not) linkable to a real deal value. */
+  reason: ReferralLinkReason;
+  /** When reason='linkable', the realized deal value that can be attached; otherwise null. */
+  resolved: ResolvedDealValue | null;
+}
+
+/**
+ * Explain WHY a referred tenant's deal value is (or is not) resolvable, so an admin can act on an
+ * honest coverage gap instead of a silent NULL. Read-only (delegates to resolveReferredTenantDealValue),
+ * never throws, never fabricates. Distinguishes the two real causes:
+ *   • no_email            — the referred tenant has no contact_email, so no ledger row can ever match.
+ *   • no_realized_revenue — it has an email but no paid revenue is recorded in the ledgers.
+ *   • linkable            — realized revenue exists now and can be auto-attached (resolved carries it).
+ */
+export async function diagnoseReferredTenantDealValue(
+  pool: pg.Pool,
+  referredTenantId: number | null,
+): Promise<ReferralLinkDiagnosis> {
+  if (referredTenantId == null) {
+    return { referred_tenant_id: null, has_email: false, reason: 'no_referred_tenant', resolved: null };
+  }
+  let email: string | null = null;
+  try {
+    const t = await pool.query(`SELECT contact_email FROM tenants WHERE id = $1`, [referredTenantId]);
+    email = t.rows[0]?.contact_email ?? null;
+  } catch {
+    email = null;
+  }
+  const hasEmail = !!(email && String(email).trim() !== '');
+  if (!hasEmail) {
+    return { referred_tenant_id: referredTenantId, has_email: false, reason: 'no_email', resolved: null };
+  }
+  const resolved = await resolveReferredTenantDealValue(pool, referredTenantId);
+  if (resolved) {
+    return { referred_tenant_id: referredTenantId, has_email: true, reason: 'linkable', resolved };
+  }
+  return { referred_tenant_id: referredTenantId, has_email: true, reason: 'no_realized_revenue', resolved: null };
+}
+
 function asInt(v: unknown, field: string): number {
   const n = Number(v);
   if (!Number.isInteger(n)) throw new PartnerActionError('invalid_input', `${field} must be an integer.`);
@@ -495,4 +540,77 @@ export async function transitionReferral(
     params,
   );
   return { ...upd.rows[0], from_status: from };
+}
+
+export interface ResolveReferralDealValueInput {
+  /** Explicit deal/transaction value the commission is computed against (currency units). */
+  deal_value?: number | string | null;
+  /** When true and no explicit deal_value is given, auto-resolve from the referred tenant's ledgers. */
+  link_deal?: boolean;
+}
+
+/**
+ * Resolve an ALREADY-converted referral's missing deal value (the honest coverage gap surfaced by the
+ * unlinkable-referrals view). Conversion is terminal, so this is a separate write path from transitionReferral:
+ * it only attaches a deal_value (and derives commission_amount = pct × deal_value when no amount is stored yet)
+ * to a converted row. Precedence: explicit operator deal_value ('manual'), else link_deal auto-resolves from
+ * the referred tenant's realized ledgers. Never fabricates — auto-link fails CLOSED (no realized revenue → error).
+ */
+export async function resolveReferralDealValue(
+  pool: pg.Pool,
+  referralId: number,
+  input: ResolveReferralDealValueInput = {},
+) {
+  await ensurePartnerEcosystemSchema(pool);
+  const cur = await pool.query(
+    `SELECT id, status, referred_tenant_id, commission_pct, commission_amount, deal_value, currency
+       FROM tenant_channel_referrals WHERE id = $1`,
+    [referralId],
+  );
+  if (cur.rowCount === 0) throw new PartnerActionError('not_found', `referral ${referralId} not found.`, 404);
+  const row = cur.rows[0];
+  if (String(row.status) !== 'converted') {
+    throw new PartnerActionError('invalid_state', 'a deal value can only be set on a converted referral.');
+  }
+  const referredId = row.referred_tenant_id == null ? null : Number(row.referred_tenant_id);
+  const pct = row.commission_pct == null ? null : Number(row.commission_pct);
+
+  let dealValue: number | null = null;
+  let dealSource: string | null = null;
+  if (input.deal_value != null && input.deal_value !== '') {
+    dealValue = asAmount(input.deal_value);
+    dealSource = 'manual';
+  } else if (input.link_deal) {
+    if (referredId == null) {
+      throw new PartnerActionError('invalid_input', 'cannot auto-link: this referral has no referred tenant.');
+    }
+    const resolved = await resolveReferredTenantDealValue(pool, referredId);
+    if (!resolved) {
+      throw new PartnerActionError('not_linkable', 'no realized revenue found for the referred tenant — nothing to link.', 422);
+    }
+    dealValue = resolved.value;
+    dealSource = resolved.source;
+  } else {
+    throw new PartnerActionError('invalid_input', 'provide a deal_value, or set link_deal to auto-resolve from the ledgers.');
+  }
+
+  const existingAmount = row.commission_amount == null ? null : Number(row.commission_amount);
+  const sets: string[] = ['deal_value = $1', 'deal_value_source = $2'];
+  const params: any[] = [dealValue, dealSource];
+  let i = 3;
+  // Derive the earned amount only when none is already stored (an explicit amount always wins).
+  if (existingAmount == null && dealValue != null && pct != null) {
+    const amount = Math.round((pct / 100) * dealValue * 100) / 100;
+    sets.push(`commission_amount = $${i++}`); params.push(amount);
+    sets.push(`commission_amount_source = $${i++}`); params.push('derived');
+  }
+  params.push(referralId);
+  const upd = await pool.query(
+    `UPDATE tenant_channel_referrals SET ${sets.join(', ')} WHERE id = $${i}
+     RETURNING id, channel_partner_tenant_id, referred_tenant_id, referral_code, status,
+               commission_pct, commission_amount, commission_amount_source, deal_value, deal_value_source,
+               currency, referred_at, converted_at`,
+    params,
+  );
+  return upd.rows[0];
 }

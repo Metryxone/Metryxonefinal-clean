@@ -42,6 +42,19 @@ disable the new default — pass it through as tri-state
 blank=auto-resolve (sends nothing), "none"/0=opt out (sends `link_deal:false`). When
 the resolver returns null the row stays an honest gap (never fabricated), as before.
 
+**Resolving an ALREADY-converted row** (unlinkable-referrals view): conversion is
+terminal, so you can't reuse `transitionReferral` to add a deal value after the
+fact. Use the separate `resolveReferralDealValue` write path — it asserts
+`status='converted'`, then explicit `deal_value`='manual' OR `link_deal` auto-resolve
+(fails CLOSED 422 'not_linkable' when no realized revenue), and derives
+`commission_amount` ONLY when none is stored (explicit amount always wins). The
+read side `diagnoseReferredTenantDealValue` returns reason ∈ no_email /
+no_realized_revenue / linkable / no_referred_tenant by probing
+`tenants.contact_email` then `resolveReferredTenantDealValue`; the engine's
+`buildUnlinkableReferrals` (read-only, GET) calls it per candidate row. **Engine
+imports diagnose FROM actions** — keep that direction (actions must NOT import the
+engine) or you create a circular dep.
+
 **Historical backfill** (`scripts/partner-deal-value-backfill.ts`): fills pre-feature
 converted rows. It must call `ensurePartnerEcosystemSchema` FIRST — the deal_value /
 *_source columns are write-path lazy and absent until some POST runs. Re-runnable

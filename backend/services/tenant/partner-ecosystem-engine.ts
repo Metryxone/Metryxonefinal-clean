@@ -13,7 +13,7 @@
  * papered over with a fabricated number).
  */
 import pg from 'pg';
-import { resolveReferredTenantDealValue } from './partner-ecosystem-actions';
+import { resolveReferredTenantDealValue, diagnoseReferredTenantDealValue } from './partner-ecosystem-actions';
 
 const N = (v: unknown): number => {
   const n = Number(v);
@@ -450,5 +450,125 @@ export async function buildPartnerEcosystem(
       auto_derived_count: autoDerivedTotal,
     },
     agreements, referrals, payouts, notes,
+  };
+}
+
+// ── Unlinkable converted referrals (honest coverage gap, actionable) ───────────
+export type UnlinkableReason = 'no_email' | 'no_realized_revenue' | 'linkable';
+
+export interface UnlinkableReferralRow {
+  id: number;
+  referral_code: string;
+  channel_partner_tenant_id: number;
+  channel_partner_name: string | null;
+  referred_tenant_id: number;
+  referred_tenant_name: string | null;
+  commission_pct: number | null;
+  currency: string;
+  converted_at: string | null;
+  /** Why this conversion has no deal value: no email · no realized revenue · linkable (revenue now exists). */
+  reason: UnlinkableReason;
+  reason_label: string;
+  /** When reason='linkable', the realized deal value (currency units) available to attach; else null. */
+  linkable_value: number | null;
+  linkable_source: string | null;
+}
+
+export interface UnlinkableReferrals {
+  generated_at: string;
+  degraded: boolean;
+  substrate: { referrals_table: boolean };
+  total: number;
+  by_reason: Record<string, number>;
+  rows: UnlinkableReferralRow[];
+  notes: string[];
+}
+
+const UNLINKABLE_REASON_LABELS: Record<UnlinkableReason, string> = {
+  no_email: 'Referred tenant has no contact email — no revenue ledger can ever match it.',
+  no_realized_revenue: 'Referred tenant has an email but no realized (paid) revenue in the ledgers.',
+  linkable: 'Realized revenue now exists for the referred tenant — it can be linked automatically.',
+};
+
+/**
+ * List CONVERTED referrals that have a referred tenant but still carry NO deal value and NO commission
+ * amount — the honest, unlinkable coverage gap. Each row is diagnosed (no_email vs no_realized_revenue,
+ * or linkable when revenue has since appeared) so an admin can manually price it or chase the link.
+ * READ-ONLY: to_regclass / information_schema probes only, never DDL, never fabricates.
+ */
+export async function buildUnlinkableReferrals(pool: pg.Pool): Promise<UnlinkableReferrals> {
+  const generated_at = new Date().toISOString();
+  const notes: string[] = [];
+  let degraded = false;
+
+  const hasReferrals = await exists(pool, 'tenant_channel_referrals');
+  if (!hasReferrals) {
+    notes.push('tenant_channel_referrals not provisioned yet — nothing to surface.');
+    return { generated_at, degraded, substrate: { referrals_table: false }, total: 0, by_reason: {}, rows: [], notes };
+  }
+
+  // deal_value is an additive column; on a legacy substrate it may be absent (then it is NULL for all rows).
+  const hasDealCols = await columnExists(pool, 'tenant_channel_referrals', 'deal_value');
+
+  let candidates: any[] = [];
+  try {
+    const r = await pool.query(`
+      SELECT cr.id, cr.referral_code, cr.channel_partner_tenant_id, cr.referred_tenant_id,
+             cr.commission_pct, cr.currency, cr.converted_at,
+             cp.tenant_name AS channel_partner_name, rt.tenant_name AS referred_tenant_name
+        FROM tenant_channel_referrals cr
+        LEFT JOIN tenants cp ON cp.id = cr.channel_partner_tenant_id
+        LEFT JOIN tenants rt ON rt.id = cr.referred_tenant_id
+       WHERE cr.status = 'converted'
+         AND cr.referred_tenant_id IS NOT NULL
+         AND cr.commission_amount IS NULL
+         ${hasDealCols ? 'AND cr.deal_value IS NULL' : ''}
+       ORDER BY cr.converted_at DESC NULLS LAST, cr.id DESC`);
+    candidates = r.rows;
+  } catch (e) {
+    degraded = true;
+    notes.push('tenant_channel_referrals unreadable — degraded.');
+  }
+
+  const rows: UnlinkableReferralRow[] = [];
+  const byReason: Record<string, number> = {};
+  for (const c of candidates) {
+    const referredId = Number(c.referred_tenant_id);
+    const diag = await diagnoseReferredTenantDealValue(pool, referredId);
+    // referred_tenant_id is guaranteed non-null by the WHERE clause; map the impossible case defensively.
+    const reason: UnlinkableReason = diag.reason === 'no_referred_tenant' ? 'no_email' : diag.reason;
+    rows.push({
+      id: N(c.id),
+      referral_code: String(c.referral_code ?? ''),
+      channel_partner_tenant_id: N(c.channel_partner_tenant_id),
+      channel_partner_name: c.channel_partner_name ?? null,
+      referred_tenant_id: referredId,
+      referred_tenant_name: c.referred_tenant_name ?? null,
+      commission_pct: numOrNull(c.commission_pct),
+      currency: String(c.currency ?? 'INR'),
+      converted_at: c.converted_at ? new Date(c.converted_at).toISOString() : null,
+      reason,
+      reason_label: UNLINKABLE_REASON_LABELS[reason],
+      linkable_value: diag.resolved ? diag.resolved.value : null,
+      linkable_source: diag.resolved ? diag.resolved.source : null,
+    });
+    byReason[reason] = (byReason[reason] ?? 0) + 1;
+  }
+
+  if (rows.length === 0) {
+    notes.push('No converted referrals are missing a deal value — nothing to resolve.');
+  } else {
+    if ((byReason['linkable'] ?? 0) > 0) {
+      notes.push(`${byReason['linkable']} converted referral(s) now have realized revenue available to link.`);
+    }
+    const stuck = (byReason['no_email'] ?? 0) + (byReason['no_realized_revenue'] ?? 0);
+    if (stuck > 0) {
+      notes.push(`${stuck} converted referral(s) cannot be auto-linked (no email or no realized revenue) — price them manually or chase the missing revenue link.`);
+    }
+  }
+
+  return {
+    generated_at, degraded, substrate: { referrals_table: true },
+    total: rows.length, by_reason: byReason, rows, notes,
   };
 }

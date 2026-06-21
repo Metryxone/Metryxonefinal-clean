@@ -29,7 +29,7 @@ import {
 } from '../services/tenant/tenant-isolation-enforcement';
 import { ensureTenantRelationshipSchema } from '../services/tenant/tenant-relationship-schema';
 import { ensurePartnerEcosystemSchema } from '../services/tenant/partner-ecosystem-schema';
-import { buildPartnerEcosystem, type PartnerEcosystemFilter } from '../services/tenant/partner-ecosystem-engine';
+import { buildPartnerEcosystem, buildUnlinkableReferrals, type PartnerEcosystemFilter } from '../services/tenant/partner-ecosystem-engine';
 import { buildPartnerEcosystemValidation } from '../services/tenant/partner-ecosystem-validation';
 import {
   upsertPartnerAgreement,
@@ -37,6 +37,7 @@ import {
   listAgreementEvents,
   createChannelReferral,
   transitionReferral,
+  resolveReferralDealValue,
   PartnerActionError,
   PARTNER_TYPES,
   AGREEMENT_STATUSES,
@@ -265,6 +266,17 @@ export function registerMultiTenantArchitectureRoutes(
     }
   });
 
+  // Honest coverage gap: converted referrals with a referred tenant but no deal value / amount, each
+  // diagnosed (no_email vs no_realized_revenue vs linkable) so an admin can act. READ-ONLY (literal —
+  // registered before /referrals/:id param routes).
+  app.get('/api/admin/tenant-architecture/console/partner-ecosystem/referrals/unlinkable', ...partnerChain, async (_req: any, res) => {
+    try {
+      res.json(await buildUnlinkableReferrals(pool));
+    } catch (err) {
+      handlePartnerError(err, res, 'unlinkable referrals');
+    }
+  });
+
   app.get('/api/admin/tenant-architecture/console/partner-ecosystem', ...partnerChain, async (_req: any, res) => {
     try {
       res.json(await buildPartnerEcosystem(pool));
@@ -326,6 +338,22 @@ export function registerMultiTenantArchitectureRoutes(
       }));
     } catch (err) {
       handlePartnerError(err, res, 'transition referral');
+    }
+  });
+
+  // Resolve a missing deal value on an ALREADY-converted referral (from the unlinkable-referrals view):
+  // an explicit deal_value (manual), or link_deal=true to auto-resolve from the referred tenant's ledgers.
+  app.post('/api/admin/tenant-architecture/console/partner-ecosystem/referrals/:id/resolve-deal-value', ...partnerChain, async (req: any, res) => {
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id)) return res.status(400).json({ error: 'invalid_id' });
+    try {
+      const { deal_value, link_deal } = req.body ?? {};
+      res.json(await resolveReferralDealValue(pool, id, {
+        deal_value: deal_value === undefined ? undefined : deal_value,
+        link_deal: link_deal === true,
+      }));
+    } catch (err) {
+      handlePartnerError(err, res, 'resolve referral deal value');
     }
   });
 }

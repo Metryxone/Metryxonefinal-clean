@@ -637,6 +637,21 @@ interface PPayout {
   converted: number; pending: number; expired: number; rejected: number; earned_commission: number;
   currencies: string[]; converted_without_amount: number; auto_derived: number;
 }
+interface PUnlinkableRow {
+  id: number; referral_code: string;
+  channel_partner_tenant_id: number; channel_partner_name: string | null;
+  referred_tenant_id: number; referred_tenant_name: string | null;
+  commission_pct: number | null; currency: string; converted_at: string | null;
+  reason: 'no_email' | 'no_realized_revenue' | 'linkable';
+  reason_label: string;
+  linkable_value: number | null; linkable_source: string | null;
+}
+interface PUnlinkable {
+  generated_at: string; degraded: boolean;
+  substrate: { referrals_table: boolean };
+  total: number; by_reason: Record<string, number>;
+  rows: PUnlinkableRow[]; notes: string[];
+}
 interface PartnerEco {
   generated_at: string; degraded: boolean;
   substrate: { agreements_table: boolean; referrals_table: boolean; events_table: boolean };
@@ -662,6 +677,17 @@ const REFERRAL_BADGE: Record<string, string> = {
   converted: 'bg-green-50 text-green-700 border-green-200',
   expired: 'bg-gray-100 text-gray-500 border-gray-200',
   rejected: 'bg-red-50 text-red-700 border-red-200',
+};
+
+const UNLINKABLE_BADGE: Record<string, string> = {
+  linkable: 'bg-green-50 text-green-700 border-green-200',
+  no_realized_revenue: 'bg-amber-50 text-amber-700 border-amber-200',
+  no_email: 'bg-gray-100 text-gray-600 border-gray-200',
+};
+const UNLINKABLE_LABEL: Record<string, string> = {
+  linkable: 'Linkable',
+  no_realized_revenue: 'No realized revenue',
+  no_email: 'No email',
 };
 
 // Expandable per-referral commission breakdown: exactly how the earned amount was reached
@@ -768,6 +794,14 @@ function PartnerEcosystemView() {
       return r.json();
     },
   });
+  const unlinkable = useQuery<PUnlinkable>({
+    queryKey: [`${P_BASE}/referrals/unlinkable`],
+    queryFn: async () => {
+      const r = await fetch(`${P_BASE}/referrals/unlinkable`, { credentials: 'include' });
+      if (!r.ok) throw new Error('failed to load unlinkable referrals');
+      return r.json();
+    },
+  });
 
   // New-agreement form state
   const [agTenant, setAgTenant] = useState('');
@@ -789,6 +823,7 @@ function PartnerEcosystemView() {
       if (next.has(id)) next.delete(id); else next.add(id);
       return next;
     });
+  const [unlinkDeal, setUnlinkDeal] = useState<Record<number, string>>({});
 
   // Export filter state (optional — date range + status; empty = full export, byte-identical to before)
   const [fltFrom, setFltFrom] = useState('');
@@ -820,6 +855,7 @@ function PartnerEcosystemView() {
       const data = await r.json().catch(() => ({}));
       if (!r.ok) { setErr(data?.message || data?.error || `request failed (${r.status})`); return false; }
       await qc.invalidateQueries({ queryKey: [P_BASE] });
+      await qc.invalidateQueries({ queryKey: [`${P_BASE}/referrals/unlinkable`] });
       return true;
     } catch (e: any) {
       setErr(e?.message || 'request failed'); return false;
@@ -1066,6 +1102,86 @@ function PartnerEcosystemView() {
                 ))}
               </TableBody>
             </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Unlinkable converted referrals — converted but no deal value / amount, diagnosed + resolvable */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-base"><AlertTriangle className="h-4 w-4" /> Unlinkable Converted Referrals</CardTitle>
+          <CardDescription>
+            Converted referrals that have a referred tenant but still carry no deal value and no commission amount.
+            Each row shows <em>why</em> — no contact email, no realized revenue, or now linkable — so you can attach a value or chase the link. Never inferred.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {unlinkable.isLoading ? (
+            <p className="text-sm text-gray-500">Loading…</p>
+          ) : !unlinkable.data || unlinkable.data.total === 0 ? (
+            <p className="text-sm text-gray-500">No converted referrals are missing a deal value — nothing to resolve.</p>
+          ) : (
+            <>
+              <div className="flex flex-wrap gap-2 text-xs">
+                {Object.entries(unlinkable.data.by_reason).map(([k, v]) => (
+                  <span key={k} className={`rounded-full border px-2 py-0.5 font-medium ${UNLINKABLE_BADGE[k] ?? 'bg-gray-100 text-gray-600 border-gray-200'}`}>
+                    {UNLINKABLE_LABEL[k] ?? k}: {v}
+                  </span>
+                ))}
+              </div>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Code</TableHead><TableHead>Partner</TableHead><TableHead>Referred</TableHead>
+                    <TableHead>Why unlinkable</TableHead><TableHead>Resolve</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {unlinkable.data.rows.map((u) => (
+                    <TableRow key={u.id}>
+                      <TableCell className="font-mono text-xs">{u.referral_code}</TableCell>
+                      <TableCell className="text-sm">{u.channel_partner_name || `#${u.channel_partner_tenant_id}`}</TableCell>
+                      <TableCell className="text-sm">{u.referred_tenant_name || `#${u.referred_tenant_id}`}</TableCell>
+                      <TableCell className="text-sm">
+                        <span className={`mr-2 rounded-full border px-2 py-0.5 text-xs font-medium ${UNLINKABLE_BADGE[u.reason] ?? 'bg-gray-100 text-gray-600 border-gray-200'}`}>{UNLINKABLE_LABEL[u.reason] ?? u.reason}</span>
+                        <span className="text-xs text-gray-500">{u.reason_label}</span>
+                        {u.reason === 'linkable' && u.linkable_value != null && (
+                          <div className="mt-0.5 text-xs text-green-700">Available: {u.linkable_value} {u.currency}{u.linkable_source ? <span className="text-gray-400"> ({u.linkable_source})</span> : null}</div>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-wrap items-center gap-1">
+                          <input
+                            className="h-7 w-24 rounded border border-gray-300 px-2 text-sm"
+                            placeholder={`value ${u.currency}`}
+                            value={unlinkDeal[u.id] ?? ''}
+                            onChange={(e) => setUnlinkDeal((s) => ({ ...s, [u.id]: e.target.value }))}
+                          />
+                          <Button size="sm" variant="outline" className="h-7 px-2 text-xs" disabled={busy}
+                            onClick={async () => {
+                              const raw = (unlinkDeal[u.id] ?? '').trim();
+                              if (raw === '') { setErr('Enter a deal value to set it manually.'); return; }
+                              const num = Number(raw);
+                              if (!Number.isFinite(num) || num < 0) { setErr('Deal value must be a non-negative number.'); return; }
+                              const ok = await post(`/referrals/${u.id}/resolve-deal-value`, { deal_value: num });
+                              if (ok) setUnlinkDeal((s) => { const n = { ...s }; delete n[u.id]; return n; });
+                            }}>Set value</Button>
+                          {u.reason === 'linkable' && (
+                            <Button size="sm" className="h-7 px-2 text-xs" disabled={busy}
+                              onClick={() => post(`/referrals/${u.id}/resolve-deal-value`, { link_deal: true })}>Link</Button>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              {unlinkable.data.notes.length > 0 && (
+                <ul className="space-y-1 text-xs text-gray-500">
+                  {unlinkable.data.notes.map((n, i) => <li key={i}>• {n}</li>)}
+                </ul>
+              )}
+            </>
           )}
         </CardContent>
       </Card>

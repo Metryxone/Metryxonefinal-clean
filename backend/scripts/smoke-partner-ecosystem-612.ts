@@ -28,6 +28,7 @@ const ROUTES = [
   `${P}/ping`,
   `${P}/meta`,
   `${P}/validation`,
+  `${P}/referrals/unlinkable`,
   P,
 ];
 

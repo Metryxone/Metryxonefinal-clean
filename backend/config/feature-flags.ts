@@ -852,6 +852,19 @@ export const FEATURE_FLAGS = {
    *  never-throws. Outputs are developmental signals only — NEVER hiring/
    *  suitability predictions. Super-admin gated. Env: `FF_EMPLOYABILITY_MATCHING`. */
   employabilityMatching: false,
+
+  /** PHASE 5.7 — Assessment-Led Hiring (hiring_assessment_engine). Supports the
+   *  assessment-led hiring lifecycle — Invitations, Completion, Validation,
+   *  Scoring, Comparison, Ranking — over the employer substrate. The assessment
+   *  SCORE is COMPOSED (employer_candidates.assessment_score → a linked
+   *  onto_competency_score_runs → a competency_profile proxy → unmeasured), never
+   *  re-scored. Reads are GET-never-writes (to_regclass probe + degrade); the two
+   *  net-new tables (assessment_invites, candidate_ranking) are created ONLY on the
+   *  POST write path while the flag is ON, so OFF is byte-identical legacy (every
+   *  route 503 before any auth/DB/DDL touch). Ranking is a developmental assessment
+   *  ranking — NEVER a hire/suitability verdict. Super-admin gated. Env:
+   *  `FF_HIRING_ASSESSMENT`. */
+  hiringAssessment: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1254,6 +1267,10 @@ export function isTalentMatchingEnabled(): boolean {
 
 export function isEmployabilityMatchingEnabled(): boolean {
   return isFlagEnabled('employabilityMatching');
+}
+
+export function isHiringAssessmentEnabled(): boolean {
+  return isFlagEnabled('hiringAssessment');
 }
 
 export function isTalentDiscoveryEnabled(): boolean {

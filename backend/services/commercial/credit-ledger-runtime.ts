@@ -28,6 +28,8 @@ export interface CreditEntryRow {
 export interface CreditMutationResult {
   entry: CreditEntryRow;
   balance_paise: number;
+  /** True when a prior entry with the same idempotency key was replayed instead of a new write. */
+  deduped?: boolean;
 }
 
 const asPositiveInt = (v: unknown): number => {
@@ -73,19 +75,31 @@ export interface CreditMutationInput {
   ref_type?: string | null;
   ref_id?: string | null;
   metadata?: Record<string, unknown> | null;
+  /**
+   * Optional dedup key. When supplied, a credit with the SAME (customer_id, idempotency_key) is
+   * granted AT MOST ONCE — a retried refund-to-credit replays the existing entry instead of doubling
+   * the store value. Absent (null/undefined) → unchanged append-only behaviour.
+   */
+  idempotency_key?: string | null;
 }
 
+const normKey = (v: unknown): string | null => {
+  const s = typeof v === 'string' ? v.trim() : '';
+  return s.length ? s : null;
+};
+
 async function appendEntry(
-  client: PoolClient, entryType: 'credit' | 'debit', amount: number, balanceAfter: number, input: CreditMutationInput,
+  client: PoolClient, entryType: 'credit' | 'debit', amount: number, balanceAfter: number,
+  input: CreditMutationInput, idempotencyKey: string | null,
 ): Promise<CreditEntryRow> {
   const { rows } = await client.query(
     `INSERT INTO comm_credit_ledger
-       (customer_id, entry_type, amount_paise, currency, reason, ref_type, ref_id, balance_after_paise, metadata)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9::jsonb) RETURNING *`,
+       (customer_id, entry_type, amount_paise, currency, reason, ref_type, ref_id, balance_after_paise, metadata, idempotency_key)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9::jsonb,$10) RETURNING *`,
     [
       input.customer_id, entryType, amount, input.currency || 'INR',
       input.reason ?? null, input.ref_type ?? null, input.ref_id ?? null,
-      balanceAfter, input.metadata ? JSON.stringify(input.metadata) : null,
+      balanceAfter, input.metadata ? JSON.stringify(input.metadata) : null, idempotencyKey,
     ],
   );
   return rows[0] as CreditEntryRow;
@@ -94,18 +108,40 @@ async function appendEntry(
 /**
  * Add store credit to a customer's wallet. Serializes on the customer row so the derived balance
  * snapshot is consistent under concurrency. Returns null when the customer does not exist.
+ *
+ * IDEMPOTENCY: when `input.idempotency_key` is supplied, the dedup lookup runs INSIDE the same
+ * per-customer row lock — so a retried refund-to-credit (same key) replays the existing credit entry
+ * (`deduped:true`) instead of appending a second one. A partial unique index on
+ * (customer_id, idempotency_key) is the belt-and-suspenders DB guarantee. Callers that pass no key
+ * are byte-identical to the prior append-only behaviour.
  */
 export async function issueCredit(pool: Pool, input: CreditMutationInput): Promise<CreditMutationResult | null> {
   const amount = asPositiveInt(input.amount_paise);
+  const idempotencyKey = normKey(input.idempotency_key);
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
     const c = await client.query(`SELECT id FROM comm_customers WHERE id = $1 FOR UPDATE`, [input.customer_id]);
     if (!c.rows.length) { await client.query('ROLLBACK'); return null; }
+
+    // Dedup within the held lock: a prior credit with this key → replay it (never double-grant).
+    if (idempotencyKey) {
+      const prior = await client.query(
+        `SELECT * FROM comm_credit_ledger
+           WHERE customer_id = $1 AND entry_type = 'credit' AND idempotency_key = $2 LIMIT 1`,
+        [input.customer_id, idempotencyKey],
+      );
+      if (prior.rows.length) {
+        const balance_paise = await balanceFor(client, input.customer_id);
+        await client.query('COMMIT');
+        return { entry: prior.rows[0] as CreditEntryRow, balance_paise, deduped: true };
+      }
+    }
+
     const after = (await balanceFor(client, input.customer_id)) + amount;
-    const entry = await appendEntry(client, 'credit', amount, after, input);
+    const entry = await appendEntry(client, 'credit', amount, after, input, idempotencyKey);
     await client.query('COMMIT');
-    return { entry, balance_paise: after };
+    return { entry, balance_paise: after, deduped: false };
   } catch (e) {
     await client.query('ROLLBACK').catch(() => {});
     throw e;
@@ -132,7 +168,7 @@ export async function applyCredit(pool: Pool, input: CreditMutationInput): Promi
       throw Object.assign(new Error('insufficient_credit_balance'), { status: 400, balance_paise: current });
     }
     const after = current - amount;
-    const entry = await appendEntry(client, 'debit', amount, after, input);
+    const entry = await appendEntry(client, 'debit', amount, after, input, null);
     await client.query('COMMIT');
     return { entry, balance_paise: after };
   } catch (e) {

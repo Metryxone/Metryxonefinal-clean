@@ -51,6 +51,10 @@ args = "credits-concurrency"
 task = "workflow.run"
 args = "credits-issue-concurrency"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "credits-issue-idempotency"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -149,6 +153,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx scripts/smoke-credits-issue-concurrency-28.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "credits-issue-idempotency"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx scripts/smoke-credits-issue-idempotency-29.ts"
 
 [workflows.workflow.metadata]
 isValidation = true

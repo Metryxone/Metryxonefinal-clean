@@ -236,6 +236,13 @@ async function createSchema(pool: Pool): Promise<void> {
       created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
     );
 
+    -- Dedup key for credit issuance (Task #29): a retried refund-to-credit with the same key grants
+    -- store value AT MOST ONCE. Nullable + partial unique index → existing rows / key-less callers
+    -- are unaffected (byte-identical append-only behaviour when the key is absent).
+    ALTER TABLE comm_credit_ledger ADD COLUMN IF NOT EXISTS idempotency_key TEXT;
+    CREATE UNIQUE INDEX IF NOT EXISTS uq_comm_credit_ledger_idem
+      ON comm_credit_ledger(customer_id, idempotency_key) WHERE idempotency_key IS NOT NULL;
+
     CREATE INDEX IF NOT EXISTS idx_comm_refunds_sub            ON comm_refunds(subscription_id);
     CREATE INDEX IF NOT EXISTS idx_comm_refunds_customer       ON comm_refunds(customer_id);
     CREATE INDEX IF NOT EXISTS idx_comm_credit_ledger_customer ON comm_credit_ledger(customer_id, created_at);

@@ -474,12 +474,23 @@ export function registerCommercialSpineRoutes(
       const b = req.body || {};
       const amount = asInt(b.amount_paise);
       if (amount <= 0) return res.status(400).json({ error: 'amount_paise must be > 0' });
+      const ref_type = asStr(b.ref_type);
+      const ref_id = asStr(b.ref_id);
+      // Dedup key for retried refund-to-credit (Task #29). Precedence:
+      //   1) explicit Idempotency-Key header or body.idempotency_key (mirrors the refund route), else
+      //   2) opt-in derivation from the refund identity (customer_id is implicit in the lookup):
+      //      `ref:<ref_type>:<ref_id>` when the caller sets `dedupe_by_ref:true` and both refs exist.
+      // Absent → unchanged append-only behaviour (existing key-less callers are byte-identical).
+      const explicitKey = asStr(req.get('Idempotency-Key')) || asStr(b.idempotency_key);
+      const refKey = (b.dedupe_by_ref === true && ref_type && ref_id) ? `ref:${ref_type}:${ref_id}` : null;
+      const idempotency_key = explicitKey || refKey || null;
       const out = await issueCredit(pool, {
         customer_id: req.params.id, amount_paise: amount,
-        reason: asStr(b.reason), ref_type: asStr(b.ref_type), ref_id: asStr(b.ref_id),
+        reason: asStr(b.reason), ref_type, ref_id, idempotency_key,
       });
       if (out == null) return res.status(404).json({ error: 'customer not found' });
-      res.status(201).json(out);
+      // A replayed (deduped) credit is not a new resource → 200; a fresh grant → 201.
+      res.status(out.deduped ? 200 : 201).json(out);
     } catch (e: any) {
       if (e?.status === 400) return res.status(400).json({ error: e.message });
       next(e);

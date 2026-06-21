@@ -571,6 +571,17 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
     enabled: isAuthenticated,
   });
 
+  // Phase 6.10 Platform Intelligence console flag — when OFF the /console/ping probe
+  // 503s and the "Platform Intelligence" nav item self-hides, keeping flag-OFF byte-identical.
+  const { data: platformIntelligenceEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/admin/platform/console/ping', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/platform/console/ping', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
   // Governance & Security (RBAC/Audit) flag — when OFF the route 503s and the
   // nav item self-hides, keeping the flag-OFF UI byte-identical to legacy.
   const { data: governanceEnabled = false } = useQuery<boolean>({
@@ -2816,6 +2827,7 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
     {
       label: 'Platform',
       items: [
+        { id: 'platform-intelligence',  icon: TrendingUp, label: 'Platform Intelligence' },
         { id: 'documents',              icon: FileCheck, label: 'Documents' },
         { id: 'settings',               icon: Settings,  label: 'Settings' },
         { id: 'content',                icon: Play,      label: 'Content Manager' },
@@ -2912,6 +2924,11 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
       enterpriseGovernanceEnabled
         ? group
         : { ...group, items: group.items.filter(it => it.id !== 'enterprise-governance') }
+    )
+    .map(group =>
+      platformIntelligenceEnabled
+        ? group
+        : { ...group, items: group.items.filter(it => it.id !== 'platform-intelligence') }
     )
     .map(group =>
       competencyRuntimeEnabled

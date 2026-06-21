@@ -571,6 +571,16 @@ export const FEATURE_FLAGS = {
    *  → byte-identical legacy. Distinct from `governanceRbacV2` (the operational write subsystem); this
    *  flag only adds the read-only console. Env: `FF_ENTERPRISE_GOVERNANCE_CONSOLE`. */
   enterpriseGovernanceConsole: false,
+  /** Phase 6.10 Platform Intelligence console — read-only super-admin analytics console COMPOSING the
+   *  EXISTING read-only commercial engines (engagement / retention / revenue) plus a new operational
+   *  view (data quality, growth trend, conversion funnel, operational volume) into seven metric
+   *  categories: Platform Health, Adoption, Growth, Conversion, Retention, Revenue, Operational, and the
+   *  derived executive_dashboard + founder_dashboard projections. Never recomputes, never writes schema
+   *  (to_regclass probes only — runs NO ensure-schema/DDL on the read path), never fabricates (honest
+   *  no_substrate vs empty; rates null with a reason when no denominator). Flag OFF → GET
+   *  /api/admin/platform/console/* routes 503 and the SuperAdmin Platform Intelligence tab is hidden →
+   *  byte-identical legacy. Env: `FF_PLATFORM_INTELLIGENCE_CONSOLE`. */
+  platformIntelligenceConsole: false,
   /** Critical Gaps #2 & #3 — operational RBAC + Audit Trail + Governance/Security Center. Gates the
    *  whole governance subsystem: role/permission framework + hierarchies + permission groups, admin
    *  lifecycle (activate/suspend/terminate), categorized audit logging, generalized approval workflows,
@@ -1272,6 +1282,10 @@ export function isCommercialCustomerSuccessEnabled(): boolean {
 
 export function isEnterpriseGovernanceConsoleEnabled(): boolean {
   return isFlagEnabled('enterpriseGovernanceConsole');
+}
+
+export function isPlatformIntelligenceConsoleEnabled(): boolean {
+  return isFlagEnabled('platformIntelligenceConsole');
 }
 
 export function isCommercialEntitlementEnabled(): boolean {

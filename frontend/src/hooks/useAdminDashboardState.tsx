@@ -560,6 +560,17 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
     enabled: isAuthenticated,
   });
 
+  // Phase 6.9 Enterprise Governance console flag — when OFF the /console/ping probe
+  // 503s and the "Enterprise Governance" nav item self-hides, keeping flag-OFF byte-identical.
+  const { data: enterpriseGovernanceEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/admin/governance/console/ping', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/governance/console/ping', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
   // Governance & Security (RBAC/Audit) flag — when OFF the route 503s and the
   // nav item self-hides, keeping the flag-OFF UI byte-identical to legacy.
   const { data: governanceEnabled = false } = useQuery<boolean>({
@@ -2790,6 +2801,7 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
     {
       label: 'Governance',
       items: [
+        { id: 'enterprise-governance', icon: ShieldCheck, label: 'Enterprise Governance' },
         { id: 'ai-governance',       icon: Shield,      label: 'AI Governance Platform' },
         { id: 'security',            icon: ShieldCheck, label: 'Security & Audit' },
         { id: 'access',              icon: Lock,        label: 'Access Control' },
@@ -2895,6 +2907,11 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
       customerSuccessEnabled
         ? group
         : { ...group, items: group.items.filter(it => it.id !== 'customer-success') }
+    )
+    .map(group =>
+      enterpriseGovernanceEnabled
+        ? group
+        : { ...group, items: group.items.filter(it => it.id !== 'enterprise-governance') }
     )
     .map(group =>
       competencyRuntimeEnabled

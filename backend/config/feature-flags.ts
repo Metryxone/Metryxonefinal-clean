@@ -562,6 +562,15 @@ export const FEATURE_FLAGS = {
    *  → GET /api/admin/commercial/success/* routes 503 and the SuperAdmin Customer Success tab is
    *  hidden → byte-identical legacy. Env: `FF_COMMERCIAL_CUSTOMER_SUCCESS`. */
   commercialCustomerSuccess: false,
+  /** Phase 6.9 Enterprise Governance console — read-only admin console COMPOSING the EXISTING
+   *  governance subsystem (RBAC + approval workflows + audit trails + security center) plus the
+   *  genuinely-missing Data Governance (governance_events) and a transparent Compliance posture index.
+   *  Never recomputes, never writes schema (to_regclass probes only — does NOT trigger
+   *  ensureGovernanceSchema), never fabricates (honest no_substrate vs empty). Flag OFF → GET
+   *  /api/admin/governance/console/* routes 503 and the SuperAdmin Enterprise Governance tab is hidden
+   *  → byte-identical legacy. Distinct from `governanceRbacV2` (the operational write subsystem); this
+   *  flag only adds the read-only console. Env: `FF_ENTERPRISE_GOVERNANCE_CONSOLE`. */
+  enterpriseGovernanceConsole: false,
   /** Critical Gaps #2 & #3 — operational RBAC + Audit Trail + Governance/Security Center. Gates the
    *  whole governance subsystem: role/permission framework + hierarchies + permission groups, admin
    *  lifecycle (activate/suspend/terminate), categorized audit logging, generalized approval workflows,
@@ -1259,6 +1268,10 @@ export function isCommercialRevenueIntelligenceEnabled(): boolean {
 
 export function isCommercialCustomerSuccessEnabled(): boolean {
   return isFlagEnabled('commercialCustomerSuccess');
+}
+
+export function isEnterpriseGovernanceConsoleEnabled(): boolean {
+  return isFlagEnabled('enterpriseGovernanceConsole');
 }
 
 export function isCommercialEntitlementEnabled(): boolean {

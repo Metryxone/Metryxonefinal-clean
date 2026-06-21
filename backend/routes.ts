@@ -13747,6 +13747,9 @@ Rules:
   // ── Phase 6.8 Customer Success Intelligence (flag commercialCustomerSuccess, default OFF) ─────────
   const { registerCustomerSuccessRoutes } = await import('./routes/customer-success');
   registerCustomerSuccessRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  // ── Phase 6.9 Enterprise Governance console (flag enterpriseGovernanceConsole, default OFF) ───────
+  const { registerEnterpriseGovernanceRoutes } = await import('./routes/enterprise-governance');
+  registerEnterpriseGovernanceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Employer Intelligence Operating System (EP-98) ───────────────────────────
   registerEmployerPortalRoutes(app, concernsPool, requireAuth);
   // ── Super-Admin Employer Onboarding (create org + admin login) ───────────────

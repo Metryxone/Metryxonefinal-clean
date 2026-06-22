@@ -586,6 +586,53 @@ This proves data has flowed through the foundations end-to-end (not just structu
 
 ---
 
+## How the report is generated (post-assessment)
+
+Once a person finishes the assessment, **there is no separate "generate report" button**. The report *is* the scored result — it is produced the instant scoring runs, and then read back on demand.
+
+### What happens, step by step
+1. **The person submits answers** → stored in `onto_assessment_responses`.
+2. **Scoring runs automatically.** Two scorers can write the result:
+   - `backend/services/competency-scoring.ts` — the rich normalised scorer → writes one row to **`onto_competency_score_runs`**.
+   - `backend/services/competency-runtime.ts` (`scoreAssessment`) — the runtime path → writes the **competency profile** to **`onto_competency_profiles`** (append-only: one row per scoring run, never edited in place).
+3. **The profile is assembled** — overall score + level, a per-domain breakdown, a coverage figure, and honest "what we couldn't measure" notes.
+4. **Role readiness is derived** by `backend/services/role-competency-profile.ts`: for each competency, `attainment = min(actual ÷ required, 1)`; the role score = `Σ(attainment × weight) ÷ Σ(weight of assessed competencies) × 100`. If any *critical* competency falls below its required level it is flagged as a **blocking gap**, and the overall role fit is capped at "partial" no matter how high the number.
+5. **The report is read back** — per person — through the competency-runtime endpoints (`backend/routes/competency-runtime.ts`):
+   - `GET /api/competency-runtime/profiles/:subjectId` — the latest scored competency profile for one person.
+   - `GET /api/competency-runtime/gap-analysis/:subjectId` — required vs measured gaps for that person.
+   - `GET /api/competency-runtime/score-runs/:runId` — the raw score-run ledger entry.
+   - *(Separate, framework-level analytics — not a per-person report — live at `GET /api/admin/competency-intelligence/readiness` and `/classification-report` in `backend/routes/competency-intelligence.ts`.)*
+
+### What the report actually contains — a real example
+Pulled live from `onto_competency_profiles` (generated 2026-06-19):
+
+| Field | Value |
+|---|---|
+| Subject | `adaptive_smoke_1` |
+| Role assessed | `role_pm` (Product Manager) · blueprint `bp_pm_v1` |
+| **Overall** | **72.5 → Level 4** |
+| Competencies in blueprint | 6 (5 measurable, 1 unmeasurable) |
+
+Per-domain breakdown (the scored body of the report):
+
+| Domain | Level | Score | Questions answered |
+|---|---|---|---|
+| Behavioral Capabilities | 5 | 100 | 1 |
+| Interpersonal & Leadership Capabilities | 3 | 45 | 5 |
+
+Honesty notes carried *inside* the report (Coverage vs Confidence in action):
+- ⚠️ *"1 of 6 blueprint competencies are UNMEASURABLE — no question-bank coverage for their onto-domain."* The competency **Agile Collaboration** maps to domain `dom_strategic`, which has no questions, so it is left **unscored** rather than guessed.
+- ⚠️ *"Per-competency scores are a domain-PROXY"* — the 7-code question bank crosswalks down to 5 domains until `onto_competency_question_map` is populated. The score is honestly labelled as a proxy.
+
+### How to see it yourself
+- **As super-admin (one person's report):** log in, then open `$REPLIT_DEV_DOMAIN/api/competency-runtime/profiles/<subjectId>` (e.g. `adaptive_smoke_1`) — that returns the latest scored profile. Pair it with `/api/competency-runtime/gap-analysis/<subjectId>` for the required-vs-measured gaps.
+- **As super-admin (whole-framework health):** `$REPLIT_DEV_DOMAIN/api/admin/competency-intelligence/readiness` — note this is framework-level analytics, not a single person's report.
+- **Straight from the data:** query `onto_competency_profiles` (the `profile` column is the full per-domain JSON) — that is the same content the report is built from.
+
+> Note: a report only has content if a session was actually completed and scored. The competency runtime tables hold real rows today; the separate **CAPADEX behavioural** stakeholder report (`backend/services/pil/report-builder.ts`, `GET /api/capadex/session/:id/report`) is empty in the live DB because there are currently **0 completed CAPADEX sessions**.
+
+---
+
 ## Summary table
 
 | Phase | Module | Public reads | Admin CRUD | Tables (live rows) | State |

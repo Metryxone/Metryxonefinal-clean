@@ -34,6 +34,7 @@ import {
   getTaxonomy,
   buildCompetencyCrosswalk,
   getFrameworkReadiness,
+  getAssetRows,
 } from '../services/competency-framework-intelligence.js';
 import {
   getCompetencyTypes,
@@ -161,6 +162,17 @@ export function registerCompetencyFrameworkIntelligenceRoutes(
     requireAuth,
     requireSuperAdmin,
     wrap(async () => getFrameworkReadiness(pool)),
+  );
+
+  // Read-only "View" into ONE framework asset's rows (up to 200). Table resolved
+  // from the fixed ASSET_SPECS allow-list; absent/empty/unreadable reported
+  // honestly. Literal-keyed param — no catch-all on this base to swallow it.
+  app.get(
+    '/api/admin/competency-intelligence/asset-rows/:key',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req) => getAssetRows(pool, String(req.params.key))),
   );
 
   // Admin classification validation report (coverage · distribution ·

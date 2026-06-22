@@ -403,6 +403,50 @@ export async function getFrameworkReadiness(pool: Pool): Promise<FrameworkReadin
 }
 
 // --------------------------------------------------------------------------
+// Asset row preview — read-only "View" into ONE framework asset's rows.
+// The table is resolved from the fixed ASSET_SPECS allow-list (never user
+// input); absent / empty / unreadable are reported honestly (no fabrication).
+// --------------------------------------------------------------------------
+
+export interface AssetRowsResult {
+  key: string;
+  table: string;
+  label: string | null;
+  columns: string[];
+  rows: Record<string, unknown>[];
+  total: number | null;
+  note?: string;
+}
+
+export async function getAssetRows(
+  pool: Pool,
+  key: string,
+  limit = 200,
+): Promise<AssetRowsResult> {
+  const spec = ASSET_SPECS.find((s) => s.key === key);
+  if (!spec) {
+    return { key, table: '', label: null, columns: [], rows: [], total: null, note: 'unknown asset key' };
+  }
+  // Probe existence first so an absent table reads differently from an empty one.
+  const reg = await safeRows<{ exists: string | null }>(pool, 'SELECT to_regclass($1) AS exists', [spec.table]);
+  if (!reg[0] || reg[0].exists == null) {
+    return { key, table: spec.table, label: spec.label, columns: [], rows: [], total: null, note: 'table not provisioned in this environment' };
+  }
+  const total = await safeCount(pool, spec.table);
+  const cap = Math.max(1, Math.min(500, limit));
+  // spec.table is from the fixed allow-list; cap is a clamped integer.
+  const { rows, read_status } = await safeQuery<Record<string, unknown>>(
+    pool,
+    `SELECT * FROM ${spec.table} ORDER BY 1 LIMIT ${cap}`,
+  );
+  if (read_status === 'unknown') {
+    return { key, table: spec.table, label: spec.label, columns: [], rows: [], total, note: 'table could not be read' };
+  }
+  const columns = rows.length > 0 ? Object.keys(rows[0]) : [];
+  return { key, table: spec.table, label: spec.label, columns, rows, total };
+}
+
+// --------------------------------------------------------------------------
 // Crosswalk registry — map fragmented competency identifiers → canonical id.
 // --------------------------------------------------------------------------
 

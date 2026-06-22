@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Network, Database, Layers, GitBranch, RefreshCw, CheckCircle2, Upload,
   AlertTriangle, Info, Boxes, Link2, ShieldCheck, Tags, ListChecks,
+  Eye, ChevronDown,
 } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
@@ -71,7 +72,84 @@ function MetricCard({ icon: Icon, label, value, sub, color }: { icon: React.Elem
   );
 }
 
+interface AssetRowsResult {
+  key: string; table: string; label: string | null;
+  columns: string[]; rows: Record<string, unknown>[];
+  total: number | null; note?: string;
+}
+
+function formatCell(v: unknown): string {
+  if (v === null || v === undefined) return '—';
+  if (typeof v === 'boolean') return v ? 'true' : 'false';
+  if (typeof v === 'object') {
+    try { return JSON.stringify(v); } catch { return String(v); }
+  }
+  return String(v);
+}
+
+function AssetRowsTable({ assetKey, table }: { assetKey: string; table: string }) {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['competency-framework-asset-rows', assetKey],
+    queryFn: async () => {
+      const r = await fetch(`/api/admin/competency-intelligence/asset-rows/${encodeURIComponent(assetKey)}`, { credentials: 'include' });
+      if (!r.ok) throw new Error('asset rows failed');
+      const j = await r.json();
+      return j.data as AssetRowsResult;
+    },
+  });
+
+  if (isLoading) return <div className="px-4 py-3 text-xs text-gray-500">Loading rows from <code>{table}</code>…</div>;
+  if (isError || !data) return <div className="px-4 py-3 text-xs text-red-600">Failed to load rows from <code>{table}</code>.</div>;
+
+  if (data.note) {
+    return (
+      <div className="px-4 py-3 text-xs text-gray-500 flex items-center gap-1.5">
+        <Info className="h-3.5 w-3.5 shrink-0" /> {data.note} (<code>{table}</code>).
+      </div>
+    );
+  }
+  if (data.rows.length === 0) {
+    return (
+      <div className="px-4 py-3 text-xs text-gray-500 flex items-center gap-1.5">
+        <Info className="h-3.5 w-3.5 shrink-0" /> Table <code>{table}</code> exists but has no rows yet.
+      </div>
+    );
+  }
+
+  return (
+    <div className="px-4 pb-4 pt-1">
+      <div className="text-xs text-gray-400 mb-1.5">
+        Showing {data.rows.length}{data.total != null && data.total > data.rows.length ? ` of ${data.total}` : ''} row{data.rows.length === 1 ? '' : 's'} from <code>{table}</code>
+        {data.total != null && data.total > data.rows.length ? ' (capped at 200)' : ''}
+      </div>
+      <div className="max-h-80 overflow-auto rounded-md border border-gray-200">
+        <table className="w-full text-xs">
+          <thead className="sticky top-0 bg-gray-50">
+            <tr className="text-left text-gray-500 border-b">
+              {data.columns.map((c) => (
+                <th key={c} className="py-1.5 px-2 font-medium whitespace-nowrap font-mono">{c}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {data.rows.map((row, i) => (
+              <tr key={i} className="border-b last:border-0 hover:bg-gray-50/60">
+                {data.columns.map((c) => (
+                  <td key={c} className="py-1.5 px-2 align-top text-gray-700 max-w-[22rem] truncate" title={formatCell(row[c])}>
+                    {formatCell(row[c])}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 export default function CompetencyFrameworkIntelligencePanel() {
+  const [openAsset, setOpenAsset] = useState<string | null>(null);
   const qc = useQueryClient();
   const q = useQuery({
     queryKey: ['competency-framework-intelligence-readiness'],
@@ -199,7 +277,8 @@ export default function CompetencyFrameworkIntelligencePanel() {
             </thead>
             <tbody>
               {d.assets.map((a) => (
-                <tr key={a.key} className="border-b last:border-0">
+                <React.Fragment key={a.key}>
+                <tr className="border-b last:border-0">
                   <td className="py-2 pr-3">
                     <div className="font-medium text-gray-900">{a.label}</div>
                     <div className="text-xs text-gray-400"><code>{a.table}</code></div>
@@ -209,21 +288,39 @@ export default function CompetencyFrameworkIntelligencePanel() {
                   <td className="py-2 px-3"><StatusBadge status={a.status} /></td>
                   <td className="py-2 px-3 text-xs text-gray-500">{a.confidence}</td>
                   <td className="py-2 pl-3 text-right">
-                    {a.status === 'empty_pending_import' ? (
-                      <a
-                        href={`${window.location.protocol}//${window.location.hostname}:8000/admin/upload`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title="Open the Bulk Upload tool to import data for this asset"
-                        className="inline-flex items-center gap-1 text-xs font-medium text-[#344E86] hover:text-[#243a66] hover:underline whitespace-nowrap"
+                    <div className="inline-flex items-center gap-3 whitespace-nowrap">
+                      <button
+                        type="button"
+                        onClick={() => setOpenAsset((cur) => (cur === a.key ? null : a.key))}
+                        title="View this asset's backing table rows inline"
+                        className="inline-flex items-center gap-1 text-xs font-medium text-[#344E86] hover:text-[#243a66] hover:underline"
                       >
-                        <Upload className="h-3.5 w-3.5" /> Upload
-                      </a>
-                    ) : (
-                      <span className="text-xs text-gray-300">—</span>
-                    )}
+                        <Eye className="h-3.5 w-3.5" />
+                        {openAsset === a.key ? 'Hide' : 'View'}
+                        <ChevronDown className={`h-3.5 w-3.5 transition-transform ${openAsset === a.key ? 'rotate-180' : ''}`} />
+                      </button>
+                      {a.status === 'empty_pending_import' && (
+                        <a
+                          href={`/api/admin/competency-intelligence/upload?asset=${encodeURIComponent(a.key)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="Open the Bulk Upload tool to import data for this asset"
+                          className="inline-flex items-center gap-1 text-xs font-medium text-[#344E86] hover:text-[#243a66] hover:underline"
+                        >
+                          <Upload className="h-3.5 w-3.5" /> Upload
+                        </a>
+                      )}
+                    </div>
                   </td>
                 </tr>
+                {openAsset === a.key && (
+                  <tr className="bg-gray-50/40">
+                    <td colSpan={6} className="p-0 border-b last:border-0">
+                      <AssetRowsTable assetKey={a.key} table={a.table} />
+                    </td>
+                  </tr>
+                )}
+                </React.Fragment>
               ))}
             </tbody>
           </table>

@@ -2099,6 +2099,9 @@
   .max-w-\[12rem\] {
     max-width: 12rem;
   }
+  .max-w-\[22rem\] {
+    max-width: 22rem;
+  }
   .max-w-\[68\%\] {
     max-width: 68%;
   }
@@ -4768,6 +4771,12 @@
     background-color: color-mix(in srgb, oklch(96.2% 0.018 272.314) 50%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in oklab, var(--color-indigo-50) 50%, transparent);
+    }
+  }
+  .bg-indigo-50\/60 {
+    background-color: color-mix(in srgb, oklch(96.2% 0.018 272.314) 60%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-indigo-50) 60%, transparent);
     }
   }
   .bg-indigo-100 {
@@ -9938,6 +9947,13 @@
     &:hover {
       @media (hover: hover) {
         color: #5F6C80;
+      }
+    }
+  }
+  .hover\:text-\[\#243a66\] {
+    &:hover {
+      @media (hover: hover) {
+        color: #243a66;
       }
     }
   }

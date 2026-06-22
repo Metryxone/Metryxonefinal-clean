@@ -889,7 +889,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                         ids: ['cmp-master', 'cmp-micro-framework', 'cmp-role-profile', 'cmp-role-families', 'cmp-blueprints', 'cmp-blueprint-mappings', 'cmp-level-profiles'],
                       },
                       {
-                        label: 'Reference Library (O*NET) · read-only',
+                        label: 'Reference Library (O*NET)',
                         ids: ['ont-overview', 'ont-industries', 'ont-functions', 'ont-departments', 'ont-role-families', 'ont-roles', 'ont-career-tracks', 'ont-competency-levels', 'ont-indicators', 'ont-benchmarks', 'ont-career-paths', 'ont-learning-paths', 'ont-future-skills', 'ont-layers', 'ont-clusters', 'ont-competencies', 'ont-micro-competencies', 'ont-concerns', 'ont-assessment-questions', 'ont-ai-rules', 'ont-import-export'],
                         collapsed: true,
                       },

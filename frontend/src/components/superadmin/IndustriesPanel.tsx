@@ -136,6 +136,22 @@ export default function IndustriesPanel() {
     const a = document.createElement('a'); a.href = url; a.download = 'industries_import_template.csv'; a.click();
     URL.revokeObjectURL(url);
   };
+  const csvCell = (v: unknown) => {
+    const s = v == null ? '' : String(v);
+    return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  const exportCsv = () => {
+    if (!filtered.length) { toast({ title: 'Nothing to export', description: 'No industries match the current filters.' }); return; }
+    const lines = [IMPORT_COLUMNS.join(',')];
+    for (const i of filtered) {
+      lines.push([i.code, i.name, i.parent_sector, i.description, i.status, i.sort_order, i.is_active].map(csvCell).join(','));
+    }
+    const blob = new Blob([lines.join('\n') + '\n'], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url;
+    a.download = `industries_export_${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="space-y-4">
@@ -146,6 +162,7 @@ export default function IndustriesPanel() {
         </div>
         <div className="flex items-center gap-2">
           <SubmitForReviewButton entityType="industry" entityId="module" entityLabel="Industries" />
+          <Button variant="outline" onClick={exportCsv}><Download className="h-4 w-4 mr-2" />Export CSV</Button>
           <Button variant="outline" onClick={openImport}><Upload className="h-4 w-4 mr-2" />Import CSV</Button>
           <Button onClick={openCreate} style={{ backgroundColor: BRAND.primary, color: 'white' }}><Plus className="h-4 w-4 mr-2" />Add Industry</Button>
         </div>

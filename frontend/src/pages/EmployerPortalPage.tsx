@@ -8106,7 +8106,7 @@ function CustomRoleBuilderModal({ initial, onClose, onSaved }: {
         if (q.trim()) params.set('q', q.trim());
         if (domainId) params.set('domain_id', domainId);
         if (familyId) params.set('family_id', familyId);
-        const r = await fetch(`/api/ontology/competencies?${params.toString()}`);
+        const r = await fetch(`/api/ontology/curated/competencies?${params.toString()}`);
         if (r.ok) { const j = await r.json(); if (aliveRef.current && token === searchTokenRef.current) setResults(Array.isArray(j?.data) ? j.data.slice(0, 60) : []); }
       } catch { if (aliveRef.current && token === searchTokenRef.current) setResults([]); }
       finally { if (aliveRef.current && token === searchTokenRef.current) setLibLoading(false); }

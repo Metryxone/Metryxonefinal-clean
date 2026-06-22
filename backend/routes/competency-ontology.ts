@@ -36,18 +36,24 @@ export function registerCompetencyOntologyRoutes(opts: { app: Express; pool: Poo
   app.get('/api/ontology/domains',          wrap(async () => svc.listDomains()));
   app.get('/api/ontology/families',         wrap(async (req) => svc.listFamilies(req.query.domain_id as string | undefined)));
 
-  // ---- Competencies ------------------------------------------------------
-  app.get('/api/ontology/competencies', wrap(async (req) => svc.listCompetencies({
+  // ---- Competencies (curated onto_* viewer reads) ------------------------
+  // NOTE: namespaced under /curated so the bare /api/ontology/competencies and
+  // /api/ontology/layers paths belong to the ont_* competency-core CRUD
+  // (routes/ontology-competency-core.ts) that the SuperAdmin Competency
+  // Framework Core panel reads/writes ({items} envelope). These curated reads
+  // (onto_* genome, {data} envelope) serve the OntologyExplorer / Benchmark /
+  // EmployerPortal viewer consumers.
+  app.get('/api/ontology/curated/competencies', wrap(async (req) => svc.listCompetencies({
     domainId: req.query.domain_id as string | undefined,
     familyId: req.query.family_id as string | undefined,
     search:   req.query.q         as string | undefined,
   })));
-  app.get('/api/ontology/competencies/:id', wrap(async (req, res) => {
+  app.get('/api/ontology/curated/competencies/:id', wrap(async (req, res) => {
     const c = await svc.getCompetency(String(req.params.id));
     if (!c) { res.status(404).json({ ok: false, error: 'not_found' }); return; }
     return c;
   }));
-  app.get('/api/ontology/competencies/resolve/:name', wrap(async (req, res) => {
+  app.get('/api/ontology/curated/competencies/resolve/:name', wrap(async (req, res) => {
     const c = await svc.resolveAlias(String(req.params.name));
     if (!c) { res.status(404).json({ ok: false, error: 'not_found', name: req.params.name }); return; }
     return c;
@@ -55,7 +61,7 @@ export function registerCompetencyOntologyRoutes(opts: { app: Express; pool: Poo
 
   // ---- Proficiency / Layers ---------------------------------------------
   app.get('/api/ontology/proficiency-levels', wrap(async () => svc.listProficiencyLevels()));
-  app.get('/api/ontology/layers',             wrap(async () => svc.listLayers()));
+  app.get('/api/ontology/curated/layers',     wrap(async () => svc.listLayers()));
 
   // ---- Workforce taxonomy (curated onto_* read API) ----------------------
   // NOTE: namespaced under /curated so the bare /api/ontology/{entity} paths

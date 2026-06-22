@@ -242,7 +242,7 @@ function CompetenciesPane() {
         if (q) qs.set('q', q);
         if (domainFilter) qs.set('domain_id', domainFilter);
         const [comps, doms] = await Promise.all([
-          getJSON<Competency[]>(`/api/ontology/competencies?${qs.toString()}`),
+          getJSON<Competency[]>(`/api/ontology/curated/competencies?${qs.toString()}`),
           domains.length ? Promise.resolve(domains) : getJSON<Domain[]>('/api/ontology/domains'),
         ]);
         if (cancelled) return;
@@ -257,7 +257,7 @@ function CompetenciesPane() {
 
   const openDetail = useCallback(async (id: string) => {
     try {
-      const c = await getJSON<Competency>(`/api/ontology/competencies/${id}`);
+      const c = await getJSON<Competency>(`/api/ontology/curated/competencies/${id}`);
       setSelected(c);
     } catch (e: any) { setError(e.message); }
   }, []);
@@ -601,7 +601,7 @@ function LayersPane() {
       try {
         setLoad(true); setError(null);
         const [l, p] = await Promise.all([
-          getJSON<Layer[]>('/api/ontology/layers'),
+          getJSON<Layer[]>('/api/ontology/curated/layers'),
           getJSON<ProficiencyLevel[]>('/api/ontology/proficiency-levels'),
         ]);
         setLayers(l); setProfs(p);

@@ -12111,26 +12111,61 @@ Respond with valid JSON only (no markdown), using EXACTLY these section names in
   app.get("/api/competency/domains", async (req, res, next) => {
     try {
       const include = String(req.query.include || '');
+      // Gate on GLOBAL legacy-table emptiness so once competency_domains is seeded
+      // this stays byte-identical to legacy (the filtered result is never the gate).
+      const legacyCount = await db.execute(sql`SELECT count(*)::int AS n FROM competency_domains`);
+      const useLegacy = ((legacyCount.rows[0] as any).n) > 0;
       if (include.includes('subdomains')) {
-        const result = await db.execute(sql`
-          SELECT d.id, d.code, d.name, d.description, d.color, d.weight, d.display_order, d.is_active,
+        if (useLegacy) {
+          const result = await db.execute(sql`
+            SELECT d.id, d.code, d.name, d.description, d.color, d.weight, d.display_order, d.is_active,
+              COALESCE(json_agg(
+                json_build_object(
+                  'id', c.id, 'code', c.code, 'name', c.name, 'description', c.description,
+                  'competency_type', c.competency_type, 'proficiency_levels', c.proficiency_levels,
+                  'is_active', c.is_active, 'display_order', c.display_order
+                ) ORDER BY c.display_order
+              ) FILTER (WHERE c.id IS NOT NULL), '[]') AS subdomains
+            FROM competency_domains d
+            LEFT JOIN competencies c ON c.domain_id = d.id AND c.is_active = true
+            WHERE d.is_active = true
+            GROUP BY d.id
+            ORDER BY d.display_order
+          `);
+          return res.json(result.rows);
+        }
+        // Convergence fallback: legacy competency_* is globally empty → read the canonical
+        // onto_* genome mapped to the legacy shape. Additive & reversible: once the
+        // legacy tables are seeded this branch never runs (byte-identical to before).
+        const onto = await db.execute(sql`
+          SELECT d.id, d.id AS code, d.name, d.description, NULL::text AS color, 1 AS weight,
+            d.display_order, (NOT d.deprecated) AS is_active,
             COALESCE(json_agg(
               json_build_object(
-                'id', c.id, 'code', c.code, 'name', c.name, 'description', c.description,
-                'competency_type', c.competency_type, 'proficiency_levels', c.proficiency_levels,
-                'is_active', c.is_active, 'display_order', c.display_order
-              ) ORDER BY c.display_order
+                'id', c.id, 'code', c.slug, 'name', c.canonical_name, 'description', c.definition,
+                'competency_type', c.scientific_type, 'proficiency_levels', '{}'::jsonb,
+                'is_active', (NOT c.deprecated), 'display_order', c.complexity_level
+              ) ORDER BY c.canonical_name
             ) FILTER (WHERE c.id IS NOT NULL), '[]') AS subdomains
-          FROM competency_domains d
-          LEFT JOIN competencies c ON c.domain_id = d.id AND c.is_active = true
-          WHERE d.is_active = true
+          FROM onto_domains d
+          LEFT JOIN onto_competencies c ON c.domain_id = d.id AND NOT c.deprecated
+          WHERE NOT d.deprecated
           GROUP BY d.id
           ORDER BY d.display_order
         `);
+        return res.json(onto.rows);
+      }
+      if (useLegacy) {
+        const result = await db.execute(sql`SELECT * FROM competency_domains WHERE is_active=true ORDER BY display_order`);
         return res.json(result.rows);
       }
-      const result = await db.execute(sql`SELECT * FROM competency_domains WHERE is_active=true ORDER BY display_order`);
-      res.json(result.rows);
+      // Convergence fallback (see note above): legacy competency_domains globally empty.
+      const onto = await db.execute(sql`
+        SELECT id, id AS code, name, description, NULL::text AS color, 1 AS weight,
+          display_order, (NOT deprecated) AS is_active
+        FROM onto_domains WHERE NOT deprecated ORDER BY display_order
+      `);
+      res.json(onto.rows);
     } catch (err) { next(err); }
   });
 
@@ -12178,10 +12213,28 @@ Respond with valid JSON only (no markdown), using EXACTLY these section names in
   app.get("/api/competency/competencies", async (req, res, next) => {
     try {
       const domainId = req.query.domain_id ? String(req.query.domain_id) : null;
-      const r = domainId
-        ? await db.execute(sql`SELECT * FROM competencies WHERE domain_id = ${domainId} ORDER BY display_order`)
-        : await db.execute(sql`SELECT * FROM competencies ORDER BY display_order`);
-      res.json(r.rows);
+      // Gate on GLOBAL legacy-table emptiness (not the filtered result).
+      const legacyCount = await db.execute(sql`SELECT count(*)::int AS n FROM competencies`);
+      if (((legacyCount.rows[0] as any).n) > 0) {
+        const r = domainId
+          ? await db.execute(sql`SELECT * FROM competencies WHERE domain_id = ${domainId} ORDER BY display_order`)
+          : await db.execute(sql`SELECT * FROM competencies ORDER BY display_order`);
+        return res.json(r.rows);
+      }
+      // Convergence fallback: legacy `competencies` globally empty → canonical onto_competencies
+      // mapped to legacy shape. Additive & reversible (no-op once legacy is seeded).
+      const onto = domainId
+        ? await db.execute(sql`
+            SELECT id, domain_id, slug AS code, canonical_name AS name, definition AS description,
+              scientific_type AS competency_type, '{}'::jsonb AS proficiency_levels,
+              complexity_level AS display_order, (NOT deprecated) AS is_active
+            FROM onto_competencies WHERE NOT deprecated AND domain_id = ${domainId} ORDER BY canonical_name`)
+        : await db.execute(sql`
+            SELECT id, domain_id, slug AS code, canonical_name AS name, definition AS description,
+              scientific_type AS competency_type, '{}'::jsonb AS proficiency_levels,
+              complexity_level AS display_order, (NOT deprecated) AS is_active
+            FROM onto_competencies WHERE NOT deprecated ORDER BY canonical_name`);
+      res.json(onto.rows);
     } catch (err) { next(err); }
   });
 
@@ -12369,14 +12422,22 @@ Respond with valid JSON only (no markdown), using EXACTLY these section names in
   // ---- Stats for Super Admin overview card ----
   app.get("/api/competency/stats", async (_req, res, next) => {
     try {
+      // Convergence: domains/competencies/items counts fall back to the canonical
+      // onto_* genome when the legacy competency_* tables are empty (no-op once seeded).
       const r = await db.execute(sql`
         SELECT
-          (SELECT count(*) FROM competency_domains WHERE is_active=true)::int AS domains,
-          (SELECT count(*) FROM competencies WHERE is_active=true)::int AS competencies,
+          (SELECT CASE WHEN (SELECT count(*) FROM competency_domains)=0
+             THEN (SELECT count(*) FROM onto_domains WHERE NOT deprecated)
+             ELSE (SELECT count(*) FROM competency_domains WHERE is_active=true) END)::int AS domains,
+          (SELECT CASE WHEN (SELECT count(*) FROM competencies)=0
+             THEN (SELECT count(*) FROM onto_competencies WHERE NOT deprecated)
+             ELSE (SELECT count(*) FROM competencies WHERE is_active=true) END)::int AS competencies,
           (SELECT count(*) FROM competency_clusters WHERE is_active=true)::int AS clusters,
           (SELECT count(*) FROM stage_competency_norms)::int AS stage_norms,
           (SELECT count(*) FROM scoring_configs)::int AS scoring_configs,
-          (SELECT count(*) FROM competency_assessment_items WHERE is_active=true)::int AS assessment_items,
+          (SELECT CASE WHEN (SELECT count(*) FROM competency_assessment_items)=0
+             THEN (SELECT count(*) FROM competency_question_templates)
+             ELSE (SELECT count(*) FROM competency_assessment_items WHERE is_active=true) END)::int AS assessment_items,
           (SELECT count(*) FROM role_competency_weights)::int AS role_weights,
           (SELECT count(distinct role_code) FROM role_competency_weights)::int AS roles
       `);
@@ -12569,27 +12630,56 @@ Respond with valid JSON only (no markdown), using EXACTLY these section names in
     try {
       const competencyId = req.query.competency_id ? String(req.query.competency_id) : null;
       const language = req.query.language ? String(req.query.language).toLowerCase() : null;
-      const r = competencyId
+      // Gate on GLOBAL legacy-table emptiness (not the filtered result), so once
+      // competency_assessment_items is seeded this stays byte-identical to legacy.
+      const legacyCount = await db.execute(sql`SELECT count(*)::int AS n FROM competency_assessment_items`);
+      if (((legacyCount.rows[0] as any).n) > 0) {
+        const r = competencyId
+          ? await db.execute(sql`
+              SELECT i.*, COALESCE(json_agg(json_build_object('id', o.id, 'text', o.text, 'score_value', o.score_value, 'display_order', o.display_order) ORDER BY o.display_order) FILTER (WHERE o.id IS NOT NULL), '[]') AS options
+              FROM competency_assessment_items i
+              LEFT JOIN competency_assessment_options o ON o.item_id = i.id
+              WHERE i.competency_id = ${competencyId}
+                ${language ? sql`AND i.language_code = ${language}` : sql``}
+              GROUP BY i.id
+              ORDER BY i.code
+            `)
+          : await db.execute(sql`
+              SELECT i.*, c.code AS competency_code, c.name AS competency_name,
+                COALESCE(json_agg(json_build_object('id', o.id, 'text', o.text, 'score_value', o.score_value, 'display_order', o.display_order) ORDER BY o.display_order) FILTER (WHERE o.id IS NOT NULL), '[]') AS options
+              FROM competency_assessment_items i
+              JOIN competencies c ON c.id = i.competency_id
+              LEFT JOIN competency_assessment_options o ON o.item_id = i.id
+              ${language ? sql`WHERE i.language_code = ${language}` : sql``}
+              GROUP BY i.id, c.code, c.name
+              ORDER BY i.code
+            `);
+        return res.json(r.rows);
+      }
+      // Convergence fallback: legacy competency_assessment_items globally empty → canonical V1
+      // question bank (competency_question_templates) mapped to the legacy item shape.
+      // Additive & reversible (no-op once the legacy items table is seeded).
+      const onto = competencyId
         ? await db.execute(sql`
-            SELECT i.*, COALESCE(json_agg(json_build_object('id', o.id, 'text', o.text, 'score_value', o.score_value, 'display_order', o.display_order) ORDER BY o.display_order) FILTER (WHERE o.id IS NOT NULL), '[]') AS options
-            FROM competency_assessment_items i
-            LEFT JOIN competency_assessment_options o ON o.item_id = i.id
-            WHERE i.competency_id = ${competencyId}
-              ${language ? sql`AND i.language_code = ${language}` : sql``}
-            GROUP BY i.id
-            ORDER BY i.code
-          `)
+            SELECT t.id, t.template_key AS code, t.competency_code AS competency_id,
+              t.question_type AS item_type, t.difficulty_band AS difficulty,
+              (t.template_body->>'stem') AS question, t.status, t.source,
+              COALESCE((SELECT json_agg(json_build_object('text', value, 'display_order', (ord-1)) ORDER BY ord)
+                FROM jsonb_array_elements_text(t.template_body->'options') WITH ORDINALITY AS arr(value, ord)), '[]') AS options
+            FROM competency_question_templates t
+            WHERE t.competency_code = ${competencyId}
+            ORDER BY t.template_key`)
         : await db.execute(sql`
-            SELECT i.*, c.code AS competency_code, c.name AS competency_name,
-              COALESCE(json_agg(json_build_object('id', o.id, 'text', o.text, 'score_value', o.score_value, 'display_order', o.display_order) ORDER BY o.display_order) FILTER (WHERE o.id IS NOT NULL), '[]') AS options
-            FROM competency_assessment_items i
-            JOIN competencies c ON c.id = i.competency_id
-            LEFT JOIN competency_assessment_options o ON o.item_id = i.id
-            ${language ? sql`WHERE i.language_code = ${language}` : sql``}
-            GROUP BY i.id, c.code, c.name
-            ORDER BY i.code
-          `);
-      res.json(r.rows);
+            SELECT t.id, t.template_key AS code, t.competency_code AS competency_id,
+              t.question_type AS item_type, t.difficulty_band AS difficulty,
+              (t.template_body->>'stem') AS question, t.status, t.source,
+              COALESCE(c.canonical_name, t.competency_code) AS competency_name, c.slug AS competency_code,
+              COALESCE((SELECT json_agg(json_build_object('text', value, 'display_order', (ord-1)) ORDER BY ord)
+                FROM jsonb_array_elements_text(t.template_body->'options') WITH ORDINALITY AS arr(value, ord)), '[]') AS options
+            FROM competency_question_templates t
+            LEFT JOIN onto_competencies c ON c.id = t.competency_code
+            ORDER BY t.competency_code, t.template_key`);
+      res.json(onto.rows);
     } catch (err) { next(err); }
   });
 

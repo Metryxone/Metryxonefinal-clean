@@ -22,3 +22,10 @@ The legacy `competency_*` tables look "dead" (0 rows) but are **wired to live UI
 ## engine-summary single-query darkening
 `GET /api/competency/engine-summary` (`routes/competency-cohorts.ts`) used to run ONE combined SQL over 8 counts that included `competency_stage_norms` + `competency_role_weights`, both **MISSING** in dev → the whole query threw → `next(err)` → the admin "Live Database Counts" card showed "Live counts unavailable" (the visible symptom that made every tab look broken).
 **Fix:** per-table `to_regclass`-guarded counts — missing table → `null` (frontend filters/hides null), present-but-empty → `0`, never throws. Log a real count failure (table exists but query fails) so genuine faults stay observable instead of masquerading as absence.
+
+## Re-pointing reads: gate on GLOBAL table emptiness, never the filtered result
+When adding an additive `onto_*` read-fallback to a legacy `competency_*` GET so it's byte-identical-once-seeded, the fallback MUST fire only when the legacy table is GLOBALLY empty: run `SELECT count(*) FROM <legacy_table>` FIRST and branch on that. Do NOT gate on `result.rows.length === 0` of the (possibly filtered) main query.
+
+**Why:** a seeded legacy table with a filter that legitimately returns 0 rows (e.g. `?domain_id=zzz_nonexistent`, `?competency_id=...`) would wrongly trigger the fallback and surface the whole canonical genome instead of an honest empty list — breaking the byte-identical-once-seeded guarantee. Regression probe: a nonexistent filter must return `[]`, not the full onto set.
+
+**How to apply:** compute the global count once at the top (e.g. `useLegacy`) and apply it in EVERY branch (domains had plain + `include=subdomains` — both must use it). For count-style endpoints prefer the inline `CASE WHEN (SELECT count(*) FROM legacy)=0 THEN onto ELSE legacy END` form (used by `/api/competency/stats`). For `engine-summary`'s null-aware counts, fall back on `=== 0` ONLY, never on a falsy `!x` (null = absent/not-migrated must stay null; 0 = exists-but-empty triggers the fallback). Clusters have NO canonical onto source → leave honestly empty, never fabricate.

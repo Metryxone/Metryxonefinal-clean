@@ -233,7 +233,7 @@ export function registerCompetencyCohortRoutes(
       }
     };
 
-    const [
+    let [
       domains, competencies, active_competencies, clusters,
       assessment_items, stage_norms, role_weights, roles,
     ] = await Promise.all([
@@ -246,6 +246,15 @@ export function registerCompetencyCohortRoutes(
       countOf('competency_role_weights',     `SELECT count(*) AS n FROM competency_role_weights`),
       countOf('competency_role_weights',     `SELECT count(distinct role_code) AS n FROM competency_role_weights`),
     ]);
+
+    // Convergence: when the legacy competency_* tables exist-but-are-empty (count === 0),
+    // surface the canonical onto_* genome (and V1 question bank) instead. We deliberately
+    // fall back ONLY on 0, never on null — null means the table is absent/not-migrated and
+    // that honest distinction is preserved. No-op once the legacy tables are seeded.
+    if (domains === 0)            domains = await countOf('onto_domains', `SELECT count(*) AS n FROM onto_domains WHERE NOT deprecated`);
+    if (competencies === 0)       competencies = await countOf('onto_competencies', `SELECT count(*) AS n FROM onto_competencies WHERE NOT deprecated`);
+    if (active_competencies === 0) active_competencies = await countOf('onto_competencies', `SELECT count(*) AS n FROM onto_competencies WHERE NOT deprecated`);
+    if (assessment_items === 0)   assessment_items = await countOf('competency_question_templates', `SELECT count(*) AS n FROM competency_question_templates`);
 
     res.json({
       domains, competencies, active_competencies, clusters,

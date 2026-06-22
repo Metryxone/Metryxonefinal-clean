@@ -44,7 +44,6 @@ import {
   findRoleByTitle,
 } from '@/lib/services/assessmentOptionsService';
 import { useCompetencyRuntimeStore } from '@/lib/stores/competencyRuntimeStore';
-import AdaptiveAssessmentRuntime from '@/modules/career-builder/competency/views/AdaptiveAssessmentRuntime';
 import ResumeStudio from '@/components/career/ResumeStudio';
 import { EIProvenanceCard } from '@/components/career/EIProvenanceCard';
 import { WeeklyActionPlanTab, NextBestActionsTab, BehavioralGrowthTab, CareerMemoryTab } from '@/components/career';
@@ -6872,9 +6871,6 @@ function AssessmentTab({ userId, profile, onTabChange }: {
                 industry={industry}
                 careerStage={careerStage}
                 currentRoleNode={currentRoleNode}
-              />
-              <AdaptiveAssessmentRuntime
-                userInputs={{ currentRole, targetRole, industry, careerStage }}
               />
             </>
           )}

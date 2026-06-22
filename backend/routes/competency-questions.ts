@@ -76,8 +76,14 @@ const DOMAIN_LABEL: Record<string, string> = {
   EIQ: 'Emotional & Social Intelligence',
 };
 function mapQuestionType(t: string): 'mcq' | 'sjt' | 'likert' {
-  if (t === 'mcq') return 'mcq';
-  if (t === 'sjt' || t === 'scenario' || t === 'case' || t === 'simulation' ||
+  // Accept BOTH the short render tokens and the scorer's canonical keys
+  // (multiple_choice / situational_judgment / scenario_based / case_study), so a
+  // canonically-typed row still renders with its authored options instead of
+  // silently falling through to the Likert scale. Byte-identical for option-less
+  // rows (they fall back to Likert in rowToQuestion regardless).
+  if (t === 'mcq' || t === 'multiple_choice') return 'mcq';
+  if (t === 'sjt' || t === 'situational_judgment' || t === 'scenario' || t === 'scenario_based' ||
+      t === 'case' || t === 'case_study' || t === 'simulation' ||
       t === 'behavioral' || t === 'communication') return 'sjt';
   return 'likert';
 }

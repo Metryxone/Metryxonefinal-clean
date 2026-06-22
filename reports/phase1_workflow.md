@@ -7,6 +7,78 @@
 
 ---
 
+## The end-to-end flow (read this first)
+
+This whole system has **one job**: take a master list of skills and turn it into a real assessment a person can take and be scored on. Here is the entire journey, top to bottom — **each step builds on the one above it**.
+
+```
+   ╔═══════════════════════════════════════════════════════════════════╗
+   ║  SET-UP  —  done once by the super-admin "back office" team        ║
+   ╚═══════════════════════════════════════════════════════════════════╝
+
+   STEP 1 · FOUNDATION
+   "Here is our master list of 299 skills (the genome)."
+        │
+        ▼
+   STEP 2 · 1.1 TYPE
+   "Label each skill — behavioural? cognitive? functional? technical? future?"
+        │
+        ▼
+   STEP 3 · 1.2 MASTER
+   "Mark each skill active/inactive, and say which products may use it."
+        │
+        ▼
+   STEP 4 · 1.4 MICRO
+   "Break big skills into smaller sub-skills (parent → child)."
+        │
+        ▼
+   STEP 5 · 1.5 ROLE PROFILE
+   "For each job role, list the skills it needs — required level, importance, weight."
+        │
+        ▼
+   STEP 6 · 1.6 ASSESSMENT FOUNDATION
+   "Turn those role needs into an assessment blueprint, and link each skill to its questions."
+        │
+        ▼
+   STEP 7 · 1.7 SEARCH
+   "Find, filter, and bulk-manage anything across all of the above."
+
+   ╔═══════════════════════════════════════════════════════════════════╗
+   ║  RUN-TIME  —  what happens when a real person takes the assessment ║
+   ╚═══════════════════════════════════════════════════════════════════╝
+        │
+        ▼
+   A blueprint (Step 6) is assembled into a real assessment
+        │
+        ▼
+   The person answers the questions
+        │
+        ▼
+   Answers are scored against the role's required levels (Step 5)
+        │
+        ▼
+   Out comes a COMPETENCY PROFILE + ROLE READINESS
+   "how ready is this person for the role, and where are the gaps?"
+```
+
+### The same flow in one sentence
+A **master list of skills** (Foundation) is **labelled** (1.1), **governed** (1.2) and **broken into sub-skills** (1.4); each **job role** declares which skills it needs and how much (1.5); those needs become an **assessment blueprint with questions** (1.6); everything is **searchable and manageable** (1.7); and at run-time a person **takes that assessment and gets a readiness score**.
+
+### Why it's built in this order (each step needs the one before it)
+- You can't **label** skills (1.1) until you have the **skill list** (Foundation).
+- You can't say a **role needs a skill** (1.5) until the skills exist and are **active** (1.2).
+- You can't build an **assessment** (1.6) until roles have **declared what they need** (1.5).
+- You can't **score readiness** until an assessment has been **built and taken**.
+
+### Where it stands today (honest status)
+- ✅ **Working with real data:** Foundation (299 skills) · 1.1 Type (all 299 labelled) · 1.5 Role Profiles (5 roles) · 1.6 Blueprints · the live run-time (people have taken assessments and been scored).
+- ⚠️ **Built but empty in the live database:** 1.2 Master and 1.4 Micro — the machinery works, the data just hasn't been loaded yet.
+- ⚠️ **Thin:** 1.6 question links currently cover only **7 of 299** skills.
+
+> Everything below is the **detailed reference** — each module's inner workings, functions, tables, routes, and how to manage it. Use the flow above as your map; drop into a section below only when you need the detail.
+
+---
+
 ## 0. The pattern every sub-phase follows
 
 All sub-phases obey the same additive contract:

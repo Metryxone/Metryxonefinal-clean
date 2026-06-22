@@ -872,6 +872,25 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       { id: 'ont-ai-rules',             label: 'AI Rules',                 icon: Bot,           node: <AIRulesPanel /> },
                       { id: 'ont-import-export',        label: 'Import / Export',          icon: FileDown,      node: <OntologyImportExportPanel /> },
                     ]}
+                    tabGroups={[
+                      {
+                        label: 'Core Assessment',
+                        ids: ['overview', 'cmp-command-center', 'cmp-intelligence', 'cmp-framework-intel', 'cmp-search-discovery', 'cmp-questions', 'cmp-question-map', 'cmp-questionbank', 'cmp-custom-modules', 'cmp-assessment-mapping', 'cmp-scoring'],
+                      },
+                      {
+                        label: 'Framework Structure',
+                        ids: ['cmp-master', 'cmp-micro-framework', 'cmp-role-profile', 'cmp-role-families', 'cmp-blueprints', 'cmp-blueprint-mappings', 'cmp-level-profiles'],
+                      },
+                      {
+                        label: 'Ontology (O*NET)',
+                        ids: ['ont-overview', 'ont-industries', 'ont-functions', 'ont-departments', 'ont-role-families', 'ont-roles', 'ont-career-tracks', 'ont-competency-levels', 'ont-indicators', 'ont-benchmarks', 'ont-career-paths', 'ont-learning-paths', 'ont-future-skills', 'ont-layers', 'ont-clusters', 'ont-competencies', 'ont-micro-competencies', 'ont-concerns', 'ont-assessment-questions', 'ont-ai-rules', 'ont-import-export'],
+                      },
+                      {
+                        label: 'Legacy Framework (empty — being retired)',
+                        ids: ['domains', 'sub', 'content', 'clusters', 'norms', 'weights', 'scoring', 'reports'],
+                        collapsed: true,
+                      },
+                    ]}
                   />
                 </div>
               )}

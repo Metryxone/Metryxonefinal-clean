@@ -13,7 +13,7 @@ import {
   Sparkles, Layers, Target, FileSpreadsheet, GitBranch,
   BarChart3, Sliders, History, Search, AlertCircle,
   Calculator, FileText, HeartHandshake, ClipboardList, HelpCircle,
-  Network,
+  Network, ChevronRight, ChevronDown,
 } from 'lucide-react';
 import {
   ClustersTab, NormsTab, WeightsTab, VersionsTab,
@@ -62,8 +62,13 @@ const ALL_PANEL_TABS: { id: PanelTab; label: string; icon: any; requiresConfig?:
 export type FrameworkExtraTab = { id: string; label: string; icon: any; node: ReactNode };
 
 // ─── Main Panel ────────────────────────────────────────────────────────────
-export default function FrameworkPanel({ config, initialTab, extraTabs }: { config: FwConfig; initialTab?: PanelTab; extraTabs?: FrameworkExtraTab[] }) {
+export type TabGroup = { label: string; ids: string[]; collapsed?: boolean };
+
+export default function FrameworkPanel({ config, initialTab, extraTabs, tabGroups }: { config: FwConfig; initialTab?: PanelTab; extraTabs?: FrameworkExtraTab[]; tabGroups?: TabGroup[] }) {
   const [tab, setTab] = useState<string>(initialTab ?? 'overview');
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
+    () => new Set((tabGroups ?? []).filter(g => g.collapsed).map(g => g.label)),
+  );
 
   const tabs = ALL_PANEL_TABS
     .filter(t => !t.requiresConfig || !!config[t.requiresConfig])
@@ -83,29 +88,81 @@ export default function FrameworkPanel({ config, initialTab, extraTabs }: { conf
     if (dup) console.warn(`[FrameworkPanel] duplicate tab id "${dup}" — an extraTab collides with a built-in tab`);
   }
 
-  return (
-    <div className="space-y-4">
-      {/* Inner tab bar */}
-      <div className="flex flex-wrap gap-1 border-b pb-0">
-        {allTabs.map(t => {
-          const active = tab === t.id;
-          const Icon = t.icon;
+  const renderTabButton = (t: { id: string; label: string; icon: any }) => {
+    const active = tab === t.id;
+    const Icon = t.icon;
+    return (
+      <button
+        key={t.id}
+        onClick={() => setTab(t.id)}
+        className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium border-b-2 -mb-px transition-all"
+        style={{
+          borderBottomColor: active ? config.color : 'transparent',
+          color: active ? config.color : '#6b7280',
+        }}
+      >
+        <Icon className="h-3.5 w-3.5" />
+        {t.label}
+      </button>
+    );
+  };
+
+  // Grouped tab bar (opt-in via tabGroups). Every tab stays reachable — any tab
+  // not named in a group falls into a trailing "Other" section so nothing is
+  // ever dropped. When tabGroups is absent the original flat bar renders
+  // (byte-identical for LBI / SDI).
+  let groupedBar: ReactNode = null;
+  if (tabGroups && tabGroups.length > 0) {
+    const placed = new Set<string>();
+    const sections = tabGroups.map(g => {
+      const groupTabs = g.ids
+        .map(id => allTabs.find(t => t.id === id))
+        .filter((t): t is { id: string; label: string; icon: any } => !!t);
+      groupTabs.forEach(t => placed.add(t.id));
+      return { label: g.label, tabs: groupTabs };
+    });
+    const leftover = allTabs.filter(t => !placed.has(t.id));
+    if (leftover.length) sections.push({ label: 'Other', tabs: leftover });
+
+    groupedBar = (
+      <div className="space-y-2 border-b pb-2">
+        {sections.map(sec => {
+          if (sec.tabs.length === 0) return null;
+          const isCollapsed = collapsedGroups.has(sec.label);
           return (
-            <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
-              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium border-b-2 -mb-px transition-all"
-              style={{
-                borderBottomColor: active ? config.color : 'transparent',
-                color: active ? config.color : '#6b7280',
-              }}
-            >
-              <Icon className="h-3.5 w-3.5" />
-              {t.label}
-            </button>
+            <div key={sec.label}>
+              <button
+                onClick={() => setCollapsedGroups(prev => {
+                  const next = new Set(prev);
+                  if (next.has(sec.label)) next.delete(sec.label); else next.add(sec.label);
+                  return next;
+                })}
+                className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-gray-400 hover:text-gray-600 transition-colors mb-1"
+              >
+                {isCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                {sec.label}
+                <span className="font-normal normal-case text-gray-300">({sec.tabs.length})</span>
+              </button>
+              {!isCollapsed && (
+                <div className="flex flex-wrap gap-1">
+                  {sec.tabs.map(renderTabButton)}
+                </div>
+              )}
+            </div>
           );
         })}
       </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* Inner tab bar */}
+      {groupedBar ?? (
+        <div className="flex flex-wrap gap-1 border-b pb-0">
+          {allTabs.map(renderTabButton)}
+        </div>
+      )}
 
       {/* Tab content */}
       <div>

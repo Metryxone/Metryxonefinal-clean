@@ -682,7 +682,8 @@ function StatsBar() {
   const items = [
     { label: 'Layers', value: s.layers_total, pub: s.layers_published, color: 'text-purple-700 bg-purple-50' },
     { label: 'Clusters', value: s.clusters_total, pub: s.clusters_published, color: 'text-blue-700 bg-blue-50' },
-    { label: 'Competencies', value: s.competencies_total, pub: s.competencies_published, color: 'text-green-700 bg-green-50' },
+    { label: 'Competencies', value: s.competencies_total, pub: s.competencies_published, color: 'text-green-700 bg-green-50',
+      sub: 'O*NET reference' },
     { label: 'Micro Competencies', value: s.micros_total, pub: s.micros_published, color: 'text-orange-700 bg-orange-50' },
     { label: 'Role Links', value: s.role_comp_links, pub: null, color: 'text-gray-700 bg-gray-50',
       sub: s.role_comp_links_derived != null ? `${s.role_comp_links_native ?? 0} O*NET · ${s.role_comp_links_derived} estimated` : null },
@@ -725,10 +726,19 @@ export default function CompetencyCorePanel({ initialTab }: { initialTab?: strin
     <div className="h-full flex flex-col gap-0">
       <div className="px-6 pt-6 pb-0">
         <div className="mb-4">
-          <h2 className="text-xl font-bold text-gray-900">Competency Framework Core</h2>
+          <h2 className="text-xl font-bold text-gray-900">Competency Framework Core — O*NET Reference Library</h2>
           <p className="text-sm text-gray-500 mt-1">
-            Manage Layers, Clusters, Competencies, and Micro Competencies — the core 4-level framework structure.
+            The O*NET-derived reference taxonomy (Layers · Clusters · Competencies · Micro Competencies). These competencies
+            are the external evidence base used to estimate role requirements — see the <span className="font-medium">Role Links</span> below.
           </p>
+          <div className="mt-2 flex items-start gap-2 text-xs text-blue-800 bg-blue-50 border border-blue-100 rounded-lg px-3 py-2">
+            <span className="font-semibold whitespace-nowrap">Not the same as the assessment framework.</span>
+            <span className="opacity-90">
+              The curated competency framework that candidates are scored against (299 competencies across 5 types) is a separate
+              layer — manage it under <span className="font-medium">Competency Assessment / Ontology Explorer</span>. The two are
+              connected by name: O*NET role-requirement weights are bridged onto the curated framework.
+            </span>
+          </div>
         </div>
         <StatsBar />
         <div className="flex gap-1 border-b">

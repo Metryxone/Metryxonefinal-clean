@@ -996,3 +996,9 @@ id = "AOoM9p9CVrUWpXRoGU9Sz"
 uri = "file://reports/competency_quality_report.md"
 type = "text"
 title = "Competency Data Quality Review — Phase 1.3 (competency_quality_report.md)"
+
+[[outputs]]
+id = "E_pCz7EHUrfRr3kgNf2vS"
+uri = "file://reports/competency_dedup_audit.md"
+type = "text"
+title = "Competency Assessment — Duplication & Cleanup Audit (Stage 0)"

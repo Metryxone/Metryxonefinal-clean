@@ -210,20 +210,46 @@ export function registerCompetencyCohortRoutes(
 
   // ─── Engine summary (counts only, admin-gated to match sibling admin routes) ───
 
-  app.get('/api/competency/engine-summary', requireAuth, requireSuperAdmin, async (_req, res, next) => {
-    try {
-      const r = await pool.query(`
-        SELECT
-          (SELECT count(*) FROM competency_domains)::int                         AS domains,
-          (SELECT count(*) FROM competencies)::int                               AS competencies,
-          (SELECT count(*) FROM competencies WHERE is_active)::int               AS active_competencies,
-          (SELECT count(*) FROM competency_clusters)::int                        AS clusters,
-          (SELECT count(*) FROM competency_assessment_items)::int                AS assessment_items,
-          (SELECT count(*) FROM competency_stage_norms)::int                     AS stage_norms,
-          (SELECT count(*) FROM competency_role_weights)::int                    AS role_weights,
-          (SELECT count(distinct role_code) FROM competency_role_weights)::int   AS roles
-      `);
-      res.json(r.rows[0]);
-    } catch (err) { next(err); }
+  app.get('/api/competency/engine-summary', requireAuth, requireSuperAdmin, async (_req, res) => {
+    // Per-table guarded counts: a missing table yields null (honest "not migrated")
+    // rather than throwing and darkening the whole card. The frontend hides null
+    // entries and renders real counts (0 = migrated-but-empty, distinct from null).
+    const tableExists = async (t: string): Promise<boolean> => {
+      try {
+        const r = await pool.query(`SELECT to_regclass($1) IS NOT NULL AS ok`, [`public.${t}`]);
+        return r.rows[0]?.ok === true;
+      } catch { return false; }
+    };
+    const countOf = async (table: string, sql: string): Promise<number | null> => {
+      if (!(await tableExists(table))) return null; // honest "not migrated"
+      try {
+        const r = await pool.query(sql);
+        return Number(r.rows[0]?.n ?? 0);
+      } catch (err) {
+        // Table exists but the count failed = a real fault, not absence.
+        // Keep the card alive (return null) but stay observable.
+        console.error(`[competency/engine-summary] count failed for ${table}:`, err);
+        return null;
+      }
+    };
+
+    const [
+      domains, competencies, active_competencies, clusters,
+      assessment_items, stage_norms, role_weights, roles,
+    ] = await Promise.all([
+      countOf('competency_domains',          `SELECT count(*) AS n FROM competency_domains`),
+      countOf('competencies',                `SELECT count(*) AS n FROM competencies`),
+      countOf('competencies',                `SELECT count(*) AS n FROM competencies WHERE is_active`),
+      countOf('competency_clusters',         `SELECT count(*) AS n FROM competency_clusters`),
+      countOf('competency_assessment_items', `SELECT count(*) AS n FROM competency_assessment_items`),
+      countOf('competency_stage_norms',      `SELECT count(*) AS n FROM competency_stage_norms`),
+      countOf('competency_role_weights',     `SELECT count(*) AS n FROM competency_role_weights`),
+      countOf('competency_role_weights',     `SELECT count(distinct role_code) AS n FROM competency_role_weights`),
+    ]);
+
+    res.json({
+      domains, competencies, active_competencies, clusters,
+      assessment_items, stage_norms, role_weights, roles,
+    });
   });
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  Network, Database, Layers, GitBranch, RefreshCw, CheckCircle2,
+  Network, Database, Layers, GitBranch, RefreshCw, CheckCircle2, Upload,
   AlertTriangle, Info, Boxes, Link2, ShieldCheck, Tags, ListChecks,
 } from 'lucide-react';
 import { Badge } from '../ui/badge';
@@ -183,7 +183,7 @@ export default function CompetencyFrameworkIntelligencePanel() {
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-base flex items-center gap-2"><Layers className="h-4 w-4 text-[#344E86]" /> Asset Readiness</CardTitle>
-          <CardDescription>Per-asset Coverage (row count) and Confidence (provenance/trust) — two separate axes.</CardDescription>
+          <CardDescription>Per-asset Coverage (row count) and Confidence (provenance/trust) — two separate axes. Rows pending import show an Upload link that opens the platform's Bulk Upload tool.</CardDescription>
         </CardHeader>
         <CardContent className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -193,7 +193,8 @@ export default function CompetencyFrameworkIntelligencePanel() {
                 <th className="py-2 px-3 font-medium">Namespace</th>
                 <th className="py-2 px-3 font-medium text-right">Coverage (rows)</th>
                 <th className="py-2 px-3 font-medium">Status</th>
-                <th className="py-2 pl-3 font-medium">Confidence</th>
+                <th className="py-2 px-3 font-medium">Confidence</th>
+                <th className="py-2 pl-3 font-medium text-right">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -206,7 +207,22 @@ export default function CompetencyFrameworkIntelligencePanel() {
                   <td className="py-2 px-3"><Badge variant="outline" className="font-mono text-xs">{a.namespace}</Badge></td>
                   <td className="py-2 px-3 text-right font-semibold text-gray-900">{a.coverage_rows == null ? '—' : a.coverage_rows}</td>
                   <td className="py-2 px-3"><StatusBadge status={a.status} /></td>
-                  <td className="py-2 pl-3 text-xs text-gray-500">{a.confidence}</td>
+                  <td className="py-2 px-3 text-xs text-gray-500">{a.confidence}</td>
+                  <td className="py-2 pl-3 text-right">
+                    {a.status === 'empty_pending_import' ? (
+                      <a
+                        href={`${window.location.protocol}//${window.location.hostname}:8000/admin/upload`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Open the Bulk Upload tool to import data for this asset"
+                        className="inline-flex items-center gap-1 text-xs font-medium text-[#344E86] hover:text-[#243a66] hover:underline whitespace-nowrap"
+                      >
+                        <Upload className="h-3.5 w-3.5" /> Upload
+                      </a>
+                    ) : (
+                      <span className="text-xs text-gray-300">—</span>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>

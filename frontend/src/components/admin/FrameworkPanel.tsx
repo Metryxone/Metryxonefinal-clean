@@ -64,14 +64,14 @@ export type FrameworkExtraTab = { id: string; label: string; icon: any; node: Re
 // ─── Main Panel ────────────────────────────────────────────────────────────
 export type TabGroup = { label: string; ids: string[]; collapsed?: boolean };
 
-export default function FrameworkPanel({ config, initialTab, extraTabs, tabGroups }: { config: FwConfig; initialTab?: PanelTab; extraTabs?: FrameworkExtraTab[]; tabGroups?: TabGroup[] }) {
-  const [tab, setTab] = useState<string>(initialTab ?? 'overview');
-  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
-    () => new Set((tabGroups ?? []).filter(g => g.collapsed).map(g => g.label)),
-  );
+export default function FrameworkPanel({ config, initialTab, extraTabs, tabGroups, hiddenTabs }: { config: FwConfig; initialTab?: string; extraTabs?: FrameworkExtraTab[]; tabGroups?: TabGroup[]; hiddenTabs?: string[] }) {
+  // Optionally suppress specific built-in/extra tab buttons (e.g. when one tab's
+  // content has been merged into another). Other frameworks pass nothing → no-op.
+  const hidden = new Set(hiddenTabs ?? []);
 
   const tabs = ALL_PANEL_TABS
     .filter(t => !t.requiresConfig || !!config[t.requiresConfig])
+    .filter(t => !hidden.has(t.id))
     .map(t => ({
       ...t,
       label: t.id === 'sub' ? config.subLabel : t.label,
@@ -79,8 +79,13 @@ export default function FrameworkPanel({ config, initialTab, extraTabs, tabGroup
 
   const allTabs = [
     ...tabs.map(t => ({ id: t.id as string, label: t.label, icon: t.icon })),
-    ...(extraTabs ?? []).map(t => ({ id: t.id, label: t.label, icon: t.icon })),
+    ...(extraTabs ?? []).filter(t => !hidden.has(t.id)).map(t => ({ id: t.id, label: t.label, icon: t.icon })),
   ];
+
+  const [tab, setTab] = useState<string>(initialTab ?? allTabs[0]?.id ?? 'overview');
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
+    () => new Set((tabGroups ?? []).filter(g => g.collapsed).map(g => g.label)),
+  );
 
   if (import.meta.env.DEV) {
     const ids = allTabs.map(t => t.id);
@@ -286,7 +291,7 @@ export default function FrameworkPanel({ config, initialTab, extraTabs, tabGroup
 }
 
 // ─── Overview Tab ──────────────────────────────────────────────────────────
-function OverviewTab({ config }: { config: FwConfig }) {
+export function OverviewTab({ config }: { config: FwConfig }) {
   const live = useQuery<Record<string, number | null>>({
     queryKey: [config.overviewApi],
     queryFn: () => safeFetch(config.overviewApi),

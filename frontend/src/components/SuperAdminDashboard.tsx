@@ -84,7 +84,7 @@ const CompetencyQuestionMapPanel = lazy(() => import('./superadmin/CompetencyQue
 import CompetencyAdminPage from '../pages/CompetencyAdminPage';
 const ActiveAgeBandsReflection = lazy(() => import('./superadmin/ActiveAgeBandsReflection'));
 import AssessmentModulesManagement from './AssessmentModulesManagement';
-import FrameworkPanel from '@/components/admin/FrameworkPanel';
+import FrameworkPanel, { OverviewTab } from '@/components/admin/FrameworkPanel';
 import AdminTabbedShell from '@/components/admin/AdminTabbedShell';
 import { LBI_CONFIG, COMPETENCY_CONFIG, SDI_CONFIG } from '@/components/admin/framework-configs';
 import { useQuery } from '@tanstack/react-query';
@@ -832,8 +832,15 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                 <div className="p-6">
                   <FrameworkPanel
                     config={COMPETENCY_CONFIG}
+                    hiddenTabs={['overview']}
+                    initialTab="cmp-command-center"
                     extraTabs={[
-                      { id: 'cmp-command-center',     label: 'Command Center',     icon: Target,     node: <ProductCommandCenter productKey="competency" /> },
+                      { id: 'cmp-command-center',     label: 'Command Center',     icon: Target,     node: (
+                        <div className="space-y-4">
+                          <OverviewTab config={COMPETENCY_CONFIG} />
+                          <ProductCommandCenter productKey="competency" />
+                        </div>
+                      ) },
                       { id: 'cmp-intelligence',       label: 'Intelligence',       icon: Brain,      node: <CompetencyIntelligenceAdminPanel /> },
                       ...(cfiEnabled ? [{ id: 'cmp-framework-intel', label: 'Framework Intelligence', icon: Network, node: <CompetencyFrameworkIntelligencePanel /> }] : []),
                       ...(cfiEnabled ? [{ id: 'cmp-master', label: 'Competency Master', icon: Boxes, node: <CompetencyMasterPanel /> }] : []),
@@ -875,7 +882,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                     tabGroups={[
                       {
                         label: 'Core Assessment',
-                        ids: ['overview', 'cmp-command-center', 'cmp-intelligence', 'cmp-framework-intel', 'cmp-search-discovery', 'cmp-questions', 'cmp-question-map', 'cmp-questionbank', 'cmp-custom-modules', 'cmp-assessment-mapping', 'cmp-scoring'],
+                        ids: ['cmp-command-center', 'cmp-intelligence', 'cmp-framework-intel', 'cmp-search-discovery', 'cmp-questions', 'cmp-question-map', 'cmp-questionbank', 'cmp-custom-modules', 'cmp-assessment-mapping', 'cmp-scoring'],
                       },
                       {
                         label: 'Framework Structure',

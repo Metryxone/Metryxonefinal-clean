@@ -289,7 +289,47 @@ each sub-phase tables ──get*Summary()──▶ per-phase admin report (cover
 | 1.4 Micro | `CompetencyMicroFrameworkPanel` | `/micro-framework`, `/micro-mapping` | `/micro-framework/summary` + CRUD | `seed-micro-competency.ts` |
 | 1.5 Role Profile | `RoleCompetencyProfilePanel` | `/role-profiles`, `/role-matrix`, `/role-readiness/:roleId` | `/role-profiles/summary` + CRUD | `seed-role-competency-profile.ts` |
 | 1.6 Assessment Foundation | `AssessmentFoundationMappingPanel` | `/blueprints`, `/role-assessments`, `/competency-questions` | `/assessment-foundation/summary` + CRUD | `seed-assessment-foundation-mapping.ts` |
-| 1.7 Search | (search in CFI panels) | search/facets functions | `bulkOperation` | (none — reads other modules) |
+| 1.7 Search | `CompetencySearchPanel` | `/search`, `/search/summary`, `/search/facets`, `/search/micro-competencies` | `/search/bulk` | (none — reads other modules) |
+
+---
+
+## Module file paths (frontend · super-admin · users)
+
+**How the layers map:** every Phase 1.x module is implemented in **one backend route file** (`backend/routes/competency-intelligence.ts`) plus a **per-module service**, and is operated from a **dedicated super-admin panel**. These modules are **super-admin / back-office curation tools** — they have **no direct end-user page**. The genome they curate is consumed *indirectly* by the user-facing competency experience, which calls the separate `/api/competency/*` runtime endpoints (not the `/api/competency-intelligence/*` endpoints documented here).
+
+### Backend paths
+
+| Module | Route file | Service file |
+|---|---|---|
+| Foundation | `backend/routes/competency-intelligence.ts` | `backend/services/competency-framework-intelligence.ts` |
+| 1.1 Type | `backend/routes/competency-intelligence.ts` | `backend/services/competency-type-classification.ts` |
+| 1.2 Master | `backend/routes/competency-intelligence.ts` | `backend/services/competency-master.ts` |
+| 1.4 Micro | `backend/routes/competency-intelligence.ts` | `backend/services/micro-competency.ts` |
+| 1.5 Role Profile | `backend/routes/competency-intelligence.ts` | `backend/services/role-competency-profile.ts` |
+| 1.6 Assessment Foundation | `backend/routes/competency-intelligence.ts` | `backend/services/assessment-foundation-mapping.ts` |
+| 1.7 Search | `backend/routes/competency-intelligence.ts` | `backend/services/competency-search.ts` |
+
+### Super-admin frontend paths
+All panels live under `frontend/src/components/superadmin/` and are lazy-registered (and flag-gated by `cfiEnabled`) in `frontend/src/components/SuperAdminDashboard.tsx`. The **tab id** is how you deep-link to the panel within the dashboard.
+
+| Module | Panel file (`frontend/src/components/superadmin/`) | Dashboard tab id |
+|---|---|---|
+| Foundation | `CompetencyFrameworkIntelligencePanel.tsx` | `cmp-framework-intel` |
+| 1.1 Type | *(no dedicated panel — surfaced inside the Framework Intelligence / Master panels)* | — |
+| 1.2 Master | `CompetencyMasterPanel.tsx` | `cmp-master` |
+| 1.4 Micro | `CompetencyMicroFrameworkPanel.tsx` | `cmp-micro-framework` |
+| 1.5 Role Profile | `RoleCompetencyProfilePanel.tsx` | `cmp-role-profile` |
+| 1.6 Assessment Foundation | `AssessmentFoundationMappingPanel.tsx` | `cmp-assessment-mapping` |
+| 1.7 Search | `CompetencySearchPanel.tsx` | `cmp-search-discovery` |
+
+### User-facing paths (indirect consumers of the curated genome)
+There is **no per-module user page** for Phase 1.x. The competency genome these modules curate is read by the end-user competency experience through `/api/competency/*` runtime endpoints in:
+- `frontend/src/pages/CareerBuilderPage.tsx` — main career workspace.
+- `frontend/src/components/CompetencyDashboard.tsx` — user competency dashboard.
+- `frontend/src/pages/IntelligenceFrameworksPage.tsx` — frameworks overview.
+- `frontend/src/pages/competency/*.tsx` — `GapAnalysisPage`, `GrowthSimulationPage`, `LearningPathsPage`, `RoleTransitionPage`, `IndustryBenchmarksPage`, `HiringPredictionPage`, `CareerStagePage`.
+
+> Honesty note: these pages consume the **runtime** competency API (`/api/competency/*`), so they reflect the genome curated by the Phase 1.x modules but are not the modules themselves. The Phase 1.x admin endpoints (`/api/competency-intelligence/*`) are called **only** by the super-admin panels above.
 
 ---
 

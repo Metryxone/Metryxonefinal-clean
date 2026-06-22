@@ -124,7 +124,7 @@ export default function BenchmarkDashboardPage({ onNavigate }: Props) {
   useEffect(() => {
     (async () => {
       try {
-        const r = await fetch('/api/ontology/roles').then(x => x.json());
+        const r = await fetch('/api/ontology/curated/roles').then(x => x.json());
         const l = await fetch('/api/ontology/layers').then(x => x.json());
         setRoles(r.data || []);
         setLayers(l.data || []);

@@ -398,7 +398,7 @@ function WorkforcePane() {
     (async () => {
       try {
         setLoad(true); setError(null);
-        const r = await getJSON<RoleRow[]>('/api/ontology/roles');
+        const r = await getJSON<RoleRow[]>('/api/ontology/curated/roles');
         if (!cancelled) setRows(r);
       } catch (e: any) { if (!cancelled) setError(e.message); }
       finally { if (!cancelled) setLoad(false); }
@@ -483,7 +483,7 @@ function RoleDNAPane() {
   useEffect(() => {
     (async () => {
       try {
-        const r = await getJSON<RoleRow[]>('/api/ontology/roles');
+        const r = await getJSON<RoleRow[]>('/api/ontology/curated/roles');
         setRoles(r);
         if (r.length && !roleId) setRoleId(r[0].id);
       } catch (e: any) { setError(e.message); }
@@ -498,7 +498,7 @@ function RoleDNAPane() {
     setDna(null); setError(null);
     (async () => {
       try {
-        const d = await getJSON<RoleDNA>(`/api/ontology/roles/${roleId}/dna`);
+        const d = await getJSON<RoleDNA>(`/api/ontology/curated/roles/${roleId}/dna`);
         if (!cancelled) setDna(d);
       } catch (e: any) { if (!cancelled) setError(e.message); }
     })();

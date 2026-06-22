@@ -86,7 +86,7 @@ export async function loadRoleOptions(authHeader: AuthHeader): Promise<RoleOptio
     // Enrich with ontology data — when an ontology row matches a catalog title
     // we copy its `id` into the catalog entry (so /api/mobility/adjacent can be
     // called for that role). Ontology-only titles are appended.
-    const json = await safeJson<any>('/api/ontology/roles', authHeader, null);
+    const json = await safeJson<any>('/api/ontology/curated/roles', authHeader, null);
     const rows: any[] = Array.isArray(json) ? json
                       : Array.isArray(json?.data) ? json.data
                       : Array.isArray(json?.roles) ? json.roles
@@ -127,7 +127,7 @@ export async function loadRoleOptions(authHeader: AuthHeader): Promise<RoleOptio
 export async function loadIndustryOptions(authHeader: AuthHeader): Promise<IndustryOption[]> {
   return memo('industries', async () => {
     const base: IndustryOption[] = ALL_INDUSTRIES.map(n => ({ id: n, name: n, source: 'catalog' as const }));
-    const json = await safeJson<any>('/api/ontology/industries', authHeader, null);
+    const json = await safeJson<any>('/api/ontology/curated/industries', authHeader, null);
     const rows: any[] = Array.isArray(json) ? json
                       : Array.isArray(json?.data) ? json.data
                       : Array.isArray(json?.industries) ? json.industries

@@ -57,17 +57,21 @@ export function registerCompetencyOntologyRoutes(opts: { app: Express; pool: Poo
   app.get('/api/ontology/proficiency-levels', wrap(async () => svc.listProficiencyLevels()));
   app.get('/api/ontology/layers',             wrap(async () => svc.listLayers()));
 
-  // ---- Workforce taxonomy ------------------------------------------------
-  app.get('/api/ontology/industries',     wrap(async () => svc.listIndustries()));
-  app.get('/api/ontology/functions',      wrap(async (req) => svc.listFunctions(req.query.industry_id as string | undefined)));
-  app.get('/api/ontology/subfunctions',   wrap(async (req) => svc.listSubfunctions(req.query.function_id as string | undefined)));
-  app.get('/api/ontology/role-families',  wrap(async (req) => svc.listRoleFamilies(req.query.subfunction_id as string | undefined)));
-  app.get('/api/ontology/roles',          wrap(async (req) => svc.listRoles({
+  // ---- Workforce taxonomy (curated onto_* read API) ----------------------
+  // NOTE: namespaced under /curated so the bare /api/ontology/{entity} paths
+  // belong to the ont_* taxonomy CRUD (routes/ontology-taxonomy.ts) that the
+  // SuperAdmin management panels read/write. These curated reads serve the
+  // OntologyExplorer / Benchmark / assessment-options consumers (onto_* genome).
+  app.get('/api/ontology/curated/industries',     wrap(async () => svc.listIndustries()));
+  app.get('/api/ontology/curated/functions',      wrap(async (req) => svc.listFunctions(req.query.industry_id as string | undefined)));
+  app.get('/api/ontology/curated/subfunctions',   wrap(async (req) => svc.listSubfunctions(req.query.function_id as string | undefined)));
+  app.get('/api/ontology/curated/role-families',  wrap(async (req) => svc.listRoleFamilies(req.query.subfunction_id as string | undefined)));
+  app.get('/api/ontology/curated/roles',          wrap(async (req) => svc.listRoles({
     roleFamilyId: req.query.role_family_id as string | undefined,
     layerId:      req.query.layer_id       as string | undefined,
     industryId:   req.query.industry_id    as string | undefined,
   })));
-  app.get('/api/ontology/roles/:id/dna',  wrap(async (req, res) => {
+  app.get('/api/ontology/curated/roles/:id/dna',  wrap(async (req, res) => {
     const d = await svc.getRoleDNA(String(req.params.id));
     if (!d) { res.status(404).json({ ok: false, error: 'not_found' }); return; }
     return d;

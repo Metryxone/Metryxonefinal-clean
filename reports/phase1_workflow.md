@@ -312,6 +312,11 @@ each sub-phase tables ──get*Summary()──▶ per-phase admin report (cover
 ### Super-admin frontend paths
 All panels live under `frontend/src/components/superadmin/` and are lazy-registered (and flag-gated by `cfiEnabled`) in `frontend/src/components/SuperAdminDashboard.tsx`. The **tab id** is how you deep-link to the panel within the dashboard.
 
+**How to navigate there (step by step):**
+1. Open the app and go to the Super Admin login (SPA screen `super-admin`).
+2. Sign in as `support@metryxone.com` / `admin123` → complete the emailed 2FA code (in dev, read it from the `mfa_codes` table) → you land on SPA screen `admin-dashboard` (`frontend/src/components/SuperAdminDashboard.tsx`).
+3. In the dashboard's left navigation open the **Competency** group; click the module whose **tab id** is listed below. (These tabs only appear when `FF_COMPETENCY_FRAMEWORK_INTELLIGENCE=1` — `cfiEnabled` — is on.)
+
 | Module | Panel file (`frontend/src/components/superadmin/`) | Dashboard tab id |
 |---|---|---|
 | Foundation | `CompetencyFrameworkIntelligencePanel.tsx` | `cmp-framework-intel` |
@@ -323,13 +328,111 @@ All panels live under `frontend/src/components/superadmin/` and are lazy-registe
 | 1.7 Search | `CompetencySearchPanel.tsx` | `cmp-search-discovery` |
 
 ### User-facing paths (indirect consumers of the curated genome)
-There is **no per-module user page** for Phase 1.x. The competency genome these modules curate is read by the end-user competency experience through `/api/competency/*` runtime endpoints in:
-- `frontend/src/pages/CareerBuilderPage.tsx` — main career workspace.
-- `frontend/src/components/CompetencyDashboard.tsx` — user competency dashboard.
-- `frontend/src/pages/IntelligenceFrameworksPage.tsx` — frameworks overview.
-- `frontend/src/pages/competency/*.tsx` — `GapAnalysisPage`, `GrowthSimulationPage`, `LearningPathsPage`, `RoleTransitionPage`, `IndustryBenchmarksPage`, `HiringPredictionPage`, `CareerStagePage`.
+There is **no per-module user page** for Phase 1.x — the modules are super-admin curation tools. The genome they curate is read by the end-user competency experience through the separate `/api/competency/*` runtime API. Each user page is an SPA screen: navigate by setting the screen value (the app routes on `currentScreen` in `frontend/src/App.tsx`), e.g. `career-builder` or `career-builder?tab=assessment`.
+
+| User page | SPA screen (set `currentScreen`) | File |
+|---|---|---|
+| Career workspace | `career-builder` | `frontend/src/pages/CareerBuilderPage.tsx` |
+| Competency intelligence home | `competency-intelligence` | `frontend/src/pages/CompetencyIntelligencePage.tsx` |
+| Gap analysis | `competency-gap-analysis` | `frontend/src/pages/competency/GapAnalysisPage.tsx` |
+| Industry benchmarks | `competency-benchmarks` | `frontend/src/pages/competency/IndustryBenchmarksPage.tsx` |
+| Career stages | `competency-career-stages` | `frontend/src/pages/competency/CareerStagePage.tsx` |
+| Role transition | `competency-role-transition` | `frontend/src/pages/competency/RoleTransitionPage.tsx` |
+| Hiring prediction | `competency-hiring-prediction` | `frontend/src/pages/competency/HiringPredictionPage.tsx` |
+| Growth simulation | `competency-growth-simulation` | `frontend/src/pages/competency/GrowthSimulationPage.tsx` |
+| Learning paths | `competency-learning-paths` | `frontend/src/pages/competency/LearningPathsPage.tsx` |
+| Frameworks overview | `intelligence-frameworks` | `frontend/src/pages/IntelligenceFrameworksPage.tsx` |
+| Competency dashboard (component) | rendered within the above | `frontend/src/components/CompetencyDashboard.tsx` |
 
 > Honesty note: these pages consume the **runtime** competency API (`/api/competency/*`), so they reflect the genome curated by the Phase 1.x modules but are not the modules themselves. The Phase 1.x admin endpoints (`/api/competency-intelligence/*`) are called **only** by the super-admin panels above.
+
+---
+
+## Data Import Options (how data gets into each module)
+
+There are **five** ways data enters the Phase 1.x modules. Not every module supports every method — the matrix at the end states exactly which apply. **Nothing here ever fabricates data**: seeds are idempotent and additive, imports are `ON CONFLICT` upserts, and empty tables stay empty (and are reported honestly) until you import.
+
+### Option 1 — Seed scripts (primary; per module)
+Run from the repo root: `cd backend && npx tsx scripts/<seed>.ts`. Seeds are **idempotent** (safe to re-run) and **additive** (never duplicate or overwrite the genome). A workflow/route restart is **not** needed after a seed (only after adding a new route). Re-run the matching admin **summary/report** afterwards to confirm the rows landed.
+
+| Module | Seed command | What it imports / derives | Source of truth |
+|---|---|---|---|
+| 1.1 Type | `npx tsx scripts/seed-competency-types.ts` | A type (1 of 5) for each of the 299 competencies | deterministic family/lexicon rules over the genome |
+| 1.2 Master | `npx tsx scripts/seed-competency-master.ts` (+ `seed-master-fixups.ts`) | Status + 6 eligibility flags per competency | curated defaults; fixups patch known rows |
+| 1.4 Micro | `npx tsx scripts/seed-micro-competency.ts` | Parent→child micro relationships | curated micro map |
+| 1.5 Role Profile | `npx tsx scripts/seed-role-competency-profile.ts` | Per-role competency requirements (level/weight/criticality) | curated role profiles |
+| 1.6 Assessment Foundation | `npx tsx scripts/seed-assessment-foundation-mapping.ts` | Blueprints (derived from 1.5), role→assessment, competency→question links | projected from Phase 1.5 + the question bank |
+| (questions) | `npx tsx scripts/seed-competency-templates.ts` | Competency question templates (so 1.6 has questions to link) | curated templates |
+| 1.7 Search | *(none — reads the other modules)* | — | — |
+
+> If a seed's prerequisite is empty, the seed honestly does nothing for that part (e.g. 1.6's competency→question links stay empty until questions exist in `competency_question_templates`). That is by design — it is never seeded with placeholder questions.
+
+### Option 2 — Foundation genome import (SQL migration + O*NET)
+The 299-competency genome itself is **not** runtime-seeded; it is curated via SQL migration (the `onto_*` library, applied by the post-merge migration runner). To expand the role/skill library from the public-domain **O*NET** dataset (populates the `ont_*` namespace, disjoint from the curated `onto_*` starter rows):
+```
+cd backend && npx tsx scripts/onet-import-run.ts            # downloads + imports
+cd backend && npx tsx scripts/onet-import-run.ts --no-download   # use cached files only
+cd backend && IMPORTANCE_THRESHOLD=2.5 npx tsx scripts/onet-import-run.ts  # tune cutoff
+```
+This importer is idempotent (`ON CONFLICT DO UPDATE/NOTHING`) and additive. In dev the `ont_*` tables are intentionally empty; run this in production to populate the full O*NET-derived library.
+
+### Option 3 — Bulk file upload (Upload Service · XLSX/CSV)
+The separate **Upload Service** (FastAPI app `backend-main/`, port **8000**, its own workflow, shares the same database) is the bulk file-import path for the **question bank** that the assessment surface (1.6) links against.
+- **UI:** `GET http://localhost:8000/admin/upload` (renders an upload form, `app/templates/upload.html`).
+- **API:** `POST http://localhost:8000/admin/upload` with `multipart/form-data` — a `file` (XLSX/CSV) plus `upload_type`.
+- **`upload_type` values:** `question_bank`, `question_options`, `task_variants`.
+- **Columns are normalised** (case/space/`-`/`/` insensitive) with built-in aliases, e.g. `QuestionCode→question_code`, `QuestionText→question_text`, `QuestionType→question_type`, `OptionScore→option_score`, `IsCorrect→is_correct`, `AgeBand→age_band`. Rows are validated per type, blanks become `NULL`, and inserts are **idempotent upserts**.
+- **First-time setup:** `POST http://localhost:8000/admin/bootstrap` creates the uploader's own tables.
+
+> Honesty note: the Upload Service writes the uploader's question-bank tables. Once real questions exist in `competency_question_templates`, re-run the 1.6 seed (`seed-assessment-foundation-mapping.ts`) to derive the competency→question links. The CFI super-admin panels themselves do **not** accept file uploads — they are form-based (single-row) editors.
+
+### Option 4 — Manual entry via the super-admin panels / CRUD API
+For one-off additions and corrections, use the panel forms (or call the admin endpoints directly). All validate that referenced roles/competencies/questions already exist and never create a competency out of thin air:
+
+| Module | Manual create/edit | Endpoint(s) |
+|---|---|---|
+| 1.2 Master | edit status + 6 flags | `PATCH /api/admin/competency-intelligence/master/:id` |
+| 1.4 Micro | add / toggle / reorder / delete relationships | `POST` · `PATCH /:id` · `DELETE /:id` (micro-framework) |
+| 1.5 Role Profile | add / edit / delete role requirements | `POST` · `PATCH /:id` · `DELETE /:id` (role-profiles) |
+| 1.6 Assessment Foundation | manage blueprints / blueprint-competencies / role-assessments / competency-questions | their respective `POST`/`PATCH`/`DELETE` |
+
+### Option 5 — Bulk update (not import) — Search & Discovery
+1.7's `POST /api/admin/competency-intelligence/search/bulk` applies an admin action across a **filtered result set** of existing competencies (e.g. bulk status changes). It edits existing rows; it does not import new ones.
+
+### Import-support matrix
+
+| Module | Seed | SQL/O*NET genome | Bulk file upload | Manual CRUD | Bulk update |
+|---|---|---|---|---|---|
+| Foundation | — | ✅ | — | — | — |
+| 1.1 Type | ✅ | — | — | — (seed-driven) | via 1.7 |
+| 1.2 Master | ✅ | — | — | ✅ | ✅ (1.7) |
+| 1.4 Micro | ✅ | — | — | ✅ | — |
+| 1.5 Role Profile | ✅ | — | — | ✅ | — |
+| 1.6 Assessment Foundation | ✅ | — | ✅ (question bank, via Upload Service) | ✅ | — |
+| 1.7 Search | — | — | — | — | ✅ (acts on others) |
+
+---
+
+## User-manual: managing a module step by step
+
+The generic loop is the same for every CRUD module (1.2 / 1.4 / 1.5 / 1.6). Foundation and 1.1 are read-only/seed-driven; 1.7 is search + bulk.
+
+**Generic workflow (CRUD modules):**
+1. **Open the panel** — log in as super admin → `admin-dashboard` → open the module's tab (id in the table above).
+2. **Review current state** — the panel loads the live rows and the module's **summary report** (coverage + honest findings). Empty? It tells you which seed to run.
+3. **Import in bulk** — run the module's seed (Option 1), or for 1.6 questions use the Upload Service (Option 3). Click **Refresh** in the panel to reload.
+4. **Adjust manually** — use the form to add a row, or the inline controls to edit/toggle/delete (Option 4). Validation blocks references to non-existent roles/competencies.
+5. **Verify** — re-read the summary report; confirm coverage rose and no new honest-gap findings appear (e.g. 1.6 warns if blueprint weights don't sum to 100 — fix at the source, it is never auto-normalised).
+6. **Roll-up check** — open the Framework Intelligence panel (`cmp-framework-intel`) → the **readiness** report should now show the module's table as `consumable` rather than `empty_pending_import`.
+
+**Per-module specifics:**
+- **Foundation (`cmp-framework-intel`)** — read-only. Use it to monitor the readiness roll-up across all sub-phases; change genome content via migration only.
+- **1.1 Type** — no per-row editor; re-run `seed-competency-types.ts` after rule/genome changes, then review `needs_review` in the classification report.
+- **1.2 Master (`cmp-master`)** — flip the 6 eligibility flags / status per competency to control which downstream products may consume it; `source` flips to `curated` when you edit.
+- **1.4 Micro (`cmp-micro-framework`)** — build the parent→child tree; a child can be a linked existing competency or a named-only micro (honestly flagged).
+- **1.5 Role Profile (`cmp-role-profile`)** — set each role's required level/weight/criticality; the matrix and weighted role-readiness recompute from these.
+- **1.6 Assessment Foundation (`cmp-assessment-mapping`)** — derive blueprints from 1.5, map roles→assessments and competencies→questions; watch the weight-integrity finding.
+- **1.7 Search (`cmp-search-discovery`)** — faceted search across all layers; use bulk operations to apply one change to a filtered set.
 
 ---
 

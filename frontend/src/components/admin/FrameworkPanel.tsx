@@ -3,7 +3,7 @@
  * (LBI, Professional Competency, SDI). Config-driven so the tab
  * structure, labels and API paths differ but the layout is identical.
  */
-import { useState, useEffect, useRef, type ReactNode } from 'react';
+import { useState, useEffect, useRef, Fragment, type ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -136,34 +136,43 @@ export default function FrameworkPanel({ config, initialTab, extraTabs, tabGroup
         .map(id => allTabs.find(t => t.id === id))
         .filter((t): t is { id: string; label: string; icon: any } => !!t);
       groupTabs.forEach(t => placed.add(t.id));
-      return { label: g.label, tabs: groupTabs };
+      return { label: g.label, tabs: groupTabs, demoted: !!g.collapsed };
     });
     const leftover = allTabs.filter(t => !placed.has(t.id));
-    if (leftover.length) sections.push({ label: 'Other', tabs: leftover });
+    if (leftover.length) sections.push({ label: 'Other', tabs: leftover, demoted: false });
+    const firstDemotedIdx = sections.findIndex(s => s.demoted && s.tabs.length > 0);
 
     groupedBar = (
       <div ref={navRef} className="flex flex-wrap items-center gap-2 border-b pb-2">
-        {sections.map(sec => {
+        {sections.map((sec, sectionIdx) => {
           if (sec.tabs.length === 0) return null;
           const isOpen = openGroup === sec.label;
           const activeInGroup = sec.tabs.find(t => t.id === tab);
+          const demoted = sec.demoted;
+          const showDivider = sectionIdx === firstDemotedIdx && firstDemotedIdx > 0;
           return (
-            <div key={sec.label} className="relative">
-              <button
-                onClick={() => setOpenGroup(o => (o === sec.label ? null : sec.label))}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md border transition-all"
-                style={{
-                  borderColor: activeInGroup ? config.color : '#e5e7eb',
-                  color: activeInGroup ? config.color : '#374151',
-                  backgroundColor: activeInGroup ? `${config.color}12` : '#fff',
-                }}
-              >
-                <span className="font-semibold">{sec.label}</span>
-                {activeInGroup && <span className="opacity-70 max-w-[140px] truncate">· {activeInGroup.label}</span>}
-                <span className="font-normal text-gray-300">({sec.tabs.length})</span>
-                <ChevronDown className={`h-3 w-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-              </button>
-              {isOpen && (
+            <Fragment key={sec.label}>
+              {showDivider && (
+                <span className="flex items-center self-stretch pl-3 ml-1 border-l border-gray-200 text-[10px] font-semibold uppercase tracking-wide text-gray-400">
+                  Reference&nbsp;/&nbsp;Legacy
+                </span>
+              )}
+              <div className="relative">
+                <button
+                  onClick={() => setOpenGroup(o => (o === sec.label ? null : sec.label))}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md border transition-all ${demoted ? 'border-dashed' : ''}`}
+                  style={{
+                    borderColor: activeInGroup ? config.color : (demoted ? '#d1d5db' : '#e5e7eb'),
+                    color: activeInGroup ? config.color : (demoted ? '#9ca3af' : '#374151'),
+                    backgroundColor: activeInGroup ? `${config.color}12` : (demoted ? '#fafafa' : '#fff'),
+                  }}
+                >
+                  <span className={demoted && !activeInGroup ? 'font-medium' : 'font-semibold'}>{sec.label}</span>
+                  {activeInGroup && <span className="opacity-70 max-w-[140px] truncate">· {activeInGroup.label}</span>}
+                  <span className="font-normal text-gray-300">({sec.tabs.length})</span>
+                  <ChevronDown className={`h-3 w-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {isOpen && (
                 <div className="absolute z-30 mt-1 left-0 min-w-[220px] max-h-[60vh] overflow-auto rounded-lg border border-gray-200 bg-white shadow-lg py-1">
                   {sec.tabs.map(t => {
                     const Icon = t.icon;
@@ -182,7 +191,8 @@ export default function FrameworkPanel({ config, initialTab, extraTabs, tabGroup
                   })}
                 </div>
               )}
-            </div>
+              </div>
+            </Fragment>
           );
         })}
       </div>

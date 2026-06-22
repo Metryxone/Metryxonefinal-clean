@@ -3,7 +3,7 @@
  * (LBI, Professional Competency, SDI). Config-driven so the tab
  * structure, labels and API paths differ but the layout is identical.
  */
-import { useState, type ReactNode } from 'react';
+import { useState, useEffect, useRef, type ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -13,7 +13,7 @@ import {
   Sparkles, Layers, Target, FileSpreadsheet, GitBranch,
   BarChart3, Sliders, History, Search, AlertCircle,
   Calculator, FileText, HeartHandshake, ClipboardList, HelpCircle,
-  Network, ChevronRight, ChevronDown,
+  Network, ChevronDown,
 } from 'lucide-react';
 import {
   ClustersTab, NormsTab, WeightsTab, VersionsTab,
@@ -83,9 +83,21 @@ export default function FrameworkPanel({ config, initialTab, extraTabs, tabGroup
   ];
 
   const [tab, setTab] = useState<string>(initialTab ?? allTabs[0]?.id ?? 'overview');
-  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
-    () => new Set((tabGroups ?? []).filter(g => g.collapsed).map(g => g.label)),
-  );
+  const [openGroup, setOpenGroup] = useState<string | null>(null);
+  const navRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!openGroup) return;
+    const onDoc = (e: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) setOpenGroup(null);
+    };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpenGroup(null); };
+    document.addEventListener('mousedown', onDoc);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDoc);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [openGroup]);
 
   if (import.meta.env.DEV) {
     const ids = allTabs.map(t => t.id);
@@ -130,27 +142,44 @@ export default function FrameworkPanel({ config, initialTab, extraTabs, tabGroup
     if (leftover.length) sections.push({ label: 'Other', tabs: leftover });
 
     groupedBar = (
-      <div className="space-y-2 border-b pb-2">
+      <div ref={navRef} className="flex flex-wrap items-center gap-2 border-b pb-2">
         {sections.map(sec => {
           if (sec.tabs.length === 0) return null;
-          const isCollapsed = collapsedGroups.has(sec.label);
+          const isOpen = openGroup === sec.label;
+          const activeInGroup = sec.tabs.find(t => t.id === tab);
           return (
-            <div key={sec.label}>
+            <div key={sec.label} className="relative">
               <button
-                onClick={() => setCollapsedGroups(prev => {
-                  const next = new Set(prev);
-                  if (next.has(sec.label)) next.delete(sec.label); else next.add(sec.label);
-                  return next;
-                })}
-                className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-gray-400 hover:text-gray-600 transition-colors mb-1"
+                onClick={() => setOpenGroup(o => (o === sec.label ? null : sec.label))}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md border transition-all"
+                style={{
+                  borderColor: activeInGroup ? config.color : '#e5e7eb',
+                  color: activeInGroup ? config.color : '#374151',
+                  backgroundColor: activeInGroup ? `${config.color}12` : '#fff',
+                }}
               >
-                {isCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
-                {sec.label}
-                <span className="font-normal normal-case text-gray-300">({sec.tabs.length})</span>
+                <span className="font-semibold">{sec.label}</span>
+                {activeInGroup && <span className="opacity-70 max-w-[140px] truncate">· {activeInGroup.label}</span>}
+                <span className="font-normal text-gray-300">({sec.tabs.length})</span>
+                <ChevronDown className={`h-3 w-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
               </button>
-              {!isCollapsed && (
-                <div className="flex flex-wrap gap-1">
-                  {sec.tabs.map(renderTabButton)}
+              {isOpen && (
+                <div className="absolute z-30 mt-1 left-0 min-w-[220px] max-h-[60vh] overflow-auto rounded-lg border border-gray-200 bg-white shadow-lg py-1">
+                  {sec.tabs.map(t => {
+                    const Icon = t.icon;
+                    const active = tab === t.id;
+                    return (
+                      <button
+                        key={t.id}
+                        onClick={() => { setTab(t.id); setOpenGroup(null); }}
+                        className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-left hover:bg-gray-50 transition-colors"
+                        style={{ color: active ? config.color : '#374151', backgroundColor: active ? `${config.color}0d` : undefined }}
+                      >
+                        <Icon className="h-3.5 w-3.5 flex-shrink-0" />
+                        <span className="truncate">{t.label}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>

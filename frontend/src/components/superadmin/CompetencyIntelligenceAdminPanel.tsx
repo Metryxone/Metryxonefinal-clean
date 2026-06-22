@@ -8,7 +8,7 @@ export default function CompetencyIntelligenceAdminPanel() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [tab, setTab] = useState<AdminTab>('overview');
-  const [showGuide, setShowGuide] = useState(true);
+  const [showGuide, setShowGuide] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true); setError('');
@@ -31,7 +31,7 @@ export default function CompetencyIntelligenceAdminPanel() {
   ];
 
   return (
-    <div className="p-6 space-y-6 max-w-5xl mx-auto">
+    <div className="p-6 space-y-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-gray-800">Competency Intelligence (D9 Admin)</h2>
@@ -117,6 +117,8 @@ export default function CompetencyIntelligenceAdminPanel() {
             ))}
           </div>
 
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div className="lg:col-span-5 space-y-6">
           {/* Domain summary */}
           {data.domain_summary?.length > 0 && (
             <div className="bg-white border border-gray-200 rounded-lg p-4">
@@ -138,7 +140,9 @@ export default function CompetencyIntelligenceAdminPanel() {
               </div>
             </div>
           )}
+            </div>
 
+            <div className="lg:col-span-7 space-y-4">
           {/* Tabs */}
           <div className="flex gap-1 border-b border-gray-200">
             {TABS.map(t => (
@@ -235,6 +239,8 @@ export default function CompetencyIntelligenceAdminPanel() {
               </div>
             </div>
           )}
+            </div>
+          </div>
         </>
       )}
 

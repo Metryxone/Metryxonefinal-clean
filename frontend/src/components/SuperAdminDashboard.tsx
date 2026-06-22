@@ -842,7 +842,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                         </div>
                       ) },
                       { id: 'cmp-intelligence',       label: 'Intelligence',       icon: Brain,      node: <CompetencyIntelligenceAdminPanel /> },
-                      ...(cfiEnabled ? [{ id: 'cmp-framework-intel', label: 'Framework Intelligence', icon: Network, node: <CompetencyFrameworkIntelligencePanel /> }] : []),
+                      ...(cfiEnabled ? [{ id: 'cmp-framework-intel', label: 'Framework Intelligence', icon: Network, node: <CompetencyFrameworkIntelligencePanel onNavigateToImportExport={() => setActiveTab('ont-import-export')} /> }] : []),
                       ...(cfiEnabled ? [{ id: 'cmp-master', label: 'Competency Master', icon: Boxes, node: <CompetencyMasterPanel /> }] : []),
                       ...(cfiEnabled ? [{ id: 'cmp-micro-framework', label: 'Micro Framework', icon: Network, node: <CompetencyMicroFrameworkPanel /> }] : []),
                       ...(cfiEnabled ? [{ id: 'cmp-role-profile', label: 'Role Competency Profile', icon: Briefcase, node: <RoleCompetencyProfilePanel /> }] : []),

@@ -148,7 +148,7 @@ function AssetRowsTable({ assetKey, table }: { assetKey: string; table: string }
   );
 }
 
-export default function CompetencyFrameworkIntelligencePanel() {
+export default function CompetencyFrameworkIntelligencePanel({ onNavigateToImportExport }: { onNavigateToImportExport?: () => void } = {}) {
   const [openAsset, setOpenAsset] = useState<string | null>(null);
   const qc = useQueryClient();
   const q = useQuery({
@@ -261,7 +261,7 @@ export default function CompetencyFrameworkIntelligencePanel() {
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-base flex items-center gap-2"><Layers className="h-4 w-4 text-[#344E86]" /> Asset Readiness</CardTitle>
-          <CardDescription>Per-asset Coverage (row count) and Confidence (provenance/trust) — two separate axes. Rows pending import show an Upload link that opens the platform's Bulk Upload tool.</CardDescription>
+          <CardDescription>Per-asset Coverage (row count) and Confidence (provenance/trust) — two separate axes. Use View to inspect an asset's backing rows inline; rows pending import link to the Import / Export panel.</CardDescription>
         </CardHeader>
         <CardContent className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -299,16 +299,15 @@ export default function CompetencyFrameworkIntelligencePanel() {
                         {openAsset === a.key ? 'Hide' : 'View'}
                         <ChevronDown className={`h-3.5 w-3.5 transition-transform ${openAsset === a.key ? 'rotate-180' : ''}`} />
                       </button>
-                      {a.status === 'empty_pending_import' && (
-                        <a
-                          href={`/api/admin/competency-intelligence/upload?asset=${encodeURIComponent(a.key)}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          title="Open the Bulk Upload tool to import data for this asset"
+                      {a.status === 'empty_pending_import' && onNavigateToImportExport && (
+                        <button
+                          type="button"
+                          onClick={onNavigateToImportExport}
+                          title="Open the Import / Export panel to load data for this asset"
                           className="inline-flex items-center gap-1 text-xs font-medium text-[#344E86] hover:text-[#243a66] hover:underline"
                         >
-                          <Upload className="h-3.5 w-3.5" /> Upload
-                        </a>
+                          <Upload className="h-3.5 w-3.5" /> Import / Export
+                        </button>
                       )}
                     </div>
                   </td>

@@ -984,3 +984,9 @@ id = "NBBAdbOcbaomEXSYPkkRu"
 uri = "file://reports/phase1_workflow.md"
 type = "text"
 title = "MetryxOne Platform Manual — Phase 1 → 6.15 (Developer · Admin · End-User Guide)"
+
+[[outputs]]
+id = "rgwluyAovdXJgascrdkCQ"
+uri = "file://reports/phase1_workflow.pdf"
+type = "pdf"
+title = "MetryxOne Platform Manual — Phase 1 → 6.15 (PDF, 21 pages)"

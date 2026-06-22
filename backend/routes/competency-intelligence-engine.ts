@@ -92,6 +92,17 @@ const DOMAIN_NAMES: Record<string, string> = {
   EIQ: 'Emotional & Social Intelligence',
 };
 
+// Canonical competency-genome domains (onto_domains). The D9 admin overview reads
+// the live scoring ledgers (onto_competency_profiles), whose per-domain entries are
+// keyed by these `dom_*` codes — NOT the legacy COG/COM/... bank codes above.
+const ONTO_DOMAIN_NAMES: Record<string, string> = {
+  dom_cognitive:     'Cognitive Capabilities',
+  dom_behavioral:    'Behavioral Capabilities',
+  dom_interpersonal: 'Interpersonal & Leadership',
+  dom_functional:    'Functional & Execution',
+  dom_strategic:     'Strategic & Organizational',
+};
+
 const STAGE_ANCHOR: Record<string, number> = {
   junior: 55, mid: 65, senior: 75, lead: 80, director: 85,
 };
@@ -856,40 +867,55 @@ export function registerCompetencyIntelligenceRoutes(
   app.get('/api/admin/competency-intelligence/overview', requireAuth, requireSuperAdmin, async (_req: Request, res: Response) => {
     if (!flagGate(res)) return;
     try {
-      const [userCount, scoreStats, trendDist, topGaps, forecastStats] = await Promise.all([
-        // Users with competency data
-        pool.query<{ total_users: string; total_scores: string }>(
-          `SELECT COUNT(DISTINCT user_id) as total_users, COUNT(*) as total_scores FROM cra_scores`
+      // ── Scores read from the CANONICAL scoring ledger ───────────────────────
+      // `onto_competency_profiles` is the live, populated runtime ledger (append-only;
+      // one row per scoring run, keyed by subject_id). Each row's `profile` JSONB is an
+      // array of per-domain entries {label, onto_domain, scaled_score, ...}. We take the
+      // latest profile per subject, then expand to per-domain score rows.
+      // Legacy `cra_scores` is an empty telemetry table nothing populates — do not read it.
+      // Shared CTE: latest profile per subject, expanded to per-domain measured scores.
+      const LEDGER_CTE = `
+        WITH latest AS (
+          SELECT DISTINCT ON (subject_id) subject_id, profile
+          FROM onto_competency_profiles
+          ORDER BY subject_id, created_at DESC
         ),
-        // Per-competency score stats
-        pool.query<{ competency_code: string; avg_score: string; min_score: string; max_score: string; user_count: string }>(
-          `SELECT competency_code,
-                  ROUND(AVG(raw_score)::numeric, 1) as avg_score,
-                  MIN(raw_score) as min_score,
-                  MAX(raw_score) as max_score,
-                  COUNT(DISTINCT user_id) as user_count
-           FROM (SELECT DISTINCT ON (user_id, competency_code) user_id, competency_code, raw_score
-                 FROM cra_scores ORDER BY user_id, competency_code, created_at DESC) latest
+        expanded AS (
+          SELECT l.subject_id,
+                 e->>'onto_domain' AS competency_code,
+                 e->>'label'       AS competency_name,
+                 NULLIF(e->>'scaled_score','')::numeric AS score
+          FROM latest l, jsonb_array_elements(l.profile) e
+          WHERE e ? 'onto_domain'
+        )`;
+
+      const [scoreStats, ledgerTotals, trendDist, forecastStats] = await Promise.all([
+        // Per-domain score stats (avg/min/max + users measured + users below the 65 anchor)
+        pool.query<{ competency_code: string; competency_name: string; avg_score: string; min_score: string; max_score: string; user_count: string; gap_count: string }>(
+          `${LEDGER_CTE}
+           SELECT competency_code,
+                  MAX(competency_name) AS competency_name,
+                  ROUND(AVG(score)::numeric, 1) AS avg_score,
+                  ROUND(MIN(score)::numeric, 1) AS min_score,
+                  ROUND(MAX(score)::numeric, 1) AS max_score,
+                  COUNT(DISTINCT subject_id) AS user_count,
+                  COUNT(DISTINCT subject_id) FILTER (WHERE score < 65) AS gap_count
+           FROM expanded
+           WHERE score IS NOT NULL
            GROUP BY competency_code
            ORDER BY avg_score ASC`
-        ),
+        ).catch(() => ({ rows: [] as any[] })),
+        // Population totals: distinct assessed subjects + total measured domain scores
+        pool.query<{ total_users: string; total_scores: string }>(
+          `${LEDGER_CTE}
+           SELECT COUNT(DISTINCT subject_id) AS total_users, COUNT(*) AS total_scores
+           FROM expanded WHERE score IS NOT NULL`
+        ).catch(() => ({ rows: [{ total_users: '0', total_scores: '0' }] })),
         // Velocity trend distribution from p4_development_velocity
         pool.query<{ trend: string; cnt: string }>(
           `SELECT trend, COUNT(*) as cnt FROM p4_development_velocity
            GROUP BY trend ORDER BY cnt DESC`
-        ).catch(() => ({ rows: [] })),
-        // Top gaps: competencies with lowest avg scores
-        pool.query<{ competency_code: string; avg_score: string; gap_count: string }>(
-          `SELECT competency_code,
-                  ROUND(AVG(raw_score)::numeric, 1) as avg_score,
-                  COUNT(DISTINCT user_id) as gap_count
-           FROM (SELECT DISTINCT ON (user_id, competency_code) user_id, competency_code, raw_score
-                 FROM cra_scores ORDER BY user_id, competency_code, created_at DESC) latest
-           WHERE raw_score < 65
-           GROUP BY competency_code
-           ORDER BY avg_score ASC
-           LIMIT 5`
-        ),
+        ).catch(() => ({ rows: [] as any[] })),
         // Forecast coverage
         pool.query<{ competencies_forecasted: string; users_forecasted: string }>(
           `SELECT COUNT(DISTINCT competency_key) as competencies_forecasted,
@@ -898,43 +924,52 @@ export function registerCompetencyIntelligenceRoutes(
         ).catch(() => ({ rows: [{ competencies_forecasted: '0', users_forecasted: '0' }] })),
       ]);
 
-      // Domain rollup
-      const domainMap = new Map<string, { total_score: number; count: number; name: string }>();
-      for (const row of scoreStats.rows) {
-        const domain = row.competency_code.slice(0, 3);
-        const existing = domainMap.get(domain) ?? { total_score: 0, count: 0, name: DOMAIN_NAMES[domain] ?? domain };
-        existing.total_score += Number(row.avg_score);
-        existing.count += 1;
-        domainMap.set(domain, existing);
-      }
-      const domainSummary = Array.from(domainMap.entries()).map(([code, d]) => ({
-        domain_code: code,
-        domain_name: d.name,
-        avg_score: Math.round((d.total_score / d.count) * 10) / 10,
+      const scoreRows = scoreStats.rows.map(r => ({
+        competency_code: r.competency_code,
+        competency_name: r.competency_name || ONTO_DOMAIN_NAMES[r.competency_code] || r.competency_code,
+        domain_code: r.competency_code,
+        avg_score: Number(r.avg_score),
+        min_score: Number(r.min_score),
+        max_score: Number(r.max_score),
+        user_count: Number(r.user_count),
+        gap_count: Number(r.gap_count),
+      }));
+
+      // KPIs derived from the same canonical ledger
+      const totalUsers = Number(ledgerTotals.rows[0]?.total_users ?? 0);
+      const totalScores = Number(ledgerTotals.rows[0]?.total_scores ?? 0);
+
+      // Domain rollup (per onto domain — competency==domain at profile granularity)
+      const domainSummary = scoreRows.map(r => ({
+        domain_code: r.domain_code,
+        domain_name: ONTO_DOMAIN_NAMES[r.domain_code] || r.competency_name,
+        avg_score: r.avg_score,
       })).sort((a, b) => a.avg_score - b.avg_score);
+
+      // Top gaps: domains with population average below the mid-stage anchor (65);
+      // gap_count = subjects whose own score in that domain is below 65.
+      const topGaps = scoreRows
+        .filter(r => r.avg_score < 65)
+        .sort((a, b) => a.avg_score - b.avg_score)
+        .slice(0, 5)
+        .map(r => ({
+          competency_code: r.competency_code,
+          competency_name: r.competency_name,
+          avg_score: r.avg_score,
+          gap_count: r.gap_count,
+        }));
 
       res.json({
         kpi: {
-          total_users: parseInt(userCount.rows[0]?.total_users ?? '0'),
-          total_scores: parseInt(userCount.rows[0]?.total_scores ?? '0'),
+          total_users: totalUsers,
+          total_scores: totalScores,
           competencies_forecasted: parseInt(forecastStats.rows[0]?.competencies_forecasted ?? '0'),
           users_forecasted: parseInt(forecastStats.rows[0]?.users_forecasted ?? '0'),
         },
-        competency_scores: scoreStats.rows.map(r => ({
-          ...r,
-          competency_name: DOMAIN_META[r.competency_code]?.name ?? r.competency_code,
-          domain_code: r.competency_code.slice(0, 3),
-          avg_score: Number(r.avg_score),
-          user_count: Number(r.user_count),
-        })),
+        competency_scores: scoreRows,
         domain_summary: domainSummary,
         trend_distribution: trendDist.rows.map(r => ({ trend: r.trend, count: Number(r.cnt) })),
-        top_gaps: topGaps.rows.map(r => ({
-          ...r,
-          competency_name: DOMAIN_META[r.competency_code]?.name ?? r.competency_code,
-          avg_score: Number(r.avg_score),
-          gap_count: Number(r.gap_count),
-        })),
+        top_gaps: topGaps,
         generated_at: new Date().toISOString(),
         _version: CI_VERSION,
       });

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { RefreshCw, AlertCircle, TrendingDown, TrendingUp } from 'lucide-react';
+import { RefreshCw, AlertCircle, TrendingDown, TrendingUp, Info, ChevronDown, ChevronRight } from 'lucide-react';
 
 type AdminTab = 'overview' | 'scores' | 'gaps' | 'trends';
 
@@ -8,6 +8,7 @@ export default function CompetencyIntelligenceAdminPanel() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [tab, setTab] = useState<AdminTab>('overview');
+  const [showGuide, setShowGuide] = useState(true);
 
   const load = useCallback(async () => {
     setLoading(true); setError('');
@@ -39,6 +40,58 @@ export default function CompetencyIntelligenceAdminPanel() {
         <button onClick={load} className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-white border border-gray-200 rounded-lg hover:bg-gray-50">
           <RefreshCw className="w-3.5 h-3.5" /> Refresh
         </button>
+      </div>
+
+      {/* About / How to use this page */}
+      <div className="bg-indigo-50/60 border border-indigo-100 rounded-lg">
+        <button
+          onClick={() => setShowGuide(s => !s)}
+          className="w-full flex items-center gap-2 px-4 py-3 text-left text-sm font-semibold text-indigo-800"
+        >
+          <Info className="w-4 h-4 flex-shrink-0" />
+          About this page — what it shows &amp; how to use it
+          <span className="ml-auto text-indigo-500">
+            {showGuide ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+          </span>
+        </button>
+        {showGuide && (
+          <div className="px-4 pb-4 pt-0 text-sm text-gray-600 space-y-3">
+            <p>
+              <strong className="text-gray-800">Introduction.</strong> This dashboard gives a
+              <em> population-level</em> view of competency results across everyone who has completed
+              a competency assessment. It reads the canonical scoring ledger
+              (<span className="font-mono text-xs">onto_competency_profiles</span>) plus the forecast and
+              development-velocity tables — so the numbers here mirror real assessment outcomes, not a
+              separate copy.
+            </p>
+            <div>
+              <strong className="text-gray-800">What each section means</strong>
+              <ul className="list-disc ml-5 mt-1 space-y-1">
+                <li><strong>KPI cards</strong> — how many people were assessed, total domain scores recorded, and how many users / competencies have a forecast.</li>
+                <li><strong>Domain Summary</strong> — average score per capability domain, sorted weakest-first (red &lt;55, amber 55–69, green ≥70).</li>
+                <li><strong>Competency Scores</strong> — per-domain average / min / max and how many users contribute to each.</li>
+                <li><strong>Top Gaps</strong> — domains where the population average is below 65 (the mid-stage anchor) — your priority development areas.</li>
+                <li><strong>Trend Distribution</strong> — how development velocity is moving (accelerating / steady / plateau / decelerating). Needs ≥2 sessions per user over time.</li>
+              </ul>
+            </div>
+            <div>
+              <strong className="text-gray-800">How to use it (steps)</strong>
+              <ol className="list-decimal ml-5 mt-1 space-y-1">
+                <li>Start on <strong>KPIs</strong> to gauge overall coverage — how much real data backs the view.</li>
+                <li>Scan the <strong>Domain Summary</strong> bars for the weakest domains at a glance.</li>
+                <li>Open <strong>Competency Scores</strong> for the exact averages and spread per domain.</li>
+                <li>Open <strong>Top Gaps</strong> to decide where to focus interventions.</li>
+                <li>Check <strong>Trend Distribution</strong> to see whether those gaps are improving over time.</li>
+                <li>Click <strong>Refresh</strong> after new assessments are completed to pull the latest numbers.</li>
+              </ol>
+            </div>
+            <p className="text-xs text-gray-500">
+              Note: forecasts and velocity trends only appear once users have multiple assessment
+              sessions over time. A clearly-labelled demo cohort (<span className="font-mono">demo_ci_*</span>)
+              may be present to illustrate every panel — it is fully separate from real results and purgeable.
+            </p>
+          </div>
+        )}
       </div>
 
       {error && (

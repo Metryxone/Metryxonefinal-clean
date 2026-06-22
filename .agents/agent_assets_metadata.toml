@@ -983,10 +983,16 @@ title = "Phase 1 Competency Assessment — Completeness Analysis"
 id = "NBBAdbOcbaomEXSYPkkRu"
 uri = "file://reports/phase1_workflow.md"
 type = "text"
-title = "MetryxOne Platform Manual — Phase 1 → 6.15 (Developer · Admin · End-User Guide)"
+title = "Full Platform Manual — Phase 1 → 6.15 (Markdown)"
 
 [[outputs]]
 id = "rgwluyAovdXJgascrdkCQ"
 uri = "file://reports/phase1_workflow.pdf"
 type = "pdf"
-title = "MetryxOne Platform Manual — Phase 1 → 6.15 (PDF, 21 pages)"
+title = "Full Platform Manual — Phase 1 → 6.15 (PDF)"
+
+[[outputs]]
+id = "AOoM9p9CVrUWpXRoGU9Sz"
+uri = "file://reports/competency_quality_report.md"
+type = "text"
+title = "Competency Data Quality Review — Phase 1.3 (competency_quality_report.md)"

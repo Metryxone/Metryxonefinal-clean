@@ -1,9 +1,14 @@
-# Competency Assessment — Phase 1 → 1.7 Detailed Workflow & Modules
+# Competency Assessment → Full Platform Manual — Phase 1 → 6.15
+### A developer · admin · end-user guide to the whole MetryxOne build journey
 
-**Track:** Competency Framework Intelligence (Phase 1 series) · **Date:** 21 June 2026
-**Source of truth:** `backend/routes/competency-intelligence.ts` (route markers) + `backend/services/competency-*.ts` (module functions). Flag: `FF_COMPETENCY_FRAMEWORK_INTELLIGENCE` → exposed as `competencyFrameworkIntelligence`.
+**Track:** the competency-to-commercial build journey (Phase 1 = competency framework → Phase 6 = commercial/platform) · **Date:** 22 June 2026
+**Source of truth:** the live code — `backend/routes/*.ts` (route markers) + `backend/services/*.ts` (module functions + file-header phase markers) + the `FF_*` flags actually set in the `Backend API` workflow command. Where a per-subsystem doc holds the exhaustive table list it is named inline (e.g. `docs/EMPLOYABILITY_INDEX.md`).
 
-> **Scope note:** the implemented series is **Phase 1 (foundation) + 1.1, 1.2, 1.4, 1.5, 1.6, 1.7**. **There is no 1.3, and no 1.8–1.15** — those numbers do not exist in code/docs/migrations. This document covers every module that actually exists.
+> **Phase 1 scope note (unchanged):** the implemented Phase 1 series is **Phase 1 (foundation) + 1.1, 1.2, 1.4, 1.5, 1.6, 1.7**. **There is no 1.3, and no 1.8–1.15** — those numbers do not exist in code/docs/migrations.
+
+> **⚠️ Read this about the numbering.** This codebase contains **more than one "Phase 1–6" numbering system**. This manual follows the **competency-to-commercial build journey** — the one the competency assessment actually flows into: **Phase 1** competency framework → **Phase 2** competency runtime → **Phase 3** employability/EI → **Phase 4** career intelligence → **Phase 5** employer/enterprise → **Phase 6** commercial/platform/super-admin (up to 6.15). A *separate, older* numbering lives in `docs/phase-history.md` as **"Track A / Track B"** (there, "Phase 2" means Adaptive Benchmarking, "Phase 3" Mobility, etc.). The two are **not the same**; if you cross-reference `phase-history.md`, keep that in mind.
+
+> **Honesty contract (applies to every phase below).** Two axes are always reported **separately**: **Coverage** = does the data exist, and **Confidence/Activation** = is it trustworthy / has it actually been used live. Nothing is fabricated. Phases 1–4 have **exact file-header phase markers** (e.g. `Phase 2.4 —`) and are documented to sub-phase precision. **Phase 5 and Phase 6 sub-numbering is looser** in the code (modules are named, not always numbered) — so those bands are documented by **module name**, and where a `6.x` number is shown it is the number used in the build logs / follow-up tasks, not always a file-header marker.
 
 ---
 
@@ -78,6 +83,37 @@ A **master list of skills** (Foundation) is **labelled** (1.1), **governed** (1.
 > Everything below is the **detailed reference** — each module's inner workings, functions, tables, routes, and how to manage it. Use the flow above as your map; drop into a section below only when you need the detail.
 
 ---
+
+## How this manual is organised
+
+The whole platform is **one long assembly line**. Each phase takes the output of the phase before it and adds a layer of meaning. Read it top to bottom for the story, or jump to a Part for the detail.
+
+| Part | Phase | In one line | Who it's mostly for |
+|---|---|---|---|
+| **Part 1** | **Phase 1 (+1.1–1.7)** | Build the *framework*: the master skill list, how skills are labelled, which roles need what, and how that becomes an assessment | Admin sets it up; Developer maintains it |
+| **Part 2** | **Phase 2 (2.1–2.4)** | The *runtime*: a real person takes the assessment, answers are scored, a **competency profile** comes out | End user takes it; Developer runs the engine |
+| **Part 3** | **Phase 3 (3.2–3.12)** | *Employability / EI*: turn the competency profile into an **Employability Index**, strengths, signals and recommendations | End user reads it; Admin curates rules |
+| **Part 4** | **Phase 4 (4.2–4.12)** | *Career intelligence*: match to roles, find gaps, build a roadmap, track progress | End user (job-seeker) |
+| **Part 5** | **Phase 5 (employer/enterprise)** | The *employer* side: post jobs, find talent, run hiring & workforce intelligence | Employer / enterprise admin |
+| **Part 6** | **Phase 6 (6.1–6.15)** | *Commercial & platform*: payments, plans, quotas, invoices, tenants, partners, and the super-admin command centres | Customer pays; Super-admin runs the business |
+
+### The journey at a glance (Phase 1 → 6.15)
+```
+PHASE 1  Framework        ─▶  a master skill list becomes a role-based ASSESSMENT BLUEPRINT
+PHASE 2  Runtime          ─▶  a person TAKES it and is SCORED  →  COMPETENCY PROFILE + role readiness
+PHASE 3  Employability/EI ─▶  the profile becomes an EMPLOYABILITY INDEX + strengths + signals + recommendations
+PHASE 4  Career           ─▶  the person is MATCHED to roles, shown GAPS, given a ROADMAP, tracked over time
+PHASE 5  Employer         ─▶  employers POST jobs, FIND talent, run HIRING & WORKFORCE intelligence
+PHASE 6  Commercial       ─▶  it all becomes a BUSINESS: plans, payments, quotas, invoices, tenants, command centres
+```
+
+> **Honest, platform-wide status (one sentence):** Phase 1–2 are **proven end-to-end with real scored data** (≈8 competency profiles in the live dev DB); Phases 3–4 are **compose-only engines that re-shape that same runtime data** (so they are as rich as the runtime data underneath them — sparse today); Phase 5 and the **commercial spine** of Phase 6 are **flag-on but un-activated** (no real sales, no completed CAPADEX sessions), while the **newer Phase 6.11–6.15 consoles default OFF** (their flags aren't set in the `Backend API` workflow, so those routes 503 / hide until switched on). Each Part restates its own honest status.
+
+---
+
+# PART 1 — PHASE 1: Building the framework (the back office)
+
+> Part 1 is the original, fully-verified detail for the Phase 1 series (Foundation + 1.1–1.7). It is the "set-up" half of the assembly line. Parts 2–6 (the runtime and everything built on it) follow after the Phase 1 summary table.
 
 ## 0. The pattern every sub-phase follows
 
@@ -646,3 +682,271 @@ Honesty notes carried *inside* the report (Coverage vs Confidence in action):
 | **1.7** | Search & Discovery | search, facets, micro-search | bulk operation | (reads all above) | ✅ active |
 
 *1.3 and 1.8–1.15 do not exist. Empty tables (1.2, 1.4) are reported as empty, not inflated.*
+
+> **End of Part 1.** Everything above is the framework set-up (the back office). Everything below — Parts 2 to 6 — is what happens once a real person takes the assessment, and how the platform turns that into employability insight, career guidance, employer tools, and a commercial product.
+
+---
+---
+
+# PART 2 — PHASE 2: Competency Runtime (taking & scoring the assessment)
+
+**Flag:** `FF_COMPETENCY_RUNTIME=1` (internally `competencyRuntime`) · **Routes:** `backend/routes/competency-runtime.ts` (`/api/competency-runtime/*`) · **Core service:** `backend/services/competency-runtime.ts`.
+
+## In plain English
+Phase 1 built the *blueprint*. **Phase 2 is the live machine that runs it.** A person sits down, is given a set of questions assembled from a blueprint, answers them, and the engine turns those answers into a **competency profile** — an overall score, a level (1–5), a per-domain breakdown, and an honest note of anything it *couldn't* measure. This is the first phase where **real human data exists** in the system.
+
+```
+blueprint (Phase 1.6) ─▶ ASSEMBLE questions ─▶ person ANSWERS ─▶ SCORE ─▶ competency profile (+ role readiness)
+        2.1 dimension mix   2.2 question map   2.3 assembly       2.4 scoring        (the report)
+```
+
+## What each audience does
+
+**👤 End user (the person being assessed)**
+- Opens an assessment, answers a balanced, role-relevant set of questions (harder questions quietly count for more).
+- At the end sees a **competency profile**: overall score → level, a breakdown by skill domain, and plain "what we couldn't measure yet" notes (it never guesses a score it doesn't have).
+- Can re-take later; each run is saved as its own row (history is never overwritten).
+
+**🛠️ Admin / super-admin**
+- Monitors assessment instances and a subject's profile history.
+- Reviews the **scoring audit** (how raw answers became a normalised score) and confirms the engine respected the honesty rules (unmeasurable skills left unscored, not floored to 1).
+- Manages the difficulty ladder and the question→competency mapping that feed assembly.
+
+**💻 Developer**
+- **Two scorers, two ledgers** — `scoreAssessment` (in `competency-runtime.ts`) writes the **competency profile** to `onto_competency_profiles` (append-only, one row per run); the richer normalised scorer (`competency-scoring.ts`) writes a row to `onto_competency_score_runs`. **Any "how many were scored" count must UNION both tables**, or runtime-scored people look unscored.
+- Scoring is currently a **domain proxy**: the 7-code question bank crosswalks *down* to the 5 ontology domains and scores the mean; it **auto-upgrades** to true per-competency scoring once `onto_competency_question_map` is populated. The domain `dom_strategic` has no questions, so it is reported **UNMEASURABLE**, never scored.
+- `subject_id` is **operator-supplied**, so the runtime endpoints must sit behind the super-admin gate (a `requireAuth`-only route here would be an IDOR).
+- Difficulty-weighted scoring (2.4) maps a normalised score to a 1–5 level on fixed bands; reverse-scored (polarity) questions invert at generate time.
+
+## Sub-phases (file-header markers)
+
+| # | Name | What it adds | Key file | Tables it owns | Main endpoint |
+|---|---|---|---|---|---|
+| **2 (core)** | Competency Runtime | Create an assessment instance, submit answers, get a scored profile | `services/competency-runtime.ts` | `onto_competency_profiles`, `onto_assessment_instances`, `onto_assessment_responses` | `POST /api/competency-runtime/assessment-instances/:id/score` · `GET /profiles/:subjectId` · `GET /gap-analysis/:subjectId` |
+| **2.1** | Blueprint dimension mix | Per-role "% mix" across competency *types* (e.g. 40% cognitive / 30% behavioural), must sum to 100 | `services/blueprint-builder.ts` | `onto_blueprint_dimension_mix` | `GET /blueprints/:id/mix` |
+| **2.2** | Question blueprint | Map question-bank items → competencies + a 1–5 difficulty ladder | `services/question-blueprint.ts` | `onto_competency_question_map`, difficulty/blueprint tables | `GET /questions/difficulty-framework` |
+| **2.3** | Assessment assembly | Pick + randomise a balanced, duplicate-free set of questions from a blueprint | `services/assessment-assembly.ts` | `onto_assembled_assessments` | `POST /assembly/build` |
+| **2.4** | Scoring engine | Difficulty-weighted score → 1–5 proficiency level + scoring audit | `services/competency-scoring.ts` | `onto_competency_score_runs` | `GET /scoring-runs/:id` |
+
+> **Developer note (assembly honesty):** each question is assigned to **exactly one** competency (highest weight; ties broken by id ascending), so duplicates are structurally impossible. Randomisation uses a seeded shuffle so a run is reproducible.
+
+## Honest live status
+✅ **Proven end-to-end.** The live dev database holds real rows: ≈**8** competency profiles (`onto_competency_profiles`) and ≈**2** score runs (`onto_competency_score_runs`) from completed assessments — this is the proof that data actually flows from Phase 1 blueprints through scoring. ⚠️ **Thin coverage:** because only 7 of 299 competencies have question links yet (Phase 1.6 gap), scores are domain-proxies and one domain (`dom_strategic`) is honestly unmeasurable.
+
+---
+
+# PART 3 — PHASE 3: Employability / EI Intelligence
+
+**Flag:** `FF_COMPETENCY_EI=1` (internally `competencyEi`), with `FF_COMPETENCY_INTELLIGENCE=1` · **Routes:** `/api/competency-ei/*` · **Nature:** **read-only, compose-only** — it never re-scores; it *re-shapes* the Phase 2 profile into employability meaning.
+
+## In plain English
+Phase 2 tells you *how good someone is at each skill*. **Phase 3 answers "so how employable are they, and what should they do next?"** It rolls the competency profile up into an **Employability Index (EI)** across a fixed set of dimensions, then adds readiness against roles / industries / functions, qualitative **signals** ("strong problem-solver"), and a **growth path** of recommendations — and tracks all of it over time.
+
+```
+competency profile (Phase 2) ─▶ EI dimensions ─▶ EI score + profile ─▶ readiness (role/industry/function)
+                                                          │                 + signals + recommendations
+                                                          ▼
+                                                   history & progression (trend over repeat snapshots)
+```
+
+## What each audience does
+
+**👤 End user**
+- Sees a single **Employability Index** plus the dimensions behind it, their strengths and risks, role/industry/function fit, plain-language **signals**, and a **growth path** of concrete actions.
+- Over repeat assessments, sees an **employability journey** (improving / stable / declining) — only once there are **two or more measured snapshots**; with one, it honestly says "not enough history yet".
+
+**🛠️ Admin**
+- Curates the **weights** that drive the EI index, the **signal rules**, and the **recommendation library** (recommendations are library-backed — the system never invents generic advice).
+- Uses the **EI dashboard** (aggregate gauges + trends) and the **super-admin validation harness** to confirm the chain is honest (no fabricated scores, flags respected, bands coherent).
+
+**💻 Developer**
+- **One EI formula authority** lives in `employabilityEngine.ts`; classifiers must not be re-implemented inline or the gauge and the backend score drift apart.
+- Every engine **composes** prior outputs — e.g. the EI dashboard (3.10) calls each prior engine **once** then makes pure projections; the trend math (3.11) lives in **one** `trend-engine.ts` that both history and dashboard import.
+- History has **two sources**: assessment runs and **EI snapshots** (`ei_profile_snapshots`, append-only, written only on the POST/snapshot path — a GET must never write). A missing value is **NULL, never 0** (a fake 0 would invent a data point and flip a trend).
+- Risk-style dimensions invert direction (higher is *worse*); readiness ≥85 caps "role potential" to Low (a positive signal, done in code, not a bug).
+
+## Sub-phases (3.1 does **not** exist — the series starts at 3.2)
+
+| # | Name | What it adds | Key file |
+|---|---|---|---|
+| **3.2** | Competency → EI dimension mapping | Translate competencies into employability dimensions + weights | `services/competency-ei-dimensions.ts` |
+| **3.3** | Employability scoring engine | Per-dimension + aggregate EI score (3 pure engines + audit ledger) | `services/employability-scoring-engine.ts` |
+| **3.4** | EI Profile | Unified, versioned candidate employability profile (strengths/risks/index) | `services/ei-profile-engine.ts` |
+| **3.5** | Role Readiness V2 | Adds **role risk** + **role potential** on top of readiness | `services/role-readiness-v2.ts` |
+| **3.6** | Industry Readiness | Fit/gap vs industry benchmarks (demand derived by aggregating role profiles) | `services/industry-readiness-engine.ts` |
+| **3.7** | Function Readiness | Same idea, one hop shorter — vs business-function benchmarks | `services/function-readiness-engine.ts` |
+| **3.8** | Employability Signal | Rule-based qualitative signals from the profile | `services/employability-signal-engine.ts` |
+| **3.9** | Recommendation Engine | Library-backed growth actions (emitted / not-applicable / withheld) | `services/ei-recommendation-engine.ts` |
+| **3.10** | EI Dashboard | Composes every prior EI engine into candidate + admin views | `services/ei-dashboard-engine.ts` |
+| **3.11** | EI History / Progression | Longitudinal trend (improving/stable/declining) over snapshots | `services/progression-engine.ts` (math in `trend-engine.ts`) |
+| **3.12** | Super-Admin Validation | 10-area read-only honesty harness across the whole EI chain | `services/super-admin-validation-engine.ts` |
+
+**Main endpoints:** `GET /api/competency-ei/intelligence/:subject` (the full envelope) · `POST /intelligence/:subject/snapshot` (write a snapshot) · `GET /intelligence/:subject/history` · `GET /admin/overview` · `GET /super-validation/:subject` (the 3.12 super-admin honesty harness — distinct from `/validation/:subject`, which is the narrower per-chain validation).
+
+> **Honesty rules baked in:** Coverage (data exists) and Confidence (enough measured signal) are reported separately; `dom_strategic` is excluded; recommendations are **withheld** rather than guessed when evidence is missing; trends need ≥2 *measured* points.
+
+## Honest live status
+⚙️ **Built and flag-on, but only as rich as the runtime beneath it.** These engines re-shape the ≈8 Phase-2 profiles, so EI output exists but is sparse, and progression is mostly "insufficient history" because repeat snapshots are rare in the dev DB. The validation harness (3.12) is the tool that reports exactly which areas are measured vs honestly absent.
+
+---
+
+# PART 4 — PHASE 4: Career Intelligence
+
+**Flags (the `FF_CAREER_*` family, all on in the workflow):** `FF_CAREER_MATCH`, `FF_CAREER_READINESS`, `FF_CAREER_GAP`, `FF_CAREER_ROADMAP`, `FF_CAREER_DEVELOPMENT`, `FF_CAREER_RECOMMENDATION`, `FF_CAREER_SIGNAL`, `FF_CAREER_PROGRESSION`, `FF_CAREER_SIMULATION`, `FF_CAREER_PASSPORT_FOUNDATION`, `FF_CAREER_VALIDATION`. · **Surface:** the Career Builder page + `/api/career/*` (enrichment) and dedicated aggregator routes. · **Nature:** **compose-only, flag-OFF byte-identical, GET-never-writes.**
+
+## In plain English
+Phase 3 says *how employable* a person is. **Phase 4 turns that into a career plan.** It matches the person to roles, shows exactly which skills are short (the gap), builds a step-by-step **roadmap**, lets them **simulate** "what if I grew this skill", tracks **progress**, and rolls everything into a portable **career passport**. It is purely additive: when the flags are off, the Career Builder behaves exactly as it did before — these engines only *attach* extra intelligence to data that already exists.
+
+```
+EI profile (Phase 3) ─▶ MATCH to roles ─▶ GAP vs target role ─▶ ROADMAP ─▶ track PROGRESS / SIMULATE growth ─▶ PASSPORT
+```
+
+## What each audience does
+
+**👤 End user (job-seeker)**
+- Sees **role matches** (ranked), the **gap** to a target role, a **development roadmap**, "what-if" **growth simulations**, **progress** over time, and developmental **signals**.
+- Gets a **career passport** — a portable summary they can share (contact details are never published).
+
+**🛠️ Admin**
+- Curates role catalogues and recommendation content; monitors the validation harness output.
+- Note: most Phase-4 insight is **derived**, not hand-entered — admins mostly maintain the underlying role/competency data from Phase 1.
+
+**💻 Developer**
+- Every 4.x engine is **compose-only** — it re-shapes prior data and **never recomputes** scores; flag-OFF must be **byte-identical** and **GETs must not write**.
+- **Trap:** `buildCareerReadiness → computeRoleReadinessV2` runs `ensureCompetencyRuntimeSchema` *unguarded* (it does DDL), so any GET composer must gate behind a `competencyRuntimeReady()` probe first.
+- The enrichment pattern attaches a flag-gated `career_intelligence` key onto the **existing** career response; `resolveEffectiveUserId` is the IDOR guard and must be applied at the **route** level too, not just on the enrichment.
+- `career_seeker_profiles` PK is **`user_id`** (there is no `id` column); data is JSONB.
+- **Honesty traps:** `cg_roles` has no per-role requirements, so only the **anchor** role match is requirement-backed — all other matches are capped at **Provisional** (Match% and confidence are *separate* axes). `Number(null) === 0` would fabricate a measured 0, so signals guard null/''/undefined before any `Number()`.
+
+## Sub-phases (4.1, 4.4, 4.5, 4.8, 4.9 are not distinct file-marked engines; the confirmed set:)
+
+| # | Name | What it does | Flag |
+|---|---|---|---|
+| **4.2** | Career Match | Rank roles by fit; anchor match is requirement-backed, rest Provisional | `FF_CAREER_MATCH` |
+| **4.3** | Career Readiness aggregator | Compose readiness across competency/EI/future-readiness blocks | `FF_CAREER_READINESS` |
+| **(gap)** | Career Gap | Required-vs-measured gap to a target role | `FF_CAREER_GAP` |
+| **(roadmap)** | Career Roadmap | Ordered development milestones | `FF_CAREER_ROADMAP` |
+| **4.6** | Career Development | Develop skills via the 5 real competency *types* (no fabricated "Leadership" type) | `FF_CAREER_DEVELOPMENT` |
+| **4.7** | Career Recommendation | Personalised vs catalog recs (catalog-only → always Provisional) | `FF_CAREER_RECOMMENDATION` |
+| **(simulation)** | Career Simulation | "What if I improve X" projections | `FF_CAREER_SIMULATION` |
+| **4.10** | Career Signal | 7 developmental signals (null-safe, never fabricated) | `FF_CAREER_SIGNAL` |
+| **(progression)** | Career Progression | Track movement over time | `FF_CAREER_PROGRESSION` |
+| **(passport)** | Career Passport (foundation) | Portable career summary (contact never published) | `FF_CAREER_PASSPORT_FOUNDATION` |
+| **4.12** | Career Validation harness | 13-area read-only honesty harness | `FF_CAREER_VALIDATION` |
+
+> The standalone numbers shown in parentheses are flag-named modules without a confirmed `4.x` file-header marker — listed by flag for accuracy rather than asserting a number that may not exist in code.
+
+## Honest live status
+⚙️ **Compose-only and flag-on.** Phase 4 surfaces inside the existing Career Builder for any user who has runtime data underneath them. With the dev DB's sparse runtime, matches/gaps/roadmaps populate where there is data and degrade honestly (Provisional / "unmeasured") where there isn't — they never fabricate a match or a gap.
+
+---
+
+# PART 5 — PHASE 5: Employer / Enterprise
+
+**Flags:** `FF_EIOS_WORLD_CLASS_VERIFIED_V2` (Employer Intelligence OS), `FF_ENTERPRISE_ANALYTICS`, `FF_AI_GOVERNANCE`, `FF_GOVERNANCE_RBAC_V2`. · **Spine:** `employer_*` (≈7 tables) and `tig_*` (Talent Intelligence Graph) tables; LBI engine. · **Auth:** employer endpoints are **session-only** (`requireAuth`), so demo data is seeded server-side and marked `@example.com`.
+
+> **Numbering honesty:** unlike Phases 1–4, the employer band is organised by **module**, not by clean file-header `5.x` markers. The build logs reference numbers like 5.3 (job posting), 5.4 (talent discovery), 5.5 (competency matching), 5.11 (hiring intelligence), 5.12 (workforce intelligence) and **5.14 (notifications & workflows)** — these are documented below by **name** so nothing is over-claimed.
+
+## In plain English
+Phases 1–4 are about the **individual**. **Phase 5 is the employer's side of the marketplace.** Employers post jobs, search a talent pool, see how candidates match their roles, run predictive **hiring intelligence**, look 36 months ahead at **workforce / skill-demand** trends, and view it all through a 28-pillar "cockpit" dashboard with exportable PDF reports.
+
+## What each audience does
+
+**👤 End user (here, the *employer/recruiter*)**
+- Posts and versions **jobs**; searches and pools **talent**; opens a **candidate drawer** that shows **Coverage** (which skill domains are covered) and **Confidence** (how calibrated the prediction is) as *separate* figures.
+- Runs **hiring intelligence** (interview substrate, operator-recorded outcomes) and **workforce forecasts**; generates PDF reports from the Report Factory.
+- Sees the **Talent Intelligence Graph** — an org/skill network view.
+
+**🛠️ Admin / super-admin**
+- Validates hiring-intelligence row counts, manages enterprise feature-flag gating, and runs governance/RBAC (roles, approvals, audit trail, security posture) under `FF_GOVERNANCE_RBAC_V2`.
+- Manages AI-governance and enterprise-analytics surfaces.
+
+**💻 Developer**
+- Every engine is **compose-only** (reads the substrate, no destructive recompute).
+- **Traps:** a column named `values` must be `values_list` (reserved keyword); the M5 route family needs `app.use('/api/m5', requireAuth)` because the per-route gate was missing. The Talent Intelligence Graph is keyed by `user_email`; its calibration is a **write-once** snapshot (Brier/ECE kept raw; a borrowed prior never upgrades a TRUST level; it only becomes "calibrated" at ≥30 real outcomes).
+- The Employer Intelligence OS spans `eios-core.ts` (pillars 3, 6–17) + `eios-intelligence.ts` (pillars 18–28 + certification); peer benchmarks suppress below `k_min = 30`.
+
+## Modules in this band
+
+| Module | What it does | Key file | Tables |
+|---|---|---|---|
+| **Employer Portal** | Jobs, candidates, the recruiter cockpit | `routes/employer-*.ts` | `employer_*` |
+| **Talent Intelligence Graph (TIG)** | Skill/candidate network + calibrated predictions | `routes/employer-tig.ts` | `tig_*` |
+| **Employer Intelligence OS (EIOS)** | 28-pillar intelligence + certification | `services/eios-core.ts`, `eios-intelligence.ts` | `eios_*` |
+| **LBI (Leadership/Behavioural Intelligence)** | Consolidated behavioural intelligence chain | `routes/lbi-intelligence.ts` | `lbi_*` |
+| **Notifications & Workflows (≈5.14)** | Workflow events, overdue-outcome nudges (no candidate PII in comms) | notifications engine | `employer_notifications` / workflow events |
+| **Governance / RBAC V2** | Roles, approvals, audit, security posture | governance engines | RBAC tables |
+
+## Honest live status
+⚙️ **Structurally built, flag-on, lightly populated.** The employer engines run, but in the dev DB the meaningful data is **demo seed** (marked `@example.com`); predictive calibration stays "borrowed prior" until ≥30 real hiring outcomes exist. Coverage and Confidence are surfaced separately so an employer is never shown a confident-looking number that isn't earned.
+
+---
+
+# PART 6 — PHASE 6: Commercial, Platform & Super-Admin (6.1 → 6.15)
+
+**Flags:** `FF_COMMERCIAL_ACTIVATION`, `FF_COMMERCIAL_ENTITLEMENT_ENFORCEMENT`, `FF_REPORT_FACTORY`, plus module flags (`commercialCustomerSuccess`, `invoiceGstEngine`, …). · **Spine:** `capadex_payments` (one-time), `comm_subscription*` (recurring), subscription packages, `inv_invoices` (GST), `tenants`/tenant tables, partner tables. · **Nature:** the Phase-6 read engines are **read-only** and probe tables with `to_regclass` so they **degrade gracefully** instead of crashing when a table is absent.
+
+> **Numbering honesty:** the confirmed, code-backed `6.x` file-header modules are **6.5, 6.8, 6.10, 6.11, 6.12, 6.13 (Automation Engine), 6.14 (SuperAdmin Command Center), 6.15 (Founder Control Center)** — each is stamped at the top of its route file. **6.1–6.4, 6.6, 6.7, 6.9** are **not** distinct file-header modules — they're bundled into the Commercial Spine (catalog/pricing/entitlement) and the Report Factory. Below, numbered items are real file-header phases; un-numbered items are named.
+
+## In plain English
+Phases 1–5 build the product. **Phase 6 turns it into a business.** It handles **plans and pricing**, takes **payments** (Razorpay), enforces **entitlements** (what a plan unlocks), **meters usage** against quotas, issues **GST invoices**, tracks **customer success / health**, supports **multiple tenants** (institutions, employers, partners, franchises) and a **partner/referral** programme — and rolls everything into **command centres** for the super-admin and a **founder control centre** for the top-line numbers.
+
+```
+PLAN/PRICE ─▶ PAYMENT (Razorpay) ─▶ ENTITLEMENT (what's unlocked) ─▶ USAGE METERING (quota) ─▶ INVOICE (GST)
+        │                                                                                          │
+        └────▶ CUSTOMER SUCCESS (health)   MULTI-TENANT   PARTNER ECOSYSTEM   ▶ COMMAND CENTRES / FOUNDER VIEW
+```
+
+## What each audience does
+
+**👤 End user (the paying customer)**
+- Sees **subscription tiers / prices** (confirmed ₹299–₹1499 packages), pays securely, sees their **usage vs quota**, and receives **GST invoices**.
+- A partner sees their **referrals** and **commission payouts**.
+
+**🛠️ Admin / super-admin**
+- Runs the business from the **command centres**: the **SuperAdmin Command Center** (system-wide posture across ~12 domains) and the **Founder Control Center** (revenue / growth / adoption / retention north-star view).
+- Manages plans, entitlements, tenants, partners; reviews customer-success health and platform-intelligence metrics; configures the seller/GST profile.
+
+**💻 Developer**
+- **Money fails *closed*:** payment verification requires a local↔gateway linkage (anti-IDOR); the webhook fails closed when configured; idempotency keys prevent double-grants. **Never sell into a stub** — entitlement checks return 402/503 (fail-closed), and the paid ledger is `capadex_payments` *paid rows only*.
+- **Metering** uses three counting kinds (period-count / latest-level / credit-balance) and a `pg_advisory_xact_lock` inside a transaction so concurrent writers can't overrun a quota; reads `to_regclass`-probe rather than `ensure-schema`.
+- **Credit-issue idempotency:** a per-customer row lock *serialises* but does **not** dedup — a retried refund-to-credit doubles store value unless keyed (partial unique index on `(customer_id, idempotency_key)`).
+- Phase-6 GET engines are **read-only and compose** existing commercial engines into metric groups; **every unmeasurable rate is `null` + an explicit note**, never a fabricated 0. A `to_regclass` probe that swallows its own error must route the failure into a `degraded` flag (otherwise "unreadable" looks like "empty").
+- **Flag-gate before `ensure-schema`** so flag-OFF does zero DDL (byte-identical).
+
+## Modules in this band
+
+| # | Module | What it does | Key file | Flag |
+|---|---|---|---|---|
+| — | **Commercial Spine** | Catalog, pricing, payments (Razorpay), one-time vs recurring | `routes/capadex-payments.ts`, commercial services | `FF_COMMERCIAL_ACTIVATION` |
+| — | **Entitlement Enforcement** | `requireEntitlement` guard; what a plan unlocks; fail-closed | entitlement engine | `FF_COMMERCIAL_ENTITLEMENT_ENFORCEMENT` |
+| — | **Invoice & GST Engine** | GST-correct invoices, refund/credit docs, seller config, txn-safe numbering | invoice engine | `invoiceGstEngine` |
+| **6.5** | **Usage Metering** | Records metered actions, enforces quotas (fail-closed) | `services/commercial/metering-engine.ts` | (commercial) |
+| **6.8** | **Customer Success Intelligence** | Engagement + retention → a health index | `services/commercial/customer-success-engine.ts` | `commercialCustomerSuccess` |
+| **6.10** | **Platform Intelligence Console** | Executive composite: health/growth/conversion/revenue (7 metric groups) | `services/platform/platform-intelligence-engine.ts` | (admin) |
+| **6.11** | **Multi-Tenant Architecture** | Institutions / employers / partners / franchises + hierarchy | `services/tenant/tenant-management-engine.ts` | `tenantManagementConsole` (default **OFF**) |
+| **6.12** | **Partner Ecosystem** | Referrals, agreements, commission payouts | `services/tenant/partner-ecosystem-engine.ts` | `partnerEcosystem` (default **OFF**) |
+| **6.13** | **Automation Engine** | Read-only automation console (rules/triggers posture) | `routes/automation-engine.ts` | `automationEngine` (default **OFF**) |
+| **6.14** | **SuperAdmin Command Center** | System-wide posture across ~12 domains | `routes/superadmin-command-center.ts` | `commandCenter` (default **OFF**) |
+| **6.15** | **Founder Control Center** | Revenue / growth / adoption / retention north-star view | `routes/founder-control-center.ts` | `founderControlCenter` (default **OFF**) |
+| — | **Report Factory** | PDF report generation (k=30 benchmark suppression) | `services/pdf-renderer.ts`, `rf_templates` | `FF_REPORT_FACTORY` |
+
+**Partner payout honesty (6.12):** a payout is `commission_amount` on **converted** referrals only; if only a percentage is stored, the deal value is resolved from real payment events (paise → rupees) — and if it can't be resolved, that's an honest coverage gap, never a fabricated number.
+
+## Honest live status
+🟡 **Built and flag-on, but commercially un-activated in the dev DB.** The machinery is real and fail-closed, but there are **0 real sales** (subscription packages have no purchases) and **0 completed CAPADEX sessions**, so **Activation** metrics read ~0 while **Structural** completeness is high. This is the dual-axis honesty rule in action: *coverage exists, activation hasn't happened yet.* The generated business reports under `reports/` (e.g. commercial / customer-success / platform-intelligence) reflect exactly this — real structure, honest zeros where nothing has been sold or completed yet.
+
+---
+
+# Grand summary — the whole journey on one page
+
+| Phase | Band | Flag(s) | Proves | Honest live status |
+|---|---|---|---|---|
+| **1 (+1.1–1.7)** | Competency framework | `FF_COMPETENCY_FRAMEWORK_INTELLIGENCE` | The skill genome → role blueprints | ✅ active (1.2/1.4 empty, 1.6 thin) |
+| **2 (2.1–2.4)** | Competency runtime | `FF_COMPETENCY_RUNTIME` | A person is assessed & scored | ✅ real data (≈8 profiles) |
+| **3 (3.2–3.12)** | Employability / EI | `FF_COMPETENCY_EI` (+`FF_COMPETENCY_INTELLIGENCE`) | Profile → employability index + signals + recs | ⚙️ compose-only; as rich as the runtime |
+| **4 (4.2–4.12)** | Career intelligence | `FF_CAREER_*` family | Match / gap / roadmap / progress | ⚙️ compose-only, flag-OFF byte-identical |
+| **5** | Employer / enterprise | `FF_EIOS_WORLD_CLASS_VERIFIED_V2`, `FF_ENTERPRISE_ANALYTICS`, `FF_GOVERNANCE_RBAC_V2`, `FF_AI_GOVERNANCE` | Jobs, talent, hiring & workforce intel | ⚙️ structural; demo-seed data |
+| **6 (6.5/6.8/6.10/6.11/6.12/6.13/6.14/6.15)** | Commercial / platform / super-admin | `FF_COMMERCIAL_ACTIVATION`, `FF_COMMERCIAL_ENTITLEMENT_ENFORCEMENT`, `FF_REPORT_FACTORY` on; `tenantManagementConsole`/`partnerEcosystem`/`automationEngine`/`commandCenter`/`founderControlCenter` default **OFF** | Plans, payments, quotas, invoices, tenants, command centres | 🟡 commercial spine flag-on but activation ~0 (no sales); 6.11–6.15 consoles flag-OFF by default |
+
+**The one honesty rule that runs through all six phases:** **Coverage** (does the data exist) and **Confidence / Activation** (is it trustworthy and has it actually been used) are always reported as **two separate things** — and where there is nothing yet, the system says so plainly instead of inventing a number.

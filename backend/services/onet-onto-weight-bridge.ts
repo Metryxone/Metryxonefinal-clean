@@ -27,6 +27,7 @@
 
 import type { Pool } from 'pg';
 import { resolveOntRole, normalize, type RoleMatchType } from './role-crosswalk.js';
+import { isFlagEnabled } from '../config/feature-flags.js';
 
 /**
  * Curated, defensible competency-name synonym groups bridging the two
@@ -156,6 +157,8 @@ export interface BridgeResult {
   unmatchedRoles?: string[];
   /** How matched roles resolved (exact_title / alias / partial_title / code). */
   roleMatchTypes?: Partial<Record<RoleMatchType, number>>;
+  /** Curated roles resolved via the persisted crosswalk (when the flag is on). */
+  rolesFromCrosswalk?: number;
   /** O*NET-derived competency links whose name resolved to a curated competency. */
   competenciesMatched?: number;
   /** Distinct O*NET competency names that did not resolve to any curated one. */
@@ -215,10 +218,34 @@ export async function bridgeOnetDerivedWeights(pool: Pool): Promise<BridgeResult
     );
     const derivedRoleIds = new Set<number>(derivedRoleRows.rows.map((r) => r.role_id));
 
+    // When the Ontology Hierarchy Completion flag is ON, prefer the persisted
+    // ont_*→onto_* crosswalk: a curated, human-confirmable mapping that the
+    // runtime title matcher only seeds/falls back to. Flag OFF (or the table not
+    // yet materialised) → behaviour is byte-identical to the pure-matcher legacy.
+    const crosswalk = new Map<string, number>(); // onto_role_id → ont_role_id
+    if (isFlagEnabled('ontologyHierarchyV2')) {
+      const probe = await pool.query<{ t: string | null }>(`SELECT to_regclass('public.map_ont_onto_role') AS t`);
+      if (probe.rows[0]?.t) {
+        const cw = await pool.query<{ onto_role_id: string; ont_role_id: number }>(
+          `SELECT onto_role_id, ont_role_id FROM map_ont_onto_role WHERE ont_role_id IS NOT NULL`);
+        for (const row of cw.rows) crosswalk.set(row.onto_role_id, row.ont_role_id);
+      }
+    }
+
     const ontRoleToProfiles = new Map<number, string[]>();
     const roleMatchTypes: Partial<Record<RoleMatchType, number>> = {};
     const unmatchedRoles: string[] = [];
+    let rolesFromCrosswalk = 0;
     for (const r of ontoRoles.rows) {
+      // Persisted crosswalk wins when present — honour the admin's confirmed mapping.
+      const mapped = crosswalk.get(r.role_id);
+      if (mapped != null) {
+        rolesFromCrosswalk += 1;
+        const arr = ontRoleToProfiles.get(mapped) ?? [];
+        arr.push(r.profile_id);
+        ontRoleToProfiles.set(mapped, arr);
+        continue;
+      }
       const candidates = await resolveOntRole(pool, r.title); // ranked best-first
       if (candidates.length === 0) {
         unmatchedRoles.push(r.title);
@@ -241,6 +268,7 @@ export async function bridgeOnetDerivedWeights(pool: Pool): Promise<BridgeResult
       rolesUnmatched: unmatchedRoles.length,
       unmatchedRoles: unmatchedRoles.slice(0, SAMPLE_CAP),
       roleMatchTypes,
+      rolesFromCrosswalk,
       competenciesMatched: 0,
       competenciesUnmatched: 0,
       unmatchedCompetencies: [],
@@ -381,7 +409,7 @@ export async function bridgeOnetDerivedWeights(pool: Pool): Promise<BridgeResult
 function logSummary(r: BridgeResult, totalRoles: number): void {
   console.log(
     `[onet-onto-weight-bridge] roles matched ${r.rolesMatched ?? 0}/${totalRoles} ` +
-      `(${JSON.stringify(r.roleMatchTypes ?? {})}), unmatched roles ${r.rolesUnmatched ?? 0}; ` +
+      `(${JSON.stringify(r.roleMatchTypes ?? {})}, crosswalk ${r.rolesFromCrosswalk ?? 0}), unmatched roles ${r.rolesUnmatched ?? 0}; ` +
       `competency links matched ${r.competenciesMatched ?? 0}, ` +
       `unmatched competency names ${r.competenciesUnmatched ?? 0}; ` +
       `derived weights bridged ${r.linksBridged}`,

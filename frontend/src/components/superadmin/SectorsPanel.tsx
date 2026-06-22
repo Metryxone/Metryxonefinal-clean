@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Edit, Trash2, Search, Building2, RefreshCw, X, Check, Upload, Download, FileText, CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
+import { Plus, Edit, Trash2, Search, Layers, RefreshCw, X, Check, Upload, Download, FileText, CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Badge } from '../ui/badge';
@@ -12,16 +12,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { useToast } from '@/hooks/use-toast';
 import SubmitForReviewButton from './SubmitForReviewButton';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4' };
-
-type Industry = { id: number; code: string; name: string; parent_sector?: string; sector_id?: number | null; description?: string; is_active: boolean; status: string; sort_order: number; created_at: string; };
-type Sector = { id: number; code: string; name: string; };
-type Form = { code: string; name: string; parent_sector: string; description: string; is_active: boolean; status: string; sort_order: number; };
-const EMPTY: Form = { code: '', name: '', parent_sector: '', description: '', is_active: true, status: 'draft', sort_order: 0 };
+const BRAND = { primary: '#344E86' };
+type Sector = { id: number; code: string; name: string; description?: string; is_active: boolean; status: string; sort_order: number; };
+type Form = { code: string; name: string; description: string; is_active: boolean; status: string; sort_order: number; };
+const EMPTY: Form = { code: '', name: '', description: '', is_active: true, status: 'draft', sort_order: 0 };
 const STATUS_COLORS: Record<string, string> = { draft: 'bg-yellow-100 text-yellow-800', published: 'bg-green-100 text-green-800', archived: 'bg-gray-100 text-gray-600' };
-const SECTOR_NONE = '__none__';
 
-const IMPORT_COLUMNS = ['code', 'name', 'parent_sector', 'description', 'status', 'sort_order', 'is_active'];
+const IMPORT_COLUMNS = ['code', 'name', 'description', 'status', 'sort_order', 'is_active'];
 
 // Minimal RFC-4180-ish CSV parser (handles quoted fields, escaped quotes, CRLF).
 function parseCsv(text: string): Record<string, string>[] {
@@ -50,7 +47,7 @@ function parseCsv(text: string): Record<string, string>[] {
 
 type ImportResult = { total: number; created: number; updated: number; failed: number; errors: { row: number; code?: string; error: string }[] };
 
-export default function IndustriesPanel() {
+export default function SectorsPanel() {
   const { toast } = useToast();
   const qc = useQueryClient();
   const [search, setSearch] = useState('');
@@ -58,38 +55,15 @@ export default function IndustriesPanel() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
   const [form, setForm] = useState<Form>(EMPTY);
-  const [delConfirm, setDelConfirm] = useState<Industry | null>(null);
+  const [delConfirm, setDelConfirm] = useState<Sector | null>(null);
   const [importOpen, setImportOpen] = useState(false);
   const [csvText, setCsvText] = useState('');
   const [importResult, setImportResult] = useState<ImportResult | null>(null);
-  const [sectorId, setSectorId] = useState<string>('');
 
-  // ── Ontology Hierarchy V2 flag probe (file-registry flag). Flag OFF → /sectors
-  //    returns 503 → Sector dropdown is omitted entirely (byte-identical UI). ──
-  const { data: ontHierEnabled = false } = useQuery<boolean>({
-    queryKey: ['/api/ontology/sectors', 'onthier-enabled-probe'],
+  const { data, isLoading } = useQuery<{ items: Sector[] }>({
+    queryKey: ['/api/ontology/sectors', statusFilter],
     queryFn: async () => {
-      const res = await fetch('/api/ontology/sectors?limit=1', { credentials: 'include' });
-      return res.ok;
-    },
-    staleTime: 60000,
-  });
-  const { data: sectorsData } = useQuery<{ items: Sector[] }>({
-    queryKey: ['/api/ontology/sectors', 'industries-parent'],
-    queryFn: async () => {
-      const res = await fetch('/api/ontology/sectors?status=all&limit=500', { credentials: 'include' });
-      if (!res.ok) throw new Error('Failed to load sectors');
-      return res.json();
-    },
-    enabled: ontHierEnabled,
-    staleTime: 30000,
-  });
-  const sectors = sectorsData?.items ?? [];
-
-  const { data, isLoading } = useQuery<{ items: Industry[] }>({
-    queryKey: ['/api/ontology/industries', statusFilter],
-    queryFn: async () => {
-      const res = await fetch(`/api/ontology/industries?status=${statusFilter}&limit=200`, { credentials: 'include' });
+      const res = await fetch(`/api/ontology/sectors?status=${statusFilter}&limit=200`, { credentials: 'include' });
       if (!res.ok) throw new Error('Failed to load');
       return res.json();
     },
@@ -99,44 +73,31 @@ export default function IndustriesPanel() {
   const items = data?.items ?? [];
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    return q ? items.filter(i => i.name.toLowerCase().includes(q) || i.code.toLowerCase().includes(q) || (i.parent_sector || '').toLowerCase().includes(q)) : items;
+    return q ? items.filter(i => i.name.toLowerCase().includes(q) || i.code.toLowerCase().includes(q)) : items;
   }, [items, search]);
 
   const save = useMutation({
     mutationFn: async (f: Form) => {
-      const url = editId ? `/api/ontology/industries/${editId}` : '/api/ontology/industries';
-      const method = editId ? 'PATCH' : 'POST';
-      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify(f) });
+      const url = editId ? `/api/ontology/sectors/${editId}` : '/api/ontology/sectors';
+      const res = await fetch(url, { method: editId ? 'PATCH' : 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify(f) });
       if (!res.ok) { const e = await res.json(); throw new Error(e.error || 'Save failed'); }
-      const saved = await res.json();
-      // Sector assignment is a separate flag-gated endpoint (sector_id is not a buildCrud field).
-      if (ontHierEnabled) {
-        const targetId = editId ?? saved?.item?.id;
-        if (targetId) {
-          const sr = await fetch(`/api/ontology/industries/${targetId}/sector`, {
-            method: 'PATCH', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
-            body: JSON.stringify({ sector_id: sectorId === '' ? null : parseInt(sectorId) }),
-          });
-          if (!sr.ok) { const e = await sr.json().catch(() => ({})); throw new Error(e.error || 'Sector assignment failed'); }
-        }
-      }
-      return saved;
+      return res.json();
     },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['/api/ontology/industries'] }); toast({ title: editId ? 'Industry updated' : 'Industry created' }); setDialogOpen(false); },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['/api/ontology/sectors'] }); toast({ title: editId ? 'Sector updated' : 'Sector created' }); setDialogOpen(false); },
     onError: (e: Error) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
   });
 
   const del = useMutation({
     mutationFn: async (id: number) => {
-      const res = await fetch(`/api/ontology/industries/${id}`, { method: 'DELETE', credentials: 'include' });
+      const res = await fetch(`/api/ontology/sectors/${id}`, { method: 'DELETE', credentials: 'include' });
       if (!res.ok) throw new Error('Delete failed');
     },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['/api/ontology/industries'] }); toast({ title: 'Industry archived' }); setDelConfirm(null); },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['/api/ontology/sectors'] }); toast({ title: 'Sector archived' }); setDelConfirm(null); },
   });
 
   const importMut = useMutation({
     mutationFn: async (rows: Record<string, string>[]) => {
-      const res = await fetch('/api/ontology/industries/import', {
+      const res = await fetch('/api/ontology/sectors/import', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
         body: JSON.stringify({ items: rows }),
       });
@@ -145,14 +106,14 @@ export default function IndustriesPanel() {
     },
     onSuccess: (r) => {
       setImportResult(r);
-      qc.invalidateQueries({ queryKey: ['/api/ontology/industries'] });
+      qc.invalidateQueries({ queryKey: ['/api/ontology/sectors'] });
       toast({ title: 'Import complete', description: `${r.created} created · ${r.updated} updated · ${r.failed} failed` });
     },
     onError: (e: Error) => toast({ title: 'Import error', description: e.message, variant: 'destructive' }),
   });
 
-  const openCreate = () => { setEditId(null); setForm(EMPTY); setSectorId(''); setDialogOpen(true); };
-  const openEdit = (i: Industry) => { setEditId(i.id); setForm({ code: i.code, name: i.name, parent_sector: i.parent_sector || '', description: i.description || '', is_active: i.is_active, status: i.status, sort_order: i.sort_order }); setSectorId(i.sector_id != null ? String(i.sector_id) : ''); setDialogOpen(true); };
+  const openCreate = () => { setEditId(null); setForm(EMPTY); setDialogOpen(true); };
+  const openEdit = (i: Sector) => { setEditId(i.id); setForm({ code: i.code, name: i.name, description: i.description || '', is_active: i.is_active, status: i.status, sort_order: i.sort_order }); setDialogOpen(true); };
   const f = (k: keyof Form, v: unknown) => setForm(p => ({ ...p, [k]: v }));
 
   const openImport = () => { setCsvText(''); setImportResult(null); setImportOpen(true); };
@@ -167,10 +128,10 @@ export default function IndustriesPanel() {
     e.target.value = '';
   };
   const downloadTemplate = () => {
-    const csv = IMPORT_COLUMNS.join(',') + '\n' + 'IND_EXAMPLE,Example Industry,Services,Optional description,draft,0,true\n';
+    const csv = IMPORT_COLUMNS.join(',') + '\n' + 'SEC_EXAMPLE,Example Sector,Optional description,draft,0,true\n';
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = 'industries_import_template.csv'; a.click();
+    const a = document.createElement('a'); a.href = url; a.download = 'sectors_import_template.csv'; a.click();
     URL.revokeObjectURL(url);
   };
   const csvCell = (v: unknown) => {
@@ -178,149 +139,71 @@ export default function IndustriesPanel() {
     return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   };
   const exportCsv = () => {
-    if (!filtered.length) { toast({ title: 'Nothing to export', description: 'No industries match the current filters.' }); return; }
+    if (!filtered.length) { toast({ title: 'Nothing to export', description: 'No sectors match the current filters.' }); return; }
     const lines = [IMPORT_COLUMNS.join(',')];
     for (const i of filtered) {
-      lines.push([i.code, i.name, i.parent_sector, i.description, i.status, i.sort_order, i.is_active].map(csvCell).join(','));
+      lines.push([i.code, i.name, i.description, i.status, i.sort_order, i.is_active].map(csvCell).join(','));
     }
     const blob = new Blob([lines.join('\n') + '\n'], { type: 'text/csv;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url;
-    a.download = `industries_export_${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+    a.download = `sectors_export_${new Date().toISOString().slice(0, 10)}.csv`; a.click();
     URL.revokeObjectURL(url);
   };
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-bold" style={{ color: BRAND.primary }}>Industries</h2>
-          <p className="text-sm text-gray-500">Top-level industry taxonomy — {filtered.length} entries</p>
-        </div>
+        <div><h2 className="text-xl font-bold" style={{ color: BRAND.primary }}>Sectors</h2><p className="text-sm text-gray-500">Top-level sector taxonomy (parent of industries) — {filtered.length} entries</p></div>
         <div className="flex items-center gap-2">
-          <SubmitForReviewButton entityType="industry" entityId="module" entityLabel="Industries" />
+          <SubmitForReviewButton entityType="sector" entityId="module" entityLabel="Sectors" />
           <Button variant="outline" onClick={exportCsv}><Download className="h-4 w-4 mr-2" />Export CSV</Button>
           <Button variant="outline" onClick={openImport}><Upload className="h-4 w-4 mr-2" />Import CSV</Button>
-          <Button onClick={openCreate} style={{ backgroundColor: BRAND.primary, color: 'white' }}><Plus className="h-4 w-4 mr-2" />Add Industry</Button>
+          <Button onClick={openCreate} style={{ backgroundColor: BRAND.primary, color: 'white' }}><Plus className="h-4 w-4 mr-2" />Add Sector</Button>
         </div>
       </div>
       <div className="flex gap-3">
-        <div className="relative flex-1 max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <Input placeholder="Search industries…" value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
-        </div>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="draft">Draft</SelectItem>
-            <SelectItem value="published">Published</SelectItem>
-            <SelectItem value="archived">Archived</SelectItem>
-          </SelectContent>
-        </Select>
-        <Button variant="outline" size="icon" onClick={() => qc.invalidateQueries({ queryKey: ['/api/ontology/industries'] })}><RefreshCw className="h-4 w-4" /></Button>
+        <div className="relative flex-1 max-w-xs"><Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" /><Input placeholder="Search sectors…" value={search} onChange={e => setSearch(e.target.value)} className="pl-9" /></div>
+        <Select value={statusFilter} onValueChange={setStatusFilter}><SelectTrigger className="w-36"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="all">All Status</SelectItem><SelectItem value="draft">Draft</SelectItem><SelectItem value="published">Published</SelectItem><SelectItem value="archived">Archived</SelectItem></SelectContent></Select>
+        <Button variant="outline" size="icon" onClick={() => qc.invalidateQueries({ queryKey: ['/api/ontology/sectors'] })}><RefreshCw className="h-4 w-4" /></Button>
       </div>
-
-      {isLoading ? (
-        <div className="flex items-center justify-center h-40"><RefreshCw className="h-6 w-6 animate-spin text-gray-400" /></div>
-      ) : (
+      {isLoading ? <div className="flex items-center justify-center h-40"><RefreshCw className="h-6 w-6 animate-spin text-gray-400" /></div> : (
         <div className="rounded-lg border overflow-hidden">
           <Table>
-            <TableHeader>
-              <TableRow className="bg-gray-50">
-                <TableHead>Code</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Sector</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Active</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
+            <TableHeader><TableRow className="bg-gray-50"><TableHead>Code</TableHead><TableHead>Name</TableHead><TableHead>Status</TableHead><TableHead>Active</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
             <TableBody>
-              {filtered.length === 0 && (
-                <TableRow><TableCell colSpan={6} className="text-center text-gray-400 py-8"><Building2 className="h-8 w-8 mx-auto mb-2 opacity-30" />No industries found</TableCell></TableRow>
-              )}
+              {filtered.length === 0 && <TableRow><TableCell colSpan={5} className="text-center text-gray-400 py-8"><Layers className="h-8 w-8 mx-auto mb-2 opacity-30" />No sectors found</TableCell></TableRow>}
               {filtered.map(i => (
                 <TableRow key={i.id} className="hover:bg-gray-50">
                   <TableCell><code className="text-xs bg-gray-100 px-1.5 py-0.5 rounded">{i.code}</code></TableCell>
                   <TableCell className="font-medium">{i.name}</TableCell>
-                  <TableCell className="text-sm text-gray-500">{i.parent_sector || '—'}</TableCell>
                   <TableCell><span className={`text-xs px-2 py-0.5 rounded-full font-medium ${STATUS_COLORS[i.status] || ''}`}>{i.status}</span></TableCell>
                   <TableCell>{i.is_active ? <Check className="h-4 w-4 text-green-500" /> : <X className="h-4 w-4 text-gray-400" />}</TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="ghost" size="sm" onClick={() => openEdit(i)}><Edit className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="sm" onClick={() => setDelConfirm(i)} className="text-red-500 hover:text-red-700"><Trash2 className="h-4 w-4" /></Button>
-                  </TableCell>
+                  <TableCell className="text-right"><Button variant="ghost" size="sm" onClick={() => openEdit(i)}><Edit className="h-4 w-4" /></Button><Button variant="ghost" size="sm" onClick={() => setDelConfirm(i)} className="text-red-500 hover:text-red-700"><Trash2 className="h-4 w-4" /></Button></TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </div>
       )}
-
-      {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-lg">
-          <DialogHeader><DialogTitle>{editId ? 'Edit Industry' : 'New Industry'}</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>{editId ? 'Edit Sector' : 'New Sector'}</DialogTitle></DialogHeader>
           <div className="space-y-4 py-2">
             <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label>Code <span className="text-red-500">*</span></Label>
-                <Input value={form.code} onChange={e => f('code', e.target.value.toUpperCase())} placeholder="TECH" disabled={!!editId} className="font-mono" />
-                {editId && <p className="text-xs text-gray-400 mt-1">Code is immutable after creation</p>}
-              </div>
-              <div>
-                <Label>Sort Order</Label>
-                <Input type="number" value={form.sort_order} onChange={e => f('sort_order', parseInt(e.target.value) || 0)} />
-              </div>
+              <div><Label>Code <span className="text-red-500">*</span></Label><Input value={form.code} onChange={e => f('code', e.target.value.toUpperCase())} placeholder="SERVICES" disabled={!!editId} className="font-mono" />{editId && <p className="text-xs text-gray-400 mt-1">Code is immutable after creation</p>}</div>
+              <div><Label>Sort Order</Label><Input type="number" value={form.sort_order} onChange={e => f('sort_order', parseInt(e.target.value) || 0)} /></div>
             </div>
-            <div>
-              <Label>Name <span className="text-red-500">*</span></Label>
-              <Input value={form.name} onChange={e => f('name', e.target.value)} placeholder="Technology" />
-            </div>
-            <div>
-              <Label>Parent Sector {ontHierEnabled && <span className="text-xs font-normal text-gray-400">(free-text legacy label)</span>}</Label>
-              <Input value={form.parent_sector} onChange={e => f('parent_sector', e.target.value)} placeholder="e.g. Services, Manufacturing" />
-            </div>
-            {ontHierEnabled && (
-              <div>
-                <Label>Sector <span className="text-xs font-normal text-gray-400">(structured taxonomy)</span></Label>
-                <Select value={sectorId === '' ? SECTOR_NONE : sectorId} onValueChange={v => setSectorId(v === SECTOR_NONE ? '' : v)}>
-                  <SelectTrigger><SelectValue placeholder="Select sector…" /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={SECTOR_NONE}>— None —</SelectItem>
-                    {sectors.map(s => <SelectItem key={s.id} value={String(s.id)}>{s.name} <span className="text-gray-400">({s.code})</span></SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-            <div>
-              <Label>Description</Label>
-              <Textarea value={form.description} onChange={e => f('description', e.target.value)} rows={2} />
-            </div>
+            <div><Label>Name <span className="text-red-500">*</span></Label><Input value={form.name} onChange={e => f('name', e.target.value)} placeholder="Services" /></div>
+            <div><Label>Description</Label><Textarea value={form.description} onChange={e => f('description', e.target.value)} rows={2} /></div>
             <div className="flex gap-4">
-              <div className="flex-1">
-                <Label>Status</Label>
-                <Select value={form.status} onValueChange={v => f('status', v)}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="published">Published</SelectItem>
-                    <SelectItem value="archived">Archived</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex items-end gap-2 pb-0.5">
-                <input type="checkbox" id="ia" checked={form.is_active} onChange={e => f('is_active', e.target.checked)} />
-                <label htmlFor="ia" className="text-sm">Active</label>
-              </div>
+              <div className="flex-1"><Label>Status</Label><Select value={form.status} onValueChange={v => f('status', v)}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="draft">Draft</SelectItem><SelectItem value="published">Published</SelectItem><SelectItem value="archived">Archived</SelectItem></SelectContent></Select></div>
+              <div className="flex items-end gap-2 pb-0.5"><input type="checkbox" id="sec-ia" checked={form.is_active} onChange={e => f('is_active', e.target.checked)} /><label htmlFor="sec-ia" className="text-sm">Active</label></div>
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-            <Button onClick={() => save.mutate(form)} disabled={save.isPending || !form.code || !form.name} style={{ backgroundColor: BRAND.primary, color: 'white' }}>
-              {save.isPending ? 'Saving…' : (editId ? 'Update' : 'Create')}
-            </Button>
+            <Button onClick={() => save.mutate(form)} disabled={save.isPending || !form.code || !form.name} style={{ backgroundColor: BRAND.primary, color: 'white' }}>{save.isPending ? 'Saving…' : (editId ? 'Update' : 'Create')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -328,7 +211,7 @@ export default function IndustriesPanel() {
       {/* CSV Import Dialog */}
       <Dialog open={importOpen} onOpenChange={(o) => { if (!importMut.isPending) setImportOpen(o); }}>
         <DialogContent className="max-w-2xl">
-          <DialogHeader><DialogTitle>Import Industries from CSV</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>Import Sectors from CSV</DialogTitle></DialogHeader>
           <div className="space-y-4 py-2">
             <div className="rounded-md bg-blue-50 border border-blue-100 p-3 text-xs text-gray-600 leading-relaxed">
               <div className="flex items-center gap-2 font-semibold text-gray-700 mb-1"><FileText className="h-3.5 w-3.5" />Expected columns</div>
@@ -344,7 +227,7 @@ export default function IndustriesPanel() {
             </div>
             <div>
               <Label>Or paste CSV content</Label>
-              <Textarea value={csvText} onChange={e => { setCsvText(e.target.value); setImportResult(null); }} rows={6} placeholder={IMPORT_COLUMNS.join(',') + '\nIND_TECH,Technology & Software,Services,...,published,0,true'} className="font-mono text-xs" />
+              <Textarea value={csvText} onChange={e => { setCsvText(e.target.value); setImportResult(null); }} rows={6} placeholder={IMPORT_COLUMNS.join(',') + '\nSEC_SERVICES,Services,...,published,0,true'} className="font-mono text-xs" />
             </div>
 
             {csvText.trim() && !importResult && (
@@ -356,10 +239,10 @@ export default function IndustriesPanel() {
                 {validRows.length > 0 && (
                   <div className="max-h-40 overflow-auto rounded border">
                     <Table>
-                      <TableHeader><TableRow className="bg-gray-50"><TableHead>Code</TableHead><TableHead>Name</TableHead><TableHead>Sector</TableHead><TableHead>Status</TableHead></TableRow></TableHeader>
+                      <TableHeader><TableRow className="bg-gray-50"><TableHead>Code</TableHead><TableHead>Name</TableHead><TableHead>Status</TableHead></TableRow></TableHeader>
                       <TableBody>
                         {validRows.slice(0, 8).map((r, idx) => (
-                          <TableRow key={idx}><TableCell className="font-mono text-xs">{(r.code || '').toUpperCase()}</TableCell><TableCell>{r.name}</TableCell><TableCell className="text-gray-500">{r.parent_sector || '—'}</TableCell><TableCell className="text-gray-500">{r.status || 'draft'}</TableCell></TableRow>
+                          <TableRow key={idx}><TableCell className="font-mono text-xs">{(r.code || '').toUpperCase()}</TableCell><TableCell>{r.name}</TableCell><TableCell className="text-gray-500">{r.status || 'draft'}</TableCell></TableRow>
                         ))}
                       </TableBody>
                     </Table>
@@ -415,15 +298,10 @@ export default function IndustriesPanel() {
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirm */}
       <Dialog open={!!delConfirm} onOpenChange={() => setDelConfirm(null)}>
-        <DialogContent className="max-w-sm">
-          <DialogHeader><DialogTitle>Archive Industry?</DialogTitle></DialogHeader>
+        <DialogContent className="max-w-sm"><DialogHeader><DialogTitle>Archive Sector?</DialogTitle></DialogHeader>
           <p className="text-sm text-gray-600">Archive <strong>{delConfirm?.name}</strong>? This sets status to archived and hides it from active use.</p>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setDelConfirm(null)}>Cancel</Button>
-            <Button variant="destructive" onClick={() => delConfirm && del.mutate(delConfirm.id)} disabled={del.isPending}>Archive</Button>
-          </DialogFooter>
+          <DialogFooter><Button variant="outline" onClick={() => setDelConfirm(null)}>Cancel</Button><Button variant="destructive" onClick={() => delConfirm && del.mutate(delConfirm.id)} disabled={del.isPending}>Archive</Button></DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

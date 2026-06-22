@@ -66,6 +66,11 @@ export const FEATURE_FLAGS = {
   continuousCompetencyMemory: true,
   /** Employability Passport (T-P7) — shareable candidate artifact + public recruiter view. */
   employabilityPassport: true,
+  /** Ontology Hierarchy Completion (Task #51) — Sector + Industry Segment entities and the
+   *  persisted ont_*→onto_* role crosswalk consumed by the weight bridge. Default OFF →
+   *  new routes 503, new admin panels hidden, the additive schema is never created, and the
+   *  weight bridge falls back to the pure runtime title matcher (byte-identical to legacy). */
+  ontologyHierarchyV2: false,
   /** Hypothesis-Driven Clarity (Phase 0B) — when ON, `/analyze` additionally attaches
    *  a hypothesis investigation envelope (bands + governance) to its response.
    *  Default OFF → response is byte-identical to current behaviour. */

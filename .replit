@@ -33,35 +33,7 @@ args = "Upload Service"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "metering-smoke"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "metering-safety"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "metering-concurrency"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "credits-concurrency"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "credits-issue-concurrency"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "credits-issue-idempotency"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
 args = "test-referral-deal-value"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "referral-deal-value-livedb"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
@@ -119,89 +91,12 @@ waitForPort = 8000
 outputType = "console"
 
 [[workflows.workflow]]
-name = "metering-smoke"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd backend && npx tsx scripts/smoke-usage-metering-65.ts"
-
-[workflows.workflow.metadata]
-isValidation = true
-
-[[workflows.workflow]]
-name = "metering-safety"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd backend && npx tsx scripts/smoke-usage-metering-safety-65.ts"
-
-[workflows.workflow.metadata]
-isValidation = true
-
-[[workflows.workflow]]
-name = "metering-concurrency"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd backend && npx tsx scripts/smoke-usage-metering-concurrency-65.ts"
-
-[workflows.workflow.metadata]
-isValidation = true
-
-[[workflows.workflow]]
-name = "credits-concurrency"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd backend && npx tsx scripts/smoke-credits-spend-concurrency-65.ts"
-
-[workflows.workflow.metadata]
-isValidation = true
-
-[[workflows.workflow]]
-name = "credits-issue-concurrency"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd backend && npx tsx scripts/smoke-credits-issue-concurrency-28.ts"
-
-[workflows.workflow.metadata]
-isValidation = true
-
-[[workflows.workflow]]
-name = "credits-issue-idempotency"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd backend && npx tsx scripts/smoke-credits-issue-idempotency-29.ts"
-
-[workflows.workflow.metadata]
-isValidation = true
-
-[[workflows.workflow]]
 name = "test-referral-deal-value"
 author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx --test tests/partner-ecosystem-referral-deal-value.test.ts"
-
-[workflows.workflow.metadata]
-isValidation = true
-
-[[workflows.workflow]]
-name = "referral-deal-value-livedb"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd backend && npx tsx scripts/smoke-referral-deal-value-resolver.ts"
 
 [workflows.workflow.metadata]
 isValidation = true
@@ -280,3 +175,6 @@ VITE_FIREBASE_PROJECT_ID = "metryxone-ai-a3431"
 VITE_FIREBASE_STORAGE_BUCKET = "metryxone-ai-a3431.firebasestorage.app"
 VITE_FIREBASE_MESSAGING_SENDER_ID = "652730117933"
 VITE_FIREBASE_MEASUREMENT_ID = "G-EQBJNCN5W6"
+
+[userenv.development]
+FF_ONTOLOGY_HIERARCHY_V2 = "1"

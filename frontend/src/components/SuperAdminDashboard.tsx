@@ -147,6 +147,9 @@ const PlatformAuditLogPanel = lazy(() => import('./superadmin/PlatformAuditLogPa
 const ApprovalWorkflowPanel = lazy(() => import('./superadmin/ApprovalWorkflowPanel'));
 const OntologyImportExportPanel = lazy(() => import('./superadmin/OntologyImportExportPanel'));
 const FunctionsPanel = lazy(() => import('./superadmin/FunctionsPanel'));
+const SectorsPanel = lazy(() => import('./superadmin/SectorsPanel'));
+const IndustrySegmentsPanel = lazy(() => import('./superadmin/IndustrySegmentsPanel'));
+const RoleCrosswalkPanel = lazy(() => import('./superadmin/RoleCrosswalkPanel'));
 const DepartmentsPanel = lazy(() => import('./superadmin/DepartmentsPanel'));
 const RolesPanel = lazy(() => import('./superadmin/RolesPanel'));
 const RoleFamiliesPanel = lazy(() => import('./superadmin/RoleFamiliesPanel'));
@@ -272,6 +275,17 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
     queryKey: ['/api/competency-intelligence/spine', 'cfi-enabled'],
     queryFn: async () => {
       const res = await fetch('/api/competency-intelligence/spine', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // ── Ontology Hierarchy V2 flag probe (file-registry flag).
+  //    Flag OFF → /sectors gate returns 503 → the 3 new tabs are omitted (byte-identical UI). ──
+  const { data: ontHierEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/ontology/sectors', 'ont-hier-enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/ontology/sectors?limit=1', { credentials: 'include' });
       return res.ok;
     },
     enabled: isAuthenticated,
@@ -858,11 +872,14 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       { id: 'cmp-blueprint-mappings', label: 'Blueprint Mappings', icon: Network,    node: <BlueprintMappingPanel /> },
                       { id: 'cmp-level-profiles',     label: 'Level Profiles',     icon: Layers,     node: <LevelProfilePanel /> },
                       { id: 'ont-overview',             label: 'Ontology Overview',        icon: Activity,      node: <OntologyOverviewPanel /> },
+                      ...(ontHierEnabled ? [{ id: 'ont-sectors', label: 'Sectors', icon: Layers, node: <SectorsPanel /> }] : []),
                       { id: 'ont-industries',           label: 'Industries',               icon: Building2,     node: <IndustriesPanel /> },
+                      ...(ontHierEnabled ? [{ id: 'ont-industry-segments', label: 'Industry Segments', icon: Network, node: <IndustrySegmentsPanel /> }] : []),
                       { id: 'ont-functions',            label: 'Functions',                icon: Briefcase,     node: <FunctionsPanel /> },
                       { id: 'ont-departments',          label: 'Departments',              icon: Layers,        node: <DepartmentsPanel /> },
                       { id: 'ont-role-families',        label: 'Role Families (Ontology)', icon: Users2,        node: <RoleFamiliesPanel /> },
                       { id: 'ont-roles',                label: 'Roles',                    icon: UserCircle2,   node: <RolesPanel /> },
+                      ...(ontHierEnabled ? [{ id: 'ont-role-crosswalk', label: 'Role Crosswalk', icon: GitBranch, node: <RoleCrosswalkPanel /> }] : []),
                       { id: 'ont-career-tracks',        label: 'Career Tracks',            icon: Map,           node: <CareerTracksPanel /> },
                       { id: 'ont-competency-levels',    label: 'Competency Levels',        icon: BarChart2,     node: <CompetencyLevelsPanel /> },
                       { id: 'ont-indicators',           label: 'Indicators',               icon: Target,        node: <IndicatorsPanel /> },
@@ -890,7 +907,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       },
                       {
                         label: 'Reference Library (O*NET)',
-                        ids: ['ont-overview', 'ont-industries', 'ont-functions', 'ont-departments', 'ont-role-families', 'ont-roles', 'ont-career-tracks', 'ont-competency-levels', 'ont-indicators', 'ont-benchmarks', 'ont-career-paths', 'ont-learning-paths', 'ont-future-skills', 'ont-layers', 'ont-clusters', 'ont-competencies', 'ont-micro-competencies', 'ont-concerns', 'ont-assessment-questions', 'ont-ai-rules', 'ont-import-export'],
+                        ids: ['ont-overview', 'ont-sectors', 'ont-industries', 'ont-industry-segments', 'ont-functions', 'ont-departments', 'ont-role-families', 'ont-roles', 'ont-role-crosswalk', 'ont-career-tracks', 'ont-competency-levels', 'ont-indicators', 'ont-benchmarks', 'ont-career-paths', 'ont-learning-paths', 'ont-future-skills', 'ont-layers', 'ont-clusters', 'ont-competencies', 'ont-micro-competencies', 'ont-concerns', 'ont-assessment-questions', 'ont-ai-rules', 'ont-import-export'],
                         collapsed: true,
                       },
                       {
@@ -1215,7 +1232,10 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
 
               {/* ── Competency Ontology panels ─────────────────────────────── */}
               {activeTab === 'ont-overview'         && <div className="h-full overflow-auto"><OntologyOverviewPanel /></div>}
+              {activeTab === 'ont-sectors'          && <div className="h-full overflow-auto"><SectorsPanel /></div>}
               {activeTab === 'ont-industries'       && <div className="h-full overflow-auto"><IndustriesPanel /></div>}
+              {activeTab === 'ont-industry-segments'&& <div className="h-full overflow-auto"><IndustrySegmentsPanel /></div>}
+              {activeTab === 'ont-role-crosswalk'   && <div className="h-full overflow-auto"><RoleCrosswalkPanel /></div>}
               {activeTab === 'ont-functions'        && <div className="h-full overflow-auto"><FunctionsPanel /></div>}
               {activeTab === 'ont-departments'      && <div className="h-full overflow-auto"><DepartmentsPanel /></div>}
               {activeTab === 'ont-roles'            && <div className="h-full overflow-auto"><RolesPanel /></div>}

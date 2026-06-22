@@ -117,6 +117,65 @@ function buildCrud(
     }
   });
 
+  // POST bulk import (CSV-driven; upsert by code). Registered before /:id param routes.
+  app.post(`/api/ontology/${base}/import`, requireAuth, requireSuperAdmin, async (req: Request, res: Response) => {
+    try {
+      await ensureTaxonomySchema(pool);
+      const rowsIn = Array.isArray(req.body?.items) ? req.body.items : null;
+      if (!rowsIn) return res.status(400).json({ error: 'items array required' });
+      if (rowsIn.length === 0) return res.status(400).json({ error: 'No rows to import' });
+      if (rowsIn.length > 1000) return res.status(400).json({ error: 'Too many rows (max 1000 per import)' });
+      const nameCol = writableFields.includes('title') ? 'title' : 'name';
+      const results = { total: rowsIn.length, created: 0, updated: 0, failed: 0, errors: [] as { row: number; code?: string; error: string }[] };
+      for (let idx = 0; idx < rowsIn.length; idx++) {
+        const raw = (rowsIn[idx] ?? {}) as Record<string, unknown>;
+        const code = String(raw.code ?? '').trim().toUpperCase();
+        const name = String(raw[nameCol] ?? raw.name ?? raw.title ?? '').trim();
+        if (!code) { results.failed++; results.errors.push({ row: idx + 1, error: 'Missing code' }); continue; }
+        if (!name) { results.failed++; results.errors.push({ row: idx + 1, code, error: `Missing ${nameCol}` }); continue; }
+        const rec: Record<string, unknown> = {};
+        for (const fld of writableFields) {
+          if (fld === 'code') { rec.code = code; continue; }
+          if (fld === nameCol) { rec[fld] = name; continue; }
+          const v = raw[fld];
+          if (v === undefined || v === null || v === '') continue;
+          if (fld === 'is_active' || fld.startsWith('is_')) {
+            rec[fld] = (v === true || ['true', '1', 'yes', 'y'].includes(String(v).toLowerCase()));
+          } else if (fld === 'sort_order' || fld === 'min_years_experience' || fld.endsWith('_id')) {
+            const n = parseInt(String(v), 10); if (!Number.isNaN(n)) rec[fld] = n;
+          } else if (fld === 'responsibilities') {
+            rec[fld] = String(v).split(/[;|]/).map(s => s.trim()).filter(Boolean);
+          } else {
+            rec[fld] = v;
+          }
+        }
+        const cols = Object.keys(rec);
+        const updateCols = cols.filter(c => c !== 'code');
+        const sql = `INSERT INTO ${table} (${cols.join(',')}) VALUES (${cols.map((_, i) => `$${i + 1}`).join(',')})
+          ON CONFLICT (code) DO UPDATE SET ${updateCols.map(c => `${c} = EXCLUDED.${c}`).join(', ')}, updated_at = NOW()`;
+        try {
+          // Deterministic created-vs-updated: check existence before upsert (xmax heuristic is implementation-fragile).
+          const { rowCount: exists } = await pool.query(`SELECT 1 FROM ${table} WHERE code = $1`, [code]);
+          await pool.query(sql, cols.map(c => rec[c]));
+          if (exists) results.updated++; else results.created++;
+        } catch (e: any) {
+          results.failed++;
+          const msg = e?.code === '23505' ? 'Duplicate code'
+            : e?.code === '23514' ? 'Invalid value (failed a check constraint)'
+            : e?.code === '23502' ? 'Missing a required field'
+            : e?.code === '22001' ? 'A value is too long'
+            : 'Insert failed';
+          results.errors.push({ row: idx + 1, code, error: msg });
+        }
+      }
+      void logAudit(pool, req, { action: 'import', entityType: base, entityId: 0, entityLabel: `import: ${results.created} created, ${results.updated} updated, ${results.failed} failed` });
+      return res.json(results);
+    } catch (err) {
+      console.error(`[ontology/${base}] IMPORT error:`, err);
+      return res.status(500).json({ error: 'Import failed' });
+    }
+  });
+
   // PATCH update
   app.patch(`/api/ontology/${base}/:id`, requireAuth, requireSuperAdmin, async (req: Request, res: Response) => {
     try {

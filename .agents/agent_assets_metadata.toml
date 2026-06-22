@@ -983,13 +983,13 @@ title = "Phase 1 Competency Assessment — Completeness Analysis"
 id = "NBBAdbOcbaomEXSYPkkRu"
 uri = "file://reports/phase1_workflow.md"
 type = "text"
-title = "Full Platform Manual — Phase 1 → 6.15 (Markdown)"
+title = "Full Platform Manual — Phase 1 → 6.15 (now incl. Phase 1.3) — Markdown"
 
 [[outputs]]
 id = "rgwluyAovdXJgascrdkCQ"
 uri = "file://reports/phase1_workflow.pdf"
 type = "pdf"
-title = "Full Platform Manual — Phase 1 → 6.15 (PDF)"
+title = "Full Platform Manual — Phase 1 → 6.15 (now incl. Phase 1.3) — PDF"
 
 [[outputs]]
 id = "AOoM9p9CVrUWpXRoGU9Sz"

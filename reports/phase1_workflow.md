@@ -4,7 +4,7 @@
 **Track:** the competency-to-commercial build journey (Phase 1 = competency framework → Phase 6 = commercial/platform) · **Date:** 22 June 2026
 **Source of truth:** the live code — `backend/routes/*.ts` (route markers) + `backend/services/*.ts` (module functions + file-header phase markers) + the `FF_*` flags actually set in the `Backend API` workflow command. Where a per-subsystem doc holds the exhaustive table list it is named inline (e.g. `docs/EMPLOYABILITY_INDEX.md`).
 
-> **Phase 1 scope note (unchanged):** the implemented Phase 1 series is **Phase 1 (foundation) + 1.1, 1.2, 1.4, 1.5, 1.6, 1.7**. **There is no 1.3, and no 1.8–1.15** — those numbers do not exist in code/docs/migrations.
+> **Phase 1 scope note:** the implemented Phase 1 *code* series is **Phase 1 (foundation) + 1.1, 1.2, 1.4, 1.5, 1.6, 1.7** — **there is no 1.3 module, route, or table in code**, and no 1.8–1.15. However, **Phase 1.3 (Competency Data Quality Review) now exists as a one-off deliverable**: a read-only audit of the 299-competency genome → `reports/competency_quality_report.md`. It is documented in its own section below, clearly marked as an audit report rather than a running engine.
 
 > **⚠️ Read this about the numbering.** This codebase contains **more than one "Phase 1–6" numbering system**. This manual follows the **competency-to-commercial build journey** — the one the competency assessment actually flows into: **Phase 1** competency framework → **Phase 2** competency runtime → **Phase 3** employability/EI → **Phase 4** career intelligence → **Phase 5** employer/enterprise → **Phase 6** commercial/platform/super-admin (up to 6.15). A *separate, older* numbering lives in `docs/phase-history.md` as **"Track A / Track B"** (there, "Phase 2" means Adaptive Benchmarking, "Phase 3" Mobility, etc.). The two are **not the same**; if you cross-reference `phase-history.md`, keep that in mind.
 
@@ -239,6 +239,33 @@ admin CRUD + summary → requireAuth + requireSuperAdmin
 5. **Report** — `getCompetencyMasterSummary` returns coverage, status breakdown, per-flag eligibility counts, and curated-vs-default provenance.
 
 **Live state:** ⚠️ **`onto_competency_master_ext = 0` in the live shared DB** → engine + routes live, but no data (seed not present here). This is the #1 activation gap.
+
+---
+
+## Phase 1.3 — Competency Data Quality Review *(audit deliverable, not a code module)*
+**Deliverable:** `reports/competency_quality_report.md` · **Generated:** 22 June 2026 · **Type:** one-off, read-only data-quality audit (no engine, no route, no table).
+
+**Why it's here:** the Competency Framework Intelligence *code* never shipped a Phase 1.3 (the markers in `competency-intelligence.ts` jump 1.2 → 1.4). This report is the **missing 1.3 deliverable** — a manual audit of the **299-row `onto_competencies` genome** (the canonical master that Phase 1 builds and Phase 2 consumes). It is **read-only**: nothing in the database was merged, renamed, or deleted, and per project policy every cleanup recommendation **stops for approval** before any mutation.
+
+**Plain-English overview:** "Is the master list of ~300 competencies clean?" The answer: **no literal duplicates, no deprecated rows, no `(duplicate)` markers** — but there *is* **naming inconsistency** (word-order / qualifier variants of the same idea, e.g. *Building Trust* vs *Trust Building*) and **classification inconsistency** (the same idea filed under different `scientific_type`s, e.g. *Delegation* behavioral vs *Task Delegation* functional).
+
+**What it found (scorecard):**
+
+| Check | Result |
+|---|---|
+| Competencies reviewed | **299** |
+| Deprecated flags / exact-duplicate names / `(duplicate)` markers | **0 / 0 / 0** |
+| Name-variant duplicate groups | **5 confirmed** + 7 lower-confidence |
+| Near-duplicate pairs flagged by similarity | **73** (most are genuinely *distinct* → RETAIN) |
+| Genuine classification conflicts | **3** |
+| Merge groups recommended | **6 high-confidence** + 7 medium-confidence |
+
+**Audience views:**
+- **End user / leadership:** the competency catalogue is structurally sound; the work left is editorial (consolidate ~6–13 near-synonym labels) and governance (pick one type per construct). No data was changed.
+- **Admin / framework curator:** §3 lists exact merge recommendations (retain-which + why); §4 lists the 3 type/domain conflicts to reconcile *before* merging; §5 lists the 73 similar-but-distinct pairs deliberately kept apart. Apply via the **Phase 1.2 `PATCH /master/:id`** (status/deprecate) and **Phase 1.4 hierarchy** (parent-child) surfaces — there is no bulk "merge" endpoint, so changes are curated, reversible, and approval-gated.
+- **Developer:** method = name normalization → exact-name + token-set + fuzzy similarity (string ratio + token Jaccard), then **manual adjudication** against `domain_id` / `family_id` / `scientific_type`. **Critical limitation:** every `definition` is an auto-generated placeholder (*"X — canonical competency in the Y family."*) carrying **no real semantic content**, so true meaning-based de-dup is impossible from data alone — **authoring real definitions is the single highest-value cleanup action** (reported as a Coverage gap: the field exists, but Confidence in it for dedup is zero).
+
+**Honest status:** ✅ **complete as an audit** (299 reviewed, **0 modified**). 🟡 **No remediation applied yet** — all merges/reconciliations remain recommendations pending approval. Scope was limited to `onto_competencies`; sibling tables (`competency_library`, `competency_catalog`, `ont_competencies`, …) are empty in this environment and were excluded.
 
 ---
 
@@ -681,7 +708,7 @@ Honesty notes carried *inside* the report (Coverage vs Confidence in action):
 | **1.6** | Assessment Foundation | blueprints, role-assessments, competency-questions | summary + full CRUD + derive | blueprints 6 / blueprint_comp 28 / role_assess 3 / question_map 25 (7 distinct comps) | ✅ active (7/299 measured) |
 | **1.7** | Search & Discovery | search, facets, micro-search | bulk operation | (reads all above) | ✅ active |
 
-*1.3 and 1.8–1.15 do not exist. Empty tables (1.2, 1.4) are reported as empty, not inflated.*
+*1.3 exists only as a one-off data-quality audit (`reports/competency_quality_report.md`), not as code; 1.8–1.15 do not exist. Empty tables (1.2, 1.4) are reported as empty, not inflated.*
 
 > **End of Part 1.** Everything above is the framework set-up (the back office). Everything below — Parts 2 to 6 — is what happens once a real person takes the assessment, and how the platform turns that into employability insight, career guidance, employer tools, and a commercial product.
 

@@ -67,6 +67,10 @@ args = "referral-deal-value-livedb"
 task = "workflow.run"
 args = "referral-deal-value-writepath"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "referral-deal-value-repair"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -209,6 +213,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx scripts/smoke-referral-deal-value-writepath.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "referral-deal-value-repair"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx scripts/smoke-referral-deal-value-repair.ts"
 
 [workflows.workflow.metadata]
 isValidation = true

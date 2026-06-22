@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Edit, Trash2, Search, Building2, RefreshCw, X, Check, Upload, Download, FileText } from 'lucide-react';
+import { Plus, Edit, Trash2, Search, Building2, RefreshCw, X, Check, Upload, Download, FileText, CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Badge } from '../ui/badge';
@@ -322,14 +322,34 @@ export default function IndustriesPanel() {
 
             {importResult && (
               <div className="rounded-md border p-3 text-sm space-y-2">
+                {importResult.failed === 0 ? (
+                  <div className="flex items-start gap-2 rounded-md bg-green-50 border border-green-200 p-2.5 text-sm text-green-800">
+                    <CheckCircle2 className="h-4 w-4 mt-0.5 shrink-0" />
+                    <span><strong>Import successful.</strong> All {importResult.total} row{importResult.total === 1 ? '' : 's'} processed — {importResult.created} created, {importResult.updated} updated.</span>
+                  </div>
+                ) : importResult.created + importResult.updated > 0 ? (
+                  <div className="flex items-start gap-2 rounded-md bg-amber-50 border border-amber-200 p-2.5 text-sm text-amber-800">
+                    <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
+                    <span><strong>Imported with errors.</strong> {importResult.created + importResult.updated} of {importResult.total} row{importResult.total === 1 ? '' : 's'} saved ({importResult.created} created, {importResult.updated} updated); {importResult.failed} failed — see details below.</span>
+                  </div>
+                ) : (
+                  <div className="flex items-start gap-2 rounded-md bg-red-50 border border-red-200 p-2.5 text-sm text-red-800">
+                    <XCircle className="h-4 w-4 mt-0.5 shrink-0" />
+                    <span><strong>Import failed.</strong> None of the {importResult.total} row{importResult.total === 1 ? '' : 's'} could be saved — see errors below.</span>
+                  </div>
+                )}
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge className="bg-green-100 text-green-800">{importResult.created} created</Badge>
                   <Badge className="bg-blue-100 text-blue-800">{importResult.updated} updated</Badge>
                   {importResult.failed > 0 && <Badge className="bg-red-100 text-red-800">{importResult.failed} failed</Badge>}
                 </div>
                 {importResult.errors.length > 0 && (
-                  <div className="max-h-32 overflow-auto text-xs text-red-600 space-y-0.5">
-                    {importResult.errors.slice(0, 20).map((er, idx) => (<div key={idx}>Row {er.row}{er.code ? ` (${er.code})` : ''}: {er.error}</div>))}
+                  <div className="space-y-1">
+                    <div className="text-xs font-semibold text-gray-700">Errors ({importResult.errors.length})</div>
+                    <div className="max-h-32 overflow-auto rounded border border-red-100 bg-red-50/40 p-2 text-xs text-red-700 space-y-0.5">
+                      {importResult.errors.slice(0, 50).map((er, idx) => (<div key={idx}>Row {er.row}{er.code ? ` (${er.code})` : ''}: {er.error}</div>))}
+                      {importResult.errors.length > 50 && <div className="text-red-400">…and {importResult.errors.length - 50} more</div>}
+                    </div>
                   </div>
                 )}
               </div>

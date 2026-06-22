@@ -12,7 +12,7 @@
 All sub-phases obey the same additive contract:
 
 ```
-ensure*Schema()      → lazy DDL (CREATE TABLE/INDEX), runs on POST/seed paths only
+ensure*Schema()      → idempotent lazy DDL (CREATE TABLE/INDEX IF NOT EXISTS); in these services it is called at the top of BOTH read and write functions (a first read self-creates the table)
 run*Seed()           → idempotent population, ADDITIVE over the genome (never mutates onto_competencies)
 get*() read views    → public, requireAuth-gated  (flag OFF → 503; flag ON, no session → 401)
 admin CRUD + summary → requireAuth + requireSuperAdmin
@@ -64,7 +64,14 @@ admin CRUD + summary → requireAuth + requireSuperAdmin
 
 **Tables:** `onto_competencies` (299), `onto_domains` (5), `onto_families` (29), `onto_proficiency_levels` (5), `onto_layers` (4), `onto_indicators` (66), `onto_role_weights` (35), `onto_aliases` (19).
 
-**Workflow:** read genome → resolve taxonomy (domain→family→competency) → join levels/indicators → emit crosswalk. `getFrameworkReadiness` rolls every sub-phase's coverage into the admin readiness report.
+**Detailed workflow (step by step):**
+1. **Spine descriptor** — `GET /spine` returns the static `CANONICAL_SPINE` descriptor (namespaces, table inventory, version `1.0.0`); no DB read.
+2. **Genome read** — `getMasterCompetencies` reads the `onto_competencies` genome via the ontology service (`listCompetencies`) with `domainId`/`familyId`/`search`/`limit` filters, and returns `canonical_count` (a `safeCount` of `onto_competencies`) for coverage.
+3. **Taxonomy assembly** — `getTaxonomy` returns 5 tiers — industry · function · department · role_family · role — and each tier carries BOTH its `onto_*` and `ont_*` table reference (e.g. `onto_subfunctions` ↔ `ont_departments`); the cross-namespace mapping lives here, not in the competency read.
+4. **Levels & indicators** — `getCompetencyLevels` returns the proficiency levels (with layers/anchors) and `getIndicators` returns the 66 indicators, each as a separate payload (not joined onto every competency row).
+5. **Role requirements** — `getRoleRequirements` resolves a role string to an O*NET code via `resolveBestOntRole`, then pulls weighted requirements through `role-crosswalk` (honest null/empty when unresolved — never fabricated).
+6. **Crosswalk** — `buildCompetencyCrosswalk` emits the cross-namespace mapping for `GET /crosswalk`.
+7. **Readiness roll-up** — `getFrameworkReadiness` iterates `ASSET_SPECS` (30+ declared tables), runs `safeCount` on each, and derives per-asset **Coverage** (row count) vs **Confidence** (qualitative provenance) → the master admin readiness report.
 
 **Live state:** ✅ populated, end-to-end functional.
 
@@ -84,7 +91,17 @@ admin CRUD + summary → requireAuth + requireSuperAdmin
 
 **Tables:** `onto_competency_types` (5) · `onto_competency_type_map` (299).
 
-**Workflow:** `runCompetencyTypeSeed` walks the genome → `classifyCompetency` assigns a type via family/lexicon rules (low-confidence rows flagged `needs_review`) → writes `onto_competency_type_map` (never touches the genome). `getClassificationReport` reports coverage · distribution · confidence · honest content gaps.
+**Detailed workflow (step by step):**
+1. **Schema** — `ensureCompetencyTypeSchema` (idempotent `CREATE … IF NOT EXISTS`, called at the top of every read and write function) creates `onto_competency_types` (5-row master) + `onto_competency_type_map` (one row per competency).
+2. **Seed types** — `runCompetencyTypeSeed` upserts the 5 canonical types, then iterates every `onto_competencies` row through `classifyCompetency`.
+3. **Classification cascade** (`classifyCompetency`, deterministic — first match wins):
+   a. Normalise name + definition (lowercase, strip punctuation).
+   b. `FUTURE_SKILLS_LEXICON` hit on **name** → `future_skills` (Medium confidence); on **definition** only → Low confidence.
+   c. `family_id` ∈ `TECHNICAL_FAMILIES` → `technical` (High); else `TECHNICAL_LEXICON` match → `technical` (Medium/Low).
+   d. Inherit the existing `scientific_type` for behavioral / cognitive / functional (High).
+   e. No rule matches → default `behavioral`, Low confidence, `needs_review = true`.
+4. **Persist** — write the assigned type + confidence + `needs_review` to `onto_competency_type_map` (the genome is never touched).
+5. **Report** — `getClassificationReport` returns coverage, per-type distribution, confidence mix, `needs_review` count, and honest content-gap findings.
 
 **Live state:** ✅ 299/299 classified. **Honest gap:** Future Skills = 0, Technical sparse (a *content* gap the classifier surfaces, not an engine fault).
 
@@ -106,7 +123,12 @@ admin CRUD + summary → requireAuth + requireSuperAdmin
 
 **Tables:** `onto_competency_master_ext` (extension row per competency; `source=curated|default`).
 
-**Workflow:** seed creates one extension row per genome competency with default flags → admin curates status/flags via PATCH (stamped `source=curated`) → summary reports per-module eligibility counts + curated-vs-default provenance.
+**Detailed workflow (step by step):**
+1. **Schema** — `ensureCompetencyMasterSchema` creates `onto_competency_master_ext` (one extension row per competency).
+2. **Seed defaults** — `runCompetencyMasterSeed` inserts one ext row per genome competency: maps the genome's existing `deprecated` flag → `status` (`deprecated` or `active`), sets all 6 eligibility flags `true`, stamps `source='default'`.
+3. **Read view** — `getCompetencyMaster` composes `onto_competencies` + `onto_competency_type_map` + `onto_competency_master_ext` into one `CompetencyMasterRow`; filters by `q`/`type`/`status`.
+4. **Curate** — `updateCompetencyMaster` (`PATCH /master/:id`) updates status + the 6 flags for one id and flips `source='curated'`; returns 404 if the id is unknown — it never creates a competency.
+5. **Report** — `getCompetencyMasterSummary` returns coverage, status breakdown, per-flag eligibility counts, and curated-vs-default provenance.
 
 **Live state:** ⚠️ **`onto_competency_master_ext = 0` in the live shared DB** → engine + routes live, but no data (seed not present here). This is the #1 activation gap.
 
@@ -126,7 +148,16 @@ admin CRUD + summary → requireAuth + requireSuperAdmin
 
 **Tables:** `onto_competency_hierarchy` (parent_competency_id → child_competency_id | micro_label).
 
-**Workflow:** parent must be an existing competency; child is validated-if-linked, else stored as a label-only micro. Summary reports coverage + linked-vs-named provenance.
+**Detailed workflow (step by step):**
+1. **Schema** — `ensureMicroCompetencySchema` creates `onto_competency_hierarchy` with a `chk_hier_no_self` check (parent ≠ child).
+2. **Seed** — `runMicroCompetencySeed` populates the curated `SEED_FRAMEWORK` groups (Communication, Leadership, Problem-Solving).
+3. **Create** (`createMicroRelationship`):
+   - **Linked child** — `child_competency_id` FK must reference a real `onto_competencies` row; the label is locked to the canonical name (`linked: true`).
+   - **Named-only child** — no FK; stores `micro_label` + `micro_slug` (via `slugify`), flagged `linked: false` (honest).
+   - Parent existence is validated; self-reference is rejected by the check constraint.
+4. **Read** — `getMicroFramework` (nested parent→children) and `getMicroMapping` (flat) with `parent_id`/`q`/`active` filters.
+5. **Mutate** — `PATCH /:id` toggles active / reorders / relabels; `DELETE /:id` removes a relationship (genome untouched, fully reversible).
+6. **Report** — `getMicroFrameworkSummary` returns coverage + linked-vs-named provenance.
 
 **Live state:** ⚠️ **`onto_competency_hierarchy = 0` in the live DB** (was 12 in the 19-Jun audit env). Engine functional; relationships need authoring/seeding.
 
@@ -147,7 +178,17 @@ admin CRUD + summary → requireAuth + requireSuperAdmin
 
 **Tables:** `onto_role_competency_profiles` (14), `onto_role_weights` (35); links to `onto_roles` (5).
 
-**Workflow:** each requirement validates role AND competency exist → readiness = Σ(weight × min(actual/required)) banded via `readinessBand`; `roleFit` downgrades when blocking (critical) gaps exist. Genome and roles untouched.
+**Detailed workflow (step by step):**
+1. **Seed** — `runRoleCompetencyProfileSeed` populates curated per-role requirements in `onto_role_competency_profiles` (validates that role AND competency exist).
+2. **Create/edit** — admin `POST`/`PATCH /:id` set `required_level` (1–5), `weight` (0–100), `criticality` ∈ {critical, important, desirable, optional}, rationale, active; both references are validated.
+3. **Profile & matrix** — `getRoleProfiles` returns nested role→competency requirements; `getRoleCompetencyMatrix` returns the roles × competencies grid.
+4. **Readiness computation** (`getRoleReadiness/:roleId?actuals=comp:level,...`):
+   - per competency `attainment = min(actual_level / required_level, 1)`
+   - `readiness_score = Σ(attainment × weight) / Σ(assessed_weight) × 100`
+   - **blocking gaps** = count of `criticality='critical'` competencies where `actual_level < required_level`
+   - band the score via `readinessBand`; `roleFit`: ≥85 strong · ≥70 good · ≥50 partial · <50 low — **capped at `partial` whenever blockingGaps > 0**, regardless of score
+   - no `actuals` supplied → returns the required structure only, readiness honestly unmeasured.
+5. **Report** — `getRoleCompetencyProfileSummary`: coverage, weight integrity, criticality mix, findings.
 
 **Live state:** ✅ 14 profiles / 35 weights / 3 role→assessment maps. **Gap:** breadth (only 5 roles).
 
@@ -175,6 +216,14 @@ role ──createRoleAssessment──▶ onto_role_assessment_map ──▶ blue
 competency ──deriveCompetencyQuestionMap / bulkMap──▶ onto_competency_question_map ──▶ existing question bank
 ```
 
+**Detailed workflow (step by step):**
+1. **Derive blueprints** — `deriveBlueprintsFromProfiles` reads each Phase 1.5 role profile and projects it verbatim into `onto_assessment_blueprints` + `onto_blueprint_competency_map` (each blueprint competency carries the profile's weight).
+2. **Map roles → assessments** — `createRoleAssessment` writes `onto_role_assessment_map`, marking one blueprint per role `is_primary`.
+3. **Map competencies → questions** — `deriveCompetencyQuestionMap` (or `bulkMapCompetencyQuestions`) links genome competency ids to rows in `competency_question_templates` via `onto_competency_question_map`. If no questions exist, the map stays empty — never seeded with placeholders.
+4. **Read views** — `getBlueprints`/`getBlueprint` return a `BlueprintView` carrying `weight_total` and `weight_balanced` (a boolean check that the weights sum ≈ 100 ±0.5).
+5. **Integrity reporting** — `getAssessmentFoundationSummary` counts blueprints, blueprint-competencies, unbalanced blueprints (reported as-is, **never auto-normalised**), role coverage, and competency-question links across N distinct competencies vs questions available.
+6. **Manual CRUD** — blueprints, blueprint-competencies, role-assessments and competency-questions each have admin `POST`/`PATCH`/`DELETE`, all validating that referenced rows exist.
+
 **Live state:** ✅ blueprints + maps populated. **Honest gap:** `onto_competency_question_map` has 25 rows but covers only **7 distinct competencies of 299** — the bulk of competencies are not yet directly measurable.
 
 ---
@@ -188,7 +237,12 @@ competency ──deriveCompetencyQuestionMap / bulkMap──▶ onto_competency_
 
 **Tables:** none of its own — reads across the layers above.
 
-**Workflow:** build facet groups from live data → filter/paginate → return results + facet counts; `bulkOperation` applies an admin action across a result set.
+**Detailed workflow (step by step):**
+1. **Facets** — `getSearchFacets` builds facet groups — types, domains, families, taxonomy (industries/functions/departments/roles) and attribute lists — from live data, each with counts (there is no `status` facet).
+2. **Search** — `searchCompetencies(opts)` applies the selected filter groups + pagination across the composed layers. Taxonomy filters (industry/function/department) resolve by joining `onto_role_competency_profiles → onto_roles → onto_role_families → onto_subfunctions → onto_functions → onto_industries`; micro-counts and role-relevance come from correlated subqueries.
+3. **Targeted lookups** — `getCompetenciesByIds` (resolve a set of ids) and `searchMicroCompetencies` (micro layer).
+4. **Summary** — `getSearchSummary`: totals (active/deprecated), typed vs untyped, domains/families, micro count, taxonomy counts, and a type breakdown.
+5. **Bulk operation** — `bulkOperation` (admin `POST /search/bulk`) supports exactly two operations: `export` (returns the selected competencies) and `assign_type` (sets the Phase 1.1 type for a set of ids, stamping `provenance='manual_bulk'`). It never changes master status and never imports new competencies.
 
 **Live state:** ✅ functional over the live 299 genome.
 
@@ -397,15 +451,15 @@ For one-off additions and corrections, use the panel forms (or call the admin en
 | 1.6 Assessment Foundation | manage blueprints / blueprint-competencies / role-assessments / competency-questions | their respective `POST`/`PATCH`/`DELETE` |
 
 ### Option 5 — Bulk update (not import) — Search & Discovery
-1.7's `POST /api/admin/competency-intelligence/search/bulk` applies an admin action across a **filtered result set** of existing competencies (e.g. bulk status changes). It edits existing rows; it does not import new ones.
+1.7's `POST /api/admin/competency-intelligence/search/bulk` runs across a **filtered result set** of existing competencies. It supports exactly two operations: `export` (read out the selection) and `assign_type` (set the Phase 1.1 type axis in bulk, stamped `provenance='manual_bulk'`). It does not change master status and does not import new competencies.
 
 ### Import-support matrix
 
 | Module | Seed | SQL/O*NET genome | Bulk file upload | Manual CRUD | Bulk update |
 |---|---|---|---|---|---|
 | Foundation | — | ✅ | — | — | — |
-| 1.1 Type | ✅ | — | — | — (seed-driven) | via 1.7 |
-| 1.2 Master | ✅ | — | — | ✅ | ✅ (1.7) |
+| 1.1 Type | ✅ | — | — | — (seed-driven) | ✅ (1.7 `assign_type`) |
+| 1.2 Master | ✅ | — | — | ✅ | — |
 | 1.4 Micro | ✅ | — | — | ✅ | — |
 | 1.5 Role Profile | ✅ | — | — | ✅ | — |
 | 1.6 Assessment Foundation | ✅ | — | ✅ (question bank, via Upload Service) | ✅ | — |

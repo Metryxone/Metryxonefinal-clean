@@ -117,8 +117,6 @@ export default function CompetencyIntelligenceAdminPanel() {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div className="lg:col-span-5 space-y-6">
           {/* Domain summary */}
           {data.domain_summary?.length > 0 && (
             <div className="bg-white border border-gray-200 rounded-lg p-4">
@@ -140,9 +138,7 @@ export default function CompetencyIntelligenceAdminPanel() {
               </div>
             </div>
           )}
-            </div>
 
-            <div className="lg:col-span-7 space-y-4">
           {/* Tabs */}
           <div className="flex gap-1 border-b border-gray-200">
             {TABS.map(t => (
@@ -239,8 +235,6 @@ export default function CompetencyIntelligenceAdminPanel() {
               </div>
             </div>
           )}
-            </div>
-          </div>
         </>
       )}
 

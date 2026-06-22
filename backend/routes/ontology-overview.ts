@@ -86,6 +86,45 @@ export function registerOntologyOverviewRoutes(
     }
   });
 
+  // GET /api/ontology/overview/entity/:id — read-only row listing for a single
+  // hierarchy entity, so the overview cards can drill into their backing table.
+  // Table name is resolved from a fixed whitelist (never client input) → safe to
+  // interpolate. Capped at 200 rows; absent table degrades to an empty result.
+  const ENTITY_TABLES: Record<string, string> = {
+    industries:           'ont_industries',
+    functions:            'ont_functions',
+    departments:          'ont_departments',
+    role_families:        'ont_role_families',
+    roles:                'ont_roles',
+    layers:               'ont_layers',
+    clusters:             'ont_competency_clusters',
+    competencies:         'ont_competencies',
+    micro_competencies:   'ont_micro_competencies',
+    concerns:             'ont_concerns',
+    indicators:           'ont_indicators',
+    assessment_questions: 'ont_assessment_questions',
+  };
+
+  app.get('/api/ontology/overview/entity/:id', requireAuth, requireSuperAdmin, async (req: Request, res: Response) => {
+    const id = String(req.params.id || '');
+    const table = ENTITY_TABLES[id];
+    if (!table) {
+      return res.status(404).json({ error: 'Unknown entity', rows: [], columns: [], total: 0 });
+    }
+    try {
+      const reg = await pool.query('SELECT to_regclass($1) AS t', [`public.${table}`]);
+      if (!reg.rows[0]?.t) {
+        return res.json({ rows: [], columns: [], total: 0, note: 'table absent' });
+      }
+      const { rows } = await pool.query(`SELECT * FROM ${table} WHERE is_active = true ORDER BY 1 LIMIT 200`);
+      const columns = rows.length ? Object.keys(rows[0]) : [];
+      return res.json({ table, rows, columns, total: rows.length });
+    } catch (err) {
+      console.error('[ontology-overview] entity error:', err);
+      return res.status(500).json({ error: 'Failed to fetch entity rows', rows: [], columns: [], total: 0 });
+    }
+  });
+
   app.post('/api/ontology/overview/seed', requireAuth, requireSuperAdmin, async (_req: Request, res: Response) => {
     try {
       const result = await runOntologySeed(pool);

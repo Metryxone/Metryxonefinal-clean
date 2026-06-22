@@ -5,7 +5,7 @@ import {
   Network, PieChart, TrendingUp, Brain, AlertTriangle, Target, MessageCircle,
   BarChart2, BookOpen, Sparkles, GitBranch, Map,
   CheckCircle2, AlertCircle, Clock, RefreshCw, Database, Shield,
-  ArrowRight, Zap, Info,
+  ArrowRight, Zap, Info, ChevronDown,
 } from 'lucide-react';
 
 function apiFetch(path: string, opts?: RequestInit) {
@@ -90,12 +90,22 @@ function StatusDot({ actual, target }: { actual: number; target: number }) {
   return <span className="inline-block w-2 h-2 rounded-full flex-shrink-0" style={{ background: color }} />;
 }
 
-function EntityCard({ item, actual }: { item: typeof HIERARCHY[0]; actual: number }) {
+function EntityCard({ item, actual, open, onToggle }: { item: typeof HIERARCHY[0]; actual: number; open: boolean; onToggle: () => void }) {
   const pct = Math.min(100, Math.round((actual / item.target) * 100));
   const color = healthColor(actual, item.target);
   const Icon = item.icon;
+  const disabled = actual === 0;
   return (
-    <div className="bg-white border border-gray-100 rounded-xl p-4 hover:shadow-md transition-shadow">
+    <button
+      type="button"
+      onClick={disabled ? undefined : onToggle}
+      disabled={disabled}
+      aria-expanded={open}
+      title={disabled ? 'No rows to view' : open ? 'Hide rows' : `View ${item.label} rows`}
+      className={`text-left w-full bg-white border rounded-xl p-4 transition-shadow ${
+        open ? 'border-[#344E86] shadow-md ring-1 ring-[#344E86]/20' : 'border-gray-100'
+      } ${disabled ? 'cursor-default opacity-80' : 'hover:shadow-md cursor-pointer'}`}
+    >
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-2">
           <div className="p-1.5 rounded-lg" style={{ background: `${item.color}15` }}>
@@ -103,7 +113,10 @@ function EntityCard({ item, actual }: { item: typeof HIERARCHY[0]; actual: numbe
           </div>
           <span className="text-sm font-medium text-gray-800">{item.label}</span>
         </div>
-        <span className="text-2xl font-bold" style={{ color }}>{actual}</span>
+        <div className="flex items-center gap-1.5">
+          <span className="text-2xl font-bold" style={{ color }}>{actual}</span>
+          {!disabled && <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`} />}
+        </div>
       </div>
       <p className="text-xs text-gray-400 mb-3 leading-relaxed">{item.description}</p>
       <div className="flex items-center gap-2">
@@ -112,6 +125,75 @@ function EntityCard({ item, actual }: { item: typeof HIERARCHY[0]; actual: numbe
         </div>
         <span className="text-xs text-gray-400">{actual}/{item.target}</span>
       </div>
+    </button>
+  );
+}
+
+function formatCell(v: any): string {
+  if (v === null || v === undefined) return '—';
+  if (typeof v === 'boolean') return v ? 'true' : 'false';
+  if (typeof v === 'object') return JSON.stringify(v);
+  return String(v);
+}
+
+function EntityTable({ item }: { item: typeof HIERARCHY[0] }) {
+  const { data, isLoading, error } = useQuery<{ rows: any[]; columns: string[]; total: number; note?: string }>({
+    queryKey: ['ontology-entity-rows', item.id],
+    queryFn: async () => {
+      const r = await apiFetch(`/api/ontology/overview/entity/${item.id}`);
+      if (!r.ok) throw new Error('Failed to load rows');
+      return r.json();
+    },
+  });
+
+  return (
+    <div className="bg-white border border-[#344E86]/30 rounded-xl p-4 -mt-1">
+      <div className="flex items-center gap-2 mb-3">
+        <item.icon className="w-4 h-4" style={{ color: item.color }} />
+        <span className="text-sm font-semibold text-gray-800">{item.label} — table rows</span>
+        {data && <span className="text-xs text-gray-400">({data.total}{data.total === 200 ? '+ shown, capped' : ''})</span>}
+      </div>
+      {isLoading && (
+        <div className="flex items-center gap-2 text-sm text-gray-400 py-4">
+          <RefreshCw className="w-4 h-4 animate-spin" /> Loading rows…
+        </div>
+      )}
+      {error && (
+        <div className="flex items-center gap-2 text-sm text-red-500 py-4">
+          <AlertCircle className="w-4 h-4" /> Failed to load rows.
+        </div>
+      )}
+      {data && !isLoading && data.rows.length === 0 && (
+        <p className="text-sm text-gray-400 py-4">
+          {data.note === 'table absent'
+            ? 'Backing table is not provisioned in this environment.'
+            : 'No rows yet — this table is empty.'}
+        </p>
+      )}
+      {data && data.rows.length > 0 && (
+        <div className="overflow-x-auto max-h-96 overflow-y-auto border border-gray-100 rounded-lg">
+          <table className="w-full text-xs">
+            <thead className="bg-gray-50 sticky top-0">
+              <tr>
+                {data.columns.map(c => (
+                  <th key={c} className="text-left font-medium text-gray-500 px-3 py-2 whitespace-nowrap">{c}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              {data.rows.map((row, i) => (
+                <tr key={i} className="hover:bg-gray-50">
+                  {data.columns.map(c => (
+                    <td key={c} className="px-3 py-2 text-gray-700 max-w-xs truncate" title={formatCell(row[c])}>
+                      {formatCell(row[c])}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
@@ -135,6 +217,7 @@ export default function OntologyOverviewPanel() {
   const qc = useQueryClient();
   const [seedLog, setSeedLog] = useState<SeedResult | null>(null);
   const [importLog, setImportLog] = useState<ImportResult | null>(null);
+  const [openEntity, setOpenEntity] = useState<string | null>(null);
 
   const { data, isLoading, error } = useQuery<{ stats: Stats }>({
     queryKey: ['ontology-overview-stats'],
@@ -385,9 +468,20 @@ export default function OntologyOverviewPanel() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {items.map(item => (
-                <EntityCard key={item.id} item={item} actual={stats[item.field] as number} />
+                <EntityCard
+                  key={item.id}
+                  item={item}
+                  actual={stats[item.field] as number}
+                  open={openEntity === item.id}
+                  onToggle={() => setOpenEntity(prev => (prev === item.id ? null : item.id))}
+                />
               ))}
             </div>
+            {items.some(item => openEntity === item.id) && (
+              <div className="mt-3">
+                <EntityTable item={items.find(item => openEntity === item.id)!} />
+              </div>
+            )}
           </div>
         );
       })}

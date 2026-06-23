@@ -1188,6 +1188,25 @@ export const FEATURE_FLAGS = {
    *  reversible: flag OFF → every route 503 before any auth/DB touch → byte-identical legacy
    *  behaviour. Env: `FF_ONET_ACTIVATION`. */
   onetActivation: false,
+  /** O*NET Crosswalk Activation (MX-100X Phase 2). When ON, a NEW read-only governance engine
+   *  at `/api/v2/onet-crosswalk-governance/*` COMPOSES the EXISTING O*NET crosswalk bridge
+   *  tables (`map_ont_onto_role` curated-role↔O*NET-role, `map_ont_onto_competency`
+   *  curated↔O*NET competency) and `map_role_competency` into crosswalk GOVERNANCE intelligence:
+   *  per-mapping confidence (read from the stored `confidence`/`match_method` — never a fabricated
+   *  number), duplicate detection, missing-mapping detection, and an inheritance-closure analysis
+   *  for unlinked roles. Coverage (a mapping exists) and Confidence (it is trustworthy) are
+   *  reported as SEPARATE axes; the industry level abstains honestly (there is NO role↔industry
+   *  linkage in the `ont_*` chain — never fabricated). O*NET stays a REFERENCE layer (never a
+   *  scoring source); `ont_*` ids are INTEGER and `onto_*` ids are TEXT — never coerced. The ONLY
+   *  writes are a reversible, provenance-stamped manual approve/reject audit on the new
+   *  `onet_crosswalk_decisions` table (write-once per entity; an approval flips the existing
+   *  `map_ont_onto_role.verified` flag and records the prior value so it is fully reversible).
+   *  GET-never-writes: reads use a to_regclass probe + degrade; lazy ensure-schema runs ONLY on
+   *  the POST/decision path. Strictly additive + reversible: flag OFF → every route 503 before any
+   *  auth/DB touch, no schema, no write → byte-identical legacy behaviour. Reversible: `POST
+   *  /rollback` (delete decisions by provenance `mx100x_p2_crosswalk` + restore prior verified) /
+   *  drop the new table. Env: `FF_ONET_CROSSWALK_GOVERNANCE`. */
+  onetCrosswalkGovernance: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1286,6 +1305,10 @@ export function isCompetencySkillIntelligenceEnabled(): boolean {
 
 export function isOnetActivationEnabled(): boolean {
   return isFlagEnabled('onetActivation');
+}
+
+export function isOnetCrosswalkGovernanceEnabled(): boolean {
+  return isFlagEnabled('onetCrosswalkGovernance');
 }
 
 export function isFunctionalCompetencySeedingEnabled(): boolean {

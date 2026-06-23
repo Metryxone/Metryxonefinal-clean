@@ -112,6 +112,7 @@ import { registerEmployerCompetencyMatchRoutes } from "./routes/employer-compete
 import { registerCareerBuilderActivationRoutes } from "./routes/career-builder-activation";
 import { registerCompetencySkillIntelligenceRoutes } from "./routes/competency-skill-intelligence";
 import { registerOnetActivationRoutes } from "./routes/onet-activation";
+import { registerOnetCrosswalkGovernanceRoutes } from "./routes/onet-crosswalk-governance";
 import { registerCompetencyGraphRuntimeRoutes } from "./routes/competency-graph-runtime";
 import { registerDynamicAssessmentRuntimeRoutes } from "./routes/dynamic-assessment-runtime";
 import { registerAdaptiveRuntimeAuthorityRoutes } from "./routes/adaptive-runtime-authority";
@@ -13645,6 +13646,7 @@ Rules:
   registerCareerBuilderActivationRoutes({ app, pool: concernsPool, requireAuth });
   registerCompetencySkillIntelligenceRoutes({ app, pool: concernsPool, requireAuth });
   registerOnetActivationRoutes({ app, pool: concernsPool, requireAuth });
+  registerOnetCrosswalkGovernanceRoutes({ app, pool: concernsPool, requireAuth });
   registerCompetencyGraphRuntimeRoutes({ app, pool: concernsPool, requireAuth });
   registerDynamicAssessmentRuntimeRoutes({ app, pool: concernsPool, requireAuth });
   registerAdaptiveRuntimeAuthorityRoutes({ app, pool: concernsPool, requireAuth });

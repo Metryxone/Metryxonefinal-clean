@@ -151,6 +151,7 @@ const FunctionsPanel = lazy(() => import('./superadmin/FunctionsPanel'));
 const SectorsPanel = lazy(() => import('./superadmin/SectorsPanel'));
 const IndustrySegmentsPanel = lazy(() => import('./superadmin/IndustrySegmentsPanel'));
 const RoleCrosswalkPanel = lazy(() => import('./superadmin/RoleCrosswalkPanel'));
+const OnetCrosswalkGovernancePanel = lazy(() => import('./superadmin/OnetCrosswalkGovernancePanel'));
 const DepartmentsPanel = lazy(() => import('./superadmin/DepartmentsPanel'));
 const RolesPanel = lazy(() => import('./superadmin/RolesPanel'));
 const RoleFamiliesPanel = lazy(() => import('./superadmin/RoleFamiliesPanel'));
@@ -287,6 +288,17 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
     queryKey: ['/api/ontology/sectors', 'ont-hier-enabled'],
     queryFn: async () => {
       const res = await fetch('/api/ontology/sectors?limit=1', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // ── O*NET Crosswalk Governance flag probe (file-registry flag onetCrosswalkGovernance).
+  //    Flag OFF → /feature-flag returns 503 → the tab is omitted (byte-identical UI). ──
+  const { data: onetCrosswalkGovEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/v2/onet-crosswalk-governance/feature-flag', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/v2/onet-crosswalk-governance/feature-flag', { credentials: 'include' });
       return res.ok;
     },
     enabled: isAuthenticated,
@@ -882,6 +894,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       { id: 'ont-role-families',        label: 'Role Families (Ontology)', icon: Users2,        node: <RoleFamiliesPanel /> },
                       { id: 'ont-roles',                label: 'Roles',                    icon: UserCircle2,   node: <RolesPanel /> },
                       ...(ontHierEnabled ? [{ id: 'ont-role-crosswalk', label: 'Role Crosswalk', icon: GitBranch, node: <RoleCrosswalkPanel /> }] : []),
+                      ...(onetCrosswalkGovEnabled ? [{ id: 'onet-crosswalk-governance', label: 'O*NET Crosswalk Governance', icon: GitBranch, node: <OnetCrosswalkGovernancePanel /> }] : []),
                       { id: 'ont-career-tracks',        label: 'Career Tracks',            icon: Map,           node: <CareerTracksPanel /> },
                       { id: 'ont-competency-levels',    label: 'Competency Levels',        icon: BarChart2,     node: <CompetencyLevelsPanel /> },
                       { id: 'ont-indicators',           label: 'Indicators',               icon: Target,        node: <IndicatorsPanel /> },
@@ -1234,6 +1247,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               {activeTab === 'ont-industries'       && <div className="h-full overflow-auto"><IndustriesPanel /></div>}
               {activeTab === 'ont-industry-segments'&& <div className="h-full overflow-auto"><IndustrySegmentsPanel /></div>}
               {activeTab === 'ont-role-crosswalk'   && <div className="h-full overflow-auto"><RoleCrosswalkPanel /></div>}
+              {activeTab === 'onet-crosswalk-governance' && <div className="h-full overflow-auto"><OnetCrosswalkGovernancePanel /></div>}
               {activeTab === 'ont-functions'        && <div className="h-full overflow-auto"><FunctionsPanel /></div>}
               {activeTab === 'ont-departments'      && <div className="h-full overflow-auto"><DepartmentsPanel /></div>}
               {activeTab === 'ont-roles'            && <div className="h-full overflow-auto"><RolesPanel /></div>}

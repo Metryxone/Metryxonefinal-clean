@@ -246,9 +246,10 @@ export default function CompetencyMasterPanel() {
     }
   };
 
+  const isRefreshing = summaryQ.isFetching || listQ.isFetching;
   const refresh = () => {
-    qc.invalidateQueries({ queryKey: ['competency-master-list'] });
-    qc.invalidateQueries({ queryKey: ['competency-master-summary'] });
+    void summaryQ.refetch();
+    void listQ.refetch();
   };
 
   const curated = summary.source_breakdown.find((x) => x.source === 'curated')?.count ?? 0;
@@ -266,8 +267,8 @@ export default function CompetencyMasterPanel() {
             Additive over the canonical genome; editing never creates a duplicate competency.
           </p>
         </div>
-        <button onClick={refresh} className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 border rounded-md px-3 py-1.5">
-          <RefreshCw className="h-4 w-4" /> Refresh
+        <button onClick={refresh} disabled={isRefreshing} className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 border rounded-md px-3 py-1.5 disabled:opacity-60 disabled:cursor-not-allowed">
+          <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} /> {isRefreshing ? 'Refreshing…' : 'Refresh'}
         </button>
       </div>
 

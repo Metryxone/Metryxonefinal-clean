@@ -40,7 +40,7 @@ export const COMPETENCY_WIZARD_STEPS: WizardStep[] = [
     icon: Boxes,
     tabIds: [
       'cmp-master', 'cmp-micro-framework',
-      'ont-layers', 'ont-clusters', 'ont-competencies', 'ont-micro-competencies',
+      'ont-competency-core',
       'ont-competency-levels', 'cmp-level-profiles', 'ont-indicators', 'ont-future-skills',
     ],
   },
@@ -63,7 +63,7 @@ export const COMPETENCY_WIZARD_STEPS: WizardStep[] = [
     tabIds: [
       'cmp-questions', 'cmp-questionbank', 'cmp-question-map',
       'cmp-custom-modules', 'cmp-assessment-mapping',
-      'ont-assessment-questions', 'ont-concerns', 'ont-ai-rules',
+      'ont-concern-mapping', 'ont-ai-rules',
     ],
   },
   {

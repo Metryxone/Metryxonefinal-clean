@@ -889,12 +889,8 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       { id: 'ont-career-paths',         label: 'Career Paths',             icon: GitBranch,     node: <CareerPathsPanel /> },
                       { id: 'ont-learning-paths',       label: 'Learning Paths',           icon: BookOpen,      node: <LearningPathsOntologyPanel /> },
                       { id: 'ont-future-skills',        label: 'Future Skills',            icon: Sparkles,      node: <FutureSkillsPanel /> },
-                      { id: 'ont-layers',               label: 'Layers',                   icon: Network,       node: <CompetencyCorePanel initialTab="ont-layers" /> },
-                      { id: 'ont-clusters',             label: 'Competency Clusters',      icon: PieChart,      node: <CompetencyCorePanel initialTab="ont-clusters" /> },
-                      { id: 'ont-competencies',         label: 'Competencies',             icon: TrendingUp,    node: <CompetencyCorePanel initialTab="ont-competencies" /> },
-                      { id: 'ont-micro-competencies',   label: 'Micro Competencies',       icon: Brain,         node: <CompetencyCorePanel initialTab="ont-micro-competencies" /> },
-                      { id: 'ont-concerns',             label: 'Ontology Concerns',        icon: AlertTriangle, node: <ConcernsMappingPanel initialTab="ont-concerns" /> },
-                      { id: 'ont-assessment-questions', label: 'Assessment Questions',     icon: MessageCircle, node: <ConcernsMappingPanel initialTab="ont-assessment-questions" /> },
+                      { id: 'ont-competency-core',      label: 'Competency Core',          icon: Network,       node: <CompetencyCorePanel /> },
+                      { id: 'ont-concern-mapping',      label: 'Concerns & Mapping',       icon: AlertTriangle, node: <ConcernsMappingPanel /> },
                       { id: 'ont-ai-rules',             label: 'AI Rules',                 icon: Bot,           node: <AIRulesPanel /> },
                       { id: 'ont-import-export',        label: 'Import / Export',          icon: FileDown,      node: <OntologyImportExportPanel /> },
                     ]}
@@ -909,7 +905,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       },
                       {
                         label: 'Reference Library (O*NET)',
-                        ids: ['ont-overview', 'ont-sectors', 'ont-industries', 'ont-industry-segments', 'ont-functions', 'ont-departments', 'ont-role-families', 'ont-roles', 'ont-role-crosswalk', 'ont-career-tracks', 'ont-competency-levels', 'ont-indicators', 'ont-benchmarks', 'ont-career-paths', 'ont-learning-paths', 'ont-future-skills', 'ont-layers', 'ont-clusters', 'ont-competencies', 'ont-micro-competencies', 'ont-concerns', 'ont-assessment-questions', 'ont-ai-rules', 'ont-import-export'],
+                        ids: ['ont-overview', 'ont-sectors', 'ont-industries', 'ont-industry-segments', 'ont-functions', 'ont-departments', 'ont-role-families', 'ont-roles', 'ont-role-crosswalk', 'ont-career-tracks', 'ont-competency-levels', 'ont-indicators', 'ont-benchmarks', 'ont-career-paths', 'ont-learning-paths', 'ont-future-skills', 'ont-competency-core', 'ont-concern-mapping', 'ont-ai-rules', 'ont-import-export'],
                         collapsed: true,
                       },
                       {

@@ -33,3 +33,12 @@ the classic toggle keeps everything reachable (nothing removed).
   flags any uncovered extraTab id.
 - Each tab id must appear in exactly ONE step (dedup). Flag-gated ids absent from
   `extraTabs` are filtered out and empty steps are dropped automatically.
+- **One multi-subtab panel = ONE top-level tab.** Do NOT expose a panel that has
+  its own internal subtab nav (e.g. `CompetencyCorePanel` = Layers/Clusters/
+  Competencies/Micros, `ConcernsMappingPanel` = Concerns/Questions/Mapping) as
+  several extraTabs via different `initialTab` props — that renders the SAME
+  subtab labels twice (top nav + inside the panel) and reads as duplicated
+  options. Give it a single id (`ont-competency-core`, `ont-concern-mapping`) and
+  let the panel's own subtabs do the sub-navigation. There is a vitest
+  (`CompetencyFrameworkShell.test.tsx`) asserting every extraTab maps to exactly
+  one wizard step — keep it green.

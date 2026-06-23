@@ -47,6 +47,9 @@ export async function ensureConcernsMappingSchema(pool: Pool) {
     );
     CREATE INDEX IF NOT EXISTS ont_concerns_bridge_tag_idx ON ont_concerns(concern_bridge_tag);
     CREATE INDEX IF NOT EXISTS ont_concerns_capadex_id_idx ON ont_concerns(capadex_concern_id);
+    -- CAPADEX concern_id is TEXT and may exceed the original VARCHAR(40); widen so the
+    -- sync can use it verbatim as the natural key (idempotent, always succeeds).
+    ALTER TABLE ont_concerns ALTER COLUMN code TYPE VARCHAR(120);
 
     CREATE TABLE IF NOT EXISTS ont_assessment_questions (
       id                    SERIAL        PRIMARY KEY,
@@ -206,61 +209,73 @@ export function registerOntologyConcernsMappingRoutes(
     } catch (err) { return res.status(500).json({ error: 'Failed to fetch concerns' }); }
   });
 
-  app.post('/api/ontology/ont-concerns', requireAuth, requireSuperAdmin, async (req: Request, res: Response) => {
+  // ── CAPADEX is the single source of truth for concerns ───────────────────────
+  // Sync mirrors capadex_concerns_master → ont_concerns (upsert by `code` = CAPADEX
+  // concern_id). Set-based + ON CONFLICT DO UPDATE preserves ont_concerns.id, so
+  // existing concern↔indicator / micro↔concern / concern↔question links stay intact.
+  // Read-only against CAPADEX; never throws (degraded JSON on failure).
+  app.post('/api/ontology/ont-concerns/sync-from-capadex', requireAuth, requireSuperAdmin, async (req: Request, res: Response) => {
     try {
       await ensure();
-      const { code, name, description, concern_bridge_tag, capadex_concern_id, severity = 'moderate',
-              domain, concern_cluster, primary_persona = 'all', age_min, age_max } = req.body ?? {};
-      if (!code || !name) return res.status(400).json({ error: 'code and name required' });
-      const { rows: [row] } = await pool.query(
-        `INSERT INTO ont_concerns (code,name,description,concern_bridge_tag,capadex_concern_id,severity,domain,concern_cluster,primary_persona,age_min,age_max,status,created_by)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,'draft',$12) RETURNING *`,
-        [code, name, description, concern_bridge_tag||null, capadex_concern_id||null, severity,
-         domain||null, concern_cluster||null, primary_persona, age_min||null, age_max||null,
-         (req as any).user?.email ?? null]);
-      void logAudit(pool, req, { action: 'create', entityType: 'ont-concerns', entityId: row.id, entityLabel: name, after: row });
-      return res.status(201).json({ item: row });
-    } catch (err: any) {
-      if (err?.code === '23505') return res.status(409).json({ error: 'Code already exists' });
-      return res.status(500).json({ error: 'Failed to create concern' });
+      const { rows: [{ reg }] } = await pool.query(`SELECT to_regclass('public.capadex_concerns_master') AS reg`);
+      if (!reg) {
+        return res.json({ ok: false, synced: 0, capadex_total: 0,
+          message: 'CAPADEX concerns master (capadex_concerns_master) is not present in this environment — nothing to sync.' });
+      }
+      const { rows: [{ capadex_total }] } = await pool.query(
+        `SELECT COUNT(*)::int AS capadex_total FROM capadex_concerns_master WHERE concern_id IS NOT NULL`);
+      const { rowCount } = await pool.query(`
+        INSERT INTO ont_concerns
+          (code, name, description, concern_bridge_tag, capadex_concern_id, severity,
+           domain, concern_cluster, primary_persona, age_min, age_max, is_active, status, created_by)
+        SELECT DISTINCT ON (m.concern_id)
+          LEFT(m.concern_id, 120),
+          LEFT(COALESCE(NULLIF(TRIM(m.display_label), ''), m.concern_id), 200),
+          COALESCE(NULLIF(TRIM(m.common_indian_context), ''), NULLIF(TRIM(m.concern_category), '')),
+          LEFT(NULLIF(TRIM(m.relational_bridge_tag), ''), 120),
+          m.concern_id,
+          CASE WHEN LOWER(TRIM(m.severity)) IN ('low','moderate','high','critical')
+               THEN LOWER(TRIM(m.severity)) ELSE 'moderate' END,
+          LEFT(NULLIF(TRIM(m.domain), ''), 80),
+          LEFT(NULLIF(TRIM(m.concern_cluster), ''), 80),
+          CASE WHEN LOWER(TRIM(m.primary_persona)) IN ('student','professional','transitioning','all')
+               THEN LOWER(TRIM(m.primary_persona)) ELSE 'all' END,
+          m.age_min, m.age_max,
+          true, 'published', 'capadex_sync'
+        FROM capadex_concerns_master m
+        WHERE m.concern_id IS NOT NULL
+        ORDER BY m.concern_id, m.id
+        ON CONFLICT (code) DO UPDATE SET
+          name               = EXCLUDED.name,
+          description        = EXCLUDED.description,
+          concern_bridge_tag = EXCLUDED.concern_bridge_tag,
+          capadex_concern_id = EXCLUDED.capadex_concern_id,
+          severity           = EXCLUDED.severity,
+          domain             = EXCLUDED.domain,
+          concern_cluster    = EXCLUDED.concern_cluster,
+          primary_persona    = EXCLUDED.primary_persona,
+          age_min            = EXCLUDED.age_min,
+          age_max            = EXCLUDED.age_max,
+          is_active          = true,
+          status             = 'published',
+          updated_at         = NOW()
+      `);
+      void logAudit(pool, req, { action: 'sync', entityType: 'ont-concerns', entityLabel: 'capadex-concerns-master', after: { synced: rowCount, capadex_total } });
+      return res.json({ ok: true, synced: rowCount ?? 0, capadex_total,
+        message: capadex_total === 0
+          ? 'CAPADEX concerns master is empty in this environment — 0 concerns to mirror.'
+          : `Mirrored ${rowCount ?? 0} concern(s) from CAPADEX.` });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: 'Failed to sync concerns from CAPADEX' });
     }
   });
 
-  app.patch('/api/ontology/ont-concerns/:id', requireAuth, requireSuperAdmin, async (req: Request, res: Response) => {
-    try {
-      await ensure();
-      const id = pid(req.params.id);
-      if (!id) return res.status(400).json({ error: 'Invalid id' });
-      const { rows: [before] } = await pool.query(`SELECT * FROM ont_concerns WHERE id=$1`, [id]);
-      const { name, description, concern_bridge_tag, capadex_concern_id, severity, domain,
-              concern_cluster, primary_persona, age_min, age_max, status, is_active } = req.body ?? {};
-      const { rows: [row] } = await pool.query(
-        `UPDATE ont_concerns SET
-           name=COALESCE($1,name), description=COALESCE($2,description),
-           concern_bridge_tag=COALESCE($3,concern_bridge_tag), capadex_concern_id=COALESCE($4,capadex_concern_id),
-           severity=COALESCE($5,severity), domain=COALESCE($6,domain),
-           concern_cluster=COALESCE($7,concern_cluster), primary_persona=COALESCE($8,primary_persona),
-           age_min=COALESCE($9,age_min), age_max=COALESCE($10,age_max),
-           status=COALESCE($11,status), is_active=COALESCE($12,is_active), updated_at=NOW()
-         WHERE id=$13 RETURNING *`,
-        [name, description, concern_bridge_tag, capadex_concern_id, severity, domain,
-         concern_cluster, primary_persona, age_min, age_max, status, is_active, id]);
-      if (!row) return res.status(404).json({ error: 'Not found' });
-      void logAudit(pool, req, { action: 'update', entityType: 'ont-concerns', entityId: id, entityLabel: row.name, before: before??null, after: row });
-      return res.json({ item: row });
-    } catch (err) { return res.status(500).json({ error: 'Failed to update concern' }); }
-  });
-
-  app.delete('/api/ontology/ont-concerns/:id', requireAuth, requireSuperAdmin, async (req: Request, res: Response) => {
-    try {
-      await ensure();
-      const id = pid(req.params.id);
-      if (!id) return res.status(400).json({ error: 'Invalid id' });
-      await pool.query(`UPDATE ont_concerns SET status='archived',is_active=false,updated_at=NOW() WHERE id=$1`, [id]);
-      void logAudit(pool, req, { action: 'archive', entityType: 'ont-concerns', entityId: id });
-      return res.json({ ok: true });
-    } catch (err) { return res.status(500).json({ error: 'Failed to archive concern' }); }
-  });
+  // Manual concern authoring is retired — CAPADEX is the source of truth.
+  const concernsAreCapadexSourced = (_req: Request, res: Response) =>
+    res.status(405).json({ error: 'Concerns are sourced from CAPADEX. Use "Sync from CAPADEX" to refresh them; manual create/edit/delete is disabled.' });
+  app.post('/api/ontology/ont-concerns', requireAuth, requireSuperAdmin, concernsAreCapadexSourced);
+  app.patch('/api/ontology/ont-concerns/:id', requireAuth, requireSuperAdmin, concernsAreCapadexSourced);
+  app.delete('/api/ontology/ont-concerns/:id', requireAuth, requireSuperAdmin, concernsAreCapadexSourced);
 
   // ── ASSESSMENT QUESTIONS ─────────────────────────────────────────────────────
 

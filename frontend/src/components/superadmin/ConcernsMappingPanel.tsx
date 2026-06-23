@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { AlertTriangle, MessageCircle, Plus, Edit2, Archive, Link, Unlink } from 'lucide-react';
+import { AlertTriangle, MessageCircle, Plus, Edit2, Archive, Link, Unlink, RefreshCw } from 'lucide-react';
 
 type Tab = 'concerns' | 'questions' | 'mapping';
 
@@ -28,7 +28,6 @@ function StatusBadge({ status }: { status: string }) {
 // ── Concerns Tab ──────────────────────────────────────────────────────────────
 function ConcernsTab() {
   const qc = useQueryClient();
-  const [form, setForm] = useState<any>(null);
   const [search, setSearch] = useState('');
   const [severity, setSeverity] = useState('all');
   const [page, setPage] = useState(1);
@@ -41,20 +40,19 @@ function ConcernsTab() {
     },
   });
 
-  const save = useMutation({
-    mutationFn: async (body: any) => {
-      const r = body.id
-        ? await apiFetch(`/api/ontology/ont-concerns/${body.id}`, { method: 'PATCH', body: JSON.stringify(body) })
-        : await apiFetch('/api/ontology/ont-concerns', { method: 'POST', body: JSON.stringify(body) });
-      if (!r.ok) throw new Error((await r.json()).error);
-      return r.json();
+  const [syncMsg, setSyncMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const sync = useMutation({
+    mutationFn: async () => {
+      const r = await apiFetch('/api/ontology/ont-concerns/sync-from-capadex', { method: 'POST' });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(j.error || 'Sync failed');
+      return j as { ok: boolean; synced: number; capadex_total: number; message: string };
     },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['ont-concerns'] }); setForm(null); },
-  });
-
-  const archive = useMutation({
-    mutationFn: (id: number) => apiFetch(`/api/ontology/ont-concerns/${id}`, { method: 'DELETE' }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['ont-concerns'] }),
+    onSuccess: (j) => {
+      setSyncMsg({ ok: j.ok !== false, text: j.message || `Mirrored ${j.synced} concern(s) from CAPADEX.` });
+      qc.invalidateQueries({ queryKey: ['ont-concerns'] });
+    },
+    onError: (e: any) => setSyncMsg({ ok: false, text: String(e?.message || e) }),
   });
 
   const items: any[] = data?.items ?? [];
@@ -62,6 +60,15 @@ function ConcernsTab() {
 
   return (
     <div className="space-y-4">
+      <div className="flex items-start gap-2 rounded-lg border border-indigo-100 bg-indigo-50/60 px-4 py-3 text-sm text-indigo-900">
+        <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0 text-indigo-500" />
+        <p>
+          Concerns are sourced from the <span className="font-semibold">CAPADEX Concerns Master</span> — the single
+          source of truth. They are read-only here; use <span className="font-semibold">Sync from CAPADEX</span> to
+          mirror the latest concerns. Existing concern&nbsp;↔&nbsp;indicator and concern&nbsp;↔&nbsp;question links are preserved on sync.
+        </p>
+      </div>
+
       <div className="flex items-center gap-3">
         <input value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} placeholder="Search concerns, bridge tags…"
           className="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
@@ -71,11 +78,17 @@ function ConcernsTab() {
           {SEVERITIES.map(s => <option key={s} value={s}>{s}</option>)}
         </select>
         <span className="text-sm text-gray-500">{total}</span>
-        <button onClick={() => setForm({})}
-          className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700">
-          <Plus className="w-4 h-4" /> New Concern
+        <button onClick={() => { setSyncMsg(null); sync.mutate(); }} disabled={sync.isPending}
+          className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 disabled:opacity-50">
+          <RefreshCw className={`w-4 h-4 ${sync.isPending ? 'animate-spin' : ''}`} /> {sync.isPending ? 'Syncing…' : 'Sync from CAPADEX'}
         </button>
       </div>
+
+      {syncMsg && (
+        <div className={`rounded-lg px-4 py-2 text-sm ${syncMsg.ok ? 'bg-green-50 text-green-800 border border-green-100' : 'bg-red-50 text-red-700 border border-red-100'}`}>
+          {syncMsg.text}
+        </div>
+      )}
 
       {isLoading ? <div className="text-center py-8 text-gray-400">Loading…</div> : (
         <div className="overflow-auto rounded-xl border">
@@ -88,7 +101,6 @@ function ConcernsTab() {
               <th className="px-4 py-3 text-left">Bridge Tag</th>
               <th className="px-4 py-3 text-left">Indicators</th>
               <th className="px-4 py-3 text-left">Status</th>
-              <th className="px-4 py-3"></th>
             </tr></thead>
             <tbody className="divide-y divide-gray-100">
               {items.map((row: any) => (
@@ -102,15 +114,9 @@ function ConcernsTab() {
                   <td className="px-4 py-3 font-mono text-xs text-gray-500 max-w-[140px] truncate" title={row.concern_bridge_tag}>{row.concern_bridge_tag ?? '—'}</td>
                   <td className="px-4 py-3 text-gray-600">{row.indicator_count ?? 0}</td>
                   <td className="px-4 py-3"><StatusBadge status={row.status} /></td>
-                  <td className="px-4 py-3">
-                    <div className="flex gap-2">
-                      <button onClick={() => setForm(row)} className="p-1 text-indigo-600 hover:bg-indigo-50 rounded"><Edit2 className="w-3.5 h-3.5" /></button>
-                      <button onClick={() => archive.mutate(row.id)} className="p-1 text-red-500 hover:bg-red-50 rounded"><Archive className="w-3.5 h-3.5" /></button>
-                    </div>
-                  </td>
                 </tr>
               ))}
-              {!items.length && <tr><td colSpan={8} className="text-center py-8 text-gray-400">No concerns yet</td></tr>}
+              {!items.length && <tr><td colSpan={7} className="text-center py-8 text-gray-400">No concerns yet — use <span className="font-medium">Sync from CAPADEX</span> to mirror them.</td></tr>}
             </tbody>
           </table>
         </div>
@@ -121,96 +127,6 @@ function ConcernsTab() {
           <button disabled={page === 1} onClick={() => setPage(p => p-1)} className="px-3 py-1 border rounded disabled:opacity-40">Previous</button>
           <span className="text-gray-500">Page {page} of {Math.ceil(total/50)}</span>
           <button disabled={page * 50 >= total} onClick={() => setPage(p => p+1)} className="px-3 py-1 border rounded disabled:opacity-40">Next</button>
-        </div>
-      )}
-
-      {form && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 space-y-4 max-h-[90vh] overflow-y-auto">
-            <h3 className="font-semibold text-lg">{form.id ? 'Edit Concern' : 'New Concern'}</h3>
-            {!form.id && <div>
-              <label className="text-xs font-medium text-gray-500">Code *</label>
-              <input value={form.code||''} onChange={e => setForm({...form, code: e.target.value})}
-                className="w-full border rounded px-3 py-2 text-sm mt-1" placeholder="CONC_AVOIDANCE_CONFLICT" />
-            </div>}
-            <div>
-              <label className="text-xs font-medium text-gray-500">Name *</label>
-              <input value={form.name||''} onChange={e => setForm({...form, name: e.target.value})}
-                className="w-full border rounded px-3 py-2 text-sm mt-1" />
-            </div>
-            <div>
-              <label className="text-xs font-medium text-gray-500">Description</label>
-              <textarea value={form.description||''} onChange={e => setForm({...form, description: e.target.value})}
-                rows={2} className="w-full border rounded px-3 py-2 text-sm mt-1" />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="text-xs font-medium text-gray-500">Severity</label>
-                <select value={form.severity||'moderate'} onChange={e => setForm({...form, severity: e.target.value})}
-                  className="w-full border rounded px-3 py-2 text-sm mt-1">
-                  {SEVERITIES.map(s => <option key={s} value={s}>{s}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="text-xs font-medium text-gray-500">Primary Persona</label>
-                <select value={form.primary_persona||'all'} onChange={e => setForm({...form, primary_persona: e.target.value})}
-                  className="w-full border rounded px-3 py-2 text-sm mt-1">
-                  {PERSONAS.map(p => <option key={p} value={p}>{p}</option>)}
-                </select>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="text-xs font-medium text-gray-500">Domain</label>
-                <input value={form.domain||''} onChange={e => setForm({...form, domain: e.target.value})}
-                  className="w-full border rounded px-3 py-2 text-sm mt-1" />
-              </div>
-              <div>
-                <label className="text-xs font-medium text-gray-500">Concern Cluster</label>
-                <input value={form.concern_cluster||''} onChange={e => setForm({...form, concern_cluster: e.target.value})}
-                  className="w-full border rounded px-3 py-2 text-sm mt-1" />
-              </div>
-            </div>
-            <div>
-              <label className="text-xs font-medium text-gray-500">CAPADEX Bridge Tag</label>
-              <input value={form.concern_bridge_tag||''} onChange={e => setForm({...form, concern_bridge_tag: e.target.value})}
-                className="w-full border rounded px-3 py-2 text-sm mt-1 font-mono"
-                placeholder="e.g. ACADEMIC_PERFORMANCE_ANXIETY" />
-              <p className="text-xs text-gray-400 mt-1">Maps to capadex_concerns_master.relational_bridge_tag</p>
-            </div>
-            <div>
-              <label className="text-xs font-medium text-gray-500">CAPADEX Concern ID</label>
-              <input value={form.capadex_concern_id||''} onChange={e => setForm({...form, capadex_concern_id: e.target.value})}
-                className="w-full border rounded px-3 py-2 text-sm mt-1 font-mono" placeholder="exact concern_id from master" />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="text-xs font-medium text-gray-500">Age Min</label>
-                <input type="number" value={form.age_min||''} onChange={e => setForm({...form, age_min: parseInt(e.target.value)||null})}
-                  className="w-full border rounded px-3 py-2 text-sm mt-1" />
-              </div>
-              <div>
-                <label className="text-xs font-medium text-gray-500">Age Max</label>
-                <input type="number" value={form.age_max||''} onChange={e => setForm({...form, age_max: parseInt(e.target.value)||null})}
-                  className="w-full border rounded px-3 py-2 text-sm mt-1" />
-              </div>
-            </div>
-            <div>
-              <label className="text-xs font-medium text-gray-500">Status</label>
-              <select value={form.status||'draft'} onChange={e => setForm({...form, status: e.target.value})}
-                className="w-full border rounded px-3 py-2 text-sm mt-1">
-                {['draft','in_review','approved','published','deprecated','archived'].map(s => <option key={s} value={s}>{s}</option>)}
-              </select>
-            </div>
-            <div className="flex justify-end gap-3 pt-2">
-              <button onClick={() => setForm(null)} className="px-4 py-2 text-sm border rounded-lg hover:bg-gray-50">Cancel</button>
-              <button onClick={() => save.mutate(form)} disabled={save.isPending}
-                className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50">
-                {save.isPending ? 'Saving…' : 'Save'}
-              </button>
-            </div>
-            {save.error && <p className="text-red-600 text-xs">{String(save.error)}</p>}
-          </div>
         </div>
       )}
     </div>

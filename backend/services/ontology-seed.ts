@@ -460,19 +460,13 @@ export async function runOntologySeed(pool: Pool): Promise<SeedResult> {
     phases.micro_competencies = micros.length;
 
     // ── 11. ONTOLOGY CONCERNS ─────────────────────────────────────────────────
-    await pool.query(`
-      INSERT INTO ont_concerns (code, name, description, concern_bridge_tag, severity, domain, concern_cluster, primary_persona, status) VALUES
-        ('ONT_C_PARALYSS',  'Analysis Paralysis',          'Inability to make decisions due to over-analysis or fear of being wrong',                'DECISION_MAKING_PARALYSIS', 'high',     'Decision-Making',     'Cognitive Barriers',      'all',          'published'),
-        ('ONT_C_COMM_AV',   'Communication Avoidance',     'Consistently avoiding difficult conversations, feedback, or conflict',                   'COMMUNICATION_AVOIDANCE',  'moderate', 'Communication',       'Interpersonal Barriers',  'all',          'published'),
-        ('ONT_C_DELEGATE',  'Delegation Difficulty',       'Inability to trust others with tasks; tendency to micromanage or overwork oneself',      'DELEGATION_AVOIDANCE',     'moderate', 'Leadership',          'Leadership Barriers',     'professional', 'published'),
-        ('ONT_C_IMPOSTER',  'Imposter Syndrome',           'Persistent belief of inadequacy despite evidence of competence',                         'SELF_DOUBT_CYCLE',         'high',     'Self-Perception',     'Confidence Barriers',     'all',          'published'),
-        ('ONT_C_PERF',      'Perfectionism Trap',          'Excessive standard-setting that delays delivery and creates disproportionate effort',    'PERFECTIONISM',            'moderate', 'Execution',           'Execution Barriers',      'all',          'published'),
-        ('ONT_C_SCOPE',     'Scope Creep Susceptibility',  'Difficulty maintaining boundaries when stakeholders request additional work',             'BOUNDARY_SETTING',         'moderate', 'Execution',           'Execution Barriers',      'professional', 'published'),
-        ('ONT_C_FEEDBACK',  'Feedback Avoidance',          'Reluctance to seek, receive, or act on feedback that challenges self-image',             'FEEDBACK_AVOIDANCE',       'moderate', 'Growth',              'Growth Barriers',         'all',          'published'),
-        ('ONT_C_BURNOUT',   'Burnout Vulnerability',       'Sustained high stress and over-investment leading to diminishing performance',           'CHRONIC_STRESS',           'critical', 'Wellbeing',           'Wellbeing Barriers',      'all',          'published')
-      ON CONFLICT (code) DO NOTHING
-    `);
-    phases.concerns = 8;
+    // RETIRED: concerns are now sourced from CAPADEX (capadex_concerns_master) as the
+    // single source of truth, mirrored into ont_concerns by the "Sync from CAPADEX"
+    // endpoint (POST /api/ontology/ont-concerns/sync-from-capadex). The previous demo
+    // seed authored a parallel competency-model concern list, which contradicted that —
+    // so it is intentionally no longer inserted here. Concern→indicator demo mappings
+    // below degrade gracefully when no concerns are present (guarded by `if (cid && iid)`).
+    phases.concerns = 0;
 
     // ── 12. INDICATORS ────────────────────────────────────────────────────────
     await pool.query(`

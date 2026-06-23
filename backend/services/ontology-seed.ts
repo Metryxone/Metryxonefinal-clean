@@ -192,18 +192,18 @@ export async function runOntologySeed(pool: Pool): Promise<SeedResult> {
       { code: 'ROLE_JR_SWE',    title: 'Junior Software Engineer',       rfCode: 'RF_SOFTENGG', seniority: 'junior' },
       { code: 'ROLE_SWE',       title: 'Software Engineer',              rfCode: 'RF_SOFTENGG', seniority: 'mid' },
       { code: 'ROLE_SR_SWE',    title: 'Senior Software Engineer',       rfCode: 'RF_SOFTENGG', seniority: 'senior' },
-      { code: 'ROLE_STAFF_ENG', title: 'Staff Engineer',                 rfCode: 'RF_SOFTENGG', seniority: 'staff' },
+      { code: 'ROLE_STAFF_ENG', title: 'Staff Engineer',                 rfCode: 'RF_SOFTENGG', seniority: 'principal' },
       { code: 'ROLE_ENG_MGR',   title: 'Engineering Manager',            rfCode: 'RF_SOFTENGG', seniority: 'manager',   isLeader: true },
       { code: 'ROLE_DA',        title: 'Data Analyst',                   rfCode: 'RF_DATA',     seniority: 'mid' },
       { code: 'ROLE_DS',        title: 'Data Scientist',                 rfCode: 'RF_DATA',     seniority: 'mid' },
       { code: 'ROLE_SR_DS',     title: 'Senior Data Scientist',          rfCode: 'RF_DATA',     seniority: 'senior' },
-      { code: 'ROLE_DATA_LEAD', title: 'Data & Analytics Lead',          rfCode: 'RF_DATA',     seniority: 'staff' },
+      { code: 'ROLE_DATA_LEAD', title: 'Data & Analytics Lead',          rfCode: 'RF_DATA',     seniority: 'lead' },
       { code: 'ROLE_APM',       title: 'Associate Product Manager',      rfCode: 'RF_PROD',     seniority: 'junior' },
       { code: 'ROLE_PM',        title: 'Product Manager',                rfCode: 'RF_PROD',     seniority: 'mid' },
       { code: 'ROLE_SR_PM',     title: 'Senior Product Manager',         rfCode: 'RF_PROD',     seniority: 'senior' },
       { code: 'ROLE_UX',        title: 'UX Designer',                    rfCode: 'RF_DESIGN',   seniority: 'mid' },
       { code: 'ROLE_SR_UX',     title: 'Senior UX Designer',             rfCode: 'RF_DESIGN',   seniority: 'senior' },
-      { code: 'ROLE_DES_LEAD',  title: 'Design Lead',                    rfCode: 'RF_DESIGN',   seniority: 'staff' },
+      { code: 'ROLE_DES_LEAD',  title: 'Design Lead',                    rfCode: 'RF_DESIGN',   seniority: 'lead' },
       { code: 'ROLE_BDR',       title: 'Business Development Rep',       rfCode: 'RF_GTM',      seniority: 'junior' },
       { code: 'ROLE_AE',        title: 'Account Executive',              rfCode: 'RF_GTM',      seniority: 'mid' },
       { code: 'ROLE_SR_AE',     title: 'Senior Account Executive',       rfCode: 'RF_GTM',      seniority: 'senior' },
@@ -633,7 +633,7 @@ export async function runOntologySeed(pool: Pool): Promise<SeedResult> {
 
     // ── 15. COMPETENCY LEVEL ANCHORS (BARS) ──────────────────────────────────
     const LEVELS = [
-      { level: 'novice',     num: 1, min:  0, max:  39 },
+      { level: 'foundational', num: 1, min:  0, max:  39 },
       { level: 'developing', num: 2, min: 40, max:  59 },
       { level: 'proficient', num: 3, min: 60, max:  74 },
       { level: 'advanced',   num: 4, min: 75, max:  89 },
@@ -1249,6 +1249,8 @@ export async function runOntologySeed(pool: Pool): Promise<SeedResult> {
       junior:  ['novice',     'developing'],
       mid:     ['developing', 'proficient'],
       senior:  ['proficient', 'advanced'],
+      lead:      ['advanced', 'expert'],
+      principal: ['advanced', 'expert'],
       staff:   ['advanced',   'expert'],
       manager: ['proficient', 'advanced'],
     };
@@ -1439,7 +1441,7 @@ export async function runOntologySeed(pool: Pool): Promise<SeedResult> {
 
       // Look up seniority for proficiency
       const role = roles.find(r => r.code === roleCode);
-      const [minP, targetP] = senProf[role?.seniority ?? 'mid'];
+      const [minP, targetP] = senProf[role?.seniority ?? 'mid'] ?? ['developing', 'proficient'];
       await pool.query(
         `INSERT INTO map_role_competency
            (role_id, competency_id, importance_tier, weight, min_proficiency, target_proficiency, source)

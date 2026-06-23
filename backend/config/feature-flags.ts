@@ -145,6 +145,19 @@ export const FEATURE_FLAGS = {
    *  byte-identical legacy behaviour incl. schema (default region == today). GET handlers probe via
    *  to_regclass and never write. Env: `FF_GLOBAL_COMPETENCY`. */
   globalCompetency: false,
+  /** MX-100X PHASE 9 — Enterprise Workforce Intelligence Console. A PURE read-only COMPOSER that wires
+   *  the EXISTING predictive-workforce engine (Phase 5: obsolescence / workforce risk / AI exposure /
+   *  emerging roles) + the M5 enterprise engines (workforce intelligence, succession, simulation,
+   *  executive) into ONE flag-gated console with 7 views: skill-gap, succession, internal-mobility,
+   *  workforce-planning, talent-risk, talent-forecasting, readiness-forecasting. compose-never-recompute:
+   *  calls only the existing engines' READ paths + read-only snapshot SELECTs (to_regclass-probed); it
+   *  recomputes nothing, runs NO DDL, writes NO rows (GET-only, no ensure-schema). Forecasts ABSTAIN
+   *  honestly below 2 longitudinal points; cohort aggregates SUPPRESSED below k=30. Unmeasured → null,
+   *  NEVER 0. Developmental signals only — NOT hiring/promotion/suitability predictions (disclaimer +
+   *  provenance on every view). OFF → every route 503 before any auth/DB touch (byte-identical legacy;
+   *  no new tables). Super-admin gated (requireAuth → requireSuperAdmin). Distinct from Phase 5.12
+   *  `workforceIntelligence` (employer-scoped). Env: `FF_ENTERPRISE_WORKFORCE_CONSOLE`. */
+  enterpriseWorkforceConsole: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -1823,6 +1836,10 @@ export function isValidationLoopEnabled(): boolean {
 
 export function isGlobalCompetencyEnabled(): boolean {
   return isFlagEnabled('globalCompetency');
+}
+
+export function isEnterpriseWorkforceConsoleEnabled(): boolean {
+  return isFlagEnabled('enterpriseWorkforceConsole');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

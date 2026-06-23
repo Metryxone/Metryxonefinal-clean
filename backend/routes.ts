@@ -106,6 +106,7 @@ import { registerAdaptiveOrchestrationV2 } from "./routes/adaptive-orchestration
 import { registerUnifiedCompetencyProfileRoutes } from "./routes/unified-competency-profile";
 import { registerRoleDNARuntimeRoutes } from "./routes/role-dna-runtime";
 import { registerRoleDnaExpansionRoutes } from "./routes/role-dna-expansion";
+import { registerCompetencySpineRoutes } from "./routes/competency-spine";
 import { registerCompetencyGraphRuntimeRoutes } from "./routes/competency-graph-runtime";
 import { registerDynamicAssessmentRuntimeRoutes } from "./routes/dynamic-assessment-runtime";
 import { registerAdaptiveRuntimeAuthorityRoutes } from "./routes/adaptive-runtime-authority";
@@ -13633,6 +13634,7 @@ Rules:
   registerUnifiedCompetencyProfileRoutes({ app, pool: concernsPool, requireAuth });
   registerRoleDNARuntimeRoutes({ app, pool: concernsPool, requireAuth });
   registerRoleDnaExpansionRoutes({ app, pool: concernsPool, requireAuth });
+  registerCompetencySpineRoutes({ app, pool: concernsPool, requireAuth });
   registerCompetencyGraphRuntimeRoutes({ app, pool: concernsPool, requireAuth });
   registerDynamicAssessmentRuntimeRoutes({ app, pool: concernsPool, requireAuth });
   registerAdaptiveRuntimeAuthorityRoutes({ app, pool: concernsPool, requireAuth });

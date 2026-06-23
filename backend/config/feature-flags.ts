@@ -1102,6 +1102,18 @@ export const FEATURE_FLAGS = {
    *  additive: flag OFF → every route 503 before any auth/DB touch, no schema, no write →
    *  byte-identical legacy behaviour. Env: `FF_ROLE_DNA_EXPANSION`. */
   roleDnaExpansion: false,
+  /** 98X Gap Closure — Phase 2: Competency Intelligence Spine Contracts. When ON, a NEW
+   *  read-only resolver + typed contracts module unifies the TWO parallel scoring ledgers
+   *  (`onto_competency_score_runs` per-competency `comp_*` + `onto_competency_profiles`
+   *  per-domain `dom_*`) into ONE canonical `UnifiedCompetencyProfile` per subject
+   *  (latest-per-ledger, union, each ledger's confidence inherited; null where unmeasured —
+   *  never fake 0). It introduces NO new scoring math and NO writes — it only gives every
+   *  downstream consumer one canonical read. GET-never-writes: reads use a to_regclass probe
+   *  + degrade (zero DDL). Optional `GET /api/v2/competency-spine/profile/:subjectId`. Strictly
+   *  additive: flag OFF → every route 503 before any auth/DB touch, no consumer wired →
+   *  byte-identical legacy behaviour. Reversible: flag OFF / delete the module (no data to undo).
+   *  Env: `FF_COMPETENCY_SPINE_CONTRACTS`. */
+  competencySpineContracts: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1176,6 +1188,10 @@ export function isRoleDNARuntimeEnabled(): boolean {
 
 export function isRoleDnaExpansionEnabled(): boolean {
   return isFlagEnabled('roleDnaExpansion');
+}
+
+export function isCompetencySpineContractsEnabled(): boolean {
+  return isFlagEnabled('competencySpineContracts');
 }
 
 export function isFunctionalCompetencySeedingEnabled(): boolean {

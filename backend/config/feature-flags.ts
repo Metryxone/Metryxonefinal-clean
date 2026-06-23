@@ -122,6 +122,17 @@ export const FEATURE_FLAGS = {
    *  re-rank → byte-identical legacy ordering. Consumes existing AQ-2 metadata only —
    *  never creates/edits questions, scoring, or reports. */
   runtimeMetadataActivation: false,
+  /** PHASE 7 — Validation Loop (structural, outcome-pending). When ON, the front-half realized-OUTCOME
+   *  intake activates: POST /api/validation-loop/outcomes records realized hiring/performance/promotion/
+   *  retention outcomes against an assessment subject (+ the decision-time prediction snapshot), and the
+   *  admin GET /api/validation-loop/status + /calibration surface compose the EXISTING calibration engine
+   *  (buildCalibrationModel) over the recorded (predicted, outcome) pairs. Predictions stay ABSTAINED
+   *  (no empirical accuracy claim) until ≥30 realized non-demo outcomes accrue (platform k_min). Strictly
+   *  additive + reversible: flag OFF → every route 503, the ensure-schema is NEVER reached so the table is
+   *  never created → byte-identical legacy behaviour incl. schema. GET handlers probe via to_regclass and
+   *  never write; demo rows are EXCLUDED from evidence-backed claims; no outcome is ever fabricated.
+   *  Env: `FF_VALIDATION_LOOP`. */
+  validationLoop: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -1792,6 +1803,10 @@ export function isNotificationEngineEnabled(): boolean {
 
 export function isTalentDiscoveryEnabled(): boolean {
   return isFlagEnabled('talentDiscovery');
+}
+
+export function isValidationLoopEnabled(): boolean {
+  return isFlagEnabled('validationLoop');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

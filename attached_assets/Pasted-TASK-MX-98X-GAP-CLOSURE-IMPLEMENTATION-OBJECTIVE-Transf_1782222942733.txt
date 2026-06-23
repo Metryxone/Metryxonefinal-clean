@@ -1,0 +1,456 @@
+TASK: MX-98X-GAP-CLOSURE-IMPLEMENTATION
+
+OBJECTIVE
+
+Transform the existing MetryxOne architecture into a fully connected enterprise-grade competency intelligence platform.
+
+The architecture review has confirmed:
+
+* Competency Framework is structurally sound
+* O*NET is correctly positioned as a reference layer
+* Assessment Engine is operational
+* Employability Index is operational
+* Career Builder foundation exists
+* Employer Intelligence foundation exists
+
+DO NOT REBUILD.
+
+DO NOT REPLACE:
+
+* Competency Genome
+* O*NET Library
+* Assessment Engine
+* Employability Index
+* Career Builder
+* Career Passport
+
+The objective is to CLOSE GAPS, ACTIVATE CAPABILITIES, and CONNECT EXISTING SYSTEMS.
+
+---
+
+PHASE 1
+ROLE DNA EXPANSION
+------------------
+
+Current State
+
+Curated Roles = 5
+
+O*NET Roles = 1040
+
+Crosswalk Coverage = 5
+
+Target State
+
+100% role crosswalk coverage.
+
+IMPLEMENT
+
+Industry
+↓
+Function
+↓
+Department
+↓
+Role Family
+↓
+Role
+↓
+O*NET Role
+↓
+Role DNA
+↓
+Competency Requirements
+↓
+Proficiency Requirements
+↓
+Assessment Blueprint
+
+Requirements
+
+1. Expand role crosswalk coverage.
+2. Build confidence scoring for role matching.
+3. Build automated competency inheritance.
+4. Build role requirement generation.
+5. Build role benchmark generation.
+6. Build role DNA generation.
+
+Deliverables
+
+role_dna_activation.md
+
+---
+
+PHASE 2
+COMPETENCY INTELLIGENCE SPINE
+-----------------------------
+
+Target State
+
+Assessment
+↓
+Competency Scores
+↓
+Competency Intelligence Layer
+↓
+Employability Intelligence
+↓
+Career Builder
+↓
+Career Passport
+↓
+Employer Intelligence
+↓
+Workforce Intelligence
+↓
+Market Intelligence
+
+Validate and implement:
+
+Unified competency intelligence contracts.
+
+Unified competency profile.
+
+Unified competency score object.
+
+Unified competency recommendation object.
+
+Unified competency gap object.
+
+Ensure:
+
+No parallel scoring paths.
+
+No duplicated intelligence calculations.
+
+No disconnected modules.
+
+Deliverables
+
+competency_intelligence_activation.md
+
+---
+
+PHASE 3
+EMPLOYER COMPETENCY HIRING
+--------------------------
+
+Current State
+
+Employer Intelligence
+↓
+LBI
+CRA
+Heuristics
+
+Target State
+
+Candidate Assessment
+↓
+Competency Profile
+↓
+Role Fit
+↓
+Competency Match
+↓
+Readiness Score
+↓
+Hiring Recommendation
+
+IMPLEMENT
+
+1. Competency score integration.
+2. Competency profile integration.
+3. Competency match engine.
+4. Role fit engine.
+5. Skill gap engine.
+6. Interview blueprint generation.
+7. Hiring recommendation engine.
+
+Ensure employer intelligence uses:
+
+onto_competency_profiles
+
+onto_competency_score_runs
+
+Role DNA
+
+Competency Requirements
+
+instead of isolated heuristic logic.
+
+Deliverables
+
+employer_competency_hiring_activation.md
+
+---
+
+PHASE 4
+CAREER BUILDER 2.0
+------------------
+
+Current State
+
+Career Builder consumes intelligence.
+
+Target State
+
+Career Builder generates intelligence.
+
+IMPLEMENT
+
+Assessment
+↓
+Competency Profile
+↓
+Competency Gaps
+↓
+Role Gaps
+↓
+Career Paths
+↓
+Learning Paths
+↓
+Development Plans
+↓
+Progress Tracking
+↓
+Reassessment
+
+Requirements
+
+1. Competency gap analysis.
+2. Role readiness engine.
+3. Career progression engine.
+4. Development plan engine.
+5. Learning recommendation engine.
+6. Progress intelligence engine.
+7. Reassessment triggers.
+
+Deliverables
+
+career_builder_activation.md
+
+---
+
+PHASE 5
+COMPETENCY TO SKILL INTELLIGENCE
+--------------------------------
+
+Target State
+
+Competency
+↓
+Skills
+↓
+Learning Assets
+↓
+Certifications
+↓
+Roles
+↓
+Career Paths
+
+IMPLEMENT
+
+Competency-to-Skill Mapping
+
+Skill-to-Learning Mapping
+
+Learning-to-Certification Mapping
+
+Certification-to-Role Mapping
+
+Role-to-Career Mapping
+
+Deliverables
+
+competency_skill_intelligence.md
+
+---
+
+PHASE 6
+VALIDATION LOOP ENGINE
+----------------------
+
+Target State
+
+Assessment
+↓
+Hiring
+↓
+Performance
+↓
+Promotion
+↓
+Retention
+↓
+Success Outcomes
+↓
+Validation Models
+↓
+Competency Calibration
+
+IMPLEMENT
+
+Outcome Capture
+
+Hiring Outcome Capture
+
+Career Progression Capture
+
+Performance Outcome Capture
+
+Retention Outcome Capture
+
+Validation Dashboards
+
+Calibration Models
+
+Predictive Accuracy Tracking
+
+Requirements
+
+No predictive model should operate without validation evidence.
+
+Deliverables
+
+validation_loop_activation.md
+
+---
+
+PHASE 7
+GLOBAL SCALE LAYER
+------------------
+
+Target State
+
+Country
+↓
+Industry
+↓
+Occupation Framework
+↓
+Competency Framework
+↓
+Assessment
+↓
+Career Intelligence
+
+IMPLEMENT
+
+Country Master
+
+Region Master
+
+Occupation Standards
+
+Framework Mapping
+
+Localization Strategy
+
+Multi-country Role Mapping
+
+Multi-country Benchmark Strategy
+
+Deliverables
+
+global_scale_activation.md
+
+---
+
+PHASE 8
+98% READINESS IMPLEMENTATION
+----------------------------
+
+For every capability:
+
+Architecture
+
+Competency Framework
+
+Role DNA
+
+Assessment
+
+Scoring
+
+Employability Index
+
+Career Builder
+
+Career Passport
+
+Employer Intelligence
+
+Workforce Intelligence
+
+Market Intelligence
+
+Predictive Intelligence
+
+Global Scale
+
+Measure:
+
+Current State
+
+Target State
+
+Implementation Required
+
+Dependencies
+
+Risk
+
+Impact
+
+Priority
+
+Success Criteria
+
+Produce:
+
+metryxone_98x_execution_plan.md
+
+---
+
+## IMPLEMENTATION RULES
+
+1. Preserve all existing architecture.
+
+2. Preserve all existing data.
+
+3. Preserve O*NET as a reference layer.
+
+4. Preserve the competency genome as canonical.
+
+5. Preserve Employability Index formulas.
+
+6. Preserve Career Builder architecture.
+
+7. Preserve Career Passport architecture.
+
+8. No rebuilds.
+
+9. No destructive migrations.
+
+10. All changes must be additive, backward compatible, and reversible.
+
+---
+
+## FINAL OUTPUT
+
+Provide:
+
+1. Gap Closure Plan
+2. Architecture Impact Assessment
+3. Data Impact Assessment
+4. API Impact Assessment
+5. Rollback Strategy
+6. Success Metrics
+7. Expected Maturity Improvement
+
+Goal:
+
+Increase platform maturity from current state to 98%+ enterprise readiness through activation, connectivity, validation, and scalability improvements.

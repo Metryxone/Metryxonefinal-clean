@@ -1130,6 +1130,21 @@ export const FEATURE_FLAGS = {
    *  byte-identical legacy behaviour. Reversible: flag OFF / delete the module (no data to
    *  undo). Env: `FF_EMPLOYER_COMPETENCY_HIRING`. */
   employerCompetencyHiring: false,
+
+  /** 98X Gap Closure — Phase 4: Career Builder 2.0 Activation. Turns ON per-user
+   *  generation of the (currently empty) `cg_user_*` calculation tables by COMPOSING
+   *  the existing persisting engines (skill-gap, readiness, recommendation, learning-rec)
+   *  + writing a reversible anchor→target career path. Adds explicit routes
+   *  `POST /api/v2/career-builder/activate/:userId`, `GET /api/v2/career-builder/intelligence/:userId`,
+   *  `POST /api/v2/career-builder/rollback/:userId` (resolveEffectiveUserId IDOR), plus a
+   *  flag-gated never-throws completion hook. Strictly additive: flag OFF → every route
+   *  503 before any auth/DB touch and the hook no-ops → byte-identical legacy behaviour
+   *  (existing Career Graph routes + CareerBuilderPage UNTOUCHED). Reversible: rollback
+   *  deletes only the rows generated for the activated user (career-path rows stamped
+   *  `source='98x_phase4'`; cache rows scoped by the recorded provenance run); content
+   *  tables untouched; no DDL on existing tables (lazy ensure-schema only for the net-new
+   *  `cg_user_activation_runs` provenance table on its write path). Env: `FF_CAREER_BUILDER_ACTIVATION`. */
+  careerBuilderActivation: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1212,6 +1227,10 @@ export function isCompetencySpineContractsEnabled(): boolean {
 
 export function isEmployerCompetencyHiringEnabled(): boolean {
   return isFlagEnabled('employerCompetencyHiring');
+}
+
+export function isCareerBuilderActivationEnabled(): boolean {
+  return isFlagEnabled('careerBuilderActivation');
 }
 
 export function isFunctionalCompetencySeedingEnabled(): boolean {

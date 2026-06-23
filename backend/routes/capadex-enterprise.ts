@@ -12,6 +12,7 @@ import { writeAuditEvent, AUDIT_EVENT } from '../lib/audit';
 import { isEnabled } from '../services/feature-flags';
 import { broadcastToSession } from '../services/ws-broadcast';
 import type { GeneratedIntervention } from '../services/intervention-engine';
+import { maybeActivateCareerBuilderOnCompletion } from '../services/career-builder-activation';
 
 // ─── Concern Categorisation ────────────────────────────────────────────────
 function categorizeConcern(concern: string): string {
@@ -155,6 +156,12 @@ export async function postCompletionHooks(
         tenantId = tr.rows[0]?.tenant_id || undefined;
       } catch { /* non-critical — global flag state applies */ }
     }
+
+    // 98X Phase 4 — fire-and-forget Career Builder activation. No-op unless the
+    // `careerBuilderActivation` flag is ON *and* the completion email resolves to a real
+    // career_seeker user; never throws, never blocks the completion write path. Flag-OFF →
+    // byte-identical legacy behaviour.
+    void maybeActivateCareerBuilderOnCompletion(pool, email);
 
     // 1. Generate rule-based recommendations — only when intervention engine is DISABLED.
     // When `interventions` flag is ON, the new engine (hook #12) replaces this path.

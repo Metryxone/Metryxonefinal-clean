@@ -106,6 +106,7 @@ import { registerAdaptiveOrchestrationV2 } from "./routes/adaptive-orchestration
 import { registerUnifiedCompetencyProfileRoutes } from "./routes/unified-competency-profile";
 import { registerRoleDNARuntimeRoutes } from "./routes/role-dna-runtime";
 import { registerRoleDnaExpansionRoutes } from "./routes/role-dna-expansion";
+import { registerRoleDnaGovernanceRoutes } from "./routes/role-dna-governance";
 import { registerCompetencySpineRoutes } from "./routes/competency-spine";
 import { registerEmployerCompetencyMatchRoutes } from "./routes/employer-competency-match";
 import { registerCareerBuilderActivationRoutes } from "./routes/career-builder-activation";
@@ -13638,6 +13639,7 @@ Rules:
   registerUnifiedCompetencyProfileRoutes({ app, pool: concernsPool, requireAuth });
   registerRoleDNARuntimeRoutes({ app, pool: concernsPool, requireAuth });
   registerRoleDnaExpansionRoutes({ app, pool: concernsPool, requireAuth });
+  registerRoleDnaGovernanceRoutes({ app, pool: concernsPool, requireAuth });
   registerCompetencySpineRoutes({ app, pool: concernsPool, requireAuth });
   registerEmployerCompetencyMatchRoutes({ app, pool: concernsPool, requireAuth });
   registerCareerBuilderActivationRoutes({ app, pool: concernsPool, requireAuth });

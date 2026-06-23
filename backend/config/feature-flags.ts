@@ -1102,6 +1102,20 @@ export const FEATURE_FLAGS = {
    *  additive: flag OFF → every route 503 before any auth/DB touch, no schema, no write →
    *  byte-identical legacy behaviour. Env: `FF_ROLE_DNA_EXPANSION`. */
   roleDnaExpansion: false,
+  /** MX-100X Phase 1 — Role DNA Governance & Benchmarks. When ON, a NEW read-only governance
+   *  engine COMPOSES the existing Role-DNA data (`ont_roles` inheritance chain + `map_role_competency`
+   *  requirements) into per-role governance scores — Completeness (Coverage axis: which DNA
+   *  components exist), Confidence (Confidence axis: provenance + link density), Quality (internal
+   *  coherence checks) — plus a human-readable explainability trace, a version stamp, and
+   *  benchmark availability across levels (role / competency / department / family / function /
+   *  readiness from `map_role_competency` aggregates; industry abstains honestly — there is NO
+   *  role↔industry linkage in the `ont_*` chain, so it is never fabricated). GET-never-writes:
+   *  reads use a to_regclass probe + degrade; lazy ensure-schema runs ONLY on the POST/materialize
+   *  path. Fully reversible: delete rows by `provenance='mx100x_p1_governance'` (or `POST /rollback`)
+   *  / drop the new `role_dna_governance` table. Strictly additive: flag OFF → every route 503
+   *  before any auth/DB touch, no schema, no write → byte-identical legacy behaviour. Env:
+   *  `FF_ROLE_DNA_GOVERNANCE`. */
+  roleDnaGovernance: false,
   /** 98X Gap Closure — Phase 2: Competency Intelligence Spine Contracts. When ON, a NEW
    *  read-only resolver + typed contracts module unifies the TWO parallel scoring ledgers
    *  (`onto_competency_score_runs` per-competency `comp_*` + `onto_competency_profiles`
@@ -1248,6 +1262,10 @@ export function isRoleDNARuntimeEnabled(): boolean {
 
 export function isRoleDnaExpansionEnabled(): boolean {
   return isFlagEnabled('roleDnaExpansion');
+}
+
+export function isRoleDnaGovernanceEnabled(): boolean {
+  return isFlagEnabled('roleDnaGovernance');
 }
 
 export function isCompetencySpineContractsEnabled(): boolean {

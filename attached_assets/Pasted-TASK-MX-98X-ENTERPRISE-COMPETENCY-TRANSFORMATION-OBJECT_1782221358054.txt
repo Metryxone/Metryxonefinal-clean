@@ -1,0 +1,481 @@
+TASK: MX-98X-ENTERPRISE-COMPETENCY-TRANSFORMATION
+
+OBJECTIVE
+
+Perform a final architecture transformation assessment for MetryxOne.
+
+The objective is NOT to audit.
+
+The objective is NOT to rename screens.
+
+The objective is NOT to hide modules.
+
+The objective is to identify everything required to transform the existing platform into a 98%+ enterprise-grade competency intelligence ecosystem.
+
+ASSUME
+
+The existing architecture remains intact.
+
+The current competency framework remains intact.
+
+The current Employability Index remains intact.
+
+The current Career Builder remains intact.
+
+The current Career Passport remains intact.
+
+The current O*NET reference library remains intact.
+
+No rebuild is permitted.
+
+No replacement is permitted.
+
+Only evolution of the existing architecture is allowed.
+
+---
+
+SECTION 1
+ARCHITECTURE MATURITY ASSESSMENT
+--------------------------------
+
+Assess:
+
+Competency Framework
+
+Micro Competency Framework
+
+Role Architecture
+
+Assessment Engine
+
+Scoring Engine
+
+Employability Index
+
+Career Builder
+
+Career Passport
+
+Employer Intelligence
+
+Workforce Intelligence
+
+Market Intelligence
+
+For each area provide:
+
+Current State
+
+Enterprise Target State
+
+Gap Analysis
+
+Current Maturity %
+
+Target Maturity %
+
+Actions Required
+
+Dependencies
+
+Business Impact
+
+Technical Impact
+
+Generate:
+
+architecture_maturity_assessment.md
+
+---
+
+SECTION 2
+COMPETENCY INTELLIGENCE SPINE
+-----------------------------
+
+Validate the existence of a unified competency intelligence layer.
+
+Trace:
+
+Industry
+↓
+Function
+↓
+Department
+↓
+Role Family
+↓
+Role
+↓
+Competency Profile
+↓
+Assessment Blueprint
+↓
+Question Blueprint
+↓
+Assessment Runtime
+↓
+Scoring
+↓
+Competency Intelligence
+↓
+Employability Intelligence
+↓
+Career Builder
+↓
+Career Passport
+↓
+Employer Intelligence
+↓
+Workforce Intelligence
+
+Identify:
+
+Missing Connections
+
+Duplicate Logic
+
+Disconnected Modules
+
+Unused Intelligence
+
+Data Silos
+
+Parallel Scoring Paths
+
+Generate:
+
+competency_intelligence_spine_assessment.md
+
+---
+
+SECTION 3
+ROLE DNA MATURITY
+-----------------
+
+Validate whether Role DNA can scale to:
+
+10 Industries
+
+100 Industries
+
+500 Industries
+
+1000 Industries
+
+5000 Roles
+
+10000 Roles
+
+Assess:
+
+Industry Architecture
+
+Function Architecture
+
+Department Architecture
+
+Role Family Architecture
+
+Role Architecture
+
+Role Competency Profiles
+
+Role Weight Models
+
+Role Readiness Models
+
+Role Intelligence Models
+
+Role Benchmark Models
+
+Generate:
+
+role_dna_scalability_assessment.md
+
+---
+
+SECTION 4
+EMPLOYER INTELLIGENCE TRANSFORMATION
+------------------------------------
+
+Validate whether employers can operate entirely using competency intelligence.
+
+Target State
+
+Employer
+↓
+Industry
+↓
+Function
+↓
+Department
+↓
+Role Family
+↓
+Role
+↓
+Suggested Competencies
+↓
+Competency Weighting
+↓
+Assessment Generation
+↓
+Candidate Assessment
+↓
+Competency Match
+↓
+Role Match
+↓
+Readiness Score
+↓
+Hiring Recommendation
+
+Assess:
+
+Current Capability
+
+Missing Capability
+
+Required Wiring
+
+Required Intelligence
+
+Required Data Models
+
+Required APIs
+
+Required Services
+
+Generate:
+
+employer_competency_transformation.md
+
+---
+
+SECTION 5
+CAREER BUILDER TRANSFORMATION
+-----------------------------
+
+Validate whether Career Builder can become competency-driven.
+
+Target State
+
+Assessment
+↓
+Competency Intelligence
+↓
+Role Fit
+↓
+Career Paths
+↓
+Skill Gaps
+↓
+Competency Gaps
+↓
+Learning Paths
+↓
+Development Plans
+↓
+Career Progression
+
+Assess:
+
+Current Capability
+
+Missing Capability
+
+Required Data
+
+Required Intelligence
+
+Required Automation
+
+Generate:
+
+career_builder_transformation.md
+
+---
+
+SECTION 6
+VALIDITY AND PREDICTIVE INTELLIGENCE
+------------------------------------
+
+Assess readiness for:
+
+Competency Benchmarking
+
+Role Benchmarking
+
+Industry Benchmarking
+
+Success Prediction
+
+Readiness Prediction
+
+Career Success Prediction
+
+Hiring Success Prediction
+
+Skill Gap Prediction
+
+Competency Forecasting
+
+Identify:
+
+Existing Capability
+
+Missing Data
+
+Missing Models
+
+Missing Signals
+
+Missing Validation Loops
+
+Generate:
+
+predictive_intelligence_assessment.md
+
+---
+
+SECTION 7
+GLOBAL SCALE READINESS
+----------------------
+
+Validate readiness for:
+
+Multi Industry
+
+Multi Country
+
+Multi Employer
+
+Multi Assessment
+
+Multi Tenant
+
+Enterprise Scale
+
+Government Scale
+
+University Scale
+
+Staffing Scale
+
+Generate:
+
+global_scale_readiness.md
+
+---
+
+SECTION 8
+98% TRANSFORMATION ROADMAP
+--------------------------
+
+Produce a transformation roadmap.
+
+Categorize:
+
+30 Day Actions
+
+60 Day Actions
+
+90 Day Actions
+
+180 Day Actions
+
+For every action classify:
+
+Must Have
+
+Should Have
+
+Good To Have
+
+Current Maturity
+
+Target Maturity
+
+Effort
+
+Impact
+
+Risk
+
+Priority
+
+Generate:
+
+metryxone_98x_transformation_roadmap.md
+
+---
+
+SECTION 9
+FOUNDER DECISION REPORT
+-----------------------
+
+Answer only:
+
+1. What prevents MetryxOne from reaching 98%+ maturity today?
+
+2. What are the Top 20 highest-impact improvements?
+
+3. What are the Top 10 improvements for employers?
+
+4. What are the Top 10 improvements for candidates?
+
+5. What are the Top 10 improvements for scalability?
+
+6. What should never be changed?
+
+7. What should be expanded aggressively?
+
+8. If you were the Chief Product Architect, what would be your roadmap?
+
+Generate:
+
+founder_98x_decision_report.md
+
+---
+
+## CRITICAL INSTRUCTIONS
+
+Do NOT recommend rebuilding.
+
+Do NOT recommend replacing O*NET.
+
+Do NOT recommend replacing the competency framework.
+
+Do NOT recommend replacing the Employability Index.
+
+Do NOT recommend replacing Career Builder.
+
+Do NOT focus on UI changes.
+
+Do NOT focus on navigation changes.
+
+Do NOT focus on cosmetic improvements.
+
+Focus on:
+
+Architecture Maturity
+
+Competency Intelligence
+
+Employer Intelligence
+
+Career Intelligence
+
+Predictive Intelligence
+
+Scalability
+
+Validation
+
+Commercial Readiness
+
+Enterprise Readiness
+
+Provide evidence for every recommendation.
+
+Identify only the gaps that materially prevent the platform from achieving 98%+ enterprise-grade maturity.

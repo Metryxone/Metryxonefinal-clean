@@ -239,7 +239,9 @@ export default function CompetencySearchPanel() {
   const summary = summaryQ.data as Summary;
   const facets = facetsQ.data as Facets | undefined;
   const families = facets?.families.filter((f) => !filters.domain_id || f.domain_id === filters.domain_id) ?? [];
-  const functions = facets?.functions.filter((f) => !filters.industry_id || f.industry_id === filters.industry_id) ?? [];
+  // A null industry_id means the function is cross-industry (applies to every industry,
+  // as in the O*NET hierarchy) — always show it; legacy onto_ functions carry a real id.
+  const functions = facets?.functions.filter((f) => !filters.industry_id || f.industry_id === filters.industry_id || f.industry_id == null) ?? [];
   const departments = facets?.departments.filter((d) => !filters.function_id || d.function_id === filters.function_id) ?? [];
   const activeFilterCount = Object.entries(filters).filter(([k, v]) => v && k !== 'q').length + (filters.q ? 1 : 0);
 

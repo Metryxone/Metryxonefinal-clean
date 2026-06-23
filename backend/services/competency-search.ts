@@ -33,6 +33,11 @@ export interface CompetencySearchOpts {
   order?: string;
   limit?: number;
   offset?: number;
+  // Task #51 — when true, the role/department/function/industry filters resolve
+  // through the O*NET (ont_) hierarchy + competency crosswalk instead of the
+  // curated onto_ role taxonomy. Flag-gated (ontologyHierarchyV2); OFF = identical
+  // to legacy. The competency catalog displayed is ALWAYS onto_competencies.
+  useOnet?: boolean;
 }
 
 export interface CompetencyResult {
@@ -111,32 +116,74 @@ function buildWhere(opts: CompetencySearchOpts): { sql: string; params: unknown[
   if (opts.stabilityLevel) where.push(`c.stability_level::text = ${p(opts.stabilityLevel)}`);
   if (opts.complexityLevel) where.push(`c.complexity_level::text = ${p(opts.complexityLevel)}`);
 
-  // Role-taxonomy filters resolve through onto_role_competency_profiles. Each level
-  // adds one more join up the genome's role hierarchy.
-  if (opts.roleId) {
-    where.push(`EXISTS (SELECT 1 FROM onto_role_competency_profiles rcp
-      WHERE rcp.competency_id = c.id AND rcp.active AND rcp.role_id = ${p(opts.roleId)})`);
-  }
-  if (opts.departmentId) {
-    where.push(`EXISTS (SELECT 1 FROM onto_role_competency_profiles rcp
-      JOIN onto_roles r ON r.id = rcp.role_id
-      JOIN onto_role_families rf ON rf.id = r.role_family_id
-      WHERE rcp.competency_id = c.id AND rcp.active AND rf.subfunction_id = ${p(opts.departmentId)})`);
-  }
-  if (opts.functionId) {
-    where.push(`EXISTS (SELECT 1 FROM onto_role_competency_profiles rcp
-      JOIN onto_roles r ON r.id = rcp.role_id
-      JOIN onto_role_families rf ON rf.id = r.role_family_id
-      JOIN onto_subfunctions sf ON sf.id = rf.subfunction_id
-      WHERE rcp.competency_id = c.id AND rcp.active AND sf.function_id = ${p(opts.functionId)})`);
-  }
-  if (opts.industryId) {
-    where.push(`EXISTS (SELECT 1 FROM onto_role_competency_profiles rcp
-      JOIN onto_roles r ON r.id = rcp.role_id
-      JOIN onto_role_families rf ON rf.id = r.role_family_id
-      JOIN onto_subfunctions sf ON sf.id = rf.subfunction_id
-      JOIN onto_functions fn ON fn.id = sf.function_id
-      WHERE rcp.competency_id = c.id AND rcp.active AND fn.industry_id = ${p(opts.industryId)})`);
+  // Role-taxonomy filters. Legacy (useOnet=false) resolve through the curated
+  // onto_role_competency_profiles hierarchy. When useOnet=true (flag ontologyHierarchyV2)
+  // they resolve through the O*NET hierarchy (industry → map_industry_function →
+  // ont_departments → ont_role_families → ont_roles → map_role_competency →
+  // ont_competencies → map_ont_onto_competency → onto_competencies). ont_ ids are
+  // integers, so they are coerced with Number().
+  if (opts.useOnet) {
+    // Shared crosswalk join: c.id (onto) ← map_ont_onto_competency ← map_role_competency.
+    const onetBase = `FROM map_ont_onto_competency x
+      JOIN map_role_competency mrc ON mrc.competency_id = x.ont_competency_id AND mrc.is_active`;
+    // ont_ ids are integers. Coerce + guard: a non-numeric id skips the filter cleanly
+    // (rather than producing NaN → a SQL type error / 500).
+    const intId = (v: string) => { const n = Number(v); return Number.isFinite(n) ? n : null; };
+    const roleN = opts.roleId ? intId(opts.roleId) : null;
+    const deptN = opts.departmentId ? intId(opts.departmentId) : null;
+    const fnN = opts.functionId ? intId(opts.functionId) : null;
+    const indN = opts.industryId ? intId(opts.industryId) : null;
+    if (roleN !== null) {
+      where.push(`EXISTS (SELECT 1 ${onetBase}
+        WHERE x.onto_competency_id = c.id AND mrc.role_id = ${p(roleN)})`);
+    }
+    if (deptN !== null) {
+      where.push(`EXISTS (SELECT 1 ${onetBase}
+        JOIN ont_roles r ON r.id = mrc.role_id
+        JOIN ont_role_families rf ON rf.id = r.role_family_id
+        WHERE x.onto_competency_id = c.id AND rf.department_id = ${p(deptN)})`);
+    }
+    if (fnN !== null) {
+      where.push(`EXISTS (SELECT 1 ${onetBase}
+        JOIN ont_roles r ON r.id = mrc.role_id
+        JOIN ont_role_families rf ON rf.id = r.role_family_id
+        JOIN ont_departments d ON d.id = rf.department_id
+        WHERE x.onto_competency_id = c.id AND d.function_id = ${p(fnN)})`);
+    }
+    if (indN !== null) {
+      where.push(`EXISTS (SELECT 1 ${onetBase}
+        JOIN ont_roles r ON r.id = mrc.role_id
+        JOIN ont_role_families rf ON rf.id = r.role_family_id
+        JOIN ont_departments d ON d.id = rf.department_id
+        JOIN map_industry_function mif ON mif.function_id = d.function_id AND mif.is_active
+        WHERE x.onto_competency_id = c.id AND mif.industry_id = ${p(indN)})`);
+    }
+  } else {
+    if (opts.roleId) {
+      where.push(`EXISTS (SELECT 1 FROM onto_role_competency_profiles rcp
+        WHERE rcp.competency_id = c.id AND rcp.active AND rcp.role_id = ${p(opts.roleId)})`);
+    }
+    if (opts.departmentId) {
+      where.push(`EXISTS (SELECT 1 FROM onto_role_competency_profiles rcp
+        JOIN onto_roles r ON r.id = rcp.role_id
+        JOIN onto_role_families rf ON rf.id = r.role_family_id
+        WHERE rcp.competency_id = c.id AND rcp.active AND rf.subfunction_id = ${p(opts.departmentId)})`);
+    }
+    if (opts.functionId) {
+      where.push(`EXISTS (SELECT 1 FROM onto_role_competency_profiles rcp
+        JOIN onto_roles r ON r.id = rcp.role_id
+        JOIN onto_role_families rf ON rf.id = r.role_family_id
+        JOIN onto_subfunctions sf ON sf.id = rf.subfunction_id
+        WHERE rcp.competency_id = c.id AND rcp.active AND sf.function_id = ${p(opts.functionId)})`);
+    }
+    if (opts.industryId) {
+      where.push(`EXISTS (SELECT 1 FROM onto_role_competency_profiles rcp
+        JOIN onto_roles r ON r.id = rcp.role_id
+        JOIN onto_role_families rf ON rf.id = r.role_family_id
+        JOIN onto_subfunctions sf ON sf.id = rf.subfunction_id
+        JOIN onto_functions fn ON fn.id = sf.function_id
+        WHERE rcp.competency_id = c.id AND rcp.active AND fn.industry_id = ${p(opts.industryId)})`);
+    }
   }
 
   if (opts.microTerm && opts.microTerm.trim()) {
@@ -209,7 +256,24 @@ export interface SearchFacets {
   complexity_level: string[];
 }
 
-export async function getSearchFacets(pool: Pool): Promise<SearchFacets> {
+export async function getSearchFacets(pool: Pool, useOnet = false): Promise<SearchFacets> {
+  // The role-taxonomy facets (industries/functions/departments/roles) come from the
+  // O*NET hierarchy when the flag is ON (206 industries, 1k+ roles) and from the
+  // curated onto_ taxonomy when OFF. The competency-keyed facets (types/domains/
+  // families/attributes) are ALWAYS onto_ — the displayed catalog never changes.
+  const taxonomyQueries = useOnet
+    ? [
+        pool.query(`SELECT id, name FROM ont_industries WHERE is_active = true ORDER BY sort_order, name`),
+        pool.query(`SELECT id, NULL::int AS industry_id, name FROM ont_functions WHERE is_active = true ORDER BY sort_order, name`),
+        pool.query(`SELECT id, function_id, name FROM ont_departments WHERE is_active = true ORDER BY sort_order, name`),
+        pool.query(`SELECT id, title, role_family_id FROM ont_roles WHERE is_active = true ORDER BY sort_order, title`),
+      ]
+    : [
+        pool.query(`SELECT id, name FROM onto_industries WHERE deprecated = false ORDER BY display_order, name`),
+        pool.query(`SELECT id, industry_id, name FROM onto_functions WHERE deprecated = false ORDER BY display_order, name`),
+        pool.query(`SELECT id, function_id, name FROM onto_subfunctions WHERE deprecated = false ORDER BY display_order, name`),
+        pool.query(`SELECT id, title, role_family_id FROM onto_roles WHERE deprecated = false ORDER BY display_order, title`),
+      ];
   const [types, domains, families, industries, functions, departments, roles, attrs] = await Promise.all([
     pool.query(`SELECT t.type_key, t.label, COUNT(tm.competency_id)::int AS count
       FROM onto_competency_types t LEFT JOIN onto_competency_type_map tm ON tm.type_key = t.type_key
@@ -220,10 +284,7 @@ export async function getSearchFacets(pool: Pool): Promise<SearchFacets> {
     pool.query(`SELECT f.id, f.domain_id, f.name, COUNT(c.id)::int AS count
       FROM onto_families f LEFT JOIN onto_competencies c ON c.family_id = f.id AND c.deprecated = false
       WHERE f.deprecated = false GROUP BY f.id, f.domain_id, f.name, f.display_order ORDER BY f.name`),
-    pool.query(`SELECT id, name FROM onto_industries WHERE deprecated = false ORDER BY display_order, name`),
-    pool.query(`SELECT id, industry_id, name FROM onto_functions WHERE deprecated = false ORDER BY display_order, name`),
-    pool.query(`SELECT id, function_id, name FROM onto_subfunctions WHERE deprecated = false ORDER BY display_order, name`),
-    pool.query(`SELECT id, title, role_family_id FROM onto_roles WHERE deprecated = false ORDER BY display_order, title`),
+    ...taxonomyQueries,
     pool.query(`SELECT
       ARRAY(SELECT DISTINCT trainability::text FROM onto_competencies WHERE trainability IS NOT NULL ORDER BY 1) AS trainability,
       ARRAY(SELECT DISTINCT stability_level::text FROM onto_competencies WHERE stability_level IS NOT NULL ORDER BY 1) AS stability_level,
@@ -311,7 +372,21 @@ export interface SearchSummary {
   findings: string[];
 }
 
-export async function getSearchSummary(pool: Pool): Promise<SearchSummary> {
+export async function getSearchSummary(pool: Pool, useOnet = false): Promise<SearchSummary> {
+  // Taxonomy counts come from the O*NET hierarchy when the flag is ON (so the summary
+  // honestly reflects the 206 industries that are now searchable) and from the curated
+  // onto_ taxonomy when OFF. Competency totals are ALWAYS onto_ (the displayed catalog).
+  const taxoQuery = useOnet
+    ? pool.query(`SELECT
+        (SELECT COUNT(*)::int FROM ont_industries WHERE is_active = true) AS industries,
+        (SELECT COUNT(*)::int FROM ont_functions WHERE is_active = true) AS functions,
+        (SELECT COUNT(*)::int FROM ont_departments WHERE is_active = true) AS departments,
+        (SELECT COUNT(*)::int FROM ont_roles WHERE is_active = true) AS roles`)
+    : pool.query(`SELECT
+        (SELECT COUNT(*)::int FROM onto_industries WHERE deprecated = false) AS industries,
+        (SELECT COUNT(*)::int FROM onto_functions WHERE deprecated = false) AS functions,
+        (SELECT COUNT(*)::int FROM onto_subfunctions WHERE deprecated = false) AS departments,
+        (SELECT COUNT(*)::int FROM onto_roles WHERE deprecated = false) AS roles`);
   const [base, typed, micro, taxo, types] = await Promise.all([
     pool.query(`SELECT
       COUNT(*)::int AS total,
@@ -322,11 +397,7 @@ export async function getSearchSummary(pool: Pool): Promise<SearchSummary> {
       FROM onto_competencies`),
     pool.query(`SELECT COUNT(DISTINCT competency_id)::int AS typed FROM onto_competency_type_map`),
     pool.query(`SELECT COUNT(*)::int AS micro FROM onto_competency_hierarchy WHERE active = true`),
-    pool.query(`SELECT
-      (SELECT COUNT(*)::int FROM onto_industries WHERE deprecated = false) AS industries,
-      (SELECT COUNT(*)::int FROM onto_functions WHERE deprecated = false) AS functions,
-      (SELECT COUNT(*)::int FROM onto_subfunctions WHERE deprecated = false) AS departments,
-      (SELECT COUNT(*)::int FROM onto_roles WHERE deprecated = false) AS roles`),
+    taxoQuery,
     pool.query(`SELECT t.type_key, t.label, COUNT(tm.competency_id)::int AS count
       FROM onto_competency_types t LEFT JOIN onto_competency_type_map tm ON tm.type_key = t.type_key
       GROUP BY t.type_key, t.label, t.display_order ORDER BY t.display_order, t.label`),
@@ -342,6 +413,7 @@ export async function getSearchSummary(pool: Pool): Promise<SearchSummary> {
   if (untyped > 0) findings.push(`${untyped} competenc${untyped === 1 ? 'y is' : 'ies are'} not yet classified by type — searchable under the "untyped" filter.`);
   else findings.push('Every competency is classified by type.');
   findings.push(`Role taxonomy: ${taxo.rows[0].industries} industries · ${taxo.rows[0].functions} functions · ${taxo.rows[0].departments} departments · ${taxo.rows[0].roles} roles.`);
+  if (useOnet) findings.push('Industry/role filters resolve through the O*NET hierarchy. O*NET has no industry dimension, so industries share the same cross-industry competency set (not differentiated). Only competencies whose names exactly match the curated catalog are reachable through these filters.');
   if ((micro.rows[0]?.micro ?? 0) === 0) findings.push('No micro-competencies defined yet — micro search will return empty (honest, never seeded with placeholders).');
 
   return {

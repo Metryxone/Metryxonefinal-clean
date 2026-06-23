@@ -23,7 +23,7 @@
 
 import type { Express, Request, Response, RequestHandler } from 'express';
 import type { Pool } from 'pg';
-import { isCompetencyFrameworkIntelligenceEnabled } from '../config/feature-flags.js';
+import { isCompetencyFrameworkIntelligenceEnabled, isFlagEnabled } from '../config/feature-flags.js';
 import {
   COMPETENCY_INTELLIGENCE_VERSION,
   CANONICAL_SPINE,
@@ -702,7 +702,7 @@ export function registerCompetencyFrameworkIntelligenceRoutes(
   // Literal sub-paths registered BEFORE the param-free search root.
 
   app.get('/api/competency-intelligence/search/facets', gate, requireAuth, wrap(async () =>
-    getSearchFacets(pool),
+    getSearchFacets(pool, isFlagEnabled('ontologyHierarchyV2')),
   ));
 
   app.get('/api/competency-intelligence/search/micro-competencies', gate, requireAuth, wrap(async (req) =>
@@ -716,11 +716,12 @@ export function registerCompetencyFrameworkIntelligenceRoutes(
   ));
 
   app.get('/api/competency-intelligence/search/summary', gate, requireAuth, wrap(async () =>
-    getSearchSummary(pool),
+    getSearchSummary(pool, isFlagEnabled('ontologyHierarchyV2')),
   ));
 
   app.get('/api/competency-intelligence/search', gate, requireAuth, wrap(async (req) =>
     searchCompetencies(pool, {
+      useOnet: isFlagEnabled('ontologyHierarchyV2'),
       q: req.query.q ? String(req.query.q) : undefined,
       typeKey: req.query.type ? String(req.query.type) : undefined,
       domainId: req.query.domain_id ? String(req.query.domain_id) : undefined,

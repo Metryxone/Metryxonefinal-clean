@@ -56,3 +56,37 @@ three-way namespace + hierarchy silo, NOT a UI bug.
 - **Never** fabricate the missing role_family→department→industry links or the 87% of
   unmatched competency pairs to inflate coverage. Coverage is gated on real source data,
   not on code.
+
+## RESOLUTION (cross-industry bridge, flag `ontologyHierarchyV2`)
+Chosen path: complete the `ont_` hierarchy + repoint Search & Discovery to it behind a flag
+(NOT mirror into `onto_`). Linker = `services/onet-hierarchy-link.ts` (run via
+`scripts/onet-hierarchy-link-run.ts`), idempotent + additive (no deletes):
+- **SOC major group → function**: `SOC_TO_FUNCTION` map. 7 white-collar SOC groups → existing
+  cross-industry functions (these BROADCAST); SOC 19 → `FN_RD`; the remaining 15 SOC groups
+  get NEW occupation-specific `FN_ONET_<nn>` functions (`is_cross_industry=false`, named from
+  official O*NET SOC labels — NOT broadcast).
+- **department + role_family link**: one `DEPT_ONET_<nn>` per SOC group under the mapped
+  function; `ont_role_families.department_id` set for every `RF_ONET_<nn>`.
+- **industry → function**: every one of the 206 industries linked to ALL `is_cross_industry=true`
+  functions (the flag is the data's own assertion, not fabricated). +2642 rows.
+- **competency crosswalk** `map_ont_onto_competency`: 15 EXACT ci/trim name matches only
+  (`ont_competencies.name` ↔ `onto_competencies.canonical_name`); the rest honestly unmapped.
+
+Search wiring: `competency-search.ts` `buildWhere`/`getSearchFacets`/`getSearchSummary` take a
+`useOnet` flag; route passes `isFlagEnabled('ontologyHierarchyV2')`. Flag-OFF = byte-identical
+legacy `onto_` (verified: 2 industries). Flag-ON traversal:
+`ont_industries → map_industry_function → ont_departments → ont_role_families → ont_roles →
+map_role_competency → ont_competencies → map_ont_onto_competency → onto_competencies`
+(verified: 206/206 industries reach a competency).
+
+**HONEST CEILING (user-accepted):** O*NET has NO industry dimension → every industry reaches the
+SAME cross-industry competency set (not differentiated; true differentiation needs BLS OEWS).
+Only the 15 crosswalked competencies are reachable via these filters. Industries APPEAR +
+filter; depth is thin by data reality, not by bug.
+
+**Traps:** `ont_` facet ids are INTEGERS (guard `Number.isFinite`, else NaN→500) vs `onto_`
+TEXT ids. Cross-industry functions carry `industry_id=NULL` in the facet → the frontend cascade
+must treat null as "applies to all industries" (`CompetencySearchPanel.tsx`) or the Function
+dropdown collapses after picking an industry. `.replit` sets `FF_ONTOLOGY_HIERARCHY_V2="1"` in
+`[userenv.development]` so the feature is ON in DEV (so the user sees the fix); prod stays
+default-OFF (flag `false`) until enabled.

@@ -849,6 +849,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                     config={COMPETENCY_CONFIG}
                     hiddenTabs={['overview']}
                     initialTab="cmp-command-center"
+                    onNavigateToReports={() => setActiveTab('reports')}
                     extraTabs={[
                       { id: 'cmp-command-center',     label: 'Command Center',     icon: Target,     node: (
                         <div className="space-y-4">

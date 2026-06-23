@@ -9,7 +9,7 @@
  * back to the classic all-tabs view at any time. Nothing is removed.
  */
 import { useMemo, useState, type ReactNode } from 'react';
-import { ChevronLeft, ChevronRight, Check, type LucideIcon } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, FileBarChart2, ArrowRight, type LucideIcon } from 'lucide-react';
 import type { FrameworkExtraTab } from '@/components/admin/FrameworkPanel';
 
 export type WizardStep = {
@@ -25,10 +25,13 @@ export default function CompetencyWizard({
   extraTabs,
   steps,
   color,
+  onNavigateToReports,
 }: {
   extraTabs: FrameworkExtraTab[];
   steps: WizardStep[];
   color: string;
+  /** Hand-off to the Unified Reports console — where reports are actually produced. */
+  onNavigateToReports?: () => void;
 }) {
   const byId = useMemo(() => {
     const m = new Map<string, FrameworkExtraTab>();
@@ -79,6 +82,8 @@ export default function CompetencyWizard({
     setStepIdx(i);
     setPanelId(null); // default to the step's first panel
   };
+
+  const isFinalStep = safeIdx === resolvedSteps.length - 1;
 
   return (
     <div className="space-y-5">
@@ -160,6 +165,39 @@ export default function CompetencyWizard({
 
       {/* ── Active panel body ───────────────────────────────────── */}
       <div>{activePanel.node as ReactNode}</div>
+
+      {/* ── Final-step hand-off to the reporting console ────────── */}
+      {isFinalStep && onNavigateToReports && (
+        <div
+          className="flex flex-col gap-3 rounded-lg border p-4 sm:flex-row sm:items-center sm:justify-between"
+          style={{ borderColor: `${color}55`, backgroundColor: `${color}0a` }}
+        >
+          <div className="flex items-start gap-3">
+            <span
+              className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg text-white"
+              style={{ backgroundColor: color }}
+            >
+              <FileBarChart2 className="h-4.5 w-4.5" />
+            </span>
+            <div>
+              <div className="text-sm font-semibold text-gray-900">Framework set up — generate reports</div>
+              <p className="mt-0.5 text-xs text-gray-500">
+                You&rsquo;ve completed the import&rarr;build&rarr;score pipeline. Reports are produced in the
+                Unified Reports console.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onNavigateToReports}
+            className="flex flex-shrink-0 items-center justify-center gap-1.5 rounded-md px-4 py-2 text-xs font-semibold text-white transition-all hover:opacity-90"
+            style={{ backgroundColor: color }}
+            data-testid="button-wizard-open-reports"
+          >
+            Open Unified Reports
+            <ArrowRight className="h-4 w-4" />
+          </button>
+        </div>
+      )}
 
       {/* ── Back / Next footer ──────────────────────────────────── */}
       <div className="flex items-center justify-between border-t border-gray-100 pt-4">

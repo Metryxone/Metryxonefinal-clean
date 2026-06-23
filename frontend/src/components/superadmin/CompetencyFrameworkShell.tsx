@@ -88,12 +88,15 @@ export default function CompetencyFrameworkShell({
   tabGroups,
   initialTab,
   hiddenTabs,
+  onNavigateToReports,
 }: {
   config: FwConfig;
   extraTabs: FrameworkExtraTab[];
   tabGroups: TabGroup[];
   initialTab?: string;
   hiddenTabs?: string[];
+  /** Hand-off from the wizard's final step to the Unified Reports console. */
+  onNavigateToReports?: () => void;
 }) {
   const [view, setView] = useState<'wizard' | 'classic'>('wizard');
   const color = config.color;
@@ -139,7 +142,7 @@ export default function CompetencyFrameworkShell({
     <div>
       {toggle}
       {view === 'wizard' ? (
-        <CompetencyWizard extraTabs={extraTabs} steps={COMPETENCY_WIZARD_STEPS} color={color} />
+        <CompetencyWizard extraTabs={extraTabs} steps={COMPETENCY_WIZARD_STEPS} color={color} onNavigateToReports={onNavigateToReports} />
       ) : (
         <FrameworkPanel
           config={config}

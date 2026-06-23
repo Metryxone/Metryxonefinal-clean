@@ -54,6 +54,7 @@ import {
   createMicroRelationship,
   updateMicroRelationship,
   deleteMicroRelationship,
+  bulkMicroAction,
 } from '../services/micro-competency.js';
 import {
   getRoleProfiles,
@@ -317,6 +318,26 @@ export function registerCompetencyFrameworkIntelligenceRoutes(
         return undefined;
       }
       return result.row;
+    }),
+  );
+
+  // Admin bulk action — activate / deactivate / delete many relationships at once.
+  // Literal path registered BEFORE the `/micro-framework/:id` param handlers.
+  app.post(
+    '/api/admin/competency-intelligence/micro-framework/bulk',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req, res) => {
+      const body = (req.body ?? {}) as Record<string, unknown>;
+      const action = String(body.action ?? '') as 'activate' | 'deactivate' | 'delete';
+      const ids = Array.isArray(body.ids) ? (body.ids as unknown[]).map((n) => Number(n)) : [];
+      const result = await bulkMicroAction(pool, action, ids);
+      if (!result.ok) {
+        res.status(400).json({ ok: false, error: result.error });
+        return undefined;
+      }
+      return result;
     }),
   );
 

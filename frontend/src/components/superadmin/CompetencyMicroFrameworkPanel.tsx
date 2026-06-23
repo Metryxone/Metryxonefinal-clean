@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Network, GitBranch, Link2, Tag, Info, RefreshCw, Search, Plus, Trash2 } from 'lucide-react';
+import { Network, GitBranch, Link2, Tag, Info, RefreshCw, Search, Plus, Trash2, CheckSquare, Square, MinusSquare, ToggleLeft, ToggleRight, X } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { Card, CardContent } from '../ui/card';
 
@@ -72,6 +72,9 @@ export default function CompetencyMicroFrameworkPanel() {
   const [formLabel, setFormLabel] = React.useState('');
   const [formMode, setFormMode] = React.useState<'linked' | 'named'>('linked');
   const [formError, setFormError] = React.useState('');
+  const [selected, setSelected] = React.useState<Set<number>>(new Set());
+  const [bulkBusy, setBulkBusy] = React.useState(false);
+  const [bulkError, setBulkError] = React.useState('');
 
   const summaryQ = useQuery({
     queryKey: ['micro-framework-summary'],
@@ -149,7 +152,52 @@ export default function CompetencyMicroFrameworkPanel() {
 
   const remove = async (row: ChildRow) => {
     await fetch(`/api/admin/competency-intelligence/micro-framework/${row.id}`, { method: 'DELETE', credentials: 'include' });
+    setSelected((prev) => { const next = new Set(prev); next.delete(row.id); return next; });
     refresh();
+  };
+
+  const toggleSelect = (id: number) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
+  const setManySelected = (ids: number[], on: boolean) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      for (const id of ids) { if (on) next.add(id); else next.delete(id); }
+      return next;
+    });
+  };
+
+  const clearSelection = () => setSelected(new Set());
+
+  const runBulk = async (action: 'activate' | 'deactivate' | 'delete') => {
+    const ids = Array.from(selected);
+    if (ids.length === 0) return;
+    if (action === 'delete' && !window.confirm(`Delete ${ids.length} relationship${ids.length === 1 ? '' : 's'}? This is reversible — the canonical genome is never touched.`)) return;
+    setBulkBusy(true);
+    setBulkError('');
+    try {
+      const resp = await fetch('/api/admin/competency-intelligence/micro-framework/bulk', {
+        method: 'POST', credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, ids }),
+      });
+      if (!resp.ok) {
+        const j = await resp.json().catch(() => ({}));
+        setBulkError(j?.error ? `Bulk ${action} failed: ${j.error}` : `Bulk ${action} failed.`);
+        return;
+      }
+      clearSelection();
+      refresh();
+    } catch {
+      setBulkError(`Bulk ${action} failed — network error.`);
+    } finally {
+      setBulkBusy(false);
+    }
   };
 
   if (summaryQ.isLoading || frameworkQ.isLoading) {
@@ -184,6 +232,11 @@ export default function CompetencyMicroFrameworkPanel() {
   const shown = groups.filter((g) =>
     !s || g.parent_name.toLowerCase().includes(s) || g.children.some((c) => c.micro_label.toLowerCase().includes(s)),
   );
+  const visibleIds = shown.flatMap((g) => g.children.map((c) => c.id));
+  const selectedVisible = visibleIds.filter((id) => selected.has(id));
+  const allVisibleSelected = visibleIds.length > 0 && selectedVisible.length === visibleIds.length;
+  const someVisibleSelected = selectedVisible.length > 0 && !allVisibleSelected;
+  const selectedCount = selected.size;
 
   return (
     <div className="h-full overflow-auto p-6 space-y-6">
@@ -254,6 +307,16 @@ export default function CompetencyMicroFrameworkPanel() {
 
       {/* Controls */}
       <div className="flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          onClick={() => setManySelected(visibleIds, !allVisibleSelected)}
+          disabled={visibleIds.length === 0}
+          className="inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 border rounded-md px-3 py-2 disabled:opacity-40"
+          title={allVisibleSelected ? 'Clear selection' : 'Select all shown'}
+        >
+          {allVisibleSelected ? <CheckSquare className="h-4 w-4" style={{ color: BRAND.primary }} /> : someVisibleSelected ? <MinusSquare className="h-4 w-4" style={{ color: BRAND.primary }} /> : <Square className="h-4 w-4" />}
+          {allVisibleSelected ? 'Deselect all' : 'Select all'}
+        </button>
         <div className="relative flex-1 min-w-[220px]">
           <Search className="h-4 w-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search parent or micro…" className="w-full pl-9 pr-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-200" />
@@ -261,22 +324,66 @@ export default function CompetencyMicroFrameworkPanel() {
         <span className="text-sm text-gray-500">{shown.length} parent{shown.length === 1 ? '' : 's'} shown</span>
       </div>
 
+      {/* Bulk action bar — appears when one or more rows are selected */}
+      {selectedCount > 0 && (
+        <div className="sticky top-0 z-10 flex flex-wrap items-center gap-2 rounded-md border border-blue-200 bg-blue-50 px-3 py-2 shadow-sm">
+          <span className="text-sm font-semibold text-gray-700">{selectedCount} selected</span>
+          <span className="text-gray-300">·</span>
+          <button onClick={() => runBulk('activate')} disabled={bulkBusy} className="inline-flex items-center gap-1.5 text-sm rounded-md px-3 py-1.5 border bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50">
+            <ToggleRight className="h-4 w-4" style={{ color: BRAND.success }} /> Activate
+          </button>
+          <button onClick={() => runBulk('deactivate')} disabled={bulkBusy} className="inline-flex items-center gap-1.5 text-sm rounded-md px-3 py-1.5 border bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50">
+            <ToggleLeft className="h-4 w-4" style={{ color: BRAND.gray }} /> Deactivate
+          </button>
+          <button onClick={() => runBulk('delete')} disabled={bulkBusy} className="inline-flex items-center gap-1.5 text-sm rounded-md px-3 py-1.5 border border-red-200 bg-white text-red-600 hover:bg-red-50 disabled:opacity-50">
+            <Trash2 className="h-4 w-4" /> Delete
+          </button>
+          <button onClick={clearSelection} disabled={bulkBusy} className="ml-auto inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800">
+            <X className="h-4 w-4" /> Clear
+          </button>
+          {bulkError && <p className="w-full text-sm text-red-600">{bulkError}</p>}
+        </div>
+      )}
+
       {/* Framework tree */}
       <div className="space-y-4">
         {shown.map((g) => (
           <Card key={g.parent_competency_id}>
             <CardContent className="pt-4 pb-4">
-              <div className="flex items-center gap-2 mb-3">
-                <GitBranch className="h-4 w-4" style={{ color: BRAND.primary }} />
-                <span className="font-semibold text-gray-900">{g.parent_name}</span>
-                <span className="font-mono text-[11px] text-gray-400">{g.parent_competency_id}</span>
-                {g.parent_family && <Badge className="bg-gray-100 text-gray-500 border-gray-200 text-[10px]">{g.parent_family}</Badge>}
-                <span className="text-xs text-gray-400 ml-auto">{g.child_count} micro{g.child_count === 1 ? '' : 's'}</span>
-              </div>
+              {(() => {
+                const groupIds = g.children.map((c) => c.id);
+                const groupSelected = groupIds.length > 0 && groupIds.every((id) => selected.has(id));
+                const groupSome = groupIds.some((id) => selected.has(id)) && !groupSelected;
+                return (
+                  <div className="flex items-center gap-2 mb-3">
+                    <button
+                      type="button"
+                      onClick={() => setManySelected(groupIds, !groupSelected)}
+                      disabled={groupIds.length === 0}
+                      className="text-gray-400 hover:text-gray-700 disabled:opacity-30"
+                      title={groupSelected ? 'Deselect group' : 'Select group'}
+                    >
+                      {groupSelected ? <CheckSquare className="h-4 w-4" style={{ color: BRAND.primary }} /> : groupSome ? <MinusSquare className="h-4 w-4" style={{ color: BRAND.primary }} /> : <Square className="h-4 w-4" />}
+                    </button>
+                    <GitBranch className="h-4 w-4" style={{ color: BRAND.primary }} />
+                    <span className="font-semibold text-gray-900">{g.parent_name}</span>
+                    <span className="font-mono text-[11px] text-gray-400">{g.parent_competency_id}</span>
+                    {g.parent_family && <Badge className="bg-gray-100 text-gray-500 border-gray-200 text-[10px]">{g.parent_family}</Badge>}
+                    <span className="text-xs text-gray-400 ml-auto">{g.child_count} micro{g.child_count === 1 ? '' : 's'}</span>
+                  </div>
+                );
+              })()}
               <ul className="space-y-1.5 pl-6">
                 {g.children.map((c) => (
-                  <li key={c.id} className={`flex items-center gap-2 text-sm rounded-md px-2 py-1.5 ${c.active ? '' : 'opacity-50'} hover:bg-gray-50`}>
-                    <span className="text-gray-300">—</span>
+                  <li key={c.id} className={`flex items-center gap-2 text-sm rounded-md px-2 py-1.5 ${c.active ? '' : 'opacity-50'} ${selected.has(c.id) ? 'bg-blue-50' : 'hover:bg-gray-50'}`}>
+                    <button
+                      type="button"
+                      onClick={() => toggleSelect(c.id)}
+                      className="text-gray-400 hover:text-gray-700 shrink-0"
+                      title={selected.has(c.id) ? 'Deselect' : 'Select'}
+                    >
+                      {selected.has(c.id) ? <CheckSquare className="h-4 w-4" style={{ color: BRAND.primary }} /> : <Square className="h-4 w-4" />}
+                    </button>
                     <span className="text-gray-900">{c.micro_label}</span>
                     {c.linked ? (
                       <Badge className="bg-teal-100 text-teal-700 border-teal-300 text-[10px]"><Link2 className="h-2.5 w-2.5 mr-0.5 inline" />linked</Badge>

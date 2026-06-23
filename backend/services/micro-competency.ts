@@ -308,6 +308,51 @@ export async function deleteMicroRelationship(pool: Pool, id: number): Promise<M
 }
 
 // --------------------------------------------------------------------------
+// Bulk admin action — activate / deactivate / delete many relationships in
+// ONE statement. Additive and reversible (genome untouched). Returns honest
+// affected counts; unknown ids are silently skipped (idempotent maintenance).
+// --------------------------------------------------------------------------
+
+export type BulkMicroAction = 'activate' | 'deactivate' | 'delete';
+
+export interface BulkMicroResult {
+  ok: boolean;
+  error?: string;
+  action?: BulkMicroAction;
+  requested?: number;
+  affected?: number;
+}
+
+export async function bulkMicroAction(
+  pool: Pool,
+  action: BulkMicroAction,
+  ids: number[],
+): Promise<BulkMicroResult> {
+  await ensureMicroCompetencySchema(pool);
+  if (action !== 'activate' && action !== 'deactivate' && action !== 'delete') {
+    return { ok: false, error: 'invalid_action' };
+  }
+  const cleanIds = Array.from(new Set(
+    (Array.isArray(ids) ? ids : []).map((n) => Number(n)).filter((n) => Number.isInteger(n) && n > 0),
+  ));
+  if (cleanIds.length === 0) return { ok: false, error: 'no_valid_ids' };
+
+  let res;
+  if (action === 'delete') {
+    res = await pool.query(`DELETE FROM onto_competency_hierarchy WHERE id = ANY($1::int[])`, [cleanIds]);
+  } else {
+    const active = action === 'activate';
+    res = await pool.query(
+      `UPDATE onto_competency_hierarchy
+         SET active = $1, source = 'curated', updated_at = now()
+       WHERE id = ANY($2::int[]) AND active IS DISTINCT FROM $1`,
+      [active, cleanIds],
+    );
+  }
+  return { ok: true, action, requested: cleanIds.length, affected: res.rowCount ?? 0 };
+}
+
+// --------------------------------------------------------------------------
 // Seed — the canonical example framework (Communication / Leadership /
 // Problem-Solving). Links existing competencies where they exist; records a
 // named-only micro where no competency row exists (honestly flagged).

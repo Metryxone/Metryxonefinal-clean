@@ -1088,6 +1088,20 @@ export const FEATURE_FLAGS = {
    *  byte-identical legacy (every route 503 before any auth/DB touch). Super-admin gated + IDOR
    *  employer-scoped. Env: `FF_NOTIFICATION_ENGINE`. */
   notificationEngine: false,
+
+  /** 98X GAP CLOSURE — Phase 1: Role DNA Expansion. A NEW, isolated, additive engine
+   *  (`services/role-dna-expansion-engine.ts` + `/api/v2/role-dna-expansion`) that SURFACES +
+   *  GENERATES Role DNA from data that ALREADY exists — confidence-scored crosswalk coverage,
+   *  competency inheritance from `map_role_competency` (curated `onto_*` always wins where
+   *  bridged), role requirement + benchmark + DNA generation — and (POST-only) materializes
+   *  them into a NEW dedicated, provenance-stamped table `role_dna_expansion_snapshots`. It does
+   *  NOT rebuild or mutate any existing engine, the curated `onto_*` genome, or the O*NET `ont_*`
+   *  reference library. GET-never-writes: reads use a to_regclass probe + degrade; lazy
+   *  ensure-schema runs ONLY on the POST/write path. Fully reversible: delete rows by
+   *  `provenance='98x_phase1_expansion'` (or `POST /rollback`) / drop the new table. Strictly
+   *  additive: flag OFF → every route 503 before any auth/DB touch, no schema, no write →
+   *  byte-identical legacy behaviour. Env: `FF_ROLE_DNA_EXPANSION`. */
+  roleDnaExpansion: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1158,6 +1172,10 @@ export function isAdaptiveIntelligenceFoundationEnabled(): boolean {
 
 export function isRoleDNARuntimeEnabled(): boolean {
   return isFlagEnabled('roleDNARuntimeEnabled');
+}
+
+export function isRoleDnaExpansionEnabled(): boolean {
+  return isFlagEnabled('roleDnaExpansion');
 }
 
 export function isFunctionalCompetencySeedingEnabled(): boolean {

@@ -165,7 +165,9 @@ function buildCrud(
       await ensure(pool);
       const body = req.body ?? {};
       const cols = writableFields.filter(f => f in body);
-      if (!body.name) return res.status(400).json({ error: 'name is required' });
+      // Primary label column is `title` for entities that have one (e.g. ont_roles), else `name`.
+      const nameCol = writableFields.includes('title') ? 'title' : 'name';
+      if (!body[nameCol]) return res.status(400).json({ error: `${nameCol} is required` });
       if (!body.code) return res.status(400).json({ error: 'code is required' });
       const params = cols.map(f => body[f]);
       const { rows: [row] } = await pool.query(
@@ -325,9 +327,10 @@ export function registerOntologyTaxonomyRoutes(
   buildCrud(app, pool, requireAuth, requireSuperAdmin, 'ont_functions',     'functions',     ['name','code'],                 FN_FIELDS);
   buildCrud(app, pool, requireAuth, requireSuperAdmin, 'ont_departments',   'departments',   ['name','code'],                 DEPT_FIELDS);
   buildCrud(app, pool, requireAuth, requireSuperAdmin, 'ont_role_families', 'role-families', ['name','code'],                 RF_FIELDS);
-  buildCrud(app, pool, requireAuth, requireSuperAdmin, 'ont_roles',         'roles',         ['title','code'],                ROLE_FIELDS);
-
-  // GET /api/ontology/roles - override to add role_family name join
+  // GET /api/ontology/roles — registered BEFORE the buildCrud('ont_roles') call below so
+  // THIS handler wins the route match. ont_roles has no `name` column (it uses `title`),
+  // so buildCrud's generic `ORDER BY sort_order, name` GET 500s against it; we only want
+  // buildCrud's POST/PATCH/DELETE for roles, never its GET.
   app.get('/api/ontology/roles', requireAuth, requireSuperAdmin, async (req: Request, res: Response) => {
     try {
       await ensureTaxonomySchema(pool);
@@ -348,6 +351,9 @@ export function registerOntologyTaxonomyRoutes(
       return res.status(500).json({ error: 'Failed to fetch roles' });
     }
   });
+  // buildCrud AFTER the custom GET above: provides POST/PATCH/DELETE for roles; its
+  // generic GET is shadowed by (and must stay after) the custom title-ordered handler.
+  buildCrud(app, pool, requireAuth, requireSuperAdmin, 'ont_roles',         'roles',         ['title','code'],                ROLE_FIELDS);
 
   // ── Ontology Hierarchy Completion (Task #51) — all flag-gated via hierarchyGate ──
   buildCrud(app, pool, requireAuth, requireSuperAdmin, 'ont_sectors',          'sectors',           ['name','code'], SECTOR_FIELDS, { gate: hierarchyGate, ensure: ensureHierarchySchema });

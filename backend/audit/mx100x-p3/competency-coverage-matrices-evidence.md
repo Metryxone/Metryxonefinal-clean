@@ -1,7 +1,7 @@
 # MX-100X Phase 3 — Competency Coverage Matrices Evidence
 
 - Engine version: `mx100x-p3-1.0.0`
-- Generated: 2026-06-23T18:13:20.880Z
+- Generated: 2026-06-23T18:27:47.709Z
 - Honesty: read-only. Coverage (data exists) and readiness/k-anonymity are SEPARATE axes. Sparse/empty cells and authoring gaps are honest, never fabricated. Genome ids are `onto_*` TEXT (no coercion). The assessment BANK (`competency_question_templates.competency_code`) is a DISJOINT namespace — reported separately, never force-joined to the 5-type axis.
 
 ## 1. Competency coverage
@@ -52,7 +52,18 @@ Genome total: **419** · with ≥1 approved question: **7** (1.7%) · assessment
 | Technical | 0 | 18 | 0% | 0 |
 | Future Skills | 0 | — | — | 0 |
 
-### Assessment-ready / linked competencies
+### By domain (with ≥1 approved Q / total)
+
+| Domain | With approved Q | Total | Coverage | Assessment-ready |
+| --- | --- | --- | --- | --- |
+| Behavioral Capabilities | 4 | 77 | 5.2% | 0 |
+| Cognitive Capabilities | 0 | 46 | 0% | 0 |
+| Functional & Execution Capabilities | 0 | 44 | 0% | 0 |
+| Interpersonal & Leadership Capabilities | 2 | 85 | 2.4% | 1 |
+| O*NET Content Model | 0 | 120 | 0% | 0 |
+| Strategic & Organizational Capabilities | 1 | 47 | 2.1% | 1 |
+
+### Linked competencies (≥1 approved Q; ✓ = assessment-ready at ≥4)
 
 | Competency | Type | Domain | Approved Q |
 | --- | --- | --- | --- |

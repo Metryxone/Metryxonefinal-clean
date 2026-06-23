@@ -18,6 +18,7 @@ type Competency = {
   by_domain: DomainRow[] | null;
 };
 type AsmtTypeRow = { type_key: string; label: string; total: number | null; with_any_approved: number; assessment_ready: number; coverage_pct: number | null };
+type AsmtDomainRow = { domain_id: string; name: string; total: number | null; with_any_approved: number; assessment_ready: number; coverage_pct: number | null };
 type ReadyRow = { competency_id: string; canonical_name: string | null; type_key: string | null; domain_id: string | null; approved_questions: number };
 type Assessment = {
   genome_total: number | null;
@@ -28,6 +29,7 @@ type Assessment = {
   threshold_min_questions: number;
   question_count_distribution: Array<{ at_least: number; competencies: number }> | null;
   by_type: AsmtTypeRow[] | null;
+  by_domain: AsmtDomainRow[] | null;
   ready_list: ReadyRow[] | null;
   bank_context: { distinct_bank_codes: number | null; total_templates: number | null; by_status: Array<{ status: string; count: number }> | null; note: string } | null;
 };
@@ -257,10 +259,30 @@ export default function CompetencyCoverageMatricesPanel() {
                 ))}
               </TableBody>
             </Table>
+            <div className="text-xs font-medium text-gray-500 mt-4 mb-1.5">By domain</div>
+            <Table>
+              <TableHeader>
+                <TableRow><TableHead>Domain</TableHead><TableHead className="text-right w-16">Cov.</TableHead><TableHead className="text-right w-16">Total</TableHead><TableHead className="text-right w-16">Ready</TableHead></TableRow>
+              </TableHeader>
+              <TableBody>
+                {assessment.by_domain == null ? (
+                  <TableRow><TableCell colSpan={4} className="text-gray-400 italic">not measurable (source unavailable)</TableCell></TableRow>
+                ) : assessment.by_domain.map((d) => (
+                  <TableRow key={d.domain_id}>
+                    <TableCell className="font-medium">{d.name}</TableCell>
+                    <TableCell className="text-right">{d.with_any_approved}</TableCell>
+                    <TableCell className="text-right text-gray-500">{d.total ?? '—'}</TableCell>
+                    <TableCell className="text-right">{d.assessment_ready}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
           <div>
-            <div className="text-xs font-medium text-gray-500 mb-1.5">Assessment-ready / linked competencies</div>
-            {(assessment.ready_list ?? []).length === 0 ? (
+            <div className="text-xs font-medium text-gray-500 mb-1.5">Linked competencies <span className="font-normal text-gray-400">(≥1 approved Q; ✓ = assessment-ready at ≥{assessment.threshold_min_questions})</span></div>
+            {assessment.ready_list == null ? (
+              <div className="text-sm text-gray-400 italic">not measurable (source unavailable).</div>
+            ) : assessment.ready_list.length === 0 ? (
               <div className="text-sm text-gray-400 italic">No linked competencies.</div>
             ) : (
               <Table>
@@ -268,7 +290,7 @@ export default function CompetencyCoverageMatricesPanel() {
                   <TableRow><TableHead>Competency</TableHead><TableHead>Type</TableHead><TableHead className="text-right w-20">Approved Q</TableHead></TableRow>
                 </TableHeader>
                 <TableBody>
-                  {(assessment.ready_list ?? []).map((r) => (
+                  {assessment.ready_list.map((r) => (
                     <TableRow key={r.competency_id}>
                       <TableCell className="font-medium">{r.canonical_name ?? r.competency_id}</TableCell>
                       <TableCell className="text-gray-500 text-xs">{r.type_key ?? '—'}</TableCell>

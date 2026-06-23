@@ -76,7 +76,13 @@ async function main() {
     log(`| --- | --- | --- | --- | --- |`);
     for (const t of asmt.by_type ?? []) log(`| ${t.label} | ${t.with_any_approved} | ${t.total ?? '—'} | ${fmtPct(t.coverage_pct)} | ${t.assessment_ready} |`);
     log('');
-    log(`### Assessment-ready / linked competencies`);
+    log(`### By domain (with ≥1 approved Q / total)`);
+    log('');
+    log(`| Domain | With approved Q | Total | Coverage | Assessment-ready |`);
+    log(`| --- | --- | --- | --- | --- |`);
+    for (const d of asmt.by_domain ?? []) log(`| ${d.name} | ${d.with_any_approved} | ${d.total ?? '—'} | ${fmtPct(d.coverage_pct)} | ${d.assessment_ready} |`);
+    log('');
+    log(`### Linked competencies (≥1 approved Q; ✓ = assessment-ready at ≥${asmt.threshold_min_questions})`);
     log('');
     log(`| Competency | Type | Domain | Approved Q |`);
     log(`| --- | --- | --- | --- |`);

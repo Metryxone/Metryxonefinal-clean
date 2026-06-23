@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Network, GitBranch, Link2, Tag, Info, RefreshCw, Search, Plus, Trash2, CheckSquare, Square, MinusSquare, ToggleLeft, ToggleRight, X } from 'lucide-react';
+import { Network, GitBranch, Link2, Tag, Info, RefreshCw, Search, Plus, Trash2, CheckSquare, Square, MinusSquare, ToggleLeft, ToggleRight, X, Download, Upload } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { Card, CardContent } from '../ui/card';
 
@@ -36,6 +36,8 @@ interface Summary {
   named_only_children: number;
   active_children: number;
   parent_coverage_pct: number | null;
+  distinct_competencies_involved: number;
+  genome_participation_pct: number | null;
   avg_children_per_parent: number | null;
   source_breakdown: { source: string; count: number }[];
   named_only: { parent_name: string; micro_label: string }[];
@@ -200,6 +202,92 @@ export default function CompetencyMicroFrameworkPanel() {
     }
   };
 
+  const fileInputRef = React.useRef<HTMLInputElement | null>(null);
+  const [ioBusy, setIoBusy] = React.useState(false);
+  const [ioMsg, setIoMsg] = React.useState('');
+
+  const exportCsv = () => {
+    setIoMsg('');
+    // GET with credentials → trigger a download via a fetched blob so the
+    // super-admin session cookie is sent (a bare anchor href would not auth).
+    setIoBusy(true);
+    fetch('/api/admin/competency-intelligence/micro-framework/export.csv', { credentials: 'include' })
+      .then(async (r) => {
+        if (!r.ok) throw new Error('export failed');
+        const blob = await r.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'micro-competency-framework.csv';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      })
+      .catch(() => setIoMsg('Export failed.'))
+      .finally(() => setIoBusy(false));
+  };
+
+  // Minimal RFC-4180 CSV parser (handles quoted fields, escaped quotes, CRLF).
+  const parseCsv = (text: string): Record<string, string>[] => {
+    const rows: string[][] = [];
+    let field = '';
+    let row: string[] = [];
+    let inQuotes = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (inQuotes) {
+        if (c === '"') {
+          if (text[i + 1] === '"') { field += '"'; i++; } else inQuotes = false;
+        } else field += c;
+      } else if (c === '"') inQuotes = true;
+      else if (c === ',') { row.push(field); field = ''; }
+      else if (c === '\n') { row.push(field); rows.push(row); field = ''; row = []; }
+      else if (c === '\r') { /* skip — handled by \n */ }
+      else field += c;
+    }
+    if (field.length > 0 || row.length > 0) { row.push(field); rows.push(row); }
+    const nonEmpty = rows.filter((r) => r.some((v) => v.trim() !== ''));
+    if (nonEmpty.length === 0) return [];
+    const headers = nonEmpty[0].map((h) => h.trim());
+    return nonEmpty.slice(1).map((r) => {
+      const obj: Record<string, string> = {};
+      headers.forEach((h, idx) => { obj[h] = (r[idx] ?? '').trim(); });
+      return obj;
+    });
+  };
+
+  const importFile = async (file: File) => {
+    setIoMsg('');
+    setIoBusy(true);
+    try {
+      const text = await file.text();
+      const rows = parseCsv(text).map((r) => ({
+        parent_competency_id: r.parent_competency_id,
+        child_competency_id: r.child_competency_id || null,
+        micro_label: r.micro_label || null,
+        sort_order: r.sort_order,
+        active: r.active,
+      }));
+      if (rows.length === 0) { setIoMsg('No rows found in file.'); return; }
+      const resp = await fetch('/api/admin/competency-intelligence/micro-framework/import', {
+        method: 'POST', credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rows }),
+      });
+      const j = await resp.json().catch(() => ({}));
+      if (!resp.ok || !j?.data?.ok) { setIoMsg(j?.error || j?.data?.error || 'Import failed.'); return; }
+      const d = j.data;
+      const skippedNote = d.skipped.length > 0 ? ` · ${d.skipped.length} skipped (${d.skipped.slice(0, 3).map((s: any) => `row ${s.row}: ${s.reason}`).join(', ')}${d.skipped.length > 3 ? '…' : ''})` : '';
+      setIoMsg(`Imported ${d.total} row${d.total === 1 ? '' : 's'}: ${d.inserted} added, ${d.updated} updated${skippedNote}`);
+      refresh();
+    } catch {
+      setIoMsg('Import failed — could not read file.');
+    } finally {
+      setIoBusy(false);
+    }
+  };
+
   if (summaryQ.isLoading || frameworkQ.isLoading) {
     return <div className="p-6 text-sm text-gray-500">Loading micro competency framework…</div>;
   }
@@ -251,14 +339,36 @@ export default function CompetencyMicroFrameworkPanel() {
             named-only micros (no competency row yet). Additive — the genome is never mutated.
           </p>
         </div>
-        <button onClick={refresh} className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 border rounded-md px-3 py-1.5">
-          <RefreshCw className="h-4 w-4" /> Refresh
-        </button>
+        <div className="flex items-center gap-2 shrink-0">
+          <button onClick={exportCsv} disabled={ioBusy} className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 border rounded-md px-3 py-1.5 disabled:opacity-50">
+            <Download className="h-4 w-4" /> Export
+          </button>
+          <button onClick={() => fileInputRef.current?.click()} disabled={ioBusy} className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 border rounded-md px-3 py-1.5 disabled:opacity-50">
+            <Upload className="h-4 w-4" /> Import
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".csv,text/csv"
+            className="hidden"
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) importFile(f); e.target.value = ''; }}
+          />
+          <button onClick={refresh} className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 border rounded-md px-3 py-1.5">
+            <RefreshCw className="h-4 w-4" /> Refresh
+          </button>
+        </div>
       </div>
+
+      {/* Import/export status line */}
+      {ioMsg && (
+        <div className="text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-md px-3 py-2 flex items-start gap-2">
+          <Info className="h-4 w-4 text-gray-400 mt-0.5 shrink-0" /> {ioMsg}
+        </div>
+      )}
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <MetricCard icon={GitBranch} label="Parent competencies" value={summary.parents_total} sub={summary.parent_coverage_pct != null ? `${summary.parent_coverage_pct}% of genome` : undefined} />
+        <MetricCard icon={GitBranch} label="Parent competencies" value={summary.parents_total} sub={summary.parent_coverage_pct != null ? `${summary.parent_coverage_pct}% of genome are parents` : undefined} />
         <MetricCard icon={Network} label="Relationships" value={summary.relationships_total} sub={summary.avg_children_per_parent != null ? `avg ${summary.avg_children_per_parent}/parent` : undefined} color={BRAND.success} />
         <MetricCard icon={Link2} label="Linked children" value={summary.linked_children} sub="reuse existing competencies" color={BRAND.accent} />
         <MetricCard icon={Tag} label="Named-only micros" value={summary.named_only_children} sub="promotion candidates" color={BRAND.warning} />

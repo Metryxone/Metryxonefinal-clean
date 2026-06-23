@@ -353,6 +353,204 @@ export async function bulkMicroAction(
 }
 
 // --------------------------------------------------------------------------
+// Export — flat dump of EVERY parent-child relationship for CSV/JSON backup
+// and offline editing. Read-only; mirrors the canonical names so the file is
+// human-legible (the ids are the join keys on re-import).
+// --------------------------------------------------------------------------
+
+export interface MicroExportRow {
+  parent_competency_id: string;
+  parent_name: string;
+  child_competency_id: string | null;
+  child_name: string | null;
+  micro_label: string;
+  source: string;
+  sort_order: number;
+  active: boolean;
+}
+
+export const MICRO_EXPORT_HEADERS = [
+  'parent_competency_id',
+  'parent_name',
+  'child_competency_id',
+  'child_name',
+  'micro_label',
+  'source',
+  'sort_order',
+  'active',
+] as const;
+
+export async function exportMicroFramework(pool: Pool): Promise<MicroExportRow[]> {
+  await ensureMicroCompetencySchema(pool);
+  const { rows } = await pool.query(`
+    SELECT h.parent_competency_id,
+           p.canonical_name  AS parent_name,
+           h.child_competency_id,
+           cc.canonical_name AS child_name,
+           h.micro_label,
+           h.source,
+           h.sort_order,
+           h.active
+      FROM onto_competency_hierarchy h
+      JOIN onto_competencies p  ON p.id  = h.parent_competency_id
+ LEFT JOIN onto_competencies cc ON cc.id = h.child_competency_id
+  ORDER BY p.canonical_name, h.sort_order, h.micro_label
+  `);
+  return rows.map((r: any) => ({
+    parent_competency_id: r.parent_competency_id,
+    parent_name: r.parent_name ?? '',
+    child_competency_id: r.child_competency_id ?? null,
+    child_name: r.child_name ?? null,
+    micro_label: r.micro_label ?? '',
+    source: r.source ?? '',
+    sort_order: r.sort_order ?? 0,
+    active: !!r.active,
+  }));
+}
+
+/** RFC-4180 CSV serialisation of the export rows. */
+export function microFrameworkToCsv(rows: MicroExportRow[]): string {
+  const esc = (v: unknown): string => {
+    const s = v === null || v === undefined ? '' : String(v);
+    return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  const lines = [MICRO_EXPORT_HEADERS.join(',')];
+  for (const r of rows) {
+    lines.push([
+      esc(r.parent_competency_id),
+      esc(r.parent_name),
+      esc(r.child_competency_id),
+      esc(r.child_name),
+      esc(r.micro_label),
+      esc(r.source),
+      esc(r.sort_order),
+      esc(r.active),
+    ].join(','));
+  }
+  return lines.join('\r\n');
+}
+
+// --------------------------------------------------------------------------
+// Import — bulk upsert of parent-child relationships from a backup/edited file.
+// HONEST + additive: only links competencies that ACTUALLY exist in the genome;
+// rows referencing unknown ids are SKIPPED and reported (never auto-created).
+// Existing relationships are updated (active / sort_order / named label); the
+// canonical genome (onto_competencies) is NEVER mutated.
+// --------------------------------------------------------------------------
+
+export interface MicroImportInputRow {
+  parent_competency_id?: string;
+  child_competency_id?: string | null;
+  micro_label?: string | null;
+  sort_order?: number | string;
+  active?: boolean | string;
+}
+
+export interface MicroImportResult {
+  ok: boolean;
+  error?: string;
+  total: number;
+  inserted: number;
+  updated: number;
+  skipped: { row: number; reason: string }[];
+}
+
+function parseBool(v: unknown, dflt: boolean): boolean {
+  if (typeof v === 'boolean') return v;
+  if (v === undefined || v === null || v === '') return dflt;
+  const s = String(v).trim().toLowerCase();
+  if (['true', '1', 'yes', 'y', 't'].includes(s)) return true;
+  if (['false', '0', 'no', 'n', 'f'].includes(s)) return false;
+  return dflt;
+}
+
+export async function importMicroFramework(
+  pool: Pool,
+  rows: MicroImportInputRow[],
+): Promise<MicroImportResult> {
+  await ensureMicroCompetencySchema(pool);
+  if (!Array.isArray(rows)) {
+    return { ok: false, error: 'rows_required', total: 0, inserted: 0, updated: 0, skipped: [] };
+  }
+
+  // Resolve all referenced competency ids in ONE round-trip for validation.
+  const referenced = new Set<string>();
+  for (const r of rows) {
+    const p = String(r.parent_competency_id ?? '').trim();
+    if (p) referenced.add(p);
+    const c = r.child_competency_id != null ? String(r.child_competency_id).trim() : '';
+    if (c) referenced.add(c);
+  }
+  const existing = new Set<string>();
+  if (referenced.size > 0) {
+    const { rows: found } = await pool.query(
+      `SELECT id FROM onto_competencies WHERE id = ANY($1::varchar[])`,
+      [Array.from(referenced)],
+    );
+    for (const f of found) existing.add(String(f.id));
+  }
+
+  let inserted = 0;
+  let updated = 0;
+  const skipped: { row: number; reason: string }[] = [];
+
+  for (let i = 0; i < rows.length; i++) {
+    const r = rows[i] ?? {};
+    const rowNum = i + 1;
+    const parentId = String(r.parent_competency_id ?? '').trim();
+    if (!parentId) { skipped.push({ row: rowNum, reason: 'missing_parent' }); continue; }
+    if (!existing.has(parentId)) { skipped.push({ row: rowNum, reason: 'parent_not_found' }); continue; }
+
+    const childRaw = r.child_competency_id != null ? String(r.child_competency_id).trim() : '';
+    let childId: string | null = null;
+    let label = String(r.micro_label ?? '').trim();
+
+    if (childRaw) {
+      if (childRaw === parentId) { skipped.push({ row: rowNum, reason: 'self_reference' }); continue; }
+      if (!existing.has(childRaw)) { skipped.push({ row: rowNum, reason: 'child_not_found' }); continue; }
+      childId = childRaw;
+      // A linked child's label is owned by the genome — re-derive it honestly.
+      const nameRes = await pool.query(`SELECT canonical_name FROM onto_competencies WHERE id = $1`, [childId]);
+      label = nameRes.rows[0]?.canonical_name ?? label;
+    } else if (!label) {
+      skipped.push({ row: rowNum, reason: 'child_or_label_required' });
+      continue;
+    }
+
+    const slug = slugify(label);
+    if (!slug) { skipped.push({ row: rowNum, reason: 'invalid_label' }); continue; }
+    const sortOrder = Number.isFinite(Number(r.sort_order)) ? Number(r.sort_order) : 0;
+    const active = parseBool(r.active, true);
+
+    try {
+      const conflictTarget = childId
+        ? `(parent_competency_id, child_competency_id) WHERE child_competency_id IS NOT NULL`
+        : `(parent_competency_id, micro_slug)`;
+      const res = await pool.query(
+        `INSERT INTO onto_competency_hierarchy
+           (parent_competency_id, child_competency_id, micro_label, micro_slug, sort_order, source, active)
+         VALUES ($1, $2, $3, $4, $5, 'imported', $6)
+         ON CONFLICT ${conflictTarget}
+         DO UPDATE SET micro_label = EXCLUDED.micro_label,
+                       sort_order  = EXCLUDED.sort_order,
+                       active      = EXCLUDED.active,
+                       source      = 'imported',
+                       updated_at  = now()
+         RETURNING (xmax = 0) AS inserted`,
+        [parentId, childId, label, slug, sortOrder, active],
+      );
+      if (res.rows[0]?.inserted) inserted++; else updated++;
+    } catch (err: any) {
+      if (err?.code === '23505') { skipped.push({ row: rowNum, reason: 'duplicate_relationship' }); continue; }
+      if (err?.code === '23514') { skipped.push({ row: rowNum, reason: 'self_reference' }); continue; }
+      skipped.push({ row: rowNum, reason: 'write_error' });
+    }
+  }
+
+  return { ok: true, total: rows.length, inserted, updated, skipped };
+}
+
+// --------------------------------------------------------------------------
 // Seed — the canonical example framework (Communication / Leadership /
 // Problem-Solving). Links existing competencies where they exist; records a
 // named-only micro where no competency row exists (honestly flagged).
@@ -467,6 +665,8 @@ export interface MicroSummary {
   named_only_children: number;
   active_children: number;
   parent_coverage_pct: number | null;
+  distinct_competencies_involved: number;
+  genome_participation_pct: number | null;
   avg_children_per_parent: number | null;
   source_breakdown: { source: string; count: number }[];
   named_only: { parent_name: string; micro_label: string }[];
@@ -491,6 +691,24 @@ export async function getMicroFrameworkSummary(pool: Pool): Promise<MicroSummary
   const parents = a.parents ?? 0;
   const rels = a.rels ?? 0;
 
+  // Distinct genome competencies that participate as a parent OR a linked child.
+  // This is a truer "how much of the genome is represented" measure than parent
+  // coverage alone, since most competencies are leaf children, not parents.
+  const involvedRes = await pool.query(`
+    SELECT COUNT(*)::int AS n FROM (
+      SELECT parent_competency_id AS cid FROM onto_competency_hierarchy
+      UNION
+      SELECT child_competency_id FROM onto_competency_hierarchy WHERE child_competency_id IS NOT NULL
+    ) t
+  `);
+  const distinctInvolved = involvedRes.rows[0]?.n ?? 0;
+  const participationPct = competenciesTotal && competenciesTotal > 0
+    ? Math.round((distinctInvolved / competenciesTotal) * 1000) / 10
+    : null;
+  const parentCoveragePct = competenciesTotal && competenciesTotal > 0
+    ? Math.round((parents / competenciesTotal) * 1000) / 10
+    : null;
+
   const sourceRes = await pool.query(
     `SELECT source, COUNT(*)::int AS n FROM onto_competency_hierarchy GROUP BY source ORDER BY source`,
   );
@@ -514,6 +732,9 @@ export async function getMicroFrameworkSummary(pool: Pool): Promise<MicroSummary
       findings.push(`${a.named} micro-competenc${(a.named === 1) ? 'y is' : 'ies are'} named-only (no canonical competency row yet): ${namedOnly.map((n) => `"${n.micro_label}"`).join(', ')}. These are honest promotion candidates — not auto-added to the genome.`);
     }
     findings.push('Linked children reuse EXISTING competencies (no duplicates created); named-only children are additive labels only — the canonical genome (onto_competencies) is never mutated.');
+    if (competenciesTotal && competenciesTotal > 0) {
+      findings.push(`"% of genome" (${parentCoveragePct}%) counts only the ${parents} broad competenc${parents === 1 ? 'y' : 'ies'} acting as a PARENT against all ${competenciesTotal} genome competencies — by design most competencies are leaf children, not parents, so this number is intentionally small. Counting every competency that participates as a parent OR a linked child, ${distinctInvolved} of ${competenciesTotal} (${participationPct}%) are represented in the framework.`);
+    }
   }
 
   return {
@@ -525,7 +746,9 @@ export async function getMicroFrameworkSummary(pool: Pool): Promise<MicroSummary
     linked_children: a.linked ?? 0,
     named_only_children: a.named ?? 0,
     active_children: a.active ?? 0,
-    parent_coverage_pct: competenciesTotal && competenciesTotal > 0 ? Math.round((parents / competenciesTotal) * 1000) / 10 : null,
+    parent_coverage_pct: parentCoveragePct,
+    distinct_competencies_involved: distinctInvolved,
+    genome_participation_pct: participationPct,
     avg_children_per_parent: parents > 0 ? Math.round((rels / parents) * 10) / 10 : null,
     source_breakdown: sourceBreakdown,
     named_only: namedOnly,

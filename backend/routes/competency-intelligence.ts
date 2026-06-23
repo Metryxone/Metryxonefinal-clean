@@ -55,6 +55,9 @@ import {
   updateMicroRelationship,
   deleteMicroRelationship,
   bulkMicroAction,
+  exportMicroFramework,
+  microFrameworkToCsv,
+  importMicroFramework,
 } from '../services/micro-competency.js';
 import {
   getRoleProfiles,
@@ -337,6 +340,49 @@ export function registerCompetencyFrameworkIntelligenceRoutes(
         res.status(400).json({ ok: false, error: result.error });
         return undefined;
       }
+      return result;
+    }),
+  );
+
+  // Admin export — flat CSV (or JSON) dump of every relationship for backup /
+  // offline editing. Literal path registered BEFORE the `/:id` param handlers.
+  app.get(
+    '/api/admin/competency-intelligence/micro-framework/export.csv',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (_req, res) => {
+      const rows = await exportMicroFramework(pool);
+      const csv = microFrameworkToCsv(rows);
+      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+      res.setHeader('Content-Disposition', 'attachment; filename="micro-competency-framework.csv"');
+      res.send(csv);
+      return undefined;
+    }),
+  );
+
+  app.get(
+    '/api/admin/competency-intelligence/micro-framework/export.json',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async () => exportMicroFramework(pool)),
+  );
+
+  // Admin import — bulk upsert relationships from an edited/backup file. Only
+  // links competencies that EXIST in the genome; unknown ids are skipped and
+  // reported. Literal path registered BEFORE the `/:id` param handlers.
+  app.post(
+    '/api/admin/competency-intelligence/micro-framework/import',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req, res) => {
+      const body = (req.body ?? {}) as Record<string, unknown>;
+      const rows = Array.isArray(body.rows) ? (body.rows as any[]) : null;
+      if (!rows) { res.status(400).json({ ok: false, error: 'rows_required' }); return undefined; }
+      const result = await importMicroFramework(pool, rows);
+      if (!result.ok) { res.status(400).json({ ok: false, error: result.error }); return undefined; }
       return result;
     }),
   );

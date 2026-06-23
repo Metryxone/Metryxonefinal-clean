@@ -26,6 +26,29 @@
 search; the design explicitly separates Coverage (which domains) from Confidence (calibration quality) and
 uses a monotonic-token guard so async hiring data can't misattribute to the wrong candidate.
 
+## MX-100X Phase 5 — Employer Competency Intelligence (additive, flag `employerCompetencyHiring`, OFF byte-identical)
+Composes the EXISTING engines into ONE read-only flow — Role → Role DNA → Requirements → Competency
+Profile → Match → Gap → Readiness → **Interview Recommendation → Hiring Recommendation + Role DNA Benchmark** —
+without rebuilding any of them. The legacy heuristic path (`routes/employer-hiring-intelligence.ts`,
+STRONG_HIRE/NO_HIRE) is UNTOUCHED.
+
+| Surface | Verdict | Evidence |
+|---|---|---|
+| Composition engine `services/employer-competency-intelligence.ts` | ✅ | composes `computeCompetencyDrivenMatch` (never recomputes) |
+| Interview recommendation | ✅ | focus areas from MEASURED gaps + probe list from UNASSESSED requirements; structure keyed to coverage/fit |
+| Hiring recommendation | ✅ | decision-SUPPORT action (advance/targeted/gather_more/development_focus/insufficient) — **NO hire-no-hire verdict** + non-verdict disclaimer |
+| Role DNA benchmark surfacing | ✅ | additive `roleDna.benchmark` on the match (single DNA call) + **k-anonymity gate** (k≥30; unknown cohort fails closed) |
+| Route `GET /api/v2/employer/competency-match/:candidateId/:jobId/intelligence` | ✅ | same gating chain (foundation→flag→auth→org-IDOR 404); OFF → 503 (byte-identical) |
+| Live competency-driven recommendation on real data | 🟡 | **0 employer rows** → match abstains (heuristic fallback), fit WITHHELD, calibration uncalibrated, benchmark abstains — honest |
+
+**Evidence:** `backend/scripts/employer-competency-intelligence-evidence.ts` →
+`employer_competency_intelligence_evidence.md` (live trace + crafted-match derivation proof + language-policy
+assertion, all PASS). **Smoke:** `backend/scripts/smoke-employer-competency-intelligence.ts` (flag-OFF HTTP 503 +
+developmental-language + no-verdict + k-anonymity guards, all PASS).
+
+**Language policy:** outputs are DEVELOPMENTAL competency signals only — never a hiring / suitability / pass-fail
+verdict. Coverage and Confidence reported on SEPARATE axes; `null`/abstain where unmeasured (never coerced to 0).
+
 ## Honest finding
 The hiring-intelligence engine is **built and competency-driven** but **dormant**: the employer flow is
 default-OFF and no employer/job/candidate rows exist. Calibration cannot occur until **≥30 realized hiring

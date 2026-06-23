@@ -23,13 +23,17 @@ import {
   computeCompetencyDrivenMatch,
 } from '../services/employer-competency-hiring';
 import {
+  EMPLOYER_COMPETENCY_INTELLIGENCE_VERSION,
+  computeEmployerCompetencyIntelligence,
+} from '../services/employer-competency-intelligence';
+import {
   isAdaptiveIntelligenceFoundationEnabled,
   isEmployerCompetencyHiringEnabled,
 } from '../config/feature-flags';
 
 type RequireAuth = (req: Request, res: Response, next: NextFunction) => void;
 
-const VERSIONS = { EMPLOYER_COMPETENCY_HIRING_VERSION };
+const VERSIONS = { EMPLOYER_COMPETENCY_HIRING_VERSION, EMPLOYER_COMPETENCY_INTELLIGENCE_VERSION };
 const LANGUAGE_POLICY = {
   allowed: ['competency match', 'requirement coverage', 'developmental focus area', 'gap band', 'calibration state'],
   disallowed: ['validated hiring prediction', 'guaranteed performance', 'pass/fail verdict', 'suitability score'],
@@ -86,6 +90,62 @@ export function registerEmployerCompetencyMatchRoutes(opts: {
   app.get('/api/v2/employer/competency-match/_meta/versions', requireFoundation, requireEmployerCompetency, (_req, res) =>
     res.json({ ok: true, methodology_versions: VERSIONS, language_policy: LANGUAGE_POLICY }));
 
+  // Org-scoped candidate+job resolver. Returns null when either is missing or out of the
+  // caller's org scope (the caller decides the 404). No cross-org existence leak.
+  async function resolveScoped(orgId: string, candidateId: string, jobId: string) {
+    const [candRes, jobRes] = await Promise.all([
+      pool.query(
+        'SELECT * FROM employer_candidates WHERE id = $1 AND employer_id = $2 LIMIT 1',
+        [candidateId, orgId],
+      ),
+      pool.query(
+        'SELECT * FROM employer_jobs WHERE id = $1 AND employer_id = $2 LIMIT 1',
+        [jobId, orgId],
+      ),
+    ]);
+    const candidate = candRes.rows[0];
+    const job = jobRes.rows[0];
+    if (!candidate || !job) return null;
+    return { candidate, job };
+  }
+
+  // GET /:candidateId/:jobId/intelligence — full competency-driven hiring flow
+  // (match + interview recommendation + hiring recommendation + Role DNA benchmark).
+  // Registered BEFORE the 2-segment param route (3 literal segments — no collision, but
+  // order kept explicit).
+  app.get(
+    '/api/v2/employer/competency-match/:candidateId/:jobId/intelligence',
+    requireFoundation,
+    requireEmployerCompetency,
+    requireAuth,
+    async (req, res) => {
+      const orgId = employerOrgId(req);
+      if (!orgId) {
+        const e = errorEnvelope('unauthenticated', {}, 401);
+        return res.status(e.status).json(e.body);
+      }
+      const candidateId = String(req.params.candidateId ?? '').trim();
+      const jobId = String(req.params.jobId ?? '').trim();
+      if (!jobId || !candidateId) {
+        const e = errorEnvelope('jobId and candidateId are required', {}, 400);
+        return res.status(e.status).json(e.body);
+      }
+      try {
+        const scoped = await resolveScoped(orgId, candidateId, jobId);
+        if (!scoped) {
+          const e = errorEnvelope('candidate or job not found in your organization', {}, 404);
+          return res.status(e.status).json(e.body);
+        }
+        const intelligence = await computeEmployerCompetencyIntelligence(pool, scoped);
+        return res.json(envelope({ intelligence }));
+      } catch (err) {
+        // Sanitize: never leak raw DB error text into an API-visible note.
+        const e = errorEnvelope('intelligence_failed', {}, 500);
+        return res.status(e.status).json(e.body);
+      }
+    },
+  );
+
   // GET /:candidateId/:jobId — read-only competency-driven match.
   app.get(
     '/api/v2/employer/competency-match/:candidateId/:jobId',
@@ -105,28 +165,17 @@ export function registerEmployerCompetencyMatchRoutes(opts: {
         return res.status(e.status).json(e.body);
       }
       try {
-        // Org-scoped lookups: candidate + job MUST belong to the caller's org.
-        const [candRes, jobRes] = await Promise.all([
-          pool.query(
-            'SELECT * FROM employer_candidates WHERE id = $1 AND employer_id = $2 LIMIT 1',
-            [candidateId, orgId],
-          ),
-          pool.query(
-            'SELECT * FROM employer_jobs WHERE id = $1 AND employer_id = $2 LIMIT 1',
-            [jobId, orgId],
-          ),
-        ]);
-        const candidate = candRes.rows[0];
-        const job = jobRes.rows[0];
-        if (!candidate || !job) {
+        const scoped = await resolveScoped(orgId, candidateId, jobId);
+        if (!scoped) {
           // No cross-org existence leak: a missing OR out-of-scope row is a 404.
           const e = errorEnvelope('candidate or job not found in your organization', {}, 404);
           return res.status(e.status).json(e.body);
         }
-        const match = await computeCompetencyDrivenMatch(pool, { candidate, job });
+        const match = await computeCompetencyDrivenMatch(pool, scoped);
         return res.json(envelope({ match }));
       } catch (err) {
-        const e = errorEnvelope('match_failed', { detail: (err as Error).message }, 500);
+        // Sanitize: never leak raw DB error text into an API-visible note.
+        const e = errorEnvelope('match_failed', {}, 500);
         return res.status(e.status).json(e.body);
       }
     },

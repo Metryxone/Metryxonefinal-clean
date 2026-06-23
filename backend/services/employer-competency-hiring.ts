@@ -37,6 +37,7 @@ import {
 } from './competency-intelligence-contracts';
 import {
   generateRoleDNA,
+  type RoleBenchmark,
   type RoleDNARequirement,
 } from './role-dna-expansion-engine';
 import { computeRoleReadinessV2 } from './role-readiness-v2';
@@ -157,6 +158,9 @@ export interface CompetencyDrivenMatch {
     confidence: number;
     band: string;
     provisional: boolean;
+    /** Phase-1 Role DNA benchmark (read-only, abstain-by-default; ti_role_benchmarks).
+     *  Surfaced here so employer consumers read ONE DNA computation. */
+    benchmark: RoleBenchmark;
   };
   candidateReadiness: {
     available: boolean;
@@ -258,6 +262,7 @@ export async function computeCompetencyDrivenMatch(
     confidence: dna.match.confidence,
     band: dna.match.band,
     provisional: dna.match.provisional,
+    benchmark: dna.benchmark,
   };
 
   const baseFail = (source: CompetencyDrivenMatch['source'], reason: string): CompetencyDrivenMatch => ({

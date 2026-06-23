@@ -449,11 +449,17 @@ export async function materializeRoleDNA(
 
   let inputs: string[] = [];
   if (opts.roleCodes && opts.roleCodes.length) {
-    inputs = opts.roleCodes.slice(0, 500);
+    // Hard ceiling = the full active O*NET library (~1,040 roles). The O*NET Activation
+    // script (98X Phase 1) deliberately materializes 500+ at once. The only HTTP caller is the
+    // admin-gated POST /api/v2/role-dna-expansion/materialize, which passes an explicit small
+    // roleCodes list; the read-only /api/v2/onet-activation/* family never calls this. The
+    // ceiling caps any single call at the library size, so it cannot run away.
+    inputs = opts.roleCodes.slice(0, 1100);
   } else {
-    // Default: materialize the highest-competency-coverage roles first, capped so a
-    // call never silently bulk-writes the whole library into the shared/prod DB.
-    const limit = Math.min(Math.max(opts.limit ?? 25, 1), 200);
+    // Default: materialize the highest-competency-coverage roles first. The default cap is
+    // kept low (25) so an unparameterised call stays small; an explicit `limit` may request
+    // up to the full active library for a deliberate activation run.
+    const limit = Math.min(Math.max(opts.limit ?? 25, 1), 1100);
     const { rows } = await pool.query(
       `SELECT r.code
          FROM ont_roles r

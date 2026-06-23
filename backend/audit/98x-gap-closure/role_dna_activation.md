@@ -64,3 +64,33 @@ New, isolated, reversible — does **not** edit the engines above:
 ## Evidence ledger
 - Counts → live shared-DB `count(*)`, 2026-06-23. Engine functions/signatures → explorer trace this session (`role-crosswalk.ts`, `onet-onto-weight-bridge.ts`, `role-dna-runtime-engine.ts`, `functional-competency-seeding-engine.ts`). Crosswalk keying (`onto_role_id` UNIQUE) → migration `20260622_ontology_hierarchy_completion.sql`.
 - Coverage/maturity targets are reasoned estimates from the above, not load-tested metrics.
+
+---
+
+## O*NET Activation (revised Phase 1, executed 2026-06-23)
+
+User approved **Option 1**: materialize 500+ Role DNA *profiles* by composing the existing engine into 5 named O*NET-Activation capabilities (no duplicate engines, no fabricated curated roles). See companion docs: `onet_activation_strategy.md`, `onet_crosswalk_expansion.md`, `onet_role_dna_generation.md`, `onet_benchmark_foundation.md`.
+
+### What was built (additive, flag `onetActivation` / `FF_ONET_ACTIVATION`, default OFF)
+- `services/onet-activation.ts` — orchestrator composing `role-dna-expansion-engine` + `role-crosswalk` into 5 capabilities + `getActivationStatus` + reversible `resolveCuratedBridges`/`rollbackBridgeResolution`. Version `98x-phase1-onet-activation-1.0.0`.
+- `routes/onet-activation.ts` — read-only `GET /api/v2/onet-activation/{status,coverage,materialized,role-intelligence/:r,inheritance/:r,role-dna/:r,benchmark/:r,feature-flag,_meta/versions}`; gating foundation→onetActivation→auth; literal-before-param.
+- `scripts/activate-onet-role-dna.ts` — `--apply` / `--rollback` / `--resolve-bridges` / `--limit N` (offline write path).
+- `scripts/smoke-onet-activation.ts` — 28 checks.
+- Raised `materializeRoleDNA` cap (500/200 → 1100 = full active library) so one deliberate run persists 500+.
+
+### Executed results (live shared DB, evidence)
+| Metric | Value |
+|---|---|
+| Role DNA profiles materialized | **600** (`role_dna_expansion_snapshots`, provenance `98x_phase1_expansion`) |
+| Target | ≥500 ✔ reached |
+| Skipped | 0 / 600 |
+| Coverage | 98.17% O*NET roles DNA-reachable (1,021 / 1,040) |
+| Curated bridges resolved | 3 / 5 (`role_be_eng`, `role_sr_be_eng` honestly unresolved — no confident O*NET equivalent) |
+| Smoke | 28/28 PASS (19 service + 9 HTTP flag-OFF 503) |
+| Frontend vite build (launch gate) | green |
+
+### Reversibility (verified path)
+`scripts/activate-onet-role-dna.ts --rollback` deletes all provenance snapshots **and** reverts activation-resolved bridges (`match_method='onet_activation_resolved'` → `unresolved`). Snapshots are derived reference data (no PII).
+
+### STOP
+Stopping for approval before Phase 2 per stop-for-approval policy.

@@ -1160,6 +1160,20 @@ export const FEATURE_FLAGS = {
    *  reversible by `source='98x_phase5'`. Read-only at runtime — never recomputes scores, never
    *  edits the genome / graph / certification content. Env: `FF_COMPETENCY_SKILL_INTELLIGENCE`. */
   competencySkillIntelligence: false,
+  /** O*NET Activation (98X Gap Closure, Phase 1 — O*NET-driven Role DNA). When ON, the read-only
+   *  orchestration layer at `/api/v2/onet-activation/*` COMPOSES the already-live O*NET reference
+   *  library (`ont_roles` 1,040 · `map_role_competency` 52k · `ont_role_families`/`departments`/
+   *  `functions` hierarchy · `ti_role_benchmarks`) and the existing Phase-1 role-dna-expansion
+   *  engine into 5 NAMED capabilities — Crosswalk Expansion, Role Intelligence, Competency
+   *  Inheritance, Role DNA Generation, Benchmark Foundation. It does NOT rebuild those engines and
+   *  adds NO parallel role/competency tables. O*NET stays a REFERENCE layer (never a scoring
+   *  source); the curated `onto_*` genome stays canonical (curated requirements take precedence
+   *  where a bridge exists, never fabricated). The only writes are reversible, provenance-stamped
+   *  Role DNA snapshots (`role_dna_expansion_snapshots`, provenance `98x_phase1_expansion`) produced
+   *  by the offline activation script — nothing in the request path writes. Strictly additive +
+   *  reversible: flag OFF → every route 503 before any auth/DB touch → byte-identical legacy
+   *  behaviour. Env: `FF_ONET_ACTIVATION`. */
+  onetActivation: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1250,6 +1264,10 @@ export function isCareerBuilderActivationEnabled(): boolean {
 
 export function isCompetencySkillIntelligenceEnabled(): boolean {
   return isFlagEnabled('competencySkillIntelligence');
+}
+
+export function isOnetActivationEnabled(): boolean {
+  return isFlagEnabled('onetActivation');
 }
 
 export function isFunctionalCompetencySeedingEnabled(): boolean {

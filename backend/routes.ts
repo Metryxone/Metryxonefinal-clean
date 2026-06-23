@@ -110,6 +110,7 @@ import { registerCompetencySpineRoutes } from "./routes/competency-spine";
 import { registerEmployerCompetencyMatchRoutes } from "./routes/employer-competency-match";
 import { registerCareerBuilderActivationRoutes } from "./routes/career-builder-activation";
 import { registerCompetencySkillIntelligenceRoutes } from "./routes/competency-skill-intelligence";
+import { registerOnetActivationRoutes } from "./routes/onet-activation";
 import { registerCompetencyGraphRuntimeRoutes } from "./routes/competency-graph-runtime";
 import { registerDynamicAssessmentRuntimeRoutes } from "./routes/dynamic-assessment-runtime";
 import { registerAdaptiveRuntimeAuthorityRoutes } from "./routes/adaptive-runtime-authority";
@@ -13641,6 +13642,7 @@ Rules:
   registerEmployerCompetencyMatchRoutes({ app, pool: concernsPool, requireAuth });
   registerCareerBuilderActivationRoutes({ app, pool: concernsPool, requireAuth });
   registerCompetencySkillIntelligenceRoutes({ app, pool: concernsPool, requireAuth });
+  registerOnetActivationRoutes({ app, pool: concernsPool, requireAuth });
   registerCompetencyGraphRuntimeRoutes({ app, pool: concernsPool, requireAuth });
   registerDynamicAssessmentRuntimeRoutes({ app, pool: concernsPool, requireAuth });
   registerAdaptiveRuntimeAuthorityRoutes({ app, pool: concernsPool, requireAuth });

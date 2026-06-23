@@ -1114,6 +1114,22 @@ export const FEATURE_FLAGS = {
    *  byte-identical legacy behaviour. Reversible: flag OFF / delete the module (no data to undo).
    *  Env: `FF_COMPETENCY_SPINE_CONTRACTS`. */
   competencySpineContracts: false,
+  /** 98X Gap Closure — Phase 3: Employer Competency Hiring Activation. When ON, a NEW
+   *  read-only service makes employer candidate↔job matching COMPETENCY-DRIVEN by reading
+   *  the canonical `onto_*` genome — composing Phase-1 `generateRoleDNA` (role requirements)
+   *  + Phase-2 `resolveUnifiedCompetencyProfile` (candidate competency profile, keyed by the
+   *  candidate's email subject) + (best-effort) `computeRoleReadinessV2` — instead of the
+   *  legacy keyword/LBI heuristic in `employer-hiring-intelligence.ts` (left UNTOUCHED). It
+   *  introduces NO new scoring math beyond a deterministic weighted attainment match, NO
+   *  writes and NO DDL. Fails CLOSED: no competency profile → `competencyMatch:null` +
+   *  `source:'heuristic_fallback'` (never a fabricated number); Coverage (requirements
+   *  assessed) and Confidence (calibration state: `uncalibrated` until >=30 realized
+   *  outcomes) reported as SEPARATE axes. Optional
+   *  `GET /api/v2/employer/competency-match/:candidateId/:jobId` (org-scope IDOR). Strictly
+   *  additive: flag OFF → every route 503 before any auth/DB touch, no consumer wired →
+   *  byte-identical legacy behaviour. Reversible: flag OFF / delete the module (no data to
+   *  undo). Env: `FF_EMPLOYER_COMPETENCY_HIRING`. */
+  employerCompetencyHiring: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1192,6 +1208,10 @@ export function isRoleDnaExpansionEnabled(): boolean {
 
 export function isCompetencySpineContractsEnabled(): boolean {
   return isFlagEnabled('competencySpineContracts');
+}
+
+export function isEmployerCompetencyHiringEnabled(): boolean {
+  return isFlagEnabled('employerCompetencyHiring');
 }
 
 export function isFunctionalCompetencySeedingEnabled(): boolean {

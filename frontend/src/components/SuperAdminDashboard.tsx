@@ -85,6 +85,7 @@ import CompetencyAdminPage from '../pages/CompetencyAdminPage';
 const ActiveAgeBandsReflection = lazy(() => import('./superadmin/ActiveAgeBandsReflection'));
 import AssessmentModulesManagement from './AssessmentModulesManagement';
 import FrameworkPanel, { OverviewTab } from '@/components/admin/FrameworkPanel';
+import CompetencyFrameworkShell from '@/components/superadmin/CompetencyFrameworkShell';
 import AdminTabbedShell from '@/components/admin/AdminTabbedShell';
 import { LBI_CONFIG, COMPETENCY_CONFIG, SDI_CONFIG } from '@/components/admin/framework-configs';
 import { useQuery } from '@tanstack/react-query';
@@ -844,7 +845,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               )}
               {activeTab === 'competency-fw' && (
                 <div className="p-6">
-                  <FrameworkPanel
+                  <CompetencyFrameworkShell
                     config={COMPETENCY_CONFIG}
                     hiddenTabs={['overview']}
                     initialTab="cmp-command-center"

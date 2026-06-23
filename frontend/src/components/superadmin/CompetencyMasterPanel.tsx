@@ -63,6 +63,22 @@ function TriCheckbox({ value, onChange }: { value: boolean | null; onChange: (v:
   );
 }
 
+// Select-all checkbox: indeterminate when some-but-not-all visible rows are selected.
+function HeaderCheckbox({ checked, indeterminate, onChange }: { checked: boolean; indeterminate: boolean; onChange: () => void }) {
+  const ref = React.useRef<HTMLInputElement>(null);
+  React.useEffect(() => { if (ref.current) ref.current.indeterminate = indeterminate; }, [indeterminate]);
+  return (
+    <input
+      ref={ref}
+      type="checkbox"
+      checked={checked}
+      onChange={onChange}
+      title="Select all (filtered)"
+      className="h-4 w-4 accent-[#344E86] cursor-pointer"
+    />
+  );
+}
+
 function MetricCard({ icon: Icon, label, value, sub, color }: { icon: React.ElementType; label: string; value: string | number; sub?: string; color?: string }) {
   return (
     <Card>
@@ -88,6 +104,10 @@ export default function CompetencyMasterPanel() {
   const [statusFilter, setStatusFilter] = React.useState('');
   const [edits, setEdits] = React.useState<Record<string, Partial<MasterRow>>>({});
   const [saving, setSaving] = React.useState<Record<string, boolean>>({});
+  const [selected, setSelected] = React.useState<Set<string>>(new Set());
+  const [bulkStatus, setBulkStatus] = React.useState('');
+  const [bulkElig, setBulkElig] = React.useState<Record<string, '' | 'yes' | 'no'>>({});
+  const [bulkSaving, setBulkSaving] = React.useState(false);
 
   const summaryQ = useQuery({
     queryKey: ['competency-master-summary'],
@@ -181,6 +201,51 @@ export default function CompetencyMasterPanel() {
     }
   };
 
+  // ---- Multi-select / bulk edit ----
+  const toggleRow = (id: string) =>
+    setSelected((prev) => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n; });
+  const allVisibleSelected = rows.length > 0 && rows.every((r) => selected.has(r.competency_id));
+  const someVisibleSelected = rows.some((r) => selected.has(r.competency_id)) && !allVisibleSelected;
+  const toggleAll = () =>
+    setSelected((prev) => {
+      const n = new Set(prev);
+      if (allVisibleSelected) rows.forEach((r) => n.delete(r.competency_id));
+      else rows.forEach((r) => n.add(r.competency_id));
+      return n;
+    });
+  const clearSelection = () => setSelected(new Set());
+  const bulkHasChange = !!bulkStatus || ELIGIBILITY_FLAGS.some((f) => bulkElig[f.key]);
+
+  const applyBulk = async () => {
+    if (selected.size === 0 || !bulkHasChange) return;
+    const patch: Record<string, any> = {};
+    if (bulkStatus) patch.status = bulkStatus;
+    for (const f of ELIGIBILITY_FLAGS) {
+      const v = bulkElig[f.key];
+      if (v === 'yes') patch[f.key] = true;
+      else if (v === 'no') patch[f.key] = false;
+    }
+    setBulkSaving(true);
+    try {
+      const resp = await fetch('/api/admin/competency-intelligence/master/bulk', {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ competency_ids: Array.from(selected), patch }),
+      });
+      if (!resp.ok) throw new Error('bulk failed');
+      setSelected(new Set());
+      setBulkStatus('');
+      setBulkElig({});
+      await qc.invalidateQueries({ queryKey: ['competency-master-list'] });
+      await qc.invalidateQueries({ queryKey: ['competency-master-summary'] });
+    } catch {
+      // keep selection so the user can retry
+    } finally {
+      setBulkSaving(false);
+    }
+  };
+
   const refresh = () => {
     qc.invalidateQueries({ queryKey: ['competency-master-list'] });
     qc.invalidateQueries({ queryKey: ['competency-master-summary'] });
@@ -258,12 +323,57 @@ export default function CompetencyMasterPanel() {
         <span className="text-sm text-gray-500">{rows.length} shown</span>
       </div>
 
+      {/* Bulk action toolbar */}
+      {selected.size > 0 && (
+        <Card className="border-[#344E86]/40 bg-[#344E86]/5">
+          <CardContent className="pt-4 pb-4">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <span className="text-sm font-semibold text-[#344E86]">{selected.size} selected</span>
+              <button onClick={clearSelection} className="text-xs text-gray-500 hover:text-gray-800 underline">Clear</button>
+              <div className="h-5 w-px bg-gray-300 hidden sm:block" />
+              <label className="text-xs text-gray-600 flex items-center gap-1.5">
+                Status
+                <select value={bulkStatus} onChange={(e) => setBulkStatus(e.target.value)} className="text-xs border rounded px-2 py-1">
+                  <option value="">— leave —</option>
+                  {STATUSES.map((st) => <option key={st} value={st}>{st}</option>)}
+                </select>
+              </label>
+              {ELIGIBILITY_FLAGS.map((f) => (
+                <label key={f.key} className="text-xs text-gray-600 flex items-center gap-1">
+                  {f.label}
+                  <select
+                    value={bulkElig[f.key] ?? ''}
+                    onChange={(e) => setBulkElig((p) => ({ ...p, [f.key]: e.target.value as '' | 'yes' | 'no' }))}
+                    className="text-xs border rounded px-1.5 py-1"
+                  >
+                    <option value="">—</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </label>
+              ))}
+              <button
+                disabled={bulkSaving || !bulkHasChange}
+                onClick={applyBulk}
+                className={`ml-auto inline-flex items-center gap-1.5 text-sm rounded-md px-3 py-1.5 ${bulkHasChange && !bulkSaving ? 'bg-[#344E86] text-white hover:opacity-90' : 'bg-gray-200 text-gray-400 cursor-default'}`}
+              >
+                <Save className="h-4 w-4" /> {bulkSaving ? 'Applying…' : `Apply to ${selected.size}`}
+              </button>
+            </div>
+            <p className="text-[11px] text-gray-400 mt-2">Leave a field on “—” to keep each row’s current value. Applying stamps the affected rows as admin-curated.</p>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Editable table */}
       <Card>
         <CardContent className="p-0 overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b bg-gray-50 text-left text-gray-500">
+                <th className="px-3 py-2 w-8">
+                  <HeaderCheckbox checked={allVisibleSelected} indeterminate={someVisibleSelected} onChange={toggleAll} />
+                </th>
                 <th className="px-3 py-2 font-medium">Code</th>
                 <th className="px-3 py-2 font-medium">Name</th>
                 <th className="px-3 py-2 font-medium">Type</th>
@@ -277,7 +387,15 @@ export default function CompetencyMasterPanel() {
                 const r = effective(raw);
                 const dirty = isDirty(r.competency_id);
                 return (
-                  <tr key={r.competency_id} className={`border-b hover:bg-gray-50/60 ${dirty ? 'bg-amber-50/50' : ''}`}>
+                  <tr key={r.competency_id} className={`border-b hover:bg-gray-50/60 ${dirty ? 'bg-amber-50/50' : selected.has(r.competency_id) ? 'bg-[#344E86]/5' : ''}`}>
+                    <td className="px-3 py-2">
+                      <input
+                        type="checkbox"
+                        checked={selected.has(r.competency_id)}
+                        onChange={() => toggleRow(r.competency_id)}
+                        className="h-4 w-4 accent-[#344E86] cursor-pointer"
+                      />
+                    </td>
                     <td className="px-3 py-2 font-mono text-xs text-gray-500 whitespace-nowrap">{r.code}</td>
                     <td className="px-3 py-2 text-gray-900">
                       {r.name}
@@ -315,7 +433,7 @@ export default function CompetencyMasterPanel() {
                 );
               })}
               {rows.length === 0 && (
-                <tr><td colSpan={5 + ELIGIBILITY_FLAGS.length} className="px-3 py-8 text-center text-gray-400">No competencies match the current filter.</td></tr>
+                <tr><td colSpan={6 + ELIGIBILITY_FLAGS.length} className="px-3 py-8 text-center text-gray-400">No competencies match the current filter.</td></tr>
               )}
             </tbody>
           </table>

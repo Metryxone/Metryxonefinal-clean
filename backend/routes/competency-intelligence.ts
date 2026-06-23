@@ -44,6 +44,7 @@ import {
 import {
   getCompetencyMaster,
   updateCompetencyMaster,
+  bulkUpdateCompetencyMaster,
   getCompetencyMasterSummary,
 } from '../services/competency-master.js';
 import {
@@ -208,6 +209,36 @@ export function registerCompetencyFrameworkIntelligenceRoutes(
     requireAuth,
     requireSuperAdmin,
     wrap(async () => getCompetencyMasterSummary(pool)),
+  );
+
+  // Admin BULK edit — apply one patch (status and/or eligibility flags) to many
+  // competencies at once. Literal `/master/bulk` MUST be registered BEFORE the
+  // `/master/:id` param handler, or `:id` swallows "bulk".
+  app.patch(
+    '/api/admin/competency-intelligence/master/bulk',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async (req, res) => {
+      const body = (req.body ?? {}) as Record<string, unknown>;
+      const ids = Array.isArray(body.competency_ids) ? body.competency_ids.map((x) => String(x)) : [];
+      const patch = (body.patch ?? {}) as Record<string, unknown>;
+      const result = await bulkUpdateCompetencyMaster(pool, ids, {
+        status: patch.status as string | undefined,
+        assessment_eligible: patch.assessment_eligible as boolean | undefined,
+        ei_eligible: patch.ei_eligible as boolean | undefined,
+        career_builder_eligible: patch.career_builder_eligible as boolean | undefined,
+        employer_eligible: patch.employer_eligible as boolean | undefined,
+        learning_eligible: patch.learning_eligible as boolean | undefined,
+        future_ready_eligible: patch.future_ready_eligible as boolean | undefined,
+      });
+      if (!result.ok) {
+        const code = result.error === 'no_matching_competencies' ? 404 : 400;
+        res.status(code).json({ ok: false, error: result.error });
+        return undefined;
+      }
+      return result;
+    }),
   );
 
   // Admin edit — update status + eligibility flags for ONE existing competency.

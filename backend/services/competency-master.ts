@@ -272,6 +272,87 @@ export async function updateCompetencyMaster(
 }
 
 // --------------------------------------------------------------------------
+// Bulk admin edit — apply ONE patch (status and/or eligibility flags) to many
+// existing competencies in a single transaction. Same honesty contract as the
+// single-row edit: only touches existing competencies (never creates one),
+// ensures the extension row exists, then stamps source='curated'. Ids that do
+// not map to a real competency are silently skipped (reported via matched).
+// --------------------------------------------------------------------------
+
+export interface BulkUpdateResult {
+  ok: boolean;
+  error?: string;
+  requested: number; // distinct ids requested
+  matched: number;   // ids that map to a real competency
+  updated: number;   // extension rows updated
+}
+
+export async function bulkUpdateCompetencyMaster(
+  pool: Pool,
+  competencyIds: string[],
+  patch: MasterPatch,
+): Promise<BulkUpdateResult> {
+  await ensureCompetencyMasterSchema(pool);
+
+  const ids = Array.from(
+    new Set((competencyIds ?? []).filter((x) => typeof x === 'string' && x.length > 0)),
+  );
+  if (ids.length === 0) return { ok: false, error: 'no_ids', requested: 0, matched: 0, updated: 0 };
+
+  // Validate the patch (identical rules to the single-row edit).
+  const sets: string[] = [];
+  const params: any[] = [];
+  if (patch.status !== undefined) {
+    if (!(COMPETENCY_STATUSES as readonly string[]).includes(patch.status)) {
+      return { ok: false, error: 'invalid_status', requested: ids.length, matched: 0, updated: 0 };
+    }
+    params.push(patch.status); sets.push(`status = $${params.length}`);
+  }
+  for (const key of ELIGIBILITY_KEYS) {
+    const v = (patch as any)[key];
+    if (v !== undefined) {
+      if (typeof v !== 'boolean') return { ok: false, error: `invalid_${key}`, requested: ids.length, matched: 0, updated: 0 };
+      params.push(v); sets.push(`${key} = $${params.length}`);
+    }
+  }
+  if (sets.length === 0) return { ok: false, error: 'no_editable_fields', requested: ids.length, matched: 0, updated: 0 };
+
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    // Restrict to ids that are real competencies — never create one here.
+    const existing = await client.query(`SELECT id FROM onto_competencies WHERE id = ANY($1)`, [ids]);
+    const validIds: string[] = existing.rows.map((r: any) => r.id);
+    if (validIds.length === 0) {
+      await client.query('ROLLBACK');
+      return { ok: false, error: 'no_matching_competencies', requested: ids.length, matched: 0, updated: 0 };
+    }
+    // Ensure an extension row exists for each (status derived from deprecated).
+    await client.query(
+      `INSERT INTO onto_competency_master_ext (competency_id, status, source)
+       SELECT id, CASE WHEN deprecated THEN 'deprecated' ELSE 'active' END, 'default'
+         FROM onto_competencies WHERE id = ANY($1)
+       ON CONFLICT (competency_id) DO NOTHING`,
+      [validIds],
+    );
+    params.push(validIds);
+    const upd = await client.query(
+      `UPDATE onto_competency_master_ext
+          SET ${sets.join(', ')}, source = 'curated', updated_at = now()
+        WHERE competency_id = ANY($${params.length})`,
+      params,
+    );
+    await client.query('COMMIT');
+    return { ok: true, requested: ids.length, matched: validIds.length, updated: upd.rowCount ?? 0 };
+  } catch (err: any) {
+    try { await client.query('ROLLBACK'); } catch { /* noop */ }
+    return { ok: false, error: err?.message ?? 'bulk_update_failed', requested: ids.length, matched: 0, updated: 0 };
+  } finally {
+    client.release();
+  }
+}
+
+// --------------------------------------------------------------------------
 // Admin summary — coverage, status breakdown, per-module eligibility counts,
 // curated-vs-default provenance, honest findings.
 // --------------------------------------------------------------------------

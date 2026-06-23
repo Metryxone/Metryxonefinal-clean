@@ -1224,6 +1224,20 @@ export const FEATURE_FLAGS = {
    *  behaviour (all existing competency/assessment/benchmark routes UNTOUCHED). Reversible by flipping
    *  the flag OFF / removing the route module. Env: `FF_COMPETENCY_COVERAGE_MATRICES`. */
   competencyCoverageMatrices: false,
+
+  /** MX-100X Phase 4 — Adaptive Assessment Activation (the keystone).
+   *  Activates the Role/Seniority → required-proficiency → difficulty + level-aware-threshold
+   *  flow in the LIVE assessment path so Junior/Mid/Senior/Leadership roles produce materially
+   *  different assessments (difficulty intent, scoring + readiness thresholds). Consumes the
+   *  seniority anchor (career stage) and `competency_runtime_weights.expected_level` WHEN present;
+   *  falls back to the stage anchor honestly when Role DNA is unpopulated. Strictly additive &
+   *  read-only (zero DDL): flag OFF → live `/api/competency/questions/select` returns byte-identical
+   *  payload (no `difficulty_plan`), role-fit readiness bands stay the fixed 85/72/58/45 ladder, and
+   *  the new `/api/competency/assessment/difficulty-plan` route 503s before any auth/DB touch.
+   *  HONESTY CEILING: the live 7-domain bank is 100% `medium` difficulty, so the SERVED difficulty
+   *  distribution cannot shift by level — surfaced as an explicit coverage gap, never padded.
+   *  Reversible by flipping OFF / removing the route. Env: `FF_ADAPTIVE_DIFFICULTY_ACTIVATION`. */
+  adaptiveDifficultyActivation: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1330,6 +1344,10 @@ export function isOnetCrosswalkGovernanceEnabled(): boolean {
 
 export function isCompetencyCoverageMatricesEnabled(): boolean {
   return isFlagEnabled('competencyCoverageMatrices');
+}
+
+export function isAdaptiveDifficultyActivationEnabled(): boolean {
+  return isFlagEnabled('adaptiveDifficultyActivation');
 }
 
 export function isFunctionalCompetencySeedingEnabled(): boolean {

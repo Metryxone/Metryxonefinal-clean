@@ -28,6 +28,12 @@
  */
 import type { Express, NextFunction, Request, Response } from 'express';
 import type { Pool } from 'pg';
+import { isAdaptiveDifficultyActivationEnabled } from '../config/feature-flags';
+import {
+  DEFAULT_READINESS_BANDS,
+  levelAwareReadinessBands,
+  classifyReadiness,
+} from '../services/adaptive-difficulty-activation';
 import { resolveBestOntRole, getRoleCompetencies } from '../services/role-crosswalk.js';
 import { isCompetencyRuntimeEnabled } from '../config/feature-flags.js';
 
@@ -579,11 +585,15 @@ export function registerCompetencyAssessmentRuntime(opts: { app: Express; pool: 
       const weighted = den > 0 ? num / den : 0;
       const fit = Math.max(0, Math.min(1, weighted / 100));
 
-      const readinessLevel =
-        weighted >= 85 ? 'Ready' :
-        weighted >= 72 ? 'Near-Ready' :
-        weighted >= 58 ? 'Developing' :
-        weighted >= 45 ? 'Emerging' : 'Foundational';
+      // Adaptive Difficulty Activation (flag-gated): make the readiness ladder
+      // level-aware so the SAME weighted score classifies differently by seniority
+      // (junior gets a lower bar, director a higher one). Calibrated so senior
+      // (anchor 75) reproduces the legacy fixed ladder exactly → flag-OFF, and
+      // flag-ON for a senior, are byte-identical. OFF → DEFAULT_READINESS_BANDS
+      // (85/72/58/45), identical to the prior literal cascade.
+      const adaptiveOn = isAdaptiveDifficultyActivationEnabled();
+      const readinessBands = adaptiveOn ? levelAwareReadinessBands(anchor) : DEFAULT_READINESS_BANDS;
+      const readinessLevel = classifyReadiness(weighted, readinessBands);
 
       const topGaps = scores
         .map(s => ({ s, m: metaFor(s.competency_code), isPri: priorityCodes.has(s.competency_code) }))

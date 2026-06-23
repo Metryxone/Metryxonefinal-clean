@@ -28,6 +28,8 @@
  */
 import type { Express, Request, Response, NextFunction, RequestHandler } from 'express';
 import type { Pool } from 'pg';
+import { isAdaptiveDifficultyActivationEnabled } from '../config/feature-flags';
+import { buildDifficultyPlan, difficultyAffinityBonus } from '../services/adaptive-difficulty-activation';
 
 type TemplateRow = {
   id: string;
@@ -152,7 +154,7 @@ function rowToQuestion(row: TemplateRow, ordinalWithinDomain: number) {
 
 function selectQuestions(rows: TemplateRow[], ctx: {
   role?: string; industry?: string; stage?: string; department?: string; subDepartment?: string;
-}, total: number, attempt: number, servedIds: Set<string>) {
+}, total: number, attempt: number, servedIds: Set<string>, targetRank?: number) {
   const baseDomains = DOMAINS;
   const domShift = attempt % baseDomains.length;
   const domains = baseDomains.slice(domShift).concat(baseDomains.slice(0, domShift));
@@ -170,8 +172,15 @@ function selectQuestions(rows: TemplateRow[], ctx: {
     let servedForDom = new Set(Array.from(servedIds).filter((id) => pool.some((p) => (p.template_body?.origin_id || p.template_key) === id)));
     if (pool.length - servedForDom.size < want) servedForDom = new Set();
 
-    const scored = pool.map((r) => ({ r, score: affinityScore(r, ctx) }))
-      .sort((a, b) => b.score - a.score);
+    // Difficulty-affinity bonus is layered ON TOP of affinity ONLY when the
+    // activation flag passes a targetRank (otherwise the term is omitted entirely
+    // → byte-identical selection). On the all-medium live bank every row gets the
+    // same bonus, so order is unchanged (honest no-op); it only re-ranks where the
+    // bank actually holds difficulty variety.
+    const scored = pool.map((r) => ({
+      r,
+      score: affinityScore(r, ctx) + (targetRank != null ? difficultyAffinityBonus(r.difficulty_band, targetRank) : 0),
+    })).sort((a, b) => b.score - a.score);
     const fresh = scored.filter((s) => !servedForDom.has(s.r.template_body?.origin_id || s.r.template_key));
     const stale = scored.filter((s) =>  servedForDom.has(s.r.template_body?.origin_id || s.r.template_key));
 
@@ -294,9 +303,36 @@ export function registerCompetencyQuestionRoutes(
       const rs = await pool.query<TemplateRow>(
         `SELECT * FROM competency_question_templates WHERE status = 'approved'`,
       );
+      // Adaptive Difficulty Activation (flag-gated). OFF → targetRank stays
+      // undefined and no `difficulty_plan` is attached → byte-identical payload.
+      if (isAdaptiveDifficultyActivationEnabled()) {
+        const plan = await buildDifficultyPlan(pool, { stage: ctx.stage, role: ctx.role });
+        const questions = selectQuestions(rs.rows, ctx, total, attempt, servedIds, plan.seniority.target_difficulty.rank);
+        return res.json({ ok: true, total: questions.length, attempt, questions, bank_size: rs.rows.length, difficulty_plan: plan });
+      }
       const questions = selectQuestions(rs.rows, ctx, total, attempt, servedIds);
       res.json({ ok: true, total: questions.length, attempt, questions, bank_size: rs.rows.length });
     } catch (e) { next(e); }
+  });
+
+  // ---------- difficulty plan (MX-100X Phase 4, flag-gated) ----------
+  // Read-only: exposes the Role/Seniority → required-proficiency → difficulty +
+  // level-aware-threshold plan plus the honest per-domain bank coverage. Flag OFF
+  // → 503 BEFORE any auth/DB touch (byte-identical absence). requireAuth applies
+  // only on the flag-ON path so the OFF contract is a pure 503.
+  app.get('/api/competency/assessment/difficulty-plan', (req: Request, res: Response, next: NextFunction) => {
+    if (!isAdaptiveDifficultyActivationEnabled()) {
+      return res.status(503).json({ ok: false, error: 'adaptive_difficulty_activation_disabled' });
+    }
+    return requireAuth(req, res, async () => {
+      try {
+        const plan = await buildDifficultyPlan(pool, {
+          stage: String(req.query.stage || ''),
+          role: String(req.query.role || ''),
+        });
+        res.json(plan);
+      } catch (e) { next(e); }
+    });
   });
 
   // ---------- admin list + stats ----------

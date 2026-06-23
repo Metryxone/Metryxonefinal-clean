@@ -1038,3 +1038,39 @@ id = "ooK7RhcTEsp8kdH-xgqou"
 uri = "file://backend/audit/competency-architecture/competency_simplification_plan.md"
 type = "text"
 title = "5 · Simplification Plan"
+
+[[outputs]]
+id = "ffMIBw_IiAXCP9lp9Oguv"
+uri = "file://backend/audit/competency-onet-validation/founder_decision_report.md"
+type = "text"
+title = "Founder Decision Report (start here)"
+
+[[outputs]]
+id = "e97vvOdWQhJ8sbyEEXgAL"
+uri = "file://backend/audit/competency-onet-validation/system_classification_matrix.md"
+type = "text"
+title = "1 · System Classification Matrix"
+
+[[outputs]]
+id = "P9JN13bcvzZXVZtZy67yT"
+uri = "file://backend/audit/competency-onet-validation/onet_positioning_report.md"
+type = "text"
+title = "2 · O*NET Positioning Report"
+
+[[outputs]]
+id = "Ze1cWhEpKduRmrUzioZOp"
+uri = "file://backend/audit/competency-onet-validation/end_to_end_competency_flow.md"
+type = "text"
+title = "3 · End-to-End Competency Flow"
+
+[[outputs]]
+id = "w2hyMn7TNlycnd0FUxM2c"
+uri = "file://backend/audit/competency-onet-validation/employer_customization_readiness.md"
+type = "text"
+title = "4 · Employer Customization Readiness"
+
+[[outputs]]
+id = "RmRGCNCZFFg3Cok376SGt"
+uri = "file://backend/audit/competency-onet-validation/competency_simplification_recommendations.md"
+type = "text"
+title = "5 · Simplification Recommendations"

@@ -1,0 +1,368 @@
+TASK: MX-COMPETENCY-ONET-ARCHITECTURE-VALIDATION
+
+OBJECTIVE
+
+Perform a complete architecture validation of the MetryxOne Competency Ecosystem.
+
+This is NOT a code audit.
+
+This is NOT a security audit.
+
+This is NOT a launch readiness audit.
+
+This is an architecture validation exercise to determine whether:
+
+1. The Competency Framework is correctly designed.
+2. O*NET is correctly positioned.
+3. Assessment Engine is correctly consuming competency data.
+4. Employability Index is correctly consuming assessment outputs.
+5. Career Builder is correctly consuming competency intelligence.
+6. Employer Portal can correctly consume competency profiles for hiring.
+
+DO NOT IMPLEMENT.
+
+DO NOT MODIFY CODE.
+
+DO NOT CREATE TABLES.
+
+DO NOT DELETE TABLES.
+
+ONLY ANALYZE AND RECOMMEND.
+
+---
+
+SECTION 1
+CANONICAL ARCHITECTURE IDENTIFICATION
+-------------------------------------
+
+Identify every competency-related system.
+
+For each system classify:
+
+CANONICAL
+REFERENCE
+LEGACY
+FUTURE
+EMPTY
+UNUSED
+
+Analyze:
+
+Competency Master
+
+Micro Competencies
+
+Competency Types
+
+Competency Levels
+
+Level Profiles
+
+Role Profiles
+
+Role Families
+
+Role Architecture
+
+Assessment Blueprints
+
+Question Banks
+
+Assessment Runtime
+
+Scoring Engine
+
+Employability Engine
+
+Career Builder
+
+Career Passport
+
+Employer Portal
+
+O*NET Library
+
+Career Graph
+
+Produce:
+
+system_classification_matrix.md
+
+---
+
+SECTION 2
+O*NET VALIDATION
+----------------
+
+Validate O*NET positioning.
+
+For every O*NET module determine:
+
+Should remain as Reference
+
+Should become Canonical
+
+Should be Hidden
+
+Should be Archived
+
+Should be Merged
+
+Analyze:
+
+O*NET Occupations
+
+O*NET Competencies
+
+O*NET Skills
+
+O*NET Abilities
+
+O*NET Knowledge
+
+O*NET Work Activities
+
+O*NET Role Families
+
+O*NET Industries
+
+O*NET Functions
+
+O*NET Benchmarks
+
+O*NET Career Paths
+
+O*NET Learning Paths
+
+Answer:
+
+What exact value does O*NET provide?
+
+Where is it currently used?
+
+Where should it be used?
+
+Where should it NOT be used?
+
+Produce:
+
+onet_positioning_report.md
+
+---
+
+SECTION 3
+END TO END COMPETENCY FLOW
+--------------------------
+
+Trace the complete flow.
+
+Industry
+↓
+Function
+↓
+Department
+↓
+Role Family
+↓
+Role
+↓
+Competency Profile
+↓
+Assessment Blueprint
+↓
+Question Mapping
+↓
+Assessment
+↓
+Scoring
+↓
+Employability Index
+↓
+Career Builder
+↓
+Career Passport
+↓
+Employer Portal
+
+For every stage identify:
+
+Tables
+
+Services
+
+APIs
+
+Runtime Consumers
+
+Dependencies
+
+Missing Links
+
+Duplicate Links
+
+Broken Links
+
+Produce:
+
+end_to_end_competency_flow.md
+
+---
+
+SECTION 4
+EMPLOYER CUSTOMIZATION VALIDATION
+---------------------------------
+
+Validate future employer workflow.
+
+Target Workflow:
+
+Employer
+↓
+Create Job
+↓
+Select Industry
+↓
+Select Function
+↓
+Select Department
+↓
+Select Role Family
+↓
+Select Role
+↓
+System Suggests Competencies
+↓
+Employer Adjusts Competencies
+↓
+System Generates Assessment
+↓
+Candidate Assessment
+↓
+Scoring
+↓
+Hiring Intelligence
+
+Validate whether existing architecture supports this.
+
+Identify:
+
+Ready
+
+Partially Ready
+
+Missing
+
+Overengineered
+
+Underengineered
+
+Produce:
+
+employer_customization_readiness.md
+
+---
+
+SECTION 5
+SIMPLIFICATION RECOMMENDATIONS
+------------------------------
+
+For every screen determine:
+
+KEEP
+
+SIMPLIFY
+
+MERGE
+
+HIDE
+
+REMOVE
+
+Focus on:
+
+Competency Screens
+
+Role Screens
+
+Question Screens
+
+O*NET Screens
+
+Assessment Screens
+
+Employer Screens
+
+Career Screens
+
+Identify:
+
+Admin Complexity
+
+User Complexity
+
+Duplicate Navigation
+
+Duplicate Concepts
+
+Naming Conflicts
+
+Produce:
+
+competency_simplification_recommendations.md
+
+---
+
+SECTION 6
+FOUNDER DECISION REPORT
+-----------------------
+
+Answer only these questions:
+
+1. Is the Competency Framework architecture fundamentally correct?
+
+2. Is O*NET positioned correctly?
+
+3. Should O*NET remain a reference layer or become a scoring layer?
+
+4. Can the architecture support:
+
+   * Competency Assessment
+   * Employability Index
+   * Career Builder
+   * Career Passport
+   * Employer Portal
+
+5. What are the Top 10 changes required?
+
+6. What should NOT be changed?
+
+7. What would you do if you were rebuilding from scratch?
+
+Provide:
+
+founder_decision_report.md
+
+---
+
+## IMPORTANT
+
+Do NOT recommend rebuilding unless absolutely necessary.
+
+Assume the existing platform must be preserved.
+
+Prefer:
+
+Rename
+Hide
+Simplify
+Merge
+
+before:
+
+Delete
+Rebuild
+Replace
+
+Focus on reducing complexity while preserving all existing capabilities.
+
+Provide evidence for every recommendation.

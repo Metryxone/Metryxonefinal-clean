@@ -56,6 +56,47 @@ export interface CareerBehaviorProfile {
   sources: string[];
 }
 
+/**
+ * CompetencyActivation — Phase 6 competency-driven scores + gap-derived plan,
+ * COMPOSED by the backend career-intelligence bridge from the MEASURED competency
+ * profile (GET /api/career/competency-activation/:userId). null when the flag is
+ * OFF (endpoint 503s) or the subject has no measured profile → the brain falls
+ * back to its existing heuristics (byte-identical legacy behaviour).
+ */
+export interface ActivationScore {
+  key: string;
+  label: string;
+  measurable: boolean;
+  value: number | null;
+  band: string | null;
+  direction?: 'improving' | 'stable' | 'declining' | null;
+  provenance: string;
+  note: string;
+}
+export interface CompetencyActivation {
+  measurable: boolean;
+  scores: {
+    measurable: boolean;
+    career_readiness: ActivationScore;
+    career_growth: ActivationScore;
+    role_progression: ActivationScore;
+    skill_gap: ActivationScore;
+  };
+  plan: {
+    focus_areas: Array<{
+      competency_id: string;
+      competency_name: string | null;
+      required_level: number;
+      actual_level: number | null;
+      gap: number;
+      criticality: string;
+      blocking: boolean;
+    }>;
+    plan_actions: Array<{ recommendation_id: string; category: string; title: string; priority: string; rationale: string }>;
+  };
+  provenance: { source: string; note: string };
+}
+
 export interface CareerBrain {
   primaryIdentity: string;
   currentStage: string;
@@ -85,6 +126,11 @@ export interface CareerBrain {
   behaviorGraph: BehaviorGraph | null;
   // ── Library-backed Best Next Actions (additive — Phase 4; [] until loaded / when absent) ──
   bestNextActions: BestNextAction[];
+  // ── Competency-driven activation (additive — Phase 6; null until loaded / when absent or not measurable) ──
+  competencyActivation: CompetencyActivation | null;
+  growthScore: number | null;          // competency-driven career-growth potential (0–100)
+  progressionScore: number | null;     // measured EI-history role-progression trajectory (0–100)
+  skillGapScore: number | null;        // competency-driven skill-gap pressure (0–100; higher = more pressure)
 }
 
 export interface CareerBrainInputs {
@@ -150,6 +196,7 @@ export function useCareerBrain(userId: string, inputs: CareerBrainInputs): { bra
   const [behaviorProfile, setBehaviorProfile] = useState<CareerBehaviorProfile | null>(null);
   const [behaviorGraph, setBehaviorGraph] = useState<BehaviorGraph | null>(null);
   const [bestNextActions, setBestNextActions] = useState<BestNextAction[]>([]);
+  const [competencyActivation, setCompetencyActivation] = useState<CompetencyActivation | null>(null);
   // Occupation-aware skill gaps from the DB graph (additive; empty = fall back to heuristic).
   const [occupationSkills, setOccupationSkills] = useState<Array<{ canonical_name: string; importance: string; proficiency_level: number; weight: number }>>([]);
   const [loading, setLoading] = useState(true);
@@ -217,6 +264,28 @@ export function useCareerBrain(userId: string, inputs: CareerBrainInputs): { bra
         }
       } catch { /* degrade */ }
 
+      // Competency-driven activation (Phase 6, best-effort). Flag OFF => endpoint 503
+      // => stays null => brain falls back to its existing heuristics (byte-identical).
+      // Adopt ONLY when the backend reports `measurable` (a real measured competency
+      // profile backs the scores); not-measurable / cold-start => ignored.
+      let adopted = false;
+      try {
+        const r = await fetch(`/api/career/competency-activation/${userId}`, { headers: authHeader() as HeadersInit, credentials: 'include' });
+        if (r.ok) {
+          const d = await r.json();
+          if (d?.ok && d?.measurable && d?.scores && id === reqId.current) {
+            setCompetencyActivation({ measurable: true, scores: d.scores, plan: d.plan, provenance: d.provenance } as CompetencyActivation);
+            adopted = true;
+          }
+        }
+      } catch { /* degrade */ }
+      // Non-adoption (503 / non-OK / parse failure / not-measurable) MUST clear any
+      // activation carried from a prior user/context, or stale competency-driven
+      // scores would keep overriding the heuristic fallback (violating byte-identical
+      // and risking cross-user leakage). Guarded by reqId so a stale request can't wipe
+      // a fresher adoption.
+      if (!adopted && id === reqId.current) setCompetencyActivation(null);
+
       if (id === reqId.current) setLoading(false);
     })();
   }, [userId]);
@@ -275,8 +344,37 @@ export function useCareerBrain(userId: string, inputs: CareerBrainInputs): { bra
         impact: s.importance === 'essential' ? Math.max(92 - i * 2, 60) : s.importance === 'important' ? Math.max(74 - i * 2, 50) : 55,
         category: s.importance === 'essential' ? 'critical' : s.importance === 'important' ? 'important' : 'nice-to-have' as BrainSkillGap['category'],
       }));
-    const skillGaps = occupationGaps.length > 0 ? occupationGaps : deriveSkillGaps(profile, targetRole);
+    // Phase 6 — competency-driven activation takes PRECEDENCE when measurable.
+    // The gap→plan focus_areas (severity-ranked, blocking flagged) become the
+    // PRIMARY skill gaps; otherwise fall back to occupation-graph then heuristic.
+    const act = competencyActivation;
+    const actMeasurable = !!act?.measurable;
+    const competencyGaps: BrainSkillGap[] = actMeasurable
+      ? (act!.plan?.focus_areas || []).map((f, i) => ({
+          skill: f.competency_name || f.competency_id,
+          impact: clamp(Math.round(90 - i * 8)),
+          category: (f.blocking || /critical|essential/i.test(f.criticality))
+            ? 'critical'
+            : /important|high/i.test(f.criticality)
+              ? 'important'
+              : 'nice-to-have',
+        }))
+      : [];
+    const skillGaps =
+      competencyGaps.length > 0
+        ? competencyGaps
+        : occupationGaps.length > 0
+          ? occupationGaps
+          : deriveSkillGaps(profile, targetRole);
     const topGap = skillGaps[0];
+
+    // Phase 6 score projections (null = not measurable, never a fabricated 0).
+    const actReadiness = actMeasurable && act!.scores.career_readiness.measurable
+      ? act!.scores.career_readiness.value
+      : null;
+    const growthScore = actMeasurable && act!.scores.career_growth.measurable ? act!.scores.career_growth.value : null;
+    const progressionScore = actMeasurable && act!.scores.role_progression.measurable ? act!.scores.role_progression.value : null;
+    const skillGapScore = actMeasurable && act!.scores.skill_gap.measurable ? act!.scores.skill_gap.value : null;
 
     // Lowest competency dimension = behavioural bottleneck candidate.
     const weakestDim = [...dimensions].sort((a, b) => a.score - b.score)[0];
@@ -365,15 +463,21 @@ export function useCareerBrain(userId: string, inputs: CareerBrainInputs): { bra
       signals: memSignals,
       patterns: memPatterns,
       dimensions,
-      careerReadiness: behaviorProfile ? clamp(behaviorProfile.careerReadiness) : marketReadiness,
+      // Phase 6: the competency-driven readiness is PRIMARY when measurable; else
+      // fall back to the CAPADEX behaviour profile, else the EI/market heuristic.
+      careerReadiness: actReadiness != null ? clamp(actReadiness) : behaviorProfile ? clamp(behaviorProfile.careerReadiness) : marketReadiness,
       learningReadiness: behaviorProfile ? clamp(behaviorProfile.learningReadiness) : clamp(Math.round(ei * 0.5 + completeness * 0.5)),
       executionReadiness: behaviorProfile ? clamp(behaviorProfile.executionReadiness) : clamp(Math.round(ei * 0.6 + completeness * 0.4)),
       leadershipReadiness: behaviorProfile ? clamp(behaviorProfile.leadershipReadiness) : clamp(Math.round(ei * 0.5 + transitionProbability * 0.5)),
       behaviorProfile,
       behaviorGraph,
       bestNextActions,
+      competencyActivation,
+      growthScore,
+      progressionScore,
+      skillGapScore,
     };
-  }, [profile, jobs, goals, eiScore, dimensions, memSignals, memPatterns, behaviorProfile, behaviorGraph, bestNextActions, occupationSkills]);
+  }, [profile, jobs, goals, eiScore, dimensions, memSignals, memPatterns, behaviorProfile, behaviorGraph, bestNextActions, occupationSkills, competencyActivation]);
 
   return { brain, loading };
 }

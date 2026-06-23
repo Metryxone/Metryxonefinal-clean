@@ -739,6 +739,18 @@ export const FEATURE_FLAGS = {
    *  suitability predictions. Env: `FF_CAREER_INTELLIGENCE`. */
   careerIntelligence: false,
 
+  /* PHASE 6 — Career Intelligence Activation. Additive + read-only. Surfaces the
+   *  four named competency-driven Career Builder scores (career readiness / career
+   *  growth / role progression / skill-gap pressure) + the gap-derived plan slice,
+   *  COMPOSED by the existing Phase-4 career-intelligence bridge from the MEASURED
+   *  competency profile. Toggles INDEPENDENTLY of `careerIntelligence` so the new
+   *  frontend-facing endpoint can be activated on its own. Flag OFF => the
+   *  /api/career/competency-activation/:userId route 503s BEFORE any DB touch and
+   *  the frontend falls back to its existing heuristics (byte-identical legacy).
+   *  GET never writes (competencyRuntimeReady gates the bridge's ensure-schema).
+   *  Outputs are developmental signals only. Env: `FF_CAREER_INTELLIGENCE_ACTIVATION`. */
+  careerIntelligenceActivation: false,
+
   /* PHASE 4.3 — Career Readiness Engine. Additive + read-only layer that COMPOSES
    *  the already-built readiness engines (Current = EI overall, Future = FRP/FRI,
    *  Role = role-readiness-v2, Growth = EI growth potential) into ONE unified
@@ -1672,6 +1684,10 @@ export function isCompetencyEiEnabled(): boolean {
 
 export function isCareerIntelligenceEnabled(): boolean {
   return isFlagEnabled('careerIntelligence');
+}
+
+export function isCareerIntelligenceActivationEnabled(): boolean {
+  return isFlagEnabled('careerIntelligenceActivation');
 }
 
 export function isCareerReadinessEnabled(): boolean {

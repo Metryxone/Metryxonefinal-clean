@@ -71,6 +71,7 @@ import { registerCompetencyRuntimeRoutes } from "./routes/competency-runtime";
 import { registerCompetencyEiRoutes } from "./routes/competency-ei";
 import { registerCareerIntelligenceRoutes } from "./routes/career-intelligence";
 import { registerCareerReadinessRoutes } from "./routes/career-readiness";
+import { registerCareerCompetencyActivationRoutes } from "./routes/career-competency-activation";
 import { registerCareerGapRoutes } from "./routes/career-gap";
 import { registerCareerMatchRoutes } from "./routes/career-match";
 import { registerCareerRoadmapRoutes } from "./routes/career-roadmap";
@@ -13591,6 +13592,7 @@ Rules:
   registerCompetencyEiRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCareerIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCareerReadinessRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerCareerCompetencyActivationRoutes(app, concernsPool, requireAuth);
   registerCareerGapRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCareerMatchRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCareerRoadmapRoutes(app, concernsPool, requireAuth, requireSuperAdmin);

@@ -204,6 +204,43 @@ export interface CareerBuilderSummary {
   surfaces: Array<{ id: string; label: string; measurable: boolean; note: string }>;
 }
 
+/**
+ * Phase 6 — Career Intelligence Activation.
+ *
+ * The FOUR named, frontend-facing scores the Career Builder surfaces, each
+ * derived (compose-only) from the already-composed competency-driven sources:
+ *   - career_readiness  ← role-readiness-v2 (competency profile vs Role DNA targets)
+ *   - career_growth     ← ei-profile-engine growth_potential (headroom)
+ *   - role_progression  ← measured EI-history trajectory (≥2 measured snapshots)
+ *   - skill_gap         ← role_gap pressure (unmet share of required competency depth)
+ *
+ * Honesty contract carried unchanged: null = missing (never a fabricated 0),
+ * Coverage (measurable) and the value are separate, no recomputation of any score.
+ */
+export interface ActivationScore {
+  key: 'career_readiness' | 'career_growth' | 'role_progression' | 'skill_gap';
+  label: string;
+  /** Coverage axis — is this score backed by measured data? */
+  measurable: boolean;
+  /** 0–100; null when not measurable (never a fabricated 0). */
+  value: number | null;
+  band: string | null;
+  /** Progression only — trajectory direction across measured snapshots. */
+  direction?: 'improving' | 'stable' | 'declining' | null;
+  /** Where the score traces back to (the measured competency/EI source). */
+  provenance: string;
+  note: string;
+}
+
+export interface ActivationScores {
+  /** True when ANY of the four scores is measurable. */
+  measurable: boolean;
+  career_readiness: ActivationScore;
+  career_growth: ActivationScore;
+  role_progression: ActivationScore;
+  skill_gap: ActivationScore;
+}
+
 export interface CareerIntelligenceEnvelope {
   ok: boolean;
   subject_id: string;
@@ -212,6 +249,8 @@ export interface CareerIntelligenceEnvelope {
   measurable: boolean;
   /** Top-level honesty axes for the whole envelope (EI profile derived). */
   axes: CoverageConfidence;
+  /** Phase 6 — the four named competency-driven Career Builder scores. */
+  activation_scores: ActivationScores;
   career_readiness: CareerReadinessSurface;
   career_pathways: CareerPathwaysSurface;
   career_planning: CareerPlanningSurface;
@@ -295,6 +334,7 @@ export async function buildCareerIntelligence(
     generated_at: new Date().toISOString(),
     measurable,
     axes: topAxes,
+    activation_scores: buildActivationScores(profile, role, history),
     career_readiness: buildReadinessSurface(role, industries, functions),
     career_pathways: buildPathwaysSurface(role, profile),
     career_planning: buildPlanningSurface(role, recs, profile),
@@ -309,6 +349,138 @@ export async function buildCareerIntelligence(
 
 function defaultConfidence(): DimensionConfidence {
   return emptyConfidence('domain_proxy', 'no measured competency profile');
+}
+
+// ---------------------------------------------------------------------------
+// Phase 6 — Activation scores (compose-only; null = missing, never fabricated 0).
+// ---------------------------------------------------------------------------
+
+function clamp100(n: number): number {
+  if (!Number.isFinite(n)) return 0;
+  return Math.max(0, Math.min(100, Math.round(n)));
+}
+
+/** Skill-gap pressure band (lower pressure is better). */
+function gapPressureBand(p: number): string {
+  if (p < 15) return 'Minimal';
+  if (p < 35) return 'Low';
+  if (p < 60) return 'Moderate';
+  return 'High';
+}
+
+/**
+ * Derive the four named Career Builder scores from the already-composed
+ * competency-driven sources. Pure, compose-only — never recomputes a score and
+ * never zero-fills an absent measure (measurable:false + value:null instead).
+ */
+export function buildActivationScores(
+  profile: EiProfile | null,
+  role: RoleReadinessV2 | null,
+  history: EiHistory | null,
+): ActivationScores {
+  // 1. Career Readiness — role readiness vs Role DNA requirement targets.
+  const readinessMeasurable = role?.measurable ?? false;
+  const career_readiness: ActivationScore = {
+    key: 'career_readiness',
+    label: 'Career Readiness',
+    measurable: readinessMeasurable,
+    value: readinessMeasurable ? (role?.readiness.score ?? null) : null,
+    band: readinessMeasurable ? (role?.readiness.band ?? null) : null,
+    provenance: 'role_readiness_v2: measured competency profile scored against role requirement targets (Role DNA)',
+    note: readinessMeasurable
+      ? 'Readiness measured against the anchor role requirement targets.'
+      : 'Not measurable — no measured competency profile / role requirements (honest absence).',
+  };
+
+  // 2. Career Growth — growth potential (headroom across improvable EI dimensions).
+  const gp = profile?.growth_potential ?? null;
+  const growthMeasurable = (profile?.measurable ?? false) && gp?.score != null;
+  const career_growth: ActivationScore = {
+    key: 'career_growth',
+    label: 'Career Growth',
+    measurable: growthMeasurable,
+    value: growthMeasurable ? (gp?.score ?? null) : null,
+    band: growthMeasurable ? (gp?.level ?? null) : null,
+    provenance: 'ei_profile_engine.growth_potential: weighted headroom across improvable competency-derived EI dimensions',
+    note: growthMeasurable
+      ? 'Growth potential = headroom across improvable competency-derived EI dimensions.'
+      : 'Not measurable — no measured EI profile (honest absence).',
+  };
+
+  // 3. Role Progression — measured EI-history trajectory (≥2 measured snapshots).
+  const measuredSnaps = (history?.ei_history.snapshots ?? []).filter((s) => s.ei_score != null && Number.isFinite(Number(s.ei_score)));
+  let role_progression: ActivationScore;
+  if (measuredSnaps.length >= 2) {
+    // snapshots arrive newest-first.
+    const latest = Number(measuredSnaps[0].ei_score);
+    const earliest = Number(measuredSnaps[measuredSnaps.length - 1].ei_score);
+    const delta = Math.round((latest - earliest) * 10) / 10;
+    const direction = delta > 2 ? 'improving' : delta < -2 ? 'declining' : 'stable';
+    role_progression = {
+      key: 'role_progression',
+      label: 'Role Progression',
+      measurable: true,
+      value: clamp100(50 + delta), // 50 = stable baseline; >50 improving, <50 declining.
+      band: direction === 'improving' ? 'Improving' : direction === 'declining' ? 'Declining' : 'Stable',
+      direction,
+      provenance: `ei_history trajectory: ${measuredSnaps.length} measured snapshots, net EI Δ ${delta >= 0 ? '+' : ''}${delta}`,
+      note: 'Progression = net EI movement across measured snapshots (50 = stable baseline).',
+    };
+  } else {
+    role_progression = {
+      key: 'role_progression',
+      label: 'Role Progression',
+      measurable: false,
+      value: null,
+      band: null,
+      direction: null,
+      provenance: 'ei_history trajectory requires ≥2 measured snapshots',
+      note: `Insufficient history — ${measuredSnaps.length} measured snapshot(s); capture assessments over time to measure progression.`,
+    };
+  }
+
+  // 4. Skill-Gap — gap pressure = unmet share of required competency depth (lower is better).
+  const gapAreas = (role?.role_gap.gap_areas ?? []).filter((g) => g.gap != null);
+  const skillGapMeasurable = (role?.measurable ?? false) && gapAreas.length > 0;
+  let skill_gap: ActivationScore;
+  if (skillGapMeasurable) {
+    const totalRequired = gapAreas.reduce((s, g) => s + (Number(g.required_level) || 0), 0);
+    const totalGapped = gapAreas.reduce((s, g) => s + Math.max(0, Number(g.gap) || 0), 0);
+    const pressure = totalRequired > 0 ? clamp100((100 * totalGapped) / totalRequired) : 0;
+    skill_gap = {
+      key: 'skill_gap',
+      label: 'Skill-Gap Pressure',
+      measurable: true,
+      value: pressure,
+      band: gapPressureBand(pressure),
+      provenance: `role_gap severity: ${gapAreas.length} measured competencies vs role targets (${role?.role_gap.blocking_gaps ?? 0} blocking)`,
+      note: 'Gap pressure = unmet share of required competency depth (lower is better).',
+    };
+  } else {
+    skill_gap = {
+      key: 'skill_gap',
+      label: 'Skill-Gap Pressure',
+      measurable: false,
+      value: null,
+      band: null,
+      provenance: 'role_gap requires a measured role readiness',
+      note: (role?.measurable ?? false)
+        ? 'No measured competency gaps against the role target (honest empty, not zero risk).'
+        : 'Not measurable — no measured role readiness (honest absence).',
+    };
+  }
+
+  return {
+    measurable:
+      career_readiness.measurable ||
+      career_growth.measurable ||
+      role_progression.measurable ||
+      skill_gap.measurable,
+    career_readiness,
+    career_growth,
+    role_progression,
+    skill_gap,
+  };
 }
 
 function collectVersions(

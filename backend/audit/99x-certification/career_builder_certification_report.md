@@ -31,3 +31,30 @@ real seeker (`career_seeker_profiles`=0). This is a **data/usage** gap (needs re
 architectural one. The 4 passport snapshots confirm the terminal sync works.
 
 **Cannot reach PASS by code** — requires real career-seeker traffic.
+
+## MX-100X Phase 6 — Career Intelligence Activation (2026-06-23)
+
+The frontend aggregator gap is now CLOSED at the wiring level. `useCareerBrain` (the central
+aggregator feeding ALL Career Builder tabs) previously derived `careerReadiness`/`skillGaps` from
+EI + completeness heuristics + a keyword-family `deriveSkillGaps`, so the surfaced scores did **not**
+trace to the measured competency profile. Phase 6 activates the EXISTING Phase-4 bridge
+(`buildCareerIntelligence`) as the PRIMARY driver:
+
+- **New flag** `careerIntelligenceActivation` (`FF_CAREER_INTELLIGENCE_ACTIVATION`, default OFF) — toggles
+  independently of Phase-4's `careerIntelligence` enrich. OFF ⇒ byte-identical legacy (endpoint 503s
+  before any DB touch; frontend falls back to heuristics).
+- **New read-only GET** `/api/career/competency-activation/:userId` — flag-503 → requireAuth →
+  `resolveEffectiveUserId` IDOR → `competencyRuntimeReady` probe (GET-never-writes: gates the bridge's
+  `ensureCompetencyRuntimeSchema` DDL) → `buildCareerIntelligence`. Returns the FOUR named scores
+  (career readiness / career growth / role progression / skill-gap pressure) + the gap→plan focus areas.
+- **Bridge** gains a pure `buildActivationScores` + `activation_scores` envelope field (compose-only,
+  null=missing). Readiness=role_readiness_v2; growth=EI growth_potential; progression=measured EI-history
+  trajectory (≥2 snapshots, else `insufficient_history`/null); skill-gap=role_gap severity pressure.
+- **Frontend** `useCareerBrain` adopts these as PRIMARY `careerReadiness`/`skillGaps` (+ new
+  `growthScore`/`progressionScore`/`skillGapScore`/`competencyActivation`) **only when `measurable`**;
+  otherwise byte-identical fallback.
+
+**Honest ceiling unchanged:** live `career_seeker_profiles`=0, so the live activation is
+`measurable:false`/null (cold-start). The derivation is proven on a controlled measured fixture and the
+honest absence on the live DB — see `backend/audit/career-intelligence-activation/`. Outputs remain
+developmental signals only (language policy). Still **PARTIAL** by the same data/usage gap, not architecture.

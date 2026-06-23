@@ -1002,3 +1002,39 @@ id = "E_pCz7EHUrfRr3kgNf2vS"
 uri = "file://reports/competency_dedup_audit.md"
 type = "text"
 title = "Competency Assessment — Duplication & Cleanup Audit (Stage 0)"
+
+[[outputs]]
+id = "j5yqMC3O_b5lVh5qajx1t"
+uri = "file://backend/audit/competency-architecture/founder_recommendation.md"
+type = "text"
+title = "Founder Recommendation (start here)"
+
+[[outputs]]
+id = "Z7-nBNif8iYWcvXs6SWUK"
+uri = "file://backend/audit/competency-architecture/competency_architecture_inventory.md"
+type = "text"
+title = "1 · Architecture Inventory"
+
+[[outputs]]
+id = "w2uOOyjhtdx_vggOCMGbv"
+uri = "file://backend/audit/competency-architecture/competency_overlap_analysis.md"
+type = "text"
+title = "2 · Overlap & Duplicate Analysis"
+
+[[outputs]]
+id = "XBGoBoPjoFIf79caeEhKW"
+uri = "file://backend/audit/competency-architecture/assessment_flow_analysis.md"
+type = "text"
+title = "3 · Assessment Flow Analysis"
+
+[[outputs]]
+id = "9AoYRWsYeSnnXZwfEE9Cq"
+uri = "file://backend/audit/competency-architecture/onet_usage_analysis.md"
+type = "text"
+title = "4 · O*NET Usage Analysis"
+
+[[outputs]]
+id = "ooK7RhcTEsp8kdH-xgqou"
+uri = "file://backend/audit/competency-architecture/competency_simplification_plan.md"
+type = "text"
+title = "5 · Simplification Plan"

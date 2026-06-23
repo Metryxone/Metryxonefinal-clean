@@ -1145,6 +1145,21 @@ export const FEATURE_FLAGS = {
    *  tables untouched; no DDL on existing tables (lazy ensure-schema only for the net-new
    *  `cg_user_activation_runs` provenance table on its write path). Env: `FF_CAREER_BUILDER_ACTIVATION`. */
   careerBuilderActivation: false,
+  /** Competency → Skill Intelligence (98X Gap Closure, Phase 5). When ON, the read-only chain
+   *  resolver at `/api/v2/competency-skill/*` COMPOSES the genuine, already-live surfaces into a
+   *  Competency → Skill → Learning → Certification → Role → Career chain. The ONLY net-new asset
+   *  is `comp_skill_map` — the genuinely-missing first hop (onto_competencies genome →
+   *  cg_skill_requirements.skill_key, by confidence-scored name/slug/token match, UNCLASSIFIED
+   *  where no match — never fabricated; the honest ceiling is LOW because the genome is abstract
+   *  O*NET vocabulary). Every downstream hop REUSES live data: cg_skill_resource_map +
+   *  cg_learning_resources (learning), lip_certifications.skills_validated[] (certifications),
+   *  cg_skill_requirements + cg_roles (roles) and cg_role_edges (career). NO parallel cert/role
+   *  tables are created (the LIP namespace already provides them). Strictly additive + reversible:
+   *  flag OFF → every route 503 before any auth/DB touch → byte-identical legacy behaviour; the
+   *  `comp_skill_map` schema is created lazily on the WRITE (seed) path only and is fully
+   *  reversible by `source='98x_phase5'`. Read-only at runtime — never recomputes scores, never
+   *  edits the genome / graph / certification content. Env: `FF_COMPETENCY_SKILL_INTELLIGENCE`. */
+  competencySkillIntelligence: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1231,6 +1246,10 @@ export function isEmployerCompetencyHiringEnabled(): boolean {
 
 export function isCareerBuilderActivationEnabled(): boolean {
   return isFlagEnabled('careerBuilderActivation');
+}
+
+export function isCompetencySkillIntelligenceEnabled(): boolean {
+  return isFlagEnabled('competencySkillIntelligence');
 }
 
 export function isFunctionalCompetencySeedingEnabled(): boolean {

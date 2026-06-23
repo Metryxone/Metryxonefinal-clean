@@ -1207,6 +1207,23 @@ export const FEATURE_FLAGS = {
    *  /rollback` (delete decisions by provenance `mx100x_p2_crosswalk` + restore prior verified) /
    *  drop the new table. Env: `FF_ONET_CROSSWALK_GOVERNANCE`. */
   onetCrosswalkGovernance: false,
+  /** Competency Coverage Matrices (MX-100X Phase 3). When ON, a NEW read-only engine at
+   *  `/api/v2/competency-coverage-matrices/*` COMPOSES the EXISTING competency genome
+   *  (`onto_competencies` domain axis, `onto_competency_type_map` 5-type axis), the genome→question
+   *  bridge (`onto_competency_question_map` → `competency_question_templates`) and the population
+   *  benchmark store (`bench_competency_benchmarks`) into three COVERAGE matrices — competency,
+   *  assessment and benchmark — each broken down by TYPE and by DOMAIN, plus a truthful
+   *  assessment-ready count. Coverage (data exists) and Confidence/readiness (sufficient + above
+   *  k-anonymity) are SEPARATE axes; sparse/empty types (e.g. future_skills = 0) and the low
+   *  assessment-content coverage are reported as HONEST gaps, never fabricated. The assessment bank's
+   *  `competency_question_templates.competency_code` is a DISJOINT namespace from the 419-competency
+   *  genome — reported separately as context, NEVER force-joined to the 5-type axis. All ids here are
+   *  `onto_*` TEXT (no `ont_*` INTEGER coercion). PURELY read-only: no new schema, no POST, no DDL —
+   *  every GET uses a to_regclass probe + degrade (null = missing, never fake 0). Strictly additive:
+   *  flag OFF → every route 503 before any auth/DB touch, no schema → byte-identical legacy
+   *  behaviour (all existing competency/assessment/benchmark routes UNTOUCHED). Reversible by flipping
+   *  the flag OFF / removing the route module. Env: `FF_COMPETENCY_COVERAGE_MATRICES`. */
+  competencyCoverageMatrices: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1309,6 +1326,10 @@ export function isOnetActivationEnabled(): boolean {
 
 export function isOnetCrosswalkGovernanceEnabled(): boolean {
   return isFlagEnabled('onetCrosswalkGovernance');
+}
+
+export function isCompetencyCoverageMatricesEnabled(): boolean {
+  return isFlagEnabled('competencyCoverageMatrices');
 }
 
 export function isFunctionalCompetencySeedingEnabled(): boolean {

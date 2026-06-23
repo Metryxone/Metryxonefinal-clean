@@ -1,0 +1,730 @@
+TASK: MX-99X-ENTERPRISE-COMPETENCY-CERTIFICATION
+
+OBJECTIVE
+
+Execute the final enterprise-grade validation, activation, and certification assessment of the MetryxOne Competency Intelligence Ecosystem.
+
+This initiative is NOT an architecture review.
+
+This is NOT a UI review.
+
+This is NOT a navigation review.
+
+This is NOT a rebuild exercise.
+
+The objective is to:
+
+1. Close all remaining enterprise acceptance gaps.
+2. Validate all intelligence flows.
+3. Validate all data flows.
+4. Validate all scoring flows.
+5. Validate all assessment flows.
+6. Validate all employer flows.
+7. Validate all career flows.
+8. Validate all O*NET flows.
+9. Validate enterprise-scale readiness.
+10. Certify overall platform maturity.
+
+ASSUME
+
+The current platform architecture remains intact.
+
+The following remain authoritative:
+
+* Competency Genome
+* Role DNA
+* O*NET Reference Library
+* Assessment Engine
+* Employability Index
+* Career Builder
+* Career Passport
+
+No rebuilds permitted.
+
+No destructive changes permitted.
+
+All recommendations must be:
+
+* Additive
+* Reversible
+* Backward Compatible
+* Production Safe
+
+---
+
+SECTION 1
+ENTERPRISE ACCEPTANCE GAP CLOSURE
+---------------------------------
+
+Re-evaluate all acceptance criteria.
+
+Current Status
+
+PASS = 9
+
+PARTIAL = 5
+
+FAIL = 1
+
+Target
+
+PASS = 15
+
+PARTIAL = 0
+
+FAIL = 0
+
+Validate:
+
+Role Resolution
+
+Role DNA
+
+O*NET Intelligence
+
+Assessment Blueprint
+
+Question Mapping
+
+Adaptive Assessment
+
+Scoring
+
+Career Builder
+
+Career Passport
+
+Employer Intelligence
+
+Validation Loop
+
+Enterprise Scale
+
+Provide:
+
+PASS
+
+PARTIAL
+
+FAIL
+
+with evidence.
+
+Generate:
+
+enterprise_acceptance_gap_closure.md
+
+---
+
+SECTION 2
+ROLE DNA CERTIFICATION
+----------------------
+
+Validate:
+
+Industry
+↓
+Function
+↓
+Department
+↓
+Role Family
+↓
+Role
+↓
+Role DNA
+
+For every role calculate:
+
+Role DNA Coverage %
+
+Competency Coverage %
+
+Proficiency Coverage %
+
+Benchmark Coverage %
+
+Crosswalk Confidence %
+
+Assessment Coverage %
+
+Readiness Coverage %
+
+Validate:
+
+No orphan roles
+
+No orphan role families
+
+No orphan departments
+
+No orphan functions
+
+No orphan industries
+
+Generate:
+
+role_dna_certification_report.md
+
+---
+
+SECTION 3
+O*NET GOVERNANCE & INTELLIGENCE
+-------------------------------
+
+Validate:
+
+ont_roles
+
+ont_industries
+
+ont_functions
+
+ont_departments
+
+ont_role_families
+
+map_role_competency
+
+map_ont_onto_role
+
+Assess:
+
+Crosswalk Coverage
+
+Crosswalk Confidence
+
+Duplicate Mappings
+
+Missing Mappings
+
+Role Mapping Accuracy
+
+Competency Mapping Accuracy
+
+Governance Controls
+
+Manual Override Controls
+
+Approval Workflow
+
+Generate:
+
+onet_governance_report.md
+
+SUCCESS CRITERIA
+
+O*NET remains:
+
+Reference Layer
+
+Role Intelligence Layer
+
+Role DNA Feeder
+
+Benchmark Feeder
+
+NOT a scoring layer.
+
+---
+
+SECTION 4
+ASSESSMENT CERTIFICATION
+------------------------
+
+Validate:
+
+Role
+↓
+Role DNA
+↓
+Competencies
+↓
+Required Levels
+↓
+Blueprint
+↓
+Questions
+↓
+Assessment
+
+Questions must NOT drive assessments.
+
+Role DNA must drive assessments.
+
+Validate:
+
+Blueprint Accuracy
+
+Question Accuracy
+
+Difficulty Accuracy
+
+Competency Coverage
+
+Assessment Coverage
+
+Assessment Completeness
+
+Generate:
+
+assessment_certification_report.md
+
+---
+
+SECTION 5
+ADAPTIVE ASSESSMENT ACTIVATION
+------------------------------
+
+Validate:
+
+Junior Roles
+
+Mid-Level Roles
+
+Senior Roles
+
+Leadership Roles
+
+Required Flow
+
+Role Level
+↓
+Required Proficiency
+↓
+Difficulty
+↓
+Question Complexity
+↓
+Scoring Threshold
+
+Assess:
+
+Difficulty Distribution
+
+Question Complexity
+
+Scoring Variation
+
+Role-Level Accuracy
+
+Generate:
+
+adaptive_assessment_activation_report.md
+
+SUCCESS CRITERIA
+
+Adaptive assessment must be active.
+
+Adaptive assessment must influence runtime behaviour.
+
+---
+
+SECTION 6
+COMPETENCY NORMALIZATION
+------------------------
+
+Validate all competencies resolve to:
+
+Behavioral
+
+Functional
+
+Technical
+
+Cognitive
+
+Future Skills
+
+Assess:
+
+Coverage
+
+Accuracy
+
+Duplicates
+
+Unmapped Competencies
+
+Classification Quality
+
+Generate:
+
+competency_normalization_report.md
+
+---
+
+SECTION 7
+SCORING CERTIFICATION
+---------------------
+
+Validate:
+
+Assessment
+↓
+Competency Scores
+↓
+Competency Profile
+↓
+Role Readiness
+↓
+Employability Index
+
+Assess:
+
+Scoring Accuracy
+
+Dual Ledger Consistency
+
+Score Integrity
+
+Readiness Accuracy
+
+Gap Accuracy
+
+Generate:
+
+scoring_certification_report.md
+
+---
+
+SECTION 8
+CAREER BUILDER CERTIFICATION
+----------------------------
+
+Validate:
+
+Assessment
+↓
+Competency Profile
+↓
+Gap Analysis
+↓
+Career Recommendations
+↓
+Development Plans
+↓
+Learning Paths
+
+Assess:
+
+Intelligence Flow
+
+Recommendation Accuracy
+
+Gap Accuracy
+
+Development Planning Accuracy
+
+User Readiness
+
+Generate:
+
+career_builder_certification_report.md
+
+---
+
+SECTION 9
+EMPLOYER INTELLIGENCE CERTIFICATION
+-----------------------------------
+
+Validate:
+
+Role
+↓
+Role DNA
+↓
+Competency Requirements
+↓
+Candidate Assessment
+↓
+Competency Profile
+↓
+Role Match
+↓
+Readiness Score
+↓
+Hiring Recommendation
+
+Assess:
+
+Competency Matching
+
+Role Matching
+
+Gap Detection
+
+Readiness Scoring
+
+Hiring Intelligence
+
+Generate:
+
+employer_intelligence_certification_report.md
+
+---
+
+SECTION 10
+VALIDATION LOOP CERTIFICATION
+-----------------------------
+
+Validate:
+
+Assessment
+↓
+Hiring
+↓
+Performance
+↓
+Promotion
+↓
+Retention
+↓
+Outcomes
+↓
+Calibration
+↓
+Prediction
+
+Assess:
+
+Outcome Capture
+
+Outcome Coverage
+
+Calibration Readiness
+
+Prediction Readiness
+
+Evidence Quality
+
+Generate:
+
+validation_loop_certification_report.md
+
+---
+
+SECTION 11
+DATA PROTECTION & MIGRATION SAFETY
+----------------------------------
+
+Validate impact on:
+
+Existing Assessments
+
+Existing Competency Profiles
+
+Existing EI Scores
+
+Existing Career Builder Data
+
+Existing Passport Data
+
+Existing Employer Data
+
+Assess:
+
+Migration Safety
+
+Backward Compatibility
+
+Rollback Safety
+
+Data Integrity
+
+Generate:
+
+data_protection_report.md
+
+SUCCESS CRITERIA
+
+No existing production data may be invalidated.
+
+---
+
+SECTION 12
+ENTERPRISE SCALE CERTIFICATION
+------------------------------
+
+Validate readiness for:
+
+1000+ Roles
+
+100+ Industries
+
+Multi Employer
+
+Multi Tenant
+
+Multi Country
+
+Government Scale
+
+University Scale
+
+Staffing Scale
+
+Enterprise Scale
+
+Assess:
+
+Current Capacity
+
+Target Capacity
+
+Scalability Risks
+
+Generate:
+
+enterprise_scale_certification.md
+
+---
+
+SECTION 13
+99X READINESS SCORECARD
+-----------------------
+
+Score:
+
+Competency Framework
+
+Role DNA
+
+O*NET
+
+Assessment Engine
+
+Adaptive Assessment
+
+Scoring Engine
+
+Employability Index
+
+Career Builder
+
+Career Passport
+
+Employer Intelligence
+
+Validation Loop
+
+Predictive Intelligence
+
+Enterprise Scale
+
+For each provide:
+
+Current Score
+
+Target Score
+
+Gap
+
+Risk
+
+Priority
+
+---
+
+SECTION 14
+PLATFORM CERTIFICATION
+----------------------
+
+Classify MetryxOne into one category:
+
+LEVEL 1
+Pilot Ready
+
+LEVEL 2
+Production Ready
+
+LEVEL 3
+Enterprise Ready
+
+LEVEL 4
+Global Ready
+
+LEVEL 5
+World Class
+
+Provide evidence for classification.
+
+---
+
+SECTION 15
+FOUNDER CERTIFICATION REPORT
+----------------------------
+
+Answer:
+
+1. Is the Competency Framework enterprise-ready?
+
+2. Is Role DNA enterprise-ready?
+
+3. Is O*NET correctly implemented?
+
+4. Is assessment generation Role DNA driven?
+
+5. Is adaptive assessment active?
+
+6. Is employer intelligence competency-driven?
+
+7. Is Career Builder intelligence-driven?
+
+8. Is the validation loop complete?
+
+9. Can MetryxOne scale globally?
+
+10. What prevents Level 5 certification?
+
+11. Top 20 remaining gaps.
+
+12. Top 20 highest ROI actions.
+
+13. What should never be changed?
+
+14. Final certification level.
+
+15. Final maturity score.
+
+---
+
+## FINAL DELIVERABLE
+
+Generate:
+
+metryxone_99x_enterprise_certification_report.md
+
+GOAL
+
+Provide a definitive certification-grade assessment of MetryxOne.
+
+Not an opinion.
+
+Not a recommendation.
+
+A fully evidence-backed certification of:
+
+Architecture
+
+Competency Intelligence
+
+Role DNA
+
+O*NET Intelligence
+
+Assessment
+
+Scoring
+
+Career Intelligence
+
+Employer Intelligence
+
+Predictive Intelligence
+
+Enterprise Readiness
+
+Global Readiness
+
+with clear PASS / PARTIAL / FAIL outcomes and a final platform certification level.

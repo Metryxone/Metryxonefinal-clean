@@ -1,0 +1,42 @@
+=== D13 ENTERPRISE SCALE & RESOLUTION ===
+scale: {"industries":206,"functions":30,"departments":43,"families":31,"roles":1040,"tenants":4}
+orphans: {"orphan_roles":0,"orphan_families":0,"orphan_depts":0}
+=== D1 COMPETENCY FRAMEWORK (genome + normalization) ===
+type_map_coverage: {"genome":419,"mapped":419,"needs_review":0}
+type_distribution: [{"type_key":"behavioral","n":199},{"type_key":"functional","n":103},{"type_key":"cognitive","n":99},{"type_key":"technical","n":18}]
+=== D2 ROLE DNA ===
+snapshots: {"rows":600,"roles":600,"avgconf":"1.000","high":600}
+inheritance: {"rows":52362,"roles":1021,"null_weight":0,"null_min":0,"null_target":0}
+comp_per_role: {"min":9,"avg":"51.3","max":92}
+dup_pairs: {"n":0}
+roles_no_links: {"n":19}
+dna_benchmark_available: {"avail":"false","n":600}
+role_benchmarks: {"n":60}
+=== D3 O*NET CROSSWALK ===
+map_role_competency: {"rows":52362,"roles":1021,"comps":159}
+map_ont_onto_role: {"total":5,"resolved":3,"verified":0}
+=== D4 ASSESSMENT ===
+question_templates: {"total":74,"approved":43,"distinct_comps":14}
+q_orphans: {"no_comp":0,"no_diff":0,"no_type":0}
+question_map: {"rows":25,"comps":7}
+=== D5 ADAPTIVE ASSESSMENT (Phase 4 activation) ===
+difficulty_distribution: [{"difficulty_band":"medium","n":53},{"difficulty_band":"advanced","n":8},{"difficulty_band":"intermediate","n":6},{"difficulty_band":"foundational","n":5},{"difficulty_band":"hard","n":2}]
+difficulty_vocab_split: {"laddered":19,"legacy":55,"distinct_bands":5}
+runtime_role_dna_levels: {"rows":0,"role_dnas":0,"with_expected_level":0}
+=== D6 SCORING ===
+ledgers: {"score_runs":2,"run_subjects":2,"profiles":38,"profile_subjects":36}
+=== D8/D9 CAREER BUILDER / CAREER PASSPORT ===
+career_passport: {"seekers":0,"recs":0,"passports":4}
+=== D10 EMPLOYER INTELLIGENCE ===
+employer: {"candidates":0,"jobs":0}
+=== D11 VALIDATION LOOP (Phase 7 front-half intake) ===
+validation_loop_table: {"reg":"validation_loop_outcomes"}
+validation_loop_outcomes: {"total":0,"demo":0,"realized":0}
+=== D12 GLOBAL READINESS (Phase 8 region overlay) ===
+global_region_content_table: {"reg":"global_region_content"}
+global_region_content: []
+=== D14 PREDICTIVE INTELLIGENCE / REALIZED OUTCOMES ===
+outcomes: {"career_outcomes":0,"hiring_outcomes":0,"interview_outcomes":0,"tig_calibration":0,"ti_outcome_predictions":0}
+=== D15 WORKFORCE INTELLIGENCE (Phase 9 console substrate) ===
+wos_substrate: {"workforce_risk":60,"skill_obsolescence":325,"market_signals":81,"role_emergence":6,"ai_exposure":340}
+readiness_history: {"rows":4,"subjects":1}

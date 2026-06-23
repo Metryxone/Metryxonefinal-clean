@@ -202,6 +202,7 @@ import { registerCompetencyDNARoutes } from "./routes/talent-competency-dna";
 import { registerTalentReadinessEngineRoutes } from "./routes/talent-readiness-engine";
 import { registerTalentOutcomePredictionRoutes } from "./routes/talent-outcome-prediction";
 import { registerValidationLoopRoutes } from "./routes/validation-loop";
+import { registerGlobalCompetencyRoutes } from "./routes/global-competency";
 import { registerTalentBenchmarkEngineRoutes } from "./routes/talent-benchmark-engine";
 import { registerTalentDigitalTwinRoutes } from "./routes/talent-digital-twin";
 import { registerTalentMeasurementScienceRoutes } from "./routes/talent-measurement-science";
@@ -13794,6 +13795,8 @@ Rules:
   // ── Outcome Prediction Engine (D15): probabilistic talent outcome predictions ──
   registerTalentOutcomePredictionRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerValidationLoopRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  // ── Global Competency (Phase 8): additive region dimension + per-region coverage ──
+  registerGlobalCompetencyRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Benchmark Engine (D17): industry · role · competency percentile benchmarks ─
   registerTalentBenchmarkEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Talent Digital Twin (D14): 6-state synthesis ─────────────────────────────

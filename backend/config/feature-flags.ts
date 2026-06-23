@@ -133,6 +133,18 @@ export const FEATURE_FLAGS = {
    *  never write; demo rows are EXCLUDED from evidence-backed claims; no outcome is ever fabricated.
    *  Env: `FF_VALIDATION_LOOP`. */
   validationLoop: false,
+  /** PHASE 8 — Global Competency (structural framework). When ON, an ADDITIVE region dimension threads
+   *  through the five global-deployability surfaces (role libraries · benchmarks · competency models ·
+   *  readiness models · demand intelligence) WITHOUT mutating any existing table: an overlay table
+   *  (`global_region_content`) region-tags existing entities additively + reversibly, and the read-only
+   *  admin surface (GET /api/global-competency/regions · /coverage · /coverage/:region) reports per-region
+   *  coverage — the DEFAULT region (IN/India) inherits today's real global content counts, every other
+   *  region (ME/EU/US/APAC) reports honest ZEROS until curated content is assigned. Structural framework +
+   *  coverage ONLY — never fabricates regional benchmarks/content. Strictly additive + reversible: flag
+   *  OFF → every route 503, the ensure-schema is NEVER reached so the overlay table is never created →
+   *  byte-identical legacy behaviour incl. schema (default region == today). GET handlers probe via
+   *  to_regclass and never write. Env: `FF_GLOBAL_COMPETENCY`. */
+  globalCompetency: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -1807,6 +1819,10 @@ export function isTalentDiscoveryEnabled(): boolean {
 
 export function isValidationLoopEnabled(): boolean {
   return isFlagEnabled('validationLoop');
+}
+
+export function isGlobalCompetencyEnabled(): boolean {
+  return isFlagEnabled('globalCompetency');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

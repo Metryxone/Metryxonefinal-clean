@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Network, GitBranch, Link2, Tag, Info, RefreshCw, Search, Plus, Trash2, CheckSquare, Square, MinusSquare, ToggleLeft, ToggleRight, X, Download, Upload } from 'lucide-react';
+import { Network, GitBranch, Link2, Tag, Info, RefreshCw, Search, Plus, Trash2, CheckSquare, Square, MinusSquare, ToggleLeft, ToggleRight, X, Download, Upload, FileText } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { Card, CardContent } from '../ui/card';
 
@@ -228,6 +228,27 @@ export default function CompetencyMicroFrameworkPanel() {
       .finally(() => setIoBusy(false));
   };
 
+  // Download a blank import template (placeholder rows are safely SKIPPED if
+  // imported unchanged — they reference non-existent ids, so no data changes).
+  const downloadTemplate = () => {
+    const headers = ['parent_competency_id', 'child_competency_id', 'micro_label', 'sort_order', 'active'];
+    const examples = [
+      ['REPLACE_WITH_PARENT_ID', 'REPLACE_WITH_EXISTING_CHILD_ID', '', '10', 'true'],
+      ['REPLACE_WITH_PARENT_ID', '', 'Your Named Micro Label', '20', 'true'],
+    ];
+    const csv = [headers.join(','), ...examples.map((r) => r.join(','))].join('\r\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'micro-competency-import-template.csv';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    setIoMsg('Template downloaded. Columns — parent_competency_id (REQUIRED, must already exist in the genome) · child_competency_id (an existing competency id to link, OR leave blank) · micro_label (REQUIRED only for a named-only micro, i.e. when child is blank) · sort_order (number) · active (true/false). Unknown ids are skipped on import; the genome is never created or mutated. Tip: use Export to get a file pre-filled with real competency ids.');
+  };
+
   // Minimal RFC-4180 CSV parser (handles quoted fields, escaped quotes, CRLF).
   const parseCsv = (text: string): Record<string, string>[] => {
     const rows: string[][] = [];
@@ -340,6 +361,9 @@ export default function CompetencyMicroFrameworkPanel() {
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
+          <button onClick={downloadTemplate} className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 border rounded-md px-3 py-1.5">
+            <FileText className="h-4 w-4" /> Template
+          </button>
           <button onClick={exportCsv} disabled={ioBusy} className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 border rounded-md px-3 py-1.5 disabled:opacity-50">
             <Download className="h-4 w-4" /> Export
           </button>

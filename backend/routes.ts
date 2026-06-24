@@ -208,6 +208,7 @@ import { registerTalentReadinessEngineRoutes } from "./routes/talent-readiness-e
 import { registerTalentOutcomePredictionRoutes } from "./routes/talent-outcome-prediction";
 import { registerValidationLoopRoutes } from "./routes/validation-loop";
 import { registerOutcomeIntelligenceRoutes } from "./routes/outcome-intelligence";
+import { registerEmployerEcosystemRoutes } from "./routes/employer-ecosystem";
 import { registerGlobalCompetencyRoutes } from "./routes/global-competency";
 import { registerGlobalIntelligenceRoutes } from "./routes/global-intelligence";
 import { registerTalentBenchmarkEngineRoutes } from "./routes/talent-benchmark-engine";
@@ -13810,6 +13811,8 @@ Rules:
   registerTalentOutcomePredictionRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerValidationLoopRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerOutcomeIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  // ── Live Employer Ecosystem (MX-103X): read-only audit + certification over the employer hiring funnel ──
+  registerEmployerEcosystemRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Global Competency (Phase 8): additive region dimension + per-region coverage ──
   registerGlobalCompetencyRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Global Intelligence (MX-76X): read-only composer over global/region/country assets ──

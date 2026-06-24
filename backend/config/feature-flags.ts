@@ -150,6 +150,20 @@ export const FEATURE_FLAGS = {
    *  Strictly additive + reversible: flag OFF → every route 503, no schema is touched (composer reads via
    *  to_regclass probes only) → byte-identical legacy behaviour. GET-only. Env: `FF_OUTCOME_INTELLIGENCE_ACTIVATION`. */
   outcomeIntelligenceActivation: false,
+  /** MX-103X — Live Employer Ecosystem Activation (read-only audit + certification console over the EXISTING
+   *  employer hiring funnel). When ON, a PURE read-only composer at `/api/admin/employer-ecosystem/*`
+   *  (super-admin) inventories the nine funnel stages — onboarding · create-job · role-DNA · competencies ·
+   *  assessment · candidate-match · interview · hiring-decision · outcome-tracking — reporting per stage:
+   *  gating-flag state, substrate presence (to_regclass), and REAL-vs-DEMO row counts. It keeps COVERAGE
+   *  (stage exercisable end-to-end) and CONFIDENCE (trustworthy real data; calibration ≥ k_min=30) as SEPARATE
+   *  axes and never composites them. Demo rows (@example.com candidates / `validation_loop_outcomes.is_demo`)
+   *  are counted separately and EXCLUDED from the confidence axis. It COMPOSES the already-built employer
+   *  subsystem (employer-competency-match, hiring-assessment-engine, talent-matching, interview-intelligence,
+   *  employer-hiring-intelligence, outcome-intelligence, tig calibration) — it recomputes no score, runs NO
+   *  DDL, writes NO rows (GET-only), and abstains honestly (PARTIAL) until real non-demo outcomes accrue.
+   *  Strictly additive + reversible: flag OFF → every route 503 before any DB touch → byte-identical legacy
+   *  behaviour incl. schema. Env: `FF_LIVE_EMPLOYER_ECOSYSTEM`. */
+  liveEmployerEcosystem: false,
   /** PHASE 8 — Global Competency (structural framework). When ON, an ADDITIVE region dimension threads
    *  through the five global-deployability surfaces (role libraries · benchmarks · competency models ·
    *  readiness models · demand intelligence) WITHOUT mutating any existing table: an overlay table
@@ -1968,6 +1982,10 @@ export function isValidationLoopEnabled(): boolean {
 
 export function isOutcomeIntelligenceActivationEnabled(): boolean {
   return isFlagEnabled('outcomeIntelligenceActivation');
+}
+
+export function isLiveEmployerEcosystemEnabled(): boolean {
+  return isFlagEnabled('liveEmployerEcosystem');
 }
 
 export function isGlobalCompetencyEnabled(): boolean {

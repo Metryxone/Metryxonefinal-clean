@@ -582,6 +582,17 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
     enabled: isAuthenticated,
   });
 
+  // MX-103X Live Employer Ecosystem flag (liveEmployerEcosystem) — when OFF the /enabled probe
+  // 503s and the "Live Employer Ecosystem" nav item self-hides, keeping flag-OFF byte-identical.
+  const { data: employerEcosystemEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/admin/employer-ecosystem/enabled', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/employer-ecosystem/enabled', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
   // Phase 6.9 Enterprise Governance console flag — when OFF the /console/ping probe
   // 503s and the "Enterprise Governance" nav item self-hides, keeping flag-OFF byte-identical.
   const { data: enterpriseGovernanceEnabled = false } = useQuery<boolean>({
@@ -2864,6 +2875,7 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
         { id: 'report-factory-admin', icon: FileText,  label: 'Report Factory' },
         { id: 'outcome-validation',   icon: Target,    label: 'Outcome Validation' },
         { id: 'outcome-intelligence', icon: Target,    label: 'Outcome Intelligence' },
+        { id: 'employer-ecosystem',   icon: Building2, label: 'Live Employer Ecosystem' },
       ]
     },
     // ── Commercial ──────────────────────────────────────────────────────────
@@ -3002,6 +3014,11 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
       outcomeIntelligenceEnabled
         ? group
         : { ...group, items: group.items.filter(it => it.id !== 'outcome-intelligence') }
+    )
+    .map(group =>
+      employerEcosystemEnabled
+        ? group
+        : { ...group, items: group.items.filter(it => it.id !== 'employer-ecosystem') }
     )
     .map(group =>
       enterpriseGovernanceEnabled

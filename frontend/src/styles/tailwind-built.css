@@ -1668,6 +1668,9 @@
   .max-h-\[--radix-select-content-available-height\] {
     max-height: --radix-select-content-available-height;
   }
+  .max-h-\[28rem\] {
+    max-height: 28rem;
+  }
   .max-h-\[32rem\] {
     max-height: 32rem;
   }
@@ -3806,6 +3809,9 @@
   }
   .border-slate-300 {
     border-color: var(--color-slate-300);
+  }
+  .border-slate-400 {
+    border-color: var(--color-slate-400);
   }
   .border-slate-500\/30 {
     border-color: color-mix(in srgb, oklch(55.4% 0.046 257.417) 30%, transparent);

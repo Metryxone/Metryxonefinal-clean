@@ -1,0 +1,584 @@
+TASK: MX-100X-ENTERPRISE-CERTIFICATION-AND-PLATFORM-CONSOLIDATION
+
+OBJECTIVE
+
+Perform the final enterprise-wide audit, consolidation,
+governance validation, activation validation,
+and certification of the entire MetryxOne platform.
+
+This is NOT a rebuild.
+
+This is NOT a redesign.
+
+This is NOT a new framework.
+
+Validate and certify the platform that now exists.
+
+==================================================
+SECTION 1
+PLATFORM INVENTORY
+==================================================
+
+Audit all platform domains.
+
+Competency Framework
+
+Role DNA
+
+O*NET Intelligence
+
+Assessment Intelligence
+
+Adaptive Assessment
+
+Readiness Intelligence
+
+Employability Index
+
+Career Builder
+
+Career Passport
+
+Employer Intelligence
+
+Validation Intelligence
+
+Global Intelligence
+
+Workforce Intelligence
+
+Enterprise Intelligence
+
+Generate:
+
+platform_inventory.md
+
+Output:
+
+Implemented
+
+Activated
+
+Partially Activated
+
+Dormant
+
+Deprecated
+
+==================================================
+SECTION 2
+ARCHITECTURE CERTIFICATION
+==================================================
+
+Validate:
+
+Architecture Integrity
+
+Data Integrity
+
+Relationship Integrity
+
+Dependency Integrity
+
+Scalability
+
+Extensibility
+
+Maintainability
+
+Generate:
+
+architecture_certification.md
+
+==================================================
+SECTION 3
+COMPETENCY CERTIFICATION
+==================================================
+
+Validate:
+
+Competency Genome
+
+Micro Competencies
+
+Competency Types
+
+Competency Levels
+
+Competency Profiles
+
+Question Coverage
+
+Assessment Coverage
+
+Generate:
+
+competency_certification.md
+
+==================================================
+SECTION 4
+ROLE DNA CERTIFICATION
+==================================================
+
+Validate:
+
+Industry
+
+Function
+
+Department
+
+Role Family
+
+Role
+
+Role DNA
+
+Role Benchmarks
+
+Role Readiness
+
+Generate:
+
+role_dna_certification.md
+
+==================================================
+SECTION 5
+O*NET CERTIFICATION
+==================================================
+
+Validate:
+
+Role Library
+
+Competency Library
+
+Crosswalks
+
+Benchmarks
+
+Mappings
+
+Governance
+
+Generate:
+
+onet_certification.md
+
+==================================================
+SECTION 6
+ADAPTIVE ASSESSMENT CERTIFICATION
+==================================================
+
+Validate:
+
+Role-Based Difficulty
+
+Benchmark-Based Difficulty
+
+Competency-Type Difficulty
+
+Question Selection
+
+Readiness Calibration
+
+Industry Adaptation
+
+Generate:
+
+adaptive_assessment_certification.md
+
+==================================================
+SECTION 7
+EMPLOYER INTELLIGENCE CERTIFICATION
+==================================================
+
+Validate:
+
+Role DNA Hiring
+
+Competency Hiring
+
+Assessment Hiring
+
+Readiness Hiring
+
+Benchmark Hiring
+
+Interview Intelligence
+
+Generate:
+
+employer_certification.md
+
+==================================================
+SECTION 8
+CAREER BUILDER CERTIFICATION
+==================================================
+
+Validate:
+
+Role Readiness
+
+Career Readiness
+
+Career Paths
+
+Learning Paths
+
+Gap Intelligence
+
+Passport Integration
+
+Generate:
+
+career_builder_certification.md
+
+==================================================
+SECTION 9
+VALIDATION LOOP CERTIFICATION
+==================================================
+
+Validate:
+
+Outcome Tracking
+
+Calibration
+
+Prediction Validation
+
+Hiring Validation
+
+Performance Validation
+
+Promotion Validation
+
+Retention Validation
+
+Generate:
+
+validation_loop_certification.md
+
+IMPORTANT
+
+Do not fabricate evidence.
+
+==================================================
+SECTION 10
+GLOBAL INTELLIGENCE CERTIFICATION
+==================================================
+
+Validate:
+
+Regions
+
+Countries
+
+Localization
+
+Global Benchmarks
+
+Regional Benchmarks
+
+Country Readiness
+
+Generate:
+
+global_certification.md
+
+==================================================
+SECTION 11
+WORKFORCE INTELLIGENCE CERTIFICATION
+==================================================
+
+Validate:
+
+TIG
+
+Capability Intelligence
+
+Succession Intelligence
+
+Mobility Intelligence
+
+Workforce Planning
+
+Organization Readiness
+
+Generate:
+
+workforce_certification.md
+
+==================================================
+SECTION 12
+SUPER ADMIN CERTIFICATION
+==================================================
+
+Validate:
+
+Governance
+
+Manageability
+
+Configurability
+
+Auditability
+
+Usability
+
+Generate:
+
+super_admin_certification.md
+
+==================================================
+SECTION 13
+EMPLOYER EXPERIENCE CERTIFICATION
+==================================================
+
+Validate:
+
+Job Creation
+
+Role DNA Selection
+
+Competency Selection
+
+Assessment Generation
+
+Candidate Comparison
+
+Hiring Intelligence
+
+Generate:
+
+employer_experience_certification.md
+
+==================================================
+SECTION 14
+CANDIDATE EXPERIENCE CERTIFICATION
+==================================================
+
+Validate:
+
+Assessment Experience
+
+Readiness Experience
+
+Career Experience
+
+Learning Experience
+
+Passport Experience
+
+Generate:
+
+candidate_experience_certification.md
+
+==================================================
+SECTION 15
+DATA QUALITY CERTIFICATION
+==================================================
+
+Validate:
+
+Coverage
+
+Completeness
+
+Consistency
+
+Crosswalks
+
+Orphans
+
+Duplicates
+
+Confidence
+
+Generate:
+
+data_quality_certification.md
+
+==================================================
+SECTION 16
+PLATFORM SIMPLIFICATION REVIEW
+==================================================
+
+Review:
+
+Duplicate Screens
+
+Duplicate Tables
+
+Duplicate Workflows
+
+Legacy Components
+
+Unused Components
+
+Empty Components
+
+Generate:
+
+platform_simplification_report.md
+
+Provide:
+
+KEEP
+
+MERGE
+
+HIDE
+
+ARCHIVE
+
+REMOVE
+
+Recommendations
+
+==================================================
+SECTION 17
+ENTERPRISE MATURITY ASSESSMENT
+==================================================
+
+Score:
+
+Architecture
+
+Competencies
+
+Role DNA
+
+O*NET
+
+Assessment
+
+Adaptive
+
+Employability
+
+Career Builder
+
+Employer
+
+Validation
+
+Global
+
+Workforce
+
+Governance
+
+Experience
+
+Analytics
+
+Generate:
+
+enterprise_maturity_assessment.md
+
+Output:
+
+Current Score
+
+Target Score
+
+Gap Analysis
+
+==================================================
+SECTION 18
+ROADMAP TO 98%+
+==================================================
+
+Generate:
+
+roadmap_to_98_plus.md
+
+Categorize:
+
+Quick Wins
+
+Medium Initiatives
+
+Long-Term Initiatives
+
+Data-Dependent Initiatives
+
+==================================================
+SECTION 19
+FOUNDER DECISION REPORT
+==================================================
+
+Answer:
+
+1. Is MetryxOne enterprise-ready?
+
+2. Is the competency framework complete?
+
+3. Is Role DNA complete?
+
+4. Is O*NET correctly positioned?
+
+5. Is Adaptive Assessment operational?
+
+6. Is Employer Intelligence operational?
+
+7. Is Career Builder operational?
+
+8. Is Validation Intelligence operational?
+
+9. Is Global Intelligence operational?
+
+10. Is Workforce Intelligence operational?
+
+11. What are the biggest strengths?
+
+12. What are the biggest risks?
+
+13. What should be simplified?
+
+14. What should never be changed?
+
+15. What is the true maturity score?
+
+16. What is required to reach 98%+?
+
+17. Final PASS / PARTIAL / FAIL verdict?
+
+==================================================
+IMPLEMENTATION RULES
+==================================================
+
+Read Only
+
+Evidence Based
+
+No Fabricated Data
+
+No Fabricated Accuracy
+
+Coverage ≠ Confidence
+
+Activation ≠ Usage
+
+Architecture ≠ Outcomes
+
+==================================================
+FINAL SUCCESS CRITERIA
+==================================================
+
+Complete enterprise audit performed.
+
+All modules certified.
+
+All gaps identified.
+
+All duplicate components identified.
+
+Maturity assessed honestly.
+
+Roadmap to 98%+ produced.
+
+Founder receives final certification report.
+
+Evidence-backed results only.

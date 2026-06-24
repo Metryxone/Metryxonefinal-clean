@@ -235,6 +235,73 @@ export interface RoleLibraryExpansionResult {
   roles_now_matchable: number;        // roles from this expansion with >=1 active profile row
   roles_with_dna: number;             // expansion roles that now carry a current DNA profile + weights
   skipped: { kind: string; id: string; competency?: string; reason: string }[];
+  /** true when the fast existence-probe short-circuited the full per-row loop
+   * because every expansion role + DNA profile + weights were already present. */
+  noop?: boolean;
+}
+
+/** Canonical ids of the roles this expansion seeds (used by the fast probe). */
+const EXPANSION_ROLE_IDS = EXPANSION_ROLES.map((r) => r.role_id);
+
+/**
+ * Fast existence-probe: returns a no-op result (insert counts all 0) when every
+ * expansion role already carries an active competency profile AND a current DNA
+ * profile with weights — i.e. there is nothing left to seed. Lets boots skip the
+ * ~150 per-row SELECT/INSERT round-trips of the full seeder once steady-state is
+ * reached. Returns null when seeding is (or might be) still required, so the
+ * caller falls through to the full idempotent loop. Never throws: a missing table
+ * or query error means "cannot confirm present" → fall through and seed.
+ */
+async function probeAlreadySeeded(pool: Pool): Promise<RoleLibraryExpansionResult | null> {
+  try {
+    const expected = EXPANSION_ROLE_IDS.length;
+    const probe = await pool.query<{
+      matchable_roles: string;
+      dna_roles: string;
+      dna_weight_roles: string;
+    }>(
+      `SELECT
+         (SELECT COUNT(DISTINCT role_id)
+            FROM onto_role_competency_profiles
+           WHERE source = $1 AND active = true AND role_id = ANY($2::text[])) AS matchable_roles,
+         (SELECT COUNT(DISTINCT role_id)
+            FROM onto_dna_profiles
+           WHERE version = $3 AND role_id = ANY($2::text[])) AS dna_roles,
+         (SELECT COUNT(DISTINCT d.role_id)
+            FROM onto_dna_profiles d
+            JOIN onto_role_weights w ON w.dna_profile_id = d.id
+           WHERE d.version = $3 AND d.role_id = ANY($2::text[])) AS dna_weight_roles`,
+      [ROLE_LIBRARY_EXPANSION_SOURCE, EXPANSION_ROLE_IDS, ROLE_LIBRARY_EXPANSION_DNA_VERSION],
+    );
+    const matchable = Number(probe.rows[0]?.matchable_roles ?? 0);
+    const dnaRoles = Number(probe.rows[0]?.dna_roles ?? 0);
+    const dnaWeightRoles = Number(probe.rows[0]?.dna_weight_roles ?? 0);
+
+    // Only short-circuit when EVERY expansion role is fully present on all three
+    // surfaces. If anything is short (e.g. a missing competency means a role was
+    // genuinely skipped), fall through so the full loop runs + reports honestly.
+    if (matchable >= expected && dnaRoles >= expected && dnaWeightRoles >= expected) {
+      return {
+        ok: true,
+        version: ROLE_LIBRARY_EXPANSION_VERSION,
+        functions_inserted: 0,
+        subfunctions_inserted: 0,
+        role_families_inserted: 0,
+        roles_inserted: 0,
+        requirements_inserted: 0,
+        dna_profiles_inserted: 0,
+        role_weights_inserted: 0,
+        roles_now_matchable: matchable,
+        roles_with_dna: dnaWeightRoles,
+        skipped: [],
+        noop: true,
+      };
+    }
+    return null;
+  } catch {
+    // Tables not present yet, or any query error → cannot confirm; seed normally.
+    return null;
+  }
 }
 
 /**
@@ -243,6 +310,12 @@ export interface RoleLibraryExpansionResult {
  * reports anything missing — never fabricates.
  */
 export async function runRoleLibraryExpansion(pool: Pool): Promise<RoleLibraryExpansionResult> {
+  // Fast path: if every expansion role is already fully seeded, skip the full
+  // per-row loop (and the ensure-schema DDL) entirely. Idempotency is unchanged
+  // either way — this just avoids ~150 needless round-trips on a warm boot.
+  const alreadySeeded = await probeAlreadySeeded(pool);
+  if (alreadySeeded) return alreadySeeded;
+
   await ensureRoleCompetencyProfileSchema(pool);
 
   const skipped: RoleLibraryExpansionResult['skipped'] = [];

@@ -163,10 +163,17 @@ app.use((req, res, next) => {
   // at boot. Every insert is ON CONFLICT DO NOTHING; re-runs insert 0 rows.
   try {
     const r = await runRoleLibraryExpansion(pool);
-    log(
-      `Role library expansion seeded (roles +${r.roles_inserted}, dna +${r.dna_profiles_inserted}, weights +${r.role_weights_inserted}, roles_with_dna=${r.roles_with_dna})`,
-      "seed",
-    );
+    if (r.noop) {
+      log(
+        `Role library expansion already present, nothing seeded (roles_with_dna=${r.roles_with_dna})`,
+        "seed",
+      );
+    } else {
+      log(
+        `Role library expansion seeded (roles +${r.roles_inserted}, dna +${r.dna_profiles_inserted}, weights +${r.role_weights_inserted}, roles_with_dna=${r.roles_with_dna})`,
+        "seed",
+      );
+    }
   } catch (e) {
     console.error("Failed to seed role library expansion:", e);
   }

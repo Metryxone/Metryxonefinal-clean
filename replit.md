@@ -62,6 +62,7 @@
 - **Subscription Packages** `/api/admin/subscription-packages` (CRUD + seed/export/import/stats).
 - **Concern Areas & Short Assessments** `superadmin/{ConcernAreasPanel,ShortAssessmentsPanel,ActiveAgeBandsReflection}.tsx` · `/api/concerns/*`, `/api/short-assessments/*`.
 - **Competency Question Curation** `routes/competency-questions.ts` + `CompetencyQuestionsPanel.tsx` · `competency_question_templates`. Public `GET /api/competency/questions/select`; manual POST always `status='draft'`.
+- **Question Factory** (MX-101X, flag `questionFactory`, OFF byte-identical) `routes/question-factory.ts`(`registerQuestionFactoryRoutes`) + `services/question-factory.ts` + `superadmin/QuestionFactoryPanel.tsx` (nav `question-factory`, probe `/api/admin/question-factory/feature-flag` res.ok). Generates DRAFT-only packs grounded in `onto_competencies` genome with provenance/confidence/quality_review_status; human approval is the ONLY coverage-changing op; coverage dashboard separates honest live (`active AND status='approved'`) from draft pipeline; retire archives (never deletes); AI path inert without `OPENAI_API_KEY`. ⚠️ `competency_question_templates.status` is locked to {draft,approved} by two conflicting CHECK constraints → full lifecycle lives in `quality_review_status`+map.active, NOT `status`. → `.agents/memory/question-factory.md`.
 
 ### CAPADEX ontology data
 - **Concerns Master** (~2,489) `routes/capadex-concerns-master.ts` · `CapadexConcernsMasterPanel.tsx`. `display_label` = user copy; `concern_*`/`domain` = join keys.

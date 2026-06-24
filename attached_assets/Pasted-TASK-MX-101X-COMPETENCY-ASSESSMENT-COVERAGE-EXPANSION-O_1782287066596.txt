@@ -1,0 +1,351 @@
+TASK: MX-101X-COMPETENCY-ASSESSMENT-COVERAGE-EXPANSION
+
+OBJECTIVE
+
+Expand MetryxOne from a pilot assessment framework to a production-grade competency intelligence platform by achieving comprehensive competency assessment coverage across the canonical competency genome.
+
+CURRENT STATE
+
+Canonical Competencies = 419
+
+Question Templates = 74
+
+Assessment-Ready Competencies = 7
+
+Coverage = 1.7%
+
+This is now the single largest bottleneck limiting:
+
+Assessment Accuracy
+
+Adaptive Assessment
+
+Readiness Intelligence
+
+Employability Index
+
+Career Builder
+
+Employer Intelligence
+
+Benchmark Intelligence
+
+Future Intelligence
+
+TARGET STATE
+
+Assessment Coverage ≥ 80%
+
+Assessment Ready Competencies ≥ 350
+
+Question Bank ≥ 3,500 Questions
+
+All Competency Types Represented
+
+Role DNA Fully Assessable
+
+==================================================
+SECTION 1
+ASSESSMENT COVERAGE AUDIT
+=========================
+
+Generate:
+
+assessment_coverage_audit.md
+
+Identify:
+
+Total Competencies
+
+Mapped Competencies
+
+Unmapped Competencies
+
+Partially Covered Competencies
+
+Coverage By Type
+
+Coverage By Domain
+
+Coverage By Industry
+
+Coverage By Role Family
+
+==================================================
+SECTION 2
+COMPETENCY COVERAGE MATRIX
+==========================
+
+Generate:
+
+competency_assessment_matrix.md
+
+For each competency:
+
+Competency
+
+Type
+
+Domain
+
+Questions Available
+
+Questions Required
+
+Coverage Status
+
+Readiness Status
+
+Priority
+
+==================================================
+SECTION 3
+QUESTION ARCHITECTURE
+=====================
+
+Design standard architecture.
+
+Each competency must support:
+
+Knowledge Questions
+
+Scenario Questions
+
+Behavioral Questions
+
+Situational Questions
+
+Applied Questions
+
+Advanced Questions
+
+Leadership Questions (where applicable)
+
+==================================================
+SECTION 4
+QUESTION GENERATION FRAMEWORK
+=============================
+
+Generate reusable templates.
+
+Support:
+
+Behavioral
+
+Cognitive
+
+Functional
+
+Technical
+
+Future Skills
+
+Generate:
+
+question_generation_framework.md
+
+==================================================
+SECTION 5
+COMPETENCY TYPE COVERAGE
+========================
+
+Validate:
+
+Behavioral
+
+Functional
+
+Cognitive
+
+Technical
+
+Future Skills
+
+Target:
+
+No competency type below 80% coverage.
+
+==================================================
+SECTION 6
+ROLE DNA COVERAGE
+=================
+
+Validate:
+
+All Role DNA competencies have questions.
+
+All benchmarked competencies have questions.
+
+All critical competencies have questions.
+
+Generate:
+
+role_dna_assessment_coverage.md
+
+==================================================
+SECTION 7
+ADAPTIVE ENGINE READINESS
+=========================
+
+Validate:
+
+Easy Questions
+
+Medium Questions
+
+Hard Questions
+
+Expert Questions
+
+Per Competency
+
+Per Role Level
+
+Per Benchmark Level
+
+Generate:
+
+adaptive_readiness_report.md
+
+==================================================
+SECTION 8
+EMPLOYER INTELLIGENCE READINESS
+===============================
+
+Validate:
+
+Every employer-required competency can be assessed.
+
+Every benchmarked competency can be assessed.
+
+Generate:
+
+employer_assessment_readiness.md
+
+==================================================
+SECTION 9
+CAREER BUILDER READINESS
+========================
+
+Validate:
+
+Career recommendations are supported by measured competencies.
+
+No recommendation is generated using unassessed competencies.
+
+Generate:
+
+career_builder_readiness.md
+
+==================================================
+SECTION 10
+SUPER ADMIN UI
+==============
+
+Create:
+
+Assessment Coverage Dashboard
+
+Competency Coverage Dashboard
+
+Question Coverage Dashboard
+
+Adaptive Coverage Dashboard
+
+Role DNA Coverage Dashboard
+
+Display:
+
+Coverage %
+
+Mapped %
+
+Unmapped %
+
+Question Count
+
+Competency Count
+
+==================================================
+SECTION 11
+AUTO GENERATION TOOLS
+=====================
+
+Create tools for:
+
+Question Generation
+
+Question Validation
+
+Question Approval
+
+Question Import
+
+Question Versioning
+
+Question Retirement
+
+==================================================
+SECTION 12
+CERTIFICATION
+=============
+
+Assessment Coverage PASS only when:
+
+Coverage ≥ 80%
+
+Competencies Covered ≥ 350
+
+Question Bank ≥ 3,500
+
+All Types Covered
+
+Adaptive Engine Supported
+
+Role DNA Supported
+
+Employer Supported
+
+Career Builder Supported
+
+==================================================
+IMPLEMENTATION RULES
+====================
+
+Additive
+
+Reversible
+
+Flag Gated
+
+No Existing Question Deletion
+
+No Competency Deletion
+
+No Framework Changes
+
+==================================================
+FOUNDER REPORT
+==============
+
+Answer:
+
+1. What is current assessment coverage?
+
+2. What is target coverage?
+
+3. Which competencies remain unassessed?
+
+4. Which roles are blocked?
+
+5. What is the impact on adaptive assessment?
+
+6. What is the impact on employer intelligence?
+
+7. What is the impact on career builder?
+
+8. What maturity gain is achieved?
+
+9. What is the new platform maturity score?
+
+10. Final PASS / PARTIAL / FAIL verdict?

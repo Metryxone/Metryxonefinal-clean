@@ -1329,6 +1329,20 @@ export const FEATURE_FLAGS = {
    *  behaviour (all existing competency/assessment/benchmark routes UNTOUCHED). Reversible by flipping
    *  the flag OFF / removing the route module. Env: `FF_COMPETENCY_COVERAGE_MATRICES`. */
   competencyCoverageMatrices: false,
+  /** MX-101X — Question Factory (Competency Assessment Coverage Expansion). When ON, an additive
+   *  admin Question Factory at `/api/admin/question-factory/*` generates DRAFT-only question packs
+   *  for genome competencies (grounded in onto_competencies definition/type — provenance
+   *  `template_generated`; `ai_generated` path is wired-but-inert without OPENAI_API_KEY; `imported`
+   *  bulk path), each stamped with provenance, a confidence score, and `quality_review_status`
+   *  (pending_review). Every generated question lands `status='draft'` and is routed through an
+   *  approval workflow — only an explicit human approval flips it to `status='approved'` + activates
+   *  its genome map link, so live coverage is NEVER inflated by generation. The coverage view
+   *  separates HONEST live coverage (approved+mapped) from the draft PIPELINE. Strictly additive &
+   *  reversible: flag OFF → every route 503 before any auth/DB touch, the ensure-schema is never
+   *  reached so the new columns/ledger are never created → byte-identical legacy behaviour incl.
+   *  schema. Never deletes a question/competency, never changes the framework. Env:
+   *  `FF_QUESTION_FACTORY`. */
+  questionFactory: false,
 
   /** MX-100X Phase 4 — Adaptive Assessment Activation (the keystone).
    *  Activates the Role/Seniority → required-proficiency → difficulty + level-aware-threshold
@@ -1481,6 +1495,10 @@ export function isOnetCrosswalkGovernanceEnabled(): boolean {
 
 export function isCompetencyCoverageMatricesEnabled(): boolean {
   return isFlagEnabled('competencyCoverageMatrices');
+}
+
+export function isQuestionFactoryEnabled(): boolean {
+  return isFlagEnabled('questionFactory');
 }
 
 export function isAdaptiveDifficultyActivationEnabled(): boolean {

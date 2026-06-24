@@ -13806,6 +13806,18 @@ Rules:
   registerValidationLoopRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Global Competency (Phase 8): additive region dimension + per-region coverage ──
   registerGlobalCompetencyRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  // Self-running, idempotent region-native market/benchmark seed (Task 81). A task merge carries
+  // CODE + migration DDL only, NOT rows, and the agent cannot write to prod — so the only way
+  // region data reaches the live app is a guarded startup seeder (matches this codebase's
+  // occupation/ontology self-seeder pattern). Fire-and-forget; no-op once present; never blocks boot.
+  import('./services/region-native-market-seed')
+    .then((m) => m.ensureRegionNativeMarketSeed(concernsPool))
+    .then((r) => {
+      if (r.market !== 'already_present' || r.globalContent !== 'already_present') {
+        console.log('[region-native-seed] startup:', JSON.stringify(r));
+      }
+    })
+    .catch((err) => console.warn('[region-native-seed] startup init skipped:', err?.message ?? err));
 
   // MX-100X Phase 9 — Enterprise Workforce Intelligence Console (read-only, flag-gated, OFF by default).
   registerEnterpriseWorkforceConsoleRoutes(app, concernsPool, requireAuth, requireSuperAdmin);

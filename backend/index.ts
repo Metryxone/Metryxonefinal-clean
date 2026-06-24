@@ -9,8 +9,9 @@ import { serveStatic } from "./static";
 import { registerChatRoutes } from "./replit_integrations/chat";
 import { registerAudioRoutes } from "./replit_integrations/audio";
 import { registerImageRoutes } from "./replit_integrations/image";
-import { storage } from "./storage";
+import { storage, pool } from "./storage";
 import { initWebSocketServer } from "./services/ws-broadcast";
+import { runRoleLibraryExpansion } from "./services/role-library-expansion";
 
 // ── Fail-fast: SESSION_SECRET must be set in production ─────────────────────
 if (process.env.NODE_ENV === 'production' && !process.env.SESSION_SECRET) {
@@ -153,6 +154,21 @@ app.use((req, res, next) => {
     log("Super admin seeded successfully", "seed");
   } catch (e) {
     console.error("Failed to seed super admin:", e);
+  }
+
+  // Role Library Expansion — self-running, idempotent seed so the curated
+  // expansion roles (with their DNA profiles + weights) exist in EVERY
+  // environment, including production on publish. A merged task-agent data
+  // backfill only writes to the isolated env DB, so the rows must be (re)seeded
+  // at boot. Every insert is ON CONFLICT DO NOTHING; re-runs insert 0 rows.
+  try {
+    const r = await runRoleLibraryExpansion(pool);
+    log(
+      `Role library expansion seeded (roles +${r.roles_inserted}, dna +${r.dna_profiles_inserted}, weights +${r.role_weights_inserted}, roles_with_dna=${r.roles_with_dna})`,
+      "seed",
+    );
+  } catch (e) {
+    console.error("Failed to seed role library expansion:", e);
   }
 
   // ✅ 4) Error handler (keep after routes)

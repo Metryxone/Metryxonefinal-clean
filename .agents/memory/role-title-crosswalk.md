@@ -49,6 +49,24 @@ without first bridging title → curated role.
   via `createJob` then drives `rankCandidatesForJob` (resolve + abstain + not_found).
   It is real-DB and self-skips when no users / curated profiles exist.
 
+## Growing the matchable set (library expansion)
+- Matchable coverage is bounded by how many `onto_roles` carry an ACTIVE
+  weight-bearing profile — out of the box only ~3 (Backend Eng, Senior Backend
+  Eng, Product Manager). To make more free-text titles resolve, ADD roles +
+  profiles, do NOT loosen the crosswalk rules.
+- `services/role-library-expansion.ts` (+ migration `20260624_role_library_expansion.sql`,
+  script `scripts/seed-role-library-expansion.ts`) adds 10 common roles
+  (Software Eng, Frontend Eng, Data Analyst, …) → matchable 3→13. Idempotent
+  (ON CONFLICT DO NOTHING), provenance `source='library_expansion'`, weights sum
+  to 100, references only existing `onto_competencies`. Verifies every taxonomy
+  parent + competency exists, skips/reports missing — never fabricates.
+- Crosswalk needs ONLY `onto_roles` + active `onto_role_competency_profiles`; DNA
+  profiles (`onto_dna_profiles`/`onto_role_weights`) are NOT required for matching
+  and were intentionally skipped.
+- Alias map keys on collapsed forms (e.g. "frontend developer"); SPACE variants
+  like "Front End Developer" still abstain — that's an alias-map gap, not a
+  library gap. Fix in `FULL_TITLE_ALIASES`, not by adding roles.
+
 ## Wiring
 - Engine fns: `rankCandidatesForRoleTitle(pool,title)` and
   `rankCandidatesForJob(pool,jobId)` (reads title from `job_postings`, then

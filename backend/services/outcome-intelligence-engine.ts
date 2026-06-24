@@ -282,40 +282,58 @@ async function buildTypeBlock(pool: Pool, type: OutcomeIntelType): Promise<TypeB
 
 // ── public composition surface ──────────────────────────────────────────────────────────────────
 
-export async function composeOverview(pool: Pool) {
-  const types = await Promise.all(OUTCOME_INTEL_TYPES.map((t) => buildTypeBlock(pool, t)));
-
+/** Pure platform fold over per-type blocks — kept separate so the per-type abstain semantics are
+ *  unit-testable without a DB. CRITICAL: empirical accuracy is PER-TYPE. The platform is
+ *  evidence-backed ONLY if at least one single type has individually reached k_min — pairs are
+ *  NEVER summed across heterogeneous outcome types to clear the threshold. The aggregate
+ *  `evidence_pairs` is informational only; `max_type_pairs` (the strongest single type) is what
+ *  gates k_min. */
+export function summarizePlatform(
+  blocks: Pick<TypeBlock, 'coverage' | 'calibration' | 'validation'>[],
+) {
   const sumNullable = (xs: (number | null)[]) =>
     xs.some((x) => x != null) ? xs.reduce<number>((s, x) => s + (x ?? 0), 0) : null;
 
-  const realizedCoverage = sumNullable(types.map((t) => t.coverage.realized));
-  const evidencePairs = types.reduce((s, t) => s + t.calibration.pairs_used, 0);
-  const platformVerdict = evidenceVerdict(evidencePairs);
-  const typesWithCoverage = types.filter((t) => (t.coverage.realized ?? 0) > 0).length;
-  const typesEvidenceBacked = types.filter((t) => t.validation.evidence_backed).length;
+  const realizedCoverage = sumNullable(blocks.map((t) => t.coverage.realized));
+  const evidencePairsTotal = blocks.reduce((s, t) => s + t.calibration.pairs_used, 0); // informational only
+  const maxTypePairs = blocks.reduce((m, t) => Math.max(m, t.calibration.pairs_used), 0);
+  const typesWithCoverage = blocks.filter((t) => (t.coverage.realized ?? 0) > 0).length;
+  const typesEvidenceBacked = blocks.filter((t) => t.validation.evidence_backed).length;
+  const platformEvidenceBacked = typesEvidenceBacked > 0;
+  // Platform verdict reflects the STRONGEST single type, never the cross-type sum.
+  const platformVerdict = evidenceVerdict(maxTypePairs);
+
+  return {
+    type_count: blocks.length,
+    types_with_coverage: typesWithCoverage,
+    realized_coverage: realizedCoverage,      // data axis — total realized outcomes captured
+    evidence_pairs: evidencePairsTotal,       // aggregate {pred,outcome} pairs — INFORMATIONAL ONLY (never clears k_min)
+    max_type_pairs: maxTypePairs,             // strongest single type — THIS is what gates k_min
+    types_evidence_backed: typesEvidenceBacked,
+    evidence: platformVerdict,
+    evidence_backed: platformEvidenceBacked,
+    abstained: !platformEvidenceBacked,
+  };
+}
+
+export async function composeOverview(pool: Pool) {
+  const types = await Promise.all(OUTCOME_INTEL_TYPES.map((t) => buildTypeBlock(pool, t)));
+  const platform = summarizePlatform(types);
 
   return {
     ok: true,
     version: OUTCOME_INTELLIGENCE_VERSION,
     k_min: OI_K_MIN,
     types,
-    platform: {
-      type_count: OUTCOME_INTEL_TYPES.length,
-      types_with_coverage: typesWithCoverage,
-      realized_coverage: realizedCoverage,      // data axis — total realized outcomes captured
-      evidence_pairs: evidencePairs,            // confidence axis — calibratable {pred,outcome} pairs
-      types_evidence_backed: typesEvidenceBacked,
-      evidence: platformVerdict,
-      abstained: evidencePairs < OI_K_MIN,
-    },
+    platform,
     axes: {
       coverage: 'Realized outcomes captured (data). Null = substrate unreadable, never assumed 0.',
       confidence: CONFIDENCE_NOTE,
     },
-    verdict: platformVerdict.evidence_backed
-      ? 'EVIDENCE-BACKED — realized outcomes have reached k_min; calibration is trusted.'
-      : 'PARTIAL — the six-type surface is structurally unified and reads live substrates; empirical accuracy stays ABSTAINED until realized outcomes reach k_min. No outcome or accuracy is fabricated.',
-    prediction_note: 'Prediction ≠ Outcome. Upstream engines produce predictions; this surface claims empirical accuracy ONLY once realized outcomes accrue (abstained below k_min).',
+    verdict: platform.evidence_backed
+      ? 'EVIDENCE-BACKED — at least one outcome type has individually reached k_min; its calibration is trusted (other types remain abstained until they each reach k_min).'
+      : 'PARTIAL — the six-type surface is structurally unified and reads live substrates; empirical accuracy stays ABSTAINED until a single type reaches k_min (pairs are never summed across types). No outcome or accuracy is fabricated.',
+    prediction_note: 'Prediction ≠ Outcome. Upstream engines produce predictions; this surface claims empirical accuracy ONLY once a single type accrues ≥ k_min realized pairs (abstained below it).',
     read_only: true,
   };
 }
@@ -434,7 +452,10 @@ interface CertCheck { id: string; criterion: string; status: 'PASS' | 'PARTIAL' 
  *  realized outcomes reach k_min. Never inflates a verdict. */
 export async function composeCertification(pool: Pool) {
   const overview = await composeOverview(pool);
-  const evidencePairs = overview.platform.evidence_pairs;
+  const evidencePairs = overview.platform.evidence_pairs;          // aggregate — informational only
+  const maxTypePairs = overview.platform.max_type_pairs;          // strongest single type — gates k_min
+  const typesEvidenceBacked = overview.platform.types_evidence_backed;
+  const evidenceBacked = typesEvidenceBacked > 0;
   const realized = overview.platform.realized_coverage ?? 0;
 
   const checks: CertCheck[] = [
@@ -449,11 +470,11 @@ export async function composeCertification(pool: Pool) {
       detail: 'Coverage (realized outcomes captured) and Confidence (empirical accuracy) are reported independently; a realized outcome without a decision-time prediction counts only toward Coverage.',
     },
     {
-      id: 'C3', criterion: 'Abstain below k_min — no empirical accuracy claimed under threshold',
-      status: evidencePairs >= OI_K_MIN ? 'PASS' : 'PARTIAL',
-      detail: evidencePairs >= OI_K_MIN
-        ? `Evidence pairs ${evidencePairs} ≥ k_min ${OI_K_MIN}; calibration trusted.`
-        : `Evidence pairs ${evidencePairs}/${OI_K_MIN}; accuracy correctly ABSTAINED (mechanism present, threshold unmet).`,
+      id: 'C3', criterion: 'Abstain below k_min — empirical accuracy gated PER TYPE (pairs never summed across types)',
+      status: evidenceBacked ? 'PASS' : 'PARTIAL',
+      detail: evidenceBacked
+        ? `${typesEvidenceBacked} type(s) individually reached k_min ${OI_K_MIN} (strongest single-type pairs ${maxTypePairs}); calibration trusted per type.`
+        : `No single type has reached k_min ${OI_K_MIN} (strongest single-type pairs ${maxTypePairs}/${OI_K_MIN}; aggregate ${evidencePairs} across types is informational ONLY and never clears the per-type threshold); accuracy correctly ABSTAINED.`,
     },
     {
       id: 'C4', criterion: 'No fabrication — null/abstain never coerced to 0; out-of-range predictions dropped',
@@ -471,9 +492,9 @@ export async function composeCertification(pool: Pool) {
       detail: 'Behind outcomeIntelligenceActivation (default OFF); composer reads via to_regclass probes only and never writes.',
     },
     {
-      id: 'C7', criterion: 'Empirical accuracy evidence-backed (≥ k_min realized predictions)',
-      status: evidencePairs >= OI_K_MIN ? 'PASS' : 'PARTIAL',
-      detail: `Realized coverage ${realized}, evidence pairs ${evidencePairs}/${OI_K_MIN}. PARTIAL until realized predictions reach k_min — honest, not a defect.`,
+      id: 'C7', criterion: 'Empirical accuracy evidence-backed (≥ k_min realized predictions in a single type)',
+      status: evidenceBacked ? 'PASS' : 'PARTIAL',
+      detail: `Realized coverage ${realized}; ${typesEvidenceBacked} type(s) evidence-backed (strongest single-type pairs ${maxTypePairs}/${OI_K_MIN}; aggregate ${evidencePairs} informational only). PARTIAL until a single type reaches k_min — honest, not a defect.`,
     },
   ];
 

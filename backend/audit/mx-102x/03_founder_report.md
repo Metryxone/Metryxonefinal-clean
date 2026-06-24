@@ -1,6 +1,6 @@
 # MX-102X — Outcome Intelligence Activation · Founder Report
 
-_Generated 2026-06-24T09:46:46.604Z · engine v102.0.0 · k_min=30_
+_Generated 2026-06-24T10:01:45.303Z · engine v102.0.0 · k_min=30_
 
 ## Verdict: **PARTIAL**
 
@@ -27,11 +27,11 @@ PARTIAL — six-type outcome intelligence is structurally unified and honest; em
 |---|-----------|:------:|--------|
 | C1 | Unified six-type outcome taxonomy (hiring·performance·promotion·retention·career·learning) | **PASS** | All 6 types composed from their canonical substrates without mutating any existing surface. |
 | C2 | Coverage ⟂ Confidence kept as separate axes (never composited) | **PASS** | Coverage (realized outcomes captured) and Confidence (empirical accuracy) are reported independently; a realized outcome without a decision-time prediction counts only toward Coverage. |
-| C3 | Abstain below k_min — no empirical accuracy claimed under threshold | **PARTIAL** | Evidence pairs 0/30; accuracy correctly ABSTAINED (mechanism present, threshold unmet). |
+| C3 | Abstain below k_min — empirical accuracy gated PER TYPE (pairs never summed across types) | **PARTIAL** | No single type has reached k_min 30 (strongest single-type pairs 0/30; aggregate 0 across types is informational ONLY and never clears the per-type threshold); accuracy correctly ABSTAINED. |
 | C4 | No fabrication — null/abstain never coerced to 0; out-of-range predictions dropped | **PASS** | Unreadable substrates degrade to null (not 0); only finite [0,1] predictions paired with binary outcomes feed calibration. |
 | C5 | Prediction ≠ Outcome — empirical accuracy requires realized outcomes | **PASS** | Upstream predictions are surfaced; empirical accuracy is claimed ONLY once realized outcomes accrue. |
 | C6 | Flag-gated, additive, byte-identical OFF (read-only, no DDL) | **PASS** | Behind outcomeIntelligenceActivation (default OFF); composer reads via to_regclass probes only and never writes. |
-| C7 | Empirical accuracy evidence-backed (≥ k_min realized predictions) | **PARTIAL** | Realized coverage 0, evidence pairs 0/30. PARTIAL until realized predictions reach k_min — honest, not a defect. |
+| C7 | Empirical accuracy evidence-backed (≥ k_min realized predictions in a single type) | **PARTIAL** | Realized coverage 0; 0 type(s) evidence-backed (strongest single-type pairs 0/30; aggregate 0 informational only). PARTIAL until a single type reaches k_min — honest, not a defect. |
 
 ## Per-type snapshot
 

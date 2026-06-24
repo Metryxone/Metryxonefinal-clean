@@ -1,6 +1,6 @@
 # MX-102X — Per-Type Outcome Intelligence (Coverage ⟂ Confidence)
 
-_Generated 2026-06-24T09:46:46.604Z · engine v102.0.0 · k_min=30 · read-only_
+_Generated 2026-06-24T10:01:45.303Z · engine v102.0.0 · k_min=30 · read-only_
 
 Coverage = realized outcomes captured (data axis). Confidence/accuracy = calibration trust,
 ABSTAINED until realized {prediction,outcome} pairs reach k_min. A realized outcome without a

@@ -1,6 +1,6 @@
 # MX-106X — Production Readiness & Go-Live Certification Report
 
-_Generated 2026-06-24T16:58:25.569Z · composer v106.0.0 · read-only (no DDL, no writes)_
+_Generated 2026-06-24T17:04:11.365Z · composer v106.0.0 · read-only (no DDL, no writes)_
 
 **Process flag state at run:** FF_GO_LIVE_CERTIFICATION=on, FF_ENTERPRISE_CERTIFICATION=on, FF_OUTCOME_INTELLIGENCE_ACTIVATION=on, FF_LIVE_EMPLOYER_ECOSYSTEM=on, FF_RUNTIME_INTELLIGENCE_ACTIVATION=on, FF_COMMERCIAL_ACTIVATION=on, FF_CAREER_INTELLIGENCE_ACTIVATION=on, FF_AI_GOVERNANCE=on, FF_GOVERNANCE_RBAC_V2=on, FF_ENTERPRISE_ANALYTICS=on, FF_REPORT_FACTORY=on
 
@@ -141,7 +141,7 @@ _Structural ⟂ Activation ⟂ Adoption ⟂ Operational ⟂ Outcome ⟂ Market �
       "measurable": true,
       "data_governance_events_30d": 0,
       "detail": {
-        "generated_at": "2026-06-24T16:58:23.971Z",
+        "generated_at": "2026-06-24T17:04:10.526Z",
         "degraded": false,
         "substrate": {
           "admin_audit_logs": true,
@@ -164,166 +164,12 @@ _Structural ⟂ Activation ⟂ Adoption ⟂ Operational ⟂ Outcome ⟂ Market �
               "events": 1
             }
           ],
-          "recent": [
-            {
-              "id": "118a891e-dd23-4652-a47e-6523fc23fed5",
-              "admin_user_id": "884d366a-1410-4264-b3e8-6529ff5c0eca",
-              "action_type": "POST",
-              "target_type": "api",
-              "target_id": "api",
-              "category": "create",
-              "ip_address": "49.43.225.142",
-              "created_at": "2026-06-23T11:37:05.849Z"
-            },
-            {
-              "id": "599f702a-706d-4de3-9697-83c7cf8ffa71",
-              "admin_user_id": "884d366a-1410-4264-b3e8-6529ff5c0eca",
-              "action_type": "POST",
-              "target_type": "api",
-              "target_id": "api",
-              "category": "create",
-              "ip_address": "49.43.225.142",
-              "created_at": "2026-06-23T11:37:01.897Z"
-            },
-            {
-              "id": "03f91e4a-d2a5-42e9-ae8b-aa80c6dbf820",
-              "admin_user_id": "884d366a-1410-4264-b3e8-6529ff5c0eca",
-              "action_type": "POST",
-              "target_type": "api",
-              "target_id": "api",
-              "category": "create",
-              "ip_address": "49.43.225.142",
-              "created_at": "2026-06-23T11:36:53.608Z"
-            },
-            {
-              "id": "713b0cb0-e5f6-4f70-b3ca-39ee189302d4",
-              "admin_user_id": "884d366a-1410-4264-b3e8-6529ff5c0eca",
-              "action_type": "POST",
-              "target_type": "api",
-              "target_id": "api",
-              "category": "create",
-              "ip_address": "127.0.0.1",
-              "created_at": "2026-06-23T11:16:25.597Z"
-            },
-            {
-              "id": "dac52aff-2fbf-4627-96c3-214d77d368b7",
-              "admin_user_id": "884d366a-1410-4264-b3e8-6529ff5c0eca",
-              "action_type": "PATCH",
-              "target_type": "api",
-              "target_id": "1",
-              "category": "update",
-              "ip_address": "49.43.225.142",
-              "created_at": "2026-06-23T10:46:11.970Z"
-            },
-            {
-              "id": "31226f6e-c14d-4a65-adb6-8e6b4e2c31ba",
-              "admin_user_id": "884d366a-1410-4264-b3e8-6529ff5c0eca",
-              "action_type": "PATCH",
-              "target_type": "api",
-              "target_id": "api",
-              "category": "update",
-              "ip_address": "157.50.157.12",
-              "created_at": "2026-06-23T09:35:22.919Z"
-            },
-            {
-              "id": "8b8e58b4-4d8a-4663-9163-b748b84d1c82",
-              "admin_user_id": "884d366a-1410-4264-b3e8-6529ff5c0eca",
-              "action_type": "POST",
-              "target_type": "api",
-              "target_id": "api",
-              "category": "create",
-              "ip_address": "49.43.226.252",
-              "created_at": "2026-06-22T12:30:50.041Z"
-            },
-            {
-              "id": "a77ccf21-232d-4ae6-86c8-ee3b4c2eed32",
-              "admin_user_id": "884d366a-1410-4264-b3e8-6529ff5c0eca",
-              "action_type": "PATCH",
-              "target_type": "api",
-              "target_id": "comp_accountability",
-              "category": "update",
-              "ip_address": "49.43.226.252",
-              "created_at": "2026-06-22T12:19:35.095Z"
-            },
-            {
-              "id": "0d8208bf-3ae8-4f59-ade3-ad55f9d8a40b",
-              "admin_user_id": "884d366a-1410-4264-b3e8-6529ff5c0eca",
-              "action_type": "PATCH",
-              "target_type": "api",
-              "target_id": "c628c8b1-0d91-427a-a2fc-3b5526367547",
-              "category": "update",
-              "ip_address": "127.0.0.1",
-              "created_at": "2026-06-19T14:13:05.374Z"
-            },
-            {
-              "id": "93957518-fcaf-4516-a733-da662cca9503",
-              "admin_user_id": "884d366a-1410-4264-b3e8-6529ff5c0eca",
-              "action_type": "PATCH",
-              "target_type": "api",
-              "target_id": "c628c8b1-0d91-427a-a2fc-3b5526367547",
-              "category": "update",
-              "ip_address": "127.0.0.1",
-              "created_at": "2026-06-19T14:13:05.239Z"
-            },
-            {
-              "id": "440220ca-9095-45b8-b6da-5d8b65a87038",
-              "admin_user_id": "884d366a-1410-4264-b3e8-6529ff5c0eca",
-              "action_type": "login",
-              "target_type": "auth",
-              "target_id": "884d366a-1410-4264-b3e8-6529ff5c0eca",
-              "category": "login",
-              "ip_address": "127.0.0.1",
-              "created_at": "2026-06-19T07:39:35.291Z"
-            }
-          ]
+          "recent_count": 11
         },
         "failed_logins": {
           "total": 6,
           "last_24h": 0,
-          "recent": [
-            {
-              "id": "470207ec-8cb4-4184-8207-b029404c2c4e",
-              "email": "user_masked",
-              "ip_address": "127.0.0.1",
-              "reason": "Missing credentials",
-              "created_at": "2026-06-23T11:15:38.912Z"
-            },
-            {
-              "id": "b3111f75-0bdd-4a88-90e3-6ac3c52d3cf9",
-              "email": "user_masked",
-              "ip_address": "127.0.0.1",
-              "reason": "Missing credentials",
-              "created_at": "2026-06-22T08:18:57.189Z"
-            },
-            {
-              "id": "20dc19ba-19e4-4e47-8efe-fabacd2b438a",
-              "email": "user_masked",
-              "ip_address": "127.0.0.1",
-              "reason": "Missing credentials",
-              "created_at": "2026-06-19T15:02:06.736Z"
-            },
-            {
-              "id": "5f5e9898-9511-4af2-b1b0-514fb443f4cd",
-              "email": "user_masked",
-              "ip_address": "127.0.0.1",
-              "reason": "Missing credentials",
-              "created_at": "2026-06-19T14:04:45.030Z"
-            },
-            {
-              "id": "693fc488-4101-4383-b1b8-f5a1d9f04d6c",
-              "email": "user_masked",
-              "ip_address": "127.0.0.1",
-              "reason": "Missing credentials",
-              "created_at": "2026-06-19T08:35:30.213Z"
-            },
-            {
-              "id": "f098812a-52fb-473b-823a-896b1dae591b",
-              "email": "support@metryxonecom",
-              "ip_address": "49.43.225.228",
-              "reason": "Incorrect username.",
-              "created_at": "2026-06-19T07:31:04.824Z"
-            }
-          ]
+          "recent_count": 6
         },
         "notes": []
       },

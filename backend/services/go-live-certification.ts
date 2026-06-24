@@ -50,6 +50,35 @@ async function safe<T>(fn: () => Promise<T>): Promise<T | null> {
   try { return await fn(); } catch { return null; }
 }
 
+/**
+ * Recursive PII/operational-telemetry scrubber for FOLDED governance/security detail blobs.
+ * Read-only certification surfaces must expose AGGREGATE counts only — never row-level audit
+ * payloads. Drops any `recent` row arrays (replaced with a `{recent_count}` aggregate) and masks
+ * sensitive identifiers (admin/user ids, IPs, emails) wherever they appear in a folded object.
+ * Applied at the composer so both the live API response AND the audit deliverable stay PII-free.
+ */
+const PII_KEYS = new Set([
+  'admin_user_id', 'user_id', 'actor_id', 'subject_id', 'created_by', 'updated_by',
+  'ip_address', 'ip', 'email', 'user_email', 'contact_email',
+]);
+function sanitizeDetail(value: any): any {
+  if (Array.isArray(value)) return value.map(sanitizeDetail);
+  if (value && typeof value === 'object') {
+    const out: any = {};
+    for (const [k, v] of Object.entries(value)) {
+      if (k === 'recent') {
+        // Row-level audit/event arrays carry PII — collapse to an honest aggregate count only.
+        out.recent_count = Array.isArray(v) ? v.length : null;
+        continue;
+      }
+      if (PII_KEYS.has(k)) { out[k] = v == null ? null : 'redacted'; continue; }
+      out[k] = sanitizeDetail(v);
+    }
+    return out;
+  }
+  return value;
+}
+
 /** to_regclass existence probe. Returns false on any error (never throws). */
 async function tablePresent(pool: Pool, table: string): Promise<boolean> {
   try {
@@ -317,7 +346,7 @@ export async function securityGovernanceCertification(pool: Pool) {
   const audit = {
     measurable: gov != null,
     data_governance_events_30d: (gov as any)?.headline?.data_governance_events_30d ?? null,
-    detail: (gov as any)?.audit ?? null,
+    detail: sanitizeDetail((gov as any)?.audit ?? null),
     note: 'Governance audit-trail activity over the trailing 30 days.',
   };
 
@@ -339,7 +368,7 @@ export async function securityGovernanceCertification(pool: Pool) {
   };
 
   // Data governance
-  const data_governance = { detail: (gov as any)?.data_governance ?? null };
+  const data_governance = { detail: sanitizeDetail((gov as any)?.data_governance ?? null) };
 
   // AI governance (governance-v2) — structural substrate probes ONLY (those engines persist; we never call them).
   const aiGovTables = [

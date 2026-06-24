@@ -186,8 +186,12 @@ async function main() {
     o.push('');
 
     const report = o.join('\n');
-    // PII guard: the composer returns aggregates only, but mask any stray email just in case.
-    const masked = report.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, 'user_masked');
+    // PII guard (defense-in-depth): the composer already scrubs folded detail to aggregates only,
+    // but as a final belt-and-braces pass mask any stray email, UUID, or IPv4 before writing.
+    const masked = report
+      .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, 'user_masked')
+      .replace(/\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b/g, 'id_masked')
+      .replace(/\b(?:\d{1,3}\.){3}\d{1,3}\b/g, 'ip_masked');
     fs.writeFileSync(path.join(OUT_DIR, 'go-live-certification-report.md'), masked);
     console.log(`[mx106x] level=${(cert as any).level?.label} checklist=${pct((cert as any).overall_checklist_pct)} ` +
       `scalability=${(scal as any).verdict} security=${(secg as any).verdict} ` +

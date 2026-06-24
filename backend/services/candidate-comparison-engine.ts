@@ -36,6 +36,7 @@
  */
 
 import type { Pool } from 'pg';
+import { resolveJob } from './job-store-resolver.js';
 import { competencyRuntimeReady, buildCareerGap } from './career-gap-engine.js';
 import { buildCareerReadiness } from './career-readiness-aggregator.js';
 import { buildCareerSignals } from './career-signal-engine.js';
@@ -140,16 +141,11 @@ interface CandidateRow {
   capadex_session_id: string | null;
 }
 
+// Resolve a job from EITHER store (employer_jobs first, then job_postings) so a
+// job posted via the job-posting engine is visible to candidate comparison. See
+// job-store-resolver.ts for the split-store rationale.
 async function readJob(pool: Pool, id: string): Promise<JobRow | null> {
-  if (!(await relExists(pool, 'employer_jobs'))) return null;
-  try {
-    const { rows } = await pool.query(
-      `SELECT id, employer_id, title, status FROM employer_jobs WHERE id = $1`, [id],
-    );
-    return rows[0] ?? null;
-  } catch {
-    return null;
-  }
+  return resolveJob(pool, id);
 }
 
 async function readCandidate(pool: Pool, id: string): Promise<CandidateRow | null> {

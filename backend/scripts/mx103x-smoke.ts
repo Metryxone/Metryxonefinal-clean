@@ -179,19 +179,11 @@ async function main() {
     const s4 = await call('GET', '/api/ontology/curated/competencies?limit=1');
     check('Stage 4 Competencies exercisable (taxonomy reachable)', exercisable(s4.status), `status=${s4.status}`);
 
-    // FUNNEL INTEGRATION GAP (honest finding): the job-posting engine writes
-    // `job_postings`, but the downstream assessment engine reads `employer_jobs`
-    // (TEXT id, owned by recruiter-postings). For the demo journey to be exercisable
-    // end-to-end we bridge the job into `employer_jobs` under the same demo org id
-    // (@example.com-linked, purged below). This documents — not papers over — the
-    // split job-store; certification reports it as a wiring gap, never as activated.
-    if (orgId && jobId) {
-      await pool.query(
-        `INSERT INTO employer_jobs (id, employer_id, title, status)
-         VALUES ($1,$2,$3,'active') ON CONFLICT (id) DO NOTHING`,
-        [jobId, orgId, 'Software Engineer (MX103X Demo)'],
-      );
-    }
+    // FUNNEL INTEGRATION (resolved): the job-posting engine writes `job_postings`
+    // while the downstream assessment/interview engines historically read only
+    // `employer_jobs`. A shared unified job resolver (services/job-store-resolver.ts)
+    // now makes a normally-posted job resolvable by those stages directly, so NO
+    // manual `employer_jobs` bridge is required — the funnel hands off end-to-end.
 
     // Seed the demo candidate row (data prerequisite for assessment/match/interview).
     // Server-side, explicitly @example.com + linked to the demo org/job → excludable & purgeable.

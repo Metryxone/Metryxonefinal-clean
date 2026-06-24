@@ -38,6 +38,7 @@
 
 import { randomUUID } from 'crypto';
 import type { Pool } from 'pg';
+import { resolveJob } from './job-store-resolver.js';
 
 export const HIRING_ASSESSMENT_ENGINE_VERSION = '5.7.0';
 
@@ -153,14 +154,11 @@ interface CandidateRow {
   capadex_session_id: string | null;
 }
 
+// Resolve a job from EITHER store (employer_jobs first, then job_postings) so a
+// job posted via the job-posting engine is visible to the assessment stage. See
+// job-store-resolver.ts for the split-store rationale.
 async function readJob(pool: Pool, id: string): Promise<JobRow | null> {
-  if (!(await relExists(pool, 'employer_jobs'))) return null;
-  try {
-    const { rows } = await pool.query(
-      `SELECT id, employer_id, title, status FROM employer_jobs WHERE id = $1`, [id],
-    );
-    return rows[0] ?? null;
-  } catch { return null; }
+  return resolveJob(pool, id);
 }
 
 const CANDIDATE_COLS =

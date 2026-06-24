@@ -71,6 +71,19 @@ Non-default regions read the overlay only, so the filter never touches them. See
 merged-task-data-not-in-live-db: the overlay was EMPTY in this env (prior seed ran isolated) — had to
 re-run BOTH seeds here; prod needs them re-run too.
 
+## Audit trail (who changed what, when)
+Every region-content mutation is recorded in append-only `global_region_content_audit`
+(action assign|untag|rollback, surface, region_code, actor_id/actor_email from `req.user`,
+requested/applied/rejected refs arrays + counts, detail JSONB, created_at). Read via
+`GET /api/global-competency/audit?region=&surface=&limit=` (to_regclass probe, `present:false`
+vs empty). The honesty rule that drove the design: **rejected/failed refs are stored in
+`rejected_refs`, NEVER counted as applied** — so `assignRegionContent` had to return its
+`valid` refs (applied) and `untagRegionContent` had to add `RETURNING entity_ref` (deleted_refs)
+so the route can record what ACTUALLY took effect, not just the request. `recordRegionAudit`
+is best-effort (swallows errors) so an audit failure never breaks the mutation it logs. Even a
+fully-rejected assign (400 `no_valid_entity_refs`) writes an audit row with applied=[]. Panel
+surfaces it as a read-only "Change history" table keyed off the selected region.
+
 ## Discipline that held
 GET handlers use `to_regclass` probes + degrade (200 {degraded:true}); ensure-schema runs ONLY on POST
 behind the flag, so flag-OFF never creates the overlay table via HTTP. null=table unreadable vs 0=empty

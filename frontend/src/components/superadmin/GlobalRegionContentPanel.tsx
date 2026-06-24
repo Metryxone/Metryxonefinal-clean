@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { RefreshCw, Globe, AlertTriangle, Info, CheckCircle2, Plus, RotateCcw, Trash2 } from 'lucide-react';
+import { RefreshCw, Globe, AlertTriangle, Info, CheckCircle2, Plus, RotateCcw, Trash2, History, Tag, Undo2, XCircle } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
@@ -78,6 +78,29 @@ type AssignResult = {
   rejected_refs?: string[];
 };
 
+type AuditRow = {
+  id: number;
+  action: 'assign' | 'untag' | 'rollback';
+  surface: string | null;
+  region_code: string | null;
+  actor_id: string | null;
+  actor_email: string | null;
+  requested_refs: string[];
+  applied_refs: string[];
+  rejected_refs: string[];
+  applied_count: number;
+  rejected_count: number;
+  detail?: any;
+  created_at: string;
+};
+type AuditLog = {
+  ok: boolean;
+  present?: boolean;
+  entries?: AuditRow[];
+  limit?: number;
+  degraded?: boolean;
+};
+
 async function getJson<T>(path: string): Promise<T> {
   const res = await fetch(BASE + path, { credentials: 'include' });
   if (!res.ok) throw new Error(`Failed (${res.status})`);
@@ -87,6 +110,43 @@ async function getJson<T>(path: string): Promise<T> {
 // null = unreadable/not-measurable → '—' (never coerce to 0).
 function n(v: number | null | undefined): string {
   return v == null ? '—' : String(v);
+}
+
+function ActionBadge({ action }: { action: AuditRow['action'] }) {
+  if (action === 'assign')
+    return (
+      <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100 gap-1">
+        <Tag className="h-3 w-3" /> Tagged
+      </Badge>
+    );
+  if (action === 'untag')
+    return (
+      <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-100 gap-1">
+        <Trash2 className="h-3 w-3" /> Untagged
+      </Badge>
+    );
+  return (
+    <Badge className="bg-rose-100 text-rose-800 hover:bg-rose-100 gap-1">
+      <Undo2 className="h-3 w-3" /> Rollback
+    </Badge>
+  );
+}
+
+function fmtTime(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+function surfaceLabel(key: string | null, surfaces: SurfaceMeta[]): string {
+  if (!key) return '—';
+  return surfaces.find((s) => s.key === key)?.label ?? key;
 }
 
 function SourceBadge({ source }: { source: SurfaceContent['source'] }) {
@@ -116,6 +176,11 @@ export default function GlobalRegionContentPanel() {
   const contentQ = useQuery<RegionContent>({
     queryKey: [`${BASE}/content`, selectedRegion],
     queryFn: () => getJson<RegionContent>(`/content/${selectedRegion}`),
+    enabled: !!selectedRegion,
+  });
+  const auditQ = useQuery<AuditLog>({
+    queryKey: [`${BASE}/audit`, selectedRegion],
+    queryFn: () => getJson<AuditLog>(`/audit?region=${encodeURIComponent(selectedRegion)}&limit=50`),
     enabled: !!selectedRegion,
   });
 
@@ -159,6 +224,11 @@ export default function GlobalRegionContentPanel() {
       setAssignNote('');
       qc.invalidateQueries({ queryKey: [`${BASE}/coverage`] });
       qc.invalidateQueries({ queryKey: [`${BASE}/content`, selectedRegion] });
+      qc.invalidateQueries({ queryKey: [`${BASE}/audit`, selectedRegion] });
+    },
+    onError: () => {
+      // A rejected assign is still recorded in the audit trail (honesty) — refresh it.
+      qc.invalidateQueries({ queryKey: [`${BASE}/audit`, selectedRegion] });
     },
   });
 
@@ -177,12 +247,14 @@ export default function GlobalRegionContentPanel() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [`${BASE}/coverage`] });
       qc.invalidateQueries({ queryKey: [`${BASE}/content`, selectedRegion] });
+      qc.invalidateQueries({ queryKey: [`${BASE}/audit`, selectedRegion] });
     },
   });
 
   const refreshAll = () => {
     qc.invalidateQueries({ queryKey: [`${BASE}/coverage`] });
     qc.invalidateQueries({ queryKey: [`${BASE}/content`, selectedRegion] });
+    qc.invalidateQueries({ queryKey: [`${BASE}/audit`, selectedRegion] });
   };
 
   const assignErr = assignMut.error as (Error & { detail?: AssignResult }) | null;
@@ -476,6 +548,109 @@ export default function GlobalRegionContentPanel() {
           The default region (IN) is the base — it can't be re-tagged. Select a non-default region to curate its overlay.
         </div>
       )}
+
+      {/* Audit trail — read-only history of who changed what, when */}
+      <section className="bg-white rounded-xl border shadow-sm overflow-hidden">
+        <div className="px-5 py-3 border-b flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <History className="h-4 w-4 text-gray-500" />
+            <h3 className="font-semibold text-gray-800">
+              Change history · {selectedMeta?.name ?? selectedRegion}
+            </h3>
+          </div>
+          <span className="text-xs text-gray-400">Read-only · most recent first</span>
+        </div>
+        {auditQ.isLoading ? (
+          <div className="p-6 text-sm text-gray-500">Loading history…</div>
+        ) : auditQ.isError ? (
+          <div className="p-6 text-sm text-red-600 flex items-center gap-2">
+            <AlertTriangle className="h-4 w-4" /> Failed to load change history.
+          </div>
+        ) : auditQ.data?.degraded ? (
+          <div className="p-6 text-sm text-amber-600 flex items-center gap-2">
+            <AlertTriangle className="h-4 w-4" /> Change history temporarily unavailable.
+          </div>
+        ) : (auditQ.data?.entries?.length ?? 0) === 0 ? (
+          <div className="p-6 text-sm text-gray-400 italic">
+            No recorded changes for this region yet.
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>When</TableHead>
+                  <TableHead>Action</TableHead>
+                  <TableHead>Actor</TableHead>
+                  <TableHead>Surface</TableHead>
+                  <TableHead className="text-center">Applied</TableHead>
+                  <TableHead className="text-center">Rejected</TableHead>
+                  <TableHead>Refs</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {(auditQ.data?.entries ?? []).map((e) => (
+                  <TableRow key={e.id} data-testid={`row-audit-${e.id}`}>
+                    <TableCell className="whitespace-nowrap text-xs text-gray-600">{fmtTime(e.created_at)}</TableCell>
+                    <TableCell><ActionBadge action={e.action} /></TableCell>
+                    <TableCell className="text-sm text-gray-700">
+                      {e.actor_email ?? (e.actor_id ? `#${e.actor_id}` : <span className="text-gray-400">unknown</span>)}
+                    </TableCell>
+                    <TableCell className="text-sm text-gray-700">{surfaceLabel(e.surface, surfaceOptions)}</TableCell>
+                    <TableCell className="text-center">
+                      <span className={e.applied_count > 0 ? 'text-emerald-700 font-medium' : 'text-gray-400'}>
+                        {e.applied_count}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {e.rejected_count > 0 ? (
+                        <span className="inline-flex items-center gap-1 text-rose-700 font-medium">
+                          <XCircle className="h-3.5 w-3.5" />
+                          {e.rejected_count}
+                        </span>
+                      ) : (
+                        <span className="text-gray-400">0</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="max-w-[280px]">
+                      {e.applied_refs.length > 0 && (
+                        <div className="text-xs text-emerald-700 font-mono truncate" title={e.applied_refs.join(', ')}>
+                          ✓ {e.applied_refs.join(', ')}
+                        </div>
+                      )}
+                      {e.rejected_refs.length > 0 && (
+                        <div className="text-xs text-rose-700 font-mono truncate" title={e.rejected_refs.join(', ')}>
+                          ✗ rejected: {e.rejected_refs.join(', ')}
+                        </div>
+                      )}
+                      {e.action === 'rollback' && (
+                        <div className="text-xs text-gray-500 italic">
+                          bulk rollback{e.detail?.deleted != null ? ` · ${e.detail.deleted} row(s) removed` : ''}
+                        </div>
+                      )}
+                      {e.applied_refs.length === 0 && e.rejected_refs.length === 0 && e.action !== 'rollback' && (
+                        <span className="text-xs text-gray-400">—</span>
+                      )}
+                      {e.detail?.note && (
+                        <div className="text-xs text-gray-400 truncate" title={String(e.detail.note)}>
+                          note: {String(e.detail.note)}
+                        </div>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+        <div className="px-5 py-3 border-t text-xs text-gray-500 flex items-start gap-2">
+          <Info className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+          <span>
+            Every tag / untag / rollback is recorded with the acting super-admin and timestamp.
+            Rejected refs (entities that don't exist) are recorded as rejected — never counted as applied.
+          </span>
+        </div>
+      </section>
     </div>
   );
 }

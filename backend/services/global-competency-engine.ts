@@ -423,6 +423,8 @@ export interface AssignResult {
   written: number;
   skipped: number;
   rejected: number;
+  /** Refs that exist in the backing table and are now tagged (written + already-present). */
+  applied_refs: string[];
   rejected_refs: string[];
   provenance: string;
 }
@@ -458,6 +460,7 @@ export async function assignRegionContent(
     written,
     skipped: valid.length - written,
     rejected: invalid.length,
+    applied_refs: valid,
     rejected_refs: invalid,
     provenance,
   };
@@ -484,16 +487,192 @@ export async function rollbackRegionContent(
 export async function untagRegionContent(
   pool: Pool,
   opts: { surface: SurfaceKey; region: RegionCode; entityRefs: string[] },
-): Promise<{ deleted: number; tableExisted: boolean }> {
-  if (!(await tableExists(pool, 'global_region_content'))) {
-    return { deleted: 0, tableExisted: false };
-  }
+): Promise<{ deleted: number; deleted_refs: string[]; requested_refs: string[]; tableExisted: boolean }> {
   const refs = Array.from(new Set(opts.entityRefs.map((r) => String(r).trim()).filter(Boolean)));
-  if (!refs.length) return { deleted: 0, tableExisted: true };
+  if (!(await tableExists(pool, 'global_region_content'))) {
+    return { deleted: 0, deleted_refs: [], requested_refs: refs, tableExisted: false };
+  }
+  if (!refs.length) return { deleted: 0, deleted_refs: [], requested_refs: refs, tableExisted: true };
   const res = await pool.query(
     `DELETE FROM global_region_content
-       WHERE surface = $1 AND region_code = $2 AND entity_ref = ANY($3::text[])`,
+       WHERE surface = $1 AND region_code = $2 AND entity_ref = ANY($3::text[])
+     RETURNING entity_ref`,
     [opts.surface, opts.region, refs],
   );
-  return { deleted: res.rowCount ?? 0, tableExisted: true };
+  return {
+    deleted: res.rowCount ?? 0,
+    deleted_refs: res.rows.map((r) => String(r.entity_ref)),
+    requested_refs: refs,
+    tableExisted: true,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Audit trail (who changed what, when) — write on POST paths, read-only GET.
+// ---------------------------------------------------------------------------
+/**
+ * Every region-content mutation (assign / untag / bulk rollback) is recorded here so a super-admin
+ * can review who changed what, when, and — critically — which refs were ACTUALLY applied versus
+ * REJECTED. The honesty contract: rejected/failed refs are stored in `rejected_refs`, NEVER counted
+ * as applied. This is an append-only ledger; it is never mutated in place.
+ */
+export type RegionAuditAction = 'assign' | 'untag' | 'rollback';
+
+let auditSchemaReady = false;
+export async function ensureRegionAuditSchema(pool: Pool): Promise<void> {
+  if (auditSchemaReady) return;
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS global_region_content_audit (
+      id             BIGSERIAL PRIMARY KEY,
+      action         TEXT NOT NULL,
+      surface        TEXT,
+      region_code    TEXT,
+      actor_id       TEXT,
+      actor_email    TEXT,
+      requested_refs TEXT[] NOT NULL DEFAULT '{}',
+      applied_refs   TEXT[] NOT NULL DEFAULT '{}',
+      rejected_refs  TEXT[] NOT NULL DEFAULT '{}',
+      applied_count  INTEGER NOT NULL DEFAULT 0,
+      rejected_count INTEGER NOT NULL DEFAULT 0,
+      detail         JSONB NOT NULL DEFAULT '{}'::jsonb,
+      created_at     TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `);
+  await pool.query('CREATE INDEX IF NOT EXISTS idx_grca_region ON global_region_content_audit (region_code)');
+  await pool.query('CREATE INDEX IF NOT EXISTS idx_grca_surface ON global_region_content_audit (surface)');
+  await pool.query('CREATE INDEX IF NOT EXISTS idx_grca_created ON global_region_content_audit (created_at DESC)');
+  auditSchemaReady = true;
+}
+
+export interface RegionAuditActor {
+  id?: string | null;
+  email?: string | null;
+}
+
+export interface RegionAuditEntry {
+  action: RegionAuditAction;
+  surface?: SurfaceKey | string | null;
+  region?: RegionCode | string | null;
+  actor?: RegionAuditActor;
+  requestedRefs?: string[];
+  appliedRefs?: string[];
+  rejectedRefs?: string[];
+  detail?: object;
+}
+
+/**
+ * Append one audit record. Best-effort: a failure to record an audit row must NEVER break the
+ * underlying mutation (the mutation already succeeded), so this swallows errors and returns false.
+ * Honesty: `appliedRefs` are refs that actually took effect; `rejectedRefs` never overlap with them.
+ */
+export async function recordRegionAudit(pool: Pool, entry: RegionAuditEntry): Promise<boolean> {
+  try {
+    await ensureRegionAuditSchema(pool);
+    const requested = Array.from(new Set((entry.requestedRefs ?? []).map((r) => String(r))));
+    const applied = Array.from(new Set((entry.appliedRefs ?? []).map((r) => String(r))));
+    const rejected = Array.from(new Set((entry.rejectedRefs ?? []).map((r) => String(r))));
+    await pool.query(
+      `INSERT INTO global_region_content_audit
+         (action, surface, region_code, actor_id, actor_email,
+          requested_refs, applied_refs, rejected_refs, applied_count, rejected_count, detail)
+       VALUES ($1,$2,$3,$4,$5,$6::text[],$7::text[],$8::text[],$9,$10,$11::jsonb)`,
+      [
+        entry.action,
+        entry.surface ?? null,
+        entry.region ?? null,
+        entry.actor?.id ?? null,
+        entry.actor?.email ?? null,
+        requested,
+        applied,
+        rejected,
+        applied.length,
+        rejected.length,
+        JSON.stringify(entry.detail ?? {}),
+      ],
+    );
+    return true;
+  } catch (err) {
+    console.error('[global-competency] audit record failed (mutation unaffected):', err);
+    return false;
+  }
+}
+
+export interface RegionAuditRow {
+  id: number;
+  action: RegionAuditAction;
+  surface: string | null;
+  region_code: string | null;
+  actor_id: string | null;
+  actor_email: string | null;
+  requested_refs: string[];
+  applied_refs: string[];
+  rejected_refs: string[];
+  applied_count: number;
+  rejected_count: number;
+  detail: unknown;
+  created_at: string;
+}
+
+export interface RegionAuditLog {
+  present: boolean;
+  entries: RegionAuditRow[];
+  limit: number;
+}
+
+/**
+ * Read recent audit entries (most recent first), optionally filtered by region/surface. Read-only:
+ * `to_regclass` probe + SELECT only, never DDL. `present:false` = no audit yet (distinct from empty).
+ */
+export async function listRegionAudit(
+  pool: Pool,
+  opts: { region?: string; surface?: string; limit?: number } = {},
+): Promise<RegionAuditLog> {
+  const limit = Math.max(1, Math.min(opts.limit ?? 50, 500));
+  if (!(await tableExists(pool, 'global_region_content_audit'))) {
+    return { present: false, entries: [], limit };
+  }
+  const where: string[] = [];
+  const params: unknown[] = [];
+  if (opts.region) {
+    params.push(opts.region);
+    where.push(`region_code = $${params.length}`);
+  }
+  if (opts.surface) {
+    params.push(opts.surface);
+    where.push(`surface = $${params.length}`);
+  }
+  params.push(limit);
+  const sql = `
+    SELECT id, action, surface, region_code, actor_id, actor_email,
+           requested_refs, applied_refs, rejected_refs, applied_count, rejected_count,
+           detail, created_at
+      FROM global_region_content_audit
+      ${where.length ? `WHERE ${where.join(' AND ')}` : ''}
+     ORDER BY created_at DESC, id DESC
+     LIMIT $${params.length}`;
+  try {
+    const { rows } = await pool.query(sql, params);
+    return {
+      present: true,
+      limit,
+      entries: rows.map((r) => ({
+        id: Number(r.id),
+        action: r.action,
+        surface: r.surface ?? null,
+        region_code: r.region_code ?? null,
+        actor_id: r.actor_id ?? null,
+        actor_email: r.actor_email ?? null,
+        requested_refs: r.requested_refs ?? [],
+        applied_refs: r.applied_refs ?? [],
+        rejected_refs: r.rejected_refs ?? [],
+        applied_count: Number(r.applied_count ?? 0),
+        rejected_count: Number(r.rejected_count ?? 0),
+        detail: r.detail,
+        created_at: r.created_at instanceof Date ? r.created_at.toISOString() : String(r.created_at),
+      })),
+    };
+  } catch (err) {
+    console.error('[global-competency] audit list failed:', err);
+    return { present: true, entries: [], limit };
+  }
 }

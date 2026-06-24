@@ -30,6 +30,8 @@ import {
   assignRegionContent,
   rollbackRegionContent,
   untagRegionContent,
+  recordRegionAudit,
+  listRegionAudit,
   GLOBAL_COMPETENCY_VERSION,
   type RegionCode,
   type SurfaceKey,
@@ -42,6 +44,12 @@ function flagGate(_req: Request, res: Response, next: NextFunction) {
     return res.status(503).json({ ok: false, error: 'global_competency_disabled' });
   }
   next();
+}
+
+/** Resolve the acting super-admin from the authenticated session for the audit trail. */
+function auditActor(req: Request): { id?: string | null; email?: string | null } {
+  const u = (req as any).user ?? {};
+  return { id: u.id != null ? String(u.id) : null, email: u.email ?? u.username ?? null };
 }
 
 export function registerGlobalCompetencyRoutes(
@@ -133,8 +141,31 @@ export function registerGlobalCompetencyRoutes(
       // Honesty guard: refs must be REAL existing entities. If none were valid, nothing was
       // tagged — return 400 so a caller can't believe coverage changed when it didn't.
       if (result.written === 0 && result.rejected > 0 && result.skipped === 0) {
+        // Record the rejected attempt: nothing applied, every ref rejected (honesty preserved).
+        await recordRegionAudit(pool, {
+          action: 'assign',
+          surface,
+          region,
+          actor: auditActor(req),
+          requestedRefs: refs,
+          appliedRefs: [],
+          rejectedRefs: result.rejected_refs,
+          detail: { outcome: 'rejected', written: 0, skipped: 0, note: typeof b.detail?.note === 'string' ? b.detail.note : undefined },
+        });
         return res.status(400).json({ ok: false, error: 'no_valid_entity_refs', ...result });
       }
+      // Record the applied attempt: applied_refs are the real tagged entities; rejected_refs stay
+      // recorded as rejected, never as applied.
+      await recordRegionAudit(pool, {
+        action: 'assign',
+        surface,
+        region,
+        actor: auditActor(req),
+        requestedRefs: refs,
+        appliedRefs: result.applied_refs,
+        rejectedRefs: result.rejected_refs,
+        detail: { outcome: 'applied', written: result.written, skipped: result.skipped, note: typeof b.detail?.note === 'string' ? b.detail.note : undefined },
+      });
       return res.json({ ok: true, ...result });
     } catch (err) {
       console.error('[global-competency] assign error:', err);
@@ -171,12 +202,34 @@ export function registerGlobalCompetencyRoutes(
           region: region as RegionCode,
           entityRefs: refs,
         });
+        // Audit: applied = refs actually deleted; requested-but-absent refs are NOT counted applied.
+        const notDeleted = result.requested_refs.filter((r) => !result.deleted_refs.includes(r));
+        await recordRegionAudit(pool, {
+          action: 'untag',
+          surface,
+          region,
+          actor: auditActor(req),
+          requestedRefs: result.requested_refs,
+          appliedRefs: result.deleted_refs,
+          rejectedRefs: notDeleted,
+          detail: { outcome: 'untagged', deleted: result.deleted, not_present: notDeleted.length },
+        });
         return res.json({ ok: true, mode: 'targeted', surface, region, ...result });
       }
 
       // Bulk rollback path (legacy behaviour) — delete all overlay rows for the provenance.
       const provenance = b.provenance ? String(b.provenance) : undefined;
       const result = await rollbackRegionContent(pool, provenance);
+      await recordRegionAudit(pool, {
+        action: 'rollback',
+        surface: null,
+        region: null,
+        actor: auditActor(req),
+        requestedRefs: [],
+        appliedRefs: [],
+        rejectedRefs: [],
+        detail: { outcome: 'bulk_rollback', provenance: provenance ?? 'phase8_global_competency', deleted: result.deleted },
+      });
       return res.json({ ok: true, mode: 'bulk', ...result });
     } catch (err) {
       console.error('[global-competency] rollback error:', err);
@@ -184,5 +237,32 @@ export function registerGlobalCompetencyRoutes(
     }
   });
 
-  console.log('[global-competency] Phase 8 routes registered — region registry + coverage + reversible assign');
+  // ── GET audit — read-only history of region-content changes (who/what/when) ───────────────────
+  // Records every assign / untag / bulk rollback with actor + applied vs rejected refs. Read-only:
+  // to_regclass-probed (never DDL on a read). `present:false` = no audit table yet (distinct empty).
+  app.get('/api/global-competency/audit', flagGate, requireAuth, requireSuperAdmin, async (req: Request, res: Response) => {
+    try {
+      const region = String(req.query.region ?? '').toUpperCase();
+      const surface = String(req.query.surface ?? '');
+      if (region && !isValidRegion(region)) {
+        return res.status(400).json({ ok: false, error: 'invalid_region', allowed: REGIONS.map((r) => r.code) });
+      }
+      if (surface && !isValidSurface(surface)) {
+        return res.status(400).json({ ok: false, error: 'invalid_surface', allowed: SURFACES.map((s) => s.key) });
+      }
+      const rawLimit = Number(req.query.limit);
+      const limit = Number.isFinite(rawLimit) && rawLimit > 0 ? rawLimit : undefined;
+      const log = await listRegionAudit(pool, {
+        region: region || undefined,
+        surface: surface || undefined,
+        limit,
+      });
+      return res.json({ ok: true, version: GLOBAL_COMPETENCY_VERSION, ...log, read_only: true });
+    } catch (err) {
+      console.error('[global-competency] audit list error:', err);
+      return res.status(200).json({ ok: true, degraded: true, reason: 'unexpected_error', read_only: true });
+    }
+  });
+
+  console.log('[global-competency] Phase 8 routes registered — region registry + coverage + reversible assign + audit trail');
 }

@@ -137,6 +137,19 @@ export const FEATURE_FLAGS = {
    *  evidence: predictions stay ABSTAINED and certification stays PARTIAL until ≥30 realized non-demo
    *  outcomes accrue. Env: `FF_VALIDATION_LOOP`. */
   validationLoop: true,
+  /** MX-102X — Outcome Intelligence Activation (read-only composer over the EXISTING realized-outcome
+   *  substrates). When ON, a PURE read-only composer at `/api/outcome-intelligence/*` unifies the SIX
+   *  realized-outcome types — hiring · performance · promotion · retention · career · learning — into one
+   *  honest surface that keeps COVERAGE (realized outcomes captured) and CONFIDENCE/empirical-accuracy
+   *  (calibration trusted only at ≥ k_min=30 realized predictions) as SEPARATE axes. It COMPOSES the
+   *  already-present engines (validation-loop intake `validation_loop_outcomes`, the employer hiring
+   *  feeder `employer_candidates`, the shared calibration engine `buildCalibrationModel`, the career
+   *  evidence ledger `career_outcomes`, and the learning substrate `student_subscriptions`) — it never
+   *  recomputes a score, never writes, and never fabricates an outcome or accuracy claim. With ~0 realized
+   *  outcomes the surface honestly reports Coverage 0 and ABSTAINS on accuracy (PARTIAL, not inflated).
+   *  Strictly additive + reversible: flag OFF → every route 503, no schema is touched (composer reads via
+   *  to_regclass probes only) → byte-identical legacy behaviour. GET-only. Env: `FF_OUTCOME_INTELLIGENCE_ACTIVATION`. */
+  outcomeIntelligenceActivation: false,
   /** PHASE 8 — Global Competency (structural framework). When ON, an ADDITIVE region dimension threads
    *  through the five global-deployability surfaces (role libraries · benchmarks · competency models ·
    *  readiness models · demand intelligence) WITHOUT mutating any existing table: an overlay table
@@ -1951,6 +1964,10 @@ export function isTalentDiscoveryEnabled(): boolean {
 
 export function isValidationLoopEnabled(): boolean {
   return isFlagEnabled('validationLoop');
+}
+
+export function isOutcomeIntelligenceActivationEnabled(): boolean {
+  return isFlagEnabled('outcomeIntelligenceActivation');
 }
 
 export function isGlobalCompetencyEnabled(): boolean {

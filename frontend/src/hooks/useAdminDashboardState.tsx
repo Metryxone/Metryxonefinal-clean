@@ -571,6 +571,17 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
     enabled: isAuthenticated,
   });
 
+  // MX-102X Outcome Intelligence flag (outcomeIntelligenceActivation) — when OFF the /enabled probe
+  // 503s and the "Outcome Intelligence" nav item self-hides, keeping flag-OFF byte-identical.
+  const { data: outcomeIntelligenceEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/outcome-intelligence/enabled', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/outcome-intelligence/enabled', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
   // Phase 6.9 Enterprise Governance console flag — when OFF the /console/ping probe
   // 503s and the "Enterprise Governance" nav item self-hides, keeping flag-OFF byte-identical.
   const { data: enterpriseGovernanceEnabled = false } = useQuery<boolean>({
@@ -2852,6 +2863,7 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
         { id: 'enterprise-analytics', icon: BarChart3, label: 'Enterprise Analytics' },
         { id: 'report-factory-admin', icon: FileText,  label: 'Report Factory' },
         { id: 'outcome-validation',   icon: Target,    label: 'Outcome Validation' },
+        { id: 'outcome-intelligence', icon: Target,    label: 'Outcome Intelligence' },
       ]
     },
     // ── Commercial ──────────────────────────────────────────────────────────
@@ -2985,6 +2997,11 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
       outcomeValidationEnabled
         ? group
         : { ...group, items: group.items.filter(it => it.id !== 'outcome-validation') }
+    )
+    .map(group =>
+      outcomeIntelligenceEnabled
+        ? group
+        : { ...group, items: group.items.filter(it => it.id !== 'outcome-intelligence') }
     )
     .map(group =>
       enterpriseGovernanceEnabled

@@ -127,6 +127,7 @@ const RevenueDashboardPanel = lazy(() => import('./superadmin/RevenueDashboardPa
 const UsageMeteringPanel = lazy(() => import('./superadmin/UsageMeteringPanel'));
 const CustomerSuccessPanel = lazy(() => import('./superadmin/CustomerSuccessPanel'));
 const OutcomeValidationPanel = lazy(() => import('./superadmin/OutcomeValidationPanel'));
+const OutcomeIntelligencePanel = lazy(() => import('./superadmin/OutcomeIntelligencePanel'));
 const EnterpriseGovernancePanel = lazy(() => import('./superadmin/EnterpriseGovernancePanel'));
 const PlatformIntelligencePanel = lazy(() => import('./superadmin/PlatformIntelligencePanel'));
 const MultiTenantArchitecturePanel = lazy(() => import('./superadmin/MultiTenantArchitecturePanel'));
@@ -537,6 +538,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               {activeTab === 'usage-credits'    && <UsageMeteringPanel />}
               {activeTab === 'customer-success' && <CustomerSuccessPanel />}
               {activeTab === 'outcome-validation' && <OutcomeValidationPanel />}
+              {activeTab === 'outcome-intelligence' && <OutcomeIntelligencePanel />}
               {activeTab === 'enterprise-governance' && <EnterpriseGovernancePanel />}
               {activeTab === 'platform-intelligence' && <PlatformIntelligencePanel />}
               {activeTab === 'multi-tenant-architecture' && <MultiTenantArchitecturePanel />}

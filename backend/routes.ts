@@ -207,6 +207,7 @@ import { registerCompetencyDNARoutes } from "./routes/talent-competency-dna";
 import { registerTalentReadinessEngineRoutes } from "./routes/talent-readiness-engine";
 import { registerTalentOutcomePredictionRoutes } from "./routes/talent-outcome-prediction";
 import { registerValidationLoopRoutes } from "./routes/validation-loop";
+import { registerOutcomeIntelligenceRoutes } from "./routes/outcome-intelligence";
 import { registerGlobalCompetencyRoutes } from "./routes/global-competency";
 import { registerGlobalIntelligenceRoutes } from "./routes/global-intelligence";
 import { registerTalentBenchmarkEngineRoutes } from "./routes/talent-benchmark-engine";
@@ -13808,6 +13809,7 @@ Rules:
   // ── Outcome Prediction Engine (D15): probabilistic talent outcome predictions ──
   registerTalentOutcomePredictionRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerValidationLoopRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerOutcomeIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Global Competency (Phase 8): additive region dimension + per-region coverage ──
   registerGlobalCompetencyRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Global Intelligence (MX-76X): read-only composer over global/region/country assets ──

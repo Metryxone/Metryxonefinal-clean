@@ -86,6 +86,7 @@
 ### SuperAdmin Reports Console
 - `SuperAdminDashboard.tsx` `capadex-reports` → `UnifiedReportsPanel.tsx` (CAPADEX/LBI/SDI/Competency) → `CapadexReportsPanel.tsx`. `STATUS_STEPS=['pending','in_review','approved','published']`; `getLevelFromScore` ≥80/≥60/≥40 bands.
 - Email preview (`backend/routes.ts`): `X-Preview-Subject` header MUST be `encodeURIComponent(subject)` (em-dash; ASCII-only headers).
+- **Outcome Intelligence** (MX-102X, flag `outcomeIntelligenceActivation`, OFF byte-identical incl. schema) `routes/outcome-intelligence.ts` + `services/outcome-intelligence-engine.ts` + `superadmin/OutcomeIntelligencePanel.tsx` (nav `outcome-intelligence` in Reports, probe `/api/outcome-intelligence/enabled` res.ok). Read-only composer unifying SIX realized-outcome types (hiring/performance/promotion/retention/career/learning) into ONE surface; COMPOSES validation-loop + employer-tig calibration (never recomputes); Coverage ⟂ Confidence kept SEPARATE; abstains < k_min=30; demo excluded; null never 0. Verdict PARTIAL until realized {pred,outcome} pairs ≥ k_min. Deliverables `backend/audit/mx-102x/*.md` (founder report). → `.agents/memory/outcome-intelligence-activation.md`.
 
 ---
 

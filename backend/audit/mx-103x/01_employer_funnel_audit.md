@@ -1,6 +1,6 @@
 # MX-103X — Live Employer Ecosystem · Funnel Audit (Coverage ⟂ Confidence)
 
-_Generated 2026-06-24T11:02:57.990Z · engine vmx-103x-1.0.0 · k_min=30 · read-only_
+_Generated 2026-06-24T12:02:39.687Z · engine vmx-103x-1.0.0 · k_min=30 · read-only_
 
 **Coverage** = the stage is exercisable end-to-end (gating flag ON + substrate present).
 **Confidence** = the data behind it is trustworthy (real non-demo rows; calibration ≥ k_min).

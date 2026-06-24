@@ -131,7 +131,21 @@ const INTERVIEW_TYPES  = ['Video','Phone','In-person','Technical','Panel'] as co
 const INTERVIEW_STATUS = ['Scheduled','Completed','Cancelled','No-show'] as const;
 const SOURCE_OPTIONS   = ['LinkedIn','Naukri','Indeed','Referral','Direct','Campus','MetryxOne','Other'];
 
-interface EmployerJob { _id: string; title: string; department: string; location: string; type: string; workMode: string; experience: string; salary: string; description: string; requirements: string[]; responsibilities: string[]; skills: string[]; perks: string[]; status: string; deadline: string; hiringManager: string; quota: number; eiMinScore: number; applicationCount: number; shareToken?: string | null; createdAt: string; }
+interface EmployerJob { _id: string; title: string; department: string; location: string; type: string; workMode: string; experience: string; salary: string; description: string; requirements: string[]; responsibilities: string[]; skills: string[]; perks: string[]; status: string; deadline: string; hiringManager: string; quota: number; eiMinScore: number; applicationCount: number; shareToken?: string | null; matchedRoleId?: string | null; matchedRoleSource?: string | null; createdAt: string; }
+
+// Task #102 — curated-role crosswalk resolution (employer-scoped, flag-gated).
+interface RoleMatchResult {
+  input: string;
+  resolved: {
+    role_id: string; role_title: string; seniority: string | null;
+    match_type: string; confidence_pct: number; confidence_label: string;
+    estimated: boolean; competency_count: number; weight_total: number;
+  } | null;
+  alternatives: { role_id: string; role_title: string; confidence_pct: number; estimated: boolean; competency_count: number }[];
+  candidates_considered: number;
+  note: string;
+}
+interface MatchableRole { id: string; title: string; seniority: string | null; competency_count: number; weight_total: number; }
 interface Candidate { _id: string; jobId: string; jobTitle: string; name: string; email: string; phone: string; location: string; currentRole: string; experience: string; skills: string[]; education: string; eiScore: number; matchScore: number; source: string; stage: string; notes: string; rating: number; linkedinUrl: string; appliedDate: string; interviewDate: string; offerAmount: string; tags: string[]; assessmentSent: boolean; assessmentScore: number; assessmentSentAt?: string | null; assessmentCompleted?: boolean; assessmentCompletedAt?: string | null; completionRequestedAt?: string | null; completionCompletedAt?: string | null; pooled: boolean; createdAt: string; }
 interface Interview { _id: string; candidateId: string; candidateName: string; jobId: string; jobTitle: string; type: string; date: string; time: string; duration: string; interviewers: string[]; meetingLink: string; status: string; feedback: string; rating: number; recommendation: string; scorecard?: Record<string, number>; }
 interface Analytics { totalJobs: number; activeJobs: number; totalCandidates: number; hired: number; rejected: number; inInterview: number; inOffer: number; avgEI: number; avgMatch: number; offerRate: number; hireRate: number; stageBreakdown: Record<string, number>; sourceBreakdown: Record<string, number>; conversionFunnel: { stage: string; count: number }[]; }
@@ -989,7 +1003,7 @@ function parseJobDescription(text: string): Partial<{ title: string; department:
 }
 
 function JobsTab({ jobs, setJobs }: { jobs: EmployerJob[]; setJobs: (j: EmployerJob[]) => void }) {
-  const emptyForm = { title: '', department: '', location: '', type: 'Full-time', workMode: 'Hybrid', experience: '', salary: '', description: '', requirements: '', responsibilities: '', skills: '', perks: '', deadline: '', hiringManager: '', quota: 1, eiMinScore: 0, status: 'Draft' };
+  const emptyForm = { title: '', department: '', location: '', type: 'Full-time', workMode: 'Hybrid', experience: '', salary: '', description: '', requirements: '', responsibilities: '', skills: '', perks: '', deadline: '', hiringManager: '', quota: 1, eiMinScore: 0, status: 'Draft', matchedRoleId: '', matchedRoleSource: '' };
 
   const [showForm, setShowForm]           = useState(false);
   const [editingJob, setEditingJob]       = useState<EmployerJob | null>(null);
@@ -1014,6 +1028,72 @@ function JobsTab({ jobs, setJobs }: { jobs: EmployerJob[]; setJobs: (j: Employer
     setCustomTemplates(tpls);
     localStorage.setItem('metryx_job_templates', JSON.stringify(tpls));
   };
+
+  // ── Task #102: curated role matching (flag-gated, hidden when OFF) ──────────
+  const [matchEnabled, setMatchEnabled]   = useState(false);
+  const [roleMatch, setRoleMatch]         = useState<RoleMatchResult | null>(null);
+  const [matchLoading, setMatchLoading]   = useState(false);
+  const [matchableRoles, setMatchableRoles] = useState<MatchableRole[]>([]);
+  const [showRolePicker, setShowRolePicker] = useState(false);
+  const [rolePickerSearch, setRolePickerSearch] = useState('');
+
+  const loadMatchableRoles = async () => {
+    if (matchableRoles.length) return;
+    try {
+      const res = await fetch('/api/employer/matchable-roles', { headers: authHdr() as HeadersInit });
+      if (!res.ok) return;
+      const d = await res.json();
+      setMatchableRoles(Array.isArray(d.roles) ? d.roles : []);
+    } catch { /* keep panel functional without the override list */ }
+  };
+
+  // Debounced title → curated-role resolution. A 503 (flag OFF) hides the panel
+  // entirely (byte-identical legacy). Auto-syncs the form's matched role unless
+  // the employer has manually overridden it.
+  useEffect(() => {
+    if (!showForm) return;
+    const title = form.title.trim();
+    if (!title) { setRoleMatch(null); setMatchLoading(false); return; }
+    let cancelled = false;
+    setMatchLoading(true);
+    const t = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/employer/resolve-role?title=${encodeURIComponent(title)}`, { headers: authHdr() as HeadersInit });
+        if (cancelled) return;
+        if (res.status === 503) { setMatchEnabled(false); setRoleMatch(null); return; }
+        if (!res.ok) { setRoleMatch(null); return; }
+        const d: RoleMatchResult = await res.json();
+        if (cancelled) return;
+        setMatchEnabled(true);
+        setRoleMatch(d);
+        loadMatchableRoles();
+        setForm(f => f.matchedRoleSource === 'manual'
+          ? f
+          : { ...f, matchedRoleId: d.resolved?.role_id ?? '', matchedRoleSource: d.resolved ? 'auto' : '' });
+      } catch { if (!cancelled) setRoleMatch(null); }
+      finally { if (!cancelled) setMatchLoading(false); }
+    }, 450);
+    return () => { cancelled = true; clearTimeout(t); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.title, showForm]);
+
+  const roleLabel = (id: string): string => {
+    if (!id) return '';
+    if (roleMatch?.resolved?.role_id === id) return roleMatch.resolved.role_title;
+    const m = matchableRoles.find(r => r.id === id);
+    return m ? m.title : id;
+  };
+  const pickRole = (role: MatchableRole) => {
+    setForm(f => ({ ...f, matchedRoleId: role.id, matchedRoleSource: 'manual' }));
+    setShowRolePicker(false); setRolePickerSearch('');
+  };
+  const revertToAuto = () => {
+    setForm(f => ({ ...f, matchedRoleId: roleMatch?.resolved?.role_id ?? '', matchedRoleSource: roleMatch?.resolved ? 'auto' : '' }));
+  };
+  const openRolePicker = () => { loadMatchableRoles(); setShowRolePicker(true); };
+  const filteredMatchable = matchableRoles.filter(r =>
+    !rolePickerSearch || r.title.toLowerCase().includes(rolePickerSearch.toLowerCase()),
+  );
 
   const allTemplates = [...BUILTIN_TEMPLATES, ...customTemplates];
   const tplCategories = ['All', ...Array.from(new Set(allTemplates.map(t => t.category)))];
@@ -1314,6 +1394,93 @@ function JobsTab({ jobs, setJobs }: { jobs: EmployerJob[]; setJobs: (j: Employer
                 </div>
                 {sel('status', 'Posting Status', [...JOB_STATUSES])}
               </div>
+
+              {/* Task #102 — Curated role match (flag-gated; hidden entirely when OFF) */}
+              {matchEnabled && form.title.trim() && (
+                <div className="mt-3 rounded-xl border border-gray-100 bg-gray-50/60 p-3.5">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-1.5">
+                      <Brain size={12} style={{ color: BRAND.primary }}/>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Matched Curated Role</span>
+                    </div>
+                    {matchLoading && <span className="text-[9px] text-gray-400">Matching…</span>}
+                  </div>
+
+                  {/* Manual override in effect */}
+                  {form.matchedRoleSource === 'manual' ? (
+                    <div className="flex items-start justify-between gap-3 flex-wrap">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-semibold text-gray-800">{roleLabel(form.matchedRoleId)}</span>
+                          <span className="text-[8px] font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: `${BRAND.primary}15`, color: BRAND.primary }}>SET BY YOU</span>
+                        </div>
+                        <p className="text-[9px] text-gray-400 mt-0.5">You chose this curated role. It will be used to rank candidates instead of the auto-match.</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button onClick={openRolePicker} className="text-[10px] font-medium px-2.5 py-1 rounded-lg border border-gray-200 text-gray-600 hover:bg-white">Change</button>
+                        {roleMatch?.resolved && (
+                          <button onClick={revertToAuto} className="text-[10px] font-medium px-2.5 py-1 rounded-lg text-blue-600 hover:underline">Use auto-match</button>
+                        )}
+                      </div>
+                    </div>
+                  ) : roleMatch?.resolved ? (
+                    /* Auto-resolved */
+                    <div className="flex items-start justify-between gap-3 flex-wrap">
+                      <div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-xs font-semibold text-gray-800">{roleMatch.resolved.role_title}</span>
+                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: `${BRAND.green}15`, color: BRAND.green }}>
+                            {roleMatch.resolved.confidence_pct}% confidence
+                          </span>
+                          {roleMatch.resolved.estimated && (
+                            <span className="text-[8px] font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: `${BRAND.orange}18`, color: BRAND.orange }} title="Not an exact title match — inferred from a similar curated role.">ESTIMATED</span>
+                          )}
+                        </div>
+                        <p className="text-[9px] text-gray-400 mt-0.5">
+                          Coverage: {roleMatch.resolved.competency_count} profiled competencies (separate from match confidence).
+                        </p>
+                      </div>
+                      <button onClick={openRolePicker} className="text-[10px] font-medium px-2.5 py-1 rounded-lg border border-gray-200 text-gray-600 hover:bg-white whitespace-nowrap">Override role</button>
+                    </div>
+                  ) : !matchLoading ? (
+                    /* Abstain — prompt the employer to choose */
+                    <div className="flex items-start justify-between gap-3 flex-wrap">
+                      <div className="flex items-start gap-1.5">
+                        <AlertCircle size={12} className="mt-0.5" style={{ color: BRAND.orange }}/>
+                        <div>
+                          <p className="text-[11px] font-medium text-gray-700">No confident curated-role match for this title.</p>
+                          <p className="text-[9px] text-gray-400 mt-0.5">Candidates won't be ranked until you pick a role. We never guess.</p>
+                        </div>
+                      </div>
+                      <button onClick={openRolePicker} className="text-[10px] font-semibold px-2.5 py-1 rounded-lg text-white whitespace-nowrap" style={{ backgroundColor: BRAND.primary }}>Choose a role</button>
+                    </div>
+                  ) : null}
+
+                  {/* Role picker */}
+                  {showRolePicker && (
+                    <div className="mt-3 rounded-lg border border-gray-200 bg-white p-2.5">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Search size={11} className="text-gray-400"/>
+                        <input autoFocus value={rolePickerSearch} onChange={e => setRolePickerSearch(e.target.value)} placeholder="Search curated roles…"
+                          className="flex-1 h-7 px-2 text-[11px] border border-gray-200 rounded-lg focus:outline-none"/>
+                        <button onClick={() => { setShowRolePicker(false); setRolePickerSearch(''); }}><X size={13} className="text-gray-400"/></button>
+                      </div>
+                      <div className="max-h-44 overflow-y-auto space-y-1">
+                        {filteredMatchable.map(r => (
+                          <button key={r.id} onClick={() => pickRole(r)}
+                            className={`w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-gray-50 flex items-center justify-between gap-2 ${form.matchedRoleId === r.id ? 'bg-blue-50' : ''}`}>
+                            <span className="text-[11px] text-gray-700">{r.title}{r.seniority ? <span className="text-gray-400"> · {r.seniority}</span> : null}</span>
+                            <span className="text-[9px] text-gray-400 whitespace-nowrap">{r.competency_count} comp.</span>
+                          </button>
+                        ))}
+                        {filteredMatchable.length === 0 && (
+                          <div className="text-center py-3 text-[10px] text-gray-400">No curated roles match your search.</div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Section 2: Compensation */}

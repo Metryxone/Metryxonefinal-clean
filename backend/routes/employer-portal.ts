@@ -28,6 +28,8 @@ import {
   checkApprovalRequired, createApproval, checkSSOEnforcement,
 } from './employer-security';
 import { computeSuccessProbability, parseSkills } from './employer-tig';
+import { resolveCuratedRoleByTitle, getMatchableCuratedRoles } from '../services/role-title-crosswalk';
+import { isTalentMatchingEnabled } from '../config/feature-flags';
 
 type Middleware = (req: Request, res: Response, next: any) => void;
 
@@ -45,6 +47,10 @@ export async function ensureSchema(pool: Pool): Promise<void> {
     ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS quota             INTEGER  DEFAULT 1;
     ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS application_count INTEGER  DEFAULT 0;
     ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS updated_at        TIMESTAMPTZ DEFAULT now();
+    -- Task #102: employer-confirmed curated role for talent matching (additive,
+    -- nullable). matched_role_source ∈ {auto, manual}; flag-gated UI populates it.
+    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS matched_role_id     TEXT;
+    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS matched_role_source TEXT;
 
     CREATE TABLE IF NOT EXISTS employer_candidates (
       id               TEXT PRIMARY KEY,
@@ -280,6 +286,7 @@ function toJob(r: any) {
     hiringManager: r.hiring_manager ?? '', quota: r.quota ?? 1,
     eiMinScore: r.ei_min_score ?? 0, applicationCount: r.application_count ?? 0,
     shareToken: r.share_token ?? null,
+    matchedRoleId: r.matched_role_id ?? null, matchedRoleSource: r.matched_role_source ?? null,
     createdAt: r.created_at,
   };
 }
@@ -1077,8 +1084,8 @@ export function registerEmployerPortalRoutes(
       `INSERT INTO employer_jobs
          (id, employer_id, title, department, location, type, work_mode, experience, salary,
           description, requirements, responsibilities, skills, perks, ei_min_score, status,
-          deadline, hiring_manager, quota)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)`,
+          deadline, hiring_manager, quota, matched_role_id, matched_role_source)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)`,
       [
         id, eid(req), b.title ?? '', b.department ?? '', b.location ?? '',
         b.type ?? 'Full-time', b.workMode ?? 'On-site', b.experience ?? '',
@@ -1087,6 +1094,8 @@ export function registerEmployerPortalRoutes(
         JSON.stringify(b.skills ?? []), JSON.stringify(b.perks ?? []),
         b.eiMinScore ?? 0, b.status ?? 'Active',
         b.deadline ?? '', b.hiringManager ?? '', b.quota ?? 1,
+        (typeof b.matchedRoleId === 'string' && b.matchedRoleId.trim()) ? b.matchedRoleId.trim() : null,
+        (typeof b.matchedRoleSource === 'string' && b.matchedRoleSource.trim()) ? b.matchedRoleSource.trim() : null,
       ],
     );
     const row = await pool.query(`SELECT * FROM employer_jobs WHERE id = $1`, [id]);
@@ -1104,9 +1113,15 @@ export function registerEmployerPortalRoutes(
       salary: 'salary', description: 'description', status: 'status',
       deadline: 'deadline', hiringManager: 'hiring_manager', quota: 'quota',
       eiMinScore: 'ei_min_score',
+      matchedRoleId: 'matched_role_id', matchedRoleSource: 'matched_role_source',
     };
+    const nullableText = new Set(['matchedRoleId', 'matchedRoleSource']);
     for (const [k, col] of Object.entries(map)) {
-      if (k in b) { fields.push(`${col} = $${i++}`); vals.push(b[k]); }
+      if (k in b) {
+        let v = b[k];
+        if (nullableText.has(k)) v = (typeof v === 'string' && v.trim()) ? v.trim() : null;
+        fields.push(`${col} = $${i++}`); vals.push(v);
+      }
     }
     for (const [k, col] of [['requirements','requirements'],['responsibilities','responsibilities'],['skills','skills'],['perks','perks']]) {
       if (k in b) { fields.push(`${col} = $${i++}`); vals.push(JSON.stringify(b[k])); }
@@ -1133,6 +1148,43 @@ export function registerEmployerPortalRoutes(
     );
     res.json({ success: true });
   }));
+
+  // ── ROLE MATCHING (Task #102) ───────────────────────────────────────────────
+  // Employer-scoped, flag-gated (talentMatching). OFF → 503 before any DB touch,
+  // so the JobsTab role-match panel stays hidden and the post/edit flow is
+  // byte-identical to legacy. Read-only / abstain-never-fabricate: the title is
+  // crosswalked to a curated Role-DNA role, or the response abstains (resolved:
+  // null) prompting the employer to choose a role by hand.
+
+  // Resolve a free-text job title → curated role (with Confidence ⟂ Coverage).
+  app.get('/api/employer/resolve-role', requireAuth, async (req, res) => {
+    if (!isTalentMatchingEnabled()) {
+      return res.status(503).json({ error: 'role matching is not enabled', flag: 'talentMatching' });
+    }
+    const title = String(req.query.title ?? '').trim();
+    if (!title) return res.status(400).json({ error: 'title query param is required' });
+    try {
+      const resolution = await resolveCuratedRoleByTitle(pool, title);
+      res.json(resolution);
+    } catch (e: any) {
+      console.error('[employer-portal] resolve-role', e?.message);
+      res.status(500).json({ error: 'failed to resolve role' });
+    }
+  });
+
+  // List curated roles an employer can pick from (override / abstain recovery).
+  app.get('/api/employer/matchable-roles', requireAuth, async (_req, res) => {
+    if (!isTalentMatchingEnabled()) {
+      return res.status(503).json({ error: 'role matching is not enabled', flag: 'talentMatching' });
+    }
+    try {
+      const roles = await getMatchableCuratedRoles(pool);
+      res.json({ roles });
+    } catch (e: any) {
+      console.error('[employer-portal] matchable-roles', e?.message);
+      res.status(500).json({ error: 'failed to list roles' });
+    }
+  });
 
   // ── CANDIDATES ────────────────────────────────────────────────────────────
 

@@ -317,3 +317,59 @@ export async function resolveCuratedRoleByTitle(
 
   return { input, resolved: best, alternatives, candidates_considered: roles.length, note };
 }
+
+/**
+ * Resolve an EXPLICITLY-chosen curated role id (employer override / confirmation)
+ * to a full RoleTitleResolution — bypassing the title heuristic entirely. Used
+ * when an employer has picked a role by hand: the role is treated as confirmed
+ * (`confidence_pct: 100`, `estimated: false`), so a human selection is never
+ * downgraded to an "estimate". Still honest — the role must carry an active,
+ * weight-bearing profile (it is looked up in the matchable set), else it abstains
+ * rather than matching an empty shell. Read-only; never fabricates.
+ */
+export async function resolveCuratedRoleById(
+  pool: Pool,
+  roleId: string,
+  inputTitle = '',
+): Promise<RoleTitleResolution> {
+  const input = (inputTitle ?? '').toString().trim();
+  const id = (roleId ?? '').toString().trim();
+  const roles = await getMatchableCuratedRoles(pool);
+
+  if (!id) {
+    return { input, resolved: null, alternatives: [], candidates_considered: roles.length, note: 'no role id supplied — nothing to resolve.' };
+  }
+
+  const row = roles.find((r) => r.id === id);
+  if (!row) {
+    return {
+      input,
+      resolved: null,
+      alternatives: [],
+      candidates_considered: roles.length,
+      note: `the explicitly selected role "${id}" no longer carries an active competency profile — cannot match against it (no fabrication). Pick another role.`,
+    };
+  }
+
+  const resolved: RoleTitleMatch = {
+    role_id: row.id,
+    role_title: row.title,
+    seniority: row.seniority,
+    match_type: 'exact_title',
+    confidence_pct: 100,
+    confidence_label: 'high',
+    estimated: false,
+    competency_count: row.competency_count,
+    weight_total: row.weight_total,
+  };
+
+  return {
+    input,
+    resolved,
+    alternatives: [],
+    candidates_considered: roles.length,
+    note:
+      `Role set explicitly by the employer → ${row.title} (${row.id}). Confidence reflects a human selection, not an automated title crosswalk; ` +
+      `Coverage is still the role's ${row.competency_count} profiled competencies (separate axis).`,
+  };
+}

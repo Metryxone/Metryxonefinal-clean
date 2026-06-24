@@ -51,6 +51,7 @@ import {
 } from './role-competency-profile';
 import {
   resolveCuratedRoleByTitle,
+  resolveCuratedRoleById,
   type RoleTitleResolution,
 } from './role-title-crosswalk';
 
@@ -590,21 +591,27 @@ export async function rankCandidatesForRoleTitle(
 async function readJobTitle(
   pool: Pool,
   jobId: string,
-): Promise<{ title: string | null; source: 'job_postings' | 'employer_jobs' } | null> {
-  // 1. Canonical posting flow.
+): Promise<{ title: string | null; source: 'job_postings' | 'employer_jobs'; override_role_id: string | null } | null> {
+  // 1. Canonical posting flow (no employer-confirmed override column here).
   if (await relExists(pool, 'job_postings')) {
     try {
       const { rows } = await pool.query(`SELECT title FROM job_postings WHERE id = $1`, [jobId]);
-      if (rows.length > 0) return { title: rows[0].title ?? null, source: 'job_postings' };
+      if (rows.length > 0) return { title: rows[0].title ?? null, source: 'job_postings', override_role_id: null };
     } catch {
       /* fall through to the legacy substrate */
     }
   }
-  // 2. Legacy employer-portal jobs.
+  // 2. Legacy employer-portal jobs. SELECT * (never names matched_role_id) so this
+  //    stays safe even before the employer-portal lazy ensureSchema adds the column —
+  //    an absent column simply reads as undefined → null (no employer-confirmed role).
   if (await relExists(pool, 'employer_jobs')) {
     try {
-      const { rows } = await pool.query(`SELECT title FROM employer_jobs WHERE id = $1`, [jobId]);
-      if (rows.length > 0) return { title: rows[0].title ?? null, source: 'employer_jobs' };
+      const { rows } = await pool.query(`SELECT * FROM employer_jobs WHERE id = $1`, [jobId]);
+      if (rows.length > 0) {
+        const r = rows[0];
+        const override = typeof r.matched_role_id === 'string' && r.matched_role_id.trim() ? r.matched_role_id.trim() : null;
+        return { title: r.title ?? null, source: 'employer_jobs', override_role_id: override };
+      }
     } catch {
       /* not found / unreadable */
     }
@@ -633,6 +640,30 @@ export async function rankCandidatesForJob(
 
   const job = await readJobTitle(pool, jid);
   if (!job) return err('not_found', `job ${jid} not found`);
+
+  // An employer-confirmed / overridden role wins over the title heuristic — the
+  // human selection is authoritative. Falls through to the title crosswalk only
+  // if that stored role is no longer matchable (honest, never a silent guess).
+  if (job.override_role_id) {
+    const resolution = await resolveCuratedRoleById(pool, job.override_role_id, job.title ?? '');
+    if (resolution.resolved) {
+      const ranked = await rankCandidatesForRole(pool, resolution.resolved.role_id, opts);
+      if (!ranked.ok) return ranked;
+      return ok({
+        job_id: jid,
+        job_source: job.source,
+        role_title_input: job.title ?? '',
+        resolved: true,
+        role_crosswalk: resolution,
+        role_id: ranked.data.role_id,
+        role_title: ranked.data.role_title,
+        measurable: ranked.data.measurable,
+        candidates: ranked.data.candidates,
+      });
+    }
+    // stored override no longer valid → fall through to the title crosswalk.
+  }
+
   if (!job.title || !job.title.trim()) {
     return err('invalid_input', `job ${jid} has no role title to crosswalk`);
   }

@@ -61,3 +61,23 @@ without first bridging title → curated role.
 - Note: these routes return 401 (not 503) when unauthenticated flag-off, same as
   the pre-existing talent-matching routes — a broader auth layer intercepts before
   the flag gate. 401-not-404 is the proof the routes registered.
+
+## Employer-scoped surface (job post/edit shows the matched role)
+- DISTINCT from the super-admin talent-matching routes: employer-portal exposes its
+  OWN `GET /api/employer/resolve-role?title=` + `GET /api/employer/matchable-roles`
+  (base `/api/employer`, `requireAuth` SESSION-scoped, same `talentMatching` flag →
+  503 when OFF). They reuse `resolveCuratedRoleByTitle`/`getMatchableCuratedRoles`
+  unchanged — do NOT fork the resolver.
+- Persistence: `employer_jobs.matched_role_id` + `matched_role_source` (∈
+  {auto,manual}) added lazily via ensureSchema `ADD COLUMN IF NOT EXISTS`; surfaced
+  on `toJob` as `matchedRoleId`/`matchedRoleSource`; POST/PUT null-coerce blank →
+  NULL. `readJobTitle`'s employer_jobs branch uses `SELECT *` so it's safe before
+  the column exists. The engine prefers a stored override (`resolveCuratedRoleById`
+  → `rankCandidatesForRole`) before falling back to the title crosswalk.
+- Manual override is STICKY: the frontend's debounced title→resolve effect must NOT
+  clobber a `matchedRoleSource==='manual'` form value (use functional setForm gated
+  on the current source). On abstain (resolved:null) the auto branch clears the id
+  and leaves source '' — never invents an id.
+- A blanket `/api/employer` auth middleware makes EVERY path (even bogus) return 401
+  unauth, so status code alone can't confirm a new employer route registered — grep
+  the source + check the boot log "[employer-portal] routes registered" instead.

@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { Screen } from '../App';
 
-import { Menu, RefreshCw, Search, Settings, Target, Brain, FileCheck, Database, Package, Calculator, Users, BookOpen, Network, Layers, Activity, Building2, Briefcase, Users2, UserCircle2, Map, BarChart2, BarChart3, GitBranch, Sparkles, PieChart, TrendingUp, AlertTriangle, MessageCircle, Bot, FileDown, CreditCard, Shield, FlaskConical, ClipboardList, Cpu, Award, Gauge, Zap, Sliders, Shuffle, Timer, LineChart, ClipboardCheck, Boxes, Grid3x3, Globe, ShieldCheck } from 'lucide-react';
+import { Menu, RefreshCw, Search, Settings, Target, Brain, FileCheck, Database, Package, Calculator, Users, BookOpen, Network, Layers, Activity, Building2, Briefcase, Users2, UserCircle2, Map, BarChart2, BarChart3, GitBranch, Sparkles, PieChart, TrendingUp, AlertTriangle, MessageCircle, Bot, FileDown, CreditCard, Shield, FlaskConical, ClipboardList, Cpu, Award, Gauge, Zap, Sliders, Shuffle, Timer, LineChart, ClipboardCheck, Boxes, Grid3x3, Globe, ShieldCheck, Rocket } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import SuperAdminLogin from './SuperAdminLogin';
@@ -163,6 +163,8 @@ const GlobalIntelligencePanel = lazy(() => import('./superadmin/GlobalIntelligen
 const EnterpriseWorkforceConsolePanel = lazy(() => import('./superadmin/EnterpriseWorkforceConsolePanel'));
 const EcosystemActivationPanel = lazy(() => import('./superadmin/EcosystemActivationPanel'));
 const EnterpriseCertificationPanel = lazy(() => import('./superadmin/EnterpriseCertificationPanel'));
+const GoLiveCenterPanel = lazy(() => import('./superadmin/GoLiveCenterPanel'));
+const FounderGoLiveCenterPanel = lazy(() => import('./superadmin/FounderGoLiveCenterPanel'));
 const DepartmentsPanel = lazy(() => import('./superadmin/DepartmentsPanel'));
 const RolesPanel = lazy(() => import('./superadmin/RolesPanel'));
 const RoleFamiliesPanel = lazy(() => import('./superadmin/RoleFamiliesPanel'));
@@ -387,6 +389,17 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
     queryKey: ['/api/admin/enterprise-certification/enabled', 'enabled'],
     queryFn: async () => {
       const res = await fetch('/api/admin/enterprise-certification/enabled', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // ── Go-Live Certification (MX-106X) flag probe (file-registry flag goLiveCertification).
+  //    Flag OFF → /enabled returns 503/401 → tabs omitted (byte-identical UI). ──
+  const { data: goLiveCertificationEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/admin/go-live/enabled', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/go-live/enabled', { credentials: 'include' });
       return res.ok;
     },
     enabled: isAuthenticated,
@@ -994,6 +1007,8 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       ...(enterpriseWorkforceEnabled ? [{ id: 'enterprise-workforce-console', label: 'Enterprise Workforce Console', icon: Building2, node: <EnterpriseWorkforceConsolePanel /> }] : []),
                       ...(ecosystemActivationEnabled ? [{ id: 'ecosystem-activation', label: 'Candidate & Career Ecosystem', icon: Gauge, node: <EcosystemActivationPanel /> }] : []),
                       ...(enterpriseCertificationEnabled ? [{ id: 'enterprise-certification', label: 'Enterprise Certification', icon: ShieldCheck, node: <EnterpriseCertificationPanel /> }] : []),
+                      ...(goLiveCertificationEnabled ? [{ id: 'go-live-center', label: 'Go-Live Center', icon: Rocket, node: <GoLiveCenterPanel /> }] : []),
+                      ...(goLiveCertificationEnabled ? [{ id: 'founder-go-live', label: 'Founder Go-Live Center', icon: Building2, node: <FounderGoLiveCenterPanel /> }] : []),
                       { id: 'ont-career-tracks',        label: 'Career Tracks',            icon: Map,           node: <CareerTracksPanel /> },
                       { id: 'ont-competency-levels',    label: 'Competency Levels',        icon: BarChart2,     node: <CompetencyLevelsPanel /> },
                       { id: 'ont-indicators',           label: 'Indicators',               icon: Target,        node: <IndicatorsPanel /> },
@@ -1354,6 +1369,8 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               {activeTab === 'enterprise-workforce-console' && enterpriseWorkforceEnabled && <div className="h-full overflow-auto"><EnterpriseWorkforceConsolePanel /></div>}
               {activeTab === 'ecosystem-activation' && ecosystemActivationEnabled && <div className="h-full overflow-auto"><EcosystemActivationPanel /></div>}
               {activeTab === 'enterprise-certification' && enterpriseCertificationEnabled && <div className="h-full overflow-auto"><EnterpriseCertificationPanel /></div>}
+              {activeTab === 'go-live-center' && goLiveCertificationEnabled && <div className="h-full overflow-auto"><GoLiveCenterPanel /></div>}
+              {activeTab === 'founder-go-live' && goLiveCertificationEnabled && <div className="h-full overflow-auto"><FounderGoLiveCenterPanel /></div>}
               {activeTab === 'ont-functions'        && <div className="h-full overflow-auto"><FunctionsPanel /></div>}
               {activeTab === 'ont-departments'      && <div className="h-full overflow-auto"><DepartmentsPanel /></div>}
               {activeTab === 'ont-roles'            && <div className="h-full overflow-auto"><RolesPanel /></div>}

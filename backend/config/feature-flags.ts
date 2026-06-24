@@ -234,6 +234,24 @@ export const FEATURE_FLAGS = {
    *  OFF → every route 503 before any auth/DB touch → byte-identical legacy behaviour incl. schema (no new
    *  tables). Super-admin gated (requireAuth → requireSuperAdmin). Env: `FF_ENTERPRISE_CERTIFICATION`. */
   enterpriseCertification: false,
+  /** MX-106X — Production Readiness & Go-Live Certification (read-only TOP-LEVEL composer).
+   *  A SUPERSET of MX-105X: when ON, a thin read-only composer aggregates the MX-105X
+   *  enterprise-certification views (recertification / unified journey / outcome readiness /
+   *  command center / founder center) PLUS the existing governance, multi-tenant, health,
+   *  operational, and question-certification readers into ONE production-readiness picture,
+   *  two Go-Live dashboards (Super Admin + Founder), a Scalability cert, a Security & Governance
+   *  cert, and a final 5-level go-live certificate (Prototype / Production Ready / Enterprise
+   *  Ready / Market Ready / Outcome Validated) answering the 9 yes/no go-live questions.
+   *  COMPOSE-NEVER-RECOMPUTE: it calls only existing engines' READ paths + read-only
+   *  to_regclass-probed SELECTs — recomputes no score, runs NO DDL, writes NO rows (GET-only,
+   *  no ensure-schema). SIX axes Structural ⟂ Activation ⟂ Adoption ⟂ Operational ⟂ Outcome ⟂
+   *  Market and Coverage ⟂ Confidence are reported SEPARATELY and NEVER composited; unmeasurable
+   *  live evidence (load tests, real customers) → `not_measurable`, never an invented score;
+   *  absent → null, never a fabricated 0. Never throws (degrades to honest-degraded JSON).
+   *  Strictly additive + reversible: flag OFF → every route 503 before any auth/DB touch →
+   *  byte-identical legacy behaviour incl. schema (no new tables). Super-admin gated
+   *  (requireAuth → requireSuperAdmin). Env: `FF_GO_LIVE_CERTIFICATION`. */
+  goLiveCertification: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -1542,6 +1560,10 @@ export function isEnterpriseWorkforceOSV2Enabled(): boolean {
 
 export function isEcosystemActivationEnabled(): boolean {
   return isFlagEnabled('ecosystemActivation');
+}
+
+export function isGoLiveCertificationEnabled(): boolean {
+  return isFlagEnabled('goLiveCertification');
 }
 
 export function isUcipEnabled(): boolean {

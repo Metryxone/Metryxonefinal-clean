@@ -4,7 +4,7 @@ import { resolveVizData } from './viz-data-resolver';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
-export type ReportType = 'capadex' | 'career' | 'competency' | 'employability' | 'employer' | 'passport' | 'custom';
+export type ReportType = 'capadex' | 'career' | 'competency' | 'employability' | 'employer' | 'passport' | 'enterprise_workforce' | 'outcome' | 'custom';
 export type SectionType = 'header' | 'narrative' | 'insight' | 'chart' | 'benchmark' | 'table' | 'score' | 'footer' | 'custom';
 export type ChartType = 'bar' | 'line' | 'radar' | 'gauge' | 'donut' | 'scatter' | 'heatmap' | 'funnel' | 'waterfall';
 export type BenchmarkType = 'peer' | 'industry' | 'national' | 'institutional' | 'custom';
@@ -336,6 +336,30 @@ async function seedNarrativeBlocks(pool: Pool): Promise<void> {
       variables: [],
       report_types: ['capadex','career'], tone: 'empathetic', category: 'introduction',
     },
+    {
+      key: 'report_intro_enterprise_workforce', title: 'Enterprise Workforce Introduction',
+      content: 'This Enterprise Workforce report summarises aggregate competency readiness across {{department_count}} departments covering {{employee_count}} employees. All figures are aggregate-only and suppressed below a cohort of {{k_min}} to preserve individual privacy.',
+      variables: ['department_count','employee_count','k_min'],
+      report_types: ['enterprise_workforce'], tone: 'professional', category: 'introduction',
+    },
+    {
+      key: 'enterprise_workforce_summary', title: 'Enterprise Workforce Summary',
+      content: 'Across the measurable cohort, aggregate readiness stands at {{aggregate_readiness}}. Department-level coverage and confidence are reported separately; cohorts below the privacy threshold are withheld rather than estimated.',
+      variables: ['aggregate_readiness'],
+      report_types: ['enterprise_workforce'], tone: 'professional', category: 'summary',
+    },
+    {
+      key: 'report_intro_outcome', title: 'Outcome Intelligence Introduction',
+      content: 'This Outcome report consolidates realised outcomes (hiring, performance, promotion, retention, career, and learning) into one developmental picture. Coverage (outcome types observed) and Confidence (calibration against realised results) are reported as separate axes and never blended.',
+      variables: [],
+      report_types: ['outcome'], tone: 'professional', category: 'introduction',
+    },
+    {
+      key: 'outcome_summary', title: 'Outcome Intelligence Summary',
+      content: 'Realised-outcome coverage is {{realized_coverage}}. Confidence is {{confidence_state}}; where fewer than {{k_min}} realised outcomes exist, the report abstains rather than projecting an unsupported figure.',
+      variables: ['realized_coverage','confidence_state','k_min'],
+      report_types: ['outcome'], tone: 'professional', category: 'summary',
+    },
   ];
   for (const b of blocks) {
     await pool.query(
@@ -411,6 +435,20 @@ async function seedInsightRules(pool: Pool): Promise<void> {
       template: 'An overall match of {{score}} indicates strong competency alignment with the role profile. This is a developmental decision-support signal, not a hiring recommendation.',
       variables: ['score'], severity: 'positive', priority: 72,
       report_types: ['employer'], data_source: 'any',
+    },
+    {
+      key: 'workforce_cohort_suppressed', title: 'Cohort Below Privacy Threshold',
+      condition_type: 'threshold', condition: { field: 'cohort_size', operator: '<', value: 30 },
+      template: 'One or more departments fall below the privacy threshold of {{k_min}} and have been withheld from the aggregate rather than estimated.',
+      variables: ['k_min'], severity: 'info', priority: 50,
+      report_types: ['enterprise_workforce'], data_source: 'any',
+    },
+    {
+      key: 'outcome_abstained', title: 'Outcome Evidence Insufficient',
+      condition_type: 'threshold', condition: { field: 'realized_outcomes', operator: '<', value: 30 },
+      template: 'Fewer than {{k_min}} realised outcomes are on record, so outcome confidence abstains. Coverage is reported, but no calibrated accuracy claim is made.',
+      variables: ['k_min'], severity: 'info', priority: 55,
+      report_types: ['outcome'], data_source: 'any',
     },
   ];
   for (const r of rules) {
@@ -489,6 +527,22 @@ async function seedVisualizationConfigs(pool: Pool): Promise<void> {
       style_config: { user_color: '#344E86', peer_color: '#e5e7eb' },
       dimensions: ['score', 'peer_median', 'percentile'],
       report_types: ['employer'],
+    },
+    {
+      key: 'workforce_department_bar', title: 'Department Readiness (Aggregate)',
+      chart_type: 'bar', data_source: 'any',
+      data_binding: { labels_field: 'department_names', values_field: 'aggregate_readiness', orientation: 'horizontal', suppress_below: 30 },
+      style_config: { bar_radius: 4, color_by_value: true },
+      dimensions: ['department_name', 'aggregate_readiness', 'cohort_size'],
+      report_types: ['enterprise_workforce'],
+    },
+    {
+      key: 'outcome_coverage_donut', title: 'Realised Outcome Coverage',
+      chart_type: 'donut', data_source: 'any',
+      data_binding: { labels_field: 'outcome_types', values_field: 'outcome_counts' },
+      style_config: { hole_size: 0.65, show_legend: true },
+      dimensions: ['outcome_type', 'count'],
+      report_types: ['outcome'],
     },
   ];
   for (const c of configs) {

@@ -19,7 +19,12 @@
 
 import type { Express, Request, Response } from 'express';
 import type { Pool } from 'pg';
-import { isJobPostingEngineEnabled, JOB_POSTING_ENGINE_VERSION } from '../config/feature-flags';
+import {
+  isJobPostingEngineEnabled,
+  isEmployerJobStoreSyncEnabled,
+  JOB_POSTING_ENGINE_VERSION,
+} from '../config/feature-flags';
+import { projectPublishedJob, unprojectJob } from '../services/job-store-projection';
 import {
   JOB_POSTING_ENGINE_VERSION as ENGINE_VERSION,
   JOB_STATUS,
@@ -77,6 +82,27 @@ export function registerJobPostingEngineRoutes(
     return res.status(status).json({ success: false, code: r.code, error: r.message });
   };
 
+  // MX-103W Phase 1 — after a successful lifecycle transition, keep the canonical
+  // hiring-funnel substrate (employer_jobs) in sync. Flag-gated (OFF => no-op, no
+  // DB/DDL touch => byte-identical legacy). Never throws — a projection failure
+  // must never alter the transition result already produced by the engine.
+  const syncProjection = async (req: Request, r: EngineResult): Promise<void> => {
+    if (!isEmployerJobStoreSyncEnabled() || !r.ok) return;
+    const job: any = r.data;
+    const id = job?.id != null ? String(job.id) : '';
+    const status = job?.status;
+    if (!id) return;
+    try {
+      if (status === JOB_STATUS.PUBLISHED || status === JOB_STATUS.APPROVED) {
+        await projectPublishedJob(pool, actorOf(req).id ?? null, id);
+      } else if (status === JOB_STATUS.CLOSED || status === JOB_STATUS.ARCHIVED) {
+        await unprojectJob(pool, actorOf(req).id ?? null, id);
+      }
+    } catch {
+      // swallow — projection is a best-effort side-effect of the transition.
+    }
+  };
+
   // ── meta (literal — before any param route) ────────────────────────────────
   app.get('/api/job-posting-engine/_meta/status', ...guards, (_req: Request, res: Response) => {
     res.json({
@@ -126,7 +152,9 @@ export function registerJobPostingEngineRoutes(
   });
 
   app.post('/api/job-posting-engine/jobs/:id/publish', ...guards, async (req: Request, res: Response) => {
-    send(res, await publishJob(pool, actorOf(req), req.params.id, req.body?.comments));
+    const r = await publishJob(pool, actorOf(req), req.params.id, req.body?.comments);
+    await syncProjection(req, r);
+    send(res, r);
   });
 
   // ── job_management_engine: pause / close / archive / visibility ────────────
@@ -135,11 +163,15 @@ export function registerJobPostingEngineRoutes(
   });
 
   app.post('/api/job-posting-engine/jobs/:id/close', ...guards, async (req: Request, res: Response) => {
-    send(res, await closeJob(pool, actorOf(req), req.params.id, req.body?.comments));
+    const r = await closeJob(pool, actorOf(req), req.params.id, req.body?.comments);
+    await syncProjection(req, r);
+    send(res, r);
   });
 
   app.post('/api/job-posting-engine/jobs/:id/archive', ...guards, async (req: Request, res: Response) => {
-    send(res, await archiveJob(pool, actorOf(req), req.params.id, req.body?.comments));
+    const r = await archiveJob(pool, actorOf(req), req.params.id, req.body?.comments);
+    await syncProjection(req, r);
+    send(res, r);
   });
 
   app.put('/api/job-posting-engine/jobs/:id/visibility', ...guards, async (req: Request, res: Response) => {
@@ -161,6 +193,8 @@ export function registerJobPostingEngineRoutes(
 
   app.post('/api/job-posting-engine/jobs/:id/approve', ...guards, async (req: Request, res: Response) => {
     const { stage, decision, notes } = req.body ?? {};
-    send(res, await decideStage(pool, actorOf(req), req.params.id, stage, decision ?? 'approve', notes));
+    const r = await decideStage(pool, actorOf(req), req.params.id, stage, decision ?? 'approve', notes);
+    await syncProjection(req, r);
+    send(res, r);
   });
 }

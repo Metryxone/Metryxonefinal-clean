@@ -221,6 +221,8 @@ import { registerTalentConcernIntelligenceRoutes } from "./routes/talent-concern
 import { registerTalentIntelligenceRoutes } from "./routes/talent-intelligence";
 import { registerTalentFoundationV52Routes } from "./routes/talent-foundation-v52";
 import { registerJobPostingEngineRoutes } from "./routes/job-posting-engine";
+import { registerRoleResolutionRoutes } from "./routes/role-resolution";
+import { registerEmployerProductionHealthRoutes } from "./routes/employer-production-health";
 import { registerTalentDiscoveryEngineRoutes } from "./routes/talent-discovery-engine";
 import { registerTalentMatchingEngineRoutes } from "./routes/talent-matching-engine";
 import { registerEmployabilityMatchingEngineRoutes } from "./routes/employability-matching-engine";
@@ -13619,6 +13621,8 @@ Rules:
   registerTalentIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerTalentFoundationV52Routes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerJobPostingEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerRoleResolutionRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerEmployerProductionHealthRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerTalentDiscoveryEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerTalentMatchingEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerEmployabilityMatchingEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);

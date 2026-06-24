@@ -1077,6 +1077,32 @@ export const FEATURE_FLAGS = {
    *  `FF_JOB_POSTING_ENGINE`. */
   jobPostingEngine: false,
 
+  /** MX-103W Phase 1 — Employer Job Store Sync. Additive, reversible projection
+   *  layer that, when a `job_postings` row is PUBLISHED (or leadership-approved),
+   *  idempotently projects a linked row into the canonical hiring-funnel substrate
+   *  `employer_jobs` (link via `source_posting_id`, ids as strings), so a posted
+   *  job gains full employer_jobs citizenship (lists/feeds/dashboards), not only
+   *  the read-time `resolveJob` fallback. Audit-logged to `job_projection_audit`.
+   *  Flag OFF => no hook fires, NO DDL (the additive employer_jobs columns + the
+   *  audit table are created ONLY on the projection write-path while ON), so OFF
+   *  is byte-identical legacy INCLUDING schema. Reversible: un-project marks the
+   *  projected row inactive (row + audit preserved — no data loss). Never throws
+   *  (projection failure never affects the publish/approve result). Env:
+   *  `FF_EMPLOYER_JOB_STORE_SYNC`. */
+  employerJobStoreSync: false,
+
+  /** MX-103W Phase 2 — Role DNA Auto-Resolution. Additive, read-only service that
+   *  COMPOSES the existing crosswalk (resolveCuratedRoleByTitle), Role DNA runtime
+   *  and assessment-foundation mapping into ONE pipeline: free-text role title ->
+   *  top-5 curated matches (numeric confidence) -> Role DNA competency profile ->
+   *  assessment blueprint, with an explainability envelope. O*NET stays the
+   *  REFERENCE layer, Role DNA the CANONICAL layer. Human override + audit trail
+   *  persist to `role_resolution_decisions` (ensure-schema POST-path only; GET uses
+   *  a to_regclass probe). NEVER fabricates a match (abstains); Coverage⟂Confidence
+   *  kept SEPARATE. Flag OFF => routes 503 before any auth/DB/DDL touch
+   *  (byte-identical). Super-admin gated. Env: `FF_ROLE_AUTO_RESOLUTION`. */
+  roleAutoResolution: false,
+
   /** PHASE 5.4 — Talent Discovery Engine (search + filter + curation surfaces).
    *  Additive engine surfacing the three deliverables as ONE coherent surface:
    *  candidate_search_engine (Search / Filter Candidates over the EXISTING
@@ -1930,6 +1956,14 @@ export function isTalentFoundationEnabled(): boolean {
 
 export function isJobPostingEngineEnabled(): boolean {
   return isFlagEnabled('jobPostingEngine');
+}
+
+export function isEmployerJobStoreSyncEnabled(): boolean {
+  return isFlagEnabled('employerJobStoreSync');
+}
+
+export function isRoleAutoResolutionEnabled(): boolean {
+  return isFlagEnabled('roleAutoResolution');
 }
 
 export function isTalentMatchingEnabled(): boolean {

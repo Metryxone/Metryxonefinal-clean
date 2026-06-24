@@ -17,7 +17,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Building2, RefreshCw, AlertTriangle, Info, CheckCircle2, Clock, Layers, ListChecks,
+  Building2, RefreshCw, AlertTriangle, Info, CheckCircle2, Clock, Layers, ListChecks, Activity, GitBranch,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Badge } from '../ui/badge';
@@ -230,6 +230,177 @@ export default function EmployerEcosystemPanel() {
                 <Info className="mt-0.5 h-4 w-4 flex-shrink-0" /> {data.demoTransparency}
               </CardContent>
             </Card>
+          )}
+        </>
+      )}
+
+      {/* MX-103W — Production Health (probe-gated; hidden unless a MX-103W flag is ON) */}
+      <ProductionHealthSection />
+    </div>
+  );
+}
+
+// ── MX-103W Production Health (additive, probe-gated) ────────────────────────
+interface ProdHealthReadiness { structural_score: number; band: string; signals: string[]; }
+interface ProdHealthOverview {
+  success?: boolean;
+  version?: string;
+  generated_at?: string;
+  readiness?: ProdHealthReadiness;
+  groups?: Record<string, any>;
+  axis_note?: string;
+}
+
+const READINESS_TONE: Record<string, { bg: string; fg: string }> = {
+  PASS:    { bg: '#DCFCE7', fg: '#166534' },
+  PARTIAL: { bg: '#FEF3C7', fg: '#92400E' },
+  AT_RISK: { bg: '#FEE2E2', fg: '#991B1B' },
+};
+
+function metricRow(label: string, value: number | null | undefined, hint?: string) {
+  return (
+    <div className="flex items-baseline justify-between border-b border-gray-50 py-1.5 last:border-0">
+      <span className="text-xs text-gray-500">{label}{hint ? <span className="ml-1 text-gray-300">({hint})</span> : null}</span>
+      <span className="text-sm font-semibold" style={{ color: BRAND.primary }}>{num(value)}</span>
+    </div>
+  );
+}
+
+function ProductionHealthSection() {
+  // This panel renders only inside the authenticated super-admin shell, so the
+  // credentialed fetch passes the global /api/admin auth gate. A non-200 (flag OFF
+  // 503, or any auth/error) => treat as disabled and render nothing (byte-identical).
+  const enabledQ = useQuery<{ enabled: boolean; flags?: Record<string, boolean> }>({
+    queryKey: ['/api/admin/employer-production-health/enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/employer-production-health/enabled', { credentials: 'include' });
+      if (!res.ok) return { enabled: false };
+      return res.json();
+    },
+  });
+  const enabled = enabledQ.data?.enabled === true;
+
+  const overviewQ = useQuery<ProdHealthOverview>({
+    queryKey: ['/api/admin/employer-production-health/overview'],
+    enabled,
+    queryFn: async () => {
+      const res = await fetch('/api/admin/employer-production-health/overview', { credentials: 'include' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    },
+  });
+
+  // Byte-identical-OFF: render nothing at all when the feature is disabled.
+  if (!enabled) return null;
+
+  const ov = overviewQ.data;
+  const r = ov?.readiness;
+  const tone = r ? (READINESS_TONE[r.band] ?? READINESS_TONE.PARTIAL) : READINESS_TONE.PARTIAL;
+  const g = ov?.groups ?? {};
+  const js = g.job_store_health ?? {};
+  const pj = g.projection_health ?? {};
+  const rr = g.role_resolution_coverage ?? {};
+  const cw = g.crosswalk_coverage ?? {};
+  const dna = g.role_dna_utilization ?? {};
+  const asm = g.assessment_generation ?? {};
+  const fn = g.hiring_funnel_health ?? {};
+
+  return (
+    <div className="space-y-4 pt-2">
+      <div className="flex items-center gap-2">
+        <GitBranch className="h-5 w-5" style={{ color: BRAND.accent }} />
+        <h3 className="text-lg font-bold" style={{ color: BRAND.primary }}>Production Health — MX-103W</h3>
+        <Button variant="outline" size="sm" className="ml-auto" onClick={() => overviewQ.refetch()} disabled={overviewQ.isFetching}>
+          <RefreshCw className={`mr-2 h-4 w-4 ${overviewQ.isFetching ? 'animate-spin' : ''}`} /> Refresh
+        </Button>
+      </div>
+      <p className="max-w-3xl text-xs text-gray-500">
+        Structural readiness of the employer production spine (job-store projection + role auto-resolution).
+        <strong> Readiness</strong> (can the spine run end-to-end) is kept separate from <strong>Adoption</strong>
+        {' '}(has it actually run) — a high structural score with zero projected jobs is honest, not inflated.
+      </p>
+
+      {overviewQ.isLoading && <p className="text-sm text-gray-500">Loading production health…</p>}
+      {overviewQ.isError && (
+        <Card><CardContent className="flex items-center gap-2 p-4 text-sm text-red-600">
+          <AlertTriangle className="h-4 w-4" /> Could not load production health overview.
+        </CardContent></Card>
+      )}
+
+      {ov && (
+        <>
+          {/* Structural readiness banner */}
+          <Card style={{ borderColor: r && r.band === 'PASS' ? '#86EFAC' : '#FCD34D' }}>
+            <CardContent className="flex items-start gap-3 p-5">
+              <Activity className="mt-0.5 h-5 w-5" style={{ color: BRAND.accent }} />
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-semibold" style={{ color: BRAND.primary }}>
+                    Structural readiness {r ? `${r.structural_score}%` : '—'}
+                  </p>
+                  {r && <Badge className="border-0" style={{ backgroundColor: tone.bg, color: tone.fg }}>{r.band}</Badge>}
+                </div>
+                <div className="mt-2 grid grid-cols-1 gap-x-6 gap-y-0.5 sm:grid-cols-2">
+                  {(r?.signals ?? []).map((sig, i) => (
+                    <p key={i} className="text-xs text-gray-600">{sig}</p>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Group metric cards */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <Card><CardHeader className="pb-1"><CardTitle className="text-sm">Job Store</CardTitle></CardHeader>
+              <CardContent className="pt-0">
+                {metricRow('Postings', js.postings_total)}
+                {metricRow('Published', js.postings_published)}
+                {metricRow('Employer jobs', js.employer_jobs_total)}
+                {metricRow('Active', js.employer_jobs_active)}
+              </CardContent></Card>
+
+            <Card><CardHeader className="pb-1"><CardTitle className="text-sm">Projection</CardTitle></CardHeader>
+              <CardContent className="pt-0">
+                {metricRow('Projected jobs', pj.projected_jobs)}
+                {metricRow('Active projected', pj.active_projected_jobs)}
+                {metricRow('Unprojected published', pj.unprojected_published)}
+                {metricRow('Audit events', pj.audit_events)}
+              </CardContent></Card>
+
+            <Card><CardHeader className="pb-1"><CardTitle className="text-sm">Role Resolution</CardTitle></CardHeader>
+              <CardContent className="pt-0">
+                {metricRow('Decisions', rr.total_decisions)}
+                {metricRow('Accepted', rr.accepted)}
+                {metricRow('Overridden', rr.overridden)}
+                {metricRow('Abstained', rr.abstained_persisted)}
+              </CardContent></Card>
+
+            <Card><CardHeader className="pb-1"><CardTitle className="text-sm">Crosswalk Coverage</CardTitle></CardHeader>
+              <CardContent className="pt-0">
+                {metricRow('Matchable roles', cw.matchable_roles)}
+                <p className="mt-1 text-xs text-gray-400">{cw.note}</p>
+              </CardContent></Card>
+
+            <Card><CardHeader className="pb-1"><CardTitle className="text-sm">Role DNA</CardTitle></CardHeader>
+              <CardContent className="pt-0">
+                {metricRow('Roles', dna.roles_total)}
+                {metricRow('With profile', dna.roles_with_profile)}
+                {metricRow('Coverage %', dna.profile_coverage_pct)}
+              </CardContent></Card>
+
+            <Card><CardHeader className="pb-1"><CardTitle className="text-sm">Assessment & Funnel</CardTitle></CardHeader>
+              <CardContent className="pt-0">
+                {metricRow('Blueprints', asm.blueprints_total)}
+                {metricRow('Roles mapped', asm.roles_mapped)}
+                {metricRow('Open jobs', fn.open_jobs)}
+                {metricRow('Candidates', fn.candidates)}
+              </CardContent></Card>
+          </div>
+
+          {ov.axis_note && (
+            <Card><CardContent className="flex items-start gap-2 p-4 text-xs text-gray-500">
+              <Info className="mt-0.5 h-4 w-4 flex-shrink-0" /> {ov.axis_note}
+            </CardContent></Card>
           )}
         </>
       )}

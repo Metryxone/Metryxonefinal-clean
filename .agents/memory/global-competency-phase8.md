@@ -84,6 +84,33 @@ is best-effort (swallows errors) so an audit failure never breaks the mutation i
 fully-rejected assign (400 `no_valid_entity_refs`) writes an audit row with applied=[]. Panel
 surfaces it as a read-only "Change history" table keyed off the selected region.
 
+## Region-native coverage BROADENED (D12 85→87) — crosswalk_quality honesty tag
+A further task widened region-native coverage beyond the first 13 seed signals so EVERY platform
+`onto_roles` row (only 5 exist: role_be_eng/role_sr_be_eng/role_eng_manager/role_pm/role_credit_analyst)
+carries ≥1 region-native signal, WITHOUT force-mapping. The honesty mechanism is a
+`crosswalk_quality: 'exact'|'subset'|'proxy'` tag on each signal's `context` + a confidence DISCOUNT:
+- `proxy` = related-but-distinct occupation (role_pm → BLS Project Management Specialists 13-1082;
+  source authority 0.9 BUT product≠project so confidence cut to 0.7). Never present a proxy as exact.
+- `subset` = the role is a defined sub-population of a published aggregate (role_eng_manager → Eurostat
+  "ICT specialists" which by definition includes ICT service managers ISCO-133, 0.88; role_sr_be_eng
+  reuses its base-role aggregate where the source has no seniority split).
+- NULL-role rows stay NULL (region/macro business occupations e.g. Market Research Analysts, all-occ
+  baselines) — that is breadth, not a gap to force-map.
+EU + APAC were lifted off consultancy-only by adding OFFICIAL government stats (Eurostat EU-LFS;
+Singapore MOM Labour Market Report — total employment +44,500 in 2024, 0.85). ME stays survey-only
+(no GCC govt publishes accessible occupation-level projections — honest, documented, not fabricated).
+
+**Migration DDL is NOT in the isolated env either (not just rows).** `bench_cohorts.geography` + the
+`'region'` cohort_type came from `migrations/20261213_region_native_market_benchmark.sql`; the seed
+42703'd ("column geography does not exist") until the migration was applied here by hand
+(`psql -f`, idempotent). So region-native work in a fresh env = apply that migration FIRST, then seed.
+
+**d12 differentiation-table arithmetic:** the table = universal-inheritance base (515 total / demand 80
+/ benchmarks 10 per non-default region) PLUS the region-native overlay; IN row alone comes straight from
+`computeRegionCoverage` (524/81/15). Note `computeRegionCoverage` does NOT fold the phase8 universal
+overlay into role/competency/readiness for non-default regions (they read null → surfaces 2/5) — so the
+doc table and the raw engine output are measured on different bases; keep them labelled.
+
 ## Discipline that held
 GET handlers use `to_regclass` probes + degrade (200 {degraded:true}); ensure-schema runs ONLY on POST
 behind the flag, so flag-OFF never creates the overlay table via HTTP. null=table unreadable vs 0=empty

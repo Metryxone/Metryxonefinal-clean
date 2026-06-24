@@ -25,7 +25,12 @@ const PROVENANCE = 'region_native_market_v1';
 // onto_roles ids confirmed present in this DB:
 //   role_be_eng, role_sr_be_eng, role_eng_manager, role_pm, role_credit_analyst
 // Crosswalks below only map a role when the source occupation is a clean match; otherwise role_id is
-// left NULL (region-level signal) rather than forcing a dubious mapping.
+// left NULL (region-level signal) rather than forcing a dubious mapping. Where a mapping is a defensible
+// PROXY rather than an exact occupational match (e.g. Product Manager → BLS Project Management
+// Specialists, which is a related-but-distinct occupation), it is stamped `crosswalk_quality:'proxy'`
+// and its `confidence` is discounted below the underlying source authority so the proxy is never
+// presented as an exact figure. Subset relationships (e.g. EU ICT service managers ⊂ ICT specialists)
+// are stamped `crosswalk_quality:'subset'` and retain source authority.
 
 interface MarketSignalSeed {
   geography: 'US' | 'EU' | 'ME' | 'APAC';
@@ -44,6 +49,7 @@ interface MarketSignalSeed {
     soc_code?: string;       // US SOC where applicable
     country?: string;        // sub-region the figure actually refers to
     crosswalk_note?: string; // why this maps (or does not map) to the role
+    crosswalk_quality?: 'exact' | 'subset' | 'proxy'; // honesty of the role mapping
     confidence_basis: string;
     methodology: string;
   };
@@ -112,7 +118,7 @@ const SIGNALS: MarketSignalSeed[] = [
   },
   {
     geography: 'US', signal_type: 'macro_trend', role_id: null, source: 'bls_ep_2024_34',
-    metric_value: 4, confidence: 0.9,
+    metric_value: 3, confidence: 0.9,
     context: {
       title: 'All occupations — baseline projected employment growth (US)',
       metric_unit: 'percent_change_2024_2034', direction: 'up',
@@ -120,7 +126,36 @@ const SIGNALS: MarketSignalSeed[] = [
       source_url: 'https://www.bls.gov/emp/',
       as_of: '2024-2034 projection (May 2024 base)',
       confidence_basis: 'U.S. federal statistical agency projection (economy-wide baseline).',
-      methodology: 'BLS Employment Projections program, total employment 10-year projection.',
+      methodology: 'BLS Employment Projections program, total employment 10-year projection (170.0M → 175.2M jobs, +3%).',
+    },
+  },
+  {
+    geography: 'US', signal_type: 'job_demand', role_id: 'role_pm', source: 'bls_ep_2024_34',
+    metric_value: 6, confidence: 0.7,
+    context: {
+      title: 'Project management specialists — projected employment growth (US)',
+      metric_unit: 'percent_change_2024_2034', direction: 'up',
+      source_name: 'U.S. Bureau of Labor Statistics — Occupational Outlook Handbook',
+      source_url: 'https://www.bls.gov/ooh/business-and-financial/project-management-specialists.htm',
+      as_of: '2024-2034 projection (May 2024 base)', soc_code: '13-1082',
+      crosswalk_note: 'Product Manager has no dedicated SOC; mapped to the nearest BLS published occupation, Project Management Specialists (13-1082) — a related but DISTINCT management occupation (~1.05M jobs in 2024, median $100,750). Treat as a directional PROXY for product-management demand, not an exact product-manager figure.',
+      crosswalk_quality: 'proxy',
+      confidence_basis: 'Source authority is high (U.S. federal statistical agency, 0.9), but the role crosswalk is a proxy (product ≠ project management), so the signal confidence is discounted to 0.7.',
+      methodology: 'BLS Employment Projections program, 10-year occupational projection.',
+    },
+  },
+  {
+    geography: 'US', signal_type: 'macro_trend', role_id: null, source: 'bls_ep_2024_34',
+    metric_value: 7, confidence: 0.9,
+    context: {
+      title: 'Market research analysts & marketing specialists — projected employment growth (US)',
+      metric_unit: 'percent_change_2024_2034', direction: 'up',
+      source_name: 'U.S. Bureau of Labor Statistics — Occupational Outlook Handbook',
+      source_url: 'https://www.bls.gov/ooh/business-and-financial/market-research-analysts.htm',
+      as_of: '2024-2034 projection (May 2024 base)', soc_code: '13-1161',
+      crosswalk_note: 'Region-level business-occupation demand signal (no platform role maps to marketing/market-research); broadens US coverage beyond engineering/finance/management. ~941,700 jobs in 2024, median $76,950.',
+      confidence_basis: 'U.S. federal statistical agency projection.',
+      methodology: 'BLS Employment Projections program, 10-year occupational projection.',
     },
   },
 
@@ -154,6 +189,21 @@ const SIGNALS: MarketSignalSeed[] = [
     },
   },
   {
+    geography: 'EU', signal_type: 'job_demand', role_id: 'role_eng_manager', source: 'eurostat_lfs_2024',
+    metric_value: 4.8, confidence: 0.88,
+    context: {
+      title: 'ICT specialists in employment — year-on-year growth (EU, ICT managers)',
+      metric_unit: 'percent_change_year_on_year_2023_2024', direction: 'up',
+      source_name: 'Eurostat — EU Labour Force Survey (ICT specialists in employment)',
+      source_url: 'https://ec.europa.eu/eurostat/web/products-eurostat-news/w/ddn-20250708-2',
+      as_of: '2024 (vs 2023)',
+      crosswalk_note: 'Engineering Manager maps to ICT service managers (ISCO-08 group 133), which are part of Eurostat\u2019s "ICT specialists" definition; Eurostat does not publish the ISCO-133 sub-group growth separately, so the published all-ICT-specialists YoY growth (+4.8%) is used as the closest measured figure for the management slice. Subset relationship, not a force-map.',
+      crosswalk_quality: 'subset',
+      confidence_basis: 'EU statistical office, harmonised Labour Force Survey (the manager slice is a subset of the published total).',
+      methodology: 'Eurostat secondary statistics on ICT specialists derived from EU-LFS.',
+    },
+  },
+  {
     geography: 'EU', signal_type: 'macro_trend', role_id: null, source: 'cedefop_sf_2035',
     metric_value: 0.4, confidence: 0.75,
     context: {
@@ -178,6 +228,21 @@ const SIGNALS: MarketSignalSeed[] = [
       source_url: 'https://gulfbusiness.com/uae-to-add-tech-jobs-by-2030/',
       as_of: 'to 2030 estimate (2024 report)', country: 'United Arab Emirates',
       crosswalk_note: 'Aggregate tech-role demand; applied to Backend Engineer as the representative software role. ~91,000 additional tech specialists estimated for the UAE by 2030.',
+      confidence_basis: 'Vendor-sponsored consultancy study reported by trade press (moderate confidence).',
+      methodology: 'Industry study / labour-demand modelling; not a national statistical projection.',
+    },
+  },
+  {
+    geography: 'ME', signal_type: 'emerging_role', role_id: 'role_sr_be_eng', source: 'servicenow_gcc_2024',
+    metric_value: 54, confidence: 0.55,
+    context: {
+      title: 'UAE technology-role demand — projected growth to 2030 (senior)',
+      metric_unit: 'percent_growth_to_2030', direction: 'up',
+      source_name: 'ServiceNow / Pearson "Enterprise AI Maturity" study (reported via Gulf Business)',
+      source_url: 'https://gulfbusiness.com/uae-to-add-tech-jobs-by-2030/',
+      as_of: 'to 2030 estimate (2024 report)', country: 'United Arab Emirates',
+      crosswalk_note: 'Senior Backend Engineer shares the aggregate UAE tech-role demand population with Backend Engineer; the study does not split by seniority (mirrors the US senior pattern).',
+      crosswalk_quality: 'subset',
       confidence_basis: 'Vendor-sponsored consultancy study reported by trade press (moderate confidence).',
       methodology: 'Industry study / labour-demand modelling; not a national statistical projection.',
     },
@@ -211,7 +276,21 @@ const SIGNALS: MarketSignalSeed[] = [
     },
   },
 
-  // ===== ASIA-PACIFIC — ManpowerGroup Talent Shortage 2025 + Singapore market reports =====
+  // ===== ASIA-PACIFIC — Singapore MOM (official) + ManpowerGroup Talent Shortage 2025 =====
+  {
+    geography: 'APAC', signal_type: 'macro_trend', role_id: null, source: 'sg_mom_lmr_2024',
+    metric_value: 44500, confidence: 0.85,
+    context: {
+      title: 'Singapore — total employment growth in 2024 (official)',
+      metric_unit: 'persons_total_employment_change_2024', direction: 'up',
+      source_name: 'Singapore Ministry of Manpower — Labour Market Report 4Q 2024',
+      source_url: 'https://www.mom.gov.sg/newsroom/press-releases/2025/0319-labour-market-in-4q-2024',
+      as_of: '2024 (full year)', country: 'Singapore',
+      crosswalk_note: 'Official national-statistics figure: total employment (resident and non-resident) grew by 44,500 in 2024 amid a tight labour market (overall unemployment 1.9% Dec 2024). Raises APAC off consultancy-only with a government source; macro-level, not occupation-specific.',
+      confidence_basis: 'National statistical office (Manpower Research & Statistics Department), measured administrative/survey data — higher authority than consultancy surveys.',
+      methodology: 'MOM Labour Market Report, total employment change over the calendar year.',
+    },
+  },
   {
     geography: 'APAC', signal_type: 'macro_trend', role_id: null, source: 'manpowergroup_2025',
     metric_value: 77, confidence: 0.6,
@@ -263,6 +342,8 @@ const COHORTS: RegionCohortSeed[] = [
       median_wages_usd: {
         software_developers: { p50: 133080, soc: '15-1252', url: 'https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm' },
         computer_information_systems_managers: { p50: 171200, soc: '11-3021', url: 'https://www.bls.gov/ooh/management/computer-and-information-systems-managers.htm' },
+        project_management_specialists: { p50: 100750, soc: '13-1082', url: 'https://www.bls.gov/ooh/business-and-financial/project-management-specialists.htm' },
+        market_research_analysts: { p50: 76950, soc: '13-1161', url: 'https://www.bls.gov/ooh/business-and-financial/market-research-analysts.htm' },
       },
       confidence: 0.9, confidence_basis: 'U.S. federal statistical agency (OEWS survey + EP projections).',
       note: 'Real wage levels (USD, annual median). NOT competency-benchmark statistics — no competency scores are claimed for this cohort.',
@@ -295,15 +376,17 @@ const COHORTS: RegionCohortSeed[] = [
     },
   },
   {
-    id: 'coh_region_apac', geography: 'APAC', name: 'Asia-Pacific — Talent Scarcity Benchmark (ManpowerGroup)',
+    id: 'coh_region_apac', geography: 'APAC', name: 'Asia-Pacific — Labour Market & Talent Scarcity Benchmark (Singapore MOM + ManpowerGroup)',
     filters: {
       provenance: PROVENANCE,
-      source_name: 'ManpowerGroup Talent Shortage 2025 (APAC)',
-      source_url: 'https://go.manpowergroup.com/talent-shortage',
-      as_of: '2025',
+      sources: [
+        { name: 'Singapore Ministry of Manpower — Labour Market Report 4Q 2024', metric: 'Total employment grew by 44,500 in 2024; overall unemployment 1.9% (Dec 2024)', url: 'https://www.mom.gov.sg/newsroom/press-releases/2025/0319-labour-market-in-4q-2024', confidence: 0.85, basis: 'National statistical office (official).' },
+        { name: 'ManpowerGroup Talent Shortage 2025 (APAC)', metric: '77% of employers report difficulty filling roles; IT & Data hardest (32%)', url: 'https://go.manpowergroup.com/talent-shortage', confidence: 0.6, basis: 'Large multi-market employer survey (directional).' },
+      ],
+      as_of: '2024-2025',
       talent_shortage: { employers_reporting_difficulty_pct: 77, vs_2014_pct: 45, vs_global_avg_pct: 74, hardest_skill_areas: { 'IT & Data': 32, Engineering: 27, Sales: 24 } },
-      confidence: 0.6, confidence_basis: 'Large multi-market employer survey (directional).',
-      note: 'Scarcity statistics (hard-to-fill share), NOT growth or competency scores.',
+      confidence: 0.72, confidence_basis: 'Blend of an official national-statistics labour figure (Singapore MOM, 0.85) and a multi-market employer survey (0.6); raised off consultancy-only by the official source.',
+      note: 'Labour-market growth (official, Singapore) + scarcity statistics (survey). NO wages or competency scores are claimed.',
     },
   },
 ];

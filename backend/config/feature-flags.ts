@@ -131,8 +131,12 @@ export const FEATURE_FLAGS = {
    *  additive + reversible: flag OFF → every route 503, the ensure-schema is NEVER reached so the table is
    *  never created → byte-identical legacy behaviour incl. schema. GET handlers probe via to_regclass and
    *  never write; demo rows are EXCLUDED from evidence-backed claims; no outcome is ever fabricated.
-   *  Env: `FF_VALIDATION_LOOP`. */
-  validationLoop: false,
+   *  MX-75X — DURABLE ACTIVATION: default flipped ON (redeploy/restart-safe, like `careerBuilderSuite`).
+   *  Reverse with `FF_VALIDATION_LOOP=0`, which restores byte-identical legacy behaviour incl. schema
+   *  (no DDL is reached when OFF). Activation only opens the read/intake surface — it CANNOT manufacture
+   *  evidence: predictions stay ABSTAINED and certification stays PARTIAL until ≥30 realized non-demo
+   *  outcomes accrue. Env: `FF_VALIDATION_LOOP`. */
+  validationLoop: true,
   /** PHASE 8 — Global Competency (structural framework). When ON, an ADDITIVE region dimension threads
    *  through the five global-deployability surfaces (role libraries · benchmarks · competency models ·
    *  readiness models · demand intelligence) WITHOUT mutating any existing table: an overlay table

@@ -25,6 +25,7 @@ import {
   OUTCOME_TYPES,
   isValidOutcomeType,
   toCalibrationPairs,
+  terminalCandidatesToPairs,
   calibrationSummary,
   evidenceVerdict,
   VALIDATION_K_MIN,
@@ -139,6 +140,13 @@ export function registerValidationLoopRoutes(
   });
 
   // ── GET status — honest admin surface (read-only, never writes) ─────────────────────────────────
+  // Persona-agnostic flag probe (no auth — flag STATE is not sensitive). Lets non-super-admin
+  // surfaces (employer, candidate) gate their MX-75X tabs so flag-OFF stays byte-identical in the UI.
+  // flagGate runs first → 503 when validationLoop is OFF; res.ok=true only when the loop is ON.
+  app.get('/api/validation-loop/enabled', flagGate, async (_req: Request, res: Response) => {
+    res.json({ ok: true, enabled: true });
+  });
+
   app.get('/api/validation-loop/status', flagGate, requireAuth, requireSuperAdmin, async (_req: Request, res: Response) => {
     try {
       const present = await tablePresent(pool, 'public.validation_loop_outcomes');
@@ -175,6 +183,24 @@ export function registerValidationLoopRoutes(
       const demoPairs = toCalibrationPairs(demoRows);
       const demoModel = buildCalibrationModel(demoPairs);
 
+      // MX-75X CONNECTION — realized pairs already present in the employer hiring pipeline
+      // (terminal decision + decision-time prediction snapshot), demo-excluded. Read-only:
+      // this CONNECTS the pre-existing feeder into the loop WITHOUT any manual intake.
+      let connectedPairs: { predicted: number; outcome: 0 | 1 }[] = [];
+      try {
+        const ec = await pool.query(
+          `SELECT stage, predicted_prob_at_decision, email
+             FROM employer_candidates
+            WHERE stage IN ('Hired','Rejected') AND predicted_prob_at_decision IS NOT NULL`,
+        );
+        connectedPairs = terminalCandidatesToPairs(ec.rows);
+      } catch { connectedPairs = []; }
+      const connectedModel = buildCalibrationModel(connectedPairs);
+
+      // Platform realized = manual intake + connected feeders — the honest TOTAL evidence axis.
+      const platformPairs = [...realizedPairs, ...connectedPairs];
+      const platformModel = buildCalibrationModel(platformPairs);
+
       // Coverage of the broader (fragmented, pre-existing) realized-outcome surfaces — read-only.
       const [careerOutcomes, hiringOutcomes, interviewOutcomes, tiPredictions, tigCalibration, employerTerminal] =
         await Promise.all([
@@ -186,17 +212,25 @@ export function registerValidationLoopRoutes(
           safeCount(pool, `SELECT COUNT(*)::int AS count FROM employer_candidates WHERE stage IN ('Hired','Rejected')`),
         ]);
 
-      const verdict = evidenceVerdict(realizedPairs.length);
+      // Evidence verdict folds in the connected feeder — the loop now reflects ALL real evidence.
+      const verdict = evidenceVerdict(platformPairs.length);
 
       return res.json({
         ok: true,
         version: VALIDATION_LOOP_VERSION,
         loop: ['Assessment', 'Hiring', 'Performance', 'Promotion', 'Retention', 'Outcome', 'Calibration', 'Prediction'],
         intake: { table_present: present, by_type: intake },
-        calibration: { realized: calibrationSummary(realizedModel), demo_illustrative: calibrationSummary(demoModel) },
+        calibration: {
+          realized: calibrationSummary(realizedModel),
+          connected: calibrationSummary(connectedModel),
+          platform_realized: calibrationSummary(platformModel),
+          demo_illustrative: calibrationSummary(demoModel),
+        },
         // Coverage axis: which realized-outcome substrates exist + how populated (null = table absent).
         coverage: {
           validation_loop_realized: realizedPairs.length,
+          connected_realized: connectedPairs.length,
+          platform_realized: platformPairs.length,
           career_outcomes: careerOutcomes,
           hiring_outcomes: hiringOutcomes,
           interview_outcomes: interviewOutcomes,
@@ -212,12 +246,12 @@ export function registerValidationLoopRoutes(
             'pil/prediction-engine (+ prediction-validation honesty guard)',
           ],
           empirical_accuracy_available: false,
-          outcome_coverage: realizedPairs.length,
-          abstained: realizedPairs.length < VALIDATION_K_MIN,
-          reason: realizedPairs.length === 0
+          outcome_coverage: platformPairs.length,
+          abstained: platformPairs.length < VALIDATION_K_MIN,
+          reason: platformPairs.length === 0
             ? 'no_realized_outcomes'
-            : realizedPairs.length < VALIDATION_K_MIN
-              ? `insufficient_outcomes (${realizedPairs.length}/${VALIDATION_K_MIN})`
+            : platformPairs.length < VALIDATION_K_MIN
+              ? `insufficient_outcomes (${platformPairs.length}/${VALIDATION_K_MIN})`
               : null,
           note: 'Predictions are produced by the existing engines; empirical accuracy is deliberately NOT claimed until realized outcomes accrue.',
         },
@@ -254,15 +288,30 @@ export function registerValidationLoopRoutes(
         realized = data.rows.filter(r => !r.is_demo);
         demo = data.rows.filter(r => r.is_demo);
       }
-      const realizedModel = buildCalibrationModel(toCalibrationPairs(realized));
+      const realizedPairs = toCalibrationPairs(realized);
+      const realizedModel = buildCalibrationModel(realizedPairs);
       const demoModel = buildCalibrationModel(toCalibrationPairs(demo));
+      // MX-75X CONNECTION — fold in the employer hiring feeder (read-only, demo-excluded).
+      let connectedPairs: { predicted: number; outcome: 0 | 1 }[] = [];
+      try {
+        const ec = await pool.query(
+          `SELECT stage, predicted_prob_at_decision, email
+             FROM employer_candidates
+            WHERE stage IN ('Hired','Rejected') AND predicted_prob_at_decision IS NOT NULL`,
+        );
+        connectedPairs = terminalCandidatesToPairs(ec.rows);
+      } catch { connectedPairs = []; }
+      const connectedModel = buildCalibrationModel(connectedPairs);
+      const platformModel = buildCalibrationModel([...realizedPairs, ...connectedPairs]);
       return res.json({
         ok: true,
         version: VALIDATION_LOOP_VERSION,
         k_min: VALIDATION_K_MIN,
         realized: realizedModel,
+        connected: connectedModel,
+        platform_realized: platformModel,
         demo_illustrative: demoModel,
-        note: 'Realized = evidence-backed axis (non-demo). Demo is illustrative only and never claimed as validated.',
+        note: 'Realized = manual intake (non-demo). Connected = employer hiring feeder (terminal decision + decision-time prediction, demo-excluded). Platform = their union (the honest total evidence axis). Demo is illustrative only and never claimed as validated.',
         read_only: true,
       });
     } catch (err) {

@@ -114,6 +114,44 @@ export function calibrationFromRows(rows: OutcomeRow[]) {
   return { pairs_used: pairs.length, ...calibrationSummary(model) };
 }
 
+export interface TerminalCandidateRow {
+  stage?: string | null;
+  predicted_prob_at_decision?: number | string | null;
+  email?: string | null;
+}
+
+/**
+ * PURE — MX-75X CONNECTION: map terminal employer-candidate decisions to realized
+ * {predicted, outcome} pairs, CONNECTING the pre-existing employer hiring feeder into the
+ * unified loop WITHOUT any manual intake. The decision-time success probability
+ * (predicted_prob_at_decision) is the prediction; the terminal stage is the realized binary
+ * outcome (Hired = 1, Rejected = 0).
+ *
+ * Honesty contract (mirrors toCalibrationPairs):
+ *   - Demo rows (@example.com) are EXCLUDED from realized/evidence-backed pairs.
+ *   - Only finite predictions in [0,1] qualify; out-of-range/missing predictions are DROPPED
+ *     (never clamped/coerced) so a malformed row can't become fake evidence.
+ *   - Non-terminal rows are ignored. Nothing is ever fabricated.
+ */
+export function terminalCandidatesToPairs(rows: TerminalCandidateRow[]): { predicted: number; outcome: 0 | 1 }[] {
+  const pairs: { predicted: number; outcome: 0 | 1 }[] = [];
+  for (const r of rows) {
+    const email = String(r.email ?? '').trim().toLowerCase();
+    if (email.endsWith('@example.com')) continue; // demo excluded
+    const stage = String(r.stage ?? '');
+    let outcome: 0 | 1;
+    if (stage === 'Hired') outcome = 1;
+    else if (stage === 'Rejected') outcome = 0;
+    else continue;
+    const predRaw = r.predicted_prob_at_decision;
+    if (predRaw == null || predRaw === '') continue;
+    const pred = Number(predRaw);
+    if (!Number.isFinite(pred) || pred < 0 || pred > 1) continue;
+    pairs.push({ predicted: pred, outcome });
+  }
+  return pairs;
+}
+
 /**
  * PURE — the honest evidence-backed verdict. Predictions become evidence-backed ONLY when
  * realized outcomes reach k_min; this is an OUTCOME-ACCRUAL milestone, not a code milestone.

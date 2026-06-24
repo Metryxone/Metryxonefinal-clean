@@ -26,6 +26,7 @@ import SecurityDashboardPanel        from '@/components/employer/SecurityDashboa
 import TalentIntelligenceGraphPanel  from '@/components/employer/TalentIntelligenceGraphPanel';
 import HiringIntelligencePanel       from '@/components/employer/HiringIntelligencePanel';
 import CompetencyHiringPanel         from '@/components/employer/CompetencyHiringPanel';
+import HiringValidationPanel         from '@/components/employer/HiringValidationPanel';
 import EIOSCockpit                   from '@/components/employer/EIOSCockpit';
 import { MARKET_CATALOG, type MarketRole } from '@/data/marketCatalog';
 
@@ -59,6 +60,7 @@ type TabId =
   | 'talent-graph'
   | 'hiring-intelligence'
   | 'competency-hiring'
+  | 'hiring-validation'
   | 'eios'
   | 'security';
 
@@ -98,6 +100,7 @@ const NAV_SECTIONS: { section: string; items: NavItem[] }[] = [
       { id: 'talent-graph',        label: 'Talent Graph',        icon: <Network size={16} />, badge: 'W2' },
       { id: 'hiring-intelligence', label: 'Hiring Intelligence', icon: <Brain  size={16} />, badge: 'W3' },
       { id: 'competency-hiring',   label: 'Competency Hiring',   icon: <Gauge  size={16} />, badge: 'NEW' },
+      { id: 'hiring-validation',   label: 'Hiring Validation',   icon: <Target size={16} />, badge: 'NEW' },
       { id: 'eios',                label: 'EIOS Cockpit',        icon: <LayoutGrid size={16} />, badge: 'EIOS' },
     ],
   },
@@ -264,8 +267,16 @@ export function EmployerPortalPage({ onNavigate }: EmployerPortalPageProps) {
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [company, setCompany] = useState<Company | null>(null);
   const [loading, setLoading] = useState(true);
+  // MX-75X — validationLoop flag probe: gate the Hiring Validation tab so flag-OFF is byte-identical.
+  const [validationLoopEnabled, setValidationLoopEnabled] = useState(false);
 
   const user = getUser();
+
+  useEffect(() => {
+    fetch('/api/validation-loop/enabled', { headers: authHdr() as HeadersInit })
+      .then(r => setValidationLoopEnabled(r.ok))
+      .catch(() => setValidationLoopEnabled(false));
+  }, []);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -337,7 +348,7 @@ export function EmployerPortalPage({ onNavigate }: EmployerPortalPageProps) {
                     si > 0 && <div className="mx-2 my-1.5 border-t border-gray-100" />
                   )}
                   <div className="space-y-0.5">
-                    {sec.items.map(t => (
+                    {sec.items.filter(t => t.id !== 'hiring-validation' || validationLoopEnabled).map(t => (
                       <button key={t.id} onClick={() => setTab(t.id)}
                         title={!sidebarOpen ? t.label : undefined}
                         className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
@@ -394,6 +405,7 @@ export function EmployerPortalPage({ onNavigate }: EmployerPortalPageProps) {
           {tab === 'talent-graph'        && <TalentIntelligenceGraphPanel />}
           {tab === 'hiring-intelligence' && <HiringIntelligencePanel />}
           {tab === 'competency-hiring'   && <CompetencyHiringPanel jobs={jobs as any} candidates={candidates as any} />}
+          {tab === 'hiring-validation'   && validationLoopEnabled && <HiringValidationPanel />}
           {tab === 'eios'                && <div className="h-full" style={{ height: 'calc(100vh - 120px)' }}><EIOSCockpit /></div>}
           {tab === 'security'            && <SecurityDashboardPanel />}
         </main>

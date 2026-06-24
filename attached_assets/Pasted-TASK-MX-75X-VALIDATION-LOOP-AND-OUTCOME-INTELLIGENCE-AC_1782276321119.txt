@@ -1,0 +1,474 @@
+TASK: MX-75X-VALIDATION-LOOP-AND-OUTCOME-INTELLIGENCE-ACTIVATION
+
+OBJECTIVE
+
+Activate the closed-loop intelligence architecture of MetryxOne.
+
+Transform the platform from:
+
+Assessment
+↓
+Prediction
+
+into
+
+Assessment
+↓
+Prediction
+↓
+Outcome
+↓
+Validation
+↓
+Calibration
+↓
+Improved Prediction
+
+Do NOT fabricate data.
+
+Do NOT fabricate accuracy.
+
+Do NOT replace existing architecture.
+
+Activate and connect existing validation capabilities.
+
+==================================================
+SECTION 1
+CURRENT STATE AUDIT
+==================================================
+
+Audit:
+
+Outcome Tables
+
+Calibration Tables
+
+Prediction Tables
+
+Hiring Outcomes
+
+Career Outcomes
+
+Performance Outcomes
+
+Promotion Outcomes
+
+Retention Outcomes
+
+Validation Engine
+
+Generate:
+
+validation_current_state.md
+
+Identify:
+
+Working Components
+
+Disconnected Components
+
+Unused Components
+
+Missing Links
+
+==================================================
+SECTION 2
+OUTCOME INTELLIGENCE MODEL
+==================================================
+
+Create unified outcome architecture.
+
+Track:
+
+Assessment Result
+
+Role Readiness
+
+Employability Index
+
+Hiring Outcome
+
+Performance Outcome
+
+Promotion Outcome
+
+Retention Outcome
+
+Career Progression
+
+Generate:
+
+outcome_intelligence_model.md
+
+==================================================
+SECTION 3
+HIRING VALIDATION
+==================================================
+
+Track:
+
+Candidate
+↓
+Assessment
+↓
+Shortlist
+↓
+Interview
+↓
+Offer
+↓
+Joining
+↓
+Success
+
+Generate:
+
+hiring_validation_framework.md
+
+==================================================
+SECTION 4
+PERFORMANCE VALIDATION
+==================================================
+
+Track:
+
+Candidate
+↓
+Hired
+↓
+Performance Review
+↓
+Goal Achievement
+↓
+Manager Feedback
+↓
+Outcome
+
+Generate:
+
+performance_validation_framework.md
+
+==================================================
+SECTION 5
+PROMOTION VALIDATION
+==================================================
+
+Track:
+
+Assessment
+↓
+Readiness Prediction
+↓
+Promotion Event
+↓
+Promotion Success
+
+Generate:
+
+promotion_validation_framework.md
+
+==================================================
+SECTION 6
+RETENTION VALIDATION
+==================================================
+
+Track:
+
+Assessment
+↓
+Hiring
+↓
+Retention
+↓
+Attrition
+
+Generate:
+
+retention_validation_framework.md
+
+==================================================
+SECTION 7
+PREDICTION CALIBRATION
+==================================================
+
+Support:
+
+Prediction
+
+Actual Outcome
+
+Variance
+
+Calibration
+
+Confidence
+
+Generate:
+
+prediction_calibration_framework.md
+
+IMPORTANT
+
+Separate:
+
+Prediction
+
+Confidence
+
+Evidence
+
+Coverage
+
+==================================================
+SECTION 8
+EMPLOYABILITY INDEX VALIDATION
+==================================================
+
+Validate:
+
+Employability Prediction
+
+Actual Hiring
+
+Actual Performance
+
+Actual Retention
+
+Generate:
+
+employability_validation_framework.md
+
+==================================================
+SECTION 9
+CAREER BUILDER VALIDATION
+==================================================
+
+Validate:
+
+Career Recommendation
+
+Career Progress
+
+Promotion
+
+Role Transition
+
+Generate:
+
+career_validation_framework.md
+
+==================================================
+SECTION 10
+ROLE DNA VALIDATION
+==================================================
+
+Validate:
+
+Role DNA
+
+Required Competencies
+
+Required Levels
+
+Benchmark Levels
+
+Actual Success Outcomes
+
+Generate:
+
+role_dna_validation_framework.md
+
+==================================================
+SECTION 11
+SUPER ADMIN UI
+==================================================
+
+Create:
+
+Validation Dashboard
+
+Outcome Dashboard
+
+Prediction Dashboard
+
+Calibration Dashboard
+
+Hiring Dashboard
+
+Performance Dashboard
+
+Promotion Dashboard
+
+Retention Dashboard
+
+Generate:
+
+super_admin_validation_ui.md
+
+==================================================
+SECTION 12
+EMPLOYER UI
+==================================================
+
+Provide:
+
+Hiring Success Analytics
+
+Performance Analytics
+
+Retention Analytics
+
+Prediction Analytics
+
+Generate:
+
+employer_validation_ui.md
+
+==================================================
+SECTION 13
+CANDIDATE UI
+==================================================
+
+Provide:
+
+Career Outcome Tracking
+
+Progress Tracking
+
+Readiness Tracking
+
+Success Tracking
+
+Generate:
+
+candidate_validation_ui.md
+
+==================================================
+SECTION 14
+ENTERPRISE ANALYTICS
+==================================================
+
+Generate:
+
+Prediction Accuracy
+
+Hiring Accuracy
+
+Retention Accuracy
+
+Promotion Accuracy
+
+Readiness Accuracy
+
+Competency Accuracy
+
+IMPORTANT
+
+Do not calculate accuracy without evidence.
+
+If outcome data is insufficient:
+
+Display
+
+Insufficient Evidence
+
+instead of fabricated percentages.
+
+Generate:
+
+enterprise_validation_analytics.md
+
+==================================================
+SECTION 15
+CERTIFICATION
+==================================================
+
+Validate:
+
+Outcome Tracking
+
+Prediction Tracking
+
+Calibration
+
+Evidence Capture
+
+Readiness Validation
+
+Employability Validation
+
+Career Validation
+
+Role DNA Validation
+
+Enterprise Ready
+
+Generate:
+
+validation_certification.md
+
+==================================================
+FOUNDER REPORT
+==================================================
+
+Answer:
+
+1. Is the validation loop activated?
+
+2. What outcomes are tracked?
+
+3. What predictions can be validated?
+
+4. What cannot yet be validated?
+
+5. What evidence is required?
+
+6. What changed for employers?
+
+7. What changed for candidates?
+
+8. What changed for super admins?
+
+9. What maturity gain was achieved?
+
+10. Final PASS / FAIL verdict?
+
+==================================================
+IMPLEMENTATION RULES
+==================================================
+
+Additive
+
+Reversible
+
+Flag Gated
+
+Backward Compatible
+
+Production Safe
+
+No fabricated outcomes
+
+No fabricated accuracy
+
+No destructive schema changes
+
+Only activate existing architecture
+
+==================================================
+SUCCESS CRITERIA
+==================================================
+
+Platform captures outcomes.
+
+Platform validates predictions.
+
+Platform calibrates intelligence.
+
+Platform distinguishes coverage from confidence.
+
+Platform remains honest when evidence is insufficient.
+
+Validation Certification = PASS.
+
+Evidence-backed results only.

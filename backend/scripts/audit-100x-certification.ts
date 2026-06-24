@@ -71,6 +71,12 @@ async function main() {
   console.log('=== D12 GLOBAL READINESS (Phase 8 region overlay) ===');
   await q('global_region_content_table', `SELECT to_regclass('public.global_region_content') reg`);
   await q('global_region_content', `SELECT region_code, provenance, COUNT(*)::int n FROM global_region_content GROUP BY region_code, provenance ORDER BY n DESC`);
+  // Task 75 — REAL region-native market & benchmark data (differentiation, not universal inheritance).
+  await q('region_native_market_signals', `SELECT geography, source, COUNT(*)::int n FROM wos_market_signals WHERE context->>'provenance' = 'region_native_market_v1' GROUP BY geography, source ORDER BY geography, source`);
+  await q('region_native_signal_sources', `SELECT COUNT(DISTINCT source)::int distinct_sources, COUNT(*)::int rows, COUNT(*) FILTER (WHERE role_id IS NOT NULL)::int role_mapped, ROUND(AVG(confidence),3) avg_confidence FROM wos_market_signals WHERE context->>'provenance' = 'region_native_market_v1'`);
+  await q('region_native_benchmark_cohorts', `SELECT geography, id, name FROM bench_cohorts WHERE cohort_type = 'region' ORDER BY geography`);
+  // Per-region effective demand differentiation: non-default regions must now DIFFER from each other.
+  await q('region_native_demand_overlay', `SELECT region_code, COUNT(*)::int region_native_demand_rows FROM global_region_content WHERE surface='demand_intelligence' AND provenance='region_native_market_v1' GROUP BY region_code ORDER BY region_code`);
 
   console.log('=== D14 PREDICTIVE INTELLIGENCE / REALIZED OUTCOMES ===');
   await q('outcomes', `SELECT (SELECT COUNT(*)::int FROM career_outcomes) career_outcomes,(SELECT COUNT(*)::int FROM hiring_outcomes) hiring_outcomes,(SELECT COUNT(*)::int FROM interview_outcomes) interview_outcomes,(SELECT COUNT(*)::int FROM tig_calibration) tig_calibration,(SELECT COUNT(*)::int FROM ti_outcome_predictions) ti_outcome_predictions`);

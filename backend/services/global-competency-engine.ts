@@ -57,12 +57,21 @@ export function isValidRegion(code: string): code is RegionCode {
  * table's existing content count; non-default regions count region-tagged overlay rows only.
  * `idExpr` is the column treated as the entity reference for overlay assignment.
  */
+/**
+ * `baseFilter` (default-region ONLY): a SQL predicate restricting what the DEFAULT region (IN)
+ * counts/serves from the backing table. It exists so REAL region-native rows (e.g. US/EU/ME/APAC
+ * market signals, region market-benchmark cohorts) can live in the SAME backing table without
+ * leaking into India's base read. Because these region-native rows did not exist before, applying
+ * the filter keeps the default region byte-identical to prior behaviour. `null` = no restriction.
+ * Non-default regions read ONLY the region-scoped overlay, so the filter never applies to them.
+ */
+export const NON_DEFAULT_REGION_CODES = REGIONS.filter((r) => !r.is_default).map((r) => `'${r.code}'`).join(',');
 export const SURFACES = [
-  { key: 'role_library', table: 'onto_roles', idColumn: 'id', labelColumn: 'title', label: 'Role Libraries' },
-  { key: 'benchmarks', table: 'bench_cohorts', idColumn: 'id', labelColumn: 'name', label: 'Benchmarks' },
-  { key: 'competency_models', table: 'onto_competencies', idColumn: 'id', labelColumn: 'canonical_name', label: 'Competency Models' },
-  { key: 'readiness_models', table: 'career_readiness_history', idColumn: 'id', labelColumn: 'overall_band', label: 'Readiness Models' },
-  { key: 'demand_intelligence', table: 'wos_market_signals', idColumn: 'id', labelColumn: 'signal_type', label: 'Demand Intelligence' },
+  { key: 'role_library', table: 'onto_roles', idColumn: 'id', labelColumn: 'title', label: 'Role Libraries', baseFilter: null as string | null },
+  { key: 'benchmarks', table: 'bench_cohorts', idColumn: 'id', labelColumn: 'name', label: 'Benchmarks', baseFilter: "cohort_type <> 'region'" as string | null },
+  { key: 'competency_models', table: 'onto_competencies', idColumn: 'id', labelColumn: 'canonical_name', label: 'Competency Models', baseFilter: null as string | null },
+  { key: 'readiness_models', table: 'career_readiness_history', idColumn: 'id', labelColumn: 'overall_band', label: 'Readiness Models', baseFilter: null as string | null },
+  { key: 'demand_intelligence', table: 'wos_market_signals', idColumn: 'id', labelColumn: 'signal_type', label: 'Demand Intelligence', baseFilter: `geography IS NULL OR geography NOT IN (${NON_DEFAULT_REGION_CODES})` as string | null },
 ] as const;
 
 export type SurfaceKey = (typeof SURFACES)[number]['key'];
@@ -134,10 +143,12 @@ export async function computeRegionCoverage(pool: Pool): Promise<GlobalCoverage>
   const overlayPresent = await tableExists(pool, 'global_region_content');
 
   // Real global counts per surface (DEFAULT region inheritance). null = unreadable.
+  // baseFilter restricts the default region to its non-region-native rows (byte-identical to before).
   const globalCounts: Record<string, number | null> = {};
   for (const s of SURFACES) {
+    const where = s.baseFilter ? ` WHERE ${s.baseFilter}` : '';
     globalCounts[s.key] = (await tableExists(pool, s.table))
-      ? await scalarInt(pool, `SELECT COUNT(*)::int n FROM ${s.table}`)
+      ? await scalarInt(pool, `SELECT COUNT(*)::int n FROM ${s.table}${where}`)
       : null;
   }
 
@@ -273,12 +284,13 @@ export async function resolveRegionContent(
         surfaces.push({ surface: s.key, label: s.label, backing_table: s.table, source: null, localized: false, count: null, items: [] });
         continue;
       }
-      const count = await scalarInt(pool, `SELECT COUNT(*)::int n FROM ${s.table}`);
+      const baseWhere = s.baseFilter ? ` WHERE ${s.baseFilter}` : '';
+      const count = await scalarInt(pool, `SELECT COUNT(*)::int n FROM ${s.table}${baseWhere}`);
       let items: RegionContentItem[] = [];
       try {
         const { rows } = await pool.query(
           `SELECT ${s.idColumn}::text AS ref, ${s.labelColumn}::text AS label
-             FROM ${s.table} ORDER BY ${s.idColumn} LIMIT $1`,
+             FROM ${s.table}${baseWhere} ORDER BY ${s.idColumn} LIMIT $1`,
           [limit],
         );
         items = rows.map((r) => ({ entity_ref: String(r.ref), label: r.label ?? null }));

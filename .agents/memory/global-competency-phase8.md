@@ -52,6 +52,25 @@ region serves base tables; non-default serves the curated overlay ONLY (surface 
 `source:'empty'`, never a silent base fallback). If you re-run audits, expect non-default regions
 NON-empty now — the smoke assertion was flipped accordingly (don't "fix" it back to all-empty).
 
+## Region-NATIVE data added on top (D12 75→85) — differentiation, not just inheritance
+A later task added REAL region-specific data so US/EU/ME/APAC differ from each other (not only from IN):
+region-native `wos_market_signals` (non-global `geography`, provenance `region_native_market_v1` in
+`context`) + region market-benchmark cohorts (`bench_cohorts.cohort_type='region'` + new nullable
+`geography` col, real wages/workforce/demand in `filters`, NO fabricated `bench_cohort_statistics`).
+Each row carries source_name/source_url/as_of/metric_unit/confidence (gov stats ~0.9 > IGO forecast
+~0.75 > consultancy survey ~0.55). **Figures across rows are NOT comparable** (10-yr projection vs YoY
+vs demand-to-2030 vs talent-shortage share) — unit lives per-row, never imply comparability.
+
+**Default-region byte-identical trap (the key engine change):** region-native rows live in the SAME
+backing tables IN reads wholesale, so they'd leak into India's base count. Fix = per-surface
+`baseFilter` in `SURFACES` applied ONLY on the default-region count+read: demand excludes
+`geography IN (non-default codes)`, benchmarks excludes `cohort_type='region'`. Because these rows
+didn't exist before, the filter keeps IN byte-identical (verified IN benchmarks=15/demand=81 unchanged).
+Non-default regions read the overlay only, so the filter never touches them. Seeds run via
+`scripts/seed-region-native-market.ts` (idempotent: delete-by-provenance/source/id first). Per
+merged-task-data-not-in-live-db: the overlay was EMPTY in this env (prior seed ran isolated) — had to
+re-run BOTH seeds here; prod needs them re-run too.
+
 ## Discipline that held
 GET handlers use `to_regclass` probes + degrade (200 {degraded:true}); ensure-schema runs ONLY on POST
 behind the flag, so flag-OFF never creates the overlay table via HTTP. null=table unreadable vs 0=empty

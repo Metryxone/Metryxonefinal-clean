@@ -80,6 +80,8 @@ import { registerCareerRecommendationRoutes } from "./routes/career-recommendati
 import { registerCareerSimulationEngineRoutes } from "./routes/career-simulation";
 import { registerCareerPassportFoundationRoutes } from "./routes/career-passport-foundation";
 import { registerCareerSignalRoutes } from "./routes/career-signal";
+import { registerCareerPathRoutes } from "./routes/career-path";
+import { registerLearningPathRoutes } from "./routes/learning-path";
 import { registerCareerProgressionRoutes } from "./routes/career-progression";
 import { registerCareerValidationRoutes } from "./routes/career-validation";
 import { registerEmployerValidationRoutes } from "./routes/employer-validation";
@@ -13606,6 +13608,8 @@ Rules:
   registerCareerSimulationEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCareerPassportFoundationRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCareerSignalRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerCareerPathRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerLearningPathRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerTalentIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerTalentFoundationV52Routes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerJobPostingEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);

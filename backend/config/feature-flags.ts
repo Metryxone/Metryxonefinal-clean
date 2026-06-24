@@ -760,6 +760,25 @@ export const FEATURE_FLAGS = {
    *  rich-signal backfill REFUSES to write → byte-identical legacy. No new table,
    *  no schema change. Env: `FF_RICH_BEHAVIORAL_SIGNALS`. */
   richBehavioralSignals: false,
+
+  /** MX-74X — Career Builder Intelligence Suite (DURABLE ACTIVATION master switch).
+   *  This is the ONLY career flag that defaults ON. It exists so the whole Career
+   *  Builder intelligence layer (the Phase-4.x compose family + the Phase-6 activation
+   *  endpoint) is reproducibly ACTIVE across a clean boot / redeploy WITHOUT depending
+   *  on a runtime-only workflow command (the dozens of `FF_CAREER_*` env vars are NOT
+   *  persisted in `.replit`, so a plain restart silently reverted every career route to
+   *  503 / legacy heuristics). When this suite flag is enabled, every per-phase career
+   *  flag in CAREER_SUITE_FLAGS that has NO explicit env override INHERITS the suite
+   *  state (see `isFlagEnabled`). Granular flags keep their own code-default of OFF and
+   *  remain individually OVERRIDABLE: an explicit `FF_CAREER_<PHASE>=0` env var force-
+   *  disables just that phase even while the suite is ON, and `FF_CAREER_BUILDER_SUITE=0`
+   *  reverts the ENTIRE layer to byte-identical legacy (the single reversibility lever).
+   *  The suite only forces the CAREER-SPECIFIC flags; substrate engines (competency
+   *  runtime / EI / Role DNA) are read by the bridge via read-only schema probes
+   *  (`competencyRuntimeReady`), so they need no flag to be composed. Env:
+   *  `FF_CAREER_BUILDER_SUITE`. */
+  careerBuilderSuite: true,
+
   /** PHASE 4 — Career Intelligence Layer. Master flag for the additive, read-only
    *  bridge that COMPOSES the Phase 3 Competency-EI engines (EI profile, dimensions,
    *  role / industry / function readiness, signals, recommendations, history) into
@@ -937,6 +956,22 @@ export const FEATURE_FLAGS = {
    *  composed engine's lazy ensure-schema never fires on a read). Env:
    *  `FF_CAREER_VALIDATION`. */
   careerValidation: false,
+
+  /** MX-74X — Career Path generation (the first missing link). Additive, read-only,
+   *  compose-only engine that SEQUENCES a graph-backed progression path (anchor role
+   *  → rising-seniority cg_role_edges → lateral options → canonical track) by
+   *  composing career-match + role-readiness + career-gap. Inherits the
+   *  `careerBuilderSuite` master switch; flag OFF (and suite OFF) => /api/career-path/*
+   *  503s BEFORE any DB touch (byte-identical legacy). GET is strictly read-only
+   *  (to_regclass probes; competency-runtime gated). Env: `FF_CAREER_PATH`. */
+  careerPath: false,
+
+  /** MX-74X — Learning Path sequencing (the second missing link). Additive, read-only,
+   *  compose-only engine that ORDERS the career-roadmap's gap-closure plan and JOINS
+   *  each step to matching career-recommendation items into a single learning sequence.
+   *  Inherits `careerBuilderSuite`; flag OFF => /api/learning-path/* 503s before any DB
+   *  touch (byte-identical legacy). GET read-only. Env: `FF_LEARNING_PATH`. */
+  learningPath: false,
 
   /** PHASE 5.15 — Super Admin Validation. The EMPLOYER analog of 4.12: a read-only,
    *  compose-only honesty/invariant harness a super-admin runs for ONE employer
@@ -1300,10 +1335,42 @@ function envOverride(key: FeatureFlagKey): boolean | undefined {
   return undefined;
 }
 
+/** MX-74X — per-phase career flags that INHERIT the `careerBuilderSuite` master switch
+ *  when they have no explicit env override. Keeps each phase's code-default at OFF while
+ *  the suite (default ON) provides durable, redeploy-safe activation. Excludes the suite
+ *  flag itself (resolved normally) to avoid recursion. */
+const CAREER_SUITE_FLAGS: ReadonlySet<FeatureFlagKey> = new Set<FeatureFlagKey>([
+  'careerIntelligence',
+  'careerIntelligenceActivation',
+  'careerReadiness',
+  'careerMatch',
+  'careerGap',
+  'careerRoadmap',
+  'careerDevelopment',
+  'careerRecommendation',
+  'careerSimulation',
+  'careerPassportFoundation',
+  'careerSignal',
+  'careerProgression',
+  'careerValidation',
+  'careerPath',
+  'learningPath',
+]);
+
 export function isFlagEnabled(key: FeatureFlagKey): boolean {
+  // 1. Explicit env override always wins (this is the "individually overridable" path:
+  //    FF_CAREER_<PHASE>=0 force-disables a single phase even when the suite is ON).
   const ovr = envOverride(key);
   if (ovr !== undefined) return ovr;
-  return FEATURE_FLAGS[key];
+  // 2. Code default ON.
+  if (FEATURE_FLAGS[key]) return true;
+  // 3. MX-74X durable activation: a career-suite phase with no explicit override inherits
+  //    the `careerBuilderSuite` master switch. The suite flag itself is excluded from the
+  //    set, so this recursion terminates after one hop.
+  if (key !== 'careerBuilderSuite' && CAREER_SUITE_FLAGS.has(key) && isFlagEnabled('careerBuilderSuite')) {
+    return true;
+  }
+  return false;
 }
 
 export function isAdvancedRuntimeEnabled(): boolean {
@@ -1718,6 +1785,10 @@ export function isCompetencyEiEnabled(): boolean {
   return isFlagEnabled('competencyEi');
 }
 
+export function isCareerBuilderSuiteEnabled(): boolean {
+  return isFlagEnabled('careerBuilderSuite');
+}
+
 export function isCareerIntelligenceEnabled(): boolean {
   return isFlagEnabled('careerIntelligence');
 }
@@ -1768,6 +1839,14 @@ export function isCareerProgressionEnabled(): boolean {
 
 export function isCareerValidationEnabled(): boolean {
   return isFlagEnabled('careerValidation');
+}
+
+export function isCareerPathEnabled(): boolean {
+  return isFlagEnabled('careerPath');
+}
+
+export function isLearningPathEnabled(): boolean {
+  return isFlagEnabled('learningPath');
 }
 
 export function isEmployerValidationEnabled(): boolean {

@@ -19,6 +19,7 @@ import { useQuery } from '@tanstack/react-query';
 import {
   Compass, Gauge, Layers, ShieldAlert, Target, Route, Map, Sparkles,
   TrendingUp, ClipboardList, AlertTriangle, CheckCircle2, Info, Search,
+  GitBranch, GraduationCap, ArrowRight, Clock,
 } from 'lucide-react';
 
 const BRAND = { primary: '#344E86', accent: '#4ECDC4' };
@@ -93,6 +94,36 @@ interface ValidationResult {
   areas: ValidationArea[];
 }
 
+// MX-74X — Career Path engine envelope (read-only, graph-backed).
+interface PathAxes {
+  coverage: { measurable: boolean; coverage_pct: number | null; detail: string };
+  confidence: { band: string; basis: string; caps: string[] };
+}
+interface CareerPathEnvelope {
+  subject_id: string; measurable: boolean;
+  anchor: { role_id: number | null; role_title: string | null; catalog_role_id: number | null; seniority: string | null };
+  path: Array<{
+    step: number; role_id: number; role_title: string; seniority: string | null;
+    transition: { edge_type: string; transition_probability: number | null; avg_months_transition: number | null } | null;
+  }>;
+  lateral_options: Array<{ role_id: number; role_title: string; seniority: string | null; edge_type: string; transition_probability: number | null }>;
+  canonical_track: { track_key: string; name: string | null; from_anchor: Array<{ step_order: number; role_id: number; role_title: string }> } | null;
+  summary: { advancement_steps: number; lateral_options: number; terminal_role: string | null; horizon_months: number | null };
+  axes: PathAxes; notes: string[];
+}
+// MX-74X — Learning Path engine envelope (read-only, gap→action→horizon).
+interface LearningPathEnvelope {
+  subject_id: string; measurable: boolean;
+  steps: Array<{
+    competency_id: string; competency_name: string | null; gap: number | null; blocking: boolean;
+    horizon: string; priority_band: string; development_action: string; rec_backed: boolean;
+  }>;
+  unmapped_recommendations: Array<{ rec_type: string; title: string }>;
+  timeline: { total_estimated_weeks: number | null; total_estimated_months: number | null; basis: string; disclaimer: string };
+  summary: { total_steps: number; rec_backed_steps: number; blocking_steps: number; immediate_steps: number; unmapped_recommendations: number };
+  axes: PathAxes; notes: string[];
+}
+
 const BAND_COLOR: Record<string, string> = {
   Excellent: '#15803d', Strong: '#16a34a', Developing: '#ca8a04', Emerging: '#ea580c', Early: '#dc2626',
   ready: '#16a34a', approaching: '#ca8a04', developing: '#ea580c', emerging: '#dc2626',
@@ -122,9 +153,22 @@ export default function CareerIntelligencePanel() {
     queryFn: () => getJSON(`/api/career-intelligence/${encodeURIComponent(subject)}/validation`),
     enabled: !!subject,
   });
+  // MX-74X — two newly-activated missing-link engines, surfaced read-only.
+  const pathQ = useQuery<{ data: CareerPathEnvelope }>({
+    queryKey: ['/api/career-path', subject],
+    queryFn: () => getJSON(`/api/career-path/${encodeURIComponent(subject)}`),
+    enabled: !!subject,
+  });
+  const learnQ = useQuery<{ data: LearningPathEnvelope }>({
+    queryKey: ['/api/learning-path', subject],
+    queryFn: () => getJSON(`/api/learning-path/${encodeURIComponent(subject)}`),
+    enabled: !!subject,
+  });
 
   const d = env.data?.data;
   const v = val.data?.data;
+  const cp = pathQ.data?.data;
+  const lp = learnQ.data?.data;
 
   return (
     <div className="p-6 space-y-6 max-w-6xl mx-auto">
@@ -278,6 +322,95 @@ export default function CareerIntelligencePanel() {
               </div>
             </div>
             <AxesRow axes={d.career_pathways.axes} />
+          </Section>
+
+          {/* MX-74X — Career Path (graph-backed, real cg_role_edges) */}
+          <Section icon={<GitBranch className="h-4 w-4" />} title="Career Path — graph-backed progression (MX-74X)">
+            {pathQ.isLoading && <div className="text-xs text-gray-400">Loading path…</div>}
+            {cp && !cp.measurable && (
+              <Empty text={cp.notes?.[0] ?? 'No graph-backed path could be derived for this subject.'} />
+            )}
+            {cp && cp.measurable && (
+              <>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-xs uppercase tracking-wide text-gray-500">Advancement</span>
+                  {cp.path.map((w, i) => (
+                    <span key={i} className="flex items-center gap-1.5">
+                      {i > 0 && <ArrowRight className="h-3.5 w-3.5 text-gray-300" />}
+                      <span className="inline-flex flex-col items-start rounded-lg border px-2.5 py-1">
+                        <span className="text-sm font-medium text-gray-800">{w.role_title}</span>
+                        <span className="text-[10px] text-gray-400">
+                          {w.seniority ?? 'unranked'}
+                          {w.transition && ` · ${w.transition.edge_type}`}
+                          {w.transition?.transition_probability != null && ` · p=${w.transition.transition_probability}`}
+                          {w.transition?.avg_months_transition != null && ` · ${w.transition.avg_months_transition}mo`}
+                        </span>
+                      </span>
+                    </span>
+                  ))}
+                </div>
+                {cp.lateral_options.length > 0 && (
+                  <div className="mt-3">
+                    <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">Lateral options ({cp.lateral_options.length})</div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {cp.lateral_options.map((l, i) => (
+                        <span key={i} className="text-xs rounded-full bg-gray-50 border px-2 py-0.5 text-gray-600">
+                          {l.role_title} <span className="text-gray-400">({l.edge_type})</span>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {cp.canonical_track && (
+                  <div className="text-xs text-gray-500 mt-2">
+                    Canonical track: <span className="font-medium text-gray-700">{cp.canonical_track.name ?? cp.canonical_track.track_key}</span>
+                    {' · '}{cp.canonical_track.from_anchor.length} step(s) from anchor
+                  </div>
+                )}
+                <div className="text-xs text-gray-500 mt-2">
+                  {cp.summary.advancement_steps} advancement step(s) · terminal: {cp.summary.terminal_role ?? '—'}
+                  {cp.summary.horizon_months != null && ` · ~${cp.summary.horizon_months}mo horizon`}
+                </div>
+                <AxesRow axes={cp.axes as unknown as CovConf} />
+              </>
+            )}
+          </Section>
+
+          {/* MX-74X — Learning Path (gap → action → horizon) */}
+          <Section icon={<GraduationCap className="h-4 w-4" />} title="Learning Path — sequenced development (MX-74X)">
+            {learnQ.isLoading && <div className="text-xs text-gray-400">Loading learning path…</div>}
+            {lp && !lp.measurable && (
+              <Empty text={lp.notes?.[0] ?? 'No measurable roadmap to sequence into a learning path.'} />
+            )}
+            {lp && lp.measurable && (
+              <>
+                <div className="grid grid-cols-4 gap-2 text-center mb-3">
+                  <MiniStat label="Steps" value={lp.summary.total_steps} color={BRAND.primary} />
+                  <MiniStat label="Rec-backed" value={lp.summary.rec_backed_steps} color="#16a34a" />
+                  <MiniStat label="Blocking" value={lp.summary.blocking_steps} color="#dc2626" />
+                  <MiniStat label="Immediate" value={lp.summary.immediate_steps} color="#ca8a04" />
+                </div>
+                {lp.steps.map((s, i) => (
+                  <div key={i} className="border-l-2 pl-3 py-1" style={{ borderColor: s.blocking ? '#dc2626' : '#4ECDC4' }}>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-gray-800">{i + 1}. {s.competency_name ?? s.competency_id}</span>
+                      {s.gap != null && <span className="text-[10px] text-gray-400">gap {s.gap}</span>}
+                      {s.rec_backed
+                        ? <span className="text-[10px] uppercase tracking-wide text-green-700 bg-green-50 px-1.5 py-0.5 rounded">rec-backed</span>
+                        : <span className="text-[10px] uppercase tracking-wide text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded">no rec</span>}
+                    </div>
+                    <div className="text-xs text-gray-500">{s.development_action}</div>
+                    <div className="text-[10px] text-gray-400 flex items-center gap-1 mt-0.5"><Clock className="h-3 w-3" /> {s.horizon}</div>
+                  </div>
+                ))}
+                <div className="text-xs text-gray-500 mt-2">
+                  Est. timeline: {lp.timeline.total_estimated_months != null ? `~${lp.timeline.total_estimated_months} month(s)` : 'n/a'}
+                  {lp.summary.unmapped_recommendations > 0 && ` · ${lp.summary.unmapped_recommendations} unmapped recommendation(s)`}
+                </div>
+                <p className="text-[10px] text-gray-400 mt-1">{lp.timeline.disclaimer}</p>
+                <AxesRow axes={lp.axes as unknown as CovConf} />
+              </>
+            )}
           </Section>
 
           {/* Career Planning */}

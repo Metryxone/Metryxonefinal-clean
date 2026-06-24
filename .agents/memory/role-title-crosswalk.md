@@ -63,9 +63,23 @@ without first bridging title → curated role.
 - Crosswalk needs ONLY `onto_roles` + active `onto_role_competency_profiles`; DNA
   profiles (`onto_dna_profiles`/`onto_role_weights`) are NOT required for matching
   and were intentionally skipped.
-- Alias map keys on collapsed forms (e.g. "frontend developer"); SPACE variants
-  like "Front End Developer" still abstain — that's an alias-map gap, not a
-  library gap. Fix in `FULL_TITLE_ALIASES`, not by adding roles.
+- Alias-map vs library gap: a title that abstains because no curated role exists
+  is a LIBRARY gap (add roles+profiles); a title that abstains because of a
+  spacing/spelling variant of an EXISTING role is an ALIAS-MAP gap (fix in
+  `FULL_TITLE_ALIASES`, never add a duplicate role).
+- Spacing/spelling variants now resolve (Task #106): the alias lookup checks BOTH
+  the normalised input AND its abbreviation-expanded canonical form, so one entry
+  keyed on the expanded spelling ("senior software developer") also catches
+  "Sr. Software Developer", and a "… developer" key also catches "… dev". So
+  "Front End Developer", "Backend Developer", "Full Stack Developer", "Fullstack
+  Engineer", "Dev Ops Engineer", "Quality Assurance Engineer"/"Test Engineer",
+  "ML Engineer"/"Machine Learning Engineer" (→ Data Scientist, the ML-covering
+  role), and "Software/Sr. Software Developer" all resolve as alias (Estimated).
+  Keep entries to DEFENSIBLE synonyms — "developer"/"engineer" are interchangeable
+  in titles, but never bridge genuinely-distinct roles (Product vs Project Manager
+  still abstains via the generic-token guard). "Data Engineer" intentionally has
+  NO alias: it partial-matches Data Analyst on the shared "data" token (Estimated)
+  rather than being force-mapped, since no Data Engineer role exists.
 
 ## Wiring
 - Engine fns: `rankCandidatesForRoleTitle(pool,title)` and

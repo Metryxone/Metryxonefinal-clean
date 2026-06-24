@@ -219,6 +219,58 @@ test('Coverage (profile) and Confidence (title trust) are carried as separate fi
   assert.match(res.note, /separate axes/i);
 });
 
+// ── 8. Spelling / spacing variants resolve via the alias map (Task #106) ─────
+// A fuller fixture covering the curated roles the expansion adds, so spacing /
+// spelling variants ("Front End Developer", "ML Engineer", …) have a real target.
+const VARIANT_FIXTURE: FixtureRole[] = [
+  { id: 'role_software_eng', title: 'Software Engineer', seniority: 'mid', competency_count: 6, weight_total: 100 },
+  { id: 'role_sr_software_eng', title: 'Senior Software Engineer', seniority: 'senior', competency_count: 7, weight_total: 100 },
+  { id: 'role_be_eng', title: 'Backend Engineer', seniority: 'mid', competency_count: 8, weight_total: 100 },
+  { id: 'role_fe_eng', title: 'Frontend Engineer', seniority: 'mid', competency_count: 7, weight_total: 100 },
+  { id: 'role_fullstack_eng', title: 'Full Stack Engineer', seniority: 'mid', competency_count: 6, weight_total: 100 },
+  { id: 'role_devops_eng', title: 'DevOps Engineer', seniority: 'mid', competency_count: 7, weight_total: 100 },
+  { id: 'role_qa_eng', title: 'QA Engineer', seniority: 'mid', competency_count: 6, weight_total: 100 },
+  { id: 'role_data_analyst', title: 'Data Analyst', seniority: 'mid', competency_count: 6, weight_total: 100 },
+  { id: 'role_data_scientist', title: 'Data Scientist', seniority: 'mid', competency_count: 6, weight_total: 100 },
+  { id: 'role_pm', title: 'Product Manager', seniority: 'mid', competency_count: 6, weight_total: 100 },
+  { id: 'role_project_manager', title: 'Project Manager', seniority: 'mid', competency_count: 6, weight_total: 100 },
+];
+const vpool = makeFakePool(VARIANT_FIXTURE);
+
+const VARIANT_CASES: { input: string; expect: string }[] = [
+  { input: 'Front End Developer', expect: 'role_fe_eng' },
+  { input: 'Front End Dev', expect: 'role_fe_eng' },
+  { input: 'Frontend Developer', expect: 'role_fe_eng' },
+  { input: 'Backend Developer', expect: 'role_be_eng' },
+  { input: 'Back End Dev', expect: 'role_be_eng' },
+  { input: 'Software Developer', expect: 'role_software_eng' },
+  { input: 'Sr. Software Developer', expect: 'role_sr_software_eng' },
+  { input: 'Full Stack Developer', expect: 'role_fullstack_eng' },
+  { input: 'Fullstack Engineer', expect: 'role_fullstack_eng' },
+  { input: 'Dev Ops Engineer', expect: 'role_devops_eng' },
+  { input: 'Quality Assurance Engineer', expect: 'role_qa_eng' },
+  { input: 'Test Engineer', expect: 'role_qa_eng' },
+  { input: 'ML Engineer', expect: 'role_data_scientist' },
+  { input: 'Machine Learning Engineer', expect: 'role_data_scientist' },
+];
+
+for (const { input, expect } of VARIANT_CASES) {
+  test(`variant "${input}" resolves to ${expect} (Estimated, via alias)`, async () => {
+    const res = await resolveCuratedRoleByTitle(vpool, input);
+    assert.ok(res.resolved, `"${input}" must resolve, not abstain`);
+    assert.equal(res.resolved!.role_id, expect, `"${input}" → ${expect}`);
+    assert.equal(res.resolved!.estimated, true, 'an aliased spelling variant is Estimated, never authoritative');
+  });
+}
+
+test('the new aliases do NOT collapse genuinely distinct roles (PM vs Project Manager)', async () => {
+  const product = await resolveCuratedRoleByTitle(vpool, 'Product Manager');
+  assert.equal(product.resolved!.role_id, 'role_pm', 'Product Manager → Product Manager (exact)');
+  const project = await resolveCuratedRoleByTitle(vpool, 'Project Manager');
+  assert.equal(project.resolved!.role_id, 'role_project_manager', 'Project Manager → Project Manager (exact), never Product');
+  assert.notEqual(product.resolved!.role_id, project.resolved!.role_id, 'the two never cross-match');
+});
+
 // ── Alternatives are ranked and exclude the resolved pick ────────────────────
 
 test('alternatives are returned for transparency and exclude the resolved role', async () => {

@@ -85,17 +85,43 @@ const ABBREV_TOKEN: Record<string, string> = {
 // Whole-title aliases (normalised input → normalised canonical role title to
 // try as an exact-equivalent). Deliberately small + defensible; token overlap
 // covers the long tail. Each entry is a vocabulary bridge, not a fabrication.
+//
+// The lookup checks BOTH the normalised input AND its abbreviation-expanded
+// canonical form (see resolveCuratedRoleByTitle), so an entry keyed on the
+// expanded form ("senior software developer") also catches its abbreviated
+// spelling ("Sr. Software Developer"), and a "… dev" spelling is caught by the
+// "… developer" key. That is why only the expanded spellings are listed here.
 const FULL_TITLE_ALIASES: Record<string, string> = {
+  // Software Engineer (incl. "Developer" spelling, both seniorities).
   'software engineer': 'software engineer',
+  'software developer': 'software engineer',
+  'senior software developer': 'senior software engineer',
   swe: 'software engineer',
   sde: 'software engineer',
+  // Backend Engineer (incl. "Developer"/"server" spellings).
   'backend developer': 'backend engineer',
   'back end engineer': 'backend engineer',
   'back end developer': 'backend engineer',
   'server engineer': 'backend engineer',
   'server side engineer': 'backend engineer',
+  // Frontend Engineer (incl. spaced "front end" + "Developer" spelling).
   'frontend developer': 'frontend engineer',
   'front end engineer': 'frontend engineer',
+  'front end developer': 'frontend engineer',
+  // Full Stack Engineer (incl. collapsed "fullstack" + "Developer" spelling).
+  'full stack developer': 'full stack engineer',
+  'fullstack engineer': 'full stack engineer',
+  'fullstack developer': 'full stack engineer',
+  // DevOps Engineer (incl. spaced "dev ops").
+  'dev ops engineer': 'devops engineer',
+  // QA Engineer (incl. spelled-out "quality assurance" + "Test Engineer").
+  'quality assurance engineer': 'qa engineer',
+  'test engineer': 'qa engineer',
+  // Data Scientist (ML / Machine Learning Engineer — Data Scientist is the
+  // curated role that covers machine-learning model work).
+  'ml engineer': 'data scientist',
+  'machine learning engineer': 'data scientist',
+  // Product Manager.
   'product owner': 'product manager',
   pm: 'product manager',
   'program manager': 'product manager',
@@ -276,7 +302,11 @@ export async function resolveCuratedRoleByTitle(
 
   const inputCanon = canonicalForm(input);
   const inputDistinct = distinctiveTokens(tokenize(inputNorm));
-  const aliasCanon = FULL_TITLE_ALIASES[inputNorm] ? canonicalForm(FULL_TITLE_ALIASES[inputNorm]) : null;
+  // Look the alias up by the raw normalised form AND by the abbreviation-expanded
+  // canonical form, so abbreviated spellings ("Sr." → "senior", "dev" →
+  // "developer") hit the same alias entry as their expanded keys.
+  const aliasTarget = FULL_TITLE_ALIASES[inputNorm] ?? FULL_TITLE_ALIASES[inputCanon] ?? null;
+  const aliasCanon = aliasTarget ? canonicalForm(aliasTarget) : null;
 
   const scored: Scored[] = [];
   for (const row of roles) {

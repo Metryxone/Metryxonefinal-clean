@@ -48,8 +48,26 @@ reachable but UNFED — surfaced as "Insufficient Evidence", not activated with 
   `enterpriseWorkforceConsole` composer/routes/flag → a direct violation of the "NO rebuild" mandate.
   **Decision:** activate the existing console; the genuine gap was the absent SuperAdmin surface,
   which this phase built. No parallel composer or flag was created.
-- **T004** built the SuperAdmin panel only (Section 10). Employer/Employee UIs (Sections 11–12) are
-  documented as design, not built — consistent with the SuperAdmin-activation scope.
+- **T004** initially built the SuperAdmin panel only (Section 10). A follow-up phase then BUILT the
+  Employer (Section 11) and Employee (Section 12) persona surfaces — see the persona addendum below.
+
+## Persona surfaces addendum (Employer + Employee — BUILT)
+The follow-up activated the persona surfaces previously spec'd as design-only. **No new flag, no new
+composer, no new tables** — the persona routes reuse the SAME `enterpriseWorkforceConsole` flag and the
+SAME composer view functions (compose-never-recompute).
+
+| Persona | Routes | Scope | Verified |
+|---|---|---|---|
+| Employer | `/api/employer/workforce/{_meta/status,overview,skill-gap,talent-risk,talent-forecasting}` | Org-level AGGREGATE developmental views only; person-level succession/mobility EXCLUDED (stays SuperAdmin) | flag-OFF 503-before-auth (live log) · composer smoke 3/3 views on demo_org · build clean |
+| Employee | `/api/my-workforce/{_meta/status,overview,readiness-trend}` | Strictly self-scoped via `resolveEffectiveUserId` IDOR guard (→403 cross-user); role-general future-readiness `personalized:false` | flag-OFF 503-before-auth (live log) · composer smoke abstains honestly (<2pts / no subject) · build clean |
+
+Persona-surface honesty invariants (additionally verified):
+- ✅ **Flag gate BEFORE auth** — `guards = [gate, requireAuth]`; OFF → 503 before any auth/DB touch
+  (confirmed in live workflow logs for both `/api/employer/workforce/_meta/status` and `/api/my-workforce/_meta/status`).
+- ✅ **GET never writes** — all persona routes are `app.get`, composing existing console view fns; no ensure-schema.
+- ✅ **IDOR self-scope** — employee routes resolve the effective user and 403 on cross-user access; employer views are org-aggregate only (no person-level rows leak to the employer persona).
+- ✅ **Not personalized claim is honest** — employee future-readiness is role-general and stamped `personalized:false`; the panel renders a "not personalized" banner.
+- ✅ **Frontend build clean** — `vite build` 48.5s, both `EmployerPortalPage` and `CareerBuilderPage` chunks emit with no TS/import errors; tabs are flag-probe gated (hidden when the `/_meta/status` probe 503s).
 
 ## Production safety
 - Default flag OFF → zero behavioural change in production until `FF_ENTERPRISE_WORKFORCE_CONSOLE=1`.

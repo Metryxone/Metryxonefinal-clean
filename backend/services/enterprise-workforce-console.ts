@@ -572,3 +572,139 @@ export async function consoleOverview(pool: Pool, orgId = DEFAULT_ORG_ID): Promi
     disclaimer: ENTERPRISE_WORKFORCE_DISCLAIMER,
   };
 }
+
+// ── persona-scoped composition (employer aggregate · employee self) ──────────
+//
+// The console above is SuperAdmin-scoped. Employers and employees cannot reach it.
+// These helpers re-use the SAME view functions (compose-never-recompute) but expose
+// only what each persona is allowed to see:
+//   - EMPLOYER: org-level AGGREGATE developmental views (skill-gap, talent-risk,
+//     talent-forecasting). Person-level succession/mobility candidates name
+//     individuals and stay SuperAdmin-only — they are EXCLUDED here.
+//   - EMPLOYEE: strictly self-scoped (own readiness trend, IDOR-guarded at the route)
+//     plus role-general future-readiness signals, disclosed as NOT personalized.
+
+export const EMPLOYER_WORKFORCE_DISCLAIMER =
+  'Employer workforce intelligence surfaces ORG-LEVEL AGGREGATE developmental and planning signals ' +
+  'only. It is NOT a hiring, promotion, or suitability prediction, and it does NOT name individuals ' +
+  '(person-level succession/mobility is SuperAdmin-scoped and excluded). In this environment the data ' +
+  'reflects the platform organization, not a pipeline-partitioned view. Coverage and Confidence are ' +
+  'reported separately; unmeasured signals abstain (null), cohort aggregates suppressed below k=30.';
+
+export const EMPLOYEE_WORKFORCE_DISCLAIMER =
+  'Your workforce outlook is SELF-SCOPED: the readiness trend is YOUR own measurable history only. ' +
+  'Future-readiness signals are ROLE-GENERAL market indicators, NOT personalized predictions about you. ' +
+  'It is developmental, never an evaluation against peers. Unmeasured signals say "insufficient history", ' +
+  'never a fabricated 0; predictive signals are shown as direction + confidence, never "X% likely".';
+
+/** Self-scoped readiness trend for ONE subject (employee). IDOR is enforced at the route. */
+export async function subjectReadinessTrendView(pool: Pool, subjectId: string): Promise<ConsoleView> {
+  if (!subjectId) {
+    return {
+      view: 'my-readiness-trend', available: false, abstained: true,
+      reason: 'no authenticated subject resolved',
+      provenance: { engines: [], tables: ['career_readiness_history'] },
+      data: { subject_id: null, trend: null },
+    };
+  }
+  let trend: TrendResult | null = null;
+  if (await tableExists(pool, 'career_readiness_history')) {
+    const r = await safeCall('readiness.subjectSeries', () =>
+      pool.query(
+        `SELECT overall_score
+           FROM career_readiness_history
+          WHERE subject_id = $1 AND measurable = true AND overall_score IS NOT NULL
+          ORDER BY created_at ASC`,
+        [subjectId],
+      ),
+    );
+    if (r.ok) {
+      const vals = (r.value.rows as any[]).map((x) => Number(x.overall_score)).filter((n) => Number.isFinite(n));
+      trend = buildTrend('readiness', 'My readiness trend', vals);
+    }
+  }
+  const available = !!trend?.available;
+  return {
+    view: 'my-readiness-trend',
+    available,
+    abstained: !available,
+    reason: available ? null : (trend?.reason ?? 'no measurable readiness history for this subject'),
+    provenance: {
+      engines: ['wc3/longitudinal-consumption.{leastSquaresSlope,directionOf}'],
+      tables: ['career_readiness_history'],
+      notes: ["Self-scoped: only this subject's own measurable readiness points; < 2 points abstains."],
+    },
+    data: { subject_id: subjectId, trend },
+  };
+}
+
+/** Employer-safe fold — org-level AGGREGATE developmental views ONLY (no person-level rows). */
+export async function employerWorkforceOverview(pool: Pool, orgId = DEFAULT_ORG_ID): Promise<{
+  engine: string; version: string; scope: string; org_id: string; generated_at: string;
+  views: Record<string, ConsoleView>;
+  summary: { total_views: number; available: number; abstained: number };
+  notes: string[]; disclaimer: string;
+}> {
+  const [skillGap, risk, forecast] = await Promise.all([
+    skillGapView(pool, orgId),
+    talentRiskView(pool, orgId),
+    talentForecastingView(pool),
+  ]);
+  const all = [skillGap, risk, forecast];
+  const views: Record<string, ConsoleView> = {};
+  for (const v of all) views[v.view] = v;
+  return {
+    engine: 'employer-workforce',
+    version: ENTERPRISE_WORKFORCE_CONSOLE_VERSION,
+    scope: 'employer',
+    org_id: orgId,
+    generated_at: new Date().toISOString(),
+    views,
+    summary: {
+      total_views: all.length,
+      available: all.filter((v) => v.available).length,
+      abstained: all.filter((v) => v.abstained).length,
+    },
+    notes: [
+      'Employer scope = org-level aggregate developmental signals (skill-gap, talent-risk, ' +
+      'talent-forecasting). Person-level succession/mobility candidates are SuperAdmin-scoped and excluded.',
+    ],
+    disclaimer: EMPLOYER_WORKFORCE_DISCLAIMER,
+  };
+}
+
+/** Employee-safe fold — self readiness trend + role-general future-readiness (not personalized). */
+export async function employeeWorkforceOverview(pool: Pool, subjectId: string): Promise<{
+  engine: string; version: string; scope: string; subject_id: string | null; generated_at: string;
+  my_readiness_trend: ConsoleView;
+  future_readiness: { view: string; available: boolean; abstained: boolean; reason: string | null; provenance: ViewProvenance; personalized: false; data: { emerging_roles: any[]; trends: any } };
+  notes: string[]; disclaimer: string;
+}> {
+  const [trendView, forecast] = await Promise.all([
+    subjectReadinessTrendView(pool, subjectId),
+    talentForecastingView(pool),
+  ]);
+  const fd: any = forecast.data ?? {};
+  return {
+    engine: 'employee-workforce',
+    version: ENTERPRISE_WORKFORCE_CONSOLE_VERSION,
+    scope: 'employee-self',
+    subject_id: subjectId || null,
+    generated_at: new Date().toISOString(),
+    my_readiness_trend: trendView,
+    future_readiness: {
+      view: 'future-readiness',
+      available: forecast.available,
+      abstained: forecast.abstained,
+      reason: forecast.reason,
+      provenance: forecast.provenance,
+      personalized: false,
+      data: { emerging_roles: Array.isArray(fd.emerging_roles) ? fd.emerging_roles : [], trends: fd.trends ?? null },
+    },
+    notes: [
+      'Self-scoped: readiness trend is your own measurable history (IDOR-guarded). Future-readiness ' +
+      'signals are role-general market indicators, NOT personalized predictions.',
+    ],
+    disclaimer: EMPLOYEE_WORKFORCE_DISCLAIMER,
+  };
+}

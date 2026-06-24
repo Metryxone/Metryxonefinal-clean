@@ -18,7 +18,7 @@ import {
   PieChart, Lightbulb, Flag, CheckSquare, Square, Settings, Bell,
   LogOut, TrendingDown, Minus, RefreshCw, Upload, Eye, Bookmark,
   ClipboardList, Trophy, Percent, Gauge, BookMarked, Info,
-  CalendarCheck, Rocket, History, Network, Route, Layers, ArrowUpRight, ShieldCheck
+  CalendarCheck, Rocket, History, Network, Route, Layers, ArrowUpRight, ShieldCheck, Compass
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -54,6 +54,7 @@ import LearningIntelligenceTab from '@/components/career/LearningIntelligenceTab
 import FutureReadinessTab from '@/components/career/FutureReadinessTab';
 import HiringReadinessTab from '@/components/career/HiringReadinessTab';
 import PredictionTrustTab from '@/components/career/PredictionTrustTab';
+import MyWorkforcePanel from '@/components/career/MyWorkforcePanel';
 import CareerPassportTab from '@/components/career/CareerPassportTab';
 import LBIDashboard from '@/components/career/LBIDashboard';
 import CareerTracksPanel from '@/components/career/CareerTracksPanel';
@@ -114,7 +115,9 @@ type TabId =
   // ── Hiring Readiness (98X §9 candidate, additive) ──
   | 'hiring-readiness'
   // ── MX-75X — Prediction Trust & Transparency (additive) ──
-  | 'prediction-trust';
+  | 'prediction-trust'
+  // ── MX-77X — My Workforce Outlook (self-scoped, additive) ──
+  | 'my-workforce';
 
 // 5-zone workspace grouping for the sidebar (Phase 5). Order here = render order.
 type Zone = 'command' | 'profile' | 'intelligence' | 'execution' | 'growth' | 'adaptive';
@@ -179,6 +182,7 @@ const TABS: { id: TabId; label: string; icon: React.ReactNode; screen?: string; 
   { id: 'intelligence-hub',   label: 'Intelligence Hub',  icon: <Brain size={16} />,          zone: 'intelligence', desc: '8 intelligence surfaces — memory, trajectory, forecast, outcomes, interventions, risk & opportunity' },
   { id: 'hiring-readiness',   label: 'Hiring Readiness',  icon: <Gauge size={16} />,          zone: 'intelligence', desc: 'How your assessed competencies map to a target role — developmental, not a hiring decision' },
   { id: 'prediction-trust',   label: 'Prediction Trust',  icon: <ShieldCheck size={16} />,    zone: 'intelligence', desc: 'How trustworthy your insights are today, and how they get sharper over time — full transparency' },
+  { id: 'my-workforce',       label: 'Workforce Outlook', icon: <Compass size={16} />,        zone: 'intelligence', desc: 'Your own readiness trend over time + role-general future-readiness — developmental, never a peer ranking' },
   // ── Adaptive Career Intelligence (Phases 1–5) ─────────────────────────────
   { id: 'dashboard', label: 'My Competency Map',      icon: <Brain size={16} />,        screen: 'ontology-explorer',      group: 'aci', zone: 'adaptive', desc: "See what's being measured about you" },
   { id: 'dashboard', label: 'Adaptive Benchmark',     icon: <BarChart3 size={16} />,    screen: 'benchmark-dashboard',    group: 'aci', zone: 'adaptive', desc: 'See where you stand vs peers' },
@@ -829,6 +833,7 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
   const [showWelcomeUpload, setShowWelcomeUpload] = useState(false);
   // MX-75X — validationLoop flag probe: gate the Prediction Trust tab so flag-OFF is byte-identical.
   const [validationLoopEnabled, setValidationLoopEnabled] = useState(false);
+  const [myWorkforceEnabled, setMyWorkforceEnabled] = useState(false);
 
   const tokenUser = getUser();
   const [sessionUser, setSessionUser] = useState<any>(null);
@@ -845,6 +850,9 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
     fetch('/api/validation-loop/enabled', { credentials: 'include' })
       .then(r => setValidationLoopEnabled(r.ok))
       .catch(() => setValidationLoopEnabled(false));
+    fetch('/api/my-workforce/_meta/status', { headers: authHeader() as HeadersInit })
+      .then(r => setMyWorkforceEnabled(r.ok))
+      .catch(() => setMyWorkforceEnabled(false));
   }, []);
   const user = tokenUser ?? sessionUser;
   const userId = user?.id || user?.userId || sessionUser?.id || '';
@@ -1066,7 +1074,7 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
             <nav className="p-2 space-y-0.5">
               {ZONE_ORDER.map((zone) => {
                 const items = TABS.filter((t) => (t.zone ?? 'command') === zone)
-                  .filter((t) => t.id !== 'prediction-trust' || validationLoopEnabled);
+                  .filter((t) => (t.id !== 'prediction-trust' || validationLoopEnabled) && (t.id !== 'my-workforce' || myWorkforceEnabled));
                 if (items.length === 0) return null;
                 return (
                   <div key={zone} className="pb-1">
@@ -1167,6 +1175,7 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
           {tab === 'future-readiness' && <FutureReadinessTab userId={userId} />}
           {tab === 'hiring-readiness' && <HiringReadinessTab userId={userId} />}
           {tab === 'prediction-trust' && validationLoopEnabled && <PredictionTrustTab />}
+          {tab === 'my-workforce' && myWorkforceEnabled && <MyWorkforcePanel />}
           {tab === 'career-passport' && <CareerPassportTab userId={userId} profile={profile} />}
           {tab === 'career-graph'      && <CareerGraphTab userId={userId} />}
           {tab === 'career-recs'       && <CareerRecommendationsTab userId={userId} />}
@@ -2315,7 +2324,7 @@ function StageGuidancePanel({
                         try {
                           const u = new URL(s.cta.route, window.location.origin);
                           const t = u.searchParams.get('tab') as TabId | null;
-                          const validTabs: TabId[] = ['dashboard','profile','skills','resume','jobs','interview','learning','pathways','mentors','goals','assessment','future-map','development','visibility','fresher-hub','simulations','market-intel','velocity','workforce','weekly-plan','next-actions','behavioral-growth','career-memory','career-graph','career-recs','career-tracks','career-paths','learning-intel','lbi','future-readiness','career-passport','forecast-dashboard','growth-roadmap','what-if','rec-history','intelligence-hub','hiring-readiness','prediction-trust'];
+                          const validTabs: TabId[] = ['dashboard','profile','skills','resume','jobs','interview','learning','pathways','mentors','goals','assessment','future-map','development','visibility','fresher-hub','simulations','market-intel','velocity','workforce','weekly-plan','next-actions','behavioral-growth','career-memory','career-graph','career-recs','career-tracks','career-paths','learning-intel','lbi','future-readiness','career-passport','forecast-dashboard','growth-roadmap','what-if','rec-history','intelligence-hub','hiring-readiness','prediction-trust','my-workforce'];
                           onGoToTab(t && validTabs.includes(t) ? t : 'skills');
                         } catch { onGoToTab('skills'); }
                       }}

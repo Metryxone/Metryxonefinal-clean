@@ -2819,6 +2819,7 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
         { id: 'hr',                  icon: Briefcase,     label: 'HR & Jobs' },
         { id: 'mentors',             icon: UserCheck,     label: 'Mentors' },
         { id: 'employer-onboarding', icon: Building2,     label: 'Employer Onboarding' },
+        { id: 'employer-governance', icon: Gauge,         label: 'Employer Competency Governance' },
       ]
     },
     // ── Operations ──────────────────────────────────────────────────────────

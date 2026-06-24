@@ -52,6 +52,7 @@ import MEIDashboard from '@/components/career/MEIDashboard';
 import CareerRecommendationsTab from '@/components/career/CareerRecommendationsTab';
 import LearningIntelligenceTab from '@/components/career/LearningIntelligenceTab';
 import FutureReadinessTab from '@/components/career/FutureReadinessTab';
+import HiringReadinessTab from '@/components/career/HiringReadinessTab';
 import CareerPassportTab from '@/components/career/CareerPassportTab';
 import LBIDashboard from '@/components/career/LBIDashboard';
 import CareerTracksPanel from '@/components/career/CareerTracksPanel';
@@ -108,7 +109,9 @@ type TabId =
   // ── P-R8 — Career Pathways Intelligence (CPI) (additive) ──
   | 'forecast-dashboard' | 'growth-roadmap' | 'what-if' | 'rec-history'
   // ── Career Intelligence Hub (additive) ──
-  | 'intelligence-hub';
+  | 'intelligence-hub'
+  // ── Hiring Readiness (98X §9 candidate, additive) ──
+  | 'hiring-readiness';
 
 // 5-zone workspace grouping for the sidebar (Phase 5). Order here = render order.
 type Zone = 'command' | 'profile' | 'intelligence' | 'execution' | 'growth' | 'adaptive';
@@ -171,6 +174,7 @@ const TABS: { id: TabId; label: string; icon: React.ReactNode; screen?: string; 
   { id: 'rec-history',        label: 'Rec. History',      icon: <History size={16} />,        zone: 'growth' },
   // ── Career Intelligence Hub (additive) ────────────────────────────────────
   { id: 'intelligence-hub',   label: 'Intelligence Hub',  icon: <Brain size={16} />,          zone: 'intelligence', desc: '8 intelligence surfaces — memory, trajectory, forecast, outcomes, interventions, risk & opportunity' },
+  { id: 'hiring-readiness',   label: 'Hiring Readiness',  icon: <Gauge size={16} />,          zone: 'intelligence', desc: 'How your assessed competencies map to a target role — developmental, not a hiring decision' },
   // ── Adaptive Career Intelligence (Phases 1–5) ─────────────────────────────
   { id: 'dashboard', label: 'My Competency Map',      icon: <Brain size={16} />,        screen: 'ontology-explorer',      group: 'aci', zone: 'adaptive', desc: "See what's being measured about you" },
   { id: 'dashboard', label: 'Adaptive Benchmark',     icon: <BarChart3 size={16} />,    screen: 'benchmark-dashboard',    group: 'aci', zone: 'adaptive', desc: 'See where you stand vs peers' },
@@ -1149,6 +1153,7 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
           {tab === 'learning-intel'    && <LearningIntelligenceTab userId={userId} />}
           {tab === 'lbi'               && <LBIDashboard email={profile?.email || undefined} />}
           {tab === 'future-readiness' && <FutureReadinessTab userId={userId} />}
+          {tab === 'hiring-readiness' && <HiringReadinessTab userId={userId} />}
           {tab === 'career-passport' && <CareerPassportTab userId={userId} profile={profile} />}
           {tab === 'career-graph'      && <CareerGraphTab userId={userId} />}
           {tab === 'career-recs'       && <CareerRecommendationsTab userId={userId} />}

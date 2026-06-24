@@ -10,7 +10,7 @@ consumed by THREE flag-gated surfaces: `/api/competency/questions/select` (diffi
 envelope), role-fit readiness bands in `competency-assessment-runtime.ts` (level-aware vs `DEFAULT_READINESS_BANDS`),
 and new GET `/api/competency/assessment/difficulty-plan`. OFF = byte-identical incl. zero DDL (read-only).
 
-## Unified vocabulary + activation (Task #71)
+## Unified vocabulary + activation
 - The difficulty bank now uses ONE 3-tier ladder **foundational / intermediate / advanced** (legacy
   easy/medium/hard normalized; column DEFAULT now `intermediate`). `DifficultyBand` collapsed to these three;
   `difficultyRank`/`proficiencyToDifficulty` are now ranks **1–3** (legacy still aliased for stragglers).

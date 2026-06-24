@@ -15,6 +15,7 @@ const ReadinessDashboardsPanel = lazy(() => import('./superadmin/ReadinessDashbo
 const HealthDashboardsPanel = lazy(() => import('./superadmin/HealthDashboardsPanel'));
 const ConcernAreasPanel = lazy(() => import('./superadmin/ConcernAreasPanel'));
 const EmployerOnboardingPanel = lazy(() => import('./superadmin/EmployerOnboardingPanel'));
+const EmployerGovernancePanel = lazy(() => import('./superadmin/EmployerGovernancePanel'));
 const CapadexReportsPanel = lazy(() => import('./superadmin/CapadexReportsPanel'));
 const CapadexUsersPanel = lazy(() => import('./superadmin/CapadexUsersPanel'));
 const CapadexAnalyticsPanel = lazy(() => import('./superadmin/CapadexAnalyticsPanel'));
@@ -519,6 +520,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               {activeTab === 'content'          && <ContentManagerPanel />}
               {activeTab === 'behavior'         && <AssessmentModulesManagement onNavigate={onNavigate} />}
               {activeTab === 'employer-onboarding' && <EmployerOnboardingPanel />}
+              {activeTab === 'employer-governance' && <EmployerGovernancePanel />}
               {activeTab === 'action-center'    && <ActionCenterPanel />}
               {activeTab === 'notification-center' && <NotificationCenterPanel />}
               {activeTab === 'readiness-dashboards' && <ReadinessDashboardsPanel />}

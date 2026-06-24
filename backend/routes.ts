@@ -110,6 +110,8 @@ import { registerRoleDnaExpansionRoutes } from "./routes/role-dna-expansion";
 import { registerRoleDnaGovernanceRoutes } from "./routes/role-dna-governance";
 import { registerCompetencySpineRoutes } from "./routes/competency-spine";
 import { registerEmployerCompetencyMatchRoutes } from "./routes/employer-competency-match";
+import { registerCandidateCompetencyReadinessRoutes } from "./routes/candidate-competency-readiness";
+import { registerEmployerGovernanceRoutes } from "./routes/employer-governance";
 import { registerCareerBuilderActivationRoutes } from "./routes/career-builder-activation";
 import { registerCompetencySkillIntelligenceRoutes } from "./routes/competency-skill-intelligence";
 import { registerOnetActivationRoutes } from "./routes/onet-activation";
@@ -13649,6 +13651,8 @@ Rules:
   registerRoleDnaGovernanceRoutes({ app, pool: concernsPool, requireAuth });
   registerCompetencySpineRoutes({ app, pool: concernsPool, requireAuth });
   registerEmployerCompetencyMatchRoutes({ app, pool: concernsPool, requireAuth });
+  registerCandidateCompetencyReadinessRoutes(app, concernsPool, requireAuth);
+  registerEmployerGovernanceRoutes(app, concernsPool, requireAuth);
   registerCareerBuilderActivationRoutes({ app, pool: concernsPool, requireAuth });
   registerCompetencySkillIntelligenceRoutes({ app, pool: concernsPool, requireAuth });
   registerOnetActivationRoutes({ app, pool: concernsPool, requireAuth });

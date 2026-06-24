@@ -25,6 +25,7 @@ import {
 import SecurityDashboardPanel        from '@/components/employer/SecurityDashboardPanel';
 import TalentIntelligenceGraphPanel  from '@/components/employer/TalentIntelligenceGraphPanel';
 import HiringIntelligencePanel       from '@/components/employer/HiringIntelligencePanel';
+import CompetencyHiringPanel         from '@/components/employer/CompetencyHiringPanel';
 import EIOSCockpit                   from '@/components/employer/EIOSCockpit';
 import { MARKET_CATALOG, type MarketRole } from '@/data/marketCatalog';
 
@@ -57,6 +58,7 @@ type TabId =
   | 'org-intelligence' | 'talent-match' | 'competency-map'
   | 'talent-graph'
   | 'hiring-intelligence'
+  | 'competency-hiring'
   | 'eios'
   | 'security';
 
@@ -95,6 +97,7 @@ const NAV_SECTIONS: { section: string; items: NavItem[] }[] = [
     items: [
       { id: 'talent-graph',        label: 'Talent Graph',        icon: <Network size={16} />, badge: 'W2' },
       { id: 'hiring-intelligence', label: 'Hiring Intelligence', icon: <Brain  size={16} />, badge: 'W3' },
+      { id: 'competency-hiring',   label: 'Competency Hiring',   icon: <Gauge  size={16} />, badge: 'NEW' },
       { id: 'eios',                label: 'EIOS Cockpit',        icon: <LayoutGrid size={16} />, badge: 'EIOS' },
     ],
   },
@@ -390,6 +393,7 @@ export function EmployerPortalPage({ onNavigate }: EmployerPortalPageProps) {
           {tab === 'competency-map'   && <CompetencyMapTab company={company} jobs={jobs} candidates={candidates} onTabChange={setTab} />}
           {tab === 'talent-graph'        && <TalentIntelligenceGraphPanel />}
           {tab === 'hiring-intelligence' && <HiringIntelligencePanel />}
+          {tab === 'competency-hiring'   && <CompetencyHiringPanel jobs={jobs as any} candidates={candidates as any} />}
           {tab === 'eios'                && <div className="h-full" style={{ height: 'calc(100vh - 120px)' }}><EIOSCockpit /></div>}
           {tab === 'security'            && <SecurityDashboardPanel />}
         </main>

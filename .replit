@@ -64,7 +64,7 @@ outputType = "console"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd backend && npm run dev:server"
+args = "cd backend && FF_ADAPTIVE_INTELLIGENCE_FOUNDATION=1 FF_EMPLOYER_COMPETENCY_HIRING=1 npm run dev:server"
 waitForPort = 8080
 
 [[workflows.workflow]]

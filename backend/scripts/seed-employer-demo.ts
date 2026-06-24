@@ -19,11 +19,25 @@
 import { Pool } from 'pg';
 import { buildTIGForOrg, computeSuccessProbability } from '../routes/employer-tig';
 import { runHiringAnalysis } from '../routes/employer-hiring-intelligence';
+import { generateRoleDNA } from '../services/role-dna-expansion-engine';
 
 const ORG_ID = process.env.SEED_ORG_ID ?? 'f90128da-b44b-4db7-9734-d4f713758e2d';
 const JOB_ID = 'demo-job-fullstack';
-const JOB_TITLE = 'Senior Full-Stack Engineer (DEMO)';
+// MX-73X: title MUST resolve to a curated onto_* role so generateRoleDNA returns
+// requirements (the competency-driven match needs requirement codes to overlap the
+// candidate competency profile). 'Software Engineer' resolves (conf 0.85, 10 reqs);
+// the '(DEMO)' suffix is tolerated by the resolver and preserved as an honesty marker.
+const JOB_TITLE = 'Software Engineer (DEMO)';
 const SOURCE = 'Demo Seed';
+/** Source tag stamped on every demo competency run so it is purgeable + never mistaken for real. */
+const COMPETENCY_RUN_SOURCE = 'demo_seed';
+
+// MX-73X §9 — a demo CAREER-SEEKER login so the candidate-facing Hiring Readiness tab is
+// exercisable end-to-end. Self-scoped: the candidate endpoint reads competency scores keyed
+// by the logged-in user's OWN email, so this seeker's email gets a real competency run too.
+const DEMO_SEEKER_EMAIL = 'demo.seeker@example.com';
+const DEMO_SEEKER_PASSWORD = 'demo123';
+const DEMO_SEEKER_NAME = 'Demo Seeker (DEMO)';
 
 if (!process.env.DATABASE_URL) {
   console.error('[seed] DATABASE_URL is not set — aborting.');
@@ -105,6 +119,145 @@ for (let j = 0; j < ACTIVE_STAGES.length; j++) {
   });
 }
 
+// ---------------------------------------------------------------------------
+// MX-73X — competency profile seeding (canonical onto_competency_score_runs ledger).
+//
+// HONESTY: the per-competency normalized_score values below are SYNTHETIC demo INPUTS,
+// clearly marked (source='demo_seed', subject_id is an @example.com address → purgeable).
+// The competency-driven MATCH math (computeCompetencyDrivenMatch) still runs on the REAL
+// engine over these inputs — we never write a fabricated match/fit number, only the raw
+// competency inputs the engine reads. The requirement CODES are pulled live from the REAL
+// generateRoleDNA for JOB_TITLE so the candidate keys always overlap the role requirements.
+// ---------------------------------------------------------------------------
+type ProfileTier = 'strong' | 'fit' | 'conditional' | 'development' | 'partial';
+const SCORE_RANGE: Record<Exclude<ProfileTier, 'partial'>, [number, number]> = {
+  strong: [78, 95],
+  fit: [66, 82],
+  conditional: [52, 70],
+  development: [38, 56],
+};
+function levelOf(score: number): { level: number; label: string } {
+  if (score >= 80) return { level: 4, label: 'Advanced' };
+  if (score >= 60) return { level: 3, label: 'Proficient' };
+  if (score >= 40) return { level: 2, label: 'Developing' };
+  return { level: 1, label: 'Emerging' };
+}
+
+interface ReqLite { code: string; name: string }
+
+/** Build a synthetic-but-real-shaped competency_scores array for one candidate + tier. */
+function buildCompetencyScores(reqs: ReqLite[], tier: ProfileTier): any[] {
+  // 'partial' demonstrates the coverage-thin path (headline fit band WITHHELD): only ~40%
+  // of requirements scored, using a strong range so it is clearly a COVERAGE miss, not a gap.
+  const range = SCORE_RANGE[tier === 'partial' ? 'strong' : tier];
+  const used = tier === 'partial' ? reqs.slice(0, Math.max(1, Math.ceil(reqs.length * 0.4))) : reqs;
+  return used.map((r) => {
+    const score = rint(range[0], range[1]);
+    const { level, label } = levelOf(score);
+    return {
+      competency_id: r.code,
+      competency_name: r.name,
+      normalized_score: score,
+      level,
+      level_label: label,
+      level_status: 'measured',
+    };
+  });
+}
+
+/** Insert one demo competency run per selected candidate, keyed by candidate.email. */
+async function seedCompetencyProfiles(emails: string[]): Promise<number> {
+  const dna = await generateRoleDNA(pool, JOB_TITLE);
+  const reqs: ReqLite[] = (dna.requirements ?? []).map((r: any) => ({ code: r.code, name: r.name }));
+  if (!reqs.length) {
+    console.warn(`[seed] WARN role DNA for "${JOB_TITLE}" resolved 0 requirements — competency match cannot be exercised. Skipping competency seed.`);
+    return 0;
+  }
+  // Idempotent cleanup — only the demo runs for THESE subjects (never touches real scores).
+  await pool.query(
+    `DELETE FROM onto_competency_score_runs WHERE source=$1 AND subject_id = ANY($2::text[])`,
+    [COMPETENCY_RUN_SOURCE, emails],
+  ).catch(() => {});
+
+  // Deterministic tier spread so the demo shows the full range of fit signals.
+  const TIER_CYCLE: ProfileTier[] = ['strong', 'fit', 'conditional', 'development', 'strong', 'partial'];
+  let inserted = 0;
+  for (let i = 0; i < emails.length; i++) {
+    const email = emails[i]!;
+    const tier = TIER_CYCLE[i % TIER_CYCLE.length]!;
+    const scores = buildCompetencyScores(reqs, tier);
+    const measured = scores.map((s) => s.normalized_score);
+    const overallScore = Math.round(measured.reduce((a, b) => a + b, 0) / measured.length);
+    const overall = { overall_score: overallScore, overall_level: levelOf(overallScore).level };
+    await pool.query(
+      `INSERT INTO onto_competency_score_runs
+         (subject_id, total_questions, scored_questions, competency_scores, overall, normalization, status, source, created_at)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,NOW())`,
+      [
+        email,
+        scores.length * 3,
+        scores.length * 3,
+        JSON.stringify(scores),
+        JSON.stringify(overall),
+        JSON.stringify({ method: 'demo_seed', note: 'Synthetic demo inputs — real match math runs over them.' }),
+        'measured',
+        COMPETENCY_RUN_SOURCE,
+      ],
+    );
+    inserted++;
+  }
+  console.log(`[seed] competency runs inserted: ${inserted} (role="${dna.roleTitle}", reqs=${reqs.length})`);
+  return inserted;
+}
+
+/**
+ * Seed a demo career-seeker LOGIN (+ profile + own competency run) so the §9
+ * candidate Hiring Readiness tab can be exercised. Idempotent + @example.com-purgeable.
+ * Returns the demo seeker's email (the competency subject) or null on skip.
+ */
+async function seedDemoSeeker(): Promise<string | null> {
+  const { scrypt, randomBytes } = await import('crypto');
+  const { promisify } = await import('util');
+  const scryptAsync = promisify(scrypt);
+  const hashPassword = async (pw: string) => {
+    const salt = randomBytes(16).toString('hex');
+    const buf = (await scryptAsync(pw, salt, 64)) as Buffer;
+    return `${buf.toString('hex')}.${salt}`;
+  };
+
+  const password = await hashPassword(DEMO_SEEKER_PASSWORD);
+  // Upsert the login (username == email is the platform convention).
+  const upserted = await pool.query(
+    `INSERT INTO users (username, password, full_name, role, roles, email, account_type)
+       VALUES ($1,$2,$3,'job_seeker',ARRAY['job_seeker']::text[],$1,'job_seeker')
+     ON CONFLICT (username) DO UPDATE SET password = EXCLUDED.password, full_name = EXCLUDED.full_name
+     RETURNING id`,
+    [DEMO_SEEKER_EMAIL, password, DEMO_SEEKER_NAME],
+  ).catch((e) => { console.warn('[seed] WARN demo seeker user upsert failed:', e.message); return null; });
+  if (!upserted || !upserted.rows[0]) return null;
+  const userId = String(upserted.rows[0].id);
+
+  // Career seeker profile (JSONB), keyed by user_id (PK). Minimal but real-shaped.
+  const profile = {
+    exists: true,
+    email: DEMO_SEEKER_EMAIL,
+    personal: { name: DEMO_SEEKER_NAME, email: DEMO_SEEKER_EMAIL, location: 'Bengaluru, IN' },
+    targetRole: 'Software Engineer',
+    assessmentScore: 72,
+  };
+  await pool.query(
+    `INSERT INTO career_seeker_profiles (user_id, data, completeness, created_at, updated_at)
+       VALUES ($1,$2::jsonb,$3,NOW(),NOW())
+     ON CONFLICT (user_id) DO UPDATE SET data = EXCLUDED.data, updated_at = NOW()`,
+    [userId, JSON.stringify(profile), 60],
+  ).catch((e) => console.warn('[seed] WARN demo seeker profile upsert failed:', e.message));
+
+  // Own competency run (subject_id == email) so the self-scoped readiness endpoint is non-null.
+  await seedCompetencyProfiles([DEMO_SEEKER_EMAIL]);
+  console.log(`[seed] demo career-seeker login ready: ${DEMO_SEEKER_EMAIL} / ${DEMO_SEEKER_PASSWORD}`);
+  return DEMO_SEEKER_EMAIL;
+}
+
 async function main(): Promise<void> {
   console.log(`[seed] org=${ORG_ID} job=${JOB_ID} candidates=${candidates.length} (terminal=${N_TERMINAL}, active=${ACTIVE_STAGES.length})`);
 
@@ -119,11 +272,11 @@ async function main(): Promise<void> {
   // Job
   await pool.query(
     `INSERT INTO employer_jobs
-       (id, employer_id, title, department, location, type, work_mode, experience, salary,
+       (id, employer_id, title, department, location, type, salary_min, salary_max, currency,
         description, skills, requirements, ei_min_score, status, responsibilities, perks,
         hiring_manager, quota, application_count, created_at, updated_at)
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,NOW(),NOW())`,
-    [JOB_ID, ORG_ID, JOB_TITLE, 'Engineering', 'Bengaluru, IN', 'Full-time', 'Hybrid', '5+ years', '₹28L – ₹42L',
+    [JOB_ID, ORG_ID, JOB_TITLE, 'Engineering', 'Bengaluru, IN', 'Full-time', 2800000, 4200000, 'INR',
      'Demo role seeded to showcase Job Fit & calibration. Build and scale the product across the stack.',
      JSON.stringify(JOB_SKILLS),
      JSON.stringify(['5+ years full-stack', 'Strong system design', 'Cloud (AWS)']),
@@ -150,6 +303,17 @@ async function main(): Promise<void> {
   }
   console.log(`[seed] inserted job + ${candidates.length} candidates`);
 
+  // MX-73X: seed competency profiles (canonical onto_competency_score_runs) so the
+  // competency-driven hiring flow is exercisable end-to-end. We give profiles to every
+  // ACTIVE (in-pipeline) candidate — those viewed in the Intelligence drawer — plus the
+  // first 14 terminal candidates so the admin governance distribution has real spread.
+  const activeEmails = candidates.filter(c => c.predicted == null).map(c => c.email);
+  const terminalEmails = candidates.filter(c => c.predicted != null).slice(0, 14).map(c => c.email);
+  const competencyRuns = await seedCompetencyProfiles([...activeEmails, ...terminalEmails]);
+
+  // §9 candidate persona — demo career-seeker login with its OWN competency profile.
+  const seekerEmail = await seedDemoSeeker();
+
   // Run the REAL hiring engine for every candidate (6 dims + 7 predictions → ep98_hiring_assessments).
   const analysis = await runHiringAnalysis(pool, ORG_ID, JOB_ID);
   console.log('[seed] hiring analysis:', JSON.stringify(analysis).slice(0, 160));
@@ -169,7 +333,9 @@ async function main(): Promise<void> {
   console.log(`[seed] realized outcomes: ${hired} Hired / ${rejected} Rejected (total ${hired + rejected})`);
   console.log('[seed] calibration row:', calib.rows[0] ?? '(none)');
   console.log(`[seed] assessments stored: ${asmt.rows[0]?.n ?? 0}`);
-  console.log('[seed] DONE — log in as the employer, open a candidate → Intelligence tab to see Job Fit + calibration badge.');
+  console.log(`[seed] competency runs (demo_seed): ${competencyRuns}`);
+  console.log(`[seed] demo career-seeker subject: ${seekerEmail ?? '(skipped)'}`);
+  console.log('[seed] DONE — employer: open a candidate → Competency Hiring tab. Candidate: log in as the demo seeker → Hiring Readiness tab.');
   await pool.end();
 }
 

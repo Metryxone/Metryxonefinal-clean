@@ -1,0 +1,615 @@
+TASK: MX-71X-ROLE-DNA-ADAPTIVE-ASSESSMENT-CERTIFICATION
+
+OBJECTIVE
+
+Implement and certify the complete Adaptive Assessment Architecture for MetryxOne.
+
+This is NOT a UI enhancement.
+
+This is NOT a question-bank enhancement.
+
+This is NOT a scoring-engine enhancement.
+
+This is a Role DNA Intelligence activation initiative.
+
+The goal is to transform adaptive assessment from a partially activated capability into a fully operational Role-DNA-driven assessment intelligence engine.
+
+CURRENT CERTIFICATION STATUS
+
+Adaptive Assessment = FAIL
+
+Reason:
+
+Role levels do not materially influence runtime assessment difficulty.
+
+Current Flow
+
+Role
+↓
+Assessment
+
+Target Flow
+
+Role
+↓
+Role DNA
+↓
+Competency Requirements
+↓
+Required Proficiency Levels
+↓
+Role Benchmarks
+↓
+Difficulty Allocation
+↓
+Blueprint Generation
+↓
+Question Selection
+↓
+Assessment Runtime
+↓
+Readiness Intelligence
+
+SUCCESS TARGET
+
+Adaptive Assessment = PASS
+
+---
+
+SECTION 1
+CURRENT STATE AUDIT
+-------------------
+
+Perform a complete audit.
+
+Validate:
+
+Role DNA
+
+Role Profiles
+
+Role Competency Profiles
+
+Role Weights
+
+Assessment Blueprints
+
+Question Templates
+
+Question Competency Mapping
+
+Question Difficulty Mapping
+
+Assessment Runtime
+
+Scoring Runtime
+
+Generate:
+
+adaptive_assessment_current_state.md
+
+Output:
+
+Working Components
+
+Partial Components
+
+Broken Components
+
+Missing Components
+
+---
+
+SECTION 2
+ROLE DNA DIFFICULTY ENGINE
+--------------------------
+
+Create Role DNA driven difficulty allocation.
+
+Required Flow
+
+Role
+↓
+Role DNA
+↓
+Competencies
+↓
+Required Proficiency Levels
+↓
+Difficulty Allocation
+
+Generate:
+
+Level 1 Distribution
+
+Level 2 Distribution
+
+Level 3 Distribution
+
+Level 4 Distribution
+
+Level 5 Distribution
+
+Examples
+
+Junior Engineer
+
+L1 40%
+
+L2 40%
+
+L3 20%
+
+L4 0%
+
+L5 0%
+
+Senior Engineer
+
+L1 0%
+
+L2 10%
+
+L3 30%
+
+L4 40%
+
+L5 20%
+
+Engineering Manager
+
+L1 0%
+
+L2 0%
+
+L3 20%
+
+L4 40%
+
+L5 40%
+
+Generate:
+
+role_dna_difficulty_engine.md
+
+---
+
+SECTION 3
+BENCHMARK-AWARE ADAPTIVE ENGINE
+-------------------------------
+
+Adaptive difficulty must not rely only on Role DNA.
+
+Include:
+
+Role Benchmark
+
+Industry Benchmark
+
+Department Benchmark
+
+Role Family Benchmark
+
+Competency Benchmark
+
+Readiness Benchmark
+
+Flow
+
+Role
+↓
+Role DNA
+↓
+Benchmark Intelligence
+↓
+Difficulty Allocation
+
+Generate:
+
+benchmark_adaptive_framework.md
+
+SUCCESS CRITERIA
+
+Difficulty allocation uses benchmark intelligence.
+
+---
+
+SECTION 4
+COMPETENCY-TYPE ADAPTATION
+--------------------------
+
+Adaptive assessment must support:
+
+Behavioral
+
+Functional
+
+Technical
+
+Cognitive
+
+Future Skills
+
+Each competency type must support independent difficulty allocation.
+
+Example
+
+Software Engineer
+
+Technical = High
+
+Cognitive = High
+
+Behavioral = Medium
+
+Future Skills = Medium
+
+HR Business Partner
+
+Behavioral = High
+
+Functional = High
+
+Technical = Low
+
+Generate:
+
+competency_type_adaptive_model.md
+
+---
+
+SECTION 5
+INDUSTRY-SPECIFIC ADAPTATION
+----------------------------
+
+Adaptive assessments must vary by industry.
+
+Support
+
+Technology
+
+Healthcare
+
+Banking
+
+Manufacturing
+
+Retail
+
+Education
+
+Government
+
+Professional Services
+
+Flow
+
+Industry
+↓
+Role DNA
+↓
+Competency Requirements
+↓
+Difficulty Profile
+
+Generate:
+
+industry_adaptive_framework.md
+
+SUCCESS CRITERIA
+
+Identical roles in different industries may produce different assessment blueprints.
+
+---
+
+SECTION 6
+O*NET INTELLIGENCE ENRICHMENT
+-----------------------------
+
+Use O*NET as a reference layer.
+
+Leverage
+
+ont_roles
+
+ont_competencies
+
+map_role_competency
+
+map_ont_onto_role
+
+Purpose
+
+Difficulty Calibration
+
+Role Calibration
+
+Competency Calibration
+
+Benchmark Calibration
+
+O*NET must remain:
+
+Reference Layer
+
+NOT Scoring Layer
+
+Generate:
+
+onet_adaptive_enrichment.md
+
+---
+
+SECTION 7
+QUESTION SELECTION ENGINE
+-------------------------
+
+Question selection must be driven by:
+
+Role DNA
+
+Competency
+
+Required Level
+
+Difficulty
+
+Benchmark
+
+Industry Context
+
+Competency Type
+
+Flow
+
+Role
+↓
+Role DNA
+↓
+Difficulty Engine
+↓
+Question Selection
+
+Generate:
+
+question_selection_framework.md
+
+SUCCESS CRITERIA
+
+Different role levels generate materially different assessments.
+
+---
+
+SECTION 8
+READINESS CALIBRATION
+---------------------
+
+Assessment output must include:
+
+Current Level
+
+Target Level
+
+Gap
+
+Readiness %
+
+For every competency.
+
+Flow
+
+Assessment
+↓
+Competency Score
+↓
+Current Level
+↓
+Target Level
+↓
+Gap
+↓
+Readiness
+
+Generate:
+
+readiness_calibration_framework.md
+
+---
+
+SECTION 9
+BACKWARD COMPATIBILITY VALIDATION
+---------------------------------
+
+Validate impact on:
+
+Existing Assessments
+
+Existing Assessment Results
+
+Competency Profiles
+
+Employability Index
+
+Career Builder
+
+Career Passport
+
+Employer Intelligence
+
+Requirements
+
+No breaking changes
+
+No destructive changes
+
+No data loss
+
+All functionality remains operational when feature flag is OFF.
+
+Generate:
+
+backward_compatibility_report.md
+
+---
+
+SECTION 10
+BEFORE VS AFTER VALIDATION
+--------------------------
+
+Run comparison.
+
+Scenario 1
+
+Junior Software Engineer
+
+Scenario 2
+
+Senior Software Engineer
+
+Scenario 3
+
+Engineering Manager
+
+Validate
+
+Question Distribution
+
+Difficulty Distribution
+
+Competency Coverage
+
+Readiness Thresholds
+
+Scoring Thresholds
+
+Generate:
+
+adaptive_assessment_comparison_report.md
+
+SUCCESS CRITERIA
+
+Assessments are materially different.
+
+---
+
+SECTION 11
+CERTIFICATION
+-------------
+
+Provide PASS / FAIL.
+
+Validate:
+
+Role DNA Driven
+
+Benchmark Driven
+
+Competency Driven
+
+Industry Aware
+
+O*NET Enriched
+
+Difficulty Adaptive
+
+Readiness Aware
+
+Backward Compatible
+
+Enterprise Ready
+
+Generate:
+
+adaptive_assessment_certification_report.md
+
+---
+
+## FOUNDER REPORT
+
+Answer:
+
+1. Was adaptive assessment successfully activated?
+
+2. What changed technically?
+
+3. What changed functionally?
+
+4. What changed for candidates?
+
+5. What changed for employers?
+
+6. What changed for readiness scoring?
+
+7. What changed for Career Builder?
+
+8. What changed for Employability Index?
+
+9. Is the solution backward compatible?
+
+10. What risks remain?
+
+11. What additional data is required?
+
+12. What is the maturity improvement?
+
+13. Adaptive Assessment maturity before?
+
+14. Adaptive Assessment maturity after?
+
+15. Final PASS / FAIL verdict?
+
+---
+
+## IMPLEMENTATION RULES
+
+Must be:
+
+Additive
+
+Reversible
+
+Flag Gated
+
+Backward Compatible
+
+Production Safe
+
+No schema destruction.
+
+No framework replacement.
+
+No scoring engine replacement.
+
+No O*NET replacement.
+
+No Role DNA replacement.
+
+Only activate and enrich existing architecture.
+
+---
+
+## FINAL SUCCESS DEFINITION
+
+Adaptive Assessment is considered COMPLETE only when:
+
+✓ Role DNA drives difficulty
+
+✓ Benchmarks influence difficulty
+
+✓ Competency types influence difficulty
+
+✓ Industry influences difficulty
+
+✓ O*NET enriches calibration
+
+✓ Question selection is adaptive
+
+✓ Readiness calibration is active
+
+✓ Different role levels generate materially different assessments
+
+✓ No existing functionality is broken
+
+✓ Certification status = PASS
+
+Deliver evidence-backed results only.

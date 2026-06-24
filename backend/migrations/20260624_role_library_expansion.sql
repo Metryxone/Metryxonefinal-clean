@@ -131,3 +131,93 @@ INSERT INTO onto_role_competency_profiles (role_id, competency_id, required_leve
   ('role_project_manager', 'comp_prioritization',          3, 15, 'important', 'library_expansion', true),
   ('role_project_manager', 'comp_decision_quality',        3, 10, 'desirable', 'library_expansion', true)
 ON CONFLICT (role_id, competency_id) DO NOTHING;
+
+-- ---- Role DNA Profiles (one current per role; backs the admin Role DNA views) ----
+INSERT INTO onto_dna_profiles (id, role_id, version, is_current, notes) VALUES
+  ('dna_software_eng_v1', 'role_software_eng', '1.0.0', TRUE, 'Curated DNA for Software Engineer (library expansion).'),
+  ('dna_sr_software_eng_v1', 'role_sr_software_eng', '1.0.0', TRUE, 'Curated DNA for Senior Software Engineer (library expansion).'),
+  ('dna_fe_eng_v1', 'role_fe_eng', '1.0.0', TRUE, 'Curated DNA for Frontend Engineer (library expansion).'),
+  ('dna_fullstack_eng_v1', 'role_fullstack_eng', '1.0.0', TRUE, 'Curated DNA for Full Stack Engineer (library expansion).'),
+  ('dna_devops_eng_v1', 'role_devops_eng', '1.0.0', TRUE, 'Curated DNA for DevOps Engineer (library expansion).'),
+  ('dna_qa_eng_v1', 'role_qa_eng', '1.0.0', TRUE, 'Curated DNA for QA Engineer (library expansion).'),
+  ('dna_data_analyst_v1', 'role_data_analyst', '1.0.0', TRUE, 'Curated DNA for Data Analyst (library expansion).'),
+  ('dna_data_scientist_v1', 'role_data_scientist', '1.0.0', TRUE, 'Curated DNA for Data Scientist (library expansion).'),
+  ('dna_business_analyst_v1', 'role_business_analyst', '1.0.0', TRUE, 'Curated DNA for Business Analyst (library expansion).'),
+  ('dna_project_manager_v1', 'role_project_manager', '1.0.0', TRUE, 'Curated DNA for Project Manager (library expansion).')
+ON CONFLICT (role_id, version) DO NOTHING;
+
+-- ---- Role Competency Weights (derived from the curated requirements: weight/100; sum ~1.0) ----
+INSERT INTO onto_role_weights (dna_profile_id, competency_id, weight, expected_level, rationale) VALUES
+  -- Software Engineer
+  ('dna_software_eng_v1', 'comp_technical_competence', 0.30, 4, 'Derived from curated Software Engineer requirement.'),
+  ('dna_software_eng_v1', 'comp_problem_solving', 0.25, 4, 'Derived from curated Software Engineer requirement.'),
+  ('dna_software_eng_v1', 'comp_collaboration', 0.15, 3, 'Derived from curated Software Engineer requirement.'),
+  ('dna_software_eng_v1', 'comp_communication', 0.10, 3, 'Derived from curated Software Engineer requirement.'),
+  ('dna_software_eng_v1', 'comp_adaptability', 0.10, 3, 'Derived from curated Software Engineer requirement.'),
+  ('dna_software_eng_v1', 'comp_attention_to_detail', 0.10, 3, 'Derived from curated Software Engineer requirement.'),
+  -- Senior Software Engineer
+  ('dna_sr_software_eng_v1', 'comp_technical_competence', 0.30, 5, 'Derived from curated Senior Software Engineer requirement.'),
+  ('dna_sr_software_eng_v1', 'comp_problem_solving', 0.20, 5, 'Derived from curated Senior Software Engineer requirement.'),
+  ('dna_sr_software_eng_v1', 'comp_decision_quality', 0.15, 4, 'Derived from curated Senior Software Engineer requirement.'),
+  ('dna_sr_software_eng_v1', 'comp_collaboration', 0.10, 4, 'Derived from curated Senior Software Engineer requirement.'),
+  ('dna_sr_software_eng_v1', 'comp_communication', 0.10, 4, 'Derived from curated Senior Software Engineer requirement.'),
+  ('dna_sr_software_eng_v1', 'comp_leadership', 0.10, 3, 'Derived from curated Senior Software Engineer requirement.'),
+  ('dna_sr_software_eng_v1', 'comp_adaptability', 0.05, 3, 'Derived from curated Senior Software Engineer requirement.'),
+  -- Frontend Engineer
+  ('dna_fe_eng_v1', 'comp_technical_competence', 0.30, 4, 'Derived from curated Frontend Engineer requirement.'),
+  ('dna_fe_eng_v1', 'comp_problem_solving', 0.20, 3, 'Derived from curated Frontend Engineer requirement.'),
+  ('dna_fe_eng_v1', 'comp_design_thinking', 0.15, 3, 'Derived from curated Frontend Engineer requirement.'),
+  ('dna_fe_eng_v1', 'comp_attention_to_detail', 0.15, 3, 'Derived from curated Frontend Engineer requirement.'),
+  ('dna_fe_eng_v1', 'comp_collaboration', 0.10, 3, 'Derived from curated Frontend Engineer requirement.'),
+  ('dna_fe_eng_v1', 'comp_communication', 0.10, 3, 'Derived from curated Frontend Engineer requirement.'),
+  -- Full Stack Engineer
+  ('dna_fullstack_eng_v1', 'comp_technical_competence', 0.30, 4, 'Derived from curated Full Stack Engineer requirement.'),
+  ('dna_fullstack_eng_v1', 'comp_problem_solving', 0.25, 4, 'Derived from curated Full Stack Engineer requirement.'),
+  ('dna_fullstack_eng_v1', 'comp_adaptability', 0.15, 3, 'Derived from curated Full Stack Engineer requirement.'),
+  ('dna_fullstack_eng_v1', 'comp_collaboration', 0.15, 3, 'Derived from curated Full Stack Engineer requirement.'),
+  ('dna_fullstack_eng_v1', 'comp_communication', 0.10, 3, 'Derived from curated Full Stack Engineer requirement.'),
+  ('dna_fullstack_eng_v1', 'comp_attention_to_detail', 0.05, 2, 'Derived from curated Full Stack Engineer requirement.'),
+  -- DevOps Engineer
+  ('dna_devops_eng_v1', 'comp_technical_competence', 0.30, 4, 'Derived from curated DevOps Engineer requirement.'),
+  ('dna_devops_eng_v1', 'comp_problem_solving', 0.20, 4, 'Derived from curated DevOps Engineer requirement.'),
+  ('dna_devops_eng_v1', 'comp_quality_focus', 0.15, 4, 'Derived from curated DevOps Engineer requirement.'),
+  ('dna_devops_eng_v1', 'comp_decision_quality', 0.10, 3, 'Derived from curated DevOps Engineer requirement.'),
+  ('dna_devops_eng_v1', 'comp_collaboration', 0.10, 3, 'Derived from curated DevOps Engineer requirement.'),
+  ('dna_devops_eng_v1', 'comp_communication', 0.10, 3, 'Derived from curated DevOps Engineer requirement.'),
+  ('dna_devops_eng_v1', 'comp_adaptability', 0.05, 2, 'Derived from curated DevOps Engineer requirement.'),
+  -- QA Engineer
+  ('dna_qa_eng_v1', 'comp_quality_assurance', 0.30, 4, 'Derived from curated QA Engineer requirement.'),
+  ('dna_qa_eng_v1', 'comp_attention_to_detail', 0.25, 4, 'Derived from curated QA Engineer requirement.'),
+  ('dna_qa_eng_v1', 'comp_problem_solving', 0.15, 3, 'Derived from curated QA Engineer requirement.'),
+  ('dna_qa_eng_v1', 'comp_analytical_thinking', 0.10, 3, 'Derived from curated QA Engineer requirement.'),
+  ('dna_qa_eng_v1', 'comp_communication', 0.10, 3, 'Derived from curated QA Engineer requirement.'),
+  ('dna_qa_eng_v1', 'comp_collaboration', 0.10, 3, 'Derived from curated QA Engineer requirement.'),
+  -- Data Analyst
+  ('dna_data_analyst_v1', 'comp_analytical_thinking', 0.30, 4, 'Derived from curated Data Analyst requirement.'),
+  ('dna_data_analyst_v1', 'comp_data_driven_decision_making', 0.25, 4, 'Derived from curated Data Analyst requirement.'),
+  ('dna_data_analyst_v1', 'comp_attention_to_detail', 0.15, 3, 'Derived from curated Data Analyst requirement.'),
+  ('dna_data_analyst_v1', 'comp_communication', 0.15, 3, 'Derived from curated Data Analyst requirement.'),
+  ('dna_data_analyst_v1', 'comp_problem_solving', 0.10, 3, 'Derived from curated Data Analyst requirement.'),
+  ('dna_data_analyst_v1', 'comp_quality_focus', 0.05, 2, 'Derived from curated Data Analyst requirement.'),
+  -- Data Scientist
+  ('dna_data_scientist_v1', 'comp_analytical_thinking', 0.25, 4, 'Derived from curated Data Scientist requirement.'),
+  ('dna_data_scientist_v1', 'comp_data_driven_decision_making', 0.20, 4, 'Derived from curated Data Scientist requirement.'),
+  ('dna_data_scientist_v1', 'comp_problem_solving', 0.20, 4, 'Derived from curated Data Scientist requirement.'),
+  ('dna_data_scientist_v1', 'comp_technical_competence', 0.15, 4, 'Derived from curated Data Scientist requirement.'),
+  ('dna_data_scientist_v1', 'comp_critical_thinking', 0.10, 3, 'Derived from curated Data Scientist requirement.'),
+  ('dna_data_scientist_v1', 'comp_communication', 0.10, 3, 'Derived from curated Data Scientist requirement.'),
+  -- Business Analyst
+  ('dna_business_analyst_v1', 'comp_analytical_thinking', 0.25, 4, 'Derived from curated Business Analyst requirement.'),
+  ('dna_business_analyst_v1', 'comp_stakeholder_mgmt', 0.20, 3, 'Derived from curated Business Analyst requirement.'),
+  ('dna_business_analyst_v1', 'comp_communication', 0.15, 4, 'Derived from curated Business Analyst requirement.'),
+  ('dna_business_analyst_v1', 'comp_business_acumen', 0.15, 3, 'Derived from curated Business Analyst requirement.'),
+  ('dna_business_analyst_v1', 'comp_problem_solving', 0.15, 3, 'Derived from curated Business Analyst requirement.'),
+  ('dna_business_analyst_v1', 'comp_critical_thinking', 0.10, 3, 'Derived from curated Business Analyst requirement.'),
+  -- Project Manager
+  ('dna_project_manager_v1', 'comp_project_management', 0.25, 4, 'Derived from curated Project Manager requirement.'),
+  ('dna_project_manager_v1', 'comp_planning_and_organizing', 0.20, 4, 'Derived from curated Project Manager requirement.'),
+  ('dna_project_manager_v1', 'comp_stakeholder_mgmt', 0.15, 3, 'Derived from curated Project Manager requirement.'),
+  ('dna_project_manager_v1', 'comp_communication', 0.15, 4, 'Derived from curated Project Manager requirement.'),
+  ('dna_project_manager_v1', 'comp_prioritization', 0.15, 3, 'Derived from curated Project Manager requirement.'),
+  ('dna_project_manager_v1', 'comp_decision_quality', 0.10, 3, 'Derived from curated Project Manager requirement.')
+ON CONFLICT (dna_profile_id, competency_id) DO NOTHING;

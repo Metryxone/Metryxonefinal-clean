@@ -39,6 +39,13 @@ import { ensureRoleCompetencyProfileSchema, type Criticality } from './role-comp
 
 export const ROLE_LIBRARY_EXPANSION_VERSION = 'role-library-expansion-v1';
 export const ROLE_LIBRARY_EXPANSION_SOURCE = 'library_expansion';
+export const ROLE_LIBRARY_EXPANSION_DNA_VERSION = '1.0.0';
+
+/** Canonical DNA profile id for an expansion role (mirrors the seed migration's
+ * `dna_<role-suffix>_v1` convention, e.g. role_software_eng → dna_software_eng_v1). */
+export function expansionDnaProfileId(roleId: string): string {
+  return `dna_${roleId.replace(/^role_/, '')}_v1`;
+}
 
 interface TaxFunction { id: string; industry_id: string; name: string; description: string; display_order: number }
 interface TaxSubfunction { id: string; function_id: string; name: string; description: string; display_order: number }
@@ -223,7 +230,10 @@ export interface RoleLibraryExpansionResult {
   role_families_inserted: number;
   roles_inserted: number;
   requirements_inserted: number;
+  dna_profiles_inserted: number;      // onto_dna_profiles rows created for expansion roles
+  role_weights_inserted: number;      // onto_role_weights rows created for expansion roles
   roles_now_matchable: number;        // roles from this expansion with >=1 active profile row
+  roles_with_dna: number;             // expansion roles that now carry a current DNA profile + weights
   skipped: { kind: string; id: string; competency?: string; reason: string }[];
 }
 
@@ -241,6 +251,9 @@ export async function runRoleLibraryExpansion(pool: Pool): Promise<RoleLibraryEx
   let roleFamiliesInserted = 0;
   let rolesInserted = 0;
   let requirementsInserted = 0;
+  let dnaProfilesInserted = 0;
+  let roleWeightsInserted = 0;
+  let rolesWithDna = 0;
 
   // 1. Functions (parent industry must exist).
   for (const fn of EXPANSION_FUNCTIONS) {
@@ -319,6 +332,48 @@ export async function runRoleLibraryExpansion(pool: Pool): Promise<RoleLibraryEx
       activeForRole += 1;
     }
     if (activeForRole > 0) rolesMatchable += 1;
+
+    // 5. Role DNA profile + competency weights (so the role appears in the admin
+    //    Role DNA / weights views, which read onto_dna_profiles + onto_role_weights —
+    //    a DIFFERENT surface from onto_role_competency_profiles used by matching).
+    //    Weights are DERIVED from this role's curated requirements: weight/100 (the
+    //    requirement weights sum to 100, so DNA weights sum to ~1.0, matching the
+    //    seed migration's convention) and expected_level = required_level. References
+    //    only competencies that EXIST (the same per-requirement guard above) — never
+    //    fabricated. Idempotent via ON CONFLICT DO NOTHING.
+    const dnaProfileId = expansionDnaProfileId(effectiveRoleId);
+    const insDna = await pool.query(
+      `INSERT INTO onto_dna_profiles (id, role_id, version, is_current, notes)
+       VALUES ($1,$2,$3,TRUE,$4)
+       ON CONFLICT (role_id, version) DO NOTHING
+       RETURNING id`,
+      [dnaProfileId, effectiveRoleId, ROLE_LIBRARY_EXPANSION_DNA_VERSION, `Curated DNA for ${role.title} (library expansion).`],
+    );
+    if (insDna.rowCount) dnaProfilesInserted += 1;
+
+    // Resolve the DNA profile id actually present (a pre-existing profile under a
+    // different id but the same role+version unique key wins).
+    const dnaRow = await pool.query(
+      `SELECT id FROM onto_dna_profiles WHERE role_id = $1 AND version = $2`,
+      [effectiveRoleId, ROLE_LIBRARY_EXPANSION_DNA_VERSION],
+    );
+    const effectiveDnaId = dnaRow.rows[0]?.id ?? dnaProfileId;
+
+    let weightsForRole = 0;
+    for (const req of role.requirements) {
+      const comp = await pool.query(`SELECT id FROM onto_competencies WHERE id = $1`, [req.competency_id]);
+      if (comp.rowCount === 0) { continue; } // already reported as skipped above
+      const insWeight = await pool.query(
+        `INSERT INTO onto_role_weights (dna_profile_id, competency_id, weight, expected_level, rationale)
+         VALUES ($1,$2,$3,$4,$5)
+         ON CONFLICT (dna_profile_id, competency_id) DO NOTHING
+         RETURNING id`,
+        [effectiveDnaId, req.competency_id, req.weight / 100, req.required_level, `Derived from curated ${role.title} requirement (${req.criticality}).`],
+      );
+      if (insWeight.rowCount) roleWeightsInserted += 1;
+      weightsForRole += 1;
+    }
+    if (weightsForRole > 0) rolesWithDna += 1;
   }
 
   return {
@@ -329,7 +384,10 @@ export async function runRoleLibraryExpansion(pool: Pool): Promise<RoleLibraryEx
     role_families_inserted: roleFamiliesInserted,
     roles_inserted: rolesInserted,
     requirements_inserted: requirementsInserted,
+    dna_profiles_inserted: dnaProfilesInserted,
+    role_weights_inserted: roleWeightsInserted,
     roles_now_matchable: rolesMatchable,
+    roles_with_dna: rolesWithDna,
     skipped,
   };
 }

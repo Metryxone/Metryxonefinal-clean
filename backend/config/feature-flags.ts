@@ -149,6 +149,24 @@ export const FEATURE_FLAGS = {
    *  byte-identical legacy behaviour incl. schema (default region == today). GET handlers probe via
    *  to_regclass and never write. Env: `FF_GLOBAL_COMPETENCY`. */
   globalCompetency: false,
+  /** MX-76X — Global Intelligence (read-only composer over the EXISTING global/region/country assets).
+   *  When ON, a PURE read-only composer at `/api/global-intel/*` unifies the already-present global
+   *  deployability surfaces into one honest view: the 5-tier competency model (global→regional→country→
+   *  industry→role), the canonical region set + crosswalk reconciling the three live region taxonomies
+   *  (Phase-8 `global_region_content` ME/EU/US/APAC ↔ `m4_countries.region` EMEA/APAC/Americas ↔
+   *  `nhda_regions` India sub-national), the `m4_*` country tier (via the existing `createLocalization`
+   *  engine), the benchmark tier coverage (surfacing the latent `bench_cohorts(cohort_type='region')`
+   *  read-only, k-anonymity preserved), Role-DNA region/country inheritance (variant=null honest resting
+   *  state — no region-native role source exists, never fabricated), and the localization resolution
+   *  (language packs + a country→currency display resolver defaulting to INR so India stays byte-identical).
+   *  compose-never-recompute: GET-only, NO DDL/ensure-schema (zero new tables), every read to_regclass-
+   *  probed; Coverage ⟂ Confidence; absent → null/`inherited`/`not_localized`/`not_measurable`, NEVER a
+   *  fabricated value. Empty regions/countries (Africa/LATAM, countries beyond the seeded 5) report empty.
+   *  Strictly additive + reversible: flag OFF → every route 503 before any DB touch → byte-identical legacy
+   *  behaviour incl. schema. `/api/global-intel/enabled` is a persona-agnostic flag probe (flagGate-only)
+   *  so employer/candidate UIs can gate their tabs; reference reads are flagGate→requireAuth (platform
+   *  metadata, no PII); admin overview adds requireSuperAdmin. Env: `FF_GLOBAL_INTELLIGENCE`. */
+  globalIntelligence: false,
   /** MX-100X PHASE 9 — Enterprise Workforce Intelligence Console. A PURE read-only COMPOSER that wires
    *  the EXISTING predictive-workforce engine (Phase 5: obsolescence / workforce risk / AI exposure /
    *  emerging roles) + the M5 enterprise engines (workforce intelligence, succession, simulation,

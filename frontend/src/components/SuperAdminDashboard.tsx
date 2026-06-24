@@ -156,6 +156,7 @@ const RoleCrosswalkPanel = lazy(() => import('./superadmin/RoleCrosswalkPanel'))
 const OnetCrosswalkGovernancePanel = lazy(() => import('./superadmin/OnetCrosswalkGovernancePanel'));
 const CompetencyCoverageMatricesPanel = lazy(() => import('./superadmin/CompetencyCoverageMatricesPanel'));
 const GlobalRegionContentPanel = lazy(() => import('./superadmin/GlobalRegionContentPanel'));
+const GlobalIntelligencePanel = lazy(() => import('./superadmin/GlobalIntelligencePanel'));
 const DepartmentsPanel = lazy(() => import('./superadmin/DepartmentsPanel'));
 const RolesPanel = lazy(() => import('./superadmin/RolesPanel'));
 const RoleFamiliesPanel = lazy(() => import('./superadmin/RoleFamiliesPanel'));
@@ -325,6 +326,17 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
     queryKey: ['/api/global-competency/regions', 'enabled'],
     queryFn: async () => {
       const res = await fetch('/api/global-competency/regions', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // ── Global Intelligence (MX-76X) flag probe (file-registry flag globalIntelligence).
+  //    Flag OFF → /enabled returns 503 → the tab is omitted entirely (byte-identical UI). ──
+  const { data: globalIntelEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/global-intel/enabled', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/global-intel/enabled', { credentials: 'include' });
       return res.ok;
     },
     enabled: isAuthenticated,
@@ -925,6 +937,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       ...(onetCrosswalkGovEnabled ? [{ id: 'onet-crosswalk-governance', label: 'O*NET Crosswalk Governance', icon: GitBranch, node: <OnetCrosswalkGovernancePanel /> }] : []),
                       ...(competencyCoverageMatricesEnabled ? [{ id: 'competency-coverage-matrices', label: 'Competency Coverage Matrices', icon: Grid3x3, node: <CompetencyCoverageMatricesPanel /> }] : []),
                       ...(globalCompetencyEnabled ? [{ id: 'global-region-content', label: 'Global Region Content', icon: Globe, node: <GlobalRegionContentPanel /> }] : []),
+                      ...(globalIntelEnabled ? [{ id: 'global-intelligence', label: 'Global Intelligence', icon: Globe, node: <GlobalIntelligencePanel /> }] : []),
                       { id: 'ont-career-tracks',        label: 'Career Tracks',            icon: Map,           node: <CareerTracksPanel /> },
                       { id: 'ont-competency-levels',    label: 'Competency Levels',        icon: BarChart2,     node: <CompetencyLevelsPanel /> },
                       { id: 'ont-indicators',           label: 'Indicators',               icon: Target,        node: <IndicatorsPanel /> },
@@ -1280,6 +1293,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               {activeTab === 'onet-crosswalk-governance' && <div className="h-full overflow-auto"><OnetCrosswalkGovernancePanel /></div>}
               {activeTab === 'competency-coverage-matrices' && <div className="h-full overflow-auto"><CompetencyCoverageMatricesPanel /></div>}
               {activeTab === 'global-region-content' && <div className="h-full overflow-auto"><GlobalRegionContentPanel /></div>}
+              {activeTab === 'global-intelligence'  && <div className="h-full overflow-auto"><GlobalIntelligencePanel /></div>}
               {activeTab === 'ont-functions'        && <div className="h-full overflow-auto"><FunctionsPanel /></div>}
               {activeTab === 'ont-departments'      && <div className="h-full overflow-auto"><DepartmentsPanel /></div>}
               {activeTab === 'ont-roles'            && <div className="h-full overflow-auto"><RolesPanel /></div>}

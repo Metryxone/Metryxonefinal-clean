@@ -207,6 +207,7 @@ import { registerTalentReadinessEngineRoutes } from "./routes/talent-readiness-e
 import { registerTalentOutcomePredictionRoutes } from "./routes/talent-outcome-prediction";
 import { registerValidationLoopRoutes } from "./routes/validation-loop";
 import { registerGlobalCompetencyRoutes } from "./routes/global-competency";
+import { registerGlobalIntelligenceRoutes } from "./routes/global-intelligence";
 import { registerTalentBenchmarkEngineRoutes } from "./routes/talent-benchmark-engine";
 import { registerTalentDigitalTwinRoutes } from "./routes/talent-digital-twin";
 import { registerTalentMeasurementScienceRoutes } from "./routes/talent-measurement-science";
@@ -13806,6 +13807,8 @@ Rules:
   registerValidationLoopRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Global Competency (Phase 8): additive region dimension + per-region coverage ──
   registerGlobalCompetencyRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  // ── Global Intelligence (MX-76X): read-only composer over global/region/country assets ──
+  registerGlobalIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // Self-running, idempotent region-native market/benchmark seed (Task 81). A task merge carries
   // CODE + migration DDL only, NOT rows, and the agent cannot write to prod — so the only way
   // region data reaches the live app is a guarded startup seeder (matches this codebase's

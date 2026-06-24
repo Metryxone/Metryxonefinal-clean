@@ -1,0 +1,66 @@
+export const DEFAULT_REGION = 'IN';
+export const REGIONS = [
+  { code: 'IN', name: 'India', is_default: true },
+  { code: 'ME', name: 'Middle East', is_default: false },
+  { code: 'EU', name: 'Europe', is_default: false },
+  { code: 'US', name: 'United States', is_default: false },
+  { code: 'APAC', name: 'Asia-Pacific', is_default: false },
+] as const;
+
+export type RegionCode = (typeof REGIONS)[number]['code'];
+
+export function isValidRegion(code: string): code is RegionCode {
+  return REGIONS.some((r) => r.code === code);
+}
+
+/**
+ * Each surface maps 1:1 to ONE canonical backing table. The default region inherits this
+ * table's existing content count; non-default regions count region-tagged overlay rows only.
+ * `idExpr` is the column treated as the entity reference for overlay assignment.
+ */
+/**
+ * `baseFilter` (default-region ONLY): a SQL predicate restricting what the DEFAULT region (IN)
+ * counts/serves from the backing table. It exists so REAL region-native rows (e.g. US/EU/ME/APAC
+ * market signals, region market-benchmark cohorts) can live in the SAME backing table without
+ * leaking into India's base read. Because these region-native rows did not exist before, applying
+ * the filter keeps the default region byte-identical to prior behaviour. `null` = no restriction.
+ * Non-default regions read ONLY the region-scoped overlay, so the filter never applies to them.
+ */
+export const NON_DEFAULT_REGION_CODES = REGIONS.filter((r) => !r.is_default).map((r) => `'${r.code}'`).join(',');
+export const SURFACES = [
+  { key: 'role_library', table: 'onto_roles', idColumn: 'id', labelColumn: 'title', label: 'Role Libraries', baseFilter: null as string | null },
+  { key: 'benchmarks', table: 'bench_cohorts', idColumn: 'id', labelColumn: 'name', label: 'Benchmarks', baseFilter: "cohort_type <> 'region'" as string | null },
+  { key: 'competency_models', table: 'onto_competencies', idColumn: 'id', labelColumn: 'canonical_name', label: 'Competency Models', baseFilter: null as string | null },
+  { key: 'readiness_models', table: 'career_readiness_history', idColumn: 'id', labelColumn: 'overall_band', label: 'Readiness Models', baseFilter: null as string | null },
+  { key: 'demand_intelligence', table: 'wos_market_signals', idColumn: 'id', labelColumn: 'signal_type', label: 'Demand Intelligence', baseFilter: `geography IS NULL OR geography NOT IN (${NON_DEFAULT_REGION_CODES})` as string | null },
+] as const;
+
+export type SurfaceKey = (typeof SURFACES)[number]['key'];
+
+export function isValidSurface(key: string): key is SurfaceKey {
+  return SURFACES.some((s) => s.key === key);
+}
+
+// ---------------------------------------------------------------------------
+// Read-only helpers (never DDL)
+// ---------------------------------------------------------------------------
+async function tableExists(pool: Pool, name: string): Promise<boolean> {
+  try {
+    const { rows } = await pool.query('SELECT to_regclass($1) AS reg', [`public.${name}`]);
+    return !!rows[0]?.reg;
+  } catch {
+    return false;
+  }
+}
+
+async function scalarInt(pool: Pool, sql: string, params: unknown[] = []): Promise<number | null> {
+  try {
+    const { rows } = await pool.query(sql, params);
+    const v = rows[0]?.n;
+    return v == null ? null : Number(v);
+  } catch {
+    return null;
+  }
+}
+
+// ---------------------------------------------------------------------------

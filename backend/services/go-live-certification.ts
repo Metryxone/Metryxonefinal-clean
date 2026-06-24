@@ -438,10 +438,20 @@ function answerFromBool(b: boolean | null | undefined): Answer {
   return b ? 'yes' : 'no';
 }
 
-export async function goLiveCertification(pool: Pool) {
+/**
+ * Optional dependency overrides — used ONLY by tests to feed a controlled `unifiedJourney`
+ * result into the Q3/Q4 broken-link derivation without standing up the full journey substrate.
+ * Production callers omit `deps` entirely, so the live composition path is byte-identical.
+ */
+export interface GoLiveCertificationDeps {
+  unifiedJourney: typeof unifiedJourney;
+}
+
+export async function goLiveCertification(pool: Pool, deps: Partial<GoLiveCertificationDeps> = {}) {
+  const unifiedJourneyFn = deps.unifiedJourney ?? unifiedJourney;
   const [cert, journey, outcome, scal, secg] = await Promise.all([
     safe(() => recertification(pool)),
-    safe(() => unifiedJourney(pool)),
+    safe(() => unifiedJourneyFn(pool)),
     safe(() => outcomeReadiness(pool)),
     safe(() => scalabilityCertification(pool)),
     safe(() => securityGovernanceCertification(pool)),

@@ -56,3 +56,20 @@ DATA-MATURITY ceiling — report it; never fabricate rows to make the flow "ligh
   flag-OFF HTTP 503 contract holds; service-level no-verdict / k-anonymity / abstain guards run directly.
 - Cert: `backend/audit/99x-certification/employer_intelligence_certification_report.md` (Phase-5 section).
 - Legacy heuristic path `routes/employer-hiring-intelligence.ts` (STRONG_HIRE/NO_HIRE) is UNTOUCHED by design.
+
+## MX-73X — Unified Hiring Score (the real gap closed)
+- The Phase-5 engine produced a competency-ONLY match; the Employability Index
+  (`employer_candidates.ei_score`) was STORED but never folded into hiring. The one real gap was
+  a single 0–100 score composing all five inputs. Closed by `services/employer-hiring-score.ts`
+  `deriveUnifiedHiringScore(match,{eiScore})` + an additive `hiringScore` field on
+  `EmployerCompetencyIntelligence`.
+- **Why:** "competency-driven hiring" requires competency to be the REQUIRED anchor — when
+  `competencyMatch` is null the score is WITHHELD (null), never fabricated from EI/readiness alone.
+- **How to apply:** weights (comp .35 / EI .25 / readiness .20 / roleMatch .10 / benchmark .10) are
+  RE-NORMALIZED over PRESENT components only — an absent input is dropped, never counted as 0
+  (the smoke proves `EI absent ≠ EI 0`). Benchmark abstains under k-anonymity. provisional/
+  validated/calibration are INHERITED from the match (developmental signal, not a verdict).
+- **Honesty ceiling:** all employer tables are 0 rows → architecture certifiable, OPERATION not
+  proven on real data; calibration stays uncalibrated until ≥30 realized outcomes. Legacy heuristic
+  hiring engines remain as GATED, untouched fallbacks (criterion "no parallel logic" met by gating,
+  not deletion → cert criterion 6 honestly PARTIAL).

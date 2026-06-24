@@ -39,6 +39,10 @@ import {
   type CompetencyRequirementMatch,
 } from './employer-competency-hiring';
 import type { RoleBenchmark } from './role-dna-expansion-engine';
+import {
+  deriveUnifiedHiringScore,
+  type UnifiedHiringScore,
+} from './employer-hiring-score';
 
 export const EMPLOYER_COMPETENCY_INTELLIGENCE_VERSION = '98x-phase5-1.0.0';
 
@@ -149,6 +153,9 @@ export interface EmployerCompetencyIntelligence {
   match: CompetencyDrivenMatch;
   interviewRecommendation: InterviewRecommendation;
   hiringRecommendation: HiringRecommendation;
+  /** MX-73X Section 5 — unified hiring score (0..100) composing competency + employability
+   *  index + readiness + role-match + benchmark; withheld (null) without a competency anchor. */
+  hiringScore: UnifiedHiringScore;
   benchmark: EmployerBenchmark;
   languagePolicy: typeof LANGUAGE_POLICY;
   provenance: string;
@@ -341,6 +348,7 @@ export async function computeEmployerCompetencyIntelligence(
     match,
     interviewRecommendation: deriveInterviewRecommendation(match),
     hiringRecommendation: deriveHiringRecommendation(match),
+    hiringScore: deriveUnifiedHiringScore(match, { eiScore: opts.candidate?.ei_score }),
     benchmark: deriveEmployerBenchmark(match.roleDna.benchmark),
     languagePolicy: LANGUAGE_POLICY,
     provenance: '98x_phase5_employer_competency_intelligence',

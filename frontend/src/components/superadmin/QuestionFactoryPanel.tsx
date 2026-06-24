@@ -11,7 +11,7 @@
  */
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { RefreshCw, Boxes, AlertTriangle, Info, CheckCircle2, FlaskConical, ClipboardCheck, XCircle, Archive, Search, Sparkles } from 'lucide-react';
+import { RefreshCw, Boxes, AlertTriangle, Info, CheckCircle2, FlaskConical, ClipboardCheck, XCircle, Archive, Search, Sparkles, Target, Layers, ShieldCheck, PlayCircle } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Input } from '../ui/input';
@@ -48,6 +48,27 @@ type DraftRow = {
 };
 type CompRow = { id: string; canonical_name: string; domain_id: string | null; live_approved: number; draft_pipeline: number };
 
+type Axis = { competencies: number; pct: number; questions?: number };
+type Founder = {
+  ok: boolean; version?: string; genome_competencies: number;
+  coverage: { draft: Axis; approved: Axis; assessment_ready: Axis };
+  role_dna: { role_dna_competencies: number; draft_coverage: Axis; approved_coverage: Axis; assessment_ready_coverage: Axis; target_pct: number };
+  tiers: Array<{ tier: number; tier_label: string; n: number }>;
+  target_progress: Record<'approved_coverage_pct' | 'assessment_ready_competencies' | 'role_dna_ready_pct', { value: number; target: number; met: boolean; remaining: number }>;
+  verdict_note: string;
+};
+type Quality = {
+  ok: boolean; schema_initialized: boolean; note?: string;
+  draft_corpus?: { questions: number; with_confidence: number; avg_confidence: number | null };
+  duplication?: { duplicate_groups: number; redundant_rows: number; status: string };
+  structural?: { short_prompt: number; too_few_options: number; bad_best_option: number; total_issues: number; status: string };
+  confidence_distribution?: { low_lt_0_4: number; moderate_0_4_0_5: number; higher_gte_0_5: number };
+  spread?: { competencies: number; multi_type: number; multi_difficulty: number; ready_shaped: number };
+};
+type Tiers = { ok: boolean; tier_summary: Array<{ tier: number; tier_label: string; n: number }>; rows: Array<{ id: string; canonical_name: string; domain_id: string | null; type_key: string; tier: number; dna_refs: number; live_approved: number; draft_pipeline: number }> };
+
+type Tab = 'founder' | 'population' | 'quality' | 'workbench';
+
 const fetchJson = async (url: string) => {
   const res = await fetch(url, { credentials: 'include' });
   if (!res.ok) throw new Error(`${res.status}`);
@@ -79,10 +100,15 @@ function Stat({ label, value, sub, tone }: { label: string; value: string; sub?:
 
 export default function QuestionFactoryPanel() {
   const qc = useQueryClient();
+  const [tab, setTab] = useState<Tab>('founder');
   const [search, setSearch] = useState('');
   const [gapOnly, setGapOnly] = useState(true);
   const [selectedComp, setSelectedComp] = useState<CompRow | null>(null);
   const [notice, setNotice] = useState<{ kind: 'ok' | 'err'; msg: string } | null>(null);
+
+  const founder = useQuery<Founder>({ queryKey: [`${BASE}/population/founder`], queryFn: () => fetchJson(`${BASE}/population/founder`) });
+  const quality = useQuery<Quality>({ queryKey: [`${BASE}/population/quality`], queryFn: () => fetchJson(`${BASE}/population/quality`) });
+  const tiers = useQuery<Tiers>({ queryKey: [`${BASE}/population/priority`], queryFn: () => fetchJson(`${BASE}/population/priority`) });
 
   const coverage = useQuery<Coverage>({ queryKey: [`${BASE}/coverage`], queryFn: () => fetchJson(`${BASE}/coverage`) });
   const drafts = useQuery<{ ok: boolean; count: number; rows: DraftRow[] }>({ queryKey: [`${BASE}/drafts`], queryFn: () => fetchJson(`${BASE}/drafts?limit=200`) });
@@ -95,7 +121,22 @@ export default function QuestionFactoryPanel() {
     qc.invalidateQueries({ queryKey: [`${BASE}/coverage`] });
     qc.invalidateQueries({ queryKey: [`${BASE}/drafts`] });
     qc.invalidateQueries({ queryKey: [`${BASE}/competencies`] });
+    qc.invalidateQueries({ queryKey: [`${BASE}/population/founder`] });
+    qc.invalidateQueries({ queryKey: [`${BASE}/population/quality`] });
+    qc.invalidateQueries({ queryKey: [`${BASE}/population/priority`] });
   };
+
+  const bulkRun = useMutation({
+    mutationFn: (opts: { tier?: number; dry_run?: boolean }) => postJson(`${BASE}/population/run`, opts),
+    onSuccess: (r) => {
+      const msg = r.dry_run
+        ? `Dry-run: would generate ${r.would_generate ?? 0} drafts across ${r.targeted_competencies ?? 0} competencies (nothing written).`
+        : `Generated ${r.questions_generated ?? 0} DRAFT questions across ${r.competencies_generated ?? 0} competencies (pending review — live coverage unchanged).`;
+      setNotice({ kind: 'ok', msg });
+      refreshAll();
+    },
+    onError: (e: any) => setNotice({ kind: 'err', msg: `Population run failed: ${e.message}` }),
+  });
 
   const generate = useMutation({
     mutationFn: (competencyId: string) => postJson(`${BASE}/generate`, { competency_id: competencyId }),
@@ -149,12 +190,181 @@ export default function QuestionFactoryPanel() {
         </div>
       )}
 
-      {coverage.isError && (
+      {/* Tab bar */}
+      <div className="flex flex-wrap gap-1 border-b">
+        {([
+          ['founder', 'Founder Coverage', Target],
+          ['population', 'Population', Layers],
+          ['quality', 'Quality', ShieldCheck],
+          ['workbench', 'Coverage & Review', ClipboardCheck],
+        ] as Array<[Tab, string, any]>).map(([id, label, Icon]) => (
+          <button key={id} onClick={() => setTab(id)}
+            className={`flex items-center gap-1.5 border-b-2 px-3 py-2 text-sm font-medium transition-colors ${tab === id ? 'border-[#344E86] text-[#344E86]' : 'border-transparent text-gray-500 hover:text-gray-800'}`}>
+            <Icon className="h-4 w-4" /> {label}
+          </button>
+        ))}
+      </div>
+
+      {/* ===== FOUNDER COVERAGE DASHBOARD (3 axes + target progress) ===== */}
+      {tab === 'founder' && (
+        <div className="space-y-5">
+          {founder.isLoading && <div className="text-sm text-gray-400">Loading…</div>}
+          {founder.isError && <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800">Failed to load founder dashboard.</div>}
+          {founder.data && (() => {
+            const f = founder.data;
+            const tp = f.target_progress;
+            return (
+              <>
+                <div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-xs text-blue-900">
+                  <Info className="mr-1 inline h-3.5 w-3.5" />
+                  Three SEPARATE axes. Drafts NEVER count toward approved or assessment-ready coverage — only a human approval makes a question live. {f.verdict_note}
+                </div>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                  <Stat tone="pipeline" label="Draft Coverage" value={`${f.coverage.draft.competencies}`} sub={`${pctText(f.coverage.draft.pct)} of ${f.genome_competencies} · ${f.coverage.draft.questions ?? 0} drafts`} />
+                  <Stat tone="live" label="Approved Coverage" value={`${f.coverage.approved.competencies}`} sub={`${pctText(f.coverage.approved.pct)} · ≥1 approved+active`} />
+                  <Stat tone="live" label="Assessment-Ready" value={`${f.coverage.assessment_ready.competencies}`} sub={`${pctText(f.coverage.assessment_ready.pct)} · ≥4 approved, ≥2 types & diffs`} />
+                </div>
+
+                <div>
+                  <div className="mb-2 text-sm font-semibold text-gray-700">Target progress (earned only by human approval)</div>
+                  <div className="space-y-2">
+                    <ProgressRow label="Approved coverage %" value={tp.approved_coverage_pct.value} target={tp.approved_coverage_pct.target} met={tp.approved_coverage_pct.met} suffix="%" remaining={`${tp.approved_coverage_pct.remaining}% remaining`} />
+                    <ProgressRow label="Assessment-ready competencies" value={tp.assessment_ready_competencies.value} target={tp.assessment_ready_competencies.target} met={tp.assessment_ready_competencies.met} remaining={`${tp.assessment_ready_competencies.remaining} remaining`} />
+                    <ProgressRow label="Role-DNA ready %" value={tp.role_dna_ready_pct.value} target={tp.role_dna_ready_pct.target} met={tp.role_dna_ready_pct.met} suffix="%" remaining={`${tp.role_dna_ready_pct.remaining}% remaining`} />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <div className="rounded-lg border bg-white p-4">
+                    <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">Role-DNA / consumer coverage</div>
+                    <div className="text-sm text-gray-700">Denominator: <strong>{f.role_dna.role_dna_competencies}</strong> competencies (Employer + Career consume this same set).</div>
+                    <div className="mt-2 grid grid-cols-3 gap-2 text-center text-xs">
+                      <div><div className="text-lg font-bold text-amber-600">{f.role_dna.draft_coverage.pct}%</div>Draft</div>
+                      <div><div className="text-lg font-bold text-green-600">{f.role_dna.approved_coverage.pct}%</div>Approved</div>
+                      <div><div className="text-lg font-bold text-green-700">{f.role_dna.assessment_ready_coverage.pct}%</div>Ready</div>
+                    </div>
+                  </div>
+                  <div className="rounded-lg border bg-white p-4">
+                    <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">Priority tiers</div>
+                    <div className="space-y-1">
+                      {f.tiers.map((t) => (
+                        <div key={t.tier} className="flex items-center justify-between text-sm">
+                          <span className="text-gray-700">{t.tier_label}</span>
+                          <span className="font-medium tabular-nums text-gray-900">{t.n}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </>
+            );
+          })()}
+        </div>
+      )}
+
+      {/* ===== POPULATION (priority tiers + bulk run control) ===== */}
+      {tab === 'population' && (
+        <div className="space-y-5">
+          <div className="rounded-lg border bg-white p-4">
+            <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"><PlayCircle className="h-4 w-4" /> Bulk draft population</div>
+            <p className="mb-3 max-w-3xl text-xs text-gray-600">
+              Drives the deterministic template generator across prioritized genome gaps. DRAFT-only and idempotent —
+              competencies already holding a full draft pack are skipped, and live coverage never changes. Dry-run counts only.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <Button size="sm" variant="outline" disabled={bulkRun.isPending} onClick={() => bulkRun.mutate({ dry_run: true })}>Dry-run (count only)</Button>
+              <Button size="sm" variant="default" disabled={bulkRun.isPending} onClick={() => bulkRun.mutate({})} style={{ backgroundColor: BRAND.primary }}>
+                {bulkRun.isPending ? 'Running…' : 'Run full population'}
+              </Button>
+              {[1, 2, 3, 4].map((t) => (
+                <Button key={t} size="sm" variant="ghost" disabled={bulkRun.isPending} onClick={() => bulkRun.mutate({ tier: t })}>Tier {t} only</Button>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-lg border bg-white">
+            <div className="border-b p-3 text-sm font-semibold text-gray-700">Priority tiers</div>
+            {tiers.isLoading && <div className="p-3 text-sm text-gray-400">Loading…</div>}
+            {tiers.data && (
+              <div className="grid grid-cols-1 gap-3 p-3 sm:grid-cols-2 lg:grid-cols-4">
+                {tiers.data.tier_summary.map((t) => (
+                  <Stat key={t.tier} tone="neutral" label={`Tier ${t.tier}`} value={String(t.n)} sub={t.tier_label.split('—')[1]?.trim()} />
+                ))}
+              </div>
+            )}
+            <div className="max-h-96 overflow-auto border-t">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Competency</TableHead>
+                    <TableHead>Tier</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead className="text-right">DNA refs</TableHead>
+                    <TableHead className="text-right">Live</TableHead>
+                    <TableHead className="text-right">Drafts</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {tiers.data?.rows?.slice(0, 250).map((r) => (
+                    <TableRow key={r.id}>
+                      <TableCell className="font-medium text-gray-900">{r.canonical_name}</TableCell>
+                      <TableCell><Badge variant="outline" className="text-[10px]">T{r.tier}</Badge></TableCell>
+                      <TableCell className="text-xs text-gray-500">{r.type_key}</TableCell>
+                      <TableCell className="text-right tabular-nums text-gray-600">{r.dna_refs}</TableCell>
+                      <TableCell className="text-right"><Badge variant={r.live_approved >= 4 ? 'default' : 'outline'} className="tabular-nums">{r.live_approved}</Badge></TableCell>
+                      <TableCell className="text-right tabular-nums text-gray-600">{r.draft_pipeline}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== QUALITY ===== */}
+      {tab === 'quality' && (
+        <div className="space-y-5">
+          {quality.isLoading && <div className="text-sm text-gray-400">Loading…</div>}
+          {quality.data && quality.data.schema_initialized === false && (
+            <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">{quality.data.note || 'Factory schema not initialized.'}</div>
+          )}
+          {quality.data?.draft_corpus && (
+            <>
+              <div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-xs text-blue-900">
+                <Info className="mr-1 inline h-3.5 w-3.5" />
+                Structural checks only — content quality (relevance, distractor validity) requires human review. Every draft stays pending_review.
+              </div>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                <Stat tone="neutral" label="Draft Questions" value={String(quality.data.draft_corpus.questions)} sub={`${quality.data.draft_corpus.with_confidence} with confidence`} />
+                <Stat tone="neutral" label="Avg Confidence" value={quality.data.draft_corpus.avg_confidence == null ? '—' : String(quality.data.draft_corpus.avg_confidence)} />
+                <Stat tone={quality.data.duplication?.status === 'pass' ? 'live' : 'pipeline'} label="Duplicate Groups" value={String(quality.data.duplication?.duplicate_groups ?? 0)} sub={`${quality.data.duplication?.redundant_rows ?? 0} redundant · ${quality.data.duplication?.status}`} />
+                <Stat tone={quality.data.structural?.status === 'pass' ? 'live' : 'pipeline'} label="Structural Issues" value={String(quality.data.structural?.total_issues ?? 0)} sub={quality.data.structural?.status} />
+              </div>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <Breakdown title="Confidence distribution" rows={[
+                  { k: 'Low (<0.4)', n: quality.data.confidence_distribution?.low_lt_0_4 ?? 0 },
+                  { k: 'Moderate (0.4–0.5)', n: quality.data.confidence_distribution?.moderate_0_4_0_5 ?? 0 },
+                  { k: 'Higher (≥0.5)', n: quality.data.confidence_distribution?.higher_gte_0_5 ?? 0 },
+                ]} />
+                <Breakdown title="Per-competency spread (draft)" rows={[
+                  { k: 'Competencies with drafts', n: quality.data.spread?.competencies ?? 0 },
+                  { k: 'Multi-type (≥2)', n: quality.data.spread?.multi_type ?? 0 },
+                  { k: 'Multi-difficulty (≥2)', n: quality.data.spread?.multi_difficulty ?? 0 },
+                  { k: 'Ready-shaped (≥4, ≥2 types & diffs)', n: quality.data.spread?.ready_shaped ?? 0 },
+                ]} />
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {tab === 'workbench' && coverage.isError && (
         <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800">Failed to load coverage.</div>
       )}
 
       {/* Coverage summary — HONEST live vs PIPELINE */}
-      {cov && (
+      {tab === 'workbench' && cov && (
         <div>
           <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700">
             <Boxes className="h-4 w-4" /> Coverage — honest live vs draft pipeline
@@ -180,6 +390,7 @@ export default function QuestionFactoryPanel() {
       )}
 
       {/* Generate controls — pick a genome competency */}
+      {tab === 'workbench' && (
       <div className="rounded-lg border bg-white">
         <div className="flex flex-wrap items-center gap-2 border-b p-3">
           <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
@@ -234,8 +445,10 @@ export default function QuestionFactoryPanel() {
           </Table>
         </div>
       </div>
+      )}
 
       {/* Review queue */}
+      {tab === 'workbench' && (
       <div className="rounded-lg border bg-white">
         <div className="flex items-center gap-2 border-b p-3 text-sm font-semibold text-gray-700">
           <ClipboardCheck className="h-4 w-4" /> Review queue
@@ -283,6 +496,27 @@ export default function QuestionFactoryPanel() {
             </TableBody>
           </Table>
         </div>
+      </div>
+      )}
+    </div>
+  );
+}
+
+function ProgressRow({ label, value, target, met, suffix, remaining }: { label: string; value: number; target: number; met: boolean; suffix?: string; remaining?: string }) {
+  const pct = target > 0 ? Math.min(100, Math.round((value / target) * 100)) : 0;
+  return (
+    <div className="rounded-lg border bg-white p-3">
+      <div className="flex items-center justify-between text-sm">
+        <span className="font-medium text-gray-800">{label}</span>
+        <span className="tabular-nums text-gray-600">
+          {value}{suffix || ''} / {target}{suffix || ''}
+          {met
+            ? <Badge className="ml-2 bg-green-600 text-[10px]">met</Badge>
+            : <span className="ml-2 text-xs text-amber-600">{remaining}</span>}
+        </span>
+      </div>
+      <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-gray-100">
+        <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: met ? '#16a34a' : '#d97706' }} />
       </div>
     </div>
   );

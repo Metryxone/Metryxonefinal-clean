@@ -26,6 +26,16 @@ import {
   listGenomeCompetencies,
   REVIEW_VALUES,
 } from '../services/question-factory';
+import {
+  computePriorityTiers,
+  generateBulkPopulation,
+  getThreeAxisCoverage,
+  getRoleDnaCoverage,
+  runQualityChecks,
+  getDifficultyCoverage,
+  getTypeCoverage,
+  getFounderDashboard,
+} from '../services/question-factory-population';
 
 export function registerQuestionFactoryRoutes(
   app: Express,
@@ -149,5 +159,45 @@ export function registerQuestionFactoryRoutes(
   // Surface the allowed review vocabulary for the admin UI (static, flag-gated).
   app.get(`${BASE}/review-vocabulary`, gate, requireAuth, requireSuperAdmin, (_req, res) => {
     res.json({ ok: true, review_status: REVIEW_VALUES });
+  });
+
+  // ===== MX-101A — Population Program (read-only GETs probe+degrade, NO DDL) =====
+  app.get(`${BASE}/population/priority`, gate, requireAuth, requireSuperAdmin, async (_req, res, next) => {
+    try { res.json(await computePriorityTiers(pool)); } catch (e) { next(e); }
+  });
+  app.get(`${BASE}/population/coverage`, gate, requireAuth, requireSuperAdmin, async (_req, res, next) => {
+    try { res.json(await getThreeAxisCoverage(pool)); } catch (e) { next(e); }
+  });
+  app.get(`${BASE}/population/role-dna`, gate, requireAuth, requireSuperAdmin, async (_req, res, next) => {
+    try { res.json(await getRoleDnaCoverage(pool)); } catch (e) { next(e); }
+  });
+  app.get(`${BASE}/population/quality`, gate, requireAuth, requireSuperAdmin, async (_req, res, next) => {
+    try { res.json(await runQualityChecks(pool)); } catch (e) { next(e); }
+  });
+  app.get(`${BASE}/population/difficulty`, gate, requireAuth, requireSuperAdmin, async (_req, res, next) => {
+    try { res.json(await getDifficultyCoverage(pool)); } catch (e) { next(e); }
+  });
+  app.get(`${BASE}/population/type`, gate, requireAuth, requireSuperAdmin, async (_req, res, next) => {
+    try { res.json(await getTypeCoverage(pool)); } catch (e) { next(e); }
+  });
+  app.get(`${BASE}/population/founder`, gate, requireAuth, requireSuperAdmin, async (_req, res, next) => {
+    try { res.json(await getFounderDashboard(pool)); } catch (e) { next(e); }
+  });
+
+  // Bulk DRAFT generation across prioritized gaps. DRAFT-only — never auto-approves, never inflates
+  // live coverage. ensure-schema runs ONLY on this POST path (GETs never write).
+  app.post(`${BASE}/population/run`, gate, requireAuth, requireSuperAdmin, async (req, res, next) => {
+    try {
+      const b = req.body || {};
+      await ensureQuestionFactorySchema(pool);
+      const out = await generateBulkPopulation(pool, {
+        tier: b.tier ? parseInt(String(b.tier), 10) : undefined,
+        gapOnly: b.gap_only === true || b.gap_only === '1' || b.gap_only === 'true',
+        limit: b.limit ? parseInt(String(b.limit), 10) : undefined,
+        dryRun: b.dry_run === true || b.dry_run === '1' || b.dry_run === 'true',
+        createdBy: reviewerOf(req) ? String(reviewerOf(req)) : null,
+      });
+      res.json(out);
+    } catch (e) { next(e); }
   });
 }

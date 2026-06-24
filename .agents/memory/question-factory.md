@@ -59,3 +59,27 @@ only a human approve flips a question live (status=approved + map active=true).
   CHECK-constraint workaround), so an unfiltered draft query pollutes the review queue with
   rejected/retired questions. Default to `quality_review_status IN (pending_review,in_review,
   needs_revision)`; only an explicit `review_status` filter surfaces rejected/retired.
+
+## MX-101A — Coverage Population Program (built ON TOP of MX-101X)
+Additive program that drives the existing factory across the FULL 419-competency genome and
+reports honest 3-axis coverage. Service `services/question-factory-population.ts` (8 exports),
+routes `/api/admin/question-factory/population/*` (7 GET + POST `/population/run`), scripts
+`scripts/mx101a-population-run.ts` + `mx101a-reports.ts`, reports `backend/audit/mx-101a/*.md`,
+panel = new Founder/Population/Quality tabs in `QuestionFactoryPanel.tsx`. Same `questionFactory`
+flag; OFF byte-identical.
+- **THREE separate axes — never composite**: Draft Coverage (≥1 actionable draft), Approved
+  Coverage (≥1 approved+active), Assessment-Ready (≥4 approved+active spanning ≥2 types AND ≥2
+  difficulties — rigorous gate). A full draft run moves ONLY the draft axis; approved/ready stay
+  exactly where they were (the honesty proof: post-run Approved=7/1.7%, Ready=0 UNCHANGED).
+- **DEFAULT_PACK=6** (likert/mcq/sjt × difficulty); 419×6 ≈ 2,514 drafts. `generateBulkPopulation`
+  is idempotent/resumable: SKIP any comp already holding ≥6 actionable drafts (re-run is a no-op,
+  never duplicates). Reversible: provenance `template_generated`, `template_key LIKE 'qf-%'`.
+- **Role-DNA denominator = 21** (DISTINCT comps in `onto_role_weights`, not the 44 rows). This is
+  the consumer-coverage axis (Employer + Career read the same set). future_skills tier is honestly
+  0 (`onto_competency_type_map` has 0 future_skills rows).
+- **Quality checks are STRUCTURAL only** (duplication, prompt length, option count, best_option
+  bounds, confidence/spread) — content relevance needs human review. The template generator
+  legitimately repeats the SAME prompt across difficulty bands of one competency → ~420 duplicate
+  prompt-groups is an HONEST pre-existing finding (status 'review', NOT a bug to fix here).
+- Population GET handlers to_regclass-probe + degrade; POST `/run` is the only ensure-schema path.
+  Targets (TARGETS const): approved coverage 80%, assessment_ready 350 comps, role_dna 95%.

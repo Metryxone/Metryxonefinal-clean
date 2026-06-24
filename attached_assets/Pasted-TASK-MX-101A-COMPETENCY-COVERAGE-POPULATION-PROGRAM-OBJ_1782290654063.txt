@@ -1,0 +1,411 @@
+TASK: MX-101A-COMPETENCY-COVERAGE-POPULATION-PROGRAM
+
+OBJECTIVE
+
+Use the newly implemented Question Factory, Coverage Matrix, Review Workflow, Approval Workflow, and Provenance Engine to systematically expand competency assessment coverage across the MetryxOne competency genome.
+
+This phase focuses on content population, governance, quality assurance, and assessment readiness.
+
+This is NOT a framework build.
+
+This is NOT a new architecture.
+
+This is the controlled population of the existing assessment ecosystem.
+
+==================================================
+CURRENT STATE
+=============
+
+Competencies = 419
+
+Assessment Covered = 7
+
+Coverage = 1.7%
+
+Question Factory = Complete
+
+Review Workflow = Complete
+
+Approval Workflow = Complete
+
+Coverage Dashboard = Complete
+
+Target:
+
+Assessment Ready Competencies ≥ 350
+
+Coverage ≥ 80%
+
+==================================================
+SECTION 1
+COMPETENCY PRIORITIZATION
+=========================
+
+Generate:
+
+competency_population_priority_matrix.md
+
+Classify:
+
+Tier 1
+Critical Competencies
+
+Tier 2
+High Value Competencies
+
+Tier 3
+Role Specific Competencies
+
+Tier 4
+Future Skills
+
+Output:
+
+Population Roadmap
+
+==================================================
+SECTION 2
+ROLE DNA COVERAGE FIRST
+=======================
+
+Prioritize competencies currently used by:
+
+Role DNA
+
+Role Benchmarks
+
+Employer Intelligence
+
+Career Builder
+
+Adaptive Assessment
+
+Generate:
+
+role_dna_population_plan.md
+
+Target:
+
+100% of Role DNA competencies assessable.
+
+==================================================
+SECTION 3
+QUESTION PACK GENERATION
+========================
+
+For each competency create:
+
+Knowledge Questions
+
+Scenario Questions
+
+Behavioral Questions
+
+Situational Questions
+
+Applied Questions
+
+Advanced Questions
+
+Leadership Questions (where relevant)
+
+Status:
+
+Draft
+
+Review Required
+
+Approval Required
+
+==================================================
+SECTION 4
+DIFFICULTY COVERAGE
+===================
+
+For each competency ensure:
+
+Foundational
+
+Intermediate
+
+Advanced
+
+Expert
+
+Coverage
+
+Generate:
+
+difficulty_coverage_report.md
+
+==================================================
+SECTION 5
+COMPETENCY TYPE COVERAGE
+========================
+
+Expand coverage across:
+
+Behavioral
+
+Functional
+
+Cognitive
+
+Technical
+
+Future Skills
+
+Target:
+
+No competency type below 80% assessment coverage.
+
+Generate:
+
+competency_type_coverage_report.md
+
+==================================================
+SECTION 6
+QUESTION QUALITY ENGINE
+=======================
+
+Validate:
+
+Question Quality
+
+Question Duplication
+
+Question Relevance
+
+Question Difficulty
+
+Question Clarity
+
+Generate:
+
+question_quality_framework.md
+
+==================================================
+SECTION 7
+REVIEW WORKFLOW ACTIVATION
+==========================
+
+Create:
+
+Draft
+↓
+Pending Review
+↓
+Approved
+↓
+Retired
+
+Track:
+
+Reviewer
+
+Approval Date
+
+Version
+
+Source
+
+Confidence
+
+==================================================
+SECTION 8
+PROVENANCE TRACKING
+===================
+
+Track:
+
+Human Authored
+
+AI Generated
+
+Template Generated
+
+Imported
+
+Display:
+
+Source
+
+Confidence
+
+Approval Status
+
+Generate:
+
+question_provenance_framework.md
+
+==================================================
+SECTION 9
+SUPER ADMIN DASHBOARD
+=====================
+
+Create:
+
+Coverage Dashboard
+
+Population Dashboard
+
+Question Dashboard
+
+Approval Dashboard
+
+Reviewer Dashboard
+
+Display:
+
+Coverage %
+
+Approved %
+
+Draft %
+
+Review %
+
+Assessment Ready %
+
+==================================================
+SECTION 10
+FOUNDER DASHBOARD
+=================
+
+Display:
+
+Competencies Covered
+
+Competencies Uncovered
+
+Questions Approved
+
+Questions Pending
+
+Coverage Trend
+
+Assessment Readiness Trend
+
+Target Progress
+
+==================================================
+SECTION 11
+ASSESSMENT READINESS CERTIFICATION
+==================================
+
+Assessment Ready when:
+
+Competency Covered
+
+Multiple Question Types
+
+Multiple Difficulty Levels
+
+Quality Review Passed
+
+Approval Completed
+
+Generate:
+
+assessment_readiness_framework.md
+
+==================================================
+SECTION 12
+CERTIFICATION
+=============
+
+PASS when:
+
+Coverage ≥ 80%
+
+Assessment Ready Competencies ≥ 350
+
+Role DNA Coverage ≥ 95%
+
+Adaptive Coverage ≥ 80%
+
+Employer Coverage ≥ 80%
+
+Career Builder Coverage ≥ 80%
+
+Question Governance Active
+
+Coverage Inflation Protections Active
+
+==================================================
+FOUNDER REPORT
+==============
+
+Answer:
+
+1. Current Coverage %
+
+2. Assessment Ready Competencies
+
+3. Competencies Remaining
+
+4. Coverage by Type
+
+5. Coverage by Role Family
+
+6. Coverage by Industry
+
+7. Impact on Adaptive Assessment
+
+8. Impact on Employer Intelligence
+
+9. Impact on Career Builder
+
+10. Expected Maturity Gain
+
+11. Updated Enterprise Maturity Score
+
+12. PASS / PARTIAL / FAIL
+
+==================================================
+IMPLEMENTATION RULES
+====================
+
+Additive
+
+Reversible
+
+Flag Gated
+
+No Question Auto Approval
+
+No Coverage Inflation
+
+No Competency Deletion
+
+No Existing Question Deletion
+
+Coverage ≠ Approval
+
+Draft ≠ Assessment Ready
+
+Assessment Ready Requires Approval
+
+==================================================
+SUCCESS CRITERIA
+================
+
+Question Factory Operational
+
+Coverage Expansion Operational
+
+Review Workflow Operational
+
+Approval Workflow Operational
+
+Coverage ≥ 80%
+
+Assessment Ready Competencies ≥ 350
+
+Role DNA Assessable
+
+Adaptive Assessment Supported
+
+Employer Intelligence Supported
+
+Career Builder Supported

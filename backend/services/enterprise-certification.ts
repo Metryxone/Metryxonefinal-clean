@@ -254,62 +254,72 @@ export async function outcomeReadiness(pool: Pool) {
 }
 
 // ── VIEW 3 — Super Admin command center (12 health categories) ────────────────────
+// COMPOSES the recertification subsystems + outcome-readiness view (never recomputes
+// its own SQL counts). Each category carries SEPARATE structural & adoption axes, plus
+// the required `outcome` and `certification` categories sourced from the composed views.
 
 export async function commandCenter(pool: Pool) {
-  const REGISTERED = "COALESCE(role,'') <> 'super_admin' AND COALESCE(email,'') NOT ILIKE '%@example.com'";
+  const cert = await recertification(pool);
+  const outcome = await safe(() => outcomeReadiness(pool));
 
-  // Adoption counts (null = table absent/unreadable, never a fabricated 0).
-  const [
-    candidates, sessionsDone, competencies, approvedQuestions, assessmentRuns,
-    roleDna, onetLinks, careerBuilderRuns, passports, validationRealized, employerCands,
-  ] = await Promise.all([
-    scalar(pool, 'users', `SELECT count(*)::int AS n FROM users WHERE ${REGISTERED}`),
-    scalar(pool, 'capadex_sessions', `SELECT count(*)::int AS n FROM capadex_sessions WHERE lower(coalesce(status,'')) = 'completed'`),
-    scalar(pool, 'onto_competencies', `SELECT count(*)::int AS n FROM onto_competencies`),
-    scalar(pool, 'competency_question_templates', `SELECT count(*)::int AS n FROM competency_question_templates WHERE coalesce(status,'') = 'approved'`),
-    scalar(pool, 'cra_scores', `SELECT count(DISTINCT user_id)::int AS n FROM cra_scores`),
-    scalar(pool, 'onto_role_competency_profiles', `SELECT count(DISTINCT role_id)::int AS n FROM onto_role_competency_profiles`),
-    scalar(pool, 'map_role_competency', `SELECT count(*)::int AS n FROM map_role_competency`),
-    scalar(pool, 'cg_user_activation_runs', `SELECT count(*)::int AS n FROM cg_user_activation_runs`),
-    scalar(pool, 'career_passport_snapshots', `SELECT count(*)::int AS n FROM career_passport_snapshots`),
-    scalar(pool, 'validation_loop_outcomes', `SELECT count(*)::int AS n FROM validation_loop_outcomes WHERE coalesce(is_demo,false) = false`),
-    scalar(pool, 'employer_candidates', `SELECT count(*)::int AS n FROM employer_candidates WHERE coalesce(email,'') NOT ILIKE '%@example.com'`),
-  ]);
+  const subByKey: Record<string, any> = {};
+  for (const s of ((cert as any)?.subsystems ?? [])) subByKey[s.key] = s;
 
-  // Structural presence per category.
-  const sPlatform = (await tablePresent(pool, 'users')) && (await tablePresent(pool, 'capadex_sessions'));
-  const sCompetency = await tablePresent(pool, 'onto_competencies');
-  const sQuestion = await tablePresent(pool, 'competency_question_templates');
-  const sAssessment = await tablePresent(pool, 'cra_scores');
-  const sRoleDna = await tablePresent(pool, 'onto_role_competency_profiles');
-  const sOnet = (await tablePresent(pool, 'ont_roles')) && (await tablePresent(pool, 'map_role_competency'));
-  const sCandidate = (await tablePresent(pool, 'career_seeker_profiles')) && sAssessment;
-  const sCareerBuilder = await tablePresent(pool, 'cg_user_activation_runs');
-  const sPassport = await tablePresent(pool, 'career_passport_snapshots');
-  const sEmployer = await tablePresent(pool, 'employer_candidates');
-  const sValidation = await tablePresent(pool, 'validation_loop_outcomes');
+  // Map a curated recertification subsystem → a health category (compose, never recompute).
+  const fromSub = (subKey: string, catKey: string, label: string) => {
+    const s = subByKey[subKey];
+    if (!s) {
+      return { key: catKey, label, structural: false, adoption: null as number | null, status: 'gap' as HealthStatus, source: `recertification:${subKey}` };
+    }
+    const adoption = s.adoption?.live_rows ?? null;
+    return {
+      key: catKey,
+      label,
+      structural: !!s.structural?.ok,
+      adoption,                                 // SEPARATE axis; null = not measurable
+      status: healthStatus(!!s.structural?.ok, adoption),
+      source: `recertification:${subKey}`,
+    };
+  };
 
-  const cat = (key: string, label: string, structuralOk: boolean, adoption: number | null, extra?: Record<string, unknown>) => ({
-    key, label,
-    structural: structuralOk,
-    adoption,                                 // SEPARATE axis; null = not measurable
-    status: healthStatus(structuralOk, adoption),
-    ...extra,
-  });
+  // `outcome` category — composed from MX-102X outcome readiness (types-with-coverage = adoption).
+  const outcomeAvailable = (outcome as any)?.available === true;
+  const outcomeAdoption = (outcome as any)?.coverage?.types_with_coverage ?? null;
+  const outcomeCat = {
+    key: 'outcome',
+    label: 'Outcome Intelligence (realized-outcome coverage)',
+    structural: outcomeAvailable,
+    adoption: outcomeAdoption as number | null,
+    status: healthStatus(outcomeAvailable, outcomeAdoption),
+    source: 'outcome_readiness',
+  };
+
+  // `certification` category — composed from the enterprise recertification verdict itself.
+  const certVerdict = (cert as any)?.verdict ?? null;
+  const certCat = {
+    key: 'certification',
+    label: 'Enterprise Certification (recertification verdict)',
+    structural: certVerdict === 'PASS' || certVerdict === 'PARTIAL',
+    adoption: (cert as any)?.summary?.adopted ?? null,
+    status: (certVerdict === 'PASS' ? 'healthy' : certVerdict === 'PARTIAL' ? 'partial' : 'gap') as HealthStatus,
+    source: 'recertification:verdict',
+    verdict: certVerdict,
+    structural_pct: (cert as any)?.enterprise_structural_pct ?? null,
+  };
 
   const categories = [
-    cat('platform_core', 'Platform Core (users · sessions)', sPlatform, candidates),
-    cat('competency_framework', 'Competency Framework (genome)', sCompetency, competencies),
-    cat('question_bank', 'Question Bank (approved templates)', sQuestion, approvedQuestions),
-    cat('assessment_engine', 'Assessment Engine (scored subjects)', sAssessment, assessmentRuns),
-    cat('role_dna', 'Role DNA (profiled roles)', sRoleDna, roleDna),
-    cat('onet_crosswalk', 'O*NET Crosswalk (role↔competency links)', sOnet, onetLinks),
-    cat('candidate_journey', 'Candidate Journey (registered)', sCandidate, candidates),
-    cat('employer_ecosystem', 'Employer Ecosystem (real candidates)', sEmployer, employerCands),
-    cat('career_builder', 'Career Builder (activations)', sCareerBuilder, careerBuilderRuns),
-    cat('career_passport', 'Career Passport (snapshots)', sPassport, passports),
-    cat('assessments_completed', 'Assessments Completed (CAPADEX)', sPlatform, sessionsDone),
-    cat('validation_loop', 'Validation Loop (realized outcomes)', sValidation, validationRealized),
+    fromSub('super_admin', 'platform_core', 'Platform Core (super-admin · auth)'),
+    fromSub('competency_framework', 'competency_framework', 'Competency Framework (genome)'),
+    fromSub('assessment_engine', 'assessment_engine', 'Assessment Engine (approved templates)'),
+    fromSub('role_dna', 'role_dna', 'Role DNA (profiled roles)'),
+    fromSub('candidate_intelligence', 'candidate_journey', 'Candidate Journey (seeker profiles)'),
+    fromSub('employer_intelligence', 'employer_ecosystem', 'Employer Ecosystem (real candidates)'),
+    fromSub('career_builder', 'career_builder', 'Career Builder (activations)'),
+    fromSub('career_passport', 'career_passport', 'Career Passport (snapshots)'),
+    fromSub('report_factory', 'report_factory', 'Report Factory (generated reports)'),
+    fromSub('validation_loop', 'validation_loop', 'Validation Loop (realized outcomes)'),
+    outcomeCat,
+    certCat,
   ];
 
   const healthy = categories.filter((c) => c.status === 'healthy').length;
@@ -324,61 +334,70 @@ export async function commandCenter(pool: Pool) {
       structural_pct: rate(structuralOkCount, categories.length),
       healthy_adoption: healthy,                     // adoption axis (SEPARATE)
     },
-    note: 'Structural (machinery) and Adoption (live data) reported as separate axes; null adoption = not measurable, never 0.',
+    note: 'Categories COMPOSE the recertification subsystems + outcome-readiness view (never recomputed). Structural (machinery) ⟂ Adoption (live data) reported separately; null adoption = not measurable, never 0.',
   };
 }
 
 // ── VIEW 4 — Founder command center (12 exec metrics + cert score) ────────────────
+// COMPOSES the unified-journey + outcome-readiness + recertification views. The headline
+// metrics are the per-surface READINESS scores (candidate / employer / career-builder /
+// passport / outcome / …) plus adoption volumes pulled from the composed subsystem axes —
+// never recomputed here.
 
 export async function founderCommandCenter(pool: Pool) {
-  const REGISTERED = "COALESCE(role,'') <> 'super_admin' AND COALESCE(email,'') NOT ILIKE '%@example.com'";
-
-  const [
-    candidates, assessmentsDone, employers, paidTxns, competencies, assessmentReady,
-    roleDnaRoles, onetCoverage, cbActivations, passports, realizedOutcomes,
-  ] = await Promise.all([
-    scalar(pool, 'users', `SELECT count(*)::int AS n FROM users WHERE ${REGISTERED}`),
-    scalar(pool, 'capadex_sessions', `SELECT count(*)::int AS n FROM capadex_sessions WHERE lower(coalesce(status,'')) = 'completed'`),
-    scalar(pool, 'employer_organizations', `SELECT count(*)::int AS n FROM employer_organizations`),
-    scalar(pool, 'capadex_payments', `SELECT count(*)::int AS n FROM capadex_payments WHERE lower(coalesce(status,'')) IN ('paid','captured','success','succeeded','completed')`),
-    scalar(pool, 'onto_competencies', `SELECT count(*)::int AS n FROM onto_competencies`),
-    scalar(pool, 'onto_competency_question_map', `SELECT count(DISTINCT competency_id)::int AS n FROM onto_competency_question_map`),
-    scalar(pool, 'onto_role_competency_profiles', `SELECT count(DISTINCT role_id)::int AS n FROM onto_role_competency_profiles`),
-    scalar(pool, 'map_role_competency', `SELECT count(*)::int AS n FROM map_role_competency`),
-    scalar(pool, 'cg_user_activation_runs', `SELECT count(*)::int AS n FROM cg_user_activation_runs`),
-    scalar(pool, 'career_passport_snapshots', `SELECT count(*)::int AS n FROM career_passport_snapshots`),
-    scalar(pool, 'validation_loop_outcomes', `SELECT count(*)::int AS n FROM validation_loop_outcomes WHERE coalesce(is_demo,false) = false`),
-  ]);
-
   const cert = await recertification(pool);
+  const journey = await safe(() => unifiedJourney(pool));
+  const outcome = await safe(() => outcomeReadiness(pool));
 
-  const m = (key: string, label: string, value: number | null, unit: string, axis: string) => ({ key, label, value, unit, axis });
+  const subByKey: Record<string, any> = {};
+  for (const s of ((cert as any)?.subsystems ?? [])) subByKey[s.key] = s;
+  const subStructPct = (key: string): number | null => {
+    const s = subByKey[key];
+    return s ? rate(s.structural?.present ?? null, s.structural?.total ?? null) : null;
+  };
+  const subAdoption = (key: string): number | null => {
+    const s = subByKey[key];
+    return s ? (s.adoption?.live_rows ?? null) : null;
+  };
+
+  const m = (key: string, label: string, value: number | null, unit: string, axis: string, source: string) => ({ key, label, value, unit, axis, source });
+
+  // Readiness scores composed from the journey + outcome views (already structural pcts).
+  const candidateReadiness = (journey as any)?.candidate?.completion?.structural_pct ?? null;
+  const employerReadiness = (journey as any)?.employer?.completion?.coverage_pct ?? null;
+  const outcomeReadinessPct = rate(
+    (outcome as any)?.coverage?.types_with_coverage ?? null,
+    (outcome as any)?.coverage?.type_count ?? null,
+  );
 
   const metrics = [
-    m('registered_candidates', 'Registered Candidates', candidates, 'count', 'adoption'),
-    m('assessments_completed', 'Assessments Completed', assessmentsDone, 'count', 'adoption'),
-    m('employer_organizations', 'Employer Organizations', employers, 'count', 'adoption'),
-    m('paid_transactions', 'Paid Transactions', paidTxns, 'count', 'adoption'),
-    m('genome_competencies', 'Competencies in Genome', competencies, 'count', 'structural'),
-    m('assessment_ready_competencies', 'Assessment-Ready Competencies', assessmentReady, 'count', 'structural'),
-    m('role_dna_roles', 'Role DNA Roles', roleDnaRoles, 'count', 'structural'),
-    m('onet_links', 'O*NET Role↔Competency Links', onetCoverage, 'count', 'structural'),
-    m('career_builder_activations', 'Career Builder Activations', cbActivations, 'count', 'adoption'),
-    m('passport_snapshots', 'Passport Snapshots', passports, 'count', 'adoption'),
-    m('realized_outcomes', 'Realized Outcomes (non-demo)', realizedOutcomes, 'count', 'outcome'),
-    m('enterprise_cert_score', 'Enterprise Certification Score', cert.enterprise_structural_pct, 'pct', 'structural'),
+    // Readiness axis (structural) — composed from unified-journey + recertification subsystems.
+    m('candidate_readiness', 'Candidate Journey Readiness', candidateReadiness, 'pct', 'structural', 'unified_journey'),
+    m('employer_readiness', 'Employer Journey Readiness', employerReadiness, 'pct', 'structural', 'unified_journey'),
+    m('career_builder_readiness', 'Career Builder Readiness', subStructPct('career_builder'), 'pct', 'structural', 'recertification:career_builder'),
+    m('passport_readiness', 'Career Passport Readiness', subStructPct('career_passport'), 'pct', 'structural', 'recertification:career_passport'),
+    m('competency_framework_readiness', 'Competency Framework Readiness', subStructPct('competency_framework'), 'pct', 'structural', 'recertification:competency_framework'),
+    m('assessment_readiness', 'Assessment Engine Readiness', subStructPct('assessment_engine'), 'pct', 'structural', 'recertification:assessment_engine'),
+    m('enterprise_cert_score', 'Enterprise Certification Score', (cert as any)?.enterprise_structural_pct ?? null, 'pct', 'structural', 'recertification'),
+    // Outcome axis — composed from MX-102X outcome readiness.
+    m('outcome_readiness', 'Outcome Readiness (realized-type coverage)', outcomeReadinessPct, 'pct', 'outcome', 'outcome_readiness'),
+    // Adoption axis (volume) — pulled from the composed subsystem adoption axis (no ad-hoc recompute).
+    m('registered_candidates', 'Registered Candidates', subAdoption('candidate_intelligence'), 'count', 'adoption', 'recertification:candidate_intelligence'),
+    m('assessments_completed', 'Assessments Completed', subAdoption('adaptive_assessment'), 'count', 'adoption', 'recertification:adaptive_assessment'),
+    m('employer_candidates', 'Employer Candidates (real)', subAdoption('employer_intelligence'), 'count', 'adoption', 'recertification:employer_intelligence'),
+    m('realized_outcomes', 'Realized Outcomes (non-demo)', subAdoption('validation_loop'), 'count', 'outcome', 'recertification:validation_loop'),
   ];
 
   return {
     view: 'founder_command_center',
     metrics,
     enterprise_certification: {
-      structural_pct: cert.enterprise_structural_pct,
-      verdict: cert.verdict,
-      subsystems_pass: cert.summary.pass,
-      subsystems_total: cert.summary.total,
+      structural_pct: (cert as any)?.enterprise_structural_pct ?? null,
+      verdict: (cert as any)?.verdict ?? null,
+      subsystems_pass: (cert as any)?.summary?.pass ?? null,
+      subsystems_total: (cert as any)?.summary?.total ?? null,
     },
-    note: 'Exec metrics tag their axis (structural / adoption / outcome). null = not measurable, never a fabricated 0.',
+    note: 'Exec metrics COMPOSE the unified-journey / outcome / recertification views (never recomputed). Each tags its axis (structural readiness / adoption / outcome); null = not measurable, never a fabricated 0.',
   };
 }
 

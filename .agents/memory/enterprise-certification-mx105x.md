@@ -1,43 +1,39 @@
 ---
 name: Enterprise Certification (MX-105X)
-description: Top-level read-only flag-gated composer unifying candidate+employer journeys + enterprise certification over existing engines.
+description: Top-level read-only flag-gated composer that unifies candidate+employer journeys into one enterprise certification — the four-axis honesty rule and the compose-don't-recompute discipline.
 ---
 
 # Enterprise Certification & Platform Activation (MX-105X)
 
-A THIN top-level composer (`backend/services/enterprise-certification.ts`, VERSION 105.0.0,
-ENTERPRISE_K_MIN=30) that aggregates already-built engines into ONE unified enterprise
-certification. Flag `enterpriseCertification` (env `FF_ENTERPRISE_CERTIFICATION`), default OFF.
+A THIN top-level composer (flag `enterpriseCertification`, default OFF) that folds the
+already-built activation / certification / health / outcome engines into ONE enterprise
+certification. It composes — it never recomputes a score, writes a row, runs DDL, or fabricates.
 
-## What it composes (never recomputes)
-- `ecosystem-activation.certification` (candidate journey)
-- `employer-ecosystem-audit-engine.runEmployerEcosystemAudit` (employer 9-stage funnel)
-- `outcome-intelligence-engine.composeOverview` (MX-102X six-type outcomes)
-- light `to_regclass` + `SELECT count` probes for competency/role-DNA/O*NET/validation/report-factory.
-
-Views: `unifiedJourney` · `outcomeReadiness` · `commandCenter` (12 health cats) ·
-`founderCommandCenter` (12 metrics) · `recertification` (15 subsystems, 4 axes) · `overview`.
-
-## The rule that matters
-**Four axes are SEPARATE and never composited:** Structural (required tables present) ⟂
-Activation (gating flag on) ⟂ Adoption (live rows) ⟂ Outcome-Confidence
-(calibrated/provisional/abstained). The headline **verdict is STRUCTURAL-ONLY**
-(`verdict_axis:'structural'`, ≥90% PASS / ≥60% PARTIAL); activation/adoption/outcome-confidence
-are reported alongside. `null` = not measurable, NEVER a fabricated 0.
+## The rule that matters: FOUR axes, never composited
+**Structural** (required tables present) ⟂ **Activation** (gating flag on) ⟂ **Adoption**
+(live non-demo rows) ⟂ **Outcome-Confidence** (calibrated ≥ k_min). The headline **verdict is
+STRUCTURAL-ONLY**; activation/adoption/outcome-confidence are reported ALONGSIDE, never folded in.
+`null` = not measurable (table absent/unreadable), NEVER a fabricated 0. Coverage ⟂ Confidence too.
 
 **Why:** an enterprise cert that folds activation/adoption into the structural verdict would
-report "ready" off scaffolding alone, or "not ready" off honest 0-adoption — both lie. Live run
-(all FF on): 100% structural (24/24 tables), 15/15 PASS, but only 8/15 activated and 8/15 adopted,
-outcome-confidence abstained — the divergence between axes IS the honest signal.
+report "ready" off scaffolding alone, or "not ready" off honest 0-adoption — both lie. A real run
+showed 100% structural but only ~half activated/adopted with outcome abstained; that DIVERGENCE
+between axes is the honest signal, so the axes must stay readable independently.
 
-## Traps
-- **GET-only / compose-never-recompute:** zero DDL, zero writes. Every sub-call wrapped in
-  `safe()` → degrade null (composer NEVER throws).
-- **Global `/api/admin` auth gate** (routes.ts) intercepts BEFORE the route-level flagGate, so
-  unauth OFF → 401 (not 503); authed + flag-OFF → 503. Matches platform precedent; smoke asserts {401,403,503}.
-- Frontend `/enabled` probe (`res.ok`) conditionally spreads the nav tab + gates render — hidden when OFF.
-- Report Factory got a genuinely-missing 7th type **`employer`** (Employer Match): additive only —
-  `ReportType` union + narrative/insight/viz seeds keyed `report_types:['employer']` reusing
-  `data_source:'any'` (NO new compute path), all `ON CONFLICT DO NOTHING`. Report Factory is NOT flag-gated.
-- Validation script `scripts/mx105x-recertification.ts` → `audit/mx-105x/recertification-report.md`:
-  read-only, prints process flag state, masks any stray email to `user_masked`.
+## Compose, don't recompute (the trap this task hit)
+The aggregate views (command-center health categories, founder exec metrics) must DERIVE from the
+already-composed sub-views (recertification subsystems, unified-journey, outcome-readiness) — NOT
+re-issue their own ad-hoc SQL counts. First implementation recomputed via raw SQL and drifted from
+the required surface (missing readiness metrics + the `outcome`/`certification` categories) → review
+REJECTED. **How to apply:** founder metrics = per-surface READINESS pcts pulled from the journey +
+subsystem structural axes (+ adoption volumes read off each subsystem's adoption axis); health
+categories map curated subsystems to a status, plus an `outcome` category (from outcome-readiness)
+and a `certification` category (from the recert verdict). One source of truth per number.
+
+## Other traps
+- The global `/api/admin` auth gate intercepts BEFORE the route-level flag gate, so flag-OFF +
+  unauth returns 401 (not 503); authed + flag-OFF returns 503. Smoke must accept {401,403,503}.
+- Frontend gates the nav tab + render on a no-auth `/enabled` probe (`res.ok`) — hidden when OFF.
+- Report Factory genuinely lacked a 7th `employer` report type; added additively (union + seeds
+  reusing the existing `any` data_source, ON CONFLICT DO NOTHING) — NO new compute path. Report
+  Factory itself is not flag-gated.

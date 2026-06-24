@@ -1,8 +1,8 @@
 # MX-105X — Enterprise Certification & Platform Activation · Recertification Report
 
-_Generated 2026-06-24T16:07:56.118Z · composer v105.0.0 · read-only (no DDL, no writes)_
+_Generated 2026-06-24T16:19:13.516Z · composer v105.0.0 · read-only (no DDL, no writes)_
 
-**Process flag state at run:** FF_ENTERPRISE_CERTIFICATION=on, FF_OUTCOME_INTELLIGENCE_ACTIVATION=on, FF_LIVE_EMPLOYER_ECOSYSTEM=on, FF_RUNTIME_INTELLIGENCE_ACTIVATION=on, FF_COMMERCIAL_ACTIVATION=on, FF_CAREER_INTELLIGENCE_ACTIVATION=on, FF_REPORT_FACTORY=on
+**Process flag state at run:** FF_ENTERPRISE_CERTIFICATION=on, FF_OUTCOME_INTELLIGENCE_ACTIVATION=on, FF_LIVE_EMPLOYER_ECOSYSTEM=on, FF_RUNTIME_INTELLIGENCE_ACTIVATION=off, FF_COMMERCIAL_ACTIVATION=off, FF_CAREER_INTELLIGENCE_ACTIVATION=on, FF_REPORT_FACTORY=off
 
 > This composer **recomputes nothing** — it folds the headline of each existing engine.
 > The four axes are reported **separately and never composited**:
@@ -15,7 +15,7 @@ _Generated 2026-06-24T16:07:56.118Z · composer v105.0.0 · read-only (no DDL, n
 - **Verdict (structural axis):** PASS — Structural readiness ≥ 90% for enterprise certification (PASS).
 - **Enterprise structural readiness:** 100% (24/24 required tables present)
 - **Subsystems:** 15 PASS · 0 PARTIAL · 0 FAIL (of 15)
-- **Activated (flag on):** 8/15 · **Adopted (live rows):** 8/15
+- **Activated (flag on):** 10/15 · **Adopted (live rows):** 8/15
 
 _Structural (PASS/PARTIAL/FAIL & the headline %) ⟂ Activation (flag on) ⟂ Adoption (live rows) ⟂ Outcome-Confidence. NEVER composited._
 
@@ -26,13 +26,13 @@ _Structural (PASS/PARTIAL/FAIL & the headline %) ⟂ Activation (flag on) ⟂ Ad
 | Competency Framework | PASS | 2/2 | on (always) | 419 | — |
 | Role DNA | PASS | 1/1 | off | 13 | — |
 | O*NET Crosswalk | PASS | 2/2 | off | 52362 | — |
-| Assessment Engine | PASS | 1/1 | off | 57 | — |
+| Assessment Engine | PASS | 1/1 | on | 57 | — |
 | Question Factory | PASS | 1/1 | off | 2524 | — |
 | Adaptive Assessment | PASS | 1/1 | off | 0 | — |
 | Employer Intelligence | PASS | 2/2 | on | 0 | — |
 | Candidate Intelligence | PASS | 2/2 | off | 1 | — |
 | Career Builder | PASS | 2/2 | on | 0 | — |
-| Career Passport | PASS | 1/1 | off | 4 | — |
+| Career Passport | PASS | 1/1 | on | 4 | — |
 | Outcome Intelligence | PASS | 1/1 | on | 0 | abstained |
 | Validation Loop | PASS | 1/1 | on | 0 | abstained |
 | Super Admin Command Center | PASS | 3/3 | on (always) | 1 | — |
@@ -295,96 +295,110 @@ _Structural (PASS/PARTIAL/FAIL & the headline %) ⟂ Activation (flag on) ⟂ Ad
   "categories": [
     {
       "key": "platform_core",
-      "label": "Platform Core (users · sessions)",
+      "label": "Platform Core (super-admin · auth)",
       "structural": true,
-      "adoption": 0,
-      "status": "dormant"
+      "adoption": 1,
+      "status": "healthy",
+      "source": "recertification:super_admin"
     },
     {
       "key": "competency_framework",
       "label": "Competency Framework (genome)",
       "structural": true,
       "adoption": 419,
-      "status": "healthy"
-    },
-    {
-      "key": "question_bank",
-      "label": "Question Bank (approved templates)",
-      "structural": true,
-      "adoption": 57,
-      "status": "healthy"
+      "status": "healthy",
+      "source": "recertification:competency_framework"
     },
     {
       "key": "assessment_engine",
-      "label": "Assessment Engine (scored subjects)",
+      "label": "Assessment Engine (approved templates)",
       "structural": true,
-      "adoption": 0,
-      "status": "dormant"
+      "adoption": 57,
+      "status": "healthy",
+      "source": "recertification:assessment_engine"
     },
     {
       "key": "role_dna",
       "label": "Role DNA (profiled roles)",
       "structural": true,
       "adoption": 13,
-      "status": "healthy"
-    },
-    {
-      "key": "onet_crosswalk",
-      "label": "O*NET Crosswalk (role↔competency links)",
-      "structural": true,
-      "adoption": 52362,
-      "status": "healthy"
+      "status": "healthy",
+      "source": "recertification:role_dna"
     },
     {
       "key": "candidate_journey",
-      "label": "Candidate Journey (registered)",
+      "label": "Candidate Journey (seeker profiles)",
       "structural": true,
-      "adoption": 0,
-      "status": "dormant"
+      "adoption": 1,
+      "status": "healthy",
+      "source": "recertification:candidate_intelligence"
     },
     {
       "key": "employer_ecosystem",
       "label": "Employer Ecosystem (real candidates)",
       "structural": true,
       "adoption": 0,
-      "status": "dormant"
+      "status": "dormant",
+      "source": "recertification:employer_intelligence"
     },
     {
       "key": "career_builder",
       "label": "Career Builder (activations)",
       "structural": true,
       "adoption": 0,
-      "status": "dormant"
+      "status": "dormant",
+      "source": "recertification:career_builder"
     },
     {
       "key": "career_passport",
       "label": "Career Passport (snapshots)",
       "structural": true,
       "adoption": 4,
-      "status": "healthy"
+      "status": "healthy",
+      "source": "recertification:career_passport"
     },
     {
-      "key": "assessments_completed",
-      "label": "Assessments Completed (CAPADEX)",
+      "key": "report_factory",
+      "label": "Report Factory (generated reports)",
       "structural": true,
       "adoption": 0,
-      "status": "dormant"
+      "status": "dormant",
+      "source": "recertification:report_factory"
     },
     {
       "key": "validation_loop",
       "label": "Validation Loop (realized outcomes)",
       "structural": true,
       "adoption": 0,
-      "status": "dormant"
+      "status": "dormant",
+      "source": "recertification:validation_loop"
+    },
+    {
+      "key": "outcome",
+      "label": "Outcome Intelligence (realized-outcome coverage)",
+      "structural": true,
+      "adoption": 0,
+      "status": "dormant",
+      "source": "outcome_readiness"
+    },
+    {
+      "key": "certification",
+      "label": "Enterprise Certification (recertification verdict)",
+      "structural": true,
+      "adoption": 8,
+      "status": "healthy",
+      "source": "recertification:verdict",
+      "verdict": "PASS",
+      "structural_pct": 100
     }
   ],
   "summary": {
     "category_count": 12,
     "structural_ok": 12,
     "structural_pct": 100,
-    "healthy_adoption": 5
+    "healthy_adoption": 7
   },
-  "note": "Structural (machinery) and Adoption (live data) reported as separate axes; null adoption = not measurable, never 0."
+  "note": "Categories COMPOSE the recertification subsystems + outcome-readiness view (never recomputed). Structural (machinery) ⟂ Adoption (live data) reported separately; null adoption = not measurable, never 0."
 }
 ```
 
@@ -395,88 +409,100 @@ _Structural (PASS/PARTIAL/FAIL & the headline %) ⟂ Activation (flag on) ⟂ Ad
   "view": "founder_command_center",
   "metrics": [
     {
-      "key": "registered_candidates",
-      "label": "Registered Candidates",
-      "value": 0,
-      "unit": "count",
-      "axis": "adoption"
+      "key": "candidate_readiness",
+      "label": "Candidate Journey Readiness",
+      "value": 100,
+      "unit": "pct",
+      "axis": "structural",
+      "source": "unified_journey"
     },
     {
-      "key": "assessments_completed",
-      "label": "Assessments Completed",
-      "value": 0,
-      "unit": "count",
-      "axis": "adoption"
+      "key": "employer_readiness",
+      "label": "Employer Journey Readiness",
+      "value": 33.3,
+      "unit": "pct",
+      "axis": "structural",
+      "source": "unified_journey"
     },
     {
-      "key": "employer_organizations",
-      "label": "Employer Organizations",
-      "value": 0,
-      "unit": "count",
-      "axis": "adoption"
+      "key": "career_builder_readiness",
+      "label": "Career Builder Readiness",
+      "value": 100,
+      "unit": "pct",
+      "axis": "structural",
+      "source": "recertification:career_builder"
     },
     {
-      "key": "paid_transactions",
-      "label": "Paid Transactions",
-      "value": 0,
-      "unit": "count",
-      "axis": "adoption"
+      "key": "passport_readiness",
+      "label": "Career Passport Readiness",
+      "value": 100,
+      "unit": "pct",
+      "axis": "structural",
+      "source": "recertification:career_passport"
     },
     {
-      "key": "genome_competencies",
-      "label": "Competencies in Genome",
-      "value": 419,
-      "unit": "count",
-      "axis": "structural"
+      "key": "competency_framework_readiness",
+      "label": "Competency Framework Readiness",
+      "value": 100,
+      "unit": "pct",
+      "axis": "structural",
+      "source": "recertification:competency_framework"
     },
     {
-      "key": "assessment_ready_competencies",
-      "label": "Assessment-Ready Competencies",
-      "value": 419,
-      "unit": "count",
-      "axis": "structural"
-    },
-    {
-      "key": "role_dna_roles",
-      "label": "Role DNA Roles",
-      "value": 13,
-      "unit": "count",
-      "axis": "structural"
-    },
-    {
-      "key": "onet_links",
-      "label": "O*NET Role↔Competency Links",
-      "value": 52362,
-      "unit": "count",
-      "axis": "structural"
-    },
-    {
-      "key": "career_builder_activations",
-      "label": "Career Builder Activations",
-      "value": 0,
-      "unit": "count",
-      "axis": "adoption"
-    },
-    {
-      "key": "passport_snapshots",
-      "label": "Passport Snapshots",
-      "value": 4,
-      "unit": "count",
-      "axis": "adoption"
-    },
-    {
-      "key": "realized_outcomes",
-      "label": "Realized Outcomes (non-demo)",
-      "value": 0,
-      "unit": "count",
-      "axis": "outcome"
+      "key": "assessment_readiness",
+      "label": "Assessment Engine Readiness",
+      "value": 100,
+      "unit": "pct",
+      "axis": "structural",
+      "source": "recertification:assessment_engine"
     },
     {
       "key": "enterprise_cert_score",
       "label": "Enterprise Certification Score",
       "value": 100,
       "unit": "pct",
-      "axis": "structural"
+      "axis": "structural",
+      "source": "recertification"
+    },
+    {
+      "key": "outcome_readiness",
+      "label": "Outcome Readiness (realized-type coverage)",
+      "value": 0,
+      "unit": "pct",
+      "axis": "outcome",
+      "source": "outcome_readiness"
+    },
+    {
+      "key": "registered_candidates",
+      "label": "Registered Candidates",
+      "value": 1,
+      "unit": "count",
+      "axis": "adoption",
+      "source": "recertification:candidate_intelligence"
+    },
+    {
+      "key": "assessments_completed",
+      "label": "Assessments Completed",
+      "value": 0,
+      "unit": "count",
+      "axis": "adoption",
+      "source": "recertification:adaptive_assessment"
+    },
+    {
+      "key": "employer_candidates",
+      "label": "Employer Candidates (real)",
+      "value": 0,
+      "unit": "count",
+      "axis": "adoption",
+      "source": "recertification:employer_intelligence"
+    },
+    {
+      "key": "realized_outcomes",
+      "label": "Realized Outcomes (non-demo)",
+      "value": 0,
+      "unit": "count",
+      "axis": "outcome",
+      "source": "recertification:validation_loop"
     }
   ],
   "enterprise_certification": {
@@ -485,7 +511,7 @@ _Structural (PASS/PARTIAL/FAIL & the headline %) ⟂ Activation (flag on) ⟂ Ad
     "subsystems_pass": 15,
     "subsystems_total": 15
   },
-  "note": "Exec metrics tag their axis (structural / adoption / outcome). null = not measurable, never a fabricated 0."
+  "note": "Exec metrics COMPOSE the unified-journey / outcome / recertification views (never recomputed). Each tags its axis (structural readiness / adoption / outcome); null = not measurable, never a fabricated 0."
 }
 ```
 
@@ -502,7 +528,7 @@ _Structural (PASS/PARTIAL/FAIL & the headline %) ⟂ Activation (flag on) ⟂ Ad
     "verdict": "PASS",
     "subsystems_pass": 15,
     "subsystems_total": 15,
-    "activated": 8,
+    "activated": 10,
     "adopted": 8
   },
   "journey": {
@@ -519,7 +545,7 @@ _Structural (PASS/PARTIAL/FAIL & the headline %) ⟂ Activation (flag on) ⟂ Ad
   "command_center": {
     "structural_ok": 12,
     "structural_pct": 100,
-    "healthy_adoption": 5,
+    "healthy_adoption": 7,
     "category_count": 12
   },
   "founder": {

@@ -1,0 +1,253 @@
+MX-106A-END-TO-END-COMPETENCY-ASSESSMENT-VALIDATION
+
+OBJECTIVE
+
+Validate the complete competency assessment journey and ensure a candidate can:
+
+1. Take an assessment
+2. Generate competency scores
+3. Generate competency profile
+4. Generate employability index
+5. Generate role readiness
+6. Generate career recommendations
+7. Generate career passport
+8. Generate downloadable reports
+
+The output must be visible and reviewable by:
+
+* Candidate
+* Employer
+* Super Admin
+* Founder
+
+====================================================
+
+PHASE 1
+ASSESSMENT FLOW VALIDATION
+
+Validate:
+
+Role Selection
+
+Role DNA Resolution
+
+Competency Mapping
+
+Question Selection
+
+Question Difficulty
+
+Adaptive Logic
+
+Assessment Completion
+
+Scoring
+
+Evidence Required:
+
+Screens
+
+API Responses
+
+Database Writes
+
+====================================================
+
+PHASE 2
+COMPETENCY REPORT VALIDATION
+
+Generate a complete sample report.
+
+Include:
+
+Competency Scores
+
+Competency Types
+
+Strengths
+
+Weaknesses
+
+Gap Analysis
+
+Development Areas
+
+Role Match
+
+Role Readiness
+
+Visualizations
+
+====================================================
+
+PHASE 3
+EMPLOYABILITY REPORT VALIDATION
+
+Generate:
+
+Employability Index
+
+Dimension Scores
+
+Benchmark Comparison
+
+Improvement Areas
+
+Employability Classification
+
+Career Potential
+
+====================================================
+
+PHASE 4
+CAREER BUILDER VALIDATION
+
+Validate:
+
+Recommended Roles
+
+Career Paths
+
+Competency Gaps
+
+Learning Recommendations
+
+Progression Routes
+
+====================================================
+
+PHASE 5
+CAREER PASSPORT VALIDATION
+
+Validate:
+
+Assessment Sync
+
+Competency Sync
+
+Employability Sync
+
+Role Readiness Sync
+
+Achievement Sync
+
+====================================================
+
+PHASE 6
+EMPLOYER VIEW VALIDATION
+
+Validate employer can see:
+
+Candidate Competency Profile
+
+Role Match %
+
+Gap Analysis
+
+Interview Recommendations
+
+Hiring Recommendation
+
+====================================================
+
+PHASE 7
+SUPER ADMIN VALIDATION
+
+Validate dashboards show:
+
+Assessment Counts
+
+Competency Coverage
+
+Question Coverage
+
+Readiness Metrics
+
+Assessment Health
+
+====================================================
+
+PHASE 8
+FOUNDER VALIDATION
+
+Validate dashboards show:
+
+Total Assessments
+
+Assessment Ready Competencies
+
+Average Scores
+
+Role Readiness
+
+Employability Readiness
+
+Candidate Readiness
+
+Employer Readiness
+
+====================================================
+
+PHASE 9
+OUTPUT VALIDATION
+
+Generate and store:
+
+Assessment PDF
+
+Competency PDF
+
+Employability PDF
+
+Career PDF
+
+Passport PDF
+
+JSON Export
+
+CSV Export
+
+====================================================
+
+PHASE 10
+CERTIFICATION
+
+Answer:
+
+Can a candidate complete an assessment?
+
+Can reports be generated?
+
+Can employers consume results?
+
+Can dashboards consume results?
+
+Can passport consume results?
+
+Can career builder consume results?
+
+Is the output meaningful?
+
+Is the system production ready?
+
+====================================================
+
+SUCCESS CRITERIA
+
+100% Assessment Completion
+
+100% Report Generation
+
+100% Passport Sync
+
+100% Dashboard Visibility
+
+No Broken Links
+
+No Missing Outputs
+
+PASS Certification
+
+STOP FOR APPROVAL
+
+# NO DEPLOYMENT

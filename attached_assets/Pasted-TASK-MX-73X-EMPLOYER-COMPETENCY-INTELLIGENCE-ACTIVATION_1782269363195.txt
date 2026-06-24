@@ -1,0 +1,313 @@
+TASK: MX-73X-EMPLOYER-COMPETENCY-INTELLIGENCE-ACTIVATION
+
+OBJECTIVE
+
+Transform Employer Intelligence into a fully competency-driven hiring platform.
+
+Do NOT rebuild.
+
+Do NOT replace existing architecture.
+
+Do NOT replace Role DNA.
+
+Do NOT replace O*NET.
+
+Do NOT replace Employability Index.
+
+Activate and connect existing intelligence assets.
+
+--------------------------------------------------
+SECTION 1
+CURRENT STATE AUDIT
+--------------------------------------------------
+
+Audit:
+
+Employer Jobs
+
+Employer Candidates
+
+Hiring Intelligence
+
+Interview Blueprint Engine
+
+Role DNA
+
+Role Competency Profiles
+
+Competency Scoring
+
+Employability Index
+
+Candidate Matching
+
+Generate:
+
+employer_current_state.md
+
+Identify:
+
+Working Components
+
+Disconnected Components
+
+Unused Intelligence
+
+Missing Links
+
+--------------------------------------------------
+SECTION 2
+COMPETENCY HIRING ARCHITECTURE
+--------------------------------------------------
+
+Implement:
+
+Job
+↓
+Role DNA
+↓
+Required Competencies
+↓
+Required Levels
+↓
+Role Benchmarks
+↓
+Assessment
+↓
+Readiness
+↓
+Hiring Match Score
+
+Generate:
+
+competency_hiring_architecture.md
+
+--------------------------------------------------
+SECTION 3
+ROLE DNA JOB CREATION
+--------------------------------------------------
+
+Employer Flow
+
+Industry
+↓
+Function
+↓
+Department
+↓
+Role Family
+↓
+Role
+
+Auto Generate:
+
+Required Competencies
+
+Required Levels
+
+Critical Competencies
+
+Optional Competencies
+
+Benchmark Levels
+
+Generate:
+
+role_dna_job_builder.md
+
+--------------------------------------------------
+SECTION 4
+COMPETENCY MATCH ENGINE
+--------------------------------------------------
+
+Candidate
+vs
+Role
+
+Compare:
+
+Competencies
+
+Levels
+
+Benchmarks
+
+Readiness
+
+Employability
+
+Generate:
+
+candidate_role_matching.md
+
+Output:
+
+Match %
+
+Risk %
+
+Readiness %
+
+Gap %
+
+--------------------------------------------------
+SECTION 5
+HIRING SCORE
+--------------------------------------------------
+
+Create unified score.
+
+Inputs:
+
+Competency Score
+
+Readiness Score
+
+Employability Index
+
+Role Match
+
+Benchmark Match
+
+Output:
+
+Hiring Score
+
+0-100
+
+Generate:
+
+hiring_score_model.md
+
+--------------------------------------------------
+SECTION 6
+INTERVIEW INTELLIGENCE
+--------------------------------------------------
+
+Generate interview blueprints from:
+
+Role DNA
+
+Competency Gaps
+
+Readiness Gaps
+
+Risk Areas
+
+Generate:
+
+interview_intelligence_framework.md
+
+--------------------------------------------------
+SECTION 7
+EMPLOYER DASHBOARD
+--------------------------------------------------
+
+Provide UI.
+
+Job Dashboard
+
+Candidate Dashboard
+
+Competency Dashboard
+
+Hiring Dashboard
+
+Benchmark Dashboard
+
+Generate:
+
+employer_dashboard_mockups.md
+
+--------------------------------------------------
+SECTION 8
+SUPER ADMIN GOVERNANCE
+--------------------------------------------------
+
+Create:
+
+Employer Intelligence Dashboard
+
+Hiring Intelligence Dashboard
+
+Competency Hiring Dashboard
+
+Benchmark Dashboard
+
+Generate:
+
+super_admin_employer_governance.md
+
+--------------------------------------------------
+SECTION 9
+CANDIDATE EXPERIENCE
+--------------------------------------------------
+
+Candidate must see:
+
+Role Match
+
+Readiness
+
+Gap Analysis
+
+Development Plan
+
+Generate:
+
+candidate_hiring_readiness.md
+
+--------------------------------------------------
+SECTION 10
+CERTIFICATION
+--------------------------------------------------
+
+Validate:
+
+Role DNA Driven
+
+Competency Driven
+
+Benchmark Driven
+
+Assessment Driven
+
+Readiness Driven
+
+Employability Driven
+
+Backward Compatible
+
+Enterprise Ready
+
+Generate:
+
+employer_intelligence_certification.md
+
+--------------------------------------------------
+SUCCESS CRITERIA
+--------------------------------------------------
+
+Candidate competency assessment directly influences hiring.
+
+Role DNA directly influences hiring.
+
+Readiness directly influences hiring.
+
+Employability Index directly influences hiring.
+
+No parallel hiring logic exists.
+
+No duplicate intelligence engines exist.
+
+Employer Intelligence certification = PASS.
+
+All changes:
+
+Additive
+
+Flag Gated
+
+Reversible
+
+Production Safe

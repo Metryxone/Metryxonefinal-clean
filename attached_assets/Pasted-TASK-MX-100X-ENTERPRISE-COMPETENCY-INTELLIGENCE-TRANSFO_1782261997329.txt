@@ -1,0 +1,592 @@
+TASK: MX-100X-ENTERPRISE-COMPETENCY-INTELLIGENCE-TRANSFORMATION
+
+OBJECTIVE
+
+Transform MetryxOne from a Production Ready Competency Platform into a Level 4 Global Ready Enterprise Competency Intelligence Platform.
+
+CURRENT CERTIFICATION STATUS
+
+Level 2 – Production Ready
+
+Maturity Score ≈ 67/100
+
+Current Findings
+
+PASS = 3
+
+PARTIAL = 8
+
+FAIL = 1
+
+TARGET
+
+PASS = ALL
+
+PARTIAL = 0
+
+FAIL = 0
+
+Target Maturity
+
+98%+
+
+IMPORTANT PRINCIPLES
+
+DO NOT REBUILD.
+
+DO NOT REPLACE:
+
+* Competency Framework
+* Role DNA
+* O*NET
+* Assessment Engine
+* Scoring Engine
+* Employability Index
+* Career Builder
+* Career Passport
+
+ALL CHANGES MUST BE:
+
+* Additive
+* Reversible
+* Backward Compatible
+* Flag Gated
+* Production Safe
+
+---
+
+PHASE 1
+ROLE DNA GOVERNANCE & BENCHMARK INTELLIGENCE
+--------------------------------------------
+
+OBJECTIVE
+
+Convert Role DNA from static inheritance to governed intelligence.
+
+Validate:
+
+Industry
+↓
+Function
+↓
+Department
+↓
+Role Family
+↓
+Role
+↓
+Role DNA
+
+Generate:
+
+Role DNA Confidence Score
+
+Role DNA Quality Score
+
+Role DNA Completeness Score
+
+Role DNA Explainability
+
+Role DNA Versioning
+
+Role DNA Governance Framework
+
+Activate:
+
+Role Benchmarks
+
+Competency Benchmarks
+
+Department Benchmarks
+
+Role Family Benchmarks
+
+Industry Benchmarks
+
+Readiness Benchmarks
+
+SUCCESS CRITERIA
+
+100% active Role DNA benchmark coverage.
+
+---
+
+PHASE 2
+O*NET INTELLIGENCE ACTIVATION
+-----------------------------
+
+OBJECTIVE
+
+Maximize O*NET value while preserving MetryxOne as the canonical framework.
+
+Validate:
+
+1040 O*NET Roles
+
+206 Industries
+
+Crosswalk Coverage
+
+Crosswalk Confidence
+
+Crosswalk Accuracy
+
+Generate:
+
+Role Mapping Confidence
+
+Competency Mapping Confidence
+
+Industry Mapping Confidence
+
+Duplicate Mapping Detection
+
+Missing Mapping Detection
+
+Manual Approval Workflow
+
+Crosswalk Governance Dashboard
+
+Close all remaining unlinked roles.
+
+SUCCESS CRITERIA
+
+100% role crosswalk coverage.
+
+O*NET remains:
+
+Reference Layer
+
+Role Intelligence Layer
+
+Benchmark Layer
+
+NOT a scoring layer.
+
+---
+
+PHASE 3
+COMPETENCY INTELLIGENCE EXPANSION
+---------------------------------
+
+OBJECTIVE
+
+Expand competency intelligence coverage.
+
+Validate:
+
+419 Competencies
+
+Current Question Coverage
+
+Current Benchmark Coverage
+
+Current Assessment Coverage
+
+Expand:
+
+Technical Competencies
+
+Future Skills
+
+Digital Skills
+
+AI Skills
+
+Leadership Competencies
+
+Generate:
+
+Competency Coverage Matrix
+
+Assessment Coverage Matrix
+
+Benchmark Coverage Matrix
+
+SUCCESS CRITERIA
+
+200+ competencies assessment-ready.
+
+100% competency classification coverage.
+
+---
+
+PHASE 4
+ADAPTIVE ASSESSMENT ACTIVATION
+------------------------------
+
+CURRENT STATUS
+
+FAIL
+
+OBJECTIVE
+
+Activate runtime adaptive assessment.
+
+Required Flow
+
+Role
+↓
+Role DNA
+↓
+Required Proficiency
+↓
+Difficulty
+↓
+Question Selection
+↓
+Assessment Runtime
+
+Validate:
+
+Junior Roles
+
+Mid-Level Roles
+
+Senior Roles
+
+Leadership Roles
+
+Adaptive difficulty must influence:
+
+Question Selection
+
+Question Complexity
+
+Scoring Thresholds
+
+Readiness Thresholds
+
+SUCCESS CRITERIA
+
+Role levels produce materially different assessments.
+
+---
+
+PHASE 5
+EMPLOYER COMPETENCY INTELLIGENCE
+--------------------------------
+
+CURRENT STATUS
+
+PARTIAL
+
+OBJECTIVE
+
+Make hiring fully competency-driven.
+
+Required Flow
+
+Role
+↓
+Role DNA
+↓
+Competency Requirements
+↓
+Assessment
+↓
+Competency Profile
+↓
+Role Match
+↓
+Gap Analysis
+↓
+Readiness
+↓
+Hiring Recommendation
+
+Implement:
+
+Competency Match Engine
+
+Role Match Engine
+
+Gap Engine
+
+Readiness Engine
+
+Interview Recommendation Engine
+
+Hiring Recommendation Engine
+
+Employer Benchmark Engine
+
+SUCCESS CRITERIA
+
+Employer intelligence consumes competency intelligence as primary input.
+
+---
+
+PHASE 6
+CAREER INTELLIGENCE ACTIVATION
+------------------------------
+
+OBJECTIVE
+
+Transform Career Builder into a competency intelligence engine.
+
+Required Flow
+
+Assessment
+↓
+Competency Profile
+↓
+Gap Analysis
+↓
+Career Goals
+↓
+Role Targets
+↓
+Learning Plan
+↓
+Career Development Plan
+
+Generate:
+
+Career Readiness Score
+
+Career Growth Score
+
+Role Progression Score
+
+Skill Gap Score
+
+SUCCESS CRITERIA
+
+Career Builder becomes competency-driven.
+
+---
+
+PHASE 7
+VALIDATION LOOP ACTIVATION
+--------------------------
+
+CURRENT STATUS
+
+PARTIAL
+
+OBJECTIVE
+
+Create evidence-based intelligence.
+
+Required Flow
+
+Assessment
+↓
+Hiring
+↓
+Performance
+↓
+Promotion
+↓
+Retention
+↓
+Outcomes
+↓
+Calibration
+↓
+Prediction
+
+Implement:
+
+Outcome Tracking
+
+Performance Tracking
+
+Promotion Tracking
+
+Retention Tracking
+
+Calibration Engine
+
+Prediction Engine
+
+Confidence Engine
+
+SUCCESS CRITERIA
+
+Predictions become evidence-backed.
+
+---
+
+PHASE 8
+GLOBAL COMPETENCY INTELLIGENCE
+------------------------------
+
+OBJECTIVE
+
+Prepare platform for global scale.
+
+Support:
+
+India
+
+Middle East
+
+Europe
+
+United States
+
+APAC
+
+Generate:
+
+Regional Role Libraries
+
+Regional Benchmarks
+
+Regional Competency Models
+
+Regional Readiness Models
+
+Regional Demand Intelligence
+
+SUCCESS CRITERIA
+
+Platform becomes globally deployable.
+
+---
+
+PHASE 9
+ENTERPRISE WORKFORCE INTELLIGENCE
+---------------------------------
+
+OBJECTIVE
+
+Activate workforce intelligence.
+
+Support:
+
+Skill Gap Analysis
+
+Succession Planning
+
+Internal Mobility
+
+Workforce Planning
+
+Talent Risk
+
+Talent Forecasting
+
+Readiness Forecasting
+
+SUCCESS CRITERIA
+
+Enterprise workforce intelligence becomes operational.
+
+---
+
+PHASE 10
+FINAL CERTIFICATION
+-------------------
+
+Re-run complete certification.
+
+Validate:
+
+Competency Framework
+
+Role DNA
+
+O*NET
+
+Assessment Engine
+
+Adaptive Assessment
+
+Scoring Engine
+
+Employability Index
+
+Career Builder
+
+Career Passport
+
+Employer Intelligence
+
+Validation Loop
+
+Global Readiness
+
+Enterprise Scale
+
+Predictive Intelligence
+
+Workforce Intelligence
+
+---
+
+## FOUNDER REPORT
+
+Answer:
+
+1. Is MetryxOne enterprise ready?
+
+2. Is MetryxOne globally deployable?
+
+3. Is Role DNA fully operational?
+
+4. Is O*NET fully activated?
+
+5. Is adaptive assessment active?
+
+6. Is employer intelligence competency-driven?
+
+7. Is Career Builder intelligence-driven?
+
+8. Is the validation loop complete?
+
+9. Are predictions evidence-backed?
+
+10. Is workforce intelligence operational?
+
+11. Remaining gaps?
+
+12. Remaining risks?
+
+13. Top 25 ROI actions?
+
+14. What should never be changed?
+
+15. Final maturity score?
+
+16. Final certification level?
+
+---
+
+## SUCCESS DEFINITION
+
+MetryxOne will only be considered 98%+ complete when:
+
+✓ Role DNA drives assessment generation
+
+✓ Competencies drive question generation
+
+✓ Proficiency drives difficulty
+
+✓ Assessment drives scoring
+
+✓ Scoring drives employability
+
+✓ Employability drives career intelligence
+
+✓ Competency intelligence drives employer intelligence
+
+✓ Outcomes drive validation
+
+✓ Validation drives prediction
+
+✓ O*NET enriches intelligence
+
+✓ Workforce intelligence is operational
+
+✓ Global readiness is validated
+
+✓ No disconnected intelligence flows exist
+
+✓ No duplicate scoring paths exist
+
+✓ No orphan mappings exist
+
+Deliver PASS / PARTIAL / FAIL with evidence for every criterion.

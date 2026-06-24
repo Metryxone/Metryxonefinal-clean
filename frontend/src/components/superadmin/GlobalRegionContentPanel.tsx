@@ -4,6 +4,16 @@ import { RefreshCw, Globe, AlertTriangle, Info, CheckCircle2, Plus, RotateCcw, T
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '../ui/alert-dialog';
 
 const BRAND = { primary: '#344E86' };
 const BASE = '/api/global-competency';
@@ -101,6 +111,12 @@ type AuditLog = {
   degraded?: boolean;
 };
 
+// A removal awaiting explicit confirmation. `item`/`surface` are targeted untags
+// (one or many refs in a single surface); `bulk` is the legacy provenance-wide rollback.
+type PendingRemoval =
+  | { kind: 'item' | 'surface'; surface: string; surfaceLabel: string; refs: string[]; sampleLabel?: string }
+  | { kind: 'bulk' };
+
 async function getJson<T>(path: string): Promise<T> {
   const res = await fetch(BASE + path, { credentials: 'include' });
   if (!res.ok) throw new Error(`Failed (${res.status})`);
@@ -147,6 +163,36 @@ function fmtTime(iso: string): string {
 function surfaceLabel(key: string | null, surfaces: SurfaceMeta[]): string {
   if (!key) return '—';
   return surfaces.find((s) => s.key === key)?.label ?? key;
+}
+
+// Human-readable summary of what a pending removal will delete (shown in the confirm dialog).
+function removalCopy(p: PendingRemoval, regionName: string): { title: string; body: string; action: string } {
+  if (p.kind === 'bulk') {
+    return {
+      title: 'Roll back all region overlay content?',
+      body:
+        'This deletes every curated region overlay row across all surfaces and all regions for this provenance. ' +
+        'The underlying entities are never deleted — you can re-tag them afterwards — but the entire curated overlay will be removed.',
+      action: 'Roll back all overlay',
+    };
+  }
+  if (p.kind === 'item') {
+    const name = p.sampleLabel || p.refs[0];
+    return {
+      title: 'Remove this item from the region?',
+      body:
+        `“${name}” will be untagged from ${p.surfaceLabel} in ${regionName}. ` +
+        'This deletes the region overlay row only — the underlying entity is not deleted, and you can re-tag it later.',
+      action: 'Remove item',
+    };
+  }
+  return {
+    title: `Remove all ${p.refs.length} item(s) from this surface?`,
+    body:
+      `All ${p.refs.length} curated item(s) in ${p.surfaceLabel} for ${regionName} will be untagged. ` +
+      'This deletes the region overlay rows only — the underlying entities are not deleted, and you can re-tag them later.',
+    action: `Remove ${p.refs.length} item(s)`,
+  };
 }
 
 function SourceBadge({ source }: { source: SurfaceContent['source'] }) {
@@ -232,13 +278,16 @@ export default function GlobalRegionContentPanel() {
     },
   });
 
-  const untagMut = useMutation<AssignResult, Error, { surface: string; entity_ref: string }>({
-    mutationFn: async ({ surface, entity_ref }) => {
+  // Removal awaiting confirmation (per-item, multi-ref, or bulk provenance rollback).
+  const [pending, setPending] = useState<PendingRemoval | null>(null);
+
+  const untagMut = useMutation<AssignResult, Error, { surface: string; entity_refs: string[] }>({
+    mutationFn: async ({ surface, entity_refs }) => {
       const res = await fetch(`${BASE}/rollback`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ surface, region: selectedRegion, entity_refs: [entity_ref] }),
+        body: JSON.stringify({ surface, region: selectedRegion, entity_refs }),
       });
       const j = (await res.json().catch(() => ({}))) as AssignResult;
       if (!res.ok) throw new Error(j.error || `Failed (${res.status})`);
@@ -250,6 +299,47 @@ export default function GlobalRegionContentPanel() {
       qc.invalidateQueries({ queryKey: [`${BASE}/audit`, selectedRegion] });
     },
   });
+
+  // Legacy bulk provenance rollback — deletes every overlay row for the provenance.
+  const bulkRollbackMut = useMutation<AssignResult, Error, void>({
+    mutationFn: async () => {
+      const res = await fetch(`${BASE}/rollback`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      });
+      const j = (await res.json().catch(() => ({}))) as AssignResult;
+      if (!res.ok) throw new Error(j.error || `Failed (${res.status})`);
+      return j;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: [`${BASE}/coverage`] });
+      qc.invalidateQueries({ queryKey: [`${BASE}/content`, selectedRegion] });
+    },
+  });
+
+  const removalPending = untagMut.isPending || bulkRollbackMut.isPending;
+  const removalError = (untagMut.error ?? bulkRollbackMut.error) as Error | null;
+
+  // Open the confirm dialog for a removal, clearing any stale mutation error first.
+  const requestRemoval = (p: PendingRemoval) => {
+    untagMut.reset();
+    bulkRollbackMut.reset();
+    setPending(p);
+  };
+
+  const confirmRemoval = () => {
+    if (!pending) return;
+    if (pending.kind === 'bulk') {
+      bulkRollbackMut.mutate(undefined, { onSuccess: () => setPending(null) });
+    } else {
+      untagMut.mutate(
+        { surface: pending.surface, entity_refs: pending.refs },
+        { onSuccess: () => setPending(null) },
+      );
+    }
+  };
 
   const refreshAll = () => {
     qc.invalidateQueries({ queryKey: [`${BASE}/coverage`] });
@@ -396,7 +486,28 @@ export default function GlobalRegionContentPanel() {
                     <SourceBadge source={s.source} />
                     <span className="text-xs text-gray-400">{n(s.count)} item(s)</span>
                   </div>
-                  <span className="text-xs text-gray-400">{s.backing_table}</span>
+                  <div className="flex items-center gap-3">
+                    {!selectedMeta?.is_default && s.items.length > 1 && (
+                      <button
+                        onClick={() =>
+                          requestRemoval({
+                            kind: 'surface',
+                            surface: s.surface,
+                            surfaceLabel: s.label,
+                            refs: s.items.map((it) => it.entity_ref),
+                          })
+                        }
+                        disabled={removalPending}
+                        className="inline-flex items-center gap-1 text-xs text-red-600 hover:text-red-700 disabled:opacity-50 transition-colors"
+                        title="Untag all items in this surface from this region"
+                        data-testid={`button-untag-all-${s.surface}`}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                        Untag all ({s.items.length})
+                      </button>
+                    )}
+                    <span className="text-xs text-gray-400">{s.backing_table}</span>
+                  </div>
                 </div>
                 {s.items.length === 0 ? (
                   <p className="text-sm text-gray-400 italic">
@@ -419,8 +530,16 @@ export default function GlobalRegionContentPanel() {
                         </span>
                         {!selectedMeta?.is_default && (
                           <button
-                            onClick={() => untagMut.mutate({ surface: s.surface, entity_ref: it.entity_ref })}
-                            disabled={untagMut.isPending}
+                            onClick={() =>
+                              requestRemoval({
+                                kind: 'item',
+                                surface: s.surface,
+                                surfaceLabel: s.label,
+                                refs: [it.entity_ref],
+                                sampleLabel: it.label ?? it.entity_ref,
+                              })
+                            }
+                            disabled={removalPending}
                             className="p-0.5 rounded hover:bg-red-100 text-gray-400 hover:text-red-600 transition-colors"
                             title="Untag from this region"
                             data-testid={`button-untag-${s.surface}-${it.entity_ref}`}
@@ -651,6 +770,86 @@ export default function GlobalRegionContentPanel() {
           </span>
         </div>
       </section>
+
+      {/* Danger zone — legacy bulk provenance rollback (wipes the entire overlay). */}
+      <section className="rounded-xl border border-red-200 bg-red-50/50 overflow-hidden">
+        <div className="px-5 py-3 border-b border-red-200">
+          <h3 className="font-semibold text-red-800 flex items-center gap-2">
+            <AlertTriangle className="h-4 w-4" />
+            Danger zone
+          </h3>
+        </div>
+        <div className="p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <p className="text-sm text-red-700 max-w-2xl">
+            Roll back the entire region overlay — every curated row across all surfaces and all regions for this
+            provenance. The underlying entities are never deleted (you can re-tag afterwards), but the whole curated
+            overlay will be removed.
+          </p>
+          <Button
+            variant="outline"
+            onClick={() => requestRemoval({ kind: 'bulk' })}
+            disabled={removalPending}
+            className="border-red-300 text-red-700 hover:bg-red-100 shrink-0"
+            data-testid="button-bulk-rollback"
+          >
+            <RotateCcw className="h-4 w-4 mr-2" />
+            Roll back all overlay
+          </Button>
+        </div>
+        {bulkRollbackMut.isSuccess && (
+          <div className="px-5 py-3 border-t border-red-200 text-sm text-emerald-700 flex items-center gap-1.5">
+            <CheckCircle2 className="h-4 w-4" />
+            Rolled back {bulkRollbackMut.data?.written ?? 0} overlay row(s).
+          </div>
+        )}
+      </section>
+
+      {/* Confirmation dialog — gates every overlay removal (per-item, multi-ref, bulk). */}
+      <AlertDialog
+        open={!!pending}
+        onOpenChange={(open) => {
+          if (!open && !removalPending) setPending(null);
+        }}
+      >
+        <AlertDialogContent data-testid="dialog-confirm-removal">
+          {pending &&
+            (() => {
+              const copy = removalCopy(pending, selectedMeta?.name ?? selectedRegion);
+              return (
+                <>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="flex items-center gap-2">
+                      <AlertTriangle className="h-5 w-5 text-red-600" />
+                      {copy.title}
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>{copy.body}</AlertDialogDescription>
+                  </AlertDialogHeader>
+                  {removalError && (
+                    <div className="rounded-lg bg-amber-50 border border-amber-200 px-4 py-2 text-sm text-amber-800">
+                      {removalError.message}
+                    </div>
+                  )}
+                  <AlertDialogFooter>
+                    <AlertDialogCancel disabled={removalPending} data-testid="button-cancel-removal">
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={(e) => {
+                        e.preventDefault();
+                        confirmRemoval();
+                      }}
+                      disabled={removalPending}
+                      className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
+                      data-testid="button-confirm-removal"
+                    >
+                      {removalPending ? 'Removing…' : copy.action}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </>
+              );
+            })()}
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -49,8 +49,12 @@ import {
   type ReadinessResult,
   type RoleFit,
 } from './role-competency-profile';
+import {
+  resolveCuratedRoleByTitle,
+  type RoleTitleResolution,
+} from './role-title-crosswalk';
 
-export const TALENT_MATCHING_ENGINE_VERSION = '5.5.0';
+export const TALENT_MATCHING_ENGINE_VERSION = '5.6.0';
 
 export type EngineResult<T = any> =
   | { ok: true; data: T }
@@ -522,4 +526,118 @@ export async function rankRolesForCandidate(
   ranked.sort(byFitThenMatch);
   const limit = Math.max(1, Math.min(100, opts.limit ?? 50));
   return ok({ candidate_id: candidate.id, candidate_name: candidate.name, roles: ranked.slice(0, limit) });
+}
+
+// ── title / job crosswalk → candidate ranking ───────────────────────────────
+// Real employers post jobs with a FREE-TEXT role title, not a curated role id.
+// These orchestrators crosswalk that title to a curated Role-DNA role (via
+// role-title-crosswalk, never fabricating) and then rank candidates against the
+// resolved role's profile. The title-resolution `role_crosswalk` (Confidence)
+// is carried alongside the per-candidate match axes (Coverage) — SEPARATE axes,
+// never composited. When the title does not resolve, the engine ABSTAINS
+// (resolved:false) rather than guess a role.
+
+export interface TitleRankResult {
+  role_title_input: string;
+  resolved: boolean;
+  role_crosswalk: RoleTitleResolution;
+  role_id: string | null;
+  role_title: string | null;
+  measurable: boolean;
+  candidates: RankedMatch[];
+}
+
+export async function rankCandidatesForRoleTitle(
+  pool: Pool,
+  title: string,
+  opts: { limit?: number } = {},
+): Promise<EngineResult<TitleRankResult>> {
+  const input = String(title ?? '').trim();
+  if (!input) return err('invalid_input', 'role title is required');
+
+  const crosswalk = await resolveCuratedRoleByTitle(pool, input);
+  if (!crosswalk.resolved) {
+    // Honest abstain: no defensible crosswalk → no candidates ranked (never a guess).
+    return ok({
+      role_title_input: input,
+      resolved: false,
+      role_crosswalk: crosswalk,
+      role_id: null,
+      role_title: null,
+      measurable: false,
+      candidates: [],
+    });
+  }
+
+  const ranked = await rankCandidatesForRole(pool, crosswalk.resolved.role_id, opts);
+  if (!ranked.ok) return ranked;
+  return ok({
+    role_title_input: input,
+    resolved: true,
+    role_crosswalk: crosswalk,
+    role_id: ranked.data.role_id,
+    role_title: ranked.data.role_title,
+    measurable: ranked.data.measurable,
+    candidates: ranked.data.candidates,
+  });
+}
+
+// Read a posted job's free-text role title (read-only, never-throws → null when
+// absent). The CANONICAL posting flow (POST /api/job-posting-engine/jobs) writes
+// `job_postings`, so that substrate is checked FIRST; the older employer-portal
+// `employer_jobs` table is the fallback. Deterministic precedence: a job_postings
+// hit wins. `source` is reported so the caller can surface which substrate matched.
+async function readJobTitle(
+  pool: Pool,
+  jobId: string,
+): Promise<{ title: string | null; source: 'job_postings' | 'employer_jobs' } | null> {
+  // 1. Canonical posting flow.
+  if (await relExists(pool, 'job_postings')) {
+    try {
+      const { rows } = await pool.query(`SELECT title FROM job_postings WHERE id = $1`, [jobId]);
+      if (rows.length > 0) return { title: rows[0].title ?? null, source: 'job_postings' };
+    } catch {
+      /* fall through to the legacy substrate */
+    }
+  }
+  // 2. Legacy employer-portal jobs.
+  if (await relExists(pool, 'employer_jobs')) {
+    try {
+      const { rows } = await pool.query(`SELECT title FROM employer_jobs WHERE id = $1`, [jobId]);
+      if (rows.length > 0) return { title: rows[0].title ?? null, source: 'employer_jobs' };
+    } catch {
+      /* not found / unreadable */
+    }
+  }
+  return null;
+}
+
+export interface JobRankResult extends TitleRankResult {
+  job_id: string;
+  job_source: 'job_postings' | 'employer_jobs';
+}
+
+/**
+ * Rank candidates against a NORMALLY-POSTED job — no hardcoded role id. Reads the
+ * job's free-text title (from job_postings, the canonical posting flow, falling
+ * back to employer_jobs), crosswalks it to a curated Role-DNA role, and ranks.
+ * Abstains (resolved:false) when the title does not crosswalk.
+ */
+export async function rankCandidatesForJob(
+  pool: Pool,
+  jobId: string,
+  opts: { limit?: number } = {},
+): Promise<EngineResult<JobRankResult>> {
+  const jid = String(jobId ?? '').trim();
+  if (!jid) return err('invalid_input', 'job id is required');
+
+  const job = await readJobTitle(pool, jid);
+  if (!job) return err('not_found', `job ${jid} not found`);
+  if (!job.title || !job.title.trim()) {
+    return err('invalid_input', `job ${jid} has no role title to crosswalk`);
+  }
+
+  const byTitle = await rankCandidatesForRoleTitle(pool, job.title, opts);
+  if (!byTitle.ok) return byTitle;
+  return ok({ job_id: jid, job_source: job.source, ...byTitle.data });
 }

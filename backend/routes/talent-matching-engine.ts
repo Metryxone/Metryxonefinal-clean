@@ -26,9 +26,12 @@ import {
   TALENT_MATCHING_ENGINE_VERSION as ENGINE_VERSION,
   matchCandidateToRole,
   rankCandidatesForRole,
+  rankCandidatesForRoleTitle,
+  rankCandidatesForJob,
   rankRolesForCandidate,
   type EngineResult,
 } from '../services/talent-matching-engine';
+import { resolveCuratedRoleByTitle } from '../services/role-title-crosswalk';
 
 type Mw = (req: any, res: any, next: any) => void;
 
@@ -39,6 +42,15 @@ function send(res: Response, result: EngineResult): void {
   }
   const status = result.code === 'not_found' ? 404 : 400;
   res.status(status).json({ error: result.message, code: result.code });
+}
+
+// Parse an optional ?limit= query param. A missing OR malformed value yields
+// undefined so the engine applies its own default (a NaN must never silently
+// collapse the result set to empty).
+function parseLimit(raw: unknown): number | undefined {
+  if (raw == null || raw === '') return undefined;
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : undefined;
 }
 
 export function registerTalentMatchingEngineRoutes(
@@ -63,6 +75,28 @@ export function registerTalentMatchingEngineRoutes(
   // ── meta (literal — registered first) ──────────────────────────────────────
   app.get(`${base}/_meta/status`, ...guards, (_req: Request, res: Response) => {
     res.json({ engine: 'talent-matching-engine', version: ENGINE_VERSION, ok: true });
+  });
+
+  // ── role-title crosswalk preview (literal) ─────────────────────────────────
+  // Crosswalk a free-text role title to a curated Role-DNA role (with Confidence
+  // + an Estimated/abstain path) WITHOUT ranking — for job-creation-time preview.
+  app.get(`${base}/resolve-role`, ...guards, async (req: Request, res: Response) => {
+    const title = String(req.query.title ?? '').trim();
+    if (!title) return res.status(400).json({ error: 'title query param is required', code: 'invalid_input' });
+    const resolution = await resolveCuratedRoleByTitle(pool, title);
+    res.json(resolution);
+  });
+
+  // ── rank candidates by free-text role title (literal — before param routes) ─
+  app.get(`${base}/by-title/candidates`, ...guards, async (req: Request, res: Response) => {
+    const title = String(req.query.title ?? '').trim();
+    if (!title) return res.status(400).json({ error: 'title query param is required', code: 'invalid_input' });
+    send(res, await rankCandidatesForRoleTitle(pool, title, { limit: parseLimit(req.query.limit) }));
+  });
+
+  // ── rank candidates for a normally-posted job (no hardcoded role id) ────────
+  app.get(`${base}/job/:jobId/candidates`, ...guards, async (req: Request, res: Response) => {
+    send(res, await rankCandidatesForJob(pool, req.params.jobId, { limit: parseLimit(req.query.limit) }));
   });
 
   // ── explain (more specific — before /candidate/:c/role/:r) ─────────────────

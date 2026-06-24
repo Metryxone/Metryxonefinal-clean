@@ -1,0 +1,152 @@
+TASK: MX-104X-CANDIDATE-AND-CAREER-ECOSYSTEM-ACTIVATION
+
+OBJECTIVE
+
+Activate the complete candidate journey using the now-complete:
+
+* Competency Framework
+* Role DNA
+* Assessment Engine
+* Assessment Readiness Engine
+* Employability Index
+* Career Builder
+* Career Passport
+
+Transform MetryxOne from a competency platform into a complete career intelligence platform.
+
+==================================================
+
+PHASE 1
+CANDIDATE JOURNEY VALIDATION
+
+Validate:
+
+Candidate Registration
+
+Assessment Selection
+
+Assessment Completion
+
+Score Generation
+
+Employability Generation
+
+Career Builder Integration
+
+Career Passport Sync
+
+==================================================
+
+PHASE 2
+CAREER BUILDER ACTIVATION
+
+Validate:
+
+Role DNA Usage
+
+Career Path Generation
+
+Role Recommendations
+
+Skill Gap Analysis
+
+Development Planning
+
+Career Readiness
+
+==================================================
+
+PHASE 3
+CAREER PASSPORT ACTIVATION
+
+Validate:
+
+Competency Sync
+
+Assessment Sync
+
+Employability Sync
+
+Career Sync
+
+Achievement Sync
+
+Visibility Controls
+
+==================================================
+
+PHASE 4
+SUPER ADMIN
+
+Add:
+
+Candidate Readiness Dashboard
+
+Career Builder Dashboard
+
+Passport Dashboard
+
+Employability Dashboard
+
+Journey Analytics
+
+==================================================
+
+PHASE 5
+FOUNDER DASHBOARD
+
+Display:
+
+Registered Candidates
+
+Assessed Candidates
+
+Employability Profiles
+
+Career Builder Users
+
+Career Passport Users
+
+Assessment Completion %
+
+Journey Completion %
+
+==================================================
+
+PHASE 6
+RE-CERTIFICATION
+
+Answer:
+
+1. Is candidate onboarding complete?
+2. Is assessment integration complete?
+3. Is employability integration complete?
+4. Is career builder operational?
+5. Is passport operational?
+6. Remaining blockers?
+7. Readiness score?
+8. PASS / PARTIAL / FAIL
+
+==================================================
+
+SUCCESS CRITERIA
+
+End-to-End Candidate Journey
+
+Career Builder Operational
+
+Career Passport Operational
+
+Employability Integrated
+
+Founder Visibility Active
+
+Structural Readiness ≥ 85%
+
+PASS Certification
+
+No Artificial Confidence Claims
+
+No Coverage Inflation
+
+# No Deploy

@@ -207,6 +207,19 @@ export const FEATURE_FLAGS = {
    *  no new tables). Super-admin gated (requireAuth → requireSuperAdmin). Distinct from Phase 5.12
    *  `workforceIntelligence` (employer-scoped). Env: `FF_ENTERPRISE_WORKFORCE_CONSOLE`. */
   enterpriseWorkforceConsole: false,
+  /** MX-104X — Candidate & Career Ecosystem Activation. When ON, a PURE read-only composer at
+   *  `/api/admin/ecosystem-activation/*` SURFACES the end-to-end candidate journey
+   *  (registration → assessment → score → employability → career builder → passport) as
+   *  SuperAdmin dashboards (Candidate Readiness · Career Builder · Passport · Employability ·
+   *  Journey Analytics), a Founder counts panel, and a re-certification summary. COMPOSE-NEVER-
+   *  RECOMPUTE over already-built tables/engines; runs NO DDL and writes NO rows. Honest
+   *  degradation: every read is to_regclass-probed; absent table → null (NOT fabricated 0);
+   *  empty table → 0. Structural (machinery exists) and Activation (live data) are reported as
+   *  SEPARATE axes, never composited; Coverage ⟂ Confidence kept separate. Developmental /
+   *  operational signals only — never hiring/promotion/suitability predictions. OFF → every
+   *  route 503 before any auth/DB touch (byte-identical legacy; no new tables). Super-admin gated
+   *  (requireAuth → requireSuperAdmin). Env: `FF_ECOSYSTEM_ACTIVATION`. */
+  ecosystemActivation: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -1511,6 +1524,10 @@ export function isGovernanceScienceV2Enabled(): boolean {
 
 export function isEnterpriseWorkforceOSV2Enabled(): boolean {
   return isFlagEnabled('enterpriseWorkforceOSV2');
+}
+
+export function isEcosystemActivationEnabled(): boolean {
+  return isFlagEnabled('ecosystemActivation');
 }
 
 export function isUcipEnabled(): boolean {

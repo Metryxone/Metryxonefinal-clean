@@ -161,6 +161,7 @@ const QuestionFactoryPanel = lazy(() => import('./superadmin/QuestionFactoryPane
 const GlobalRegionContentPanel = lazy(() => import('./superadmin/GlobalRegionContentPanel'));
 const GlobalIntelligencePanel = lazy(() => import('./superadmin/GlobalIntelligencePanel'));
 const EnterpriseWorkforceConsolePanel = lazy(() => import('./superadmin/EnterpriseWorkforceConsolePanel'));
+const EcosystemActivationPanel = lazy(() => import('./superadmin/EcosystemActivationPanel'));
 const DepartmentsPanel = lazy(() => import('./superadmin/DepartmentsPanel'));
 const RolesPanel = lazy(() => import('./superadmin/RolesPanel'));
 const RoleFamiliesPanel = lazy(() => import('./superadmin/RoleFamiliesPanel'));
@@ -363,6 +364,17 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
     queryKey: ['/api/enterprise-workforce/_meta/status', 'enabled'],
     queryFn: async () => {
       const res = await fetch('/api/enterprise-workforce/_meta/status', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // ── Candidate & Career Ecosystem Activation (MX-104X) flag probe (file-registry flag
+  //    ecosystemActivation). Flag OFF → /enabled returns 503 → tab omitted (byte-identical UI). ──
+  const { data: ecosystemActivationEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/admin/ecosystem-activation/enabled', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/ecosystem-activation/enabled', { credentials: 'include' });
       return res.ok;
     },
     enabled: isAuthenticated,
@@ -968,6 +980,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       ...(globalCompetencyEnabled ? [{ id: 'global-region-content', label: 'Global Region Content', icon: Globe, node: <GlobalRegionContentPanel /> }] : []),
                       ...(globalIntelEnabled ? [{ id: 'global-intelligence', label: 'Global Intelligence', icon: Globe, node: <GlobalIntelligencePanel /> }] : []),
                       ...(enterpriseWorkforceEnabled ? [{ id: 'enterprise-workforce-console', label: 'Enterprise Workforce Console', icon: Building2, node: <EnterpriseWorkforceConsolePanel /> }] : []),
+                      ...(ecosystemActivationEnabled ? [{ id: 'ecosystem-activation', label: 'Candidate & Career Ecosystem', icon: Gauge, node: <EcosystemActivationPanel /> }] : []),
                       { id: 'ont-career-tracks',        label: 'Career Tracks',            icon: Map,           node: <CareerTracksPanel /> },
                       { id: 'ont-competency-levels',    label: 'Competency Levels',        icon: BarChart2,     node: <CompetencyLevelsPanel /> },
                       { id: 'ont-indicators',           label: 'Indicators',               icon: Target,        node: <IndicatorsPanel /> },
@@ -1326,6 +1339,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               {activeTab === 'global-region-content' && <div className="h-full overflow-auto"><GlobalRegionContentPanel /></div>}
               {activeTab === 'global-intelligence'  && <div className="h-full overflow-auto"><GlobalIntelligencePanel /></div>}
               {activeTab === 'enterprise-workforce-console' && enterpriseWorkforceEnabled && <div className="h-full overflow-auto"><EnterpriseWorkforceConsolePanel /></div>}
+              {activeTab === 'ecosystem-activation' && ecosystemActivationEnabled && <div className="h-full overflow-auto"><EcosystemActivationPanel /></div>}
               {activeTab === 'ont-functions'        && <div className="h-full overflow-auto"><FunctionsPanel /></div>}
               {activeTab === 'ont-departments'      && <div className="h-full overflow-auto"><DepartmentsPanel /></div>}
               {activeTab === 'ont-roles'            && <div className="h-full overflow-auto"><RolesPanel /></div>}

@@ -1,0 +1,177 @@
+TASK: MX-103W-EMPLOYER-PRODUCTION-GAP-CLOSURE
+
+OBJECTIVE
+
+Close the two remaining production-readiness gaps identified by MX-103V.
+
+Target:
+
+Move Employer Ecosystem from:
+
+PARTIAL (62/100)
+
+to
+
+PASS (85%+ Structural Readiness)
+
+==================================================
+PHASE 1
+JOB STORE UNIFICATION (#98)
+===========================
+
+Validate all employer job flows.
+
+Identify:
+
+job_postings
+
+employer_jobs
+
+and every downstream consumer.
+
+Implement:
+
+Single Source Of Truth
+
+or
+
+Bidirectional Synchronization Layer
+
+Requirements:
+
+Create Job
+Post Job
+Assessment Generation
+Interview Generation
+Candidate Matching
+Hiring Intelligence
+
+must consume the same job entity.
+
+Deliverables:
+
+job_store_audit.md
+
+job_store_unification_plan.md
+
+job_store_validation.md
+
+==================================================
+PHASE 2
+ROLE DNA AUTO RESOLUTION (#99)
+==============================
+
+Implement:
+
+Free Text Role
+↓
+Role Resolver
+↓
+Role DNA Match
+↓
+Competency Profile
+↓
+Assessment Blueprint
+
+Use:
+
+O*NET Role Library
+
+Role DNA Profiles
+
+Crosswalk Intelligence
+
+Requirements:
+
+Confidence Score
+
+Top 5 Matches
+
+Human Override
+
+Audit Trail
+
+Deliverables:
+
+role_resolution_design.md
+
+role_resolution_validation.md
+
+==================================================
+PHASE 3
+SUPER ADMIN VISIBILITY
+======================
+
+Add dashboards for:
+
+Role Resolution Coverage
+
+Crosswalk Coverage
+
+Job Store Health
+
+Role DNA Utilization
+
+Employer Readiness
+
+Display:
+
+Resolved Jobs
+
+Unresolved Jobs
+
+Role Match Confidence
+
+Assessment Generation Rate
+
+==================================================
+PHASE 4
+PRODUCTION READINESS RE-CERTIFICATION
+=====================================
+
+Re-run MX-103V.
+
+Answer:
+
+1. Is job creation fully connected?
+2. Is assessment generation fully connected?
+3. Is interview generation fully connected?
+4. Is candidate matching fully connected?
+5. Is Role DNA auto resolution operational?
+6. Remaining blockers?
+7. Updated readiness score?
+8. PASS / PARTIAL / FAIL
+
+==================================================
+RULES
+=====
+
+Additive
+
+Flag Gated
+
+Reversible
+
+No Data Loss
+
+No Existing Workflow Removal
+
+Maintain O*NET as Reference Layer
+
+Maintain Role DNA as Canonical Layer
+
+==================================================
+SUCCESS CRITERIA
+================
+
+Job Store Unified
+
+Role DNA Auto Resolution Active
+
+No Manual Workarounds
+
+100% Employer Funnel Connectivity
+
+Production Readiness ≥ 85%
+
+# PASS Certification

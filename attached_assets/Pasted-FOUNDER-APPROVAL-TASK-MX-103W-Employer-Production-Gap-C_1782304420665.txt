@@ -1,0 +1,167 @@
+FOUNDER APPROVAL
+
+TASK:
+MX-103W Employer Production Gap Closure
+
+APPROVED APPROACH
+
+==================================================
+PHASE 1
+JOB STORE UNIFICATION
+=====================
+
+Approved.
+
+Do NOT merge job_postings and employer_jobs.
+
+Retain both bounded contexts.
+
+Implement a one-directional projection/synchronization layer:
+
+job_postings
+(Published / Approved)
+↓
+Projection Layer
+↓
+employer_jobs
+
+Requirements:
+
+* Additive
+* Reversible
+* Flag Gated
+* No Data Loss
+* No Workflow Removal
+* Idempotent
+* Audit Logged
+
+employer_jobs remains the canonical hiring-funnel entity.
+
+job_postings remains the canonical authoring/publishing entity.
+
+==================================================
+PHASE 2
+ROLE DNA AUTO RESOLUTION
+========================
+
+Approved.
+
+Implement:
+
+Free Text Role
+↓
+Role Resolver
+↓
+O*NET Reference Match
+↓
+Role DNA Resolution
+↓
+Competency Profile
+↓
+Assessment Blueprint
+
+Requirements:
+
+* Confidence Score
+* Top 5 Matches
+* Human Override
+* Audit Trail
+* Explainability
+
+Maintain:
+
+O*NET = Reference Layer
+
+Role DNA = Canonical Layer
+
+==================================================
+PHASE 3
+SUPER ADMIN
+===========
+
+Approved.
+
+Add visibility for:
+
+* Job Store Health
+* Projection Health
+* Role Resolution Coverage
+* Crosswalk Coverage
+* Role DNA Utilization
+* Employer Readiness
+* Assessment Generation
+* Hiring Funnel Health
+
+No duplicate admin screens.
+
+Integrate into existing Super Admin surfaces.
+
+==================================================
+PHASE 4
+RE-CERTIFICATION
+================
+
+Approved.
+
+Re-run MX-103V validation.
+
+Validate:
+
+* Job Creation
+* Assessment Generation
+* Candidate Matching
+* Interview Generation
+* Hiring Intelligence
+* Outcome Tracking
+
+Target:
+
+Remove manual workaround.
+
+Remove funnel disconnect.
+
+Raise structural readiness.
+
+==================================================
+GUARDRAILS
+==========
+
+Additive
+
+Flag Gated
+
+Byte Identical When OFF
+
+Reversible
+
+No Data Loss
+
+No Fabricated Confidence
+
+No Artificial Calibration
+
+No Inflation of Readiness Scores
+
+Coverage ≠ Confidence
+
+Readiness ≠ Adoption
+
+==================================================
+SUCCESS CRITERIA
+================
+
+Job Store Seam Closed
+
+Role DNA Auto Resolution Operational
+
+Employer Funnel Self Connected
+
+No Manual Bridges
+
+Structural Readiness ≥ 85%
+
+MX-103W PASS
+
+Founder Report Delivered
+
+# Stop Before Deploy

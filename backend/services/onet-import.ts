@@ -405,6 +405,18 @@ export const DERIVE_MAJORITY = 0.5;   // adopt competencies present in ≥ half 
 export const DERIVE_MIN_COMPETENCIES = 8;   // top up to at least this many (by frequency)
 export const DERIVE_MAX_COMPETENCIES = 25;  // never exceed this many derived links per role
 
+// Some O*NET SOC major groups are *entirely* unrated in the public database — every
+// occupation in the group imports with zero Skills/Abilities/Knowledge ratings, so the
+// within-group SOC-prefix walk finds no rated relative and the roles stay unlinked
+// (e.g. the whole 55 "Military Specific" group). For those groups we fall back to the
+// nearest semantically-adjacent rated major group, so the roles still receive a
+// clearly-labelled (source='onet_derived') transferable competency set rather than an
+// empty profile. Cross-group inheritance is a coarser approximation than within-group
+// and is documented here; it is only consulted when the within-group walk finds nothing.
+export const UNRATED_MAJOR_GROUP_ADJACENCY: Record<string, string> = {
+  '55': '33', // Military Specific → Protective Service (tactical / safety / command overlap)
+};
+
 interface NativeLink {
   competencyId: number;
   weight: number;
@@ -517,6 +529,22 @@ export async function deriveUnratedRoleCompetencies(pool: Pool): Promise<DeriveR
         }
       }
       if (found.length > 0) { relatives = found; break; }
+    }
+
+    // Cross-group fallback: an entirely-unrated major group (e.g. 55 Military Specific)
+    // has no rated relative anywhere within itself — borrow from the nearest adjacent
+    // rated major group so the role is still linked (source stays 'onet_derived').
+    if (relatives.length === 0) {
+      const adjacent = UNRATED_MAJOR_GROUP_ADJACENCY[base.slice(0, 2)];
+      if (adjacent) {
+        const found: number[] = [];
+        for (const [rbase, ids] of ratedByBase) {
+          if (rbase.startsWith(adjacent)) {
+            for (const id of ids) if (id !== role.id) found.push(id);
+          }
+        }
+        relatives = found;
+      }
     }
     if (relatives.length === 0) continue; // no rated relative anywhere — leave honest gap
 

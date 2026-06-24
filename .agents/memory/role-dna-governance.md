@@ -36,3 +36,29 @@ Closing it is downstream O*NET/crosswalk work, not a bug to patch with a guess.
 - Cohort benchmarks (family/department/function) require ≥2 linked roles in the cohort else
   `insufficient_cohort`; department coverage is genuinely lower (~67%) — many single-role depts.
 - pg COUNT returns strings → Number()-wrap before compares.
+
+## Per-role benchmark derivation (D2 / generateRoleBenchmark)
+`ti_role_benchmarks` is seeded at **role-FAMILY × layer** grain: 15 fixed `rf_name` × 4 `layer`
+(Strategic/Leadership/Managerial/Execution) = 60 rows, keyed by FAMILY name NOT role title. A
+title-only lookup abstains for ~every role (O*NET titles never equal the 15 RF names) — that was
+the "0 role-level benchmarks" gap. Fix: `generateRoleBenchmark(pool, {id,title})` maps the role's
+`ont_role_family` → an RF cohort (deterministic `FAMILY_TO_RF` crosswalk in
+role-dna-expansion-engine.ts) + derives the layer from seniority/`is_leadership`/title, then reads
+that cohort's band. **Honesty:** stamp `basis:'role_family_layer_aggregate'` + `rfName`/`layer`/
+`derivedFromFamily`/`rfMatch` — it's a coarse cohort band applied to the role, NEVER a role-specific
+empirical sample; abstain `no_family_benchmark_mapping` if the family doesn't map. Benchmark is
+stored in the snapshot `dna` JSONB at materialize time, so changing the fn requires
+**re-materializing** (`activate-onet-role-dna.ts --apply`) before snapshots show `available:true`.
+**How to apply:** seniority is ~98% 'mid' in the O*NET library → title regex + is_leadership carry
+the layer signal; almost everything lands in the Execution band (honest).
+
+## Cross-group derived links for entirely-unrated SOC major groups
+The within-group SOC-prefix walk in `deriveUnratedRoleCompetencies` (onet-import.ts) leaves a whole
+unrated major group unlinked when NO occupation in it has native O*NET ratings — true for SOC 55
+"Military Specific" (the only fully-unrated group → the 19 orphan roles). Fix: a documented
+`UNRATED_MAJOR_GROUP_ADJACENCY` fallback (`'55'→'33'` Military→Protective Service) consulted ONLY
+when the within-group walk finds nothing; borrowed links keep `source='onet_derived'` (governance
+0.6 confidence — coarser cross-group approximation, disclosed). `deriveUnratedRoleCompetencies`
+reads the DB only (no O*NET file download), so it's safe to call standalone via
+`activate-onet-role-dna.ts --apply --derive-unrated`. It reprocesses ALL unrated roles (idempotent
+UPSERT), so its `rolesUnrated` count (137) is broader than just the 19 military orphans.

@@ -251,46 +251,252 @@ async function curatedRequirementsFor(
 }
 
 // ---------------------------------------------------------------------------
-// 4) Role benchmark generation (read-only, abstain-by-default)
+// 4) Role benchmark generation (read-only)
 // ---------------------------------------------------------------------------
+// `ti_role_benchmarks` is seeded at role-FAMILY × layer granularity (15 RF names ×
+// 4 layers = 60 rows). A role TITLE almost never equals one of those RF names, so a
+// title-only lookup abstains for ~every role. Instead we DERIVE a per-role benchmark
+// from those family-level rows: map the role's ont_role_family → one of the 15 RF
+// cohorts, derive its layer from seniority/leadership, and read that cohort's band.
+// The benchmark is a coarse FAMILY-LEVEL aggregate applied to the role — it is marked
+// `basis: 'role_family_layer_aggregate'` and is never represented as a role-specific
+// empirical sample. No percentile is ever invented.
 export interface RoleBenchmark {
   available: boolean;
   source: string | null;
   reason?: string;
   percentiles?: Record<string, number | null>;
   sampleSize?: number | null;
+  /** How the benchmark was obtained — never a role-specific empirical sample. */
+  basis?: 'role_title_exact' | 'role_family_layer_aggregate';
+  /** The RF cohort the role was mapped into. */
+  rfName?: string | null;
+  /** The layer cohort derived from the role's seniority / leadership flag. */
+  layer?: string | null;
+  /** The ont_role_family name the RF cohort was derived from. */
+  derivedFromFamily?: string | null;
+  /** 'exact' when the family name IS an RF name; 'semantic' for a crosswalk. */
+  rfMatch?: 'exact' | 'semantic';
+  note?: string;
 }
 
-export async function generateRoleBenchmark(pool: Pool, roleTitle: string): Promise<RoleBenchmark> {
-  if (!roleTitle) return { available: false, source: null, reason: 'no_role_title' };
+// ont_role_family name (O*NET SOC major group OR curated) → one of the 15 RF cohorts
+// carried in ti_role_benchmarks. Keys are normalized (lowercase). Deterministic and
+// documented; a coarse semantic crosswalk, not a precision mapping.
+const FAMILY_TO_RF: Record<string, string> = {
+  // exact / curated families that already match an RF cohort name
+  'data & analytics': 'Data & Analytics',
+  'finance & accounting': 'Finance & Accounting',
+  'product management': 'Product Management',
+  'software engineering': 'Software Engineering',
+  'customer success': 'Customer Success',
+  'executive leadership': 'Executive Leadership',
+  'human resources': 'Human Resources',
+  'legal & compliance': 'Legal & Compliance',
+  marketing: 'Marketing',
+  operations: 'Operations',
+  'project & programme management': 'Project & Programme Management',
+  'research & development': 'Research & Development',
+  'sales & business development': 'Sales & Business Development',
+  'strategy & consulting': 'Strategy & Consulting',
+  'supply chain': 'Supply Chain',
+  // curated MetryxOne families
+  'design & user experience': 'Product Management',
+  'go-to-market & sales': 'Sales & Business Development',
+  'operations & strategy': 'Operations',
+  'people & culture': 'Human Resources',
+  // O*NET SOC major groups
+  'architecture and engineering': 'Research & Development',
+  'arts, design, entertainment, sports, and media': 'Marketing',
+  'building and grounds cleaning and maintenance': 'Operations',
+  'business and financial operations': 'Finance & Accounting',
+  'community and social service': 'Human Resources',
+  'computer and mathematical': 'Software Engineering',
+  'construction and extraction': 'Operations',
+  'educational instruction and library': 'Human Resources',
+  'farming, fishing, and forestry': 'Operations',
+  'food preparation and serving related': 'Operations',
+  'healthcare practitioners and technical': 'Operations',
+  'healthcare support': 'Operations',
+  'installation, maintenance, and repair': 'Operations',
+  legal: 'Legal & Compliance',
+  'life, physical, and social science': 'Research & Development',
+  management: 'Executive Leadership',
+  'military specific': 'Operations',
+  'office and administrative support': 'Operations',
+  'personal care and service': 'Customer Success',
+  production: 'Supply Chain',
+  'protective service': 'Operations',
+  'sales and related': 'Sales & Business Development',
+  'transportation and material moving': 'Supply Chain',
+};
+
+const EXEC_TITLE_RE = /\b(chief|ceo|cfo|cto|coo|cio|president|vice president|\bvp\b|executive|partner)\b/i;
+const DIRECTOR_TITLE_RE = /\b(director|head of)\b/i;
+const MANAGER_TITLE_RE = /\b(manager|supervisor|superintendent|foreman)\b/i;
+
+// Map seniority / leadership / title → one of the 4 benchmark layers
+// (Strategic > Leadership > Managerial > Execution). Seniority is almost always 'mid'
+// in the O*NET library, so the title regex + is_leadership carry most of the signal.
+function deriveBenchmarkLayer(meta: { seniority: string | null; isLeadership: boolean; title: string | null }): string {
+  const t = meta.title ?? '';
+  const s = (meta.seniority ?? '').toLowerCase();
+  if (EXEC_TITLE_RE.test(t) || ['executive', 'c_suite', 'vp', 'chief'].includes(s)) return 'Strategic';
+  if (DIRECTOR_TITLE_RE.test(t) || s === 'director') return 'Leadership';
+  if (meta.isLeadership || MANAGER_TITLE_RE.test(t) || s === 'manager') return 'Managerial';
+  return 'Execution';
+}
+
+interface RoleBenchmarkMeta {
+  title: string | null;
+  familyName: string | null;
+  seniority: string | null;
+  isLeadership: boolean;
+}
+
+async function loadRoleBenchmarkMeta(
+  pool: Pool,
+  role: { id?: number | null; title?: string | null },
+): Promise<RoleBenchmarkMeta | null> {
+  try {
+    if (role.id != null) {
+      const { rows } = await pool.query(
+        `SELECT r.title, r.seniority_level, r.is_leadership, f.name AS family_name
+           FROM ont_roles r
+           LEFT JOIN ont_role_families f ON f.id = r.role_family_id
+          WHERE r.id = $1 LIMIT 1`,
+        [role.id],
+      );
+      if (rows.length) {
+        const r = rows[0];
+        return {
+          title: r.title ?? role.title ?? null,
+          familyName: r.family_name ?? null,
+          seniority: r.seniority_level ?? null,
+          isLeadership: !!r.is_leadership,
+        };
+      }
+    }
+    if (role.title) {
+      const { rows } = await pool.query(
+        `SELECT r.title, r.seniority_level, r.is_leadership, f.name AS family_name
+           FROM ont_roles r
+           LEFT JOIN ont_role_families f ON f.id = r.role_family_id
+          WHERE lower(r.title) = lower($1) AND r.is_active = true
+          ORDER BY r.id LIMIT 1`,
+        [role.title],
+      );
+      if (rows.length) {
+        const r = rows[0];
+        return {
+          title: r.title ?? role.title ?? null,
+          familyName: r.family_name ?? null,
+          seniority: r.seniority_level ?? null,
+          isLeadership: !!r.is_leadership,
+        };
+      }
+      return { title: role.title, familyName: null, seniority: null, isLeadership: false };
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+async function readBenchmarkRow(
+  pool: Pool,
+  rfName: string,
+  layer: string,
+): Promise<{ p10: number | null; p25: number | null; p50: number | null; p75: number | null; p90: number | null; sample: number | null } | null> {
+  const { rows } = await pool.query(
+    `SELECT composite_p10, composite_p25, composite_p50, composite_p75, composite_p90, sample_size
+       FROM ti_role_benchmarks
+      WHERE lower(rf_name) = lower($1) AND layer = $2
+      LIMIT 1`,
+    [rfName, layer],
+  );
+  if (!rows.length) return null;
+  const r = rows[0];
+  return {
+    p10: numOrNull(r.composite_p10),
+    p25: numOrNull(r.composite_p25),
+    p50: numOrNull(r.composite_p50),
+    p75: numOrNull(r.composite_p75),
+    p90: numOrNull(r.composite_p90),
+    sample: numOrNull(r.sample_size),
+  };
+}
+
+export async function generateRoleBenchmark(
+  pool: Pool,
+  role: { id?: number | null; title?: string | null } | string,
+): Promise<RoleBenchmark> {
+  const roleArg = typeof role === 'string' ? { title: role } : role;
+  if (!roleArg.title && roleArg.id == null) {
+    return { available: false, source: null, reason: 'no_role' };
+  }
   if (!(await tableExists(pool, 'ti_role_benchmarks'))) {
     return { available: false, source: null, reason: 'benchmark_table_absent' };
   }
   try {
-    const { rows } = await pool.query(
-      `SELECT rf_name, composite_p10, composite_p25, composite_p50, composite_p75, composite_p90, sample_size
-         FROM ti_role_benchmarks
-        WHERE lower(rf_name) = lower($1)
-        LIMIT 1`,
-      [roleTitle],
-    );
-    if (!rows.length) {
-      // ti_role_benchmarks is keyed by role FAMILY name; a role-level row often has no
-      // direct match. Abstain honestly rather than invent a percentile.
-      return { available: false, source: 'ti_role_benchmarks', reason: 'no_matching_benchmark_row' };
+    const meta = await loadRoleBenchmarkMeta(pool, roleArg);
+    const layer = deriveBenchmarkLayer({
+      seniority: meta?.seniority ?? null,
+      isLeadership: meta?.isLeadership ?? false,
+      title: meta?.title ?? roleArg.title ?? null,
+    });
+
+    // Resolve the RF cohort: family crosswalk (primary), else the title as an RF name.
+    const famKey = (meta?.familyName ?? '').trim().toLowerCase();
+    let rfName: string | null = famKey ? FAMILY_TO_RF[famKey] ?? null : null;
+    let rfMatch: 'exact' | 'semantic' = 'semantic';
+    if (rfName && rfName.toLowerCase() === famKey) rfMatch = 'exact';
+
+    if (!rfName && roleArg.title) {
+      const titleKey = roleArg.title.trim().toLowerCase();
+      if (FAMILY_TO_RF[titleKey]) {
+        rfName = FAMILY_TO_RF[titleKey];
+        rfMatch = rfName.toLowerCase() === titleKey ? 'exact' : 'semantic';
+      }
     }
-    const r = rows[0];
+
+    if (!rfName) {
+      // No family and no RF-name title to map — abstain rather than invent a band.
+      return {
+        available: false,
+        source: 'ti_role_benchmarks',
+        reason: 'no_family_benchmark_mapping',
+        layer,
+        derivedFromFamily: meta?.familyName ?? null,
+      };
+    }
+
+    const row = await readBenchmarkRow(pool, rfName, layer);
+    if (!row) {
+      return {
+        available: false,
+        source: 'ti_role_benchmarks',
+        reason: 'no_matching_benchmark_row',
+        rfName,
+        layer,
+        derivedFromFamily: meta?.familyName ?? null,
+        rfMatch,
+      };
+    }
+
     return {
       available: true,
       source: 'ti_role_benchmarks',
-      percentiles: {
-        p10: numOrNull(r.composite_p10),
-        p25: numOrNull(r.composite_p25),
-        p50: numOrNull(r.composite_p50),
-        p75: numOrNull(r.composite_p75),
-        p90: numOrNull(r.composite_p90),
-      },
-      sampleSize: numOrNull(r.sample_size),
+      basis: 'role_family_layer_aggregate',
+      rfName,
+      layer,
+      derivedFromFamily: meta?.familyName ?? null,
+      rfMatch,
+      percentiles: { p10: row.p10, p25: row.p25, p50: row.p50, p75: row.p75, p90: row.p90 },
+      sampleSize: row.sample,
+      note:
+        'Coarse role-family × layer aggregate from ti_role_benchmarks — a cohort band applied to ' +
+        'the role, not a role-specific empirical sample.',
     };
   } catch {
     return { available: false, source: 'ti_role_benchmarks', reason: 'benchmark_query_failed' };
@@ -359,7 +565,7 @@ export async function generateRoleDNA(pool: Pool, input: string): Promise<RoleDN
 
   const comps = await getRoleCompetencies(pool, match.code);
   const curated = await curatedLayerFor(pool, match.id);
-  const benchmark = await generateRoleBenchmark(pool, match.title);
+  const benchmark = await generateRoleBenchmark(pool, { id: match.id, title: match.title });
 
   // Inherited O*NET requirements (ONET_* namespace).
   const inherited: RoleDNARequirement[] = comps.map((c) => ({

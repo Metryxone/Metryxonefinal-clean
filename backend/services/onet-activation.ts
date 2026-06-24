@@ -324,7 +324,7 @@ export async function getBenchmarkFoundation(
 ): Promise<BenchmarkFoundation> {
   const match = await resolveBestOntRole(pool, input);
   const benchmark = match
-    ? await generateRoleBenchmark(pool, match.title)
+    ? await generateRoleBenchmark(pool, { id: match.id, title: match.title })
     : ({ available: false, source: null, reason: 'unresolved_role' } as RoleBenchmark);
   const benchmarkRows = (await tableExists(pool, 'ti_role_benchmarks'))
     ? await scalarInt(pool, 'SELECT COUNT(*)::int n FROM ti_role_benchmarks')

@@ -31,6 +31,7 @@ import {
   resolveCuratedBridges,
   rollbackBridgeResolution,
 } from '../services/onet-activation';
+import { deriveUnratedRoleCompetencies } from '../services/onet-import';
 
 async function topRoleCodes(pool: Pool, limit: number): Promise<string[]> {
   const { rows } = await pool.query(
@@ -50,6 +51,7 @@ async function main() {
   const apply = process.argv.includes('--apply');
   const rollback = process.argv.includes('--rollback');
   const doBridges = process.argv.includes('--resolve-bridges');
+  const doDeriveUnrated = process.argv.includes('--derive-unrated');
   const limitArg = process.argv.find((a) => a.startsWith('--limit'));
   const limit = limitArg
     ? Math.min(Math.max(Number(limitArg.split('=')[1] ?? process.argv[process.argv.indexOf(limitArg) + 1]) || 600, 1), 1100)
@@ -77,6 +79,13 @@ async function main() {
     if (doBridges) {
       const bridge = await resolveCuratedBridges(pool, { apply });
       console.log(`[bridges${apply ? ':apply' : ':dry-run'}]`, JSON.stringify(bridge, null, 2));
+    }
+
+    if (doDeriveUnrated && apply) {
+      const derived = await deriveUnratedRoleCompetencies(pool);
+      console.log('[derive-unrated]', JSON.stringify(derived, null, 2));
+    } else if (doDeriveUnrated) {
+      console.log('[derive-unrated] dry-run — re-run with --apply to link unrated roles.');
     }
 
     if (!apply) {

@@ -473,3 +473,27 @@ export async function rollbackRegionContent(
   const res = await pool.query('DELETE FROM global_region_content WHERE provenance = $1', [provenance]);
   return { deleted: res.rowCount ?? 0, tableExisted: true };
 }
+
+/**
+ * Targeted untag: remove specific (surface, region, entity_ref) overlay rows. This is the granular
+ * inverse of {@link assignRegionContent} — it deletes ONLY the overlay rows it was asked to, so a
+ * single curated entity can be removed from a region without dropping the whole phase's overlay.
+ * Strictly removes overlay rows (never touches the backing entity). Idempotent: already-absent refs
+ * simply count 0 deleted. Returns {deleted, tableExisted} mirroring the bulk rollback shape.
+ */
+export async function untagRegionContent(
+  pool: Pool,
+  opts: { surface: SurfaceKey; region: RegionCode; entityRefs: string[] },
+): Promise<{ deleted: number; tableExisted: boolean }> {
+  if (!(await tableExists(pool, 'global_region_content'))) {
+    return { deleted: 0, tableExisted: false };
+  }
+  const refs = Array.from(new Set(opts.entityRefs.map((r) => String(r).trim()).filter(Boolean)));
+  if (!refs.length) return { deleted: 0, tableExisted: true };
+  const res = await pool.query(
+    `DELETE FROM global_region_content
+       WHERE surface = $1 AND region_code = $2 AND entity_ref = ANY($3::text[])`,
+    [opts.surface, opts.region, refs],
+  );
+  return { deleted: res.rowCount ?? 0, tableExisted: true };
+}

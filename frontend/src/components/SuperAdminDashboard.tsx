@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { Screen } from '../App';
 
-import { Menu, RefreshCw, Search, Settings, Target, Brain, FileCheck, Database, Package, Calculator, Users, BookOpen, Network, Layers, Activity, Building2, Briefcase, Users2, UserCircle2, Map, BarChart2, BarChart3, GitBranch, Sparkles, PieChart, TrendingUp, AlertTriangle, MessageCircle, Bot, FileDown, CreditCard, Shield, FlaskConical, ClipboardList, Cpu, Award, Gauge, Zap, Sliders, Shuffle, Timer, LineChart, ClipboardCheck, Boxes, Grid3x3 } from 'lucide-react';
+import { Menu, RefreshCw, Search, Settings, Target, Brain, FileCheck, Database, Package, Calculator, Users, BookOpen, Network, Layers, Activity, Building2, Briefcase, Users2, UserCircle2, Map, BarChart2, BarChart3, GitBranch, Sparkles, PieChart, TrendingUp, AlertTriangle, MessageCircle, Bot, FileDown, CreditCard, Shield, FlaskConical, ClipboardList, Cpu, Award, Gauge, Zap, Sliders, Shuffle, Timer, LineChart, ClipboardCheck, Boxes, Grid3x3, Globe } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import SuperAdminLogin from './SuperAdminLogin';
@@ -153,6 +153,7 @@ const IndustrySegmentsPanel = lazy(() => import('./superadmin/IndustrySegmentsPa
 const RoleCrosswalkPanel = lazy(() => import('./superadmin/RoleCrosswalkPanel'));
 const OnetCrosswalkGovernancePanel = lazy(() => import('./superadmin/OnetCrosswalkGovernancePanel'));
 const CompetencyCoverageMatricesPanel = lazy(() => import('./superadmin/CompetencyCoverageMatricesPanel'));
+const GlobalRegionContentPanel = lazy(() => import('./superadmin/GlobalRegionContentPanel'));
 const DepartmentsPanel = lazy(() => import('./superadmin/DepartmentsPanel'));
 const RolesPanel = lazy(() => import('./superadmin/RolesPanel'));
 const RoleFamiliesPanel = lazy(() => import('./superadmin/RoleFamiliesPanel'));
@@ -311,6 +312,17 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
     queryKey: ['/api/v2/competency-coverage-matrices/feature-flag', 'enabled'],
     queryFn: async () => {
       const res = await fetch('/api/v2/competency-coverage-matrices/feature-flag', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // ── Global Competency (region overlay) flag probe (file-registry flag globalCompetency).
+  //    Flag OFF → /regions gate returns 503 → the tab is omitted entirely (byte-identical UI). ──
+  const { data: globalCompetencyEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/global-competency/regions', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/global-competency/regions', { credentials: 'include' });
       return res.ok;
     },
     enabled: isAuthenticated,
@@ -908,6 +920,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       ...(ontHierEnabled ? [{ id: 'ont-role-crosswalk', label: 'Role Crosswalk', icon: GitBranch, node: <RoleCrosswalkPanel /> }] : []),
                       ...(onetCrosswalkGovEnabled ? [{ id: 'onet-crosswalk-governance', label: 'O*NET Crosswalk Governance', icon: GitBranch, node: <OnetCrosswalkGovernancePanel /> }] : []),
                       ...(competencyCoverageMatricesEnabled ? [{ id: 'competency-coverage-matrices', label: 'Competency Coverage Matrices', icon: Grid3x3, node: <CompetencyCoverageMatricesPanel /> }] : []),
+                      ...(globalCompetencyEnabled ? [{ id: 'global-region-content', label: 'Global Region Content', icon: Globe, node: <GlobalRegionContentPanel /> }] : []),
                       { id: 'ont-career-tracks',        label: 'Career Tracks',            icon: Map,           node: <CareerTracksPanel /> },
                       { id: 'ont-competency-levels',    label: 'Competency Levels',        icon: BarChart2,     node: <CompetencyLevelsPanel /> },
                       { id: 'ont-indicators',           label: 'Indicators',               icon: Target,        node: <IndicatorsPanel /> },
@@ -1262,6 +1275,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               {activeTab === 'ont-role-crosswalk'   && <div className="h-full overflow-auto"><RoleCrosswalkPanel /></div>}
               {activeTab === 'onet-crosswalk-governance' && <div className="h-full overflow-auto"><OnetCrosswalkGovernancePanel /></div>}
               {activeTab === 'competency-coverage-matrices' && <div className="h-full overflow-auto"><CompetencyCoverageMatricesPanel /></div>}
+              {activeTab === 'global-region-content' && <div className="h-full overflow-auto"><GlobalRegionContentPanel /></div>}
               {activeTab === 'ont-functions'        && <div className="h-full overflow-auto"><FunctionsPanel /></div>}
               {activeTab === 'ont-departments'      && <div className="h-full overflow-auto"><DepartmentsPanel /></div>}
               {activeTab === 'ont-roles'            && <div className="h-full overflow-auto"><RolesPanel /></div>}

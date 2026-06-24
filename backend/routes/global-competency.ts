@@ -29,6 +29,7 @@ import {
   resolveRegionContent,
   assignRegionContent,
   rollbackRegionContent,
+  untagRegionContent,
   GLOBAL_COMPETENCY_VERSION,
   type RegionCode,
   type SurfaceKey,
@@ -141,12 +142,42 @@ export function registerGlobalCompetencyRoutes(
     }
   });
 
-  // ── POST rollback — delete this phase's overlay rows (full reversibility) ──────────────────────
+  // ── POST rollback — remove overlay rows (full reversibility) ──────────────────────────────────
+  // Two modes (both reversible, both delete ONLY overlay rows — never the backing entity):
+  //   • TARGETED untag: body has surface + region + entity_refs → drop just those overlay rows
+  //     (the granular inverse of /assign, so a single curated entity can be un-tagged).
+  //   • BULK rollback: no surface/refs → delete every overlay row for the provenance (default phase8).
   app.post('/api/global-competency/rollback', flagGate, requireAuth, requireSuperAdmin, async (req: Request, res: Response) => {
     try {
-      const provenance = (req.body ?? {}).provenance ? String((req.body as any).provenance) : undefined;
+      const b = (req.body ?? {}) as Record<string, any>;
+      const refs = Array.isArray(b.entity_refs) ? b.entity_refs.map((x: any) => String(x)) : [];
+      const hasSurface = b.surface != null && String(b.surface) !== '';
+
+      // Targeted untag path — requires a valid surface, region, and at least one ref.
+      if (hasSurface || refs.length) {
+        const surface = String(b.surface ?? '');
+        if (!isValidSurface(surface)) {
+          return res.status(400).json({ ok: false, error: 'invalid_surface', allowed: SURFACES.map((s) => s.key) });
+        }
+        const region = String(b.region ?? '').toUpperCase();
+        if (!isValidRegion(region)) {
+          return res.status(400).json({ ok: false, error: 'invalid_region', allowed: REGIONS.map((r) => r.code) });
+        }
+        if (!refs.length) {
+          return res.status(400).json({ ok: false, error: 'entity_refs_required' });
+        }
+        const result = await untagRegionContent(pool, {
+          surface: surface as SurfaceKey,
+          region: region as RegionCode,
+          entityRefs: refs,
+        });
+        return res.json({ ok: true, mode: 'targeted', surface, region, ...result });
+      }
+
+      // Bulk rollback path (legacy behaviour) — delete all overlay rows for the provenance.
+      const provenance = b.provenance ? String(b.provenance) : undefined;
       const result = await rollbackRegionContent(pool, provenance);
-      return res.json({ ok: true, ...result });
+      return res.json({ ok: true, mode: 'bulk', ...result });
     } catch (err) {
       console.error('[global-competency] rollback error:', err);
       return res.status(500).json({ ok: false, error: 'rollback_failed' });

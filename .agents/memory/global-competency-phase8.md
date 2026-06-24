@@ -33,6 +33,25 @@ single `id` column (onto_*/bench text, *_history/wos bigint) → cast `::text` a
 **How to apply:** any future "tag existing entity to dimension X" overlay needs an existence check
 against the real table before insert; treat unverifiable (missing/unreadable table) as reject, not allow.
 
+## Content half AUTHORED (the "0 rows" is no longer the resting state)
+The original "non-default regions show 0 = honest finding, content out of scope" boundary was
+LIFTED by a later task: `scripts/seed-global-region-content.ts` region-tags EXISTING universal
+entities to ME/EU/US/APAC (provenance `phase8_global_competency`, idempotent). It seeds 4/5
+surfaces — role_library, competency_models, benchmarks, demand_intelligence — and DELIBERATELY
+omits `readiness_models` (career_readiness_history = subject-specific user snapshots, NOT
+regionalizable) and India-population statistical cohorts `coh_role_*` (benchmark overlay is an
+honest SUBSET, 10 of 15). This is **universal-inheritance curation**, NOT region-native statistics —
+documented in each row's `detail.basis`. The existence guard still applies (0 rejections = all refs real).
+
+**Why:** a region dimension with 0 content scored a low PARTIAL (D12 42→75). Tagging existing
+region-agnostic entities (universal roles, the scientific competency genome, global cohorts/signals)
+to a region is scope DECLARATION, not fabrication — distinct from inventing region-specific numbers.
+
+The localized read path is `resolveRegionContent(pool, region)` + `GET /content/:region`: default
+region serves base tables; non-default serves the curated overlay ONLY (surface w/o content →
+`source:'empty'`, never a silent base fallback). If you re-run audits, expect non-default regions
+NON-empty now — the smoke assertion was flipped accordingly (don't "fix" it back to all-empty).
+
 ## Discipline that held
 GET handlers use `to_regclass` probes + degrade (200 {degraded:true}); ensure-schema runs ONLY on POST
 behind the flag, so flag-OFF never creates the overlay table via HTTP. null=table unreadable vs 0=empty

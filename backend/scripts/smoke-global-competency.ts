@@ -73,8 +73,17 @@ async function main() {
     const nonDef = coverage.regions.filter((r) => !r.is_default);
     const defHasReal = def.surfaces.some((s) => (s.effective_content ?? 0) > 0);
     check('default region inherits real global content (>0 somewhere)', defHasReal);
-    const allNonDefEmpty = nonDef.every((r) => r.surfaces.every((s) => (s.effective_content ?? 0) === 0));
-    check('non-default regions are honestly empty (no fabricated content)', allNonDefEmpty);
+    // After the region-content seed, non-default priority regions carry curated overlay content on
+    // the 4 seeded surfaces, while readiness_models stays empty (subject-specific, not regional).
+    const SEEDED_SURFACES = ['role_library', 'competency_models', 'benchmarks', 'demand_intelligence'];
+    const nonDefHaveSeededContent = nonDef.every((r) =>
+      SEEDED_SURFACES.every((k) => (r.surfaces.find((s) => s.surface === k)?.effective_content ?? 0) > 0),
+    );
+    check('non-default priority regions carry curated overlay content (4 seeded surfaces > 0)', nonDefHaveSeededContent);
+    const nonDefReadinessEmpty = nonDef.every(
+      (r) => (r.surfaces.find((s) => s.surface === 'readiness_models')?.effective_content ?? 0) === 0,
+    );
+    check('non-default readiness_models stays empty (not regionalizable, never fabricated)', nonDefReadinessEmpty);
     check('default region global_content populated, non-default null', def.surfaces.every((s) => s.global_content != null) && nonDef.every((r) => r.surfaces.every((s) => s.global_content == null)));
 
     // Honesty guard: a nonexistent entity_ref must be REJECTED (never taggable → never inflates coverage).

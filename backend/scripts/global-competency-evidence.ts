@@ -69,16 +69,18 @@ async function main() {
       log(`| ${r.code} (${r.name}) | ${r.is_default ? 'yes' : ''} | ${cells.join(' | ')} | ${r.surfaces_with_content}/${SURFACES.length} |`);
     }
     log('');
-    log('Interpretation: the **default region inherits the real global counts**; every **non-default region is honestly empty** (no regional content has been authored — this phase delivers the framework, not the data). `null` = backing table absent/unreadable (distinct from `0`).');
+    log('Interpretation: the **default region inherits the real global counts**; each **non-default priority region now carries curated content** on 4/5 surfaces (role libraries, competency models, benchmarks, demand intelligence) authored by the region-content seed. `readiness_models` stays at 0 for non-default regions by design (individual user snapshots are not regionalizable). `null` = backing table absent/unreadable (distinct from `0`).');
     log('');
 
-    // (3) threadability + reversibility — assign ONE real entity to a non-default region
+    // (3) threadability + reversibility — assign ONE real entity to a non-default region.
+    // Use `readiness_models`, the surface deliberately NOT covered by the seed, so the assign delta
+    // is clean (the seeded surfaces would ON CONFLICT DO NOTHING and show a no-op).
     log(`## 2. Threadability + reversibility (assign \u2192 recount \u2192 rollback)`);
     log('');
     const demoRegion = 'EU' as const;
-    const demoSurface: SurfaceKey = 'role_library';
+    const demoSurface: SurfaceKey = 'readiness_models';
     const surfaceMeta = SURFACES.find((s) => s.key === demoSurface)!;
-    // onto_roles primary key is the role id/code; pick a real existing one (never invented).
+    // Pick a real existing backing-table entity (never invented).
     const realRef =
       (await pickRealEntity(pool, surfaceMeta.table, 'id')) ??
       (await pickRealEntity(pool, surfaceMeta.table, 'code'));
@@ -135,9 +137,9 @@ async function main() {
     log('');
     log(`## Honesty boundary`);
     log('');
-    log('- Phase 8 delivers a **structural framework + per-region coverage reporting only**. No regional benchmarks, roles, competency models, readiness models, or demand content were authored.');
-    log('- Non-default regions reporting zero is the **honest finding**, not a defect.');
-    log('- The whole phase is reversible (drop `global_region_content` or delete by provenance); existing tables are never altered. Flag OFF → byte-identical incl. schema.');
+    log('- The region-content seed authors **universal-inheritance curation**: existing region-agnostic entities (role definitions, the scientific competency genome, global/structural benchmark cohorts, global market signals) are region-tagged. It does **not** fabricate region-native statistics, benchmarks, demand figures, or roles.');
+    log('- `readiness_models` is left empty for non-default regions on purpose — `career_readiness_history` holds subject-specific user snapshots, not regionalizable reference content. India-population statistical cohorts (`coh_role_*`) are also excluded from the benchmark overlay, making it an honest subset.');
+    log('- The whole effect is reversible (delete by provenance `phase8_global_competency` or drop `global_region_content`); existing tables are never altered. Flag OFF → byte-identical incl. schema.');
 
     const outDir = path.join(__dirname, '../audit/phase8-global-competency');
     fs.mkdirSync(outDir, { recursive: true });

@@ -26,6 +26,7 @@ import {
   isValidSurface,
   computeRegionCoverage,
   computeRegionCoverageFor,
+  resolveRegionContent,
   assignRegionContent,
   rollbackRegionContent,
   GLOBAL_COMPETENCY_VERSION,
@@ -83,6 +84,25 @@ export function registerGlobalCompetencyRoutes(
       return res.json({ ok: true, version: GLOBAL_COMPETENCY_VERSION, region: detail, read_only: true });
     } catch (err) {
       console.error('[global-competency] region coverage error:', err);
+      return res.status(200).json({ ok: true, degraded: true, reason: 'unexpected_error', read_only: true });
+    }
+  });
+
+  // ── GET content/:region — region-aware LOCALIZED content read (read-only) ─────────────────────
+  // Default region serves base content; non-default regions serve ONLY their curated overlay
+  // (never silently falling back to the base/un-localized set).
+  app.get('/api/global-competency/content/:region', flagGate, requireAuth, requireSuperAdmin, async (req: Request, res: Response) => {
+    try {
+      const region = String(req.params.region ?? '').toUpperCase();
+      if (!isValidRegion(region)) {
+        return res.status(400).json({ ok: false, error: 'invalid_region', allowed: REGIONS.map((r) => r.code) });
+      }
+      const rawLimit = Number(req.query.limit);
+      const limit = Number.isFinite(rawLimit) ? rawLimit : undefined;
+      const content = await resolveRegionContent(pool, region as RegionCode, { limit });
+      return res.json({ ok: true, ...content, read_only: true });
+    } catch (err) {
+      console.error('[global-competency] region content error:', err);
       return res.status(200).json({ ok: true, degraded: true, reason: 'unexpected_error', read_only: true });
     }
   });

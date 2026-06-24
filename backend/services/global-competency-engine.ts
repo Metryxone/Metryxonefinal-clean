@@ -58,11 +58,11 @@ export function isValidRegion(code: string): code is RegionCode {
  * `idExpr` is the column treated as the entity reference for overlay assignment.
  */
 export const SURFACES = [
-  { key: 'role_library', table: 'onto_roles', idColumn: 'id', label: 'Role Libraries' },
-  { key: 'benchmarks', table: 'bench_cohorts', idColumn: 'id', label: 'Benchmarks' },
-  { key: 'competency_models', table: 'onto_competencies', idColumn: 'id', label: 'Competency Models' },
-  { key: 'readiness_models', table: 'career_readiness_history', idColumn: 'id', label: 'Readiness Models' },
-  { key: 'demand_intelligence', table: 'wos_market_signals', idColumn: 'id', label: 'Demand Intelligence' },
+  { key: 'role_library', table: 'onto_roles', idColumn: 'id', labelColumn: 'title', label: 'Role Libraries' },
+  { key: 'benchmarks', table: 'bench_cohorts', idColumn: 'id', labelColumn: 'name', label: 'Benchmarks' },
+  { key: 'competency_models', table: 'onto_competencies', idColumn: 'id', labelColumn: 'canonical_name', label: 'Competency Models' },
+  { key: 'readiness_models', table: 'career_readiness_history', idColumn: 'id', labelColumn: 'overall_band', label: 'Readiness Models' },
+  { key: 'demand_intelligence', table: 'wos_market_signals', idColumn: 'id', labelColumn: 'signal_type', label: 'Demand Intelligence' },
 ] as const;
 
 export type SurfaceKey = (typeof SURFACES)[number]['key'];
@@ -200,6 +200,149 @@ export async function computeRegionCoverageFor(
 ): Promise<RegionCoverage | null> {
   const all = await computeRegionCoverage(pool);
   return all.regions.find((r) => r.code === region) ?? null;
+}
+
+// ---------------------------------------------------------------------------
+// Region-aware CONTENT resolution (read-only) — the "localized read" path
+// ---------------------------------------------------------------------------
+/**
+ * One resolved content item for a region/surface. `label` is joined from the surface's backing
+ * table (never PII — title/name/band/signal_type only); `detail` carries the overlay's curation note.
+ */
+export interface RegionContentItem {
+  entity_ref: string;
+  label: string | null;
+  detail?: unknown;
+}
+
+export interface SurfaceContent {
+  surface: SurfaceKey;
+  label: string;
+  backing_table: string;
+  /**
+   * Where the content came from:
+   *  - 'base'    → DEFAULT region: the real backing table (== today, India-centric).
+   *  - 'overlay' → non-default region: the curated region-tagged set (LOCALIZED).
+   *  - 'empty'   → non-default region with no curated content (honest empty; NOT base fallback).
+   *  - null      → backing/overlay table unreadable (distinct from empty).
+   */
+  source: 'base' | 'overlay' | 'empty' | null;
+  localized: boolean;
+  count: number | null;
+  items: RegionContentItem[];
+}
+
+export interface RegionContent {
+  version: string;
+  region: RegionCode;
+  name: string;
+  is_default: boolean;
+  surfaces: SurfaceContent[];
+  note: string;
+}
+
+/**
+ * Resolve the CONTENT a region effectively serves, per surface — the region-aware read.
+ *
+ * - DEFAULT region (IN) returns each backing table's real content (`source:'base'`), exactly as
+ *   today. The platform is India-centric, so this is the un-overlaid behaviour.
+ * - NON-DEFAULT regions return ONLY the curated region-tagged overlay (`source:'overlay'`) joined
+ *   back to the backing table for labels. When a surface has no overlay rows, it resolves to
+ *   `source:'empty'` — it does NOT silently fall back to the base/un-localized set. This is the
+ *   behaviour the "localized content instead of base fallback" requirement asks for.
+ *
+ * Strictly read-only: `to_regclass` probes + SELECT only, never DDL. `items` are capped per surface
+ * so a content read can't dump the whole genome; `count` is the honest full size.
+ */
+export async function resolveRegionContent(
+  pool: Pool,
+  region: RegionCode,
+  opts: { limit?: number } = {},
+): Promise<RegionContent> {
+  const limit = Math.max(1, Math.min(opts.limit ?? 25, 500));
+  const meta = REGIONS.find((r) => r.code === region)!;
+  const overlayPresent = await tableExists(pool, 'global_region_content');
+
+  const surfaces: SurfaceContent[] = [];
+  for (const s of SURFACES) {
+    const backingOk = await tableExists(pool, s.table);
+
+    // DEFAULT region → base content straight from the backing table (== today).
+    if (meta.is_default) {
+      if (!backingOk) {
+        surfaces.push({ surface: s.key, label: s.label, backing_table: s.table, source: null, localized: false, count: null, items: [] });
+        continue;
+      }
+      const count = await scalarInt(pool, `SELECT COUNT(*)::int n FROM ${s.table}`);
+      let items: RegionContentItem[] = [];
+      try {
+        const { rows } = await pool.query(
+          `SELECT ${s.idColumn}::text AS ref, ${s.labelColumn}::text AS label
+             FROM ${s.table} ORDER BY ${s.idColumn} LIMIT $1`,
+          [limit],
+        );
+        items = rows.map((r) => ({ entity_ref: String(r.ref), label: r.label ?? null }));
+      } catch {
+        /* degrade: keep count, items empty */
+      }
+      surfaces.push({ surface: s.key, label: s.label, backing_table: s.table, source: 'base', localized: false, count, items });
+      continue;
+    }
+
+    // NON-DEFAULT region → curated overlay only (localized); never base fallback.
+    if (!overlayPresent) {
+      surfaces.push({ surface: s.key, label: s.label, backing_table: s.table, source: 'empty', localized: false, count: 0, items: [] });
+      continue;
+    }
+    let count = 0;
+    let items: RegionContentItem[] = [];
+    try {
+      // Join overlay → backing table for labels. LEFT JOIN so a tagged-but-since-deleted ref still
+      // shows (label null) rather than vanishing, but coverage stays honest to the overlay rows.
+      const joinSelect = backingOk
+        ? `SELECT g.entity_ref AS ref, b.${s.labelColumn}::text AS label, g.detail AS detail
+             FROM global_region_content g
+             LEFT JOIN ${s.table} b ON b.${s.idColumn}::text = g.entity_ref
+            WHERE g.surface = $1 AND g.region_code = $2
+            ORDER BY g.entity_ref LIMIT $3`
+        : `SELECT g.entity_ref AS ref, NULL::text AS label, g.detail AS detail
+             FROM global_region_content g
+            WHERE g.surface = $1 AND g.region_code = $2
+            ORDER BY g.entity_ref LIMIT $3`;
+      const cnt = await scalarInt(
+        pool,
+        `SELECT COUNT(*)::int n FROM global_region_content WHERE surface = $1 AND region_code = $2`,
+        [s.key, region],
+      );
+      count = cnt ?? 0;
+      const { rows } = await pool.query(joinSelect, [s.key, region, limit]);
+      items = rows.map((r) => ({ entity_ref: String(r.ref), label: r.label ?? null, detail: r.detail }));
+    } catch {
+      surfaces.push({ surface: s.key, label: s.label, backing_table: s.table, source: null, localized: false, count: null, items: [] });
+      continue;
+    }
+    surfaces.push({
+      surface: s.key,
+      label: s.label,
+      backing_table: s.table,
+      source: count > 0 ? 'overlay' : 'empty',
+      localized: count > 0,
+      count,
+      items,
+    });
+  }
+
+  return {
+    version: GLOBAL_COMPETENCY_VERSION,
+    region,
+    name: meta.name,
+    is_default: meta.is_default,
+    surfaces,
+    note: meta.is_default
+      ? 'Default region (IN) serves base content directly from each backing table (== today; India-centric).'
+      : 'Non-default region serves ONLY its curated region-tagged overlay (localized). Surfaces with no ' +
+        'curated content resolve to empty \u2014 they do NOT fall back to the base/un-localized set.',
+  };
 }
 
 // ---------------------------------------------------------------------------

@@ -235,6 +235,7 @@ import { registerHiringIntelligenceEngineRoutes } from "./routes/hiring-intellig
 import { registerWorkforceIntelligenceEngineRoutes } from "./routes/workforce-intelligence";
 import { registerEnterpriseWorkforceConsoleRoutes } from "./routes/enterprise-workforce-console";
 import { registerEcosystemActivationRoutes } from "./routes/ecosystem-activation";
+import { registerEnterpriseCertificationRoutes } from "./routes/enterprise-certification";
 import { registerEnterpriseWorkforcePersonaRoutes } from "./routes/enterprise-workforce-persona";
 import { registerEmployerDashboardsRoutes } from "./routes/employer-dashboards";
 import { registerNotificationRoutes } from "./routes/notifications";
@@ -13840,6 +13841,8 @@ Rules:
   // MX-100X Phase 9 — Enterprise Workforce Intelligence Console (read-only, flag-gated, OFF by default).
   registerEnterpriseWorkforceConsoleRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerEcosystemActivationRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  // MX-105X — Enterprise Certification & Platform Activation (read-only top-level composer, flag-gated OFF).
+  registerEnterpriseCertificationRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // MX-77X — Persona-scoped workforce surfaces (employer aggregate + employee self), same flag.
   registerEnterpriseWorkforcePersonaRoutes(app, concernsPool, requireAuth);
   // ── Benchmark Engine (D17): industry · role · competency percentile benchmarks ─

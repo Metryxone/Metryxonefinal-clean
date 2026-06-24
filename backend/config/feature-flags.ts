@@ -220,6 +220,20 @@ export const FEATURE_FLAGS = {
    *  route 503 before any auth/DB touch (byte-identical legacy; no new tables). Super-admin gated
    *  (requireAuth → requireSuperAdmin). Env: `FF_ECOSYSTEM_ACTIVATION`. */
   ecosystemActivation: false,
+  /** MX-105X — Enterprise Certification & Platform Activation. When ON, a thin TOP-LEVEL read-only
+   *  COMPOSER at `/api/admin/enterprise-certification/*` (super-admin) aggregates the already-built
+   *  activation / certification / health / outcome engines into ONE unified enterprise certification:
+   *  unified candidate+employer E2E journey validation (completion · broken-link · dependency reports),
+   *  outcome readiness (composing MX-102X Outcome Intelligence), a Super Admin command center (12 health
+   *  categories), a Founder command center (12 exec metrics + cert score), report-type readiness, and an
+   *  Enterprise re-certification across 15 subsystems. COMPOSE-NEVER-RECOMPUTE: it calls only the existing
+   *  engines' READ paths + read-only to_regclass-probed SELECTs — it recomputes no score, runs NO DDL,
+   *  writes NO rows (GET-only, no ensure-schema). Structural ⟂ Activation ⟂ Adoption ⟂ Outcome-Confidence
+   *  and Coverage ⟂ Confidence are reported as SEPARATE axes and NEVER composited; absent → null, never a
+   *  fabricated 0. Never throws (degrades to honest-degraded JSON). Strictly additive + reversible: flag
+   *  OFF → every route 503 before any auth/DB touch → byte-identical legacy behaviour incl. schema (no new
+   *  tables). Super-admin gated (requireAuth → requireSuperAdmin). Env: `FF_ENTERPRISE_CERTIFICATION`. */
+  enterpriseCertification: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -2066,6 +2080,10 @@ export function isGlobalCompetencyEnabled(): boolean {
 
 export function isEnterpriseWorkforceConsoleEnabled(): boolean {
   return isFlagEnabled('enterpriseWorkforceConsole');
+}
+
+export function isEnterpriseCertificationEnabled(): boolean {
+  return isFlagEnabled('enterpriseCertification');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

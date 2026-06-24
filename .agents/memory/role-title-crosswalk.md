@@ -67,7 +67,7 @@ without first bridging title → curated role.
   is a LIBRARY gap (add roles+profiles); a title that abstains because of a
   spacing/spelling variant of an EXISTING role is an ALIAS-MAP gap (fix in
   `FULL_TITLE_ALIASES`, never add a duplicate role).
-- Spacing/spelling variants now resolve (Task #106): the alias lookup checks BOTH
+- Spacing/spelling variants now resolve: the alias lookup checks BOTH
   the normalised input AND its abbreviation-expanded canonical form, so one entry
   keyed on the expanded spelling ("senior software developer") also catches
   "Sr. Software Developer", and a "… developer" key also catches "… dev". So

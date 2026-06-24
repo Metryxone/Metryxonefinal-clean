@@ -11,7 +11,7 @@
  */
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { RefreshCw, Boxes, AlertTriangle, Info, CheckCircle2, FlaskConical, ClipboardCheck, XCircle, Archive, Search, Sparkles, Target, Layers, ShieldCheck, PlayCircle } from 'lucide-react';
+import { RefreshCw, Boxes, AlertTriangle, Info, CheckCircle2, FlaskConical, ClipboardCheck, XCircle, Archive, Search, Sparkles, Target, Layers, ShieldCheck, PlayCircle, Gauge, TrendingUp, Award } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Input } from '../ui/input';
@@ -19,6 +19,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 
 const BRAND = { primary: '#344E86' };
 const BASE = '/api/admin/question-factory';
+// MX-101B — Assessment Readiness Acceleration. Sub-sections are probe-gated by `assessmentReadiness`
+// (GET /enabled). With the flag OFF the probe returns {enabled:false} → the Readiness tab is never
+// rendered (byte-identical), and the routes themselves 503 regardless.
+const AR_BASE = '/api/admin/assessment-readiness';
 
 type Coverage = {
   ok: boolean;
@@ -67,7 +71,31 @@ type Quality = {
 };
 type Tiers = { ok: boolean; tier_summary: Array<{ tier: number; tier_label: string; n: number }>; rows: Array<{ id: string; canonical_name: string; domain_id: string | null; type_key: string; tier: number; dna_refs: number; live_approved: number; draft_pipeline: number }> };
 
-type Tab = 'founder' | 'population' | 'quality' | 'workbench';
+type Tab = 'founder' | 'population' | 'quality' | 'workbench' | 'readiness';
+
+// MX-101B response shapes (matched to the service return blocks — these surfaces degrade, never throw).
+type ArAxis = { competencies: number; pct: number; questions?: number };
+type ArDashboard = {
+  ok: boolean;
+  readiness?: { base_ready: number; ready_assured: number; ready_unverified: number; ready_quality_concern: number };
+  coverage_axes?: { draft: ArAxis; approved: ArAxis; assessment_ready: ArAxis };
+  certification?: {
+    ok: boolean; schema_initialized?: boolean; certified: number; needs_review: number; failed: number; total: number;
+    uncertified_actionable_drafts: number | null; avg_structural: number | null; avg_heuristic: number | null; note?: string;
+  };
+  backlog?: {
+    ok: boolean; total_pending: number; by_age?: { last_7d: number; days_7_to_30: number; older_than_30d: number };
+    by_certification?: { certified: number; needs_review: number; failed: number } | null; certification_available?: boolean; note?: string;
+  };
+  trends?: {
+    ok: boolean; schema_initialized?: boolean; points: number; trend: string;
+    series: Array<{ captured_at: string; label?: string | null; base_ready_competencies: number; quality_assured_competencies: number; approved_competencies: number }>;
+    deltas?: { approved_competencies: number; base_ready_competencies: number; quality_assured_competencies: number; approved_questions: number };
+    note?: string;
+  };
+  note?: string;
+};
+type ArReviewers = { ok: boolean; reviewers: Array<{ reviewer_id: string; approved: number; rejected: number; retired: number; last_review_at?: string | null }>; actions_last_30d?: number; note?: string };
 
 const fetchJson = async (url: string) => {
   const res = await fetch(url, { credentials: 'include' });
@@ -117,6 +145,16 @@ export default function QuestionFactoryPanel() {
     queryFn: () => fetchJson(`${BASE}/competencies?limit=400${gapOnly ? '&gap_only=1' : ''}${search ? `&q=${encodeURIComponent(search)}` : ''}`),
   });
 
+  // MX-101B — probe the assessmentReadiness flag. enabled:false (flag OFF) → tab never rendered.
+  const arEnabled = useQuery<{ enabled: boolean }>({
+    queryKey: [`${AR_BASE}/enabled`],
+    queryFn: () => fetchJson(`${AR_BASE}/enabled`),
+    retry: false,
+  });
+  const arOn = arEnabled.data?.enabled === true;
+  const arDash = useQuery<ArDashboard>({ queryKey: [`${AR_BASE}/dashboard`], queryFn: () => fetchJson(`${AR_BASE}/dashboard`), enabled: arOn });
+  const arReviewers = useQuery<ArReviewers>({ queryKey: [`${AR_BASE}/workbench/reviewers`], queryFn: () => fetchJson(`${AR_BASE}/workbench/reviewers`), enabled: arOn });
+
   const refreshAll = () => {
     qc.invalidateQueries({ queryKey: [`${BASE}/coverage`] });
     qc.invalidateQueries({ queryKey: [`${BASE}/drafts`] });
@@ -124,7 +162,24 @@ export default function QuestionFactoryPanel() {
     qc.invalidateQueries({ queryKey: [`${BASE}/population/founder`] });
     qc.invalidateQueries({ queryKey: [`${BASE}/population/quality`] });
     qc.invalidateQueries({ queryKey: [`${BASE}/population/priority`] });
+    if (arOn) {
+      qc.invalidateQueries({ queryKey: [`${AR_BASE}/dashboard`] });
+      qc.invalidateQueries({ queryKey: [`${AR_BASE}/workbench/reviewers`] });
+    }
   };
+
+  // Certification + snapshot are the only MX-101B write paths the agent exposes. Neither flips
+  // coverage: certify pre-qualifies (Confidence axis), snapshot is an append-only time-series point.
+  const certifyDrafts = useMutation({
+    mutationFn: () => postJson(`${AR_BASE}/certification/certify-drafts`, {}),
+    onSuccess: (r) => { setNotice({ kind: 'ok', msg: `Certified ${r.evaluated ?? 0} drafts — ${r.certified ?? 0} certified, ${r.needs_review ?? 0} need review, ${r.failed ?? 0} failed. Certification ≠ approval; coverage unchanged.` }); refreshAll(); },
+    onError: (e: any) => setNotice({ kind: 'err', msg: `Certification run failed: ${e.message}` }),
+  });
+  const snapshot = useMutation({
+    mutationFn: () => postJson(`${AR_BASE}/readiness/snapshot`, {}),
+    onSuccess: () => { setNotice({ kind: 'ok', msg: 'Coverage snapshot captured (append-only trend point).' }); refreshAll(); },
+    onError: (e: any) => setNotice({ kind: 'err', msg: `Snapshot failed: ${e.message}` }),
+  });
 
   const bulkRun = useMutation({
     mutationFn: (opts: { tier?: number; dry_run?: boolean }) => postJson(`${BASE}/population/run`, opts),
@@ -197,6 +252,7 @@ export default function QuestionFactoryPanel() {
           ['population', 'Population', Layers],
           ['quality', 'Quality', ShieldCheck],
           ['workbench', 'Coverage & Review', ClipboardCheck],
+          ...(arOn ? [['readiness', 'Assessment Readiness', Gauge] as [Tab, string, any]] : []),
         ] as Array<[Tab, string, any]>).map(([id, label, Icon]) => (
           <button key={id} onClick={() => setTab(id)}
             className={`flex items-center gap-1.5 border-b-2 px-3 py-2 text-sm font-medium transition-colors ${tab === id ? 'border-[#344E86] text-[#344E86]' : 'border-transparent text-gray-500 hover:text-gray-800'}`}>
@@ -498,6 +554,171 @@ export default function QuestionFactoryPanel() {
         </div>
       </div>
       )}
+
+      {/* ===== MX-101B — ASSESSMENT READINESS (probe-gated by assessmentReadiness) ===== */}
+      {tab === 'readiness' && arOn && (() => {
+        const d = arDash.data;
+        const r = d?.readiness;
+        const cert = d?.certification;
+        const bl = d?.backlog;
+        const tr = d?.trends;
+        const ax = d?.coverage_axes;
+        return (
+          <div className="space-y-5">
+            <div className="rounded-md border border-indigo-200 bg-indigo-50 p-3 text-xs text-indigo-900">
+              <Info className="mr-1 inline h-3.5 w-3.5" />
+              <strong>Coverage ⟂ Confidence.</strong> <em>Base-ready</em> is the live Coverage gate (≥4 approved, ≥2 types & difficulties).
+              <em> Quality-assured</em> is a SEPARATE Confidence axis layered on via certification — it is always ≤ base-ready and is NEVER
+              composited into the coverage number. Certification pre-qualifies questions; it is <strong>not</strong> approval. Only a human
+              approval in the review workbench changes live coverage.
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <Button size="sm" variant="outline" disabled={arDash.isFetching} onClick={() => refreshAll()}>
+                <RefreshCw className={`mr-2 h-4 w-4 ${arDash.isFetching ? 'animate-spin' : ''}`} /> Refresh
+              </Button>
+              <Button size="sm" variant="default" disabled={certifyDrafts.isPending} style={{ backgroundColor: BRAND.primary }} onClick={() => certifyDrafts.mutate()}>
+                <ShieldCheck className="mr-2 h-4 w-4" /> {certifyDrafts.isPending ? 'Certifying…' : 'Certify actionable drafts'}
+              </Button>
+              <Button size="sm" variant="outline" disabled={snapshot.isPending} onClick={() => snapshot.mutate()}>
+                <TrendingUp className="mr-2 h-4 w-4" /> {snapshot.isPending ? 'Capturing…' : 'Capture trend snapshot'}
+              </Button>
+            </div>
+
+            {arDash.isLoading && <div className="text-sm text-gray-400">Loading readiness…</div>}
+            {arDash.isError && <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800">Failed to load assessment readiness.</div>}
+
+            {d && (
+              <>
+                {/* Readiness breakdown — Coverage vs Confidence side by side */}
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
+                  <Stat tone="live" label="Base-ready (Coverage)" value={`${r?.base_ready ?? 0}`} sub="live assessment-ready gate" />
+                  <Stat tone="neutral" label="Quality-assured (Confidence)" value={`${r?.ready_assured ?? 0}`} sub="base-ready AND certified" />
+                  <Stat tone="pipeline" label="Ready, unverified" value={`${r?.ready_unverified ?? 0}`} sub="base-ready, not yet certified" />
+                  <Stat tone="pipeline" label="Ready, quality concern" value={`${r?.ready_quality_concern ?? 0}`} sub="certification flagged a concern" />
+                </div>
+
+                {ax && (
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                    <Stat tone="pipeline" label="Draft coverage" value={`${ax.draft.competencies}`} sub={`${pctText(ax.draft.pct)} · ${ax.draft.questions ?? 0} drafts`} />
+                    <Stat tone="live" label="Approved coverage" value={`${ax.approved.competencies}`} sub={pctText(ax.approved.pct)} />
+                    <Stat tone="live" label="Assessment-ready coverage" value={`${ax.assessment_ready.competencies}`} sub={pctText(ax.assessment_ready.pct)} />
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  {/* Certification ledger */}
+                  <div className="rounded-lg border bg-white p-4">
+                    <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"><Award className="h-4 w-4" /> Certification ledger</div>
+                    {cert?.schema_initialized === false ? (
+                      <div className="text-xs text-gray-500">{cert?.note || 'Certification ledger not initialized — run “Certify actionable drafts”.'}</div>
+                    ) : (
+                      <>
+                        <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                          <div><div className="text-lg font-bold text-green-600">{cert?.certified ?? 0}</div>Certified</div>
+                          <div><div className="text-lg font-bold text-amber-600">{cert?.needs_review ?? 0}</div>Needs review</div>
+                          <div><div className="text-lg font-bold text-red-600">{cert?.failed ?? 0}</div>Failed</div>
+                        </div>
+                        <div className="mt-3 space-y-1 text-xs text-gray-600">
+                          <div className="flex justify-between"><span>Uncertified actionable drafts</span><span className="tabular-nums font-medium text-gray-900">{cert?.uncertified_actionable_drafts ?? '—'}</span></div>
+                          <div className="flex justify-between"><span>Avg structural (high-confidence)</span><span className="tabular-nums font-medium text-gray-900">{cert?.avg_structural ?? '—'}</span></div>
+                          <div className="flex justify-between"><span>Avg heuristic (proxy)</span><span className="tabular-nums font-medium text-gray-900">{cert?.avg_heuristic ?? '—'}</span></div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Review backlog */}
+                  <div className="rounded-lg border bg-white p-4">
+                    <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"><ClipboardCheck className="h-4 w-4" /> Review backlog (pipeline, not coverage)</div>
+                    <div className="text-sm text-gray-700">Drafts awaiting human review: <strong className="tabular-nums">{bl?.total_pending ?? 0}</strong></div>
+                    {bl?.by_age && (
+                      <div className="mt-3 grid grid-cols-3 gap-2 text-center text-xs">
+                        <div><div className="text-lg font-bold text-gray-900">{bl.by_age.last_7d}</div>≤7d</div>
+                        <div><div className="text-lg font-bold text-gray-900">{bl.by_age.days_7_to_30}</div>7–30d</div>
+                        <div><div className="text-lg font-bold text-gray-900">{bl.by_age.older_than_30d}</div>&gt;30d</div>
+                      </div>
+                    )}
+                    {bl?.by_certification && (
+                      <div className="mt-3 text-xs text-gray-500">Of these, certified: <strong>{bl.by_certification.certified}</strong> · needs review: <strong>{bl.by_certification.needs_review}</strong> · failed: <strong>{bl.by_certification.failed}</strong> (cert-passed are the fast-track for bulk approval).</div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Reviewer productivity */}
+                <div className="rounded-lg border bg-white">
+                  <div className="flex items-center gap-2 border-b p-3 text-sm font-semibold text-gray-700"><Target className="h-4 w-4" /> Reviewer productivity
+                    <span className="ml-2 text-xs font-normal text-gray-400">canonical reviewed_by (most-recent reviewer per question)</span>
+                  </div>
+                  <div className="max-h-64 overflow-auto">
+                    <Table>
+                      <TableHeader><TableRow><TableHead>Reviewer</TableHead><TableHead className="text-right">Approved</TableHead><TableHead className="text-right">Rejected</TableHead><TableHead className="text-right">Retired</TableHead><TableHead className="text-right">Last review</TableHead></TableRow></TableHeader>
+                      <TableBody>
+                        {(!arReviewers.data?.reviewers || arReviewers.data.reviewers.length === 0) && <TableRow><TableCell colSpan={5} className="text-center text-sm text-gray-400">No human reviews recorded yet.</TableCell></TableRow>}
+                        {arReviewers.data?.reviewers?.map((rv) => (
+                          <TableRow key={rv.reviewer_id}>
+                            <TableCell className="text-xs text-gray-700">{rv.reviewer_id}</TableCell>
+                            <TableCell className="text-right tabular-nums text-green-700">{rv.approved}</TableCell>
+                            <TableCell className="text-right tabular-nums text-red-600">{rv.rejected}</TableCell>
+                            <TableCell className="text-right tabular-nums text-gray-500">{rv.retired}</TableCell>
+                            <TableCell className="text-right text-xs text-gray-500">{rv.last_review_at ? new Date(rv.last_review_at).toLocaleDateString() : '—'}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+
+                {/* Trends */}
+                <div className="rounded-lg border bg-white p-4">
+                  <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"><TrendingUp className="h-4 w-4" /> Coverage & readiness trend</div>
+                  {!tr || tr.trend === 'insufficient_history' ? (
+                    <div className="text-xs text-gray-500">{tr?.note || 'Need at least two snapshots to compute a trend. Capture snapshots over time to build the series.'}</div>
+                  ) : (
+                    <>
+                      {tr.deltas && (
+                        <div className="grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
+                          <DeltaStat label="Approved comps" v={tr.deltas.approved_competencies} />
+                          <DeltaStat label="Base-ready comps" v={tr.deltas.base_ready_competencies} />
+                          <DeltaStat label="Quality-assured comps" v={tr.deltas.quality_assured_competencies} />
+                          <DeltaStat label="Approved questions" v={tr.deltas.approved_questions} />
+                        </div>
+                      )}
+                      <div className="mt-3 max-h-48 overflow-auto">
+                        <Table>
+                          <TableHeader><TableRow><TableHead>Captured</TableHead><TableHead className="text-right">Approved</TableHead><TableHead className="text-right">Base-ready</TableHead><TableHead className="text-right">Quality-assured</TableHead></TableRow></TableHeader>
+                          <TableBody>
+                            {tr.series.map((s, i) => (
+                              <TableRow key={i}>
+                                <TableCell className="text-xs text-gray-600">{new Date(s.captured_at).toLocaleString()}{s.label ? ` · ${s.label}` : ''}</TableCell>
+                                <TableCell className="text-right tabular-nums">{s.approved_competencies}</TableCell>
+                                <TableCell className="text-right tabular-nums">{s.base_ready_competencies}</TableCell>
+                                <TableCell className="text-right tabular-nums">{s.quality_assured_competencies}</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {d.note && <div className="text-[11px] text-gray-400">{d.note}</div>}
+              </>
+            )}
+          </div>
+        );
+      })()}
+    </div>
+  );
+}
+
+function DeltaStat({ label, v }: { label: string; v: number }) {
+  const tone = v > 0 ? 'text-green-600' : v < 0 ? 'text-red-600' : 'text-gray-500';
+  return (
+    <div className="rounded-lg border bg-white p-2 text-center">
+      <div className={`text-lg font-bold ${tone}`}>{v > 0 ? `+${v}` : v}</div>
+      <div className="text-[11px] text-gray-500">{label}</div>
     </div>
   );
 }

@@ -1410,6 +1410,21 @@ export const FEATURE_FLAGS = {
    *  distribution cannot shift by level — surfaced as an explicit coverage gap, never padded.
    *  Reversible by flipping OFF / removing the route. Env: `FF_ADAPTIVE_DIFFICULTY_ACTIVATION`. */
   adaptiveDifficultyActivation: false,
+
+  /** MX-101B — Assessment Readiness Acceleration. ADDITIVE, flag-gated layer ON TOP of the
+   *  MX-101X Question Factory / MX-101A population program. Adds (1) per-question Quality
+   *  Certification (5 dims: duplication/difficulty/competency-alignment = structural; relevance/
+   *  clarity = labeled lower-confidence heuristic proxies + inert AI hooks, never fabricated),
+   *  (2) a bulk Review Workbench that drives the EXISTING human approval state machine over an
+   *  explicit reviewer-selected id set (NEVER scheduled/automatic), (3) an Assessment Readiness
+   *  engine that extends the readiness gate with a quality-threshold criterion, and (4) super-admin
+   *  + founder metrics & trends. Certification ≠ approval — only an explicit human approval flips
+   *  live coverage, so generation/certification NEVER inflate coverage. Strictly additive &
+   *  reversible: flag OFF → every new route 503s before any auth/DB touch, the ensure-schema is
+   *  never reached so the new `question_certifications` / `qf_coverage_snapshots` tables are never
+   *  created → byte-identical legacy behaviour incl. schema; the panel sub-sections hide.
+   *  Env: `FF_ASSESSMENT_READINESS`. */
+  assessmentReadiness: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1536,6 +1551,12 @@ export function isCareerBuilderActivationEnabled(): boolean {
 
 export function isCompetencySkillIntelligenceEnabled(): boolean {
   return isFlagEnabled('competencySkillIntelligence');
+}
+
+/** MX-101B — Assessment Readiness Acceleration (certification + bulk review workbench + readiness
+ *  engine + founder trends). Default OFF → new routes 503 before auth/DB, ensure-schema unreached. */
+export function isAssessmentReadinessEnabled(): boolean {
+  return isFlagEnabled('assessmentReadiness');
 }
 
 export function isOnetActivationEnabled(): boolean {

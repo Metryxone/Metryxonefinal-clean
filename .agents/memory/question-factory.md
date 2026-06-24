@@ -83,3 +83,29 @@ flag; OFF byte-identical.
   prompt-groups is an HONEST pre-existing finding (status 'review', NOT a bug to fix here).
 - Population GET handlers to_regclass-probe + degrade; POST `/run` is the only ensure-schema path.
   Targets (TARGETS const): approved coverage 80%, assessment_ready 350 comps, role_dna 95%.
+
+## MX-101B — Assessment Readiness Acceleration (flag `assessmentReadiness` / FF_ASSESSMENT_READINESS)
+- **The machinery, not the coverage**: builds the human/SME path to turn MX-101A drafts into
+  assessment-ready coverage. Agent NEVER auto-approves and NEVER inflates — the live count rises
+  ONLY when a human bulk-approves through the workbench. `bulkReview` over an EXPLICIT id set is the
+  sole coverage-changing op; empty/no-valid-id sets are REFUSED (no blanket approval).
+- **certification ≠ approval ≠ readiness** — three distinct stages: `question_certifications`
+  (append-only per-question 5-dim cert ledger: Duplication/Difficulty/CompetencyAlignment structural
+  high-confidence + Relevance/Clarity heuristic proxies labelled lower-confidence; AI hooks inert,
+  never fabricate) PRE-QUALIFIES but never flips coverage. Approval (existing reviewQuestion) moves
+  coverage. Readiness composes both. A `certifiedOnly` bulk fast-track skips uncertified drafts.
+- **Readiness invariant (proven by smoke): `quality_assured ≤ base_ready ≤ approved ≤ draft`** — these
+  are the Coverage⟂Confidence axes kept SEPARATE (quality_assured is the cert-floor-met subset of
+  base_ready; never composite them). Criteria: min_approved=4, min_types=2, min_difficulty_bands=2,
+  quality_structural_floor=70.
+- **never-throws over uuid casts**: any handler/service whose SQL casts ids to `uuid`/`uuid[]` must
+  validate FIRST — routes reject a malformed `:id` with a 400 (not 500); `bulkReview` partitions
+  non-uuid ids into `errors[]` and only queries the valid ones (a bad id never aborts the valid set,
+  and `ANY($1::uuid[])` can't throw). UUID_RE lives in both the route file and the service.
+- **Tables**: `question_certifications` + `qf_coverage_snapshots` (append-only trend series, empty
+  <2 snaps). Lazy ensure-schema POST-only; GET handlers to_regclass-probe + degrade. Flag-OFF is
+  byte-identical incl. SCHEMA (no DDL fires OFF). Routes base `/api/admin/assessment-readiness`
+  (sits under the global `/api/admin` auth gate → unauth is 401 before the flag gate, like
+  question-factory; `/enabled` is the no-auth probe the UI uses to hide sections).
+- Smoke `scripts/mx101b-smoke.ts` writes the SHARED live bank → purges its own `qf-%` rows + certs
+  (by certified_by marker) + snapshots + batches and rolls coverage back to baseline (zero residue).

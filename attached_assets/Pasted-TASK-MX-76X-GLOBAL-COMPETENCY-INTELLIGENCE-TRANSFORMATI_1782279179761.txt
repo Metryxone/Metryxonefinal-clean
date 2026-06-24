@@ -1,0 +1,402 @@
+TASK: MX-76X-GLOBAL-COMPETENCY-INTELLIGENCE-TRANSFORMATION
+
+OBJECTIVE
+
+Transform MetryxOne from an India-centric competency platform into a globally deployable competency intelligence ecosystem.
+
+Do NOT rebuild.
+
+Do NOT replace Role DNA.
+
+Do NOT replace O*NET.
+
+Do NOT replace Competency Framework.
+
+Do NOT replace Employability Index.
+
+Activate and extend existing global architecture.
+
+==================================================
+SECTION 1
+CURRENT STATE AUDIT
+==================================================
+
+Audit:
+
+Tenants
+
+Regions
+
+Countries
+
+Localization
+
+Role DNA
+
+Competency Framework
+
+Benchmarks
+
+O*NET
+
+Career Builder
+
+Employer Intelligence
+
+Validation Loop
+
+Generate:
+
+global_current_state.md
+
+Identify:
+
+Working Components
+
+Global Gaps
+
+Localization Gaps
+
+Country Gaps
+
+Region Gaps
+
+Compliance Gaps
+
+==================================================
+SECTION 2
+GLOBAL COMPETENCY MODEL
+==================================================
+
+Create:
+
+Global Competency
+↓
+Regional Competency
+↓
+Country Competency
+↓
+Industry Competency
+↓
+Role Competency
+
+Generate:
+
+global_competency_model.md
+
+==================================================
+SECTION 3
+REGIONAL INTELLIGENCE
+==================================================
+
+Support:
+
+North America
+
+Europe
+
+Middle East
+
+India
+
+APAC
+
+Africa
+
+Latin America
+
+Generate:
+
+regional_intelligence_framework.md
+
+==================================================
+SECTION 4
+COUNTRY INTELLIGENCE
+==================================================
+
+Support country-specific:
+
+Roles
+
+Benchmarks
+
+Industries
+
+Functions
+
+Departments
+
+Generate:
+
+country_intelligence_framework.md
+
+==================================================
+SECTION 5
+GLOBAL ROLE DNA
+==================================================
+
+Support:
+
+Global Role DNA
+
+Regional Variants
+
+Country Variants
+
+Industry Variants
+
+Example:
+
+Software Engineer
+USA
+
+Software Engineer
+India
+
+Software Engineer
+Germany
+
+Generate:
+
+global_role_dna_framework.md
+
+==================================================
+SECTION 6
+GLOBAL BENCHMARK ENGINE
+==================================================
+
+Create:
+
+Global Benchmark
+
+Regional Benchmark
+
+Country Benchmark
+
+Industry Benchmark
+
+Role Benchmark
+
+Generate:
+
+global_benchmark_framework.md
+
+==================================================
+SECTION 7
+LOCALIZATION ENGINE
+==================================================
+
+Support:
+
+Language
+
+Currency
+
+Region
+
+Country
+
+Assessment Localization
+
+Generate:
+
+localization_framework.md
+
+==================================================
+SECTION 8
+MULTI-TENANT GOVERNANCE
+==================================================
+
+Support:
+
+Platform Level
+
+Tenant Level
+
+Organization Level
+
+Department Level
+
+Role Level
+
+Generate:
+
+multi_tenant_governance.md
+
+==================================================
+SECTION 9
+GLOBAL EMPLOYER INTELLIGENCE
+==================================================
+
+Enable:
+
+Country Hiring Models
+
+Regional Hiring Models
+
+Global Readiness Models
+
+Generate:
+
+global_employer_intelligence.md
+
+==================================================
+SECTION 10
+GLOBAL CAREER INTELLIGENCE
+==================================================
+
+Support:
+
+Country Career Paths
+
+Regional Career Paths
+
+Global Career Mobility
+
+Generate:
+
+global_career_intelligence.md
+
+==================================================
+SECTION 11
+SUPER ADMIN UI
+==================================================
+
+Create:
+
+Global Dashboard
+
+Region Dashboard
+
+Country Dashboard
+
+Localization Dashboard
+
+Benchmark Dashboard
+
+Generate:
+
+super_admin_global_ui.md
+
+==================================================
+SECTION 12
+EMPLOYER UI
+==================================================
+
+Create:
+
+Country Hiring Dashboard
+
+Regional Benchmark Dashboard
+
+Global Talent Dashboard
+
+Generate:
+
+employer_global_ui.md
+
+==================================================
+SECTION 13
+CANDIDATE UI
+==================================================
+
+Show:
+
+Global Readiness
+
+Country Readiness
+
+Regional Readiness
+
+Mobility Readiness
+
+Generate:
+
+candidate_global_ui.md
+
+==================================================
+SECTION 14
+CERTIFICATION
+==================================================
+
+Validate:
+
+Global Ready
+
+Multi Tenant Ready
+
+Localized
+
+Benchmark Aware
+
+Region Aware
+
+Country Aware
+
+Enterprise Ready
+
+Generate:
+
+global_certification.md
+
+==================================================
+FOUNDER REPORT
+==================================================
+
+Answer:
+
+1. Is MetryxOne globally deployable?
+
+2. What countries are supported?
+
+3. What regional intelligence exists?
+
+4. What localization exists?
+
+5. What benchmarks exist?
+
+6. What employer capabilities exist?
+
+7. What candidate capabilities exist?
+
+8. What maturity gain was achieved?
+
+9. What gaps remain?
+
+10. Final PASS / FAIL verdict?
+
+==================================================
+IMPLEMENTATION RULES
+==================================================
+
+Additive
+
+Reversible
+
+Flag Gated
+
+Backward Compatible
+
+Production Safe
+
+No framework replacement
+
+No destructive changes
+
+==================================================
+SUCCESS CRITERIA
+==================================================
+
+Platform supports multiple regions.
+
+Platform supports multiple countries.
+
+Platform supports tenant isolation.
+
+Platform supports localized intelligence.
+
+Platform supports global benchmarking.
+
+Global Certification = PASS.
+
+Evidence-backed results only.

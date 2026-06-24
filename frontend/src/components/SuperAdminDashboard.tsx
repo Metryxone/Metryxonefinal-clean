@@ -157,6 +157,7 @@ const OnetCrosswalkGovernancePanel = lazy(() => import('./superadmin/OnetCrosswa
 const CompetencyCoverageMatricesPanel = lazy(() => import('./superadmin/CompetencyCoverageMatricesPanel'));
 const GlobalRegionContentPanel = lazy(() => import('./superadmin/GlobalRegionContentPanel'));
 const GlobalIntelligencePanel = lazy(() => import('./superadmin/GlobalIntelligencePanel'));
+const EnterpriseWorkforceConsolePanel = lazy(() => import('./superadmin/EnterpriseWorkforceConsolePanel'));
 const DepartmentsPanel = lazy(() => import('./superadmin/DepartmentsPanel'));
 const RolesPanel = lazy(() => import('./superadmin/RolesPanel'));
 const RoleFamiliesPanel = lazy(() => import('./superadmin/RoleFamiliesPanel'));
@@ -337,6 +338,17 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
     queryKey: ['/api/global-intel/enabled', 'enabled'],
     queryFn: async () => {
       const res = await fetch('/api/global-intel/enabled', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // ── Enterprise Workforce Console (MX-77X) flag probe (file-registry flag enterpriseWorkforceConsole).
+  //    Flag OFF → _meta/status returns 503 → the tab is omitted entirely (byte-identical UI). ──
+  const { data: enterpriseWorkforceEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/enterprise-workforce/_meta/status', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/enterprise-workforce/_meta/status', { credentials: 'include' });
       return res.ok;
     },
     enabled: isAuthenticated,
@@ -938,6 +950,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       ...(competencyCoverageMatricesEnabled ? [{ id: 'competency-coverage-matrices', label: 'Competency Coverage Matrices', icon: Grid3x3, node: <CompetencyCoverageMatricesPanel /> }] : []),
                       ...(globalCompetencyEnabled ? [{ id: 'global-region-content', label: 'Global Region Content', icon: Globe, node: <GlobalRegionContentPanel /> }] : []),
                       ...(globalIntelEnabled ? [{ id: 'global-intelligence', label: 'Global Intelligence', icon: Globe, node: <GlobalIntelligencePanel /> }] : []),
+                      ...(enterpriseWorkforceEnabled ? [{ id: 'enterprise-workforce-console', label: 'Enterprise Workforce Console', icon: Building2, node: <EnterpriseWorkforceConsolePanel /> }] : []),
                       { id: 'ont-career-tracks',        label: 'Career Tracks',            icon: Map,           node: <CareerTracksPanel /> },
                       { id: 'ont-competency-levels',    label: 'Competency Levels',        icon: BarChart2,     node: <CompetencyLevelsPanel /> },
                       { id: 'ont-indicators',           label: 'Indicators',               icon: Target,        node: <IndicatorsPanel /> },
@@ -1294,6 +1307,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               {activeTab === 'competency-coverage-matrices' && <div className="h-full overflow-auto"><CompetencyCoverageMatricesPanel /></div>}
               {activeTab === 'global-region-content' && <div className="h-full overflow-auto"><GlobalRegionContentPanel /></div>}
               {activeTab === 'global-intelligence'  && <div className="h-full overflow-auto"><GlobalIntelligencePanel /></div>}
+              {activeTab === 'enterprise-workforce-console' && enterpriseWorkforceEnabled && <div className="h-full overflow-auto"><EnterpriseWorkforceConsolePanel /></div>}
               {activeTab === 'ont-functions'        && <div className="h-full overflow-auto"><FunctionsPanel /></div>}
               {activeTab === 'ont-departments'      && <div className="h-full overflow-auto"><DepartmentsPanel /></div>}
               {activeTab === 'ont-roles'            && <div className="h-full overflow-auto"><RolesPanel /></div>}

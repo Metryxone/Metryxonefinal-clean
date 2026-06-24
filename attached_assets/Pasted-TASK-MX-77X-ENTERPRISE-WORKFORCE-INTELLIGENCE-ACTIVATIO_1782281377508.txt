@@ -1,0 +1,493 @@
+TASK: MX-77X-ENTERPRISE-WORKFORCE-INTELLIGENCE-ACTIVATION
+
+OBJECTIVE
+
+Activate the dormant Workforce Intelligence, Talent Intelligence Graph (TIG),
+Succession Intelligence, Workforce Planning, Organizational Capability Intelligence,
+and Enterprise Readiness architecture.
+
+Do NOT rebuild.
+
+Do NOT replace:
+
+Role DNA
+
+Competency Framework
+
+Adaptive Assessment
+
+Employer Intelligence
+
+Career Builder
+
+Validation Loop
+
+Global Intelligence
+
+Activate and connect existing enterprise intelligence assets.
+
+==================================================
+SECTION 1
+CURRENT STATE AUDIT
+==================================================
+
+Audit:
+
+TIG
+
+M5 Workforce OS
+
+Workforce Intelligence
+
+Succession Planning
+
+Capability Intelligence
+
+Skill Gap Intelligence
+
+Workforce Planning
+
+Organization Readiness
+
+Benchmark Intelligence
+
+Generate:
+
+enterprise_current_state.md
+
+Identify:
+
+Working Components
+
+Disconnected Components
+
+Unused Intelligence
+
+Missing Links
+
+==================================================
+SECTION 2
+TALENT INTELLIGENCE GRAPH (TIG)
+==================================================
+
+Validate:
+
+Nodes
+
+Edges
+
+Competencies
+
+Roles
+
+Career Paths
+
+Benchmarks
+
+Readiness Signals
+
+Generate:
+
+tig_architecture.md
+
+Target Flow
+
+Employee
+↓
+Competencies
+↓
+Readiness
+↓
+Career Path
+↓
+Performance
+↓
+Potential
+↓
+TIG
+
+==================================================
+SECTION 3
+ORGANIZATIONAL CAPABILITY INTELLIGENCE
+==================================================
+
+Create:
+
+Organization
+↓
+Departments
+↓
+Roles
+↓
+Competencies
+↓
+Capability Index
+
+Generate:
+
+organizational_capability_framework.md
+
+Outputs
+
+Capability Score
+
+Risk Score
+
+Readiness Score
+
+Strength Areas
+
+Gap Areas
+
+==================================================
+SECTION 4
+WORKFORCE SKILL GAP INTELLIGENCE
+==================================================
+
+Calculate:
+
+Current Skills
+
+Required Skills
+
+Emerging Skills
+
+Future Skills
+
+Generate:
+
+workforce_gap_framework.md
+
+Outputs
+
+Critical Gaps
+
+Emerging Risks
+
+Capability Risks
+
+Future Readiness Risks
+
+==================================================
+SECTION 5
+SUCCESSION INTELLIGENCE
+==================================================
+
+Create:
+
+Role
+↓
+Successor Pool
+↓
+Readiness
+↓
+Risk
+↓
+Succession Index
+
+Generate:
+
+succession_framework.md
+
+Outputs
+
+Ready Now
+
+Ready in 6 Months
+
+Ready in 12 Months
+
+High Risk Roles
+
+Critical Roles
+
+==================================================
+SECTION 6
+INTERNAL MOBILITY INTELLIGENCE
+==================================================
+
+Create:
+
+Employee
+↓
+Current Role
+↓
+Target Role
+↓
+Readiness
+↓
+Transition Path
+
+Generate:
+
+internal_mobility_framework.md
+
+Outputs
+
+Mobility Score
+
+Transition Risk
+
+Learning Requirements
+
+Career Opportunities
+
+==================================================
+SECTION 7
+WORKFORCE PLANNING INTELLIGENCE
+==================================================
+
+Support:
+
+Demand Forecasting
+
+Supply Forecasting
+
+Skill Forecasting
+
+Role Forecasting
+
+Capability Forecasting
+
+Generate:
+
+workforce_planning_framework.md
+
+==================================================
+SECTION 8
+ORGANIZATION READINESS INDEX
+==================================================
+
+Create:
+
+Competency Readiness
+
+Leadership Readiness
+
+Capability Readiness
+
+Succession Readiness
+
+Future Readiness
+
+Generate:
+
+organization_readiness_framework.md
+
+Output:
+
+Enterprise Readiness Index
+
+==================================================
+SECTION 9
+PREDICTIVE WORKFORCE INTELLIGENCE
+==================================================
+
+Support:
+
+Attrition Prediction
+
+Promotion Prediction
+
+Capability Risk Prediction
+
+Leadership Readiness Prediction
+
+Succession Prediction
+
+Generate:
+
+predictive_workforce_framework.md
+
+IMPORTANT
+
+Separate:
+
+Prediction
+
+Confidence
+
+Evidence
+
+Coverage
+
+Do not fabricate accuracy.
+
+==================================================
+SECTION 10
+SUPER ADMIN UI
+==================================================
+
+Create:
+
+Enterprise Intelligence Dashboard
+
+Capability Dashboard
+
+Succession Dashboard
+
+Mobility Dashboard
+
+Workforce Planning Dashboard
+
+TIG Dashboard
+
+Generate:
+
+super_admin_workforce_ui.md
+
+==================================================
+SECTION 11
+EMPLOYER UI
+==================================================
+
+Create:
+
+Capability Dashboard
+
+Skill Gap Dashboard
+
+Succession Dashboard
+
+Mobility Dashboard
+
+Workforce Planning Dashboard
+
+Generate:
+
+employer_workforce_ui.md
+
+==================================================
+SECTION 12
+EMPLOYEE UI
+==================================================
+
+Provide:
+
+Career Mobility
+
+Readiness
+
+Successor Eligibility
+
+Growth Opportunities
+
+Future Skills
+
+Generate:
+
+employee_workforce_ui.md
+
+==================================================
+SECTION 13
+ENTERPRISE ANALYTICS
+==================================================
+
+Create:
+
+Capability Heatmaps
+
+Risk Heatmaps
+
+Mobility Heatmaps
+
+Succession Heatmaps
+
+Readiness Heatmaps
+
+Generate:
+
+enterprise_analytics_framework.md
+
+==================================================
+SECTION 14
+CERTIFICATION
+==================================================
+
+Validate:
+
+TIG Active
+
+Capability Intelligence Active
+
+Succession Active
+
+Mobility Active
+
+Workforce Planning Active
+
+Predictive Intelligence Active
+
+Enterprise Ready
+
+Generate:
+
+workforce_certification.md
+
+==================================================
+FOUNDER REPORT
+==================================================
+
+Answer:
+
+1. Is Workforce Intelligence activated?
+
+2. Is TIG operational?
+
+3. Is Succession Intelligence operational?
+
+4. Is Internal Mobility operational?
+
+5. Is Workforce Planning operational?
+
+6. What intelligence is now available?
+
+7. What changed for enterprises?
+
+8. What changed for employees?
+
+9. What maturity gain was achieved?
+
+10. What gaps remain?
+
+11. Final PASS / FAIL verdict?
+
+==================================================
+IMPLEMENTATION RULES
+==================================================
+
+Additive
+
+Reversible
+
+Flag Gated
+
+Backward Compatible
+
+Production Safe
+
+No destructive schema changes
+
+No framework replacement
+
+No architecture replacement
+
+==================================================
+SUCCESS CRITERIA
+==================================================
+
+TIG operational
+
+Succession operational
+
+Internal mobility operational
+
+Workforce planning operational
+
+Capability intelligence operational
+
+Enterprise readiness operational
+
+Workforce certification = PASS
+
+Evidence-backed results only.

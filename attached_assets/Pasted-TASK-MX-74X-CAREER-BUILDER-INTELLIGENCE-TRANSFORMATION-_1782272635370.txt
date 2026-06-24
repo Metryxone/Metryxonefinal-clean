@@ -1,0 +1,465 @@
+TASK: MX-74X-CAREER-BUILDER-INTELLIGENCE-TRANSFORMATION
+
+OBJECTIVE
+
+Transform Career Builder into a competency-driven, readiness-driven,
+Role-DNA-driven career intelligence platform.
+
+Do NOT rebuild.
+
+Do NOT replace Career Builder.
+
+Do NOT replace Role DNA.
+
+Do NOT replace Competency Framework.
+
+Do NOT replace Employability Index.
+
+Do NOT replace O*NET.
+
+Activate and connect existing intelligence assets.
+
+==================================================
+SECTION 1
+CURRENT STATE AUDIT
+==================================================
+
+Audit:
+
+Career Builder
+
+Career Graph
+
+Career Roles
+
+Career Paths
+
+Learning Paths
+
+Role DNA
+
+Competency Profiles
+
+Employability Index
+
+Readiness Engine
+
+Assessment Results
+
+Passport Integration
+
+Generate:
+
+career_builder_current_state.md
+
+Identify:
+
+Working Components
+
+Disconnected Components
+
+Unused Intelligence
+
+Missing Links
+
+==================================================
+SECTION 2
+CAREER INTELLIGENCE ARCHITECTURE
+==================================================
+
+Target Flow
+
+Candidate
+↓
+Assessment
+↓
+Competency Profile
+↓
+Readiness
+↓
+Employability Index
+↓
+Career Intelligence
+↓
+Career Path
+↓
+Learning Path
+↓
+Career Passport
+
+Generate:
+
+career_intelligence_architecture.md
+
+==================================================
+SECTION 3
+ROLE READINESS ENGINE
+==================================================
+
+For every role:
+
+Calculate:
+
+Current Readiness
+
+Target Readiness
+
+Gap
+
+Benchmark Position
+
+Role Fit
+
+Generate:
+
+role_readiness_framework.md
+
+Output:
+
+Ready Now
+
+Ready in 6 Months
+
+Ready in 12 Months
+
+Long-Term Target
+
+==================================================
+SECTION 4
+CAREER PATH ENGINE
+==================================================
+
+Create:
+
+Role
+↓
+Next Role
+↓
+Future Role
+↓
+Leadership Role
+
+Leverage:
+
+Role DNA
+
+Role Families
+
+O*NET Relationships
+
+Career Graph
+
+Generate:
+
+career_path_engine.md
+
+==================================================
+SECTION 5
+SKILL GAP INTELLIGENCE
+==================================================
+
+Identify:
+
+Competency Gaps
+
+Skill Gaps
+
+Behavioral Gaps
+
+Technical Gaps
+
+Functional Gaps
+
+Future Skill Gaps
+
+Generate:
+
+skill_gap_intelligence.md
+
+Output:
+
+Critical Gaps
+
+Moderate Gaps
+
+Future Gaps
+
+==================================================
+SECTION 6
+LEARNING INTELLIGENCE
+==================================================
+
+Generate learning recommendations using:
+
+Role DNA
+
+Readiness
+
+Skill Gaps
+
+Career Targets
+
+Output:
+
+Learning Plans
+
+Development Plans
+
+Certifications
+
+Projects
+
+Experiences
+
+Generate:
+
+learning_intelligence_framework.md
+
+==================================================
+SECTION 7
+CAREER PASSPORT INTEGRATION
+==================================================
+
+Validate:
+
+Assessment
+↓
+Competencies
+↓
+Readiness
+↓
+Career Progress
+↓
+Passport
+
+Generate:
+
+career_passport_integration.md
+
+Success Criteria
+
+Career Passport automatically reflects career intelligence.
+
+==================================================
+SECTION 8
+EMPLOYABILITY INTEGRATION
+==================================================
+
+Validate:
+
+Competencies
+↓
+Readiness
+↓
+Employability Index
+↓
+Career Builder
+
+Generate:
+
+employability_career_alignment.md
+
+==================================================
+SECTION 9
+SUPER ADMIN UI
+==================================================
+
+Create:
+
+Career Intelligence Dashboard
+
+Role Readiness Dashboard
+
+Career Path Dashboard
+
+Learning Intelligence Dashboard
+
+Gap Intelligence Dashboard
+
+Passport Dashboard
+
+Generate:
+
+super_admin_career_intelligence.md
+
+==================================================
+SECTION 10
+CANDIDATE UI
+==================================================
+
+Provide:
+
+Career Readiness
+
+Role Readiness
+
+Career Path
+
+Future Opportunities
+
+Learning Recommendations
+
+Gap Analysis
+
+Career Passport Progress
+
+Generate:
+
+candidate_career_experience.md
+
+==================================================
+SECTION 11
+EMPLOYER UI
+==================================================
+
+Allow employers to see:
+
+Role Readiness
+
+Career Potential
+
+Growth Potential
+
+Leadership Potential
+
+Future Role Fit
+
+Generate:
+
+employer_career_intelligence.md
+
+==================================================
+SECTION 12
+PREDICTIVE CAREER INTELLIGENCE
+==================================================
+
+Generate:
+
+Probability of Success
+
+Probability of Promotion
+
+Probability of Role Readiness
+
+Probability of Leadership Readiness
+
+Probability of Career Transition
+
+Generate:
+
+predictive_career_intelligence.md
+
+IMPORTANT
+
+Do not fabricate accuracy.
+
+Use confidence scores.
+
+Separate:
+
+Coverage
+
+Confidence
+
+Prediction
+
+Evidence
+
+==================================================
+SECTION 13
+CERTIFICATION
+==================================================
+
+Validate:
+
+Role DNA Driven
+
+Competency Driven
+
+Assessment Driven
+
+Readiness Driven
+
+Employability Driven
+
+Career Driven
+
+Passport Integrated
+
+Enterprise Ready
+
+Generate:
+
+career_builder_certification.md
+
+==================================================
+FOUNDER REPORT
+==================================================
+
+Answer:
+
+1. Is Career Builder fully activated?
+
+2. What changed technically?
+
+3. What changed for candidates?
+
+4. What changed for employers?
+
+5. What changed for Career Passport?
+
+6. What changed for Employability Index?
+
+7. What intelligence is now available?
+
+8. What gaps remain?
+
+9. What maturity improvement was achieved?
+
+10. Final PASS / FAIL verdict?
+
+==================================================
+IMPLEMENTATION RULES
+==================================================
+
+Additive
+
+Reversible
+
+Flag Gated
+
+Backward Compatible
+
+Production Safe
+
+No schema destruction.
+
+No framework replacement.
+
+No Role DNA replacement.
+
+No O*NET replacement.
+
+No Employability Index replacement.
+
+Only activate and connect existing architecture.
+
+==================================================
+SUCCESS CRITERIA
+==================================================
+
+Career Builder becomes competency-driven.
+
+Career Builder becomes readiness-driven.
+
+Career Builder becomes Role-DNA-driven.
+
+Career Builder integrates with Employability Index.
+
+Career Builder integrates with Career Passport.
+
+Career Builder provides actionable career intelligence.
+
+Certification = PASS.
+
+Evidence-backed results only.

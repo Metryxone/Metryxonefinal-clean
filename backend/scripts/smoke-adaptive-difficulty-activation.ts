@@ -79,8 +79,8 @@ async function main() {
   });
   check('C7. single-band selection no-op (ordering preserved)', noOpHolds);
   check('C8. matcher discriminates on variety',
-    difficultyAffinityBonus('advanced', 4) > difficultyAffinityBonus('medium', 4) &&
-    difficultyAffinityBonus('easy', 4) === 0);
+    difficultyAffinityBonus('advanced', 3) > difficultyAffinityBonus('intermediate', 3) &&
+    difficultyAffinityBonus('foundational', 3) === 0);
   check('C9. unknown band → 0 (no penalty)', difficultyAffinityBonus('xyz', 3) === 0);
 
   /* report */

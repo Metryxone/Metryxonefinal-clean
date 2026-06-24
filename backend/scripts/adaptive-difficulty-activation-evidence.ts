@@ -121,38 +121,49 @@ async function main() {
   lines.push('### Honest notes');
   for (const n of plan.honest_notes) lines.push(`- ${n}`);
   lines.push('');
-  // The honest finding: on the all-medium live bank, served difficulty cannot shift.
+  // After activation the served 7-domain bank carries harder/easier variants, so
+  // served difficulty CAN now shift by level. This is the activation finding.
   checks.push(assert(
-    plan.bank.served_difficulty_can_shift === false,
-    `live bank is single-difficulty-band → served difficulty CANNOT shift by level (honest ceiling surfaced, not padded)`,
+    plan.bank.served_difficulty_can_shift === true,
+    `served 7-domain bank now holds multiple difficulty ranks → served difficulty CAN shift by level (activation realised, not padded)`,
   ));
 
-  /* 5. difficulty-affinity bonus is a no-op on a single-band bank */
-  lines.push('## 4. Difficulty-affinity selection bias (no-op on single-band bank)');
+  /* 4. difficulty-affinity bonus shifts the served pool by level */
+  lines.push('## 4. Difficulty-affinity selection bias (live, on the varied served bank)');
   lines.push('');
-  // The SERVED band is what the 7 live domains actually hold — NOT the bank-wide
-  // distinct set (which includes disjoint genome comp_* rows never served by /select).
+  // The SERVED bands are what the 7 live domains actually hold.
   const servedBands = Array.from(new Set(
     plan.per_domain.flatMap((d) => d.by_band.map((b) => b.band)),
+  )).sort();
+  lines.push(`Served domains (COG/COM/LEA/EXE/ADP/TEC/EIQ) hold bands \`[${servedBands.join(', ')}]\` (unified 3-tier ladder). Each domain now carries a foundational + advanced variant alongside its intermediate stock, so the selection bonus has rows to discriminate between.`);
+  lines.push('');
+  // Show the bonus a junior (target foundational) vs a director (target advanced)
+  // applies to the SAME candidate rows — opposite ends of the ladder are favoured.
+  const juniorRank = resolveSeniorityProfile('junior').target_difficulty.rank;
+  const directorRank = resolveSeniorityProfile('director').target_difficulty.rank;
+  lines.push('| Served band | Junior bonus (target foundational) | Director bonus (target advanced) |');
+  lines.push('|---|---|---|');
+  for (const band of servedBands) {
+    lines.push(`| ${band} (rank ${difficultyRank(band)}) | ${difficultyAffinityBonus(band, juniorRank)} | ${difficultyAffinityBonus(band, directorRank)} |`);
+  }
+  lines.push('');
+  // A junior should favour the foundational variant; a director the advanced one —
+  // i.e. the SAME pool re-ranks oppositely by level. That is the activation proof.
+  const juniorFavoursEasier =
+    difficultyAffinityBonus('foundational', juniorRank) > difficultyAffinityBonus('advanced', juniorRank);
+  const directorFavoursHarder =
+    difficultyAffinityBonus('advanced', directorRank) > difficultyAffinityBonus('foundational', directorRank);
+  checks.push(assert(
+    juniorFavoursEasier && directorFavoursHarder,
+    `same served pool re-ranks oppositely by level (junior favours foundational, director favours advanced) — served difficulty genuinely shifts`,
   ));
-  const liveBand = servedBands[0] ?? 'medium';
-  const bonusJunior = difficultyAffinityBonus(liveBand, resolveSeniorityProfile('junior').target_difficulty.rank);
-  const bonusDirector = difficultyAffinityBonus(liveBand, resolveSeniorityProfile('director').target_difficulty.rank);
-  lines.push(`Served domains (COG/COM/LEA/EXE/ADP/TEC/EIQ) hold bands \`[${servedBands.join(', ')}]\`. The non-medium bands in the bank-wide set \`[${plan.bank.distinct_bands.join(', ')}]\` belong to disjoint genome \`comp_*\` codes that \`/select\` never serves.`);
-  lines.push('');
-  lines.push(`Every served row has band \`${liveBand}\` (rank ${difficultyRank(liveBand)}). The bonus for that band is uniform across all rows within a level, so it cannot re-order an all-\`${liveBand}\` pool.`);
-  lines.push('');
-  lines.push(`- junior target bonus on \`${liveBand}\`: ${bonusJunior}`);
-  lines.push(`- director target bonus on \`${liveBand}\`: ${bonusDirector}`);
-  lines.push('');
-  // Prove the matcher WORKS where variety exists (synthetic ranks), so the no-op is a
-  // bank-content ceiling, not a broken matcher.
-  const variedExact = difficultyAffinityBonus('advanced', 4);
-  const variedOne = difficultyAffinityBonus('medium', 4);
-  const variedFar = difficultyAffinityBonus('easy', 4);
+  // Prove the matcher still discriminates on the unified ladder.
+  const variedExact = difficultyAffinityBonus('advanced', 3);
+  const variedOne = difficultyAffinityBonus('intermediate', 3);
+  const variedFar = difficultyAffinityBonus('foundational', 3);
   checks.push(assert(
     variedExact > variedOne && variedOne >= variedFar && variedFar === 0,
-    `band matcher discriminates where variety exists (advanced→${variedExact} > medium→${variedOne} > easy→${variedFar} for target rank 4)`,
+    `band matcher discriminates on unified ladder (advanced→${variedExact} > intermediate→${variedOne} > foundational→${variedFar} for target rank 3)`,
   ));
   checks.push(assert(
     difficultyAffinityBonus('unknown_band', 3) === 0,

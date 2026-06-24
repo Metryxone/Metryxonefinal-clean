@@ -259,8 +259,14 @@ async function generateDrafts(pool: Pool, n: number, competencyCode?: string): P
     }
     delete body2.origin_id;
 
+    // Unified 3-tier ladder: bump one step harder (foundational→intermediate→advanced).
+    // Legacy easy/medium aliases are mapped through so older seeds still shift.
     const newDifficulty = variantKind === 'difficulty_shift'
-      ? (seed.difficulty_band === 'easy' ? 'medium' : seed.difficulty_band === 'medium' ? 'hard' : 'medium')
+      ? (seed.difficulty_band === 'foundational' || seed.difficulty_band === 'easy'
+          ? 'intermediate'
+          : seed.difficulty_band === 'intermediate' || seed.difficulty_band === 'medium'
+            ? 'advanced'
+            : 'advanced')
       : seed.difficulty_band;
     const newKey = `gen-${seed.template_key}-${Date.now().toString(36)}-${i}`;
     const ins = await pool.query<{ id: string }>(
@@ -284,6 +290,18 @@ export function registerCompetencyQuestionRoutes(
   requireAuth: RequestHandler,
   requireSuperAdmin: RequestHandler,
 ) {
+  // Activate adaptive difficulty data at boot (idempotent, self-contained so it
+  // survives a merge to prod): unify the difficulty vocabulary + author
+  // harder/easier variants, and populate runtime Role-DNA expected levels. This
+  // is data for the existing competency runtime; it is NOT gated by the adaptive
+  // flag (the flag only gates the engine's HTTP exposure / selection bias).
+  Promise.resolve()
+    .then(() => import('../services/adaptive-assessment-seed').then((m) => m.runAdaptiveAssessmentSeed(pool)))
+    .then((r) => {
+      if (r && !r.ok) console.error('[adaptive-assessment-seed] failed:', r.error);
+    })
+    .catch((e) => console.error('[adaptive-assessment-seed] error:', e?.message ?? e));
+
   // ---------- public selection endpoint ----------
   app.get('/api/competency/questions/select', requireAuth, async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -380,7 +398,7 @@ export function registerCompetencyQuestionRoutes(
         best_option: typeof b.best_option === 'number' ? b.best_option : 0,
         reverse_scored: b.reverse_scored === true,
         depth: b.depth || 'standard',
-        pool_key: b.pool_key || `${b.competency_code.toLowerCase()}_${b.question_type}_${b.difficulty_band || 'med'}`,
+        pool_key: b.pool_key || `${b.competency_code.toLowerCase()}_${b.question_type}_${b.difficulty_band || 'intermediate'}`,
         role_tags: b.role_tags || [],
         industry_tags: b.industry_tags || [],
         stage_tags: b.stage_tags || [],
@@ -403,7 +421,7 @@ export function registerCompetencyQuestionRoutes(
           (template_key, competency_code, question_type, template_body,
            difficulty_band, status, source, notes)
          VALUES ($1, $2, $3, $4::jsonb, $5, 'draft', 'manual', $6) RETURNING *`,
-        [tpl_key, b.competency_code, b.question_type, JSON.stringify(body), b.difficulty_band || 'medium', b.notes || null],
+        [tpl_key, b.competency_code, b.question_type, JSON.stringify(body), b.difficulty_band || 'intermediate', b.notes || null],
       );
       res.json({ ok: true, row: rs.rows[0] });
     } catch (e) { next(e); }

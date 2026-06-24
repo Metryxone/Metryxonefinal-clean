@@ -1,6 +1,6 @@
 # Adaptive Assessment Activation — Evidence
 
-Engine version: `1.0.0` · generated 2026-06-23T18:56:46.893Z
+Engine version: `1.0.0` · generated 2026-06-24T01:06:20.869Z
 
 > Read-only. Pure engine + `buildDifficultyPlan` over the live bank. No writes, no DDL.
 
@@ -8,11 +8,11 @@ Engine version: `1.0.0` · generated 2026-06-23T18:56:46.893Z
 
 | Level | Anchor | Target band | Target rank | Source |
 |---|---|---|---|---|
-| junior | 55 | intermediate | 2 | seniority_anchor |
-| mid | 65 | medium | 3 | seniority_anchor |
-| senior | 75 | advanced | 4 | seniority_anchor |
-| lead | 80 | advanced | 4 | seniority_anchor |
-| director | 85 | advanced | 4 | seniority_anchor |
+| junior | 55 | foundational | 1 | seniority_anchor |
+| mid | 65 | intermediate | 2 | seniority_anchor |
+| senior | 75 | advanced | 3 | seniority_anchor |
+| lead | 80 | advanced | 3 | seniority_anchor |
+| director | 85 | advanced | 3 | seniority_anchor |
 
 ## 2. Level-aware readiness bands
 
@@ -36,42 +36,44 @@ Same weighted score (80) classified per level:
 
 ## 3. Live bank coverage (honest ceiling)
 
-Bank table present: `true` · approved total: `20` · distinct bands: `[advanced, foundational, intermediate, medium]`
-Served difficulty can shift by level: **`false`** — bank holds a single difficulty band across served domains (medium-only) — honest coverage ceiling
+Bank table present: `true` · approved total: `34` · distinct bands: `[advanced, foundational, intermediate]`
+Served difficulty can shift by level: **`true`** — bank holds multiple difficulty bands across served domains
 
 | Domain | Approved | Bands (band×count) | Target available | Coverage gap |
 |---|---|---|---|---|
-| COG | 4 | medium×4 | no | ⚠️ yes |
-| COM | 3 | medium×3 | no | ⚠️ yes |
-| LEA | 3 | medium×3 | no | ⚠️ yes |
-| EXE | 2 | medium×2 | no | ⚠️ yes |
-| ADP | 3 | medium×3 | no | ⚠️ yes |
-| TEC | 2 | medium×2 | no | ⚠️ yes |
-| EIQ | 3 | medium×3 | no | ⚠️ yes |
+| COG | 6 | foundational×1, intermediate×4, advanced×1 | yes | no |
+| COM | 5 | foundational×1, intermediate×3, advanced×1 | yes | no |
+| LEA | 5 | foundational×1, intermediate×3, advanced×1 | yes | no |
+| EXE | 4 | foundational×1, intermediate×2, advanced×1 | yes | no |
+| ADP | 5 | foundational×1, intermediate×3, advanced×1 | yes | no |
+| TEC | 4 | foundational×1, intermediate×2, advanced×1 | yes | no |
+| EIQ | 5 | foundational×1, intermediate×3, advanced×1 | yes | no |
 
 ### Honest notes
 - Role-DNA anchor not used (no role supplied) — falling back to career-stage anchor.
-- Live 7-domain bank holds a single difficulty rank — SERVED difficulty cannot shift by role level. Target difficulty + readiness/scoring thresholds DO shift; bank content is the ceiling.
+- Live 7-domain bank holds 3 difficulty ranks [1,2,3] — SERVED difficulty shifts by role level (harder/easier variants are selected via the affinity bonus).
 
-## 4. Difficulty-affinity selection bias (no-op on single-band bank)
+## 4. Difficulty-affinity selection bias (live, on the varied served bank)
 
-Served domains (COG/COM/LEA/EXE/ADP/TEC/EIQ) hold bands `[medium]`. The non-medium bands in the bank-wide set `[advanced, foundational, intermediate, medium]` belong to disjoint genome `comp_*` codes that `/select` never serves.
+Served domains (COG/COM/LEA/EXE/ADP/TEC/EIQ) hold bands `[advanced, foundational, intermediate]` (unified 3-tier ladder). Each domain now carries a foundational + advanced variant alongside its intermediate stock, so the selection bonus has rows to discriminate between.
 
-Every served row has band `medium` (rank 3). The bonus for that band is uniform across all rows within a level, so it cannot re-order an all-`medium` pool.
-
-- junior target bonus on `medium`: 0.3
-- director target bonus on `medium`: 0.3
+| Served band | Junior bonus (target foundational) | Director bonus (target advanced) |
+|---|---|---|
+| advanced (rank 3) | 0 | 0.6 |
+| foundational (rank 1) | 0.6 | 0 |
+| intermediate (rank 2) | 0.3 | 0.3 |
 
 ## Checks
 
 - ✅ PASS — proficiency anchor monotonic non-decreasing by level [55, 65, 75, 80, 85]
-- ✅ PASS — target difficulty rank monotonic non-decreasing by level [2, 3, 4, 4, 4]
+- ✅ PASS — target difficulty rank monotonic non-decreasing by level [1, 2, 3, 3, 3]
 - ✅ PASS — expected_level override wins over stage anchor + stamps provenance (junior+90 → anchor 90, source role_dna_expected_level)
 - ✅ PASS — senior level-aware bands == legacy fixed ladder (flag-ON senior is byte-identical to flag-OFF)
 - ✅ PASS — ready_min monotonic non-decreasing by level [65, 75, 85, 90, 95]
 - ✅ PASS — score 80 classifies differently for junior (Ready) vs director (Developing) — level-awareness is real
-- ✅ PASS — live bank is single-difficulty-band → served difficulty CANNOT shift by level (honest ceiling surfaced, not padded)
-- ✅ PASS — band matcher discriminates where variety exists (advanced→0.6 > medium→0.3 > easy→0 for target rank 4)
+- ✅ PASS — served 7-domain bank now holds multiple difficulty ranks → served difficulty CAN shift by level (activation realised, not padded)
+- ✅ PASS — same served pool re-ranks oppositely by level (junior favours foundational, director favours advanced) — served difficulty genuinely shifts
+- ✅ PASS — band matcher discriminates on unified ladder (advanced→0.6 > intermediate→0.3 > foundational→0 for target rank 3)
 - ✅ PASS — unknown band → 0 bonus (never penalises an untagged row below a tagged one)
 
-**9/9 checks passed.**
+**10/10 checks passed.**

@@ -28,7 +28,10 @@ import type { Pool } from 'pg';
 export const ADAPTIVE_DIFFICULTY_ACTIVATION_VERSION = '1.0.0';
 
 export type SeniorityBand = 'junior' | 'mid' | 'senior' | 'lead' | 'director';
-export type DifficultyBand = 'easy' | 'medium' | 'hard';
+/** ONE unified 3-tier difficulty ladder across the whole bank. Legacy
+ *  easy/medium/hard rows are migrated to this vocabulary by the adaptive
+ *  assessment seed; the aliases below keep any straggler coherent. */
+export type DifficultyBand = 'foundational' | 'intermediate' | 'advanced';
 
 /** Per-stage proficiency anchor — what a competent person at this stage typically
  *  scores. MUST stay in lockstep with STAGE_ANCHOR in competency-assessment-runtime.ts
@@ -47,35 +50,34 @@ const STAGE_ALIASES: Record<string, SeniorityBand> = {
   director: 'director', head: 'director', vp: 'director', executive: 'director', exec: 'director',
 };
 
-/** Canonical rank across BOTH difficulty vocabularies the bank uses:
- *  the 7-domain bank emits {easy, medium, hard}; the genome `comp_*` bank emits
- *  {foundational, intermediate, medium, advanced}. We collapse to a 1–4 ladder so
- *  "closeness to target" is comparable regardless of which vocabulary a row uses. */
+/** Canonical rank over the UNIFIED 3-tier ladder (foundational/intermediate/
+ *  advanced). Legacy vocabularies are aliased so any un-migrated straggler still
+ *  ranks coherently: easy→foundational(1), medium→intermediate(2),
+ *  hard→advanced(3). Unknown → 0 (never matches a target). */
 export function difficultyRank(band: string | null | undefined): number {
   switch (String(band ?? '').trim().toLowerCase()) {
     case 'foundational':
     case 'easy':
       return 1;
     case 'intermediate':
-      return 2;
     case 'medium':
-      return 3;
+      return 2;
     case 'advanced':
     case 'hard':
-      return 4;
+      return 3;
     default:
       return 0; // unknown → never matches a target (honest)
   }
 }
 
-/** Map a proficiency anchor (0–100) → target difficulty band + canonical rank.
- *  Monotonic non-decreasing by anchor: junior→intermediate, mid→medium, senior+→hard. */
+/** Map a proficiency anchor (0–100) → target difficulty band + canonical rank
+ *  on the unified 3-tier ladder. Monotonic non-decreasing by anchor:
+ *  junior(55)→foundational, mid(65)→intermediate, senior+(≥75)→advanced. */
 export function proficiencyToDifficulty(anchor: number): { band: DifficultyBand; rank: number; label: string } {
   const a = Math.max(0, Math.min(100, anchor));
-  if (a < 50) return { band: 'easy', rank: 1, label: 'foundational' };
-  if (a < 65) return { band: 'easy', rank: 2, label: 'intermediate' };
-  if (a < 75) return { band: 'medium', rank: 3, label: 'medium' };
-  return { band: 'hard', rank: 4, label: 'advanced' };
+  if (a < 60) return { band: 'foundational', rank: 1, label: 'foundational' };
+  if (a < 75) return { band: 'intermediate', rank: 2, label: 'intermediate' };
+  return { band: 'advanced', rank: 3, label: 'advanced' };
 }
 
 export function resolveSeniorityBand(stage: string | null | undefined): SeniorityBand {
@@ -202,19 +204,21 @@ export type RoleDnaAnchor = {
 
 /**
  * READ-ONLY lookup of the runtime Role-DNA expected proficiency for a role.
- * Chain: role (title OR id) → onto_roles → onto_dna_profiles (is_current) →
- * competency_runtime_weights → AVG(expected_level). Every table is to_regclass
- * probed; any missing table / no match / out-of-range value → anchor=null with a
- * reason (honest fallback to the stage anchor downstream — never fabricated).
+ * Chain: role (title OR id) → onto_roles → role_dna_profiles_v2 (is_active,
+ * UUID) → competency_runtime_weights (role_dna_id UUID) → AVG(expected_level).
+ * Every table is to_regclass probed; any missing table / no match / out-of-range
+ * value → anchor=null with a reason (honest fallback to the stage anchor
+ * downstream — never fabricated).
  *
- * Scale assumption: `expected_level` is treated as a 0–100 proficiency. Values
- * outside [0,100] are rejected (anchor=null) rather than silently coerced — when
- * real Role-DNA data lands, confirm the scale before trusting this path.
+ * Scale: `competency_runtime_weights.expected_level` is stored on a 0–100
+ * proficiency scale (the runtime generator/seed write it that way — the curated
+ * 1–5 `onto_role_weights.expected_level` is converted to 0–100 at seed time).
+ * Values outside [0,100] are rejected (anchor=null) rather than silently coerced.
  */
 export async function lookupRoleDnaAnchor(pool: Pool, role: string | null | undefined): Promise<RoleDnaAnchor> {
   const r = String(role ?? '').trim();
   if (!r) return { anchor: null, source_rows: 0, reason: 'no role supplied' };
-  for (const t of ['competency_runtime_weights', 'onto_dna_profiles', 'onto_roles']) {
+  for (const t of ['competency_runtime_weights', 'role_dna_profiles_v2', 'onto_roles']) {
     if (!(await tableExists(pool, t))) {
       return { anchor: null, source_rows: 0, reason: `${t} absent — Role-DNA anchor unmeasurable` };
     }
@@ -223,7 +227,7 @@ export async function lookupRoleDnaAnchor(pool: Pool, role: string | null | unde
     const q = await pool.query<{ avg_expected: string | null; n: string }>(
       `SELECT AVG(crw.expected_level)::numeric AS avg_expected, COUNT(*)::int AS n
          FROM competency_runtime_weights crw
-         JOIN onto_dna_profiles dp ON dp.id = crw.role_dna_id AND dp.is_current = true
+         JOIN role_dna_profiles_v2 dp ON dp.id = crw.role_dna_id AND dp.is_active = true
          JOIN onto_roles ro ON ro.id = dp.role_id
         WHERE crw.expected_level IS NOT NULL
           AND (lower(ro.title) = lower($1) OR lower(ro.id) = lower($1))`,
@@ -325,12 +329,18 @@ export async function buildDifficultyPlan(
   const distinctBands = Array.from(new Set(rows.map((r) => r.difficulty_band))).sort();
   const liveApprovedTotal = per_domain.reduce((a, b) => a + b.approved_total, 0);
   // The served difficulty can shift by level ONLY if the live bank holds >1 distinct
-  // rank across the 7 served domains. Today it is 100% medium → cannot shift.
+  // rank across the 7 served domains. After activation each domain carries a
+  // foundational + advanced variant alongside its intermediate stock → it can shift.
   const liveRanks = Array.from(new Set(
     per_domain.flatMap((d) => d.available_ranks),
   ));
   const served_difficulty_can_shift = liveRanks.length > 1;
-  if (!served_difficulty_can_shift) {
+  if (served_difficulty_can_shift) {
+    honest_notes.push(
+      `Live 7-domain bank holds ${liveRanks.length} difficulty ranks [${liveRanks.slice().sort().join(',')}] — ` +
+      'SERVED difficulty shifts by role level (harder/easier variants are selected via the affinity bonus).',
+    );
+  } else {
     honest_notes.push(
       'Live 7-domain bank holds a single difficulty rank — SERVED difficulty cannot shift by ' +
       'role level. Target difficulty + readiness/scoring thresholds DO shift; bank content is the ceiling.',
@@ -361,8 +371,9 @@ export async function buildDifficultyPlan(
  * Difficulty-affinity bonus for a single bank row, given a target rank. Pure,
  * additive scoring term layered ON TOP of the existing affinity score when the
  * flag is ON. Returns 0 when the row's band rank is unknown (never penalises an
- * untagged row below a tagged one). On an all-medium bank every row gets the
- * same bonus → selection order is unchanged (honest no-op).
+ * untagged row below a tagged one). On a single-band pool every row gets the
+ * same bonus → selection order is unchanged (honest no-op); on the activated
+ * multi-band bank the bonus favours the rows nearest the target rank.
  */
 export function difficultyAffinityBonus(rowBand: string | null | undefined, targetRank: number): number {
   const r = difficultyRank(rowBand);

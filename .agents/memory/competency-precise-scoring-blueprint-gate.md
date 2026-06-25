@@ -47,15 +47,22 @@ for a comp that is not a role requirement moves nothing.
 resolves through the LIVE bridge. The chain is
 `generateRoleDNA(jobTitle)` → `resolveBestOntRole` → `ont_roles` →
 `map_ont_onto_role` (needs **non-null `ont_role_id`**) → curated `onto_role` →
-`onto_role_weights`. As of Task #138 only THREE onto roles are bridge-reachable
-(map rows with non-null ont_role_id): `role_pm` (Product Manager / dna_pm_v1),
-`role_eng_manager` (Engineering Manager / dna_eng_manager_v1), `role_credit_analyst`
-(Credit Analyst / dna_credit_v1). `role_be_eng`/`role_sr_be_eng` have NULL
-ont_role_id → unreachable, so wiring their DNA cannot move the employer metric
-until the bridge is populated. **Why:** confirmed by querying map_ont_onto_role +
+`onto_role_weights`. The bridge-reachable set has GROWN over tasks: base 3
+(`role_pm`, `role_eng_manager`, `role_credit_analyst`); Task #145 added the
+Backend pair (`role_be_eng`/`role_sr_be_eng` via dedicated ROLE_BE_ENG/
+ROLE_SR_BE_ENG); Task #151 completed the engineering family (`role_qa_eng`,
+`role_devops_eng`, `role_fe_eng`, `role_fullstack_eng` via NEW dedicated
+ROLE_QA_ENG/ROLE_DEVOPS_ENG/ROLE_FE_ENG/ROLE_FULLSTACK_ENG library roles +
+`role_software_eng`/`role_sr_software_eng` bridged to the PRE-EXISTING
+ROLE_SWE/ROLE_SR_SWE). **Why:** confirmed by querying map_ont_onto_role +
 proven e2e (each role's directMatchCount rose 0→N once its DNA+blueprint were
 wired). **How to apply:** before wiring, check the comp's target role is
 bridge-reachable; otherwise the data is correct but inert at match time.
+**Crucial:** merged task-agent data does NOT reach the live/prod DB (only code +
+DDL merge), so re-run the four seed scripts (`seed-task1NN-bridge`,
+`-competency-questions`, `-blueprint-wiring`, then `verify-task1NN-e2e`) in prod
+AFTER running `ontology-seed-run.ts` (which lazily ON CONFLICT-adds the new
+library roles). Task #151's roles needed no new routes → no Backend restart.
 
 ## Other gotchas hit
 - Generic TYPE-coded MX-101A drafts (competency_code TEC/EIQ/ADP/...) can be

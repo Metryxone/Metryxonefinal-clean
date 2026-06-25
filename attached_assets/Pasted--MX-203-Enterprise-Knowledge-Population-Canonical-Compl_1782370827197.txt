@@ -1,0 +1,192 @@
+# MX-203 — Enterprise Knowledge Population & Canonical Completion
+
+## OBJECTIVE
+
+Complete the remaining canonical enterprise knowledge so that every competency becomes fully operational using evidence-backed knowledge instead of rule-generated placeholders.
+
+This is a **knowledge population program**, not a software engineering project.
+
+Do not build new engines.
+
+Do not duplicate existing services.
+
+Reuse every governance workflow, approval workflow, versioning engine, audit engine, Question Factory, Role DNA engine, O*NET integration, Competency Framework and Verified Lifecycle already implemented.
+
+---
+
+# CURRENT VERIFIED STATE
+
+Verified Knowledge Coverage: 78.9%
+
+Remaining gaps are real knowledge gaps, not software gaps.
+
+Current factual coverage already exists for:
+
+* Competency Identity
+* Competency Definitions
+* Domains
+* Eligibility
+* Competency Types
+* O*NET Crosswalks
+* Benchmarks (where available)
+* Role DNA mappings
+* Function mappings
+* Department mappings
+* Industry mappings
+
+Do NOT recreate these.
+
+---
+
+# PHASE 1 — COMPLETE FACTUAL KNOWLEDGE
+
+Populate remaining factual knowledge only where authoritative sources exist.
+
+Examples:
+
+* additional O*NET mappings
+* ESCO mappings
+* NICE framework mappings
+* SFIA mappings
+* industry standards
+* certifications
+* regulatory frameworks
+* occupation mappings
+* competency relationships
+
+Every addition must include
+
+* provenance
+* version
+* source
+* confidence
+* audit trail
+
+Nothing without provenance becomes Verified.
+
+---
+
+# PHASE 2 — SME KNOWLEDGE AUTHORING
+
+Create SME draft content for:
+
+* Behavioural Indicators
+* Observable Behaviours
+* Learning Outcomes
+* Evidence Requirements
+* Proficiency Anchors
+* Coaching Guidance
+* Interview Guidance
+* Development Activities
+
+All content:
+
+* Draft only
+* needs_review=true
+* Version controlled
+* Fully auditable
+* Never automatically approved
+
+---
+
+# PHASE 3 — KNOWLEDGE VALIDATION
+
+Validate every competency supports:
+
+* Assessment
+* Adaptive Assessment
+* Role DNA
+* Career Builder
+* Employability Index
+* Employer Matching
+* Interview Intelligence
+* Career Passport
+* Report Factory
+
+Generate readiness scores for each consumer.
+
+---
+
+# PHASE 4 — SUPER ADMIN KNOWLEDGE CENTER
+
+Expand the Knowledge Center to include:
+
+* Verified Coverage
+* Draft Coverage
+* SME Backlog
+* Review Queue
+* Approval Velocity
+* Competency Health
+* Knowledge Completeness
+* Source Coverage
+* Provenance Quality
+* Certification Status
+
+Provide drill-down to every competency.
+
+---
+
+# PHASE 5 — FOUNDER DASHBOARD
+
+Founder must see:
+
+* Overall Knowledge Completion
+* Verified Completion
+* Draft Completion
+* Approval Completion
+* Remaining Backlog
+* Weakest Competencies
+* Highest Risk Areas
+* Knowledge Growth Trend
+* Estimated Completion
+
+---
+
+# PHASE 6 — ENTERPRISE RE-CERTIFICATION
+
+Re-certify the platform.
+
+Report separately:
+
+* Structural Readiness
+* Verified Knowledge
+* Draft Knowledge
+* Approved Knowledge
+* Activation
+* Adoption
+* Outcome Confidence
+
+Never combine these dimensions.
+
+Coverage ≠ Confidence.
+
+Draft ≠ Verified.
+
+Verified ≠ Approved.
+
+---
+
+# SUCCESS CRITERIA
+
+* 100% structural implementation maintained.
+* 100% governance maintained.
+* 100% auditability maintained.
+* 100% version control maintained.
+* 100% provenance maintained.
+* 100% reversible.
+* Zero duplicate knowledge.
+* Zero fabricated knowledge.
+* Zero automatic approvals.
+* Every competency traceable from source → draft → verified → approved.
+
+Generate:
+
+* Enterprise Knowledge Certification
+* Founder Executive Report
+* Knowledge Coverage Report
+* Competency Health Report
+* Super Admin Dashboard Report
+
+STOP FOR FOUNDER APPROVAL.
+
+NO DEPLOYMENT.

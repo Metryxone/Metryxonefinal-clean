@@ -1,13 +1,13 @@
 {
   "schema_version": "1.0",
-  "exported_at": "2026-06-25T14:58:51.940Z",
+  "exported_at": "2026-06-25T15:47:59.020Z",
   "report": {
-    "uuid": "5b9a41ad-9875-4b70-96fa-6e4ef7228a1d",
+    "uuid": "3141e4b6-c43e-4a59-9b83-5febf31e1913",
     "type": "competency_radar",
     "language": "en",
     "status": "complete",
-    "created_at": "2026-06-25T14:58:51.905Z",
-    "completed_at": "2026-06-25T14:58:51.905Z",
+    "created_at": "2026-06-25T15:47:58.983Z",
+    "completed_at": "2026-06-25T15:47:58.983Z",
     "narrative_texts": {
       "data_source": "competency-runtime.computeTypeProfile → onto_competency_profiles grouped by competency type.",
       "interpretation": "Competency-type classification is required to render the radar.",
@@ -16,7 +16,7 @@
       "confidence_level": "Derived from 100% measurement coverage.",
       "executive_summary": "Sarah Johnson's competencies are not yet classified by type.",
       "assessment_summary": "No competency-type means are available.",
-      "generated_timestamp": "This report was generated on 25 June 2026 at 14:58 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 15:47 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
       "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
     },
     "insights": [],
@@ -85,7 +85,7 @@
         },
         {
           "key": "generated_timestamp",
-          "text": "This report was generated on 25 June 2026 at 14:58 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "text": "This report was generated on 25 June 2026 at 15:47 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
           "type": "narrative",
           "title": "Generated Timestamp"
         }

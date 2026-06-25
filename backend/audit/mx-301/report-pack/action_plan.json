@@ -1,20 +1,20 @@
 {
   "schema_version": "1.0",
-  "exported_at": "2026-06-25T14:58:52.240Z",
+  "exported_at": "2026-06-25T15:47:59.373Z",
   "report": {
-    "uuid": "d28462f5-0513-4663-8b17-5ae6db2029a8",
+    "uuid": "b8b3c3ea-9379-4713-8fcd-10f2faa555e4",
     "type": "action_plan",
     "language": "en",
     "status": "complete",
-    "created_at": "2026-06-25T14:58:52.217Z",
-    "completed_at": "2026-06-25T14:58:52.217Z",
+    "created_at": "2026-06-25T15:47:59.350Z",
+    "completed_at": "2026-06-25T15:47:59.350Z",
     "narrative_texts": {
       "data_source": "career-development-engine.buildCareerDevelopment → development streams + tracking from gaps and requirements.",
       "interpretation": "The action plan groups development into themed streams, each addressing a cluster of related gaps with a now/next/later horizon. Tracking compares effort over time once a baseline exists.",
       "confidence_level": "Confidence: Provisional — depends on gap and requirement coverage.",
       "executive_summary": "Sarah Johnson's action plan organises development into 5 streams.",
-      "assessment_summary": "Streams — Behavioral Development (0 comps); Technical Development (0 comps); Functional Development (0 comps); Cognitive Development (1 comps, ~4w); Future Skills Development (0 comps).",
-      "generated_timestamp": "This report was generated on 25 June 2026 at 14:58 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "assessment_summary": "Streams — Behavioral Development (0 comps); Technical Development (0 comps); Functional Development (0 comps); Cognitive Development (0 comps); Future Skills Development (0 comps).",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 15:47 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
       "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
     },
     "insights": [
@@ -58,7 +58,7 @@
         },
         {
           "key": "assessment_summary",
-          "text": "Streams — Behavioral Development (0 comps); Technical Development (0 comps); Functional Development (0 comps); Cognitive Development (1 comps, ~4w); Future Skills Development (0 comps).",
+          "text": "Streams — Behavioral Development (0 comps); Technical Development (0 comps); Functional Development (0 comps); Cognitive Development (0 comps); Future Skills Development (0 comps).",
           "type": "narrative",
           "title": "Assessment Summary"
         },
@@ -80,7 +80,7 @@
                   0,
                   0,
                   0,
-                  1,
+                  0,
                   0
                 ]
               }
@@ -131,7 +131,7 @@
         },
         {
           "key": "generated_timestamp",
-          "text": "This report was generated on 25 June 2026 at 14:58 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "text": "This report was generated on 25 June 2026 at 15:47 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
           "type": "narrative",
           "title": "Generated Timestamp"
         }

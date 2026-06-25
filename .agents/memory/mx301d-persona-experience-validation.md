@@ -45,3 +45,46 @@ fingerprint, when both lenses are measurable, as an optional STRENGTHENER only.
 enabled → founder consoles + super-admin Platform Health stay 503. That is an honest
 `flag_gated` ceiling, NOT a failure. Read-only harness: only writes are the audit
 `.md` files; mask candidate email to `user_<sha256>` in every committed artifact.
+(When the flags CAN be set dev-only — `FF_PLATFORM_INTELLIGENCE_CONSOLE`,
+`FF_COMMAND_CENTER` — those consoles flip from `flag_gated` to live aggregates.)
+
+## Aggregate-reachability extraction honesty
+
+**Why:** founder/platform consoles return totals in TWO shapes the naive aggregator
+misses, so genuinely-reachable tabs read as `wired_no_data` (under-reporting, the
+mirror of fabrication): (1) pg `COUNT(*)` comes back as a **string** (`"3"`), and
+(2) consoles emit `{ key|label:'total_users', value|count:3, measurable:true }`
+metric-objects where the AGG token is in `key/label` and the magnitude in
+`value/count`. **How to apply:** coerce numeric strings AND recognise the
+metric-object shape, but EXCLUDE `measurable:false` slots so an abstained/null
+metric is never counted as present. A genuinely all-zero console (e.g. unified
+growth with institutions/employers=0) stays honest `wired_no_data` — never forced.
+
+## "Counted" needs a SUBJECT-specific substrate, not a global flag
+
+**Why:** classifying an aggregate tab as `aggregated` on `globalTotals>0 AND
+herOntoRowExists` over-asserts for a console whose true substrate differs (e.g.
+report-factory rollup) — it reads as endpoint-shopping. **How to apply:** give such
+a tab a parameterised (`$1=subjectId`) COUNT asserting HER OWN rows exist in THAT
+store (e.g. `rf_generated_reports WHERE user_id=$1`); it overrides the global flag,
+degrades honestly to `wired_no_data` when she has no rows. Also: a config/log
+console (`vx/reports/overview` = templates/sections/rules + `report_generation_log`)
+never reflects generated reports — repoint to the rollup that counts them
+(`/api/admin/rf/stats` → `generated_reports`).
+
+## Honest residual ceiling (do NOT fabricate to force 19/19)
+
+Employer Candidate Match / Competency Match need PRECISE per-competency (`comp_*`)
+levels; a demo assessment that carries only domain-proxy / EI data (the common case)
+has `evidence_mix.measured=0` against role requirements. That is a genuine ceiling —
+forcing a pass would fabricate per-competency evidence she never produced. Report it,
+keep verdict PARTIAL at 17/19.
+
+## behavioural-memory snapshot schema drift (unblocks candidate hub)
+
+`/api/career/behavioural-memory/snapshot` failed on two real drifts: a backfill
+referencing a phantom `captured_at` (add `created_at` + `COALESCE(created_at,NOW())`)
+and a legacy `snapshot_id NOT NULL` with no default (DROP NOT NULL). Both fixes are
+idempotent/additive. Separately, `career-intelligence-hub` `getEmail` must fall back
+to `req.user.username` — the career-seeker's email is stored there, not on a dedicated
+field — or self-session hub summary/trajectory/report return `auth_required`.

@@ -1,13 +1,13 @@
 {
   "schema_version": "1.0",
-  "exported_at": "2026-06-25T14:58:52.017Z",
+  "exported_at": "2026-06-25T15:47:59.111Z",
   "report": {
-    "uuid": "ff9d56eb-a361-4533-91e4-7365d2f272cf",
+    "uuid": "f9a99402-1370-4eab-98e6-9bf190bff90e",
     "type": "development_areas",
     "language": "en",
     "status": "complete",
-    "created_at": "2026-06-25T14:58:51.988Z",
-    "completed_at": "2026-06-25T14:58:51.988Z",
+    "created_at": "2026-06-25T15:47:59.082Z",
+    "completed_at": "2026-06-25T15:47:59.082Z",
     "narrative_texts": {
       "data_source": "ei-profile-engine.buildEiProfile → development_areas (dimensions below the Strong band, with headroom).",
       "interpretation": "No dimension falls below the Strong band — an honest measured result. Continued practice maintains these levels.",
@@ -15,7 +15,7 @@
       "confidence_level": "Confidence band: Moderate.",
       "executive_summary": "Sarah Johnson's measured dimensions are all at/above the Strong band — no development areas below threshold.",
       "assessment_summary": "All measured dimensions reach the Strong band; no below-threshold development areas.",
-      "generated_timestamp": "This report was generated on 25 June 2026 at 14:58 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 15:47 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
       "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
     },
     "insights": [],
@@ -107,7 +107,7 @@
         },
         {
           "key": "generated_timestamp",
-          "text": "This report was generated on 25 June 2026 at 14:58 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "text": "This report was generated on 25 June 2026 at 15:47 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
           "type": "narrative",
           "title": "Generated Timestamp"
         }

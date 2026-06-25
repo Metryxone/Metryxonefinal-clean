@@ -12,7 +12,16 @@ import type { Pool } from 'pg';
 import { computeUserForecasts } from '../services/wc3/forecast-intelligence';
 
 function getEmail(req: Request): string | null {
-  return (req as any).user?.email ?? (req as any).session?.email ?? (req.query?.email as string) ?? null;
+  // Career-seeker accounts store their email in `username` (login is by email),
+  // so fall back to it when the `email` field is absent — without it the self
+  // hub reports auth_required for an authenticated candidate.
+  return (
+    (req as any).user?.email ??
+    (req as any).user?.username ??
+    (req as any).session?.email ??
+    (req.query?.email as string) ??
+    null
+  );
 }
 function getUserId(req: Request): string | null {
   const u = (req as any).user;

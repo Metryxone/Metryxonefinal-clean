@@ -1,25 +1,25 @@
 {
   "schema_version": "1.0",
-  "exported_at": "2026-06-25T14:58:52.129Z",
+  "exported_at": "2026-06-25T15:47:59.260Z",
   "report": {
-    "uuid": "025f0456-4044-439f-a8ac-af3ae54fc493",
+    "uuid": "2f2897c2-b020-4951-b5e8-92bcff21fd67",
     "type": "learning_roadmap",
     "language": "en",
     "status": "complete",
-    "created_at": "2026-06-25T14:58:52.113Z",
-    "completed_at": "2026-06-25T14:58:52.113Z",
+    "created_at": "2026-06-25T15:47:59.248Z",
+    "completed_at": "2026-06-25T15:47:59.248Z",
     "narrative_texts": {
       "data_source": "career-roadmap-engine.buildCareerRoadmap → milestones + development plan from gaps and role requirements.",
       "interpretation": "The roadmap sequences development into time-boxed milestones ordered by priority band. Estimated effort is derived from the size of the competency gaps each milestone addresses.",
       "confidence_level": "Confidence: Provisional — sequence and effort estimates depend on requirement coverage.",
-      "executive_summary": "Sarah Johnson's roadmap has 3 milestones totalling ~4 weeks.",
-      "assessment_summary": "Milestones — Immediate Focus (1 comps, ~4w); Near-Term Development (0 comps); Longer-Term Growth (0 comps).",
-      "generated_timestamp": "This report was generated on 25 June 2026 at 14:58 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "executive_summary": "Sarah Johnson's roadmap has 3 milestones.",
+      "assessment_summary": "Milestones — Immediate Focus (0 comps); Near-Term Development (0 comps); Longer-Term Growth (0 comps).",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 15:47 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
       "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
     },
     "insights": [
       {
-        "text": "Immediate Focus: 1 competencies, ~4 weeks.",
+        "text": "Immediate Focus: 0 competencies.",
         "severity": "info"
       },
       {
@@ -35,7 +35,7 @@
       "axes": {
         "coverage": {
           "pct": null,
-          "note": "3 milestone(s), 1 development item(s)."
+          "note": "3 milestone(s), 0 development item(s)."
         },
         "activation": "Engine executed in-process and produced this artifact.",
         "confidence": {
@@ -46,7 +46,7 @@
       "sections": [
         {
           "key": "executive_summary",
-          "text": "Sarah Johnson's roadmap has 3 milestones totalling ~4 weeks.",
+          "text": "Sarah Johnson's roadmap has 3 milestones.",
           "type": "narrative",
           "title": "Executive Summary"
         },
@@ -58,7 +58,7 @@
         },
         {
           "key": "assessment_summary",
-          "text": "Milestones — Immediate Focus (1 comps, ~4w); Near-Term Development (0 comps); Longer-Term Growth (0 comps).",
+          "text": "Milestones — Immediate Focus (0 comps); Near-Term Development (0 comps); Longer-Term Growth (0 comps).",
           "type": "narrative",
           "title": "Assessment Summary"
         },
@@ -75,7 +75,7 @@
             "datasets": [
               {
                 "data": [
-                  4,
+                  0,
                   0,
                   0
                 ]
@@ -100,7 +100,7 @@
           "title": "Recommendations",
           "insights": [
             {
-              "text": "Immediate Focus: 1 competencies, ~4 weeks.",
+              "text": "Immediate Focus: 0 competencies.",
               "severity": "info"
             },
             {
@@ -127,7 +127,7 @@
         },
         {
           "key": "generated_timestamp",
-          "text": "This report was generated on 25 June 2026 at 14:58 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "text": "This report was generated on 25 June 2026 at 15:47 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
           "type": "narrative",
           "title": "Generated Timestamp"
         }

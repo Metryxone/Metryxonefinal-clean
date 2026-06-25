@@ -311,6 +311,51 @@ function inspectIndividual(json: any): PayloadVerdict {
         };
   }
 
+  // Career Intelligence Hub shapes (summary / trajectory / report). These read
+  // her career_memory_snapshots row directly; the keys (ei_score, market_readiness,
+  // competency_levels, sections) are NOT in the generic measured-key sets, so they
+  // must be recognised explicitly — but ONLY when the real snapshot-derived values
+  // are genuinely present (snapshot-backed), never on an empty/default payload.
+
+  // report shape: array of narrative sections built from her snapshot.
+  if (Array.isArray(d.sections) && d.sections.some((s: any) => s && s.type && s.content)) {
+    const live = d.sections.filter((s: any) => s && s.type && s.content);
+    signals.push(`sections[${live.length}]`, ...live.slice(0, 3).map((s: any) => String(s.type)));
+    return live.length > 0
+      ? { usable: true, reason: 'career report renders narrative sections built from her snapshot', signals }
+      : { usable: false, reason: 'report route wired but no snapshot-backed sections', signals };
+  }
+
+  // trajectory shape: ei_score + per-competency levels, gated on a real snapshot.
+  if (typeof d.ei_score === 'number' && d.competency_levels && typeof d.competency_levels === 'object') {
+    const levels = Object.keys(d.competency_levels).length;
+    const fromSnap = d.computed_from_snapshot != null;
+    const roles = Array.isArray(d.roles) ? d.roles.length : 0;
+    signals.push(`ei_score=${d.ei_score}`, `competency_levels[${levels}]`, `roles[${roles}]`, `from_snapshot=${fromSnap}`);
+    return fromSnap && d.ei_score > 0 && levels > 0
+      ? { usable: true, reason: 'trajectory computed from her snapshot + measured competency levels', signals }
+      : {
+          usable: false,
+          reason: 'trajectory route wired but not snapshot-backed (computed_from_snapshot null / no levels)',
+          signals,
+        };
+  }
+
+  // summary shape: snapshot-derived employability standing.
+  if (typeof d.ei_score === 'number' && (typeof d.snapshot_count === 'number' || 'last_snapshot_at' in d)) {
+    const cnt = Number(d.snapshot_count ?? 0);
+    const hasSnap = cnt > 0 || d.last_snapshot_at != null;
+    signals.push(
+      `ei_score=${d.ei_score}`,
+      `snapshot_count=${cnt}`,
+      `market_readiness=${d.market_readiness ?? 'null'}`,
+      `interview_readiness=${d.interview_readiness ?? 'null'}`,
+    );
+    return hasSnap && d.ei_score > 0
+      ? { usable: true, reason: 'summary surfaces her snapshot-derived employability standing', signals }
+      : { usable: false, reason: 'summary route wired but no snapshot exists for her yet', signals };
+  }
+
   // Generic composed engines (compute-score / readiness / intelligence / report).
   const overall = d.overall?.score ?? d.overall_ei ?? d.overall_score ?? d.overallScore ?? d.weighted_score ?? null;
   if (typeof overall === 'number' && Number.isFinite(overall) && overall !== 0) {
@@ -336,15 +381,38 @@ const AGG_TOKENS = [
   'total', 'count', 'sessions', 'assessments', 'users', 'candidates', 'completed',
   'profiles', 'runs', 'subjects', 'records', 'reports', 'active', 'enrolled', 'members',
 ];
+// pg COUNT(*) comes back as a STRING ('3'); accept numeric strings as well as
+// numbers so a real, nonzero platform total is never silently dropped.
+function aggNum(v: unknown): number | null {
+  if (typeof v === 'number') return Number.isFinite(v) ? v : null;
+  if (typeof v === 'string' && /^-?\d+(\.\d+)?$/.test(v.trim())) {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  }
+  return null;
+}
 function recursiveAggregate(node: any, depth = 0, seen = new Set<any>()): string[] {
   const out: string[] = [];
   if (node == null || depth > 6 || typeof node !== 'object') return out;
   if (seen.has(node)) return out;
   seen.add(node);
+  // Metric-object shape the platform / founder consoles use:
+  //   { key|label: 'total_users', value|count: 3, measurable: true }
+  // The token lives in key/label, the magnitude in value/count — recognise it
+  // explicitly (the value IS genuinely present, never fabricated). measurable:false
+  // (a null/abstained metric) is excluded so we never count an unmeasured slot.
+  if (!Array.isArray(node)) {
+    const label = String((node as any).key ?? (node as any).label ?? '').toLowerCase();
+    const mv = aggNum((node as any).value ?? (node as any).count);
+    if (label && mv != null && mv > 0 && (node as any).measurable !== false && AGG_TOKENS.some((t) => label.includes(t))) {
+      out.push(`${(node as any).key ?? (node as any).label}=${mv}`);
+    }
+  }
   for (const [k, v] of Object.entries(node)) {
     const lk = k.toLowerCase();
-    if (typeof v === 'number' && Number.isFinite(v) && v > 0 && AGG_TOKENS.some((t) => lk.includes(t))) {
-      out.push(`${k}=${v}`);
+    const n = aggNum(v);
+    if (n != null && n > 0 && AGG_TOKENS.some((t) => lk.includes(t))) {
+      out.push(`${k}=${n}`);
     }
     out.push(...recursiveAggregate(v, depth + 1, seen));
   }
@@ -398,6 +466,10 @@ interface TabSpec {
   kind: Kind;
   consumes: string;
   capture?: 'self-fp' | 'admin-fp'; // capture compute-score fingerprint
+  // Subject-specific substrate assertion for an aggregate tab: a parameterised ($1=subjectId)
+  // COUNT that proves HER OWN rows exist in the counted store (not merely that the platform has
+  // totals + she exists somewhere). When set, it OVERRIDES the global substrate flag for this tab.
+  substrateSql?: string;
 }
 interface TabResult extends TabSpec {
   unauthStatus: number;
@@ -450,6 +522,8 @@ interface ValidateCtx {
   selfCookie: string | null;
   substratePresent: boolean;
   fingerprints: { self?: number | null; admin?: number | null };
+  // per-tab subject-specific substrate results, keyed by spec.path (see TabSpec.substrateSql).
+  substrateOverrides: Record<string, boolean>;
 }
 async function validateTab(spec: TabSpec, ctx: ValidateCtx): Promise<TabResult> {
   const cookie = spec.scope === 'self' ? ctx.selfCookie : ctx.adminCookie;
@@ -477,7 +551,11 @@ async function validateTab(spec: TabSpec, ctx: ValidateCtx): Promise<TabResult> 
   }
   let p: PayloadVerdict = { usable: false, reason: '', signals: [] };
   if (authStatus === 200) {
-    p = spec.kind === 'aggregate' ? inspectAggregate(authedJson, ctx.substratePresent) : inspectIndividual(authedJson);
+    // For aggregate tabs, prefer a subject-specific substrate assertion (her OWN rows in the
+    // counted store) when the spec provides one — so "counted" means HER data is genuinely in
+    // the rollup, not merely that the platform has totals + she exists somewhere on the platform.
+    const sub = spec.substrateSql ? (ctx.substrateOverrides[spec.path] ?? false) : ctx.substratePresent;
+    p = spec.kind === 'aggregate' ? inspectAggregate(authedJson, sub) : inspectIndividual(authedJson);
   }
   const { verdict, detail } = classify(spec.kind, unauth.status, authStatus, p);
   return { ...spec, unauthStatus: unauth.status, authStatus, verdict, reason: detail, signals: p.signals };
@@ -626,7 +704,7 @@ async function main() {
     { persona: 'super-admin', tab: 'Analytics', method: 'GET', path: `/api/admin/mission-control`, scope: 'admin', kind: 'aggregate', consumes: 'platform analytics rollup' },
     { persona: 'super-admin', tab: 'Assessment', method: 'GET', path: `/api/career-intelligence/${sid}`, scope: 'admin', kind: 'individual', consumes: 'composed career-intelligence incl. her assessment (admin drill-down)', capture: 'admin-fp' },
     { persona: 'super-admin', tab: 'Competencies', method: 'GET', path: `/api/competency/engine-summary`, scope: 'admin', kind: 'aggregate', consumes: 'competency genome / scoring rollup' },
-    { persona: 'super-admin', tab: 'Reports', method: 'GET', path: `/api/admin/vx/reports/overview`, scope: 'admin', kind: 'aggregate', consumes: 'reports console rollup' },
+    { persona: 'super-admin', tab: 'Reports', method: 'GET', path: `/api/admin/rf/stats`, scope: 'admin', kind: 'aggregate', consumes: 'report factory rollup (counts generated_reports incl. hers)', substrateSql: 'SELECT COUNT(*)::int AS n FROM rf_generated_reports WHERE user_id = $1' },
     { persona: 'super-admin', tab: 'Platform Health', method: 'GET', path: `/api/admin/platform/console/overview`, scope: 'admin', kind: 'aggregate', consumes: 'platform health rollup' },
     // FOUNDER.
     { persona: 'founder', tab: 'Executive Dashboard', method: 'GET', path: `/api/admin/platform/console/executive`, scope: 'admin', kind: 'aggregate', consumes: 'executive rollup' },
@@ -641,7 +719,18 @@ async function main() {
     selfCookie: selfAuth.cookie,
     substratePresent,
     fingerprints: {},
+    substrateOverrides: {},
   };
+
+  // Pre-compute subject-specific substrate assertions (her OWN rows in the counted store) for
+  // any aggregate tab that declares one — read-only COUNTs, honest empty when she has no rows.
+  for (const spec of specs) {
+    if (!spec.substrateSql) continue;
+    ctx.substrateOverrides[spec.path] = await pool
+      .query(spec.substrateSql, [subjectId])
+      .then((r) => Number(r.rows[0]?.n ?? 0) > 0)
+      .catch(() => false);
+  }
 
   const results: TabResult[] = [];
   for (const spec of specs) {

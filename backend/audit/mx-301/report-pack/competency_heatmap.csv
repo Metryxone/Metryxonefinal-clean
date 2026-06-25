@@ -1,6 +1,6 @@
 ﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
-"c122ab6f-a85b-42bb-8534-a819297f1ed9","competency_heatmap","executive_summary","narrative","No individual competencies are measured for Sarah Johnson.",,,,,,
-"c122ab6f-a85b-42bb-8534-a819297f1ed9","competency_heatmap","candidate_information","narrative","Name: Sarah Johnson
+"9c07312d-42d8-4745-9e93-8d477788ff8c","competency_heatmap","executive_summary","narrative","No individual competencies are measured for Sarah Johnson.",,,,,,
+"9c07312d-42d8-4745-9e93-8d477788ff8c","competency_heatmap","candidate_information","narrative","Name: Sarah Johnson
 Reference (masked): user_4286d980cc6c
 Current role: Senior Product Manager
 Target role: Director of Product
@@ -10,22 +10,22 @@ Education: MBA
 Location: Bangalore, India
 
 Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
-"c122ab6f-a85b-42bb-8534-a819297f1ed9","competency_heatmap","assessment_summary","narrative","No per-competency scores are available.",,,,,,
-"c122ab6f-a85b-42bb-8534-a819297f1ed9","competency_heatmap","visualizations","narrative","Insufficient validated data to populate this section yet.
+"9c07312d-42d8-4745-9e93-8d477788ff8c","competency_heatmap","assessment_summary","narrative","No per-competency scores are available.",,,,,,
+"9c07312d-42d8-4745-9e93-8d477788ff8c","competency_heatmap","visualizations","narrative","Insufficient validated data to populate this section yet.
 
 Why: No measured per-competency scores were found.
 How to populate it: Score a competency-tagged assessment.
 What is needed: Measured competencies within type buckets.
 Expected output once available: A ranked heatmap of individual competency scores.",,,,,,
-"c122ab6f-a85b-42bb-8534-a819297f1ed9","competency_heatmap","interpretation","narrative","Per-competency scores are required to render the heatmap.",,,,,,
-"c122ab6f-a85b-42bb-8534-a819297f1ed9","competency_heatmap","recommendations","narrative","Insufficient validated data to populate this section yet.
+"9c07312d-42d8-4745-9e93-8d477788ff8c","competency_heatmap","interpretation","narrative","Per-competency scores are required to render the heatmap.",,,,,,
+"9c07312d-42d8-4745-9e93-8d477788ff8c","competency_heatmap","recommendations","narrative","Insufficient validated data to populate this section yet.
 
 Why: No measured per-competency scores were found.
 How to populate it: Score a competency-tagged assessment.
 What is needed: Measured competencies within type buckets.
 Expected output once available: A ranked heatmap of individual competency scores.",,,,,,
-"c122ab6f-a85b-42bb-8534-a819297f1ed9","competency_heatmap","confidence_level","narrative","Derived from 100% measurement coverage.",,,,,,
-"c122ab6f-a85b-42bb-8534-a819297f1ed9","competency_heatmap","data_source","narrative","competency-runtime.computeTypeProfile → per-competency measured scores.",,,,,,
-"c122ab6f-a85b-42bb-8534-a819297f1ed9","competency_heatmap","generated_timestamp","narrative","This report was generated on 25 June 2026 at 14:58 UTC.
+"9c07312d-42d8-4745-9e93-8d477788ff8c","competency_heatmap","confidence_level","narrative","Derived from 100% measurement coverage.",,,,,,
+"9c07312d-42d8-4745-9e93-8d477788ff8c","competency_heatmap","data_source","narrative","competency-runtime.computeTypeProfile → per-competency measured scores.",,,,,,
+"9c07312d-42d8-4745-9e93-8d477788ff8c","competency_heatmap","generated_timestamp","narrative","This report was generated on 25 June 2026 at 15:47 UTC.
 
 Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

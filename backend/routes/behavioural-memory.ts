@@ -82,10 +82,20 @@ function ensureBehaviouralMemorySchema(pool: Pool): Promise<void> {
     await pool.query(`ALTER TABLE career_memory_snapshots ADD COLUMN IF NOT EXISTS outcomes JSONB DEFAULT '[]'`);
     await pool.query(`ALTER TABLE career_memory_snapshots ADD COLUMN IF NOT EXISTS brain JSONB DEFAULT '{}'`);
 
-    // ── 4. Backfill snapshot_at from captured_at for any pre-existing rows ───
+    // ── 3b. Relax a legacy NOT-NULL the Phase-5 writer does not populate ─────
+    //    Older installs created `snapshot_id` NOT NULL (no default). The legacy
+    //    Phase-3 writer still supplies it; the Phase-5 writer omits it, so drop
+    //    the constraint to let both coexist (additive, never destructive).
+    await pool.query(`ALTER TABLE career_memory_snapshots ALTER COLUMN snapshot_id DROP NOT NULL`).catch(() => {});
+
+    // ── 4. Backfill snapshot_at for any pre-existing rows ───────────────────
+    //    Legacy installs carry `created_at` (NOT `captured_at`); guarantee the
+    //    column exists, then COALESCE only over columns we know are present so
+    //    this migration is drift-safe and never throws on older schemas.
+    await pool.query(`ALTER TABLE career_memory_snapshots ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW()`);
     await pool.query(`
       UPDATE career_memory_snapshots
-         SET snapshot_at = COALESCE(captured_at, created_at, NOW())
+         SET snapshot_at = COALESCE(created_at, NOW())
        WHERE snapshot_at IS NULL`);
 
     // ── 5. Index on snapshot_at (must come after column is guaranteed present) ─

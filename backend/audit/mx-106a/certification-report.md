@@ -59,9 +59,9 @@ null ≠ 0; unmeasurable is reported, never fabricated.
 | Competency PDF | competency | pdf | default | ✓ | 2965 |
 | Career PDF | career | pdf | default | ✓ | 3145 |
 | Passport PDF | passport | pdf | default | ✓ | 3203 |
-| Employability PDF | employability | pdf | ad-hoc (no default template) | ✓ | 2951 |
+| Employability PDF | employability | pdf | default | ✓ | 3423 |
 | Competency JSON | competency | json | default | ✓ | 6352 |
-| Employability JSON | employability | json | default | ✓ | 8239 |
+| Employability JSON | employability | json | default | ✓ | 8316 |
 | Career CSV | career | csv | default | ✓ | 660 |
 | Passport CSV | passport | csv | default | ✓ | 1412 |
 

@@ -221,6 +221,18 @@ export async function ensureReportFactorySchema(pool: Pool): Promise<void> {
   try {
     await pool.query(DDL);
     await seedDefaults(pool);
+    // Idempotent backfill: any already-seeded Employability template whose headline
+    // gauge still points at the career-readiness viz must be re-pointed at the
+    // dedicated EI gauge so the lead chart reflects the actual Employability Index.
+    await pool.query(
+      `UPDATE rf_template_sections s
+          SET config = jsonb_set(s.config, '{viz_key}', '"employability_gauge"')
+         FROM rf_templates t
+        WHERE s.template_id = t.id
+          AND t.report_type = 'employability'
+          AND s.section_key = 'ei_gauge'
+          AND s.config->>'viz_key' = 'readiness_gauge'`,
+    ).catch((e) => console.error('[ReportFactory] ei_gauge backfill skipped:', e));
     schemaReady = true;
   } catch (e) {
     console.error('[ReportFactory] schema init error:', e);
@@ -487,6 +499,14 @@ async function seedVisualizationConfigs(pool: Pool): Promise<void> {
       report_types: ['career', 'employability'],
     },
     {
+      key: 'employability_gauge', title: 'Employability Index Gauge',
+      chart_type: 'gauge', data_source: 'employability',
+      data_binding: { value_field: 'ei_score', min: 0, max: 100 },
+      style_config: { thresholds: [{ value: 40, color: '#ef4444' }, { value: 70, color: '#f59e0b' }, { value: 100, color: '#10b981' }] },
+      dimensions: ['ei_score'],
+      report_types: ['employability'],
+    },
+    {
       key: 'domain_bar', title: 'Domain Score Bar Chart',
       chart_type: 'bar', data_source: 'capadex',
       data_binding: { labels_field: 'domain_names', values_field: 'domain_scores', orientation: 'horizontal' },
@@ -651,7 +671,7 @@ async function seedDefaultTemplates(pool: Pool): Promise<void> {
       sections: [
         { key: 'header', type: 'header', title: 'Report Header', order: 0, required: true },
         { key: 'intro', type: 'narrative', title: 'Introduction', order: 1, config: { block_key: 'report_intro_employability' }, required: true },
-        { key: 'ei_gauge', type: 'chart', title: 'Employability Index', order: 2, config: { viz_key: 'readiness_gauge' }, required: true },
+        { key: 'ei_gauge', type: 'chart', title: 'Employability Index', order: 2, config: { viz_key: 'employability_gauge' }, required: true },
         { key: 'trend', type: 'chart', title: 'Score Trend', order: 3, config: { viz_key: 'trend_line' }, required: false },
         { key: 'benchmark', type: 'benchmark', title: 'Peer Comparison', order: 4, config: { benchmark_key: 'peer_career_readiness' }, required: false },
         { key: 'summary', type: 'narrative', title: 'Readiness Summary', order: 5, config: { block_key: 'readiness_summary' }, required: true },

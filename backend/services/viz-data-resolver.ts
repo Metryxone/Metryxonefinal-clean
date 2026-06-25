@@ -131,6 +131,24 @@ async function resolveCareer(pool: Pool, binding: Record<string, unknown>, param
   };
 }
 
+// employability: the Employability Index (EI) score for a headline gauge.
+// Reads the EI value straight from the report's data snapshot so the gauge ALWAYS
+// matches the intro narrative (both consume the same {{ei_score}}). No fabrication:
+// an absent / non-numeric ei_score yields an empty dataset (gauge has no value).
+function resolveEmployability(binding: Record<string, unknown>, params: VizResolveParams): ResolvedChartData {
+  const chartType = String(binding.chart_type ?? 'gauge');
+  const valField  = String(binding.value_field ?? 'ei_score');
+  const snap = params.reportDataSnapshot ?? {};
+  const raw = snap[valField];
+  const num = raw == null || raw === '' ? null : Number(raw);
+  const value = num != null && Number.isFinite(num) ? num : null;
+  return {
+    labels: ['Employability Index'],
+    datasets: [{ label: 'Employability Index', data: value != null ? [value] : [] }],
+    metadata: { source: 'employability', resolved_at: new Date().toISOString(), row_count: value != null ? 1 : 0, user_filtered: false, chart_type: chartType, config_key: params.configKey },
+  };
+}
+
 // competency: proficiency scores per category from cp_competencies
 async function resolveCompetency(pool: Pool, binding: Record<string, unknown>, params: VizResolveParams): Promise<ResolvedChartData> {
   const chartType = String(binding.chart_type ?? 'radar');
@@ -265,8 +283,8 @@ export async function resolveVizData(pool: Pool, params: VizResolveParams): Prom
 
   switch (dataSource) {
     case 'capadex':       return resolveCapadex(pool, binding, params);
-    case 'career':
-    case 'employability': return resolveCareer(pool, binding, params);
+    case 'employability': return resolveEmployability(binding, params);
+    case 'career':        return resolveCareer(pool, binding, params);
     case 'competency':    return resolveCompetency(pool, binding, params);
     case 'passport':      return resolvePassport(pool, binding, params);
     // 'any' = aggregate across all primary score sources: capadex + readiness

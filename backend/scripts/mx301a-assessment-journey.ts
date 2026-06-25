@@ -44,7 +44,7 @@ import { scoreAssessmentRun } from '../services/competency-scoring.js';
 import { resolveRoleEndToEnd } from '../services/role-auto-resolution.js';
 import { buildEiProfile } from '../services/ei-profile-engine.js';
 
-import { MX301_SUBJECT } from './mx301-demo-candidate.js';
+import { MX301_SUBJECT, MX301_PASSWORD } from './mx301-demo-candidate.js';
 
 const BASE = process.env.MX301A_BASE ?? 'http://localhost:8080';
 const ROLE_TITLE = 'Senior Product Manager';
@@ -174,6 +174,26 @@ async function authSuperAdmin(pool: Pool): Promise<AuthResult> {
   };
 }
 
+// ── Candidate self-session (Sarah logs in AS herself) ───────────────────────
+// Self-scoped endpoints (cv/profile, gap-analysis) reject a super-admin reading
+// another user's id (IDOR guard → 403). To prove they SERVE the candidate her own
+// data, the validator authenticates as the candidate and uses her cookie for
+// those self-scoped stages only. career_seeker has no MFA challenge.
+async function authCandidate(): Promise<AuthResult> {
+  const login = await http('POST', '/api/login', {
+    body: { username: MX301_SUBJECT, password: MX301_PASSWORD },
+  });
+  const cookie = sessionCookie(login.cookies);
+  if (login.status === 200 && !login.json?.mfaRequired && cookie) {
+    return { cookie, mode: 'self', detail: 'candidate self-session login (career_seeker, no MFA)' };
+  }
+  return {
+    cookie: null,
+    mode: 'failed',
+    detail: `candidate login status=${login.status} mfaRequired=${login.json?.mfaRequired ?? 'n/a'} ${login.error ?? ''}`.trim(),
+  };
+}
+
 // ── API check: unauth (gated) + authed (served) ─────────────────────────────
 type ApiVerdict = 'served' | 'served_empty' | 'wired' | 'flag_gated' | 'forbidden_cross_user' | 'broken' | 'not_probed';
 interface ApiCheck {
@@ -288,6 +308,12 @@ async function main() {
   console.log(`[mx301a] super-admin auth: mode=${auth.mode} cookie=${auth.cookie ? 'yes' : 'no'} — ${auth.detail}`);
   const cookie = auth.cookie;
 
+  // Candidate self-session — used ONLY for self-scoped stages (3 profile, 12 strength)
+  // where the super-admin is (correctly) refused as a cross-user reader.
+  const selfAuth = await authCandidate();
+  console.log(`[mx301a] candidate self-session: mode=${selfAuth.mode} cookie=${selfAuth.cookie ? 'yes' : 'no'} — ${selfAuth.detail}`);
+  const selfCookie = selfAuth.cookie;
+
   const stages: Stage[] = [];
   // Shared competency-ledger substrate (queried real in stage 8, reused by the
   // derived stages 10–13 which have no dedicated per-stage table).
@@ -333,7 +359,7 @@ async function main() {
       completeness = r.rows[0]?.completeness ?? null;
       hasData = r.rows[0]?.has_data === true;
     } catch { /* honest absence */ }
-    const api = await apiCheck('GET', `/api/cv/profile/${encodeURIComponent(subjectId)}`, cookie);
+    const api = await apiCheck('GET', `/api/cv/profile/${encodeURIComponent(subjectId)}`, selfCookie ?? cookie);
     stages.push({
       n: 3,
       stage: 'Profile completion',
@@ -528,7 +554,7 @@ async function main() {
         : typeof ei?.measured === 'boolean'
           ? ei.measured
           : strengths > 0;
-    const api = await apiCheck('GET', `/api/competency/gap-analysis/${encodeURIComponent(subjectId)}`, cookie);
+    const api = await apiCheck('GET', `/api/competency/gap-analysis/${encodeURIComponent(subjectId)}`, selfCookie ?? cookie);
     stages.push({
       n: 12,
       stage: 'Strength analysis',
@@ -805,9 +831,21 @@ async function main() {
     `- **Coverage ⟂ Confidence ⟂ Activation** are reported separately. A stage being structurally wired`,
     `  (Coverage) does not imply measurable output for this candidate (Confidence) nor a live-flag`,
     `  surface (Activation).`,
-    `- **Role DNA resolution API** (\`/api/admin/role-resolution/resolve\`) is \`flag_gated\` because the`,
-    `  \`roleAutoResolution\` flag is OFF in this environment — the resolution itself is verified via the`,
-    `  in-process engine and the resolved requirement profile, which is the honest evidence.`,
+    ...(() => {
+      const roleStage = stages.find((s) => s.stage === 'Role DNA resolution');
+      const flagGated = roleStage?.api?.verdict === 'flag_gated';
+      return flagGated
+        ? [
+            `- **Role DNA resolution API** (\`/api/admin/role-resolution/resolve\`) is \`flag_gated\` because the`,
+            `  \`roleAutoResolution\` flag is OFF in this environment — the resolution itself is verified via the`,
+            `  in-process engine and the resolved requirement profile, which is the honest evidence.`,
+          ]
+        : [
+            `- **Role DNA resolution API** (\`/api/admin/role-resolution/resolve\`) is \`served\` — the`,
+            `  \`roleAutoResolution\` flag is ON in this environment (development-only env var \`FF_ROLE_AUTO_RESOLUTION=1\`;`,
+            `  code default + production stay OFF). The resolved requirement profile is the honest evidence.`,
+          ];
+    })(),
     `- **Radar / heatmap** measurability is reported exactly as the engine returns it; where empty it is`,
     `  an honest "Insufficient validated data" state (type-classified per-competency scores required),`,
     `  not a fabricated chart.`,

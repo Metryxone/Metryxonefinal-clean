@@ -1,8 +1,8 @@
 # MX-301A — Journey Certification
 
-**Candidate:** Sarah Johnson (`user_4286d980cc6cc038`) · **Generated:** 2026-06-25T13:07:42.190Z
+**Candidate:** Sarah Johnson (`user_4286d980cc6cc038`) · **Generated:** 2026-06-25T13:28:23.350Z
 
-## Verdict: PASS (with honest-empty surfaces)
+## Verdict: PASS
 
 | Criterion | Result |
 |-----------|--------|
@@ -17,9 +17,9 @@
 - **Coverage ⟂ Confidence ⟂ Activation** are reported separately. A stage being structurally wired
   (Coverage) does not imply measurable output for this candidate (Confidence) nor a live-flag
   surface (Activation).
-- **Role DNA resolution API** (`/api/admin/role-resolution/resolve`) is `flag_gated` because the
-  `roleAutoResolution` flag is OFF in this environment — the resolution itself is verified via the
-  in-process engine and the resolved requirement profile, which is the honest evidence.
+- **Role DNA resolution API** (`/api/admin/role-resolution/resolve`) is `served` — the
+  `roleAutoResolution` flag is ON in this environment (development-only env var `FF_ROLE_AUTO_RESOLUTION=1`;
+  code default + production stay OFF). The resolved requirement profile is the honest evidence.
 - **Radar / heatmap** measurability is reported exactly as the engine returns it; where empty it is
   an honest "Insufficient validated data" state (type-classified per-competency scores required),
   not a fabricated chart.

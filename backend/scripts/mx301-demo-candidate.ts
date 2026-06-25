@@ -38,7 +38,23 @@ const { Pool } = pg;
 
 export const MX301_SUBJECT = 'sarah.johnson.mx301@example.com';
 export const MX301_TAG = 'mx301';
+// Self-service login credential for the demo candidate. This account is an
+// @example.com demo (data->>'demo'=true) used only by the MX-301A validator to
+// prove the candidate can read her OWN profile/strength endpoints (self-session,
+// not cross-user). It is intentionally well-known and carries no real-user data.
+export const MX301_PASSWORD = 'Mx301Demo!Sarah';
 const ROLE_TITLE = 'Senior Product Manager';
+
+// scrypt password hash in the exact `${hash}.${salt}` format the login route's
+// crypto.compare expects (see routes.ts). Lets the demo candidate authenticate.
+async function hashPassword(password: string): Promise<string> {
+  const { scrypt, randomBytes } = await import('crypto');
+  const { promisify } = await import('util');
+  const scryptAsync = promisify(scrypt);
+  const salt = randomBytes(16).toString('hex');
+  const buf = (await scryptAsync(password, salt, 64)) as Buffer;
+  return `${buf.toString('hex')}.${salt}`;
+}
 
 // Realistic, demonstrable competency profile for a strong senior PM.
 const DOMAINS = [
@@ -115,11 +131,12 @@ async function provision(pool: pg.Pool) {
   await rollback(pool);
 
   // ── Stage: Registration ──────────────────────────────────────────────────
+  const hashedPassword = await hashPassword(MX301_PASSWORD);
   await pool.query(
     `INSERT INTO users (id, username, password, full_name, role, roles, email, account_type, created_at)
      VALUES ($1::text, $1::text, $2, $3, 'career_seeker', ARRAY['career_seeker'], $1::text, 'individual', now())
-     ON CONFLICT (id) DO UPDATE SET full_name = EXCLUDED.full_name, email = EXCLUDED.email`,
-    [MX301_SUBJECT, '!mx301-demo-login-disabled', 'Sarah Johnson'],
+     ON CONFLICT (id) DO UPDATE SET full_name = EXCLUDED.full_name, email = EXCLUDED.email, password = EXCLUDED.password`,
+    [MX301_SUBJECT, hashedPassword, 'Sarah Johnson'],
   );
 
   const profileData = {

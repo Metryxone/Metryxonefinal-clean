@@ -6,17 +6,17 @@ Candidate `user_4286d980cc6cc038` traversal. Each node carries its validated len
 flowchart TD
   N1["1. Registration\nDB:ok · measurable · API:wired"]
   N2["2. Authentication\nDB:ok · measurable · API:wired"]
-  N3["3. Profile completion\nDB:ok · measurable · API:forbidden_cross_user"]
+  N3["3. Profile completion\nDB:ok · measurable · API:served"]
   N4["4. Role selection\nDB:ok · measurable · API:engine+db"]
-  N5["5. Role DNA resolution\nDB:— · measurable · API:flag_gated"]
+  N5["5. Role DNA resolution\nDB:— · measurable · API:served"]
   N6["6. Adaptive assessment (question engine)\nDB:ok · measurable · API:engine+db"]
   N7["7. Response capture (scorer executes)\nDB:n/a · measurable · API:engine+db"]
   N8["8. Competency scoring\nDB:ok · measurable · API:engine+db"]
   N9["9. Competency profile\nDB:ok · measurable · API:served"]
   N10["10. Competency radar (type profile)\nDB:ok · measurable · API:served"]
   N11["11. Competency heatmap\nDB:ok · measurable · API:served"]
-  N12["12. Strength analysis\nDB:ok · measurable · API:forbidden_cross_user"]
-  N13["13. Development areas (gap engine)\nDB:ok · honest-empty · API:served_empty"]
+  N12["12. Strength analysis\nDB:ok · measurable · API:served"]
+  N13["13. Development areas (gap engine)\nDB:ok · measurable · API:served"]
   N1 --> N2
   N2 --> N3
   N3 --> N4

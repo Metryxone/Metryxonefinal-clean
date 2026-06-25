@@ -2,11 +2,11 @@
   "task": "MX-301A",
   "title": "Enterprise Assessment Journey Validation",
   "candidate_masked": "user_4286d980cc6cc038",
-  "generated_at": "2026-06-25T13:07:42.190Z",
+  "generated_at": "2026-06-25T13:28:23.350Z",
   "base_url": "http://localhost:8080",
   "super_admin_auth_mode": "direct",
-  "verdict": "PASS (with honest-empty surfaces)",
-  "measurable_stages": 12,
+  "verdict": "PASS",
+  "measurable_stages": 13,
   "total_stages": 13,
   "engine_errors": 0,
   "broken_apis": 0,
@@ -81,8 +81,8 @@
         "method": "GET",
         "path": "/api/cv/profile/user_4286d980cc6cc038",
         "unauth": 401,
-        "authed": 403,
-        "verdict": "forbidden_cross_user"
+        "authed": 200,
+        "verdict": "served"
       }
     },
     {
@@ -103,8 +103,8 @@
         "method": "POST",
         "path": "/api/admin/role-resolution/resolve",
         "unauth": 401,
-        "authed": 503,
-        "verdict": "flag_gated"
+        "authed": 200,
+        "verdict": "served"
       }
     },
     {
@@ -183,8 +183,8 @@
         "method": "GET",
         "path": "/api/competency/gap-analysis/user_4286d980cc6cc038",
         "unauth": 401,
-        "authed": 403,
-        "verdict": "forbidden_cross_user"
+        "authed": 200,
+        "verdict": "served"
       }
     },
     {
@@ -192,13 +192,13 @@
       "stage": "Development areas (gap engine)",
       "db_ok": true,
       "engine_generated": true,
-      "measurable": false,
+      "measurable": true,
       "api": {
         "method": "GET",
         "path": "/api/competency-runtime/gap-engine/user_4286d980cc6cc038",
         "unauth": 401,
-        "authed": 404,
-        "verdict": "served_empty"
+        "authed": 200,
+        "verdict": "served"
       }
     }
   ],

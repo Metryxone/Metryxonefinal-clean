@@ -23,10 +23,10 @@ honest empty, distinct from a query error.
 | 7 | Response capture (scorer executes) | scorer ran persist:false (read-only) — no DB write expected by design; responses=23, scored=23 validated via the ENGINE lens |
 | 8 | Competency scoring | onto_competency_score_runs=1 (precise ledger), onto_competency_profiles=1 (domain-proxy ledger) |
 | 9 | Competency profile | measured=true, history_count=1 |
-| 10 | Competency radar (type profile) | no dedicated radar table — backed by competency ledgers (runs=1, profiles=1); classified=0/0 |
-| 11 | Competency heatmap | no dedicated heatmap table — shares the competency-ledger substrate (runs=1, profiles=1); classification coverage=null% |
+| 10 | Competency radar (type profile) | no dedicated radar table — backed by competency ledgers (runs=1, profiles=1); classified=6/6 |
+| 11 | Competency heatmap | no dedicated heatmap table — shares the competency-ledger substrate (runs=1, profiles=1); classification coverage=100% |
 | 12 | Strength analysis | strengths derived from the competency ledgers (runs=1, profiles=1) — no dedicated strengths table; EI strengths surfaced=0 |
-| 13 | Development areas (gap engine) | gaps derived from the competency ledgers (runs=1, profiles=1) against role requirements — no dedicated gap table; measurable_competencies=0/0 |
+| 13 | Development areas (gap engine) | gaps derived from the competency ledgers (runs=1, profiles=1) against role requirements — no dedicated gap table; measurable_competencies=5/6 |
 
 **Note:** the scorer was run with `persist:false` (read-only validation) — it proves the scoring
 transaction executes without writing a duplicate ledger row. The ledger rows shown above were

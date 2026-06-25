@@ -10,13 +10,13 @@ candidate's real data). Verdicts are honest about flag-gated and self-scoped rou
 |---|-------|--------|------|--------|--------|---------|------|
 | 1 | Registration | POST | `/api/register` | 400 | 400 | **wired** | authed status=400 |
 | 2 | Authentication | POST | `/api/login` | 401 | 401 | **wired** | authed status=401 |
-| 3 | Profile completion | GET | `/api/cv/profile/user_4286d980cc6cc038` | 401 | 403 | **forbidden_cross_user** | authed 403 — endpoint is self-scoped (IDOR guard); not cross-user readable by super-admin |
-| 5 | Role DNA resolution | POST | `/api/admin/role-resolution/resolve` | 401 | 503 | **flag_gated** | reachable + authed, feature flag OFF (503) — honest |
+| 3 | Profile completion | GET | `/api/cv/profile/user_4286d980cc6cc038` | 401 | 200 | **served** | authenticated 200 — API serves candidate data |
+| 5 | Role DNA resolution | POST | `/api/admin/role-resolution/resolve` | 401 | 200 | **served** | authenticated 200 — API serves candidate data |
 | 9 | Competency profile | GET | `/api/competency-runtime/profiles/user_4286d980cc6cc038` | 401 | 200 | **served** | authenticated 200 — API serves candidate data |
 | 10 | Competency radar (type profile) | GET | `/api/competency-runtime/profiles/user_4286d980cc6cc038/type-profile` | 401 | 200 | **served** | authenticated 200 — API serves candidate data |
 | 11 | Competency heatmap | GET | `/api/competency-runtime/mapping-grid` | 401 | 200 | **served** | authenticated 200 — API serves candidate data |
-| 12 | Strength analysis | GET | `/api/competency/gap-analysis/user_4286d980cc6cc038` | 401 | 403 | **forbidden_cross_user** | authed 403 — endpoint is self-scoped (IDOR guard); not cross-user readable by super-admin |
-| 13 | Development areas (gap engine) | GET | `/api/competency-runtime/gap-engine/user_4286d980cc6cc038` | 401 | 404 | **served_empty** | authed 404 — route wired + secured; honest no-data for candidate (e.g. no scored blueprint) |
+| 12 | Strength analysis | GET | `/api/competency/gap-analysis/user_4286d980cc6cc038` | 401 | 200 | **served** | authenticated 200 — API serves candidate data |
+| 13 | Development areas (gap engine) | GET | `/api/competency-runtime/gap-engine/user_4286d980cc6cc038` | 401 | 200 | **served** | authenticated 200 — API serves candidate data |
 
 **Verdict glossary:** `served` (authed 200, data returned) · `wired` (correctly gated unauth) ·
 `flag_gated` (503 — feature flag OFF, honest) · `forbidden_cross_user` (403 — endpoint is

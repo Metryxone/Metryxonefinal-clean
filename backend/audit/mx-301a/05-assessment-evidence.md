@@ -43,5 +43,5 @@ Candidate `user_4286d980cc6cc038` · role "Senior Product Manager".
 | undefined | null |
 
 ## Radar / heatmap (computeTypeProfile)
-- measured=true · classified=0/0 · coverage=null%
+- measured=true · classified=6/6 · coverage=100%
 - Radar/heatmap render the classified per-competency scores.

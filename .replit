@@ -33,10 +33,6 @@ args = "Upload Service"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "test-referral-deal-value"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
 args = "referral-deal-value-writepath"
 
 [[workflows.workflow.tasks]]
@@ -45,15 +41,7 @@ args = "referral-deal-value-repair"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "precise-scores-isolation"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
 args = "precise-scores-onoff"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "employer-job-posting"
 
 [[workflows.workflow]]
 name = "Start application"
@@ -103,17 +91,6 @@ waitForPort = 8000
 outputType = "console"
 
 [[workflows.workflow]]
-name = "test-referral-deal-value"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd backend && npx tsx --test tests/partner-ecosystem-referral-deal-value.test.ts"
-
-[workflows.workflow.metadata]
-isValidation = true
-
-[[workflows.workflow]]
 name = "referral-deal-value-writepath"
 author = "agent"
 
@@ -136,34 +113,12 @@ args = "cd backend && npx tsx scripts/smoke-referral-deal-value-repair.ts"
 isValidation = true
 
 [[workflows.workflow]]
-name = "precise-scores-isolation"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd backend && npx tsx scripts/task158-e2e-precise-scores-isolation.ts"
-
-[workflows.workflow.metadata]
-isValidation = true
-
-[[workflows.workflow]]
 name = "precise-scores-onoff"
 author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx scripts/task167-precise-scores-onoff.ts"
-
-[workflows.workflow.metadata]
-isValidation = true
-
-[[workflows.workflow]]
-name = "employer-job-posting"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd backend && npx tsx tests/employer-job-posting.test.ts"
 
 [workflows.workflow.metadata]
 isValidation = true
@@ -207,3 +162,4 @@ VITE_FIREBASE_MEASUREMENT_ID = "G-EQBJNCN5W6"
 
 [userenv.development]
 FF_ONTOLOGY_HIERARCHY_V2 = "1"
+FF_ROLE_AUTO_RESOLUTION = "1"

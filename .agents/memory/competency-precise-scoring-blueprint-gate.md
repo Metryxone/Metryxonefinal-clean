@@ -70,6 +70,21 @@ bridge-reachable; otherwise the data is correct but inert at match time.
   Engineer"/"QA Engineer" returned 0 requirements while "Data Scientist"/"Product
   Manager" resolved) — a separate title-resolution concern, independent of the
   question/blueprint data.
+- **Resolution lever (precedes the bridge):** the employer match resolves jobTitle
+  → `resolveBestOntRole` (rank code<exact_title<alias<partial) → `curatedLayerFor`
+  (`map_ont_onto_role WHERE ont_role_id=<resolved id>`). A title that only matches
+  a SHARED O*NET alias (e.g. "Backend Engineer" AND "DevOps Engineer" both →
+  ONET_15-1252.00 "Software Developers" id 123) or matches NOTHING ("Senior Backend
+  Engineer") cannot be bridged safely — pointing the shared id at one role's DNA
+  mis-routes its siblings. Fix = seed a DEDICATED curated `ont_roles` row per title
+  in `services/ontology-seed.ts` (mirror ROLE_SWE/ROLE_SR_SWE: add to `roles` +
+  `roleExtras`) so each resolves EXACTLY (exact_title beats the shared alias) to a
+  DISTINCT id; then UPDATE the `map_ont_onto_role` NULL bridge to that id by CODE
+  (never hardcode the autoincrement id). `map_ont_onto_role` has `UNIQUE(onto_role_id)`
+  + FK `ON DELETE SET NULL` (reversible). **Side effect to disclose:** the title's
+  inherited requirement set shifts from the generic O*NET occupation to the curated
+  seeded role (fewer but role-appropriate comps) — accepted as more consistent with
+  how ROLE_SWE already behaves, not a regression.
 - `onto_dna_profiles` has no `name` col; `onto_assessment_blueprints` has no
   `status` col (use `active`); blueprint comps come from
   `onto_blueprint_competency_map` joined to `onto_competencies.canonical_name`.

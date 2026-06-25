@@ -193,6 +193,8 @@ export async function runOntologySeed(pool: Pool): Promise<SeedResult> {
       { code: 'ROLE_SWE',       title: 'Software Engineer',              rfCode: 'RF_SOFTENGG', seniority: 'mid' },
       { code: 'ROLE_SR_SWE',    title: 'Senior Software Engineer',       rfCode: 'RF_SOFTENGG', seniority: 'senior' },
       { code: 'ROLE_STAFF_ENG', title: 'Staff Engineer',                 rfCode: 'RF_SOFTENGG', seniority: 'principal' },
+      { code: 'ROLE_BE_ENG',    title: 'Backend Engineer',               rfCode: 'RF_SOFTENGG', seniority: 'mid' },
+      { code: 'ROLE_SR_BE_ENG', title: 'Senior Backend Engineer',        rfCode: 'RF_SOFTENGG', seniority: 'senior' },
       { code: 'ROLE_ENG_MGR',   title: 'Engineering Manager',            rfCode: 'RF_SOFTENGG', seniority: 'manager',   isLeader: true },
       { code: 'ROLE_DA',        title: 'Data Analyst',                   rfCode: 'RF_DATA',     seniority: 'mid' },
       { code: 'ROLE_DS',        title: 'Data Scientist',                 rfCode: 'RF_DATA',     seniority: 'mid' },
@@ -1283,6 +1285,17 @@ export async function runOntologySeed(pool: Pool): Promise<SeedResult> {
       ['ROLE_STAFF_ENG', 'C_PROB_SOLV',  'core',      1.2],
       ['ROLE_STAFF_ENG', 'C_DATA_DEC',   'core',      1.0],
       ['ROLE_STAFF_ENG', 'C_THOUGHT',    'secondary', 1.0],
+
+      ['ROLE_BE_ENG',    'C_TECH_CORE',  'core',      1.3],
+      ['ROLE_BE_ENG',    'C_TOOLS',      'core',      1.2],
+      ['ROLE_BE_ENG',    'C_PROB_SOLV',  'core',      1.1],
+      ['ROLE_BE_ENG',    'C_DATA_DEC',   'secondary', 0.9],
+
+      ['ROLE_SR_BE_ENG', 'C_TECH_CORE',  'core',      1.3],
+      ['ROLE_SR_BE_ENG', 'C_TOOLS',      'core',      1.2],
+      ['ROLE_SR_BE_ENG', 'C_PROB_SOLV',  'core',      1.1],
+      ['ROLE_SR_BE_ENG', 'C_DATA_DEC',   'core',      1.0],
+      ['ROLE_SR_BE_ENG', 'C_CREATIVE',   'secondary', 0.9],
 
       ['ROLE_ENG_MGR',   'C_TECH_CORE',  'secondary', 0.9],
       ['ROLE_ENG_MGR',   'C_PROB_SOLV',  'core',      1.1],

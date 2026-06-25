@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
@@ -31,7 +32,7 @@ export function formatCurrency(amount: number | string | null): string {
   return isNaN(n) ? '—' : '₹' + n.toLocaleString('en-IN');
 }
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', cyan: '#4ECDC4', lightBg: '#f8fafc', dark: '#1e293b', success: '#10b981', warning: '#f59e0b', danger: '#ef4444', purple: '#8b5cf6', indigo: '#6366f1' };
+
 
 export function useAdminDashboardState(onNavigate?: (screen: string) => void): AdminDashboardContextValue {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

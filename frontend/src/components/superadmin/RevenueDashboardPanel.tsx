@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 /**
  * Phase 6.6 — Revenue Intelligence dashboard (READ-ONLY).
  * Surfaces the composite revenue analytics: MRR / ARR / collections + revenue by
@@ -19,7 +20,7 @@ import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4' };
+
 
 function formatCurrency(n?: number | null) {
   if (n == null) return '—';

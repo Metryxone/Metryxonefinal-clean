@@ -53,16 +53,22 @@ function MarketDemandPanel() {
   const [forecasts, setForecasts] = useState<AnyObj[]>([]);
   const [velocity, setVelocity] = useState<AnyObj[]>([]);
   const [emerging, setEmerging] = useState<AnyObj[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
+    setLoading(true); setError(null);
     Promise.all([
       getJSON(`${API}/demand/competency`), getJSON(`${API}/demand/role`),
       getJSON(`${API}/demand/forecasts`), getJSON(`${API}/demand/velocity`), getJSON(`${API}/emerging`),
     ]).then(([c, r, f, v, e]) => {
       setComps(c.data); setRoles(r.data); setForecasts(f.data); setVelocity(v.data); setEmerging(e.data);
-    });
+    }).catch(() => setError("Couldn't load data. Please try again."))
+      .finally(() => setLoading(false));
   }, []);
   return (
     <div className="space-y-4">
+      {loading && <p className="text-xs text-slate-500">Loading…</p>}
+      {error && <p className="text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-md px-3 py-2">{error}</p>}
       <Card title="Competency market demand" subtitle="Composite = 0.30·hiring + 0.20·salary + 0.20·industry + 0.25·future − 0.15·automation">
         <div className="grid gap-2">
           {comps.map(c => (
@@ -138,17 +144,25 @@ function NormalizationPanel() {
   const [resolved, setResolved] = useState<AnyObj | null>(null);
   const [similar, setSimilar] = useState<AnyObj[]>([]);
   const [clusters, setClusters] = useState<AnyObj[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     if (!title) return;
     const t = encodeURIComponent(title);
-    getJSON(`${API}/normalize/resolve?title=${t}`).then(r => setResolved(r.data));
-    getJSON(`${API}/normalize/similar?title=${t}&k=5`).then(r => setSimilar(r.data));
+    setLoading(true); setError(null);
+    Promise.all([
+      getJSON(`${API}/normalize/resolve?title=${t}`).then(r => setResolved(r.data)),
+      getJSON(`${API}/normalize/similar?title=${t}&k=5`).then(r => setSimilar(r.data)),
+    ]).catch(() => setError("Couldn't load data. Please try again."))
+      .finally(() => setLoading(false));
   }, [title]);
-  useEffect(() => { getJSON(`${API}/normalize/clusters`).then(r => setClusters(r.data)); }, []);
+  useEffect(() => { getJSON(`${API}/normalize/clusters`).then(r => setClusters(r.data)).catch(() => setError("Couldn't load data. Please try again.")); }, []);
   const methodColor = (m: string) =>
     m === 'exact' ? 'green' : m === 'alias' ? 'blue' : m === 'embedding' ? 'purple' : 'amber';
   return (
     <div className="space-y-4">
+      {loading && <p className="text-xs text-slate-500">Loading…</p>}
+      {error && <p className="text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-md px-3 py-2">{error}</p>}
       <Card title="Resolve raw title → canonical role" subtitle="exact → alias → 16-dim cosine embedding; unresolved spawns emerging-role candidate">
         <input value={title} onChange={e => setTitle(e.target.value)}
           className="w-full border rounded px-3 py-2 text-sm" placeholder="e.g. Sr. Software Developer" />
@@ -200,16 +214,24 @@ function EvidencePanel() {
   const [newComp, setNewComp] = useState('TEC');
   const [newSrc, setNewSrc] = useState('mes_cert');
   const [newStrength, setNewStrength] = useState(0.8);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const refresh = () => {
-    getJSON(`${API}/evidence/${subject}`).then(r => setEvidence(r.data));
-    getJSON(`${API}/evidence/${subject}/confidence`).then(r => setConf(r.data));
+    setLoading(true); setError(null);
+    Promise.all([
+      getJSON(`${API}/evidence/${subject}`).then(r => setEvidence(r.data)),
+      getJSON(`${API}/evidence/${subject}/confidence`).then(r => setConf(r.data)),
+    ]).catch(() => setError("Couldn't load data. Please try again."))
+      .finally(() => setLoading(false));
   };
   useEffect(refresh, [subject]);
-  useEffect(() => { getJSON(`${API}/evidence/sources`).then(r => setSources(r.data)); }, []);
+  useEffect(() => { getJSON(`${API}/evidence/sources`).then(r => setSources(r.data)).catch(() => setError("Couldn't load data. Please try again.")); }, []);
   const verifColor = (v: string) =>
     v === 'verified' ? 'green' : v === 'strong' ? 'blue' : v === 'moderate' ? 'amber' : 'red';
   return (
     <div className="space-y-4">
+      {loading && <p className="text-xs text-slate-500">Loading…</p>}
+      {error && <p className="text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-md px-3 py-2">{error}</p>}
       <div className="flex gap-2 items-end">
         <label className="text-xs">Subject ID
           <input value={subject} onChange={e => setSubject(e.target.value)} className="border rounded px-2 py-1 ml-2 text-sm" /></label>
@@ -283,19 +305,27 @@ function MobilityPanel() {
   const [paths, setPaths] = useState<AnyObj[]>([]);
   const [tr, setTr] = useState<AnyObj[]>([]);
   const [cp, setCp] = useState<AnyObj[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
-    getJSON(`${API}/mobility/adjacent/${role}`).then(r => setAdj(r.data));
-    getJSON(`${API}/mobility/recommend?role=${role}&scores=${encodeURIComponent(JSON.stringify(DEMO_SCORES))}`).then(r => setRec(r.data));
+    setLoading(true); setError(null);
+    Promise.all([
+      getJSON(`${API}/mobility/adjacent/${role}`).then(r => setAdj(r.data)),
+      getJSON(`${API}/mobility/recommend?role=${role}&scores=${encodeURIComponent(JSON.stringify(DEMO_SCORES))}`).then(r => setRec(r.data)),
+    ]).catch(() => setError("Couldn't load data. Please try again."))
+      .finally(() => setLoading(false));
   }, [role]);
-  useEffect(() => { getJSON(`${API}/mobility/paths?to=${target}&depth=3`).then(r => setPaths(r.data)); }, [target]);
+  useEffect(() => { getJSON(`${API}/mobility/paths?to=${target}&depth=3`).then(r => setPaths(r.data)).catch(() => setError("Couldn't load data. Please try again.")); }, [target]);
   useEffect(() => {
-    getJSON(`${API}/mobility/transitions`).then(r => setTr(r.data));
-    getJSON(`${API}/mobility/career-paths`).then(r => setCp(r.data));
+    getJSON(`${API}/mobility/transitions`).then(r => setTr(r.data)).catch(() => setError("Couldn't load data. Please try again."));
+    getJSON(`${API}/mobility/career-paths`).then(r => setCp(r.data)).catch(() => setError("Couldn't load data. Please try again."));
   }, []);
   const allRoles = ['mrole_eng_sr','mrole_pm_sr','mrole_ds_lead','mrole_ta_spec','mrole_cyber_an'];
   const readyColor = (l: string) => l === 'ready' ? 'green' : l === 'developing' ? 'blue' : 'amber';
   return (
     <div className="space-y-4">
+      {loading && <p className="text-xs text-slate-500">Loading…</p>}
+      {error && <p className="text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-md px-3 py-2">{error}</p>}
       <div className="flex flex-wrap gap-3 items-end">
         <label className="text-xs">Current role
           <select value={role} onChange={e => setRole(e.target.value)} className="border rounded px-2 py-1 ml-2">{allRoles.map(r => <option key={r}>{r}</option>)}</select></label>
@@ -369,10 +399,16 @@ function DynOntologyPanel() {
   const [roles, setRoles] = useState<AnyObj[]>([]);
   const [skills, setSkills] = useState<AnyObj[]>([]);
   const [events, setEvents] = useState<AnyObj[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const refresh = () => {
-    getJSON(`${API}/dyn/emerging-roles?threshold=50`).then(r => setRoles(r.data));
-    getJSON(`${API}/dyn/emerging-skills?threshold=50`).then(r => setSkills(r.data));
-    getJSON(`${API}/dyn/events`).then(r => setEvents(r.data));
+    setLoading(true); setError(null);
+    Promise.all([
+      getJSON(`${API}/dyn/emerging-roles?threshold=50`).then(r => setRoles(r.data)),
+      getJSON(`${API}/dyn/emerging-skills?threshold=50`).then(r => setSkills(r.data)),
+      getJSON(`${API}/dyn/events`).then(r => setEvents(r.data)),
+    ]).catch(() => setError("Couldn't load data. Please try again."))
+      .finally(() => setLoading(false));
   };
   useEffect(refresh, []);
   const statusColor = (s: string) => s === 'promoted' ? 'green' : s === 'rejected' ? 'red' : s === 'under_review' ? 'amber' : 'slate';
@@ -382,6 +418,8 @@ function DynOntologyPanel() {
   };
   return (
     <div className="space-y-4">
+      {loading && <p className="text-xs text-slate-500">Loading…</p>}
+      {error && <p className="text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-md px-3 py-2">{error}</p>}
       <Card title="Emerging role candidates" subtitle="Auto-detected from ingest pipeline; promotion is a governance decision">
         <ul className="text-sm divide-y divide-slate-100">
           {roles.map(r => (
@@ -430,13 +468,20 @@ function DynOntologyPanel() {
 // ─── Confidence v2 ────────────────────────────────────────────────────
 function ConfidenceV2Panel() {
   const [vec, setVec] = useState<AnyObj[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
+    setLoading(true); setError(null);
     getJSON(`${API}/confidence/vector?subject_id=demo_user&scores=${encodeURIComponent(JSON.stringify(DEMO_SCORES))}`)
-      .then(r => setVec(r.data));
+      .then(r => setVec(r.data))
+      .catch(() => setError("Couldn't load data. Please try again."))
+      .finally(() => setLoading(false));
   }, []);
   const levelColor = (l: string) => l === 'verified' ? 'green' : l === 'strong' ? 'blue' : l === 'moderate' ? 'amber' : 'red';
   return (
     <Card title="Capability confidence v2" subtitle="0.25·reliability + 0.25·evidence + 0.15·history + 0.20·market + 0.15·benchmark">
+      {loading && <p className="text-xs text-slate-500 mb-2">Loading…</p>}
+      {error && <p className="text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-md px-3 py-2 mb-2">{error}</p>}
       <div className="grid gap-2">
         {vec.map(r => (
           <div key={r.competency_id} className="border border-slate-200 rounded-lg p-3">

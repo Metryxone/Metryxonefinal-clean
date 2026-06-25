@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useMemo, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { RefreshCw, Globe, AlertTriangle, Info, CheckCircle2, Plus, RotateCcw, Trash2, History, Tag, Undo2, XCircle } from 'lucide-react';
@@ -15,7 +16,7 @@ import {
   AlertDialogTitle,
 } from '../ui/alert-dialog';
 
-const BRAND = { primary: '#344E86' };
+
 const BASE = '/api/global-competency';
 
 type RegionMeta = { code: string; name: string; is_default: boolean };

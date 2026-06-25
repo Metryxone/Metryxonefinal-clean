@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { Users, TrendingUp, Award, BookOpen, Brain } from 'lucide-react';
 
 interface ChildSummary {
@@ -16,7 +17,7 @@ interface Props {
   onSelectChild: (id: string) => void;
 }
 
-const BRAND = { primary: '#0B3C5D', teal: '#4ECDC4' };
+
 
 export function SiblingComparison({ children, onSelectChild }: Props) {
   if (children.length < 2) return null;

@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { RefreshCw, ShieldCheck, ShieldX, GitBranch, AlertTriangle, CheckCircle2, XCircle, Undo2, Layers } from 'lucide-react';
@@ -9,7 +10,7 @@ import { Textarea } from '../ui/textarea';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { useToast } from '@/hooks/use-toast';
 
-const BRAND = { primary: '#344E86' };
+
 const BASE = '/api/v2/onet-crosswalk-governance';
 
 const BAND_COLORS: Record<string, string> = {

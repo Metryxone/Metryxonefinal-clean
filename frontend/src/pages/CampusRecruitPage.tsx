@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import {
   GraduationCap, CheckCircle, Shield, ArrowRight, ArrowDown,
   BookOpen, Users, Brain, Award, Zap, BarChart3,
@@ -17,10 +18,7 @@ interface Props {
   onNavigate: (screen: Screen) => void;
 }
 
-const BRAND = {
-  primary: '#344E86',
-  accent: '#4ECDC4',
-};
+
 
 const FEATURES = [
   { icon: Brain, title: 'Pre-Placement Behavioral Assessment', desc: 'Comprehensive behavioral profiling across 19 domains and 97 subdomains before candidates enter the hiring pipeline.' },

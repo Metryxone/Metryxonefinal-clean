@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Brain, Play, ChevronRight, Clock, Award, BarChart2, Target,
@@ -7,7 +8,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', green: '#2A9D8F', red: '#e63946', orange: '#f4a261' };
+
 
 const api = async (method: string, path: string, body?: unknown) => {
   const r = await fetch(`/api/career${path}`, {

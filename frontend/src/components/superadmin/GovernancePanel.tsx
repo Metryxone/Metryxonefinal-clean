@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -17,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import FeatureFlagsPanel from './FeatureFlagsPanel';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', success: '#10b981', warning: '#f59e0b', danger: '#ef4444', purple: '#8b5cf6' };
+
 
 type SubTab = 'runtime-state' | 'explainability-log' | 'simulator' | 'feature-flags';
 
@@ -520,7 +521,7 @@ function RuntimeStateTab() {
       {drawerOpen && selected && (
         <div className="fixed inset-0 z-50 flex">
           <div className="flex-1 bg-black/30 backdrop-blur-sm" onClick={closeDrawer} />
-          <div className="w-[640px] bg-white shadow-2xl overflow-y-auto flex flex-col">
+          <div className="w-[640px] max-w-[95vw] bg-white shadow-2xl overflow-y-auto flex flex-col">
             <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between z-10">
               <div>
                 <div className="flex items-center gap-2">

@@ -102,3 +102,51 @@ export const EI_BANDS = [
 export function getEIBand(score: number) {
   return EI_BANDS.find(b => score >= b.min) ?? EI_BANDS[EI_BANDS.length - 1];
 }
+
+// ---------------------------------------------------------------------------
+// Canonical inline-style brand palette (MX-301E convergence).
+// Single source for components that previously declared their own `const BRAND`.
+// This object is a SUPERSET of every key used across the app, so a drop-in
+// import can never leave a color undefined. Semantic keys map to COLOR canon.
+// ---------------------------------------------------------------------------
+export const BRAND = {
+  primary:      COLOR.primary,   // #344E86
+  primaryLight: '#EEF2FF',
+  accent:       COLOR.accent,    // #4ECDC4
+  accentLight:  '#E6FAF8',
+  navy:         '#0B3C5D',       // official secondary (deep-navy) brand tone
+  dark:         '#1E293B',
+  text:         '#2E3470',
+  muted:        '#64748B',
+  sub:          '#6B7280',
+  gray:         '#64748B',
+  slate:        COLOR.slate,     // #94a3b8
+  border:       '#E2E8F0',
+  bg:           '#F8FAFC',
+  lightBg:      '#F8FAFC',
+  cardBg:       '#FFFFFF',
+  surface:      '#FFFFFF',
+  success:      '#10B981',
+  green:        COLOR.green,     // #2A9D8F
+  greenLight:   '#ECFDF5',
+  warning:      '#F59E0B',
+  amber:        '#F59E0B',
+  amberLight:   '#FFFBEB',
+  gold:         '#F59E0B',
+  orange:       COLOR.orange,    // #f4a261
+  danger:       '#EF4444',
+  red:          COLOR.red,       // #e63946
+  redLight:     '#FEF2F2',
+  purple:       COLOR.purple,    // #8b5cf6
+  indigo:       '#6366F1',
+  cyan:         COLOR.accent,
+  teal:         COLOR.accent,
+  blue:         '#2563EB',
+  stress:       '#EF4444',
+  calm:         '#22C55E',
+} as const;
+
+// Navy-primary variant for deep-navy sub-surfaces (exam-prep + legacy
+// student/parent education flows). Keeps the navy identity while tokenizing it.
+// To converge to a single uniform brand later, set `primary: COLOR.primary` here.
+export const BRAND_NAVY = { ...BRAND, primary: BRAND.navy } as const;

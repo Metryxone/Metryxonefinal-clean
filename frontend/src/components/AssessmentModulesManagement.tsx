@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -19,7 +20,7 @@ const safeGet = (url: string) =>
     return r.json();
   });
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4' };
+
 
 const FRAMEWORK_META: Record<string, { label: string; color: string; bg: string; icon: any; description: string }> = {
   lbi:        { label: 'LBI Behavioural',  color: '#3b82f6', bg: '#eff6ff', icon: Brain,    description: 'Stress · Adjustment · Discipline · Communication' },

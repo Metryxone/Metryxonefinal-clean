@@ -1,12 +1,7 @@
 import React from 'react';
 
-export const BRAND = {
-  primary: '#344E86',
-  accent: '#4ECDC4',
-  cyan: '#4ECDC4',
-  lightBg: '#f8fafc',
-  cardBg: '#ffffff',
-};
+import { BRAND } from '@/design-system/tokens';
+export { BRAND };
 
 export function formatEntityType(type?: string): string {
   if (!type) return '';

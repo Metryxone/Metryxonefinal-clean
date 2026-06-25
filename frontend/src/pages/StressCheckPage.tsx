@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import { useState } from 'react';
 import { Brain, CheckCircle, ChevronDown, ChevronUp, Clock, Shield, ArrowRight, Heart, AlertTriangle, FileText, Award, Zap, BarChart3, Lock, Users, Sparkles, Activity, ThermometerSun } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -11,12 +12,7 @@ interface Props {
   onNavigate: (screen: Screen) => void;
 }
 
-const BRAND = {
-  primary: '#344E86',
-  accent: '#4ECDC4',
-  stress: '#ef4444',
-  calm: '#22c55e',
-};
+
 
 const ASSESSMENT_DOMAINS = [
   { 

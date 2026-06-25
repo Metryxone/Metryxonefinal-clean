@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Edit, Trash2, Search, Layers, RefreshCw, X, Check, Upload, Download, FileText, CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
@@ -12,7 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { useToast } from '@/hooks/use-toast';
 import SubmitForReviewButton from './SubmitForReviewButton';
 
-const BRAND = { primary: '#344E86' };
+
 type Sector = { id: number; code: string; name: string; description?: string; is_active: boolean; status: string; sort_order: number; };
 type Form = { code: string; name: string; description: string; is_active: boolean; status: string; sort_order: number; };
 const EMPTY: Form = { code: '', name: '', description: '', is_active: true, status: 'draft', sort_order: 0 };

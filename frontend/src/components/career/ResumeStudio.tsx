@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import {
   User, Mail, Phone, MapPin, Linkedin, Github, Globe, Plus, X, Trash2,
@@ -10,7 +11,7 @@ import { THEME_PRESETS, FONT_FAMILIES, FontFamilyId, PAGE_SIZES, PageSizeId, TEM
 import { NEW_TEMPLATE_RENDERERS, TemplateProps as NewTemplateProps } from './resume/templates';
 import { AIBulletPicker, ATSCheckPanel, CoverLetterStudio } from './resume/addons';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', green: '#2A9D8F' };
+
 
 /* ───────────────────────────── Types ───────────────────────────── */
 

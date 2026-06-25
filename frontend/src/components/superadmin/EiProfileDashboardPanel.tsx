@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 /**
  * Phase 3.4 + 3.5 — Candidate Employability Profile dashboard.
  *
@@ -27,7 +28,7 @@ import {
   ShieldCheck, XCircle, ChevronDown, ChevronRight,
 } from 'lucide-react';
 
-const BRAND = { primary: '#344E86', accent: '#5B7BD5' };
+
 
 const BAND_COLOR: Record<string, string> = {
   Excellent: '#15803d', Strong: '#16a34a', Developing: '#ca8a04',

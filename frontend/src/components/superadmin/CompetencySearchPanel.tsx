@@ -1,10 +1,11 @@
+import { BRAND } from '@/design-system/tokens';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Search, Filter, Info, RefreshCw, X, ArrowUpDown, ArrowUp, ArrowDown, Boxes, Layers, Briefcase, Building2, Network, GitBranch, Download, Tag, CheckSquare, Square } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { Card, CardContent } from '../ui/card';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', success: '#10b981', warning: '#f59e0b', danger: '#ef4444', gray: '#6b7280' };
+
 
 const TYPE_STYLE: Record<string, string> = {
   behavioral: 'bg-purple-100 text-purple-700 border-purple-300',

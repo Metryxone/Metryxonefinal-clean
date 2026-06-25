@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { RefreshCw, Globe, AlertTriangle, Info, CheckCircle2 } from 'lucide-react';
@@ -5,7 +6,7 @@ import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
-const BRAND = { primary: '#344E86' };
+
 const BASE = '/api/global-intel';
 
 type RegionRow = {

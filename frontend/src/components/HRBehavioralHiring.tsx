@@ -1,7 +1,8 @@
+import { BRAND } from '@/design-system/tokens';
 import { useState } from 'react';
 import { Briefcase, Brain, Target, Users, TrendingUp, Download, Star, CheckCircle, AlertCircle, Filter } from 'lucide-react';
 
-const BRAND = { primary: '#344E86', teal: '#4ECDC4' };
+
 
 interface Candidate {
   id: string;

@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { useState, useRef, type ReactNode } from 'react';
 import {
   Upload, FileText, X, Loader2, CheckCircle, User, Mail, Phone,
@@ -7,7 +8,7 @@ import {
 } from 'lucide-react';
 import { ProfileCompletenessCard } from './ProfileCompletenessCard';
 
-const BRAND = { primary: '#0B3C5D', accent: '#4ECDC4', green: '#4ECDC4' };
+
 
 export interface ParsedCVProfile {
   personal: {

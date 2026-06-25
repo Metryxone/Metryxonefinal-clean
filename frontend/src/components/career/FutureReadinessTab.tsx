@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 /**
  * FutureReadinessTab — Future Readiness Platform (FRP)
  * Career Builder sub-tab: 11 panels split into two sections.
@@ -30,11 +31,7 @@ import {
 } from 'lucide-react';
 
 // ── Brand ──────────────────────────────────────────────────────────────────
-const BRAND = {
-  primary: '#6C63FF', accent: '#FF6584', green: '#43C59E',
-  amber: '#F7B731', red: '#FC5C65', blue: '#45AAF2',
-  border: '#E5E7EB',
-};
+
 
 const BAND_COLOR: Record<string, string> = {
   pioneering: '#43C59E', resilient: '#45AAF2', capable: '#6C63FF',

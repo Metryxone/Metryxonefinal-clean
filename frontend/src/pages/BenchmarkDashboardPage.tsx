@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import { DashboardIntro } from '../components/career/DashboardIntro';
 import ContextualBenchmarkV2Panel from '../components/career/ContextualBenchmarkV2Panel';
 /**
@@ -22,11 +23,7 @@ import {
 
 interface Props { onNavigate?: (screen: string) => void }
 
-const BRAND = {
-  primary: '#0F172A', accent: '#FB923C', green: '#16A34A', amber: '#D97706',
-  red: '#DC2626', blue: '#2563EB', surface: '#FFFFFF', bg: '#F8FAFC',
-  border: '#E2E8F0',
-};
+
 
 interface Role { id: string; title: string; seniority: string|null; layer_name: string; industry_name: string }
 interface Layer { id: string; name: string }

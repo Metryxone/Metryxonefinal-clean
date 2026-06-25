@@ -1,7 +1,8 @@
+import { BRAND } from '@/design-system/tokens';
 import { useEffect, useState } from 'react';
 import { Shield, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4' };
+
 
 type Status = 'loading' | 'approved' | 'already_approved' | 'invalid' | 'error';
 

@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import {
   BarChart3, CheckCircle, Shield, ArrowRight, ArrowDown,
   Users, Brain, Award, Zap, TrendingUp,
@@ -16,10 +17,7 @@ interface Props {
   onNavigate: (screen: Screen) => void;
 }
 
-const BRAND = {
-  primary: '#344E86',
-  accent: '#4ECDC4',
-};
+
 
 const FEATURES = [
   { icon: Users, title: 'Team Dynamics Mapping', desc: 'Visualize collaboration patterns, communication flows, and interpersonal dynamics across teams to identify high-performing configurations.' },

@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { Button } from "@/components/ui/button";
 import { 
   Brain, CheckCircle2, Users, Clock, Shield, ArrowRight, ChevronDown,
@@ -7,10 +8,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-const BRAND = {
-  primary: '#0B3C5D',
-  accent: '#4ECDC4',
-};
+
 
 const DOMAINS = [
   { id: 'D01', name: 'Academic & Cognitive Effectiveness', subdomains: 6, icon: BookOpen, description: 'Measures how effectively a student processes, retains, and applies academic content' },

@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { useState } from 'react';
 import {
   Brain, CheckCircle, ChevronDown, Clock, Shield, ArrowRight, Target,
@@ -15,14 +16,7 @@ interface Props {
   onNavigate: (screen: string) => void;
 }
 
-const BRAND = {
-  primary: '#0B3C5D',
-  accent: '#4ECDC4',
-  green: '#4ECDC4',
-  purple: '#0B3C5D',
-  orange: '#f59e0b',
-  red: '#ef4444',
-};
+
 
 const ASSESSMENT_MODULES = [
   { id: 'M01', name: 'Stress Management & Coping', subdomains: 4, icon: Activity, desc: 'Exam pressure tolerance, anxiety triggers, coping mechanisms, and recovery speed', color: BRAND.primary },

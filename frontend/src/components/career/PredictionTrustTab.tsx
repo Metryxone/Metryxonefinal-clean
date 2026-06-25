@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 /**
  * MX-75X — Candidate Prediction Trust & Transparency (READ-ONLY, candidate-facing).
  *
@@ -16,7 +17,7 @@
  */
 import { ShieldCheck, GitBranch, Database, Gauge, Info, CheckCircle2, XCircle, Clock } from 'lucide-react';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', amber: '#f4a261' };
+
 const K_MIN = 30;
 
 const LOOP = ['Assessment', 'Prediction', 'Outcome', 'Validation', 'Calibration', 'Improved prediction'];

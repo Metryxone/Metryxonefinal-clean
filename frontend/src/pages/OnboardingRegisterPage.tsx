@@ -1,6 +1,7 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState } from 'react';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', text: '#2E3470', muted: '#9AA4B2', border: '#E2E8F0' };
+
 
 function formatEntityType(type?: string): string {
   if (!type) return '';

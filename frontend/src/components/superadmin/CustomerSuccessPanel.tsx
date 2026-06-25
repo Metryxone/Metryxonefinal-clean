@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 /**
  * Phase 6.8 — Customer Success Intelligence dashboard (READ-ONLY).
  * Surfaces the composite customer-success analytics: a transparent health index + Adoption,
@@ -19,7 +20,7 @@ import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4' };
+
 
 function formatNum(n?: number | null) {
   if (n == null) return '—';

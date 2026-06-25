@@ -1,10 +1,11 @@
+import { BRAND } from '@/design-system/tokens';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { RefreshCw, Building2, AlertTriangle, Info, CircleSlash, TrendingDown, ListChecks, Rocket } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 
-const BRAND = { primary: '#344E86' };
+
 const BASE = '/api/admin/go-live';
 
 function Pct({ value }: { value: number | null | undefined }) {

@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import { useState } from 'react';
 import {
   HelpCircle, Search, ArrowRight, BookOpen,
@@ -17,10 +18,7 @@ interface Props {
   onNavigate: (screen: Screen) => void;
 }
 
-const BRAND = {
-  primary: '#344E86',
-  accent: '#4ECDC4',
-};
+
 
 const CATEGORY_COLORS = [BRAND.accent, BRAND.primary, BRAND.accent, BRAND.primary, BRAND.accent, BRAND.primary];
 

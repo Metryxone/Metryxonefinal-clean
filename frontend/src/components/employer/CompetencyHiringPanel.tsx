@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 /**
  * §7 — Competency Hiring Intelligence Panel (MX-73X / MX-100X Phase 5)
  *
@@ -17,10 +18,7 @@ import {
   RefreshCw, Users, Briefcase, BarChart3, Layers, Info, Search,
 } from 'lucide-react';
 
-const BRAND = {
-  primary: '#344E86', accent: '#4ECDC4', green: '#2A9D8F',
-  red: '#e63946', orange: '#f4a261', purple: '#8b5cf6', gold: '#f59e0b',
-};
+
 
 function authHdr() {
   const t = localStorage.getItem('metryx_token');

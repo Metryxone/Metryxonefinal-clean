@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Edit, Trash2, Search, BookOpen, RefreshCw, ChevronDown, ChevronRight as ChevRight, GripVertical } from 'lucide-react';
@@ -10,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { useToast } from '@/hooks/use-toast';
 
-const BRAND = { primary: '#344E86' };
+
 const STATUS_COLORS: Record<string, string> = { draft: 'bg-yellow-100 text-yellow-800', published: 'bg-green-100 text-green-800', archived: 'bg-gray-100 text-gray-600' };
 const DIFF_COLORS: Record<string, string> = { beginner: 'bg-green-100 text-green-700', intermediate: 'bg-blue-100 text-blue-700', advanced: 'bg-purple-100 text-purple-700' };
 const STEP_TYPE_COLORS: Record<string, string> = { module: 'bg-blue-100 text-blue-700', assessment: 'bg-orange-100 text-orange-700', project: 'bg-green-100 text-green-700', reflection: 'bg-purple-100 text-purple-700', coaching: 'bg-pink-100 text-pink-700', peer_activity: 'bg-teal-100 text-teal-700' };

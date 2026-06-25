@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 /**
  * Phase 6.14 — Super Admin Command Center console (READ-ONLY).
  * Unifies the platform's 12 operational domains (Institutions, Employers, Students, Candidates,
@@ -20,7 +21,7 @@ import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4' };
+
 
 function formatValue(value?: number | null, unit?: string) {
   if (value == null) return '—';

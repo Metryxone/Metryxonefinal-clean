@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 /**
  * MX-101X — Question Factory admin panel.
  *
@@ -17,7 +18,7 @@ import { Badge } from '../ui/badge';
 import { Input } from '../ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
-const BRAND = { primary: '#344E86' };
+
 const BASE = '/api/admin/question-factory';
 // MX-101B — Assessment Readiness Acceleration. Sub-sections are probe-gated by `assessmentReadiness`
 // (GET /enabled). With the flag OFF the probe returns {enabled:false} → the Readiness tab is never

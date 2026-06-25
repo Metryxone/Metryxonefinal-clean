@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 /**
  * JoinSessionPage — Student joins a session via invite link.
  * URL: /join-session?room=metryx-session-xxxx&token=yyyy
@@ -10,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { VideoCallRoom } from '@/components/video/VideoCallRoom';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4' };
+
 
 interface SessionInfo {
   roomId: string;

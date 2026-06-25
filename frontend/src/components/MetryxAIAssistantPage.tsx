@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -37,10 +38,7 @@ import {
   Loader2,
 } from "lucide-react";
 
-const BRAND = {
-  primary: '#0B3C5D',
-  accent: '#4ECDC4',
-};
+
 
 const CAPABILITIES = [
   { icon: Brain, title: 'LBI Interpretation', desc: 'Explains domain scores, subdomain patterns, and what they mean for your child\'s learning journey across all 19 domains.' },

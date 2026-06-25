@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 /**
  * EIProvenanceCard — Phase 2 explainability surface.
  *
@@ -10,7 +11,7 @@ import React from 'react';
 import { SectionCard } from './SectionCard';
 import type { OfficialEIClient, ResolutionClient, TrustClient, ConfidenceClient, VersionQuadClient } from '@/lib/hooks/useHybridEI';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', amber: '#F59E0B', red: '#EF4444', muted: '#6B7280' };
+
 
 function confColor(c: number) {
   if (c >= 0.85) return '#10B981';

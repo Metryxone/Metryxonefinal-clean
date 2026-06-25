@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import { DashboardIntro } from '../components/career/DashboardIntro';
 /**
  * Phase 1 — Competency Ontology + Workforce Taxonomy explorer.
@@ -73,14 +74,7 @@ interface RoleDNA {
 /** True when a competency's weight is estimated/inherited from O*NET, not measured. */
 const isEstimatedSource = (source?: string) => source === 'onet_derived';
 
-const BRAND = {
-  primary: '#0F172A',
-  accent: '#FB923C',
-  green: '#16A34A',
-  surface: '#FFFFFF',
-  bg: '#F8FAFC',
-  border: '#E2E8F0',
-};
+
 
 async function getJSON<T>(url: string): Promise<T> {
   const r = await fetch(url);

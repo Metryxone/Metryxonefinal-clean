@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -13,7 +14,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { useToast } from '@/hooks/use-toast';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', success: '#10b981', danger: '#ef4444', dark: '#1e293b' };
+
 
 type EmployerRow = {
   orgId: string;

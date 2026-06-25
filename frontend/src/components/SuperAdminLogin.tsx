@@ -1,12 +1,10 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { useState, useEffect } from 'react';
 import { Shield, Mail, Lock, ArrowRight, Eye, EyeOff, Loader2, CheckCircle, Home, Map, RefreshCw, AlertCircle, WifiOff, UserX, KeyRound, ShieldOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import metryxLogo from '@/assets/metryx-logo-dark.jpg';
 
-const BRAND = {
-  primary: '#0B3C5D',
-  accent: '#4ECDC4',
-};
+
 
 interface SuperAdminLoginProps {
   onLoginSuccess: () => void;

@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
@@ -19,7 +20,7 @@ import mentor6 from '@/assets/images/mentor6.png';
 import mentor7 from '@/assets/images/mentor7.png';
 import mentor8 from '@/assets/images/mentor8.png';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4' };
+
 
 const MENTOR_THUMBNAILS: Record<number, string> = {
   0: mentor1, 1: mentor2, 2: mentor3, 3: mentor4,

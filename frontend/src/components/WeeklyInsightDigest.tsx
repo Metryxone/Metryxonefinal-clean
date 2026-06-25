@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { useState } from 'react';
 import { FileText, Download, TrendingUp, AlertCircle, CheckCircle, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
 
@@ -20,7 +21,7 @@ interface Props {
   data: DigestData;
 }
 
-const BRAND = { primary: '#0B3C5D', teal: '#4ECDC4' };
+
 
 export function WeeklyInsightDigest({ data }: Props) {
   const [expanded, setExpanded] = useState(false);

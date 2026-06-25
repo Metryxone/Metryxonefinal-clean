@@ -1,8 +1,9 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Sparkles, FileText, Target, X, Plus, Download, Mail, ChevronDown, ChevronUp, CheckCircle2, AlertCircle } from 'lucide-react';
 import { AI_BULLET_LIBRARY, atsScore, COVER_LETTER_DEFAULT, CoverLetterData } from './library';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', green: '#2A9D8F' };
+
 
 /* ─────────────────────────── AI Bullet Picker ─────────────────────────── */
 export function AIBulletPicker({ roleHint, onPick, onClose }: { roleHint: string; onPick: (b: string) => void; onClose: () => void }) {

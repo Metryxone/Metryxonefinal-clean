@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Edit, Trash2, Search, Building, RefreshCw, Check, X } from 'lucide-react';
@@ -11,7 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { useToast } from '@/hooks/use-toast';
 import SubmitForReviewButton from './SubmitForReviewButton';
 
-const BRAND = { primary: '#344E86' };
+
 const STATUS_COLORS: Record<string, string> = { draft: 'bg-yellow-100 text-yellow-800', published: 'bg-green-100 text-green-800', archived: 'bg-gray-100 text-gray-600' };
 const CCT_COLORS: Record<string, string> = { revenue: 'bg-green-100 text-green-700', cost: 'bg-orange-100 text-orange-700', support: 'bg-blue-100 text-blue-700', strategic: 'bg-purple-100 text-purple-700' };
 type Dept = { id: number; code: string; name: string; description?: string; function_id?: number; cost_centre_type?: string; is_active: boolean; status: string; sort_order: number; };

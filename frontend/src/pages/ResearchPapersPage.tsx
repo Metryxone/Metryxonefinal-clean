@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import {
   FileText, ArrowRight, CheckCircle, BookOpen,
   Brain, Shield, Download, ExternalLink,
@@ -15,10 +16,7 @@ interface Props {
   onNavigate: (screen: Screen) => void;
 }
 
-const BRAND = {
-  primary: '#344E86',
-  accent: '#4ECDC4',
-};
+
 
 const PAPERS = [
   {

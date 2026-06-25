@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import { useState, useEffect, useCallback } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
@@ -13,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4' };
+
 const API = '/api/gamification';
 const TOKEN_KEY = 'metryx_token';
 

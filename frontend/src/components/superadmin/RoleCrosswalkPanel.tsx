@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Search, RefreshCw, Link2, ShieldCheck, Wand2, AlertTriangle, X } from 'lucide-react';
@@ -11,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { useToast } from '@/hooks/use-toast';
 
-const BRAND = { primary: '#344E86' };
+
 const NONE = '__none__';
 
 type CrosswalkRow = {

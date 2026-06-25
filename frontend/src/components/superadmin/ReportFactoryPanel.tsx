@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   FileText, Layers, Lightbulb, BarChart2, TrendingUp, Download,
@@ -13,12 +14,7 @@ import {
 } from 'recharts';
 import { ReportSection } from '../reports/GeneratedReportBody';
 
-const BRAND = {
-  primary: '#6366f1', primaryLight: '#eef2ff',
-  green: '#10b981', greenLight: '#ecfdf5',
-  amber: '#f59e0b', red: '#ef4444',
-  border: '#e5e7eb', muted: '#6b7280', bg: '#f9fafb',
-};
+
 
 type RFTab = 'overview' | 'templates' | 'narratives' | 'insights' | 'visualizations' |
              'benchmarks' | 'whitelabel' | 'languages' | 'reports' | 'exports';

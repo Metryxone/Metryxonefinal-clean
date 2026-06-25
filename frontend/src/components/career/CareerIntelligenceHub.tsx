@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 /**
  * Career Intelligence Hub — 8-surface intelligence platform
  * Composes: Memory · Trajectory · Transition · Forecast · Outcomes · Interventions · Risk · Reports
@@ -14,7 +15,7 @@ import {
 
 type HubTab = 'memory' | 'trajectory' | 'transition' | 'forecast' | 'outcomes' | 'interventions' | 'risk' | 'reports';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', green: '#10B981', red: '#EF4444', orange: '#F59E0B' };
+
 
 const TAB_CONFIG: { id: HubTab; label: string; icon: React.ReactNode; desc: string }[] = [
   { id: 'memory',        label: 'Career Memory',      icon: <History size={14} />,      desc: 'Growth timeline & signal evolution' },

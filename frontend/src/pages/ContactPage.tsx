@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import {
   Mail, Phone, MapPin, Clock, Send,
   ArrowRight, CheckCircle, MessageSquare,
@@ -15,10 +16,7 @@ interface Props {
   onNavigate: (screen: Screen) => void;
 }
 
-const BRAND = {
-  primary: '#344E86',
-  accent: '#4ECDC4',
-};
+
 
 const CONTACT_REASONS = [
   'Product Demo Request',

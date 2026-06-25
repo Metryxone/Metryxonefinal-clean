@@ -1,9 +1,10 @@
+import { BRAND } from '@/design-system/tokens';
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Bell, Shield, CreditCard, GraduationCap, BookOpen, Sparkles, Calendar, MessageSquare, FileText, Users, AlertCircle, Info, ChevronLeft, Smartphone, Mail, MessageCircle, Volume2, Check, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4' };
+
 
 interface NotificationPreference {
   id: string;
@@ -65,7 +66,7 @@ export default function NotificationPreferencesPage({ onNavigate }: Notification
   const [savingCategory, setSavingCategory] = useState<string | null>(null);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
 
-  const { data: preferences = [] } = useQuery<NotificationPreference[]>({
+  const { data: preferences = [], isLoading: prefsLoading, isError: prefsError } = useQuery<NotificationPreference[]>({
     queryKey: ['/api/notification-preferences'],
     queryFn: async () => {
       const res = await fetch('/api/notification-preferences', { credentials: 'include' });
@@ -181,6 +182,20 @@ export default function NotificationPreferencesPage({ onNavigate }: Notification
             </div>
           ))}
         </div>
+
+        {prefsLoading && (
+          <div className="flex items-center gap-2 mb-3 px-3 py-2 rounded-lg border text-xs" style={{ borderColor: 'var(--border-subtle)', color: 'var(--text-muted)' }} data-testid="prefs-loading">
+            <Loader2 className="h-3.5 w-3.5 animate-spin" style={{ color: BRAND.primary }} />
+            Loading…
+          </div>
+        )}
+
+        {prefsError && (
+          <div className="flex items-center gap-2 mb-3 px-3 py-2 rounded-lg border text-xs" style={{ borderColor: '#FCA5A5', backgroundColor: '#FEF2F2', color: '#DC2626' }} data-testid="prefs-error">
+            <AlertCircle className="h-3.5 w-3.5" />
+            Couldn't load data. Please try again.
+          </div>
+        )}
 
         <div className="space-y-3">
           {categories.map(catKey => {

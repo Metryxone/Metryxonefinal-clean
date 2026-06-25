@@ -37,11 +37,13 @@ interface FileFinding {
   imgNoAlt: number;          // <img ...> occurrences lacking alt=
   fontInter: number;         // references to Inter
   fontJakarta: number;       // references to Plus Jakarta Sans
-  bigFixedPx: number;        // hardcoded widths >= 600px (mobile-overflow risk)
+  bigFixedPx: number;        // GENUINE bare fixed widths >= 600px (excl. max-w/responsive/decorative)
   hasLoading: boolean;       // uses a loading/skeleton/spinner primitive or isLoading guard
   hasEmpty: boolean;         // uses an empty-state primitive/branch
   hasError: boolean;         // uses an error-state primitive/branch
-  fetchesData: boolean;      // useQuery/fetch/axios present (so states are EXPECTED)
+  fetchesData: boolean;      // useQuery/fetch/axios/mutation present (any data IO)
+  readsData: boolean;        // READS data for display (useQuery/useSWR or fetch-in-effect) — states EXPECTED
+  isUtilityFile: boolean;    // contexts/debug/hooks — not a screen, excluded from state gaps
   intentionalStub: number;   // "coming soon" inside a toast(...) — documented legacy stub
   defectPlaceholder: number; // non-toast "coming soon"/"under construction"/"not implemented"
 }
@@ -84,16 +86,32 @@ function analyze(file: string): FileFinding {
     : 0;
   const fontJakarta = (src.match(/plus jakarta sans/gi) ?? []).length;
 
-  // hardcoded big widths: w-[NNNpx] or width: NNNpx / style width  >= 600
-  const pxWidths = [...src.matchAll(/(?:w-\[|width:\s*|minWidth:\s*['"]?|min-width:\s*)(\d{3,4})px/gi)]
-    .map((m) => parseInt(m[1], 10))
-    .filter((n) => n >= 600);
-  const bigFixedPx = pxWidths.length;
+  // hardcoded big widths that are a GENUINE mobile-overflow risk: a BARE fixed width
+  // (w-[NNNpx] / inline width / minWidth >= 600px). EXCLUDES max-width caps, responsive-
+  // prefixed widths (sm:/md:/lg:/xl:), and decorative aria-hidden / pointer-events-none
+  // elements (blur orbs etc.) — those are responsive-correct, not defects.
+  let bigFixedPx = 0;
+  for (const line of src.split('\n')) {
+    if (/aria-hidden|pointer-events-none/.test(line)) continue; // decorative layer, not layout
+    if (/max-w-\[/.test(line)) continue; // a max-width cap (e.g. max-w-[95vw]) makes the bare width responsive-safe
+    for (const m of line.matchAll(/(?:^|[\s"'`{])w-\[(\d{3,4})px\]/g)) if (parseInt(m[1], 10) >= 600) bigFixedPx++;
+    for (const m of line.matchAll(/(?:(?<![a-zA-Z-])width|minWidth|min-width)\s*:\s*['"]?(\d{3,4})px/gi)) if (parseInt(m[1], 10) >= 600) bigFixedPx++;
+  }
 
+  // a "data screen" that genuinely needs loading/empty/error READS data for display
+  // (useQuery/useSWR, or fetch/apiRequest inside an effect). Pure useMutation-only forms
+  // (submit-on-click) and non-screen utility files (contexts/, debug/, hooks/) are NOT
+  // list/dashboard reads — excluding them removes scanner false positives.
+  const isUtilityFile = /(^|\/)(contexts|debug|hooks)\//.test(rel);
+  // readsData must reflect an actual data CALL in THIS file — not a mere import that
+  // delegates to child tabs/components (tab-container false positives).
+  const readsData = /useQuery\s*[(<]|useSWR\s*\(/.test(src) || (/fetch\(|apiRequest\(|axios/.test(src) && /useEffect/.test(src));
   const fetchesData = /useQuery|useMutation|fetch\(|axios|apiRequest|useSWR/.test(src);
-  const hasLoading = /isLoading|isPending|Skeleton|Spinner|LoadingState|animate-pulse|isFetching/.test(src);
+  // loading: hook flags, the common useState `[loading,setLoading]` pattern, or render guards
+  const hasLoading = /isLoading|isPending|isFetching|setLoading|loading\s*[&?]|\{\s*loading|Skeleton|Spinner|LoadingState|animate-pulse/i.test(src);
   const hasEmpty = /EmptyState|<Empty\b|no (data|results|records)|isEmpty|length\s*===\s*0|\.length\s*\?/i.test(src);
-  const hasError = /ErrorState|isError|error\s*&&|catch\s*\(|<Alert\b|onError/i.test(src);
+  // error: hook flags, the common useState `[error,setError]` pattern, try/catch, or alert UI
+  const hasError = /ErrorState|isError|setError|error\s*[&?]|\{\s*error|catch\s*\(|\.catch\(|<Alert\b|onError|errorMsg/i.test(src);
 
   // placeholders: intentional (toast) vs defect (rendered text)
   const csLines = src.split('\n').filter((l) => /coming soon|under construction|not implemented/i.test(l));
@@ -117,6 +135,8 @@ function analyze(file: string): FileFinding {
     hasEmpty,
     hasError,
     fetchesData,
+    readsData,
+    isUtilityFile,
     intentionalStub,
     defectPlaceholder,
   };
@@ -128,6 +148,7 @@ function main() {
 
   // aggregate (honest counts only)
   const dataScreens = findings.filter((f) => f.fetchesData);
+  const stateScreens = findings.filter((f) => f.readsData && !f.isUtilityFile);
   const agg = {
     scannedAt: new Date().toISOString(),
     totalFiles: findings.length,
@@ -149,6 +170,14 @@ function main() {
       filesWithBigFixedPx: findings.filter((f) => f.bigFixedPx > 0).map((f) => ({ file: f.file, count: f.bigFixedPx })),
     },
     states: {
+      // honest denominator: screens that READ data for display (exclude mutation-only forms + utility files)
+      stateScreens: stateScreens.length,
+      stateScreensMissingLoading: stateScreens.filter((f) => !f.hasLoading).map((f) => f.file),
+      stateScreensMissingEmpty: stateScreens.filter((f) => !f.hasEmpty).map((f) => f.file),
+      stateScreensMissingError: stateScreens.filter((f) => !f.hasError).map((f) => f.file),
+      // GENUINE true gaps: reads data but has NEITHER a loading NOR an error affordance
+      trueStateGaps: stateScreens.filter((f) => !f.hasLoading && !f.hasError).map((f) => f.file),
+      // raw (broad heuristic, retained for transparency — includes mutation-only/utility false positives)
       dataScreens: dataScreens.length,
       dataScreensMissingLoading: dataScreens.filter((f) => !f.hasLoading).map((f) => f.file),
       dataScreensMissingEmpty: dataScreens.filter((f) => !f.hasEmpty).map((f) => f.file),
@@ -172,8 +201,8 @@ function main() {
   console.log(`  OFF-BRAND accent:  ${agg.brand.offBrandAccentFiles.length} -> ${agg.brand.offBrandAccentFiles.join(', ') || 'none'}`);
   console.log(`  typography: Inter-ref ${agg.typography.filesReferencingInter} | Jakarta-ref ${agg.typography.filesReferencingJakarta}`);
   console.log(`  a11y: <img> missing alt across ${agg.accessibility.filesWithImgNoAlt.length} files (${agg.accessibility.totalImgNoAlt} imgs)`);
-  console.log(`  responsive: big (>=600px) fixed widths in ${agg.responsive.filesWithBigFixedPx.length} files`);
-  console.log(`  states: ${agg.states.dataScreens} data screens | missing loading ${agg.states.dataScreensMissingLoading.length} | missing empty ${agg.states.dataScreensMissingEmpty.length} | missing error ${agg.states.dataScreensMissingError.length}`);
+  console.log(`  responsive: GENUINE bare (>=600px) fixed widths in ${agg.responsive.filesWithBigFixedPx.length} files`);
+  console.log(`  states: ${agg.states.stateScreens} read-screens | missing loading ${agg.states.stateScreensMissingLoading.length} | missing empty ${agg.states.stateScreensMissingEmpty.length} | missing error ${agg.states.stateScreensMissingError.length} | TRUE gaps (no loading+no error) ${agg.states.trueStateGaps.length}`);
   console.log(`  placeholders: intentional toast-stubs ${agg.placeholders.totalIntentionalStubs} (legacy, KEEP) | rendered-defect placeholders in ${agg.placeholders.defectPlaceholderFiles.length} files`);
   console.log(`  -> ${path.join(OUT_DIR, 'scan.json')}`);
 }

@@ -1,7 +1,8 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState, useEffect } from 'react';
 import { Award, Share2, BadgeCheck, RefreshCw, Users, TrendingUp } from 'lucide-react';
 
-const BRAND = { primary: '#6366f1', green: '#10b981', border: '#e5e7eb', muted: '#6b7280' };
+
 
 function Stat({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
   return (

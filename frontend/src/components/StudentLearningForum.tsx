@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,7 @@ import {
   Lightbulb, GraduationCap
 } from "lucide-react";
 
-const BRAND = { primary: '#0B3C5D', accent: '#4ECDC4' };
+
 
 const SUBJECTS = [
   { key: 'math',      label: 'Mathematics',  icon: Calculator,    color: '#0B3C5D' },

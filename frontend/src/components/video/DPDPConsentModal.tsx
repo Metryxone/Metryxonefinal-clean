@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 /**
  * DPDPConsentModal — Digital Personal Data Protection (DPDP) Act 2023 compliant
  * consent gate. ALL participants must accept before gaining access to the session.
@@ -14,7 +15,7 @@ import { useState } from 'react';
 import { Shield, Lock, Mic, Video, FileText, Clock, Trash2, AlertTriangle, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const BRAND = { primary: '#0B3C5D', accent: '#4ECDC4' };
+
 const CONSENT_VERSION = 'DPDP-2023-v1';
 const RETENTION_DAYS = 90;
 

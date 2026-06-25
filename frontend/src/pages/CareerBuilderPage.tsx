@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { FresherHubTab } from './career/FresherHubTab';
 import { SimulationsTab } from './career/SimulationsTab';
@@ -78,7 +79,7 @@ import {
 import { selectAssessmentQuestions, selectAssessmentQuestionsFromAPI, computeScoresFromSelected, getAssessmentAttempt, bumpAssessmentAttempt } from '@/lib/assessmentSelector';
 import { classifyEducation, classifyExperience, classifyCertifications } from '@/lib/engines/employabilityEngine';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', green: '#2A9D8F', red: '#e63946', orange: '#f4a261' };
+
 
 /* Persistence keys for client-side career state (will graduate to API later) */
 const LS_TARGET_ROLE   = 'mx-career-target-role';

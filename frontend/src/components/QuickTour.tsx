@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { useState, useEffect } from 'react';
 import {
   X, ChevronRight, ChevronLeft, Home, GraduationCap, FileText,
@@ -10,7 +11,7 @@ import { type DashboardType, TOUR_KEYS } from '@/lib/tourUtils';
 
 export type { DashboardType };
 
-const BRAND = { primary: '#0B3C5D', teal: '#4ECDC4' };
+
 
 interface TourStep {
   section?: string;

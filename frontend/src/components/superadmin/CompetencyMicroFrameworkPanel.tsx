@@ -1,10 +1,11 @@
+import { BRAND } from '@/design-system/tokens';
 import React from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Network, GitBranch, Link2, Tag, Info, RefreshCw, Search, Plus, Trash2, CheckSquare, Square, MinusSquare, ToggleLeft, ToggleRight, X, Download, Upload, FileText } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { Card, CardContent } from '../ui/card';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', success: '#10b981', warning: '#f59e0b', gray: '#6b7280' };
+
 
 interface ChildRow {
   id: number;

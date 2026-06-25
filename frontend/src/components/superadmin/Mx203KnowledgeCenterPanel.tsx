@@ -1,10 +1,11 @@
+import { BRAND } from '@/design-system/tokens';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { RefreshCw, BookOpen, AlertTriangle, Info, Layers, Gauge, Database, ListChecks } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 
-const BRAND = { primary: '#344E86' };
+
 const BASE = '/api/admin/mx203-knowledge';
 
 /** null/undefined → "not measurable" (amber); 0 stays 0 (never coerced). */

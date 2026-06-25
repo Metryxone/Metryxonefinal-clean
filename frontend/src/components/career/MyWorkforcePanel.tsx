@@ -1,10 +1,11 @@
+import { BRAND } from '@/design-system/tokens';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { RefreshCw, Compass, AlertTriangle, Info, CheckCircle2, Ban, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 
-const BRAND = { primary: '#344E86' };
+
 const BASE = '/api/my-workforce';
 
 type Provenance = { engines: string[]; tables: string[]; notes?: string[] };

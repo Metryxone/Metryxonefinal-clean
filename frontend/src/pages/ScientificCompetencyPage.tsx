@@ -51,12 +51,20 @@ function BarsPanel() {
   const [score, setScore] = useState(72);
   const [anchors, setAnchors] = useState<AnyObj[]>([]);
   const [resolved, setResolved] = useState<AnyObj | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
-    fetchJSON(`${API}/bars/${comp}/${layer}`).then(r => setAnchors(r.data || []));
-    fetchJSON(`${API}/bars/${comp}/${layer}/resolve?score=${score}`).then(r => setResolved(r.data));
+    setLoading(true); setError(null);
+    Promise.all([
+      fetchJSON(`${API}/bars/${comp}/${layer}`).then(r => setAnchors(r.data || [])),
+      fetchJSON(`${API}/bars/${comp}/${layer}/resolve?score=${score}`).then(r => setResolved(r.data)),
+    ]).catch(() => setError("Couldn't load data. Please try again."))
+      .finally(() => setLoading(false));
   }, [comp, layer, score]);
   return (
     <div className="space-y-4">
+      {loading && <p className="text-xs text-slate-500">Loading…</p>}
+      {error && <p className="text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-md px-3 py-2">{error}</p>}
       <div className="flex flex-wrap gap-3 items-end">
         <label className="text-xs"><div className="text-slate-500 mb-1">Competency</div>
           <select value={comp} onChange={e => setComp(e.target.value)} className="border rounded px-2 py-1">
@@ -103,10 +111,16 @@ function FrameworksPanel() {
   const [selected, setSelected] = useState<string | null>(null);
   const [detail, setDetail] = useState<AnyObj | null>(null);
   const [scored, setScored] = useState<AnyObj | null>(null);
-  useEffect(() => { fetchJSON(`${API}/frameworks`).then(r => {
-    setFrameworks(r.data || []);
-    if (r.data?.[0]) setSelected(r.data[0].id);
-  }); }, []);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    setLoading(true); setError(null);
+    fetchJSON(`${API}/frameworks`).then(r => {
+      setFrameworks(r.data || []);
+      if (r.data?.[0]) setSelected(r.data[0].id);
+    }).catch(() => setError("Couldn't load data. Please try again."))
+      .finally(() => setLoading(false));
+  }, []);
   useEffect(() => {
     if (!selected) return;
     fetchJSON(`${API}/frameworks/${selected}`).then(r => setDetail(r.data));
@@ -115,6 +129,8 @@ function FrameworksPanel() {
   }, [selected]);
   return (
     <div className="space-y-4">
+      {loading && <p className="text-xs text-slate-500">Loading…</p>}
+      {error && <p className="text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-md px-3 py-2">{error}</p>}
       <div className="flex flex-wrap gap-2">
         {frameworks.map(f => (
           <button key={f.id} onClick={() => setSelected(f.id)}
@@ -164,7 +180,14 @@ function GraphPanel() {
   const [seq, setSeq] = useState<AnyObj[]>([]);
   const [pathFrom, setPathFrom] = useState('EIQ');
   const [pathTo, setPathTo] = useState('STR');
-  useEffect(() => { fetchJSON(`${API}/graph/edges`).then(r => setEdges(r.data || [])); }, []);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    setLoading(true); setError(null);
+    fetchJSON(`${API}/graph/edges`).then(r => setEdges(r.data || []))
+      .catch(() => setError("Couldn't load data. Please try again."))
+      .finally(() => setLoading(false));
+  }, []);
   useEffect(() => {
     fetchJSON(`${API}/graph/sequence/${target}?scores=${encodeURIComponent(JSON.stringify(DEMO_SCORES))}`)
       .then(r => setSeq(r.data || []));
@@ -181,6 +204,8 @@ function GraphPanel() {
   };
   return (
     <div className="space-y-4">
+      {loading && <p className="text-xs text-slate-500">Loading…</p>}
+      {error && <p className="text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-md px-3 py-2">{error}</p>}
       <Section title="Edges" subtitle={`${edges.length} relationships across the competency graph`}>
         <ul className="text-xs space-y-1">
           {edges.map(e => (
@@ -236,10 +261,23 @@ function GraphPanel() {
 function PsychometricsPanel() {
   const [seed, setSeed] = useState(42);
   const [data, setData] = useState<AnyObj | null>(null);
-  useEffect(() => { fetchJSON(`${API}/psychometrics/demo?seed=${seed}`).then(r => setData(r.data)); }, [seed]);
-  if (!data) return null;
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    setLoading(true); setError(null);
+    fetchJSON(`${API}/psychometrics/demo?seed=${seed}`).then(r => setData(r.data))
+      .catch(() => setError("Couldn't load data. Please try again."))
+      .finally(() => setLoading(false));
+  }, [seed]);
+  if (!data) return (
+    <div className="space-y-2">
+      {loading && <p className="text-xs text-slate-500">Loading…</p>}
+      {error && <p className="text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-md px-3 py-2">{error}</p>}
+    </div>
+  );
   return (
     <div className="space-y-4">
+      {error && <p className="text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-md px-3 py-2">{error}</p>}
       <div className="flex items-end gap-2">
         <label className="text-xs">Seed <input type="number" value={seed} onChange={e => setSeed(+e.target.value)} className="border rounded px-2 py-1 w-20 ml-1" /></label>
         <p className="text-xs text-slate-500">Synthetic 8-item × 30-respondent matrix.</p>
@@ -275,12 +313,19 @@ function PsychometricsPanel() {
 // ─── Confidence Panel ─────────────────────────────────────────────────
 function ConfidencePanel() {
   const [vec, setVec] = useState<AnyObj[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
+    setLoading(true); setError(null);
     fetchJSON(`${API}/confidence/vector?scores=${encodeURIComponent(JSON.stringify(DEMO_SCORES))}`)
-      .then(r => setVec(r.data || []));
+      .then(r => setVec(r.data || []))
+      .catch(() => setError("Couldn't load data. Please try again."))
+      .finally(() => setLoading(false));
   }, []);
   return (
     <Section title="Confidence-weighted competency vector" subtitle="Each row carries raw score + composite confidence + reliability tier + evidence strength">
+      {loading && <p className="text-xs text-slate-500 mb-2">Loading…</p>}
+      {error && <p className="text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-md px-3 py-2 mb-2">{error}</p>}
       <div className="grid gap-2">
         {vec.map(r => {
           const pct = Math.round(r.confidence * 100);
@@ -309,14 +354,21 @@ function ConfidencePanel() {
 // ─── Gaps Panel ───────────────────────────────────────────────────────
 function GapsPanel() {
   const [data, setData] = useState<AnyObj[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
+    setLoading(true); setError(null);
     fetchJSON(`${API}/gaps/compute?current=${encodeURIComponent(JSON.stringify(DEMO_SCORES))}`)
-      .then(r => setData(r.data || []));
+      .then(r => setData(r.data || []))
+      .catch(() => setError("Couldn't load data. Please try again."))
+      .finally(() => setLoading(false));
   }, []);
   const sevColor = (s: string) => s === 'critical' ? 'red' : s === 'high' ? 'amber' : s === 'medium' ? 'blue' : s === 'low' ? 'slate' : 'green';
   const typeColor = (t: string) => t === 'leadership' ? 'purple' : t === 'strategic' ? 'blue' : t === 'cognitive' ? 'green' : t === 'readiness' ? 'amber' : 'slate';
   return (
     <Section title="Typed gap analysis (priority-ranked)" subtitle="Behavioural / Cognitive / Functional / Leadership / Strategic / Readiness — priority = severity × criticality × market × dependency-boost">
+      {loading && <p className="text-xs text-slate-500 mb-2">Loading…</p>}
+      {error && <p className="text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-md px-3 py-2 mb-2">{error}</p>}
       <div className="grid gap-2">
         {data.map(g => (
           <div key={g.competency_id} className="border border-slate-200 rounded-lg p-3">

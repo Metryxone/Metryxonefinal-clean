@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,7 +17,7 @@ import {
   PaperclipIcon, Info, LogOut, Settings, Eye
 } from 'lucide-react';
 
-const BRAND = { primary: '#0B3C5D', accent: '#4ECDC4' };
+
 
 function collabFetch(url: string, options: RequestInit = {}) {
   const token = localStorage.getItem('metryx_token');

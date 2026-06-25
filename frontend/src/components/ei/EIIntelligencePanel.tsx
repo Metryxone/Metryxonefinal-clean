@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 /**
  * EI Intelligence Panel — Report Intelligence v2
  *
@@ -18,7 +19,7 @@ import {
   ChevronRight, AlertCircle, CheckCircle2, Lightbulb, FileText,
 } from 'lucide-react';
 
-const BRAND = { primary: '#0B3C5D', accent: '#4ECDC4', muted: '#64748B' };
+
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 

@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import { useState, useRef, useEffect } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
@@ -11,7 +12,7 @@ import {
   Calculator, Atom, TestTubes, FileText, Play, ChevronLeft, X
 } from 'lucide-react';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4' };
+
 
 interface CareerPath {
   id: string;

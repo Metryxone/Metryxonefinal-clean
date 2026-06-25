@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import {
   Rocket, CheckCircle, Shield, ArrowRight, ArrowDown,
   BookOpen, Users, Brain, Award, Zap, BarChart3, Lock,
@@ -16,10 +17,7 @@ interface Props {
   onNavigate: (screen: Screen) => void;
 }
 
-const BRAND = {
-  primary: '#344E86',
-  accent: '#4ECDC4',
-};
+
 
 const FEATURES = [
   { icon: Code, title: 'RESTful API Integration', desc: 'Production-ready REST APIs with comprehensive endpoints for assessments, reports, and user management. Full OpenAPI documentation included.' },

@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { useState, useEffect, useCallback } from 'react';
 import {
   BookOpen, Plus, Search, Filter, Edit2, Trash2, Eye, EyeOff,
@@ -8,15 +9,7 @@ import {
 import { AppTopBar } from '@/components/AppTopBar';
 
 // ─── Brand colours ─────────────────────────────────────────────────────────────
-const BRAND = {
-  primary: '#0B3C5D',
-  green:   '#4ECDC4',
-  accent:  '#1a6b9e',
-  orange:  '#f97316',
-  red:     '#ef4444',
-  purple:  '#8b5cf6',
-  gray:    '#64748b',
-};
+
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 interface IQuestion {

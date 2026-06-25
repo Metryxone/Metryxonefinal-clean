@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -9,7 +10,7 @@ import { Badge } from '../ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { useToast } from '@/hooks/use-toast';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', success: '#10b981', warning: '#f59e0b', danger: '#ef4444' };
+
 
 function statusColor(status: string) {
   if (status === 'healthy') return BRAND.success;

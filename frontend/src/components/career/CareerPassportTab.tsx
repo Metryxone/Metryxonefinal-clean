@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState, useEffect, useCallback } from 'react';
 import { IntelligenceLayers } from '../shared/IntelligenceLayers';
 import {
@@ -8,11 +9,7 @@ import {
   TrendingUp, Mail, Eye, EyeOff,
 } from 'lucide-react';
 
-const BRAND = {
-  primary: '#6366f1', primaryLight: '#eef2ff', green: '#10b981', greenLight: '#ecfdf5',
-  amber: '#f59e0b', amberLight: '#fffbeb', red: '#ef4444', redLight: '#fef2f2',
-  border: '#e5e7eb', muted: '#6b7280', bg: '#f9fafb',
-};
+
 
 // ── Verification badge ─────────────────────────────────────────────────────
 function VerificationBadge({ status, platform }: { status?: string; platform?: boolean }) {

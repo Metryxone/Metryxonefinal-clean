@@ -7,7 +7,8 @@ import {
   Heart, Shield, Users, Zap, Award, Building2, GraduationCap, Briefcase, UserCheck,
 } from 'lucide-react';
 
-export const BRAND = { primary: '#344E86', accent: '#4ECDC4' };
+import { BRAND } from '@/design-system/tokens';
+export { BRAND };
 
 export const METRYX_NAVY = '#344E86';
 export const CAPADEX_STAGES = [

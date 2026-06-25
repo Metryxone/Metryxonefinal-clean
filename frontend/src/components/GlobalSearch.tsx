@@ -1,8 +1,9 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Search, X, ArrowUp, ArrowDown, CornerDownLeft, Command } from 'lucide-react';
 import { filterAndScore, type SearchItem, type SearchRole } from '@/lib/searchIndex';
 
-const BRAND = { primary: '#0B3C5D', teal: '#4ECDC4' };
+
 const TEAL = BRAND.teal;
 
 const CATEGORY_LABELS: Record<string, string> = {

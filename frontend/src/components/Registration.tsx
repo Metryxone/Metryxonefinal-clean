@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { useState, useRef, useEffect, type ReactNode } from 'react';
 import { signInWithPopup } from 'firebase/auth';
 import { auth as firebaseAuth, googleProvider, isFirebaseConfigured, syncProfileToFirestore } from '@/lib/firebase';
@@ -24,7 +25,7 @@ interface RegistrationProps {
 
 type UserRole = 'parent' | 'institute' | 'student' | 'career_seeker' | 'ngo' | 'corporate' | 'metryx_applicant';
 
-const BRAND = { primary: '#0B3C5D', accent: '#4ECDC4' };
+
 
 const PLATFORM_ROLES: UserRole[] = ['parent', 'student', 'institute', 'career_seeker', 'ngo', 'corporate'];
 

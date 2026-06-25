@@ -90,15 +90,23 @@ function GovernanceTab() {
   const [risks, setRisks] = useState<any[]>([]);
   const [decisions, setDecisions] = useState<any[]>([]);
   const [hallucinations, setHallu] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
-    api('/api/m4/gov/policies').then(d => setPolicies(d ?? []));
-    api('/api/m4/gov/models').then(d => setModels(d ?? []));
-    api('/api/m4/gov/risk').then(d => setRisks(d ?? []));
-    api('/api/m4/gov/decisions?limit=20').then(d => setDecisions(d ?? []));
-    api('/api/m4/gov/hallucinations').then(d => setHallu(d ?? []));
+    setLoading(true); setError(null);
+    Promise.all([
+      api('/api/m4/gov/policies').then(d => setPolicies(d ?? [])),
+      api('/api/m4/gov/models').then(d => setModels(d ?? [])),
+      api('/api/m4/gov/risk').then(d => setRisks(d ?? [])),
+      api('/api/m4/gov/decisions?limit=20').then(d => setDecisions(d ?? [])),
+      api('/api/m4/gov/hallucinations').then(d => setHallu(d ?? [])),
+    ]).catch(() => setError("Couldn't load data. Please try again."))
+      .finally(() => setLoading(false));
   }, []);
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+      {loading && <div style={{ gridColumn: '1 / -1', fontSize: 12, color: '#64748b' }}>Loading…</div>}
+      {error && <div style={{ gridColumn: '1 / -1', fontSize: 12, color: '#b91c1c', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, padding: '8px 12px' }}>Couldn't load data. Please try again.</div>}
       <Section title="Governance Policies" sub="Active rules — language, fairness, explainability, safety, risk">
         <Table cols={['policy_code','category','enforcement','scope','version']} rows={policies} />
       </Section>
@@ -126,19 +134,35 @@ function FairnessTab() {
   const [pa, setPa] = useState<any[]>([]);
   const [runResult, setRunResult] = useState<any>(null);
   const [running, setRunning] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [runError, setRunError] = useState<string | null>(null);
   const refresh = () => {
-    api('/api/m4/fair/scores').then(d => setScores(d ?? []));
-    api('/api/m4/fair/bias').then(d => setBias(d ?? []));
-    api('/api/m4/fair/protected-attributes').then(d => setPa(d ?? []));
+    setLoading(true); setError(null);
+    Promise.all([
+      api('/api/m4/fair/scores').then(d => setScores(d ?? [])),
+      api('/api/m4/fair/bias').then(d => setBias(d ?? [])),
+      api('/api/m4/fair/protected-attributes').then(d => setPa(d ?? [])),
+    ]).catch(() => setError("Couldn't load data. Please try again."))
+      .finally(() => setLoading(false));
   };
   useEffect(refresh, []);
   const run = async () => {
-    setRunning(true);
-    const r = await api('/api/m4/fair/run', { method: 'POST', body: JSON.stringify({ model_id: 'm4m_pred', n: 400 }) });
-    setRunResult(r); setRunning(false); refresh();
+    setRunning(true); setRunError(null);
+    try {
+      const r = await api('/api/m4/fair/run', { method: 'POST', body: JSON.stringify({ model_id: 'm4m_pred', n: 400 }) });
+      if (r == null) throw new Error('failed');
+      setRunResult(r); refresh();
+    } catch {
+      setRunError("Couldn't load data. Please try again.");
+    } finally {
+      setRunning(false);
+    }
   };
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+      {loading && <div style={{ gridColumn: '1 / -1', fontSize: 12, color: '#64748b' }}>Loading…</div>}
+      {error && <div style={{ gridColumn: '1 / -1', fontSize: 12, color: '#b91c1c', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, padding: '8px 12px' }}>Couldn't load data. Please try again.</div>}
       <Section title="Fairness Scores" sub="Most recent demographic_parity / disparate_impact / equal_opportunity per model">
         <Table cols={['model_id','metric','value','status','cohort']} rows={scores} />
       </Section>
@@ -153,6 +177,9 @@ function FairnessTab() {
           style={{ padding: '8px 14px', borderRadius: 8, border: 0, background: '#2563eb', color: '#fff', cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>
           {running ? 'Running…' : 'Run on demo cohort (n=400)'}
         </button>
+        {runError && (
+          <div style={{ marginTop: 12, fontSize: 12, color: '#b91c1c', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, padding: '8px 12px' }}>Couldn't load data. Please try again.</div>
+        )}
         {runResult && (
           <div style={{ marginTop: 12, fontSize: 12, color: '#334155' }}>
             <div>Overall: <span style={badge(runResult.overall_status)}>{runResult.overall_status}</span></div>
@@ -176,15 +203,23 @@ function LocalizationTab() {
   const [profile, setProfile] = useState<any>(null);
   const [weights, setWeights] = useState<any>(null);
   const [adapted, setAdapted] = useState<any>(null);
-  useEffect(() => { api('/api/m4/loc/countries').then(d => setCountries(d ?? [])); }, []);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => { api('/api/m4/loc/countries').then(d => setCountries(d ?? [])).catch(() => setError("Couldn't load data. Please try again.")); }, []);
   useEffect(() => {
     if (!sel) return;
-    api(`/api/m4/loc/profile/${sel}`).then(setProfile);
-    api(`/api/m4/loc/weights/${sel}?competencies=LEA,STR,COM,EIQ,ADP,TEC`).then(setWeights);
-    api(`/api/m4/loc/adapt/${sel}?scores=${encodeURIComponent(JSON.stringify({LEA:70,STR:68,COM:72,EIQ:71,ADP:67,TEC:78}))}`).then(setAdapted);
+    setLoading(true); setError(null);
+    Promise.all([
+      api(`/api/m4/loc/profile/${sel}`).then(setProfile),
+      api(`/api/m4/loc/weights/${sel}?competencies=LEA,STR,COM,EIQ,ADP,TEC`).then(setWeights),
+      api(`/api/m4/loc/adapt/${sel}?scores=${encodeURIComponent(JSON.stringify({LEA:70,STR:68,COM:72,EIQ:71,ADP:67,TEC:78}))}`).then(setAdapted),
+    ]).catch(() => setError("Couldn't load data. Please try again."))
+      .finally(() => setLoading(false));
   }, [sel]);
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+      {loading && <div style={{ gridColumn: '1 / -1', fontSize: 12, color: '#64748b' }}>Loading…</div>}
+      {error && <div style={{ gridColumn: '1 / -1', fontSize: 12, color: '#b91c1c', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, padding: '8px 12px' }}>Couldn't load data. Please try again.</div>}
       <Section title="Countries" sub="Select to compare regional intelligence">
         <select value={sel} onChange={e => setSel(e.target.value)}
           style={{ padding: 8, border: '1px solid #cbd5e1', borderRadius: 8, fontSize: 13 }}>
@@ -230,18 +265,26 @@ function PredictiveTab() {
   const [burnout, setBurnout] = useState<any>(null);
   const [gaps, setGaps] = useState<any[]>([]);
   const [decay, setDecay] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
-    api(`/api/m4/pred/trajectories?subject_id=${subject}`).then(d => setTraj(d ?? []));
-    api(`/api/m4/pred/classify?subject_id=${subject}`).then(d => setClasses(d ?? []));
-    api(`/api/m4/pred/future-readiness?subject_id=${subject}&horizon_months=12`).then(setReadiness);
-    api(`/api/m4/pred/promotion?subject_id=${subject}`).then(d => setPromo(d ?? []));
-    api(`/api/m4/pred/leadership-potential?subject_id=${subject}`).then(setLead);
-    api(`/api/m4/pred/burnout?subject_id=${subject}`).then(setBurnout);
-    api(`/api/m4/pred/future-gaps?subject_id=${subject}`).then(d => setGaps(d ?? []));
-    api(`/api/m4/pred/skill-decay?subject_id=${subject}`).then(d => setDecay(d ?? []));
+    setLoading(true); setError(null);
+    Promise.all([
+      api(`/api/m4/pred/trajectories?subject_id=${subject}`).then(d => setTraj(d ?? [])),
+      api(`/api/m4/pred/classify?subject_id=${subject}`).then(d => setClasses(d ?? [])),
+      api(`/api/m4/pred/future-readiness?subject_id=${subject}&horizon_months=12`).then(setReadiness),
+      api(`/api/m4/pred/promotion?subject_id=${subject}`).then(d => setPromo(d ?? [])),
+      api(`/api/m4/pred/leadership-potential?subject_id=${subject}`).then(setLead),
+      api(`/api/m4/pred/burnout?subject_id=${subject}`).then(setBurnout),
+      api(`/api/m4/pred/future-gaps?subject_id=${subject}`).then(d => setGaps(d ?? [])),
+      api(`/api/m4/pred/skill-decay?subject_id=${subject}`).then(d => setDecay(d ?? [])),
+    ]).catch(() => setError("Couldn't load data. Please try again."))
+      .finally(() => setLoading(false));
   }, []);
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+      {loading && <div style={{ gridColumn: '1 / -1', fontSize: 12, color: '#64748b' }}>Loading…</div>}
+      {error && <div style={{ gridColumn: '1 / -1', fontSize: 12, color: '#b91c1c', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, padding: '8px 12px' }}>Couldn't load data. Please try again.</div>}
       <Section title="Capability Trajectories" sub="Velocity + acceleration + trajectory class">
         <Table cols={['competency_id','baseline','current','velocity','acceleration','trajectory']} rows={traj} />
       </Section>
@@ -294,17 +337,33 @@ function SimulationTab() {
   const [pick, setPick] = useState<string>('');
   const [result, setResult] = useState<any>(null);
   const [running, setRunning] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [runError, setRunError] = useState<string | null>(null);
   useEffect(() => {
-    api('/api/m4/sim/scenarios').then(d => { setScenarios(d ?? []); if (d && d[0]) setPick(d[0].scenario_code); });
+    setLoading(true); setError(null);
+    api('/api/m4/sim/scenarios')
+      .then(d => { setScenarios(d ?? []); if (d && d[0]) setPick(d[0].scenario_code); })
+      .catch(() => setError("Couldn't load data. Please try again."))
+      .finally(() => setLoading(false));
   }, []);
   const run = async () => {
     if (!pick) return;
-    setRunning(true);
-    const r = await api('/api/m4/sim/run', { method: 'POST', body: JSON.stringify({ scenario: pick, subject_id: 'demo_user', horizon_months: 12 }) });
-    setResult(r); setRunning(false);
+    setRunning(true); setRunError(null);
+    try {
+      const r = await api('/api/m4/sim/run', { method: 'POST', body: JSON.stringify({ scenario: pick, subject_id: 'demo_user', horizon_months: 12 }) });
+      if (r == null) throw new Error('failed');
+      setResult(r);
+    } catch {
+      setRunError("Couldn't load data. Please try again.");
+    } finally {
+      setRunning(false);
+    }
   };
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+      {loading && <div style={{ gridColumn: '1 / -1', fontSize: 12, color: '#64748b' }}>Loading…</div>}
+      {error && <div style={{ gridColumn: '1 / -1', fontSize: 12, color: '#b91c1c', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, padding: '8px 12px' }}>Couldn't load data. Please try again.</div>}
       <Section title="Scenarios" sub="What-if uplift / promotion / pipeline simulations">
         <Table cols={['scenario_code','name','kind']} rows={scenarios} />
       </Section>
@@ -319,6 +378,9 @@ function SimulationTab() {
             {running ? 'Running…' : 'Run'}
           </button>
         </div>
+        {runError && (
+          <div style={{ marginTop: 12, fontSize: 12, color: '#b91c1c', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, padding: '8px 12px' }}>Couldn't load data. Please try again.</div>
+        )}
         {result && (
           <div style={{ marginTop: 12, fontSize: 13, color: '#334155' }}>
             <div>Baseline: <b>{result.baseline_readiness}</b> → Projected: <b style={{ color: '#7c3aed' }}>{result.projected_readiness}</b> ({result.delta >= 0 ? '+' : ''}{result.delta} pts over {result.horizon_months}mo)</div>
@@ -339,15 +401,23 @@ function RiskTab() {
   const [lead, setLead] = useState<any[]>([]);
   const [res, setRes] = useState<any[]>([]);
   const [crit, setCrit] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
-    api('/api/m4/risk/capabilities').then(d => setCaps(d ?? []));
-    api('/api/m4/risk/succession').then(d => setSucc(d ?? []));
-    api('/api/m4/risk/leadership-gaps').then(d => setLead(d ?? []));
-    api('/api/m4/risk/resilience').then(d => setRes(d ?? []));
-    api('/api/m4/risk/critical').then(d => setCrit(d ?? []));
+    setLoading(true); setError(null);
+    Promise.all([
+      api('/api/m4/risk/capabilities').then(d => setCaps(d ?? [])),
+      api('/api/m4/risk/succession').then(d => setSucc(d ?? [])),
+      api('/api/m4/risk/leadership-gaps').then(d => setLead(d ?? [])),
+      api('/api/m4/risk/resilience').then(d => setRes(d ?? [])),
+      api('/api/m4/risk/critical').then(d => setCrit(d ?? [])),
+    ]).catch(() => setError("Couldn't load data. Please try again."))
+      .finally(() => setLoading(false));
   }, []);
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+      {loading && <div style={{ gridColumn: '1 / -1', fontSize: 12, color: '#64748b' }}>Loading…</div>}
+      {error && <div style={{ gridColumn: '1 / -1', fontSize: 12, color: '#b91c1c', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, padding: '8px 12px' }}>Couldn't load data. Please try again.</div>}
       <Section title="Capability Risks" sub="Org-unit × competency coverage gap"><Table cols={['org_unit','competency_id','risk','band']} rows={caps} /></Section>
       <Section title="Succession Risk" sub="Successor windows + readiness across 24mo"><Table cols={['role_id','successors_n','ready_now','ready_12m','ready_24m','risk','band']} rows={succ} /></Section>
       <Section title="Leadership Gap" sub="Forecast gap % per org unit"><Table cols={['org_unit','horizon_months','gap_pct']} rows={lead} /></Section>
@@ -364,14 +434,22 @@ function ObservabilityTab() {
   const [drift, setDrift] = useState<any[]>([]);
   const [mon, setMon] = useState<any[]>([]);
   const [logs, setLogs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
-    api('/api/m4/obs/accuracy').then(d => setAcc(d ?? []));
-    api('/api/m4/obs/drift').then(d => setDrift(d ?? []));
-    api('/api/m4/obs/monitoring').then(d => setMon(d ?? []));
-    api('/api/m4/obs/logs').then(d => setLogs(d ?? []));
+    setLoading(true); setError(null);
+    Promise.all([
+      api('/api/m4/obs/accuracy').then(d => setAcc(d ?? [])),
+      api('/api/m4/obs/drift').then(d => setDrift(d ?? [])),
+      api('/api/m4/obs/monitoring').then(d => setMon(d ?? [])),
+      api('/api/m4/obs/logs').then(d => setLogs(d ?? [])),
+    ]).catch(() => setError("Couldn't load data. Please try again."))
+      .finally(() => setLoading(false));
   }, []);
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+      {loading && <div style={{ gridColumn: '1 / -1', fontSize: 12, color: '#64748b' }}>Loading…</div>}
+      {error && <div style={{ gridColumn: '1 / -1', fontSize: 12, color: '#b91c1c', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, padding: '8px 12px' }}>Couldn't load data. Please try again.</div>}
       <Section title="Forecast Accuracy" sub="MAPE + Brier per model × horizon"><Table cols={['model_id','horizon_months','mape','brier','sample_n']} rows={acc} /></Section>
       <Section title="Model Drift" sub="PSI default; warn ≥0.10, fail ≥0.20"><Table cols={['model_id','drift_metric','value','threshold','status']} rows={drift} /></Section>
       <Section title="Prediction Monitoring" sub="Live metric stream"><Table cols={['model_id','metric','value','status']} rows={mon} /></Section>

@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,10 +22,7 @@ interface RequestDemoProps {
   onNavigate: (screen: Screen) => void;
 }
 
-const BRAND = {
-  primary: '#0B3C5D',
-  accent: '#4ECDC4',
-};
+
 
 const organizationTypes = [
   { id: 'school', label: 'K-12 Schools', icon: GraduationCap },

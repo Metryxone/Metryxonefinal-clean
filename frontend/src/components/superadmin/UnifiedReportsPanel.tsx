@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -44,7 +45,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAdminDashboard } from '@/contexts/AdminDashboardContext';
 import CapadexReportsPanel from './CapadexReportsPanel';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', cyan: '#4ECDC4', lightBg: '#f8fafc', dark: '#1e293b', success: '#10b981', warning: '#f59e0b', danger: '#ef4444', purple: '#8b5cf6', indigo: '#6366f1' };
+
 const PKG_CATEGORIES_DEFAULT = ['Psychometric', 'Academic', 'Counselling', 'Career', 'Wellness', 'Digital Skills', 'Leadership', 'Life Skills'];
 const PKG_SUBCATEGORIES_DEFAULT = ['Entry', 'Standard', 'Premium', 'Enterprise'];
 
@@ -185,10 +186,14 @@ export default function UnifiedReportsPanel() {
   const [sourceCounts, setSourceCounts] = useState<Record<SourceType, number | null>>({
     all: null, capadex: null, lbi: null, sdi: null, competency: null,
   });
+  const [loadingCounts, setLoadingCounts] = useState(false);
+  const [countsError, setCountsError] = useState<string | null>(null);
 
   // Fetch counts for the overview tabs
   useEffect(() => {
     async function loadCounts() {
+      setLoadingCounts(true);
+      setCountsError(null);
       try {
         // CAPADEX — use existing reports endpoint
         const r = await fetch('/api/admin/capadex/reports?limit=1');
@@ -203,9 +208,13 @@ export default function UnifiedReportsPanel() {
             competency: 0,
             all: cap, // will grow as others get data
           }));
+        } else {
+          setCountsError("Couldn't load data. Please try again.");
         }
       } catch {
-        // silently ignore
+        setCountsError("Couldn't load data. Please try again.");
+      } finally {
+        setLoadingCounts(false);
       }
     }
     loadCounts();
@@ -287,6 +296,18 @@ export default function UnifiedReportsPanel() {
       <div className="flex-1 overflow-hidden">
         {activeSource === 'all' && (
           <div className="h-full overflow-y-auto">
+            {loadingCounts && (
+              <div className="mx-6 mt-6 flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-xs font-medium text-gray-500">
+                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                Loading…
+              </div>
+            )}
+            {countsError && !loadingCounts && (
+              <div className="mx-6 mt-6 flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-medium text-red-600">
+                <AlertCircle className="w-3.5 h-3.5" />
+                {countsError}
+              </div>
+            )}
             <AllSourcesOverview
               sourceCounts={sourceCounts}
               onSelect={setActiveSource}

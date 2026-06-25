@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -12,10 +13,7 @@ import {
   BookOpen, Shield, Quote, Eye, Play
 } from "lucide-react";
 
-const BRAND = {
-  primary: "#344E86",
-  accent: "#4ECDC4"
-};
+
 
 interface PressPageProps {
   onNavigate: (screen: Screen) => void;

@@ -1,8 +1,9 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { useEffect, useState } from 'react';
 import { X, Sparkles, ArrowRight, Clock } from 'lucide-react';
 import { ProfileCompletenessCard } from './ProfileCompletenessCard';
 
-const BRAND = { primary: '#0B3C5D', accent: '#4ECDC4', green: '#4ECDC4' };
+
 
 const STORAGE_KEY = 'metryx_profile_setup';
 const DISMISS_KEY = 'metryx_profile_setup_dismissed';

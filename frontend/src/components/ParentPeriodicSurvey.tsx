@@ -107,6 +107,7 @@ export function ParentPeriodicSurvey({ childId, childName, onClose, onSubmitted 
   const { toast } = useToast();
   const [activeSection, setActiveSection] = useState(0);
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [overallMood, setOverallMood] = useState<string>('good');
   const [parentConcerns, setParentConcerns] = useState('');
@@ -138,6 +139,7 @@ export function ParentPeriodicSurvey({ childId, childName, onClose, onSubmitted 
 
   const submit = async () => {
     setSubmitting(true);
+    setSubmitError(null);
     try {
       const token = localStorage.getItem('metryx_token');
       const res = await fetch('/api/survey/parent', {
@@ -168,6 +170,7 @@ export function ParentPeriodicSurvey({ childId, childName, onClose, onSubmitted 
       onSubmitted?.();
       toast({ title: 'Monthly check-in saved', description: `Your observations for ${childName} have been added to their growth profile.` });
     } catch {
+      setSubmitError("Couldn't load data. Please try again.");
       toast({ title: 'Error', description: 'Failed to save check-in. Please try again.', variant: 'destructive' });
     } finally {
       setSubmitting(false);
@@ -313,6 +316,13 @@ export function ParentPeriodicSurvey({ childId, childName, onClose, onSubmitted 
           </div>
         )}
       </div>
+
+      {/* Submit error notice */}
+      {submitError && (
+        <div className="mx-5 mt-3 px-3 py-2 rounded-lg text-xs flex items-center gap-2" style={{ background: '#FEF2F2', border: '1px solid #FCA5A5', color: '#DC2626' }}>
+          {submitError}
+        </div>
+      )}
 
       {/* Footer */}
       <div className="px-5 pb-5 pt-3 flex gap-2 border-t border-gray-100">

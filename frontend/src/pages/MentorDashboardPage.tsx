@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import { useState } from 'react';
 import { AppTopBar } from '@/components/AppTopBar';
 import { GlobalSearch } from '@/components/GlobalSearch';
@@ -27,7 +28,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 import mentor1 from '@/assets/images/mentor1.png';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4' };
+
 
 interface MentorDashboardPageProps {
   onNavigate: (screen: Screen | string, data?: Record<string, unknown>) => void;

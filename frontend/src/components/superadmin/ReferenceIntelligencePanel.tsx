@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 /**
  * ReferenceIntelligencePanel
  * Phase 1 admin UI for canonical reference data powering Employability Index.
@@ -23,7 +24,7 @@ import {
   Tag, Layers, RefreshCw, Database, Star, Loader2, Sparkles, Crown,
 } from 'lucide-react';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', warning: '#f59e0b', success: '#10b981', danger: '#ef4444' };
+
 
 type EntityKey = 'institutions' | 'qualifications' | 'certifications' | 'skills' | 'occupations';
 

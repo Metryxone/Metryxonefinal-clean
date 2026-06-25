@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 /**
  * Phase 4 — Career Intelligence admin panel.
  *
@@ -22,7 +23,7 @@ import {
   GitBranch, GraduationCap, ArrowRight, Clock,
 } from 'lucide-react';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4' };
+
 
 interface CovConf {
   coverage: { measurable: boolean; coverage_pct: number | null; detail: string };

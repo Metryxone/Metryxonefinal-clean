@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState, useEffect } from 'react';
 import {
   GraduationCap, Building2, Code, BookOpen, CheckSquare, Square, Plus, X,
@@ -8,7 +9,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', green: '#2A9D8F', red: '#e63946', orange: '#f4a261' };
+
 
 const LS_DRIVES   = 'mx-fresher-drives';
 const LS_PROJECTS = 'mx-fresher-projects';

@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { useState, useEffect } from 'react';
 import { Screen } from '../App';
 import { Button } from "@/components/ui/button";
@@ -87,12 +88,7 @@ export function StudentExamList({ onNavigate, onLogout, onSelectExam, initialTab
   }, [initialTab]);
 
   // MetryxOne Brand Colors
-  const BRAND = {
-    primary: '#0B3C5D',
-    accent: '#4ECDC4',
-    primaryLight: '#0B3C5D20',
-    accentLight: '#4ECDC420',
-  };
+  
 
   // Theme colors based on mode
   const theme = {

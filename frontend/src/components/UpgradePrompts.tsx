@@ -1,10 +1,8 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { Button } from "@/components/ui/button";
 import { Lock, Crown, ArrowRight, Zap, TrendingUp, AlertCircle } from "lucide-react";
 
-const BRAND = {
-  primary: '#0B3C5D',
-  accent: '#4ECDC4',
-};
+
 
 interface UpgradePromptProps {
   feature: string;

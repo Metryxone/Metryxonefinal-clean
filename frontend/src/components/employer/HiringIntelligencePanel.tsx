@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 /**
  * EP-98-W3 — Hiring Intelligence Panel
  *
@@ -14,10 +15,7 @@ import {
   FileText, Lightbulb, Flag, Search,
 } from 'lucide-react';
 
-const BRAND = {
-  primary: '#344E86', accent: '#4ECDC4', green: '#2A9D8F',
-  red: '#e63946', orange: '#f4a261', purple: '#8b5cf6', gold: '#f59e0b',
-};
+
 
 function authHdr() {
   const t = localStorage.getItem('metryx_token');

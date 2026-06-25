@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import * as XLSX from 'xlsx';
 import { Navbar } from '@/components/layout/Navbar';
@@ -31,7 +32,7 @@ import EmployerWorkforcePanel        from '@/components/employer/EmployerWorkfor
 import EIOSCockpit                   from '@/components/employer/EIOSCockpit';
 import { MARKET_CATALOG, type MarketRole } from '@/data/marketCatalog';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', green: '#2A9D8F', red: '#e63946', orange: '#f4a261', purple: '#8b5cf6' };
+
 
 // Hiring-intelligence verdict + calibration presentation (P2: surface AI intelligence).
 // Calibration is the CONFIDENCE axis (is the model trustworthy yet?), kept distinct from

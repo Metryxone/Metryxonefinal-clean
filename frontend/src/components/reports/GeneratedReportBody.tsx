@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React from 'react';
 import { Award } from 'lucide-react';
 
@@ -8,12 +9,7 @@ import { Award } from 'lucide-react';
 // domain-proxy competency layout in backend/services/pdf-renderer.ts.
 // No fabrication: score == null renders "—" (never 0).
 
-const BRAND = {
-  primary: '#6366f1', primaryLight: '#eef2ff',
-  green: '#10b981', greenLight: '#ecfdf5',
-  amber: '#f59e0b', red: '#ef4444',
-  border: '#e5e7eb', muted: '#6b7280', bg: '#f9fafb',
-};
+
 
 const SEVERITY_COLORS: Record<string, string> = {
   positive: BRAND.green, info: BRAND.primary, warning: BRAND.amber, critical: BRAND.red,

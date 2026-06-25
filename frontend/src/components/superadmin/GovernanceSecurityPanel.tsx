@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -13,7 +14,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { ScrollArea } from '../ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', danger: '#ef4444', warning: '#f59e0b', success: '#10b981' };
+
 
 const j = (url: string) => fetch(url).then(async (r) => ({ status: r.status, body: await r.json().catch(() => ({})) }));
 function fmtDateTime(d?: string | null) {

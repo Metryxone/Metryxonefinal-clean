@@ -1,10 +1,11 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   BookOpen, CheckCircle2, Circle, Clock, Calendar, ChevronRight,
   BarChart2, Zap, AlertCircle, Tag, User, Plus, X, Filter, RefreshCw,
 } from 'lucide-react';
 
-const BRAND = { primary: '#0B3C5D', accent: '#4ECDC4' };
+
 
 interface StudyTask {
   id: string;

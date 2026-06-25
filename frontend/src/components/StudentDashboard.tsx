@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { useState, useEffect } from 'react';
 import { AreaChart, Area, BarChart, Bar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Screen } from '../App';
@@ -401,12 +402,7 @@ export function StudentDashboard({ onNavigate, onLogout, onSelectExam }: Props) 
   };
 
   // MetryxOne Brand Colors
-  const BRAND = {
-    primary: '#0B3C5D',
-    accent: '#4ECDC4',
-    primaryLight: '#0B3C5D15',
-    accentLight: '#4ECDC415',
-  };
+  
 
   // Theme colors
   const theme = {

@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Edit, Trash2, Search, Bot, RefreshCw, ShieldCheck, ShieldAlert, Play, Pause, CheckCircle, Clock, ChevronDown, ChevronRight as ChevRight, History } from 'lucide-react';
@@ -11,7 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { useToast } from '@/hooks/use-toast';
 import SubmitForReviewButton from './SubmitForReviewButton';
 
-const BRAND = { primary: '#344E86' };
+
 const STATUS_COLORS: Record<string, string> = { draft: 'bg-yellow-100 text-yellow-800', in_review: 'bg-blue-100 text-blue-700', approved: 'bg-indigo-100 text-indigo-700', active: 'bg-green-100 text-green-800', suspended: 'bg-orange-100 text-orange-700', archived: 'bg-gray-100 text-gray-600' };
 const RISK_COLORS: Record<string, string> = { low: 'bg-green-100 text-green-700', medium: 'bg-yellow-100 text-yellow-800', high: 'bg-orange-100 text-orange-700', critical: 'bg-red-100 text-red-700' };
 const TYPE_COLORS: Record<string, string> = { scoring: 'bg-blue-100 text-blue-700', routing: 'bg-teal-100 text-teal-700', suppression: 'bg-red-100 text-red-700', language: 'bg-purple-100 text-purple-700', recommendation: 'bg-green-100 text-green-700', threshold: 'bg-orange-100 text-orange-700', safety: 'bg-pink-100 text-pink-700' };

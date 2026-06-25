@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import {
   School, CheckCircle, Shield, ArrowRight, ArrowDown, Target,
   BookOpen, Users, Brain, Award, Zap, BarChart3, Lock,
@@ -16,10 +17,7 @@ interface Props {
   onNavigate: (screen: Screen) => void;
 }
 
-const BRAND = {
-  primary: '#344E86',
-  accent: '#4ECDC4',
-};
+
 
 const FEATURES = [
   { icon: Brain, title: 'LBI Assessment Engine', desc: 'Full 19-domain, 97-subdomain behavioral intelligence covering cognitive, emotional, social, and metacognitive dimensions.' },

@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import {
   Briefcase, CheckCircle, Shield, ArrowRight, ArrowDown,
   Users, Brain, Award, Zap, BarChart3,
@@ -17,10 +18,7 @@ interface Props {
   onNavigate: (screen: Screen) => void;
 }
 
-const BRAND = {
-  primary: '#344E86',
-  accent: '#4ECDC4',
-};
+
 
 const FEATURES = [
   { icon: Brain, title: 'Behavioral Competency Profiling', desc: 'Map candidates across 19 behavioral domains and 97 competency signals — understand how they think, collaborate, and perform under pressure.' },

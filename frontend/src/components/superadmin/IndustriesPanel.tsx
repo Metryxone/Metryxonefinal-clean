@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Edit, Trash2, Search, Building2, RefreshCw, X, Check, Upload, Download, FileText, CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
@@ -12,7 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { useToast } from '@/hooks/use-toast';
 import SubmitForReviewButton from './SubmitForReviewButton';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4' };
+
 
 type Industry = { id: number; code: string; name: string; parent_sector?: string; sector_id?: number | null; description?: string; is_active: boolean; status: string; sort_order: number; created_at: string; };
 type Sector = { id: number; code: string; name: string; };

@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import { useState, useEffect } from 'react';
 import { CheckCircle, X, Send, ChevronDown, Clock, Book, Target, Clipboard, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -43,7 +44,7 @@ const PROGRESS_OPTIONS = [
   { value: 'needs-support', label: 'Needs Support', color: '#EF4444' },
 ];
 
-const BRAND = { blue: '#0B3C5D', green: '#4ECDC4' };
+
 
 function NoteCard({ note }: { note: SessionNote }) {
   const [open, setOpen] = useState(false);

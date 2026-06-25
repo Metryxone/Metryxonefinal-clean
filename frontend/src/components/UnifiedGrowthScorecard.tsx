@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import { useState, useEffect } from 'react';
 import { TrendingUp, TrendingDown, Minus, Brain, Book, Heart, Star, RefreshCw } from 'lucide-react';
 
@@ -16,7 +17,7 @@ interface Props {
   compact?: boolean;
 }
 
-const BRAND = { blue: '#0B3C5D', green: '#4ECDC4' };
+
 
 function TrendIcon({ trend, delta }: { trend: 'up' | 'down' | 'stable'; delta?: number }) {
   if (trend === 'up') return (

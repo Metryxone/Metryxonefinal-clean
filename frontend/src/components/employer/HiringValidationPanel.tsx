@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 /**
  * MX-75X — Employer Hiring Validation surface (READ-ONLY).
  *
@@ -17,7 +18,7 @@ import {
   Target, RefreshCw, AlertTriangle, CheckCircle, Clock, Gauge, Database, Info,
 } from 'lucide-react';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', green: '#2A9D8F', orange: '#f4a261', slate: '#94a3b8' };
+
 
 const CALIB_META: Record<string, { label: string; color: string; bg: string; note: string }> = {
   calibrated:  { label: 'Calibrated',   color: BRAND.green,  bg: `${BRAND.green}18`,  note: 'Probabilities empirically calibrated on ≥30 realized hire outcomes.' },

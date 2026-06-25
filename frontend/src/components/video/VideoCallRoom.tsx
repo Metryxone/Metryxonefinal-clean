@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 /**
  * VideoCallRoom — Native WebRTC video calling, fully within MetryxOne.
  * Features: recording, live transcription, session notes, DPDP consent,
@@ -15,7 +16,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { DPDPConsentModal } from './DPDPConsentModal';
 
-const BRAND = { primary: '#0B3C5D', accent: '#4ECDC4' };
+
 const ICE_SERVERS = {
   iceServers: [
     { urls: 'stun:stun.l.google.com:19302' },

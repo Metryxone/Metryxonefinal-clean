@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import { useState, useEffect } from 'react';
 import { Lightbulb, BookOpen, Briefcase, Users, Clock, Zap, ArrowRight, BarChart3, Target } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
@@ -8,7 +9,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { Screen } from '../../App';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', green: '#2A9D8F', orange: '#f4a261' };
+
 
 const apiFetch = async (url: string) => {
   const token = localStorage.getItem('metryx_token');

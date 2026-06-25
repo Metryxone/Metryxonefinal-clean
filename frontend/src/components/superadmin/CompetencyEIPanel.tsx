@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 /**
  * Phase 3 — Competency Employability Intelligence (CEI) admin panel.
  *
@@ -19,7 +20,7 @@ import {
   AlertTriangle, CheckCircle2, Info, History as HistoryIcon, Search,
 } from 'lucide-react';
 
-const BRAND = { primary: '#344E86', accent: '#5B7BD5' };
+
 
 interface Driver {
   key: string; label: string; weight: number; raw_score: number | null;

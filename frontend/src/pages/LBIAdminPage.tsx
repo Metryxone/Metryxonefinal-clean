@@ -85,6 +85,12 @@ function LbiOverview() {
     <Card>
       <CardHeader><CardTitle className="text-base flex items-center gap-2"><Sparkles className="h-4 w-4 text-amber-500" /> LBI Engine Overview</CardTitle></CardHeader>
       <CardContent>
+        {stats.isLoading && (
+          <div className="text-center py-8 text-gray-400 text-sm">Loading…</div>
+        )}
+        {stats.isError && (
+          <div className="mb-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">Couldn't load data. Please try again.</div>
+        )}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
           {stats.data && Object.entries(stats.data).map(([k, v]) => (
             <div key={k} className="bg-gradient-to-br from-blue-50 to-white border rounded-lg p-4">
@@ -104,6 +110,12 @@ function LbiSimpleList({ path, col1, col2, col3 }: { path: string; col1: string;
     <Card>
       <CardHeader><CardTitle className="text-base flex items-center gap-2">{col2.replace(/_/g, ' ')}<Badge variant="outline" className="ml-2">{data.data?.length ?? 0}</Badge></CardTitle></CardHeader>
       <CardContent>
+        {data.isLoading && (
+          <div className="text-center py-8 text-gray-400 text-sm">Loading…</div>
+        )}
+        {data.isError && (
+          <div className="mb-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">Couldn't load data. Please try again.</div>
+        )}
         <div className="border rounded-lg overflow-hidden max-h-[600px] overflow-y-auto">
           <table className="w-full text-sm">
             <thead className="bg-gray-50 text-[10px] uppercase tracking-wide text-gray-500 sticky top-0">
@@ -179,6 +191,12 @@ function LbiItemsList() {
       </CardHeader>
       <CardContent>
         <p className="text-xs text-gray-500 mb-3">Items are mapped to subdomains × age bands. Bulk import via Super Admin → LBI question upload.</p>
+        {items.isLoading && (
+          <div className="text-center py-8 text-gray-400 text-sm" data-testid="lbi-items-loading">Loading…</div>
+        )}
+        {items.isError && (
+          <div className="mb-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600" data-testid="lbi-items-error">Couldn't load data. Please try again.</div>
+        )}
         <div className="border rounded-lg overflow-hidden">
           <table className="w-full text-xs">
             <thead className="bg-gray-50 text-[10px] uppercase tracking-wide text-gray-500">

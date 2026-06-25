@@ -1,10 +1,11 @@
+import { BRAND } from '@/design-system/tokens';
 import React from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Briefcase, Grid3x3, Gauge, Info, RefreshCw, Search, Plus, Trash2, AlertTriangle, Target } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { Card, CardContent } from '../ui/card';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', success: '#10b981', warning: '#f59e0b', danger: '#ef4444', gray: '#6b7280' };
+
 
 const CRIT_STYLE: Record<string, string> = {
   critical: 'bg-red-100 text-red-700 border-red-300',

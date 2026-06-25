@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { Users, TrendingUp, BarChart2, Info } from 'lucide-react';
 import { useState } from 'react';
 
@@ -10,7 +11,7 @@ interface Props {
   lbiScore?: number;
 }
 
-const BRAND = { primary: '#0B3C5D', teal: '#4ECDC4' };
+
 
 const COHORT_DATA: Record<string, { avgScore: number; lbi: number; exams: number; topPct: number; label: string }> = {
   default: { avgScore: 62, lbi: 58, exams: 8, topPct: 25, label: 'Grade 8–10' },

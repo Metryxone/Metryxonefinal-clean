@@ -1,7 +1,8 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { useState } from 'react';
 import { School, Users, Brain, TrendingUp, AlertTriangle, BarChart2, Download, Filter } from 'lucide-react';
 
-const BRAND = { primary: '#0B3C5D', teal: '#4ECDC4' };
+
 
 interface ClassData {
   grade: string;

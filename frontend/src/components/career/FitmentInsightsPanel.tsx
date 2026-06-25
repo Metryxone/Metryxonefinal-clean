@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 /**
  * Fitment Insights Panel
  * ──────────────────────
@@ -50,7 +51,7 @@ interface PercentileResp {
   percentiles: PercentileRow[];
 }
 
-const BRAND = { primary: '#6366f1', accent: '#f59e0b', green: '#10b981' };
+
 
 function authHeader(): Record<string, string> {
   try {

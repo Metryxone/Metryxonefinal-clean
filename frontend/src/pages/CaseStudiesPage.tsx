@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import {
   Award, ArrowRight, CheckCircle, TrendingUp,
   Users, Brain, GraduationCap, Building2, Heart,
@@ -15,10 +16,7 @@ interface Props {
   onNavigate: (screen: Screen) => void;
 }
 
-const BRAND = {
-  primary: '#344E86',
-  accent: '#4ECDC4',
-};
+
 
 const CASE_STUDIES = [
   {

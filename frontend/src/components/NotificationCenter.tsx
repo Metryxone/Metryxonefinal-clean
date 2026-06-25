@@ -1,8 +1,9 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Bell, Check, CheckCheck, Eye, Info, Mail, MailOpen, Settings, X, Trash2, RefreshCw, Filter, Shield, CreditCard, GraduationCap, BookOpen, Users, MessageSquare, Calendar, FileText, Sparkles, AlertCircle, Zap, Send, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-const BRAND = { primary: '#0B3C5D', accent: '#4ECDC4' };
+
 
 type NotificationType = 'fyi' | 'fya';
 type NotificationPriority = 'low' | 'normal' | 'high' | 'urgent';

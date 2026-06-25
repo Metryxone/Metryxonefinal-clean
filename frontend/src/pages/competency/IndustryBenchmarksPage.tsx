@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import { useState, useEffect } from 'react';
 import {
   BarChart3, Activity, TrendingUp, TrendingDown, Minus,
@@ -12,7 +13,7 @@ import { Screen } from '../../App';
 import { Navbar } from '../../components/layout/Navbar';
 import { Footer } from '../../components/layout/Footer';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4' };
+
 
 const INDUSTRIES = ['Technology', 'Finance', 'Healthcare', 'Education', 'Manufacturing', 'Consulting', 'E-Commerce'];
 const INDUSTRY_COLORS: Record<string, string> = {

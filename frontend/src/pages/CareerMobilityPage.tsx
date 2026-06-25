@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import { DashboardIntro } from '../components/career/DashboardIntro';
 /**
  * Phase 3 — Career Mobility & Pathway Intelligence dashboard.
@@ -27,11 +28,7 @@ import {
 
 interface Props { onNavigate?: (screen: string) => void }
 
-const BRAND = {
-  primary: '#0F172A', accent: '#FB923C', green: '#16A34A', amber: '#D97706',
-  red: '#DC2626', blue: '#2563EB', purple: '#7C3AED',
-  surface: '#FFFFFF', bg: '#F8FAFC', border: '#E2E8F0',
-};
+
 
 interface Role { id: string; title: string; role_family_id: string; layer_id: string; seniority: string|null }
 interface CompGap {

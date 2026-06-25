@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import { useState, useEffect } from 'react';
 import {
   UserCheck, ArrowRight, Shield, Zap, BarChart3, Target, BookOpen,
@@ -12,7 +13,7 @@ import { Screen } from '../../App';
 import { Navbar } from '../../components/layout/Navbar';
 import { Footer } from '../../components/layout/Footer';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4' };
+
 
 const apiFetch = async (url: string) => {
   const token = localStorage.getItem('metryx_token');

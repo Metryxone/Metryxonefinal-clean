@@ -29,7 +29,11 @@ export default function ActiveAgeBandsReflection({ onEdit }: { onEdit?: () => vo
   return (
     <div className="rounded-xl border bg-white p-3 flex flex-wrap items-center gap-2">
       <span className="text-xs font-medium text-gray-700 mr-1">Active Age Bands:</span>
-      {active.length === 0 ? (
+      {q.isLoading ? (
+        <span className="text-xs text-gray-400">Loading…</span>
+      ) : q.isError ? (
+        <span className="text-xs text-red-600">Couldn't load data. Please try again.</span>
+      ) : active.length === 0 ? (
         <span className="text-xs text-gray-400">None configured</span>
       ) : (
         active.map(b => (

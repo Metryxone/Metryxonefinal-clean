@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 /**
  * ParentMentorServices — AI-powered mentor recommendation, booking, calling,
  * post-session feedback, and academic-year planning hub for parents.
@@ -30,7 +31,7 @@ import mentor6 from '@/assets/images/mentor6.png';
 import mentor7 from '@/assets/images/mentor7.png';
 import mentor8 from '@/assets/images/mentor8.png';
 
-const BRAND = { primary: '#0B3C5D', accent: '#4ECDC4' };
+
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

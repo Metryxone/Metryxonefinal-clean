@@ -1,6 +1,7 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { Sparkles } from 'lucide-react';
 
-const BRAND = { primary: '#0B3C5D', accent: '#4ECDC4' };
+
 
 export const PROFILE_SECTION_META: Array<{
   key: string;

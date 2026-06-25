@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,7 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Calendar as CalendarIcon, Clock, Bell, BellRing, Plus, X, Check, ChevronRight, AlertCircle, Trash2, CheckCircle, Timer, BookOpen, FileText, Brain, Target, Repeat } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 
-const BRAND = { primary: '#0B3C5D', accent: '#4ECDC4' };
+
 
 interface ScheduledEvent {
   id: string;

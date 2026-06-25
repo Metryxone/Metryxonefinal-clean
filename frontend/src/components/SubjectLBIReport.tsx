@@ -1,8 +1,9 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { useState } from 'react';
 import { IntelligenceLayers } from './shared/IntelligenceLayers';
 import { Brain, BookOpen, Share2, Download, Copy, CheckCircle } from 'lucide-react';
 
-const BRAND = { primary: '#0B3C5D', teal: '#4ECDC4' };
+
 
 interface Props {
   childName: string;

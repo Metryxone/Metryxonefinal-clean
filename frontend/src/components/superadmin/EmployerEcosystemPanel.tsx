@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 /**
  * MX-103X — Live Employer Ecosystem (READ-ONLY funnel certification, super-admin).
  *
@@ -24,7 +25,7 @@ import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4' };
+
 
 function num(n?: number | null) {
   if (n == null) return '—';

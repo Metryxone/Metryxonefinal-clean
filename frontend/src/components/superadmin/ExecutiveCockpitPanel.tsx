@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   RefreshCw, Loader2, Briefcase, Users, TrendingUp, ShieldCheck, AlertTriangle,
@@ -17,7 +18,7 @@ import {
  * fabricates). Runtime figures are partly demo-seeded — disclosed in-banner.
  */
 
-const BRAND = { primary: '#344E86', accent: '#0E7C7B' };
+
 
 type Band = 'ready' | 'partial' | 'early' | 'idle' | 'unavailable';
 interface Dimension { key: string; label: string; available: boolean; score: number | null; band: string; }

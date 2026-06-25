@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import { useState, useEffect, useCallback } from 'react';
 import {
   Shield, Users, FileText, CheckCircle, Monitor, AlertTriangle,
@@ -6,7 +7,7 @@ import {
   AlertCircle, BarChart3, LogOut, Building2, Cpu, Download, Edit3
 } from 'lucide-react';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', green: '#2A9D8F', red: '#e63946', orange: '#f4a261', purple: '#8b5cf6' };
+
 
 type SecTab = 'overview' | 'members' | 'audit' | 'approvals' | 'sessions' | 'risk' | 'units' | 'sso';
 

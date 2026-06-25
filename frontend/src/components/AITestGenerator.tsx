@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { useState, useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { Brain, Sparkles, BookOpen, Target, Clock, CheckCircle, AlertCircle, Loader2, Play, Save, ArrowRight, FileText, Zap, GraduationCap, Lightbulb, Settings2 } from 'lucide-react';
@@ -10,10 +11,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Switch } from '@/components/ui/switch';
 import { apiRequest } from '@/lib/queryClient';
 
-const BRAND = {
-  primary: '#0B3C5D',
-  accent: '#4ECDC4',
-};
+
 
 interface Child {
   id: string;

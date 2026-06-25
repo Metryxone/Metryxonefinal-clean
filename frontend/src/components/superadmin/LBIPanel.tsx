@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -12,10 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Input } from '../ui/input';
 
-const BRAND = {
-  primary: '#344E86', accent: '#4ECDC4', success: '#10b981',
-  warning: '#f59e0b', danger: '#ef4444', purple: '#8b5cf6',
-};
+
 
 // ── Module-level constants ────────────────────────────────────────────────────
 

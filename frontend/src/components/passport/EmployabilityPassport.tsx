@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 /**
  * Employability Passport — presentational + owner/recruiter wrappers (T-P7).
  *
@@ -20,7 +21,7 @@ import {
   type PassportSnapshot, type PassportVisibility, type PassportSectionKey, type ShareStatus,
 } from '@/lib/passport/passportClient';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', green: '#2A9D8F' };
+
 const BORDER = '#E8EBF4';
 
 function bandColor(band: string): string {

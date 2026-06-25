@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Edit, Trash2, Search, Sparkles, RefreshCw, TrendingUp, TrendingDown, Minus } from 'lucide-react';
@@ -11,7 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { useToast } from '@/hooks/use-toast';
 import SubmitForReviewButton from './SubmitForReviewButton';
 
-const BRAND = { primary: '#344E86' };
+
 const CAT_COLORS: Record<string, string> = { digital: 'bg-blue-100 text-blue-700', ai_ml: 'bg-purple-100 text-purple-700', green: 'bg-green-100 text-green-700', human: 'bg-pink-100 text-pink-700', data: 'bg-indigo-100 text-indigo-700', leadership: 'bg-orange-100 text-orange-700', creative: 'bg-yellow-100 text-yellow-800', cross_functional: 'bg-teal-100 text-teal-700' };
 const HORIZON_COLORS: Record<string, string> = { now: 'bg-red-100 text-red-700', '1_2_years': 'bg-orange-100 text-orange-700', '3_5_years': 'bg-blue-100 text-blue-700', '5_plus_years': 'bg-gray-100 text-gray-600' };
 const STATUS_COLORS: Record<string, string> = { draft: 'bg-yellow-100 text-yellow-800', published: 'bg-green-100 text-green-800', archived: 'bg-gray-100 text-gray-600' };

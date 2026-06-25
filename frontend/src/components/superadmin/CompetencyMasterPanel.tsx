@@ -1,10 +1,11 @@
+import { BRAND } from '@/design-system/tokens';
 import React from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Boxes, ShieldCheck, CheckCircle2, Info, RefreshCw, Search, Save } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { Card, CardContent } from '../ui/card';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', success: '#10b981', warning: '#f59e0b', gray: '#6b7280' };
+
 
 const ELIGIBILITY_FLAGS = [
   { key: 'assessment_eligible', label: 'Assessment' },

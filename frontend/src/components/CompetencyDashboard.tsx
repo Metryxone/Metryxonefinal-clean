@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -19,7 +20,7 @@ import { QuickTour } from './QuickTour';
 import { Footer } from './layout/Footer';
 import { IntelligenceLayers } from './shared/IntelligenceLayers';
 
-const BRAND = { primary: '#0B3C5D', accent: '#4ECDC4' };
+
 
 interface CompetencyScore {
   competencyId: string;

@@ -41,6 +41,7 @@ export function QuickCheckIn({ childId, childName, onComplete }: Props) {
   const [sleep, setSleep] = useState('');
   const [stress, setStress] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [lastDate, setLastDate] = useState<string | null>(null);
 
   useEffect(() => {
@@ -63,6 +64,7 @@ export function QuickCheckIn({ childId, childName, onComplete }: Props) {
 
   const submit = async () => {
     setSubmitting(true);
+    setSubmitError(null);
     try {
       const token = localStorage.getItem('metryx_token');
       const now = new Date();
@@ -82,12 +84,14 @@ export function QuickCheckIn({ childId, childName, onComplete }: Props) {
           overallMood: mood,
         }),
       });
-    } catch { /* silently continue */ }
-
-    localStorage.setItem(storageKey, new Date().toISOString());
-    setStep(3);
-    setSubmitting(false);
-    onComplete?.();
+      localStorage.setItem(storageKey, new Date().toISOString());
+      setStep(3);
+      onComplete?.();
+    } catch {
+      setSubmitError("Couldn't load data. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (!visible) return null;
@@ -178,6 +182,13 @@ export function QuickCheckIn({ childId, childName, onComplete }: Props) {
           ))}
         </div>
       </div>
+
+      {/* Submit error notice */}
+      {submitError && (
+        <div className="mx-4 mb-2 px-3 py-2 rounded-xl text-[10px] font-medium" style={{ background: 'rgba(220,38,38,0.06)', border: '1px solid rgba(220,38,38,0.2)', color: '#DC2626' }}>
+          {submitError}
+        </div>
+      )}
 
       {/* Navigation footer */}
       <div className="px-4 pb-3.5 flex items-center justify-between">

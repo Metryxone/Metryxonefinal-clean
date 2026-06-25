@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 /**
  * BookSessionModal — Create a new video session and generate a shareable invite link.
  */
@@ -8,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 
-const BRAND = { primary: '#0B3C5D', accent: '#4ECDC4' };
+
 
 export interface CreatedSession {
   roomId: string;

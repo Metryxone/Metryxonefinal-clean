@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import {
   Plug, CheckCircle, Shield, ArrowRight, ArrowDown,
   Users, Award, Zap,
@@ -16,10 +17,7 @@ interface Props {
   onNavigate: (screen: Screen) => void;
 }
 
-const BRAND = {
-  primary: '#344E86',
-  accent: '#4ECDC4',
-};
+
 
 const FEATURES = [
   { icon: Layers, title: 'LMS Integration', desc: 'Native connectors for Cornerstone, SAP SuccessFactors, and 20+ learning management systems. Bi-directional sync of learner data and completions.' },

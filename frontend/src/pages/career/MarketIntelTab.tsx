@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState, useEffect } from 'react';
 import {
   TrendingUp, BarChart2, Target, Brain, Zap, Star, ChevronRight,
@@ -6,7 +7,7 @@ import {
 } from 'lucide-react';
 import { inferCompetencyLevels, detectCurrentRole } from '@/lib/careerIntelligence';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', green: '#2A9D8F', red: '#e63946', orange: '#f4a261' };
+
 
 const careerFetch = async (method: string, path: string, body?: unknown) => {
   const r = await fetch(`/api/career${path}`, {

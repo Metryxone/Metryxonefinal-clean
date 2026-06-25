@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 /**
  * IntelligenceLayers — shared 6-tab intelligence panel consumed by all 5 report surfaces.
  *
@@ -27,7 +28,7 @@ import {
   Compass, Lightbulb, Activity,
 } from 'lucide-react';
 
-const BRAND = { primary: '#0B3C5D', accent: '#4ECDC4', muted: '#64748B' };
+
 
 export interface IntelligenceLayersProps {
   sessionId?: string | null;

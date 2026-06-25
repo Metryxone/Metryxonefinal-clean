@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import {
   Heart, Target, Users, Lightbulb, Award, Globe,
   ArrowRight, ArrowDown, CheckCircle, Brain, Shield, Sparkles,
@@ -11,10 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-const BRAND = {
-  primary: "#344E86",
-  accent: "#4ECDC4"
-};
+
 
 interface AboutPageProps {
   onNavigate: (screen: Screen) => void;

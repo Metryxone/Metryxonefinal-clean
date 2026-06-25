@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 /**
  * FRPDesignPanel — Future Readiness Platform Admin
  * Super Admin panel: 7 tabs
@@ -6,7 +7,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { RefreshCw, Plus, Search, Edit3, Trash2, AlertTriangle, TrendingUp, CheckCircle, Save, X } from 'lucide-react';
 
-const BRAND = { primary:'#6C63FF', accent:'#FF6584', green:'#43C59E', amber:'#F7B731', red:'#FC5C65', blue:'#45AAF2', border:'#E5E7EB' };
+
 
 function authHeader(): Record<string, string> {
   const t = localStorage.getItem('metryx_token');

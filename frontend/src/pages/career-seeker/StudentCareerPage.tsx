@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import { useState, useEffect } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
@@ -10,7 +11,7 @@ import {
   PieChart, LogOut, AlertCircle, Heart, Rocket, Shield
 } from 'lucide-react';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', green: '#2A9D8F', orange: '#f4a261', red: '#e63946', purple: '#8b5cf6' };
+
 
 type Tab = 'dashboard' | 'competency' | 'explore' | 'goals' | 'mentors';
 

@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 /**
  * LIP — Learning Intelligence Tab
  * Sub-tabs: Gap Map | My Path | Resources | Needs | Report | Readiness
@@ -11,19 +12,7 @@ import {
   BarChart3, Brain, Activity, Filter, Search, Lightbulb, FileText,
 } from 'lucide-react';
 
-const BRAND = {
-  primary: '#6C63FF',
-  accent: '#FF6584',
-  green: '#43C59E',
-  amber: '#F7B731',
-  red: '#FC5C65',
-  blue: '#45AAF2',
-  navy: '#1E293B',
-  text: '#374151',
-  sub: '#6B7280',
-  border: '#E5E7EB',
-  bg: '#F9FAFB',
-};
+
 
 function authHeader(): Record<string, string> {
   const t = localStorage.getItem('metryx_token');

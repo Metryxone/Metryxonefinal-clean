@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import {
   GraduationCap, CheckCircle, Shield, ArrowRight, ArrowDown,
   Users, Brain, Award, Zap, TrendingUp,
@@ -16,10 +17,7 @@ interface Props {
   onNavigate: (screen: Screen) => void;
 }
 
-const BRAND = {
-  primary: '#344E86',
-  accent: '#4ECDC4',
-};
+
 
 const FEATURES = [
   { icon: Compass, title: 'Individual Growth Plans', desc: 'AI-generated personalized development roadmaps based on behavioral assessments, role requirements, and career aspirations for every employee.' },

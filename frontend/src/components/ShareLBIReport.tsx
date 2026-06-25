@@ -157,6 +157,7 @@ export function ShareLBIReport({ child, insights, avgScore, totalScore, maxScore
   const [shareMode, setShareMode] = useState<'options' | 'link'>('options');
   const [shareLink, setShareLink] = useState('');
   const [generating, setGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState<string | null>(null);
 
   useEffect(() => { const t = setTimeout(() => setVisible(true), 50); return () => clearTimeout(t); }, []);
 
@@ -165,6 +166,7 @@ export function ShareLBIReport({ child, insights, avgScore, totalScore, maxScore
   /* Generate obfuscated share token (base64 encoded compact payload) */
   const generateShareLink = async () => {
     setGenerating(true);
+    setGenerateError(null);
     try {
       const payload = {
         n: child.name,
@@ -196,6 +198,8 @@ export function ShareLBIReport({ child, insights, avgScore, totalScore, maxScore
       }
       setShareLink(link);
       setShareMode('link');
+    } catch {
+      setGenerateError("Couldn't load data. Please try again.");
     } finally {
       setGenerating(false);
     }
@@ -332,6 +336,16 @@ export function ShareLBIReport({ child, insights, avgScore, totalScore, maxScore
               This report is sanitised for teacher use — <strong>no sensitive personal data</strong> beyond name and grade is included. Shared under parental consent (DPDP Act 2023).
             </p>
           </div>
+
+          {generateError && (
+            <div className="rounded-xl px-4 py-3 flex gap-2 items-start"
+              style={{ backgroundColor: '#FEF2F2', border: '1px solid #FCA5A5' }}>
+              <AlertCircle size={13} style={{ color: '#DC2626', marginTop: 2, flexShrink: 0 }} />
+              <p style={{ fontSize: '11.5px', color: '#DC2626', lineHeight: 1.6 }}>
+                Couldn't load data. Please try again.
+              </p>
+            </div>
+          )}
 
           {shareMode === 'options' ? (
             /* Action buttons */

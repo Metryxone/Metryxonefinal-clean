@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Edit, Trash2, Search, Users, RefreshCw, Check, X, ChevronDown, ListChecks } from 'lucide-react';
@@ -12,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import SubmitForReviewButton from './SubmitForReviewButton';
 
-const BRAND = { primary: '#344E86' };
+
 const STATUS_COLORS: Record<string, string> = { draft: 'bg-yellow-100 text-yellow-800', published: 'bg-green-100 text-green-800', archived: 'bg-gray-100 text-gray-600' };
 const SENIORITY_COLORS: Record<string, string> = { intern: 'bg-gray-100 text-gray-600', junior: 'bg-blue-100 text-blue-700', mid: 'bg-indigo-100 text-indigo-700', senior: 'bg-purple-100 text-purple-700', lead: 'bg-orange-100 text-orange-700', principal: 'bg-red-100 text-red-700', manager: 'bg-green-100 text-green-700', sr_manager: 'bg-green-100 text-green-800', director: 'bg-teal-100 text-teal-700', vp: 'bg-pink-100 text-pink-700', c_suite: 'bg-yellow-100 text-yellow-800' };
 const SENIORITY_LEVELS = ['intern','junior','mid','senior','lead','principal','manager','sr_manager','director','vp','c_suite'];

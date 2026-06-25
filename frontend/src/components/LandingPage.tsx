@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import React, { useState, useEffect, useRef, memo } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -61,7 +62,7 @@ interface LandingPageProps {
   onClearDeepLink?: () => void;
 }
 
-const BRAND = { primary: '#0B3C5D', accent: '#4ECDC4' };
+
 
 const ROTATING_HEADLINES = [
   "Behavioral intelligence that turns potential into measurable performance.",

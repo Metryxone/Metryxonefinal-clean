@@ -1,3 +1,4 @@
+import { BRAND } from '@/design-system/tokens';
 import React, { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Edit, Trash2, Search, Target, RefreshCw } from 'lucide-react';
@@ -11,7 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { useToast } from '@/hooks/use-toast';
 import SubmitForReviewButton from './SubmitForReviewButton';
 
-const BRAND = { primary: '#344E86' };
+
 const LEVEL_COLORS: Record<string, string> = { foundational: 'bg-gray-100 text-gray-700', developing: 'bg-blue-100 text-blue-700', proficient: 'bg-green-100 text-green-700', advanced: 'bg-purple-100 text-purple-700', expert: 'bg-yellow-100 text-yellow-800' };
 const LEVELS = ['foundational', 'developing', 'proficient', 'advanced', 'expert'];
 const LEVEL_DEFAULTS: Record<string, { min: number; max: number; num: number }> = { foundational: { min: 0, max: 39.99, num: 1 }, developing: { min: 40, max: 59.99, num: 2 }, proficient: { min: 60, max: 74.99, num: 3 }, advanced: { min: 75, max: 89.99, num: 4 }, expert: { min: 90, max: 100, num: 5 } };

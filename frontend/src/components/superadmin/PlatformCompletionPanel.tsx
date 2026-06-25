@@ -1,10 +1,11 @@
+import { BRAND } from '@/design-system/tokens';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { RefreshCw, ShieldCheck, AlertTriangle, Info, CheckCircle2, CircleSlash, Layers, Gauge, Building2, Award, FileText } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 
-const BRAND = { primary: '#344E86' };
+
 const BASE = '/api/admin/platform-completion';
 
 /** null/undefined → "not measurable" (amber); 0 stays 0. */

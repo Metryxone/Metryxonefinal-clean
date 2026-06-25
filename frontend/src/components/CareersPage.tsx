@@ -1,3 +1,4 @@
+import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
 import { useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
@@ -37,10 +38,7 @@ interface Job {
   publishedAt: string;
 }
 
-const BRAND = {
-  primary: "#0B3C5D",
-  accent: "#4ECDC4"
-};
+
 
 const ROLE_ICONS: Record<string, typeof Briefcase> = {
   mentor: Users,

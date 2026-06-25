@@ -1,7 +1,8 @@
+import { BRAND } from '@/design-system/tokens';
 import { useState, useEffect } from 'react';
 import { Briefcase, MapPin, Clock, DollarSign, Send, CheckCircle, AlertCircle, Building2, ChevronDown, ChevronUp, Paperclip, X } from 'lucide-react';
 
-const BRAND = { primary: '#344E86', accent: '#4ECDC4', green: '#2A9D8F', red: '#e63946', orange: '#f4a261' };
+
 
 const RESUME_MAX_BYTES = 5 * 1024 * 1024;
 const RESUME_EXTS = ['pdf', 'doc', 'docx', 'txt', 'rtf', 'odt'];

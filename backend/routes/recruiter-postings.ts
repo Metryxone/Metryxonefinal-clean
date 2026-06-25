@@ -95,11 +95,27 @@ export function registerRecruiterPostingsRoutes(
         eiMinScore: r.ei_min_score || 0,
         createdAt: r.created_at,
       }));
-      res.json({ success: true, version: VERSION, postings });
+      // Distinguish a genuine empty list from a read failure so the candidate
+      // UI can tell "no jobs yet" apart from "couldn't load jobs".
+      res.json({
+        success: true,
+        version: VERSION,
+        postings,
+        note: postings.length === 0 ? 'no_data' : undefined,
+      });
     } catch (e: any) {
-      // Graceful fallback — never break the candidate UI
-      console.error('[recruiter-postings] read failed:', e?.message);
-      res.json({ success: true, version: VERSION, postings: [], note: 'no_data' });
+      // Graceful fallback — never break the candidate UI — but be HONEST that
+      // this is a failure, not an empty list. Operators can alert on this log
+      // line and the frontend surfaces a distinct "couldn't load" state.
+      console.error(
+        '[recruiter-postings] read failed — returning unavailable:',
+        e?.message,
+        e?.code ? `(code=${e.code})` : '',
+        e?.stack,
+      );
+      res
+        .status(503)
+        .json({ success: false, version: VERSION, postings: [], note: 'unavailable' });
     }
   });
 }

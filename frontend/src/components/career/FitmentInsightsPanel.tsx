@@ -110,6 +110,7 @@ export default function FitmentInsightsPanel({ profile, jobs, userId, behavior }
   const [percentileErr, setPercentileErr] = useState<string | null>(null);
   const [postings, setPostings] = useState<Posting[]>([]);
   const [postingsLoaded, setPostingsLoaded] = useState(false);
+  const [postingsError, setPostingsError] = useState(false);
   const [tab, setTab] = useState<'peer' | 'applied' | 'openings'>('peer');
 
   // ── Peer ranking ────────────────────────────────────────────────────────
@@ -146,13 +147,22 @@ export default function FitmentInsightsPanel({ profile, jobs, userId, behavior }
     (async () => {
       try {
         const r = await fetch('/api/career/recruiter-postings', { headers: authHeader() });
-        const d = await r.json();
+        const d = await r.json().catch(() => ({}));
         if (!cancelled) {
-          setPostings(Array.isArray(d.postings) ? d.postings : []);
+          // A read failure (non-OK status or note: 'unavailable') is distinct
+          // from a genuinely empty list — surface it so candidates aren't told
+          // there are zero jobs when the listings simply failed to load.
+          if (!r.ok || d?.note === 'unavailable') {
+            setPostingsError(true);
+            setPostings([]);
+          } else {
+            setPostingsError(false);
+            setPostings(Array.isArray(d.postings) ? d.postings : []);
+          }
           setPostingsLoaded(true);
         }
       } catch {
-        if (!cancelled) { setPostings([]); setPostingsLoaded(true); }
+        if (!cancelled) { setPostingsError(true); setPostings([]); setPostingsLoaded(true); }
       }
     })();
     return () => { cancelled = true; };
@@ -386,6 +396,35 @@ export default function FitmentInsightsPanel({ profile, jobs, userId, behavior }
           <>
             {!postingsLoaded ? (
               <div className="text-xs text-gray-500 py-4 text-center">Loading openings…</div>
+            ) : postingsError ? (
+              <div className="space-y-2">
+                <div className="flex items-start gap-2 p-2.5 rounded-lg bg-rose-50/50 border border-rose-100">
+                  <AlertCircle size={11} className="text-rose-500 shrink-0 mt-0.5" />
+                  <div className="text-[10px] text-rose-800">
+                    We couldn’t load live employer postings right now — this isn’t a sign there are no openings. Please try again in a moment.{demandSuggestions.length > 0 && ' In the meantime, here are demand-driven suggestions from the live market catalog.'}
+                  </div>
+                </div>
+                {demandSuggestions.map((r, i) => (
+                  <div key={r.role.id || i} className="flex items-center gap-3 p-2.5 rounded-xl border border-gray-100 hover:border-indigo-200 hover:bg-indigo-50/20 transition-colors">
+                    <FitRing score={r.fitment.fitScore} />
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs font-semibold text-gray-800 truncate">{r.role.title}</div>
+                      <div className="text-[11px] text-gray-500 truncate">
+                        Family: {r.role.family} · Demand {r.role.demandScore} · Growth {r.role.growth36mo}%
+                      </div>
+                      <div className="flex flex-wrap items-center gap-1.5 mt-1">
+                        <span className="text-[9px] px-1.5 py-0.5 rounded font-medium" style={{ backgroundColor: `${fitColor(r.fitment.fitScore)}15`, color: fitColor(r.fitment.fitScore) }}>
+                          {fitLabel(r.fitment.fitScore)}
+                        </span>
+                        <span className="text-[9px] text-gray-500">Hire prob {r.fitment.hireProbability}%</span>
+                        {r.fitment.missingSkills.length > 0 && (
+                          <span className="text-[9px] text-amber-700 truncate">Missing: {r.fitment.missingSkills.slice(0, 3).join(', ')}</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             ) : rankedPostings.length > 0 ? (
               <div className="space-y-2">
                 <div className="text-[10px] text-gray-500 mb-1.5">

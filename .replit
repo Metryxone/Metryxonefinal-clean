@@ -47,6 +47,10 @@ args = "referral-deal-value-repair"
 task = "workflow.run"
 args = "precise-scores-isolation"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "precise-scores-onoff"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -134,6 +138,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx scripts/task158-e2e-precise-scores-isolation.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "precise-scores-onoff"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx scripts/task167-precise-scores-onoff.ts"
 
 [workflows.workflow.metadata]
 isValidation = true

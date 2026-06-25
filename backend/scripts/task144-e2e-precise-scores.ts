@@ -87,11 +87,11 @@ async function main() {
     // 2) Submit a real assessment over HTTP as that candidate. Mix of mapped +
     //    unmapped CRA codes — only the mapped ones may become precise scores.
     const scores = [
-      { competencyCode: 'COG01', rawScore: 82, confidence: 0.9 }, // -> comp_critical_thinking  (level 5)
-      { competencyCode: 'COG02', rawScore: 55, confidence: 0.8 }, // -> comp_problem_solving     (level 3)
-      { competencyCode: 'EIQ05', rawScore: 30, confidence: 0.7 }, // -> comp_conflict_resolution (level 2)
-      { competencyCode: 'COG03', rawScore: 90, confidence: 0.9 }, // UNMAPPED (Analytical Reasoning)
-      { competencyCode: 'TEC02', rawScore: 70, confidence: 0.8 }, // UNMAPPED (Digital Fluency)
+      { competencyCode: 'COG01', rawScore: 82, confidence: 0.9 }, // -> comp_critical_thinking   (level 5)
+      { competencyCode: 'COG02', rawScore: 55, confidence: 0.8 }, // -> comp_problem_solving      (level 3)
+      { competencyCode: 'EIQ05', rawScore: 30, confidence: 0.7 }, // -> comp_conflict_resolution  (level 2)
+      { competencyCode: 'COG03', rawScore: 90, confidence: 0.9 }, // -> comp_analytical_thinking  (level 5) — curated synonym (Task #143)
+      { competencyCode: 'TEC02', rawScore: 70, confidence: 0.8 }, // UNMAPPED (Digital Fluency — deliberately not a synonym of "Technology Adoption")
     ];
     const run = await fetch(`${BASE}/api/competency/run-assessment`, {
       method: 'POST',
@@ -101,10 +101,10 @@ async function main() {
     const runBody = await run.json().catch(() => ({}));
     assert(run.ok, `POST run-assessment accepted over HTTP (HTTP ${run.status})`);
     assert(runBody?.data?.saved === scores.length, `all ${scores.length} scores saved (got ${runBody?.data?.saved})`);
-    // The bridge writes the precise run inline (flag ON). 3 mapped, 2 unmapped omitted.
+    // The bridge writes the precise run inline (flag ON). 4 mapped, 1 unmapped (TEC02) omitted.
     assert(
-      runBody?.data?.precise?.written === true && runBody?.data?.precise?.competencies === 3,
-      `precise-run bridge wrote 3 mapped competencies (got written=${runBody?.data?.precise?.written}, n=${runBody?.data?.precise?.competencies})`,
+      runBody?.data?.precise?.written === true && runBody?.data?.precise?.competencies === 4,
+      `precise-run bridge wrote 4 mapped competencies (got written=${runBody?.data?.precise?.written}, n=${runBody?.data?.precise?.competencies})`,
     );
 
     // 3) Read precise-scores with the SAME session — proves the authenticated
@@ -117,7 +117,7 @@ async function main() {
     assert(psBody?.hasPrecise === true, 'hasPrecise=true');
 
     const precise: any[] = Array.isArray(psBody?.precise) ? psBody.precise : [];
-    assert(precise.length === 3, `precise-scores surfaces 3 competency-granularity scores (got ${precise.length})`);
+    assert(precise.length === 4, `precise-scores surfaces 4 competency-granularity scores (got ${precise.length})`);
 
     const ct = precise.find((s) => s.code === 'comp_critical_thinking');
     assert(
@@ -128,10 +128,17 @@ async function main() {
     assert(!!ps2 && ps2.score === 55 && ps2.level === 3, `comp_problem_solving = 55 / level 3 (got ${ps2?.score}/${ps2?.level})`);
     const cr = precise.find((s) => s.code === 'comp_conflict_resolution');
     assert(!!cr && cr.score === 30 && cr.level === 2, `comp_conflict_resolution = 30 / level 2 (got ${cr?.score}/${cr?.level})`);
-
-    // Honesty: unmapped CRA codes never appear as precise scores.
+    // COG03 is a curated-synonym mapping (Task #143): Analytical Reasoning -> genome "Analytical Thinking".
+    const at = precise.find((s) => s.code === 'comp_analytical_thinking');
     assert(
-      !precise.some((s) => s.code === 'COG03' || s.code === 'TEC02' || s.code === 'comp_analytical_reasoning' || s.code === 'comp_digital_fluency'),
+      !!at && at.score === 90 && at.level === 5 && at.measurement === 'precise',
+      `comp_analytical_thinking = 90 / level 5 / precise (got ${at?.score}/${at?.level}/${at?.measurement})`,
+    );
+
+    // Honesty: the deliberately-unmapped CRA code (TEC02 Digital Fluency) never
+    // appears as a precise score, and no raw CRA codes leak through.
+    assert(
+      !precise.some((s) => s.code === 'COG03' || s.code === 'TEC02' || s.code === 'comp_digital_fluency'),
       'unmapped CRA codes never appear as precise scores (no fabrication)',
     );
 

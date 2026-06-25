@@ -54,6 +54,23 @@ user pages (`source === 'onet_derived'`) could never fire — `getRoleDNA` /
   and a standalone `POST /api/ontology/overview/bridge-onet-weights` for
   re-bridging without a full re-import.
 
+## ONET_* role requirements → onto-domain crosswalk (employer matching)
+O*NET-inherited role-DNA requirements carry `ONET_*` codes (= `ont_competencies.code`,
+the O*NET import library) which have NO row in the curated `onto_competencies` genome,
+so a `comp_*→domain_id` lookup can't reach them and they stay permanently unassessed
+(capping employer match coverage). The bridge to make them assessable via domain-proxy:
+reuse the import-time classification already on `ont_competencies` (`category` /
+`competency_type` — Skills→functional, Abilities→cognitive/core, Knowledge→domain,
+Work Styles→behavioral) → map to an `onto_domains.scientific_type` → resolve the REAL
+`dom_*` id from `onto_domains` (never hardcode the id; look it up so a missing domain
+honestly drops). Lives in `loadCompetencyDomainCrosswalk` (employer-competency-hiring.ts)
+as a SECOND resolution pass over only the codes the curated path didn't resolve.
+**Why grounded, not fabricated:** the category IS O*NET's own content-file classification;
+no `dom_*` is invented. Categories with no scientific_type mapping (and any scientific_type
+with no `onto_domains` row) stay unassessed — the honest O*NET coverage ceiling.
+**Reachable domains:** O*NET sources only reach cognitive/behavioral/functional;
+interpersonal & strategic have no O*NET source (correct, never force one).
+
 ## Env reality (why the badge stays grey in dev)
 `ont_*` ships EMPTY in dev (merges carry code+DDL, not rows). O*NET is imported
 only in prod via `runOnetImport`/`import-onet`, and onetcenter.org times out from

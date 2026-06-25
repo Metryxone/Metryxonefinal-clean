@@ -83,12 +83,48 @@ async function tableExists(pool: Pool, name: string): Promise<boolean> {
 }
 
 /**
- * Crosswalk from a role-DNA requirement competency id (`comp_*`) to its canonical
- * onto-DOMAIN id (`dom_*`), read from `onto_competencies.domain_id`. This is the binding
- * that lets a candidate's DOMAIN-PROXY profile (a handful of measured `dom_*` scores)
- * score against `comp_*` role requirements — exactly the crosswalk the competency runtime
- * itself uses for domain-proxy measurement. Read-only; degrades to an empty map (never
- * throws, never fabricates a domain).
+ * O*NET classification vocabulary → onto-domain `scientific_type`.
+ *
+ * O*NET-inherited requirements carry `ONET_*` codes that have NO row in the curated
+ * `onto_competencies` genome, so they cannot resolve a `domain_id` directly. But the
+ * O*NET import table (`ont_competencies`) already classifies every element by the
+ * source content file it came from (`category` / `competency_type` — Skills→functional,
+ * Abilities→cognitive, Knowledge→domain, Work Styles→behavioral). That existing,
+ * O*NET-grounded classification is the bridge: we map it onto one of the curated
+ * `onto_domains.scientific_type` values, then resolve the REAL `dom_*` id from
+ * `onto_domains`. Nothing is invented — only the import-time category is reused.
+ *
+ * Keys are checked in `category` first, then `competency_type`. A value with no entry
+ * here (and no curated `onto_domains` row for the resolved scientific_type) stays
+ * unassessed — the honest O*NET coverage ceiling, never fabricated.
+ */
+const ONET_CLASS_TO_SCIENTIFIC_TYPE: Record<string, string> = {
+  // ont_competencies.category values (from onet-import CONTENT_FILES)
+  cognitive: 'cognitive',
+  behavioral: 'behavioral',
+  technical: 'functional',
+  domain: 'functional',
+  // ont_competencies.competency_type values (Abilities=core/cognitive, Skills=functional)
+  core: 'cognitive',
+  functional: 'functional',
+};
+
+/**
+ * Crosswalk from a role-DNA requirement competency id to its canonical onto-DOMAIN id
+ * (`dom_*`). Two disjoint requirement namespaces both resolve through this single map:
+ *
+ *   1. Curated `comp_*` ids → `onto_competencies.domain_id` (the direct curated binding).
+ *   2. O*NET-inherited `ONET_*` ids → reached via the O*NET import table
+ *      (`ont_competencies.category` / `competency_type`) → onto-domain `scientific_type`
+ *      → the real `dom_*` id in `onto_domains`. This lets the 11/27 O*NET-inherited
+ *      role-DNA requirements (which have no `onto_competencies` row) ALSO participate in
+ *      domain-proxy matching, instead of staying permanently unassessed.
+ *
+ * This is the binding that lets a candidate's DOMAIN-PROXY profile (a handful of measured
+ * `dom_*` scores) score against role requirements — exactly the crosswalk the competency
+ * runtime itself uses for domain-proxy measurement. Read-only; degrades to an empty map
+ * (never throws, never fabricates a domain). A code that resolves through neither path
+ * stays unassessed — the honest coverage ceiling.
  */
 async function loadCompetencyDomainCrosswalk(
   pool: Pool,
@@ -97,21 +133,59 @@ async function loadCompetencyDomainCrosswalk(
   const map = new Map<string, string>();
   const ids = Array.from(new Set(compCodes.map((c) => String(c ?? '').trim()).filter(Boolean)));
   if (!ids.length) return map;
-  if (!(await tableExists(pool, 'onto_competencies'))) return map;
-  try {
-    const { rows } = await pool.query(
-      `SELECT id, domain_id FROM onto_competencies WHERE id = ANY($1::text[])`,
-      [ids],
-    );
-    for (const r of rows as any[]) {
-      const id = String(r?.id ?? '').trim();
-      const dom = String(r?.domain_id ?? '').trim();
-      if (id && dom) map.set(id, dom);
+
+  // 1) Curated comp_* → onto_competencies.domain_id (direct binding).
+  if (await tableExists(pool, 'onto_competencies')) {
+    try {
+      const { rows } = await pool.query(
+        `SELECT id, domain_id FROM onto_competencies WHERE id = ANY($1::text[])`,
+        [ids],
+      );
+      for (const r of rows as any[]) {
+        const id = String(r?.id ?? '').trim();
+        const dom = String(r?.domain_id ?? '').trim();
+        if (id && dom) map.set(id, dom);
+      }
+    } catch {
+      // Degrade: a read failure yields no curated resolutions → those requirements stay
+      // unassessed (honest coverage miss), never a fabricated match.
     }
-  } catch {
-    // Degrade: a read failure yields an empty crosswalk → requirements stay unassessed
-    // (honest coverage miss), never a fabricated match.
   }
+
+  // 2) O*NET-inherited ONET_* → ont_competencies classification → onto_domains scientific_type.
+  //    Only attempt for codes the curated path did not already resolve.
+  const unresolved = ids.filter((id) => !map.has(id));
+  if (unresolved.length && (await tableExists(pool, 'ont_competencies')) && (await tableExists(pool, 'onto_domains'))) {
+    try {
+      // Build scientific_type → real dom_* id from the live onto_domains table (never hardcoded).
+      const sciToDom = new Map<string, string>();
+      const dres = await pool.query(`SELECT id, scientific_type FROM onto_domains`);
+      for (const r of dres.rows as any[]) {
+        const id = String(r?.id ?? '').trim();
+        const sci = String(r?.scientific_type ?? '').trim().toLowerCase();
+        if (id && sci && !sciToDom.has(sci)) sciToDom.set(sci, id);
+      }
+
+      const cres = await pool.query(
+        `SELECT code, category, competency_type FROM ont_competencies WHERE code = ANY($1::text[])`,
+        [unresolved],
+      );
+      for (const r of cres.rows as any[]) {
+        const code = String(r?.code ?? '').trim();
+        if (!code) continue;
+        const category = String(r?.category ?? '').trim().toLowerCase();
+        const compType = String(r?.competency_type ?? '').trim().toLowerCase();
+        const sci = ONET_CLASS_TO_SCIENTIFIC_TYPE[category] ?? ONET_CLASS_TO_SCIENTIFIC_TYPE[compType] ?? null;
+        if (!sci) continue; // no grounded domain mapping → stay unassessed (honest)
+        const dom = sciToDom.get(sci);
+        if (dom) map.set(code, dom); // only when a REAL onto_domains row backs the scientific_type
+      }
+    } catch {
+      // Degrade: the inherited path yields no resolutions → ONET_* requirements stay
+      // unassessed (honest coverage ceiling), never a fabricated domain.
+    }
+  }
+
   return map;
 }
 

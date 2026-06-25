@@ -1,0 +1,214 @@
+{
+  "task": "MX-301A",
+  "title": "Enterprise Assessment Journey Validation",
+  "candidate_masked": "user_4286d980cc6cc038",
+  "generated_at": "2026-06-25T13:07:42.190Z",
+  "base_url": "http://localhost:8080",
+  "super_admin_auth_mode": "direct",
+  "verdict": "PASS (with honest-empty surfaces)",
+  "measurable_stages": 12,
+  "total_stages": 13,
+  "engine_errors": 0,
+  "broken_apis": 0,
+  "criteria": [
+    {
+      "id": "C1",
+      "label": "Complete assessment executes (scorer runs deterministically)",
+      "pass": true
+    },
+    {
+      "id": "C2",
+      "label": "No broken workflow (no engine errors, no broken API routes)",
+      "pass": true
+    },
+    {
+      "id": "C3",
+      "label": "Competency scores generated (scored profile measurable)",
+      "pass": true
+    },
+    {
+      "id": "C4",
+      "label": "Role DNA resolved (engine resolves requirement profile)",
+      "pass": true
+    },
+    {
+      "id": "C5",
+      "label": "DB writes verified (canonical competency ledgers populated)",
+      "pass": true
+    },
+    {
+      "id": "C6",
+      "label": "APIs verified (every journey route wired + secured, none broken)",
+      "pass": true
+    }
+  ],
+  "stages": [
+    {
+      "n": 1,
+      "stage": "Registration",
+      "db_ok": true,
+      "engine_generated": true,
+      "measurable": true,
+      "api": {
+        "method": "POST",
+        "path": "/api/register",
+        "unauth": 400,
+        "authed": 400,
+        "verdict": "wired"
+      }
+    },
+    {
+      "n": 2,
+      "stage": "Authentication",
+      "db_ok": true,
+      "engine_generated": true,
+      "measurable": true,
+      "api": {
+        "method": "POST",
+        "path": "/api/login",
+        "unauth": 401,
+        "authed": 401,
+        "verdict": "wired"
+      }
+    },
+    {
+      "n": 3,
+      "stage": "Profile completion",
+      "db_ok": true,
+      "engine_generated": true,
+      "measurable": true,
+      "api": {
+        "method": "GET",
+        "path": "/api/cv/profile/user_4286d980cc6cc038",
+        "unauth": 401,
+        "authed": 403,
+        "verdict": "forbidden_cross_user"
+      }
+    },
+    {
+      "n": 4,
+      "stage": "Role selection",
+      "db_ok": true,
+      "engine_generated": true,
+      "measurable": true,
+      "api": null
+    },
+    {
+      "n": 5,
+      "stage": "Role DNA resolution",
+      "db_ok": false,
+      "engine_generated": true,
+      "measurable": true,
+      "api": {
+        "method": "POST",
+        "path": "/api/admin/role-resolution/resolve",
+        "unauth": 401,
+        "authed": 503,
+        "verdict": "flag_gated"
+      }
+    },
+    {
+      "n": 6,
+      "stage": "Adaptive assessment (question engine)",
+      "db_ok": true,
+      "engine_generated": true,
+      "measurable": true,
+      "api": null
+    },
+    {
+      "n": 7,
+      "stage": "Response capture (scorer executes)",
+      "db_ok": "n/a",
+      "engine_generated": true,
+      "measurable": true,
+      "api": null
+    },
+    {
+      "n": 8,
+      "stage": "Competency scoring",
+      "db_ok": true,
+      "engine_generated": true,
+      "measurable": true,
+      "api": null
+    },
+    {
+      "n": 9,
+      "stage": "Competency profile",
+      "db_ok": true,
+      "engine_generated": true,
+      "measurable": true,
+      "api": {
+        "method": "GET",
+        "path": "/api/competency-runtime/profiles/user_4286d980cc6cc038",
+        "unauth": 401,
+        "authed": 200,
+        "verdict": "served"
+      }
+    },
+    {
+      "n": 10,
+      "stage": "Competency radar (type profile)",
+      "db_ok": true,
+      "engine_generated": true,
+      "measurable": true,
+      "api": {
+        "method": "GET",
+        "path": "/api/competency-runtime/profiles/user_4286d980cc6cc038/type-profile",
+        "unauth": 401,
+        "authed": 200,
+        "verdict": "served"
+      }
+    },
+    {
+      "n": 11,
+      "stage": "Competency heatmap",
+      "db_ok": true,
+      "engine_generated": true,
+      "measurable": true,
+      "api": {
+        "method": "GET",
+        "path": "/api/competency-runtime/mapping-grid",
+        "unauth": 401,
+        "authed": 200,
+        "verdict": "served"
+      }
+    },
+    {
+      "n": 12,
+      "stage": "Strength analysis",
+      "db_ok": true,
+      "engine_generated": true,
+      "measurable": true,
+      "api": {
+        "method": "GET",
+        "path": "/api/competency/gap-analysis/user_4286d980cc6cc038",
+        "unauth": 401,
+        "authed": 403,
+        "verdict": "forbidden_cross_user"
+      }
+    },
+    {
+      "n": 13,
+      "stage": "Development areas (gap engine)",
+      "db_ok": true,
+      "engine_generated": true,
+      "measurable": false,
+      "api": {
+        "method": "GET",
+        "path": "/api/competency-runtime/gap-engine/user_4286d980cc6cc038",
+        "unauth": 401,
+        "authed": 404,
+        "verdict": "served_empty"
+      }
+    }
+  ],
+  "deliverables": [
+    "01-e2e-validation.md",
+    "02-journey-flow-diagram.md",
+    "03-db-evidence.md",
+    "04-api-evidence.md",
+    "05-assessment-evidence.md",
+    "06-journey-certification.md",
+    "manifest.json"
+  ]
+}

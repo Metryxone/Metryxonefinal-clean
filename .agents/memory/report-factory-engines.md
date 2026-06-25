@@ -39,9 +39,17 @@ Both wrapped in `.catch(() => null/[])` — never throws.
 - Benchmark `behaviour_score` queries `wcl0_user_intelligence.behaviour_dims_present > 0` (7 rows in dev)
 - PDF files stored in `/tmp/rf_exports/` — ephemeral per-restart, not persisted across deploys
 
-## Enterprise report-pack composer (MX-301 Phase 3)
-- `services/report-pack.ts` composes 16 reports into ONE shape (`generated_content.sections`, fixed 9-section layout) that BOTH the 4 exporters (pdf/html/json/csv) and the in-app preview (HTML) consume; orchestrated by `scripts/mx301-report-pack.ts` (idempotent self-purge + `--rollback`).
-- **NO-placeholder is a hard contract**, not just prose: the obvious `num(x) ?? '?'` idiom silently emits `~?w` / `?%` stubs into committed deliverables. Use honest formatters (omit the clause when the value is absent) AND enforce a `PLACEHOLDER_RE` guard inside `validateReport` so any future `~?`/`?w`/`TBD`/`lorem`/` ?%` FAILS the no-empty guard before export.
-- **Interview count field**: `evaluation-engine.candidateEvaluation` returns the score count as `total_scores` (folded), NOT `scores.length` — reading the wrong field makes the founder report say "0 panel scores" despite a successful enrichment. Read `ev.data.total_scores`.
+## Enterprise report-pack composer
+
+A single composer shapes many reports into ONE layout consumed by BOTH the exporters (pdf/html/json/csv) and the in-app HTML preview. Durable lessons:
+
+- **NO-placeholder is a hard contract**, not just prose: the obvious `num(x) ?? '?'` idiom silently emits `~?w` / `?%` stubs into committed deliverables. Use honest formatters (omit the clause when the value is absent) AND enforce a `PLACEHOLDER_RE` guard inside the validator so any future `~?`/`?w`/`TBD`/`lorem`/` ?%` FAILS the no-empty guard before export.
+- **Folded count fields**: candidate evaluation returns its score count as a folded `total_scores`, NOT `scores.length` — reading the raw array length makes a report say "0 panel scores" despite a successful enrichment. Read the folded total.
 - Honest-empty is legit & expected: radar/heatmap need type-classified / per-competency PRECISE scores (domain-proxy candidates have none → honest), role/promotion readiness + skill_gap need role requirements / a 2nd EI snapshot. Never fabricate a 2nd snapshot to flip Promotion Readiness "ready".
 - Coverage⟂Confidence⟂Activation kept as separate fields per report; subject email masked to `user_<sha>` in every committed artifact.
+
+## Read-only validators of the assessment journey
+
+- A validator must be **strictly read-only**: never auto-provision the demonstration candidate from inside a validation run (no `execSync` of a seed script). If the candidate is absent, fail fast with an explicit "run the provisioning script first" instruction and exit non-zero.
+- **Don't fake a DB-lens check.** A stage with no dedicated table must NOT report `db.ok:true` from a constant or a scorer-derived value. Either back it on a real query of the underlying substrate (e.g. the competency ledgers) and say so in the detail, or mark it `n/a` (e.g. a `persist:false` scorer that writes nothing by design). A green ✓ with no query behind it is fabricated evidence.
+- An authed-404 AFTER a route is confirmed gated unauth (401/403) is `served_empty` (wired, no data), NOT a broken API.

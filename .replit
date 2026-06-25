@@ -51,6 +51,10 @@ args = "precise-scores-isolation"
 task = "workflow.run"
 args = "precise-scores-onoff"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "employer-job-posting"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -149,6 +153,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx scripts/task167-precise-scores-onoff.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "employer-job-posting"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx tests/employer-job-posting.test.ts"
 
 [workflows.workflow.metadata]
 isValidation = true

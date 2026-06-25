@@ -31,6 +31,17 @@ fabricated column. Project the 1:1 link by reusing the source id (employer_jobs.
 posting id, TEXT). Reversible = status='inactive' (never DELETE); idempotent =
 `ON CONFLICT (id) DO UPDATE`.
 
+## Native portal POST owns the descriptive trio via additive ALTER
+The MX-103W *projection* folds orphan source fields into existing columns, but the
+**native** `POST /api/employer/jobs` authoring path genuinely treats `work_mode`/
+`experience`/`salary` as first-class fields (its INSERT + `toJob` mapping both
+reference them). The live table lacked all three, so create returned 500. Fix:
+`employer-portal.ts` `ensureSchema` now `ADD COLUMN IF NOT EXISTS` the trio
+(nullable TEXT) so the ensure step and INSERT agree. Additive, pre-existing rows
+unaffected. `salary_min`/`salary_max`/`currency` (projection origin) coexist with the
+free-text `salary`; they are not reconciled — the two write paths populate different
+salary representations by design.
+
 ## /enabled probe under /api/admin is authenticated-only
 A global `app.use('/api/admin', requireAuth→requireSuperAdmin)` gate fronts the
 router, so an intended "unauthenticated" `/enabled` probe returns 401 to an

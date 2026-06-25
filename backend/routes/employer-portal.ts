@@ -39,7 +39,14 @@ let schemaReady = false;
 export async function ensureSchema(pool: Pool): Promise<void> {
   if (schemaReady) return;
   await pool.query(`
-    -- Extend employer_jobs with missing columns
+    -- Extend employer_jobs with missing columns.
+    -- The live table was created by recruiter-postings / MX-103W projection with a
+    -- DIVERGENT shape (salary_min/salary_max/currency, NO work_mode/experience/salary).
+    -- The portal's INSERT + toJob mapping expect the descriptive trio below, so add
+    -- them additively (nullable TEXT) — flag-off / pre-existing rows are unaffected.
+    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS work_mode         TEXT;
+    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS experience        TEXT;
+    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS salary            TEXT;
     ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS responsibilities JSONB    DEFAULT '[]'::jsonb;
     ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS perks             JSONB    DEFAULT '[]'::jsonb;
     ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS deadline          TEXT;

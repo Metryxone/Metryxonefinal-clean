@@ -42,6 +42,26 @@ unaffected. `salary_min`/`salary_max`/`currency` (projection origin) coexist wit
 free-text `salary`; they are not reconciled — the two write paths populate different
 salary representations by design.
 
+## Recruiter read path must self-reconcile (don't depend on another module's ALTER)
+`recruiter-postings.ts` lazily `CREATE TABLE IF NOT EXISTS employer_jobs` then
+SELECTs `work_mode`/`experience`/`salary`. The CREATE is a NO-OP against the
+pre-existing divergent table, so those columns were silently absent and the
+SELECT threw — but the handler swallows the error into `{postings:[],
+note:'no_data'}`, so the candidate UI just shows ZERO postings (no 500). It only
+worked when employer-portal's `ensureSchema` happened to run its `ADD COLUMN`
+first.
+
+**Why:** column existence is per-DB persistent state; merges carry CODE not
+applied DDL (merged-task-data-not-in-live-db.md), so a fresh env has the columns
+missing until SOME module ALTERs them. Relying on cross-module ordering is the
+silent-break vector.
+
+**How to apply:** every module that SELECTs descriptive columns out of
+`employer_jobs` must ADD COLUMN IF NOT EXISTS them in its OWN ensure step — never
+trust another writer's ALTER. A "graceful fallback" catch that hides a schema
+error is extra dangerous: it converts a loud 500 into invisible empty results,
+so the regression guard must assert the row actually reads back (not just 200).
+
 ## /enabled probe under /api/admin is authenticated-only
 A global `app.use('/api/admin', requireAuth→requireSuperAdmin)` gate fronts the
 router, so an intended "unauthenticated" `/enabled` probe returns 401 to an

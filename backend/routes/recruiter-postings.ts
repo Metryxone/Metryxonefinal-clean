@@ -40,6 +40,26 @@ async function ensureTable(pool: Pool) {
     );
     CREATE INDEX IF NOT EXISTS idx_employer_jobs_status ON employer_jobs(status);
   `);
+  // `employer_jobs` is owned by SEVERAL modules with DIVERGENT shapes
+  // (employer-portal authoring, MX-103W projection, this module). When the
+  // table already exists from another writer, the CREATE above is a no-op and
+  // could leave it WITHOUT the descriptive columns this module SELECTs — the
+  // read then throws and is swallowed into a silent empty `no_data` list.
+  // Reconcile the divergent table additively so the recruiter read path is
+  // self-sufficient regardless of which module created it first.
+  // (see .agents/memory/employer-job-store-projection.md)
+  await pool.query(`
+    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS department   TEXT;
+    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS location     TEXT;
+    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS type         TEXT;
+    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS work_mode    TEXT;
+    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS experience   TEXT;
+    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS salary       TEXT;
+    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS description  TEXT;
+    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS skills       JSONB DEFAULT '[]'::jsonb;
+    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS requirements JSONB DEFAULT '[]'::jsonb;
+    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS ei_min_score INTEGER DEFAULT 0;
+  `);
   tableEnsured = true;
 }
 

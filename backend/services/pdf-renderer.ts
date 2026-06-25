@@ -179,6 +179,47 @@ export function renderReportToPDF(report: Record<string, unknown>, wl?: WhiteLab
           hr();
           break;
         }
+        case 'precise_competency': {
+          // Task #135 — precise per-competency scores, clearly labelled
+          // precise vs domain-proxy, falling back to domain when precise absent.
+          const precise = (s.precise as any[]) ?? [];
+          const domains = (s.domains as any[]) ?? [];
+          const note = String(s.note ?? '');
+          if (note) {
+            doc.fontSize(8).fillColor('#9ca3af').text(note, 60, doc.y, { width: pageW, lineGap: 2, oblique: true });
+            doc.moveDown(0.4);
+          }
+          if (precise.length) {
+            doc.fontSize(9).fillColor('#10b981').text('Precise (measured per competency)', 60, doc.y, { width: pageW });
+            doc.moveDown(0.2);
+            for (const c of precise) {
+              if (doc.y > 720) doc.addPage();
+              const score = c.score == null ? '—' : Math.round(Number(c.score));
+              const lvl = c.levelLabel ? ` · ${c.levelLabel}` : '';
+              doc.fontSize(10).fillColor('#374151')
+                 .text(`${c.name ?? c.code}: ${score}${score === '—' ? '' : ' / 100'}${lvl}`, 72, doc.y, { width: pageW - 12 });
+              doc.moveDown(0.25);
+            }
+            doc.moveDown(0.2);
+          }
+          if (domains.length) {
+            doc.fontSize(9).fillColor('#6366f1').text('Domain proxy (aggregate)', 60, doc.y, { width: pageW });
+            doc.moveDown(0.2);
+            for (const c of domains) {
+              if (doc.y > 720) doc.addPage();
+              const score = c.score == null ? '—' : Math.round(Number(c.score));
+              doc.fontSize(10).fillColor('#374151')
+                 .text(`${c.name ?? c.code}: ${score}${score === '—' ? '' : ' / 100'}`, 72, doc.y, { width: pageW - 12 });
+              doc.moveDown(0.25);
+            }
+          }
+          if (!precise.length && !domains.length) {
+            doc.fontSize(9).fillColor('#9ca3af').text('No competency scores available.', 60, doc.y, { width: pageW });
+            doc.moveDown(0.5);
+          }
+          hr();
+          break;
+        }
       }
     }
 
@@ -394,6 +435,14 @@ export function renderReportToCSV(report: Record<string, unknown>): string {
         if (!r.suppressed) {
           rows.push([esc(uuid), esc(rtype), esc(key), esc('benchmark'), '', '', esc(r.metric ?? ''), esc(r.user_score ?? ''), esc(r.peer_median ?? ''), esc(r.percentile ?? ''), esc(r.cohort_size ?? '')].join(','));
         }
+      }
+    }
+    if (type === 'precise_competency') {
+      for (const c of (s.precise as any[]) ?? []) {
+        rows.push([esc(uuid), esc(rtype), esc(key), esc('precise_competency'), esc(c.name ?? c.code ?? ''), esc(c.levelLabel ?? ''), esc(c.name ?? c.code ?? ''), esc(c.score ?? ''), '', '', ''].join(','));
+      }
+      for (const c of (s.domains as any[]) ?? []) {
+        rows.push([esc(uuid), esc(rtype), esc(key), esc('domain_proxy'), esc(c.name ?? c.code ?? ''), '', esc(c.name ?? c.code ?? ''), esc(c.score ?? ''), '', '', ''].join(','));
       }
     }
     if (type === 'chart' && (s.resolved_data as any)?.labels) {

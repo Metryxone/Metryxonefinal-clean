@@ -1,11 +1,13 @@
 import type { Pool } from 'pg';
 import { computeBenchmarkForReport } from './benchmark-engine';
 import { resolveVizData } from './viz-data-resolver';
+import { resolveUnifiedCompetencyProfile } from './competency-intelligence-contracts';
+import { isCompetencyRuntimeEnabled } from '../config/feature-flags.js';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
 export type ReportType = 'capadex' | 'career' | 'competency' | 'employability' | 'employer' | 'passport' | 'enterprise_workforce' | 'outcome' | 'custom';
-export type SectionType = 'header' | 'narrative' | 'insight' | 'chart' | 'benchmark' | 'table' | 'score' | 'footer' | 'custom';
+export type SectionType = 'header' | 'narrative' | 'insight' | 'chart' | 'benchmark' | 'table' | 'score' | 'precise_competency' | 'footer' | 'custom';
 export type ChartType = 'bar' | 'line' | 'radar' | 'gauge' | 'donut' | 'scatter' | 'heatmap' | 'funnel' | 'waterfall';
 export type BenchmarkType = 'peer' | 'industry' | 'national' | 'institutional' | 'custom';
 export type InsightSeverity = 'positive' | 'info' | 'warning' | 'critical';
@@ -819,6 +821,63 @@ export async function generateReport(pool: Pool, params: GenerateReportParams) {
     }
 
     (generatedContent.sections as unknown[]).push(outSection);
+  }
+
+  // ── Precise per-competency scores (Task #135) ─────────────────────────────
+  // Mirror the candidate's live Assessment results screen (Task #131) inside the
+  // generated/downloadable report so the precise-vs-domain-proxy breakdown is
+  // consistent across surfaces. Composes resolveUnifiedCompetencyProfile (the
+  // SAME source as GET /api/competency/precise-scores) — no scoring math here.
+  //   • Flag-gated (competencyRuntime) — OFF → no section appended → the report
+  //     is byte-identical to legacy.
+  //   • Only for competency reports with a resolvable subject.
+  //   • Never fabricates — only MEASURED competencies appear; null = unmeasured
+  //     (never a fabricated 0); falls back to domain-proxy when precise absent.
+  if (template.report_type === 'competency' && isCompetencyRuntimeEnabled() && userId) {
+    try {
+      // Resolve the subject email — onto ledgers key the subject by EMAIL
+      // (== users.username in this system). userId here is the auth/session id.
+      const u = await pool
+        .query<{ email: string | null; username: string | null }>(
+          `SELECT email, username FROM users WHERE id = $1 LIMIT 1`,
+          [userId],
+        )
+        .catch(() => ({ rows: [] as { email: string | null; username: string | null }[] }));
+      const subject = u.rows[0]?.email ?? u.rows[0]?.username ?? null;
+      if (subject) {
+        const unified = await resolveUnifiedCompetencyProfile(pool, subject);
+        const precise = unified.scores
+          .filter((s) => s.granularity === 'competency' && s.score != null)
+          .map((s) => ({
+            code: s.key, name: s.label, score: s.score, level: s.level,
+            levelLabel: s.levelLabel, status: s.status, measurement: 'precise' as const,
+          }));
+        const domains = unified.scores
+          .filter((s) => s.granularity === 'domain' && s.score != null)
+          .map((s) => ({
+            code: s.key, name: s.label, score: s.score, level: s.level,
+            measurement: 'domain_proxy' as const,
+          }));
+        // Only append when there is at least one measured competency or domain —
+        // an empty resolve adds nothing (stays byte-identical for unscored users).
+        if (precise.length > 0 || domains.length > 0) {
+          (generatedContent.sections as unknown[]).push({
+            key: 'precise_competency',
+            type: 'precise_competency',
+            title: 'Precise Competency Scores',
+            hasPrecise: precise.length > 0,
+            precise,
+            domains,
+            note: precise.length > 0
+              ? 'Measured directly per competency from the latest competency-tagged assessment — more granular than the domain-level (proxy) scores. Only measured competencies are shown.'
+              : 'No precise per-competency scores yet — domain-level (proxy) scores apply. Precise scores appear once a competency-tagged assessment is scored.',
+          });
+        }
+      }
+    } catch (e) {
+      // Never let report generation fail on the additive precise section.
+      console.error('[report-factory] precise-competency section failed:', e);
+    }
   }
 
   const { rows } = await pool.query(

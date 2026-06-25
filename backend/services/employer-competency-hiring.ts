@@ -443,6 +443,17 @@ export async function computeCompetencyDrivenMatch(
     generatedAt: new Date().toISOString(),
   });
 
+  // Abstain CLOSED when the job title does not resolve to a role profile (or the
+  // resolved role carries no requirements). Without requirements there is nothing
+  // to match against — surface an explicit "no role profile" signal rather than
+  // silently reporting 0 matched requirements as if requirements existed.
+  if (reqs.length === 0) {
+    const reason = dna.resolved
+      ? `Job title ${jobTitle ? `"${jobTitle}"` : '(empty)'} resolved to role "${dna.roleTitle}" but that role carries no competency requirements in the genome — competency match withheld (no role profile).`
+      : `Job title ${jobTitle ? `"${jobTitle}"` : '(empty)'} did not resolve to any role profile — competency match withheld (no role profile). Use a recognised role title for a competency-driven match.`;
+    return baseFail('heuristic_fallback', reason);
+  }
+
   // Fail CLOSED: no competency subject → no competency read possible.
   if (!subjectId) {
     return baseFail('heuristic_fallback',

@@ -29,6 +29,24 @@ override) returning `requiredCompetencies` from `getRoleCompetencies`
 - resolver biases toward the candidate WITH competencies within a rank tier, so a
   match is useful, not an empty shell.
 
+**generateRoleDNA uses THIS crosswalk (not the talent-matching one):**
+`role-dna-expansion-engine.generateRoleDNA` → `resolveBestOntRole` here → `ont_roles`
+(O*NET INT ids). This is DISJOINT from `role-title-crosswalk.ts` (curated `onto_roles`
+for talent matching). When `employer-competency-hiring.computeCompetencyDrivenMatch`
+gets an empty `requirements`, it ABSTAINS with an explicit "no role profile" reason —
+NOT the "coverage miss" reason (that one implies requirements existed). Keep the two
+abstain messages distinct.
+
+**Common engineering title variants need synonyms here:** out of the box only exact
+O*NET/seeded titles + a few synonyms resolved, so "Backend Engineer", "QA Engineer",
+"Frontend Engineer" etc. returned 0 requirements. Fix = add DEFENSIBLE synonyms to
+`TITLE_SYNONYMS` ("engineer"≈"developer" in software titles → existing O*NET roles:
+backend/fullstack→Software Developers, frontend→Web Developers, qa/test/sdet→Software
+Quality Assurance Analysts and Testers). NEVER bridge distinct roles (Product vs Project
+Manager stays separate). ⚠️ `normalize` turns "Back-End"→"back end" but "Backend" stays
+"backend" — DIFFERENT keys, so add BOTH spaced and unspaced forms ("back end engineer"
+AND "backend engineer").
+
 **Env reality:** `ont_*` tables ship EMPTY (merges carry code + DDL, not rows —
 see merged-task-data-not-in-live-db). In dev, only the starter `runOntologySeed`
 (~24 `ROLE_*`, 262 links) is present, so non-starter titles (e.g. "Registered

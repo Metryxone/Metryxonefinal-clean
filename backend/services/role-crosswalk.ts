@@ -115,6 +115,40 @@ const TITLE_SYNONYMS: Record<string, string[]> = {
   nurse: ['registered nurses'],
   'registered nurse': ['registered nurses'],
   teacher: ['secondary school teachers, except special and career/technical education'],
+  // Common engineering title variants — "engineer" and "developer" are interchangeable
+  // in software titles, so these bridge to the recognised O*NET occupation rather than
+  // returning zero requirements. Defensible synonyms only — never bridge distinct roles
+  // (Product vs Project Manager still stays separate).
+  'backend engineer': ['software developers'],
+  'backend developer': ['software developers'],
+  'back end engineer': ['software developers'],
+  'back end developer': ['software developers'],
+  'frontend engineer': ['web developers', 'software developers'],
+  'frontend developer': ['web developers', 'software developers'],
+  'front end engineer': ['web developers', 'software developers'],
+  'front end developer': ['web developers', 'software developers'],
+  'full stack engineer': ['software developers', 'web developers'],
+  'full stack developer': ['software developers', 'web developers'],
+  'fullstack engineer': ['software developers', 'web developers'],
+  'fullstack developer': ['software developers', 'web developers'],
+  'web developer': ['web developers'],
+  'mobile engineer': ['software developers'],
+  'mobile developer': ['software developers'],
+  'ios developer': ['software developers'],
+  'android developer': ['software developers'],
+  'platform engineer': ['software developers'],
+  'site reliability engineer': ['software developers'],
+  sre: ['software developers'],
+  'qa engineer': ['software quality assurance analysts and testers'],
+  'quality assurance engineer': ['software quality assurance analysts and testers'],
+  'test engineer': ['software quality assurance analysts and testers'],
+  'qa analyst': ['software quality assurance analysts and testers'],
+  sdet: ['software quality assurance analysts and testers'],
+  'security engineer': ['information security analysts', 'information security engineers'],
+  'security analyst': ['information security analysts'],
+  'network engineer': ['computer network architects'],
+  'database administrator': ['database administrators', 'database architects'],
+  'database engineer': ['database architects'],
 };
 
 function sourceFromCode(code: string): RoleMatch['source'] {

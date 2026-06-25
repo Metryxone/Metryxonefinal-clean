@@ -41,6 +41,22 @@ export const HOME_BY_ATTR: Record<string, { table: string; cols: string[]; build
     cols: ['competency_id', 'department_name', 'provenance', 'source', 'draft_id'],
     build: (d) => [d.competency_id, d.content?.department_name ?? d.content_text, d.provenance, 'mx202b', d.id],
   },
+  // ── MX-203 new expert-authored canonical homes (reuse this ONE promotion engine; never duplicate) ──
+  coaching_guidance: {
+    table: 'onto_competency_coaching_guidance',
+    cols: ['competency_id', 'proficiency_level', 'guidance', 'provenance', 'source', 'draft_id'],
+    build: (d) => [d.competency_id, d.proficiency_level, d.content_text, d.provenance, d.source ?? 'mx203', d.id],
+  },
+  interview_guidance: {
+    table: 'onto_competency_interview_guidance',
+    cols: ['competency_id', 'proficiency_level', 'guidance', 'provenance', 'source', 'draft_id'],
+    build: (d) => [d.competency_id, d.proficiency_level, d.content_text, d.provenance, d.source ?? 'mx203', d.id],
+  },
+  development_activity: {
+    table: 'onto_competency_development_activity',
+    cols: ['competency_id', 'proficiency_level', 'activity', 'provenance', 'source', 'draft_id'],
+    build: (d) => [d.competency_id, d.proficiency_level, d.content_text, d.provenance, d.source ?? 'mx203', d.id],
+  },
 };
 
 async function loadDraft(pool: Pool, draftId: number): Promise<any | null> {

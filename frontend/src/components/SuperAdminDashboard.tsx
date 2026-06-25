@@ -128,6 +128,7 @@ const UsageMeteringPanel = lazy(() => import('./superadmin/UsageMeteringPanel'))
 const CustomerSuccessPanel = lazy(() => import('./superadmin/CustomerSuccessPanel'));
 const OutcomeValidationPanel = lazy(() => import('./superadmin/OutcomeValidationPanel'));
 const OutcomeIntelligencePanel = lazy(() => import('./superadmin/OutcomeIntelligencePanel'));
+const Mx203KnowledgeCenterPanel = lazy(() => import('./superadmin/Mx203KnowledgeCenterPanel'));
 const CompetencyMatchIntelligencePanel = lazy(() => import('./superadmin/CompetencyMatchIntelligencePanel'));
 const EmployerEcosystemPanel = lazy(() => import('./superadmin/EmployerEcosystemPanel'));
 const EnterpriseGovernancePanel = lazy(() => import('./superadmin/EnterpriseGovernancePanel'));
@@ -425,6 +426,19 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
     queryFn: async () => {
       const res = await fetch('/api/admin/platform-completion/enabled', { credentials: 'include' });
       return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // ── Knowledge Center (MX-203) flag probe (file-registry flag mx203KnowledgePopulation).
+  //    Flag OFF → /enabled gate returns 503/401 → tab omitted entirely (byte-identical UI). ──
+  const { data: mx203KnowledgeEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/admin/mx203-knowledge/enabled', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/mx203-knowledge/enabled', { credentials: 'include' });
+      if (!res.ok) return false;
+      const j = await res.json().catch(() => ({}));
+      return j?.enabled === true;
     },
     enabled: isAuthenticated,
   });
@@ -1035,6 +1049,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       ...(goLiveCertificationEnabled ? [{ id: 'go-live-center', label: 'Go-Live Center', icon: Rocket, node: <GoLiveCenterPanel /> }] : []),
                       ...(goLiveCertificationEnabled ? [{ id: 'founder-go-live', label: 'Founder Go-Live Center', icon: Building2, node: <FounderGoLiveCenterPanel /> }] : []),
                       ...(platformCompletionEnabled ? [{ id: 'platform-completion', label: 'Platform Completion', icon: Award, node: <PlatformCompletionPanel /> }] : []),
+                      ...(mx203KnowledgeEnabled ? [{ id: 'mx203-knowledge-center', label: 'Knowledge Center', icon: BookOpen, node: <Mx203KnowledgeCenterPanel /> }] : []),
                       { id: 'ont-career-tracks',        label: 'Career Tracks',            icon: Map,           node: <CareerTracksPanel /> },
                       { id: 'ont-competency-levels',    label: 'Competency Levels',        icon: BarChart2,     node: <CompetencyLevelsPanel /> },
                       { id: 'ont-indicators',           label: 'Indicators',               icon: Target,        node: <IndicatorsPanel /> },

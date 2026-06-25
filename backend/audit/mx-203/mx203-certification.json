@@ -1,0 +1,438 @@
+{
+  "task": "MX-203",
+  "mode": "Enterprise Knowledge Population & Canonical Completion",
+  "generated_at": "2026-06-25T07:25:55.135Z",
+  "genome": 419,
+  "dimensions": {
+    "structural_readiness_pct": 100,
+    "verified_knowledge_coverage_pct": 71.3,
+    "draft_knowledge_coverage_pct": 100,
+    "approved_knowledge_coverage_pct": 0,
+    "consumer_readiness_pct": 31.8,
+    "adoption_pct": null,
+    "outcome_confidence_pct": null
+  },
+  "governance": {
+    "mx203_drafts_total": 10475,
+    "mx203_draft_competencies": 419,
+    "mx203_approved": 0,
+    "mx203_by_attribute": [
+      {
+        "attribute_type": "coaching_guidance",
+        "n": 2095,
+        "c": 419
+      },
+      {
+        "attribute_type": "development_activity",
+        "n": 2095,
+        "c": 419
+      },
+      {
+        "attribute_type": "interview_guidance",
+        "n": 2095,
+        "c": 419
+      },
+      {
+        "attribute_type": "observable_behaviour",
+        "n": 2095,
+        "c": 419
+      },
+      {
+        "attribute_type": "proficiency_anchor",
+        "n": 2095,
+        "c": 419
+      }
+    ],
+    "auto_promotions": 0,
+    "statement": "All 10475 MX-203 records are governed DRAFTS (provenance=rule_based, confidence=low, needs_review=true). 0 approved → nothing auto-promotes; human approval via mx202b-content-approval.approveContentDraft is the ONLY activation path. Canonical homes stay empty until then."
+  },
+  "coverage": {
+    "ok": true,
+    "version": "mx203-knowledge-1.0.0",
+    "genome": 419,
+    "coverage": {
+      "verified_pct": 71.3,
+      "draft_pct": 100,
+      "approved_pct": 0
+    },
+    "verified_breakdown": [
+      {
+        "attribute": "definition",
+        "live_n": 419
+      },
+      {
+        "attribute": "domain",
+        "live_n": 419
+      },
+      {
+        "attribute": "family",
+        "live_n": 419
+      },
+      {
+        "attribute": "scientific_type",
+        "live_n": 419
+      },
+      {
+        "attribute": "scoring_metadata",
+        "live_n": 419
+      },
+      {
+        "attribute": "benchmark_metadata",
+        "live_n": 299
+      },
+      {
+        "attribute": "type_classification",
+        "live_n": 419
+      },
+      {
+        "attribute": "onet_crosswalk",
+        "live_n": 137
+      },
+      {
+        "attribute": "role_dna",
+        "live_n": 24
+      },
+      {
+        "attribute": "behavioural_indicators",
+        "live_n": 13
+      }
+    ],
+    "governed_attribute_matrix": [
+      {
+        "attribute": "behavioural_indicator",
+        "draft_comps": 419,
+        "approved_comps": 0
+      },
+      {
+        "attribute": "observable_behaviour",
+        "draft_comps": 419,
+        "approved_comps": 0
+      },
+      {
+        "attribute": "proficiency_anchor",
+        "draft_comps": 419,
+        "approved_comps": 0
+      },
+      {
+        "attribute": "evidence_requirement",
+        "draft_comps": 419,
+        "approved_comps": 0
+      },
+      {
+        "attribute": "learning_outcome",
+        "draft_comps": 419,
+        "approved_comps": 0
+      },
+      {
+        "attribute": "function_map",
+        "draft_comps": 419,
+        "approved_comps": 0
+      },
+      {
+        "attribute": "industry_map",
+        "draft_comps": 419,
+        "approved_comps": 0
+      },
+      {
+        "attribute": "department_map",
+        "draft_comps": 419,
+        "approved_comps": 0
+      },
+      {
+        "attribute": "coaching_guidance",
+        "draft_comps": 419,
+        "approved_comps": 0
+      },
+      {
+        "attribute": "interview_guidance",
+        "draft_comps": 419,
+        "approved_comps": 0
+      },
+      {
+        "attribute": "development_activity",
+        "draft_comps": 419,
+        "approved_comps": 0
+      }
+    ],
+    "notes": {
+      "separation": "Verified, Draft, and Approved are THREE independent axes — never combined. Drafts are rule_based proposals awaiting human approval; nothing auto-promotes.",
+      "phase1_data_block": "Verified coverage < 100% is an HONEST gap: O*NET crosswalk is exhausted (~137/419) and benchmark/role-DNA have no machine source. Raising it requires a licensed dataset (ESCO/NICE/SFIA), SME authoring, or OPENAI_API_KEY-backed assisted authoring — never fabricated."
+    }
+  },
+  "consumer_rollup": {
+    "assessment": {
+      "ready": 0,
+      "partial": 21,
+      "not_ready": 398,
+      "not_measurable": 0,
+      "ready_pct": 0
+    },
+    "adaptive_assessment": {
+      "ready": 0,
+      "partial": 0,
+      "not_ready": 419,
+      "not_measurable": 0,
+      "ready_pct": 0
+    },
+    "role_dna": {
+      "ready": 24,
+      "partial": 0,
+      "not_ready": 395,
+      "not_measurable": 0,
+      "ready_pct": 5.7
+    },
+    "career_builder": {
+      "ready": 24,
+      "partial": 395,
+      "not_ready": 0,
+      "not_measurable": 0,
+      "ready_pct": 5.7
+    },
+    "employability_index": {
+      "ready": 419,
+      "partial": 0,
+      "not_ready": 0,
+      "not_measurable": 0,
+      "ready_pct": 100
+    },
+    "employer_matching": {
+      "ready": 0,
+      "partial": 24,
+      "not_ready": 395,
+      "not_measurable": 0,
+      "ready_pct": 0
+    },
+    "interview_intelligence": {
+      "ready": 13,
+      "partial": 406,
+      "not_ready": 0,
+      "not_measurable": 0,
+      "ready_pct": 3.1
+    },
+    "career_passport": {
+      "ready": 419,
+      "partial": 0,
+      "not_ready": 0,
+      "not_measurable": 0,
+      "ready_pct": 100
+    },
+    "report_factory": {
+      "ready": 299,
+      "partial": 120,
+      "not_ready": 0,
+      "not_measurable": 0,
+      "ready_pct": 71.4
+    }
+  },
+  "health_distribution": {
+    "healthy": 41,
+    "partial": 378,
+    "weak": 0
+  },
+  "founder": {
+    "ok": true,
+    "version": "mx203-knowledge-1.0.0",
+    "genome": 419,
+    "generated_at": "2026-06-25T07:25:55.836Z",
+    "knowledge_completion": {
+      "verified_pct": 71.3,
+      "draft_pct": 100,
+      "approved_pct": 0
+    },
+    "health_distribution": {
+      "healthy": 41,
+      "partial": 378,
+      "weak": 0
+    },
+    "sme_review_backlog": {
+      "drafts_pending": 17996,
+      "competencies_pending": 419
+    },
+    "weakest_competencies": [
+      {
+        "competency_id": "comp_accountable_leadership",
+        "canonical_name": "Accountable Leadership",
+        "health_pct": 62.5,
+        "verified_attributes": 5
+      },
+      {
+        "competency_id": "onet_1_c_1_a",
+        "canonical_name": "Achievement/Effort",
+        "health_pct": 62.5,
+        "verified_attributes": 5
+      },
+      {
+        "competency_id": "onet_2_a_2_b",
+        "canonical_name": "Active Learning",
+        "health_pct": 62.5,
+        "verified_attributes": 5
+      },
+      {
+        "competency_id": "comp_active_problem_identification",
+        "canonical_name": "Active Problem Identification",
+        "health_pct": 62.5,
+        "verified_attributes": 5
+      },
+      {
+        "competency_id": "onet_1_c_4_c",
+        "canonical_name": "Adaptability/Flexibility",
+        "health_pct": 62.5,
+        "verified_attributes": 5
+      },
+      {
+        "competency_id": "onet_2_c_1_a",
+        "canonical_name": "Administration and Management",
+        "health_pct": 62.5,
+        "verified_attributes": 5
+      },
+      {
+        "competency_id": "onet_2_c_1_b",
+        "canonical_name": "Administrative",
+        "health_pct": 62.5,
+        "verified_attributes": 5
+      },
+      {
+        "competency_id": "comp_agility_in_execution",
+        "canonical_name": "Agility in Execution",
+        "health_pct": 62.5,
+        "verified_attributes": 5
+      },
+      {
+        "competency_id": "comp_appreciation_of_diversity",
+        "canonical_name": "Appreciation of Diversity",
+        "health_pct": 62.5,
+        "verified_attributes": 5
+      },
+      {
+        "competency_id": "onet_1_a_2_a_1",
+        "canonical_name": "Arm-Hand Steadiness",
+        "health_pct": 62.5,
+        "verified_attributes": 5
+      },
+      {
+        "competency_id": "comp_assertive_communication",
+        "canonical_name": "Assertive Communication",
+        "health_pct": 62.5,
+        "verified_attributes": 5
+      },
+      {
+        "competency_id": "comp_assertiveness",
+        "canonical_name": "Assertiveness",
+        "health_pct": 62.5,
+        "verified_attributes": 5
+      },
+      {
+        "competency_id": "comp_attention_to_deadlines",
+        "canonical_name": "Attention to Deadlines",
+        "health_pct": 62.5,
+        "verified_attributes": 5
+      },
+      {
+        "competency_id": "onet_1_a_4_b_2",
+        "canonical_name": "Auditory Attention",
+        "health_pct": 62.5,
+        "verified_attributes": 5
+      },
+      {
+        "competency_id": "comp_authenticity",
+        "canonical_name": "Authenticity",
+        "health_pct": 62.5,
+        "verified_attributes": 5
+      }
+    ],
+    "highest_risk_consumers": [
+      {
+        "consumer": "assessment",
+        "ready_pct": 0
+      },
+      {
+        "consumer": "adaptive_assessment",
+        "ready_pct": 0
+      },
+      {
+        "consumer": "employer_matching",
+        "ready_pct": 0
+      },
+      {
+        "consumer": "interview_intelligence",
+        "ready_pct": 3.1
+      },
+      {
+        "consumer": "role_dna",
+        "ready_pct": 5.7
+      }
+    ],
+    "data_block": {
+      "phase1_factual": "DATA-BLOCKED — Verified coverage cannot be raised by code alone. Levers: licensed ESCO/NICE/SFIA dataset import, SME authoring, or OPENAI_API_KEY-assisted authoring. Nothing fabricated."
+    },
+    "honesty": "Verified ⟂ Draft ⟂ Approved coverage and per-consumer readiness are reported separately and never combined into a single completion number. null ≠ 0 throughout."
+  },
+  "structural_checklist": [
+    {
+      "item": "genome present (onto_competencies=419)",
+      "ok": true
+    },
+    {
+      "item": "governed-draft staging reused (onto_competency_content_drafts)",
+      "ok": true
+    },
+    {
+      "item": "canonical home: coaching_guidance",
+      "ok": true
+    },
+    {
+      "item": "canonical home: interview_guidance",
+      "ok": true
+    },
+    {
+      "item": "canonical home: development_activity",
+      "ok": true
+    },
+    {
+      "item": "observable_behaviour/proficiency_anchor reuse onto_indicators",
+      "ok": true
+    },
+    {
+      "item": "audit trail reused (onto_audit_logs)",
+      "ok": true
+    },
+    {
+      "item": "version trail reused (onto_competency_versions)",
+      "ok": true
+    },
+    {
+      "item": "content schema code present (mx203-content-schema.ts)",
+      "ok": true
+    },
+    {
+      "item": "draft generator code present (mx203-generate-drafts.ts)",
+      "ok": true
+    },
+    {
+      "item": "knowledge composer code present (mx203-knowledge.ts service)",
+      "ok": true
+    },
+    {
+      "item": "knowledge routes code present (mx203-knowledge.ts routes)",
+      "ok": true
+    },
+    {
+      "item": "promotion engine reused (mx202b-content-approval.ts)",
+      "ok": true
+    },
+    {
+      "item": "mx203 audit-logged generation run",
+      "ok": true
+    }
+  ],
+  "usage": {
+    "scored_subjects": 37,
+    "score_runs": 23,
+    "capadex_sessions": 0,
+    "realized_non_demo_outcomes": 0
+  },
+  "data_block": {
+    "phase1": "DATA-BLOCKED — Verified Knowledge Coverage cannot be raised by code alone. O*NET crosswalk is exhausted (~137/419) and benchmark/role-DNA have no machine source. Levers: licensed ESCO/NICE/SFIA dataset import, SME authoring, or OPENAI_API_KEY-assisted authoring. Nothing fabricated."
+  },
+  "honesty": "Seven dimensions reported SEPARATELY — never combined. Verified ⟂ Draft ⟂ Approved ⟂ Consumer-Readiness ⟂ Adoption ⟂ Outcome-Confidence. null ≠ 0 throughout. Governed drafts are rule_based proposals awaiting human approval; nothing auto-promotes."
+}

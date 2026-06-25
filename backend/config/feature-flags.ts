@@ -1481,6 +1481,12 @@ export const FEATURE_FLAGS = {
    *  `FF_QUESTION_FACTORY`. */
   questionFactory: false,
 
+  /** MX-203 — Enterprise Knowledge Population & Canonical Completion. Gates the read-only
+   *  Knowledge Center + Founder knowledge-completion dashboard routes. OFF → every route 503
+   *  before any auth/DB touch (byte-identical legacy). The governed-draft generator + certifier
+   *  are offline scripts (not flag-gated). Env: `FF_MX203_KNOWLEDGE_POPULATION`. */
+  mx203KnowledgePopulation: false,
+
   /** MX-100X Phase 4 — Adaptive Assessment Activation (the keystone).
    *  Activates the Role/Seniority → required-proficiency → difficulty + level-aware-threshold
    *  flow in the LIVE assessment path so Junior/Mid/Senior/Leadership roles produce materially
@@ -1669,6 +1675,10 @@ export function isCompetencyCoverageMatricesEnabled(): boolean {
 
 export function isQuestionFactoryEnabled(): boolean {
   return isFlagEnabled('questionFactory');
+}
+
+export function isMx203KnowledgePopulationEnabled(): boolean {
+  return isFlagEnabled('mx203KnowledgePopulation');
 }
 
 export function isAdaptiveDifficultyActivationEnabled(): boolean {

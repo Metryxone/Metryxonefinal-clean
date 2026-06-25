@@ -25,6 +25,7 @@ import { registerEmployabilityPassportRoutes } from "./routes/employability-pass
 import { registerCompetencyQuestionRoutes } from "./routes/competency-questions";
 import { registerQuestionFactoryRoutes } from "./routes/question-factory";
 import { registerAssessmentReadinessRoutes } from "./routes/assessment-readiness";
+import { registerMx203KnowledgeRoutes } from "./routes/mx203-knowledge";
 import { registerCapadexEnterpriseRoutes } from "./routes/capadex-enterprise";
 import { registerMissionControlRoutes } from "./routes/mission-control";
 import { registerProductCommandCenterRoutes } from "./routes/product-command-center";
@@ -13543,6 +13544,7 @@ Rules:
   registerCompetencyQuestionRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerQuestionFactoryRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerAssessmentReadinessRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerMx203KnowledgeRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCapadexRecommendationsRoute(app, concernsPool);
   registerCapadexEnterpriseRoutes(app, concernsPool);
   registerCapadexPaymentRoutes(app, concernsPool);

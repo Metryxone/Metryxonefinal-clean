@@ -1063,10 +1063,139 @@ function LanguagesTab() {
   );
 }
 
+// ── Precise Competency section renderer (mirrors pdf-renderer.ts) ──────────
+// Renders the `precise_competency` section produced by generateReport, clearly
+// labelled precise (measured per competency) vs domain-proxy (aggregate).
+// No fabrication: score == null renders "—" (never 0); falls back to domain
+// when precise absent. Mirrors backend/services/pdf-renderer.ts.
+function PreciseCompetencySection({ section }: { section: any }) {
+  const precise: any[] = Array.isArray(section?.precise) ? section.precise : [];
+  const domains: any[] = Array.isArray(section?.domains) ? section.domains : [];
+  const note = String(section?.note ?? '');
+
+  const ScoreRow = ({ c }: { c: any }) => {
+    const hasScore = c?.score != null;
+    const score = hasScore ? Math.round(Number(c.score)) : null;
+    return (
+      <div className="flex items-center gap-2 py-1">
+        <span className="flex-1 text-gray-700">{c.name ?? c.code}</span>
+        {c.levelLabel && <Pill label={c.levelLabel} color={BRAND.muted} />}
+        <span className="font-semibold tabular-nums" style={{ color: hasScore ? BRAND.primary : BRAND.muted }}>
+          {hasScore ? `${score} / 100` : '—'}
+        </span>
+      </div>
+    );
+  };
+
+  return (
+    <div className="rounded-xl border p-4" style={{ borderColor: BRAND.border, background: BRAND.bg }}>
+      <div className="flex items-center gap-2 mb-2">
+        <Award size={14} style={{ color: BRAND.green }} />
+        <p className="font-semibold text-gray-800 text-sm">{section.title ?? 'Precise Competency Scores'}</p>
+      </div>
+      {note && <p className="text-[11px] text-gray-400 italic mb-3">{note}</p>}
+      {precise.length > 0 && (
+        <div className="mb-3">
+          <p className="text-[10px] font-semibold uppercase mb-1" style={{ color: BRAND.green }}>
+            Precise (measured per competency)
+          </p>
+          <div className="divide-y" style={{ borderColor: BRAND.border }}>
+            {precise.map((c, i) => <ScoreRow key={c.code ?? i} c={c} />)}
+          </div>
+        </div>
+      )}
+      {domains.length > 0 && (
+        <div>
+          <p className="text-[10px] font-semibold uppercase mb-1" style={{ color: BRAND.primary }}>
+            Domain proxy (aggregate)
+          </p>
+          <div className="divide-y" style={{ borderColor: BRAND.border }}>
+            {domains.map((c, i) => <ScoreRow key={c.code ?? i} c={c} />)}
+          </div>
+        </div>
+      )}
+      {precise.length === 0 && domains.length === 0 && (
+        <p className="text-xs text-gray-400">No competency scores available.</p>
+      )}
+    </div>
+  );
+}
+
+// ── Generic report-section renderer ───────────────────────────────────────
+// Renders one entry of generated_content.sections on screen. Mirrors the
+// section types emitted by generateReport (backend/services/report-factory-schema.ts).
+function ReportSection({ section }: { section: any }) {
+  const type = section?.type;
+  if (type === 'precise_competency') return <PreciseCompetencySection section={section} />;
+
+  const Wrap = ({ children }: { children: React.ReactNode }) => (
+    <div className="rounded-xl border p-4" style={{ borderColor: BRAND.border }}>
+      <div className="flex items-center gap-2 mb-2">
+        <p className="font-semibold text-gray-800 text-sm">{section.title ?? section.key}</p>
+        <Pill label={String(type ?? 'section')} />
+      </div>
+      {children}
+    </div>
+  );
+
+  if (type === 'narrative' && section.text) {
+    return <Wrap><p className="text-xs text-gray-600 whitespace-pre-line">{section.text}</p></Wrap>;
+  }
+  if (type === 'insight') {
+    const insights: any[] = Array.isArray(section.insights) ? section.insights : [];
+    return (
+      <Wrap>
+        {insights.length === 0
+          ? <p className="text-xs text-gray-400">No insights fired.</p>
+          : <div className="space-y-1.5">
+              {insights.map((ins, i) => (
+                <div key={ins.rule_key ?? i} className="flex items-start gap-2 text-xs">
+                  <span className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0"
+                    style={{ background: SEVERITY_COLORS[ins.severity] ?? BRAND.muted }} />
+                  <span className="text-gray-600">{ins.text}</span>
+                </div>
+              ))}
+            </div>}
+      </Wrap>
+    );
+  }
+  if (type === 'benchmark') {
+    const results: any[] = Array.isArray(section.benchmark_results) ? section.benchmark_results : [];
+    return (
+      <Wrap>
+        {results.length === 0
+          ? <p className="text-xs text-gray-400">No benchmark results.</p>
+          : <div className="space-y-1 text-xs text-gray-600">
+              {results.map((b, i) => (
+                <div key={i} className="flex justify-between">
+                  <span>{b.metric ?? b.label ?? `Metric ${i + 1}`}</span>
+                  <span className="font-semibold tabular-nums">{b.percentile != null ? `${b.percentile}th pct` : (b.value ?? '—')}</span>
+                </div>
+              ))}
+            </div>}
+      </Wrap>
+    );
+  }
+  if (type === 'chart') {
+    return <Wrap><p className="text-xs text-gray-400">Chart: {section.visualization?.name ?? section.key} (rendered in PDF/visual export).</p></Wrap>;
+  }
+  // header / footer / score / custom — show whatever text the section carries
+  return (
+    <Wrap>
+      {section.text
+        ? <p className="text-xs text-gray-600 whitespace-pre-line">{section.text}</p>
+        : <p className="text-xs text-gray-400">No on-screen content for this section type.</p>}
+    </Wrap>
+  );
+}
+
 // ── Generated Reports Tab ─────────────────────────────────────────────────
 function GeneratedReportsTab() {
   const [reports, setReports] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [openUuid, setOpenUuid] = useState<string | null>(null);
+  const [detail, setDetail] = useState<Record<string, any>>({});
+  const [detailLoading, setDetailLoading] = useState<string | null>(null);
 
   const load = useCallback(() => {
     setLoading(true);
@@ -1075,6 +1204,23 @@ function GeneratedReportsTab() {
   }, []);
 
   useEffect(() => { load(); }, [load]);
+
+  const toggleView = async (uuid: string) => {
+    if (openUuid === uuid) { setOpenUuid(null); return; }
+    setOpenUuid(uuid);
+    if (!detail[uuid]) {
+      setDetailLoading(uuid);
+      try {
+        const r = await apiFetch(`/api/rf/reports/${uuid}`);
+        const d = await r.json();
+        setDetail(prev => ({ ...prev, [uuid]: d.report ?? null }));
+      } catch {
+        setDetail(prev => ({ ...prev, [uuid]: null }));
+      } finally {
+        setDetailLoading(null);
+      }
+    }
+  };
 
   const STATUS_COLORS: Record<string, string> = { complete: BRAND.green, pending: BRAND.amber, generating: BRAND.primary, failed: BRAND.red };
 
@@ -1085,26 +1231,55 @@ function GeneratedReportsTab() {
       <SectionHeader title="Generated Reports" sub={`${reports.length} most recent reports`}
         onAdd={load} addLabel="↻ Refresh" />
       <div className="space-y-2">
-        {reports.map(r => (
-          <div key={r.id} className="p-3 rounded-xl border text-xs" style={{ borderColor: BRAND.border }}>
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap mb-1">
-                  <span className="font-mono text-gray-400">{r.report_uuid?.slice(0, 8)}…</span>
-                  <Pill label={r.report_type} color={REPORT_TYPE_COLORS[r.report_type]} />
-                  <Pill label={r.status} color={STATUS_COLORS[r.status]} />
-                  <span className="text-gray-400">{r.language}</span>
+        {reports.map(r => {
+          const rep = detail[r.report_uuid];
+          const sections: any[] = Array.isArray(rep?.generated_content?.sections) ? rep.generated_content.sections : [];
+          const isOpen = openUuid === r.report_uuid;
+          return (
+            <div key={r.id} className="rounded-xl border text-xs overflow-hidden" style={{ borderColor: BRAND.border }}>
+              <div className="p-3 cursor-pointer hover:bg-gray-50" onClick={() => toggleView(r.report_uuid)}>
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                      <span className="font-mono text-gray-400">{r.report_uuid?.slice(0, 8)}…</span>
+                      <Pill label={r.report_type} color={REPORT_TYPE_COLORS[r.report_type]} />
+                      <Pill label={r.status} color={STATUS_COLORS[r.status]} />
+                      <span className="text-gray-400">{r.language}</span>
+                    </div>
+                    {r.user_id && <p className="text-gray-400">User: {r.user_id}</p>}
+                    {r.session_id && <p className="text-gray-400">Session: {r.session_id}</p>}
+                    <p className="text-gray-400 mt-0.5">{new Date(r.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {r.insights?.length > 0 && (
+                      <span className="text-[10px] text-gray-400">{r.insights.length} insight{r.insights.length !== 1 ? 's' : ''}</span>
+                    )}
+                    <span className="flex items-center gap-1 text-[10px] font-semibold" style={{ color: BRAND.primary }}>
+                      <Eye size={11} />{isOpen ? 'Hide' : 'View'}
+                      {isOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                    </span>
+                  </div>
                 </div>
-                {r.user_id && <p className="text-gray-400">User: {r.user_id}</p>}
-                {r.session_id && <p className="text-gray-400">Session: {r.session_id}</p>}
-                <p className="text-gray-400 mt-0.5">{new Date(r.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
               </div>
-              {r.insights?.length > 0 && (
-                <span className="text-[10px] text-gray-400 shrink-0">{r.insights.length} insight{r.insights.length !== 1 ? 's' : ''}</span>
+              {isOpen && (
+                <div className="border-t px-3 py-3" style={{ borderColor: BRAND.border, background: BRAND.bg }}>
+                  {detailLoading === r.report_uuid && <Spinner />}
+                  {detailLoading !== r.report_uuid && rep === null && (
+                    <p className="text-gray-400 text-center py-4">Could not load report content.</p>
+                  )}
+                  {detailLoading !== r.report_uuid && rep && sections.length === 0 && (
+                    <p className="text-gray-400 text-center py-4">This report has no body sections.</p>
+                  )}
+                  {detailLoading !== r.report_uuid && rep && sections.length > 0 && (
+                    <div className="space-y-2">
+                      {sections.map((s, i) => <ReportSection key={s.key ?? i} section={s} />)}
+                    </div>
+                  )}
+                </div>
               )}
             </div>
-          </div>
-        ))}
+          );
+        })}
         {reports.length === 0 && <p className="text-center text-gray-400 text-sm py-8">No reports generated yet.</p>}
       </div>
     </div>

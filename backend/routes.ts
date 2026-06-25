@@ -237,6 +237,7 @@ import { registerEnterpriseWorkforceConsoleRoutes } from "./routes/enterprise-wo
 import { registerEcosystemActivationRoutes } from "./routes/ecosystem-activation";
 import { registerEnterpriseCertificationRoutes } from "./routes/enterprise-certification";
 import { registerGoLiveCertificationRoutes } from "./routes/go-live-certification";
+import { registerCompetencyMatchIntelligenceRoutes } from "./routes/competency-match-intelligence";
 import { registerEnterpriseWorkforcePersonaRoutes } from "./routes/enterprise-workforce-persona";
 import { registerEmployerDashboardsRoutes } from "./routes/employer-dashboards";
 import { registerNotificationRoutes } from "./routes/notifications";
@@ -13844,6 +13845,7 @@ Rules:
   registerEcosystemActivationRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // MX-105X — Enterprise Certification & Platform Activation (read-only top-level composer, flag-gated OFF).
   registerEnterpriseCertificationRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerCompetencyMatchIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // MX-106X — Production Readiness & Go-Live Certification (read-only top-level composer, superset of MX-105X, flag-gated OFF).
   registerGoLiveCertificationRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // MX-77X — Persona-scoped workforce surfaces (employer aggregate + employee self), same flag.

@@ -252,6 +252,26 @@ export const FEATURE_FLAGS = {
    *  byte-identical legacy behaviour incl. schema (no new tables). Super-admin gated
    *  (requireAuth → requireSuperAdmin). Env: `FF_GO_LIVE_CERTIFICATION`. */
   goLiveCertification: false,
+  /** MX-107A — Competency Match Intelligence (read-only composer over the EXISTING competency
+   *  crosswalk). When ON, a PURE read-only composer at `/api/admin/competency-match-intelligence/*`
+   *  (super-admin) traces the full canonical chain — assessment questions → competencies measured →
+   *  competency scores → Role DNA requirements → required levels → gap → role readiness → employer
+   *  match — and surfaces it as a Crosswalk Coverage report (Phase 1), a Super Admin coverage console
+   *  (Phase 5: crosswalk / Role-DNA / assessment / competency-match / employer-match coverage), a
+   *  Founder dashboard (Phase 6: average match · highest/lowest match roles · crosswalk health ·
+   *  Role-DNA health · competency coverage), and an honest PASS/PARTIAL/FAIL certification (Phase 8).
+   *  It COMPOSES the already-built match engine (computeCompetencyDrivenMatch), Role DNA
+   *  (onto_role_competency_profiles), the question→competency crosswalk (onto_competency_question_map),
+   *  the runtime competency ledgers (onto_competency_profiles / onto_competency_score_runs) and role
+   *  readiness (getRoleReadiness) — it recomputes no score, runs NO DDL, writes NO rows (GET-only,
+   *  no ensure-schema). Coverage ⟂ Confidence and Structural ⟂ Activation are reported on SEPARATE
+   *  axes and NEVER composited; PRECISE comp_* mapping coverage and operational (domain-proxy) match
+   *  are reported separately so canonical precision is never inflated. Absent table → null (never a
+   *  fabricated 0); a rate with a zero denominator is null. Never throws (degrades to honest-degraded
+   *  JSON). Strictly additive + reversible: flag OFF → every route 503 before any auth/DB touch →
+   *  byte-identical legacy behaviour incl. schema (no new tables). Super-admin gated (requireAuth →
+   *  requireSuperAdmin); `/enabled` is a persona-agnostic flag probe. Env: `FF_COMPETENCY_MATCH_INTELLIGENCE`. */
+  competencyMatchIntelligence: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -1564,6 +1584,10 @@ export function isEcosystemActivationEnabled(): boolean {
 
 export function isGoLiveCertificationEnabled(): boolean {
   return isFlagEnabled('goLiveCertification');
+}
+
+export function isCompetencyMatchIntelligenceEnabled(): boolean {
+  return isFlagEnabled('competencyMatchIntelligence');
 }
 
 export function isUcipEnabled(): boolean {

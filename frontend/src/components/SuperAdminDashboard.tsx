@@ -128,6 +128,7 @@ const UsageMeteringPanel = lazy(() => import('./superadmin/UsageMeteringPanel'))
 const CustomerSuccessPanel = lazy(() => import('./superadmin/CustomerSuccessPanel'));
 const OutcomeValidationPanel = lazy(() => import('./superadmin/OutcomeValidationPanel'));
 const OutcomeIntelligencePanel = lazy(() => import('./superadmin/OutcomeIntelligencePanel'));
+const CompetencyMatchIntelligencePanel = lazy(() => import('./superadmin/CompetencyMatchIntelligencePanel'));
 const EmployerEcosystemPanel = lazy(() => import('./superadmin/EmployerEcosystemPanel'));
 const EnterpriseGovernancePanel = lazy(() => import('./superadmin/EnterpriseGovernancePanel'));
 const PlatformIntelligencePanel = lazy(() => import('./superadmin/PlatformIntelligencePanel'));
@@ -389,6 +390,17 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
     queryKey: ['/api/admin/enterprise-certification/enabled', 'enabled'],
     queryFn: async () => {
       const res = await fetch('/api/admin/enterprise-certification/enabled', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // ── Competency Match Intelligence (MX-107A) flag probe (file-registry flag
+  //    competencyMatchIntelligence). Flag OFF → /enabled returns 503/401 → tab omitted. ──
+  const { data: competencyMatchIntelEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/admin/competency-match-intelligence/enabled', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/competency-match-intelligence/enabled', { credentials: 'include' });
       return res.ok;
     },
     enabled: isAuthenticated,
@@ -1007,6 +1019,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       ...(enterpriseWorkforceEnabled ? [{ id: 'enterprise-workforce-console', label: 'Enterprise Workforce Console', icon: Building2, node: <EnterpriseWorkforceConsolePanel /> }] : []),
                       ...(ecosystemActivationEnabled ? [{ id: 'ecosystem-activation', label: 'Candidate & Career Ecosystem', icon: Gauge, node: <EcosystemActivationPanel /> }] : []),
                       ...(enterpriseCertificationEnabled ? [{ id: 'enterprise-certification', label: 'Enterprise Certification', icon: ShieldCheck, node: <EnterpriseCertificationPanel /> }] : []),
+                      ...(competencyMatchIntelEnabled ? [{ id: 'competency-match-intelligence', label: 'Competency Match Intelligence', icon: GitBranch, node: <CompetencyMatchIntelligencePanel /> }] : []),
                       ...(goLiveCertificationEnabled ? [{ id: 'go-live-center', label: 'Go-Live Center', icon: Rocket, node: <GoLiveCenterPanel /> }] : []),
                       ...(goLiveCertificationEnabled ? [{ id: 'founder-go-live', label: 'Founder Go-Live Center', icon: Building2, node: <FounderGoLiveCenterPanel /> }] : []),
                       { id: 'ont-career-tracks',        label: 'Career Tracks',            icon: Map,           node: <CareerTracksPanel /> },
@@ -1369,6 +1382,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               {activeTab === 'enterprise-workforce-console' && enterpriseWorkforceEnabled && <div className="h-full overflow-auto"><EnterpriseWorkforceConsolePanel /></div>}
               {activeTab === 'ecosystem-activation' && ecosystemActivationEnabled && <div className="h-full overflow-auto"><EcosystemActivationPanel /></div>}
               {activeTab === 'enterprise-certification' && enterpriseCertificationEnabled && <div className="h-full overflow-auto"><EnterpriseCertificationPanel /></div>}
+              {activeTab === 'competency-match-intelligence' && competencyMatchIntelEnabled && <div className="h-full overflow-auto"><CompetencyMatchIntelligencePanel /></div>}
               {activeTab === 'go-live-center' && goLiveCertificationEnabled && <div className="h-full overflow-auto"><GoLiveCenterPanel /></div>}
               {activeTab === 'founder-go-live' && goLiveCertificationEnabled && <div className="h-full overflow-auto"><FounderGoLiveCenterPanel /></div>}
               {activeTab === 'ont-functions'        && <div className="h-full overflow-auto"><FunctionsPanel /></div>}

@@ -1,0 +1,263 @@
+MX-107A-COMPETENCY-MATCH-INTELLIGENCE
+
+OBJECTIVE
+
+Close the final intelligence gap between Candidate Competency Assessment and Employer Role DNA so that employer competency match, role readiness, hiring fit, and career recommendations are driven by the same canonical competency framework.
+
+Do NOT rebuild any subsystem.
+
+Compose existing engines only.
+
+====================================================
+
+FOUNDATION
+
+Canonical sources remain:
+
+• onto_competencies
+• Role DNA
+• O*NET Reference
+• Competency Assessment
+• Employability Index
+
+O*NET remains a reference layer only.
+
+Never fabricate competency matches.
+
+If evidence is insufficient, abstain honestly.
+
+====================================================
+
+PHASE 1
+
+Trace the complete mapping:
+
+Assessment Questions
+
+↓
+
+Competencies Measured
+
+↓
+
+Competency Scores
+
+↓
+
+Role DNA Requirements
+
+↓
+
+Required Levels
+
+↓
+
+Gap Calculation
+
+↓
+
+Role Readiness
+
+↓
+
+Employer Match
+
+Generate:
+
+Crosswalk Coverage Report
+
+====================================================
+
+PHASE 2
+
+Build canonical Competency Match Engine.
+
+Inputs
+
+Candidate Competency Profile
+
+Role DNA
+
+Required Levels
+
+Weightings
+
+Outputs
+
+Role Match %
+
+Critical Gaps
+
+Strengths
+
+Transferable Competencies
+
+Development Priority
+
+Confidence Score
+
+====================================================
+
+PHASE 3
+
+Employer Dashboard
+
+Display
+
+Overall Match %
+
+Competency Heatmap
+
+Required vs Actual
+
+Critical Missing Competencies
+
+Interview Focus Areas
+
+Hiring Recommendation
+
+====================================================
+
+PHASE 4
+
+Candidate Dashboard
+
+Display
+
+Role Readiness
+
+Promotion Readiness
+
+Career Readiness
+
+Top Matching Roles
+
+Gap Analysis
+
+Development Plan
+
+====================================================
+
+PHASE 5
+
+Super Admin
+
+Display
+
+Crosswalk Coverage
+
+Role DNA Coverage
+
+Assessment Coverage
+
+Competency Match Coverage
+
+Employer Match Coverage
+
+====================================================
+
+PHASE 6
+
+Founder Dashboard
+
+Display
+
+Average Match
+
+Highest Match Roles
+
+Lowest Match Roles
+
+Crosswalk Health
+
+Role DNA Health
+
+Competency Coverage
+
+====================================================
+
+PHASE 7
+
+Validation
+
+Validate
+
+Assessment
+
+↓
+
+Competency Scores
+
+↓
+
+Competency Profile
+
+↓
+
+Role DNA
+
+↓
+
+Competency Match
+
+↓
+
+Role Readiness
+
+↓
+
+Employer Dashboard
+
+↓
+
+Candidate Dashboard
+
+↓
+
+Reports
+
+Generate evidence.
+
+====================================================
+
+PHASE 8
+
+Certification
+
+Answer:
+
+Can every assessed competency map to Role DNA?
+
+Can Role DNA calculate readiness?
+
+Can employers trust match scores?
+
+Can candidates trust readiness?
+
+Can dashboards consume results?
+
+Can reports consume results?
+
+PASS / PARTIAL / FAIL
+
+====================================================
+
+SUCCESS CRITERIA
+
+No fabricated matches
+
+100% canonical mapping
+
+Role readiness operational
+
+Employer match operational
+
+Candidate readiness operational
+
+Evidence-backed confidence
+
+No duplicate engines
+
+No deploy
+
+# STOP FOR APPROVAL

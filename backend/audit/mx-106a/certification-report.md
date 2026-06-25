@@ -1,6 +1,6 @@
 # MX-106A — End-to-End Competency Assessment Validation & Certification
 
-**Verdict: PASS**  ·  generated 2026-06-25T00:48:55.716Z
+**Verdict: PASS**  ·  generated 2026-06-25T01:01:21.592Z
 
 Read-only certification of the complete competency-assessment journey for ONE
 purgeable demo subject (`user_masked`, `@example.com`). The run actually TAKES the
@@ -23,32 +23,32 @@ null ≠ 0; unmeasurable is reported, never fabricated.
 
 | # | Question | Verdict | Evidence |
 |---|----------|---------|----------|
-| 1 | Can a candidate take a competency assessment and have it scored + persisted? | **PASS** | questions=20, answered=20, overall=100, measurement=domain_proxy, domains=2, profile_rows 7→8 |
-| 2 | Does a competency profile generate with domain scores? | **PASS** | overall=100, domains=2, measurement=domain_proxy, history=8 |
+| 1 | Can a candidate take a competency assessment and have it scored + persisted? | **PASS** | questions=21, answered=21, overall=100, measurement=hybrid, domains=3, profile_rows 9→10 |
+| 2 | Does a competency profile generate with domain scores? | **PASS** | overall=100, domains=3, measurement=domain_proxy, history=10 |
 | 3 | Does the employability index compute from the competency scores? | **PASS** | ei_score=100, ei_band=Excellent, coverage_pct=100, dims=5/5, confidence=60/Moderate |
-| 4 | Does role readiness compute for the subject? | **PASS** | role=role_pm, score=100 (over ASSESSED weight), band=ready, coverage=80% (assessed/total weight — SEPARATE axis), fit=strong, blocking_gaps=0, notes=0 |
+| 4 | Does role readiness compute for the subject? | **PASS** | role=role_pm, score=100 (over ASSESSED weight), band=ready, coverage=100% (assessed/total weight — SEPARATE axis), fit=strong, blocking_gaps=0, notes=0 |
 | 5 | Are career recommendations generated (match / gap / roadmap / development)? | **PASS** | match:true gap:true roadmap:true dev:true |
-| 6 | Does the career passport generate + persist? | **PASS** | sections=5/6, history 7→8 |
+| 6 | Does the career passport generate + persist? | **PASS** | sections=5/6, history 9→10 |
 | 7 | Can downloadable reports be produced through the Report Factory? | **PASS** | 9/9 outputs rendered a non-empty file |
 | 8 | Can the Candidate persona read their results? | **PASS** | profile_measured=true, ei_overall=100, readiness=100 |
-| 9 | Can the Employer persona read competency-match + hiring recommendation? | **PASS** | competencyMatch=100, coverage=9.1%, reqs=10/27 (0 direct, 10 domain-proxy), source=onto_competency_profile, hiringAction=gather_more_evidence, interview_coverage_ok=false |
+| 9 | Can the Employer persona read competency-match + hiring recommendation? | **PASS** | competencyMatch=100, coverage=26.4%, reqs=14/27 (6 direct, 8 domain-proxy), source=onto_competency_profile, hiringAction=gather_more_evidence, interview_coverage_ok=false |
 | 10 | Can the Super Admin + Founder personas read oversight metrics? | **PASS** | superadmin:true founder:true |
 
 ## Journey stages (generated ⟂ measurable ⟂ persisted)
 
 | # | Stage | Gen | Meas | Persist | Detail |
 |---|-------|-----|------|---------|--------|
-| 1 | Assessment taken+scored | ✓ | ✓ | ✓ | questions=20, answered=20, overall=100, measurement=domain_proxy, domains=2, profile_rows 7→8 |
-| 2 | Competency profile | ✓ | ✓ | n/a | overall=100, domains=2, measurement=domain_proxy, history=8 |
+| 1 | Assessment taken+scored | ✓ | ✓ | ✓ | questions=21, answered=21, overall=100, measurement=hybrid, domains=3, profile_rows 9→10 |
+| 2 | Competency profile | ✓ | ✓ | n/a | overall=100, domains=3, measurement=domain_proxy, history=10 |
 | 3 | EI profile | ✓ | ✓ | n/a | overall_ei=100, band=Excellent, coverage=100 |
-| 4 | Role readiness | ✓ | ✓ | n/a | role=role_pm, score=100 (over ASSESSED weight), band=ready, coverage=80% (assessed/total weight — SEPARATE axis), fit=strong, blocking_gaps=0, notes=0 |
-| 5 | Career matches | ✓ | ✓ | ✓ | matches=8, history 7→8 |
-| 6 | Career gaps | ✓ | ✓ | ✓ | gaps=0, history 7→8 |
-| 7 | Career roadmap | ✓ | ✓ | ✓ | phases=0, history 7→8 |
-| 8 | Development plan | ✓ | ✓ | ✓ | streams=0, history 7→8 |
-| 9 | Career passport | ✓ | ✓ | ✓ | sections=5/6, history 7→8 |
+| 4 | Role readiness | ✓ | ✓ | n/a | role=role_pm, score=100 (over ASSESSED weight), band=ready, coverage=100% (assessed/total weight — SEPARATE axis), fit=strong, blocking_gaps=0, notes=0 |
+| 5 | Career matches | ✓ | ✓ | ✓ | matches=8, history 9→10 |
+| 6 | Career gaps | ✓ | ✓ | ✓ | gaps=0, history 9→10 |
+| 7 | Career roadmap | ✓ | ✓ | ✓ | phases=0, history 9→10 |
+| 8 | Development plan | ✓ | ✓ | ✓ | streams=0, history 9→10 |
+| 9 | Career passport | ✓ | ✓ | ✓ | sections=5/6, history 9→10 |
 | 10 | Career signals | ✓ | ✓ | n/a | signals=7 (config-as-data) |
-| 11 | Progress tracking | ✓ | ✓ | ✓ | growth_tracking 7→8 |
+| 11 | Progress tracking | ✓ | ✓ | ✓ | growth_tracking 9→10 |
 | 12 | Employability index | ✓ | ✓ | ✓ | ei_score=100, ei_band=Excellent, coverage_pct=100, dims=5/5, confidence=60/Moderate |
 
 ## Report Factory outputs (9 = 5 PDF + 2 JSON + 2 CSV)
@@ -70,13 +70,12 @@ null ≠ 0; unmeasurable is reported, never fabricated.
 | Persona | Surface | Can read | Measurable | Detail |
 |---------|---------|----------|------------|--------|
 | Candidate | profile + EI + readiness | ✓ | ✓ | profile_measured=true, ei_overall=100, readiness=100 |
-| Employer | competency-match + interview/hiring rec | ✓ | ✓ | competencyMatch=100, coverage=9.1%, reqs=10/27 (0 direct, 10 domain-proxy), source=onto_competency_profile, hiringAction=gather_more_evidence, interview_coverage_ok=false |
+| Employer | competency-match + interview/hiring rec | ✓ | ✓ | competencyMatch=100, coverage=26.4%, reqs=14/27 (6 direct, 8 domain-proxy), source=onto_competency_profile, hiringAction=gather_more_evidence, interview_coverage_ok=false |
 | Super Admin | platform intelligence | ✓ | n/a | headline_groups=11 |
 | Founder | founder dashboard | ✓ | n/a | metric_groups=4 |
 
 ## Findings
-- Report Factory ships default templates for only 4 of the journey report types (capadex, career, competency, passport). No default template exists for `employability` — exercised via an ad-hoc payload here; add a seeded employability template in a follow-up so it has a first-class report.
-- Employer competency-match is now non-null for a MEASURABLE candidate: competencyMatch=100/100 over 10/27 requirements (coverage 9.1%), via a comp_* → onto-domain crosswalk — 0 direct competency match(es) and 10 domain-proxy. Domain-proxy attainments are clearly labelled (matchVia=domain_proxy / matchedLedger "(domain_proxy)") and never represented as per-competency measurements. Residual unassessed requirements (O*NET-inherited keys + competencies in unmeasured domains) stay an honest coverage gap, never fabricated.
+- Employer competency-match is now non-null for a MEASURABLE candidate: competencyMatch=100/100 over 14/27 requirements (coverage 26.4%), via a comp_* → onto-domain crosswalk — 6 direct competency match(es) and 8 domain-proxy. Domain-proxy attainments are clearly labelled (matchVia=domain_proxy / matchedLedger "(domain_proxy)") and never represented as per-competency measurements. Residual unassessed requirements (O*NET-inherited keys + competencies in unmeasured domains) stay an honest coverage gap, never fabricated.
 
 ## Scope & honesty notes
 - This is a validation + certification deliverable: it exercises and reports, it does

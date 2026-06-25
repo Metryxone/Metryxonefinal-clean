@@ -34,3 +34,29 @@ evidence checks in a read-only validation report, not independent correctness pr
 the runtime `scoreInstance` path (mind `onto_competency_score_runs.assessment_id` is a UUID
 FK — the runtime *instance* id is from `onto_assessment_instances`, not `onto_assembled_assessments`,
 so leave assessment_id NULL or add an instance_id column) and switch the harness to that single table.
+
+# Per-competency (comp_*) scoring now writes the run ledger — but generation is the real gate
+
+The runtime `scoreAssessment` now DOES write `onto_competency_score_runs` (source
+`runtime_competency_map`, assessment_id NULL) whenever its precise per-competency layer
+produced scores — so the unified profile (`resolveUnifiedCompetencyProfile`) surfaces them
+at `granularity:'competency'` and the employer match scores requirements via DIRECT
+per-competency hits instead of the domain proxy. `ensureScoringSchema(pool)` is called
+BEFORE the txn so the conditional INSERT can never abort scoring mid-transaction.
+
+**The non-obvious gate (cost >2 attempts):** writing the run ledger is necessary but NOT
+sufficient. The precise layer only fires when the SERVED+answered questions are linked in
+`onto_competency_question_map`, and legacy `generateAssessment` only ever served the **7-code
+domain bank** (COG/LEA/COM/ADP/EIQ/EXE/TEC) — those approved templates are NOT in the map.
+The mapped/tagged templates are coded directly to **comp_\*** ids (`competency_code ==
+competency_id`, e.g. `comp_stakeholder_mgmt`). So generation had to be extended to ALSO
+select comp_*-coded approved templates for the blueprint's competencies and serve them first
+(onto-domain resolved via `domByComp`, never fabricated). Without that wire the run-ledger
+INSERT is dead code and `directMatchCount` stays 0.
+
+**Why it lines up for the PM demo:** `bp_pm_v1` competencies, `role_pm` requirements, and the
+23 approved+mapped templates are ALL the same comp_* ids by design (demo seed). Of ~2,539 map
+rows only ~25 are `active`+approved (the rest are MX-101A draft pipeline, human-approval-gated).
+MX-106A demo result moved from `0 direct / 10 proxy` to `6 direct / 8 proxy` (measurement
+domain_proxy→hybrid). **How to apply:** to raise direct matches, approve+map more comp_*
+templates for the blueprint's competencies — never fabricate; untagged comps stay null.

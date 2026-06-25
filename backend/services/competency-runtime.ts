@@ -37,6 +37,7 @@ import type { Pool } from 'pg';
 import { isCompetencyRuntimeEnabled } from '../config/feature-flags.js';
 import { computeBehaviouralEvidence } from './competency-behavioural-evidence.js';
 import { getBlueprint } from './assessment-foundation-mapping.js';
+import { ensureScoringSchema } from './competency-scoring.js';
 import { getRoleReadiness, type ReadinessResult } from './role-competency-profile.js';
 import { COMPETENCY_TYPES, type CompetencyTypeKey } from './competency-type-classification.js';
 import { chooseBranch, type BranchDecision } from './adaptive-branching-engine.js';
@@ -300,23 +301,46 @@ export async function generateAssessment(
 
   const total = Math.max(0, Math.min(60, Number(input.total) || 21));
 
-  // Pull approved templates for the needed codes.
+  // Pull approved templates. TWO coverage banks are unioned:
+  //  (a) DOMAIN bank   — templates coded to the 7-code bank that crosswalks to the
+  //                      measurable onto-domains (the legacy domain-PROXY path).
+  //  (b) COMPETENCY-TAGGED bank — templates coded DIRECTLY to this blueprint's
+  //                      comp_* competencies (competency_code == competency_id).
+  //                      When such approved templates exist AND are linked in
+  //                      onto_competency_question_map, serving them lets
+  //                      scoreAssessment produce PRECISE per-competency scores
+  //                      (raising employer DIRECT matches) instead of the proxy.
+  // No tagged templates => only the domain bank is served => byte-identical legacy.
+  const compIds = comps.map((c) => c.competency_id);
+  const selectCodes = [...new Set([...codes, ...compIds])];
+
   let templates: any[] = [];
-  if (codes.length > 0) {
+  if (selectCodes.length > 0) {
     const res = await pool.query(
       `SELECT id, template_key, competency_code, question_type, template_body
          FROM competency_question_templates
         WHERE status = 'approved' AND competency_code = ANY($1::text[])`,
-      [codes],
+      [selectCodes],
     );
     templates = res.rows;
   }
   const bankEmpty = templates.length === 0;
 
+  // Resolve the onto-domain a template scores into:
+  //  - 7-code bank template => its fixed crosswalk domain.
+  //  - comp_*-coded template => the competency's own onto-domain (domByComp).
+  // Never fabricate a domain: a code with no resolvable onto-domain is dropped below.
+  const ontoOf = (code: string): string | null =>
+    DOMAIN_CODE_TO_ONTO[code] ?? domByComp.get(code) ?? null;
+
   // Round-robin select across codes (deterministic order) up to `total`.
+  // Competency-tagged codes are served FIRST so the assessment is competency-tagged
+  // wherever the curated+mapped bank allows; domain-bank codes fill any remainder.
   const byCode = new Map<string, any[]>();
   for (const t of templates) (byCode.get(t.competency_code) ?? byCode.set(t.competency_code, []).get(t.competency_code)!).push(t);
-  const orderedCodes = codes.filter((c) => (byCode.get(c)?.length ?? 0) > 0);
+  const taggedCodes = compIds.filter((c) => (byCode.get(c)?.length ?? 0) > 0);
+  const domainCodes = codes.filter((c) => (byCode.get(c)?.length ?? 0) > 0);
+  const orderedCodes = [...new Set([...taggedCodes, ...domainCodes])];
   const picked: RuntimeQuestion[] = [];
   const cursor = new Map<string, number>();
   let idx = 0;
@@ -328,19 +352,21 @@ export async function generateAssessment(
       const cur = cursor.get(code) ?? 0;
       if (cur >= pool2.length) continue;
       cursor.set(code, cur + 1);
+      advanced = true;
+      const dom = ontoOf(code);
+      if (!dom) continue; // no resolvable onto-domain — never place into a fabricated domain
       const t = pool2[cur];
       const body = t.template_body || {};
       picked.push({
         index: idx++,
         template_id: t.id,
         code,
-        onto_domain: DOMAIN_CODE_TO_ONTO[code],
+        onto_domain: dom,
         type: t.question_type,
         text: body.prompt || '',
         options: deriveOptions(t.question_type, body),
         reverse_scored: body.reverse_scored === true && isLikertType(t.question_type) ? true : undefined,
       });
-      advanced = true;
     }
     if (!advanced) break;
   }
@@ -349,7 +375,11 @@ export async function generateAssessment(
   const notes: string[] = [];
   if (bankEmpty) notes.push('Question bank has no approved items for the required domains — the generated assessment is empty; scoring will be honestly unmeasured.');
   if (unmeasurable.length > 0) notes.push(`${unmeasurable.length} of ${comps.length} blueprint competencies are UNMEASURABLE (no question-bank coverage for their onto-domain).`);
-  notes.push('Per-competency scores are a domain-PROXY (the 7-code bank crosswalks to 5 onto-domains) until onto_competency_question_map is populated.');
+  if (taggedCodes.length > 0) {
+    notes.push(`${taggedCodes.length} competency-tagged question group(s) served from the curated bank — these score at PRECISE per-competency granularity (onto_competency_question_map), the rest remain a domain-PROXY.`);
+  } else {
+    notes.push('Per-competency scores are a domain-PROXY (the 7-code bank crosswalks to 5 onto-domains) until onto_competency_question_map is populated.');
+  }
 
   const coverage: InstanceCoverage = {
     total_competencies: comps.length,
@@ -445,6 +475,11 @@ export async function scoreAssessment(pool: Pool, input: ScoreInput): Promise<Sc
     accepted.push({ q, selected: sel, score: Number(q.options[sel].score) });
   }
 
+  // Ensure the per-competency score-run ledger exists BEFORE opening the txn, so a
+  // conditional INSERT into onto_competency_score_runs (precise layer below) can never
+  // fail mid-transaction and abort the whole scoring. Memoized: a no-op after first call.
+  await ensureScoringSchema(pool).catch(() => {});
+
   // Persist responses + recompute domain scores in a transaction (idempotent re-score).
   const client = await pool.connect();
   try {
@@ -538,13 +573,68 @@ export async function scoreAssessment(pool: Pool, input: ScoreInput): Promise<Sc
       `UPDATE onto_assessment_instances SET status='scored', updated_at=now() WHERE id=$1`,
       [instanceId],
     );
-    // Append-only profile snapshot.
+    // Append-only profile snapshot (per-DOMAIN dom_* ledger).
     await client.query(
       `INSERT INTO onto_competency_profiles (subject_id, instance_id, blueprint_id, role_id, overall_score, overall_level, profile, coverage)
        VALUES ($1,$2,$3,$4,$5,$6,$7::jsonb,$8::jsonb)`,
       [inst.subject_id, instanceId, inst.blueprint_id, inst.role_id, overall, overallLevel,
        JSON.stringify(domainScores), JSON.stringify(inst.coverage ?? {})],
     );
+
+    // --- Persist the PRECISE per-competency layer to the normalized-run ledger ---
+    // When competency-tagged questions produced real per-competency (comp_*) scores,
+    // also write them to onto_competency_score_runs so the unified competency profile
+    // (resolveUnifiedCompetencyProfile) surfaces them at COMPETENCY granularity. This
+    // lets downstream consumers (e.g. the employer competency match) score role
+    // requirements via a DIRECT per-competency score instead of the domain-proxy.
+    // Empty map => no precise scores => this block is skipped entirely => the
+    // normalized-run ledger is untouched and the read path is byte-identical legacy.
+    // assessment_id is left NULL: a runtime instance is NOT a row in the FK target
+    // (onto_assembled_assessments); fabricating one would break referential honesty.
+    if (competencyScores.length > 0) {
+      const runComps = competencyScores.map((c) => ({
+        competency_id: c.competency_id,
+        competency_name: c.competency_name,
+        normalized_score: c.scaled_score,
+        normalization_basis: 'option_score_mean',
+        level: c.level,
+        level_label: null,
+        level_status: 'measured',
+        item_count: c.question_count,
+        measurement: 'precise' as const,
+      }));
+      // Overall = item-count-weighted mean of measured per-competency scores (mirrors
+      // the rich scorer's convention). Measured-only; never coerced to 0.
+      let wSum = 0;
+      let acc = 0;
+      for (const c of competencyScores) { acc += c.scaled_score * c.question_count; wSum += c.question_count; }
+      const compOverall = wSum > 0 ? Math.round((acc / wSum) * 10) / 10 : null;
+      const compOverallLevel = compOverall != null ? scoreToLevel(compOverall) : null;
+      const scoredQuestions = competencyScores.reduce((s, c) => s + c.question_count, 0);
+      await client.query(
+        `INSERT INTO onto_competency_score_runs
+           (assessment_id, blueprint_id, subject_id, total_questions, scored_questions, competency_scores, overall, normalization, status, source)
+         VALUES (NULL,$1,$2,$3,$4,$5::jsonb,$6::jsonb,$7::jsonb,'scored','runtime_competency_map')`,
+        [
+          inst.blueprint_id,
+          inst.subject_id,
+          accepted.length,
+          scoredQuestions,
+          JSON.stringify(runComps),
+          JSON.stringify({
+            overall_score: compOverall,
+            overall_level: compOverallLevel,
+            competencies_scored: competencyScores.length,
+            measurement: 'precise',
+          }),
+          JSON.stringify({
+            basis: 'option_score_mean',
+            instance_id: instanceId,
+            note: 'Per-competency scores aggregated from onto_competency_question_map-tagged items (mean of authored option scores).',
+          }),
+        ],
+      );
+    }
     await client.query('COMMIT');
 
     return {

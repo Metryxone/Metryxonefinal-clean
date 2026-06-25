@@ -82,7 +82,7 @@ import {
   persistScoringRun,
   listScoringRuns,
 } from '../services/employability-scoring-engine.js';
-import { generateReport } from '../services/report-factory-schema.js';
+import { generateReport, ensureReportFactorySchema } from '../services/report-factory-schema.js';
 import {
   renderReportToPDF,
   renderReportToCSV,
@@ -181,6 +181,12 @@ async function main() {
     process.exit(1);
   }
   const pool = new Pool({ connectionString: databaseUrl });
+
+  // Ensure the Report Factory schema + default templates (incl. employability)
+  // are seeded into the shared DB before the standard render path reads them.
+  await ensureReportFactorySchema(pool).catch((e) => {
+    console.error('[mx106a] ensureReportFactorySchema failed:', e?.message ?? e);
+  });
 
   const stages: StageRow[] = [];
   const outputs: OutputRow[] = [];
@@ -389,6 +395,8 @@ async function main() {
       score: overall,
       ei_score: eiScore,
       coverage_pct: employability?.summary?.coverage_pct ?? 0,
+      readiness_level: employability?.summary?.ei_band ?? readiness?.readiness?.band ?? 'developing',
+      readiness_description: 'measured strengths and growth areas',
       sections_present: passport?.coverage?.sections_present ?? 0,
       sections_total: passport?.coverage?.sections_total ?? 0,
     };
@@ -438,59 +446,14 @@ async function main() {
     await renderPdf('Career PDF', 'career');
     await renderPdf('Passport PDF', 'passport');
 
-    // 5: Employability PDF — NO default template ships for report_type=employability,
-    // so we build an ad-hoc generated_content payload from the employability artifact
-    // and render it through the SAME Report Factory renderer. The report row is demo
-    // subject data (purgeable), NOT permanent config. The missing template is a finding.
-    let employabilityReport: any = null;
-    try {
-      const dims: any[] = employability?.dimension_scores ?? [];
-      const sections = [
-        { key: 'header', type: 'header', title: 'Employability Index' },
-        {
-          key: 'summary', type: 'narrative', title: 'Summary',
-          text: employability?.measurable
-            ? `Employability Index ${employability.summary.ei_score} (band ${employability.summary.ei_band}); coverage ${employability.summary.coverage_pct}% across ${employability.summary.dimensions_measurable}/${employability.summary.dimensions_total} dimensions.`
-            : 'Employability index is not measurable for this subject (no measured competency profile or unprovisioned config). Reported honestly — never imputed.',
-        },
-        {
-          key: 'dimensions', type: 'insight', title: 'Dimension Findings',
-          insights: dims.map((d: any) => ({ text: `${d.dimension_name ?? d.label ?? d.ei_dimension_id}: ${d.score ?? d.scaled_score ?? 'n/a'}`, severity: 'info' })),
-        },
-        { key: 'footer', type: 'footer', title: 'Footer', text: 'Developmental signal only — not for hiring or promotion decisions.' },
-      ];
-      const ins = await pool.query(
-        `INSERT INTO rf_generated_reports
-           (template_id, user_id, session_id, report_type, data_snapshot, generated_content, narrative_texts, insights, language, status, completed_at)
-         VALUES ($1,$2,$3,'employability',$4,$5,$6,$7,'en','complete',NOW())
-         RETURNING *`,
-        [tmplByType.get('competency') ?? null, SUBJECT, 'mx106a_employability',
-          JSON.stringify(dataSnapshot), JSON.stringify({ sections }),
-          JSON.stringify({ summary: (sections[1] as any).text }),
-          JSON.stringify((sections[2] as any).insights)],
-      );
-      employabilityReport = ins.rows[0];
-      const fp = await renderReportToPDF(employabilityReport);
-      outputs.push({ name: 'Employability PDF', report_type: 'employability', format: 'pdf', template: 'ad-hoc (no default template)', rendered: fileBytes(fp) > 0, bytes: fileBytes(fp), detail: maskPII(String(fp)) });
-    } catch (e: any) {
-      outputs.push({ name: 'Employability PDF', report_type: 'employability', format: 'pdf', template: 'ad-hoc', rendered: false, bytes: 0, detail: `ERROR: ${String(e?.message ?? e).slice(0, 120)}` });
-    }
-    findings.push('Report Factory ships default templates for only 4 of the journey report types (capadex, career, competency, passport). No default template exists for `employability` — exercised via an ad-hoc payload here; add a seeded employability template in a follow-up so it has a first-class report.');
+    // 5: Employability PDF — a first-class default template now ships for
+    // report_type=employability, so it renders through the SAME standard Report
+    // Factory path as the other journey reports (no ad-hoc payload).
+    await renderPdf('Employability PDF', 'employability');
 
     // 6-7: JSON exports.
     await renderFmt('Competency JSON', 'competency', 'json');
-    try {
-      if (employabilityReport) {
-        const fp = path.join('/tmp/rf_exports', `rf_${employabilityReport.report_uuid ?? employabilityReport.id}_mx106a.json`);
-        fs.mkdirSync(path.dirname(fp), { recursive: true });
-        fs.writeFileSync(fp, renderReportToJSON(employabilityReport), 'utf8');
-        outputs.push({ name: 'Employability JSON', report_type: 'employability', format: 'json', template: 'ad-hoc', rendered: fileBytes(fp) > 0, bytes: fileBytes(fp), detail: maskPII(String(fp)) });
-      } else {
-        outputs.push({ name: 'Employability JSON', report_type: 'employability', format: 'json', template: 'ad-hoc', rendered: false, bytes: 0, detail: 'employability report row not created' });
-      }
-    } catch (e: any) {
-      outputs.push({ name: 'Employability JSON', report_type: 'employability', format: 'json', template: 'ad-hoc', rendered: false, bytes: 0, detail: `ERROR: ${String(e?.message ?? e).slice(0, 120)}` });
-    }
+    await renderFmt('Employability JSON', 'employability', 'json');
 
     // 8-9: CSV exports.
     await renderFmt('Career CSV', 'career', 'csv');

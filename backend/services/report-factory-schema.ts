@@ -301,6 +301,12 @@ async function seedNarrativeBlocks(pool: Pool): Promise<void> {
       report_types: ['career','employability'], tone: 'professional', category: 'summary',
     },
     {
+      key: 'report_intro_employability', title: 'Employability Index Introduction',
+      content: 'This report presents {{name}}\'s Employability Index, a composite developmental signal compiled from the underlying competency profile and behavioural assessment data. The index currently stands at {{ei_score}} out of 100, with measured coverage across {{coverage_pct}}% of the evaluated dimensions. Coverage (how much data exists) and confidence (how trustworthy that data is) are reported separately and never blended.',
+      variables: ['name','ei_score','coverage_pct'],
+      report_types: ['employability'], tone: 'professional', category: 'introduction',
+    },
+    {
       key: 'intervention_recommendation', title: 'Intervention Recommendation',
       content: 'The following interventions are recommended based on the assessment findings: {{intervention_list}}. These are prioritised by potential impact and alignment with {{name}}\'s stated goals.',
       variables: ['name','intervention_list'],
@@ -636,6 +642,21 @@ async function seedDefaultTemplates(pool: Pool): Promise<void> {
         { key: 'benchmark', type: 'benchmark', title: 'Industry Benchmark', order: 4, config: { benchmark_key: 'industry_competency' }, required: false },
         { key: 'insights', type: 'insight', title: 'Key Findings', order: 5, config: { rules: ['competency_gap', 'strong_competency', 'benchmark_above_peer'] }, required: true },
         { key: 'footer', type: 'footer', title: 'Footer', order: 6, config: { block_key: 'report_footer_standard' }, required: true },
+      ],
+    },
+    {
+      name: 'Employability Index Report',
+      report_type: 'employability',
+      description: 'Branded employability index report compiling competency and behavioural signals into a developmental readiness picture',
+      sections: [
+        { key: 'header', type: 'header', title: 'Report Header', order: 0, required: true },
+        { key: 'intro', type: 'narrative', title: 'Introduction', order: 1, config: { block_key: 'report_intro_employability' }, required: true },
+        { key: 'ei_gauge', type: 'chart', title: 'Employability Index', order: 2, config: { viz_key: 'readiness_gauge' }, required: true },
+        { key: 'trend', type: 'chart', title: 'Score Trend', order: 3, config: { viz_key: 'trend_line' }, required: false },
+        { key: 'benchmark', type: 'benchmark', title: 'Peer Comparison', order: 4, config: { benchmark_key: 'peer_career_readiness' }, required: false },
+        { key: 'summary', type: 'narrative', title: 'Readiness Summary', order: 5, config: { block_key: 'readiness_summary' }, required: true },
+        { key: 'insights', type: 'insight', title: 'Key Insights', order: 6, config: { rules: ['high_readiness', 'low_readiness', 'benchmark_above_peer'] }, required: true },
+        { key: 'footer', type: 'footer', title: 'Footer', order: 7, config: { block_key: 'report_footer_standard' }, required: true },
       ],
     },
     {

@@ -91,6 +91,12 @@ function values(v: any): any[] {
 function round(n: number | null): number | null {
   return n == null ? null : Math.round(n * 10) / 10;
 }
+/** Honest level formatter — an absent/non-numeric level reads "not yet measured",
+ *  NEVER the literal string "null" (precise⟂domain-proxy gap is surfaced honestly). */
+function lvl(v: any): string {
+  const n = num(v);
+  return n == null ? 'not yet measured' : String(n);
+}
 
 // ── Types ───────────────────────────────────────────────────────────────────
 export interface CandidateInfo {
@@ -779,7 +785,7 @@ const buildRoleReadiness: Builder = (s) => {
       ? 'Readiness compares measured capability to the role’s required competency levels. Critical and blocking gaps cap readiness regardless of average score. This is a developmental signal, not a hiring or promotion decision.'
       : 'The employer competency match report reaches role requirements via a different path (generateRoleDNA over the genome) and does compute a match — the divergence is a real platform finding, surfaced honestly rather than estimated here.',
     recommendations: measurable
-      ? gaps.slice(0, 3).map((g) => ({ text: `Close gap in ${str(g.competency_name)} (need level ${num(g.required_level)}, at ${num(g.actual_level)}).`, severity: 'warning' }))
+      ? gaps.slice(0, 3).map((g) => ({ text: `Close gap in ${str(g.competency_name)} (need level ${lvl(g.required_level)}, currently ${lvl(g.actual_level)}).`, severity: 'warning' }))
       : [],
     confidence_text: measurable ? 'Confidence: Moderate — measured against the resolved role profile.' : 'Confidence not applicable — role requirements unmapped on this path.',
     honest: measurable
@@ -991,13 +997,13 @@ const buildSkillGap: Builder = (s) => {
       ? `${s.candidate.name} has ${num(gap?.summary?.total_gaps) ?? items.length} skill gap(s); the most material is ${str(gap?.summary?.most_material?.competency_name) ?? str(top[0]?.competency_name)}.`
       : `No skill gaps could be computed for ${s.candidate.name} — no role-requirement substrate to compare against.`,
     assessment: measurable
-      ? `Largest gaps — ${top.slice(0, 8).map((g) => `${str(g.competency_name)}: need ${num(g.required_level)} at ${num(g.actual_level)} (gap ${num(g.gap)})`).join('; ')}.`
+      ? `Largest gaps — ${top.slice(0, 8).map((g) => `${str(g.competency_name)}: need ${lvl(g.required_level)}, currently ${lvl(g.actual_level)} (gap ${lvl(g.gap)})`).join('; ')}.`
       : 'No gaps are available.',
     chart: measurable ? { title: 'Gap size by competency', data_source: 'career', chart_type: 'bar', ...chart } : null,
     interpretation: measurable
       ? 'A gap is the distance between a required competency level and the measured level. Critical and blocking gaps are prioritised in the Action Plan and Learning Roadmap. Gaps are developmental, not disqualifying.'
       : 'Computing gaps requires a profiled role with stored requirements; without it the platform reports no measurable gaps rather than inventing them.',
-    recommendations: top.slice(0, 3).map((g) => ({ text: `Close gap in ${str(g.competency_name)} (need ${num(g.required_level)}, at ${num(g.actual_level)}).`, severity: g.blocking ? 'critical' : 'warning' })),
+    recommendations: top.slice(0, 3).map((g) => ({ text: `Close gap in ${str(g.competency_name)} (need ${lvl(g.required_level)}, currently ${lvl(g.actual_level)}).`, severity: g.blocking ? 'critical' : 'warning' })),
     confidence_text: measurable ? 'Confidence: Provisional — depends on requirement coverage and measurement granularity.' : 'Confidence not applicable — no gaps could be computed.',
     honest: measurable
       ? null
@@ -1090,7 +1096,7 @@ const buildEmployerMatch: Builder = (s) => {
       ? 'The match contrasts the candidate’s measured competencies with the role’s genome-derived requirements. The fit signal is decision-SUPPORT only — never a hire/no-hire verdict. Calibration reports whether realized outcomes back the signal.'
       : 'A match requires a measured competency profile and resolvable role requirements.',
     recommendations: measurable
-      ? gaps.slice(0, 3).map((g: any) => ({ text: `Requirement gap: ${str(g.competency_name) ?? str(g.name)} (need ${num(g.required_level)}, at ${num(g.actual_level)}).`, severity: 'warning' }))
+      ? gaps.slice(0, 3).map((g: any) => ({ text: `Requirement gap: ${str(g.competency_name) ?? str(g.name)} (need ${lvl(g.required_level)}, currently ${lvl(g.actual_level)}).`, severity: 'warning' }))
       : [],
     confidence_text: measurable
       ? `Calibration: ${str(m?.calibration?.state) ?? 'uncalibrated'}${num(m?.calibration?.realizedOutcomes) != null ? ` (${num(m.calibration.realizedOutcomes)} realized outcomes)` : ''}. The fit signal is decision-support, not a verdict.`
@@ -1250,8 +1256,9 @@ export function composePack(snapshot: PackSnapshot): ComposedReport[] {
 
 // ── No-empty validation guard ───────────────────────────────────────────────
 // Founder requirement: NO placeholder content anywhere in a deliverable.
-// Catches "?w" / "~?" effort stubs, lorem ipsum, TBD/TODO/N/A and bare "?%".
-const PLACEHOLDER_RE = /(~\?|\?w\b|\bTBD\b|\bTODO\b|\bN\/A\b|\blorem\b|\bplaceholder\b|\s\?%)/i;
+// Catches "?w" / "~?" effort stubs, lorem ipsum, TBD/TODO/N/A, bare "?%" AND any
+// leaked literal null/undefined/NaN from a nullable value interpolated into prose.
+const PLACEHOLDER_RE = /(~\?|\?w\b|\bTBD\b|\bTODO\b|\bN\/A\b|\blorem\b|\bplaceholder\b|\s\?%|\bnull\b|\bundefined\b|\bNaN\b)/i;
 
 const REQUIRED_SECTION_TITLES = [
   'Executive Summary',

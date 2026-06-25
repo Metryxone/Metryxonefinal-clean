@@ -7,7 +7,7 @@ live Report Factory and exported in **four formats each (64 files total)**.
 - **Candidate**: Sarah Johnson — Senior Product Manager, Technology, 8 yrs, MBA, Bangalore (demonstration data, purgeable).
 - **Subject (masked)**: `user_4286d980cc6c`
 - **White-label**: MetryxOne (primary `#0B2447`, accent `#2E8B8B`)
-- **Generated**: 2026-06-25T11:39:32.419Z
+- **Generated**: 2026-06-25T14:58:52.253Z
 - **Build / rollback**: `npx tsx backend/scripts/mx301-report-pack.ts [--rollback]`
 - **Provision candidate first**: `npx tsx backend/scripts/mx301-demo-candidate.ts`
 
@@ -22,7 +22,7 @@ report is structurally incomplete — **16/16 reports passed** with no blank cha
 ## Three separate axes (never composited)
 
 - **Activation** — the report generated and persisted. All 16 reports activate.
-- **Coverage** — the candidate has measurable input for that report. **11/16** are measured;
+- **Coverage** — the candidate has measurable input for that report. **14/16** are measured;
   the rest render a professional *"Insufficient validated data"* state — honest, not a failure, not fabricated.
 - **Confidence** — trustworthiness of the produced value (calibration / domain-proxy vs direct), reported per report.
 
@@ -34,16 +34,16 @@ report is structurally incomplete — **16/16 reports passed** with no blank cha
 | --- | --- | --- | --- | --- |
 | Executive Summary | YES | n/a | Provisional | measured |
 | Competency Profile | YES | n/a | Provisional | measured |
-| Competency Radar | empty | n/a | n/a | insufficient data (honest) |
-| Competency Heatmap | empty | n/a | n/a | insufficient data (honest) |
+| Competency Radar | empty | 100% | Moderate | insufficient data (honest) |
+| Competency Heatmap | empty | 100% | Moderate | insufficient data (honest) |
 | Strengths | YES | 100% | Moderate | measured |
 | Development Areas | YES | 100% | Moderate | measured |
-| Role Readiness | empty | n/a | n/a | insufficient data (honest) |
-| Promotion Readiness | empty | n/a | n/a | insufficient data (honest) |
+| Role Readiness | YES | 100% | Moderate | measured |
+| Promotion Readiness | YES | n/a | Moderate | measured |
 | Employability Index | YES | 100% | Moderate | measured |
-| Career Recommendations | YES | n/a | Provisional | measured |
+| Career Recommendations | YES | n/a | Moderate | measured |
 | Learning Roadmap | YES | n/a | Provisional | measured |
-| Skill Gap | empty | n/a | n/a | insufficient data (honest) |
+| Skill Gap | YES | 100% | Provisional | measured |
 | Interview Readiness | YES | n/a | Operator-recorded | measured |
 | Employer Competency Match | YES | 61.8% | Calibrated | measured |
 | Career Passport | YES | 100% | Moderate | measured |

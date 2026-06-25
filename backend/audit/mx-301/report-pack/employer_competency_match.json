@@ -1,33 +1,33 @@
 {
   "schema_version": "1.0",
-  "exported_at": "2026-06-25T11:39:32.381Z",
+  "exported_at": "2026-06-25T14:58:52.197Z",
   "report": {
-    "uuid": "030ad6fa-d296-4004-b3a2-4b0515b96f10",
+    "uuid": "6baca476-499b-41d0-bfa2-a9b99f50733c",
     "type": "employer_competency_match",
     "language": "en",
     "status": "complete",
-    "created_at": "2026-06-25T11:39:32.362Z",
-    "completed_at": "2026-06-25T11:39:32.362Z",
+    "created_at": "2026-06-25T14:58:52.179Z",
+    "completed_at": "2026-06-25T14:58:52.179Z",
     "narrative_texts": {
       "data_source": "employer-competency-hiring.computeCompetencyDrivenMatch → Role DNA (genome) requirements vs candidate competencies.",
       "interpretation": "The match contrasts the candidate’s measured competencies with the role’s genome-derived requirements. The fit signal is decision-SUPPORT only — never a hire/no-hire verdict. Calibration reports whether realized outcomes back the signal.",
       "confidence_level": "Calibration: calibrated (34 realized outcomes). The fit signal is decision-support, not a verdict.",
       "executive_summary": "Sarah Johnson's competency match to Senior Product Manager is 77.4%, covering 8/13 requirements (fit: fit).",
       "assessment_summary": "Match 77.4%, coverage 61.8%. Fit signal: fit. Calibration: calibrated. 8 requirement gap(s).",
-      "generated_timestamp": "This report was generated on 25 June 2026 at 11:39 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 14:58 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
       "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
     },
     "insights": [
       {
-        "text": "Requirement gap: Data-Driven Decision Making (need null, at null).",
+        "text": "Requirement gap: Data-Driven Decision Making (need not yet measured, currently not yet measured).",
         "severity": "warning"
       },
       {
-        "text": "Requirement gap: Structured Problem Solving (need null, at null).",
+        "text": "Requirement gap: Structured Problem Solving (need not yet measured, currently not yet measured).",
         "severity": "warning"
       },
       {
-        "text": "Requirement gap: Accountability & Ownership (need null, at null).",
+        "text": "Requirement gap: Accountability & Ownership (need not yet measured, currently not yet measured).",
         "severity": "warning"
       }
     ],
@@ -98,15 +98,15 @@
           "title": "Recommendations",
           "insights": [
             {
-              "text": "Requirement gap: Data-Driven Decision Making (need null, at null).",
+              "text": "Requirement gap: Data-Driven Decision Making (need not yet measured, currently not yet measured).",
               "severity": "warning"
             },
             {
-              "text": "Requirement gap: Structured Problem Solving (need null, at null).",
+              "text": "Requirement gap: Structured Problem Solving (need not yet measured, currently not yet measured).",
               "severity": "warning"
             },
             {
-              "text": "Requirement gap: Accountability & Ownership (need null, at null).",
+              "text": "Requirement gap: Accountability & Ownership (need not yet measured, currently not yet measured).",
               "severity": "warning"
             }
           ]
@@ -125,7 +125,7 @@
         },
         {
           "key": "generated_timestamp",
-          "text": "This report was generated on 25 June 2026 at 11:39 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "text": "This report was generated on 25 June 2026 at 14:58 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
           "type": "narrative",
           "title": "Generated Timestamp"
         }

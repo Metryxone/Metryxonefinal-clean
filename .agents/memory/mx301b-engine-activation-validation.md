@@ -29,8 +29,20 @@ LIVE HTTP surface for a demonstration candidate (id==email) and classifies each 
 - **flag-OFF (503) is an honest "not activated", not a defect** — report it with the exact
   one-line dev enable (`FF_*=1`), never flip the flag.
 
-## Honest baseline at time of writing
-3 received (Career Readiness, Promotion Signal, Employability Index — all consume the
-EI/domain-proxy ledger) · 7 wired_no_data (skill-gap family unresolved role requirements;
-learning roadmap downstream of gap; employer match = ledger split; interview = operator-input;
-passport UNSYNCED until `POST /api/passport/sync`) · 2 flag_gated (Career Builder) · 0 broken.
+- **The generic payload detector only knows TOP-LEVEL shapes** (`gaps[]`, `overall_score`,
+  `evidence_mix`…). Engines that nest their measured values — e.g. career-gap puts per-comp
+  `actual_level` under `buckets.<type>.items[]` + `summary.most_material`, prioritization under
+  `items[]`+`bands` — are FALSE-NEGATIVE `wired_no_data` until you add a shape-specific handler.
+  **Why:** a `measurable:true` engine surfacing real derived gaps still read as no-data purely
+  because the harness couldn't find the number. **How to apply:** add the handler BEFORE the
+  generic block, and gate `received` on a GENUINE finite measured value (a finite `actual_level`,
+  a non-empty measurable `items[]`) so the handler can never flip an empty/non-measurable payload.
+- **The deliverable's narrative prose must be DERIVED from the verdict sets, never hardcoded.**
+  **Why:** hand-written "root-cause" bullets and the verdict-tail dependency list silently went
+  stale and contradicted the results table once an engine flipped to `received`. **How to apply:**
+  build every per-engine explanation + the verdict dependency list conditionally from the live
+  `wired_no_data`/`flag_gated` membership, so prose can never claim a now-RECEIVED engine is dark.
+- **Domain-proxy actuals are a LEGITIMATE measured input for the developmental gap chain.** Once
+  the role anchor resolves, career-gap/readiness/roadmap DERIVE per-comp `actual_level` from the
+  candidate's 5 domain-proxy scores — that IS `received`. Only the hiring-facing precise match
+  (`comp_*`) stays the honest ceiling. Don't lump the developmental chain in with the precise split.

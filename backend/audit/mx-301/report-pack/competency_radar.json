@@ -1,35 +1,35 @@
 {
   "schema_version": "1.0",
-  "exported_at": "2026-06-25T11:39:32.115Z",
+  "exported_at": "2026-06-25T14:58:51.940Z",
   "report": {
-    "uuid": "af77d80d-4c81-4052-b030-5295a7f4f881",
+    "uuid": "5b9a41ad-9875-4b70-96fa-6e4ef7228a1d",
     "type": "competency_radar",
     "language": "en",
     "status": "complete",
-    "created_at": "2026-06-25T11:39:32.086Z",
-    "completed_at": "2026-06-25T11:39:32.086Z",
+    "created_at": "2026-06-25T14:58:51.905Z",
+    "completed_at": "2026-06-25T14:58:51.905Z",
     "narrative_texts": {
       "data_source": "competency-runtime.computeTypeProfile → onto_competency_profiles grouped by competency type.",
       "interpretation": "Competency-type classification is required to render the radar.",
       "visualizations": "Insufficient validated data to populate this section yet.\n\nWhy: No competencies could be classified into types for this candidate.\nHow to populate it: Score a competency assessment whose competencies map to onto types.\nWhat is needed: Classified competencies in computeTypeProfile buckets.\nExpected output once available: A radar of mean capability across each competency type.",
       "recommendations": "Insufficient validated data to populate this section yet.\n\nWhy: No competencies could be classified into types for this candidate.\nHow to populate it: Score a competency assessment whose competencies map to onto types.\nWhat is needed: Classified competencies in computeTypeProfile buckets.\nExpected output once available: A radar of mean capability across each competency type.",
-      "confidence_level": "Confidence not applicable — no measured input yet.",
+      "confidence_level": "Derived from 100% measurement coverage.",
       "executive_summary": "Sarah Johnson's competencies are not yet classified by type.",
       "assessment_summary": "No competency-type means are available.",
-      "generated_timestamp": "This report was generated on 25 June 2026 at 11:39 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 14:58 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
       "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
     },
     "insights": [],
     "generated_content": {
       "axes": {
         "coverage": {
-          "pct": null,
-          "note": "0/0 competencies classified by type."
+          "pct": 100,
+          "note": "6/6 competencies classified by type."
         },
         "activation": "Engine executed in-process and produced this artifact.",
         "confidence": {
-          "band": null,
-          "note": "Confidence not applicable — no measured input yet."
+          "band": "Moderate",
+          "note": "Derived from 100% measurement coverage."
         }
       },
       "sections": [
@@ -73,7 +73,7 @@
         },
         {
           "key": "confidence_level",
-          "text": "Confidence not applicable — no measured input yet.",
+          "text": "Derived from 100% measurement coverage.",
           "type": "narrative",
           "title": "Confidence Level"
         },
@@ -85,7 +85,7 @@
         },
         {
           "key": "generated_timestamp",
-          "text": "This report was generated on 25 June 2026 at 11:39 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "text": "This report was generated on 25 June 2026 at 14:58 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
           "type": "narrative",
           "title": "Generated Timestamp"
         }

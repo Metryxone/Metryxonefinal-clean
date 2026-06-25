@@ -31,18 +31,6 @@ args = "build"
 task = "workflow.run"
 args = "Upload Service"
 
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "referral-deal-value-writepath"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "referral-deal-value-repair"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "precise-scores-onoff"
-
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -89,39 +77,6 @@ waitForPort = 8000
 
 [workflows.workflow.metadata]
 outputType = "console"
-
-[[workflows.workflow]]
-name = "referral-deal-value-writepath"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd backend && npx tsx scripts/smoke-referral-deal-value-writepath.ts"
-
-[workflows.workflow.metadata]
-isValidation = true
-
-[[workflows.workflow]]
-name = "referral-deal-value-repair"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd backend && npx tsx scripts/smoke-referral-deal-value-repair.ts"
-
-[workflows.workflow.metadata]
-isValidation = true
-
-[[workflows.workflow]]
-name = "precise-scores-onoff"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd backend && npx tsx scripts/task167-precise-scores-onoff.ts"
-
-[workflows.workflow.metadata]
-isValidation = true
 
 [[ports]]
 localPort = 5000

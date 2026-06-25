@@ -1,22 +1,21 @@
 {
   "schema_version": "1.0",
-  "exported_at": "2026-06-25T11:39:32.259Z",
+  "exported_at": "2026-06-25T14:58:52.070Z",
   "report": {
-    "uuid": "1c2b53ce-7a84-4433-ab3f-284ea07d0ef4",
+    "uuid": "ce84f357-5e26-4573-b009-64cc7d3cc891",
     "type": "promotion_readiness",
     "language": "en",
     "status": "complete",
-    "created_at": "2026-06-25T11:39:32.232Z",
-    "completed_at": "2026-06-25T11:39:32.232Z",
+    "created_at": "2026-06-25T14:58:52.046Z",
+    "completed_at": "2026-06-25T14:58:52.046Z",
     "narrative_texts": {
       "data_source": "progression-engine.buildProgression → ei_profile_snapshots over time (net delta between measured snapshots).",
-      "interpretation": "A trajectory needs at least two measured points in time. With one snapshot the platform reports insufficient history rather than inferring a trend.",
-      "visualizations": "Insufficient validated data to populate this section yet.\n\nWhy: Fewer than two measured EI snapshots exist, so no trajectory can be computed.\nHow to populate it: Re-assess over time so a second measured snapshot is captured (persistEiProfile).\nWhat is needed: At least two measured snapshots in ei_profile_snapshots.\nExpected output once available: A net-delta trend per dimension with a ready/insufficient verdict.",
-      "recommendations": "Insufficient validated data to populate this section yet.\n\nWhy: Fewer than two measured EI snapshots exist, so no trajectory can be computed.\nHow to populate it: Re-assess over time so a second measured snapshot is captured (persistEiProfile).\nWhat is needed: At least two measured snapshots in ei_profile_snapshots.\nExpected output once available: A net-delta trend per dimension with a ready/insufficient verdict.",
-      "confidence_level": "Confidence not applicable — insufficient history.",
-      "executive_summary": "Promotion readiness requires at least two measured snapshots over time; Sarah Johnson currently has 0.",
-      "assessment_summary": "Status: insufficient_history — trend cannot be computed from a single snapshot.",
-      "generated_timestamp": "This report was generated on 25 June 2026 at 11:39 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "interpretation": "Promotion readiness is a longitudinal signal: it measures sustained movement across dimensions between measured snapshots, not a single score. Positive net delta with broad growth areas indicates upward trajectory.",
+      "recommendations": "No specific recommendations have been derived from the current measured inputs. Recommendations will appear once additional assessment evidence is captured.",
+      "confidence_level": "Confidence: Moderate — based on measured snapshots; rises as more are captured.",
+      "executive_summary": "Sarah Johnson has 2 measured snapshots; net movement is 0 (stable).",
+      "assessment_summary": "Status: ready. Net delta 0. Growth areas: 0, decline: 0, stable: 5.",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 14:58 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
       "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
     },
     "insights": [],
@@ -24,18 +23,18 @@
       "axes": {
         "coverage": {
           "pct": null,
-          "note": "0/0 measured snapshots (≥2 required)."
+          "note": "2/2 measured snapshots (≥2 required)."
         },
         "activation": "Engine executed in-process and produced this artifact.",
         "confidence": {
-          "band": null,
+          "band": "Moderate",
           "note": "Confidence rises with the number of measured snapshots over time."
         }
       },
       "sections": [
         {
           "key": "executive_summary",
-          "text": "Promotion readiness requires at least two measured snapshots over time; Sarah Johnson currently has 0.",
+          "text": "Sarah Johnson has 2 measured snapshots; net movement is 0 (stable).",
           "type": "narrative",
           "title": "Executive Summary"
         },
@@ -47,33 +46,56 @@
         },
         {
           "key": "assessment_summary",
-          "text": "Status: insufficient_history — trend cannot be computed from a single snapshot.",
+          "text": "Status: ready. Net delta 0. Growth areas: 0, decline: 0, stable: 5.",
           "type": "narrative",
           "title": "Assessment Summary"
         },
         {
           "key": "visualizations",
-          "text": "Insufficient validated data to populate this section yet.\n\nWhy: Fewer than two measured EI snapshots exist, so no trajectory can be computed.\nHow to populate it: Re-assess over time so a second measured snapshot is captured (persistEiProfile).\nWhat is needed: At least two measured snapshots in ei_profile_snapshots.\nExpected output once available: A net-delta trend per dimension with a ready/insufficient verdict.",
-          "type": "narrative",
+          "type": "chart",
           "title": "Visualizations",
-          "callout": "honest"
+          "resolved_data": {
+            "labels": [
+              "Communication Readiness",
+              "Future Readiness",
+              "Leadership Readiness",
+              "Problem-Solving Readiness",
+              "Workplace Readiness"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              }
+            ]
+          },
+          "visualization": {
+            "title": "Net change by dimension",
+            "chart_type": "bar",
+            "data_source": "employability"
+          }
         },
         {
           "key": "interpretation",
-          "text": "A trajectory needs at least two measured points in time. With one snapshot the platform reports insufficient history rather than inferring a trend.",
+          "text": "Promotion readiness is a longitudinal signal: it measures sustained movement across dimensions between measured snapshots, not a single score. Positive net delta with broad growth areas indicates upward trajectory.",
           "type": "narrative",
           "title": "Interpretation"
         },
         {
           "key": "recommendations",
-          "text": "Insufficient validated data to populate this section yet.\n\nWhy: Fewer than two measured EI snapshots exist, so no trajectory can be computed.\nHow to populate it: Re-assess over time so a second measured snapshot is captured (persistEiProfile).\nWhat is needed: At least two measured snapshots in ei_profile_snapshots.\nExpected output once available: A net-delta trend per dimension with a ready/insufficient verdict.",
+          "text": "No specific recommendations have been derived from the current measured inputs. Recommendations will appear once additional assessment evidence is captured.",
           "type": "narrative",
           "title": "Recommendations",
           "callout": "honest"
         },
         {
           "key": "confidence_level",
-          "text": "Confidence not applicable — insufficient history.",
+          "text": "Confidence: Moderate — based on measured snapshots; rises as more are captured.",
           "type": "narrative",
           "title": "Confidence Level"
         },
@@ -85,7 +107,7 @@
         },
         {
           "key": "generated_timestamp",
-          "text": "This report was generated on 25 June 2026 at 11:39 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "text": "This report was generated on 25 June 2026 at 14:58 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
           "type": "narrative",
           "title": "Generated Timestamp"
         }
@@ -93,15 +115,10 @@
       "data_flow": "progression-engine.buildProgression → ei_profile_snapshots over time (net delta between measured snapshots)."
     },
     "metadata": {
-      "measurable": false,
+      "measurable": true,
       "role_title": "Senior Product Manager",
       "data_source": "progression-engine.buildProgression → ei_profile_snapshots over time (net delta between measured snapshots).",
-      "honest_state": {
-        "why": "Fewer than two measured EI snapshots exist, so no trajectory can be computed.",
-        "needed": "At least two measured snapshots in ei_profile_snapshots.",
-        "expected": "A net-delta trend per dimension with a ready/insufficient verdict.",
-        "workflow": "Re-assess over time so a second measured snapshot is captured (persistEiProfile)."
-      },
+      "honest_state": null,
       "pack_version": "1.0.0"
     }
   }

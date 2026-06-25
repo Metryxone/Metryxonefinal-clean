@@ -1,6 +1,6 @@
 ﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
-"7ce4c978-1628-45e4-9bb3-e1025089b446","executive_summary","executive_summary","narrative","Sarah Johnson (Senior Product Manager) has completed an enterprise competency assessment across 5 capability domains. The overall competency score is 77/100 (level 4). Employability Index stands at 81.2/100 (Excellent). Top strength: Communication Readiness (84). Match to Senior Product Manager is 77.4%.",,,,,,
-"7ce4c978-1628-45e4-9bb3-e1025089b446","executive_summary","candidate_information","narrative","Name: Sarah Johnson
+"e6fb5e5e-bb45-46e6-9354-1c4574e996aa","executive_summary","executive_summary","narrative","Sarah Johnson (Senior Product Manager) has completed an enterprise competency assessment across 5 capability domains. The overall competency score is 77/100 (level 4). Employability Index stands at 81.2/100 (Excellent). Top strength: Communication Readiness (84). Most material development gap: Agile Collaboration. Match to Senior Product Manager is 77.4%.",,,,,,
+"e6fb5e5e-bb45-46e6-9354-1c4574e996aa","executive_summary","candidate_information","narrative","Name: Sarah Johnson
 Reference (masked): user_4286d980cc6c
 Current role: Senior Product Manager
 Target role: Director of Product
@@ -10,17 +10,17 @@ Education: MBA
 Location: Bangalore, India
 
 Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
-"7ce4c978-1628-45e4-9bb3-e1025089b446","executive_summary","assessment_summary","narrative","Headline metrics — Competency Score: 77; Employability Index: 81.2; EI Composite: 81.2; Role Match %: 77.4.",,,,,,
-"7ce4c978-1628-45e4-9bb3-e1025089b446","executive_summary","visualizations","chart_datapoint","Competency Score",,"Competency Score","77",,,
-"7ce4c978-1628-45e4-9bb3-e1025089b446","executive_summary","visualizations","chart_datapoint","Employability Index",,"Employability Index","81.2",,,
-"7ce4c978-1628-45e4-9bb3-e1025089b446","executive_summary","visualizations","chart_datapoint","EI Composite",,"EI Composite","81.2",,,
-"7ce4c978-1628-45e4-9bb3-e1025089b446","executive_summary","visualizations","chart_datapoint","Role Match %",,"Role Match %","77.4",,,
-"7ce4c978-1628-45e4-9bb3-e1025089b446","executive_summary","interpretation","narrative","This summary consolidates the candidate’s strongest evidence across competency, employability and role-fit lenses. Each headline metric is explored in its dedicated report; figures are developmental signals, not hiring or promotion decisions.",,,,,,
-"7ce4c978-1628-45e4-9bb3-e1025089b446","executive_summary","recommendations","insight","Target role: GenAI Engineer","info",,,,,
-"7ce4c978-1628-45e4-9bb3-e1025089b446","executive_summary","recommendations","insight","Consider the research industry","info",,,,,
-"7ce4c978-1628-45e4-9bb3-e1025089b446","executive_summary","recommendations","insight","Consider the data function","info",,,,,
-"7ce4c978-1628-45e4-9bb3-e1025089b446","executive_summary","confidence_level","narrative","Overall confidence: Provisional. Domain-proxy scoring (aggregate domain level, not per-competency). Confidence rises to High once a competency-tagged assessment is scored. Coverage, Confidence and Activation are reported as separate axes and are never combined into a single figure.",,,,,,
-"7ce4c978-1628-45e4-9bb3-e1025089b446","executive_summary","data_source","narrative","Composed from competency-runtime (getProfile), ei-profile-engine, employability-scoring-engine, career-gap-engine, employer-competency-hiring (match) and career-recommendation-aggregator.",,,,,,
-"7ce4c978-1628-45e4-9bb3-e1025089b446","executive_summary","generated_timestamp","narrative","This report was generated on 25 June 2026 at 11:39 UTC.
+"e6fb5e5e-bb45-46e6-9354-1c4574e996aa","executive_summary","assessment_summary","narrative","Headline metrics — Competency Score: 77; Employability Index: 81.2; EI Composite: 81.2; Role Match %: 77.4.",,,,,,
+"e6fb5e5e-bb45-46e6-9354-1c4574e996aa","executive_summary","visualizations","chart_datapoint","Competency Score",,"Competency Score","77",,,
+"e6fb5e5e-bb45-46e6-9354-1c4574e996aa","executive_summary","visualizations","chart_datapoint","Employability Index",,"Employability Index","81.2",,,
+"e6fb5e5e-bb45-46e6-9354-1c4574e996aa","executive_summary","visualizations","chart_datapoint","EI Composite",,"EI Composite","81.2",,,
+"e6fb5e5e-bb45-46e6-9354-1c4574e996aa","executive_summary","visualizations","chart_datapoint","Role Match %",,"Role Match %","77.4",,,
+"e6fb5e5e-bb45-46e6-9354-1c4574e996aa","executive_summary","interpretation","narrative","This summary consolidates the candidate’s strongest evidence across competency, employability and role-fit lenses. Each headline metric is explored in its dedicated report; figures are developmental signals, not hiring or promotion decisions.",,,,,,
+"e6fb5e5e-bb45-46e6-9354-1c4574e996aa","executive_summary","recommendations","insight","Target role: AI Product Manager","info",,,,,
+"e6fb5e5e-bb45-46e6-9354-1c4574e996aa","executive_summary","recommendations","insight","Advance from a Advanced readiness base","info",,,,,
+"e6fb5e5e-bb45-46e6-9354-1c4574e996aa","executive_summary","recommendations","insight","Consider the research industry","info",,,,,
+"e6fb5e5e-bb45-46e6-9354-1c4574e996aa","executive_summary","confidence_level","narrative","Overall confidence: Provisional. Domain-proxy scoring (aggregate domain level, not per-competency). Confidence rises to High once a competency-tagged assessment is scored. Coverage, Confidence and Activation are reported as separate axes and are never combined into a single figure.",,,,,,
+"e6fb5e5e-bb45-46e6-9354-1c4574e996aa","executive_summary","data_source","narrative","Composed from competency-runtime (getProfile), ei-profile-engine, employability-scoring-engine, career-gap-engine, employer-competency-hiring (match) and career-recommendation-aggregator.",,,,,,
+"e6fb5e5e-bb45-46e6-9354-1c4574e996aa","executive_summary","generated_timestamp","narrative","This report was generated on 25 June 2026 at 14:58 UTC.
 
 Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

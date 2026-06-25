@@ -1,6 +1,6 @@
 # Career Builder Validation
 
-_MX-301B — Career Intelligence Activation · generated 2026-06-25T14:20:22.510Z_
+_MX-301B — Career Intelligence Activation · generated 2026-06-25T15:09:47.526Z_
 
 **Demonstration candidate:** `user_4286d980cc6cc038` (PII-masked).
 **Assessment input (the data each engine must receive):** `onto_competency_score_runs`=1 (precise ledger), `onto_competency_profiles`=1 (domain-proxy ledger), profile completeness=85%. A real assessment exists — so every downstream engine HAS data to receive.

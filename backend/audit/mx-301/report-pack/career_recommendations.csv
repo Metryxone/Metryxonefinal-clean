@@ -1,6 +1,6 @@
 ﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
-"46c24012-b456-41d2-a8c4-cfbe87c14946","career_recommendations","executive_summary","narrative","4 recommendations are available for Sarah Johnson, 0 personalized to their profile.",,,,,,
-"46c24012-b456-41d2-a8c4-cfbe87c14946","career_recommendations","candidate_information","narrative","Name: Sarah Johnson
+"91a5fa7b-532e-45a0-ba50-73aaaa1b8b80","career_recommendations","executive_summary","narrative","6 recommendations are available for Sarah Johnson, 6 personalized to their profile.",,,,,,
+"91a5fa7b-532e-45a0-ba50-73aaaa1b8b80","career_recommendations","candidate_information","narrative","Name: Sarah Johnson
 Reference (masked): user_4286d980cc6c
 Current role: Senior Product Manager
 Target role: Director of Product
@@ -10,15 +10,17 @@ Education: MBA
 Location: Bangalore, India
 
 Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
-"46c24012-b456-41d2-a8c4-cfbe87c14946","career_recommendations","assessment_summary","narrative","Recommendations span 4 type(s). Top item: Target role: GenAI Engineer.",,,,,,
-"46c24012-b456-41d2-a8c4-cfbe87c14946","career_recommendations","visualizations","narrative","No chartable measured data points are available for this report yet; the metrics above summarise everything currently measured.",,,,,,
-"46c24012-b456-41d2-a8c4-cfbe87c14946","career_recommendations","interpretation","narrative","Recommendations are derived developmental suggestions ranked by relevance. Personalized items consume the candidate’s own profile; catalog items are general and flagged as provisional. None are directives.",,,,,,
-"46c24012-b456-41d2-a8c4-cfbe87c14946","career_recommendations","recommendations","insight","Target role: GenAI Engineer — A strong current market signal (demand and growth) for GenAI Engineer in the data function. (general)","info",,,,,
-"46c24012-b456-41d2-a8c4-cfbe87c14946","career_recommendations","recommendations","insight","Consider the research industry — The research industry shows strong aggregate role demand and growth in the catalog. (general)","info",,,,,
-"46c24012-b456-41d2-a8c4-cfbe87c14946","career_recommendations","recommendations","insight","Consider the data function — The data function shows strong aggregate demand and growth across catalog roles. (general)","info",,,,,
-"46c24012-b456-41d2-a8c4-cfbe87c14946","career_recommendations","recommendations","insight","Future-resilient role: GenAI Engineer — GenAI Engineer combines high projected growth with lower automation exposure — a more future-resilient target. (general)","info",,,,,
-"46c24012-b456-41d2-a8c4-cfbe87c14946","career_recommendations","confidence_level","narrative","Confidence varies per recommendation; personalized items inherit the chain confidence, catalog items are Provisional.",,,,,,
-"46c24012-b456-41d2-a8c4-cfbe87c14946","career_recommendations","data_source","narrative","career-recommendation-aggregator.buildCareerRecommendations → composed from competency, gap and market signals.",,,,,,
-"46c24012-b456-41d2-a8c4-cfbe87c14946","career_recommendations","generated_timestamp","narrative","This report was generated on 25 June 2026 at 11:39 UTC.
+"91a5fa7b-532e-45a0-ba50-73aaaa1b8b80","career_recommendations","assessment_summary","narrative","Recommendations span 6 type(s). Top item: Target role: AI Product Manager.",,,,,,
+"91a5fa7b-532e-45a0-ba50-73aaaa1b8b80","career_recommendations","visualizations","narrative","No chartable measured data points are available for this report yet; the metrics above summarise everything currently measured.",,,,,,
+"91a5fa7b-532e-45a0-ba50-73aaaa1b8b80","career_recommendations","interpretation","narrative","Recommendations are derived developmental suggestions ranked by relevance. Personalized items consume the candidate’s own profile; catalog items are general and flagged as provisional. None are directives.",,,,,,
+"91a5fa7b-532e-45a0-ba50-73aaaa1b8b80","career_recommendations","recommendations","insight","Target role: AI Product Manager — A strong current market signal (demand and growth) for AI Product Manager in the product function.","info",,,,,
+"91a5fa7b-532e-45a0-ba50-73aaaa1b8b80","career_recommendations","recommendations","insight","Advance from a Advanced readiness base — Your present-state readiness is at the Advanced band. Consolidating Cognitive Development is the highest-leverage next move on your current track.","info",,,,,
+"91a5fa7b-532e-45a0-ba50-73aaaa1b8b80","career_recommendations","recommendations","insight","Consider the research industry — The research industry shows strong aggregate role demand and growth in the catalog. (general)","info",,,,,
+"91a5fa7b-532e-45a0-ba50-73aaaa1b8b80","career_recommendations","recommendations","insight","Consider the data function — The data function shows strong aggregate demand and growth across catalog roles. (general)","info",,,,,
+"91a5fa7b-532e-45a0-ba50-73aaaa1b8b80","career_recommendations","recommendations","insight","Future-resilient role: GenAI Engineer — GenAI Engineer combines high projected growth with lower automation exposure — a more future-resilient target. (general)","info",,,,,
+"91a5fa7b-532e-45a0-ba50-73aaaa1b8b80","career_recommendations","recommendations","insight","Alternative direction: GenAI Engineer — GenAI Engineer sits in the data function — a different direction from your current track, with healthy market signal. (general)","info",,,,,
+"91a5fa7b-532e-45a0-ba50-73aaaa1b8b80","career_recommendations","confidence_level","narrative","Confidence varies per recommendation; personalized items inherit the chain confidence, catalog items are Provisional.",,,,,,
+"91a5fa7b-532e-45a0-ba50-73aaaa1b8b80","career_recommendations","data_source","narrative","career-recommendation-aggregator.buildCareerRecommendations → composed from competency, gap and market signals.",,,,,,
+"91a5fa7b-532e-45a0-ba50-73aaaa1b8b80","career_recommendations","generated_timestamp","narrative","This report was generated on 25 June 2026 at 14:58 UTC.
 
 Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

@@ -323,6 +323,54 @@ function inspectPayload(json: any): PayloadVerdict {
         };
   }
 
+  // ── Career-gap envelope shape — the candidate's measured per-competency actual
+  // levels live under buckets.<type>.items[].actual_level + summary.most_material
+  // (a nested structure, NOT a flat `gaps` array the generic detector recognises).
+  // Honesty gate: a finite actual_level must be present, else it is honest no-data.
+  if (
+    d.buckets && typeof d.buckets === 'object' &&
+    d.summary && typeof d.summary === 'object' &&
+    ('total_gaps' in d.summary || 'most_material' in d.summary)
+  ) {
+    const actuals: number[] = [];
+    const mm: any = d.summary.most_material;
+    if (mm && Number.isFinite(Number(mm.actual_level))) actuals.push(Number(mm.actual_level));
+    for (const b of Object.values(d.buckets) as any[]) {
+      for (const it of (Array.isArray(b?.items) ? b.items : [])) {
+        if (Number.isFinite(Number(it?.actual_level))) actuals.push(Number(it.actual_level));
+      }
+    }
+    signals.push(`total_gaps=${d.summary.total_gaps ?? 0} classified_pct=${d.summary.classified_pct ?? 0}`);
+    if (mm?.competency_name) signals.push(`most_material=${mm.competency_name} actual=${mm.actual_level}/req=${mm.required_level}`);
+    if (actuals.length > 0) {
+      return {
+        measurable,
+        usable: true,
+        reason: "candidate's derived per-competency actual levels flow into the role-gap comparison",
+        signals,
+      };
+    }
+    return {
+      measurable,
+      usable: false,
+      reason: 'gap envelope resolved but no per-competency actual level is present (no role requirement resolved, or actuals all null)',
+      signals,
+    };
+  }
+
+  // ── Career-gap prioritization shape — ranked items + now/next/later bands.
+  if (
+    Array.isArray(d.items) && d.bands && typeof d.bands === 'object' &&
+    ('now' in d.bands || 'next' in d.bands || 'later' in d.bands)
+  ) {
+    const hasGaps = d.items.some((it: any) => Number.isFinite(Number(it?.gap)));
+    signals.push(`items[${d.items.length}] now=${d.bands.now ?? 0} next=${d.bands.next ?? 0} later=${d.bands.later ?? 0}`);
+    if (d.items[0]) signals.push(`top=${d.items[0].competency_name ?? d.items[0].competency_id} priority=${d.items[0].priority_score}`);
+    return measurable !== false && d.items.length > 0 && hasGaps
+      ? { measurable, usable: true, reason: "deterministic prioritization over the candidate's measured gaps", signals }
+      : { measurable, usable: false, reason: 'no measurable gaps to prioritise for this candidate', signals };
+  }
+
   // ── Generic composed engines (readiness / gap / roadmap / learning / intelligence).
   const overall = d.overall?.score ?? d.overall_ei ?? d.overall_score ?? null;
   if (typeof overall === 'number' && Number.isFinite(overall) && overall !== 0) {
@@ -710,22 +758,35 @@ async function main() {
   summary.push('## Root-cause of the non-RECEIVED engines (honest, not failures)');
   summary.push('');
   summary.push(
-    '- **Precise-competency consumers** (Skill Gap, Employer Match, and therefore Learning Roadmap, ' +
-      'which is downstream of the gap/roadmap) receive the candidate reference and resolve the role ' +
-      'requirements, but the assessment ledger carries **domain-proxy / EI** data — not the precise ' +
-      'per-competency (`comp_*`) levels these engines compare against — so they honestly report ' +
-      'no gaps / 100% gap / 0 match rather than fabricate. This is the documented precise⟂domain-proxy ' +
-      'ledger split, not a wiring break.',
+    '- **Developmental chain RECEIVES the assessment** (Career Readiness, Skill Gap + prioritization, ' +
+      'Promotion roadmap/signal, Learning Roadmap, Employability Index): once the role anchor resolves, ' +
+      'these engines DERIVE per-competency actual levels from the candidate\'s domain-proxy / EI ledger ' +
+      'and surface real measured gaps (e.g. Agile Collaboration actual=3 vs required=4) — developmental ' +
+      'signals only, never hiring predictions.',
   );
-  summary.push(
-    '- **Career Passport** is wired but UNSYNCED — it requires an explicit `POST /api/passport/sync` ' +
-      'to pull the assessment snapshot into its sections.',
-  );
-  summary.push(
-    '- **Interview Readiness** is operator-interview-input driven (arithmetic over panelist-entered ' +
-      'scores); it does not consume the competency assessment ledger, and no interview scores exist ' +
-      'for this candidate.',
-  );
+  const isWired = (frag: string) => wired.some((w) => w.engine.toLowerCase().includes(frag.toLowerCase()));
+  if (isWired('talent matching') || isWired('Employer Match')) {
+    summary.push(
+      '- **Employer Match (talent matching) — honest precise-competency ceiling**: the hiring-facing ' +
+        'matcher compares against precise per-competency (`comp_*`) levels by design, and the candidate\'s ' +
+        'assessment carries domain-proxy / EI data, not those precise levels (`evidence_mix.measured=0`). ' +
+        'It therefore reports 0 match / 0 confidence rather than fabricate — the documented precise⟂domain-proxy ' +
+        'ledger split, not a wiring break.',
+    );
+  }
+  if (isWired('Passport')) {
+    summary.push(
+      '- **Career Passport** is wired but UNSYNCED — it requires an explicit `POST /api/passport/sync` ' +
+        'to pull the assessment snapshot into its sections.',
+    );
+  }
+  if (isWired('Interview')) {
+    summary.push(
+      '- **Interview Readiness** is operator-interview-input driven (arithmetic over panelist-entered ' +
+        'scores); it does not consume the competency assessment ledger, and no interview scores exist ' +
+        'for this candidate.',
+    );
+  }
   if (gated.length) {
     summary.push(
       '- **Career Builder** is flag-gated OFF (503) — honestly NOT activated.',
@@ -747,10 +808,18 @@ async function main() {
   for (const f of files) summary.push(`- \`backend/audit/mx-301b/${f.name}\` — ${f.title}`);
   summary.push('');
   summary.push('---');
+  const deps: string[] = [];
+  if (isWired('talent matching') || isWired('Employer Match')) deps.push('the precise-competency match');
+  if (isWired('Passport')) deps.push('passport sync');
+  if (isWired('Interview')) deps.push('interview input');
+  if (gated.length) deps.push('the flag-gated Career Builder');
+  const depList = deps.length > 1 ? deps.slice(0, -1).join(', ') + ' and ' + deps[deps.length - 1] : deps[0] ?? '';
+  const depSentence = deps.length
+    ? `${depList} ${deps.length === 1 ? 'is an honest, named dependency' : 'are honest, named dependencies'} — never fabricated. `
+    : 'every other surface is honestly RECEIVED or genuinely flag-gated — never fabricated. ';
   summary.push(
     `_Verdict: ${broken.length === 0 ? 'no engine is broken — every wired, activated engine is reachable and consumes the candidate reference. ' : `${broken.length} engine(s) BROKEN. `}` +
-      `The EI/domain-proxy chain RECEIVES measured data; the precise-competency chain, passport sync, ` +
-      `interview input, and the flag-gated Career Builder are honest, named dependencies — never fabricated. ` +
+      `The EI/domain-proxy chain RECEIVES measured data; ${depSentence}` +
       `Read-only, additive, PII-masked. NO DEPLOY._`,
   );
   summary.push('');

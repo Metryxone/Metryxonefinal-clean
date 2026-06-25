@@ -1,6 +1,6 @@
 ﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
-"332b3559-b65d-4580-8fe4-9914712ea361","role_readiness","executive_summary","narrative","Role readiness for Senior Product Manager cannot be measured: the resolved role title does not map to a profiled role with stored competency requirements.",,,,,,
-"332b3559-b65d-4580-8fe4-9914712ea361","role_readiness","candidate_information","narrative","Name: Sarah Johnson
+"640e7a15-d126-40ed-bef7-dd009b099394","role_readiness","executive_summary","narrative","Sarah Johnson's readiness for Product Manager is 95/100 (ready).",,,,,,
+"640e7a15-d126-40ed-bef7-dd009b099394","role_readiness","candidate_information","narrative","Name: Sarah Johnson
 Reference (masked): user_4286d980cc6c
 Current role: Senior Product Manager
 Target role: Director of Product
@@ -10,22 +10,12 @@ Education: MBA
 Location: Bangalore, India
 
 Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
-"332b3559-b65d-4580-8fe4-9914712ea361","role_readiness","assessment_summary","narrative","No readiness score is available because the role lacks a stored requirement profile on this path.",,,,,,
-"332b3559-b65d-4580-8fe4-9914712ea361","role_readiness","visualizations","narrative","Insufficient validated data to populate this section yet.
-
-Why: ""Senior Product Manager"" does not resolve to a profiled role with stored competency requirements on the Role-Readiness path.
-How to populate it: Map the target role to a profiled onto_role with stored requirement levels (Role DNA governance).
-What is needed: A role profile with required competency levels for the target role.
-Expected output once available: A readiness score with per-competency gaps, fit band, and critical/blocking gap counts.",,,,,,
-"332b3559-b65d-4580-8fe4-9914712ea361","role_readiness","interpretation","narrative","The employer competency match report reaches role requirements via a different path (generateRoleDNA over the genome) and does compute a match — the divergence is a real platform finding, surfaced honestly rather than estimated here.",,,,,,
-"332b3559-b65d-4580-8fe4-9914712ea361","role_readiness","recommendations","narrative","Insufficient validated data to populate this section yet.
-
-Why: ""Senior Product Manager"" does not resolve to a profiled role with stored competency requirements on the Role-Readiness path.
-How to populate it: Map the target role to a profiled onto_role with stored requirement levels (Role DNA governance).
-What is needed: A role profile with required competency levels for the target role.
-Expected output once available: A readiness score with per-competency gaps, fit band, and critical/blocking gap counts.",,,,,,
-"332b3559-b65d-4580-8fe4-9914712ea361","role_readiness","confidence_level","narrative","Confidence not applicable — role requirements unmapped on this path.",,,,,,
-"332b3559-b65d-4580-8fe4-9914712ea361","role_readiness","data_source","narrative","role-readiness-v2.computeRoleReadinessV2 → resolved role profile vs candidate competency scores.",,,,,,
-"332b3559-b65d-4580-8fe4-9914712ea361","role_readiness","generated_timestamp","narrative","This report was generated on 25 June 2026 at 11:39 UTC.
+"640e7a15-d126-40ed-bef7-dd009b099394","role_readiness","assessment_summary","narrative","Readiness 95/100, fit band partial, 1 critical gap(s), 1 blocking.",,,,,,
+"640e7a15-d126-40ed-bef7-dd009b099394","role_readiness","visualizations","chart_datapoint","Agile Collaboration",,"Agile Collaboration","1",,,
+"640e7a15-d126-40ed-bef7-dd009b099394","role_readiness","interpretation","narrative","Readiness compares measured capability to the role’s required competency levels. Critical and blocking gaps cap readiness regardless of average score. This is a developmental signal, not a hiring or promotion decision.",,,,,,
+"640e7a15-d126-40ed-bef7-dd009b099394","role_readiness","recommendations","insight","Close gap in Agile Collaboration (need level 4, currently 3).","warning",,,,,
+"640e7a15-d126-40ed-bef7-dd009b099394","role_readiness","confidence_level","narrative","Confidence: Moderate — measured against the resolved role profile.",,,,,,
+"640e7a15-d126-40ed-bef7-dd009b099394","role_readiness","data_source","narrative","role-readiness-v2.computeRoleReadinessV2 → resolved role profile vs candidate competency scores.",,,,,,
+"640e7a15-d126-40ed-bef7-dd009b099394","role_readiness","generated_timestamp","narrative","This report was generated on 25 June 2026 at 14:58 UTC.
 
 Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

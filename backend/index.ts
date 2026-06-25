@@ -12,6 +12,7 @@ import { registerImageRoutes } from "./replit_integrations/image";
 import { storage, pool } from "./storage";
 import { initWebSocketServer } from "./services/ws-broadcast";
 import { runRoleLibraryExpansion } from "./services/role-library-expansion";
+import { runRoleBridgeActivation } from "./services/role-bridge-activation";
 
 // ── Fail-fast: SESSION_SECRET must be set in production ─────────────────────
 if (process.env.NODE_ENV === 'production' && !process.env.SESSION_SECRET) {
@@ -176,6 +177,28 @@ app.use((req, res, next) => {
     }
   } catch (e) {
     console.error("Failed to seed role library expansion:", e);
+  }
+
+  // Backend / Senior Backend Engineer Role-DNA activation (Task #145) —
+  // self-running, idempotent seed so the bridge link, authored questions, and
+  // blueprint wiring (which let the employer match score those roles PRECISELY)
+  // exist in EVERY environment, including production on publish. A merged
+  // task-agent data backfill only writes to the isolated env DB, so the rows must
+  // be (re)seeded at boot. Every write is additive + ON CONFLICT / NOT EXISTS;
+  // re-runs no-op via the fast-path probe.
+  try {
+    const r = await runRoleBridgeActivation(pool);
+    if (r.noop) {
+      log("Role bridge activation already present, nothing seeded", "seed");
+    } else {
+      log(
+        `Role bridge activation seeded (library_roles +${r.library_roles_inserted}, bridge ${r.bridge_rows_set}/${r.bridge_rows_skipped} skipped, templates +${r.templates_upserted}, question_map +${r.question_map_rows}, blueprints +${r.blueprints_created}, blueprint_comps +${r.blueprint_comp_rows}, dna_comps_no_q=${r.dna_comps_without_questions})`,
+        "seed",
+      );
+      if (r.notes.length) log(`Role bridge activation notes: ${r.notes.join(" | ")}`, "seed");
+    }
+  } catch (e) {
+    console.error("Failed to seed role bridge activation:", e);
   }
 
   // ✅ 4) Error handler (keep after routes)

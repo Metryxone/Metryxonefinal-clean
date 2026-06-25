@@ -3,6 +3,7 @@ import { computeBenchmarkForReport } from './benchmark-engine';
 import { resolveVizData } from './viz-data-resolver';
 import { resolveUnifiedCompetencyProfile } from './competency-intelligence-contracts';
 import { isCompetencyRuntimeEnabled } from '../config/feature-flags.js';
+import { NOT_ON_PRECISE_SCALE } from '../routes/competency-assessment-runtime.js';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -868,6 +869,14 @@ export async function generateReport(pool: Pool, params: GenerateReportParams) {
             hasPrecise: precise.length > 0,
             precise,
             domains,
+            // Task #166 — mirror the in-app honest footnote (Task #160) in the
+            // generated/downloadable report: competencies measured in the broader
+            // assessment that have no genuine genome equivalent yet, so the precise
+            // section doesn't look like data silently vanished. Derived from the
+            // SAME crosswalk gap as GET /api/competency/precise-scores — never
+            // fabricated, never given a score.
+            notOnPreciseScale: NOT_ON_PRECISE_SCALE,
+            notOnPreciseScaleCount: NOT_ON_PRECISE_SCALE.length,
             note: precise.length > 0
               ? 'Measured directly per competency from the latest competency-tagged assessment — more granular than the domain-level (proxy) scores. Only measured competencies are shown.'
               : 'No precise per-competency scores yet — domain-level (proxy) scores apply. Precise scores appear once a competency-tagged assessment is scored.',

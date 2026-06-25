@@ -217,6 +217,25 @@ export function renderReportToPDF(report: Record<string, unknown>, wl?: WhiteLab
             doc.fontSize(9).fillColor('#9ca3af').text('No competency scores available.', 60, doc.y, { width: pageW });
             doc.moveDown(0.5);
           }
+          // Task #166 — mirror the in-app honest footnote (Task #160): name the
+          // competencies measured in the broader assessment that aren't yet on
+          // the precise scale, so the exported report doesn't look like results
+          // silently vanished. Names only, never a fabricated score.
+          const notOnScale = (s.notOnPreciseScale as any[]) ?? [];
+          if (notOnScale.length) {
+            if (doc.y > 700) doc.addPage();
+            doc.moveDown(0.2);
+            doc.fontSize(9).fillColor('#b45309')
+               .text(`${notOnScale.length} of your competencies aren't on the precise scale yet`, 60, doc.y, { width: pageW });
+            doc.moveDown(0.2);
+            doc.fontSize(8).fillColor('#92400e').text(
+              "These were measured in your broader assessment, but there isn't a genuine matching competency in our genome yet, so we don't show a precise score rather than fabricate one:",
+              60, doc.y, { width: pageW, lineGap: 2 });
+            doc.moveDown(0.2);
+            const names = notOnScale.map((c) => String(c.name ?? c.code ?? '')).filter(Boolean).join(', ');
+            doc.fontSize(9).fillColor('#374151').text(names, 72, doc.y, { width: pageW - 12 });
+            doc.moveDown(0.4);
+          }
           hr();
           break;
         }

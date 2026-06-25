@@ -203,7 +203,7 @@ const CRA_CODE_TO_COMP: Record<string, string> = {
 // COM01 (Verbal Communication), LEA05 (Change Leadership), TEC02 (Digital
 // Fluency). Surfaced to the candidate as an honest note so the 17/20 precise
 // section never looks like data is missing or broken.
-const NOT_ON_PRECISE_SCALE: Array<{ code: string; name: string; domainName: string }> =
+export const NOT_ON_PRECISE_SCALE: Array<{ code: string; name: string; domainName: string }> =
   Object.entries(COMPETENCY_META)
     .filter(([code]) => !(code in CRA_CODE_TO_COMP))
     .map(([code, meta]) => ({ code, name: meta.name, domainName: meta.domainName }));

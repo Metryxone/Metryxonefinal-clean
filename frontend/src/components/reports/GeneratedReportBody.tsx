@@ -35,6 +35,7 @@ function Pill({ label, color }: { label: string; color?: string }) {
 export function PreciseCompetencySection({ section }: { section: any }) {
   const precise: any[] = Array.isArray(section?.precise) ? section.precise : [];
   const domains: any[] = Array.isArray(section?.domains) ? section.domains : [];
+  const notOnPreciseScale: any[] = Array.isArray(section?.notOnPreciseScale) ? section.notOnPreciseScale : [];
   const note = String(section?.note ?? '');
 
   const ScoreRow = ({ c }: { c: any }) => {
@@ -80,6 +81,25 @@ export function PreciseCompetencySection({ section }: { section: any }) {
       )}
       {precise.length === 0 && domains.length === 0 && (
         <p className="text-xs text-gray-400">No competency scores available.</p>
+      )}
+      {notOnPreciseScale.length > 0 && (
+        <div className="mt-3 rounded-lg border border-amber-100 bg-amber-50/60 px-3 py-2.5">
+          <p className="text-[11px] font-medium text-amber-800">
+            {notOnPreciseScale.length} of your competencies aren't on the precise scale yet
+          </p>
+          <p className="text-[10px] text-amber-700/90 mt-1 leading-relaxed">
+            These were measured in your broader assessment, but there isn't a genuine matching
+            competency in our genome yet, so we don't show a precise score rather than fabricate one:
+          </p>
+          <div className="flex flex-wrap gap-1.5 mt-2">
+            {notOnPreciseScale.map((c, i) => (
+              <span key={c.code ?? i}
+                className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-white border border-amber-200 text-amber-800">
+                {c.name ?? c.code}
+              </span>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );

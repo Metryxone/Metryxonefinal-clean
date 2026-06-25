@@ -16,10 +16,10 @@
  * All scores are derived deterministically from the user's profile + the
  * shared career-intelligence functions; no estimates, no fake data.
  */
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Users, Briefcase, Target, TrendingUp, ChevronRight, Sparkles,
-  AlertCircle, Award, MapPin, Building2,
+  AlertCircle, Award, MapPin, Building2, RefreshCw,
 } from 'lucide-react';
 import {
   computeFitment, rankJobsForUser, detectCurrentRole,
@@ -142,6 +142,33 @@ export default function FitmentInsightsPanel({ profile, jobs, userId, behavior }
   }, [userId]);
 
   // ── Recruiter postings ──────────────────────────────────────────────────
+  const [postingsRetrying, setPostingsRetrying] = useState(false);
+
+  const fetchPostings = useCallback(async () => {
+    setPostingsRetrying(true);
+    try {
+      const r = await fetch('/api/career/recruiter-postings', { headers: authHeader() });
+      const d = await r.json().catch(() => ({}));
+      // A read failure (non-OK status or note: 'unavailable') is distinct
+      // from a genuinely empty list — surface it so candidates aren't told
+      // there are zero jobs when the listings simply failed to load.
+      if (!r.ok || d?.note === 'unavailable') {
+        setPostingsError(true);
+        setPostings([]);
+      } else {
+        setPostingsError(false);
+        setPostings(Array.isArray(d.postings) ? d.postings : []);
+      }
+      setPostingsLoaded(true);
+    } catch {
+      setPostingsError(true);
+      setPostings([]);
+      setPostingsLoaded(true);
+    } finally {
+      setPostingsRetrying(false);
+    }
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -149,9 +176,6 @@ export default function FitmentInsightsPanel({ profile, jobs, userId, behavior }
         const r = await fetch('/api/career/recruiter-postings', { headers: authHeader() });
         const d = await r.json().catch(() => ({}));
         if (!cancelled) {
-          // A read failure (non-OK status or note: 'unavailable') is distinct
-          // from a genuinely empty list — surface it so candidates aren't told
-          // there are zero jobs when the listings simply failed to load.
           if (!r.ok || d?.note === 'unavailable') {
             setPostingsError(true);
             setPostings([]);
@@ -400,8 +424,19 @@ export default function FitmentInsightsPanel({ profile, jobs, userId, behavior }
               <div className="space-y-2">
                 <div className="flex items-start gap-2 p-2.5 rounded-lg bg-rose-50/50 border border-rose-100">
                   <AlertCircle size={11} className="text-rose-500 shrink-0 mt-0.5" />
-                  <div className="text-[10px] text-rose-800">
-                    We couldn’t load live employer postings right now — this isn’t a sign there are no openings. Please try again in a moment.{demandSuggestions.length > 0 && ' In the meantime, here are demand-driven suggestions from the live market catalog.'}
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[10px] text-rose-800">
+                      We couldn’t load live employer postings right now — this isn’t a sign there are no openings. Please try again in a moment.{demandSuggestions.length > 0 && ' In the meantime, here are demand-driven suggestions from the live market catalog.'}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => { void fetchPostings(); }}
+                      disabled={postingsRetrying}
+                      className="mt-1.5 inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white border border-rose-200 text-[10px] font-semibold text-rose-700 hover:bg-rose-50 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                    >
+                      <RefreshCw size={10} className={postingsRetrying ? 'animate-spin' : ''} />
+                      {postingsRetrying ? 'Retrying…' : 'Try again'}
+                    </button>
                   </div>
                 </div>
                 {demandSuggestions.map((r, i) => (

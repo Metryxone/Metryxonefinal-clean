@@ -1,41 +1,48 @@
 {
   "schema_version": "1.0",
-  "exported_at": "2026-06-25T17:17:46.606Z",
+  "exported_at": "2026-06-25T17:57:57.863Z",
   "report": {
-    "uuid": "4c6b6a0a-f4ac-4faa-a6ce-d385d9d04c3b",
+    "uuid": "403abd28-8b7c-415e-b87e-08cf4f152ba3",
     "type": "competency_radar",
     "language": "en",
     "status": "complete",
-    "created_at": "2026-06-25T17:17:46.579Z",
-    "completed_at": "2026-06-25T17:17:46.579Z",
+    "created_at": "2026-06-25T17:57:57.829Z",
+    "completed_at": "2026-06-25T17:57:57.829Z",
     "narrative_texts": {
-      "data_source": "competency-runtime.computeTypeProfile → onto_competency_profiles grouped by competency type.",
-      "interpretation": "Competency-type classification is required to render the radar.",
-      "visualizations": "Insufficient validated data to populate this section yet.\n\nWhy: No measured competency-type means are available yet (competencies may be classified by type, but none carry a measured score).\nHow to populate it: Score a competency assessment whose competencies map to onto types.\nWhat is needed: Measured per-type means in computeTypeProfile buckets.\nExpected output once available: A radar of mean capability across each competency type.",
-      "recommendations": "Insufficient validated data to populate this section yet.\n\nWhy: No measured competency-type means are available yet (competencies may be classified by type, but none carry a measured score).\nHow to populate it: Score a competency assessment whose competencies map to onto types.\nWhat is needed: Measured per-type means in computeTypeProfile buckets.\nExpected output once available: A radar of mean capability across each competency type.",
-      "confidence_level": "Confidence not applicable — no measured competency-type scores yet.",
-      "executive_summary": "Sarah Johnson's competencies are classified by type, but no measured per-type means are available yet.",
-      "assessment_summary": "No competency-type means are available.",
-      "generated_timestamp": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "data_source": "competency-runtime.computeTypeProfile → onto_competency_profiles domain scores, grouped by competency type (domain-PROXY mean per type; an onto-domain with no bank code, e.g. strategic, is unmeasurable and excluded).",
+      "interpretation": "The radar contrasts capability across competency types (behavioural, cognitive, functional, technical, future-skills). Each type mean is a domain-proxy: every competency inherits the measured score of its onto-domain. A balanced shape indicates broad capability; a skewed shape highlights concentration.",
+      "confidence_level": "Derived from 100% type-classification coverage (structural; not measured scores).",
+      "executive_summary": "Sarah Johnson's capability is measured across 4 competency types (domain-proxy), classification coverage 100%.",
+      "assessment_summary": "Mean domain-proxy score by competency type — Behavioral: 80.4; Cognitive: 82; Functional: 74; Technical: 74.",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 17:57 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
       "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
     },
-    "insights": [],
+    "insights": [
+      {
+        "text": "Strongest: Cognitive (82).",
+        "severity": "positive"
+      },
+      {
+        "text": "Development priority: Technical (74).",
+        "severity": "warning"
+      }
+    ],
     "generated_content": {
       "axes": {
         "coverage": {
-          "pct": null,
-          "note": "6/6 competencies classified by type (structural only); no measured type means yet."
+          "pct": 100,
+          "note": "14/14 competencies classified by type; 4 types carry a bank-measurable domain-proxy mean."
         },
         "activation": "Engine executed in-process and produced this artifact.",
         "confidence": {
-          "band": null,
-          "note": "Confidence not applicable — no measured competency-type scores yet."
+          "band": "Moderate",
+          "note": "Derived from 100% type-classification coverage (structural; not measured scores)."
         }
       },
       "sections": [
         {
           "key": "executive_summary",
-          "text": "Sarah Johnson's competencies are classified by type, but no measured per-type means are available yet.",
+          "text": "Sarah Johnson's capability is measured across 4 competency types (domain-proxy), classification coverage 100%.",
           "type": "narrative",
           "title": "Executive Summary"
         },
@@ -47,61 +54,85 @@
         },
         {
           "key": "assessment_summary",
-          "text": "No competency-type means are available.",
+          "text": "Mean domain-proxy score by competency type — Behavioral: 80.4; Cognitive: 82; Functional: 74; Technical: 74.",
           "type": "narrative",
           "title": "Assessment Summary"
         },
         {
           "key": "visualizations",
-          "text": "Insufficient validated data to populate this section yet.\n\nWhy: No measured competency-type means are available yet (competencies may be classified by type, but none carry a measured score).\nHow to populate it: Score a competency assessment whose competencies map to onto types.\nWhat is needed: Measured per-type means in computeTypeProfile buckets.\nExpected output once available: A radar of mean capability across each competency type.",
-          "type": "narrative",
+          "type": "chart",
           "title": "Visualizations",
-          "callout": "honest"
+          "resolved_data": {
+            "labels": [
+              "Behavioral",
+              "Cognitive",
+              "Functional",
+              "Technical"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  80.4,
+                  82,
+                  74,
+                  74
+                ]
+              }
+            ]
+          },
+          "visualization": {
+            "title": "Competency type means (domain-proxy)",
+            "chart_type": "radar",
+            "data_source": "competency"
+          }
         },
         {
           "key": "interpretation",
-          "text": "Competency-type classification is required to render the radar.",
+          "text": "The radar contrasts capability across competency types (behavioural, cognitive, functional, technical, future-skills). Each type mean is a domain-proxy: every competency inherits the measured score of its onto-domain. A balanced shape indicates broad capability; a skewed shape highlights concentration.",
           "type": "narrative",
           "title": "Interpretation"
         },
         {
           "key": "recommendations",
-          "text": "Insufficient validated data to populate this section yet.\n\nWhy: No measured competency-type means are available yet (competencies may be classified by type, but none carry a measured score).\nHow to populate it: Score a competency assessment whose competencies map to onto types.\nWhat is needed: Measured per-type means in computeTypeProfile buckets.\nExpected output once available: A radar of mean capability across each competency type.",
-          "type": "narrative",
+          "type": "insight",
           "title": "Recommendations",
-          "callout": "honest"
+          "insights": [
+            {
+              "text": "Strongest: Cognitive (82).",
+              "severity": "positive"
+            },
+            {
+              "text": "Development priority: Technical (74).",
+              "severity": "warning"
+            }
+          ]
         },
         {
           "key": "confidence_level",
-          "text": "Confidence not applicable — no measured competency-type scores yet.",
+          "text": "Derived from 100% type-classification coverage (structural; not measured scores).",
           "type": "narrative",
           "title": "Confidence Level"
         },
         {
           "key": "data_source",
-          "text": "competency-runtime.computeTypeProfile → onto_competency_profiles grouped by competency type.",
+          "text": "competency-runtime.computeTypeProfile → onto_competency_profiles domain scores, grouped by competency type (domain-PROXY mean per type; an onto-domain with no bank code, e.g. strategic, is unmeasurable and excluded).",
           "type": "narrative",
           "title": "Data Source"
         },
         {
           "key": "generated_timestamp",
-          "text": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "text": "This report was generated on 25 June 2026 at 17:57 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
           "type": "narrative",
           "title": "Generated Timestamp"
         }
       ],
-      "data_flow": "competency-runtime.computeTypeProfile → onto_competency_profiles grouped by competency type."
+      "data_flow": "competency-runtime.computeTypeProfile → onto_competency_profiles domain scores, grouped by competency type (domain-PROXY mean per type; an onto-domain with no bank code, e.g. strategic, is unmeasurable and excluded)."
     },
     "metadata": {
-      "measurable": false,
+      "measurable": true,
       "role_title": "Senior Product Manager",
-      "data_source": "competency-runtime.computeTypeProfile → onto_competency_profiles grouped by competency type.",
-      "honest_state": {
-        "why": "No measured competency-type means are available yet (competencies may be classified by type, but none carry a measured score).",
-        "needed": "Measured per-type means in computeTypeProfile buckets.",
-        "expected": "A radar of mean capability across each competency type.",
-        "workflow": "Score a competency assessment whose competencies map to onto types."
-      },
+      "data_source": "competency-runtime.computeTypeProfile → onto_competency_profiles domain scores, grouped by competency type (domain-PROXY mean per type; an onto-domain with no bank code, e.g. strategic, is unmeasurable and excluded).",
+      "honest_state": null,
       "pack_version": "1.0.0"
     }
   }

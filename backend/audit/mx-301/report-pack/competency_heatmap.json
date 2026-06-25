@@ -1,41 +1,48 @@
 {
   "schema_version": "1.0",
-  "exported_at": "2026-06-25T17:17:46.624Z",
+  "exported_at": "2026-06-25T17:57:57.878Z",
   "report": {
-    "uuid": "d8adce8a-f12f-42a7-9d4d-7b916f0c9608",
+    "uuid": "176ab0b1-89e9-441c-80e1-b1cbb5f32569",
     "type": "competency_heatmap",
     "language": "en",
     "status": "complete",
-    "created_at": "2026-06-25T17:17:46.609Z",
-    "completed_at": "2026-06-25T17:17:46.609Z",
+    "created_at": "2026-06-25T17:57:57.864Z",
+    "completed_at": "2026-06-25T17:57:57.864Z",
     "narrative_texts": {
-      "data_source": "competency-runtime.computeTypeProfile → per-competency measured scores.",
-      "interpretation": "Per-competency scores are required to render the heatmap.",
-      "visualizations": "Insufficient validated data to populate this section yet.\n\nWhy: No measured per-competency scores were found.\nHow to populate it: Score a competency-tagged assessment.\nWhat is needed: Measured competencies within type buckets.\nExpected output once available: A ranked heatmap of individual competency scores.",
-      "recommendations": "Insufficient validated data to populate this section yet.\n\nWhy: No measured per-competency scores were found.\nHow to populate it: Score a competency-tagged assessment.\nWhat is needed: Measured competencies within type buckets.\nExpected output once available: A ranked heatmap of individual competency scores.",
-      "confidence_level": "Confidence not applicable — no measured competency scores yet.",
-      "executive_summary": "No individual competencies are measured for Sarah Johnson.",
-      "assessment_summary": "No per-competency scores are available.",
-      "generated_timestamp": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "data_source": "competency-runtime.computeTypeProfile → per-competency domain-PROXY scores (each competency inherits its onto-domain score; precise per-competency scoring requires onto_competency_question_map coverage).",
+      "interpretation": "The heatmap ranks individual competencies by domain-proxy score (each inherits its onto-domain measurement), giving a granular view beneath the domain and type summaries. Use it to pinpoint specific strengths and targeted development items.",
+      "confidence_level": "Derived from 100% type-classification coverage (structural; not measured scores).",
+      "executive_summary": "13 individual competencies are measured for Sarah Johnson; the heatmap surfaces the 13 highest-scoring.",
+      "assessment_summary": "Top measured competencies — Stakeholder Management: 84; Active Listening: 84; Analytical Thinking: 82; Critical Thinking: 82; Decision-Making: 82; Accountability: 78; Adaptability: 78; Ambiguity Tolerance: 78….",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 17:57 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
       "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
     },
-    "insights": [],
+    "insights": [
+      {
+        "text": "Strongest competency: Stakeholder Management (84).",
+        "severity": "positive"
+      },
+      {
+        "text": "Lowest measured: Technology Adoption (74).",
+        "severity": "warning"
+      }
+    ],
     "generated_content": {
       "axes": {
         "coverage": {
-          "pct": null,
-          "note": "0 measured competencies."
+          "pct": 100,
+          "note": "13 measured competencies."
         },
         "activation": "Engine executed in-process and produced this artifact.",
         "confidence": {
-          "band": null,
-          "note": "Confidence not applicable — no measured competency scores yet."
+          "band": "Moderate",
+          "note": "Derived from 100% type-classification coverage (structural; not measured scores)."
         }
       },
       "sections": [
         {
           "key": "executive_summary",
-          "text": "No individual competencies are measured for Sarah Johnson.",
+          "text": "13 individual competencies are measured for Sarah Johnson; the heatmap surfaces the 13 highest-scoring.",
           "type": "narrative",
           "title": "Executive Summary"
         },
@@ -47,61 +54,103 @@
         },
         {
           "key": "assessment_summary",
-          "text": "No per-competency scores are available.",
+          "text": "Top measured competencies — Stakeholder Management: 84; Active Listening: 84; Analytical Thinking: 82; Critical Thinking: 82; Decision-Making: 82; Accountability: 78; Adaptability: 78; Ambiguity Tolerance: 78….",
           "type": "narrative",
           "title": "Assessment Summary"
         },
         {
           "key": "visualizations",
-          "text": "Insufficient validated data to populate this section yet.\n\nWhy: No measured per-competency scores were found.\nHow to populate it: Score a competency-tagged assessment.\nWhat is needed: Measured competencies within type buckets.\nExpected output once available: A ranked heatmap of individual competency scores.",
-          "type": "narrative",
+          "type": "chart",
           "title": "Visualizations",
-          "callout": "honest"
+          "resolved_data": {
+            "labels": [
+              "Stakeholder Management",
+              "Active Listening",
+              "Analytical Thinking",
+              "Critical Thinking",
+              "Decision-Making",
+              "Accountability",
+              "Adaptability",
+              "Ambiguity Tolerance",
+              "Prioritization",
+              "Project Management",
+              "Time Management",
+              "Technical Competence",
+              "Technology Adoption"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  84,
+                  84,
+                  82,
+                  82,
+                  82,
+                  78,
+                  78,
+                  78,
+                  74,
+                  74,
+                  74,
+                  74,
+                  74
+                ]
+              }
+            ]
+          },
+          "visualization": {
+            "title": "Per-competency scores (top 20)",
+            "chart_type": "heatmap",
+            "data_source": "competency"
+          }
         },
         {
           "key": "interpretation",
-          "text": "Per-competency scores are required to render the heatmap.",
+          "text": "The heatmap ranks individual competencies by domain-proxy score (each inherits its onto-domain measurement), giving a granular view beneath the domain and type summaries. Use it to pinpoint specific strengths and targeted development items.",
           "type": "narrative",
           "title": "Interpretation"
         },
         {
           "key": "recommendations",
-          "text": "Insufficient validated data to populate this section yet.\n\nWhy: No measured per-competency scores were found.\nHow to populate it: Score a competency-tagged assessment.\nWhat is needed: Measured competencies within type buckets.\nExpected output once available: A ranked heatmap of individual competency scores.",
-          "type": "narrative",
+          "type": "insight",
           "title": "Recommendations",
-          "callout": "honest"
+          "insights": [
+            {
+              "text": "Strongest competency: Stakeholder Management (84).",
+              "severity": "positive"
+            },
+            {
+              "text": "Lowest measured: Technology Adoption (74).",
+              "severity": "warning"
+            }
+          ]
         },
         {
           "key": "confidence_level",
-          "text": "Confidence not applicable — no measured competency scores yet.",
+          "text": "Derived from 100% type-classification coverage (structural; not measured scores).",
           "type": "narrative",
           "title": "Confidence Level"
         },
         {
           "key": "data_source",
-          "text": "competency-runtime.computeTypeProfile → per-competency measured scores.",
+          "text": "competency-runtime.computeTypeProfile → per-competency domain-PROXY scores (each competency inherits its onto-domain score; precise per-competency scoring requires onto_competency_question_map coverage).",
           "type": "narrative",
           "title": "Data Source"
         },
         {
           "key": "generated_timestamp",
-          "text": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "text": "This report was generated on 25 June 2026 at 17:57 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
           "type": "narrative",
           "title": "Generated Timestamp"
         }
       ],
-      "data_flow": "competency-runtime.computeTypeProfile → per-competency measured scores."
+      "data_flow": "competency-runtime.computeTypeProfile → per-competency domain-PROXY scores (each competency inherits its onto-domain score; precise per-competency scoring requires onto_competency_question_map coverage)."
     },
     "metadata": {
-      "measurable": false,
+      "measurable": true,
       "role_title": "Senior Product Manager",
-      "data_source": "competency-runtime.computeTypeProfile → per-competency measured scores.",
-      "honest_state": {
-        "why": "No measured per-competency scores were found.",
-        "needed": "Measured competencies within type buckets.",
-        "expected": "A ranked heatmap of individual competency scores.",
-        "workflow": "Score a competency-tagged assessment."
-      },
+      "data_source": "competency-runtime.computeTypeProfile → per-competency domain-PROXY scores (each competency inherits its onto-domain score; precise per-competency scoring requires onto_competency_question_map coverage).",
+      "honest_state": null,
       "pack_version": "1.0.0"
     }
   }

@@ -1,6 +1,6 @@
 ﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
-"76d88948-4570-4c31-9fa4-7e14309ed037","promotion_readiness","executive_summary","narrative","Sarah Johnson has 2 measured snapshots; net movement is 0 (stable).",,,,,,
-"76d88948-4570-4c31-9fa4-7e14309ed037","promotion_readiness","candidate_information","narrative","Name: Sarah Johnson
+"e7ee89a8-cdcc-46e5-b8a6-13b5f74c60fa","promotion_readiness","executive_summary","narrative","Sarah Johnson has 2 measured snapshots; net movement is 0 (stable).",,,,,,
+"e7ee89a8-cdcc-46e5-b8a6-13b5f74c60fa","promotion_readiness","candidate_information","narrative","Name: Sarah Johnson
 Reference (masked): user_4286d980cc6c
 Current role: Senior Product Manager
 Target role: Director of Product
@@ -10,16 +10,16 @@ Education: MBA
 Location: Bangalore, India
 
 Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
-"76d88948-4570-4c31-9fa4-7e14309ed037","promotion_readiness","assessment_summary","narrative","Status: ready. Net delta 0. Growth areas: 0, decline: 0, stable: 5.",,,,,,
-"76d88948-4570-4c31-9fa4-7e14309ed037","promotion_readiness","visualizations","chart_datapoint","Communication Readiness",,"Communication Readiness","0",,,
-"76d88948-4570-4c31-9fa4-7e14309ed037","promotion_readiness","visualizations","chart_datapoint","Future Readiness",,"Future Readiness","0",,,
-"76d88948-4570-4c31-9fa4-7e14309ed037","promotion_readiness","visualizations","chart_datapoint","Leadership Readiness",,"Leadership Readiness","0",,,
-"76d88948-4570-4c31-9fa4-7e14309ed037","promotion_readiness","visualizations","chart_datapoint","Problem-Solving Readiness",,"Problem-Solving Readiness","0",,,
-"76d88948-4570-4c31-9fa4-7e14309ed037","promotion_readiness","visualizations","chart_datapoint","Workplace Readiness",,"Workplace Readiness","0",,,
-"76d88948-4570-4c31-9fa4-7e14309ed037","promotion_readiness","interpretation","narrative","Promotion readiness is a longitudinal signal: it measures sustained movement across dimensions between measured snapshots, not a single score. Positive net delta with broad growth areas indicates upward trajectory.",,,,,,
-"76d88948-4570-4c31-9fa4-7e14309ed037","promotion_readiness","recommendations","narrative","No specific recommendations have been derived from the current measured inputs. Recommendations will appear once additional assessment evidence is captured.",,,,,,
-"76d88948-4570-4c31-9fa4-7e14309ed037","promotion_readiness","confidence_level","narrative","Confidence: Moderate — based on measured snapshots; rises as more are captured.",,,,,,
-"76d88948-4570-4c31-9fa4-7e14309ed037","promotion_readiness","data_source","narrative","progression-engine.buildProgression → ei_profile_snapshots over time (net delta between measured snapshots).",,,,,,
-"76d88948-4570-4c31-9fa4-7e14309ed037","promotion_readiness","generated_timestamp","narrative","This report was generated on 25 June 2026 at 17:17 UTC.
+"e7ee89a8-cdcc-46e5-b8a6-13b5f74c60fa","promotion_readiness","assessment_summary","narrative","Status: ready. Net delta 0. Growth areas: 0, decline: 0, stable: 5.",,,,,,
+"e7ee89a8-cdcc-46e5-b8a6-13b5f74c60fa","promotion_readiness","visualizations","chart_datapoint","Communication Readiness",,"Communication Readiness","0",,,
+"e7ee89a8-cdcc-46e5-b8a6-13b5f74c60fa","promotion_readiness","visualizations","chart_datapoint","Future Readiness",,"Future Readiness","0",,,
+"e7ee89a8-cdcc-46e5-b8a6-13b5f74c60fa","promotion_readiness","visualizations","chart_datapoint","Leadership Readiness",,"Leadership Readiness","0",,,
+"e7ee89a8-cdcc-46e5-b8a6-13b5f74c60fa","promotion_readiness","visualizations","chart_datapoint","Problem-Solving Readiness",,"Problem-Solving Readiness","0",,,
+"e7ee89a8-cdcc-46e5-b8a6-13b5f74c60fa","promotion_readiness","visualizations","chart_datapoint","Workplace Readiness",,"Workplace Readiness","0",,,
+"e7ee89a8-cdcc-46e5-b8a6-13b5f74c60fa","promotion_readiness","interpretation","narrative","Promotion readiness is a longitudinal signal: it measures sustained movement across dimensions between measured snapshots, not a single score. Positive net delta with broad growth areas indicates upward trajectory.",,,,,,
+"e7ee89a8-cdcc-46e5-b8a6-13b5f74c60fa","promotion_readiness","recommendations","narrative","No specific recommendations have been derived from the current measured inputs. Recommendations will appear once additional assessment evidence is captured.",,,,,,
+"e7ee89a8-cdcc-46e5-b8a6-13b5f74c60fa","promotion_readiness","confidence_level","narrative","Confidence: Moderate — based on measured snapshots; rises as more are captured.",,,,,,
+"e7ee89a8-cdcc-46e5-b8a6-13b5f74c60fa","promotion_readiness","data_source","narrative","progression-engine.buildProgression → ei_profile_snapshots over time (net delta between measured snapshots).",,,,,,
+"e7ee89a8-cdcc-46e5-b8a6-13b5f74c60fa","promotion_readiness","generated_timestamp","narrative","This report was generated on 25 June 2026 at 17:57 UTC.
 
 Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

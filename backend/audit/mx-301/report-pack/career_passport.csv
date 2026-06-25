@@ -1,6 +1,6 @@
 ﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
-"9235166d-86ea-4904-b3a5-43f4191f18cd","career_passport","executive_summary","narrative","Sarah Johnson's career passport has 6 of 6 sections populated (100% coverage).",,,,,,
-"9235166d-86ea-4904-b3a5-43f4191f18cd","career_passport","candidate_information","narrative","Name: Sarah Johnson
+"32f94e90-0b78-45c1-a0d4-4bc33dc5da9e","career_passport","executive_summary","narrative","Sarah Johnson's career passport has 6 of 6 sections populated (100% coverage).",,,,,,
+"32f94e90-0b78-45c1-a0d4-4bc33dc5da9e","career_passport","candidate_information","narrative","Name: Sarah Johnson
 Reference (masked): user_4286d980cc6c
 Current role: Senior Product Manager
 Target role: Director of Product
@@ -10,17 +10,17 @@ Education: MBA
 Location: Bangalore, India
 
 Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
-"9235166d-86ea-4904-b3a5-43f4191f18cd","career_passport","assessment_summary","narrative","Section status — competency profile: present; ei profile: present; career profile: present; career readiness: present; achievements: present; career journey: present.",,,,,,
-"9235166d-86ea-4904-b3a5-43f4191f18cd","career_passport","visualizations","chart_datapoint","competency profile",,"competency profile","1",,,
-"9235166d-86ea-4904-b3a5-43f4191f18cd","career_passport","visualizations","chart_datapoint","ei profile",,"ei profile","1",,,
-"9235166d-86ea-4904-b3a5-43f4191f18cd","career_passport","visualizations","chart_datapoint","career profile",,"career profile","1",,,
-"9235166d-86ea-4904-b3a5-43f4191f18cd","career_passport","visualizations","chart_datapoint","career readiness",,"career readiness","1",,,
-"9235166d-86ea-4904-b3a5-43f4191f18cd","career_passport","visualizations","chart_datapoint","achievements",,"achievements","1",,,
-"9235166d-86ea-4904-b3a5-43f4191f18cd","career_passport","visualizations","chart_datapoint","career journey",,"career journey","1",,,
-"9235166d-86ea-4904-b3a5-43f4191f18cd","career_passport","interpretation","narrative","The career passport is a shareable, composed snapshot of the candidate’s verified platform artifacts. Each present section reflects a completed workflow; absent sections indicate workflows not yet completed. Contact details are never included in the published view.",,,,,,
-"9235166d-86ea-4904-b3a5-43f4191f18cd","career_passport","recommendations","narrative","No specific recommendations have been derived from the current measured inputs. Recommendations will appear once additional assessment evidence is captured.",,,,,,
-"9235166d-86ea-4904-b3a5-43f4191f18cd","career_passport","confidence_level","narrative","Confidence: Moderate — composed from completed platform artifacts.",,,,,,
-"9235166d-86ea-4904-b3a5-43f4191f18cd","career_passport","data_source","narrative","passport-generator.generateCareerPassport → composed snapshot of competency, EI, career and journey artifacts.",,,,,,
-"9235166d-86ea-4904-b3a5-43f4191f18cd","career_passport","generated_timestamp","narrative","This report was generated on 25 June 2026 at 17:17 UTC.
+"32f94e90-0b78-45c1-a0d4-4bc33dc5da9e","career_passport","assessment_summary","narrative","Section status — competency profile: present; ei profile: present; career profile: present; career readiness: present; achievements: present; career journey: present.",,,,,,
+"32f94e90-0b78-45c1-a0d4-4bc33dc5da9e","career_passport","visualizations","chart_datapoint","competency profile",,"competency profile","1",,,
+"32f94e90-0b78-45c1-a0d4-4bc33dc5da9e","career_passport","visualizations","chart_datapoint","ei profile",,"ei profile","1",,,
+"32f94e90-0b78-45c1-a0d4-4bc33dc5da9e","career_passport","visualizations","chart_datapoint","career profile",,"career profile","1",,,
+"32f94e90-0b78-45c1-a0d4-4bc33dc5da9e","career_passport","visualizations","chart_datapoint","career readiness",,"career readiness","1",,,
+"32f94e90-0b78-45c1-a0d4-4bc33dc5da9e","career_passport","visualizations","chart_datapoint","achievements",,"achievements","1",,,
+"32f94e90-0b78-45c1-a0d4-4bc33dc5da9e","career_passport","visualizations","chart_datapoint","career journey",,"career journey","1",,,
+"32f94e90-0b78-45c1-a0d4-4bc33dc5da9e","career_passport","interpretation","narrative","The career passport is a shareable, composed snapshot of the candidate’s verified platform artifacts. Each present section reflects a completed workflow; absent sections indicate workflows not yet completed. Contact details are never included in the published view.",,,,,,
+"32f94e90-0b78-45c1-a0d4-4bc33dc5da9e","career_passport","recommendations","narrative","No specific recommendations have been derived from the current measured inputs. Recommendations will appear once additional assessment evidence is captured.",,,,,,
+"32f94e90-0b78-45c1-a0d4-4bc33dc5da9e","career_passport","confidence_level","narrative","Confidence: Moderate — composed from completed platform artifacts.",,,,,,
+"32f94e90-0b78-45c1-a0d4-4bc33dc5da9e","career_passport","data_source","narrative","passport-generator.generateCareerPassport → composed snapshot of competency, EI, career and journey artifacts.",,,,,,
+"32f94e90-0b78-45c1-a0d4-4bc33dc5da9e","career_passport","generated_timestamp","narrative","This report was generated on 25 June 2026 at 17:57 UTC.
 
 Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

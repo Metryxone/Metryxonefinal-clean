@@ -558,10 +558,24 @@ const buildCompetencyProfile: Builder = (s) => {
 
 const buildCompetencyRadar: Builder = (s) => {
   const tp = s.engines.typeProfile ?? {};
-  const buckets = values(tp.buckets).filter((b) => b && b.measurable && num(b.mean_score) != null);
+  // Honest domain-PROXY type means. computeTypeProfile emits TypeBucket
+  // {type_key,label,measured_count,avg_score,competencies[]} where each competency
+  // carries {measured_score, measurement}. We re-derive each type mean over ONLY the
+  // competencies the bank can genuinely measure (`measurement === 'domain_proxy'`) so
+  // an UNMEASURABLE onto-domain (e.g. dom_strategic, which has no bank code) — whose
+  // proxy score the engine still counts in avg_score — never contaminates a type mean.
+  const buckets = values(tp.buckets)
+    .map((b) => {
+      const dp = arr(b?.competencies).filter((c) => c && c.measurement === 'domain_proxy' && num(c.measured_score) != null);
+      const mean = dp.length > 0
+        ? Math.round((dp.reduce((sum, c) => sum + (num(c.measured_score) ?? 0), 0) / dp.length) * 10) / 10
+        : null;
+      return { label: str(b?.label) ?? str(b?.type_key) ?? '', measured_count: dp.length, mean };
+    })
+    .filter((b) => b.measured_count > 0 && b.mean != null);
   const measurable = buckets.length > 0;
   const chart = measurable
-    ? cleanChart(buckets.map((b) => str(b.label) ?? str(b.type_key)), buckets.map((b) => num(b.mean_score)))
+    ? cleanChart(buckets.map((b) => b.label), buckets.map((b) => b.mean))
     : { labels: [], values: [] };
 
   return {
@@ -572,36 +586,36 @@ const buildCompetencyRadar: Builder = (s) => {
     coverage: {
       pct: measurable ? num(tp.classification_coverage_pct) : null,
       note: measurable
-        ? `${num(tp.classified_competencies) ?? 0}/${num(tp.total_competencies) ?? 0} competencies classified by type.`
-        : `${num(tp.classified_competencies) ?? 0}/${num(tp.total_competencies) ?? 0} competencies classified by type (structural only); no measured type means yet.`,
+        ? `${num(tp.classified_competencies) ?? 0}/${num(tp.total_competencies) ?? 0} competencies classified by type; ${buckets.length} type${buckets.length === 1 ? '' : 's'} carry a bank-measurable domain-proxy mean.`
+        : `${num(tp.classified_competencies) ?? 0}/${num(tp.total_competencies) ?? 0} competencies classified by type (structural only); no bank-measurable domain-proxy type means yet.`,
     },
     confidence: measurable
       ? confidenceFromMeasurement(null, num(tp.classification_coverage_pct))
       : { band: null, note: 'Confidence not applicable — no measured competency-type scores yet.' },
     activation: ACTIVATION,
-    data_source: 'competency-runtime.computeTypeProfile → onto_competency_profiles grouped by competency type.',
+    data_source: 'competency-runtime.computeTypeProfile → onto_competency_profiles domain scores, grouped by competency type (domain-PROXY mean per type; an onto-domain with no bank code, e.g. strategic, is unmeasurable and excluded).',
     executive: measurable
-      ? `${s.candidate.name}'s capability is measured across ${buckets.length} competency types, classification coverage ${num(tp.classification_coverage_pct) ?? 0}%.`
-      : `${s.candidate.name}'s competencies are classified by type, but no measured per-type means are available yet.`,
+      ? `${s.candidate.name}'s capability is measured across ${buckets.length} competency type${buckets.length === 1 ? '' : 's'} (domain-proxy), classification coverage ${num(tp.classification_coverage_pct) ?? 0}%.`
+      : `${s.candidate.name}'s competencies are classified by type, but no bank-measurable per-type means are available yet.`,
     assessment: measurable
-      ? `Mean score by competency type — ${buckets.map((b) => `${str(b.label) ?? str(b.type_key)}: ${num(b.mean_score)}`).join('; ')}.`
-      : 'No competency-type means are available.',
+      ? `Mean domain-proxy score by competency type — ${buckets.map((b) => `${b.label}: ${b.mean}`).join('; ')}.`
+      : 'No bank-measurable competency-type means are available.',
     chart: measurable
-      ? { title: 'Competency type means', data_source: 'competency', chart_type: 'radar', ...chart }
+      ? { title: 'Competency type means (domain-proxy)', data_source: 'competency', chart_type: 'radar', ...chart }
       : null,
     interpretation: measurable
-      ? 'The radar contrasts capability across competency types (behavioural, cognitive, functional, technical, future-skills). A balanced shape indicates broad capability; a skewed shape highlights concentration.'
-      : 'Competency-type classification is required to render the radar.',
-    recommendations: measurable ? topAndBottom(buckets, 'label', 'mean_score') : [],
+      ? 'The radar contrasts capability across competency types (behavioural, cognitive, functional, technical, future-skills). Each type mean is a domain-proxy: every competency inherits the measured score of its onto-domain. A balanced shape indicates broad capability; a skewed shape highlights concentration.'
+      : 'Competency-type classification with at least one bank-measurable onto-domain is required to render the radar.',
+    recommendations: measurable ? topAndBottom(buckets, 'label', 'mean') : [],
     confidence_text: measurable
       ? confidenceFromMeasurement(null, num(tp.classification_coverage_pct)).note
       : 'Confidence not applicable — no measured competency-type scores yet.',
     honest: measurable
       ? null
       : {
-          why: 'No measured competency-type means are available yet (competencies may be classified by type, but none carry a measured score).',
-          workflow: 'Score a competency assessment whose competencies map to onto types.',
-          needed: 'Measured per-type means in computeTypeProfile buckets.',
+          why: 'No bank-measurable competency-type means are available yet (competencies may be classified by type, but none map to a bank-measurable onto-domain with a score).',
+          workflow: 'Score a competency assessment whose competencies map to bank-measurable onto types.',
+          needed: 'At least one type bucket with a domain-proxy measured competency in computeTypeProfile.',
           expected: 'A radar of mean capability across each competency type.',
         },
   };
@@ -612,7 +626,13 @@ const buildCompetencyHeatmap: Builder = (s) => {
   const comps: any[] = [];
   for (const b of values(tp.buckets)) {
     for (const c of arr(b?.competencies)) {
-      if (c && c.measured && num(c.score) != null) comps.push({ name: str(c.name) ?? str(c.id), score: num(c.score) });
+      // TypeBucketCompetency = {competency_id, competency_name, onto_domain,
+      // measured_level, measured_score, measurement}. Include ONLY competencies the
+      // bank can genuinely measure (`measurement === 'domain_proxy'`); an unmeasurable
+      // onto-domain carries a score but is not a real measurement.
+      if (c && c.measurement === 'domain_proxy' && num(c.measured_score) != null) {
+        comps.push({ name: str(c.competency_name) ?? str(c.competency_id), score: num(c.measured_score) });
+      }
     }
   }
   comps.sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
@@ -630,7 +650,7 @@ const buildCompetencyHeatmap: Builder = (s) => {
       ? confidenceFromMeasurement(null, num(tp.classification_coverage_pct))
       : { band: null, note: 'Confidence not applicable — no measured competency scores yet.' },
     activation: ACTIVATION,
-    data_source: 'competency-runtime.computeTypeProfile → per-competency measured scores.',
+    data_source: 'competency-runtime.computeTypeProfile → per-competency domain-PROXY scores (each competency inherits its onto-domain score; precise per-competency scoring requires onto_competency_question_map coverage).',
     executive: measurable
       ? `${comps.length} individual competencies are measured for ${s.candidate.name}; the heatmap surfaces the ${top.length} highest-scoring.`
       : `No individual competencies are measured for ${s.candidate.name}.`,
@@ -641,7 +661,7 @@ const buildCompetencyHeatmap: Builder = (s) => {
       ? { title: 'Per-competency scores (top 20)', data_source: 'competency', chart_type: 'heatmap', ...chart }
       : null,
     interpretation: measurable
-      ? 'The heatmap ranks individual competencies by measured score, giving a granular view beneath the domain and type summaries. Use it to pinpoint specific strengths and targeted development items.'
+      ? 'The heatmap ranks individual competencies by domain-proxy score (each inherits its onto-domain measurement), giving a granular view beneath the domain and type summaries. Use it to pinpoint specific strengths and targeted development items.'
       : 'Per-competency scores are required to render the heatmap.',
     recommendations: measurable
       ? [

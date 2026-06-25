@@ -8,7 +8,7 @@
     "primary_color": "#0B2447",
     "accent_color": "#2E8B8B"
   },
-  "generated_at": "2026-06-25T17:17:46.911Z",
+  "generated_at": "2026-06-25T17:57:58.181Z",
   "report_count": 16,
   "file_count": 64,
   "formats": [
@@ -29,7 +29,7 @@
     "Data Source",
     "Generated Timestamp"
   ],
-  "measurable_reports": 12,
+  "measurable_reports": 16,
   "interview_enrichment": {
     "enriched": true,
     "detail": "interview scheduled + 4/4 panel scores recorded",
@@ -51,7 +51,7 @@
     {
       "report_type": "executive_summary",
       "title": "Executive Summary",
-      "report_uuid": "0812ae89-e18f-4336-920c-4c5298e1686e",
+      "report_uuid": "98193687-43ad-42d5-8b7e-88d69aadbdb6",
       "measurable": true,
       "coverage_pct": null,
       "confidence_band": "Provisional",
@@ -60,22 +60,22 @@
       "files": [
         {
           "format": "pdf",
-          "bytes": 5463,
+          "bytes": 5515,
           "path": "executive_summary.pdf"
         },
         {
           "format": "html",
-          "bytes": 6901,
+          "bytes": 6969,
           "path": "executive_summary.html"
         },
         {
           "format": "json",
-          "bytes": 7620,
+          "bytes": 7756,
           "path": "executive_summary.json"
         },
         {
           "format": "csv",
-          "bytes": 3470,
+          "bytes": 3538,
           "path": "executive_summary.csv"
         }
       ]
@@ -83,7 +83,7 @@
     {
       "report_type": "competency_profile",
       "title": "Competency Profile",
-      "report_uuid": "3aa2f2dd-9f81-40da-a8e2-c403f82fcec6",
+      "report_uuid": "dbc7e516-6d40-40e5-b361-496ef4c53ac4",
       "measurable": true,
       "coverage_pct": null,
       "confidence_band": "Provisional",
@@ -92,7 +92,7 @@
       "files": [
         {
           "format": "pdf",
-          "bytes": 5182,
+          "bytes": 5183,
           "path": "competency_profile.pdf"
         },
         {
@@ -115,71 +115,7 @@
     {
       "report_type": "competency_radar",
       "title": "Competency Radar",
-      "report_uuid": "4c6b6a0a-f4ac-4faa-a6ce-d385d9d04c3b",
-      "measurable": false,
-      "coverage_pct": null,
-      "confidence_band": null,
-      "activation": "Engine executed in-process and produced this artifact.",
-      "honest_state": "No measured competency-type means are available yet (competencies may be classified by type, but none carry a measured score).",
-      "files": [
-        {
-          "format": "pdf",
-          "bytes": 4712,
-          "path": "competency_radar.pdf"
-        },
-        {
-          "format": "html",
-          "bytes": 5633,
-          "path": "competency_radar.html"
-        },
-        {
-          "format": "json",
-          "bytes": 6981,
-          "path": "competency_radar.json"
-        },
-        {
-          "format": "csv",
-          "bytes": 2821,
-          "path": "competency_radar.csv"
-        }
-      ]
-    },
-    {
-      "report_type": "competency_heatmap",
-      "title": "Competency Heatmap",
-      "report_uuid": "d8adce8a-f12f-42a7-9d4d-7b916f0c9608",
-      "measurable": false,
-      "coverage_pct": null,
-      "confidence_band": null,
-      "activation": "Engine executed in-process and produced this artifact.",
-      "honest_state": "No measured per-competency scores were found.",
-      "files": [
-        {
-          "format": "pdf",
-          "bytes": 4525,
-          "path": "competency_heatmap.pdf"
-        },
-        {
-          "format": "html",
-          "bytes": 5299,
-          "path": "competency_heatmap.html"
-        },
-        {
-          "format": "json",
-          "bytes": 6081,
-          "path": "competency_heatmap.json"
-        },
-        {
-          "format": "csv",
-          "bytes": 2505,
-          "path": "competency_heatmap.csv"
-        }
-      ]
-    },
-    {
-      "report_type": "strength",
-      "title": "Strengths",
-      "report_uuid": "17a4d818-4895-4cd5-aad1-fb8eed5da2ba",
+      "report_uuid": "403abd28-8b7c-415e-b87e-08cf4f152ba3",
       "measurable": true,
       "coverage_pct": 100,
       "confidence_band": "Moderate",
@@ -188,7 +124,71 @@
       "files": [
         {
           "format": "pdf",
-          "bytes": 5053,
+          "bytes": 5193,
+          "path": "competency_radar.pdf"
+        },
+        {
+          "format": "html",
+          "bytes": 6522,
+          "path": "competency_radar.html"
+        },
+        {
+          "format": "json",
+          "bytes": 6887,
+          "path": "competency_radar.json"
+        },
+        {
+          "format": "csv",
+          "bytes": 2991,
+          "path": "competency_radar.csv"
+        }
+      ]
+    },
+    {
+      "report_type": "competency_heatmap",
+      "title": "Competency Heatmap",
+      "report_uuid": "176ab0b1-89e9-441c-80e1-b1cbb5f32569",
+      "measurable": true,
+      "coverage_pct": 100,
+      "confidence_band": "Moderate",
+      "activation": "Engine executed in-process and produced this artifact.",
+      "honest_state": null,
+      "files": [
+        {
+          "format": "pdf",
+          "bytes": 5475,
+          "path": "competency_heatmap.pdf"
+        },
+        {
+          "format": "html",
+          "bytes": 9031,
+          "path": "competency_heatmap.html"
+        },
+        {
+          "format": "json",
+          "bytes": 7435,
+          "path": "competency_heatmap.json"
+        },
+        {
+          "format": "csv",
+          "bytes": 4419,
+          "path": "competency_heatmap.csv"
+        }
+      ]
+    },
+    {
+      "report_type": "strength",
+      "title": "Strengths",
+      "report_uuid": "bf3d9f3c-cc6b-4585-84f1-70720d86473f",
+      "measurable": true,
+      "coverage_pct": 100,
+      "confidence_band": "Moderate",
+      "activation": "Engine executed in-process and produced this artifact.",
+      "honest_state": null,
+      "files": [
+        {
+          "format": "pdf",
+          "bytes": 5054,
           "path": "strength.pdf"
         },
         {
@@ -211,7 +211,7 @@
     {
       "report_type": "development_areas",
       "title": "Development Areas",
-      "report_uuid": "a4d3f8e4-acf5-46d3-bb4e-187a50c11be0",
+      "report_uuid": "0571fb93-b367-4abc-9eda-9a52e9c1adaa",
       "measurable": true,
       "coverage_pct": 100,
       "confidence_band": "Moderate",
@@ -220,7 +220,7 @@
       "files": [
         {
           "format": "pdf",
-          "bytes": 4804,
+          "bytes": 4805,
           "path": "development_areas.pdf"
         },
         {
@@ -243,31 +243,31 @@
     {
       "report_type": "role_readiness",
       "title": "Role Readiness",
-      "report_uuid": "c38fb6fe-55f8-49ba-ad66-99954cace21d",
-      "measurable": false,
-      "coverage_pct": null,
-      "confidence_band": null,
+      "report_uuid": "1a41879a-5853-4b9c-a0d3-eafdc6997f81",
+      "measurable": true,
+      "coverage_pct": 100,
+      "confidence_band": "Moderate",
       "activation": "Engine executed in-process and produced this artifact.",
-      "honest_state": "\"Senior Product Manager\" does not resolve to a profiled role with stored competency requirements on the Role-Readiness path.",
+      "honest_state": null,
       "files": [
         {
           "format": "pdf",
-          "bytes": 5213,
+          "bytes": 4663,
           "path": "role_readiness.pdf"
         },
         {
           "format": "html",
-          "bytes": 6078,
+          "bytes": 5361,
           "path": "role_readiness.html"
         },
         {
           "format": "json",
-          "bytes": 7851,
+          "bytes": 5625,
           "path": "role_readiness.json"
         },
         {
           "format": "csv",
-          "bytes": 3240,
+          "bytes": 2195,
           "path": "role_readiness.csv"
         }
       ]
@@ -275,7 +275,7 @@
     {
       "report_type": "promotion_readiness",
       "title": "Promotion Readiness",
-      "report_uuid": "76d88948-4570-4c31-9fa4-7e14309ed037",
+      "report_uuid": "e7ee89a8-cdcc-46e5-b8a6-13b5f74c60fa",
       "measurable": true,
       "coverage_pct": null,
       "confidence_band": "Moderate",
@@ -284,7 +284,7 @@
       "files": [
         {
           "format": "pdf",
-          "bytes": 4882,
+          "bytes": 4883,
           "path": "promotion_readiness.pdf"
         },
         {
@@ -307,7 +307,7 @@
     {
       "report_type": "employability_index",
       "title": "Employability Index",
-      "report_uuid": "098a1810-4960-4933-b1aa-df2cac4afe9f",
+      "report_uuid": "15847f81-6089-48d0-b0af-d0478c726e02",
       "measurable": true,
       "coverage_pct": 100,
       "confidence_band": "Moderate",
@@ -316,7 +316,7 @@
       "files": [
         {
           "format": "pdf",
-          "bytes": 4926,
+          "bytes": 4927,
           "path": "employability_index.pdf"
         },
         {
@@ -339,31 +339,31 @@
     {
       "report_type": "career_recommendations",
       "title": "Career Recommendations",
-      "report_uuid": "ece70c24-23b4-4d0a-90ca-1dc8e669f2d4",
+      "report_uuid": "93b3e82e-ff5f-4c3e-87c6-752023233145",
       "measurable": true,
       "coverage_pct": null,
-      "confidence_band": "Provisional",
+      "confidence_band": "Moderate",
       "activation": "Engine executed in-process and produced this artifact.",
       "honest_state": null,
       "files": [
         {
           "format": "pdf",
-          "bytes": 5200,
+          "bytes": 5626,
           "path": "career_recommendations.pdf"
         },
         {
           "format": "html",
-          "bytes": 5836,
+          "bytes": 6323,
           "path": "career_recommendations.html"
         },
         {
           "format": "json",
-          "bytes": 7161,
+          "bytes": 8192,
           "path": "career_recommendations.json"
         },
         {
           "format": "csv",
-          "bytes": 3222,
+          "bytes": 3801,
           "path": "career_recommendations.csv"
         }
       ]
@@ -371,7 +371,7 @@
     {
       "report_type": "learning_roadmap",
       "title": "Learning Roadmap",
-      "report_uuid": "51771210-8fd6-45df-bedf-dbb269406eb8",
+      "report_uuid": "4131b917-b99a-46eb-b9b8-83cb82b5d71f",
       "measurable": true,
       "coverage_pct": null,
       "confidence_band": "Provisional",
@@ -380,22 +380,22 @@
       "files": [
         {
           "format": "pdf",
-          "bytes": 4918,
+          "bytes": 4962,
           "path": "learning_roadmap.pdf"
         },
         {
           "format": "html",
-          "bytes": 6010,
+          "bytes": 6046,
           "path": "learning_roadmap.html"
         },
         {
           "format": "json",
-          "bytes": 6162,
+          "bytes": 6230,
           "path": "learning_roadmap.json"
         },
         {
           "format": "csv",
-          "bytes": 2742,
+          "bytes": 2776,
           "path": "learning_roadmap.csv"
         }
       ]
@@ -403,31 +403,31 @@
     {
       "report_type": "skill_gap",
       "title": "Skill Gap",
-      "report_uuid": "22088454-509e-41e8-a036-c4730ddba0fa",
-      "measurable": false,
-      "coverage_pct": null,
-      "confidence_band": null,
+      "report_uuid": "5b414e52-e84b-4a21-bb57-757884d04605",
+      "measurable": true,
+      "coverage_pct": 100,
+      "confidence_band": "Provisional",
       "activation": "Engine executed in-process and produced this artifact.",
-      "honest_state": "No role-requirement substrate exists to compare measured scores against.",
+      "honest_state": null,
       "files": [
         {
           "format": "pdf",
-          "bytes": 4740,
+          "bytes": 4644,
           "path": "skill_gap.pdf"
         },
         {
           "format": "html",
-          "bytes": 5587,
+          "bytes": 5336,
           "path": "skill_gap.html"
         },
         {
           "format": "json",
-          "bytes": 6773,
+          "bytes": 5543,
           "path": "skill_gap.json"
         },
         {
           "format": "csv",
-          "bytes": 2730,
+          "bytes": 2140,
           "path": "skill_gap.csv"
         }
       ]
@@ -435,7 +435,7 @@
     {
       "report_type": "interview_readiness",
       "title": "Interview Readiness",
-      "report_uuid": "7032f847-a7f3-4681-8f5f-52e19340da7f",
+      "report_uuid": "3ecff760-7fa1-4ac0-9ddd-19944900a5e1",
       "measurable": true,
       "coverage_pct": null,
       "confidence_band": "Operator-recorded",
@@ -444,7 +444,7 @@
       "files": [
         {
           "format": "pdf",
-          "bytes": 4889,
+          "bytes": 4890,
           "path": "interview_readiness.pdf"
         },
         {
@@ -467,7 +467,7 @@
     {
       "report_type": "employer_competency_match",
       "title": "Employer Competency Match",
-      "report_uuid": "b70bc149-61f3-4e7d-8359-e0e1201cc976",
+      "report_uuid": "c2697c5f-80bc-46d2-8a1a-2eeb5b38f42f",
       "measurable": true,
       "coverage_pct": 61.8,
       "confidence_band": "Calibrated",
@@ -476,7 +476,7 @@
       "files": [
         {
           "format": "pdf",
-          "bytes": 5125,
+          "bytes": 5127,
           "path": "employer_competency_match.pdf"
         },
         {
@@ -499,7 +499,7 @@
     {
       "report_type": "career_passport",
       "title": "Career Passport",
-      "report_uuid": "9235166d-86ea-4904-b3a5-43f4191f18cd",
+      "report_uuid": "32f94e90-0b78-45c1-a0d4-4bc33dc5da9e",
       "measurable": true,
       "coverage_pct": 100,
       "confidence_band": "Moderate",
@@ -508,7 +508,7 @@
       "files": [
         {
           "format": "pdf",
-          "bytes": 4951,
+          "bytes": 4952,
           "path": "career_passport.pdf"
         },
         {
@@ -531,7 +531,7 @@
     {
       "report_type": "action_plan",
       "title": "Action Plan",
-      "report_uuid": "45e3ba3a-593b-4cc2-83d1-c11abe257057",
+      "report_uuid": "3d3ce52a-4721-4cd2-9a4c-ded5fbc520f9",
       "measurable": true,
       "coverage_pct": null,
       "confidence_band": "Provisional",
@@ -540,22 +540,22 @@
       "files": [
         {
           "format": "pdf",
-          "bytes": 5205,
+          "bytes": 5230,
           "path": "action_plan.pdf"
         },
         {
           "format": "html",
-          "bytes": 6806,
+          "bytes": 6813,
           "path": "action_plan.html"
         },
         {
           "format": "json",
-          "bytes": 6899,
+          "bytes": 6909,
           "path": "action_plan.json"
         },
         {
           "format": "csv",
-          "bytes": 3294,
+          "bytes": 3299,
           "path": "action_plan.csv"
         }
       ]

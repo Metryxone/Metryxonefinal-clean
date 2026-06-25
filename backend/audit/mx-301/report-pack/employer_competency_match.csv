@@ -1,6 +1,6 @@
 ﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
-"b70bc149-61f3-4e7d-8359-e0e1201cc976","employer_competency_match","executive_summary","narrative","Sarah Johnson's competency match to Senior Product Manager is 77.4%, covering 8/13 requirements (fit: fit).",,,,,,
-"b70bc149-61f3-4e7d-8359-e0e1201cc976","employer_competency_match","candidate_information","narrative","Name: Sarah Johnson
+"c2697c5f-80bc-46d2-8a1a-2eeb5b38f42f","employer_competency_match","executive_summary","narrative","Sarah Johnson's competency match to Senior Product Manager is 77.4%, covering 8/13 requirements (fit: fit).",,,,,,
+"c2697c5f-80bc-46d2-8a1a-2eeb5b38f42f","employer_competency_match","candidate_information","narrative","Name: Sarah Johnson
 Reference (masked): user_4286d980cc6c
 Current role: Senior Product Manager
 Target role: Director of Product
@@ -10,15 +10,15 @@ Education: MBA
 Location: Bangalore, India
 
 Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
-"b70bc149-61f3-4e7d-8359-e0e1201cc976","employer_competency_match","assessment_summary","narrative","Match 77.4%, coverage 61.8%. Fit signal: fit. Calibration: calibrated. 8 requirement gap(s).",,,,,,
-"b70bc149-61f3-4e7d-8359-e0e1201cc976","employer_competency_match","visualizations","chart_datapoint","Competency Match %",,"Competency Match %","77.4",,,
-"b70bc149-61f3-4e7d-8359-e0e1201cc976","employer_competency_match","visualizations","chart_datapoint","Requirement Coverage %",,"Requirement Coverage %","61.8",,,
-"b70bc149-61f3-4e7d-8359-e0e1201cc976","employer_competency_match","interpretation","narrative","The match contrasts the candidate’s measured competencies with the role’s genome-derived requirements. The fit signal is decision-SUPPORT only — never a hire/no-hire verdict. Calibration reports whether realized outcomes back the signal.",,,,,,
-"b70bc149-61f3-4e7d-8359-e0e1201cc976","employer_competency_match","recommendations","insight","Requirement gap: Data-Driven Decision Making (need not yet measured, currently not yet measured).","warning",,,,,
-"b70bc149-61f3-4e7d-8359-e0e1201cc976","employer_competency_match","recommendations","insight","Requirement gap: Structured Problem Solving (need not yet measured, currently not yet measured).","warning",,,,,
-"b70bc149-61f3-4e7d-8359-e0e1201cc976","employer_competency_match","recommendations","insight","Requirement gap: Accountability & Ownership (need not yet measured, currently not yet measured).","warning",,,,,
-"b70bc149-61f3-4e7d-8359-e0e1201cc976","employer_competency_match","confidence_level","narrative","Calibration: calibrated (34 realized outcomes). The fit signal is decision-support, not a verdict.",,,,,,
-"b70bc149-61f3-4e7d-8359-e0e1201cc976","employer_competency_match","data_source","narrative","employer-competency-hiring.computeCompetencyDrivenMatch → Role DNA (genome) requirements vs candidate competencies.",,,,,,
-"b70bc149-61f3-4e7d-8359-e0e1201cc976","employer_competency_match","generated_timestamp","narrative","This report was generated on 25 June 2026 at 17:17 UTC.
+"c2697c5f-80bc-46d2-8a1a-2eeb5b38f42f","employer_competency_match","assessment_summary","narrative","Match 77.4%, coverage 61.8%. Fit signal: fit. Calibration: calibrated. 8 requirement gap(s).",,,,,,
+"c2697c5f-80bc-46d2-8a1a-2eeb5b38f42f","employer_competency_match","visualizations","chart_datapoint","Competency Match %",,"Competency Match %","77.4",,,
+"c2697c5f-80bc-46d2-8a1a-2eeb5b38f42f","employer_competency_match","visualizations","chart_datapoint","Requirement Coverage %",,"Requirement Coverage %","61.8",,,
+"c2697c5f-80bc-46d2-8a1a-2eeb5b38f42f","employer_competency_match","interpretation","narrative","The match contrasts the candidate’s measured competencies with the role’s genome-derived requirements. The fit signal is decision-SUPPORT only — never a hire/no-hire verdict. Calibration reports whether realized outcomes back the signal.",,,,,,
+"c2697c5f-80bc-46d2-8a1a-2eeb5b38f42f","employer_competency_match","recommendations","insight","Requirement gap: Data-Driven Decision Making (need not yet measured, currently not yet measured).","warning",,,,,
+"c2697c5f-80bc-46d2-8a1a-2eeb5b38f42f","employer_competency_match","recommendations","insight","Requirement gap: Structured Problem Solving (need not yet measured, currently not yet measured).","warning",,,,,
+"c2697c5f-80bc-46d2-8a1a-2eeb5b38f42f","employer_competency_match","recommendations","insight","Requirement gap: Accountability & Ownership (need not yet measured, currently not yet measured).","warning",,,,,
+"c2697c5f-80bc-46d2-8a1a-2eeb5b38f42f","employer_competency_match","confidence_level","narrative","Calibration: calibrated (34 realized outcomes). The fit signal is decision-support, not a verdict.",,,,,,
+"c2697c5f-80bc-46d2-8a1a-2eeb5b38f42f","employer_competency_match","data_source","narrative","employer-competency-hiring.computeCompetencyDrivenMatch → Role DNA (genome) requirements vs candidate competencies.",,,,,,
+"c2697c5f-80bc-46d2-8a1a-2eeb5b38f42f","employer_competency_match","generated_timestamp","narrative","This report was generated on 25 June 2026 at 17:57 UTC.
 
 Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

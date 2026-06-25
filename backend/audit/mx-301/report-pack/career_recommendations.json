@@ -1,26 +1,30 @@
 {
   "schema_version": "1.0",
-  "exported_at": "2026-06-25T17:17:46.781Z",
+  "exported_at": "2026-06-25T17:57:58.007Z",
   "report": {
-    "uuid": "ece70c24-23b4-4d0a-90ca-1dc8e669f2d4",
+    "uuid": "93b3e82e-ff5f-4c3e-87c6-752023233145",
     "type": "career_recommendations",
     "language": "en",
     "status": "complete",
-    "created_at": "2026-06-25T17:17:46.765Z",
-    "completed_at": "2026-06-25T17:17:46.765Z",
+    "created_at": "2026-06-25T17:57:57.988Z",
+    "completed_at": "2026-06-25T17:57:57.988Z",
     "narrative_texts": {
       "data_source": "career-recommendation-aggregator.buildCareerRecommendations → composed from competency, gap and market signals.",
       "interpretation": "Recommendations are derived developmental suggestions ranked by relevance. Personalized items consume the candidate’s own profile; catalog items are general and flagged as provisional. None are directives.",
       "visualizations": "No chartable measured data points are available for this report yet; the metrics above summarise everything currently measured.",
       "confidence_level": "Confidence varies per recommendation; personalized items inherit the chain confidence, catalog items are Provisional.",
-      "executive_summary": "4 recommendations are available for Sarah Johnson, 0 personalized to their profile.",
-      "assessment_summary": "Recommendations span 4 type(s). Top item: Target role: GenAI Engineer.",
-      "generated_timestamp": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "executive_summary": "6 recommendations are available for Sarah Johnson, 6 personalized to their profile.",
+      "assessment_summary": "Recommendations span 6 type(s). Top item: Target role: AI Product Manager.",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 17:57 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
       "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
     },
     "insights": [
       {
-        "text": "Target role: GenAI Engineer — A strong current market signal (demand and growth) for GenAI Engineer in the data function. (general)",
+        "text": "Target role: AI Product Manager — A strong current market signal (demand and growth) for AI Product Manager in the product function.",
+        "severity": "info"
+      },
+      {
+        "text": "Advance from a Advanced readiness base — Your present-state readiness is at the Advanced band. Consolidating Cognitive Development is the highest-leverage next move on your current track.",
         "severity": "info"
       },
       {
@@ -34,24 +38,28 @@
       {
         "text": "Future-resilient role: GenAI Engineer — GenAI Engineer combines high projected growth with lower automation exposure — a more future-resilient target. (general)",
         "severity": "info"
+      },
+      {
+        "text": "Alternative direction: GenAI Engineer — GenAI Engineer sits in the data function — a different direction from your current track, with healthy market signal. (general)",
+        "severity": "info"
       }
     ],
     "generated_content": {
       "axes": {
         "coverage": {
           "pct": null,
-          "note": "20 recommendation(s), 0 personalized."
+          "note": "26 recommendation(s), 6 personalized."
         },
         "activation": "Engine executed in-process and produced this artifact.",
         "confidence": {
-          "band": "Provisional",
+          "band": "Moderate",
           "note": "Per-recommendation confidence bands shown inline."
         }
       },
       "sections": [
         {
           "key": "executive_summary",
-          "text": "4 recommendations are available for Sarah Johnson, 0 personalized to their profile.",
+          "text": "6 recommendations are available for Sarah Johnson, 6 personalized to their profile.",
           "type": "narrative",
           "title": "Executive Summary"
         },
@@ -63,7 +71,7 @@
         },
         {
           "key": "assessment_summary",
-          "text": "Recommendations span 4 type(s). Top item: Target role: GenAI Engineer.",
+          "text": "Recommendations span 6 type(s). Top item: Target role: AI Product Manager.",
           "type": "narrative",
           "title": "Assessment Summary"
         },
@@ -86,7 +94,11 @@
           "title": "Recommendations",
           "insights": [
             {
-              "text": "Target role: GenAI Engineer — A strong current market signal (demand and growth) for GenAI Engineer in the data function. (general)",
+              "text": "Target role: AI Product Manager — A strong current market signal (demand and growth) for AI Product Manager in the product function.",
+              "severity": "info"
+            },
+            {
+              "text": "Advance from a Advanced readiness base — Your present-state readiness is at the Advanced band. Consolidating Cognitive Development is the highest-leverage next move on your current track.",
               "severity": "info"
             },
             {
@@ -99,6 +111,10 @@
             },
             {
               "text": "Future-resilient role: GenAI Engineer — GenAI Engineer combines high projected growth with lower automation exposure — a more future-resilient target. (general)",
+              "severity": "info"
+            },
+            {
+              "text": "Alternative direction: GenAI Engineer — GenAI Engineer sits in the data function — a different direction from your current track, with healthy market signal. (general)",
               "severity": "info"
             }
           ]
@@ -117,7 +133,7 @@
         },
         {
           "key": "generated_timestamp",
-          "text": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "text": "This report was generated on 25 June 2026 at 17:57 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
           "type": "narrative",
           "title": "Generated Timestamp"
         }

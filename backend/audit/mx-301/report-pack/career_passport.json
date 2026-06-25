@@ -1,13 +1,13 @@
 {
   "schema_version": "1.0",
-  "exported_at": "2026-06-25T17:17:46.881Z",
+  "exported_at": "2026-06-25T17:57:58.145Z",
   "report": {
-    "uuid": "9235166d-86ea-4904-b3a5-43f4191f18cd",
+    "uuid": "32f94e90-0b78-45c1-a0d4-4bc33dc5da9e",
     "type": "career_passport",
     "language": "en",
     "status": "complete",
-    "created_at": "2026-06-25T17:17:46.865Z",
-    "completed_at": "2026-06-25T17:17:46.865Z",
+    "created_at": "2026-06-25T17:57:58.074Z",
+    "completed_at": "2026-06-25T17:57:58.074Z",
     "narrative_texts": {
       "data_source": "passport-generator.generateCareerPassport → composed snapshot of competency, EI, career and journey artifacts.",
       "interpretation": "The career passport is a shareable, composed snapshot of the candidate’s verified platform artifacts. Each present section reflects a completed workflow; absent sections indicate workflows not yet completed. Contact details are never included in the published view.",
@@ -15,7 +15,7 @@
       "confidence_level": "Confidence: Moderate — composed from completed platform artifacts.",
       "executive_summary": "Sarah Johnson's career passport has 6 of 6 sections populated (100% coverage).",
       "assessment_summary": "Section status — competency profile: present; ei profile: present; career profile: present; career readiness: present; achievements: present; career journey: present.",
-      "generated_timestamp": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 17:57 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
       "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
     },
     "insights": [],
@@ -109,7 +109,7 @@
         },
         {
           "key": "generated_timestamp",
-          "text": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "text": "This report was generated on 25 June 2026 at 17:57 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
           "type": "narrative",
           "title": "Generated Timestamp"
         }

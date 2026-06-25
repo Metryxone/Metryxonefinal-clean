@@ -1,20 +1,20 @@
 {
   "schema_version": "1.0",
-  "exported_at": "2026-06-25T17:17:46.863Z",
+  "exported_at": "2026-06-25T17:57:58.073Z",
   "report": {
-    "uuid": "b70bc149-61f3-4e7d-8359-e0e1201cc976",
+    "uuid": "c2697c5f-80bc-46d2-8a1a-2eeb5b38f42f",
     "type": "employer_competency_match",
     "language": "en",
     "status": "complete",
-    "created_at": "2026-06-25T17:17:46.846Z",
-    "completed_at": "2026-06-25T17:17:46.846Z",
+    "created_at": "2026-06-25T17:57:58.060Z",
+    "completed_at": "2026-06-25T17:57:58.060Z",
     "narrative_texts": {
       "data_source": "employer-competency-hiring.computeCompetencyDrivenMatch → Role DNA (genome) requirements vs candidate competencies.",
       "interpretation": "The match contrasts the candidate’s measured competencies with the role’s genome-derived requirements. The fit signal is decision-SUPPORT only — never a hire/no-hire verdict. Calibration reports whether realized outcomes back the signal.",
       "confidence_level": "Calibration: calibrated (34 realized outcomes). The fit signal is decision-support, not a verdict.",
       "executive_summary": "Sarah Johnson's competency match to Senior Product Manager is 77.4%, covering 8/13 requirements (fit: fit).",
       "assessment_summary": "Match 77.4%, coverage 61.8%. Fit signal: fit. Calibration: calibrated. 8 requirement gap(s).",
-      "generated_timestamp": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 17:57 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
       "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
     },
     "insights": [
@@ -125,7 +125,7 @@
         },
         {
           "key": "generated_timestamp",
-          "text": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "text": "This report was generated on 25 June 2026 at 17:57 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
           "type": "narrative",
           "title": "Generated Timestamp"
         }

@@ -1,6 +1,6 @@
 ﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
-"4c6b6a0a-f4ac-4faa-a6ce-d385d9d04c3b","competency_radar","executive_summary","narrative","Sarah Johnson's competencies are classified by type, but no measured per-type means are available yet.",,,,,,
-"4c6b6a0a-f4ac-4faa-a6ce-d385d9d04c3b","competency_radar","candidate_information","narrative","Name: Sarah Johnson
+"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","executive_summary","narrative","Sarah Johnson's capability is measured across 4 competency types (domain-proxy), classification coverage 100%.",,,,,,
+"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","candidate_information","narrative","Name: Sarah Johnson
 Reference (masked): user_4286d980cc6c
 Current role: Senior Product Manager
 Target role: Director of Product
@@ -10,22 +10,16 @@ Education: MBA
 Location: Bangalore, India
 
 Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
-"4c6b6a0a-f4ac-4faa-a6ce-d385d9d04c3b","competency_radar","assessment_summary","narrative","No competency-type means are available.",,,,,,
-"4c6b6a0a-f4ac-4faa-a6ce-d385d9d04c3b","competency_radar","visualizations","narrative","Insufficient validated data to populate this section yet.
-
-Why: No measured competency-type means are available yet (competencies may be classified by type, but none carry a measured score).
-How to populate it: Score a competency assessment whose competencies map to onto types.
-What is needed: Measured per-type means in computeTypeProfile buckets.
-Expected output once available: A radar of mean capability across each competency type.",,,,,,
-"4c6b6a0a-f4ac-4faa-a6ce-d385d9d04c3b","competency_radar","interpretation","narrative","Competency-type classification is required to render the radar.",,,,,,
-"4c6b6a0a-f4ac-4faa-a6ce-d385d9d04c3b","competency_radar","recommendations","narrative","Insufficient validated data to populate this section yet.
-
-Why: No measured competency-type means are available yet (competencies may be classified by type, but none carry a measured score).
-How to populate it: Score a competency assessment whose competencies map to onto types.
-What is needed: Measured per-type means in computeTypeProfile buckets.
-Expected output once available: A radar of mean capability across each competency type.",,,,,,
-"4c6b6a0a-f4ac-4faa-a6ce-d385d9d04c3b","competency_radar","confidence_level","narrative","Confidence not applicable — no measured competency-type scores yet.",,,,,,
-"4c6b6a0a-f4ac-4faa-a6ce-d385d9d04c3b","competency_radar","data_source","narrative","competency-runtime.computeTypeProfile → onto_competency_profiles grouped by competency type.",,,,,,
-"4c6b6a0a-f4ac-4faa-a6ce-d385d9d04c3b","competency_radar","generated_timestamp","narrative","This report was generated on 25 June 2026 at 17:17 UTC.
+"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","assessment_summary","narrative","Mean domain-proxy score by competency type — Behavioral: 80.4; Cognitive: 82; Functional: 74; Technical: 74.",,,,,,
+"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","visualizations","chart_datapoint","Behavioral",,"Behavioral","80.4",,,
+"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","visualizations","chart_datapoint","Cognitive",,"Cognitive","82",,,
+"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","visualizations","chart_datapoint","Functional",,"Functional","74",,,
+"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","visualizations","chart_datapoint","Technical",,"Technical","74",,,
+"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","interpretation","narrative","The radar contrasts capability across competency types (behavioural, cognitive, functional, technical, future-skills). Each type mean is a domain-proxy: every competency inherits the measured score of its onto-domain. A balanced shape indicates broad capability; a skewed shape highlights concentration.",,,,,,
+"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","recommendations","insight","Strongest: Cognitive (82).","positive",,,,,
+"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","recommendations","insight","Development priority: Technical (74).","warning",,,,,
+"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","confidence_level","narrative","Derived from 100% type-classification coverage (structural; not measured scores).",,,,,,
+"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","data_source","narrative","competency-runtime.computeTypeProfile → onto_competency_profiles domain scores, grouped by competency type (domain-PROXY mean per type; an onto-domain with no bank code, e.g. strategic, is unmeasurable and excluded).",,,,,,
+"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","generated_timestamp","narrative","This report was generated on 25 June 2026 at 17:57 UTC.
 
 Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

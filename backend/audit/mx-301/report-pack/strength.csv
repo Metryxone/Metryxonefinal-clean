@@ -1,6 +1,6 @@
 ﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
-"17a4d818-4895-4cd5-aad1-fb8eed5da2ba","strength","executive_summary","narrative","Sarah Johnson demonstrates 5 clear strengths, led by Communication Readiness (84).",,,,,,
-"17a4d818-4895-4cd5-aad1-fb8eed5da2ba","strength","candidate_information","narrative","Name: Sarah Johnson
+"bf3d9f3c-cc6b-4585-84f1-70720d86473f","strength","executive_summary","narrative","Sarah Johnson demonstrates 5 clear strengths, led by Communication Readiness (84).",,,,,,
+"bf3d9f3c-cc6b-4585-84f1-70720d86473f","strength","candidate_information","narrative","Name: Sarah Johnson
 Reference (masked): user_4286d980cc6c
 Current role: Senior Product Manager
 Target role: Director of Product
@@ -10,18 +10,18 @@ Education: MBA
 Location: Bangalore, India
 
 Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
-"17a4d818-4895-4cd5-aad1-fb8eed5da2ba","strength","assessment_summary","narrative","Strength areas — Communication Readiness: 84 (Excellent); Problem-Solving Readiness: 81.2 (Excellent); Leadership Readiness: 81.2 (Excellent); Workplace Readiness: 80 (Excellent); Future Readiness: 79.4 (Strong).",,,,,,
-"17a4d818-4895-4cd5-aad1-fb8eed5da2ba","strength","visualizations","chart_datapoint","Communication Readiness",,"Communication Readiness","84",,,
-"17a4d818-4895-4cd5-aad1-fb8eed5da2ba","strength","visualizations","chart_datapoint","Problem-Solving Readiness",,"Problem-Solving Readiness","81.2",,,
-"17a4d818-4895-4cd5-aad1-fb8eed5da2ba","strength","visualizations","chart_datapoint","Leadership Readiness",,"Leadership Readiness","81.2",,,
-"17a4d818-4895-4cd5-aad1-fb8eed5da2ba","strength","visualizations","chart_datapoint","Workplace Readiness",,"Workplace Readiness","80",,,
-"17a4d818-4895-4cd5-aad1-fb8eed5da2ba","strength","visualizations","chart_datapoint","Future Readiness",,"Future Readiness","79.4",,,
-"17a4d818-4895-4cd5-aad1-fb8eed5da2ba","strength","interpretation","narrative","Strengths are dimensions measured at or above the Strong band — reliable areas to leverage. They are developmental signals, not endorsements for any specific role decision.",,,,,,
-"17a4d818-4895-4cd5-aad1-fb8eed5da2ba","strength","recommendations","insight","Leverage Communication Readiness (84).","positive",,,,,
-"17a4d818-4895-4cd5-aad1-fb8eed5da2ba","strength","recommendations","insight","Leverage Problem-Solving Readiness (81.2).","positive",,,,,
-"17a4d818-4895-4cd5-aad1-fb8eed5da2ba","strength","recommendations","insight","Leverage Leadership Readiness (81.2).","positive",,,,,
-"17a4d818-4895-4cd5-aad1-fb8eed5da2ba","strength","confidence_level","narrative","Confidence band: Moderate.",,,,,,
-"17a4d818-4895-4cd5-aad1-fb8eed5da2ba","strength","data_source","narrative","ei-profile-engine.buildEiProfile → strength_areas (dimensions at/above the Strong band).",,,,,,
-"17a4d818-4895-4cd5-aad1-fb8eed5da2ba","strength","generated_timestamp","narrative","This report was generated on 25 June 2026 at 17:17 UTC.
+"bf3d9f3c-cc6b-4585-84f1-70720d86473f","strength","assessment_summary","narrative","Strength areas — Communication Readiness: 84 (Excellent); Problem-Solving Readiness: 81.2 (Excellent); Leadership Readiness: 81.2 (Excellent); Workplace Readiness: 80 (Excellent); Future Readiness: 79.4 (Strong).",,,,,,
+"bf3d9f3c-cc6b-4585-84f1-70720d86473f","strength","visualizations","chart_datapoint","Communication Readiness",,"Communication Readiness","84",,,
+"bf3d9f3c-cc6b-4585-84f1-70720d86473f","strength","visualizations","chart_datapoint","Problem-Solving Readiness",,"Problem-Solving Readiness","81.2",,,
+"bf3d9f3c-cc6b-4585-84f1-70720d86473f","strength","visualizations","chart_datapoint","Leadership Readiness",,"Leadership Readiness","81.2",,,
+"bf3d9f3c-cc6b-4585-84f1-70720d86473f","strength","visualizations","chart_datapoint","Workplace Readiness",,"Workplace Readiness","80",,,
+"bf3d9f3c-cc6b-4585-84f1-70720d86473f","strength","visualizations","chart_datapoint","Future Readiness",,"Future Readiness","79.4",,,
+"bf3d9f3c-cc6b-4585-84f1-70720d86473f","strength","interpretation","narrative","Strengths are dimensions measured at or above the Strong band — reliable areas to leverage. They are developmental signals, not endorsements for any specific role decision.",,,,,,
+"bf3d9f3c-cc6b-4585-84f1-70720d86473f","strength","recommendations","insight","Leverage Communication Readiness (84).","positive",,,,,
+"bf3d9f3c-cc6b-4585-84f1-70720d86473f","strength","recommendations","insight","Leverage Problem-Solving Readiness (81.2).","positive",,,,,
+"bf3d9f3c-cc6b-4585-84f1-70720d86473f","strength","recommendations","insight","Leverage Leadership Readiness (81.2).","positive",,,,,
+"bf3d9f3c-cc6b-4585-84f1-70720d86473f","strength","confidence_level","narrative","Confidence band: Moderate.",,,,,,
+"bf3d9f3c-cc6b-4585-84f1-70720d86473f","strength","data_source","narrative","ei-profile-engine.buildEiProfile → strength_areas (dimensions at/above the Strong band).",,,,,,
+"bf3d9f3c-cc6b-4585-84f1-70720d86473f","strength","generated_timestamp","narrative","This report was generated on 25 June 2026 at 17:57 UTC.
 
 Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

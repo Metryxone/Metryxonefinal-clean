@@ -1,6 +1,6 @@
 ﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
-"098a1810-4960-4933-b1aa-df2cac4afe9f","employability_index","executive_summary","narrative","Sarah Johnson's Employability Index is 81.2/100 (Excellent), from 5 measurable dimensions.",,,,,,
-"098a1810-4960-4933-b1aa-df2cac4afe9f","employability_index","candidate_information","narrative","Name: Sarah Johnson
+"15847f81-6089-48d0-b0af-d0478c726e02","employability_index","executive_summary","narrative","Sarah Johnson's Employability Index is 81.2/100 (Excellent), from 5 measurable dimensions.",,,,,,
+"15847f81-6089-48d0-b0af-d0478c726e02","employability_index","candidate_information","narrative","Name: Sarah Johnson
 Reference (masked): user_4286d980cc6c
 Current role: Senior Product Manager
 Target role: Director of Product
@@ -10,16 +10,16 @@ Education: MBA
 Location: Bangalore, India
 
 Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
-"098a1810-4960-4933-b1aa-df2cac4afe9f","employability_index","assessment_summary","narrative","EI 81.2/100 (Excellent); coverage 100%. Dimension scores — Communication Readiness: 84; Workplace Readiness: 80; Problem-Solving Readiness: 81.2; Leadership Readiness: 81.2; Future Readiness: 79.4.",,,,,,
-"098a1810-4960-4933-b1aa-df2cac4afe9f","employability_index","visualizations","chart_datapoint","Communication Readiness",,"Communication Readiness","84",,,
-"098a1810-4960-4933-b1aa-df2cac4afe9f","employability_index","visualizations","chart_datapoint","Workplace Readiness",,"Workplace Readiness","80",,,
-"098a1810-4960-4933-b1aa-df2cac4afe9f","employability_index","visualizations","chart_datapoint","Problem-Solving Readiness",,"Problem-Solving Readiness","81.2",,,
-"098a1810-4960-4933-b1aa-df2cac4afe9f","employability_index","visualizations","chart_datapoint","Leadership Readiness",,"Leadership Readiness","81.2",,,
-"098a1810-4960-4933-b1aa-df2cac4afe9f","employability_index","visualizations","chart_datapoint","Future Readiness",,"Future Readiness","79.4",,,
-"098a1810-4960-4933-b1aa-df2cac4afe9f","employability_index","interpretation","narrative","The Employability Index aggregates dimension scores derived from measured competencies. It is a developmental indicator of overall job-readiness signal strength, not a hiring or promotion prediction.",,,,,,
-"098a1810-4960-4933-b1aa-df2cac4afe9f","employability_index","recommendations","narrative","No specific recommendations have been derived from the current measured inputs. Recommendations will appear once additional assessment evidence is captured.",,,,,,
-"098a1810-4960-4933-b1aa-df2cac4afe9f","employability_index","confidence_level","narrative","Confidence band: Moderate (coverage 100%).",,,,,,
-"098a1810-4960-4933-b1aa-df2cac4afe9f","employability_index","data_source","narrative","employability-scoring-engine.computeEmployabilityScore → competency → dimension → EI roll-up.",,,,,,
-"098a1810-4960-4933-b1aa-df2cac4afe9f","employability_index","generated_timestamp","narrative","This report was generated on 25 June 2026 at 17:17 UTC.
+"15847f81-6089-48d0-b0af-d0478c726e02","employability_index","assessment_summary","narrative","EI 81.2/100 (Excellent); coverage 100%. Dimension scores — Communication Readiness: 84; Workplace Readiness: 80; Problem-Solving Readiness: 81.2; Leadership Readiness: 81.2; Future Readiness: 79.4.",,,,,,
+"15847f81-6089-48d0-b0af-d0478c726e02","employability_index","visualizations","chart_datapoint","Communication Readiness",,"Communication Readiness","84",,,
+"15847f81-6089-48d0-b0af-d0478c726e02","employability_index","visualizations","chart_datapoint","Workplace Readiness",,"Workplace Readiness","80",,,
+"15847f81-6089-48d0-b0af-d0478c726e02","employability_index","visualizations","chart_datapoint","Problem-Solving Readiness",,"Problem-Solving Readiness","81.2",,,
+"15847f81-6089-48d0-b0af-d0478c726e02","employability_index","visualizations","chart_datapoint","Leadership Readiness",,"Leadership Readiness","81.2",,,
+"15847f81-6089-48d0-b0af-d0478c726e02","employability_index","visualizations","chart_datapoint","Future Readiness",,"Future Readiness","79.4",,,
+"15847f81-6089-48d0-b0af-d0478c726e02","employability_index","interpretation","narrative","The Employability Index aggregates dimension scores derived from measured competencies. It is a developmental indicator of overall job-readiness signal strength, not a hiring or promotion prediction.",,,,,,
+"15847f81-6089-48d0-b0af-d0478c726e02","employability_index","recommendations","narrative","No specific recommendations have been derived from the current measured inputs. Recommendations will appear once additional assessment evidence is captured.",,,,,,
+"15847f81-6089-48d0-b0af-d0478c726e02","employability_index","confidence_level","narrative","Confidence band: Moderate (coverage 100%).",,,,,,
+"15847f81-6089-48d0-b0af-d0478c726e02","employability_index","data_source","narrative","employability-scoring-engine.computeEmployabilityScore → competency → dimension → EI roll-up.",,,,,,
+"15847f81-6089-48d0-b0af-d0478c726e02","employability_index","generated_timestamp","narrative","This report was generated on 25 June 2026 at 17:57 UTC.
 
 Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

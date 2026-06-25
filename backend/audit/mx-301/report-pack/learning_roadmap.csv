@@ -1,6 +1,6 @@
 ﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
-"51771210-8fd6-45df-bedf-dbb269406eb8","learning_roadmap","executive_summary","narrative","Sarah Johnson's roadmap has 3 milestones.",,,,,,
-"51771210-8fd6-45df-bedf-dbb269406eb8","learning_roadmap","candidate_information","narrative","Name: Sarah Johnson
+"4131b917-b99a-46eb-b9b8-83cb82b5d71f","learning_roadmap","executive_summary","narrative","Sarah Johnson's roadmap has 3 milestones totalling ~4 weeks.",,,,,,
+"4131b917-b99a-46eb-b9b8-83cb82b5d71f","learning_roadmap","candidate_information","narrative","Name: Sarah Johnson
 Reference (masked): user_4286d980cc6c
 Current role: Senior Product Manager
 Target role: Director of Product
@@ -10,16 +10,16 @@ Education: MBA
 Location: Bangalore, India
 
 Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
-"51771210-8fd6-45df-bedf-dbb269406eb8","learning_roadmap","assessment_summary","narrative","Milestones — Immediate Focus (0 comps); Near-Term Development (0 comps); Longer-Term Growth (0 comps).",,,,,,
-"51771210-8fd6-45df-bedf-dbb269406eb8","learning_roadmap","visualizations","chart_datapoint","Immediate Focus",,"Immediate Focus","0",,,
-"51771210-8fd6-45df-bedf-dbb269406eb8","learning_roadmap","visualizations","chart_datapoint","Near-Term Development",,"Near-Term Development","0",,,
-"51771210-8fd6-45df-bedf-dbb269406eb8","learning_roadmap","visualizations","chart_datapoint","Longer-Term Growth",,"Longer-Term Growth","0",,,
-"51771210-8fd6-45df-bedf-dbb269406eb8","learning_roadmap","interpretation","narrative","The roadmap sequences development into time-boxed milestones ordered by priority band. Estimated effort is derived from the size of the competency gaps each milestone addresses.",,,,,,
-"51771210-8fd6-45df-bedf-dbb269406eb8","learning_roadmap","recommendations","insight","Immediate Focus: 0 competencies.","info",,,,,
-"51771210-8fd6-45df-bedf-dbb269406eb8","learning_roadmap","recommendations","insight","Near-Term Development: 0 competencies.","info",,,,,
-"51771210-8fd6-45df-bedf-dbb269406eb8","learning_roadmap","recommendations","insight","Longer-Term Growth: 0 competencies.","info",,,,,
-"51771210-8fd6-45df-bedf-dbb269406eb8","learning_roadmap","confidence_level","narrative","Confidence: Provisional — sequence and effort estimates depend on requirement coverage.",,,,,,
-"51771210-8fd6-45df-bedf-dbb269406eb8","learning_roadmap","data_source","narrative","career-roadmap-engine.buildCareerRoadmap → milestones + development plan from gaps and role requirements.",,,,,,
-"51771210-8fd6-45df-bedf-dbb269406eb8","learning_roadmap","generated_timestamp","narrative","This report was generated on 25 June 2026 at 17:17 UTC.
+"4131b917-b99a-46eb-b9b8-83cb82b5d71f","learning_roadmap","assessment_summary","narrative","Milestones — Immediate Focus (1 comps, ~4w); Near-Term Development (0 comps); Longer-Term Growth (0 comps).",,,,,,
+"4131b917-b99a-46eb-b9b8-83cb82b5d71f","learning_roadmap","visualizations","chart_datapoint","Immediate Focus",,"Immediate Focus","4",,,
+"4131b917-b99a-46eb-b9b8-83cb82b5d71f","learning_roadmap","visualizations","chart_datapoint","Near-Term Development",,"Near-Term Development","0",,,
+"4131b917-b99a-46eb-b9b8-83cb82b5d71f","learning_roadmap","visualizations","chart_datapoint","Longer-Term Growth",,"Longer-Term Growth","0",,,
+"4131b917-b99a-46eb-b9b8-83cb82b5d71f","learning_roadmap","interpretation","narrative","The roadmap sequences development into time-boxed milestones ordered by priority band. Estimated effort is derived from the size of the competency gaps each milestone addresses.",,,,,,
+"4131b917-b99a-46eb-b9b8-83cb82b5d71f","learning_roadmap","recommendations","insight","Immediate Focus: 1 competencies, ~4 weeks.","info",,,,,
+"4131b917-b99a-46eb-b9b8-83cb82b5d71f","learning_roadmap","recommendations","insight","Near-Term Development: 0 competencies.","info",,,,,
+"4131b917-b99a-46eb-b9b8-83cb82b5d71f","learning_roadmap","recommendations","insight","Longer-Term Growth: 0 competencies.","info",,,,,
+"4131b917-b99a-46eb-b9b8-83cb82b5d71f","learning_roadmap","confidence_level","narrative","Confidence: Provisional — sequence and effort estimates depend on requirement coverage.",,,,,,
+"4131b917-b99a-46eb-b9b8-83cb82b5d71f","learning_roadmap","data_source","narrative","career-roadmap-engine.buildCareerRoadmap → milestones + development plan from gaps and role requirements.",,,,,,
+"4131b917-b99a-46eb-b9b8-83cb82b5d71f","learning_roadmap","generated_timestamp","narrative","This report was generated on 25 June 2026 at 17:57 UTC.
 
 Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

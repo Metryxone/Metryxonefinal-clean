@@ -45,6 +45,41 @@ export const MX301_TAG = 'mx301';
 export const MX301_PASSWORD = 'Mx301Demo!Sarah';
 const ROLE_TITLE = 'Senior Product Manager';
 
+// The genome's canonical Product-Manager role carries REAL Role DNA (stored
+// competency requirements in onto_role_competency_profiles). The free-text title
+// "Senior Product Manager" has none, so readiness/gap target this profiled role
+// when (and only when) it genuinely exists with requirements.
+const PROFILED_PM_ROLE = 'role_pm';
+
+// Assessment blueprint for the demo. Holds the 6 role_pm requirements (for
+// readiness/gap coherence) PLUS a representative spread across bank-measurable
+// competency types so the competency radar/heatmap render a genuine multi-axis
+// shape. Every competency inherits its onto-domain PROXY score — nothing is
+// fabricated. comp_agile_collaboration maps to dom_strategic, which the bank cannot
+// measure; it is present only because it is a real role_pm requirement and is
+// honestly excluded from the radar/heatmap by the report builders.
+const BLUEPRINT_ID = 'mx301_blueprint';
+const BLUEPRINT_COMPETENCIES: { id: string; required_level: number; criticality: string }[] = [
+  // role_pm requirements (behavioural + interpersonal + the one strategic/unmeasurable req)
+  { id: 'comp_accountability', required_level: 3, criticality: 'critical' },
+  { id: 'comp_active_listening', required_level: 3, criticality: 'important' },
+  { id: 'comp_adaptability', required_level: 3, criticality: 'important' },
+  { id: 'comp_ambiguity_tolerance', required_level: 3, criticality: 'important' },
+  { id: 'comp_stakeholder_mgmt', required_level: 4, criticality: 'critical' },
+  { id: 'comp_agile_collaboration', required_level: 4, criticality: 'important' },
+  // cognitive (dom_cognitive — bank-measurable)
+  { id: 'comp_critical_thinking', required_level: 4, criticality: 'important' },
+  { id: 'comp_decision_making', required_level: 4, criticality: 'important' },
+  { id: 'comp_analytical_thinking', required_level: 4, criticality: 'important' },
+  // functional (dom_functional — bank-measurable)
+  { id: 'comp_prioritization', required_level: 3, criticality: 'important' },
+  { id: 'comp_time_management', required_level: 3, criticality: 'desirable' },
+  { id: 'comp_project_management', required_level: 4, criticality: 'important' },
+  // technical (dom_functional — bank-measurable)
+  { id: 'comp_technical_competence', required_level: 3, criticality: 'desirable' },
+  { id: 'comp_technology_adoption', required_level: 3, criticality: 'desirable' },
+];
+
 // scrypt password hash in the exact `${hash}.${salt}` format the login route's
 // crypto.compare expects (see routes.ts). Lets the demo candidate authenticate.
 async function hashPassword(password: string): Promise<string> {
@@ -75,6 +110,10 @@ const PURGE_TARGETS: { table: string; cols: string[] }[] = [
   { table: 'onto_competency_profiles', cols: ['subject_id'] },
   { table: 'onto_competency_score_runs', cols: ['subject_id'] },
   { table: 'onto_assessment_instances', cols: ['subject_id'] },
+  // Demo blueprint (id/blueprint_id carry the mx301 tag). Comp-map first, then the
+  // parent (CASCADE would also clear it, but explicit keeps the log honest).
+  { table: 'onto_blueprint_competency_map', cols: ['blueprint_id'] },
+  { table: 'onto_assessment_blueprints', cols: ['id'] },
   { table: 'competency_forecasts', cols: ['user_id'] },
   { table: 'p4_development_velocity', cols: ['user_id', 'id'] },
   { table: 'career_match_history', cols: ['subject_id', 'user_id'] },
@@ -89,8 +128,43 @@ const PURGE_TARGETS: { table: string; cols: string[] }[] = [
   { table: 'career_history', cols: ['subject_id', 'user_id'] },
   { table: 'role_resolution_decisions', cols: ['subject_id'] },
   { table: 'career_seeker_profiles', cols: ['user_id'] },
+  // Audit rows the demo's own scripted activity writes (admin_user_id = the demo
+  // identity). users.id is FK-referenced here with ON DELETE NO ACTION, so these
+  // MUST be cleared before the users row or the delete is FK-blocked and the demo
+  // identity leaks. Safe to purge: these are demo @example.com audit rows only.
+  { table: 'admin_audit_logs', cols: ['admin_user_id'] },
   { table: 'users', cols: ['id', 'email', 'username'] },
 ];
+
+// After rollback, prove the demo identity is fully gone — the "@example.com demo
+// data must stay purgeable" contract. Any surviving mx301-tagged row in a core
+// identity table is a hard failure (throws), never a silent skip.
+const PURGE_ASSERT: { table: string; col: string }[] = [
+  { table: 'users', col: 'id' },
+  { table: 'career_seeker_profiles', col: 'user_id' },
+  { table: 'onto_competency_profiles', col: 'subject_id' },
+  { table: 'onto_competency_score_runs', col: 'subject_id' },
+  { table: 'onto_assessment_instances', col: 'subject_id' },
+  { table: 'admin_audit_logs', col: 'admin_user_id' },
+];
+
+async function assertPurged(pool: pg.Pool): Promise<void> {
+  const leaks: string[] = [];
+  for (const a of PURGE_ASSERT) {
+    if (!(await tableExists(pool, a.table))) continue;
+    if (!(await columnExists(pool, a.table, a.col))) continue;
+    const r = await pool.query(
+      `SELECT count(*)::int AS n FROM ${a.table} WHERE ${a.col}::text LIKE $1`,
+      [`%${MX301_TAG}%`],
+    );
+    const n = r.rows[0]?.n ?? 0;
+    if (n > 0) leaks.push(`${a.table}.${a.col}=${n}`);
+  }
+  if (leaks.length) {
+    throw new Error(`Purge incomplete — demo identity rows survive: ${leaks.join(', ')}`);
+  }
+  console.log('Purge verified: no mx301-tagged rows remain in core identity tables.');
+}
 
 async function columnExists(pool: pg.Pool, table: string, col: string): Promise<boolean> {
   const r = await pool.query(
@@ -103,6 +177,71 @@ async function columnExists(pool: pg.Pool, table: string, col: string): Promise<
 async function tableExists(pool: pg.Pool, table: string): Promise<boolean> {
   const r = await pool.query(`SELECT to_regclass($1) AS reg`, [table]);
   return r.rows[0]?.reg != null;
+}
+
+// Returns the first candidate role_id that genuinely carries Role DNA requirements
+// (rows in onto_role_competency_profiles). Never invents requirements — if none of
+// the candidates have a profiled role, returns null and the caller keeps the title.
+async function firstRoleWithRequirements(
+  pool: pg.Pool,
+  candidates: (string | null | undefined)[],
+): Promise<string | null> {
+  for (const id of candidates) {
+    const roleId = String(id ?? '').trim();
+    if (!roleId) continue;
+    const r = await pool.query(
+      `SELECT 1 FROM onto_role_competency_profiles WHERE role_id = $1 LIMIT 1`,
+      [roleId],
+    );
+    if ((r.rowCount ?? 0) > 0) return roleId;
+  }
+  return null;
+}
+
+// Idempotently (re)creates the demo assessment blueprint so getBlueprint() returns
+// REAL competencies → computeTypeProfile measures the radar/heatmap, and
+// computeRoleReadinessForSubject builds per-competency actuals. Self-contained and
+// reproducible; purged on rollback (the blueprint id carries the mx301 tag). Only
+// seeds competency ids that genuinely exist in the genome — never fabricates one.
+async function ensureBlueprint(pool: pg.Pool): Promise<void> {
+  const roleExists =
+    (await pool.query(`SELECT 1 FROM onto_roles WHERE id = $1`, [PROFILED_PM_ROLE])).rowCount ?? 0;
+  await pool.query(
+    `INSERT INTO onto_assessment_blueprints (id, blueprint_key, name, description, source_role_id, source)
+     VALUES ($1, $1, $2, $3, $4, 'curated')
+     ON CONFLICT (id) DO UPDATE
+       SET name = EXCLUDED.name, description = EXCLUDED.description, source_role_id = EXCLUDED.source_role_id`,
+    [
+      BLUEPRINT_ID,
+      'MX-301 Demo — Senior PM Assessment',
+      'MX-301 demonstration assessment blueprint spanning bank-measurable competency types for the demo candidate.',
+      roleExists ? PROFILED_PM_ROLE : null,
+    ],
+  );
+
+  const wantIds = BLUEPRINT_COMPETENCIES.map((c) => c.id);
+  const present = new Set(
+    (await pool.query(`SELECT id FROM onto_competencies WHERE id = ANY($1::text[])`, [wantIds])).rows.map(
+      (r: any) => r.id,
+    ),
+  );
+  const weight = Math.round((100 / wantIds.length) * 100) / 100;
+  let seeded = 0;
+  for (const c of BLUEPRINT_COMPETENCIES) {
+    if (!present.has(c.id)) {
+      console.log(`  [skip] competency not in genome (never fabricated): ${c.id}`);
+      continue;
+    }
+    await pool.query(
+      `INSERT INTO onto_blueprint_competency_map (blueprint_id, competency_id, required_level, weight, criticality, source)
+       VALUES ($1, $2, $3, $4, $5, 'curated')
+       ON CONFLICT (blueprint_id, competency_id) DO UPDATE
+         SET required_level = EXCLUDED.required_level, weight = EXCLUDED.weight, criticality = EXCLUDED.criticality`,
+      [BLUEPRINT_ID, c.id, c.required_level, weight, c.criticality],
+    );
+    seeded += 1;
+  }
+  console.log(`Blueprint ensured: ${BLUEPRINT_ID} (${seeded}/${wantIds.length} competencies seeded).`);
 }
 
 async function rollback(pool: pg.Pool): Promise<number> {
@@ -164,14 +303,26 @@ async function provision(pool: pg.Pool) {
   console.log('Registration: users + career_seeker_profiles created.');
 
   // ── Stage: Role selection + automatic Role DNA resolution ────────────────
+  // Readiness/gap compare against a role's stored competency requirements, so the
+  // target role must genuinely carry Role DNA. We run the real resolver for the
+  // decision trail, then pick the first candidate that ACTUALLY has requirements
+  // (resolved role first, else the genome's profiled PM role). If neither has Role
+  // DNA we keep the free-text title — readiness then honestly reports unmeasured.
   let roleId = ROLE_TITLE;
+  let resolved: string | null = null;
   try {
     const res: any = await resolveRoleEndToEnd(pool, { title: ROLE_TITLE });
-    roleId = res?.role?.role_id ?? res?.role?.id ?? res?.resolution?.role_id ?? ROLE_TITLE;
-    console.log(`Role DNA resolution: "${ROLE_TITLE}" → role_id=${roleId} (resolved=${!!res?.resolved ?? 'n/a'}).`);
+    resolved = res?.role?.role_id ?? res?.role?.id ?? res?.resolution?.role_id ?? null;
   } catch (e: any) {
-    console.log(`Role DNA resolution: fell back to title (${String(e?.message ?? e).slice(0, 80)}).`);
+    console.log(`Role DNA resolution: resolver fell back (${String(e?.message ?? e).slice(0, 80)}).`);
   }
+  roleId = (await firstRoleWithRequirements(pool, [resolved, PROFILED_PM_ROLE])) ?? resolved ?? ROLE_TITLE;
+  console.log(
+    `Role DNA resolution: "${ROLE_TITLE}" → resolved=${resolved ?? 'none'}; readiness target role_id=${roleId}.`,
+  );
+
+  // ── Stage: Ensure the demo assessment blueprint (real competencies) ──────
+  await ensureBlueprint(pool);
 
   // ── Stage: Real scorer execution (proof the scoring transaction runs) ─────
   try {
@@ -257,6 +408,7 @@ async function main() {
       console.log('MX-301 demo candidate ROLLBACK…');
       const n = await rollback(pool);
       console.log(`Rollback complete: ${n} rows removed.`);
+      await assertPurged(pool);
     } else {
       await provision(pool);
     }

@@ -43,6 +43,10 @@ args = "referral-deal-value-writepath"
 task = "workflow.run"
 args = "referral-deal-value-repair"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "precise-scores-isolation"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -119,6 +123,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx scripts/smoke-referral-deal-value-repair.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "precise-scores-isolation"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx scripts/task158-e2e-precise-scores-isolation.ts"
 
 [workflows.workflow.metadata]
 isValidation = true

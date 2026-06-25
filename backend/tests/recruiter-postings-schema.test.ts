@@ -1,5 +1,6 @@
 /**
  * Recruiter Postings — schema-drift regression guard (Task #174)
+ *                      + negative-path contract guard (Task #178)
  *
  * `employer_jobs` is created and written by SEVERAL modules with DIVERGENT
  * column shapes (employer-portal authoring path, MX-103W projection, and this
@@ -9,15 +10,26 @@
  *   - lazily CREATEs `employer_jobs` with its OWN fallback shape, and
  *   - SELECTs a fixed column list out of it.
  *
- * The recruiter route is EXTRA dangerous on drift: its handler catches any
- * error and returns `{ postings: [], note: 'no_data' }` (graceful fallback so
- * the candidate UI never breaks). So a schema drift does NOT surface as a 500 —
- * it SILENTLY hides every posting. A simple "did it 200?" check would miss it.
+ * The recruiter route is EXTRA dangerous on drift: a naive handler that catches
+ * any error and returns `{ postings: [], note: 'no_data' }` would SILENTLY hide
+ * every posting on a read failure, so a candidate could not tell "no jobs yet"
+ * apart from "couldn't load jobs". The route therefore now distinguishes the
+ * two: an empty-but-healthy read returns 200 + `note: 'no_data'`, while a read
+ * FAILURE returns HTTP 503 + `note: 'unavailable'`.
  * See `.agents/memory/employer-job-store-projection.md`.
  *
- * This test exercises the REAL route against the REAL dev/prod DB so it fails
- * loudly whenever the recruiter SELECT column set and the live `employer_jobs`
- * schema disagree:
+ * Part A — Negative-path contract (Task #178), deterministic stub pools, no DB:
+ *   3. An empty-but-healthy table returns 200 + `note: 'no_data'` (NOT
+ *      'unavailable') and an empty postings list.
+ *   4. A read failure (the SELECT throws, e.g. a missing/broken table) returns
+ *      HTTP 503 + `note: 'unavailable'` — NOT a swallowed 200 empty list.
+ *   These use in-memory stub pools so they assert the contract directly and run
+ *   even without DATABASE_URL — locking in the honest error state so a future
+ *   refactor cannot silently revert to swallowing failures as empty.
+ *
+ * Part B — Schema-drift round-trip (Task #174), against the REAL dev/prod DB so
+ * it fails loudly whenever the recruiter SELECT column set and the live
+ * `employer_jobs` schema disagree:
  *   1. Static guard — parse the exact column list out of the `SELECT ... FROM
  *      employer_jobs` statement in recruiter-postings.ts and assert every one of
  *      those columns exists in the live table (after lazy ensureTable has run).
@@ -27,11 +39,11 @@
  *      the recruiter SELECT column set (so a missing column throws "column does
  *      not exist" right here), then GET /api/career/recruiter-postings and assert
  *      the created job reads back with its fields intact. If a future drift makes
- *      the SELECT throw, the handler swallows it and returns [], so the row would
- *      NOT appear — which fails this assertion loudly instead of silently.
+ *      the SELECT throw, the handler now returns 503 'unavailable' (not a
+ *      swallowed empty list), so the row would NOT appear — failing this loudly.
  *
- * All test data uses @example.com and is cleaned up afterwards (shared dev/prod
- * DB — see runtime-activation-traps.md).
+ * All DB test data uses @example.com and is cleaned up afterwards (shared
+ * dev/prod DB — see runtime-activation-traps.md).
  *
  * Run with:  cd backend && npx tsx tests/recruiter-postings-schema.test.ts
  */
@@ -84,13 +96,110 @@ function selectColumnsFromSource(): string[] {
     .filter(Boolean);
 }
 
+/**
+ * In-memory stub pool so the negative-path contract can be asserted directly,
+ * deterministically, and without touching the live DB.
+ *   - DDL (CREATE/ALTER from lazy ensureTable) always succeeds.
+ *   - The recruiter SELECT either returns the supplied rows OR throws to
+ *     simulate a broken/missing table read.
+ */
+function makeStubPool(opts: { selectRows?: any[]; failSelect?: boolean }) {
+  return {
+    query: async (text: string) => {
+      const isRead = /SELECT[\s\S]*FROM\s+employer_jobs/i.test(text);
+      if (isRead) {
+        if (opts.failSelect) {
+          const err: any = new Error('relation "employer_jobs" does not exist');
+          err.code = '42P01';
+          throw err;
+        }
+        return { rows: opts.selectRows ?? [], rowCount: (opts.selectRows ?? []).length };
+      }
+      // CREATE TABLE / ALTER / CREATE INDEX from ensureTable — succeed silently.
+      return { rows: [], rowCount: 0 };
+    },
+  };
+}
+
+/**
+ * Spin up a throwaway Express app with the REAL recruiter route wired to the
+ * given pool, run `fn` against its base URL, then tear the server down.
+ */
+async function withRoute(
+  pool: any,
+  fn: (base: string) => Promise<void>,
+): Promise<void> {
+  const app: Express = express();
+  app.use(express.json());
+  const passthroughAuth = (req: any, _res: Response, next: NextFunction) => {
+    req.user = { id: TEST_EMAIL, account_type: 'parent', username: TEST_EMAIL, role: 'parent' };
+    req.isAuthenticated = () => true;
+    next();
+  };
+  registerRecruiterPostingsRoutes(app, pool as Pool, passthroughAuth);
+  const server = createServer(app);
+  await new Promise<void>((r) => server.listen(0, r));
+  const addr = server.address();
+  const port = typeof addr === 'object' && addr ? addr.port : 0;
+  try {
+    await fn(`http://127.0.0.1:${port}`);
+  } finally {
+    await new Promise<void>((r) => server.close(() => r()));
+  }
+}
+
+// ── Part A: negative-path contract (Task #178) — stub pools, no DB needed. ─────
+async function runNegativePathTests() {
+  // 3. Empty-but-healthy table → 200 + note 'no_data' (NOT 'unavailable').
+  await test('empty-but-healthy table returns 200 + note no_data (not unavailable)', async () => {
+    await withRoute(makeStubPool({ selectRows: [] }), async (base) => {
+      const res = await fetch(`${base}/api/career/recruiter-postings`);
+      assert.equal(res.status, 200, `expected 200 for an empty healthy read, got ${res.status}`);
+      const body = await res.json();
+      assert.equal(body.success, true, 'an empty healthy read should report success');
+      assert.deepEqual(body.postings, [], 'postings should be an empty array');
+      assert.equal(body.note, 'no_data', "empty healthy read must carry note 'no_data'");
+      assert.notEqual(body.note, 'unavailable', "an empty healthy read must NOT report 'unavailable'");
+    });
+  });
+
+  // 4. Read failure → HTTP 503 + note 'unavailable' (NOT a swallowed 200 []).
+  await test('read failure returns HTTP 503 + note unavailable (not a 200 empty list)', async () => {
+    await withRoute(makeStubPool({ failSelect: true }), async (base) => {
+      const res = await fetch(`${base}/api/career/recruiter-postings`);
+      assert.equal(
+        res.status,
+        503,
+        `a read failure must surface as 503, got ${res.status} (regression: error swallowed as empty)`,
+      );
+      const body = await res.json();
+      assert.equal(body.success, false, 'a read failure should report success:false');
+      assert.equal(body.note, 'unavailable', "a read failure must carry note 'unavailable'");
+      assert.notEqual(body.note, 'no_data', "a read failure must NOT masquerade as 'no_data'");
+      assert.deepEqual(body.postings, [], 'failure response still returns an empty postings array');
+    });
+  });
+}
+
 async function main() {
   const dbUrl = process.env.DATABASE_URL;
-  if (!dbUrl) {
-    console.log('\n  \u26a0  DATABASE_URL not set — skipping recruiter-postings DB test.\n');
-    return;
+  // Part B (live-DB schema) runs FIRST so the REAL recruiter ensureTable runs
+  // against the real table (lazily ADDing its columns) before the stub-pool
+  // tests trip the module-level `tableEnsured` latch — otherwise the stub DDL
+  // would mark the table "ensured" and the live ALTERs would be skipped.
+  if (dbUrl) {
+    await runDbTests(dbUrl);
+  } else {
+    console.log('\n  \u26a0  DATABASE_URL not set — skipping recruiter-postings live-DB schema tests.\n');
   }
 
+  // Part A — negative-path contract (Task #178). Deterministic stub pools.
+  await runNegativePathTests();
+
+  printSummaryAndExit();
+}
+
+async function runDbTests(dbUrl: string) {
   const pool = new Pool({ connectionString: dbUrl });
   let server: Server | undefined;
 
@@ -193,7 +302,9 @@ async function main() {
     if (server) await new Promise<void>((r) => server!.close(() => r()));
     await pool.end().catch(() => {});
   }
+}
 
+function printSummaryAndExit() {
   console.log(`\n  ${passed} passed, ${failed} failed`);
   if (failed > 0) {
     console.error(`\n  FAILED: ${failures.join(', ')}`);

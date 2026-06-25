@@ -99,3 +99,26 @@ CREATE TABLE IF NOT EXISTS onto_competency_department_map (
   created_at       TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS ix_ocdm_comp ON onto_competency_department_map (competency_id);
+
+-- ── 3. Controlled Enterprise Activation — Verified lifecycle (additive, reversible) ──
+-- Founder directive (MX-202B Controlled Enterprise Activation): source-backed FACTUAL
+-- knowledge is governed independently from expert-authored/interpretive knowledge.
+--   governance_track = 'factual'         → draft → VERIFIED (deterministic auto-promote, no
+--                                           human judgement) for provenance-verified content.
+--   governance_track = 'expert_authored' → draft → APPROVED (human gate). Default for ALL
+--                                           rule_based/ai/behavioural/evidence/learning content.
+-- Nothing auto-promotes unless provenance is source-backed AND attribute is factual-class.
+-- Fully reversible (status returns to 'draft'; promoted rows carry lifecycle='verified').
+ALTER TABLE onto_competency_content_drafts ADD COLUMN IF NOT EXISTS governance_track TEXT NOT NULL DEFAULT 'expert_authored';
+ALTER TABLE onto_competency_content_drafts ADD COLUMN IF NOT EXISTS verified_by TEXT;
+ALTER TABLE onto_competency_content_drafts ADD COLUMN IF NOT EXISTS verified_at TIMESTAMPTZ;
+ALTER TABLE onto_competency_content_drafts DROP CONSTRAINT IF EXISTS onto_competency_content_drafts_status_check;
+ALTER TABLE onto_competency_content_drafts ADD CONSTRAINT onto_competency_content_drafts_status_check
+  CHECK (status IN ('draft','in_review','verified','approved','rejected','archived'));
+
+-- lifecycle marker on canonical homes: distinguishes HOW a row went live (verified vs approved).
+ALTER TABLE onto_competency_evidence          ADD COLUMN IF NOT EXISTS lifecycle TEXT NOT NULL DEFAULT 'approved';
+ALTER TABLE onto_competency_learning_outcomes ADD COLUMN IF NOT EXISTS lifecycle TEXT NOT NULL DEFAULT 'approved';
+ALTER TABLE onto_competency_function_map      ADD COLUMN IF NOT EXISTS lifecycle TEXT NOT NULL DEFAULT 'approved';
+ALTER TABLE onto_competency_industry_map      ADD COLUMN IF NOT EXISTS lifecycle TEXT NOT NULL DEFAULT 'approved';
+ALTER TABLE onto_competency_department_map    ADD COLUMN IF NOT EXISTS lifecycle TEXT NOT NULL DEFAULT 'approved';

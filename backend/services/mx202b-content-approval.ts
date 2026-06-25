@@ -15,7 +15,7 @@ import type { Pool } from 'pg';
 
 export type ApprovalResult = { ok: boolean; reason?: string; draft_id: number; attribute_type?: string; promoted_id?: number | null };
 
-const HOME_BY_ATTR: Record<string, { table: string; cols: string[]; build: (d: any) => any[] }> = {
+export const HOME_BY_ATTR: Record<string, { table: string; cols: string[]; build: (d: any) => any[] }> = {
   evidence_requirement: {
     table: 'onto_competency_evidence',
     cols: ['competency_id', 'proficiency_level', 'evidence', 'evidence_type', 'provenance', 'source', 'draft_id'],
@@ -52,6 +52,11 @@ export async function approveContentDraft(pool: Pool, draftId: number, reviewer:
   const d = await loadDraft(pool, draftId);
   if (!d) return { ok: false, reason: 'draft_not_found', draft_id: draftId };
   if (d.status === 'approved') return { ok: false, reason: 'already_approved', draft_id: draftId };
+  // Verified and human-Approved are INDEPENDENT lifecycles (Controlled Enterprise Activation).
+  // A verified draft already has a canonical home row (lifecycle='verified'); approving it again
+  // would insert a duplicate and collapse the two tracks. Reject (unverify first to re-route).
+  if (d.status === 'verified') return { ok: false, reason: 'already_verified', draft_id: draftId };
+  if (d.status === 'rejected' || d.status === 'archived') return { ok: false, reason: `not_approvable:${d.status}`, draft_id: draftId };
 
   const client = await pool.connect();
   try {

@@ -1,18 +1,38 @@
-# MX-202B — Founder Certification Report
-**Implementation Maturity** (distinct from production validation). Generated 2026-06-25T06:17:20.538Z. Genome: 419 competencies.
+# MX-202B — Founder Certification Report (Controlled Enterprise Activation)
+**Implementation Maturity** (distinct from production validation). Generated 2026-06-25T06:40:24.120Z. Genome: 419 competencies.
 
-> **Read this first.** "Implementation maturity" means the *system is built and every competency is reachable by every attribute pipeline*. It is **NOT** a claim of production validation, real adoption, or proven outcomes — those are reported as separate, honestly-low dimensions below. **Governed drafts are rule-based proposals (status=draft, needs_review=true, never published).** Approval is the only thing that makes content live; nothing auto-promotes.
+> **Read this first.** Per the founder's *Controlled Enterprise Activation* directive, knowledge is governed in **two independent lifecycles**: source-backed **Verified** factual content (deterministic, provenance-verified — may auto-activate, no human judgement) and **expert-authored** interpretive content (rule-based/AI proposals — **draft → human approval**, nothing auto-promotes). The seven dimensions below are reported **separately and never combined**.
 
-## The six dimensions (reported separately — never combined)
+## Controlled Enterprise Activation — outcome
+- **7521** governed drafts are **expert-authored** (provenance=`rule_based`) → they correctly remain in **Draft** awaiting human approval.
+- **0** governed drafts qualified as **factual** (source-backed); **0** were auto-promoted to **Verified**.
+- **Honest result:** the verified factual layer (O*NET crosswalk, Role DNA, benchmark, genome identity/type) **already lives** in its canonical tables and is measured by *Verified Knowledge Coverage* below — it is **not** something that needed promoting from the draft staging. Relabeling rule_based drafts as "verified" would fabricate provenance, so **0** were promoted. This is correct.
+
+## The seven dimensions (reported separately — never combined)
 | # | Dimension | Value | What it means |
 |---|-----------|-------|---------------|
-| 1 | Implementation Completion | **87.3%** | Every (competency × attribute) cell has a canonical home + at least a draft-or-real record. |
-| 2 | Structural Readiness | **100%** | Infrastructure present (tables, engines, migration, generator, approval, audit/version). |
-| 3a | Content Completion — **Draft** | **100%** | Draftable attributes with governed draft (or real) content. |
-| 3b | Content Completion — **Approved** | **0.7%** | Draftable attributes with **human-approved live** content. |
-| 4 | Activation | **41%** | Live/active content across all attributes — **includes pre-existing native genome identity**. MX-202B-generated content activation = **0.7%** (only human-approved drafts go live). |
-| 5 | Adoption | `null` (not measurable) | null (not genome-denominated; no production deployment). Raw dev/test usage: scored_subjects=37, score_runs=23, capadex_sessions=0. |
-| 6 | Outcome Confidence | `null` (not measurable) | Realized-outcome calibration. abstains — 0 realized non-demo outcomes (< k_min=30). |
+| 1 | Structural Readiness | **100%** | Infrastructure present (tables, engines, migration, generator, approval, verified-lifecycle, audit/version). |
+| 2 | **Verified** Knowledge Coverage | **78.9%** | Source-backed FACTUAL knowledge that is **live** (genome identity, type classification, benchmark, O*NET, Role DNA). Deterministic/provenance-verified — partial because real factual coverage is partial (never fabricated). |
+| 3 | **Draft** Knowledge Coverage | **100%** | Expert-authored governed DRAFTS (rule_based, needs_review, never published) across 6 attributes. Implementation-complete; **not** activated. |
+| 4 | **Approved** Knowledge Coverage | **0%** | Governed drafts a **human approved** → live in canonical homes. Low by design pre-review (nothing auto-promotes). |
+| 5 | Activation | **41%** | Live/active content across all attributes — **includes pre-existing native genome identity**. MX-202B-generated content activation = **0.7%**. |
+| 6 | Adoption | `null` (not measurable) | null (not genome-denominated; no production deployment). Raw dev/test usage: scored_subjects=37, score_runs=23, capadex_sessions=0. |
+| 7 | Outcome Confidence | `null` (not measurable) | Realized-outcome calibration. abstains — 0 realized non-demo outcomes (< k_min=30). |
+
+### Verified Knowledge Coverage — factual breakdown
+| Factual attribute | Live /419 |
+|-------------------|-----------|
+| definition | 419 |
+| domain | 419 |
+| family | 419 |
+| scientific_type | 419 |
+| scoring_metadata | 419 |
+| type_classification | 419 |
+| benchmark_metadata | 299 |
+| onet_crosswalk | 137 |
+| role_dna | 24 |
+
+> *Supplementary (original MX-202B axes, not part of the seven):* Implementation Completion **87.3%** · Content Completion draft **100%** / approved **0.7%**.
 
 ## Per-attribute coverage matrix
 | Attribute | Home | Draftable | Real /419 | Draft /419 | Combined /419 | Active /419 | Note |

@@ -1,23 +1,40 @@
 {
   "task": "MX-202B",
-  "generated_at": "2026-06-25T06:17:20.538Z",
+  "mode": "Controlled Enterprise Activation",
+  "generated_at": "2026-06-25T06:40:24.120Z",
   "genome": 419,
   "dimensions": {
-    "implementation_completion_pct": 87.3,
     "structural_readiness_pct": 100,
-    "content_completion": {
-      "draft_pct": 100,
-      "approved_pct": 0.7
-    },
+    "verified_knowledge_coverage_pct": 78.9,
+    "draft_knowledge_coverage_pct": 100,
+    "approved_knowledge_coverage_pct": 0,
     "activation_pct": 41,
     "adoption_pct": null,
     "outcome_confidence_pct": null
   },
+  "supplementary": {
+    "implementation_completion_pct": 87.3,
+    "content_completion": {
+      "draft_pct": 100,
+      "approved_pct": 0.7
+    }
+  },
+  "governance": {
+    "tracks": {
+      "expert_authored": 7521
+    },
+    "verified_drafts_promoted": 0,
+    "verified_home_rows": 0,
+    "controlled_activation": "0 governed drafts auto-promoted to VERIFIED — all 7521 drafts are expert-authored (provenance=rule_based) and correctly stay in Draft. The verified factual layer is already live in canonical tables and is measured by Verified Knowledge Coverage, NOT by promotion."
+  },
   "notes": {
+    "verified_knowledge": "Source-backed FACTUAL knowledge that is LIVE: genome identity (definition/domain/family/type/scoring), competency type classification (419/419), benchmark (299/419), O*NET crosswalk (137/419), Role DNA (24/419). Deterministic/provenance-verified — NOT rule-based proposals. Honestly < 100% because benchmark/O*NET/Role-DNA real coverage is partial (never fabricated).",
+    "draft_knowledge": "Expert-authored governed DRAFTS (rule_based, needs_review, never published) across 6 attributes. Implementation-complete but NOT activated — awaits human approval.",
+    "approved_knowledge": "Governed drafts a HUMAN approved → live in canonical homes. 0% by design pre-review (nothing auto-promotes).",
     "adoption": "null (not genome-denominated; no production deployment). Raw dev/test usage: scored_subjects=37, score_runs=23, capadex_sessions=0.",
-    "activation": "41% reflects ALL live content INCLUDING pre-existing native genome identity (definition/domain/family/type/scoring = already live). MX-202B-generated content activation = 0.7% (only human-approved drafts go live; nothing auto-promotes).",
+    "activation": "41% reflects ALL live content INCLUDING pre-existing native genome identity. MX-202B-generated content activation = 0.7% (only human-approved drafts go live; nothing auto-promotes).",
     "outcome_confidence": "abstains — 0 realized non-demo outcomes (< k_min=30)",
-    "honesty": "Governed drafts (rule_based, needs_review, never published) count toward Implementation Completion + Draft Content ONLY. Activation/Adoption/Outcome reflect live/approved reality and stay honestly low. benchmark + role_dna are REAL-ONLY (never drafted)."
+    "honesty": "Verified, Draft, and Approved knowledge are THREE independent axes — never combined. Controlled Enterprise Activation auto-promotes ONLY source-backed factual content; rule_based drafts can never be relabeled verified (= fabricating provenance). benchmark + role_dna + O*NET are REAL-ONLY; their gaps show honestly."
   },
   "attribute_matrix": [
     {
@@ -184,6 +201,44 @@
       "combined_n": 24,
       "active_n": 24,
       "note": "REAL-ONLY (role weights NOT fabricated; honest coverage gap)"
+    }
+  ],
+  "verified_factual_breakdown": [
+    {
+      "name": "definition",
+      "live_n": 419
+    },
+    {
+      "name": "domain",
+      "live_n": 419
+    },
+    {
+      "name": "family",
+      "live_n": 419
+    },
+    {
+      "name": "scientific_type",
+      "live_n": 419
+    },
+    {
+      "name": "scoring_metadata",
+      "live_n": 419
+    },
+    {
+      "name": "type_classification",
+      "live_n": 419
+    },
+    {
+      "name": "benchmark_metadata",
+      "live_n": 299
+    },
+    {
+      "name": "onet_crosswalk",
+      "live_n": 137
+    },
+    {
+      "name": "role_dna",
+      "live_n": 24
     }
   ],
   "structural_checklist": [

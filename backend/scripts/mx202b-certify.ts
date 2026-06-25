@@ -81,6 +81,12 @@ async function main() {
     const liveIM = await safeCount(pool, 'onto_competency_industry_map', `SELECT count(DISTINCT competency_id)::int n FROM onto_competency_industry_map`) ?? 0;
     const liveDM = await safeCount(pool, 'onto_competency_department_map', `SELECT count(DISTINCT competency_id)::int n FROM onto_competency_department_map`) ?? 0;
 
+    // ---- VERIFIED-promoted home rows (lifecycle='verified'; source-backed factual auto-promotions) ----
+    const vrf = async (t: string) => (await safeCount(pool, t, `SELECT count(DISTINCT competency_id)::int n FROM ${t} WHERE lifecycle='verified'`)) ?? 0;
+    const verifiedHomeRows = (await vrf('onto_competency_evidence')) + (await vrf('onto_competency_learning_outcomes')) + (await vrf('onto_competency_function_map')) + (await vrf('onto_competency_industry_map')) + (await vrf('onto_competency_department_map'));
+    // competency type classification (onto_competency_type_map) — source-backed genome fact
+    const realType_map = await safeCount(pool, 'onto_competency_type_map', `SELECT count(DISTINCT competency_id)::int n FROM onto_competency_type_map`) ?? 0;
+
     const homeExists = async (t: string) => regclass(pool, t);
 
     const attrs: AttrRow[] = [
@@ -133,6 +139,40 @@ async function main() {
     // ---- DIMENSION 4: Activation % (live/active content across attrs) ----
     const activation = pct(attrs.reduce((s, a) => s + Math.min(GENOME, a.active_n), 0), attrs.length * GENOME);
 
+    // ============================================================================
+    // Controlled Enterprise Activation — Verified vs Draft vs Approved Knowledge
+    // coverage, reported as THREE SEPARATE axes (never combined). null ≠ 0.
+    // ============================================================================
+    // VERIFIED KNOWLEDGE COVERAGE — source-backed FACTUAL knowledge that is LIVE.
+    // These are deterministic / provenance-verified canonical facts (genome identity, type
+    // classification, O*NET crosswalk, Role DNA, benchmark) — NOT rule-based proposals.
+    const verifiedFactual = [
+      { name: 'definition', live_n: realDef },
+      { name: 'domain', live_n: realDom },
+      { name: 'family', live_n: realFam },
+      { name: 'scientific_type', live_n: realType },
+      { name: 'scoring_metadata', live_n: realScoring },
+      { name: 'type_classification', live_n: realType_map },
+      { name: 'benchmark_metadata', live_n: realBench },
+      { name: 'onet_crosswalk', live_n: realOnet },
+      { name: 'role_dna', live_n: realRoleDna },
+    ];
+    const verifiedKnowledgeCoverage = pct(
+      verifiedFactual.reduce((s, a) => s + Math.min(GENOME, a.live_n), 0) + Math.min(GENOME, verifiedHomeRows),
+      (verifiedFactual.length + (verifiedHomeRows > 0 ? 1 : 0)) * GENOME);
+
+    // DRAFT KNOWLEDGE COVERAGE — expert-authored governed DRAFTS (rule_based, needs_review,
+    // never published). Distinct-competency coverage across the 6 MX-202B draftable attributes.
+    const draftableExpert = ['behavioural_indicator', 'evidence_requirement', 'learning_outcome', 'function_map', 'industry_map', 'department_map'];
+    const draftKnowledgeCoverage = pct(
+      draftableExpert.reduce((s, a) => s + Math.min(GENOME, draftCov[a] ?? 0), 0),
+      draftableExpert.length * GENOME);
+
+    // APPROVED KNOWLEDGE COVERAGE — governed drafts a HUMAN approved → live in canonical homes.
+    const approvedKnowledgeCoverage = pct(
+      draftableExpert.reduce((s, a) => s + Math.min(GENOME, approvedCov[a] ?? 0), 0),
+      draftableExpert.length * GENOME);
+
     // ---- DIMENSION 5: Adoption % (real usage) ----
     const scoredSubjects = await safeCount(pool, 'onto_competency_profiles', `SELECT count(DISTINCT subject_id)::int n FROM onto_competency_profiles`);
     const scoreRuns = await safeCount(pool, 'onto_competency_score_runs', `SELECT count(*)::int n FROM onto_competency_score_runs`);
@@ -148,23 +188,42 @@ async function main() {
     const outcomeConfidence: number | null = (realizedOutcomes ?? 0) >= 30 ? null /* would compute calibration */ : null; // abstain: insufficient realized data
     const outcomeNote = (realizedOutcomes ?? 0) >= 30 ? 'calibration computable' : `abstains — ${realizedOutcomes ?? 0} realized non-demo outcomes (< k_min=30)`;
 
+    // governance-track split of the governed drafts (Controlled Enterprise Activation)
+    const trackSplit = (await pool.query(
+      `SELECT governance_track, count(*)::int n FROM onto_competency_content_drafts WHERE source='mx202b' GROUP BY governance_track`)).rows
+      .reduce((m: Record<string, number>, r: any) => { m[r.governance_track] = Number(r.n); return m; }, {});
+    const verifiedDrafts = await safeCount(pool, 'onto_competency_content_drafts', `SELECT count(*)::int n FROM onto_competency_content_drafts WHERE source='mx202b' AND status='verified'`) ?? 0;
+
     const result = {
-      task: 'MX-202B', generated_at: now, genome: GENOME,
+      task: 'MX-202B', mode: 'Controlled Enterprise Activation', generated_at: now, genome: GENOME,
+      // Seven dimensions reported SEPARATELY — never combined (founder directive). null ≠ 0.
       dimensions: {
-        implementation_completion_pct: implementationCompletion,
         structural_readiness_pct: structuralReadiness,
-        content_completion: { draft_pct: draftContent, approved_pct: approvedContent },
+        verified_knowledge_coverage_pct: verifiedKnowledgeCoverage,
+        draft_knowledge_coverage_pct: draftKnowledgeCoverage,
+        approved_knowledge_coverage_pct: approvedKnowledgeCoverage,
         activation_pct: activation,
         adoption_pct: adoption,
         outcome_confidence_pct: outcomeConfidence,
       },
+      supplementary: { implementation_completion_pct: implementationCompletion, content_completion: { draft_pct: draftContent, approved_pct: approvedContent } },
+      governance: {
+        tracks: trackSplit,
+        verified_drafts_promoted: verifiedDrafts,
+        verified_home_rows: verifiedHomeRows,
+        controlled_activation: `0 governed drafts auto-promoted to VERIFIED — all ${(trackSplit['expert_authored'] ?? 0)} drafts are expert-authored (provenance=rule_based) and correctly stay in Draft. The verified factual layer is already live in canonical tables and is measured by Verified Knowledge Coverage, NOT by promotion.`,
+      },
       notes: {
+        verified_knowledge: `Source-backed FACTUAL knowledge that is LIVE: genome identity (definition/domain/family/type/scoring), competency type classification (${realType_map}/419), benchmark (${realBench}/419), O*NET crosswalk (${realOnet}/419), Role DNA (${realRoleDna}/419). Deterministic/provenance-verified — NOT rule-based proposals. Honestly < 100% because benchmark/O*NET/Role-DNA real coverage is partial (never fabricated).`,
+        draft_knowledge: `Expert-authored governed DRAFTS (rule_based, needs_review, never published) across 6 attributes. Implementation-complete but NOT activated — awaits human approval.`,
+        approved_knowledge: `Governed drafts a HUMAN approved → live in canonical homes. ${approvedKnowledgeCoverage ?? 0}% by design pre-review (nothing auto-promotes).`,
         adoption: `null (not genome-denominated; no production deployment). Raw dev/test usage: scored_subjects=${scoredSubjects}, score_runs=${scoreRuns}, capadex_sessions=${capadexSessions}.`,
-        activation: `41% reflects ALL live content INCLUDING pre-existing native genome identity (definition/domain/family/type/scoring = already live). MX-202B-generated content activation = ${approvedContent}% (only human-approved drafts go live; nothing auto-promotes).`,
+        activation: `${activation}% reflects ALL live content INCLUDING pre-existing native genome identity. MX-202B-generated content activation = ${approvedContent}% (only human-approved drafts go live; nothing auto-promotes).`,
         outcome_confidence: outcomeNote,
-        honesty: 'Governed drafts (rule_based, needs_review, never published) count toward Implementation Completion + Draft Content ONLY. Activation/Adoption/Outcome reflect live/approved reality and stay honestly low. benchmark + role_dna are REAL-ONLY (never drafted).',
+        honesty: 'Verified, Draft, and Approved knowledge are THREE independent axes — never combined. Controlled Enterprise Activation auto-promotes ONLY source-backed factual content; rule_based drafts can never be relabeled verified (= fabricating provenance). benchmark + role_dna + O*NET are REAL-ONLY; their gaps show honestly.',
       },
       attribute_matrix: attrs,
+      verified_factual_breakdown: verifiedFactual,
       structural_checklist: structural,
       usage: { scored_subjects: scoredSubjects, score_runs: scoreRuns, capadex_sessions: capadexSessions, realized_non_demo_outcomes: realizedOutcomes },
     };
@@ -174,21 +233,33 @@ async function main() {
 
     // ---- Markdown founder report ----
     const fmt = (v: number | null) => (v === null ? '`null` (not measurable)' : `**${v}%**`);
-    const md = `# MX-202B — Founder Certification Report
+    const md = `# MX-202B — Founder Certification Report (Controlled Enterprise Activation)
 **Implementation Maturity** (distinct from production validation). Generated ${now}. Genome: ${GENOME} competencies.
 
-> **Read this first.** "Implementation maturity" means the *system is built and every competency is reachable by every attribute pipeline*. It is **NOT** a claim of production validation, real adoption, or proven outcomes — those are reported as separate, honestly-low dimensions below. **Governed drafts are rule-based proposals (status=draft, needs_review=true, never published).** Approval is the only thing that makes content live; nothing auto-promotes.
+> **Read this first.** Per the founder's *Controlled Enterprise Activation* directive, knowledge is governed in **two independent lifecycles**: source-backed **Verified** factual content (deterministic, provenance-verified — may auto-activate, no human judgement) and **expert-authored** interpretive content (rule-based/AI proposals — **draft → human approval**, nothing auto-promotes). The seven dimensions below are reported **separately and never combined**.
 
-## The six dimensions (reported separately — never combined)
+## Controlled Enterprise Activation — outcome
+- **${(trackSplit['expert_authored'] ?? 0)}** governed drafts are **expert-authored** (provenance=\`rule_based\`) → they correctly remain in **Draft** awaiting human approval.
+- **${(trackSplit['factual'] ?? 0)}** governed drafts qualified as **factual** (source-backed); **${verifiedDrafts}** were auto-promoted to **Verified**.
+- **Honest result:** the verified factual layer (O*NET crosswalk, Role DNA, benchmark, genome identity/type) **already lives** in its canonical tables and is measured by *Verified Knowledge Coverage* below — it is **not** something that needed promoting from the draft staging. Relabeling rule_based drafts as "verified" would fabricate provenance, so **0** were promoted. This is correct.
+
+## The seven dimensions (reported separately — never combined)
 | # | Dimension | Value | What it means |
 |---|-----------|-------|---------------|
-| 1 | Implementation Completion | ${fmt(implementationCompletion)} | Every (competency × attribute) cell has a canonical home + at least a draft-or-real record. |
-| 2 | Structural Readiness | ${fmt(structuralReadiness)} | Infrastructure present (tables, engines, migration, generator, approval, audit/version). |
-| 3a | Content Completion — **Draft** | ${fmt(draftContent)} | Draftable attributes with governed draft (or real) content. |
-| 3b | Content Completion — **Approved** | ${fmt(approvedContent)} | Draftable attributes with **human-approved live** content. |
-| 4 | Activation | ${fmt(activation)} | Live/active content across all attributes — **includes pre-existing native genome identity**. MX-202B-generated content activation = **${approvedContent}%** (only human-approved drafts go live). |
-| 5 | Adoption | ${fmt(adoption)} | ${result.notes.adoption} |
-| 6 | Outcome Confidence | ${fmt(outcomeConfidence)} | Realized-outcome calibration. ${outcomeNote}. |
+| 1 | Structural Readiness | ${fmt(structuralReadiness)} | Infrastructure present (tables, engines, migration, generator, approval, verified-lifecycle, audit/version). |
+| 2 | **Verified** Knowledge Coverage | ${fmt(verifiedKnowledgeCoverage)} | Source-backed FACTUAL knowledge that is **live** (genome identity, type classification, benchmark, O*NET, Role DNA). Deterministic/provenance-verified — partial because real factual coverage is partial (never fabricated). |
+| 3 | **Draft** Knowledge Coverage | ${fmt(draftKnowledgeCoverage)} | Expert-authored governed DRAFTS (rule_based, needs_review, never published) across 6 attributes. Implementation-complete; **not** activated. |
+| 4 | **Approved** Knowledge Coverage | ${fmt(approvedKnowledgeCoverage)} | Governed drafts a **human approved** → live in canonical homes. Low by design pre-review (nothing auto-promotes). |
+| 5 | Activation | ${fmt(activation)} | Live/active content across all attributes — **includes pre-existing native genome identity**. MX-202B-generated content activation = **${approvedContent}%**. |
+| 6 | Adoption | ${fmt(adoption)} | ${result.notes.adoption} |
+| 7 | Outcome Confidence | ${fmt(outcomeConfidence)} | Realized-outcome calibration. ${outcomeNote}. |
+
+### Verified Knowledge Coverage — factual breakdown
+| Factual attribute | Live /419 |
+|-------------------|-----------|
+${verifiedFactual.map((a) => `| ${a.name} | ${a.live_n} |`).join('\n')}
+
+> *Supplementary (original MX-202B axes, not part of the seven):* Implementation Completion ${fmt(implementationCompletion)} · Content Completion draft ${fmt(draftContent)} / approved ${fmt(approvedContent)}.
 
 ## Per-attribute coverage matrix
 | Attribute | Home | Draftable | Real /419 | Draft /419 | Combined /419 | Active /419 | Note |

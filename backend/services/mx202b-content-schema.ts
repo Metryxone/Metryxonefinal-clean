@@ -90,5 +90,16 @@ export async function ensureMx202bContentSchema(pool: Pool): Promise<void> {
       created_at TIMESTAMPTZ NOT NULL DEFAULT now());`);
   await pool.query(`CREATE INDEX IF NOT EXISTS ix_ocdm_comp ON onto_competency_department_map (competency_id);`);
 
+  // ── Controlled Enterprise Activation — Verified lifecycle (additive, reversible) ──
+  await pool.query(`ALTER TABLE onto_competency_content_drafts ADD COLUMN IF NOT EXISTS governance_track TEXT NOT NULL DEFAULT 'expert_authored';`);
+  await pool.query(`ALTER TABLE onto_competency_content_drafts ADD COLUMN IF NOT EXISTS verified_by TEXT;`);
+  await pool.query(`ALTER TABLE onto_competency_content_drafts ADD COLUMN IF NOT EXISTS verified_at TIMESTAMPTZ;`);
+  await pool.query(`ALTER TABLE onto_competency_content_drafts DROP CONSTRAINT IF EXISTS onto_competency_content_drafts_status_check;`);
+  await pool.query(`ALTER TABLE onto_competency_content_drafts ADD CONSTRAINT onto_competency_content_drafts_status_check
+      CHECK (status IN ('draft','in_review','verified','approved','rejected','archived'));`);
+  for (const t of ['onto_competency_evidence', 'onto_competency_learning_outcomes', 'onto_competency_function_map', 'onto_competency_industry_map', 'onto_competency_department_map']) {
+    await pool.query(`ALTER TABLE ${t} ADD COLUMN IF NOT EXISTS lifecycle TEXT NOT NULL DEFAULT 'approved';`);
+  }
+
   ensured = true;
 }

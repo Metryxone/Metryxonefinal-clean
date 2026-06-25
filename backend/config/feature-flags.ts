@@ -252,6 +252,25 @@ export const FEATURE_FLAGS = {
    *  byte-identical legacy behaviour incl. schema (no new tables). Super-admin gated
    *  (requireAuth → requireSuperAdmin). Env: `FF_GO_LIVE_CERTIFICATION`. */
   goLiveCertification: false,
+  /** MX-108 — Platform Completion Certification & Founder Executive Report (read-only TOP-LEVEL
+   *  composer). When ON, a thin read-only composer at `/api/admin/platform-completion/*` (super-admin)
+   *  COMPOSES the already-built certification/activation/health composers (go-live, enterprise-
+   *  certification, ecosystem-activation, competency-coverage-matrices, competency-match-intelligence,
+   *  outcome-intelligence) PLUS genuinely-new read-only content/structure probes (genome attribute
+   *  coverage incl. `onto_indicators`, question density per competency, Role-DNA completeness, O*NET
+   *  reference governance) into ONE platform-completion picture: an overall completion broken into
+   *  Engineering / Content / Integration / Governance / Dashboard (each a SEPARATE honest %), the FIVE
+   *  certification dimensions (Implementation ⟂ Structural Readiness ⟂ Activation ⟂ Adoption ⟂
+   *  Outcome-Confidence) reported side-by-side and NEVER composited into one number, a per-module
+   *  PASS/PARTIAL/FAIL map (content/activation modules CAPPED at PARTIAL by honest evidence, never
+   *  upgraded on demo/seed), top risks, and a go-live recommendation. COMPOSE-NEVER-RECOMPUTE: it calls
+   *  only existing engines' READ paths + read-only to_regclass-probed SELECTs — recomputes no score,
+   *  runs NO DDL, writes NO rows (GET-only, no ensure-schema). Coverage ⟂ Confidence kept separate;
+   *  absent → null ("not measurable"), never a fabricated 0. Never throws (degrades to honest-degraded
+   *  JSON). Strictly additive + reversible: flag OFF → every route 503 before any auth/DB touch →
+   *  byte-identical legacy behaviour incl. schema (no new tables). Super-admin gated (requireAuth →
+   *  requireSuperAdmin); `/enabled` is a persona-agnostic flag probe. Env: `FF_PLATFORM_COMPLETION`. */
+  platformCompletion: false,
   /** MX-107A — Competency Match Intelligence (read-only composer over the EXISTING competency
    *  crosswalk). When ON, a PURE read-only composer at `/api/admin/competency-match-intelligence/*`
    *  (super-admin) traces the full canonical chain — assessment questions → competencies measured →
@@ -2130,6 +2149,10 @@ export function isEnterpriseWorkforceConsoleEnabled(): boolean {
 
 export function isEnterpriseCertificationEnabled(): boolean {
   return isFlagEnabled('enterpriseCertification');
+}
+
+export function isPlatformCompletionEnabled(): boolean {
+  return isFlagEnabled('platformCompletion');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

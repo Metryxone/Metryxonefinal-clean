@@ -166,6 +166,7 @@ const EcosystemActivationPanel = lazy(() => import('./superadmin/EcosystemActiva
 const EnterpriseCertificationPanel = lazy(() => import('./superadmin/EnterpriseCertificationPanel'));
 const GoLiveCenterPanel = lazy(() => import('./superadmin/GoLiveCenterPanel'));
 const FounderGoLiveCenterPanel = lazy(() => import('./superadmin/FounderGoLiveCenterPanel'));
+const PlatformCompletionPanel = lazy(() => import('./superadmin/PlatformCompletionPanel'));
 const DepartmentsPanel = lazy(() => import('./superadmin/DepartmentsPanel'));
 const RolesPanel = lazy(() => import('./superadmin/RolesPanel'));
 const RoleFamiliesPanel = lazy(() => import('./superadmin/RoleFamiliesPanel'));
@@ -412,6 +413,17 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
     queryKey: ['/api/admin/go-live/enabled', 'enabled'],
     queryFn: async () => {
       const res = await fetch('/api/admin/go-live/enabled', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // ── Platform Completion Certification (MX-108) flag probe (file-registry flag platformCompletion).
+  //    Flag OFF → /enabled returns 503/401 → tab omitted (byte-identical UI). ──
+  const { data: platformCompletionEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/admin/platform-completion/enabled', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/platform-completion/enabled', { credentials: 'include' });
       return res.ok;
     },
     enabled: isAuthenticated,
@@ -1022,6 +1034,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       ...(competencyMatchIntelEnabled ? [{ id: 'competency-match-intelligence', label: 'Competency Match Intelligence', icon: GitBranch, node: <CompetencyMatchIntelligencePanel /> }] : []),
                       ...(goLiveCertificationEnabled ? [{ id: 'go-live-center', label: 'Go-Live Center', icon: Rocket, node: <GoLiveCenterPanel /> }] : []),
                       ...(goLiveCertificationEnabled ? [{ id: 'founder-go-live', label: 'Founder Go-Live Center', icon: Building2, node: <FounderGoLiveCenterPanel /> }] : []),
+                      ...(platformCompletionEnabled ? [{ id: 'platform-completion', label: 'Platform Completion', icon: Award, node: <PlatformCompletionPanel /> }] : []),
                       { id: 'ont-career-tracks',        label: 'Career Tracks',            icon: Map,           node: <CareerTracksPanel /> },
                       { id: 'ont-competency-levels',    label: 'Competency Levels',        icon: BarChart2,     node: <CompetencyLevelsPanel /> },
                       { id: 'ont-indicators',           label: 'Indicators',               icon: Target,        node: <IndicatorsPanel /> },
@@ -1385,6 +1398,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               {activeTab === 'competency-match-intelligence' && competencyMatchIntelEnabled && <div className="h-full overflow-auto"><CompetencyMatchIntelligencePanel /></div>}
               {activeTab === 'go-live-center' && goLiveCertificationEnabled && <div className="h-full overflow-auto"><GoLiveCenterPanel /></div>}
               {activeTab === 'founder-go-live' && goLiveCertificationEnabled && <div className="h-full overflow-auto"><FounderGoLiveCenterPanel /></div>}
+              {activeTab === 'platform-completion' && platformCompletionEnabled && <div className="h-full overflow-auto"><PlatformCompletionPanel /></div>}
               {activeTab === 'ont-functions'        && <div className="h-full overflow-auto"><FunctionsPanel /></div>}
               {activeTab === 'ont-departments'      && <div className="h-full overflow-auto"><DepartmentsPanel /></div>}
               {activeTab === 'ont-roles'            && <div className="h-full overflow-auto"><RolesPanel /></div>}

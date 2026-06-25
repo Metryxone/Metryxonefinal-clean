@@ -194,6 +194,20 @@ const CRA_CODE_TO_COMP: Record<string, string> = {
   LEA03: 'comp_coaching',               // Coaching & Mentoring == genome "Coaching" (dominant construct)
 };
 
+// Task #160 — competencies measured in the broader (domain-grained) CRA
+// assessment but NOT yet available on the precise (per-competency) scale,
+// because the genome has no genuine equivalent (see DOCUMENTED OMISSIONS above).
+// Derived from the crosswalk so the count is always honest and self-updating:
+// any COMPETENCY_META code without a CRA_CODE_TO_COMP entry is, by definition,
+// measured by the assessment yet absent from the precise ledger. Currently
+// COM01 (Verbal Communication), LEA05 (Change Leadership), TEC02 (Digital
+// Fluency). Surfaced to the candidate as an honest note so the 17/20 precise
+// section never looks like data is missing or broken.
+const NOT_ON_PRECISE_SCALE: Array<{ code: string; name: string; domainName: string }> =
+  Object.entries(COMPETENCY_META)
+    .filter(([code]) => !(code in CRA_CODE_TO_COMP))
+    .map(([code, meta]) => ({ code, name: meta.name, domainName: meta.domainName }));
+
 // Canonical proficiency labels (onto_proficiency_levels) — derived from the
 // deterministic 0..100 → 1..5 band below. Used only to label measured scores.
 const PROFICIENCY_LABELS: Record<number, string> = {
@@ -708,6 +722,12 @@ export function registerCompetencyAssessmentRuntime(opts: { app: Express; pool: 
         hasPrecise: precise.length > 0,
         precise,
         domains,
+        // Task #160 — honestly disclose the competencies measured in the broader
+        // assessment that have no genuine genome equivalent yet, so the precise
+        // section doesn't look like data is missing. Never fabricated: names are
+        // derived from the crosswalk gap, never given a score.
+        notOnPreciseScale: NOT_ON_PRECISE_SCALE,
+        notOnPreciseScaleCount: NOT_ON_PRECISE_SCALE.length,
         overall: unified.overallScore,
         overallSource: unified.overallSource,
         note: precise.length > 0

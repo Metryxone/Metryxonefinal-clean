@@ -1,6 +1,6 @@
 # MX-201 — Competency Genome Completion · Phase 1+2 Audit
 
-_Read-only audit generated 2026-06-25T05:28:40.146Z. No data was written or fabricated._
+_Read-only audit generated 2026-06-25T05:44:07.641Z. No data was written or fabricated._
 
 **Canonical genome:** `onto_competencies` — **419 live competencies** (TEXT ids, e.g. `comp_accountability`).
 

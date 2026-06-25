@@ -2,7 +2,7 @@
   "task": "MX-301A",
   "title": "Enterprise Assessment Journey Validation",
   "candidate_masked": "user_4286d980cc6cc038",
-  "generated_at": "2026-06-25T13:28:23.350Z",
+  "generated_at": "2026-06-25T13:42:31.163Z",
   "base_url": "http://localhost:8080",
   "super_admin_auth_mode": "direct",
   "verdict": "PASS",

@@ -1,7 +1,7 @@
 # MX-301A — E2E Assessment Journey Validation
 
 **Candidate:** Sarah Johnson · **Subject (masked):** `user_4286d980cc6cc038`
-**Generated:** 2026-06-25T13:28:23.350Z · **Base:** http://localhost:8080 · **Super-admin auth:** direct
+**Generated:** 2026-06-25T13:42:31.163Z · **Base:** http://localhost:8080 · **Super-admin auth:** direct
 
 Each stage is validated through three lenses — **DB** (canonical row/state), **ENGINE** (the
 same in-process function the HTTP route calls), and **API** (real HTTP: unauth gating + a

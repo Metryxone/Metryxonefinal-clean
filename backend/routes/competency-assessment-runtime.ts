@@ -145,6 +145,167 @@ const ROLE_PRIORITIES: Record<string, string[]> = {
   'Marketing Manager':   ['COM01', 'COM02', 'ADP03', 'LEA01', 'COG04'],
 };
 
+// ── Task #136 — candidate CRA → competency-granularity ledger bridge ─────────
+// Precise per-competency scores only surface once a subject has a
+// competency-tagged run in `onto_competency_score_runs`. The candidate-facing
+// assessment writes ONLY domain-grained CRA rows (cra_scores), so that section
+// stayed hidden for live candidates. This crosswalk lets the genuinely-measured
+// per-competency CRA scores become real genome-competency (comp_*) scores.
+//
+// HONESTY RULE: a CRA code is mapped ONLY when its competency is unambiguously
+// the SAME construct as a real `onto_competencies` row — an exact name match,
+// modulo hyphenation/case (verified against the live genome). CRA codes with no
+// clear genome equivalent (e.g. COG03 Analytical Reasoning, COM01 Verbal
+// Communication, TEC02 Digital Fluency) are intentionally OMITTED: they still
+// appear in the domain breakdown but are never CLAIMED as a precise competency
+// measurement. Existence is re-verified at write time, so a stale mapping is
+// silently skipped rather than fabricated.
+const CRA_CODE_TO_COMP: Record<string, string> = {
+  COG01: 'comp_critical_thinking',      // Critical Thinking
+  COG02: 'comp_problem_solving',        // Problem Solving  == genome "Problem-Solving"
+  COG04: 'comp_decision_making',        // Decision Making  == genome "Decision-Making"
+  COM02: 'comp_written_communication',  // Written Communication
+  COM04: 'comp_active_listening',       // Active Listening
+  LEA01: 'comp_team_leadership',        // Team Leadership
+  EXE01: 'comp_project_management',     // Project Management
+  EXE02: 'comp_accountability',         // Accountability
+  ADP01: 'comp_learning_agility',       // Learning Agility
+  ADP02: 'comp_resilience',             // Resilience
+  EIQ01: 'comp_self_awareness',         // Self-Awareness
+  EIQ05: 'comp_conflict_resolution',    // Conflict Resolution
+};
+
+// Canonical proficiency labels (onto_proficiency_levels) — derived from the
+// deterministic 0..100 → 1..5 band below. Used only to label measured scores.
+const PROFICIENCY_LABELS: Record<number, string> = {
+  1: 'Awareness',
+  2: 'Basic Application',
+  3: 'Independent Application',
+  4: 'Advanced Application',
+  5: 'Expert / Strategic Application',
+};
+
+// 0..100 score → 1..5 level band. Mirrors competency-runtime.scoreToLevel
+// EXACTLY; kept local so this module stays decoupled from the Phase-2 engine.
+function scoreToLevel(score: number): number {
+  if (score >= 80) return 5;
+  if (score >= 60) return 4;
+  if (score >= 40) return 3;
+  if (score >= 20) return 2;
+  return 1;
+}
+
+/**
+ * Resolve the subject key used by the competency ledgers (the caller's EMAIL).
+ * The onto_* ledgers key a subject by email; the session `username` is the email
+ * in this system, with a DB lookup fallback. This is the SAME resolution the
+ * precise-scores read endpoint uses, so the write subject and the read subject
+ * always match (no silent split-brain where the candidate can't see their run).
+ */
+async function resolveSubjectEmail(pool: Pool, req: Request, auth: string): Promise<string | null> {
+  let subject: string | null = ((req as any).user?.username as string | undefined) ?? null;
+  if (!subject || !subject.includes('@')) {
+    const u = await pool
+      .query<{ email: string | null; username: string | null }>(
+        `SELECT email, username FROM users WHERE id = $1 LIMIT 1`,
+        [auth],
+      )
+      .catch(() => ({ rows: [] as { email: string | null; username: string | null }[] }));
+    subject = u.rows[0]?.email ?? u.rows[0]?.username ?? subject;
+  }
+  return subject;
+}
+
+/**
+ * Task #136 — write the genuinely-measured per-competency CRA scores to the
+ * competency-granularity ledger (`onto_competency_score_runs`) as ONE append-only
+ * run keyed by the subject's email, so resolveUnifiedCompetencyProfile surfaces
+ * them and the candidate sees the Precise Competency Scores section WITHOUT any
+ * manual seeding.
+ *
+ *   • Honesty — a precise score is written ONLY for a competency the candidate
+ *     genuinely answered AND that exists in onto_competencies (re-verified here).
+ *     Unmapped/absent competencies are skipped; nothing is fabricated and no
+ *     value is coerced to 0.
+ *   • Additive + reversible — one new run row (the resolver reads the LATEST per
+ *     subject, mirroring the rich scorer's one-row-per-scoring convention). No
+ *     existing rows are mutated; deleting the row restores prior behaviour.
+ *   • Flag-gated by the CALLER (competencyRuntime) so flag-OFF is byte-identical.
+ */
+async function writeCandidatePreciseRun(
+  pool: Pool,
+  subject: string,
+  measured: Array<{ code: string; raw: number }>,
+): Promise<{ written: boolean; competencies: number }> {
+  // CRA code → genome comp_* (verified crosswalk). Last write wins per comp.
+  const byComp = new Map<string, number>();
+  for (const m of measured) {
+    const compId = CRA_CODE_TO_COMP[m.code];
+    if (!compId) continue;
+    byComp.set(compId, m.raw);
+  }
+  if (byComp.size === 0) return { written: false, competencies: 0 };
+
+  // Re-verify each comp_* exists in the genome NOW and pull its canonical name.
+  // Only verified competencies are written (guards against crosswalk drift).
+  const ids = [...byComp.keys()];
+  const nameRes = await pool.query<{ id: string; canonical_name: string }>(
+    `SELECT id, canonical_name FROM onto_competencies WHERE id = ANY($1::text[])`,
+    [ids],
+  );
+  const nameById = new Map(nameRes.rows.map((r) => [r.id, r.canonical_name]));
+
+  const runComps: Array<Record<string, unknown>> = [];
+  for (const [compId, raw] of byComp) {
+    const name = nameById.get(compId);
+    if (!name) continue; // not in genome anymore → skip (never fabricate)
+    const score = Math.round(raw * 10) / 10;
+    const level = scoreToLevel(score);
+    runComps.push({
+      competency_id: compId,
+      competency_name: name,
+      normalized_score: score,
+      normalization_basis: 'cra_option_score',
+      level,
+      level_label: PROFICIENCY_LABELS[level] ?? null,
+      level_status: 'measured',
+      item_count: 1,
+      measurement: 'precise',
+    });
+  }
+  if (runComps.length === 0) return { written: false, competencies: 0 };
+
+  const overallScore =
+    Math.round((runComps.reduce((s, c) => s + (c.normalized_score as number), 0) / runComps.length) * 10) / 10;
+  const overallLevel = scoreToLevel(overallScore);
+
+  await pool.query(
+    `INSERT INTO onto_competency_score_runs
+       (assessment_id, blueprint_id, subject_id, total_questions, scored_questions,
+        competency_scores, overall, normalization, status, source)
+     VALUES (NULL, NULL, $1, $2, $3, $4::jsonb, $5::jsonb, $6::jsonb, 'scored', 'candidate_cra_crosswalk')`,
+    [
+      subject,
+      measured.length,
+      runComps.length,
+      JSON.stringify(runComps),
+      JSON.stringify({
+        overall_score: overallScore,
+        overall_level: overallLevel,
+        competencies_scored: runComps.length,
+        measurement: 'precise',
+      }),
+      JSON.stringify({
+        basis: 'cra_option_score',
+        note:
+          'Per-competency scores from the candidate CRA assessment, mapped to genome ' +
+          'competencies via a verified exact-name crosswalk (authored option scores).',
+      }),
+    ],
+  );
+  return { written: true, competencies: runComps.length };
+}
+
 interface ScoreRow {
   competency_code: string;
   raw_score: number;
@@ -342,6 +503,7 @@ export function registerCompetencyAssessmentRuntime(opts: { app: Express; pool: 
       const attemptAt = new Date();
       const values: string[] = [];
       const params: unknown[] = [];
+      const validated: Array<{ code: string; raw: number }> = [];
       let p = 1;
       let skipped = 0;
       for (const s of scores) {
@@ -355,6 +517,7 @@ export function registerCompetencyAssessmentRuntime(opts: { app: Express; pool: 
         const conf = Math.max(0, Math.min(1, Number.isFinite(confNum) ? confNum : 1));
         values.push(`($${p++}, $${p++}, $${p++}, $${p++}, $${p++})`);
         params.push(userId, code, raw, conf, attemptAt);
+        validated.push({ code, raw });
       }
       if (params.length === 0) {
         return res.status(400).json({ success: false, error: 'no valid scores (unknown codes or out-of-range values)' });
@@ -364,7 +527,33 @@ export function registerCompetencyAssessmentRuntime(opts: { app: Express; pool: 
          VALUES ${values.join(', ')}`,
         params,
       );
-      res.json(envelope({ saved: params.length / 5, skipped, attemptAt: attemptAt.toISOString() }));
+
+      // Task #136 — additively bridge the genuinely-measured per-competency CRA
+      // scores into the competency-granularity ledger so the candidate sees the
+      // Precise Competency Scores section without manual seeding. Flag-gated
+      // (mirrors the precise-scores read endpoint) so flag-OFF stays
+      // byte-identical (the `precise` field is omitted entirely), and
+      // never-throws: a failure here must NOT fail the candidate's submission
+      // (cra_scores are already persisted above).
+      let precise: { written: boolean; competencies: number } | undefined;
+      if (isCompetencyRuntimeEnabled()) {
+        precise = { written: false, competencies: 0 };
+        try {
+          const subject = await resolveSubjectEmail(pool, req, auth);
+          if (subject) {
+            precise = await writeCandidatePreciseRun(pool, subject, validated);
+          }
+        } catch (e: any) {
+          console.error('[cra] precise-run bridge failed (non-fatal):', e?.message ?? e);
+        }
+      }
+
+      res.json(envelope({
+        saved: params.length / 5,
+        skipped,
+        attemptAt: attemptAt.toISOString(),
+        ...(precise ? { precise } : {}),
+      }));
     } catch (e: any) {
       console.error('[cra] run-assessment failed:', e);
       res.status(500).json({ success: false, error: e?.message ?? 'run_assessment_failed' });
@@ -463,18 +652,10 @@ export function registerCompetencyAssessmentRuntime(opts: { app: Express; pool: 
       if (!isCompetencyRuntimeEnabled()) {
         return res.json({ enabled: false, hasPrecise: false, precise: [], domains: [] });
       }
-      // Resolve the caller's email server-side (onto subject key). The session
-      // user's `username` is the email in this system; fall back to a DB lookup.
-      let subject: string | null = ((req as any).user?.username as string | undefined) ?? null;
-      if (!subject || !subject.includes('@')) {
-        const u = await pool
-          .query<{ email: string | null; username: string | null }>(
-            `SELECT email, username FROM users WHERE id = $1 LIMIT 1`,
-            [auth],
-          )
-          .catch(() => ({ rows: [] as { email: string | null; username: string | null }[] }));
-        subject = u.rows[0]?.email ?? u.rows[0]?.username ?? subject;
-      }
+      // Resolve the caller's email server-side (onto subject key) using the SAME
+      // resolution the candidate assessment write uses, so the read and write
+      // subjects always match.
+      const subject = await resolveSubjectEmail(pool, req, auth);
       if (!subject) {
         return res.json({ enabled: true, available: true, resolved: false, hasPrecise: false, precise: [], domains: [] });
       }

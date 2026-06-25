@@ -149,7 +149,7 @@ export default function ContentManagerPanel() {
       {contentSubTab === 'slides' && (
         <div className="space-y-4">
           <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold">
-            {slides.length} slides · Drag to reorder (coming soon)
+            {slides.length} slides
           </p>
           {slides.map((slide, idx) => (
             <div key={slide.id} className="border rounded-2xl overflow-hidden bg-white shadow-sm">

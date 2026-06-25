@@ -255,11 +255,11 @@ export default function IndustryBenchmarksPage({ onNavigate }: { onNavigate: (sc
                     </div>
                   </div>
                 ))}
-                {/* Placeholder for 8th slot */}
+                {/* Roadmap teaser: next industry on the benchmark roadmap */}
                 <div className="border border-dashed border-gray-200 rounded-xl p-4 flex items-center justify-center text-center">
                   <div>
-                    <p className="text-xs font-semibold text-gray-300 mb-1">Coming soon</p>
-                    <p className="text-[10px] text-gray-300">Government & Public Sector</p>
+                    <Badge variant="outline" className="text-[9px] px-1.5 mb-1.5 text-gray-400">On the roadmap</Badge>
+                    <p className="text-[10px] text-gray-400">Government &amp; Public Sector</p>
                   </div>
                 </div>
               </div>

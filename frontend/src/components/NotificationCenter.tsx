@@ -508,7 +508,7 @@ export default function NotificationCenter({ variant = 'light', onNavigate }: No
                   Manage which email notifications you receive.
                 </p>
                 <div className={`text-[10px] p-2 rounded-lg ${isDark ? 'bg-gray-800 text-gray-400' : 'bg-blue-50 text-blue-700'}`}>
-                  Email preference management coming soon.
+                  Open full preferences below to customize each notification type.
                 </div>
                 {onNavigate && (
                   <button

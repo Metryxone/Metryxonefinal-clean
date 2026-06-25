@@ -12,7 +12,9 @@ export const COLOR = {
 } as const;
 
 export const TYPOGRAPHY = {
-  fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+  // Canonical family — mirrors styles/index.css (@layer base). Plus Jakarta Sans is the
+  // platform brand font; DM Sans / Inter are fallbacks. Keep in sync with index.css.
+  fontFamily: "'Plus Jakarta Sans', 'DM Sans', 'Inter', system-ui, -apple-system, sans-serif",
   sizes: {
     xs:  '10px',
     sm:  '12px',

@@ -1,0 +1,975 @@
+{
+  "generated_at": "2026-06-25T05:28:40.149Z",
+  "genome_total": 419,
+  "avg_health_pct": 68.4,
+  "identity_coverage_pct": 100,
+  "depth_coverage_pct": 42.2,
+  "role_map_disjointness": {
+    "rows": 52362,
+    "canonical_joins": 0
+  },
+  "distribution": {
+    "Complete": 3,
+    "Nearly Complete": 29,
+    "Partial": 387,
+    "Missing": 0
+  },
+  "attributes": [
+    {
+      "n": 1,
+      "label": "Definition",
+      "backing": "native",
+      "source": "onto_competencies.definition",
+      "field": "has_definition",
+      "present": 419,
+      "coverage": 100,
+      "detail": ""
+    },
+    {
+      "n": 2,
+      "label": "Description",
+      "backing": "native",
+      "source": "onto_competencies.definition",
+      "field": "has_definition",
+      "note": "No separate business-description field; definition is the only descriptive field.",
+      "present": 419,
+      "coverage": 100,
+      "detail": "No separate business-description field; definition is the only descriptive field."
+    },
+    {
+      "n": 3,
+      "label": "Behavioural Indicators",
+      "backing": "native",
+      "source": "onto_indicators.indicator",
+      "field": "has_indicators",
+      "present": 13,
+      "coverage": 3.1,
+      "detail": ""
+    },
+    {
+      "n": 4,
+      "label": "Observable Behaviours",
+      "backing": "native",
+      "source": "onto_indicators.indicator",
+      "field": "has_indicators",
+      "note": "No distinct field; onto_indicators rows ARE the observable behaviours (shared with #3).",
+      "present": 13,
+      "coverage": 3.1,
+      "detail": "No distinct field; onto_indicators rows ARE the observable behaviours (shared with #3)."
+    },
+    {
+      "n": 5,
+      "label": "Proficiency / Required Levels",
+      "backing": "native",
+      "source": "onto_indicators.proficiency_level",
+      "field": "has_levels",
+      "note": "Per-competency levels = ≥2 distinct proficiency_level values among its indicators.",
+      "present": 7,
+      "coverage": 1.7,
+      "detail": "Per-competency levels = ≥2 distinct proficiency_level values among its indicators."
+    },
+    {
+      "n": 6,
+      "label": "Level Descriptors",
+      "backing": "global",
+      "source": "onto_proficiency_levels.description",
+      "note": "Global 1–5 level descriptors apply to every competency; not authored per-competency.",
+      "present": 419,
+      "coverage": 100,
+      "detail": "Global 1–5 level descriptors apply to every competency; not authored per-competency."
+    },
+    {
+      "n": 7,
+      "label": "Evidence Requirements",
+      "backing": "disjoint",
+      "source": "map_competency_proficiency.sample_evidence",
+      "note": "0 rows AND INT-keyed (O*NET ont_ namespace) — does not attach to the canonical genome.",
+      "present": 0,
+      "coverage": null,
+      "detail": "0 rows AND INT-keyed (O*NET ont_ namespace) — does not attach to the canonical genome. (rows=0)"
+    },
+    {
+      "n": 8,
+      "label": "Learning Outcomes",
+      "backing": "absent",
+      "source": "(none)",
+      "note": "No learning-outcomes field anywhere in the ontology.",
+      "present": null,
+      "coverage": null,
+      "detail": "No learning-outcomes field anywhere in the ontology."
+    },
+    {
+      "n": 9,
+      "label": "Industry Mapping",
+      "backing": "disjoint",
+      "source": "map_industry_competency",
+      "note": "0 rows AND INT-keyed (O*NET ont_ namespace) — not attached to the 419.",
+      "present": 0,
+      "coverage": null,
+      "detail": "0 rows AND INT-keyed (O*NET ont_ namespace) — not attached to the 419. (rows=0)"
+    },
+    {
+      "n": 10,
+      "label": "Function Mapping",
+      "backing": "absent",
+      "source": "(none direct)",
+      "note": "onto_functions exists but no competency→function map for the canonical genome.",
+      "present": null,
+      "coverage": null,
+      "detail": "onto_functions exists but no competency→function map for the canonical genome."
+    },
+    {
+      "n": 11,
+      "label": "Department Mapping",
+      "backing": "absent",
+      "source": "(none)",
+      "note": "No department dimension in the genome.",
+      "present": null,
+      "coverage": null,
+      "detail": "No department dimension in the genome."
+    },
+    {
+      "n": 12,
+      "label": "Role Family Mapping",
+      "backing": "native",
+      "source": "onto_competencies.family_id → onto_families",
+      "field": "has_family",
+      "note": "family_id is the COMPETENCY family; role-family is a separate (role-side) dimension.",
+      "present": 419,
+      "coverage": 100,
+      "detail": "family_id is the COMPETENCY family; role-family is a separate (role-side) dimension."
+    },
+    {
+      "n": 13,
+      "label": "Role Mapping",
+      "backing": "native",
+      "source": "onto_role_competency_profiles",
+      "field": "has_role_dna",
+      "note": "Same source as Role DNA (#15).",
+      "present": 24,
+      "coverage": 5.7,
+      "detail": "Same source as Role DNA (#15)."
+    },
+    {
+      "n": 14,
+      "label": "O*NET Mapping",
+      "backing": "absent",
+      "source": "(none direct)",
+      "note": "No external_ref column on onto_competencies; only an indirect bridge-by-name to ont_competencies.",
+      "present": null,
+      "coverage": null,
+      "detail": "No external_ref column on onto_competencies; only an indirect bridge-by-name to ont_competencies."
+    },
+    {
+      "n": 15,
+      "label": "Role DNA Mapping",
+      "backing": "native",
+      "source": "onto_role_competency_profiles",
+      "field": "has_role_dna",
+      "present": 24,
+      "coverage": 5.7,
+      "detail": ""
+    },
+    {
+      "n": 16,
+      "label": "Assessment Strategy",
+      "backing": "native",
+      "source": "onto_competencies.scoring_metadata",
+      "field": "has_scoring",
+      "note": "scoring_metadata JSONB is the canonical scoring/assessment config; ont_competencies.assessment_methods is the disjoint O*NET copy.",
+      "present": 419,
+      "coverage": 100,
+      "detail": "scoring_metadata JSONB is the canonical scoring/assessment config; ont_competencies.assessment_methods is the disjoint O*NET copy."
+    },
+    {
+      "n": 17,
+      "label": "Learning Resources",
+      "backing": "disjoint",
+      "source": "cg_skill_resource_map.skill_key",
+      "note": "Keyed by skill_key (TEXT) — measured by name/slug overlap with the genome (reported separately).",
+      "present": 7,
+      "coverage": 1.7,
+      "detail": "Keyed by skill_key (TEXT) — measured by name/slug overlap with the genome (reported separately)."
+    },
+    {
+      "n": 18,
+      "label": "Certification Mapping",
+      "backing": "absent",
+      "source": "rr_certifications (role-keyed)",
+      "note": "Certifications attach to roles, not competencies — no competency-level mapping.",
+      "present": null,
+      "coverage": null,
+      "detail": "Certifications attach to roles, not competencies — no competency-level mapping."
+    }
+  ],
+  "native_coverage": [
+    {
+      "attribute": "Definition",
+      "present": 419,
+      "total": 419,
+      "coverage_pct": 100
+    },
+    {
+      "attribute": "Domain",
+      "present": 419,
+      "total": 419,
+      "coverage_pct": 100
+    },
+    {
+      "attribute": "Family",
+      "present": 419,
+      "total": 419,
+      "coverage_pct": 100
+    },
+    {
+      "attribute": "Scientific Type",
+      "present": 419,
+      "total": 419,
+      "coverage_pct": 100
+    },
+    {
+      "attribute": "Governance Ext",
+      "present": 419,
+      "total": 419,
+      "coverage_pct": 100
+    },
+    {
+      "attribute": "Behavioural Indicators",
+      "present": 13,
+      "total": 419,
+      "coverage_pct": 3.1
+    },
+    {
+      "attribute": "Proficiency Levels",
+      "present": 7,
+      "total": 419,
+      "coverage_pct": 1.7
+    },
+    {
+      "attribute": "Role Relevance",
+      "present": 299,
+      "total": 419,
+      "coverage_pct": 71.4
+    },
+    {
+      "attribute": "Assessment Strategy (scoring_metadata)",
+      "present": 419,
+      "total": 419,
+      "coverage_pct": 100
+    },
+    {
+      "attribute": "Benchmark Metadata",
+      "present": 299,
+      "total": 419,
+      "coverage_pct": 71.4
+    },
+    {
+      "attribute": "Role / Role-DNA Mapping",
+      "present": 24,
+      "total": 419,
+      "coverage_pct": 5.7
+    }
+  ],
+  "schema_gaps": [
+    {
+      "attribute": "Evidence Requirements",
+      "backing": "disjoint",
+      "reason": "0 rows AND INT-keyed (O*NET ont_ namespace) — does not attach to the canonical genome. (rows=0)"
+    },
+    {
+      "attribute": "Learning Outcomes",
+      "backing": "absent",
+      "reason": "No learning-outcomes field anywhere in the ontology."
+    },
+    {
+      "attribute": "Industry Mapping",
+      "backing": "disjoint",
+      "reason": "0 rows AND INT-keyed (O*NET ont_ namespace) — not attached to the 419. (rows=0)"
+    },
+    {
+      "attribute": "Function Mapping",
+      "backing": "absent",
+      "reason": "onto_functions exists but no competency→function map for the canonical genome."
+    },
+    {
+      "attribute": "Department Mapping",
+      "backing": "absent",
+      "reason": "No department dimension in the genome."
+    },
+    {
+      "attribute": "O*NET Mapping",
+      "backing": "absent",
+      "reason": "No external_ref column on onto_competencies; only an indirect bridge-by-name to ont_competencies."
+    },
+    {
+      "attribute": "Learning Resources",
+      "backing": "disjoint",
+      "reason": "Keyed by skill_key (TEXT) — measured by name/slug overlap with the genome (reported separately)."
+    },
+    {
+      "attribute": "Certification Mapping",
+      "backing": "absent",
+      "reason": "Certifications attach to roles, not competencies — no competency-level mapping."
+    }
+  ],
+  "downstream_readiness": {
+    "assessment": 7,
+    "role_dna": 24,
+    "employer": 24,
+    "career": 419,
+    "employability": 419,
+    "reporting": 419
+  },
+  "worst": [
+    {
+      "id": "onet_1_c_1_a",
+      "name": "Achievement/Effort",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_a_2_b",
+      "name": "Active Learning",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_c_4_c",
+      "name": "Adaptability/Flexibility",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_c_1_a",
+      "name": "Administration and Management",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_c_1_b",
+      "name": "Administrative",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_a_2_a_1",
+      "name": "Arm-Hand Steadiness",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_a_4_b_2",
+      "name": "Auditory Attention",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_c_4_d",
+      "name": "Biology",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_c_3_d",
+      "name": "Building and Construction",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_a_1_b_7",
+      "name": "Category Flexibility",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_c_4_c",
+      "name": "Chemistry",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_c_9_b",
+      "name": "Communications and Media",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_b_2_i",
+      "name": "Complex Problem Solving",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_c_3_a",
+      "name": "Computers and Electronics",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_c_3_b",
+      "name": "Concern for Others",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_a_2_b_1",
+      "name": "Control Precision",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_c_3_a",
+      "name": "Cooperation",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_b_1_b",
+      "name": "Coordination",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_c_1_e",
+      "name": "Customer and Personal Service",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_a_1_b_4",
+      "name": "Deductive Reasoning",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_a_4_a_6",
+      "name": "Depth Perception",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_c_3_c",
+      "name": "Design",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_a_3_c_2",
+      "name": "Dynamic Flexibility",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_a_3_a_3",
+      "name": "Dynamic Strength",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_c_1_c",
+      "name": "Economics and Accounting",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_c_6",
+      "name": "Education and Training",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_c_3_b",
+      "name": "Engineering and Technology",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_c_7_a",
+      "name": "English Language",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_b_3_j",
+      "name": "Equipment Maintenance",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_b_3_c",
+      "name": "Equipment Selection",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_a_3_a_2",
+      "name": "Explosive Strength",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_a_3_c_1",
+      "name": "Extent Flexibility",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_a_4_a_2",
+      "name": "Far Vision",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_c_7_c",
+      "name": "Fine Arts",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_a_2_a_3",
+      "name": "Finger Dexterity",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_a_1_e_2",
+      "name": "Flexibility of Closure",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_a_1_b_1",
+      "name": "Fluency of Ideas",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_c_2_b",
+      "name": "Food Production",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_c_7_b",
+      "name": "Foreign Language",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_c_4_g",
+      "name": "Geography",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_a_4_a_7",
+      "name": "Glare Sensitivity",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_a_3_c_3",
+      "name": "Gross Body Coordination",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_a_3_c_4",
+      "name": "Gross Body Equilibrium",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_a_4_b_1",
+      "name": "Hearing Sensitivity",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_c_7_d",
+      "name": "History and Archeology",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_c_6",
+      "name": "Independence",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_a_1_b_5",
+      "name": "Inductive Reasoning",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_1_a_1_b_6",
+      "name": "Information Ordering",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_b_3_d",
+      "name": "Installation",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    },
+    {
+      "id": "onet_2_b_1_e",
+      "name": "Instructing",
+      "pct": 54.5,
+      "klass": "Partial",
+      "missing": [
+        "Behavioural Indicators",
+        "Proficiency Levels",
+        "Role Relevance",
+        "Benchmark Metadata",
+        "Role / Role-DNA Mapping"
+      ]
+    }
+  ]
+}

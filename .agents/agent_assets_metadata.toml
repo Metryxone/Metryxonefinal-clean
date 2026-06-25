@@ -1074,3 +1074,9 @@ id = "RmRGCNCZFFg3Cok376SGt"
 uri = "file://backend/audit/competency-onet-validation/competency_simplification_recommendations.md"
 type = "text"
 title = "5 · Simplification Recommendations"
+
+[[outputs]]
+id = "ejCZdpqM9Cts1D4ZpUPon"
+uri = "file://backend/audit/mx-201/genome-completion-report.md"
+type = "text"
+title = "MX-201 Genome Completion — Phase 1+2 Audit"

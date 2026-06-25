@@ -13841,6 +13841,21 @@ Rules:
     })
     .catch((err) => console.warn('[region-native-seed] startup init skipped:', err?.message ?? err));
 
+  // Self-running, idempotent Task #138 competency-expansion seed (applied by Task #146). A task
+  // merge carries CODE + migration DDL only, NOT rows, and the agent cannot write to prod — so the
+  // only way the role-DNA weights / per-competency questions / blueprint wiring reach the live app
+  // is a guarded startup seeder (matches this codebase's region-native/occupation self-seeders).
+  // Fire-and-forget; each lever no-ops once its own provenance is present; never blocks boot.
+  // Downstream consumption stays flag-gated (employerCompetencyHiring / competencyRuntime).
+  import('./services/task138-competency-seed')
+    .then((m) => m.ensureTask138CompetencySeed(concernsPool))
+    .then((r) => {
+      if (r.roleWeights !== 'already_present' || r.questions !== 'already_present' || r.blueprints !== 'already_present') {
+        console.log('[task138-seed] startup:', JSON.stringify(r));
+      }
+    })
+    .catch((err) => console.warn('[task138-seed] startup init skipped:', err?.message ?? err));
+
   // MX-100X Phase 9 — Enterprise Workforce Intelligence Console (read-only, flag-gated, OFF by default).
   registerEnterpriseWorkforceConsoleRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerEcosystemActivationRoutes(app, concernsPool, requireAuth, requireSuperAdmin);

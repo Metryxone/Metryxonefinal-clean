@@ -1,0 +1,123 @@
+{
+  "schema_version": "1.0",
+  "exported_at": "2026-06-25T11:39:32.360Z",
+  "report": {
+    "uuid": "bb6e6b2f-f87e-4c6d-9992-c155dd3a0ccb",
+    "type": "interview_readiness",
+    "language": "en",
+    "status": "complete",
+    "created_at": "2026-06-25T11:39:32.347Z",
+    "completed_at": "2026-06-25T11:39:32.347Z",
+    "narrative_texts": {
+      "data_source": "evaluation-engine.candidateEvaluation → interview_scores (operator/panelist entries, averaged per criterion).",
+      "interpretation": "Interview readiness summarises operator-recorded panelist scores per criterion. These are arithmetic averages of human inputs — a record of what panelists entered, NOT an algorithmic hire/reject verdict.",
+      "recommendations": "No specific recommendations have been derived from the current measured inputs. Recommendations will appear once additional assessment evidence is captured.",
+      "confidence_level": "Operator-recorded — averages of panelist-entered scores, not a model prediction.",
+      "executive_summary": "Sarah Johnson has 4 recorded interview score(s); overall operator mean is 75%.",
+      "assessment_summary": "Overall mean 75% across 2 panelist(s). Per criterion — Analytical Depth: 60%; Leadership: 80%; Product Strategy: 80%; Stakeholder Communication: 80%.",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 11:39 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+    },
+    "insights": [],
+    "generated_content": {
+      "axes": {
+        "coverage": {
+          "pct": null,
+          "note": "4 score(s) across 1 interview(s)."
+        },
+        "activation": "Engine executed in-process and produced this artifact.",
+        "confidence": {
+          "band": "Operator-recorded",
+          "note": "Interview summaries average operator-entered scores; not an algorithmic verdict."
+        }
+      },
+      "sections": [
+        {
+          "key": "executive_summary",
+          "text": "Sarah Johnson has 4 recorded interview score(s); overall operator mean is 75%.",
+          "type": "narrative",
+          "title": "Executive Summary"
+        },
+        {
+          "key": "candidate_information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",
+          "type": "narrative",
+          "title": "Candidate Information"
+        },
+        {
+          "key": "assessment_summary",
+          "text": "Overall mean 75% across 2 panelist(s). Per criterion — Analytical Depth: 60%; Leadership: 80%; Product Strategy: 80%; Stakeholder Communication: 80%.",
+          "type": "narrative",
+          "title": "Assessment Summary"
+        },
+        {
+          "key": "visualizations",
+          "type": "chart",
+          "title": "Visualizations",
+          "resolved_data": {
+            "labels": [
+              "Analytical Depth",
+              "Leadership",
+              "Product Strategy",
+              "Stakeholder Communication"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  60,
+                  80,
+                  80,
+                  80
+                ]
+              }
+            ]
+          },
+          "visualization": {
+            "title": "Interview scores by criterion",
+            "chart_type": "bar",
+            "data_source": "career"
+          }
+        },
+        {
+          "key": "interpretation",
+          "text": "Interview readiness summarises operator-recorded panelist scores per criterion. These are arithmetic averages of human inputs — a record of what panelists entered, NOT an algorithmic hire/reject verdict.",
+          "type": "narrative",
+          "title": "Interpretation"
+        },
+        {
+          "key": "recommendations",
+          "text": "No specific recommendations have been derived from the current measured inputs. Recommendations will appear once additional assessment evidence is captured.",
+          "type": "narrative",
+          "title": "Recommendations",
+          "callout": "honest"
+        },
+        {
+          "key": "confidence_level",
+          "text": "Operator-recorded — averages of panelist-entered scores, not a model prediction.",
+          "type": "narrative",
+          "title": "Confidence Level"
+        },
+        {
+          "key": "data_source",
+          "text": "evaluation-engine.candidateEvaluation → interview_scores (operator/panelist entries, averaged per criterion).",
+          "type": "narrative",
+          "title": "Data Source"
+        },
+        {
+          "key": "generated_timestamp",
+          "text": "This report was generated on 25 June 2026 at 11:39 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "type": "narrative",
+          "title": "Generated Timestamp"
+        }
+      ],
+      "data_flow": "evaluation-engine.candidateEvaluation → interview_scores (operator/panelist entries, averaged per criterion)."
+    },
+    "metadata": {
+      "measurable": true,
+      "role_title": "Senior Product Manager",
+      "data_source": "evaluation-engine.candidateEvaluation → interview_scores (operator/panelist entries, averaged per criterion).",
+      "honest_state": null,
+      "pack_version": "1.0.0"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
+"030ad6fa-d296-4004-b3a2-4b0515b96f10","employer_competency_match","executive_summary","narrative","Sarah Johnson's competency match to Senior Product Manager is 77.4%, covering 8/13 requirements (fit: fit).",,,,,,
+"030ad6fa-d296-4004-b3a2-4b0515b96f10","employer_competency_match","candidate_information","narrative","Name: Sarah Johnson
+Reference (masked): user_4286d980cc6c
+Current role: Senior Product Manager
+Target role: Director of Product
+Industry: Technology
+Experience: 8 years
+Education: MBA
+Location: Bangalore, India
+
+Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
+"030ad6fa-d296-4004-b3a2-4b0515b96f10","employer_competency_match","assessment_summary","narrative","Match 77.4%, coverage 61.8%. Fit signal: fit. Calibration: calibrated. 8 requirement gap(s).",,,,,,
+"030ad6fa-d296-4004-b3a2-4b0515b96f10","employer_competency_match","visualizations","chart_datapoint","Competency Match %",,"Competency Match %","77.4",,,
+"030ad6fa-d296-4004-b3a2-4b0515b96f10","employer_competency_match","visualizations","chart_datapoint","Requirement Coverage %",,"Requirement Coverage %","61.8",,,
+"030ad6fa-d296-4004-b3a2-4b0515b96f10","employer_competency_match","interpretation","narrative","The match contrasts the candidate’s measured competencies with the role’s genome-derived requirements. The fit signal is decision-SUPPORT only — never a hire/no-hire verdict. Calibration reports whether realized outcomes back the signal.",,,,,,
+"030ad6fa-d296-4004-b3a2-4b0515b96f10","employer_competency_match","recommendations","insight","Requirement gap: Data-Driven Decision Making (need null, at null).","warning",,,,,
+"030ad6fa-d296-4004-b3a2-4b0515b96f10","employer_competency_match","recommendations","insight","Requirement gap: Structured Problem Solving (need null, at null).","warning",,,,,
+"030ad6fa-d296-4004-b3a2-4b0515b96f10","employer_competency_match","recommendations","insight","Requirement gap: Accountability & Ownership (need null, at null).","warning",,,,,
+"030ad6fa-d296-4004-b3a2-4b0515b96f10","employer_competency_match","confidence_level","narrative","Calibration: calibrated (34 realized outcomes). The fit signal is decision-support, not a verdict.",,,,,,
+"030ad6fa-d296-4004-b3a2-4b0515b96f10","employer_competency_match","data_source","narrative","employer-competency-hiring.computeCompetencyDrivenMatch → Role DNA (genome) requirements vs candidate competencies.",,,,,,
+"030ad6fa-d296-4004-b3a2-4b0515b96f10","employer_competency_match","generated_timestamp","narrative","This report was generated on 25 June 2026 at 11:39 UTC.
+
+Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

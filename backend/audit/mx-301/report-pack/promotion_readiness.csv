@@ -1,0 +1,31 @@
+﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
+"1c2b53ce-7a84-4433-ab3f-284ea07d0ef4","promotion_readiness","executive_summary","narrative","Promotion readiness requires at least two measured snapshots over time; Sarah Johnson currently has 0.",,,,,,
+"1c2b53ce-7a84-4433-ab3f-284ea07d0ef4","promotion_readiness","candidate_information","narrative","Name: Sarah Johnson
+Reference (masked): user_4286d980cc6c
+Current role: Senior Product Manager
+Target role: Director of Product
+Industry: Technology
+Experience: 8 years
+Education: MBA
+Location: Bangalore, India
+
+Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
+"1c2b53ce-7a84-4433-ab3f-284ea07d0ef4","promotion_readiness","assessment_summary","narrative","Status: insufficient_history — trend cannot be computed from a single snapshot.",,,,,,
+"1c2b53ce-7a84-4433-ab3f-284ea07d0ef4","promotion_readiness","visualizations","narrative","Insufficient validated data to populate this section yet.
+
+Why: Fewer than two measured EI snapshots exist, so no trajectory can be computed.
+How to populate it: Re-assess over time so a second measured snapshot is captured (persistEiProfile).
+What is needed: At least two measured snapshots in ei_profile_snapshots.
+Expected output once available: A net-delta trend per dimension with a ready/insufficient verdict.",,,,,,
+"1c2b53ce-7a84-4433-ab3f-284ea07d0ef4","promotion_readiness","interpretation","narrative","A trajectory needs at least two measured points in time. With one snapshot the platform reports insufficient history rather than inferring a trend.",,,,,,
+"1c2b53ce-7a84-4433-ab3f-284ea07d0ef4","promotion_readiness","recommendations","narrative","Insufficient validated data to populate this section yet.
+
+Why: Fewer than two measured EI snapshots exist, so no trajectory can be computed.
+How to populate it: Re-assess over time so a second measured snapshot is captured (persistEiProfile).
+What is needed: At least two measured snapshots in ei_profile_snapshots.
+Expected output once available: A net-delta trend per dimension with a ready/insufficient verdict.",,,,,,
+"1c2b53ce-7a84-4433-ab3f-284ea07d0ef4","promotion_readiness","confidence_level","narrative","Confidence not applicable — insufficient history.",,,,,,
+"1c2b53ce-7a84-4433-ab3f-284ea07d0ef4","promotion_readiness","data_source","narrative","progression-engine.buildProgression → ei_profile_snapshots over time (net delta between measured snapshots).",,,,,,
+"1c2b53ce-7a84-4433-ab3f-284ea07d0ef4","promotion_readiness","generated_timestamp","narrative","This report was generated on 25 June 2026 at 11:39 UTC.
+
+Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

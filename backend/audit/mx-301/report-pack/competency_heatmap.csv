@@ -1,0 +1,31 @@
+﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
+"fc1a878a-686f-4d17-9952-7c462d6c3b64","competency_heatmap","executive_summary","narrative","No individual competencies are measured for Sarah Johnson.",,,,,,
+"fc1a878a-686f-4d17-9952-7c462d6c3b64","competency_heatmap","candidate_information","narrative","Name: Sarah Johnson
+Reference (masked): user_4286d980cc6c
+Current role: Senior Product Manager
+Target role: Director of Product
+Industry: Technology
+Experience: 8 years
+Education: MBA
+Location: Bangalore, India
+
+Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
+"fc1a878a-686f-4d17-9952-7c462d6c3b64","competency_heatmap","assessment_summary","narrative","No per-competency scores are available.",,,,,,
+"fc1a878a-686f-4d17-9952-7c462d6c3b64","competency_heatmap","visualizations","narrative","Insufficient validated data to populate this section yet.
+
+Why: No measured per-competency scores were found.
+How to populate it: Score a competency-tagged assessment.
+What is needed: Measured competencies within type buckets.
+Expected output once available: A ranked heatmap of individual competency scores.",,,,,,
+"fc1a878a-686f-4d17-9952-7c462d6c3b64","competency_heatmap","interpretation","narrative","Per-competency scores are required to render the heatmap.",,,,,,
+"fc1a878a-686f-4d17-9952-7c462d6c3b64","competency_heatmap","recommendations","narrative","Insufficient validated data to populate this section yet.
+
+Why: No measured per-competency scores were found.
+How to populate it: Score a competency-tagged assessment.
+What is needed: Measured competencies within type buckets.
+Expected output once available: A ranked heatmap of individual competency scores.",,,,,,
+"fc1a878a-686f-4d17-9952-7c462d6c3b64","competency_heatmap","confidence_level","narrative","Confidence not applicable — no measured input yet.",,,,,,
+"fc1a878a-686f-4d17-9952-7c462d6c3b64","competency_heatmap","data_source","narrative","competency-runtime.computeTypeProfile → per-competency measured scores.",,,,,,
+"fc1a878a-686f-4d17-9952-7c462d6c3b64","competency_heatmap","generated_timestamp","narrative","This report was generated on 25 June 2026 at 11:39 UTC.
+
+Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

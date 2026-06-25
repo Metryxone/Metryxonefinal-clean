@@ -1,0 +1,125 @@
+{
+  "schema_version": "1.0",
+  "exported_at": "2026-06-25T11:39:32.191Z",
+  "report": {
+    "uuid": "bcbc4028-0246-4166-94e7-0c81c24ba593",
+    "type": "development_areas",
+    "language": "en",
+    "status": "complete",
+    "created_at": "2026-06-25T11:39:32.162Z",
+    "completed_at": "2026-06-25T11:39:32.162Z",
+    "narrative_texts": {
+      "data_source": "ei-profile-engine.buildEiProfile → development_areas (dimensions below the Strong band, with headroom).",
+      "interpretation": "No dimension falls below the Strong band — an honest measured result. Continued practice maintains these levels.",
+      "recommendations": "No specific recommendations have been derived from the current measured inputs. Recommendations will appear once additional assessment evidence is captured.",
+      "confidence_level": "Confidence band: Moderate.",
+      "executive_summary": "Sarah Johnson's measured dimensions are all at/above the Strong band — no development areas below threshold.",
+      "assessment_summary": "All measured dimensions reach the Strong band; no below-threshold development areas.",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 11:39 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+    },
+    "insights": [],
+    "generated_content": {
+      "axes": {
+        "coverage": {
+          "pct": 100,
+          "note": "0 development areas identified."
+        },
+        "activation": "Engine executed in-process and produced this artifact.",
+        "confidence": {
+          "band": "Moderate",
+          "note": "Confidence band reported by the EI profile engine."
+        }
+      },
+      "sections": [
+        {
+          "key": "executive_summary",
+          "text": "Sarah Johnson's measured dimensions are all at/above the Strong band — no development areas below threshold.",
+          "type": "narrative",
+          "title": "Executive Summary"
+        },
+        {
+          "key": "candidate_information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",
+          "type": "narrative",
+          "title": "Candidate Information"
+        },
+        {
+          "key": "assessment_summary",
+          "text": "All measured dimensions reach the Strong band; no below-threshold development areas.",
+          "type": "narrative",
+          "title": "Assessment Summary"
+        },
+        {
+          "key": "visualizations",
+          "type": "chart",
+          "title": "Visualizations",
+          "resolved_data": {
+            "labels": [
+              "Future Readiness",
+              "Workplace Readiness",
+              "Problem-Solving Readiness",
+              "Leadership Readiness",
+              "Communication Readiness"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  79.4,
+                  80,
+                  81.2,
+                  81.2,
+                  84
+                ]
+              }
+            ]
+          },
+          "visualization": {
+            "title": "Development headroom",
+            "chart_type": "bar",
+            "data_source": "employability"
+          }
+        },
+        {
+          "key": "interpretation",
+          "text": "No dimension falls below the Strong band — an honest measured result. Continued practice maintains these levels.",
+          "type": "narrative",
+          "title": "Interpretation"
+        },
+        {
+          "key": "recommendations",
+          "text": "No specific recommendations have been derived from the current measured inputs. Recommendations will appear once additional assessment evidence is captured.",
+          "type": "narrative",
+          "title": "Recommendations",
+          "callout": "honest"
+        },
+        {
+          "key": "confidence_level",
+          "text": "Confidence band: Moderate.",
+          "type": "narrative",
+          "title": "Confidence Level"
+        },
+        {
+          "key": "data_source",
+          "text": "ei-profile-engine.buildEiProfile → development_areas (dimensions below the Strong band, with headroom).",
+          "type": "narrative",
+          "title": "Data Source"
+        },
+        {
+          "key": "generated_timestamp",
+          "text": "This report was generated on 25 June 2026 at 11:39 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "type": "narrative",
+          "title": "Generated Timestamp"
+        }
+      ],
+      "data_flow": "ei-profile-engine.buildEiProfile → development_areas (dimensions below the Strong band, with headroom)."
+    },
+    "metadata": {
+      "measurable": true,
+      "role_title": "Senior Product Manager",
+      "data_source": "ei-profile-engine.buildEiProfile → development_areas (dimensions below the Strong band, with headroom).",
+      "honest_state": null,
+      "pack_version": "1.0.0"
+    }
+  }
+}

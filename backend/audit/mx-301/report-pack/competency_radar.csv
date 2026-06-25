@@ -1,0 +1,31 @@
+﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
+"af77d80d-4c81-4052-b030-5295a7f4f881","competency_radar","executive_summary","narrative","Sarah Johnson's competencies are not yet classified by type.",,,,,,
+"af77d80d-4c81-4052-b030-5295a7f4f881","competency_radar","candidate_information","narrative","Name: Sarah Johnson
+Reference (masked): user_4286d980cc6c
+Current role: Senior Product Manager
+Target role: Director of Product
+Industry: Technology
+Experience: 8 years
+Education: MBA
+Location: Bangalore, India
+
+Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
+"af77d80d-4c81-4052-b030-5295a7f4f881","competency_radar","assessment_summary","narrative","No competency-type means are available.",,,,,,
+"af77d80d-4c81-4052-b030-5295a7f4f881","competency_radar","visualizations","narrative","Insufficient validated data to populate this section yet.
+
+Why: No competencies could be classified into types for this candidate.
+How to populate it: Score a competency assessment whose competencies map to onto types.
+What is needed: Classified competencies in computeTypeProfile buckets.
+Expected output once available: A radar of mean capability across each competency type.",,,,,,
+"af77d80d-4c81-4052-b030-5295a7f4f881","competency_radar","interpretation","narrative","Competency-type classification is required to render the radar.",,,,,,
+"af77d80d-4c81-4052-b030-5295a7f4f881","competency_radar","recommendations","narrative","Insufficient validated data to populate this section yet.
+
+Why: No competencies could be classified into types for this candidate.
+How to populate it: Score a competency assessment whose competencies map to onto types.
+What is needed: Classified competencies in computeTypeProfile buckets.
+Expected output once available: A radar of mean capability across each competency type.",,,,,,
+"af77d80d-4c81-4052-b030-5295a7f4f881","competency_radar","confidence_level","narrative","Confidence not applicable — no measured input yet.",,,,,,
+"af77d80d-4c81-4052-b030-5295a7f4f881","competency_radar","data_source","narrative","competency-runtime.computeTypeProfile → onto_competency_profiles grouped by competency type.",,,,,,
+"af77d80d-4c81-4052-b030-5295a7f4f881","competency_radar","generated_timestamp","narrative","This report was generated on 25 June 2026 at 11:39 UTC.
+
+Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

@@ -66,6 +66,19 @@ function str(v: any): string | null {
   if (v != null && typeof v !== 'object') return String(v);
   return null;
 }
+// Honest formatters — NEVER emit a "?" / "?w" placeholder when a value is absent.
+function wkSuffix(v: any): string {
+  const n = num(v);
+  return n != null ? `, ~${n}w` : '';
+}
+function wkClause(v: any): string {
+  const n = num(v);
+  return n != null ? ` totalling ~${n} weeks` : '';
+}
+function pctOrPhrase(v: any): string {
+  const n = num(v);
+  return n != null ? `${n}%` : 'not yet computed';
+}
 function arr(v: any): any[] {
   return Array.isArray(v) ? v : [];
 }
@@ -931,10 +944,10 @@ const buildLearningRoadmap: Builder = (s) => {
     activation: ACTIVATION,
     data_source: 'career-roadmap-engine.buildCareerRoadmap → milestones + development plan from gaps and role requirements.',
     executive: measurable
-      ? `${s.candidate.name}'s roadmap has ${milestones.length} milestone${milestones.length === 1 ? '' : 's'} totalling ~${num(rm?.timeline?.total_estimated_weeks) ?? '?'} weeks.`
+      ? `${s.candidate.name}'s roadmap has ${milestones.length} milestone${milestones.length === 1 ? '' : 's'}${wkClause(rm?.timeline?.total_estimated_weeks)}.`
       : `A learning roadmap could not be composed for ${s.candidate.name} — no role-requirement substrate to sequence against.`,
     assessment: measurable
-      ? `Milestones — ${milestones.map((m) => `${str(m.label) ?? `Phase ${num(m.sequence)}`} (${num(m.competency_count) ?? 0} comps, ~${num(m.estimated_weeks) ?? '?'}w)`).join('; ')}.`
+      ? `Milestones — ${milestones.map((m) => `${str(m.label) ?? `Phase ${num(m.sequence)}`} (${num(m.competency_count) ?? 0} comps${wkSuffix(m.estimated_weeks)})`).join('; ')}.`
       : 'No milestones are available.',
     chart: milestones.length
       ? { title: 'Estimated weeks per milestone', data_source: 'career', chart_type: 'bar', ...chart }
@@ -942,7 +955,7 @@ const buildLearningRoadmap: Builder = (s) => {
     interpretation: measurable
       ? 'The roadmap sequences development into time-boxed milestones ordered by priority band. Estimated effort is derived from the size of the competency gaps each milestone addresses.'
       : 'Sequencing a roadmap requires a profiled role with stored requirements so gaps can be ordered; without it the platform reports the absence honestly.',
-    recommendations: milestones.slice(0, 3).map((m) => ({ text: `${str(m.label) ?? `Phase ${num(m.sequence)}`}: ${num(m.competency_count) ?? 0} competencies, ~${num(m.estimated_weeks) ?? '?'} weeks.`, severity: 'info' })),
+    recommendations: milestones.slice(0, 3).map((m) => ({ text: `${str(m.label) ?? `Phase ${num(m.sequence)}`}: ${num(m.competency_count) ?? 0} competencies${num(m.estimated_weeks) != null ? `, ~${num(m.estimated_weeks)} weeks` : ''}.`, severity: 'info' })),
     confidence_text: measurable ? 'Confidence: Provisional — sequence and effort estimates depend on requirement coverage.' : 'Confidence not applicable — no roadmap could be composed.',
     honest: measurable
       ? null
@@ -1016,10 +1029,10 @@ const buildInterviewReadiness: Builder = (s) => {
     activation: ACTIVATION,
     data_source: 'evaluation-engine.candidateEvaluation → interview_scores (operator/panelist entries, averaged per criterion).',
     executive: measurable
-      ? `${s.candidate.name} has ${num(data.total_scores)} recorded interview score(s); overall operator mean is ${num(data.overall_mean_pct) ?? '?'}%.`
+      ? `${s.candidate.name} has ${num(data.total_scores)} recorded interview score(s); overall operator mean is ${pctOrPhrase(data.overall_mean_pct)}.`
       : `No interview has been captured for ${s.candidate.name}, so interview readiness is not yet measurable.`,
     assessment: measurable
-      ? `Overall mean ${num(data.overall_mean_pct) ?? '?'}% across ${num(data.distinct_panelists) ?? 0} panelist(s). Per criterion — ${criteria.map((c) => `${str(c.criterion)}: ${num(c.mean_pct)}%`).join('; ')}.`
+      ? `Overall mean ${pctOrPhrase(data.overall_mean_pct)} across ${num(data.distinct_panelists) ?? 0} panelist(s). Per criterion — ${criteria.map((c) => `${str(c.criterion)}: ${pctOrPhrase(c.mean_pct)}`).join('; ')}.`
       : 'No interview scores are available.',
     chart: measurable && criteria.length
       ? { title: 'Interview scores by criterion', data_source: 'career', chart_type: 'bar', ...chart }
@@ -1158,7 +1171,7 @@ const buildActionPlan: Builder = (s) => {
       ? `${s.candidate.name}'s action plan organises development into ${streams.length} stream${streams.length === 1 ? '' : 's'}${tracking?.has_baseline ? ' with a tracking baseline' : ''}.`
       : `An action plan could not be composed for ${s.candidate.name} — no development streams to organise.`,
     assessment: measurable
-      ? `Streams — ${streams.map((st) => `${str(st.label) ?? str(st.type_key)} (${num(st.competency_count) ?? 0} comps, ~${num(st.estimated_weeks) ?? '?'}w)`).join('; ')}.`
+      ? `Streams — ${streams.map((st) => `${str(st.label) ?? str(st.type_key)} (${num(st.competency_count) ?? 0} comps${wkSuffix(st.estimated_weeks)})`).join('; ')}.`
       : 'No development streams are available.',
     chart: measurable ? { title: 'Effort by development stream', data_source: 'career', chart_type: 'bar', ...chart } : null,
     interpretation: measurable
@@ -1236,6 +1249,10 @@ export function composePack(snapshot: PackSnapshot): ComposedReport[] {
 }
 
 // ── No-empty validation guard ───────────────────────────────────────────────
+// Founder requirement: NO placeholder content anywhere in a deliverable.
+// Catches "?w" / "~?" effort stubs, lorem ipsum, TBD/TODO/N/A and bare "?%".
+const PLACEHOLDER_RE = /(~\?|\?w\b|\bTBD\b|\bTODO\b|\bN\/A\b|\blorem\b|\bplaceholder\b|\s\?%)/i;
+
 const REQUIRED_SECTION_TITLES = [
   'Executive Summary',
   'Candidate Information',
@@ -1267,12 +1284,16 @@ export function validateReport(report: ComposedReport): string[] {
     const type = String(sec.type);
     if (type === 'narrative') {
       if (!str(sec.text)) violations.push(`${report.key}: "${expected}" narrative is empty`);
+      else if (PLACEHOLDER_RE.test(String(sec.text))) violations.push(`${report.key}: "${expected}" narrative contains a placeholder marker`);
     } else if (type === 'chart') {
       const labels = sec.resolved_data?.labels ?? [];
       const data = sec.resolved_data?.datasets?.[0]?.data ?? [];
       if (labels.length === 0 || data.length === 0) violations.push(`${report.key}: "${expected}" chart has no data`);
     } else if (type === 'insight') {
       if (arr(sec.insights).length === 0) violations.push(`${report.key}: "${expected}" insight list is empty`);
+      else if (arr(sec.insights).some((ins: any) => PLACEHOLDER_RE.test(String(ins?.text ?? ins?.title ?? '')))) {
+        violations.push(`${report.key}: "${expected}" insight contains a placeholder marker`);
+      }
     } else {
       violations.push(`${report.key}: "${expected}" has unexpected section type "${type}"`);
     }

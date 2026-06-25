@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0",
+  "exported_at": "2026-06-25T11:39:32.134Z",
+  "report": {
+    "uuid": "fc1a878a-686f-4d17-9952-7c462d6c3b64",
+    "type": "competency_heatmap",
+    "language": "en",
+    "status": "complete",
+    "created_at": "2026-06-25T11:39:32.116Z",
+    "completed_at": "2026-06-25T11:39:32.116Z",
+    "narrative_texts": {
+      "data_source": "competency-runtime.computeTypeProfile → per-competency measured scores.",
+      "interpretation": "Per-competency scores are required to render the heatmap.",
+      "visualizations": "Insufficient validated data to populate this section yet.\n\nWhy: No measured per-competency scores were found.\nHow to populate it: Score a competency-tagged assessment.\nWhat is needed: Measured competencies within type buckets.\nExpected output once available: A ranked heatmap of individual competency scores.",
+      "recommendations": "Insufficient validated data to populate this section yet.\n\nWhy: No measured per-competency scores were found.\nHow to populate it: Score a competency-tagged assessment.\nWhat is needed: Measured competencies within type buckets.\nExpected output once available: A ranked heatmap of individual competency scores.",
+      "confidence_level": "Confidence not applicable — no measured input yet.",
+      "executive_summary": "No individual competencies are measured for Sarah Johnson.",
+      "assessment_summary": "No per-competency scores are available.",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 11:39 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+    },
+    "insights": [],
+    "generated_content": {
+      "axes": {
+        "coverage": {
+          "pct": null,
+          "note": "0 measured competencies."
+        },
+        "activation": "Engine executed in-process and produced this artifact.",
+        "confidence": {
+          "band": null,
+          "note": "Confidence not applicable — no measured input yet."
+        }
+      },
+      "sections": [
+        {
+          "key": "executive_summary",
+          "text": "No individual competencies are measured for Sarah Johnson.",
+          "type": "narrative",
+          "title": "Executive Summary"
+        },
+        {
+          "key": "candidate_information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",
+          "type": "narrative",
+          "title": "Candidate Information"
+        },
+        {
+          "key": "assessment_summary",
+          "text": "No per-competency scores are available.",
+          "type": "narrative",
+          "title": "Assessment Summary"
+        },
+        {
+          "key": "visualizations",
+          "text": "Insufficient validated data to populate this section yet.\n\nWhy: No measured per-competency scores were found.\nHow to populate it: Score a competency-tagged assessment.\nWhat is needed: Measured competencies within type buckets.\nExpected output once available: A ranked heatmap of individual competency scores.",
+          "type": "narrative",
+          "title": "Visualizations",
+          "callout": "honest"
+        },
+        {
+          "key": "interpretation",
+          "text": "Per-competency scores are required to render the heatmap.",
+          "type": "narrative",
+          "title": "Interpretation"
+        },
+        {
+          "key": "recommendations",
+          "text": "Insufficient validated data to populate this section yet.\n\nWhy: No measured per-competency scores were found.\nHow to populate it: Score a competency-tagged assessment.\nWhat is needed: Measured competencies within type buckets.\nExpected output once available: A ranked heatmap of individual competency scores.",
+          "type": "narrative",
+          "title": "Recommendations",
+          "callout": "honest"
+        },
+        {
+          "key": "confidence_level",
+          "text": "Confidence not applicable — no measured input yet.",
+          "type": "narrative",
+          "title": "Confidence Level"
+        },
+        {
+          "key": "data_source",
+          "text": "competency-runtime.computeTypeProfile → per-competency measured scores.",
+          "type": "narrative",
+          "title": "Data Source"
+        },
+        {
+          "key": "generated_timestamp",
+          "text": "This report was generated on 25 June 2026 at 11:39 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "type": "narrative",
+          "title": "Generated Timestamp"
+        }
+      ],
+      "data_flow": "competency-runtime.computeTypeProfile → per-competency measured scores."
+    },
+    "metadata": {
+      "measurable": false,
+      "role_title": "Senior Product Manager",
+      "data_source": "competency-runtime.computeTypeProfile → per-competency measured scores.",
+      "honest_state": {
+        "why": "No measured per-competency scores were found.",
+        "needed": "Measured competencies within type buckets.",
+        "expected": "A ranked heatmap of individual competency scores.",
+        "workflow": "Score a competency-tagged assessment."
+      },
+      "pack_version": "1.0.0"
+    }
+  }
+}

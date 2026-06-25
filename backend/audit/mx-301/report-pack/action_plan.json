@@ -1,0 +1,149 @@
+{
+  "schema_version": "1.0",
+  "exported_at": "2026-06-25T11:39:32.412Z",
+  "report": {
+    "uuid": "c0943bde-5a2c-4f6a-8f1a-521412c0245f",
+    "type": "action_plan",
+    "language": "en",
+    "status": "complete",
+    "created_at": "2026-06-25T11:39:32.397Z",
+    "completed_at": "2026-06-25T11:39:32.397Z",
+    "narrative_texts": {
+      "data_source": "career-development-engine.buildCareerDevelopment → development streams + tracking from gaps and requirements.",
+      "interpretation": "The action plan groups development into themed streams, each addressing a cluster of related gaps with a now/next/later horizon. Tracking compares effort over time once a baseline exists.",
+      "confidence_level": "Confidence: Provisional — depends on gap and requirement coverage.",
+      "executive_summary": "Sarah Johnson's action plan organises development into 5 streams.",
+      "assessment_summary": "Streams — Behavioral Development (0 comps); Technical Development (0 comps); Functional Development (0 comps); Cognitive Development (0 comps); Future Skills Development (0 comps).",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 11:39 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+    },
+    "insights": [
+      {
+        "text": "Behavioral Development: How you work with others and regulate yourself — interpersonal, attitudinal and self-management behaviours..",
+        "severity": "info"
+      },
+      {
+        "text": "Technical Development: Tool, technology and domain-specific technical proficiency..",
+        "severity": "info"
+      },
+      {
+        "text": "Functional Development: Role and process execution capabilities that deliver work outcomes..",
+        "severity": "info"
+      }
+    ],
+    "generated_content": {
+      "axes": {
+        "coverage": {
+          "pct": null,
+          "note": "5 development stream(s)."
+        },
+        "activation": "Engine executed in-process and produced this artifact.",
+        "confidence": {
+          "band": "Provisional",
+          "note": "Action plan composes role requirements, gaps and development streams."
+        }
+      },
+      "sections": [
+        {
+          "key": "executive_summary",
+          "text": "Sarah Johnson's action plan organises development into 5 streams.",
+          "type": "narrative",
+          "title": "Executive Summary"
+        },
+        {
+          "key": "candidate_information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",
+          "type": "narrative",
+          "title": "Candidate Information"
+        },
+        {
+          "key": "assessment_summary",
+          "text": "Streams — Behavioral Development (0 comps); Technical Development (0 comps); Functional Development (0 comps); Cognitive Development (0 comps); Future Skills Development (0 comps).",
+          "type": "narrative",
+          "title": "Assessment Summary"
+        },
+        {
+          "key": "visualizations",
+          "type": "chart",
+          "title": "Visualizations",
+          "resolved_data": {
+            "labels": [
+              "Behavioral Development",
+              "Technical Development",
+              "Functional Development",
+              "Cognitive Development",
+              "Future Skills Development"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              }
+            ]
+          },
+          "visualization": {
+            "title": "Effort by development stream",
+            "chart_type": "bar",
+            "data_source": "career"
+          }
+        },
+        {
+          "key": "interpretation",
+          "text": "The action plan groups development into themed streams, each addressing a cluster of related gaps with a now/next/later horizon. Tracking compares effort over time once a baseline exists.",
+          "type": "narrative",
+          "title": "Interpretation"
+        },
+        {
+          "key": "recommendations",
+          "type": "insight",
+          "title": "Recommendations",
+          "insights": [
+            {
+              "text": "Behavioral Development: How you work with others and regulate yourself — interpersonal, attitudinal and self-management behaviours..",
+              "severity": "info"
+            },
+            {
+              "text": "Technical Development: Tool, technology and domain-specific technical proficiency..",
+              "severity": "info"
+            },
+            {
+              "text": "Functional Development: Role and process execution capabilities that deliver work outcomes..",
+              "severity": "info"
+            }
+          ]
+        },
+        {
+          "key": "confidence_level",
+          "text": "Confidence: Provisional — depends on gap and requirement coverage.",
+          "type": "narrative",
+          "title": "Confidence Level"
+        },
+        {
+          "key": "data_source",
+          "text": "career-development-engine.buildCareerDevelopment → development streams + tracking from gaps and requirements.",
+          "type": "narrative",
+          "title": "Data Source"
+        },
+        {
+          "key": "generated_timestamp",
+          "text": "This report was generated on 25 June 2026 at 11:39 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "type": "narrative",
+          "title": "Generated Timestamp"
+        }
+      ],
+      "data_flow": "career-development-engine.buildCareerDevelopment → development streams + tracking from gaps and requirements."
+    },
+    "metadata": {
+      "measurable": true,
+      "role_title": "Senior Product Manager",
+      "data_source": "career-development-engine.buildCareerDevelopment → development streams + tracking from gaps and requirements.",
+      "honest_state": null,
+      "pack_version": "1.0.0"
+    }
+  }
+}

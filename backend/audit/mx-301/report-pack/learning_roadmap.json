@@ -1,0 +1,145 @@
+{
+  "schema_version": "1.0",
+  "exported_at": "2026-06-25T11:39:32.324Z",
+  "report": {
+    "uuid": "951bce25-bbe1-4b4f-a6af-5f576edf928e",
+    "type": "learning_roadmap",
+    "language": "en",
+    "status": "complete",
+    "created_at": "2026-06-25T11:39:32.312Z",
+    "completed_at": "2026-06-25T11:39:32.312Z",
+    "narrative_texts": {
+      "data_source": "career-roadmap-engine.buildCareerRoadmap → milestones + development plan from gaps and role requirements.",
+      "interpretation": "The roadmap sequences development into time-boxed milestones ordered by priority band. Estimated effort is derived from the size of the competency gaps each milestone addresses.",
+      "confidence_level": "Confidence: Provisional — sequence and effort estimates depend on requirement coverage.",
+      "executive_summary": "Sarah Johnson's roadmap has 3 milestones.",
+      "assessment_summary": "Milestones — Immediate Focus (0 comps); Near-Term Development (0 comps); Longer-Term Growth (0 comps).",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 11:39 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+    },
+    "insights": [
+      {
+        "text": "Immediate Focus: 0 competencies.",
+        "severity": "info"
+      },
+      {
+        "text": "Near-Term Development: 0 competencies.",
+        "severity": "info"
+      },
+      {
+        "text": "Longer-Term Growth: 0 competencies.",
+        "severity": "info"
+      }
+    ],
+    "generated_content": {
+      "axes": {
+        "coverage": {
+          "pct": null,
+          "note": "3 milestone(s), 0 development item(s)."
+        },
+        "activation": "Engine executed in-process and produced this artifact.",
+        "confidence": {
+          "band": "Provisional",
+          "note": "Roadmap composes role requirements and measured gaps."
+        }
+      },
+      "sections": [
+        {
+          "key": "executive_summary",
+          "text": "Sarah Johnson's roadmap has 3 milestones.",
+          "type": "narrative",
+          "title": "Executive Summary"
+        },
+        {
+          "key": "candidate_information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",
+          "type": "narrative",
+          "title": "Candidate Information"
+        },
+        {
+          "key": "assessment_summary",
+          "text": "Milestones — Immediate Focus (0 comps); Near-Term Development (0 comps); Longer-Term Growth (0 comps).",
+          "type": "narrative",
+          "title": "Assessment Summary"
+        },
+        {
+          "key": "visualizations",
+          "type": "chart",
+          "title": "Visualizations",
+          "resolved_data": {
+            "labels": [
+              "Immediate Focus",
+              "Near-Term Development",
+              "Longer-Term Growth"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  0,
+                  0,
+                  0
+                ]
+              }
+            ]
+          },
+          "visualization": {
+            "title": "Estimated weeks per milestone",
+            "chart_type": "bar",
+            "data_source": "career"
+          }
+        },
+        {
+          "key": "interpretation",
+          "text": "The roadmap sequences development into time-boxed milestones ordered by priority band. Estimated effort is derived from the size of the competency gaps each milestone addresses.",
+          "type": "narrative",
+          "title": "Interpretation"
+        },
+        {
+          "key": "recommendations",
+          "type": "insight",
+          "title": "Recommendations",
+          "insights": [
+            {
+              "text": "Immediate Focus: 0 competencies.",
+              "severity": "info"
+            },
+            {
+              "text": "Near-Term Development: 0 competencies.",
+              "severity": "info"
+            },
+            {
+              "text": "Longer-Term Growth: 0 competencies.",
+              "severity": "info"
+            }
+          ]
+        },
+        {
+          "key": "confidence_level",
+          "text": "Confidence: Provisional — sequence and effort estimates depend on requirement coverage.",
+          "type": "narrative",
+          "title": "Confidence Level"
+        },
+        {
+          "key": "data_source",
+          "text": "career-roadmap-engine.buildCareerRoadmap → milestones + development plan from gaps and role requirements.",
+          "type": "narrative",
+          "title": "Data Source"
+        },
+        {
+          "key": "generated_timestamp",
+          "text": "This report was generated on 25 June 2026 at 11:39 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "type": "narrative",
+          "title": "Generated Timestamp"
+        }
+      ],
+      "data_flow": "career-roadmap-engine.buildCareerRoadmap → milestones + development plan from gaps and role requirements."
+    },
+    "metadata": {
+      "measurable": true,
+      "role_title": "Senior Product Manager",
+      "data_source": "career-roadmap-engine.buildCareerRoadmap → milestones + development plan from gaps and role requirements.",
+      "honest_state": null,
+      "pack_version": "1.0.0"
+    }
+  }
+}

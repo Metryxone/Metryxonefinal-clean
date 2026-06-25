@@ -1,0 +1,149 @@
+{
+  "schema_version": "1.0",
+  "exported_at": "2026-06-25T11:39:32.161Z",
+  "report": {
+    "uuid": "87614cc3-7ae5-4c7e-8459-58ec1846d6fd",
+    "type": "strength",
+    "language": "en",
+    "status": "complete",
+    "created_at": "2026-06-25T11:39:32.136Z",
+    "completed_at": "2026-06-25T11:39:32.136Z",
+    "narrative_texts": {
+      "data_source": "ei-profile-engine.buildEiProfile → strength_areas (dimensions at/above the Strong band).",
+      "interpretation": "Strengths are dimensions measured at or above the Strong band — reliable areas to leverage. They are developmental signals, not endorsements for any specific role decision.",
+      "confidence_level": "Confidence band: Moderate.",
+      "executive_summary": "Sarah Johnson demonstrates 5 clear strengths, led by Communication Readiness (84).",
+      "assessment_summary": "Strength areas — Communication Readiness: 84 (Excellent); Problem-Solving Readiness: 81.2 (Excellent); Leadership Readiness: 81.2 (Excellent); Workplace Readiness: 80 (Excellent); Future Readiness: 79.4 (Strong).",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 11:39 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+    },
+    "insights": [
+      {
+        "text": "Leverage Communication Readiness (84).",
+        "severity": "positive"
+      },
+      {
+        "text": "Leverage Problem-Solving Readiness (81.2).",
+        "severity": "positive"
+      },
+      {
+        "text": "Leverage Leadership Readiness (81.2).",
+        "severity": "positive"
+      }
+    ],
+    "generated_content": {
+      "axes": {
+        "coverage": {
+          "pct": 100,
+          "note": "5 measurable dimensions."
+        },
+        "activation": "Engine executed in-process and produced this artifact.",
+        "confidence": {
+          "band": "Moderate",
+          "note": "Confidence band reported by the EI profile engine."
+        }
+      },
+      "sections": [
+        {
+          "key": "executive_summary",
+          "text": "Sarah Johnson demonstrates 5 clear strengths, led by Communication Readiness (84).",
+          "type": "narrative",
+          "title": "Executive Summary"
+        },
+        {
+          "key": "candidate_information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",
+          "type": "narrative",
+          "title": "Candidate Information"
+        },
+        {
+          "key": "assessment_summary",
+          "text": "Strength areas — Communication Readiness: 84 (Excellent); Problem-Solving Readiness: 81.2 (Excellent); Leadership Readiness: 81.2 (Excellent); Workplace Readiness: 80 (Excellent); Future Readiness: 79.4 (Strong).",
+          "type": "narrative",
+          "title": "Assessment Summary"
+        },
+        {
+          "key": "visualizations",
+          "type": "chart",
+          "title": "Visualizations",
+          "resolved_data": {
+            "labels": [
+              "Communication Readiness",
+              "Problem-Solving Readiness",
+              "Leadership Readiness",
+              "Workplace Readiness",
+              "Future Readiness"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  84,
+                  81.2,
+                  81.2,
+                  80,
+                  79.4
+                ]
+              }
+            ]
+          },
+          "visualization": {
+            "title": "Strength dimensions",
+            "chart_type": "bar",
+            "data_source": "employability"
+          }
+        },
+        {
+          "key": "interpretation",
+          "text": "Strengths are dimensions measured at or above the Strong band — reliable areas to leverage. They are developmental signals, not endorsements for any specific role decision.",
+          "type": "narrative",
+          "title": "Interpretation"
+        },
+        {
+          "key": "recommendations",
+          "type": "insight",
+          "title": "Recommendations",
+          "insights": [
+            {
+              "text": "Leverage Communication Readiness (84).",
+              "severity": "positive"
+            },
+            {
+              "text": "Leverage Problem-Solving Readiness (81.2).",
+              "severity": "positive"
+            },
+            {
+              "text": "Leverage Leadership Readiness (81.2).",
+              "severity": "positive"
+            }
+          ]
+        },
+        {
+          "key": "confidence_level",
+          "text": "Confidence band: Moderate.",
+          "type": "narrative",
+          "title": "Confidence Level"
+        },
+        {
+          "key": "data_source",
+          "text": "ei-profile-engine.buildEiProfile → strength_areas (dimensions at/above the Strong band).",
+          "type": "narrative",
+          "title": "Data Source"
+        },
+        {
+          "key": "generated_timestamp",
+          "text": "This report was generated on 25 June 2026 at 11:39 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "type": "narrative",
+          "title": "Generated Timestamp"
+        }
+      ],
+      "data_flow": "ei-profile-engine.buildEiProfile → strength_areas (dimensions at/above the Strong band)."
+    },
+    "metadata": {
+      "measurable": true,
+      "role_title": "Senior Product Manager",
+      "data_source": "ei-profile-engine.buildEiProfile → strength_areas (dimensions at/above the Strong band).",
+      "honest_state": null,
+      "pack_version": "1.0.0"
+    }
+  }
+}

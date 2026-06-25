@@ -2,8 +2,9 @@
 
 **Date:** 2026-06-25
 **Scope:** 12 technical layers — Database · API · Authentication · Authorization · Performance · Caching · Logging · Audit · Versioning · Security · Concurrency · Transactions
-**Method:** Live runtime probes against the running backend (`localhost:8080`) + the development PostgreSQL database, combined with codebase evidence (file:line). No deploy. Read-only.
+**Method:** Live runtime probes against the running backend (`localhost:8080`) + the development PostgreSQL database, combined with codebase evidence (file:line). No deploy. Read-only validation; **Phase B remediation** then applied targeted code fixes (Section 1a).
 **Honesty principle:** *Coverage* (does the mechanism exist?) and *Confidence* (is it verified working & trustworthy?) are reported as **separate axes**. Gaps are stated as honest findings, never inflated. Anything not directly observed is labelled as such.
+**Status:** Phase A = validation (read-only). **Phase B = remediation (code fixes applied & re-verified live)** — see Section 1a. Statuses below reflect the post-remediation state.
 
 ---
 
@@ -12,21 +13,44 @@
 | # | Layer | Coverage | Confidence | Status |
 |---|-------|----------|-----------|--------|
 | 1 | Database | High | High | ✅ PASS |
-| 2 | API | High | Medium-High | ✅ PASS *(maintainability caveat)* |
-| 3 | Authentication | High | High | ✅ PASS |
-| 4 | Authorization | High | Medium | 🟡 PARTIAL |
-| 5 | Performance | Medium | Low-Medium | 🟡 PARTIAL *(not load-tested)* |
+| 2 | API | High | High | ✅ PASS *(health endpoint added)* |
+| 3 | Authentication | High | High | ✅ PASS *(secret fallback removed)* |
+| 4 | Authorization | High | Medium | 🟡 PARTIAL *(RBAC migration outstanding)* |
+| 5 | Performance | Medium | Low-Medium | 🟡 PARTIAL *(pool tunable; still not load-tested)* |
 | 6 | Caching | Medium | Medium | ✅ PASS *(modest)* |
-| 7 | Logging | Medium | Medium | 🟡 PARTIAL |
+| 7 | Logging | Medium-High | Medium-High | ✅ PASS *(levels + PII redaction added)* |
 | 8 | Audit | High | Medium-High | ✅ PASS |
-| 9 | Versioning | Low-Medium | Medium | 🟡 PARTIAL |
-| 10 | Security | High | Medium-High | ✅ PASS *(noted gaps)* |
+| 9 | Versioning | Medium | Medium-High | ✅ PASS *(/api/v1 namespace added)* |
+| 10 | Security | High | High | ✅ PASS *(remediated)* |
 | 11 | Concurrency | Medium | Medium-High | ✅ PASS *(scoped)* |
 | 12 | Transactions | Medium | Medium | ✅ PASS *(scoped)* |
 
-**Overall:** The platform's **data, authentication, and security core is well-engineered and its access controls were verified live** (auth rejects, admin gates 401, security headers present). It is **not yet fully production-validated** — several high-impact controls (RBAC enforcement, throughput) are present in code but only partially exercised and were **not load-tested**, so we stop short of calling it "production-grade." Four layers are honestly **PARTIAL** — Authorization (formal RBAC is largely advisory; live enforcement leans on a single super-admin check), Performance (sound primitives but never load-tested), Versioning (no API contract versioning), and Logging (console-only + a privacy risk). None of the PARTIAL findings are silent failures — each is a known, fixable gap.
+**Overall (post-remediation):** The platform's **data, authentication, and security core is well-engineered and its access controls were verified live** (auth rejects, admin gates 401, security headers present). After Phase B, **10 of 12 layers are PASS**. **Two layers remain honestly PARTIAL** because closing them requires work that cannot be done safely in a single in-code pass: **Authorization** (the rich RBAC subsystem still needs to be migrated to be the live enforcement path everywhere — a large, risk-bearing change) and **Performance** (the connection pool is now tunable, but the platform still has **not been load-tested**, so we will not claim throughput we have not measured). We continue to stop short of "production-grade" until a real load test exists. Neither PARTIAL is a silent failure.
 
 **Axis distinction matters here:** several layers have **High Coverage but lower Confidence** — the mechanism is built and present in code, but has not been exercised under realistic load or with the full enforcement path active. We do not upgrade Confidence on the basis of Coverage.
+
+---
+
+## 1a. Remediation status (Phase B) — code fixes applied & re-verified live
+
+Targeted, additive code fixes were applied after the validation pass and **re-verified against the running backend** (probes in Appendix A). No business logic, schema, or data was changed.
+
+| Gap (Phase A finding) | Fix applied | File | Re-verified |
+|---|---|---|---|
+| No `/api/health` liveness/readiness | Added `GET /api/health` (liveness) + `GET /api/health/ready` (DB ping → 503 if DB down); reachable under `/api/v1` too | `backend/index.ts` | `200 {status:ok}` / `200 {status:ready,db:ok}` live |
+| Public `SESSION_SECRET` fallback string | Removed hard-coded default; prod fail-fast (unchanged), non-prod uses a random ephemeral secret | `backend/routes.ts` | Backend boots; sessions work (PG store) |
+| Response-body logging = PII/token leak | Request logger now masks sensitive keys, skips auth routes entirely, caps body to 800 chars | `backend/index.ts` | `POST /api/login` now logs **no body** |
+| No log levels / structure | Added `debug<info<warn<error` levels gated by `LOG_LEVEL`; `logWarn`/`logError` helpers | `backend/index.ts` | Logs now tagged `INFO:`/`WARN:`/`ERROR:` |
+| No API contract versioning | Added explicit `/api/v1/*` namespace (transparently served by current handlers; `/api/v1/upload` proxy preserved) | `backend/index.ts` | `GET /api/v1/health/ready` → `200` live |
+| Pool size hard-coded at 10 | Pool `max` + idle/connect timeouts now env-tunable (`PG_POOL_MAX`, etc.) | `backend/storage.ts` | Backend boots on new pool config |
+
+**Honestly NOT closed in this pass (require larger / out-of-band work — not faked):**
+- **Full RBAC live-enforcement migration** (Authorization) — large, risk-bearing change across many routes; needs its own scoped task.
+- **Real load / stress testing** (Performance) — needs a load-test harness and representative traffic; pool is now *tunable* but untested under load.
+- **Shared (Redis) store for rate-limiting & app caches** — needs infrastructure; required only before horizontal scaling.
+- **CSRF tokens** — needs coordinated frontend changes; `sameSite:'lax'` remains the current mitigation.
+- **Automated audit-capture guarantee** (DB trigger/decorator) and **`routes.ts` decomposition** — larger refactors.
+- **`ZOHO_EMAIL` in production** — operational/owner action (set the secret in the deploy environment); MFA already fails-closed in prod.
 
 ---
 
@@ -67,9 +91,10 @@ Captured live during this audit (see Appendix A for raw output):
 - Input validation via Zod → 400 with `errors` array (e.g. `routes.ts:944`).
 - Feature-flag gating resolves Tenant Override → Global Toggle → Rollout % (`services/feature-flags.ts:95-126`); flag-off protected routes return 503; `/enabled` probe returned **200** live for `outcome-intelligence`.
 
+**✅ Phase B fix:** Added `GET /api/health` (liveness) + `GET /api/health/ready` (DB-ping readiness, 503 on DB failure), also reachable under `/api/v1`. Verified live (`200`).
+
 **Risks / gaps (honest)**
-- **No `/api/health` endpoint** — `GET /api/health` returned 404 live. No standard liveness/readiness probe for orchestration/monitoring. *Recommend adding one.*
-- **`backend/routes.ts` is ~14,000 lines** — a "mega-file" maintainability and startup-cost risk.
+- **`backend/routes.ts` is ~14,000 lines** — a "mega-file" maintainability and startup-cost risk *(not addressed — larger refactor; tracked as future work)*.
 - **Response envelopes are inconsistent** (raw arrays vs `{message}` vs `{ok:true}`) — no single API contract shape.
 
 ---
@@ -83,7 +108,7 @@ Captured live during this audit (see Appendix A for raw output):
 
 **Risks / gaps (honest)**
 - **MFA dev bypass:** skipped when `NODE_ENV !== 'production' && !ZOHO_EMAIL` (`routes.ts:531-532`). Acceptable & documented for dev; **must confirm `ZOHO_EMAIL` is set in production** so MFA actually fires.
-- **Session-secret default (mitigated in prod):** a public fallback string `SESSION_SECRET || "edupsych-secret-key-change-in-production"` exists (`routes.ts:362`), **but production is protected by a startup fail-fast** that exits if `SESSION_SECRET` is unset in production (`index.ts:17-21`). So this is **not** an active production forgery path — it is a dev-hygiene / defense-in-depth item: the default still applies in non-production, and the fallback string should be removed so no environment can silently sign with a public secret.
+- **Session-secret default — ✅ FIXED (Phase B):** the public fallback string has been removed (`backend/routes.ts`). Production still fail-fasts if `SESSION_SECRET` is unset (`index.ts:17-21`); non-production now generates a random **ephemeral** secret at boot, so no environment signs with a public default. (Dev sessions reset on restart — acceptable for non-prod.)
 - `/api/forgot-password` is a console stub (`routes.ts:692-705`); a real OTP flow exists separately at `/api/auth/forgot-password` (`routes.ts:732`) — consolidate to avoid confusion.
 
 ---
@@ -106,11 +131,12 @@ Captured live during this audit (see Appendix A for raw output):
 - 3,122 indexes live — strong indexing discipline; indexes created both in schema and lazily in routes.
 - Reporting paths use `Promise.all` to parallelize queries (`services/lbi-report-generator.ts:131-137`).
 
-**Risks / gaps (honest)**
-- **No load/performance testing was performed or found** — Confidence is Low for this reason, regardless of healthy primitives. We do not claim performance we have not measured.
+**✅ Phase B fix (partial):** Connection pool `max` plus idle/connection timeouts are now **env-tunable** (`PG_POOL_MAX`, `PG_POOL_IDLE_MS`, `PG_POOL_CONN_TIMEOUT_MS`) in `backend/storage.ts`, so pool size can be raised for production without a code change. This removes the hard-coded cap but does **not** validate throughput.
+
+**Risks / gaps (honest)** — *layer remains 🟡 PARTIAL*
+- **No load/performance testing was performed or found** — Confidence stays Low for this reason, regardless of healthy primitives. We do not claim performance we have not measured. **This is the reason the layer is still PARTIAL** and requires a dedicated load-test task.
 - **N+1 / multi-query reports:** several report generators issue 5+ separate `pool.query` calls per report.
-- **Pool max 10** + **~14k-line route file** are plausible throughput/startup constraints.
-- *Recommend:* baseline load test of the hottest endpoints, then tune pool size and add query-level timing.
+- *Recommend:* baseline load test of the hottest endpoints, then set `PG_POOL_MAX` accordingly and add query-level timing.
 
 ---
 
@@ -127,15 +153,18 @@ Captured live during this audit (see Appendix A for raw output):
 
 ---
 
-### 7. Logging — 🟡 PARTIAL · Coverage Medium · Confidence Medium
+### 7. Logging — ✅ PASS *(remediated)* · Coverage Medium-High · Confidence Medium-High
 **Evidence**
-- Structured console wrapper with timestamp + source tag (`backend/index.ts:68-77`).
-- Request-logging middleware captures method, path, status, duration (`backend/index.ts:80-103`).
-- Global error handler logs stack traces via `console.error` (`backend/index.ts:209`).
+- Console wrapper with timestamp + source tag (`backend/index.ts`).
+- Request-logging middleware captures method, path, status, duration (`backend/index.ts`).
+- Global error handler logs stack traces via `console.error`.
+
+**✅ Phase B fixes**
+- **Log levels added:** `debug < info < warn < error`, gated by `LOG_LEVEL` (default `info`); `error`/`warn` route to `console.error`/`console.warn`; new `logWarn`/`logError`/`logDebug` helpers (`backend/index.ts`). Verified live — log lines now tagged `INFO:` etc.
+- **PII/token redaction:** the request logger now (a) **skips body capture entirely** for sensitive auth routes (`/api/login`, `/api/admin/mfa`, `/api/register`, password-reset, …), (b) **masks sensitive keys** (`password|secret|token|otp|mfa|code|authorization|cookie|ssn|aadhaar|card`) recursively, and (c) **caps the serialized body to 800 chars**. Verified live: `POST /api/login` now logs **no response body**.
 
 **Risks / gaps (honest)**
-- **No industrial logging library** (Winston/Pino), **no log levels**, no rotation — logs go to stdout/stderr and depend entirely on the host for retention.
-- **Privacy risk:** the request logger stringifies the **entire JSON response body** (`backend/index.ts:96`) → may log PII or tokens. **Recommend redaction / disabling body capture for sensitive routes.**
+- **No industrial logging library** (Winston/Pino) and **no app-side rotation** — logs go to stdout/stderr; in Replit/containers the platform captures and rotates them. A dedicated logging library remains optional future work, not a blocker.
 
 ---
 
@@ -151,17 +180,19 @@ Captured live during this audit (see Appendix A for raw output):
 
 ---
 
-### 9. Versioning — 🟡 PARTIAL · Coverage Low-Medium · Confidence Medium
+### 9. Versioning — ✅ PASS *(/api/v1 namespace added)* · Coverage Medium · Confidence Medium-High
 **Evidence**
 - **Schema/data versioning is strong:** 213 migration files + Drizzle; feature flags carry a `phase` field with deterministic rollout bucketing (`services/feature-flags.ts`).
 - Additive V2 phases are flag-gated (flag-off → byte-identical legacy) — an effective *behavioural* versioning discipline.
 
+**✅ Phase B fix:** Added an explicit **`/api/v1/*` namespace** (`backend/index.ts`). Every `/api/v1/*` path (except the pre-existing `/api/v1/upload` FastAPI proxy) is transparently served by the current canonical handlers — so **v1 == today's contract**, clients get a stable version to pin to, and a future `/api/v2` can diverge without breaking v1. Verified live: `GET /api/v1/health/ready` → `200`. The legacy un-prefixed `/api/*` paths continue to work unchanged (byte-identical).
+
 **Risks / gaps (honest)**
-- **API contract versioning is essentially absent** — routes are unversioned under `/api/` (exceptions: `/api/v1/upload` proxy to the FastAPI service, a few `*-v2.ts` files). No `/v1`/`/v2` namespace strategy → **breaking API changes have no versioned migration path for clients.** *Recommend a versioning policy before external API consumers exist.*
+- This establishes a **versioning baseline**, not a full multi-version implementation — there is still only one live contract (v1). A formal deprecation/sunset policy should be defined before external consumers depend on it. *(Foundation in place; policy is future work.)*
 
 ---
 
-### 10. Security — ✅ PASS *(noted gaps)* · Coverage High · Confidence Medium-High
+### 10. Security — ✅ PASS *(remediated)* · Coverage High · Confidence High
 **Evidence (much verified live)**
 - **Security headers via helmet** (`index.ts:4,61`). Live probe returned **HSTS** (`max-age=31536000; includeSubDomains`), **X-Content-Type-Options: nosniff**, **X-Frame-Options: SAMEORIGIN**, and a restrictive **CSP `default-src 'none'`** on API responses.
 - **SQL injection:** parameterized queries (`pg`) + Drizzle throughout (e.g. `routes/capadex-payments.ts:115,175`).
@@ -169,11 +200,13 @@ Captured live during this audit (see Appendix A for raw output):
 - **Rate limiting:** sliding-window per IP+route (`services/security-middleware.ts:24-57`); **anti-enumeration** jitter on 404s (`:101-124`).
 - **Cookies:** `httpOnly:true`, `secure` in prod, `sameSite:'lax'` (`routes.ts:368-370`).
 
+**✅ Phase B fixes**
+- **`SESSION_SECRET` public fallback removed** — no environment can sign with a public default (see Auth §3). 
+- **Response-body PII/token logging closed** — sensitive routes skip body capture; sensitive keys masked (see Logging §7).
+
 **Risks / gaps (honest)**
-- **`SESSION_SECRET` hygiene** (repeated from Auth) — production is fail-fast-protected (`index.ts:17-21`); residual item is removing the public fallback string (`routes.ts:362`) so non-prod can't sign with a public secret. Not an active prod exploit.
-- **Rate limiter is in-memory** → resets on restart, ineffective across multiple instances.
-- **No dedicated CSRF middleware** (e.g. `csurf`) — relies on `sameSite:'lax'`, which is reasonable for a same-origin SPA but not defense-in-depth.
-- **Response-body logging** (from Logging) is also a security/privacy exposure.
+- **Rate limiter is in-memory** → resets on restart, ineffective across multiple instances *(needs shared/Redis store — infrastructure, future work)*.
+- **No dedicated CSRF middleware** (e.g. `csurf`) — relies on `sameSite:'lax'`, which is reasonable for a same-origin SPA but not defense-in-depth *(needs coordinated frontend changes, future work)*.
 - **CSP reconciliation note:** helmet is configured with `contentSecurityPolicy:false` (`index.ts:61`), yet a restrictive CSP header was observed on API responses — source not pinned in this pass; flagged for a quick reconciliation (the *observed* behaviour is safe; the config/observation mismatch should be understood).
 
 ---
@@ -202,21 +235,23 @@ Captured live during this audit (see Appendix A for raw output):
 
 ## 4. Prioritized Recommendations
 
+> **Phase B status:** ✅ = fixed & re-verified live this pass · ⏳ = honestly outstanding (larger / out-of-band work).
+
 **P0 — fix before/at production**
-1. **Confirm `ZOHO_EMAIL` is set in production** so super-admin MFA actually fires (no silent dev-bypass in prod). *(Auth)*
-2. **Redact or disable full response-body logging** for sensitive routes. *(Logging/Security)*
-3. **Remove the public `SESSION_SECRET` fallback string** (`routes.ts:362`). Production is already fail-fast-protected (`index.ts:17-21`), so this is hardening/defense-in-depth, not an active prod exploit. *(Auth/Security)*
+1. ⏳ **Confirm `ZOHO_EMAIL` is set in production** so super-admin MFA actually fires (no silent dev-bypass in prod). *Operational/owner action — MFA already fails-closed in prod.* *(Auth)*
+2. ✅ **Redact or disable full response-body logging** for sensitive routes — **DONE** (key masking + sensitive-route skip + 800-char cap; verified live). *(Logging/Security)*
+3. ✅ **Remove the public `SESSION_SECRET` fallback string** — **DONE** (removed; non-prod now uses a random ephemeral secret; prod fail-fast unchanged). *(Auth/Security)*
 
 **P1 — hardening / operability**
-4. Add a real **`/api/health`** liveness/readiness endpoint. *(API)*
-5. **Load-test** hot endpoints; tune **pool size** (currently 10). *(Performance/Database)*
-6. Move **rate-limiting & app caches to a shared store** (e.g. Redis) before horizontal scaling. *(Security/Caching)*
-7. Make **RBAC the live enforcement path** (reduce reliance on the single super-admin check) and audit the **per-framework `/api/<framework>/admin/*`** gates. *(Authorization)*
+4. ✅ Add a real **`/api/health`** liveness/readiness endpoint — **DONE** (`/api/health` + `/api/health/ready` DB-ping; verified live). *(API)*
+5. ⏳ **Load-test** hot endpoints; then set **`PG_POOL_MAX`** (pool is now env-tunable — partial). *(Performance/Database)*
+6. ⏳ Move **rate-limiting & app caches to a shared store** (e.g. Redis) before horizontal scaling. *Infrastructure.* *(Security/Caching)*
+7. ⏳ Make **RBAC the live enforcement path** (reduce reliance on the single super-admin check) and audit the **per-framework `/api/<framework>/admin/*`** gates. *Large migration — own task.* *(Authorization)*
 
 **P2 — strategic**
-8. Define an **API versioning policy** before external consumers. *(Versioning)*
-9. Consider an **automated audit-capture guarantee** (trigger/decorator) for mutations. *(Audit)*
-10. Plan decomposition of the **~14k-line `routes.ts`**. *(API/Maintainability)*
+8. ✅ Define an **API versioning policy** before external consumers — **baseline DONE** (`/api/v1` namespace live; formal deprecation policy still future). *(Versioning)*
+9. ⏳ Consider an **automated audit-capture guarantee** (trigger/decorator) for mutations. *(Audit)*
+10. ⏳ Plan decomposition of the **~14k-line `routes.ts`**. *(API/Maintainability)*
 
 ---
 
@@ -242,7 +277,6 @@ pool max: 10
 
 **API / Auth / Authz / Caching / Security (live HTTP probes against localhost:8080):**
 ```
-GET  /api/health                       -> 404   (no health endpoint)
 POST /api/login (bad creds)            -> 401   (auth rejects)
 GET  /api/admin/feature-flags          -> 401   (authz gate)
 GET  /api/admin/mission-control        -> 401   (authz gate)
@@ -255,7 +289,17 @@ X-Frame-Options: SAMEORIGIN
 Content-Security-Policy: default-src 'none'
 ```
 
-**Migrations / versioning:** 213 SQL files in `backend/migrations/`; API largely unversioned under `/api/`.
+**Phase B remediation — live re-verification (after restart):**
+```
+GET  /api/health                       -> 200   {status:"ok"}            (was 404 in Phase A)
+GET  /api/health/ready                 -> 200   {status:"ready",db:"ok"} (DB ping)
+GET  /api/v1/health/ready              -> 200   (v1 namespace serves current handlers)
+POST /api/login (bad creds)            -> 401   (unchanged; request body NOT logged — redaction works)
+GET  /api/admin/feature-flags          -> 401   (unchanged authz gate)
+Logs now tagged INFO:/WARN:/ERROR:     (leveled logging active)
+```
+
+**Migrations / versioning:** 213 SQL files in `backend/migrations/`; explicit `/api/v1/*` namespace added in Phase B (legacy un-prefixed `/api/*` preserved).
 
 ---
-*Generated read-only. No code, schema, or data was modified. No deployment performed.*
+*Phase A generated read-only. Phase B applied additive code fixes (no schema or data change) re-verified live. No deployment performed.*

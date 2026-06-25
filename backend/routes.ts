@@ -356,10 +356,20 @@ export async function registerRoutes(
   // so req.secure is true and secure cookies work correctly.
   app.set('trust proxy', 1);
 
+  // Resolve the session secret. Production is fail-fast-guarded at boot (index.ts),
+  // so SESSION_SECRET is always present in prod. In non-production we generate a
+  // random ephemeral secret instead of shipping a hard-coded public fallback (a
+  // public default would let anyone forge a session cookie). Ephemeral => dev
+  // sessions reset on restart, which is acceptable for non-production.
+  const SESSION_SECRET = process.env.SESSION_SECRET
+    || (process.env.NODE_ENV === 'production'
+      ? (() => { throw new Error('SESSION_SECRET is required in production'); })()
+      : randomBytes(48).toString('hex'));
+
   app.use(
     session({
       name: 'mx.sid',
-      secret: process.env.SESSION_SECRET || "edupsych-secret-key-change-in-production",
+      secret: SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
       store: sessionStore,

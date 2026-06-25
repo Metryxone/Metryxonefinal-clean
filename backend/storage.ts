@@ -330,6 +330,11 @@ const { Pool } = pg;
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
+  // Tunable for production load. Keep within the database's max_connections budget,
+  // accounting for the other pools (session store, FastAPI service) sharing the DB.
+  max: Number(process.env.PG_POOL_MAX) || 10,
+  idleTimeoutMillis: Number(process.env.PG_POOL_IDLE_MS) || 30000,
+  connectionTimeoutMillis: Number(process.env.PG_POOL_CONN_TIMEOUT_MS) || 10000,
 });
 
 export { pool };

@@ -33,7 +33,7 @@ fully purgeable. Two distinct traps.
   method, internally consistent, not a contradiction.
 
 ## Purgeability trap — FK-blocked demo identity delete
-- **`users.id` IS the email** for these demo rows (e.g. `sarah.johnson.mx301@example.com`).
+- **`users.id` IS the email** for these demo rows (e.g. `<firstname.lastname>.mx301@example.com`).
 - `admin_audit_logs.admin_user_id → users.id` is **ON DELETE NO ACTION**, and the
   demo's own scripted activity writes audit rows under that id. So deleting the
   `users` row is FK-blocked and a try/catch rollback **silently skips it** → the

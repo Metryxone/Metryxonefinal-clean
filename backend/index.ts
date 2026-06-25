@@ -38,6 +38,18 @@ app.use(
   } as any),
 );
 
+// ── API versioning: /api/v1/* namespace ──────────────────────────────────────
+// Establishes an explicit version namespace. /api/v1/upload/* is proxied above to
+// the FastAPI service; every OTHER /api/v1/* path is transparently served by the
+// canonical /api/* handlers (v1 == the current contract). This gives clients a
+// stable version to pin to and lets a future /api/v2 diverge without breaking v1.
+app.use((req, _res, next) => {
+  if (req.url.startsWith("/api/v1/") && !req.url.startsWith("/api/v1/upload")) {
+    req.url = "/api" + req.url.slice("/api/v1".length);
+  }
+  next();
+});
+
 declare module "http" {
   interface IncomingMessage {
     rawBody: unknown;
@@ -65,18 +77,59 @@ import { requestId as _phase5RequestId, antiEnumDelay as _phase5AntiEnum } from 
 app.use(_phase5RequestId());
 app.use(_phase5AntiEnum(80));
 
-export function log(message: string, source = "express") {
+// ── Structured logging with levels ───────────────────────────────────────────
+// LOG_LEVEL gates output (debug < info < warn < error); default "info".
+// In Replit/containers, stdout/stderr are captured (and rotated) by the platform.
+type LogLevel = "debug" | "info" | "warn" | "error";
+const LOG_ORDER: Record<LogLevel, number> = { debug: 10, info: 20, warn: 30, error: 40 };
+const ACTIVE_LOG_LEVEL: LogLevel =
+  (["debug", "info", "warn", "error"] as const).includes(process.env.LOG_LEVEL as LogLevel)
+    ? (process.env.LOG_LEVEL as LogLevel)
+    : "info";
+
+function emit(level: LogLevel, message: string, source = "express") {
+  if (LOG_ORDER[level] < LOG_ORDER[ACTIVE_LOG_LEVEL]) return;
   const formattedTime = new Date().toLocaleTimeString("en-US", {
     hour: "numeric",
     minute: "2-digit",
     second: "2-digit",
     hour12: true,
   });
-
-  console.log(`${formattedTime} [${source}] ${message}`);
+  const line = `${formattedTime} [${source}] ${level.toUpperCase()}: ${message}`;
+  if (level === "error") console.error(line);
+  else if (level === "warn") console.warn(line);
+  else console.log(line);
 }
 
-// API request logger
+export function log(message: string, source = "express") {
+  emit("info", message, source);
+}
+export const logDebug = (message: string, source = "express") => emit("debug", message, source);
+export const logWarn = (message: string, source = "express") => emit("warn", message, source);
+export const logError = (message: string, source = "express") => emit("error", message, source);
+
+// API request logger — captures method/path/status/duration. Response bodies are
+// PRIVACY-REDACTED: sensitive keys are masked, sensitive auth routes never log a
+// body at all, and the serialized body is length-capped so large/PII payloads
+// don't leak into application logs.
+const SENSITIVE_BODY_PATHS = [
+  "/api/login", "/api/admin/mfa", "/api/auth", "/api/register",
+  "/api/forgot-password", "/api/reset-password",
+];
+const SENSITIVE_KEY = /pass(word)?|secret|token|otp|mfa|code|authorization|cookie|ssn|aadhaar|card/i;
+function redactBody(value: any, depth = 0): any {
+  if (value == null || depth > 4) return value;
+  if (Array.isArray(value)) return value.slice(0, 20).map((v) => redactBody(v, depth + 1));
+  if (typeof value === "object") {
+    const out: Record<string, any> = {};
+    for (const [k, v] of Object.entries(value)) {
+      out[k] = SENSITIVE_KEY.test(k) ? "[REDACTED]" : redactBody(v, depth + 1);
+    }
+    return out;
+  }
+  return value;
+}
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -92,14 +145,32 @@ app.use((req, res, next) => {
     const duration = Date.now() - start;
     if (path.startsWith("/api")) {
       let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+      const isSensitive = SENSITIVE_BODY_PATHS.some((p) => path.startsWith(p));
+      if (capturedJsonResponse && !isSensitive) {
+        let body = JSON.stringify(redactBody(capturedJsonResponse));
+        if (body && body.length > 800) body = body.slice(0, 800) + "…[truncated]";
+        logLine += ` :: ${body}`;
       }
       log(logLine);
     }
   });
 
   next();
+});
+
+// ── Health checks ────────────────────────────────────────────────────────────
+// Liveness: the process is up. Readiness: process up AND the database is reachable.
+// Reachable under both /api/health and /api/v1/health.
+app.get("/api/health", (_req, res) => {
+  res.json({ status: "ok", uptime_s: Math.round(process.uptime()), ts: new Date().toISOString() });
+});
+app.get("/api/health/ready", async (_req, res) => {
+  try {
+    await pool.query("SELECT 1");
+    res.json({ status: "ready", db: "ok", ts: new Date().toISOString() });
+  } catch (e: any) {
+    res.status(503).json({ status: "not_ready", db: "error", error: e?.message ?? "db unreachable" });
+  }
 });
 
 

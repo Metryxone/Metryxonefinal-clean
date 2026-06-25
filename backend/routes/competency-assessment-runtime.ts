@@ -209,10 +209,12 @@ const CRA_CODE_TO_COMP: Record<string, string> = {
 // because the genome has no genuine equivalent (see DOCUMENTED OMISSIONS above).
 // Derived from the crosswalk so the count is always honest and self-updating:
 // any COMPETENCY_META code without a CRA_CODE_TO_COMP entry is, by definition,
-// measured by the assessment yet absent from the precise ledger. Currently
-// COM01 (Verbal Communication), LEA05 (Change Leadership), TEC02 (Digital
-// Fluency). Surfaced to the candidate as an honest note so the 17/20 precise
-// section never looks like data is missing or broken.
+// measured by the assessment yet absent from the precise ledger. As of the
+// Task #161 genome seed, every COMPETENCY_META code now maps to a genuine
+// genome competency, so this array is currently EMPTY (all 20/20 on the precise
+// scale). It stays derived (not hard-emptied) so that if a future taxonomy code
+// is added without a mapping, the honest "not yet on precise scale" note
+// reappears automatically rather than the section silently looking complete.
 export const NOT_ON_PRECISE_SCALE: Array<{ code: string; name: string; domainName: string }> =
   Object.entries(COMPETENCY_META)
     .filter(([code]) => !(code in CRA_CODE_TO_COMP))

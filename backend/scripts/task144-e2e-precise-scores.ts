@@ -7,7 +7,7 @@
  *   1. Registers a candidate over HTTP (POST /api/register) and keeps the
  *      session cookie — i.e. authenticates as a real logged-in candidate.
  *   2. Submits a real assessment via POST /api/competency/run-assessment with
- *      that cookie (a mix of mapped + unmapped CRA codes).
+ *      that cookie (CRA codes that all map to genome competencies post Task #161).
  *   3. Reads GET /api/competency/precise-scores with the SAME cookie and asserts
  *      it returns the expected competency-granularity scores keyed to that
  *      authenticated session (subject resolved server-side from the session, so
@@ -84,14 +84,15 @@ async function main() {
     assert(cookie.length > 0, 'session cookie issued on registration');
     if (!reg.ok || !cookie) throw new Error('cannot continue without an authenticated session');
 
-    // 2) Submit a real assessment over HTTP as that candidate. Mix of mapped +
-    //    unmapped CRA codes — only the mapped ones may become precise scores.
+    // 2) Submit a real assessment over HTTP as that candidate. Every CRA code
+    //    below now maps to a genuine genome competency, so all become precise
+    //    scores. (Raw CRA short-codes must never leak into the precise ledger.)
     const scores = [
       { competencyCode: 'COG01', rawScore: 82, confidence: 0.9 }, // -> comp_critical_thinking   (level 5)
       { competencyCode: 'COG02', rawScore: 55, confidence: 0.8 }, // -> comp_problem_solving      (level 3)
       { competencyCode: 'EIQ05', rawScore: 30, confidence: 0.7 }, // -> comp_conflict_resolution  (level 2)
       { competencyCode: 'COG03', rawScore: 90, confidence: 0.9 }, // -> comp_analytical_thinking  (level 5) — curated synonym (Task #143)
-      { competencyCode: 'TEC02', rawScore: 70, confidence: 0.8 }, // UNMAPPED (Digital Fluency — deliberately not a synonym of "Technology Adoption")
+      { competencyCode: 'TEC02', rawScore: 70, confidence: 0.8 }, // -> comp_digital_fluency      (level 4) — SME-authored genome competency (Task #161)
     ];
     const run = await fetch(`${BASE}/api/competency/run-assessment`, {
       method: 'POST',
@@ -101,10 +102,11 @@ async function main() {
     const runBody = await run.json().catch(() => ({}));
     assert(run.ok, `POST run-assessment accepted over HTTP (HTTP ${run.status})`);
     assert(runBody?.data?.saved === scores.length, `all ${scores.length} scores saved (got ${runBody?.data?.saved})`);
-    // The bridge writes the precise run inline (flag ON). 4 mapped, 1 unmapped (TEC02) omitted.
+    // The bridge writes the precise run inline (flag ON). All 5 CRA codes map to
+    // genome competencies (TEC02 -> comp_digital_fluency, Task #161), so 5 written.
     assert(
-      runBody?.data?.precise?.written === true && runBody?.data?.precise?.competencies === 4,
-      `precise-run bridge wrote 4 mapped competencies (got written=${runBody?.data?.precise?.written}, n=${runBody?.data?.precise?.competencies})`,
+      runBody?.data?.precise?.written === true && runBody?.data?.precise?.competencies === 5,
+      `precise-run bridge wrote 5 mapped competencies (got written=${runBody?.data?.precise?.written}, n=${runBody?.data?.precise?.competencies})`,
     );
 
     // 3) Read precise-scores with the SAME session — proves the authenticated
@@ -117,7 +119,7 @@ async function main() {
     assert(psBody?.hasPrecise === true, 'hasPrecise=true');
 
     const precise: any[] = Array.isArray(psBody?.precise) ? psBody.precise : [];
-    assert(precise.length === 4, `precise-scores surfaces 4 competency-granularity scores (got ${precise.length})`);
+    assert(precise.length === 5, `precise-scores surfaces 5 competency-granularity scores (got ${precise.length})`);
 
     const ct = precise.find((s) => s.code === 'comp_critical_thinking');
     assert(
@@ -134,12 +136,18 @@ async function main() {
       !!at && at.score === 90 && at.level === 5 && at.measurement === 'precise',
       `comp_analytical_thinking = 90 / level 5 / precise (got ${at?.score}/${at?.level}/${at?.measurement})`,
     );
-
-    // Honesty: the deliberately-unmapped CRA code (TEC02 Digital Fluency) never
-    // appears as a precise score, and no raw CRA codes leak through.
+    // TEC02 Digital Fluency is now a first-class genome competency (Task #161).
+    const df = precise.find((s) => s.code === 'comp_digital_fluency');
     assert(
-      !precise.some((s) => s.code === 'COG03' || s.code === 'TEC02' || s.code === 'comp_digital_fluency'),
-      'unmapped CRA codes never appear as precise scores (no fabrication)',
+      !!df && df.score === 70 && df.level === 4 && df.measurement === 'precise',
+      `comp_digital_fluency = 70 / level 4 / precise (got ${df?.score}/${df?.level}/${df?.measurement})`,
+    );
+
+    // Honesty: only genome competency ids (comp_*) ever surface — raw CRA
+    // short-codes (COG03, TEC02, …) must never leak into the precise ledger.
+    assert(
+      precise.every((s) => typeof s.code === 'string' && s.code.startsWith('comp_')),
+      'only genome comp_* ids appear as precise scores — no raw CRA codes leak (no fabrication)',
     );
 
     // 4) Identity guard: a DIFFERENT (unauthenticated) request must NOT see them.

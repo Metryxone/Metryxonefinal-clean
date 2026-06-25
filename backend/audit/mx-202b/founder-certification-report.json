@@ -1,0 +1,253 @@
+{
+  "task": "MX-202B",
+  "generated_at": "2026-06-25T06:17:20.538Z",
+  "genome": 419,
+  "dimensions": {
+    "implementation_completion_pct": 87.3,
+    "structural_readiness_pct": 100,
+    "content_completion": {
+      "draft_pct": 100,
+      "approved_pct": 0.7
+    },
+    "activation_pct": 41,
+    "adoption_pct": null,
+    "outcome_confidence_pct": null
+  },
+  "notes": {
+    "adoption": "null (not genome-denominated; no production deployment). Raw dev/test usage: scored_subjects=37, score_runs=23, capadex_sessions=0.",
+    "activation": "41% reflects ALL live content INCLUDING pre-existing native genome identity (definition/domain/family/type/scoring = already live). MX-202B-generated content activation = 0.7% (only human-approved drafts go live; nothing auto-promotes).",
+    "outcome_confidence": "abstains — 0 realized non-demo outcomes (< k_min=30)",
+    "honesty": "Governed drafts (rule_based, needs_review, never published) count toward Implementation Completion + Draft Content ONLY. Activation/Adoption/Outcome reflect live/approved reality and stay honestly low. benchmark + role_dna are REAL-ONLY (never drafted)."
+  },
+  "attribute_matrix": [
+    {
+      "attribute": "definition",
+      "home_table": "onto_competencies",
+      "home_exists": true,
+      "draftable": false,
+      "real_n": 419,
+      "draft_n": 0,
+      "combined_n": 419,
+      "active_n": 419,
+      "note": "native identity"
+    },
+    {
+      "attribute": "domain",
+      "home_table": "onto_competencies",
+      "home_exists": true,
+      "draftable": false,
+      "real_n": 419,
+      "draft_n": 0,
+      "combined_n": 419,
+      "active_n": 419,
+      "note": "native identity"
+    },
+    {
+      "attribute": "family",
+      "home_table": "onto_competencies",
+      "home_exists": true,
+      "draftable": false,
+      "real_n": 419,
+      "draft_n": 0,
+      "combined_n": 419,
+      "active_n": 419,
+      "note": "native identity"
+    },
+    {
+      "attribute": "scientific_type",
+      "home_table": "onto_competencies",
+      "home_exists": true,
+      "draftable": false,
+      "real_n": 419,
+      "draft_n": 0,
+      "combined_n": 419,
+      "active_n": 419,
+      "note": "native identity"
+    },
+    {
+      "attribute": "scoring_metadata",
+      "home_table": "onto_competencies",
+      "home_exists": true,
+      "draftable": false,
+      "real_n": 419,
+      "draft_n": 0,
+      "combined_n": 419,
+      "active_n": 419,
+      "note": "native identity"
+    },
+    {
+      "attribute": "benchmark_metadata",
+      "home_table": "onto_competencies",
+      "home_exists": true,
+      "draftable": false,
+      "real_n": 299,
+      "draft_n": 0,
+      "combined_n": 299,
+      "active_n": 299,
+      "note": "REAL-ONLY (not drafted; honest gap)"
+    },
+    {
+      "attribute": "behavioural_indicator",
+      "home_table": "onto_indicators",
+      "home_exists": true,
+      "draftable": true,
+      "real_n": 13,
+      "draft_n": 419,
+      "combined_n": 419,
+      "active_n": 13,
+      "note": "real 13 + governed drafts (per level, skips real pairs)"
+    },
+    {
+      "attribute": "evidence_requirement",
+      "home_table": "onto_competency_evidence",
+      "home_exists": true,
+      "draftable": true,
+      "real_n": 0,
+      "draft_n": 419,
+      "combined_n": 419,
+      "active_n": 0,
+      "note": "new canonical home; governed drafts"
+    },
+    {
+      "attribute": "learning_outcome",
+      "home_table": "onto_competency_learning_outcomes",
+      "home_exists": true,
+      "draftable": true,
+      "real_n": 0,
+      "draft_n": 419,
+      "combined_n": 419,
+      "active_n": 0,
+      "note": "new canonical home; governed drafts"
+    },
+    {
+      "attribute": "function_map",
+      "home_table": "onto_competency_function_map",
+      "home_exists": true,
+      "draftable": true,
+      "real_n": 0,
+      "draft_n": 419,
+      "combined_n": 419,
+      "active_n": 0,
+      "note": "new canonical home; governed drafts"
+    },
+    {
+      "attribute": "industry_map",
+      "home_table": "onto_competency_industry_map",
+      "home_exists": true,
+      "draftable": true,
+      "real_n": 0,
+      "draft_n": 419,
+      "combined_n": 419,
+      "active_n": 0,
+      "note": "new canonical home; conservative cross-industry drafts"
+    },
+    {
+      "attribute": "department_map",
+      "home_table": "onto_competency_department_map",
+      "home_exists": true,
+      "draftable": true,
+      "real_n": 0,
+      "draft_n": 419,
+      "combined_n": 419,
+      "active_n": 0,
+      "note": "new canonical home; governed drafts"
+    },
+    {
+      "attribute": "assessment_questions",
+      "home_table": "competency_question_templates",
+      "home_exists": true,
+      "draftable": true,
+      "real_n": 7,
+      "draft_n": 419,
+      "combined_n": 419,
+      "active_n": 7,
+      "note": "Question Factory drafts cover all; only active are live"
+    },
+    {
+      "attribute": "onet_crosswalk",
+      "home_table": "onto_competency_onet_crosswalk",
+      "home_exists": true,
+      "draftable": false,
+      "real_n": 137,
+      "draft_n": 0,
+      "combined_n": 137,
+      "active_n": 137,
+      "note": "REAL-ONLY; 137 mapped. Remaining 282 have NO materialized decision yet (candidates for explicit no-equivalent adjudication) — counted as gap, never fabricated as covered."
+    },
+    {
+      "attribute": "role_dna",
+      "home_table": "onto_role_competency_profiles",
+      "home_exists": true,
+      "draftable": false,
+      "real_n": 24,
+      "draft_n": 0,
+      "combined_n": 24,
+      "active_n": 24,
+      "note": "REAL-ONLY (role weights NOT fabricated; honest coverage gap)"
+    }
+  ],
+  "structural_checklist": [
+    {
+      "item": "genome present (onto_competencies=419)",
+      "ok": true
+    },
+    {
+      "item": "governed-draft staging table",
+      "ok": true
+    },
+    {
+      "item": "canonical home: evidence",
+      "ok": true
+    },
+    {
+      "item": "canonical home: learning_outcomes",
+      "ok": true
+    },
+    {
+      "item": "canonical home: function_map",
+      "ok": true
+    },
+    {
+      "item": "canonical home: industry_map",
+      "ok": true
+    },
+    {
+      "item": "canonical home: department_map",
+      "ok": true
+    },
+    {
+      "item": "audit trail reused (onto_audit_logs)",
+      "ok": true
+    },
+    {
+      "item": "version trail reused (onto_competency_versions)",
+      "ok": true
+    },
+    {
+      "item": "crosswalk governance engine code present (onet-crosswalk-governance-engine.ts)",
+      "ok": true
+    },
+    {
+      "item": "role DNA governance engine code present (role-dna-governance-engine.ts)",
+      "ok": true
+    },
+    {
+      "item": "content approval mechanism code present (mx202b-content-approval.ts)",
+      "ok": true
+    },
+    {
+      "item": "question draft+approval pipeline (onto_competency_question_map)",
+      "ok": true
+    },
+    {
+      "item": "mx202b audit-logged generation run",
+      "ok": true
+    }
+  ],
+  "usage": {
+    "scored_subjects": 37,
+    "score_runs": 23,
+    "capadex_sessions": 0,
+    "realized_non_demo_outcomes": 0
+  }
+}

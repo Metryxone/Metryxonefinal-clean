@@ -1,13 +1,13 @@
 {
   "schema_version": "1.0",
-  "exported_at": "2026-06-25T15:47:59.230Z",
+  "exported_at": "2026-06-25T17:17:46.765Z",
   "report": {
-    "uuid": "a15434e0-9311-446f-9f9d-8b6607c221c5",
+    "uuid": "098a1810-4960-4933-b1aa-df2cac4afe9f",
     "type": "employability_index",
     "language": "en",
     "status": "complete",
-    "created_at": "2026-06-25T15:47:59.216Z",
-    "completed_at": "2026-06-25T15:47:59.216Z",
+    "created_at": "2026-06-25T17:17:46.752Z",
+    "completed_at": "2026-06-25T17:17:46.752Z",
     "narrative_texts": {
       "data_source": "employability-scoring-engine.computeEmployabilityScore → competency → dimension → EI roll-up.",
       "interpretation": "The Employability Index aggregates dimension scores derived from measured competencies. It is a developmental indicator of overall job-readiness signal strength, not a hiring or promotion prediction.",
@@ -15,7 +15,7 @@
       "confidence_level": "Confidence band: Moderate (coverage 100%).",
       "executive_summary": "Sarah Johnson's Employability Index is 81.2/100 (Excellent), from 5 measurable dimensions.",
       "assessment_summary": "EI 81.2/100 (Excellent); coverage 100%. Dimension scores — Communication Readiness: 84; Workplace Readiness: 80; Problem-Solving Readiness: 81.2; Leadership Readiness: 81.2; Future Readiness: 79.4.",
-      "generated_timestamp": "This report was generated on 25 June 2026 at 15:47 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
       "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
     },
     "insights": [],
@@ -107,7 +107,7 @@
         },
         {
           "key": "generated_timestamp",
-          "text": "This report was generated on 25 June 2026 at 15:47 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "text": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
           "type": "narrative",
           "title": "Generated Timestamp"
         }

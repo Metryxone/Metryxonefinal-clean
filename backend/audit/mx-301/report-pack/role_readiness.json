@@ -1,13 +1,13 @@
 {
   "schema_version": "1.0",
-  "exported_at": "2026-06-25T15:47:59.151Z",
+  "exported_at": "2026-06-25T17:17:46.727Z",
   "report": {
-    "uuid": "c7d9c8df-12d2-4b65-8e3f-143937c3a7f3",
+    "uuid": "c38fb6fe-55f8-49ba-ad66-99954cace21d",
     "type": "role_readiness",
     "language": "en",
     "status": "complete",
-    "created_at": "2026-06-25T15:47:59.114Z",
-    "completed_at": "2026-06-25T15:47:59.114Z",
+    "created_at": "2026-06-25T17:17:46.690Z",
+    "completed_at": "2026-06-25T17:17:46.690Z",
     "narrative_texts": {
       "data_source": "role-readiness-v2.computeRoleReadinessV2 → resolved role profile vs candidate competency scores.",
       "interpretation": "The employer competency match report reaches role requirements via a different path (generateRoleDNA over the genome) and does compute a match — the divergence is a real platform finding, surfaced honestly rather than estimated here.",
@@ -16,7 +16,7 @@
       "confidence_level": "Confidence not applicable — role requirements unmapped on this path.",
       "executive_summary": "Role readiness for Senior Product Manager cannot be measured: the resolved role title does not map to a profiled role with stored competency requirements.",
       "assessment_summary": "No readiness score is available because the role lacks a stored requirement profile on this path.",
-      "generated_timestamp": "This report was generated on 25 June 2026 at 15:47 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
       "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
     },
     "insights": [],
@@ -85,7 +85,7 @@
         },
         {
           "key": "generated_timestamp",
-          "text": "This report was generated on 25 June 2026 at 15:47 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "text": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
           "type": "narrative",
           "title": "Generated Timestamp"
         }

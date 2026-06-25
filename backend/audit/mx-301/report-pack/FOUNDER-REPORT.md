@@ -7,7 +7,7 @@ live Report Factory and exported in **four formats each (64 files total)**.
 - **Candidate**: Sarah Johnson — Senior Product Manager, Technology, 8 yrs, MBA, Bangalore (demonstration data, purgeable).
 - **Subject (masked)**: `user_4286d980cc6c`
 - **White-label**: MetryxOne (primary `#0B2447`, accent `#2E8B8B`)
-- **Generated**: 2026-06-25T15:47:59.379Z
+- **Generated**: 2026-06-25T17:17:46.911Z
 - **Build / rollback**: `npx tsx backend/scripts/mx301-report-pack.ts [--rollback]`
 - **Provision candidate first**: `npx tsx backend/scripts/mx301-demo-candidate.ts`
 
@@ -34,8 +34,8 @@ report is structurally incomplete — **16/16 reports passed** with no blank cha
 | --- | --- | --- | --- | --- |
 | Executive Summary | YES | n/a | Provisional | measured |
 | Competency Profile | YES | n/a | Provisional | measured |
-| Competency Radar | empty | 100% | Moderate | insufficient data (honest) |
-| Competency Heatmap | empty | 100% | Moderate | insufficient data (honest) |
+| Competency Radar | empty | n/a | n/a | insufficient data (honest) |
+| Competency Heatmap | empty | n/a | n/a | insufficient data (honest) |
 | Strengths | YES | 100% | Moderate | measured |
 | Development Areas | YES | 100% | Moderate | measured |
 | Role Readiness | empty | n/a | n/a | insufficient data (honest) |

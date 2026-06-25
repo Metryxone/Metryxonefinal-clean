@@ -1,20 +1,20 @@
 {
   "schema_version": "1.0",
-  "exported_at": "2026-06-25T15:47:59.080Z",
+  "exported_at": "2026-06-25T17:17:46.653Z",
   "report": {
-    "uuid": "9fbcf44f-d0ef-4ae0-84a1-d47676a285c4",
+    "uuid": "17a4d818-4895-4cd5-aad1-fb8eed5da2ba",
     "type": "strength",
     "language": "en",
     "status": "complete",
-    "created_at": "2026-06-25T15:47:59.050Z",
-    "completed_at": "2026-06-25T15:47:59.050Z",
+    "created_at": "2026-06-25T17:17:46.625Z",
+    "completed_at": "2026-06-25T17:17:46.625Z",
     "narrative_texts": {
       "data_source": "ei-profile-engine.buildEiProfile → strength_areas (dimensions at/above the Strong band).",
       "interpretation": "Strengths are dimensions measured at or above the Strong band — reliable areas to leverage. They are developmental signals, not endorsements for any specific role decision.",
       "confidence_level": "Confidence band: Moderate.",
       "executive_summary": "Sarah Johnson demonstrates 5 clear strengths, led by Communication Readiness (84).",
       "assessment_summary": "Strength areas — Communication Readiness: 84 (Excellent); Problem-Solving Readiness: 81.2 (Excellent); Leadership Readiness: 81.2 (Excellent); Workplace Readiness: 80 (Excellent); Future Readiness: 79.4 (Strong).",
-      "generated_timestamp": "This report was generated on 25 June 2026 at 15:47 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
       "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
     },
     "insights": [
@@ -131,7 +131,7 @@
         },
         {
           "key": "generated_timestamp",
-          "text": "This report was generated on 25 June 2026 at 15:47 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "text": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
           "type": "narrative",
           "title": "Generated Timestamp"
         }

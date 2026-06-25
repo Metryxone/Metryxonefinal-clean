@@ -1,6 +1,6 @@
 ﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
-"c7d9c8df-12d2-4b65-8e3f-143937c3a7f3","role_readiness","executive_summary","narrative","Role readiness for Senior Product Manager cannot be measured: the resolved role title does not map to a profiled role with stored competency requirements.",,,,,,
-"c7d9c8df-12d2-4b65-8e3f-143937c3a7f3","role_readiness","candidate_information","narrative","Name: Sarah Johnson
+"c38fb6fe-55f8-49ba-ad66-99954cace21d","role_readiness","executive_summary","narrative","Role readiness for Senior Product Manager cannot be measured: the resolved role title does not map to a profiled role with stored competency requirements.",,,,,,
+"c38fb6fe-55f8-49ba-ad66-99954cace21d","role_readiness","candidate_information","narrative","Name: Sarah Johnson
 Reference (masked): user_4286d980cc6c
 Current role: Senior Product Manager
 Target role: Director of Product
@@ -10,22 +10,22 @@ Education: MBA
 Location: Bangalore, India
 
 Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
-"c7d9c8df-12d2-4b65-8e3f-143937c3a7f3","role_readiness","assessment_summary","narrative","No readiness score is available because the role lacks a stored requirement profile on this path.",,,,,,
-"c7d9c8df-12d2-4b65-8e3f-143937c3a7f3","role_readiness","visualizations","narrative","Insufficient validated data to populate this section yet.
+"c38fb6fe-55f8-49ba-ad66-99954cace21d","role_readiness","assessment_summary","narrative","No readiness score is available because the role lacks a stored requirement profile on this path.",,,,,,
+"c38fb6fe-55f8-49ba-ad66-99954cace21d","role_readiness","visualizations","narrative","Insufficient validated data to populate this section yet.
 
 Why: ""Senior Product Manager"" does not resolve to a profiled role with stored competency requirements on the Role-Readiness path.
 How to populate it: Map the target role to a profiled onto_role with stored requirement levels (Role DNA governance).
 What is needed: A role profile with required competency levels for the target role.
 Expected output once available: A readiness score with per-competency gaps, fit band, and critical/blocking gap counts.",,,,,,
-"c7d9c8df-12d2-4b65-8e3f-143937c3a7f3","role_readiness","interpretation","narrative","The employer competency match report reaches role requirements via a different path (generateRoleDNA over the genome) and does compute a match — the divergence is a real platform finding, surfaced honestly rather than estimated here.",,,,,,
-"c7d9c8df-12d2-4b65-8e3f-143937c3a7f3","role_readiness","recommendations","narrative","Insufficient validated data to populate this section yet.
+"c38fb6fe-55f8-49ba-ad66-99954cace21d","role_readiness","interpretation","narrative","The employer competency match report reaches role requirements via a different path (generateRoleDNA over the genome) and does compute a match — the divergence is a real platform finding, surfaced honestly rather than estimated here.",,,,,,
+"c38fb6fe-55f8-49ba-ad66-99954cace21d","role_readiness","recommendations","narrative","Insufficient validated data to populate this section yet.
 
 Why: ""Senior Product Manager"" does not resolve to a profiled role with stored competency requirements on the Role-Readiness path.
 How to populate it: Map the target role to a profiled onto_role with stored requirement levels (Role DNA governance).
 What is needed: A role profile with required competency levels for the target role.
 Expected output once available: A readiness score with per-competency gaps, fit band, and critical/blocking gap counts.",,,,,,
-"c7d9c8df-12d2-4b65-8e3f-143937c3a7f3","role_readiness","confidence_level","narrative","Confidence not applicable — role requirements unmapped on this path.",,,,,,
-"c7d9c8df-12d2-4b65-8e3f-143937c3a7f3","role_readiness","data_source","narrative","role-readiness-v2.computeRoleReadinessV2 → resolved role profile vs candidate competency scores.",,,,,,
-"c7d9c8df-12d2-4b65-8e3f-143937c3a7f3","role_readiness","generated_timestamp","narrative","This report was generated on 25 June 2026 at 15:47 UTC.
+"c38fb6fe-55f8-49ba-ad66-99954cace21d","role_readiness","confidence_level","narrative","Confidence not applicable — role requirements unmapped on this path.",,,,,,
+"c38fb6fe-55f8-49ba-ad66-99954cace21d","role_readiness","data_source","narrative","role-readiness-v2.computeRoleReadinessV2 → resolved role profile vs candidate competency scores.",,,,,,
+"c38fb6fe-55f8-49ba-ad66-99954cace21d","role_readiness","generated_timestamp","narrative","This report was generated on 25 June 2026 at 17:17 UTC.
 
 Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

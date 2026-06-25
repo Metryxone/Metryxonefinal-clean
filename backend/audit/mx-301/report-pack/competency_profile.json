@@ -1,20 +1,20 @@
 {
   "schema_version": "1.0",
-  "exported_at": "2026-06-25T15:47:58.981Z",
+  "exported_at": "2026-06-25T17:17:46.577Z",
   "report": {
-    "uuid": "ff8167d8-ac89-45ea-9310-a44f0c620ce7",
+    "uuid": "3aa2f2dd-9f81-40da-a8e2-c403f82fcec6",
     "type": "competency_profile",
     "language": "en",
     "status": "complete",
-    "created_at": "2026-06-25T15:47:58.934Z",
-    "completed_at": "2026-06-25T15:47:58.934Z",
+    "created_at": "2026-06-25T17:17:46.545Z",
+    "completed_at": "2026-06-25T17:17:46.545Z",
     "narrative_texts": {
       "data_source": "competency-runtime.getProfile → onto_competency_profiles (canonical runtime ledger).",
       "interpretation": "Domain scores describe relative capability strength across the competency genome. Higher domains indicate stronger demonstrated capability; lower domains are development priorities (see the Skill Gap and Action Plan reports).",
       "confidence_level": "Provisional — Domain-proxy scoring (aggregate domain level, not per-competency). Confidence rises to High once a competency-tagged assessment is scored.",
       "executive_summary": "Sarah Johnson's competency profile spans 5 domains with an overall score of 77/100 (domain_proxy measurement).",
       "assessment_summary": "Domain scores — Cognitive Capabilities: 82; Behavioral Capabilities: 78; Interpersonal & Leadership: 84; Functional & Execution: 74; Strategic & Organizational: 69. Overall: 77/100.",
-      "generated_timestamp": "This report was generated on 25 June 2026 at 15:47 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
       "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
     },
     "insights": [
@@ -123,7 +123,7 @@
         },
         {
           "key": "generated_timestamp",
-          "text": "This report was generated on 25 June 2026 at 15:47 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "text": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
           "type": "narrative",
           "title": "Generated Timestamp"
         }

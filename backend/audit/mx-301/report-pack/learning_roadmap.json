@@ -1,20 +1,20 @@
 {
   "schema_version": "1.0",
-  "exported_at": "2026-06-25T15:47:59.260Z",
+  "exported_at": "2026-06-25T17:17:46.808Z",
   "report": {
-    "uuid": "2f2897c2-b020-4951-b5e8-92bcff21fd67",
+    "uuid": "51771210-8fd6-45df-bedf-dbb269406eb8",
     "type": "learning_roadmap",
     "language": "en",
     "status": "complete",
-    "created_at": "2026-06-25T15:47:59.248Z",
-    "completed_at": "2026-06-25T15:47:59.248Z",
+    "created_at": "2026-06-25T17:17:46.782Z",
+    "completed_at": "2026-06-25T17:17:46.782Z",
     "narrative_texts": {
       "data_source": "career-roadmap-engine.buildCareerRoadmap → milestones + development plan from gaps and role requirements.",
       "interpretation": "The roadmap sequences development into time-boxed milestones ordered by priority band. Estimated effort is derived from the size of the competency gaps each milestone addresses.",
       "confidence_level": "Confidence: Provisional — sequence and effort estimates depend on requirement coverage.",
       "executive_summary": "Sarah Johnson's roadmap has 3 milestones.",
       "assessment_summary": "Milestones — Immediate Focus (0 comps); Near-Term Development (0 comps); Longer-Term Growth (0 comps).",
-      "generated_timestamp": "This report was generated on 25 June 2026 at 15:47 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
       "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
     },
     "insights": [
@@ -127,7 +127,7 @@
         },
         {
           "key": "generated_timestamp",
-          "text": "This report was generated on 25 June 2026 at 15:47 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "text": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
           "type": "narrative",
           "title": "Generated Timestamp"
         }

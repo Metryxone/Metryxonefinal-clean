@@ -1,13 +1,13 @@
 {
   "schema_version": "1.0",
-  "exported_at": "2026-06-25T15:47:59.247Z",
+  "exported_at": "2026-06-25T17:17:46.781Z",
   "report": {
-    "uuid": "f8936d65-8adf-40d6-91b4-1319711986dc",
+    "uuid": "ece70c24-23b4-4d0a-90ca-1dc8e669f2d4",
     "type": "career_recommendations",
     "language": "en",
     "status": "complete",
-    "created_at": "2026-06-25T15:47:59.232Z",
-    "completed_at": "2026-06-25T15:47:59.232Z",
+    "created_at": "2026-06-25T17:17:46.765Z",
+    "completed_at": "2026-06-25T17:17:46.765Z",
     "narrative_texts": {
       "data_source": "career-recommendation-aggregator.buildCareerRecommendations → composed from competency, gap and market signals.",
       "interpretation": "Recommendations are derived developmental suggestions ranked by relevance. Personalized items consume the candidate’s own profile; catalog items are general and flagged as provisional. None are directives.",
@@ -15,7 +15,7 @@
       "confidence_level": "Confidence varies per recommendation; personalized items inherit the chain confidence, catalog items are Provisional.",
       "executive_summary": "4 recommendations are available for Sarah Johnson, 0 personalized to their profile.",
       "assessment_summary": "Recommendations span 4 type(s). Top item: Target role: GenAI Engineer.",
-      "generated_timestamp": "This report was generated on 25 June 2026 at 15:47 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "generated_timestamp": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
       "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
     },
     "insights": [
@@ -117,7 +117,7 @@
         },
         {
           "key": "generated_timestamp",
-          "text": "This report was generated on 25 June 2026 at 15:47 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "text": "This report was generated on 25 June 2026 at 17:17 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
           "type": "narrative",
           "title": "Generated Timestamp"
         }

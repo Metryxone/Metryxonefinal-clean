@@ -415,7 +415,7 @@ function confidenceFromMeasurement(measurement: string | null, coveragePct: numb
   if (coveragePct != null) {
     return {
       band: coveragePct >= 80 ? 'Moderate' : 'Provisional',
-      note: `Derived from ${coveragePct}% measurement coverage.`,
+      note: `Derived from ${coveragePct}% type-classification coverage (structural; not measured scores).`,
     };
   }
   return { band: null, note: 'Confidence not applicable — no measured input yet.' };
@@ -570,15 +570,19 @@ const buildCompetencyRadar: Builder = (s) => {
     title: 'Competency Radar',
     measurable,
     coverage: {
-      pct: num(tp.classification_coverage_pct),
-      note: `${num(tp.classified_competencies) ?? 0}/${num(tp.total_competencies) ?? 0} competencies classified by type.`,
+      pct: measurable ? num(tp.classification_coverage_pct) : null,
+      note: measurable
+        ? `${num(tp.classified_competencies) ?? 0}/${num(tp.total_competencies) ?? 0} competencies classified by type.`
+        : `${num(tp.classified_competencies) ?? 0}/${num(tp.total_competencies) ?? 0} competencies classified by type (structural only); no measured type means yet.`,
     },
-    confidence: confidenceFromMeasurement(null, num(tp.classification_coverage_pct)),
+    confidence: measurable
+      ? confidenceFromMeasurement(null, num(tp.classification_coverage_pct))
+      : { band: null, note: 'Confidence not applicable — no measured competency-type scores yet.' },
     activation: ACTIVATION,
     data_source: 'competency-runtime.computeTypeProfile → onto_competency_profiles grouped by competency type.',
     executive: measurable
       ? `${s.candidate.name}'s capability is measured across ${buckets.length} competency types, classification coverage ${num(tp.classification_coverage_pct) ?? 0}%.`
-      : `${s.candidate.name}'s competencies are not yet classified by type.`,
+      : `${s.candidate.name}'s competencies are classified by type, but no measured per-type means are available yet.`,
     assessment: measurable
       ? `Mean score by competency type — ${buckets.map((b) => `${str(b.label) ?? str(b.type_key)}: ${num(b.mean_score)}`).join('; ')}.`
       : 'No competency-type means are available.',
@@ -589,13 +593,15 @@ const buildCompetencyRadar: Builder = (s) => {
       ? 'The radar contrasts capability across competency types (behavioural, cognitive, functional, technical, future-skills). A balanced shape indicates broad capability; a skewed shape highlights concentration.'
       : 'Competency-type classification is required to render the radar.',
     recommendations: measurable ? topAndBottom(buckets, 'label', 'mean_score') : [],
-    confidence_text: confidenceFromMeasurement(null, num(tp.classification_coverage_pct)).note,
+    confidence_text: measurable
+      ? confidenceFromMeasurement(null, num(tp.classification_coverage_pct)).note
+      : 'Confidence not applicable — no measured competency-type scores yet.',
     honest: measurable
       ? null
       : {
-          why: 'No competencies could be classified into types for this candidate.',
+          why: 'No measured competency-type means are available yet (competencies may be classified by type, but none carry a measured score).',
           workflow: 'Score a competency assessment whose competencies map to onto types.',
-          needed: 'Classified competencies in computeTypeProfile buckets.',
+          needed: 'Measured per-type means in computeTypeProfile buckets.',
           expected: 'A radar of mean capability across each competency type.',
         },
   };
@@ -619,8 +625,10 @@ const buildCompetencyHeatmap: Builder = (s) => {
     report_type: 'competency_heatmap',
     title: 'Competency Heatmap',
     measurable,
-    coverage: { pct: num(tp.classification_coverage_pct), note: `${comps.length} measured competencies.` },
-    confidence: confidenceFromMeasurement(null, num(tp.classification_coverage_pct)),
+    coverage: { pct: measurable ? num(tp.classification_coverage_pct) : null, note: `${comps.length} measured competencies.` },
+    confidence: measurable
+      ? confidenceFromMeasurement(null, num(tp.classification_coverage_pct))
+      : { band: null, note: 'Confidence not applicable — no measured competency scores yet.' },
     activation: ACTIVATION,
     data_source: 'competency-runtime.computeTypeProfile → per-competency measured scores.',
     executive: measurable
@@ -641,7 +649,9 @@ const buildCompetencyHeatmap: Builder = (s) => {
           ...(top.length > 1 ? [{ text: `Lowest measured: ${top[top.length - 1].name} (${top[top.length - 1].score}).`, severity: 'warning' }] : []),
         ]
       : [],
-    confidence_text: confidenceFromMeasurement(null, num(tp.classification_coverage_pct)).note,
+    confidence_text: measurable
+      ? confidenceFromMeasurement(null, num(tp.classification_coverage_pct)).note
+      : 'Confidence not applicable — no measured competency scores yet.',
     honest: measurable
       ? null
       : {

@@ -51,6 +51,12 @@ import {
 import { ensureReportFactorySchema } from '../services/report-factory-schema.js';
 import { scheduleInterview, ensureInterviewSchema } from '../services/interview-engine.js';
 import { recordScore, ensureScoreSchema, candidateEvaluation } from '../services/evaluation-engine.js';
+import { buildEiProfile } from '../services/ei-profile-engine.js';
+import {
+  persistEiProfile,
+  listEiProfileHistory,
+  ensureEiProfileHistorySchema,
+} from '../services/ei-profile-history.js';
 
 import { MX301_SUBJECT } from './mx301-demo-candidate.js';
 
@@ -99,6 +105,8 @@ const RF_PURGE: { table: string; col: string; like: string }[] = [
   { table: 'interview_schedules', col: 'candidate_id', like: `%${TENANT_ID}%` },
   { table: 'employer_candidates', col: 'id', like: `%${TENANT_ID}%` },
   { table: 'employer_jobs', col: 'id', like: `%${TENANT_ID}%` },
+  // EI snapshot enrichment (demonstration input; tagged via captured_by)
+  { table: 'ei_profile_snapshots', col: 'captured_by', like: TENANT_ID },
 ];
 
 async function rollback(pool: pg.Pool): Promise<number> {
@@ -293,6 +301,54 @@ async function enrichInterview(pool: pg.Pool): Promise<{ enriched: boolean; deta
   }
 }
 
+// Best-effort EI snapshot enrichment — symmetric with the interview enrichment, but
+// HONESTY-BOUNDED. It persists AT MOST ONE genuine current EI snapshot when the
+// candidate's profile is measurable and none has been recorded yet. It deliberately
+// NEVER manufactures a second, coincident duplicate to force Promotion Readiness
+// (which needs ≥2 snapshots OVER TIME) to "ready" — that would fabricate a trend from
+// non-time-separated data. Promotion Readiness reaching "measurable" must come from
+// genuinely time-separated snapshots (repeat assessments / the activation journey),
+// not from this script duplicating one capture. Captures are tagged captured_by=TENANT_ID
+// and purged by rollback().
+async function enrichEiSnapshots(pool: pg.Pool): Promise<{ enriched: boolean; detail: string; measured_snapshots: number }> {
+  try {
+    await ensureEiProfileHistorySchema(pool);
+    const existing = await listEiProfileHistory(pool, MX301_SUBJECT, 200);
+    const measured = existing.filter((r) => r.measurable).length;
+    if (measured >= 1) {
+      return {
+        enriched: false,
+        detail:
+          `already ${measured} measured EI snapshot(s) on record — no capture needed; ` +
+          'Promotion Readiness renders only when ≥2 genuinely time-separated snapshots exist',
+        measured_snapshots: measured,
+      };
+    }
+    const profile = await buildEiProfile(pool, MX301_SUBJECT);
+    if (!profile?.measurable) {
+      return {
+        enriched: false,
+        detail: 'EI profile is not measurable (no scored competencies) — Promotion Readiness stays honestly empty',
+        measured_snapshots: measured,
+      };
+    }
+    await persistEiProfile(pool, profile, TENANT_ID);
+    return {
+      enriched: true,
+      detail:
+        `captured 1 genuine measured EI snapshot (tagged ${TENANT_ID}); ` +
+        'Promotion Readiness stays honestly empty until a second, time-separated snapshot is recorded (never duplicated to force "ready")',
+      measured_snapshots: 1,
+    };
+  } catch (e: any) {
+    return {
+      enriched: false,
+      detail: `EI enrichment skipped (${String(e?.message ?? e).slice(0, 90)}) — honest empty`,
+      measured_snapshots: 0,
+    };
+  }
+}
+
 // ── main ─────────────────────────────────────────────────────────────────────
 async function main() {
   const url = process.env.DATABASE_URL;
@@ -320,6 +376,11 @@ async function main() {
     // Best-effort interview enrichment (demonstration input; honest if unavailable).
     const enrich = await enrichInterview(pool);
     console.log(`Interview enrichment: ${enrich.enriched ? 'OK' : 'skipped'} — ${enrich.detail}`);
+
+    // Best-effort EI snapshot enrichment so Promotion Readiness can render a trend
+    // when the EI profile is genuinely measurable (never fabricates otherwise).
+    const eiEnrich = await enrichEiSnapshots(pool);
+    console.log(`EI enrichment: ${eiEnrich.enriched ? 'OK' : 'skipped'} — ${eiEnrich.detail}`);
 
     // Confirm what the Interview Readiness engine actually sees post-enrichment.
     let interviewScoresSeen = 0;
@@ -412,6 +473,7 @@ async function main() {
       ],
       measurable_reports: measurableCount,
       interview_enrichment: { enriched: enrich.enriched, detail: enrich.detail, scores_seen_by_engine: interviewScoresSeen },
+      ei_enrichment: { enriched: eiEnrich.enriched, detail: eiEnrich.detail, measured_snapshots: eiEnrich.measured_snapshots },
       dashboard_sync: dashboardSync,
       axes_note:
         'Coverage (measurable input) ⟂ Confidence (trustworthiness) ⟂ Activation (report generated) are separate; null is never coerced to 0. ' +

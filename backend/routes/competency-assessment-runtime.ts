@@ -153,14 +153,27 @@ const ROLE_PRIORITIES: Record<string, string[]> = {
 // per-competency CRA scores become real genome-competency (comp_*) scores.
 //
 // HONESTY RULE: a CRA code is mapped ONLY when its competency is unambiguously
-// the SAME construct as a real `onto_competencies` row — an exact name match,
-// modulo hyphenation/case (verified against the live genome). CRA codes with no
-// clear genome equivalent (e.g. COG03 Analytical Reasoning, COM01 Verbal
-// Communication, TEC02 Digital Fluency) are intentionally OMITTED: they still
-// appear in the domain breakdown but are never CLAIMED as a precise competency
-// measurement. Existence is re-verified at write time, so a stale mapping is
-// silently skipped rather than fabricated.
+// the SAME construct as a real `onto_competencies` row. Two kinds of mappings
+// qualify, both verified by hand against the live genome:
+//   1. EXACT name match modulo hyphenation/case (the original 12).
+//   2. CURATED synonym match — a different name for the SAME construct (Task #143;
+//      e.g. "Analytical Reasoning" == genome "Analytical Thinking"). These are
+//      human-verified, not lexical guesses, and the comp_* is re-verified to exist
+//      at write time so a stale mapping is silently skipped rather than fabricated.
+//
+// DOCUMENTED OMISSIONS (Task #143) — three CRA codes are intentionally NOT mapped
+// because the genome has no genuine equivalent, only broader-or-different
+// constructs that mapping would misrepresent. They still appear in the domain
+// breakdown but are never CLAIMED as a precise competency measurement:
+//   • COM01 Verbal Communication — genome has only the umbrella "Communication"
+//     (broader) and channel-specific "Written Communication"; there is no verbal/
+//     oral competency, so a map would conflate a channel with the umbrella.
+//   • LEA05 Change Leadership — genome has "Change Management" and "Change
+//     Advocacy", which are distinct constructs (leading vs. implementing change).
+//   • TEC02 Digital Fluency — genome has only "Technology Adoption" (embracing new
+//     tech), a different construct from fluency/proficiency with digital tools.
 const CRA_CODE_TO_COMP: Record<string, string> = {
+  // ── Exact name matches (original 12) ──────────────────────────────────────
   COG01: 'comp_critical_thinking',      // Critical Thinking
   COG02: 'comp_problem_solving',        // Problem Solving  == genome "Problem-Solving"
   COG04: 'comp_decision_making',        // Decision Making  == genome "Decision-Making"
@@ -173,6 +186,12 @@ const CRA_CODE_TO_COMP: Record<string, string> = {
   ADP02: 'comp_resilience',             // Resilience
   EIQ01: 'comp_self_awareness',         // Self-Awareness
   EIQ05: 'comp_conflict_resolution',    // Conflict Resolution
+  // ── Curated synonym matches (Task #143) — same construct, different name ───
+  COG03: 'comp_analytical_thinking',    // Analytical Reasoning == genome "Analytical Thinking"
+  ADP03: 'comp_innovation',             // Innovation Mindset   == genome "Innovation"
+  EIQ02: 'comp_emotional_regulation',   // Self-Regulation      == genome "Emotional Regulation" (Goleman EI)
+  TEC01: 'comp_technical_competence',   // Technical Expertise  == genome "Technical Competence"
+  LEA03: 'comp_coaching',               // Coaching & Mentoring == genome "Coaching" (dominant construct)
 };
 
 // Canonical proficiency labels (onto_proficiency_levels) — derived from the

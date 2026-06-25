@@ -19,15 +19,26 @@ just-submitted CRA scores.
 
 **Why the crosswalk is honesty-critical:** CRA bank codes (COG01…) are a SEPARATE
 namespace from the `comp_*` genome. A precise score must be a genuine genome
-competency, so only CRA codes whose competency is an EXACT name match (modulo
-hyphen/case) to a real `onto_competencies` row are mapped — 12 of 20
-(critical_thinking, problem_solving, decision_making, written_communication,
-active_listening, team_leadership, project_management, accountability,
-learning_agility, resilience, self_awareness, conflict_resolution). The other 8
-(Analytical Reasoning, Verbal Communication, Coaching & Mentoring, Change
-Leadership, Innovation Mindset, Technical Expertise, Digital Fluency,
-Self-Regulation) have NO clean genome equivalent → omitted, never fabricated.
-Existence is re-verified at write time (skip stale ids).
+competency. Two kinds of mappings qualify (both hand-verified): EXACT name match
+modulo hyphen/case, and CURATED synonym match (a different name for the SAME
+construct). **17 of 20 are mapped** (Task #143 added 5 curated synonyms on top of
+the original 12):
+- Original 12 (exact): critical_thinking, problem_solving, decision_making,
+  written_communication, active_listening, team_leadership, project_management,
+  accountability, learning_agility, resilience, self_awareness, conflict_resolution.
+- Task #143 curated synonyms: Analytical Reasoning→`comp_analytical_thinking`,
+  Innovation Mindset→`comp_innovation`, Self-Regulation→`comp_emotional_regulation`
+  (Goleman EI), Technical Expertise→`comp_technical_competence`,
+  Coaching & Mentoring→`comp_coaching` (dominant construct).
+
+The remaining 3 are DOCUMENTED OMISSIONS (no genuine genome equivalent — mapping
+would misrepresent, so they show in the domain breakdown but never as a precise
+score): **Verbal Communication** (genome has only the umbrella "Communication" +
+channel-specific "Written Communication", no verbal/oral comp), **Change
+Leadership** (genome has only "Change Management"/"Change Advocacy", distinct
+constructs), **Digital Fluency** (genome has only "Technology Adoption", a
+different construct). Existence is re-verified at write time (skip stale ids); a
+"close but different" construct is NEVER mapped just to raise the count.
 
 **How to apply / traps:**
 - The write subject and the precise-scores read subject MUST resolve identically

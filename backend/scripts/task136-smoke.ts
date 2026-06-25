@@ -23,6 +23,12 @@ const CRA_CODE_TO_COMP: Record<string, string> = {
   ADP02: 'comp_resilience',
   EIQ01: 'comp_self_awareness',
   EIQ05: 'comp_conflict_resolution',
+  // Task #143 curated synonym matches (mirror production crosswalk).
+  COG03: 'comp_analytical_thinking',
+  ADP03: 'comp_innovation',
+  EIQ02: 'comp_emotional_regulation',
+  TEC01: 'comp_technical_competence',
+  LEA03: 'comp_coaching',
 };
 const PROFICIENCY_LABELS: Record<number, string> = {
   1: 'Awareness', 2: 'Basic Application', 3: 'Independent Application',
@@ -45,8 +51,8 @@ async function main() {
       { code: 'COG01', raw: 82 }, // -> comp_critical_thinking (level 5)
       { code: 'COG02', raw: 55 }, // -> comp_problem_solving    (level 3)
       { code: 'EIQ05', raw: 30 }, // -> comp_conflict_resolution(level 2)
-      { code: 'COG03', raw: 90 }, // UNMAPPED (Analytical Reasoning) -> omitted
-      { code: 'TEC02', raw: 70 }, // UNMAPPED (Digital Fluency)     -> omitted
+      { code: 'COM01', raw: 90 }, // UNMAPPED (Verbal Communication) -> omitted
+      { code: 'TEC02', raw: 70 }, // UNMAPPED (Digital Fluency)      -> omitted
     ];
 
     // Mirror writeCandidatePreciseRun exactly.
@@ -87,7 +93,7 @@ async function main() {
     const ct = precise.find((s) => s.key === 'comp_critical_thinking');
     assert(!!ct && ct.score === 82 && ct.level === 5 && ct.levelLabel === 'Expert / Strategic Application',
       `comp_critical_thinking = 82 / level 5 / Expert label (got ${ct?.score}/${ct?.level}/${ct?.levelLabel})`);
-    assert(!precise.some((s) => s.key === 'COG03' || s.key === 'TEC02'),
+    assert(!precise.some((s) => s.key === 'COM01' || s.key === 'TEC02'),
       'unmapped CRA codes never appear as precise scores');
     assert(unified.overallScore === overall, `overall surfaced (${unified.overallScore})`);
   } finally {

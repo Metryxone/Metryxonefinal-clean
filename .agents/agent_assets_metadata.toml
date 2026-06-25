@@ -1080,3 +1080,9 @@ id = "ejCZdpqM9Cts1D4ZpUPon"
 uri = "file://backend/audit/mx-201/genome-completion-report.md"
 type = "text"
 title = "MX-201 Genome Completion — Phase 1+2 Audit"
+
+[[outputs]]
+id = "CrYEZ8TyuKqB8TDttUn2i"
+uri = "file://backend/audit/platform-validation/PLATFORM-VALIDATION-REPORT.md"
+type = "text"
+title = "Platform Validation Report — MetryxOne"

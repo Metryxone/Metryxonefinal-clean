@@ -1090,6 +1090,9 @@
   .mx-5 {
     margin-inline: calc(var(--spacing) * 5);
   }
+  .mx-6 {
+    margin-inline: calc(var(--spacing) * 6);
+  }
   .mx-auto {
     margin-inline: auto;
   }
@@ -2137,6 +2140,9 @@
   }
   .max-w-\[88\%\] {
     max-width: 88%;
+  }
+  .max-w-\[95vw\] {
+    max-width: 95vw;
   }
   .max-w-\[100px\] {
     max-width: 100px;

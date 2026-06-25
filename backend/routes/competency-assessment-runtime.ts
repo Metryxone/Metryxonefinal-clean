@@ -36,6 +36,7 @@ import {
 } from '../services/adaptive-difficulty-activation';
 import { resolveBestOntRole, getRoleCompetencies } from '../services/role-crosswalk.js';
 import { isCompetencyRuntimeEnabled } from '../config/feature-flags.js';
+import { resolveUnifiedCompetencyProfile } from '../services/competency-intelligence-contracts.js';
 
 type RequireAuth = (req: Request, res: Response, next: NextFunction) => void;
 
@@ -437,6 +438,86 @@ export function registerCompetencyAssessmentRuntime(opts: { app: Express; pool: 
     } catch (e: any) {
       console.error('[cra] compute-score failed:', e);
       res.status(500).json({ success: false, error: e?.message ?? 'compute_score_failed' });
+    }
+  });
+
+  // ── GET /api/competency/precise-scores ───────────────────────────────────
+  // Task #131 — surface PRECISE per-competency scores to the candidate.
+  // The candidate's domain-level scores already render in compute-score (CRA
+  // bank). When a competency-tagged scoring run exists for this subject
+  // (onto_competency_score_runs comp_*), the unified profile resolver also
+  // carries precise per-competency scores; this endpoint exposes them so the
+  // candidate sees them with an explicit precise-vs-domain-proxy label.
+  //
+  //   • Read-only — composes resolveUnifiedCompetencyProfile, no scoring math.
+  //   • Self-only — subject derived from the SESSION (no :userId param → no
+  //     IDOR). onto ledgers key the subject by EMAIL (== users.username here).
+  //   • Flag-gated (competencyRuntime) — OFF → { enabled:false } so the
+  //     frontend hides the section → byte-identical legacy behaviour.
+  //   • Never fabricates — only MEASURED competencies appear; null = unmeasured
+  //     (never a fabricated 0); empty → honest "no precise scores yet".
+  app.get('/api/competency/precise-scores', requireAuth, async (req: Request, res: Response) => {
+    try {
+      const auth = callerId(req);
+      if (!auth) return res.status(401).json({ success: false, error: 'unauthenticated' });
+      if (!isCompetencyRuntimeEnabled()) {
+        return res.json({ enabled: false, hasPrecise: false, precise: [], domains: [] });
+      }
+      // Resolve the caller's email server-side (onto subject key). The session
+      // user's `username` is the email in this system; fall back to a DB lookup.
+      let subject: string | null = ((req as any).user?.username as string | undefined) ?? null;
+      if (!subject || !subject.includes('@')) {
+        const u = await pool
+          .query<{ email: string | null; username: string | null }>(
+            `SELECT email, username FROM users WHERE id = $1 LIMIT 1`,
+            [auth],
+          )
+          .catch(() => ({ rows: [] as { email: string | null; username: string | null }[] }));
+        subject = u.rows[0]?.email ?? u.rows[0]?.username ?? subject;
+      }
+      if (!subject) {
+        return res.json({ enabled: true, available: true, resolved: false, hasPrecise: false, precise: [], domains: [] });
+      }
+
+      const unified = await resolveUnifiedCompetencyProfile(pool, subject);
+      const precise = unified.scores
+        .filter((s) => s.granularity === 'competency' && s.score != null)
+        .map((s) => ({
+          code: s.key,
+          name: s.label,
+          score: s.score,
+          level: s.level,
+          levelLabel: s.levelLabel,
+          status: s.status,
+          measurement: 'precise' as const,
+        }));
+      const domains = unified.scores
+        .filter((s) => s.granularity === 'domain' && s.score != null)
+        .map((s) => ({
+          code: s.key,
+          name: s.label,
+          score: s.score,
+          level: s.level,
+          measurement: 'domain_proxy' as const,
+        }));
+
+      return res.json({
+        enabled: true,
+        available: unified.available,
+        resolved: unified.resolved,
+        hasPrecise: precise.length > 0,
+        precise,
+        domains,
+        overall: unified.overallScore,
+        overallSource: unified.overallSource,
+        note: precise.length > 0
+          ? 'Precise per-competency scores from your latest competency-tagged assessment. Only measured competencies are shown.'
+          : 'No precise per-competency scores yet — domain-level (proxy) scores apply. Precise scores appear once a competency-tagged assessment is scored.',
+        version: VERSION,
+      });
+    } catch (e: any) {
+      console.error('[cra] precise-scores failed:', e);
+      res.status(500).json({ success: false, error: e?.message ?? 'precise_scores_failed' });
     }
   });
 

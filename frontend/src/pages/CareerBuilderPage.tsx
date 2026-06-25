@@ -5333,6 +5333,7 @@ function GoalsTab({ goals, setGoals, userId }: { goals: CareerGoal[]; setGoals: 
 
 interface AssessmentResults {
   computedScore: any; percentile: any; gapAnalysis: any; roleFit: any; interventions: any;
+  precise?: any;
 }
 
 const ROLES = ['Software Engineer','Product Manager','Data Analyst','Team Lead','Director','Consultant','Business Analyst','UX Designer','DevOps Engineer','Marketing Manager'];
@@ -6125,14 +6126,15 @@ function AssessmentTab({ userId, profile, onTabChange }: {
         });
       } catch { /* non-blocking — local UI already updated */ }
       setLoadingResults(true);
-      const [csRes, percRes, gapRes, rfRes, intRes] = await Promise.all([
+      const [csRes, percRes, gapRes, rfRes, intRes, precRes] = await Promise.all([
         fetch(`/api/competency/compute-score/${userId}`, { headers: authHeader() as HeadersInit }).then(r => r.json()),
         fetch(`/api/competency/get-percentile/${userId}`, { headers: authHeader() as HeadersInit }).then(r => r.json()),
         fetch(`/api/competency/gap-analysis/${userId}`, { headers: authHeader() as HeadersInit }).then(r => r.json()),
         fetch(`/api/competency/role-fit/${userId}`, { headers: authHeader() as HeadersInit }).then(r => r.json()),
         fetch(`/api/competency/interventions/${userId}`, { headers: authHeader() as HeadersInit }).then(r => r.json()),
+        fetch(`/api/competency/precise-scores`, { headers: authHeader() as HeadersInit }).then(r => r.json()).catch(() => null),
       ]);
-      setResults({ computedScore: csRes, percentile: percRes, gapAnalysis: gapRes, roleFit: rfRes, interventions: intRes });
+      setResults({ computedScore: csRes, percentile: percRes, gapAnalysis: gapRes, roleFit: rfRes, interventions: intRes, precise: precRes });
 
       // ── Propagate assessment score into profile so the Employability Index
       // dashboard card recomputes. The EI breakdown (L948+) reads
@@ -6161,15 +6163,16 @@ function AssessmentTab({ userId, profile, onTabChange }: {
   const loadExistingResults = async () => {
     setLoadingResults(true);
     try {
-      const [csRes, percRes, gapRes, rfRes, intRes] = await Promise.all([
+      const [csRes, percRes, gapRes, rfRes, intRes, precRes] = await Promise.all([
         fetch(`/api/competency/compute-score/${userId}`, { headers: authHeader() as HeadersInit }).then(r => r.json()),
         fetch(`/api/competency/get-percentile/${userId}`, { headers: authHeader() as HeadersInit }).then(r => r.json()),
         fetch(`/api/competency/gap-analysis/${userId}`, { headers: authHeader() as HeadersInit }).then(r => r.json()),
         fetch(`/api/competency/role-fit/${userId}`, { headers: authHeader() as HeadersInit }).then(r => r.json()),
         fetch(`/api/competency/interventions/${userId}`, { headers: authHeader() as HeadersInit }).then(r => r.json()),
+        fetch(`/api/competency/precise-scores`, { headers: authHeader() as HeadersInit }).then(r => r.json()).catch(() => null),
       ]);
       if (csRes.totalCompetencies > 0) {
-        setResults({ computedScore: csRes, percentile: percRes, gapAnalysis: gapRes, roleFit: rfRes, interventions: intRes });
+        setResults({ computedScore: csRes, percentile: percRes, gapAnalysis: gapRes, roleFit: rfRes, interventions: intRes, precise: precRes });
         setView('results');
         // Backfill assessmentScore into profile for users who took the
         // assessment before the Employability-Index propagation fix shipped.
@@ -7177,6 +7180,53 @@ function AssessmentTab({ userId, profile, onTabChange }: {
                 );
               })}
             </div>
+          </div>
+        )}
+
+        {/* Precise per-competency scores (Task #131) — onto ledger, flag-gated;
+            absent / no precise scores => not shown (falls back to domain above). */}
+        {results.precise?.hasPrecise && Array.isArray(results.precise?.precise) && results.precise.precise.length > 0 && (
+          <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+            <div className="flex items-center justify-between mb-1">
+              <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
+                <Target size={14} style={{ color: BRAND.primary }} /> Precise Competency Scores
+              </h3>
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                style={{ backgroundColor: `${BRAND.green}1a`, color: BRAND.green }}>Precise</span>
+            </div>
+            <p className="text-[11px] text-gray-500 mb-4">
+              Measured directly per competency from your latest competency-tagged assessment — more
+              granular than the domain-level scores above. Only measured competencies are shown.
+            </p>
+            <div className="space-y-3">
+              {results.precise.precise.map((c: any) => {
+                const score = typeof c.score === 'number' ? Math.round(c.score) : null;
+                const color = score == null ? '#9ca3af' : score >= 70 ? BRAND.green : score >= 50 ? BRAND.accent : BRAND.orange;
+                return (
+                  <div key={c.code}>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs text-gray-700 font-medium">{c.name}</span>
+                      <div className="flex items-center gap-2">
+                        {c.levelLabel && (
+                          <span className="text-[9px] px-1.5 py-0.5 rounded font-medium"
+                            style={{ backgroundColor: `${color}12`, color }}>{c.levelLabel}</span>
+                        )}
+                        <span className="text-xs font-bold" style={{ color }}>{score == null ? '—' : score}</span>
+                        <span className="text-[10px] text-gray-400">/ 100</span>
+                      </div>
+                    </div>
+                    <div className="h-2.5 rounded-full bg-gray-100 overflow-hidden">
+                      <div className="h-full rounded-full transition-all duration-700"
+                        style={{ width: `${score ?? 0}%`, backgroundColor: color }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <p className="text-[10px] text-gray-400 mt-3">
+              Domain scores above are aggregate proxies; these are precise per-competency measurements.
+              Where a competency hasn't been precisely measured, only the domain-level proxy is available.
+            </p>
           </div>
         )}
 

@@ -38,3 +38,21 @@ disagreed depending on which path scored the subject.
 **How to apply:** any future subject-scoped competency endpoint reuses this self-only /
 super-admin authorization policy and the `{tablePresent,row}` degrade signaling. See also
 [competency-runtime-dual-scoring-ledger.md](competency-runtime-dual-scoring-ledger.md).
+
+## onto subject is keyed by EMAIL, but the session has no email field
+
+The onto ledgers' `subject_id` for candidates is the **email** (e.g. `x@example.com`),
+which equals `users.username` in this system. The deserialized session `req.user` exposes
+`{id, username, fullName, role, ...}` with **NO `email` field**, and the route helper
+`callerId(req)` returns `String(user.id)` — the numeric id, **not** the email. So a
+self-only candidate endpoint that wants precise onto scores must resolve the subject as
+`req.user.username` (fall back to `SELECT email, username FROM users WHERE id = $1`), NOT
+`callerId`. Passing the id straight to `resolveUnifiedCompetencyProfile` silently resolves
+nothing (honest-empty, but wrong subject).
+
+**Why:** candidate AssessmentTab precise-score surfacing (`GET /api/competency/precise-scores`)
+needed the per-competency (`granularity:'competency'`) scores keyed by email while the auth
+principal is an id; passing the id resolved nothing. **How to apply:** for any self-scoped onto read, derive the email
+subject from `username`; keep it param-less (subject from session) so there's no IDOR to
+guard. The unified resolver labels precise vs `domain` proxy and never fabricates, so the
+UI just filters `granularity` and falls back to domain when precise is absent.

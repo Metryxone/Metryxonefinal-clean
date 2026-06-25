@@ -29,6 +29,11 @@ const CRA_CODE_TO_COMP: Record<string, string> = {
   EIQ02: 'comp_emotional_regulation',
   TEC01: 'comp_technical_competence',
   LEA03: 'comp_coaching',
+  // Task #161 SME-authored genome competencies (mirror production crosswalk) —
+  // the final 3 that lift the mapping to a full 20/20.
+  COM01: 'comp_verbal_communication',
+  LEA05: 'comp_change_leadership',
+  TEC02: 'comp_digital_fluency',
 };
 const PROFICIENCY_LABELS: Record<number, string> = {
   1: 'Awareness', 2: 'Basic Application', 3: 'Independent Application',
@@ -46,13 +51,25 @@ async function main() {
   try {
     await pool.query(`DELETE FROM onto_competency_score_runs WHERE subject_id = $1`, [SUBJECT]);
 
-    // Simulate the validated CRA submission (mix of mapped + unmapped codes).
+    // Task #161 — all 20 CRA taxonomy competencies now map to a genuine genome
+    // competency (the final 3 — Verbal Communication, Change Leadership, Digital
+    // Fluency — are SME-authored, seeded by task161-genome-competency-seed.ts).
+    assert(Object.keys(CRA_CODE_TO_COMP).length === 20, `crosswalk maps all 20 CRA competencies (got ${Object.keys(CRA_CODE_TO_COMP).length})`);
+    const newComps = ['comp_verbal_communication', 'comp_change_leadership', 'comp_digital_fluency'];
+    const genomeCheck = await pool.query<{ id: string }>(
+      `SELECT id FROM onto_competencies WHERE id = ANY($1::text[])`, [newComps]);
+    assert(genomeCheck.rows.length === 3,
+      `Task #161 genome competencies exist in onto_competencies (got ${genomeCheck.rows.length}/3) — run with the task161 seed applied`);
+
+    // Simulate the validated CRA submission: includes the 3 Task #161 codes (now
+    // mapped) plus a genuinely-UNKNOWN code that must never be fabricated.
     const measured = [
-      { code: 'COG01', raw: 82 }, // -> comp_critical_thinking (level 5)
-      { code: 'COG02', raw: 55 }, // -> comp_problem_solving    (level 3)
-      { code: 'EIQ05', raw: 30 }, // -> comp_conflict_resolution(level 2)
-      { code: 'COM01', raw: 90 }, // UNMAPPED (Verbal Communication) -> omitted
-      { code: 'TEC02', raw: 70 }, // UNMAPPED (Digital Fluency)      -> omitted
+      { code: 'COG01', raw: 82 }, // -> comp_critical_thinking   (level 5)
+      { code: 'COG02', raw: 55 }, // -> comp_problem_solving      (level 3)
+      { code: 'EIQ05', raw: 30 }, // -> comp_conflict_resolution  (level 2)
+      { code: 'COM01', raw: 90 }, // Task #161 -> comp_verbal_communication (level 5)
+      { code: 'TEC02', raw: 70 }, // Task #161 -> comp_digital_fluency      (level 4)
+      { code: 'ZZZ99', raw: 50 }, // genuinely UNKNOWN code -> omitted (no fabrication)
     ];
 
     // Mirror writeCandidatePreciseRun exactly.
@@ -83,18 +100,25 @@ async function main() {
        JSON.stringify({ overall_score: overall, overall_level: scoreToLevel(overall), competencies_scored: runComps.length, measurement: 'precise' }),
        JSON.stringify({ basis: 'cra_option_score' })]);
 
-    assert(runComps.length === 3, `3 mapped competencies written (got ${runComps.length}); 2 unmapped omitted (no fabrication)`);
+    assert(runComps.length === 5, `5 mapped competencies written (got ${runComps.length}); 1 unknown code omitted (no fabrication)`);
 
     // The READ path the candidate sees.
     const unified = await resolveUnifiedCompetencyProfile(pool, SUBJECT);
     const precise = unified.scores.filter((s) => s.granularity === 'competency' && s.score != null);
     assert(unified.resolved, 'resolver resolved the subject');
-    assert(precise.length === 3, `precise-scores surfaces 3 competency-granularity scores (got ${precise.length})`);
+    assert(precise.length === 5, `precise-scores surfaces 5 competency-granularity scores (got ${precise.length})`);
     const ct = precise.find((s) => s.key === 'comp_critical_thinking');
     assert(!!ct && ct.score === 82 && ct.level === 5 && ct.levelLabel === 'Expert / Strategic Application',
       `comp_critical_thinking = 82 / level 5 / Expert label (got ${ct?.score}/${ct?.level}/${ct?.levelLabel})`);
-    assert(!precise.some((s) => s.key === 'COM01' || s.key === 'TEC02'),
-      'unmapped CRA codes never appear as precise scores');
+    // Task #161 — the previously-omitted codes now surface as genuine precise scores.
+    const vc = precise.find((s) => s.key === 'comp_verbal_communication');
+    assert(!!vc && vc.score === 90 && vc.level === 5,
+      `COM01 now scores precisely as comp_verbal_communication = 90 / level 5 (got ${vc?.score}/${vc?.level})`);
+    const df = precise.find((s) => s.key === 'comp_digital_fluency');
+    assert(!!df && df.score === 70 && df.level === 4,
+      `TEC02 now scores precisely as comp_digital_fluency = 70 / level 4 (got ${df?.score}/${df?.level})`);
+    assert(!precise.some((s) => s.key === 'ZZZ99'),
+      'genuinely-unknown CRA codes never appear as precise scores (no fabrication)');
     assert(unified.overallScore === overall, `overall surfaced (${unified.overallScore})`);
   } finally {
     await pool.query(`DELETE FROM onto_competency_score_runs WHERE subject_id = $1`, [SUBJECT]).catch(() => {});

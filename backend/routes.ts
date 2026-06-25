@@ -13858,6 +13858,20 @@ Rules:
     })
     .catch((err) => console.warn('[task138-seed] startup init skipped:', err?.message ?? err));
 
+  // Self-running, idempotent Task #161 genome seed — authors the 3 competencies that
+  // had no genuine same-construct genome match (Verbal Communication, Change Leadership,
+  // Digital Fluency) so all 20 CRA competencies can be scored precisely. Same live-reach
+  // rationale as task138: a merge carries CODE only, not rows, so the only way these
+  // genome rows reach the live app is a guarded startup seeder. No-ops once present.
+  import('./services/task161-genome-competency-seed')
+    .then((m) => m.ensureTask161GenomeCompetencies(concernsPool))
+    .then((r) => {
+      if (r.competencies !== 'already_present') {
+        console.log('[task161-seed] startup:', JSON.stringify(r));
+      }
+    })
+    .catch((err) => console.warn('[task161-seed] startup init skipped:', err?.message ?? err));
+
   // MX-100X Phase 9 — Enterprise Workforce Intelligence Console (read-only, flag-gated, OFF by default).
   registerEnterpriseWorkforceConsoleRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerEcosystemActivationRoutes(app, concernsPool, requireAuth, requireSuperAdmin);

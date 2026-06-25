@@ -21,24 +21,30 @@ just-submitted CRA scores.
 namespace from the `comp_*` genome. A precise score must be a genuine genome
 competency. Two kinds of mappings qualify (both hand-verified): EXACT name match
 modulo hyphen/case, and CURATED synonym match (a different name for the SAME
-construct). **17 of 20 are mapped** (Task #143 added 5 curated synonyms on top of
-the original 12):
+construct). **ALL 20 of 20 are now mapped** (a THIRD kind was added last):
 - Original 12 (exact): critical_thinking, problem_solving, decision_making,
   written_communication, active_listening, team_leadership, project_management,
   accountability, learning_agility, resilience, self_awareness, conflict_resolution.
-- Task #143 curated synonyms: Analytical Reasoning→`comp_analytical_thinking`,
+- Task #143 curated synonyms (5): Analytical Reasoning→`comp_analytical_thinking`,
   Innovation Mindset→`comp_innovation`, Self-Regulation→`comp_emotional_regulation`
   (Goleman EI), Technical Expertise→`comp_technical_competence`,
   Coaching & Mentoring→`comp_coaching` (dominant construct).
+- Task #161 SME-AUTHORED genome rows (3): the final 3 had NO genuine same-construct
+  genome match, so rather than fabricate a synonym they were authored as NEW,
+  DISTINCT `onto_competencies` rows and then mapped: Verbal Communication→
+  `comp_verbal_communication` (spoken/oral channel, distinct from umbrella
+  Communication + Written Communication), Change Leadership→`comp_change_leadership`
+  (mobilising people through change, distinct from Change Management/Advocacy),
+  Digital Fluency→`comp_digital_fluency` (proficiency, distinct from Technology
+  Adoption = willingness). **Genome rows reach the LIVE app ONLY via a self-running
+  idempotent startup seeder** (`services/task161-genome-competency-seed.ts`, wired in
+  `routes.ts` beside the task138 seeder) — a merge carries CODE not rows (see
+  merged-task-data-not-in-live-db.md). Seeder is additive (ON CONFLICT DO NOTHING),
+  verifies parent domain+family exist, no-ops once present.
 
-The remaining 3 are DOCUMENTED OMISSIONS (no genuine genome equivalent — mapping
-would misrepresent, so they show in the domain breakdown but never as a precise
-score): **Verbal Communication** (genome has only the umbrella "Communication" +
-channel-specific "Written Communication", no verbal/oral comp), **Change
-Leadership** (genome has only "Change Management"/"Change Advocacy", distinct
-constructs), **Digital Fluency** (genome has only "Technology Adoption", a
-different construct). Existence is re-verified at write time (skip stale ids); a
-"close but different" construct is NEVER mapped just to raise the count.
+Existence is re-verified at write time (skip stale ids); a "close but different"
+construct is NEVER mapped to raise the count — instead, when it matters, the
+DISTINCT construct is authored into the genome (Task #161) so the map stays honest.
 
 **How to apply / traps:**
 - The write subject and the precise-scores read subject MUST resolve identically

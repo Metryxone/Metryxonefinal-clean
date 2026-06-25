@@ -161,17 +161,23 @@ const ROLE_PRIORITIES: Record<string, string[]> = {
 //      human-verified, not lexical guesses, and the comp_* is re-verified to exist
 //      at write time so a stale mapping is silently skipped rather than fabricated.
 //
-// DOCUMENTED OMISSIONS (Task #143) — three CRA codes are intentionally NOT mapped
-// because the genome has no genuine equivalent, only broader-or-different
-// constructs that mapping would misrepresent. They still appear in the domain
-// breakdown but are never CLAIMED as a precise competency measurement:
-//   • COM01 Verbal Communication — genome has only the umbrella "Communication"
-//     (broader) and channel-specific "Written Communication"; there is no verbal/
-//     oral competency, so a map would conflate a channel with the umbrella.
-//   • LEA05 Change Leadership — genome has "Change Management" and "Change
-//     Advocacy", which are distinct constructs (leading vs. implementing change).
-//   • TEC02 Digital Fluency — genome has only "Technology Adoption" (embracing new
-//     tech), a different construct from fluency/proficiency with digital tools.
+// RESOLVED OMISSIONS (Task #161) — the three CRA codes that previously had NO
+// genuine genome equivalent are now mapped to first-class SME-authored genome
+// competencies seeded by services/task161-genome-competency-seed.ts. Each new comp
+// is a DISTINCT construct, not a synonym of the adjacent rows that already existed:
+//   • COM01 Verbal Communication → comp_verbal_communication — the spoken/oral
+//     channel, parallel to Written Communication and distinct from the umbrella
+//     "Communication". (Previously omitted: only the umbrella + written existed.)
+//   • LEA05 Change Leadership → comp_change_leadership — setting direction and
+//     mobilising people through change, distinct from Change Management
+//     (implementing) and Change Advocacy (championing one change).
+//   • TEC02 Digital Fluency → comp_digital_fluency — demonstrated proficiency with
+//     digital tools, distinct from Technology Adoption (willingness to embrace).
+// As always, each comp_* is re-verified to exist in onto_competencies at write time
+// (services/competency-assessment-runtime writeCandidatePreciseRun), so a candidate
+// run on a backend whose live DB has not yet been seeded simply skips the unseeded
+// id rather than fabricating a score. With the seed applied, all 20/20 CRA
+// competencies now map to a genuine genome competency.
 const CRA_CODE_TO_COMP: Record<string, string> = {
   // ── Exact name matches (original 12) ──────────────────────────────────────
   COG01: 'comp_critical_thinking',      // Critical Thinking
@@ -192,6 +198,10 @@ const CRA_CODE_TO_COMP: Record<string, string> = {
   EIQ02: 'comp_emotional_regulation',   // Self-Regulation      == genome "Emotional Regulation" (Goleman EI)
   TEC01: 'comp_technical_competence',   // Technical Expertise  == genome "Technical Competence"
   LEA03: 'comp_coaching',               // Coaching & Mentoring == genome "Coaching" (dominant construct)
+  // ── SME-authored genome competencies (Task #161) — distinct constructs ─────
+  COM01: 'comp_verbal_communication',   // Verbal Communication (spoken/oral channel)
+  LEA05: 'comp_change_leadership',       // Change Leadership    (mobilising people through change)
+  TEC02: 'comp_digital_fluency',        // Digital Fluency      (proficiency with digital tools)
 };
 
 // Task #160 — competencies measured in the broader (domain-grained) CRA

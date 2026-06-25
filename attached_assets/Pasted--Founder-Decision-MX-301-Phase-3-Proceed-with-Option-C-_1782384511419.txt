@@ -1,0 +1,213 @@
+# Founder Decision — MX-301 Phase 3
+
+Proceed with **Option C (Enhanced Hybrid Enterprise Validation)**.
+
+The objective is **not simply to generate 16 reports**.
+
+The objective is to demonstrate a complete, enterprise-grade competency assessment experience using genuine platform functionality while remaining completely honest about any data limitations.
+
+---
+
+## IMPLEMENTATION REQUIREMENTS
+
+### 1. Maximize Real Data
+
+Provision the demonstration candidate with as much legitimate data as possible using the existing platform.
+
+This includes:
+
+* Assessment responses
+* Competency scores
+* Competency profile
+* Competency history
+* Second assessment snapshot
+* Role DNA resolution
+* Employability Index
+* Career Builder output
+* Career Passport
+* Learning Roadmap
+* Interview Readiness
+* Promotion Readiness
+* Employer Competency Match
+* Assessment history
+* Career progression history
+* Captured interview (if supported)
+
+Use existing workflows only.
+
+Do not bypass the assessment.
+
+Do not insert fabricated outputs.
+
+---
+
+### 2. Never Fabricate Missing Data
+
+If a report genuinely lacks sufficient data:
+
+Do NOT invent scores.
+
+Do NOT create synthetic charts.
+
+Do NOT manufacture recommendations.
+
+Instead render a professional enterprise state.
+
+Example:
+
+> **Insufficient validated data available for this section.**
+
+Display:
+
+* Why it is unavailable
+* Which workflow populates it
+* What additional activity is required
+* Expected output after completion
+
+The report should still look polished.
+
+No blank pages.
+
+No empty charts.
+
+No broken layouts.
+
+---
+
+### 3. Every Report Must Be Presentation Quality
+
+Generate all 16 reports.
+
+Each report must include:
+
+* Executive Summary
+* Candidate Information
+* Assessment Summary
+* Visualizations
+* Interpretation
+* Recommendations
+* Confidence Level
+* Data Source
+* Generated Timestamp
+
+Professional branding throughout.
+
+---
+
+### 4. Validate End-to-End Data Flow
+
+For every report, trace the source data.
+
+Assessment
+
+↓
+
+Responses
+
+↓
+
+Competency Scores
+
+↓
+
+Role DNA
+
+↓
+
+Employability
+
+↓
+
+Career Builder
+
+↓
+
+Career Passport
+
+↓
+
+Employer Match
+
+↓
+
+Report
+
+If any step fails, identify it explicitly.
+
+---
+
+### 5. Dashboard Validation
+
+Verify the same assessment appears correctly in:
+
+* Candidate Portal
+* Employer Portal
+* Super Admin
+* Founder Dashboard
+
+All views must be synchronized.
+
+No stale data.
+
+No inconsistencies.
+
+---
+
+### 6. Enterprise UX
+
+Every page should be polished.
+
+No placeholders.
+
+No lorem ipsum.
+
+No developer text.
+
+No unfinished cards.
+
+Professional charts.
+
+Professional typography.
+
+Enterprise-grade visual design.
+
+---
+
+### 7. Final Deliverables
+
+Produce:
+
+* 16 fully branded reports
+* Complete assessment evidence
+* API execution log
+* Database evidence
+* Dashboard screenshots
+* Candidate journey screenshots
+* Employer journey screenshots
+* Super Admin screenshots
+* Founder dashboard screenshots
+* End-to-end architecture flow
+* Final Founder Executive Report
+
+---
+
+## SUCCESS CRITERIA
+
+The implementation is successful only if:
+
+* The complete competency assessment executes end-to-end.
+* Every downstream engine receives data correctly.
+* Every report is generated successfully.
+* Every dashboard displays consistent information.
+* Every visualization renders correctly.
+* Any genuine data limitation is presented honestly and professionally.
+* No fabricated outputs exist.
+* No broken workflow exists.
+* No blank reports exist.
+* No placeholder content exists.
+
+The result should be suitable for demonstrating MetryxOne to enterprise customers, investors, universities, and corporate clients.
+
+STOP FOR FOUNDER REVIEW.
+
+NO DEPLOYMENT.

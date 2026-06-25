@@ -1,0 +1,202 @@
+{
+  "phase": "MX-301",
+  "title": "End-to-End Enterprise Competency Assessment Experience",
+  "candidate": "Sarah Johnson (Senior Product Manager, Technology, 8 yrs, MBA, Bangalore)",
+  "subject_masked": "user_4286d980cc6c",
+  "generated_at": "2026-06-25T08:59:31.834Z",
+  "summary": {
+    "stages": 23,
+    "measurable": 15,
+    "generation_failures": 0,
+    "persistence_failures": 0,
+    "persistable_inserted": 8,
+    "persistable_total": 8
+  },
+  "axes_note": "Activation = stage executes & generates an artifact (generated). Coverage = candidate has measurable input (measurable). Confidence = trustworthiness of the value (calibration / domain_proxy vs direct / confidence_pct), reported in detail. These axes are kept separate; null is never coerced to 0.",
+  "stages": [
+    {
+      "n": 1,
+      "stage": "Registration",
+      "activation_generated": true,
+      "coverage_measurable": true,
+      "persisted": "n/a",
+      "detail": "user + career profile present (completeness=85%)"
+    },
+    {
+      "n": 2,
+      "stage": "Role DNA resolution",
+      "activation_generated": true,
+      "coverage_measurable": true,
+      "persisted": "n/a",
+      "detail": "\"Senior Product Manager\" → role_pm, confidence=72% (medium), profile_comps=0"
+    },
+    {
+      "n": 3,
+      "stage": "Competency scoring (scorer)",
+      "activation_generated": true,
+      "coverage_measurable": true,
+      "persisted": "n/a",
+      "detail": "status=scored, scored=23/23 (honest: limited by approved mappings)"
+    },
+    {
+      "n": 4,
+      "stage": "Assessment completed",
+      "activation_generated": true,
+      "coverage_measurable": true,
+      "persisted": "n/a",
+      "detail": "scored profiles=1, overall_score=77"
+    },
+    {
+      "n": 5,
+      "stage": "Competency profile",
+      "activation_generated": true,
+      "coverage_measurable": true,
+      "persisted": "n/a",
+      "detail": "overall_score=77, domains=5, measurement=domain_proxy"
+    },
+    {
+      "n": 6,
+      "stage": "Radar / heatmap",
+      "activation_generated": true,
+      "coverage_measurable": true,
+      "persisted": "n/a",
+      "detail": "buckets=5, classified=0/0, coverage=null%"
+    },
+    {
+      "n": 7,
+      "stage": "EI profile (strengths)",
+      "activation_generated": true,
+      "coverage_measurable": true,
+      "persisted": "n/a",
+      "detail": "overall={\"measurable\":true,\"ei_score\":81.2,\"band\":\"Excelle, strengths=0"
+    },
+    {
+      "n": 8,
+      "stage": "Role readiness",
+      "activation_generated": true,
+      "coverage_measurable": false,
+      "persisted": "n/a",
+      "detail": "score=null, band=null, role=Senior Product Manager, coverage=null%"
+    },
+    {
+      "n": 9,
+      "stage": "Promotion readiness",
+      "activation_generated": true,
+      "coverage_measurable": false,
+      "persisted": "n/a",
+      "detail": "status=insufficient_history, snapshots=0/0, net_delta=null (≥2 measured snapshots required — honest)"
+    },
+    {
+      "n": 10,
+      "stage": "Employability index",
+      "activation_generated": true,
+      "coverage_measurable": true,
+      "persisted": "n/a",
+      "detail": "ei_score=81.2, band=Excellent, dims=5/5"
+    },
+    {
+      "n": 11,
+      "stage": "Career readiness",
+      "activation_generated": true,
+      "coverage_measurable": true,
+      "persisted": true,
+      "detail": "overall=81.2, history 1→2"
+    },
+    {
+      "n": 12,
+      "stage": "Career matches",
+      "activation_generated": true,
+      "coverage_measurable": true,
+      "persisted": true,
+      "detail": "matches=8, history 1→2"
+    },
+    {
+      "n": 13,
+      "stage": "Career recommendations",
+      "activation_generated": true,
+      "coverage_measurable": true,
+      "persisted": true,
+      "detail": "recs=0, history 5→6"
+    },
+    {
+      "n": 14,
+      "stage": "Career gaps",
+      "activation_generated": true,
+      "coverage_measurable": false,
+      "persisted": true,
+      "detail": "gaps=0, history 1→2"
+    },
+    {
+      "n": 15,
+      "stage": "Career roadmap",
+      "activation_generated": true,
+      "coverage_measurable": false,
+      "persisted": true,
+      "detail": "phases=0, history 1→2"
+    },
+    {
+      "n": 16,
+      "stage": "Development plan",
+      "activation_generated": true,
+      "coverage_measurable": false,
+      "persisted": true,
+      "detail": "streams=0, history 1→2"
+    },
+    {
+      "n": 17,
+      "stage": "Career signals",
+      "activation_generated": true,
+      "coverage_measurable": true,
+      "persisted": "n/a",
+      "detail": "signals=7 (config-as-data)"
+    },
+    {
+      "n": 18,
+      "stage": "Career passport",
+      "activation_generated": true,
+      "coverage_measurable": true,
+      "persisted": true,
+      "detail": "sections=6/6, history 5→6"
+    },
+    {
+      "n": 19,
+      "stage": "Progress tracking",
+      "activation_generated": true,
+      "coverage_measurable": true,
+      "persisted": true,
+      "detail": "growth_tracking 1→2, career_history=0 (event-only)"
+    },
+    {
+      "n": 20,
+      "stage": "Employer competency match",
+      "activation_generated": true,
+      "coverage_measurable": true,
+      "persisted": "n/a",
+      "detail": "match=77.4%, coverage=61.8% (8/13 reqs), fit=fit, calibration=calibrated"
+    },
+    {
+      "n": 21,
+      "stage": "Interview readiness",
+      "activation_generated": true,
+      "coverage_measurable": false,
+      "persisted": "n/a",
+      "detail": "no interview captured for candidate (honest empty)"
+    },
+    {
+      "n": 22,
+      "stage": "Downloadable reports",
+      "activation_generated": true,
+      "coverage_measurable": false,
+      "persisted": "n/a",
+      "detail": "report engine reachable; no report_templates substrate provisioned (honest measurable=false)"
+    },
+    {
+      "n": 23,
+      "stage": "All data persisted",
+      "activation_generated": true,
+      "coverage_measurable": "n/a",
+      "persisted": true,
+      "detail": "8/8 persistable stages inserted ≥1 row this run"
+    }
+  ]
+}

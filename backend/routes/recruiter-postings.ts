@@ -12,55 +12,22 @@
  */
 import type { Express, NextFunction, Request, Response } from 'express';
 import type { Pool } from 'pg';
+import { ensureEmployerJobsSchema } from '../services/employer-jobs-schema';
 
 type RequireAuth = (req: Request, res: Response, next: NextFunction) => void;
 
 const VERSION = '1.0.0';
 
-let tableEnsured = false;
+// `employer_jobs` is a shared table owned by SEVERAL modules (employer-portal
+// authoring, MX-103W projection, this recruiter read). Its canonical schema —
+// the base table plus every descriptive column the read below reads back — is
+// defined once in services/employer-jobs-schema.ts so no module can reintroduce
+// schema drift. Previously each module maintained its own CREATE/ALTER and a
+// divergent table silently dropped the columns this read needs (the read then
+// threw and was swallowed into an empty `no_data` list). See
+// .agents/memory/employer-job-store-projection.md.
 async function ensureTable(pool: Pool) {
-  if (tableEnsured) return;
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS employer_jobs (
-      id            TEXT PRIMARY KEY,
-      employer_id   TEXT,
-      title         TEXT NOT NULL,
-      department    TEXT,
-      location      TEXT,
-      type          TEXT,
-      work_mode     TEXT,
-      experience    TEXT,
-      salary        TEXT,
-      description   TEXT,
-      skills        JSONB DEFAULT '[]'::jsonb,
-      requirements  JSONB DEFAULT '[]'::jsonb,
-      ei_min_score  INTEGER DEFAULT 0,
-      status        TEXT DEFAULT 'active',
-      created_at    TIMESTAMPTZ DEFAULT now()
-    );
-    CREATE INDEX IF NOT EXISTS idx_employer_jobs_status ON employer_jobs(status);
-  `);
-  // `employer_jobs` is owned by SEVERAL modules with DIVERGENT shapes
-  // (employer-portal authoring, MX-103W projection, this module). When the
-  // table already exists from another writer, the CREATE above is a no-op and
-  // could leave it WITHOUT the descriptive columns this module SELECTs — the
-  // read then throws and is swallowed into a silent empty `no_data` list.
-  // Reconcile the divergent table additively so the recruiter read path is
-  // self-sufficient regardless of which module created it first.
-  // (see .agents/memory/employer-job-store-projection.md)
-  await pool.query(`
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS department   TEXT;
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS location     TEXT;
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS type         TEXT;
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS work_mode    TEXT;
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS experience   TEXT;
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS salary       TEXT;
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS description  TEXT;
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS skills       JSONB DEFAULT '[]'::jsonb;
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS requirements JSONB DEFAULT '[]'::jsonb;
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS ei_min_score INTEGER DEFAULT 0;
-  `);
-  tableEnsured = true;
+  await ensureEmployerJobsSchema(pool);
 }
 
 export function registerRecruiterPostingsRoutes(

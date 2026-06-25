@@ -33,6 +33,7 @@
  *                         break the publish/approve transition that triggered it.
  */
 import type { Pool } from 'pg';
+import { ensureEmployerJobsSchema } from './employer-jobs-schema';
 
 export const JOB_STORE_PROJECTION_VERSION = '1.0.0';
 
@@ -78,29 +79,17 @@ async function columnExists(pool: Pool, table: string, column: string): Promise<
  * (idempotent, additive — never drops or alters existing columns).
  */
 export async function ensureProjectionSchema(pool: Pool): Promise<void> {
-  // Self-contained fallback shape ONLY for the case where employer_jobs has not
-  // yet been provisioned by recruiter-postings / employer-portal. The CANONICAL
-  // table (when it already exists) is owned by those subsystems and has a
-  // divergent shape (type, salary_min/max — NO work_mode/experience/salary), so
-  // the INSERT below writes only columns guaranteed present in BOTH shapes.
+  // Canonical employer_jobs base table + descriptive columns are owned by
+  // services/employer-jobs-schema.ts (the single schema owner shared with
+  // recruiter-postings / employer-portal) — call it so projection is
+  // self-contained even if neither of those ensure-schemas has run yet, and so
+  // the base shape can never drift away from what those modules expect.
+  await ensureEmployerJobsSchema(pool);
+  // Projection-SPECIFIC columns + the audit table below stay here, gated to this
+  // WRITE path (which only runs flag-ON), preserving the MX-103W byte-identical
+  // flag-OFF SCHEMA contract: these never exist until the projection feature is
+  // actually exercised. All IF NOT EXISTS (idempotent, additive).
   await pool.query(`
-    CREATE TABLE IF NOT EXISTS employer_jobs (
-      id            TEXT PRIMARY KEY,
-      employer_id   TEXT,
-      title         TEXT NOT NULL,
-      department    TEXT,
-      location      TEXT,
-      type          TEXT,
-      description   TEXT,
-      skills        JSONB DEFAULT '[]'::jsonb,
-      requirements  JSONB DEFAULT '[]'::jsonb,
-      ei_min_score  INTEGER DEFAULT 0,
-      status        TEXT DEFAULT 'active',
-      created_at    TIMESTAMPTZ DEFAULT now()
-    );
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS responsibilities  JSONB DEFAULT '[]'::jsonb;
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS perks             JSONB DEFAULT '[]'::jsonb;
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS updated_at        TIMESTAMPTZ DEFAULT now();
     ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS source_posting_id TEXT;
     ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS source_status     TEXT;
     ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS projected_at      TIMESTAMPTZ;

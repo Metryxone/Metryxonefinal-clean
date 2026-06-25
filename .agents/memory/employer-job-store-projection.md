@@ -69,6 +69,25 @@ uncredentialed caller. Fine here because the panel renders only in the super-adm
 shell (credentialed fetch passes); don't claim it's public. (Same pattern noted in
 platform-intelligence-console.md.)
 
+## employer_jobs has ONE schema owner now
+The base table + all shared descriptive columns are defined ONCE in
+`services/employer-jobs-schema.ts` (`ensureEmployerJobsSchema`). recruiter-postings,
+employer-portal, and the MX-103W projection all call it instead of each
+maintaining their own CREATE/ALTER — so a new writer/reader inherits the full
+column set and cannot reintroduce the descriptive-column drift.
+
+**Projection columns stay gated:** the projection-specific columns
+(source_posting_id/source_status/projected_at/projected_by + unique index) and
+job_projection_audit are NOT in the shared function — they remain in
+`ensureProjectionSchema`, gated to the flag-ON write path, to preserve the
+byte-identical flag-OFF SCHEMA contract (and so getProjectionHealth's
+`projection_active` column-probe stays honest flag-OFF).
+
+**Test trap:** the two regression guards parse the route source with a regex
+(`/SELECT\s+…FROM employer_jobs/i`, `/INSERT INTO employer_jobs\s*\(…\)/`). A
+COMMENT containing the literal token `SELECT ` (caps + trailing space, case-
+insensitive) before the real SQL hijacks the match — use "SELECTs"/reword.
+
 ## Readiness ≠ Adoption (honesty)
 `deriveReadiness` scores STRUCTURAL presence (can the spine run): 8 substrate checks
 → 100% on the live DB. Adoption is separately, honestly 0 (0 published postings → 0

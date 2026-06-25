@@ -30,6 +30,7 @@ import {
 import { computeSuccessProbability, parseSkills } from './employer-tig';
 import { resolveCuratedRoleByTitle, getMatchableCuratedRoles } from '../services/role-title-crosswalk';
 import { isTalentMatchingEnabled } from '../config/feature-flags';
+import { ensureEmployerJobsSchema } from '../services/employer-jobs-schema';
 
 type Middleware = (req: Request, res: Response, next: any) => void;
 
@@ -38,27 +39,15 @@ let schemaReady = false;
 
 export async function ensureSchema(pool: Pool): Promise<void> {
   if (schemaReady) return;
+  // `employer_jobs` is a shared table owned by SEVERAL modules (this authoring
+  // path, recruiter-postings, MX-103W projection). Its canonical schema — the
+  // base table + every descriptive column the INSERT / toJob mapping reference
+  // (work_mode/experience/salary, responsibilities/perks, deadline, quota,
+  // matched_role_*, share_token, …) — is now defined once in
+  // services/employer-jobs-schema.ts so no module reintroduces schema drift.
+  // See .agents/memory/employer-job-store-projection.md.
+  await ensureEmployerJobsSchema(pool);
   await pool.query(`
-    -- Extend employer_jobs with missing columns.
-    -- The live table was created by recruiter-postings / MX-103W projection with a
-    -- DIVERGENT shape (salary_min/salary_max/currency, NO work_mode/experience/salary).
-    -- The portal's INSERT + toJob mapping expect the descriptive trio below, so add
-    -- them additively (nullable TEXT) — flag-off / pre-existing rows are unaffected.
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS work_mode         TEXT;
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS experience        TEXT;
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS salary            TEXT;
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS responsibilities JSONB    DEFAULT '[]'::jsonb;
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS perks             JSONB    DEFAULT '[]'::jsonb;
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS deadline          TEXT;
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS hiring_manager    TEXT;
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS quota             INTEGER  DEFAULT 1;
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS application_count INTEGER  DEFAULT 0;
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS updated_at        TIMESTAMPTZ DEFAULT now();
-    -- Task #102: employer-confirmed curated role for talent matching (additive,
-    -- nullable). matched_role_source ∈ {auto, manual}; flag-gated UI populates it.
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS matched_role_id     TEXT;
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS matched_role_source TEXT;
-
     CREATE TABLE IF NOT EXISTS employer_candidates (
       id               TEXT PRIMARY KEY,
       employer_id      TEXT NOT NULL,
@@ -230,9 +219,7 @@ export async function ensureSchema(pool: Pool): Promise<void> {
 
     -- Employer account type (additive — existing users keep default 'job_seeker')
     ALTER TABLE users ADD COLUMN IF NOT EXISTS account_type TEXT DEFAULT 'job_seeker';
-    -- Public job share links
-    ALTER TABLE employer_jobs ADD COLUMN IF NOT EXISTS share_token TEXT;
-    UPDATE employer_jobs SET share_token = gen_random_uuid()::text WHERE share_token IS NULL;
+    -- (employer_jobs.share_token + backfill is owned by ensureEmployerJobsSchema)
     -- Interview scorecard (structured per-criterion ratings)
     ALTER TABLE employer_interviews ADD COLUMN IF NOT EXISTS scorecard JSONB DEFAULT '{}'::jsonb;
 

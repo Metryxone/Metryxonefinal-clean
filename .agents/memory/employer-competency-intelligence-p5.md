@@ -91,3 +91,20 @@ even when the candidate WAS measurable.
   proven on real data; calibration stays uncalibrated until ≥30 realized outcomes. Legacy heuristic
   hiring engines remain as GATED, untouched fallbacks (criterion "no parallel logic" met by gating,
   not deletion → cert criterion 6 honestly PARTIAL).
+
+## Crosswalk regression smoke (Task 125) — two traps
+- To seed a MEASURABLE candidate for `computeCompetencyDrivenMatch`, you write an
+  `onto_competency_profiles` row, but `instance_id` is **NOT NULL with no default AND FKs
+  `onto_assessment_instances`** → a bare `randomUUID()` violates the FK. Seed a minimal purgeable
+  `onto_assessment_instances` row FIRST (id defaults gen_random_uuid, needs blueprint_id+subject_id)
+  and reference its id. Domain-granularity profile (`profile:[{onto_domain,scaled_score,...}]`)
+  exercises the comp_*→dom_* DOMAIN-PROXY path: every requirement matches via `matchVia='domain_proxy'`
+  with `(domain_proxy)` in matchedLedger. Role 'Product Manager' has curated comp_* reqs whose codes
+  carry `onto_competencies.domain_id` (16 crosswalk rows); 'Software Engineer'/'Data Analyst' use C_*
+  codes with 0 crosswalk → don't use them. Cleanup order: profiles → instances → score_runs.
+- **The dev Backend API workflow runs with `employerCompetencyHiring` flag ON**, not OFF as older
+  smokes assumed → an anon hit to a param route returns **401** (a global auth gate intercepts;
+  envelope `{"message":"Unauthorized"}`, different from the route's own 401), NOT the 503 flag gate.
+  A robust smoke must READ the live flag (`GET /competency-match/feature-flag`: 503⇒off, ok+true⇒on)
+  and assert 503 when off OR {401,403} when on — never assume one workflow flag config.
+  **Why:** hardcoding `=== 503` false-fails whenever the workflow has the flag enabled.

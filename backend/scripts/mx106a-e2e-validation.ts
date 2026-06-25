@@ -483,14 +483,20 @@ async function main() {
         persona: 'Employer', surface: 'competency-match + interview/hiring rec',
         canRead: !!emp,
         measurable: m?.competencyProfileAvailable ?? (m?.competencyMatch != null),
-        detail: `competencyMatch=${m?.competencyMatch ?? 'null'}, coverage=${m?.requirementCoveragePct ?? 'null'}%, reqs=${m?.matchedRequirementCount ?? 0}/${m?.totalRequirementCount ?? 0}, source=${m?.source ?? 'n/a'}, hiringAction=${emp?.hiringRecommendation?.action ?? 'n/a'}, interview_coverage_ok=${emp?.interviewRecommendation?.coverageSufficient ?? 'n/a'}`,
+        detail: `competencyMatch=${m?.competencyMatch ?? 'null'}, coverage=${m?.requirementCoveragePct ?? 'null'}%, reqs=${m?.matchedRequirementCount ?? 0}/${m?.totalRequirementCount ?? 0} (${m?.directMatchCount ?? 0} direct, ${m?.domainProxyMatchCount ?? 0} domain-proxy), source=${m?.source ?? 'n/a'}, hiringAction=${emp?.hiringRecommendation?.action ?? 'n/a'}, interview_coverage_ok=${emp?.interviewRecommendation?.coverageSufficient ?? 'n/a'}`,
       });
-      // Honest cross-namespace finding: the candidate IS measurable (domain-proxy
-      // profile), but if NONE of the role-DNA requirements matched, employer match
-      // coverage is honestly 0% — the assessment's measured domains do not crosswalk
-      // to this role's requirement keys.
-      if (profileView?.measured && (m?.totalRequirementCount ?? 0) > 0 && (m?.matchedRequirementCount ?? 0) === 0) {
-        findings.push(`Employer competency-match coverage is 0% for a MEASURABLE candidate: the assessment produces a domain-proxy profile (${(profileView?.domain_scores ?? []).length} measured domains) that does not crosswalk to ${ROLE_TITLE}'s ${m?.totalRequirementCount} role-DNA requirement keys (source fell back to ${m?.source}). The employer surface reads honestly (abstain, never fabricated), but match coverage stays 0 until onto_competency_question_map / role-DNA requirement keys align with the assessed domains.`);
+      // Honest cross-namespace finding. The candidate IS measurable (domain-proxy profile).
+      // A comp_* → dom_* crosswalk now scores domain-granularity profiles against
+      // competency-granularity role requirements, so employer match coverage is > 0%
+      // (domain-proxy matches are clearly labelled, never represented as per-competency
+      // measurements). The residual coverage gap is honest: O*NET-inherited requirements
+      // and competencies in unmeasured domains stay unassessed (never fabricated).
+      if (profileView?.measured && (m?.totalRequirementCount ?? 0) > 0) {
+        if ((m?.matchedRequirementCount ?? 0) === 0) {
+          findings.push(`Employer competency-match coverage is 0% for a MEASURABLE candidate: the assessment produces a domain-proxy profile (${(profileView?.domain_scores ?? []).length} measured domains) that did not crosswalk to ${ROLE_TITLE}'s ${m?.totalRequirementCount} role-DNA requirement keys (source fell back to ${m?.source}). The employer surface reads honestly (abstain, never fabricated).`);
+        } else {
+          findings.push(`Employer competency-match is now non-null for a MEASURABLE candidate: competencyMatch=${m?.competencyMatch}/100 over ${m?.matchedRequirementCount}/${m?.totalRequirementCount} requirements (coverage ${m?.requirementCoveragePct}%), via a comp_* → onto-domain crosswalk — ${m?.directMatchCount ?? 0} direct competency match(es) and ${m?.domainProxyMatchCount ?? 0} domain-proxy. Domain-proxy attainments are clearly labelled (matchVia=domain_proxy / matchedLedger "(domain_proxy)") and never represented as per-competency measurements. Residual unassessed requirements (O*NET-inherited keys + competencies in unmeasured domains) stay an honest coverage gap, never fabricated.`);
+        }
       }
     } catch (e: any) {
       personas.push({ persona: 'Employer', surface: 'competency-match + interview/hiring rec', canRead: false, measurable: 'n/a', detail: `ERROR: ${String(e?.message ?? e).slice(0, 120)}` });

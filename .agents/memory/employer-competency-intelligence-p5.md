@@ -49,6 +49,24 @@ Live employer data = 0 rows (`employer_candidates` / `employer_jobs`). So in dev
 the heuristic fallback, fit band is WITHHELD, calibration is uncalibrated, benchmark abstains. This is a
 DATA-MATURITY ceiling — report it; never fabricate rows to make the flow "light up".
 
+## comp_* ↔ dom_* granularity crosswalk (the "0% coverage on a measurable candidate" fix)
+The candidate runtime profile (`onto_competency_profiles`) is **domain-granularity** (`dom_*` scores),
+but role-DNA curated requirements are **competency-granularity** (`comp_*` keys from `onto_role_weights`).
+`findCandidateScore`'s exact/label match found 0 overlap → `competencyMatch=null` / `heuristic_fallback`
+even when the candidate WAS measurable.
+- **Fix:** `computeCompetencyDrivenMatch` now loads a `comp_* → dom_*` crosswalk
+  (`loadCompetencyDomainCrosswalk` reads `onto_competencies.domain_id`) and `findCandidateScore` falls
+  back, after direct match fails, to the candidate's measured onto-domain score for the requirement's
+  domain. This is the SAME domain-proxy measurement the competency runtime already uses.
+- **Why honest:** domain-proxy is the platform's documented measurement philosophy; multiple comps in one
+  domain legitimately share the domain score. Honesty preserved by LABELLING: each match carries
+  `matchVia: 'direct_competency' | 'domain_proxy'`, `matchedLedger` gets a `(domain_proxy)` suffix, and
+  the output adds `directMatchCount`/`domainProxyMatchCount`. A proxied attainment is NEVER presented as a
+  per-competency measurement.
+- **Honest ceiling stays:** O*NET-inherited (`ONET_*`) requirements aren't in `onto_competencies` and
+  competencies in unmeasured domains stay unassessed → coverage is real but partial (e.g. 9.1% for the
+  MX-106A PM demo where only 2 domains were measured), never fabricated up.
+
 ## Verification surfaces
 - Evidence: `backend/scripts/employer-competency-intelligence-evidence.ts` → audit md (runs the engine
   directly, regardless of the workflow flag state).

@@ -34,6 +34,8 @@ interface ReqMatch {
   code: string; name: string; importanceTier: string; weight: number;
   source: string; targetScore: number; candidateScore: number | null;
   attainment: number | null; assessed: boolean;
+  matchedKey?: string | null; matchedLedger?: string | null;
+  matchVia?: 'direct_competency' | 'domain_proxy' | null;
 }
 interface FocusArea {
   code: string; name: string; importanceTier: string; targetScore: number;
@@ -365,7 +367,9 @@ export default function CompetencyHiringPanel({ jobs = [], candidates = [] }: { 
                           </td>
                           <td className="text-right">
                             {r.assessed
-                              ? <span className="text-[10px] text-green-600">assessed</span>
+                              ? (r.matchVia === 'domain_proxy'
+                                  ? <span className="text-[10px] text-amber-600" title="Scored from the candidate's measured onto-domain score (domain-proxy) — a developmental approximation, not a per-competency measurement.">assessed · domain-proxy</span>
+                                  : <span className="text-[10px] text-green-600">assessed</span>)
                               : <span className="text-[10px] text-gray-400">unassessed</span>}
                           </td>
                         </tr>

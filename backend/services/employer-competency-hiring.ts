@@ -42,7 +42,7 @@ import {
 } from './role-dna-expansion-engine';
 import { computeRoleReadinessV2 } from './role-readiness-v2';
 
-export const EMPLOYER_COMPETENCY_HIRING_VERSION = '98x-phase3-1.0.0';
+export const EMPLOYER_COMPETENCY_HIRING_VERSION = '98x-phase3-1.1.0';
 
 /** Realized outcomes required before the platform can claim a calibrated probability. */
 export const CALIBRATION_MIN_OUTCOMES = 30;
@@ -72,6 +72,49 @@ function effWeight(req: { weight?: number | null }): number {
   return Number.isFinite(w) && w > 0 ? w : 1;
 }
 
+/** Read-only table probe — degrade (false) on any error, never throw. */
+async function tableExists(pool: Pool, name: string): Promise<boolean> {
+  try {
+    const { rows } = await pool.query('SELECT to_regclass($1) AS reg', [name]);
+    return !!rows[0]?.reg;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Crosswalk from a role-DNA requirement competency id (`comp_*`) to its canonical
+ * onto-DOMAIN id (`dom_*`), read from `onto_competencies.domain_id`. This is the binding
+ * that lets a candidate's DOMAIN-PROXY profile (a handful of measured `dom_*` scores)
+ * score against `comp_*` role requirements — exactly the crosswalk the competency runtime
+ * itself uses for domain-proxy measurement. Read-only; degrades to an empty map (never
+ * throws, never fabricates a domain).
+ */
+async function loadCompetencyDomainCrosswalk(
+  pool: Pool,
+  compCodes: string[],
+): Promise<Map<string, string>> {
+  const map = new Map<string, string>();
+  const ids = Array.from(new Set(compCodes.map((c) => String(c ?? '').trim()).filter(Boolean)));
+  if (!ids.length) return map;
+  if (!(await tableExists(pool, 'onto_competencies'))) return map;
+  try {
+    const { rows } = await pool.query(
+      `SELECT id, domain_id FROM onto_competencies WHERE id = ANY($1::text[])`,
+      [ids],
+    );
+    for (const r of rows as any[]) {
+      const id = String(r?.id ?? '').trim();
+      const dom = String(r?.domain_id ?? '').trim();
+      if (id && dom) map.set(id, dom);
+    }
+  } catch {
+    // Degrade: a read failure yields an empty crosswalk → requirements stay unassessed
+    // (honest coverage miss), never a fabricated match.
+  }
+  return map;
+}
+
 /** Target score (0..100) a requirement expects, from its expected level / proficiency. */
 export function targetScoreOf(req: RoleDNARequirement): number {
   if (req.expectedLevel != null && Number.isFinite(Number(req.expectedLevel))) {
@@ -93,24 +136,51 @@ export function resolveCandidateCompetencySubject(candidate: any): string | null
   return email || null;
 }
 
+/** How a requirement was matched to a candidate score. */
+export type RequirementMatchVia = 'direct_competency' | 'domain_proxy';
+
 /** Find the candidate's MEASURED competency score for a role requirement.
- *  Match precedence: exact canonical key, then normalized-label equality, then
- *  bidirectional token containment. Unmeasured scores are skipped (never matched). */
+ *  Match precedence:
+ *    1. DIRECT — exact canonical key, then normalized-label equality / bidirectional token
+ *       containment (a per-competency score for this exact requirement).
+ *    2. DOMAIN-PROXY — the requirement's competency `comp_*` → its onto-DOMAIN `dom_*`
+ *       (via compDomainMap) → the candidate's measured domain score. This is the same
+ *       domain-proxy measurement the competency runtime uses; it is clearly LABELLED so a
+ *       proxied score is never mistaken for a per-competency one.
+ *  Unmeasured scores are skipped (never matched). */
 function findCandidateScore(
   req: RoleDNARequirement,
   scores: UnifiedCompetencyScore[],
-): UnifiedCompetencyScore | null {
+  compDomainMap?: Map<string, string>,
+): { score: UnifiedCompetencyScore; via: RequirementMatchVia } | null {
   const code = norm(req.code);
   const name = norm(req.name);
+  // 1) Direct — exact canonical key.
   for (const s of scores) {
     if (s.score == null) continue;
-    if (code && norm(s.key) === code) return s;
+    if (code && norm(s.key) === code) return { score: s, via: 'direct_competency' };
   }
+  // 1) Direct — normalized label equality / token containment.
   for (const s of scores) {
     if (s.score == null) continue;
     const label = norm(s.label);
     if (!label || !name) continue;
-    if (label === name || label.includes(name) || name.includes(label)) return s;
+    if (label === name || label.includes(name) || name.includes(label)) {
+      return { score: s, via: 'direct_competency' };
+    }
+  }
+  // 2) Domain-proxy — requirement competency → its onto-domain → candidate's domain score.
+  if (compDomainMap && compDomainMap.size > 0) {
+    const domainId = compDomainMap.get(String(req.code ?? '').trim());
+    if (domainId) {
+      const dnorm = norm(domainId);
+      for (const s of scores) {
+        if (s.score == null) continue;
+        if (s.granularity === 'domain' && norm(s.key) === dnorm) {
+          return { score: s, via: 'domain_proxy' };
+        }
+      }
+    }
   }
   return null;
 }
@@ -131,6 +201,10 @@ export interface CompetencyRequirementMatch {
   assessed: boolean;
   matchedKey: string | null;
   matchedLedger: string | null;
+  /** How the requirement was matched: a per-competency score (`direct_competency`) or the
+   *  candidate's measured onto-domain score used as a proxy (`domain_proxy`). null when
+   *  unassessed. A proxied attainment is NEVER represented as a per-competency measurement. */
+  matchVia: RequirementMatchVia | null;
 }
 
 export interface CompetencyDrivenMatch {
@@ -146,6 +220,10 @@ export interface CompetencyDrivenMatch {
   requirementCoveragePct: number | null;
   matchedRequirementCount: number;
   totalRequirementCount: number;
+  /** Of the matched requirements, how many used a per-competency (direct) score. */
+  directMatchCount: number;
+  /** Of the matched requirements, how many used a domain-proxy (onto-domain) score. */
+  domainProxyMatchCount: number;
   requirements: CompetencyRequirementMatch[];
   /** Assessed requirements below target (real, measured gaps). */
   gaps: CompetencyRequirementMatch[];
@@ -275,6 +353,8 @@ export async function computeCompetencyDrivenMatch(
     requirementCoveragePct: null,
     matchedRequirementCount: 0,
     totalRequirementCount: reqs.length,
+    directMatchCount: 0,
+    domainProxyMatchCount: 0,
     requirements: [],
     gaps: [],
     unassessedRequirements: [],
@@ -306,11 +386,16 @@ export async function computeCompetencyDrivenMatch(
     return baseFail('heuristic_fallback', reason);
   }
 
+  // Load the comp_* → dom_* crosswalk once so requirements expressed as competencies can be
+  // scored against a candidate whose profile is at DOMAIN granularity (domain-proxy). The
+  // candidate's per-competency scores still win (direct match) when present.
+  const compDomainMap = await loadCompetencyDomainCrosswalk(pool, reqs.map((r) => String(r.code)));
+
   // Map each requirement to the candidate's measured competency where it overlaps.
   const requirements: CompetencyRequirementMatch[] = reqs.map((req) => {
     const target = targetScoreOf(req);
-    const cs = findCandidateScore(req, profile.scores);
-    const candidateScore = cs?.score ?? null;
+    const cs = findCandidateScore(req, profile.scores, compDomainMap);
+    const candidateScore = cs?.score.score ?? null;
     const attainment = candidateScore != null && target > 0 ? round1(clamp01(candidateScore / target) * 100) / 100 : null;
     return {
       code: req.code,
@@ -322,8 +407,9 @@ export async function computeCompetencyDrivenMatch(
       candidateScore,
       attainment,
       assessed: candidateScore != null,
-      matchedKey: cs?.key ?? null,
-      matchedLedger: cs?.ledger ?? null,
+      matchedKey: cs?.score.key ?? null,
+      matchedLedger: cs ? (cs.via === 'domain_proxy' ? `${cs.score.ledger} (domain_proxy)` : cs.score.ledger) : null,
+      matchVia: cs?.via ?? null,
     };
   });
 
@@ -385,6 +471,9 @@ export async function computeCompetencyDrivenMatch(
     candidateReadiness.note = 'Candidate readiness could not be computed (degraded).';
   }
 
+  const directMatchCount = assessed.filter((m) => m.matchVia === 'direct_competency').length;
+  const domainProxyMatchCount = assessed.filter((m) => m.matchVia === 'domain_proxy').length;
+
   const assessedBand = fitBandOf(competencyMatch);
   const coverageSufficient = (requirementCoveragePct ?? 0) >= MIN_COVERAGE_FOR_FIT;
   // Headline band is WITHHELD when coverage is too thin to represent role fit — a high
@@ -393,7 +482,10 @@ export async function computeCompetencyDrivenMatch(
   const provisional = !coverageSufficient || !calibrated;
   const rationale =
     `Competency match ${competencyMatch}/100 over ${assessed.length}/${requirements.length} assessed requirements ` +
-    `(coverage ${requirementCoveragePct}%). ` +
+    `(coverage ${requirementCoveragePct}%; ${directMatchCount} direct, ${domainProxyMatchCount} domain-proxy). ` +
+    (domainProxyMatchCount > 0
+      ? `${domainProxyMatchCount} requirement(s) scored via DOMAIN-PROXY (the candidate's measured onto-domain score stands in for the per-competency score) — a developmental approximation, not a per-competency measurement. `
+      : '') +
     (coverageSufficient
       ? ''
       : `Headline fit band WITHHELD — coverage ${requirementCoveragePct}% < ${MIN_COVERAGE_FOR_FIT}% minimum ` +
@@ -412,6 +504,8 @@ export async function computeCompetencyDrivenMatch(
     requirementCoveragePct,
     matchedRequirementCount: assessed.length,
     totalRequirementCount: requirements.length,
+    directMatchCount,
+    domainProxyMatchCount,
     requirements,
     gaps,
     unassessedRequirements: unassessed,
@@ -421,7 +515,11 @@ export async function computeCompetencyDrivenMatch(
     fitSignal: { band, assessedBand, coverageSufficient, provisional, rationale, validated: calibrated },
     coverageNote:
       `Coverage = assessed requirement weight / total requirement weight = ${requirementCoveragePct}%. ` +
-      `${unassessed.length} requirement(s) had no candidate competency data (never fabricated).`,
+      `${assessed.length} requirement(s) assessed (${directMatchCount} direct competency, ${domainProxyMatchCount} domain-proxy); ` +
+      `${unassessed.length} had no candidate competency data (never fabricated). ` +
+      (domainProxyMatchCount > 0
+        ? 'Domain-proxy matches use the candidate\'s measured onto-domain score as a stand-in for the per-competency score — clearly labelled (matchVia=domain_proxy), never represented as a direct measurement.'
+        : ''),
     confidenceNote: LANGUAGE_NOTE,
     provenance: '98x_phase3_employer_competency_hiring',
     version: EMPLOYER_COMPETENCY_HIRING_VERSION,

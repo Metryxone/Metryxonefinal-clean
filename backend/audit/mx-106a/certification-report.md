@@ -1,6 +1,6 @@
 # MX-106A — End-to-End Competency Assessment Validation & Certification
 
-**Verdict: PASS**  ·  generated 2026-06-25T00:44:35.853Z
+**Verdict: PASS**  ·  generated 2026-06-25T00:48:55.716Z
 
 Read-only certification of the complete competency-assessment journey for ONE
 purgeable demo subject (`user_masked`, `@example.com`). The run actually TAKES the
@@ -31,7 +31,7 @@ null ≠ 0; unmeasurable is reported, never fabricated.
 | 6 | Does the career passport generate + persist? | **PASS** | sections=5/6, history 7→8 |
 | 7 | Can downloadable reports be produced through the Report Factory? | **PASS** | 9/9 outputs rendered a non-empty file |
 | 8 | Can the Candidate persona read their results? | **PASS** | profile_measured=true, ei_overall=100, readiness=100 |
-| 9 | Can the Employer persona read competency-match + hiring recommendation? | **PASS** | competencyMatch=null, coverage=0%, reqs=0/27, source=heuristic_fallback, hiringAction=insufficient_competency_evidence, interview_coverage_ok=false |
+| 9 | Can the Employer persona read competency-match + hiring recommendation? | **PASS** | competencyMatch=100, coverage=9.1%, reqs=10/27 (0 direct, 10 domain-proxy), source=onto_competency_profile, hiringAction=gather_more_evidence, interview_coverage_ok=false |
 | 10 | Can the Super Admin + Founder personas read oversight metrics? | **PASS** | superadmin:true founder:true |
 
 ## Journey stages (generated ⟂ measurable ⟂ persisted)
@@ -59,7 +59,7 @@ null ≠ 0; unmeasurable is reported, never fabricated.
 | Competency PDF | competency | pdf | default | ✓ | 2965 |
 | Career PDF | career | pdf | default | ✓ | 3145 |
 | Passport PDF | passport | pdf | default | ✓ | 3203 |
-| Employability PDF | employability | pdf | default | ✓ | 3337 |
+| Employability PDF | employability | pdf | ad-hoc (no default template) | ✓ | 2951 |
 | Competency JSON | competency | json | default | ✓ | 6352 |
 | Employability JSON | employability | json | default | ✓ | 8239 |
 | Career CSV | career | csv | default | ✓ | 660 |
@@ -70,12 +70,13 @@ null ≠ 0; unmeasurable is reported, never fabricated.
 | Persona | Surface | Can read | Measurable | Detail |
 |---------|---------|----------|------------|--------|
 | Candidate | profile + EI + readiness | ✓ | ✓ | profile_measured=true, ei_overall=100, readiness=100 |
-| Employer | competency-match + interview/hiring rec | ✓ | ✓ | competencyMatch=null, coverage=0%, reqs=0/27, source=heuristic_fallback, hiringAction=insufficient_competency_evidence, interview_coverage_ok=false |
+| Employer | competency-match + interview/hiring rec | ✓ | ✓ | competencyMatch=100, coverage=9.1%, reqs=10/27 (0 direct, 10 domain-proxy), source=onto_competency_profile, hiringAction=gather_more_evidence, interview_coverage_ok=false |
 | Super Admin | platform intelligence | ✓ | n/a | headline_groups=11 |
 | Founder | founder dashboard | ✓ | n/a | metric_groups=4 |
 
 ## Findings
-- Employer competency-match coverage is 0% for a MEASURABLE candidate: the assessment produces a domain-proxy profile (2 measured domains) that does not crosswalk to Product Manager's 27 role-DNA requirement keys (source fell back to heuristic_fallback). The employer surface reads honestly (abstain, never fabricated), but match coverage stays 0 until onto_competency_question_map / role-DNA requirement keys align with the assessed domains.
+- Report Factory ships default templates for only 4 of the journey report types (capadex, career, competency, passport). No default template exists for `employability` — exercised via an ad-hoc payload here; add a seeded employability template in a follow-up so it has a first-class report.
+- Employer competency-match is now non-null for a MEASURABLE candidate: competencyMatch=100/100 over 10/27 requirements (coverage 9.1%), via a comp_* → onto-domain crosswalk — 0 direct competency match(es) and 10 domain-proxy. Domain-proxy attainments are clearly labelled (matchVia=domain_proxy / matchedLedger "(domain_proxy)") and never represented as per-competency measurements. Residual unassessed requirements (O*NET-inherited keys + competencies in unmeasured domains) stay an honest coverage gap, never fabricated.
 
 ## Scope & honesty notes
 - This is a validation + certification deliverable: it exercises and reports, it does

@@ -3,7 +3,7 @@
 **Can a candidate go from assessment all the way to downloadable reports, and can
 every persona see it? → YES, end-to-end.**
 
-_Generated 2026-06-25T00:44:35.853Z. One synthetic demo candidate walked the entire journey._
+_Generated 2026-06-25T00:48:55.716Z. One synthetic demo candidate walked the entire journey._
 
 ## What works, in plain terms
 - The candidate **took a real competency assessment** and got a scored profile.
@@ -21,4 +21,5 @@ _Generated 2026-06-25T00:44:35.853Z. One synthetic demo candidate walked the ent
   works end-to-end — not real-world usage. Real-data confidence is a separate axis.
 
 ## What to fix next (not blockers)
-- Employer competency-match coverage is 0% for a MEASURABLE candidate: the assessment produces a domain-proxy profile (2 measured domains) that does not crosswalk to Product Manager's 27 role-DNA requirement keys (source fell back to heuristic_fallback). The employer surface reads honestly (abstain, never fabricated), but match coverage stays 0 until onto_competency_question_map / role-DNA requirement keys align with the assessed domains.
+- Report Factory ships default templates for only 4 of the journey report types (capadex, career, competency, passport). No default template exists for `employability` — exercised via an ad-hoc payload here; add a seeded employability template in a follow-up so it has a first-class report.
+- Employer competency-match is now non-null for a MEASURABLE candidate: competencyMatch=100/100 over 10/27 requirements (coverage 9.1%), via a comp_* → onto-domain crosswalk — 0 direct competency match(es) and 10 domain-proxy. Domain-proxy attainments are clearly labelled (matchVia=domain_proxy / matchedLedger "(domain_proxy)") and never represented as per-competency measurements. Residual unassessed requirements (O*NET-inherited keys + competencies in unmeasured domains) stay an honest coverage gap, never fabricated.

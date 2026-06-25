@@ -53,3 +53,14 @@ different construct). Existence is re-verified at write time (skip stale ids); a
 - `competency_scores` entry fields the resolver reads: `competency_id`,
   `competency_name`, `normalized_score`, `level`, `level_label`, `level_status`;
   overall jsonb uses `overall_score`/`overall_level`. `source` is varchar(30).
+
+**Live HTTP E2E (`scripts/task144-e2e-precise-scores.ts`):** to exercise the full
+auth/session path (not just the in-process `task136-smoke.ts`), register the
+candidate with `username == email` via `POST /api/register` — then the
+session-derived subject (`req.user.username`) IS the onto-ledger key, so the
+write and read subjects match without a DB lookup. Keep the `Set-Cookie` from
+register (use `headers.getSetCookie()`) and replay it on run-assessment +
+precise-scores. The bridge writes the precise run INLINE in run-assessment, so
+`runBody.data.precise.{written,competencies}` is the cheapest write proof.
+Cleanup spans THREE keys: `onto_competency_score_runs` by EMAIL, `cra_scores`/
+`cra_profiles` by the user id, and `users` by username — delete before AND after.

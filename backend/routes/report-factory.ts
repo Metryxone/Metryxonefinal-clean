@@ -814,12 +814,41 @@ export function registerReportFactoryRoutes(
     } catch (e: any) { res.status(500).json({ error: e.message }); }
   });
 
+  // Candidate-facing list: a user's OWN generated reports (scoped to user_id).
+  // requireAuth only (no super-admin) — never leaks other users' reports.
+  app.get('/api/rf/my-reports', requireAuth, async (req: Request, res: Response) => {
+    if (!gate(res)) return;
+    const userId = (req as any).user?.id ?? (req as any).session?.userId;
+    if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+    const limit = Math.min(Number(req.query.limit) || 50, 200);
+    const { report_type } = req.query;
+    try {
+      let q = `SELECT id,report_uuid,template_id,user_id,session_id,report_type,language,tenant_id,status,insights,created_at,completed_at FROM rf_generated_reports WHERE user_id=$1`;
+      const p: unknown[] = [String(userId)];
+      if (report_type) { p.push(report_type); q += ` AND report_type=$${p.length}`; }
+      p.push(limit); q += ` ORDER BY created_at DESC LIMIT $${p.length}`;
+      const { rows } = await pool.query(q, p);
+      res.json({ reports: rows });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
   app.get('/api/rf/reports/:reportUuid', requireAuth, async (req: Request, res: Response) => {
     if (!gate(res)) return;
     try {
       const { rows } = await pool.query(`SELECT * FROM rf_generated_reports WHERE report_uuid=$1`, [req.params.reportUuid]);
       if (!rows.length) return res.status(404).json({ error: 'Not found' });
-      res.json({ report: rows[0] });
+      const report = rows[0];
+      // Ownership check: a candidate may view ONLY their own report. Super-admins
+      // (and the admin Report Factory panel) may view any. Report user_id is
+      // stored as String(userId) at generate-time (see /api/rf/generate).
+      const u = (req as any).user;
+      const userId = u?.id ?? (req as any).session?.userId;
+      const roles: string[] = u?.roles ?? (u?.role ? [u.role] : []);
+      const isSuperAdmin = roles.includes('super_admin');
+      if (!isSuperAdmin && (!userId || String(report.user_id) !== String(userId))) {
+        return res.status(403).json({ error: 'Forbidden' });
+      }
+      res.json({ report });
     } catch (e: any) { res.status(500).json({ error: e.message }); }
   });
 }

@@ -6,7 +6,8 @@ import { Badge } from '../components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Progress } from '../components/ui/progress';
 import { toast } from 'sonner';
-import { ArrowLeft, ArrowRight, CheckCircle2, Sparkles, TrendingUp, Target, BookOpen, Users, Video, Award, RefreshCw, Compass } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle2, Sparkles, TrendingUp, Target, BookOpen, Users, Video, Award, RefreshCw, Compass, FileText, ChevronDown, ChevronUp, Eye } from 'lucide-react';
+import { GeneratedReportBody } from '../components/reports/GeneratedReportBody';
 
 type Item = {
   id: string; code: string; competency_code: string; competency_name: string;
@@ -412,7 +413,102 @@ function ResultsCard({ userId, stageCode, roleCode, onRestart, onNavigate }: any
       </div>
 
       <AnalyticsCard userId={userId} stageCode={stageCode} roleCode={roleCode} />
+
+      <MyReportsCard />
     </div>
+  );
+}
+
+/* My generated reports — candidate-facing on-screen view of report bodies
+   (including the precise-vs-domain-proxy competency section). Scoped to the
+   current user via /api/rf/my-reports; detail loaded from /api/rf/reports/:uuid
+   which enforces ownership server-side. Honest empty/disabled states. */
+function MyReportsCard() {
+  const [openUuid, setOpenUuid] = useState<string | null>(null);
+  const [detail, setDetail] = useState<Record<string, any>>({});
+  const [detailLoading, setDetailLoading] = useState<string | null>(null);
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['/api/rf/my-reports'],
+    queryFn: async () => {
+      const r = await fetch('/api/rf/my-reports?limit=50', { credentials: 'include' });
+      if (r.status === 503) return { disabled: true, reports: [] };
+      if (!r.ok) throw new Error(await r.text());
+      return r.json();
+    },
+  });
+
+  const reports: any[] = Array.isArray(data?.reports) ? data.reports : [];
+  const disabled = data?.disabled === true;
+
+  const toggleView = async (uuid: string) => {
+    if (openUuid === uuid) { setOpenUuid(null); return; }
+    setOpenUuid(uuid);
+    if (!detail[uuid]) {
+      setDetailLoading(uuid);
+      try {
+        const r = await fetch(`/api/rf/reports/${uuid}`, { credentials: 'include' });
+        const d = await r.json();
+        setDetail(prev => ({ ...prev, [uuid]: r.ok ? (d.report ?? null) : null }));
+      } catch {
+        setDetail(prev => ({ ...prev, [uuid]: null }));
+      } finally {
+        setDetailLoading(null);
+      }
+    }
+  };
+
+  // Hide entirely when the feature is off or there's nothing to show — keeps the
+  // results screen clean for users who have no generated reports.
+  if (disabled || (!isLoading && !isError && reports.length === 0)) return null;
+
+  return (
+    <Card data-testid="card-my-reports">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-base">
+          <FileText className="h-5 w-5 text-indigo-600" />My Reports
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        {isLoading && <p className="text-sm text-gray-400 text-center py-4">Loading your reports…</p>}
+        {isError && <p className="text-sm text-gray-400 text-center py-4">Could not load your reports.</p>}
+        {!isLoading && !isError && reports.map((r) => {
+          const rep = detail[r.report_uuid];
+          const sections: any[] = Array.isArray(rep?.generated_content?.sections) ? rep.generated_content.sections : [];
+          const isOpen = openUuid === r.report_uuid;
+          return (
+            <div key={r.id} className="rounded-xl border overflow-hidden" style={{ borderColor: '#e5e7eb' }}>
+              <div className="p-3 cursor-pointer hover:bg-gray-50 flex items-start justify-between gap-2"
+                onClick={() => toggleView(r.report_uuid)} data-testid={`my-report-${r.report_uuid}`}>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap text-xs">
+                    <span className="font-semibold text-gray-700 capitalize">{r.report_type} report</span>
+                    <Badge variant="outline" className="capitalize">{r.status}</Badge>
+                    <span className="text-gray-400 uppercase">{r.language}</span>
+                  </div>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    {new Date(r.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                </div>
+                <span className="flex items-center gap-1 text-xs font-semibold text-indigo-600 shrink-0">
+                  <Eye className="h-3.5 w-3.5" />{isOpen ? 'Hide' : 'View'}
+                  {isOpen ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+                </span>
+              </div>
+              {isOpen && (
+                <div className="border-t px-3 py-3 bg-gray-50" style={{ borderColor: '#e5e7eb' }}>
+                  {detailLoading === r.report_uuid && <p className="text-sm text-gray-400 text-center py-4">Loading…</p>}
+                  {detailLoading !== r.report_uuid && rep === null && (
+                    <p className="text-sm text-gray-400 text-center py-4">Could not load report content.</p>
+                  )}
+                  {detailLoading !== r.report_uuid && rep && <GeneratedReportBody sections={sections} />}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </CardContent>
+    </Card>
   );
 }
 

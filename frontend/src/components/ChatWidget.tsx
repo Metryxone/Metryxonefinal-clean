@@ -283,6 +283,24 @@ export function ChatWidget({ position = 'bottom-right', userName, userRole }: Ch
     return () => clearInterval(id);
   }, [isOpen]);
 
+  // Touch devices have no hover, so the promo teaser (which reveals on
+  // hover/focus on desktop) would never surface. Reveal it ONCE per session for
+  // a few seconds on hover-less devices, then auto-collapse to the compact
+  // launcher — never a persistent overlay. Desktop (hover capable) is untouched.
+  useEffect(() => {
+    if (isOpen) return;
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const noHover = window.matchMedia('(hover: none)').matches;
+    if (!noHover) return;
+    try {
+      if (sessionStorage.getItem('mx-chat-promo-touch-shown') === '1') return;
+      sessionStorage.setItem('mx-chat-promo-touch-shown', '1');
+    } catch { /* sessionStorage unavailable — show once, don't persist */ }
+    setPromptVisible(true);
+    const t = setTimeout(() => setPromptVisible(false), 5000);
+    return () => clearTimeout(t);
+  }, [isOpen]);
+
   useEffect(() => {
     const q = botConcernSearch.trim();
     if (q.length < 2) { setBotConcernSuggestions([]); setShowBotSuggestions(false); return; }
@@ -541,7 +559,7 @@ export function ChatWidget({ position = 'bottom-right', userName, userRole }: Ch
           onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setPromptVisible(false); }}
         >
           {promptVisible && (
-            <div key={featureIdx} style={{ background: '#ffffff', borderRadius: 14, padding: '13px 16px', boxShadow: '0 8px 32px rgba(29,62,139,0.14), 0 2px 8px rgba(29,62,139,0.08)', border: '1px solid #E0E5EE', position: 'relative', width: 220, animation: 'mxBubbleFade 4s ease-in-out' }}>
+            <div key={featureIdx} style={{ background: '#ffffff', borderRadius: 14, padding: '13px 16px', boxShadow: '0 8px 32px rgba(29,62,139,0.14), 0 2px 8px rgba(29,62,139,0.08)', border: '1px solid #E0E5EE', position: 'relative', width: 220, maxWidth: 'calc(100vw - 40px)', boxSizing: 'border-box', animation: 'mxBubbleFade 4s ease-in-out' }}>
               <span style={{ display: 'inline-block', marginBottom: 6, fontSize: '9px', fontWeight: 700, letterSpacing: '0.2px', color: '#fff', background: '#1D3E8B', borderRadius: 4, padding: '2px 7px' }}>{prompt.tag.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())}</span>
               <p style={{ fontSize: '13px', fontWeight: 700, color: '#1D3E8B', margin: '0 0 4px', lineHeight: 1.35 }}>{prompt.headline}</p>
               <p style={{ fontSize: '11px', color: '#6B7280', margin: '0 0 8px', lineHeight: 1.5 }}>{prompt.sub}</p>

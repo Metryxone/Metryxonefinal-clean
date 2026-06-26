@@ -58,6 +58,19 @@ function GlobalChatMount() {
   }
   return <ChatWidget />;
 }
+// Screens that ship their OWN dedicated bottom-right corner bot (the exam-ready
+// BotWidget). The global ChatWidget renders later in the DOM at the same
+// corner/z-index, so mounting it here would bury the page's own bot. Suppress
+// the global ChatWidget on these screens (no double launcher). NOTE: only the
+// four exam-ready screens below actually mount a fixed corner bot — the
+// metryxai-assistant screen renders inline assistant content with NO floating
+// launcher, so it must KEEP the global ChatWidget.
+const SCREENS_WITH_OWN_BOT = new Set<string>([
+  'exam-ready',
+  'exam-ready-compare',
+  'exam-ready-checkout',
+  'exam-ready-report-view',
+]);
 const FreeAssessmentModalGlobal = lazy(() => import('./components/FreeAssessmentModal').then(m => ({ default: m.FreeAssessmentModal })));
 const PrivacyPage = lazy(() => import('./components/PrivacyPage').then(m => ({ default: m.PrivacyPage })));
 const TermsPage = lazy(() => import('./components/TermsPage').then(m => ({ default: m.TermsPage })));
@@ -890,7 +903,7 @@ export default function App() {
           peer-benchmark CTA, etc.) actually surface the chat. We pre-seed the
           dismissed flag in sessionStorage so the widget mounts CLOSED — it
           only appears when an explicit event fires. */}
-      {currentScreen !== 'landing' && <GlobalChatMount />}
+      {currentScreen !== 'landing' && !SCREENS_WITH_OWN_BOT.has(currentScreen) && <GlobalChatMount />}
 
       {/* ── Global Search (⌘K / Ctrl+K from any screen) ─────────────── */}
       {showAppSearch && (

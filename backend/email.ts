@@ -51,7 +51,7 @@ export async function sendMfaCode(toEmail: string, code: string, adminEmail: str
     return true;
   } catch (error: any) {
     console.error('Failed to send MFA email:', error?.message || error);
-    console.error('SMTP config used - host: smtp.zoho.in, port: 465, user:', process.env.ZOHO_EMAIL);
+    console.error('SMTP config used - host: smtp.zoho.in, port: 465, user configured:', !!process.env.ZOHO_EMAIL);
     console.error('Full error:', JSON.stringify(error, null, 2));
     return false;
   }
@@ -97,7 +97,7 @@ export async function sendIntroVerificationOtp(toEmail: string, name: string, co
     return true;
   } catch (error: any) {
     console.error('[email] Failed to send intro verification OTP:', error?.message || error);
-    console.error('[email] SMTP config — host: smtppro.zoho.in, port: 465, user:', process.env.ZOHO_EMAIL || '(not set)');
+    console.error('[email] SMTP config — host: smtppro.zoho.in, port: 465, user configured:', !!process.env.ZOHO_EMAIL);
     return false;
   }
 }

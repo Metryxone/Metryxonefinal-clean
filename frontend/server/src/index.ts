@@ -72,12 +72,12 @@ const allowedOrigins = process.env.CLIENT_ORIGIN
 app.use(
   cors({
     origin: (origin, cb) => {
-      // Allow same-origin requests (no origin header) and configured origins
-      if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV === 'production') {
-        cb(null, true);
-      } else {
-        cb(null, true); // permissive for now; tighten with actual domain in production
-      }
+      // Allowlist-only: permit same-origin / non-browser requests (no Origin
+      // header) and EXPLICITLY configured origins (CLIENT_ORIGIN). Reflecting
+      // arbitrary origins with credentials:true is a credential-leak/CSRF vector,
+      // so unknown origins are rejected (including in production).
+      if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+      return cb(new Error('Not allowed by CORS'), false);
     },
     credentials: true,
   }),

@@ -1,0 +1,32 @@
+Dependency vulnerabilities (runDependencyAudit)
+6 critical · 127 high · 124 moderate · 27 low (284 entries, many transitive/duplicated). Notable:
+Package	Sev	Note
+protobufjs	critical/high	prototype-pollution; fix available (7.2.5)
+axios	high (×24)	SSRF / credential-leak advisories; upgrade
+xlsx (SheetJS)	high	prototype-pollution + ReDoS — no npm fix, needs vendor build or replacement
+multer	high	DoS; upgrade
+nodemailer	high	requires major upgrade (→9.x)
+undici / ws / form-data / undstreamed	high	upgrade
+vite / esbuild	high (dev)	dev-server CORS/file-read — dev-only exposure
+@grpc/grpc-js, @xmldom/xmldom, path-to-regexp, http-proxy-middleware, shell-quote, tmp, uuid, js-cookie	high	mostly transitive
+Many "high" are dev/build-chain (esbuild/vite) — lower runtime risk. Runtime-critical priorities: axios, xlsx, multer, protobufjs, nodemailer.
+Automated scanners
+•	Dependency audit: ✅ ran (above).
+•	HoundDog (privacy/dataflow): ✅ ran — 8 critical (secrets-to-stdout in scripts), 12 medium, 70 low.
+•	SAST (runSastScan): ❌ failed twice with a server-side CANCEL error — could not complete. Static-analysis coverage for this run is therefore incomplete; re-run recommended.
+________________________________________
+Top priorities (honest, severity-ranked)
+1.	Python upload service auth (live): confirm port 8000 isn't public; add auth to backend-main /admin/*.
+2.	CSRF on the deployed backend (live): add tokens or sameSite:'strict' for mutations.
+3.	frontend/server/ flaws (latent→critical if deployed): delete/quarantine it, or fix the x-user-id bypass, hardcoded JWT secret, and open CORS before it's ever wired up.
+4.	IDOR in engines.ts:81 and per-framework /admin/* gate gaps (live).
+5.	Registration password policy + verify rate limiting is bound to auth endpoints.
+6.	Dependency upgrades: axios, xlsx, multer, protobufjs, nodemailer.
+7.	Enable Helmet CSP and harden it; sanitize the dangerouslySetInnerHTML sink.
+8.	Remove secret-printing from seed/audit scripts; consider the 237 MB client-main-emergent-workzip/ duplicate for deletion (doubles the vuln surface in scans).
+Coverage & confidence
+•	High confidence (read the source myself): items #1, #11 (JWT), #13 (CORS/CSP), #14 (upload mount), dependency counts.
+•	Medium confidence (from code-audit subagents, spot-verified): IDOR, CSRF absence, NoSQL gap, XSS sink, audit fragmentation, rate-limit coverage.
+•	Gaps: SAST did not run (re-run needed); I could not inspect Replit deployment-pane config, so the deployed/latent status of frontend/server is inferred from workflows + .replit, not from deploy settings. No runtime/penetration testing was performed — this is a static + dataflow review.
+This is a report only — I have not changed any code. Tell me which items you'd like fixed and I'll proceed.
+

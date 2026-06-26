@@ -74,19 +74,27 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
     return null
   }
 
+  // Defense-in-depth: although id/key/color come from developer-defined chart
+  // config (not user input), sanitize them before interpolating into the inline
+  // <style> so no value can break out of the CSS context (XSS hardening).
+  const safeIdent = (v: string) => String(v).replace(/[^a-zA-Z0-9_-]/g, "")
+  const safeColor = (v: string) =>
+    String(v).replace(/[^#a-zA-Z0-9(),.%\s-]/g, "").slice(0, 64)
+  const safeId = safeIdent(id)
+
   return (
     <style
       dangerouslySetInnerHTML={{
         __html: Object.entries(THEMES)
           .map(
             ([theme, prefix]) => `
-${prefix} [data-chart=${id}] {
+${prefix} [data-chart=${safeId}] {
 ${colorConfig
   .map(([key, itemConfig]) => {
     const color =
       itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
       itemConfig.color
-    return color ? `  --color-${key}: ${color};` : null
+    return color ? `  --color-${safeIdent(key)}: ${safeColor(color)};` : null
   })
   .join("\n")}
 }

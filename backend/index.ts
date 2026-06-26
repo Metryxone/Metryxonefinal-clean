@@ -70,9 +70,36 @@ app.use(
 app.use(express.urlencoded({ extended: false, limit: '8mb' }));
 
 // ── Security headers (helmet) ────────────────────────────────────────────────
-// contentSecurityPolicy disabled initially to avoid breaking the production SPA;
-// re-enable with a refined policy once CSP directives are audited.
-app.use(helmet({ contentSecurityPolicy: false }));
+// CSP is ENABLED with a policy tuned to the SPA's actual resource origins:
+// self + Razorpay checkout + Google Fonts. 'unsafe-inline' is allowed for STYLES
+// only (the shadcn chart injects an inline <style> and many CSS-in-JS libs use
+// inline style attributes); SCRIPTS are restricted to 'self' + Razorpay — the
+// Vite production build emits hashed module scripts under /assets with no inline
+// JS, so valid behaviour is preserved because every origin the app already uses
+// is allowlisted. Instant kill-switch: CSP_DISABLED=1 reverts to no CSP.
+const cspEnabled = process.env.CSP_DISABLED !== '1';
+app.use(
+  helmet({
+    contentSecurityPolicy: cspEnabled
+      ? {
+          useDefaults: true,
+          directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", 'https://checkout.razorpay.com'],
+            styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+            fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
+            imgSrc: ["'self'", 'data:', 'blob:', 'https:'],
+            connectSrc: ["'self'", 'https://*.razorpay.com', 'https://lumberjack.razorpay.com', 'wss:'],
+            frameSrc: ["'self'", 'https://*.razorpay.com', 'https://api.razorpay.com'],
+            objectSrc: ["'none'"],
+            baseUri: ["'self'"],
+            formAction: ["'self'", 'https://*.razorpay.com'],
+            frameAncestors: ["'self'"],
+          },
+        }
+      : false,
+  }),
+);
 
 // Phase 5 — global security middleware: request id tagging + anti-enumeration delay.
 import { requestId as _phase5RequestId, antiEnumDelay as _phase5AntiEnum } from './services/security-middleware.js';

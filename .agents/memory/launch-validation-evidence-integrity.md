@@ -38,7 +38,7 @@ no failure may silently masquerade as a finding.
    literals. A hardcoded `"⚠️ CONDITIONAL GO"` in a cert template contradicts the re-run
    instruction — on the next run (after blocking items are cleared) the cert header changes but
    the table rows still say FAIL. Wire every verdict cell to the probe variable that determined
-   it (e.g. `${admin123Live ? "❌ OPEN" : "✅ Set"}`).
+   it (e.g. `${seedPwLive ? "❌ OPEN" : "✅ Set"}`).
 
 **How to apply:** before certifying, grep the script for (a) DB columns against the live
 schema, (b) any blocker/verdict that clears from an env flag — confirm the flag means

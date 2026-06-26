@@ -86,4 +86,4 @@ The `SUPERADMIN_INITIAL_PASSWORD` env var triggers password rotation on restart:
 3. `seedSuperAdmin()` detects the existing super_admin row, hashes the new password, and UPDATEs it
 4. The env var can be cleared after rotation (the DB row has already been updated)
 
-**Confirmed 2026-06-10**: rotation confirmed in startup log "Super Admin password rotated via SUPERADMIN_INITIAL_PASSWORD (username → support@metryxone.com)". admin123 now rejected (401). The credential is rotated.
+**Confirmed 2026-06-10**: rotation confirmed in startup log "Super Admin password rotated via SUPERADMIN_INITIAL_PASSWORD (username → support@metryxone.com)". the old dev seed password now rejected (401). The credential is rotated.

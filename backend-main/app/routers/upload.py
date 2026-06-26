@@ -22,9 +22,12 @@ from app.services.inserter import (
     upsert_task_variant,
 )
 from app.models import BulkUploadJob, BulkUploadRow
+from app.security import require_upload_auth
 
 templates = Jinja2Templates(directory="app/templates")
-router = APIRouter(prefix="/admin", tags=["admin"])
+# Shared-secret gate on EVERY /admin/* endpoint (see app/security.py); mirrors
+# admin_upload.py so a future re-enable of this router stays gated by default.
+router = APIRouter(prefix="/admin", tags=["admin"], dependencies=[Depends(require_upload_auth)])
 
 _ALIAS_MAP: dict[str, dict[str, str]] = {
     "question_bank": {

@@ -32,9 +32,22 @@ is dead (commented out in main, and has its own `job.meta`/`question_code` bugs)
   `question_code` column. Handler resolves question_code→QuestionBank.id first.
 - **Starlette ≥1.3 TemplateResponse** — new signature is
   `TemplateResponse(request, name)`, not `(name, {"request": request})`.
-- **Security gap (not yet fixed):** `/admin/upload` and `/admin/bootstrap` are
-  UNAUTHENTICATED. Dev-only on port 8000, not in the deployment config — but add
-  an auth guard before ever exposing/deploying it.
+- **Public port-8000 surface (FIXED, finding #14):** `.replit` publishes localPort
+  8000 → externalPort 8000 (uneditable), so `/admin/*` was reachable on the public
+  internet with NO auth. Fixed by an always-ON shared-secret gate `app/security.py`
+  `require_upload_auth` (Depends on the router): constant-time `hmac.compare_digest`
+  of `X-Upload-Service-Token` vs `UPLOAD_SERVICE_TOKEN`; dev-fallback constant keeps
+  dev byte-identical, **prod fail-closed (503) when the env var is unset**, kill-switch
+  `UPLOAD_AUTH_DISABLED=1`. The Node side reaches it via a `requireAuth→requireSuperAdmin`
+  proxy at `/api/v1/upload` (in `routes.ts`, AFTER session/passport — the old `index.ts`
+  proxy was DEAD: targeted port 8002 + ran pre-session so could never auth); the proxy
+  injects the secret header only AFTER the super-admin guard passes.
+  **Why mirror the CSRF precedent:** security controls are always-ON (never flag-gated),
+  fail-closed in prod, dev-fallback for byte-identical dev.
+- **`parser.py` validates server-side, not just by extension:** `_safe_filename`
+  (basename only, reject path components / NUL / control chars, whitelist
+  `.csv/.xlsx/.xls` → 400) + `_read_capped` (`MAX_UPLOAD_BYTES` env, default 10MB → 413).
+  Reads into `BytesIO` then pandas, so valid-file parse output stays byte-identical.
 
 ## Dev-DB table collision recovery (admin login broke)
 - An **unscoped** `create_all` (or an old run of it) let this Python service own a

@@ -1,6 +1,5 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { createServer } from "http";
-import { createProxyMiddleware } from "http-proxy-middleware";
 import helmet from "helmet";
 
 import { connectMongo } from "./mongo";
@@ -32,20 +31,14 @@ const httpServer = createServer(app);
 // token, and fails CLOSED on internal errors. Kill-switch: CSRF_PROTECTION_DISABLED=1.
 app.use(csrfProtection());
 
-// ── Reverse-proxy: /api/v1/upload/* → FastAPI (port 8002) ──
-// Routes:
-//   /api/v1/upload/admin/*  → http://localhost:8002/admin/*   (bulk upload endpoints)
-//   /api/v1/upload/health   → http://localhost:8002/health
-const FASTAPI_URL = process.env.FASTAPI_URL || "http://localhost:8002";
-app.use(
-  "/api/v1/upload",
-  createProxyMiddleware({
-    target: FASTAPI_URL,
-    changeOrigin: true,
-    pathRewrite: (path: string) => path.replace(/^\/api\/v1\/upload/, "") || "/",
-    logLevel: "warn",
-  } as any),
-);
+// ── Upload reverse-proxy (registered later, with auth) ───────────────────────
+// The /api/v1/upload/* → FastAPI bulk-upload proxy is registered INSIDE
+// registerRoutes (backend/routes.ts), AFTER the super-admin auth guards are
+// defined, so the proxy can enforce requireAuth → requireSuperAdmin BEFORE it
+// injects the upload service's shared secret (never authenticating an
+// unauthenticated caller into the upload service). It cannot live here because
+// express-session/passport are initialised inside registerRoutes. CSRF (mounted
+// above) still gates the whole /api surface, including that proxy path.
 
 // ── API versioning: /api/v1/* namespace ──────────────────────────────────────
 // Establishes an explicit version namespace. /api/v1/upload/* is proxied above to

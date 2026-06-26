@@ -17,4 +17,4 @@ This dev DB has pervasive pre-existing schema drift — many admin tables don't 
 **Among RBAC/settings candidates, only `feature_flags` and `role_definitions` exist.** To prove a positive audit write live, use `POST /api/admin/roles` (writes `role_definitions`) — it returns 200. Clean up after: delete the throwaway role + the test audit rows.
 
 ## Dev super-admin login (recap, for smoke tests)
-passport local strategy keys on `username` NOT email. `POST /api/login {username,password:'admin123'}` → attemptToken (2FA gated); read code from `mfa_codes` (Zoho absent in dev → emailSent:false); `POST /api/admin/mfa/verify {code,attemptToken}`. Active sessions read from `express_sessions` (NOT the non-provisioned `user_sessions`).
+passport local strategy keys on `username` NOT email. `POST /api/login {username,password:<dev seed pw — see replit.md>}` → attemptToken (2FA gated); read code from `mfa_codes` (Zoho absent in dev → emailSent:false); `POST /api/admin/mfa/verify {code,attemptToken}`. Active sessions read from `express_sessions` (NOT the non-provisioned `user_sessions`).

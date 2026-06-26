@@ -11,9 +11,13 @@ from app.services.parser import parse_upload
 from app.uploads.registry import get_handler
 from app.uploads.base import process_rows
 from app.models import BulkUploadJob, BulkUploadRow
+from app.security import require_upload_auth
 
 templates = Jinja2Templates(directory="app/templates")
-router = APIRouter(prefix="/admin", tags=["admin"])
+# Shared-secret gate on EVERY /admin/* endpoint (see app/security.py): closes the
+# unauthenticated public-port bulk-upload surface. The Express proxy injects the
+# token after enforcing a super-admin session.
+router = APIRouter(prefix="/admin", tags=["admin"], dependencies=[Depends(require_upload_auth)])
 
 
 @router.post("/bootstrap")

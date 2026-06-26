@@ -19,7 +19,7 @@ empty node_modules locally) so this change can't be exercised here, but it's the
 
 ## 2. Seed/dev/audit scripts must never interpolate credential VALUES into stdout
 Secret scanners flag `console.log(`... ${PASSWORD}`)` even in non-request-path dev scripts
-(e.g. seed-employer-demo demo password, storage.ts seedSuperAdmin's `admin123`).
+(e.g. seed-employer-demo demo password, storage.ts seedSuperAdmin's dev seed password — value documented only in `replit.md`).
 **Why:** logs get shipped/captured; a literal credential in a log line is a leak regardless of
 where the script runs.
 **How to apply:** print the identifier (email/username) only; say "(password omitted from logs)".

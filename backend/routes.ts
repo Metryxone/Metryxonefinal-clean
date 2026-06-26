@@ -294,6 +294,7 @@ import { registerCareerIntelligenceHubRoutes } from "./routes/career-intelligenc
 import { registerEmployerPortalRoutes }        from "./routes/employer-portal";
 import { requireModuleAccess } from "./services/wc7c/require-module-access";
 import { rateLimit } from "./services/security-middleware";
+import { createProxyMiddleware } from "http-proxy-middleware";
 
 declare global {
   namespace Express {
@@ -5063,6 +5064,34 @@ ${context?.userName ? `- User name: ${context.userName}` : ""}
     }
     next();
   };
+
+  // ── Secure reverse-proxy: /api/v1/upload/* → FastAPI bulk-upload service ──────
+  // The FastAPI service (backend-main, port 8000) is published externally per
+  // .replit, so its /admin/* bulk-upload endpoints are reachable directly on the
+  // public internet. That service now requires a shared secret
+  // (X-Upload-Service-Token) and this proxy is the ONLY caller that holds it.
+  // We therefore gate the proxy with requireAuth → requireSuperAdmin FIRST and
+  // only THEN inject the secret, so Express never authenticates an
+  // unauthenticated caller into the upload service. CSRF (mounted in index.ts)
+  // still applies ahead of this. Mounted here, after requireSuperAdmin exists.
+  const FASTAPI_UPLOAD_URL = process.env.FASTAPI_URL || "http://localhost:8000";
+  const UPLOAD_SERVICE_TOKEN =
+    process.env.UPLOAD_SERVICE_TOKEN ||
+    (process.env.NODE_ENV === "production"
+      ? "" // prod: no well-known default — operator must set the secret on both services
+      : "dev-only-upload-token-do-not-use-in-production"); // must match backend-main/app/security.py
+  app.use(
+    "/api/v1/upload",
+    requireAuth,
+    requireSuperAdmin,
+    createProxyMiddleware({
+      target: FASTAPI_UPLOAD_URL,
+      changeOrigin: true,
+      pathRewrite: (path: string) => path.replace(/^\/api\/v1\/upload/, "") || "/",
+      headers: UPLOAD_SERVICE_TOKEN ? { "x-upload-service-token": UPLOAD_SERVICE_TOKEN } : {},
+      logLevel: "warn",
+    } as any),
+  );
 
   // ============================================================
   // F3 — Authoritative admin authorization gate (defence-in-depth)

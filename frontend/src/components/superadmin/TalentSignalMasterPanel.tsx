@@ -79,7 +79,7 @@ export default function TalentSignalMasterPanel() {
           <div className="grid grid-cols-2 gap-3">
             {(['signal_code', 'signal_name'] as const).map(f => (
               <div key={f}><label className="text-xs text-gray-500 mb-1 block capitalize">{f.replace('_', ' ')}</label>
-                <input className="w-full border border-gray-200 rounded px-2 py-1.5 text-sm" value={form[f]} onChange={e => setForm(p => ({ ...p, [f]: e.target.value }))} /></div>
+                <input aria-label={f.replace('_', ' ')} className="w-full border border-gray-200 rounded px-2 py-1.5 text-sm" value={form[f]} onChange={e => setForm(p => ({ ...p, [f]: e.target.value }))} /></div>
             ))}
             <div><label className="text-xs text-gray-500 mb-1 block">Category</label>
               <select className="w-full border border-gray-200 rounded px-2 py-1.5 text-sm" value={form.category} onChange={e => setForm(p => ({ ...p, category: e.target.value }))}>

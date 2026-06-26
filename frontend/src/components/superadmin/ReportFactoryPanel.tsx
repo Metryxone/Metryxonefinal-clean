@@ -939,7 +939,7 @@ function WhiteLabelTab() {
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-3 min-w-0">
                 {c.logo_url
-                  ? <img src={c.logo_url} alt="logo" className="w-10 h-10 rounded-lg object-contain border" style={{ borderColor: BRAND.border }} />
+                  ? <img src={c.logo_url} alt={c.org_name ? `${c.org_name} logo` : 'Organization logo'} className="w-10 h-10 rounded-lg object-contain border" style={{ borderColor: BRAND.border }} />
                   : <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white text-sm font-bold"
                       style={{ background: c.primary_color ?? BRAND.primary }}>
                       {(c.org_name ?? 'T')[0]}

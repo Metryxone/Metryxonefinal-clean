@@ -32,11 +32,11 @@ function ConcernsTab() {
   const [severity, setSeverity] = useState('all');
   const [page, setPage] = useState(1);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['ont-concerns', search, severity, page],
     queryFn: async () => {
       const p = new URLSearchParams({ search, page: String(page), limit: '50', ...(severity !== 'all' && { severity }) });
-      return apiFetch(`/api/ontology/ont-concerns?${p}`).then(r => r.json());
+      return apiFetch(`/api/ontology/ont-concerns?${p}`).then(r => { if (!r.ok) throw new Error('Failed to load'); return r.json(); });
     },
   });
 
@@ -90,7 +90,11 @@ function ConcernsTab() {
         </div>
       )}
 
-      {isLoading ? <div className="text-center py-8 text-gray-400">Loading…</div> : (
+      {isLoading ? <div className="text-center py-8 text-gray-400">Loading…</div> : isError ? (
+        <div className="text-center py-8 text-gray-500">
+          Couldn't load concerns. <button onClick={() => refetch()} className="underline font-medium">Retry</button>
+        </div>
+      ) : (
         <div className="overflow-auto rounded-xl border">
           <table className="w-full text-sm">
             <thead><tr className="bg-gray-50 text-gray-500 uppercase text-xs">
@@ -141,11 +145,11 @@ function QuestionsTab() {
   const [assessType, setAssessType] = useState('all');
   const [page, setPage] = useState(1);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['ont-questions', search, assessType, page],
     queryFn: async () => {
       const p = new URLSearchParams({ search, page: String(page), limit: '50', ...(assessType !== 'all' && { assessment_type: assessType }) });
-      return apiFetch(`/api/ontology/assessment-questions?${p}`).then(r => r.json());
+      return apiFetch(`/api/ontology/assessment-questions?${p}`).then(r => { if (!r.ok) throw new Error('Failed to load'); return r.json(); });
     },
   });
 
@@ -185,7 +189,11 @@ function QuestionsTab() {
         </button>
       </div>
 
-      {isLoading ? <div className="text-center py-8 text-gray-400">Loading…</div> : (
+      {isLoading ? <div className="text-center py-8 text-gray-400">Loading…</div> : isError ? (
+        <div className="text-center py-8 text-gray-500">
+          Couldn't load questions. <button onClick={() => refetch()} className="underline font-medium">Retry</button>
+        </div>
+      ) : (
         <div className="overflow-auto rounded-xl border">
           <table className="w-full text-sm">
             <thead><tr className="bg-gray-50 text-gray-500 uppercase text-xs">

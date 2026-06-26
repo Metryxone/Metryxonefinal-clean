@@ -64,7 +64,7 @@ export default function IndustrySegmentsPanel() {
   const [csvText, setCsvText] = useState('');
   const [importResult, setImportResult] = useState<ImportResult | null>(null);
 
-  const { data, isLoading } = useQuery<{ items: Segment[] }>({
+  const { data, isLoading, isError, refetch } = useQuery<{ items: Segment[] }>({
     queryKey: ['/api/ontology/industry-segments', statusFilter],
     queryFn: async () => {
       const res = await fetch(`/api/ontology/industry-segments?status=${statusFilter}&limit=200`, { credentials: 'include' });
@@ -207,6 +207,12 @@ export default function IndustrySegmentsPanel() {
 
       {isLoading ? (
         <div className="flex items-center justify-center h-40"><RefreshCw className="h-6 w-6 animate-spin text-gray-400" /></div>
+      ) : isError ? (
+        <div className="flex flex-col items-center justify-center h-40 text-center gap-2">
+          <AlertTriangle className="h-8 w-8 text-red-400" />
+          <p className="text-sm text-gray-600">Couldn't load industry segments.</p>
+          <Button variant="outline" size="sm" onClick={() => refetch()}>Retry</Button>
+        </div>
       ) : (
         <div className="rounded-lg border overflow-hidden">
           <Table>

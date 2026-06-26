@@ -162,7 +162,7 @@ export default function TalentScoringPanel() {
           <div className="bg-white border border-gray-200 rounded-lg p-4">
             <div className="flex justify-between items-center mb-3">
               <h3 className="text-sm font-semibold text-gray-700">Role Family Score Distribution</h3>
-              <button onClick={load} className="p-1 hover:bg-gray-100 rounded"><RefreshCw className="w-3.5 h-3.5 text-gray-400" /></button>
+              <button onClick={load} aria-label="Refresh score distribution" className="p-1 hover:bg-gray-100 rounded"><RefreshCw className="w-3.5 h-3.5 text-gray-400" /></button>
             </div>
             <div className="space-y-1 max-h-64 overflow-y-auto">
               {overview.rf_distribution.map(rf => (

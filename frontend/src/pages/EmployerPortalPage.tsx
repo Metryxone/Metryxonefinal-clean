@@ -5386,7 +5386,7 @@ function InterviewsTab({ interviews, setInterviews, candidates, jobs }: { interv
 
       {/* Auto-Schedule Panel */}
       <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
-        <div className="flex items-center justify-between p-4 cursor-pointer" onClick={() => setShowAutoPanel(s => !s)}>
+        <div role="button" tabIndex={0} aria-expanded={showAutoPanel} className="flex items-center justify-between p-4 cursor-pointer" onClick={() => setShowAutoPanel(s => !s)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setShowAutoPanel(s => !s); } }}>
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${BRAND.green}15`, color: BRAND.green }}>
               <Wand2 size={14} />
@@ -8365,7 +8365,7 @@ function CustomRoleBuilderModal({ initial, onClose, onSaved }: {
             <h2 className="text-base font-bold text-gray-900">{isEdit ? 'Edit custom role profile' : 'Build a custom role profile'}</h2>
             <p className="text-[11px] text-gray-500 mt-0.5">Attach competencies from your imported library or add your own. They become the role's requirements in the Competency Map.</p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-1"><X size={18} /></button>
+          <button onClick={onClose} aria-label="Close dialog" className="text-gray-400 hover:text-gray-600 p-1"><X size={18} /></button>
         </div>
 
         {/* body */}

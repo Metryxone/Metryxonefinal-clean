@@ -564,7 +564,7 @@ export function ChatWidget({ position = 'bottom-right', userName, userRole }: Ch
               <p style={{ fontSize: '13px', fontWeight: 700, color: '#1D3E8B', margin: '0 0 4px', lineHeight: 1.35 }}>{prompt.headline}</p>
               <p style={{ fontSize: '11px', color: '#6B7280', margin: '0 0 8px', lineHeight: 1.5 }}>{prompt.sub}</p>
               <span style={{ fontSize: '11px', fontWeight: 600, color: '#2EC4B6' }}>Chat with Pragati →</span>
-              <button onClick={e => { e.stopPropagation(); setPromptVisible(false); }} style={{ position: 'absolute', top: 8, right: 8, width: 18, height: 18, borderRadius: '50%', border: 'none', background: '#F0F2F6', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, color: '#9CA3AF' }}>✕</button>
+              <button aria-label="Dismiss prompt" onClick={e => { e.stopPropagation(); setPromptVisible(false); }} style={{ position: 'absolute', top: 8, right: 8, width: 18, height: 18, borderRadius: '50%', border: 'none', background: '#F0F2F6', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, color: '#9CA3AF' }}>✕</button>
               <div style={{ position: 'absolute', bottom: -8, right: 28, width: 0, height: 0, borderLeft: '8px solid transparent', borderRight: '8px solid transparent', borderTop: '8px solid #ffffff' }} />
             </div>
           )}

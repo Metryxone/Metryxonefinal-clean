@@ -686,7 +686,7 @@ export function AIPoweredReports({ childName, childAge, childGrade, childId, rol
                     const classReports = completedReports.filter(r => r.class === cls);
                     const classAvg = classReports.length > 0 ? Math.round(classReports.reduce((s, r) => s + r.overallScore, 0) / classReports.length) : 0;
                     return (
-                      <div key={cls} className="flex items-center justify-between p-2.5 rounded-lg border cursor-pointer hover:shadow-sm" onClick={() => setFilterClass(cls)} data-testid={`class-row-${cls.replace(' ', '-')}`}>
+                      <div key={cls} role="button" tabIndex={0} aria-label={`Filter by ${cls}`} className="flex items-center justify-between p-2.5 rounded-lg border cursor-pointer hover:shadow-sm" onClick={() => setFilterClass(cls)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setFilterClass(cls); } }} data-testid={`class-row-${cls.replace(' ', '-')}`}>
                         <div className="flex items-center gap-2">
                           <GraduationCap size={14} style={{ color: brand.primary }} />
                           <span className="text-xs font-medium">{cls}</span>

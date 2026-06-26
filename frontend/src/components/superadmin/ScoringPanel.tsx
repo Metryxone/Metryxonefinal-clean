@@ -508,6 +508,7 @@ export default function ScoringPanel() {
                                   <tr key={m.code + mi} className="hover:bg-gray-50 group">
                                     <td className="px-3 py-2">
                                       <input value={m.code} onChange={e => updateModule('code', e.target.value.toUpperCase())}
+                                        aria-label="Module code"
                                         className="w-14 border-b border-transparent group-hover:border-gray-300 focus:border-blue-400 focus:outline-none text-[10px] font-bold bg-transparent text-center rounded px-1 py-0.5"
                                         style={{ color: '#fff', backgroundColor: m.color }} />
                                     </td>

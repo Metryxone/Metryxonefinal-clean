@@ -35,9 +35,9 @@ export default function CAFSessionsPanel() {
   const [page, setPage] = useState(1);
   const [expanded, setExpanded] = useState<string|null>(null);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey:['caf-sessions', statusFilter, page],
-    queryFn:()=>fetch(`/api/caf/sessions?status=${statusFilter}&page=${page}&limit=50`).then(r=>r.json()),
+    queryFn:()=>fetch(`/api/caf/sessions?status=${statusFilter}&page=${page}&limit=50`).then(r=>{ if(!r.ok) throw new Error('Failed to load'); return r.json(); }),
   });
 
   const { data: responses=[] } = useQuery({
@@ -106,6 +106,7 @@ export default function CAFSessionsPanel() {
           </thead>
           <tbody className="divide-y">
             {isLoading ? <tr><td colSpan={10} className="py-12 text-center text-gray-400">Loading…</td></tr>
+            : isError ? <tr><td colSpan={10} className="py-12 text-center text-gray-500">Couldn't load sessions. <button onClick={()=>refetch()} className="underline font-medium">Retry</button></td></tr>
             : sessions.length===0 ? <tr><td colSpan={10} className="py-12 text-center text-gray-400">No sessions found</td></tr>
             : sessions.map(s=>(
               <>

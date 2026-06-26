@@ -237,7 +237,7 @@ function ImportModal({ onClose }: { onClose: () => void }) {
             <h2 className="font-semibold text-gray-900 text-sm">Import Items (CSV)</h2>
             <p className="text-[11px] text-gray-400 mt-0.5">Upserts on item_code — existing rows are updated, new rows are inserted</p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X className="h-4 w-4" /></button>
+          <button onClick={onClose} aria-label="Close dialog" className="text-gray-400 hover:text-gray-600"><X className="h-4 w-4" /></button>
         </div>
 
         <div className="flex-1 overflow-y-auto p-5 space-y-4">

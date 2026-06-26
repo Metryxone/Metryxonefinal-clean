@@ -119,7 +119,7 @@ export function BookSessionModal({ mentorName, onClose, onSessionCreated }: Book
               {step === 'form' ? 'Fill in details to generate a session link' : 'Share the invite link with your student'}
             </p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-1"><X size={18} /></button>
+          <button onClick={onClose} aria-label="Close dialog" className="text-gray-400 hover:text-gray-600 p-1"><X size={18} /></button>
         </div>
 
         {/* Form */}

@@ -157,7 +157,7 @@ function TextField({ label, value, onChange, placeholder, icon }: {
   return (
     <div>
       {label && <div className="text-[10px] uppercase tracking-wider text-gray-500 font-medium mb-1 flex items-center gap-1">{icon}{label}</div>}
-      <input className={inputCls} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder}/>
+      <input className={inputCls} aria-label={label || placeholder} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder}/>
     </div>
   );
 }
@@ -1047,9 +1047,9 @@ function ItemCard({ children, onDelete, onMoveUp, onMoveDown }: { children: Reac
   return (
     <div className="rounded-lg border border-gray-200 bg-gray-50/40 p-2.5 space-y-2">
       <div className="flex items-center gap-1 justify-end">
-        {onMoveUp && <button onClick={onMoveUp} className="text-gray-400 hover:text-gray-600"><ArrowUp size={11}/></button>}
-        {onMoveDown && <button onClick={onMoveDown} className="text-gray-400 hover:text-gray-600"><ArrowDown size={11}/></button>}
-        <button onClick={onDelete} className="text-gray-400 hover:text-red-500"><Trash2 size={11}/></button>
+        {onMoveUp && <button onClick={onMoveUp} aria-label="Move item up" className="text-gray-400 hover:text-gray-600"><ArrowUp size={11}/></button>}
+        {onMoveDown && <button onClick={onMoveDown} aria-label="Move item down" className="text-gray-400 hover:text-gray-600"><ArrowDown size={11}/></button>}
+        <button onClick={onDelete} aria-label="Delete item" className="text-gray-400 hover:text-red-500"><Trash2 size={11}/></button>
       </div>
       {children}
     </div>

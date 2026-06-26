@@ -11,6 +11,15 @@
 - `Backend API`: `cd backend && npm run dev:server`
 - `Start application`: `cd frontend && npm run dev`
 
+## Deployment (canonical production path — single source of truth)
+**Production = Google Cloud + Firebase**, deployed via `scripts/deploy-gcp.sh` (one-shot). This is the ONLY canonical production topology:
+- **Node API** (`backend/`) → Cloud Run service `metryxone-api`.
+- **FastAPI upload** (`backend-main/`) → Cloud Run service `metryxone-bulk-upload`. The deploy sets the Node API's `FASTAPI_URL` to this service URL — **this is why file uploads work in prod** (uploads proxy through the Node API to FastAPI).
+- **Frontend** (`frontend/`) → Firebase Hosting (`frontend/firebase.json` + `.firebaserc`), with `/api/**` rewritten to `metryxone-api`. Public domain `https://metryx.one`.
+- Region `asia-south1`. Required envs (stored in Secret Manager): `GCP_PROJECT`, `DATABASE_URL`, `MONGODB_URI`, `EMERGENT_LLM_KEY`; `SECRET_KEY` auto-generated. Verify `SESSION_SECRET` (backend fails fast in prod without it) and `ZOHO_EMAIL`/`ZOHO_APP_PASSWORD` (super-admin MFA email delivery) are set.
+
+**`.replit` `[deployment]` (autoscale) is DEV / WORKSPACE PREVIEW ONLY — NOT production.** It starts only the Node backend (no FastAPI), so file uploads do NOT work under it unless you separately publish the FastAPI service and set `FASTAPI_URL` + a real `UPLOAD_SERVICE_TOKEN` (the default token is a dev placeholder). Do not treat Replit autoscale as the production deploy.
+
 ## Key Files
 - `backend/index.ts` — Express entry, port 8080
 - `backend/routes.ts` — Main route file (~13.2k lines)

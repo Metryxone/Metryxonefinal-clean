@@ -1,5 +1,10 @@
 #!/bin/bash
 # /app/scripts/deploy-gcp.sh
+# ===========================================================================
+# CANONICAL PRODUCTION DEPLOY (single source of truth: see replit.md).
+# The .replit [deployment] autoscale target is DEV / WORKSPACE PREVIEW ONLY
+# (Node backend only, no FastAPI) and must NOT be treated as production.
+# ===========================================================================
 # One-shot deploy of all 3 MetryxOne services to Google Cloud:
 #   • Node API   → Cloud Run service: metryxone-api      (port 8080)
 #   • FastAPI    → Cloud Run service: metryxone-bulk-upload (port 8080)

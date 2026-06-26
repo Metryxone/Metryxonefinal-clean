@@ -293,6 +293,7 @@ import { registerCareerSimulationRoutes }  from "./routes/career-simulations";
 import { registerCareerIntelligenceHubRoutes } from "./routes/career-intelligence-hub";
 import { registerEmployerPortalRoutes }        from "./routes/employer-portal";
 import { requireModuleAccess } from "./services/wc7c/require-module-access";
+import { rateLimit } from "./services/security-middleware";
 
 declare global {
   namespace Express {
@@ -419,6 +420,14 @@ export async function registerRoutes(
   // Shared pg.Pool used by custom routes that bypass drizzle.
   // Declared early so endpoints registered later in this function can reuse it.
   const concernsPool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+
+  // Brute-force protection for auth endpoints (per client IP + route, sliding window).
+  // trust proxy=1 (set above) makes req.ip the real client IP behind the Replit proxy.
+  // Requests under the limit are unchanged (just add X-RateLimit-* headers); over-limit → 429.
+  const authLoginLimiter = rateLimit({ max: 10, windowMs: 60_000, pool: concernsPool });
+  const authRegisterLimiter = rateLimit({ max: 5, windowMs: 60_000, pool: concernsPool });
+  const authMfaVerifyLimiter = rateLimit({ max: 10, windowMs: 60_000, pool: concernsPool });
+  const authMfaResendLimiter = rateLimit({ max: 5, windowMs: 60_000, pool: concernsPool });
   await initFeatureFlags(concernsPool);
 
   passport.deserializeUser(async (id: string, done) => {
@@ -448,7 +457,7 @@ export async function registerRoutes(
   };
 
   // Auth Routes
-  app.post("/api/register", async (req, res, next) => {
+  app.post("/api/register", authRegisterLimiter, async (req, res, next) => {
     try {
       console.log("Registration request body:", req.body);
       const result = insertUserSchema.safeParse(req.body);
@@ -584,7 +593,7 @@ export async function registerRoutes(
     } catch { /* best-effort */ }
   };
 
-  app.post("/api/login", async (req, res, next) => {
+  app.post("/api/login", authLoginLimiter, async (req, res, next) => {
     const loginIp = (req.headers["x-forwarded-for"]?.toString().split(",")[0].trim()) || req.ip || null;
     const loginIdentifier = String(req.body?.username || req.body?.email || "").trim().toLowerCase();
     if (loginIdentifier) {
@@ -665,7 +674,7 @@ export async function registerRoutes(
   });
 
   // ── POST /api/admin/mfa/verify ────────────────────────────────────────────
-  app.post("/api/admin/mfa/verify", async (req, res, next) => {
+  app.post("/api/admin/mfa/verify", authMfaVerifyLimiter, async (req, res, next) => {
     try {
       const { code, attemptToken } = req.body || {};
       if (!code || !attemptToken) {
@@ -717,7 +726,7 @@ export async function registerRoutes(
   });
 
   // ── POST /api/admin/mfa/resend ─────────────────────────────────────────────
-  app.post("/api/admin/mfa/resend", async (req, res, next) => {
+  app.post("/api/admin/mfa/resend", authMfaResendLimiter, async (req, res, next) => {
     try {
       const { attemptToken } = req.body || {};
       if (!attemptToken) {

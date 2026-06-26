@@ -1086,3 +1086,9 @@ id = "CrYEZ8TyuKqB8TDttUn2i"
 uri = "file://backend/audit/platform-validation/PLATFORM-VALIDATION-REPORT.md"
 type = "text"
 title = "Platform Validation Report — MetryxOne (with Phase B remediation)"
+
+[[outputs]]
+id = "4JhBXPHEsr0TyVaPHqHLp"
+uri = "file://backend/audit/performance/PERFORMANCE_BENCHMARKS.md"
+type = "text"
+title = "MetryxOne Performance Benchmarks (PART 6)"

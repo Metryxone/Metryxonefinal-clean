@@ -1,0 +1,101 @@
+[
+  {
+    "label": "count_89k_full_scan (mobility_transferability_maps)",
+    "reps": 3,
+    "exec_ms_median": 8.669,
+    "exec_ms_all": [
+      8.647,
+      8.669,
+      8.784
+    ],
+    "planning_ms": 3.208
+  },
+  {
+    "label": "count_52k (map_role_competency)",
+    "reps": 3,
+    "exec_ms_median": 5.087,
+    "exec_ms_all": [
+      5.006,
+      5.087,
+      5.129
+    ],
+    "planning_ms": 0.392
+  },
+  {
+    "label": "scan_limit1000 (89k)",
+    "reps": 3,
+    "exec_ms_median": 0.268,
+    "exec_ms_all": [
+      0.219,
+      0.268,
+      0.274
+    ],
+    "planning_ms": 0.411
+  },
+  {
+    "label": "sort_limit100 (89k order by col1)",
+    "reps": 3,
+    "exec_ms_median": 0.088,
+    "exec_ms_all": [
+      0.079,
+      0.088,
+      0.089
+    ],
+    "planning_ms": 0.393
+  },
+  {
+    "label": "question_bank_count_2665",
+    "reps": 3,
+    "exec_ms_median": 0.595,
+    "exec_ms_all": [
+      0.588,
+      0.595,
+      0.632
+    ],
+    "planning_ms": 0.458
+  },
+  {
+    "label": "question_bank_filtered_status",
+    "reps": 3,
+    "exec_ms_median": 0.263,
+    "exec_ms_all": [
+      0.213,
+      0.263,
+      0.333
+    ],
+    "planning_ms": 0.68
+  },
+  {
+    "label": "drafts_count_17k (onto_competency_content_drafts)",
+    "reps": 3,
+    "exec_ms_median": 2.039,
+    "exec_ms_all": [
+      1.784,
+      2.039,
+      2.745
+    ],
+    "planning_ms": 0.48
+  },
+  {
+    "label": "groupby_19k (aig_monitoring_metrics by metric_name)",
+    "reps": 3,
+    "exec_ms_median": 5.574,
+    "exec_ms_all": [
+      4.277,
+      5.574,
+      696.079
+    ],
+    "planning_ms": 0.483
+  },
+  {
+    "label": "indexed_recent (aig_mm_recent idx, last 100 by recorded_at)",
+    "reps": 3,
+    "exec_ms_median": 0.088,
+    "exec_ms_all": [
+      0.081,
+      0.088,
+      0.107
+    ],
+    "planning_ms": 0.47
+  }
+]

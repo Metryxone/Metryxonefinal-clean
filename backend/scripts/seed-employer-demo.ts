@@ -254,7 +254,7 @@ async function seedDemoSeeker(): Promise<string | null> {
 
   // Own competency run (subject_id == email) so the self-scoped readiness endpoint is non-null.
   await seedCompetencyProfiles([DEMO_SEEKER_EMAIL]);
-  console.log(`[seed] demo career-seeker login ready: ${DEMO_SEEKER_EMAIL} / ${DEMO_SEEKER_PASSWORD}`);
+  console.log(`[seed] demo career-seeker login ready: ${DEMO_SEEKER_EMAIL} (password omitted from logs — see seeder source/env)`);
   return DEMO_SEEKER_EMAIL;
 }
 

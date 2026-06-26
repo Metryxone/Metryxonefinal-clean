@@ -4199,7 +4199,7 @@ export class DatabaseStorage implements IStorage {
     });
 
     if (!initialPassword) {
-      console.log(`Super Admin created: ${SUPER_ADMIN_EMAIL} / admin123 — ⚠️  Set SUPERADMIN_INITIAL_PASSWORD to rotate this credential`);
+      console.log(`Super Admin created: ${SUPER_ADMIN_EMAIL} — default dev password applies (omitted from logs); ⚠️  Set SUPERADMIN_INITIAL_PASSWORD to rotate this credential`);
     } else {
       console.log(`Super Admin created: ${SUPER_ADMIN_EMAIL} (password from SUPERADMIN_INITIAL_PASSWORD)`);
     }

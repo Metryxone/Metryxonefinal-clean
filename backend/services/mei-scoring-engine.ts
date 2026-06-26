@@ -654,11 +654,13 @@ export function mapProfileToMEIInput(cp: Record<string, any>, opts: {
   industryCode?: string | null;
   roleLevelCode?: string | null;
 } = {}): MEIProfileInput {
-  const education = cp.education ?? [];
-  const experience = cp.experience ?? [];
-  const certifications = cp.certifications ?? [];
-  const skills = cp.skills ?? {};
-  const projects = cp.projects ?? [];
+  // Defensive: profile JSONB fields can be non-array (object/string/null) for
+  // partially-filled profiles, so coerce before any .reduce/.map/.length use.
+  const education = Array.isArray(cp.education) ? cp.education : [];
+  const experience = Array.isArray(cp.experience) ? cp.experience : [];
+  const certifications = Array.isArray(cp.certifications) ? cp.certifications : [];
+  const skills = (cp.skills && typeof cp.skills === 'object' && !Array.isArray(cp.skills)) ? cp.skills : {};
+  const projects = Array.isArray(cp.projects) ? cp.projects : [];
 
   // Degree + institution detection (classifiers imported at top of file)
   const bestEdu = education.reduce((best: Record<string, unknown> | null, e: Record<string, unknown>) => {

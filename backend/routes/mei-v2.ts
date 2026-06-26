@@ -48,7 +48,7 @@ async function ensureSchema(pool: Pool) {
 /** Resolve career profile for a user ID */
 async function resolveProfile(pool: Pool, userId: string): Promise<Record<string, unknown> | null> {
   const res = await pool.query(
-    `SELECT data FROM career_seeker_profiles WHERE id = $1 LIMIT 1`,
+    `SELECT data FROM career_seeker_profiles WHERE user_id = $1 LIMIT 1`,
     [userId]
   );
   if (res.rows.length === 0) return null;

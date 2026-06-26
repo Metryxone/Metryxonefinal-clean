@@ -22,7 +22,8 @@
 
 ## Super Admin
 - Login: `support@metryxone.com` / `admin123` (role `super_admin`; seeded by `storage.ts` `seedSuperAdmin`, `SUPER_ADMIN_EMAIL`) · `SuperAdminLogin.tsx` → SPA nav to `screen = 'admin-dashboard'`.
-- Super-admin login is **2FA-gated**: `POST /api/login` returns `{mfaRequired:true}` + writes a `mfa_codes` row; complete via `POST /api/admin/mfa/verify`. MFA code is **emailed via Zoho** (`ZOHO_EMAIL`/`ZOHO_APP_PASSWORD`) — both **absent in dev**, so `emailSent:false` and the code must be read from the `mfa_codes` table to finish dev login.
+- Super-admin login is **2FA-gated in production**: `POST /api/login` returns `{mfaRequired:true}` + writes a `mfa_codes` row; complete via `POST /api/admin/mfa/verify`. MFA code is **emailed via Zoho** (`ZOHO_EMAIL`/`ZOHO_APP_PASSWORD`).
+- ⚠️ **Dev MFA bypass (known risk, MX-301I §G4 — deferred to deployment)**: when `NODE_ENV !== 'production'` AND `ZOHO_EMAIL` is unset, `/api/login` (`mfaDisabledInDev`, L540-552) **skips MFA entirely** and returns an authenticated session directly with `{mfaBypassed:true}` (it does NOT write an `mfa_codes` row). Because dev and prod share one DB, harden before deploy: enforce MFA whenever credentials are configured, or otherwise gate the bypass.
 
 ## Feature flags (two distinct systems)
 - **File registry** `backend/config/feature-flags.ts` — every additive V2 phase ships behind a flag; flag-off → protected routes 503 + UI panel hides; flag-off path is byte-identical to legacy. All default OFF.

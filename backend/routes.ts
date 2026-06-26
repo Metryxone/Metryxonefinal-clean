@@ -12870,6 +12870,21 @@ Respond with valid JSON only (no markdown), using EXACTLY these section names in
       const stageCode = String(req.query.stage_code || 'EXEC');
       const roleCode = req.query.role_code ? String(req.query.role_code) : null;
 
+      // Honest degrade: this legacy scoring path reads competency_* tables, which
+      // may not exist (canonical scoring lives in onto_*). Return a zeroed, empty
+      // coverage envelope (200) instead of 500 when the response table is absent.
+      const respProbe = await db.execute(sql`SELECT to_regclass('public.competency_user_responses') AS t`);
+      if ((respProbe.rows as any[])[0]?.t == null) {
+        return res.json({
+          user_id: userId, stage_code: stageCode, role_code: roleCode,
+          employability_index: 0, confidence: 0,
+          coverage: { competencies_total: 0, competencies_attempted: 0, total_attempts: 0 },
+          explainability: { top_strengths: [], top_gaps: [] },
+          breakdown: [],
+          note: 'No competency response data available yet.',
+        });
+      }
+
       // 1) Per-competency raw score = avg of user responses
       const compScores = await db.execute(sql`
         SELECT c.id, c.code, c.name, c.domain_id,
@@ -12968,6 +12983,15 @@ Respond with valid JSON only (no markdown), using EXACTLY these section names in
       const stage = String(req.query.stage_code || 'EXEC');
       const role = req.query.role_code ? String(req.query.role_code) : null;
 
+      // Honest degrade when the legacy competency_user_responses table is absent.
+      const respProbe = await db.execute(sql`SELECT to_regclass('public.competency_user_responses') AS t`);
+      if ((respProbe.rows as any[])[0]?.t == null) {
+        return res.json({
+          user_id: userId, stage_code: stage, role_code: role,
+          cohort_size: 0, my_ei: 0, percentile: null, top_percent: null,
+        });
+      }
+
       const r = await db.execute(sql`
         WITH per_user_comp AS (
           SELECT r.user_id, i.competency_id, AVG(r.score_obtained)::real AS raw_score
@@ -13026,6 +13050,12 @@ Respond with valid JSON only (no markdown), using EXACTLY these section names in
       const userId = req.params.userId;
       const stage = String(req.query.stage_code || 'EXEC');
       const role = req.query.role_code ? String(req.query.role_code) : null;
+
+      // Honest degrade when the legacy competency_user_responses table is absent.
+      const respProbe = await db.execute(sql`SELECT to_regclass('public.competency_user_responses') AS t`);
+      if ((respProbe.rows as any[])[0]?.t == null) {
+        return res.json({ has_diff: false, message: 'No competency response data available yet.' });
+      }
 
       // Get distinct sessions: group responses by minute (a "session" is responses within a 30-minute window)
       const sessions = await db.execute(sql`

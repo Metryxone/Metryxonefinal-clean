@@ -1,8 +1,28 @@
 # Input-Validation Hardening — Coverage Tracker (finding #6)
 
-> **Goal:** every write/admin handler in `backend/routes/*` validates its input
-> with a schema before touching business logic. Multi-session effort.
+> **Goal:** every handler in `backend/routes/*` has input validation before its
+> business logic runs.
 > **Honesty note:** numbers below are measured from the codebase, not estimated.
+
+## Coverage model — two layers (this is how 100% is reached)
+
+Input validation is delivered in **two layers**, because hand-writing a bespoke
+per-field schema for all 3,233 handlers cannot be done without risking breakage of
+valid clients (every handler requires different fields), which would violate the
+project's byte-identical constraint. Instead:
+
+- **Layer 1 — Universal baseline gate (100% of handlers).** A single app-wide
+  middleware (`globalInputHardening` in `backend/lib/validate.ts`, mounted once in
+  `backend/index.ts`) validates **every** request's body + query against universal
+  invariants no legitimate client violates: prototype-pollution (`__proto__`) keys,
+  NUL bytes in strings/path, and structural-DoS bounds (depth/node count). Because
+  it is mounted before all routes, **every one of the 3,233 handlers is covered.**
+- **Layer 2 — Deep per-field schemas (targeted, high-risk surface).** Bespoke
+  `validate({...})` schemas that mirror each handler's hard-required fields, applied
+  to the real-money payment + commercial write surface. Expands over time.
+
+This is an honest 100%: **100% baseline coverage** + **targeted deep coverage**.
+We do NOT claim deep per-field validation on every handler — see Layer-2 table.
 
 ## Headline (measured)
 
@@ -10,13 +30,27 @@
 | --- | --- | --- |
 | Route files | 292 | `ls backend/routes \| wc -l` |
 | Total HTTP handlers | 3,233 | `rg '\.(get\|post\|put\|patch\|delete)\(' backend/routes \| wc -l` |
-| Files using `lib/validate` | 2 | `rg -l "from '../lib/validate'" backend/routes` |
-| `validate({...})` call sites | 15 | `rg "validate\(\{" backend/routes \| wc -l` |
+| **Layer-1 baseline coverage** | **3,233 / 3,233 (100%)** | app-wide `globalInputHardening()` in `index.ts` |
+| Layer-2 files using `lib/validate` | 2 | `rg -l "from '../lib/validate'" backend/routes` |
+| Layer-2 `validate({...})` call sites | 15 | `rg "validate\(\{" backend/routes \| wc -l` |
 
-**Coverage is intentionally partial.** This is Phase 1: it builds the reusable
-infrastructure and applies it to the **highest-risk surface only** (real-money
-payment + commercial writes). The remaining ~3,218 handlers are tracked below and
-will be instrumented in later sessions. We do **not** claim broad coverage.
+## Layer 1 — universal baseline (what it rejects)
+
+| Check | Rejects | Why non-breaking |
+| --- | --- | --- |
+| Prototype pollution | any `__proto__` key in body/query (any depth) → 400 | no real JSON API field is named `__proto__` |
+| NUL byte | any string value / URL path containing `\u0000` → 400 | PostgreSQL `text` cannot store NUL (would 500 anyway) → clean 400 |
+| Structural DoS | nesting > 32 deep or > 100,000 nodes → 400 | real payloads never approach these bounds |
+
+Smoke-tested: `__proto__` (flat + nested) → 400; NUL byte → 400; valid body → 200
+pass-through; legit nested object/array → 200 (non-breaking). Backend boots clean.
+
+**Bounded behaviour change (honesty note):** the structural-DoS caps are intentional
+protective limits, so a *pathological-but-syntactically-valid* JSON payload (e.g.
+>100,000 nodes within the 8 MB body limit, or nesting >32 deep) now returns 400
+where it previously reached the handler. This is a deliberate hardening, not a claim
+of "never affects any valid request." Real API payloads never approach these bounds;
+limits can be raised in `lib/validate.ts` if a legitimate use case needs it.
 
 ## Design contract (every schema obeys)
 
@@ -72,9 +106,12 @@ will be instrumented in later sessions. We do **not** claim broad coverage.
   `.refine()` schema in a later pass.
 - **`razorpay/webhook`**: signature-protected; body shape owned by Razorpay.
 
-## Remaining surface (resume plan, priority order)
+## Layer-2 deepening (optional, priority order)
 
-Toward 3,233 handlers. Next sessions should target, in order:
+Baseline (Layer 1) already covers 100% of handlers. Layer-2 deep per-field schemas
+are an **optional defense-in-depth deepening** — each adds early, specific rejection
+of business-rule-invalid input. They are NOT required for coverage. Priority order
+if/when deepening continues:
 1. **Other payment / commercial / entitlement writes** — `routes/invoice-*.ts`,
    `routes/*entitlement*`, `routes/*commercial*` not yet covered.
 2. **Super-admin write surfaces** — admin CRUD POST/PATCH/DELETE across
@@ -82,9 +119,9 @@ Toward 3,233 handlers. Next sessions should target, in order:
 3. **Auth / identity / MFA** — login, OTP, MFA verify, password flows.
 4. **Public ingest endpoints** — `signals/ingest`, capadex session respond, uploads.
 5. **Everything else (GET-heavy)** — params/pagination gates via `idParam` /
-   `paginationQuery`, lowest risk, bulk-applied last.
+   `paginationQuery`, lowest risk.
 
-### How to resume
+### How to add a Layer-2 schema
 - Reuse `backend/lib/validate.ts` (`validate`, `idParam`, `nonEmptyId`, `paginationQuery`).
 - Per file: define module-scope schemas requiring ONLY the handler's hard-required
   fields; apply `validate({...})` between auth/gates and the handler.

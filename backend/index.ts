@@ -77,6 +77,13 @@ import { requestId as _phase5RequestId, antiEnumDelay as _phase5AntiEnum } from 
 app.use(_phase5RequestId());
 app.use(_phase5AntiEnum(80));
 
+// Finding #6 — universal input-validation baseline (covers 100% of handlers).
+// Prototype-pollution + NUL-byte + structural-DoS guards on every request body
+// and query. Non-breaking for valid traffic; deep per-field schemas (lib/validate
+// `validate({...})`) are layered on top for the high-risk write surface.
+import { globalInputHardening as _inputHardening } from './lib/validate.js';
+app.use(_inputHardening());
+
 // ── Structured logging with levels ───────────────────────────────────────────
 // LOG_LEVEL gates output (debug < info < warn < error); default "info".
 // In Replit/containers, stdout/stderr are captured (and rotated) by the platform.

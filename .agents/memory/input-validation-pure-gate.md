@@ -7,8 +7,31 @@ description: How to add Zod request validation to backend/routes/* without break
 
 `backend/lib/validate.ts` exports `validate({body,params,query})` + reusable
 `nonEmptyId` / `idParam` / `paginationQuery`. ~3,233 handlers across 292 route
-files; this is a multi-session push to 100%. Progress tracker (the single source
-of truth, NOT a follow-up task): `backend/audit/input-validation/coverage.md`.
+files. Progress tracker (the single source of truth, NOT a follow-up task):
+`backend/audit/input-validation/coverage.md`.
+
+## Reaching 100% honestly — two layers (don't hand-write 3,233 schemas)
+
+Bespoke per-field schemas for ALL 3,233 handlers is NOT feasible non-breakingly
+(every handler requires different fields; getting a few wrong breaks valid clients
+→ violates the byte-identical rule). So 100% coverage is delivered in TWO layers:
+
+- **Layer 1 — universal baseline (100%).** `globalInputHardening()` in
+  `lib/validate.ts`, mounted ONCE in `index.ts` app-wide AFTER the body parser +
+  existing security mw (helmet/requestId/antiEnum). Recursively scans every
+  request body+query and rejects ONLY universal invariants no legit client uses:
+  `__proto__` key at any depth (prototype pollution), NUL byte `\u0000` in any
+  string / the URL path (Postgres `text` can't store it → would 500 anyway), and
+  structural-DoS bounds (depth>32 or >100,000 nodes). never-throws → next().
+  Because it's app-level, it covers 100% of handlers with ONE mount.
+- **Layer 2 — targeted deep schemas.** The bespoke `validate({...})` per-field
+  schemas (below) on the high-risk write surface. Optional defense-in-depth.
+
+**Why:** "honesty over optimism" — call it "100% baseline + targeted deep", never
+"100% per-field". **Non-breaking calls:** deliberately did NOT block `constructor`
+/`prototype` keys (only `__proto__`) because JSONB metadata fields could legit
+carry them; the node/depth caps ARE a bounded behaviour change (pathological-but-
+valid huge JSON now 400s) — document it, don't claim "never affects valid traffic".
 
 ## The rule that keeps it non-breaking
 

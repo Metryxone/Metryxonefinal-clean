@@ -242,6 +242,34 @@ function inspectIndividual(json: any): PayloadVerdict {
   if (!d || typeof d !== 'object') return { usable: false, reason: 'no JSON payload', signals: [] };
   const signals: string[] = [];
 
+  // Employer competency-driven match shape (onto genome vs Role DNA). The match
+  // object is nested under `match`; it is "visible" only when real requirement
+  // overlap was measured from her ledger (matched > 0 AND a numeric match), never
+  // on the heuristic-fallback (competencyMatch null) payload.
+  if (d.match && typeof d.match === 'object') {
+    const m: any = d.match;
+    const matched = Number(m.matchedRequirementCount ?? m.matched ?? 0);
+    const total = Number(m.totalRequirementCount ?? m.total ?? 0);
+    const direct = Number(m.directMatchCount ?? m.direct ?? 0);
+    const proxy = Number(m.domainProxyMatchCount ?? m.proxy ?? 0);
+    const cm = m.competencyMatch ?? m.match ?? null;
+    signals.push(
+      `competencyMatch=${cm ?? 'null'}`,
+      `matched=${matched}/${total}`,
+      `direct=${direct} proxy=${proxy}`,
+      `coverage=${m.requirementCoveragePct ?? m.coverage ?? 'null'}%`,
+    );
+    return matched > 0 && cm != null
+      ? { usable: true, reason: 'competency-driven match computed from her onto ledger vs role DNA', signals }
+      : {
+          usable: false,
+          reason:
+            'competency-match route wired + secured, but no requirement overlap was measured ' +
+            'for her (heuristic fallback — competencyMatch null); honest no-data, not fabricated',
+          signals,
+        };
+  }
+
   // Talent-match shape — actuals can be null despite a resolved role.
   if (d.evidence_mix && typeof d.evidence_mix === 'object') {
     const em = d.evidence_mix;
@@ -697,7 +725,7 @@ async function main() {
     { persona: 'candidate', tab: 'Reports', method: 'GET', path: `/api/career/hub/report`, scope: 'self', kind: 'individual', consumes: 'candidate report (self hub)' },
     // EMPLOYER (elevated session).
     { persona: 'employer', tab: 'Candidate Match', method: 'GET', path: `/api/talent-matching-engine/candidate/${sid}/role/${role}`, scope: 'admin', kind: 'individual', consumes: 'precise comp_* vs role' },
-    { persona: 'employer', tab: 'Competency Match', method: 'GET', path: `/api/v2/employer/competency-match/feature-flag`, scope: 'admin', kind: 'flag-probe', consumes: 'server-side competency-driven match (MX-107A)' },
+    { persona: 'employer', tab: 'Competency Match', method: 'GET', path: `/api/v2/employer/competency-match/${sid}/${job}`, scope: 'admin', kind: 'individual', consumes: 'competency-driven match — her onto ledger vs role DNA (MX-107A)' },
     { persona: 'employer', tab: 'Interview', method: 'GET', path: `/api/interview-intelligence/job/${job}/candidate/${sid}/evaluation`, scope: 'admin', kind: 'individual', consumes: 'operator interview scores' },
     { persona: 'employer', tab: 'Hiring Dashboard', method: 'GET', path: `/api/employer/hiring/readiness`, scope: 'admin', kind: 'aggregate', consumes: 'hiring readiness rollup' },
     // SUPER ADMIN.

@@ -1,6 +1,6 @@
 # Candidate — Persona Experience Validation
 
-_MX-301D — Persona Experience Validation · generated 2026-06-25T16:02:48.729Z_
+_MX-301D — Persona Experience Validation · generated 2026-06-25T16:26:00.167Z_
 
 **Demonstration candidate:** `user_4286d980cc6cc038` (PII-masked).
 

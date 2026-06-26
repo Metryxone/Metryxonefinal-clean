@@ -131,7 +131,15 @@ function deriveOptions(questionType: string, body: any): { label: string; score:
   if (isLikert || !hasAuthored) {
     return LIKERT_OPTIONS.map((o) => ({ label: o.label, score: reverse ? 100 - o.score : o.score }));
   }
-  const best = Number.isFinite(body.best_option) ? Number(body.best_option) : -1;
+  // Honor the authored correct answer. Templates carry it as EITHER `best_option`
+  // OR `correct_index` (the curated competency bank uses `correct_index`); without
+  // this fallback every correct_index-authored MCQ collapses to a flat score (all
+  // options 20) and can never produce a differentiated PRECISE competency score.
+  const best = Number.isFinite(body.best_option)
+    ? Number(body.best_option)
+    : Number.isFinite(body.correct_index)
+      ? Number(body.correct_index)
+      : -1;
   return (body.options as string[]).map((label, i) => {
     let score = 20;
     if (i === best) score = 100;

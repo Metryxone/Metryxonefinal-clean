@@ -72,13 +72,36 @@ console (`vx/reports/overview` = templates/sections/rules + `report_generation_l
 never reflects generated reports — repoint to the rollup that counts them
 (`/api/admin/rf/stats` → `generated_reports`).
 
-## Honest residual ceiling (do NOT fabricate to force 19/19)
+## Match tabs were TWO real bugs, not an evidence ceiling (now 18/19)
 
-Employer Candidate Match / Competency Match need PRECISE per-competency (`comp_*`)
-levels; a demo assessment that carries only domain-proxy / EI data (the common case)
-has `evidence_mix.measured=0` against role requirements. That is a genuine ceiling —
-forcing a pass would fabricate per-competency evidence she never produced. Report it,
-keep verdict PARTIAL at 17/19.
+Earlier this was misdiagnosed as a "domain-proxy-only / can't fabricate comp_*" ceiling
+stuck at 17/19. WRONG — precise `comp_*` levels ARE genuinely producible via the real
+scorer once two real bugs are fixed (both fixed; demo lit up honestly):
+
+- **`deriveOptions` only honored `best_option`, but the curated competency MCQ bank
+  authors the correct answer as `correct_index`** → `best=-1` → every option scored a
+  flat 20 → precise per-competency scores were IMPOSSIBLE (measurement looked "precise"
+  but all comps tied). Latent platform-wide scorer bug. Fix: honor `correct_index` as a
+  fallback for `best_option`. Then answering the authored-correct option scores 100 via
+  the REAL scorer — genuine strong-persona data, not fabrication. Any flat-scored runs
+  created BEFORE this fix are meaningless and should be rescored.
+- **The harness probes `MX301D_JOB_ID` default `mx301d-probe-job`, NOT `mx301_demo_job`.**
+  The org-scoped competency-match route (`/api/v2/employer/competency-match/:c/:j`,
+  flags `adaptiveIntelligenceFoundation`+`employerCompetencyHiring`) resolves candidate
+  AND job by `employer_id = req.user.id` (super-admin session — no `req.orgId` middleware
+  on `/api/v2/employer`). So the probe job must EXIST and be scoped to the elevated org,
+  and `computeCompetencyDrivenMatch` derives requirements from the job **title** (via
+  `generateRoleDNA`), NOT `matched_role_id` → title must be a recognised role
+  (e.g. "Senior Product Manager" → role_pm). Candidate Match (talent-matching) reads
+  `employer_candidates.competency_profile` (project the unified comp_* scores into it).
+
+## Honest residual ceiling — the Interview tab (do NOT fabricate to force 19/19)
+
+The genuine 19th-tab gap is **Employer Interview** (`/api/interview-intelligence/job/:j/
+candidate/:c/evaluation`), which aggregates PANELIST-entered interview scores/feedback —
+operator human-interview data with no genuine source for a demo candidate who was never
+interviewed. Forcing it would fabricate interview evidence. Keep it honest
+`wired_no_data`; verdict 18/19, not 19/19.
 
 ## behavioural-memory snapshot schema drift (unblocks candidate hub)
 

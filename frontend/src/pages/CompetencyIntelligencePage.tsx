@@ -56,9 +56,12 @@ export default function CompetencyIntelligencePage({ onNavigate }: Props) {
     try {
       const r = await fetch('/api/competency/intelligence/summary', { credentials: 'include' });
       if (r.status === 503) { setError('Intelligence engine not enabled (FF_COMPETENCY_INTELLIGENCE=0)'); setLoading(false); return; }
-      if (!r.ok) throw new Error(await r.text());
+      if (r.status === 401 || r.status === 403) {
+        setError('Please sign in to view your competency intelligence.'); setLoading(false); return;
+      }
+      if (!r.ok) { setError('We couldn\u2019t load your competency intelligence right now. Please try again in a moment.'); setLoading(false); return; }
       setData(await r.json());
-    } catch (e: any) { setError(e.message || 'Failed to load intelligence'); }
+    } catch { setError('We couldn\u2019t load your competency intelligence right now. Please check your connection and try again.'); }
     finally { setLoading(false); }
 
     fetch('/api/competency/intelligence/percentiles', { credentials: 'include' })

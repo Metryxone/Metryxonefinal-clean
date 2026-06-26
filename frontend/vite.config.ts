@@ -99,15 +99,17 @@ export default defineConfig({
       ],
     },
 
-    // HMR must target the app's own external port (5000), NOT 443.
-    // 443 resolves to externalPort 80, which the canvas mockup-sandbox Vite
-    // server squats on — sending the HMR handshake there closes the socket
-    // ("server connection lost" / "WebSocket closed without opened").
+    // HMR must target the port the browser actually loads the app on.
+    // The app (localPort 5000) is mapped to externalPort 80 in `.replit`, i.e.
+    // it is served at https://<domain> over the default port 443. There is NO
+    // externalPort 5000, so a wss handshake to :5000 never connects and the
+    // preview flaps ("server connection lost" → endless reload). Target 443,
+    // which routes to externalPort 80 → the app's own Vite on localPort 5000.
     hmr: replitDomain
       ? {
           protocol: "wss",
           host: replitDomain,
-          clientPort: 5000,
+          clientPort: 443,
           timeout: 120000,
           overlay: false,
         }

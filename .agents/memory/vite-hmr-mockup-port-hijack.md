@@ -13,9 +13,12 @@ The canvas **mockup-sandbox Component Preview Server** is a SECOND Vite server (
 - **`.replit` cannot be hand-edited** (port mappings protected → "Direct edits to .replit not allowed"). No agent tool currently remaps an externalPort.
 - The mockup workflow **cannot be deleted** (`removeWorkflow` → `PROHIBITED_ACTION: managed by an artifact`). It CAN be left in a stopped/"finished" state, but stopping it leaves externalPort 80 → dead port, so the bare domain then 502s (cosmetic; the webview preview on 5000 is unaffected).
 
-# Fix that works
-Point HMR at the app's OWN dedicated external port instead of 443/80:
-`vite.config.ts` → `hmr.clientPort: 5000` (host `REPLIT_DEV_DOMAIN`, protocol `wss`). The browser already reaches the app at `<domain>:5000`, so `wss://<domain>:5000` connects cleanly and never touches the hijacked externalPort 80. Restart "Start application" to apply; confirm browser console shows `[vite] connected.` with no "connection lost".
+# Fix that works (port-mapping–dependent — re-check `.replit` every time)
+`hmr.clientPort` MUST equal the **externalPort the browser actually loads the app on**, which is platform-managed and HAS CHANGED over time. Read `.replit` `[[ports]]`, find the mapping whose `localPort = 5000`, and set `clientPort` to its public port:
+- If `localPort 5000 → externalPort 80` (app served at `https://<domain>` over default 443): `hmr.clientPort: 443`. ← current state.
+- If `localPort 5000 → externalPort 5000` (app reached at `<domain>:5000`): `hmr.clientPort: 5000`. ← earlier state.
 
-**Why:** externalPort 80 is owned by the artifact mockup and is unfixable from the agent side; the app's port 5000 is exposed and wss-reachable, so HMR should target it directly.
-**How to apply:** any future "preview/HMR flapping" here — check for the mockup-sandbox workflow squatting externalPort 80 before touching app code; the durable cure is HMR clientPort = app port, not a .replit edit.
+Host `REPLIT_DEV_DOMAIN`, protocol `wss`. Restart "Start application"; confirm browser console shows `[vite] connected.` with NO "server connection lost".
+
+**Why:** if `clientPort` names an externalPort that does not exist in `.replit` (e.g. `:5000` after the app moved to externalPort 80), the wss handshake can never connect → the preview "flashes and goes" (endless reconnect/reload). The mockup-sandbox squat on externalPort 80 was the ORIGINAL trigger, but the root invariant is just "HMR port = the app's live external port."
+**How to apply:** any future "preview/HMR flapping" here — FIRST diff `.replit` `[[ports]]` to see which externalPort maps to localPort 5000, then set `clientPort` to match. Do NOT assume the prior value; mappings are not editable by the agent but the platform reshuffles them.

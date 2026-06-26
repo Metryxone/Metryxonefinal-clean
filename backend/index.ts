@@ -14,12 +14,14 @@ import { storage, pool } from "./storage";
 import { initWebSocketServer } from "./services/ws-broadcast";
 import { runRoleLibraryExpansion } from "./services/role-library-expansion";
 import { runRoleBridgeActivation } from "./services/role-bridge-activation";
+import { assertEnvPreflight } from "./lib/env-preflight";
 
-// ── Fail-fast: SESSION_SECRET must be set in production ─────────────────────
-if (process.env.NODE_ENV === 'production' && !process.env.SESSION_SECRET) {
-  console.error('FATAL: SESSION_SECRET environment variable is not set. Refusing to start in production without a secure session secret. Set it in the Replit Deployments pane.');
-  process.exit(1);
-}
+// ── Production env preflight ────────────────────────────────────────────────
+// Single boot-time check: aborts on missing REQUIRED secrets (SESSION_SECRET,
+// DATABASE_URL) and prints a loud warning for feature-degrading ones (Zoho MFA
+// email, upload-service wiring, OpenAI). No-op outside production, so the dev
+// boot stays byte-identical. See docs/ENVIRONMENT.md for the full var reference.
+assertEnvPreflight();
 
 const app = express();
 const httpServer = createServer(app);

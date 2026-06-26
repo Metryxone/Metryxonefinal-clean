@@ -20,6 +20,8 @@
 
 **`.replit` `[deployment]` (autoscale) is DEV / WORKSPACE PREVIEW ONLY — NOT production.** It starts only the Node backend (no FastAPI), so file uploads do NOT work under it unless you separately publish the FastAPI service and set `FASTAPI_URL` + a real `UPLOAD_SERVICE_TOKEN` (the default token is a dev placeholder). Do not treat Replit autoscale as the production deploy.
 
+**Env vars**: `docs/ENVIRONMENT.md` is the authoritative reference (required vs recommended vs optional, per service, where to set). The Node backend runs a boot-time preflight (`backend/lib/env-preflight.ts`) that aborts in prod on missing REQUIRED vars (`SESSION_SECRET`, `DATABASE_URL`) and warns loudly on feature-degrading ones (`ZOHO_*`, `FASTAPI_URL`, `UPLOAD_SERVICE_TOKEN`, `OPENAI_API_KEY`); no-op in dev.
+
 ## Key Files
 - `backend/index.ts` — Express entry, port 8080
 - `backend/routes.ts` — Main route file (~13.2k lines)

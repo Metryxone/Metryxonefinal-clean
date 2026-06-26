@@ -18,7 +18,13 @@
 #   bash /app/scripts/deploy-gcp.sh
 #
 # Required envs: GCP_PROJECT, DATABASE_URL, MONGODB_URI, EMERGENT_LLM_KEY
-# Optional:  REGION (default asia-south1), SECRET_KEY (auto-generated if missing)
+# Strongly recommended: ZOHO_EMAIL, ZOHO_APP_PASSWORD (super-admin 2FA email;
+#   without them super-admin login is IMPOSSIBLE in prod — passed through if set).
+# Optional:  REGION (default asia-south1); SECRET_KEY, SESSION_SECRET,
+#   UPLOAD_SERVICE_TOKEN (each auto-generated if missing). SESSION_SECRET is what
+#   the Node backend actually requires (it fail-fasts without it); SECRET_KEY is
+#   the FastAPI/Python key. UPLOAD_SERVICE_TOKEN is set identically on BOTH Cloud
+#   Run services so the upload proxy authenticates to FastAPI.
 
 set -e
 
@@ -28,6 +34,10 @@ DATABASE_URL="${DATABASE_URL:?Set DATABASE_URL (Postgres URI for drizzle)}"
 MONGODB_URI="${MONGODB_URI:?Set MONGODB_URI (Mongo URI)}"
 EMERGENT_LLM_KEY="${EMERGENT_LLM_KEY:?Set EMERGENT_LLM_KEY}"
 SECRET_KEY="${SECRET_KEY:-$(openssl rand -hex 32)}"
+SESSION_SECRET="${SESSION_SECRET:-$(openssl rand -hex 32)}"
+UPLOAD_SERVICE_TOKEN="${UPLOAD_SERVICE_TOKEN:-$(openssl rand -hex 32)}"
+ZOHO_EMAIL="${ZOHO_EMAIL:-}"
+ZOHO_APP_PASSWORD="${ZOHO_APP_PASSWORD:-}"
 
 echo "==========================================================="
 echo "  MetryxOne GCP Deploy"
@@ -94,6 +104,8 @@ for entry in \
   "DATABASE_URL=$DATABASE_URL" \
   "MONGODB_URI=$MONGODB_URI" \
   "SECRET_KEY=$SECRET_KEY" \
+  "SESSION_SECRET=$SESSION_SECRET" \
+  "UPLOAD_SERVICE_TOKEN=$UPLOAD_SERVICE_TOKEN" \
   "EMERGENT_LLM_KEY=$EMERGENT_LLM_KEY"; do
   KEY="${entry%%=*}"; VAL="${entry#*=}"
   gcloud secrets create "$KEY" --replication-policy=automatic 2>/dev/null || true
@@ -101,13 +113,29 @@ for entry in \
   echo "   ✓ $KEY"
 done
 
+# Zoho super-admin 2FA email — pass through ONLY when provided. Without it,
+# super-admin login is impossible in prod, so warn loudly rather than silently skip.
+if [ -n "$ZOHO_EMAIL" ] && [ -n "$ZOHO_APP_PASSWORD" ]; then
+  for entry in "ZOHO_EMAIL=$ZOHO_EMAIL" "ZOHO_APP_PASSWORD=$ZOHO_APP_PASSWORD"; do
+    KEY="${entry%%=*}"; VAL="${entry#*=}"
+    gcloud secrets create "$KEY" --replication-policy=automatic 2>/dev/null || true
+    echo -n "$VAL" | gcloud secrets versions add "$KEY" --data-file=- >/dev/null
+    echo "   ✓ $KEY"
+  done
+  ZOHO_SECRETS=",ZOHO_EMAIL=ZOHO_EMAIL:latest,ZOHO_APP_PASSWORD=ZOHO_APP_PASSWORD:latest"
+else
+  ZOHO_SECRETS=""
+  echo "   ⚠ ZOHO_EMAIL/ZOHO_APP_PASSWORD not provided — super-admin 2FA email will NOT work in prod (super-admin login impossible until set)."
+fi
+
 echo "→ [4/8] Deploying FastAPI bulk-upload service..."
 cd /app/backend-main
 gcloud run deploy metryxone-bulk-upload \
   --source . --region "$REGION" --port 8080 \
   --memory 512Mi --cpu 1 --min-instances 0 --max-instances 3 \
   --allow-unauthenticated --quiet \
-  --set-secrets "DATABASE_URL=DATABASE_URL:latest,EMERGENT_LLM_KEY=EMERGENT_LLM_KEY:latest"
+  --set-env-vars "ENV=production,NODE_ENV=production" \
+  --set-secrets "DATABASE_URL=DATABASE_URL:latest,EMERGENT_LLM_KEY=EMERGENT_LLM_KEY:latest,UPLOAD_SERVICE_TOKEN=UPLOAD_SERVICE_TOKEN:latest"
 
 PY_URL=$(gcloud run services describe metryxone-bulk-upload --region "$REGION" --format='value(status.url)')
 echo "   ✓ FastAPI URL: $PY_URL"
@@ -119,7 +147,7 @@ gcloud run deploy metryxone-api \
   --memory 512Mi --cpu 1 --min-instances 0 --max-instances 5 \
   --allow-unauthenticated --quiet \
   --set-env-vars "NODE_ENV=production,FASTAPI_URL=$PY_URL,OPENAI_BASE_URL=$PY_URL/llm/v1,AI_INTEGRATIONS_OPENAI_BASE_URL=$PY_URL/llm/v1" \
-  --set-secrets "DATABASE_URL=DATABASE_URL:latest,MONGODB_URI=MONGODB_URI:latest,SECRET_KEY=SECRET_KEY:latest,OPENAI_API_KEY=EMERGENT_LLM_KEY:latest,AI_INTEGRATIONS_OPENAI_API_KEY=EMERGENT_LLM_KEY:latest,EMERGENT_LLM_KEY=EMERGENT_LLM_KEY:latest"
+  --set-secrets "DATABASE_URL=DATABASE_URL:latest,MONGODB_URI=MONGODB_URI:latest,SECRET_KEY=SECRET_KEY:latest,SESSION_SECRET=SESSION_SECRET:latest,UPLOAD_SERVICE_TOKEN=UPLOAD_SERVICE_TOKEN:latest,OPENAI_API_KEY=EMERGENT_LLM_KEY:latest,AI_INTEGRATIONS_OPENAI_API_KEY=EMERGENT_LLM_KEY:latest,EMERGENT_LLM_KEY=EMERGENT_LLM_KEY:latest${ZOHO_SECRETS}"
 
 API_URL=$(gcloud run services describe metryxone-api --region "$REGION" --format='value(status.url)')
 echo "   ✓ Node API URL: $API_URL"

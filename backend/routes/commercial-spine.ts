@@ -40,6 +40,31 @@ import {
   verifyWebhookSignature, createRazorpayPlan, createRazorpaySubscription, createRazorpayPaymentLink,
   createRazorpayRefund,
 } from '../services/commercial/razorpay-client';
+import { z } from 'zod';
+import { validate, idParam } from '../lib/validate';
+
+// ── Input-validation schemas (finding #6). Each schema requires ONLY the fields
+//    the handler itself already requires (mirroring its `asStr`/`!x` 400 checks),
+//    so valid requests stay byte-identical. Optional / value-checked / coerced
+//    fields (asInt amounts, COALESCE patch bodies) are left to the handler.
+//    Webhooks are intentionally NOT body-gated (signature-protected, Razorpay
+//    controls the payload shape). ────────────────────────────────────────────
+const reqStr = (max: number) => z.string().trim().min(1).max(max);
+const reqEmail = z.string().trim().email().max(320);
+const codeName = z.object({ code: reqStr(128), name: reqStr(256) });
+const VS = {
+  productCreate: codeName,
+  planCreate: z.object({ product_id: reqStr(256), code: reqStr(128), name: reqStr(256) }),
+  bundleCreate: codeName,
+  promotionCreate: codeName,
+  couponCreate: z.object({ code: reqStr(128) }),
+  discountRuleCreate: codeName,
+  customerCreate: z.object({ email: reqEmail }),
+  razorpayPlan: z.object({ plan_id: reqStr(256) }),
+  razorpaySubscribe: z.object({ email: reqEmail, plan_id: reqStr(256) }),
+  razorpayVerify: z.object({ razorpay_payment_id: reqStr(256), razorpay_signature: reqStr(512) }),
+  razorpayRefund: z.object({ razorpay_payment_id: reqStr(256) }),
+};
 
 const INTERVALS: BillingInterval[] = ['one_time', 'trial', 'monthly', 'quarterly', 'annual'];
 const anyCommercialFlag = () =>
@@ -93,7 +118,7 @@ export function registerCommercialSpineRoutes(
       res.json({ rows });
     } catch (e) { next(e); }
   });
-  app.post('/api/commercial/admin/catalog/products', catalogGate, ...admin, async (req, res, next) => {
+  app.post('/api/commercial/admin/catalog/products', catalogGate, ...admin, validate({ body: VS.productCreate }), async (req, res, next) => {
     try {
       const b = req.body || {};
       const code = asStr(b.code); const name = asStr(b.name);
@@ -146,7 +171,7 @@ export function registerCommercialSpineRoutes(
       res.json({ rows });
     } catch (e) { next(e); }
   });
-  app.post('/api/commercial/admin/catalog/plans', catalogGate, ...admin, async (req, res, next) => {
+  app.post('/api/commercial/admin/catalog/plans', catalogGate, ...admin, validate({ body: VS.planCreate }), async (req, res, next) => {
     try {
       const b = req.body || {};
       const productId = asStr(b.product_id); const code = asStr(b.code); const name = asStr(b.name);
@@ -211,7 +236,7 @@ export function registerCommercialSpineRoutes(
       res.json({ rows: bundles.map((b) => ({ ...b, items: byBundle[b.id] || [] })) });
     } catch (e) { next(e); }
   });
-  app.post('/api/commercial/admin/catalog/bundles', catalogGate, ...admin, async (req, res, next) => {
+  app.post('/api/commercial/admin/catalog/bundles', catalogGate, ...admin, validate({ body: VS.bundleCreate }), async (req, res, next) => {
     const client = await pool.connect();
     try {
       const b = req.body || {};
@@ -274,7 +299,7 @@ export function registerCommercialSpineRoutes(
     try { res.json({ rows: (await pool.query(`SELECT * FROM comm_promotions ORDER BY created_at DESC`)).rows }); }
     catch (e) { next(e); }
   });
-  app.post('/api/commercial/admin/catalog/promotions', catalogGate, ...admin, async (req, res, next) => {
+  app.post('/api/commercial/admin/catalog/promotions', catalogGate, ...admin, validate({ body: VS.promotionCreate }), async (req, res, next) => {
     try {
       const b = req.body || {};
       const code = asStr(b.code); const name = asStr(b.name);
@@ -296,7 +321,7 @@ export function registerCommercialSpineRoutes(
     try { res.json({ rows: (await pool.query(`SELECT * FROM comm_coupons ORDER BY created_at DESC`)).rows }); }
     catch (e) { next(e); }
   });
-  app.post('/api/commercial/admin/catalog/coupons', catalogGate, ...admin, async (req, res, next) => {
+  app.post('/api/commercial/admin/catalog/coupons', catalogGate, ...admin, validate({ body: VS.couponCreate }), async (req, res, next) => {
     try {
       const b = req.body || {};
       const code = asStr(b.code);
@@ -359,7 +384,7 @@ export function registerCommercialSpineRoutes(
     try { res.json({ rows: (await pool.query(`SELECT * FROM comm_discount_rules ORDER BY priority DESC, name`)).rows }); }
     catch (e) { next(e); }
   });
-  app.post('/api/commercial/admin/catalog/discount-rules', catalogGate, ...admin, async (req, res, next) => {
+  app.post('/api/commercial/admin/catalog/discount-rules', catalogGate, ...admin, validate({ body: VS.discountRuleCreate }), async (req, res, next) => {
     try {
       const b = req.body || {};
       const code = asStr(b.code); const name = asStr(b.name);
@@ -423,7 +448,7 @@ export function registerCommercialSpineRoutes(
       res.json({ rows });
     } catch (e) { next(e); }
   });
-  app.post('/api/commercial/admin/customers', subsGate, ...admin, async (req, res, next) => {
+  app.post('/api/commercial/admin/customers', subsGate, ...admin, validate({ body: VS.customerCreate }), async (req, res, next) => {
     try {
       const b = req.body || {};
       const email = asStr(b.email);
@@ -627,7 +652,7 @@ export function registerCommercialSpineRoutes(
     path: string,
     fn: (id: string, body: any) => Promise<unknown | null>,
   ) => {
-    app.post(`/api/commercial/admin/subscriptions/:id/${path}`, subsGate, ...admin, async (req, res, next) => {
+    app.post(`/api/commercial/admin/subscriptions/:id/${path}`, subsGate, ...admin, validate({ params: idParam }), async (req, res, next) => {
       try {
         const idemKey = asStr(req.get('Idempotency-Key'));
         if (idemKey) {
@@ -665,7 +690,7 @@ export function registerCommercialSpineRoutes(
   // ════════════════════════════════════════════════════════════════════════════════════════
 
   // Create a Razorpay plan for an existing comm_plan (admin). Demo fallback when keyless.
-  app.post('/api/commercial/razorpay/plan', rzpGate, ...admin, async (req, res, next) => {
+  app.post('/api/commercial/razorpay/plan', rzpGate, ...admin, validate({ body: VS.razorpayPlan }), async (req, res, next) => {
     try {
       const planId = asStr((req.body || {}).plan_id);
       if (!planId) return res.status(400).json({ error: 'plan_id is required' });
@@ -683,7 +708,7 @@ export function registerCommercialSpineRoutes(
   });
 
   // Create a recurring subscription. Links/creates the comm_subscription locally.
-  app.post('/api/commercial/razorpay/subscribe', rzpGate, async (req, res, next) => {
+  app.post('/api/commercial/razorpay/subscribe', rzpGate, validate({ body: VS.razorpaySubscribe }), async (req, res, next) => {
     try {
       const b = req.body || {};
       const email = asStr(b.email); const planId = asStr(b.plan_id);
@@ -738,7 +763,7 @@ export function registerCommercialSpineRoutes(
   });
 
   // Idempotent verify — exactly-once via comm_idempotency_keys keyed on the order id.
-  app.post('/api/commercial/razorpay/verify', rzpGate, async (req, res, next) => {
+  app.post('/api/commercial/razorpay/verify', rzpGate, validate({ body: VS.razorpayVerify }), async (req, res, next) => {
     try {
       const b = req.body || {};
       const orderId = asStr(b.razorpay_order_id);
@@ -846,7 +871,7 @@ export function registerCommercialSpineRoutes(
   });
 
   // Refund a captured payment (admin).
-  app.post('/api/commercial/razorpay/refund', rzpGate, ...admin, async (req, res, next) => {
+  app.post('/api/commercial/razorpay/refund', rzpGate, ...admin, validate({ body: VS.razorpayRefund }), async (req, res, next) => {
     try {
       const b = req.body || {};
       const paymentId = asStr(b.razorpay_payment_id);

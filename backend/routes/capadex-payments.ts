@@ -11,8 +11,41 @@
 import type { Express, Request, Response, NextFunction } from 'express';
 import type { Pool } from 'pg';
 import { createHmac } from 'crypto';
+import { z } from 'zod';
+import { validate } from '../lib/validate';
 import { sendPaymentConfirmationUser, sendPaymentConfirmationAdmin } from '../email';
 import { sendWhatsAppNotification } from '../services/whatsapp';
+
+// ── Input-validation schemas (finding #6). Required fields mirror what each
+//    handler already requires; optional fields stay optional/nullable so valid
+//    requests remain byte-identical. ──────────────────────────────────────────
+const idLike = z.union([z.string().trim().min(1).max(256), z.number()]);
+const optStr = (max: number) => z.string().max(max).optional().nullable();
+
+const createOrderBody = z.object({
+  stage_code: z.string().trim().min(1).max(64),
+  email: z.string().trim().email().max(320),
+  session_id: optStr(256),
+  participant_name: optStr(256),
+  concern_name: optStr(512),
+});
+
+const verifyBody = z.object({
+  razorpay_order_id: z.string().trim().min(1).max(256),
+  razorpay_payment_id: z.string().trim().min(1).max(256),
+  razorpay_signature: z.string().trim().min(1).max(512),
+  payment_id: idLike.optional().nullable(),
+  email: optStr(320),
+  participant_name: optStr(256),
+  concern_name: optStr(512),
+  stage_code: optStr(64),
+  phone: optStr(32),
+});
+
+const refundBody = z.object({
+  payment_id: idLike,
+  reason: optStr(1000),
+});
 
 const STAGE_PRICES: Record<string, number> = {
   CAP_INS: 499,
@@ -51,7 +84,7 @@ function requireSuperAdminLocal(req: Request, res: Response, next: NextFunction)
 export function registerCapadexPaymentRoutes(app: Express, pool: Pool) {
 
   // ── POST /api/capadex/payment/create-order ──────────────────────────────
-  app.post('/api/capadex/payment/create-order', async (req: Request, res: Response, next: NextFunction) => {
+  app.post('/api/capadex/payment/create-order', validate({ body: createOrderBody }), async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { stage_code, session_id, email, participant_name, concern_name } = req.body || {};
 
@@ -147,7 +180,7 @@ export function registerCapadexPaymentRoutes(app: Express, pool: Pool) {
   });
 
   // ── POST /api/capadex/payment/verify ────────────────────────────────────
-  app.post('/api/capadex/payment/verify', async (req: Request, res: Response, next: NextFunction) => {
+  app.post('/api/capadex/payment/verify', validate({ body: verifyBody }), async (req: Request, res: Response, next: NextFunction) => {
     try {
       const {
         razorpay_order_id,
@@ -408,7 +441,7 @@ export function registerCapadexPaymentRoutes(app: Express, pool: Pool) {
   // ── POST /api/capadex/payment/refund ─────────────────────────────────────
   // Super-admin only. Initiates a full refund for a paid CAPADEX payment.
   // Demo orders (DEMO_ prefix) are always rejected — no real Razorpay charge exists.
-  app.post('/api/capadex/payment/refund', requireAuthLocal, requireSuperAdminLocal, async (req: Request, res: Response, next: NextFunction) => {
+  app.post('/api/capadex/payment/refund', requireAuthLocal, requireSuperAdminLocal, validate({ body: refundBody }), async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { payment_id, reason } = req.body || {};
       if (!payment_id) return res.status(400).json({ error: 'payment_id is required' });

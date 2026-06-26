@@ -3,7 +3,7 @@ name: Performance benchmarking on this repl
 description: How to benchmark this stack honestly, plus the established perf baselines and the single-process ceiling.
 ---
 
-# Performance benchmarking (PART 6 baseline)
+# Performance benchmarking
 
 **Why:** the project owner's rule is honesty over optimism; a perf report must label what is
 representative vs not, and never fabricate gated-flow timings.
@@ -19,7 +19,7 @@ representative vs not, and never fabricate gated-flow timings.
   parse the plain-text `Execution Time:` line; `executeSql` truncates/reformats `FORMAT JSON`.
 - **Row counts**: `pg_stat.n_live_tup` is STALE (big tables show 0); always real `COUNT(*)`.
 
-## Established baselines (June 2026, 2 vCPU / 16GB)
+## Established baselines (measured 2026-06, 2 vCPU / 16GB)
 - API warm single-client p95 **< 6 ms** for reachable reads; auth-reject (401) ~3 ms p50.
 - DB: full `count(*)` of the 89k-row largest table (`mobility_transferability_maps`) **~8.7 ms**;
   indexed/limited reads sub-ms. One-off cold first-touch can spike (~700 ms once) → pre-warm.

@@ -1,0 +1,205 @@
+{
+  "version": "400.0.0",
+  "evidence": {
+    "generatedAt": "2026-06-26T03:58:51.665Z",
+    "db": {
+      "users_total": 4,
+      "users_demo": 3,
+      "employer_candidates_total": 41,
+      "employer_candidates_nondemo": 0,
+      "career_seeker_profiles": 2,
+      "capadex_sessions": 0,
+      "capadex_responses": 0,
+      "lbi_sessions": 0,
+      "student_assessment_sessions": 0,
+      "subscription_packages": 0,
+      "capadex_payments_paid": 0,
+      "wc3_outcome_state": 0,
+      "validation_loop_outcomes": 0,
+      "validation_loop_outcomes_real": 0,
+      "onto_competencies": 422,
+      "onto_indicators": 66,
+      "comps_with_indicator": 13,
+      "cqt_total": 2665,
+      "cqt_approved": 120,
+      "total_tables": 1397
+    },
+    "derived": {
+      "users_real": 1,
+      "real_assessment_activity": 0,
+      "knowledge_coverage_pct": 3.1,
+      "assessment_approval_pct": 28.4
+    },
+    "env": {
+      "secretsPresent": {
+        "DATABASE_URL": true,
+        "OPENAI_API_KEY": false,
+        "ZOHO_EMAIL": false,
+        "ZOHO_APP_PASSWORD": false,
+        "MONGODB_URI": false
+      },
+      "secretsAbsent": [
+        "OPENAI_API_KEY",
+        "ZOHO_EMAIL",
+        "ZOHO_APP_PASSWORD",
+        "MONGODB_URI"
+      ]
+    },
+    "workflow": {
+      "ffEnabledCount": 60,
+      "wc3OutcomeCrosswalk": false
+    },
+    "build": {
+      "frontendArtifact": true,
+      "frontendArtifactBuiltAt": "2026-06-26T03:32:26.935Z"
+    },
+    "priorAudits": {
+      "launch-readiness": true,
+      "mx-301j": true,
+      "wc-c10": true,
+      "wc-c8b": true,
+      "mx-301e": true
+    },
+    "dbConnects": true
+  },
+  "verdict": {
+    "lenses": [
+      {
+        "id": "architecture",
+        "name": "Architecture / Platform Implementation (structural)",
+        "status": "READY",
+        "rationale": "STRUCTURAL axis only: the machinery is extensive and the data layer is reachable. This is independent of — and must NOT be read as — launch readiness; the overall verdict and the functional/data axes are reported separately.",
+        "evidence": [
+          "public tables = 1397",
+          "DB connects = true",
+          "prior structural cert (mx-301j) present = true"
+        ],
+        "blockers": []
+      },
+      {
+        "id": "qa",
+        "name": "QA / Functional Readiness",
+        "status": "CONDITIONAL",
+        "rationale": "App builds and serves (mechanically functional), but end-to-end intelligence flows are UNPROVEN with real data: there is no completed assessment activity to exercise the runtime.",
+        "evidence": [
+          "frontend build artifact present = true (built 2026-06-26T03:32:26.935Z)",
+          "real assessment activity (sessions+responses) = 0",
+          "capadex_sessions = 0, capadex_responses = 0"
+        ],
+        "blockers": [
+          "Zero real assessment runs — functional E2E behaviour is asserted by code, not demonstrated by usage."
+        ]
+      },
+      {
+        "id": "product",
+        "name": "Product / Adoption & Commercial Activation",
+        "status": "NOT_READY",
+        "rationale": "No real adoption and no commercial substrate. A SaaS product cannot be certified launch-ready for public use with no buyable packages and no transactions.",
+        "evidence": [
+          "real (non-demo) users = 1 of 4 total",
+          "non-demo employer candidates = 0 of 41 total (rest are demo seeds)",
+          "subscription packages = 0",
+          "paid transactions = 0"
+        ],
+        "blockers": [
+          "subscription_packages is empty — nothing is purchasable.",
+          "Zero paid transactions — commercial path is unexercised end-to-end.",
+          "Real (non-demo) user count is below the adoption floor — adoption is unproven."
+        ]
+      },
+      {
+        "id": "security",
+        "name": "Security",
+        "status": "CONDITIONAL",
+        "rationale": "Auth/MFA hardening mechanism is certified (super-admin login always 2FA-gated, dev bypass removed). Production secret/email-delivery channel is NOT configured, so the MFA delivery path cannot complete in production.",
+        "evidence": [
+          "prior hardening cert present (wc-c10/wc-c8b) = true",
+          "ZOHO email channel configured = false",
+          "secrets absent = OPENAI_API_KEY, ZOHO_EMAIL, ZOHO_APP_PASSWORD, MONGODB_URI"
+        ],
+        "blockers": [
+          "ZOHO_EMAIL / ZOHO_APP_PASSWORD absent — MFA codes cannot be emailed in production (login would be unrecoverable for real users)."
+        ]
+      },
+      {
+        "id": "ux",
+        "name": "UX / UI Quality",
+        "status": "CONDITIONAL",
+        "rationale": "A static UI certification scan exists (design tokens / a11y / state screens). It is a structural scan, not a live human usability or full accessibility audit, and predates a real-traffic UX validation.",
+        "evidence": [
+          "UI scan deliverable present (mx-301e) = true"
+        ],
+        "blockers": [
+          "No live usability/accessibility validation under real traffic (static scan only)."
+        ]
+      },
+      {
+        "id": "operations",
+        "name": "Operations / Deployment",
+        "status": "NOT_READY",
+        "rationale": "The platform is not deployed to a production environment and required production secrets are missing. Without a deployment and configured secrets there is nothing to launch and no production observability.",
+        "evidence": [
+          "production deployment exists = false",
+          "required prod secrets present = false",
+          "missing secrets = OPENAI_API_KEY, ZOHO_EMAIL, ZOHO_APP_PASSWORD, MONGODB_URI",
+          "feature flags enabled in live workflow = 60",
+          "FF_WC3_OUTCOME_CROSSWALK enabled = false"
+        ],
+        "blockers": [
+          "No production deployment.",
+          "Missing production secrets: OPENAI_API_KEY, ZOHO_EMAIL, ZOHO_APP_PASSWORD, MONGODB_URI."
+        ]
+      },
+      {
+        "id": "knowledge",
+        "name": "Knowledge Completion (content depth)",
+        "status": "NOT_READY",
+        "rationale": "Competency genome breadth exists, but behavioural-indicator content depth is thin. Requires an authoring source (OPENAI_API_KEY or SME) — no machine source means it cannot be honestly fabricated.",
+        "evidence": [
+          "competencies with ≥1 indicator = 13 of 422 (3.1%)",
+          "total indicators authored = 66",
+          "OPENAI_API_KEY present = false"
+        ],
+        "blockers": [
+          "Content depth far below launch threshold; authoring source absent."
+        ]
+      },
+      {
+        "id": "assessment",
+        "name": "Assessment Quality (approval coverage)",
+        "status": "NOT_READY",
+        "rationale": "Human approval is the only coverage-changing operation; approved coverage is far below the competency genome. No bulk auto-approval (would be fabrication).",
+        "evidence": [
+          "approved templates = 120 of 2665 total; competencies = 422"
+        ],
+        "blockers": [
+          "Approved question coverage far below competency count."
+        ]
+      },
+      {
+        "id": "outcome",
+        "name": "Outcome Confidence (empirical calibration)",
+        "status": "ABSTAIN",
+        "rationale": "No realized prediction→outcome pairs exist, so empirical accuracy is NOT MEASURABLE (abstains below k_min=30). This is an honest absence, not a 0% score.",
+        "evidence": [
+          "realized non-demo outcome records = 0 (k_min = 30)",
+          "wc3_outcome_state rows = 0",
+          "FF_WC3_OUTCOME_CROSSWALK enabled = false"
+        ],
+        "blockers": [
+          "No realized outcomes — outcome chain is empty (crosswalk flag off AND behavioural spine unpopulated)."
+        ]
+      }
+    ],
+    "overall": "NOT_READY",
+    "conditionalSurface": "A narrowly-scoped **Free Assessment Beta** (CAPADEX intro → assessment → developmental report) is the only honest CONDITIONAL-launch candidate: it depends on the assessment knowledge bank (present) and NOT on the commercial substrate, realized outcomes, or employer ecosystem (all empty). It would still require: (a) a production deployment, (b) ZOHO email configured so account/MFA flows complete, and (c) a content-depth pass so reports read as authored rather than thin.",
+    "goPath": [
+      "Deploy to a production environment and configure all required secrets (OPENAI_API_KEY, ZOHO_EMAIL, ZOHO_APP_PASSWORD, MONGODB_URI).",
+      "Seed and actually sell the commercial substrate: subscription_packages populated, at least one real paid transaction exercised end-to-end.",
+      "Author behavioural-indicator content depth across the competency genome (OPENAI_API_KEY or SME) — lift Knowledge Completion from ~3% toward launch threshold.",
+      "Drive real assessment usage so the intelligence runtime is exercised on live data (sessions + responses > 0).",
+      "Accumulate ≥30 realized prediction→outcome pairs per outcome type to lift Outcome Confidence out of ABSTAIN (enable FF_WC3_OUTCOME_CROSSWALK and populate the behavioural spine).",
+      "Run a live usability + accessibility validation under real traffic (beyond the static UI scan)."
+    ]
+  }
+}

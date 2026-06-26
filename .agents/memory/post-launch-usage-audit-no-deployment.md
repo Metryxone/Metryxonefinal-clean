@@ -28,6 +28,15 @@ fabrication.
 - Separate Coverage (real usage = 0) from the one fair positive: the measurement **pipeline**
   is sound if the queries actually ran against the live schema. Don't overclaim "ran cleanly"
   if helpers swallow errors (see below).
+- In-process deployment detection (when an audit script runs INSIDE the runtime, not via the
+  prod-SQL probe): derive "deployed" from `process.env.REPLIT_DEPLOYMENT || REPLIT_DEPLOYMENT_ID`
+  — these are set ONLY in a deployed runtime and absent in the dev workspace. Never hardcode
+  `const deployed = false` (reads as a fabricated failure even when true); a reviewer will reject it.
+- Verdict gates must be null-AWARE, not `?? 0`: a missing table/probe returning null must map to
+  ABSTAIN ("not measurable"), NOT to a measured-0 failure. Use a gate that returns true/false/null
+  and let null short-circuit to ABSTAIN — coercing null→0 fabricates a measured shortfall and
+  violates the null≠0 doctrine. (For a read-only cert, also enforce read-only at the connection:
+  `new Pool({ options: '-c default_transaction_read_only=on' })`.)
 - Frozen-evidence script traps (an audit script that hardcodes `productionDbExists=false`):
   (1) add a STALENESS / re-run guard — a post-deployment re-run must NOT silently regenerate a
   confident "NO DATA" verdict; (2) **log** query errors, never swallow silently, so an empty

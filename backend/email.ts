@@ -1430,7 +1430,7 @@ export async function sendCrisisEscalationAlert(escalation: {
   <p style="text-align:center;color:#c4cad4;font-size:10px;margin-top:12px;">MetryxOne · RIE Crisis Alert · Escalation ID: ${escalation.id?.slice(0,8)}</p>
 </div>`,
     });
-    console.log(`[rie] Crisis escalation email sent to ${adminEmail} for user ${escalation.user_email}`);
+    console.log(`[rie] Crisis escalation email sent (escalation ${escalation.id?.slice(0, 8)}, severity ${escalation.severity})`);
     return true;
   } catch (error: any) {
     console.error('[rie] Failed to send crisis alert email:', error?.message || error);

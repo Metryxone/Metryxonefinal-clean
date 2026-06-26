@@ -10,7 +10,16 @@ description: The Node↔FastAPI env-var contract, the SESSION_SECRET vs SECRET_K
 dev boot is byte-identical (no output). Two tiers:
 - FATAL `process.exit(1)`: `SESSION_SECRET`, `DATABASE_URL` (app cannot run securely/at all).
 - Loud WARN (never blocks): `ZOHO_EMAIL`+`ZOHO_APP_PASSWORD`, `FASTAPI_URL` (localhost/unset),
-  `UPLOAD_SERVICE_TOKEN` (unset/dev-placeholder), `OPENAI_API_KEY`.
+  `UPLOAD_SERVICE_TOKEN` (unset/dev-placeholder), `OPENAI_API_KEY`, `MONGODB_URI`
+  (degrade only — `MONGO_REQUIRED` defaults false).
+
+**Validation traps (don't regress):**
+- `SESSION_SECRET` validity = **trim + non-empty + not a known placeholder**. A naive `!!value`
+  passes a whitespace-only `'   '` secret → must `.trim()` BEFORE the length/placeholder test.
+- **No localhost guard on `DATABASE_URL`** by design: Cloud SQL Auth Proxy legitimately uses
+  `127.0.0.1`, so a localhost-reject rule is a false positive that blocks a valid prod boot.
+- Sole export is `assertEnvPreflight()` (calls `process.exit`); no pure evaluator → test by
+  invoking under tsx with env set and checking the exit code (whitespace→1, valid→0).
 
 **Why WARN, not FATAL, for Zoho/upload/AI:** those only degrade an admin-only or
 fail-soft feature. Aborting the whole platform boot (taking end-user traffic offline)
@@ -33,6 +42,18 @@ A "launch blocker" (checklist gate) is NOT the same as a "boot blocker".
 - FastAPI only enforces the token when it thinks it is in prod: `security.py` checks
   `NODE_ENV` **or** `ENV` == `production`. The deploy now sets `ENV=production,NODE_ENV=production`
   on the FastAPI service, otherwise enforcement silently stays off.
+
+## Deploy-time readiness gate (`scripts/deploy-gcp.sh`)
+- `validate_inputs()` collects **ALL** missing required vars + format/placeholder problems and
+  reports them at once (not one-at-a-time `${VAR:?}` aborts).
+- `--check` / `--dry-run` / `CHECK_ONLY=1` = validate (and audit Secret Manager if gcloud present)
+  then exit 0 **without deploying**.
+- **Placeholder regex must be anchored** to template tokens that never occur in real credentials
+  (`<...>`, `changeme`, `replace_me`, `xxxxx`, `placeholder`). Do NOT match loose substrings like
+  `your-` — a real password can contain them, and that wrongly blocks a valid deploy. Verify with a
+  valid input whose password contains `your-` → must exit 0.
+- Has `set -e` + `set -o pipefail`. `set -u` deliberately NOT added — retrofitting it onto the large
+  existing script risks unbound-var regressions that block valid deploys.
 
 ## Where vars are documented
 `docs/ENVIRONMENT.md` is the authoritative reference (required/recommended/optional, per

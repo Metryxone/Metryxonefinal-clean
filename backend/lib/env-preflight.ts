@@ -13,6 +13,19 @@
 
 const DEV_UPLOAD_TOKEN = "dev-only-upload-token-do-not-use-in-production";
 
+// Known placeholder / dev SESSION_SECRET values. A var that is "set" to one of
+// these is NOT really configured — treat it as missing (present-but-broken).
+const SESSION_SECRET_PLACEHOLDERS = new Set([
+  "edupsych-secret-key-change-in-production",
+  "change-me",
+  "changeme",
+  "changemeinproduction",
+  "secret",
+  "dev",
+  "development",
+  "your-session-secret",
+]);
+
 type Severity = "fatal" | "warn";
 
 interface EnvCheck {
@@ -30,14 +43,26 @@ export function assertEnvPreflight(env: NodeJS.ProcessEnv = process.env): void {
     {
       name: "SESSION_SECRET",
       severity: "fatal",
-      ok: !!env.SESSION_SECRET,
-      note: "express-session signing key. Missing => insecure/broken sessions. Refusing to start.",
+      ok: (() => {
+        const ss = (env.SESSION_SECRET ?? "").trim();
+        return ss.length > 0 && !SESSION_SECRET_PLACEHOLDERS.has(ss.toLowerCase());
+      })(),
+      note: "express-session signing key. Missing, whitespace-only, or a known placeholder => insecure/broken sessions. Refusing to start.",
     },
     {
       name: "DATABASE_URL",
       severity: "fatal",
       ok: !!env.DATABASE_URL,
       note: "Postgres connection string. Missing => the app cannot function. Refusing to start.",
+    },
+    {
+      name: "MONGODB_URI",
+      severity: "warn",
+      ok: !!env.MONGODB_URI,
+      note:
+        "Mongo connection string. The app continues without it (MONGO_REQUIRED " +
+        "defaults false), but Mongo-backed features degrade. Set in production " +
+        "unless the deployment is intentionally Mongo-less.",
     },
     {
       name: "ZOHO_EMAIL + ZOHO_APP_PASSWORD",

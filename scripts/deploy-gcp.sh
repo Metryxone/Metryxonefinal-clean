@@ -17,6 +17,14 @@
 #   EMERGENT_LLM_KEY=sk-emergent-... \
 #   bash /app/scripts/deploy-gcp.sh
 #
+# Verify readiness WITHOUT deploying (recommended before every prod deploy):
+#   GCP_PROJECT=... DATABASE_URL=... MONGODB_URI=... EMERGENT_LLM_KEY=... \
+#     bash /app/scripts/deploy-gcp.sh --check
+#   (or CHECK_ONLY=1 bash /app/scripts/deploy-gcp.sh)
+#   --check validates every required input is present + well-formed and, when
+#   gcloud is available, audits which secrets already exist in Secret Manager.
+#   It creates/deploys NOTHING.
+#
 # Required envs: GCP_PROJECT, DATABASE_URL, MONGODB_URI, EMERGENT_LLM_KEY
 # Strongly recommended: ZOHO_EMAIL, ZOHO_APP_PASSWORD (super-admin 2FA email;
 #   without them super-admin login is IMPOSSIBLE in prod — passed through if set).
@@ -27,17 +35,100 @@
 #   Run services so the upload proxy authenticates to FastAPI.
 
 set -e
+set -o pipefail
+
+# ── args: support `--check` / `--dry-run` (alias of CHECK_ONLY=1) ───────────────
+CHECK_ONLY="${CHECK_ONLY:-}"
+for arg in "$@"; do
+  case "$arg" in
+    --check|--dry-run) CHECK_ONLY=1 ;;
+    -h|--help) sed -n '2,40p' "$0"; exit 0 ;;
+    *) echo "Unknown argument: $arg (use --check or --help)"; exit 2 ;;
+  esac
+done
 
 REGION="${REGION:-asia-south1}"
-GCP_PROJECT="${GCP_PROJECT:?Set GCP_PROJECT to your Google Cloud project ID}"
-DATABASE_URL="${DATABASE_URL:?Set DATABASE_URL (Postgres URI for drizzle)}"
-MONGODB_URI="${MONGODB_URI:?Set MONGODB_URI (Mongo URI)}"
-EMERGENT_LLM_KEY="${EMERGENT_LLM_KEY:?Set EMERGENT_LLM_KEY}"
+GCP_PROJECT="${GCP_PROJECT:-}"
+DATABASE_URL="${DATABASE_URL:-}"
+MONGODB_URI="${MONGODB_URI:-}"
+EMERGENT_LLM_KEY="${EMERGENT_LLM_KEY:-}"
 SECRET_KEY="${SECRET_KEY:-$(openssl rand -hex 32)}"
 SESSION_SECRET="${SESSION_SECRET:-$(openssl rand -hex 32)}"
 UPLOAD_SERVICE_TOKEN="${UPLOAD_SERVICE_TOKEN:-$(openssl rand -hex 32)}"
 ZOHO_EMAIL="${ZOHO_EMAIL:-}"
 ZOHO_APP_PASSWORD="${ZOHO_APP_PASSWORD:-}"
+
+# ── Preflight: validate ALL required inputs up front and report the COMPLETE ────
+# list at once (instead of aborting one var at a time), plus format/placeholder
+# sanity. This is the deploy-time mirror of backend/lib/env-preflight.ts.
+validate_inputs() {
+  local missing=() badfmt=()
+
+  [ -n "$GCP_PROJECT" ]      || missing+=("GCP_PROJECT (Google Cloud project ID)")
+  [ -n "$DATABASE_URL" ]     || missing+=("DATABASE_URL (Postgres URI)")
+  [ -n "$MONGODB_URI" ]      || missing+=("MONGODB_URI (Mongo URI)")
+  [ -n "$EMERGENT_LLM_KEY" ] || missing+=("EMERGENT_LLM_KEY (LLM key)")
+
+  if [ -n "$DATABASE_URL" ] && ! printf '%s' "$DATABASE_URL" | grep -qiE '^postgres(ql)?://'; then
+    badfmt+=("DATABASE_URL must start with postgres:// or postgresql://")
+  fi
+  if [ -n "$MONGODB_URI" ] && ! printf '%s' "$MONGODB_URI" | grep -qiE '^mongodb(\+srv)?://'; then
+    badfmt+=("MONGODB_URI must start with mongodb:// or mongodb+srv://")
+  fi
+  for pair in "DATABASE_URL=$DATABASE_URL" "MONGODB_URI=$MONGODB_URI" "EMERGENT_LLM_KEY=$EMERGENT_LLM_KEY"; do
+    local k="${pair%%=*}" v="${pair#*=}"
+    # Anchored template/placeholder tokens that never occur in real credentials.
+    # (Deliberately NOT matching loose substrings like "your-", which can legitimately
+    # appear inside a real password and would wrongly block a valid deploy.)
+    if [ -n "$v" ] && printf '%s' "$v" | grep -qiE '(<[^>]+>|changeme|change_me|change-me|replace_me|replace-me|placeholder|xxxxx)'; then
+      badfmt+=("$k looks like a placeholder, not a real value")
+    fi
+  done
+
+  if [ "${#missing[@]}" -gt 0 ] || [ "${#badfmt[@]}" -gt 0 ]; then
+    echo "✗ Production secret preflight FAILED — nothing was deployed:"
+    for m in "${missing[@]}"; do echo "   • MISSING:  $m"; done
+    for b in "${badfmt[@]}"; do echo "   • INVALID:  $b"; done
+    echo
+    echo "Set the variables above and re-run. To verify WITHOUT deploying:"
+    echo "   CHECK_ONLY=1 bash scripts/deploy-gcp.sh"
+    exit 1
+  fi
+
+  echo "✓ Required inputs present & well-formed: GCP_PROJECT, DATABASE_URL, MONGODB_URI, EMERGENT_LLM_KEY"
+  echo "✓ Auto-generated where unset: SESSION_SECRET, UPLOAD_SERVICE_TOKEN, SECRET_KEY"
+  if [ -n "$ZOHO_EMAIL" ] && [ -n "$ZOHO_APP_PASSWORD" ]; then
+    echo "✓ ZOHO_EMAIL/ZOHO_APP_PASSWORD provided — super-admin 2FA email will work"
+  else
+    echo "⚠ ZOHO_EMAIL/ZOHO_APP_PASSWORD NOT provided — super-admin 2FA email will NOT"
+    echo "  work (super-admin login impossible until set)."
+  fi
+}
+
+validate_inputs
+
+# ── CHECK_ONLY: verify readiness and exit WITHOUT creating/deploying anything ──
+if [ -n "$CHECK_ONLY" ]; then
+  echo
+  echo "CHECK_ONLY mode — no resources were created or deployed."
+  if command -v gcloud >/dev/null 2>&1; then
+    echo "→ Auditing existing secrets in Secret Manager (project: $GCP_PROJECT)..."
+    for KEY in DATABASE_URL MONGODB_URI SECRET_KEY SESSION_SECRET \
+               UPLOAD_SERVICE_TOKEN EMERGENT_LLM_KEY ZOHO_EMAIL ZOHO_APP_PASSWORD; do
+      if gcloud secrets describe "$KEY" --project "$GCP_PROJECT" >/dev/null 2>&1; then
+        echo "   ✓ exists in Secret Manager: $KEY"
+      else
+        echo "   ✗ absent in Secret Manager: $KEY (will be created on real deploy if provided)"
+      fi
+    done
+  else
+    echo "(gcloud not on PATH here — input validation only. Run on a machine with"
+    echo " gcloud + auth to audit Secret Manager contents.)"
+  fi
+  echo
+  echo "✓ Readiness check complete. Re-run without --check to deploy."
+  exit 0
+fi
 
 echo "==========================================================="
 echo "  MetryxOne GCP Deploy"

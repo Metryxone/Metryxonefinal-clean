@@ -1,0 +1,1809 @@
+[
+  {
+    "key": "executive_summary",
+    "report_type": "executive_summary",
+    "title": "Executive Summary",
+    "measurable": true,
+    "generated_content": {
+      "sections": [
+        {
+          "type": "narrative",
+          "key": "executive_summary",
+          "title": "Executive Summary",
+          "text": "Sarah Johnson (Senior Product Manager) has completed an enterprise competency assessment across 5 capability domains. The overall competency score is 77/100 (level 4). Employability Index stands at 81.2/100 (Excellent). Top strength: Communication Readiness (84). Most material development gap: Agile Collaboration. Match to Senior Product Manager is 77.4%."
+        },
+        {
+          "type": "narrative",
+          "key": "candidate_information",
+          "title": "Candidate Information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+        },
+        {
+          "type": "narrative",
+          "key": "assessment_summary",
+          "title": "Assessment Summary",
+          "text": "Headline metrics — Competency Score: 77; Employability Index: 81.2; EI Composite: 81.2; Role Match %: 77.4."
+        },
+        {
+          "type": "chart",
+          "key": "visualizations",
+          "title": "Visualizations",
+          "visualization": {
+            "title": "Headline metrics",
+            "data_source": "composite",
+            "chart_type": "bar"
+          },
+          "resolved_data": {
+            "labels": [
+              "Competency Score",
+              "Employability Index",
+              "EI Composite",
+              "Role Match %"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  77,
+                  81.2,
+                  81.2,
+                  77.4
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "narrative",
+          "key": "interpretation",
+          "title": "Interpretation",
+          "text": "This summary consolidates the candidate’s strongest evidence across competency, employability and role-fit lenses. Each headline metric is explored in its dedicated report; figures are developmental signals, not hiring or promotion decisions."
+        },
+        {
+          "type": "insight",
+          "key": "recommendations",
+          "title": "Recommendations",
+          "insights": [
+            {
+              "text": "Target role: AI Product Manager",
+              "severity": "info"
+            },
+            {
+              "text": "Advance from a Advanced readiness base",
+              "severity": "info"
+            },
+            {
+              "text": "Consider the research industry",
+              "severity": "info"
+            }
+          ]
+        },
+        {
+          "type": "narrative",
+          "key": "confidence_level",
+          "title": "Confidence Level",
+          "text": "Overall confidence: Provisional. Domain-proxy scoring (aggregate domain level, not per-competency). Confidence rises to High once a competency-tagged assessment is scored. Coverage, Confidence and Activation are reported as separate axes and are never combined into a single figure."
+        },
+        {
+          "type": "narrative",
+          "key": "data_source",
+          "title": "Data Source",
+          "text": "Composed from competency-runtime (getProfile), ei-profile-engine, employability-scoring-engine, career-gap-engine, employer-competency-hiring (match) and career-recommendation-aggregator."
+        },
+        {
+          "type": "narrative",
+          "key": "generated_timestamp",
+          "title": "Generated Timestamp",
+          "text": "This report was generated on 26 June 2026 at 02:12 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data."
+        }
+      ],
+      "axes": {
+        "activation": "Engine executed in-process and produced this artifact.",
+        "coverage": {
+          "pct": null,
+          "note": "Assessment completed and scored."
+        },
+        "confidence": {
+          "band": "Provisional",
+          "note": "Domain-proxy scoring (aggregate domain level, not per-competency). Confidence rises to High once a competency-tagged assessment is scored."
+        }
+      },
+      "data_flow": "Composed from competency-runtime (getProfile), ei-profile-engine, employability-scoring-engine, career-gap-engine, employer-competency-hiring (match) and career-recommendation-aggregator."
+    },
+    "metadata": {
+      "pack_version": "1.0.0",
+      "measurable": true,
+      "honest_state": null,
+      "data_source": "Composed from competency-runtime (getProfile), ei-profile-engine, employability-scoring-engine, career-gap-engine, employer-competency-hiring (match) and career-recommendation-aggregator.",
+      "role_title": "Senior Product Manager"
+    }
+  },
+  {
+    "key": "competency_profile",
+    "report_type": "competency_profile",
+    "title": "Competency Profile",
+    "measurable": true,
+    "generated_content": {
+      "sections": [
+        {
+          "type": "narrative",
+          "key": "executive_summary",
+          "title": "Executive Summary",
+          "text": "Sarah Johnson's competency profile spans 5 domains with an overall score of 77/100 (domain_proxy measurement)."
+        },
+        {
+          "type": "narrative",
+          "key": "candidate_information",
+          "title": "Candidate Information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+        },
+        {
+          "type": "narrative",
+          "key": "assessment_summary",
+          "title": "Assessment Summary",
+          "text": "Domain scores — Cognitive Capabilities: 82; Behavioral Capabilities: 78; Interpersonal & Leadership: 84; Functional & Execution: 74; Strategic & Organizational: 69. Overall: 77/100."
+        },
+        {
+          "type": "chart",
+          "key": "visualizations",
+          "title": "Visualizations",
+          "visualization": {
+            "title": "Domain scores",
+            "data_source": "competency",
+            "chart_type": "bar"
+          },
+          "resolved_data": {
+            "labels": [
+              "Cognitive Capabilities",
+              "Behavioral Capabilities",
+              "Interpersonal & Leadership",
+              "Functional & Execution",
+              "Strategic & Organizational"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  82,
+                  78,
+                  84,
+                  74,
+                  69
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "narrative",
+          "key": "interpretation",
+          "title": "Interpretation",
+          "text": "Domain scores describe relative capability strength across the competency genome. Higher domains indicate stronger demonstrated capability; lower domains are development priorities (see the Skill Gap and Action Plan reports)."
+        },
+        {
+          "type": "insight",
+          "key": "recommendations",
+          "title": "Recommendations",
+          "insights": [
+            {
+              "text": "Strongest: Interpersonal & Leadership (84).",
+              "severity": "positive"
+            },
+            {
+              "text": "Development priority: Strategic & Organizational (69).",
+              "severity": "warning"
+            }
+          ]
+        },
+        {
+          "type": "narrative",
+          "key": "confidence_level",
+          "title": "Confidence Level",
+          "text": "Provisional — Domain-proxy scoring (aggregate domain level, not per-competency). Confidence rises to High once a competency-tagged assessment is scored."
+        },
+        {
+          "type": "narrative",
+          "key": "data_source",
+          "title": "Data Source",
+          "text": "competency-runtime.getProfile → onto_competency_profiles (canonical runtime ledger)."
+        },
+        {
+          "type": "narrative",
+          "key": "generated_timestamp",
+          "title": "Generated Timestamp",
+          "text": "This report was generated on 26 June 2026 at 02:12 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data."
+        }
+      ],
+      "axes": {
+        "activation": "Engine executed in-process and produced this artifact.",
+        "coverage": {
+          "pct": null,
+          "note": "5 domains scored."
+        },
+        "confidence": {
+          "band": "Provisional",
+          "note": "Domain-proxy scoring (aggregate domain level, not per-competency). Confidence rises to High once a competency-tagged assessment is scored."
+        }
+      },
+      "data_flow": "competency-runtime.getProfile → onto_competency_profiles (canonical runtime ledger)."
+    },
+    "metadata": {
+      "pack_version": "1.0.0",
+      "measurable": true,
+      "honest_state": null,
+      "data_source": "competency-runtime.getProfile → onto_competency_profiles (canonical runtime ledger).",
+      "role_title": "Senior Product Manager"
+    }
+  },
+  {
+    "key": "competency_radar",
+    "report_type": "competency_radar",
+    "title": "Competency Radar",
+    "measurable": true,
+    "generated_content": {
+      "sections": [
+        {
+          "type": "narrative",
+          "key": "executive_summary",
+          "title": "Executive Summary",
+          "text": "Sarah Johnson's capability is measured across 4 competency types (domain-proxy), classification coverage 100%."
+        },
+        {
+          "type": "narrative",
+          "key": "candidate_information",
+          "title": "Candidate Information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+        },
+        {
+          "type": "narrative",
+          "key": "assessment_summary",
+          "title": "Assessment Summary",
+          "text": "Mean domain-proxy score by competency type — Behavioral: 80.4; Cognitive: 82; Functional: 74; Technical: 74."
+        },
+        {
+          "type": "chart",
+          "key": "visualizations",
+          "title": "Visualizations",
+          "visualization": {
+            "title": "Competency type means (domain-proxy)",
+            "data_source": "competency",
+            "chart_type": "radar"
+          },
+          "resolved_data": {
+            "labels": [
+              "Behavioral",
+              "Cognitive",
+              "Functional",
+              "Technical"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  80.4,
+                  82,
+                  74,
+                  74
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "narrative",
+          "key": "interpretation",
+          "title": "Interpretation",
+          "text": "The radar contrasts capability across competency types (behavioural, cognitive, functional, technical, future-skills). Each type mean is a domain-proxy: every competency inherits the measured score of its onto-domain. A balanced shape indicates broad capability; a skewed shape highlights concentration."
+        },
+        {
+          "type": "insight",
+          "key": "recommendations",
+          "title": "Recommendations",
+          "insights": [
+            {
+              "text": "Strongest: Cognitive (82).",
+              "severity": "positive"
+            },
+            {
+              "text": "Development priority: Technical (74).",
+              "severity": "warning"
+            }
+          ]
+        },
+        {
+          "type": "narrative",
+          "key": "confidence_level",
+          "title": "Confidence Level",
+          "text": "Derived from 100% type-classification coverage (structural; not measured scores)."
+        },
+        {
+          "type": "narrative",
+          "key": "data_source",
+          "title": "Data Source",
+          "text": "competency-runtime.computeTypeProfile → onto_competency_profiles domain scores, grouped by competency type (domain-PROXY mean per type; an onto-domain with no bank code, e.g. strategic, is unmeasurable and excluded)."
+        },
+        {
+          "type": "narrative",
+          "key": "generated_timestamp",
+          "title": "Generated Timestamp",
+          "text": "This report was generated on 26 June 2026 at 02:12 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data."
+        }
+      ],
+      "axes": {
+        "activation": "Engine executed in-process and produced this artifact.",
+        "coverage": {
+          "pct": 100,
+          "note": "14/14 competencies classified by type; 4 types carry a bank-measurable domain-proxy mean."
+        },
+        "confidence": {
+          "band": "Moderate",
+          "note": "Derived from 100% type-classification coverage (structural; not measured scores)."
+        }
+      },
+      "data_flow": "competency-runtime.computeTypeProfile → onto_competency_profiles domain scores, grouped by competency type (domain-PROXY mean per type; an onto-domain with no bank code, e.g. strategic, is unmeasurable and excluded)."
+    },
+    "metadata": {
+      "pack_version": "1.0.0",
+      "measurable": true,
+      "honest_state": null,
+      "data_source": "competency-runtime.computeTypeProfile → onto_competency_profiles domain scores, grouped by competency type (domain-PROXY mean per type; an onto-domain with no bank code, e.g. strategic, is unmeasurable and excluded).",
+      "role_title": "Senior Product Manager"
+    }
+  },
+  {
+    "key": "competency_heatmap",
+    "report_type": "competency_heatmap",
+    "title": "Competency Heatmap",
+    "measurable": true,
+    "generated_content": {
+      "sections": [
+        {
+          "type": "narrative",
+          "key": "executive_summary",
+          "title": "Executive Summary",
+          "text": "13 individual competencies are measured for Sarah Johnson; the heatmap surfaces the 13 highest-scoring."
+        },
+        {
+          "type": "narrative",
+          "key": "candidate_information",
+          "title": "Candidate Information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+        },
+        {
+          "type": "narrative",
+          "key": "assessment_summary",
+          "title": "Assessment Summary",
+          "text": "Top measured competencies — Stakeholder Management: 84; Active Listening: 84; Analytical Thinking: 82; Critical Thinking: 82; Decision-Making: 82; Accountability: 78; Adaptability: 78; Ambiguity Tolerance: 78…."
+        },
+        {
+          "type": "chart",
+          "key": "visualizations",
+          "title": "Visualizations",
+          "visualization": {
+            "title": "Per-competency scores (top 20)",
+            "data_source": "competency",
+            "chart_type": "heatmap"
+          },
+          "resolved_data": {
+            "labels": [
+              "Stakeholder Management",
+              "Active Listening",
+              "Analytical Thinking",
+              "Critical Thinking",
+              "Decision-Making",
+              "Accountability",
+              "Adaptability",
+              "Ambiguity Tolerance",
+              "Prioritization",
+              "Project Management",
+              "Time Management",
+              "Technical Competence",
+              "Technology Adoption"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  84,
+                  84,
+                  82,
+                  82,
+                  82,
+                  78,
+                  78,
+                  78,
+                  74,
+                  74,
+                  74,
+                  74,
+                  74
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "narrative",
+          "key": "interpretation",
+          "title": "Interpretation",
+          "text": "The heatmap ranks individual competencies by domain-proxy score (each inherits its onto-domain measurement), giving a granular view beneath the domain and type summaries. Use it to pinpoint specific strengths and targeted development items."
+        },
+        {
+          "type": "insight",
+          "key": "recommendations",
+          "title": "Recommendations",
+          "insights": [
+            {
+              "text": "Strongest competency: Stakeholder Management (84).",
+              "severity": "positive"
+            },
+            {
+              "text": "Lowest measured: Technology Adoption (74).",
+              "severity": "warning"
+            }
+          ]
+        },
+        {
+          "type": "narrative",
+          "key": "confidence_level",
+          "title": "Confidence Level",
+          "text": "Derived from 100% type-classification coverage (structural; not measured scores)."
+        },
+        {
+          "type": "narrative",
+          "key": "data_source",
+          "title": "Data Source",
+          "text": "competency-runtime.computeTypeProfile → per-competency domain-PROXY scores (each competency inherits its onto-domain score; precise per-competency scoring requires onto_competency_question_map coverage)."
+        },
+        {
+          "type": "narrative",
+          "key": "generated_timestamp",
+          "title": "Generated Timestamp",
+          "text": "This report was generated on 26 June 2026 at 02:12 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data."
+        }
+      ],
+      "axes": {
+        "activation": "Engine executed in-process and produced this artifact.",
+        "coverage": {
+          "pct": 100,
+          "note": "13 measured competencies."
+        },
+        "confidence": {
+          "band": "Moderate",
+          "note": "Derived from 100% type-classification coverage (structural; not measured scores)."
+        }
+      },
+      "data_flow": "competency-runtime.computeTypeProfile → per-competency domain-PROXY scores (each competency inherits its onto-domain score; precise per-competency scoring requires onto_competency_question_map coverage)."
+    },
+    "metadata": {
+      "pack_version": "1.0.0",
+      "measurable": true,
+      "honest_state": null,
+      "data_source": "competency-runtime.computeTypeProfile → per-competency domain-PROXY scores (each competency inherits its onto-domain score; precise per-competency scoring requires onto_competency_question_map coverage).",
+      "role_title": "Senior Product Manager"
+    }
+  },
+  {
+    "key": "strength",
+    "report_type": "strength",
+    "title": "Strengths",
+    "measurable": true,
+    "generated_content": {
+      "sections": [
+        {
+          "type": "narrative",
+          "key": "executive_summary",
+          "title": "Executive Summary",
+          "text": "Sarah Johnson demonstrates 5 clear strengths, led by Communication Readiness (84)."
+        },
+        {
+          "type": "narrative",
+          "key": "candidate_information",
+          "title": "Candidate Information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+        },
+        {
+          "type": "narrative",
+          "key": "assessment_summary",
+          "title": "Assessment Summary",
+          "text": "Strength areas — Communication Readiness: 84 (Excellent); Problem-Solving Readiness: 81.2 (Excellent); Leadership Readiness: 81.2 (Excellent); Workplace Readiness: 80 (Excellent); Future Readiness: 79.4 (Strong)."
+        },
+        {
+          "type": "chart",
+          "key": "visualizations",
+          "title": "Visualizations",
+          "visualization": {
+            "title": "Strength dimensions",
+            "data_source": "employability",
+            "chart_type": "bar"
+          },
+          "resolved_data": {
+            "labels": [
+              "Communication Readiness",
+              "Problem-Solving Readiness",
+              "Leadership Readiness",
+              "Workplace Readiness",
+              "Future Readiness"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  84,
+                  81.2,
+                  81.2,
+                  80,
+                  79.4
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "narrative",
+          "key": "interpretation",
+          "title": "Interpretation",
+          "text": "Strengths are dimensions measured at or above the Strong band — reliable areas to leverage. They are developmental signals, not endorsements for any specific role decision."
+        },
+        {
+          "type": "insight",
+          "key": "recommendations",
+          "title": "Recommendations",
+          "insights": [
+            {
+              "text": "Leverage Communication Readiness (84).",
+              "severity": "positive"
+            },
+            {
+              "text": "Leverage Problem-Solving Readiness (81.2).",
+              "severity": "positive"
+            },
+            {
+              "text": "Leverage Leadership Readiness (81.2).",
+              "severity": "positive"
+            }
+          ]
+        },
+        {
+          "type": "narrative",
+          "key": "confidence_level",
+          "title": "Confidence Level",
+          "text": "Confidence band: Moderate."
+        },
+        {
+          "type": "narrative",
+          "key": "data_source",
+          "title": "Data Source",
+          "text": "ei-profile-engine.buildEiProfile → strength_areas (dimensions at/above the Strong band)."
+        },
+        {
+          "type": "narrative",
+          "key": "generated_timestamp",
+          "title": "Generated Timestamp",
+          "text": "This report was generated on 26 June 2026 at 02:12 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data."
+        }
+      ],
+      "axes": {
+        "activation": "Engine executed in-process and produced this artifact.",
+        "coverage": {
+          "pct": 100,
+          "note": "5 measurable dimensions."
+        },
+        "confidence": {
+          "band": "Moderate",
+          "note": "Confidence band reported by the EI profile engine."
+        }
+      },
+      "data_flow": "ei-profile-engine.buildEiProfile → strength_areas (dimensions at/above the Strong band)."
+    },
+    "metadata": {
+      "pack_version": "1.0.0",
+      "measurable": true,
+      "honest_state": null,
+      "data_source": "ei-profile-engine.buildEiProfile → strength_areas (dimensions at/above the Strong band).",
+      "role_title": "Senior Product Manager"
+    }
+  },
+  {
+    "key": "development_areas",
+    "report_type": "development_areas",
+    "title": "Development Areas",
+    "measurable": true,
+    "generated_content": {
+      "sections": [
+        {
+          "type": "narrative",
+          "key": "executive_summary",
+          "title": "Executive Summary",
+          "text": "Sarah Johnson's measured dimensions are all at/above the Strong band — no development areas below threshold."
+        },
+        {
+          "type": "narrative",
+          "key": "candidate_information",
+          "title": "Candidate Information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+        },
+        {
+          "type": "narrative",
+          "key": "assessment_summary",
+          "title": "Assessment Summary",
+          "text": "All measured dimensions reach the Strong band; no below-threshold development areas."
+        },
+        {
+          "type": "chart",
+          "key": "visualizations",
+          "title": "Visualizations",
+          "visualization": {
+            "title": "Development headroom",
+            "data_source": "employability",
+            "chart_type": "bar"
+          },
+          "resolved_data": {
+            "labels": [
+              "Future Readiness",
+              "Workplace Readiness",
+              "Problem-Solving Readiness",
+              "Leadership Readiness",
+              "Communication Readiness"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  79.4,
+                  80,
+                  81.2,
+                  81.2,
+                  84
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "narrative",
+          "key": "interpretation",
+          "title": "Interpretation",
+          "text": "No dimension falls below the Strong band — an honest measured result. Continued practice maintains these levels."
+        },
+        {
+          "type": "narrative",
+          "key": "recommendations",
+          "title": "Recommendations",
+          "text": "No specific recommendations have been derived from the current measured inputs. Recommendations will appear once additional assessment evidence is captured.",
+          "callout": "honest"
+        },
+        {
+          "type": "narrative",
+          "key": "confidence_level",
+          "title": "Confidence Level",
+          "text": "Confidence band: Moderate."
+        },
+        {
+          "type": "narrative",
+          "key": "data_source",
+          "title": "Data Source",
+          "text": "ei-profile-engine.buildEiProfile → development_areas (dimensions below the Strong band, with headroom)."
+        },
+        {
+          "type": "narrative",
+          "key": "generated_timestamp",
+          "title": "Generated Timestamp",
+          "text": "This report was generated on 26 June 2026 at 02:12 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data."
+        }
+      ],
+      "axes": {
+        "activation": "Engine executed in-process and produced this artifact.",
+        "coverage": {
+          "pct": 100,
+          "note": "0 development areas identified."
+        },
+        "confidence": {
+          "band": "Moderate",
+          "note": "Confidence band reported by the EI profile engine."
+        }
+      },
+      "data_flow": "ei-profile-engine.buildEiProfile → development_areas (dimensions below the Strong band, with headroom)."
+    },
+    "metadata": {
+      "pack_version": "1.0.0",
+      "measurable": true,
+      "honest_state": null,
+      "data_source": "ei-profile-engine.buildEiProfile → development_areas (dimensions below the Strong band, with headroom).",
+      "role_title": "Senior Product Manager"
+    }
+  },
+  {
+    "key": "role_readiness",
+    "report_type": "role_readiness",
+    "title": "Role Readiness",
+    "measurable": true,
+    "generated_content": {
+      "sections": [
+        {
+          "type": "narrative",
+          "key": "executive_summary",
+          "title": "Executive Summary",
+          "text": "Sarah Johnson's readiness for Product Manager is 95/100 (ready)."
+        },
+        {
+          "type": "narrative",
+          "key": "candidate_information",
+          "title": "Candidate Information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+        },
+        {
+          "type": "narrative",
+          "key": "assessment_summary",
+          "title": "Assessment Summary",
+          "text": "Readiness 95/100, fit band partial, 1 critical gap(s), 1 blocking."
+        },
+        {
+          "type": "chart",
+          "key": "visualizations",
+          "title": "Visualizations",
+          "visualization": {
+            "title": "Role gap by competency",
+            "data_source": "career",
+            "chart_type": "bar"
+          },
+          "resolved_data": {
+            "labels": [
+              "Agile Collaboration"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  1
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "narrative",
+          "key": "interpretation",
+          "title": "Interpretation",
+          "text": "Readiness compares measured capability to the role’s required competency levels. Critical and blocking gaps cap readiness regardless of average score. This is a developmental signal, not a hiring or promotion decision."
+        },
+        {
+          "type": "insight",
+          "key": "recommendations",
+          "title": "Recommendations",
+          "insights": [
+            {
+              "text": "Close gap in Agile Collaboration (need level 4, currently 3).",
+              "severity": "warning"
+            }
+          ]
+        },
+        {
+          "type": "narrative",
+          "key": "confidence_level",
+          "title": "Confidence Level",
+          "text": "Confidence: Moderate — measured against the resolved role profile."
+        },
+        {
+          "type": "narrative",
+          "key": "data_source",
+          "title": "Data Source",
+          "text": "role-readiness-v2.computeRoleReadinessV2 → resolved role profile vs candidate competency scores."
+        },
+        {
+          "type": "narrative",
+          "key": "generated_timestamp",
+          "title": "Generated Timestamp",
+          "text": "This report was generated on 26 June 2026 at 02:12 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data."
+        }
+      ],
+      "axes": {
+        "activation": "Engine executed in-process and produced this artifact.",
+        "coverage": {
+          "pct": 100,
+          "note": "Readiness measured against role requirements."
+        },
+        "confidence": {
+          "band": "Moderate",
+          "note": "Computed against the resolved role profile."
+        }
+      },
+      "data_flow": "role-readiness-v2.computeRoleReadinessV2 → resolved role profile vs candidate competency scores."
+    },
+    "metadata": {
+      "pack_version": "1.0.0",
+      "measurable": true,
+      "honest_state": null,
+      "data_source": "role-readiness-v2.computeRoleReadinessV2 → resolved role profile vs candidate competency scores.",
+      "role_title": "Senior Product Manager"
+    }
+  },
+  {
+    "key": "promotion_readiness",
+    "report_type": "promotion_readiness",
+    "title": "Promotion Readiness",
+    "measurable": true,
+    "generated_content": {
+      "sections": [
+        {
+          "type": "narrative",
+          "key": "executive_summary",
+          "title": "Executive Summary",
+          "text": "Sarah Johnson has 2 measured snapshots; net movement is 0 (stable)."
+        },
+        {
+          "type": "narrative",
+          "key": "candidate_information",
+          "title": "Candidate Information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+        },
+        {
+          "type": "narrative",
+          "key": "assessment_summary",
+          "title": "Assessment Summary",
+          "text": "Status: ready. Net delta 0. Growth areas: 0, decline: 0, stable: 5."
+        },
+        {
+          "type": "chart",
+          "key": "visualizations",
+          "title": "Visualizations",
+          "visualization": {
+            "title": "Net change by dimension",
+            "data_source": "employability",
+            "chart_type": "bar"
+          },
+          "resolved_data": {
+            "labels": [
+              "Communication Readiness",
+              "Future Readiness",
+              "Leadership Readiness",
+              "Problem-Solving Readiness",
+              "Workplace Readiness"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "narrative",
+          "key": "interpretation",
+          "title": "Interpretation",
+          "text": "Promotion readiness is a longitudinal signal: it measures sustained movement across dimensions between measured snapshots, not a single score. Positive net delta with broad growth areas indicates upward trajectory."
+        },
+        {
+          "type": "narrative",
+          "key": "recommendations",
+          "title": "Recommendations",
+          "text": "No specific recommendations have been derived from the current measured inputs. Recommendations will appear once additional assessment evidence is captured.",
+          "callout": "honest"
+        },
+        {
+          "type": "narrative",
+          "key": "confidence_level",
+          "title": "Confidence Level",
+          "text": "Confidence: Moderate — based on measured snapshots; rises as more are captured."
+        },
+        {
+          "type": "narrative",
+          "key": "data_source",
+          "title": "Data Source",
+          "text": "progression-engine.buildProgression → ei_profile_snapshots over time (net delta between measured snapshots)."
+        },
+        {
+          "type": "narrative",
+          "key": "generated_timestamp",
+          "title": "Generated Timestamp",
+          "text": "This report was generated on 26 June 2026 at 02:12 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data."
+        }
+      ],
+      "axes": {
+        "activation": "Engine executed in-process and produced this artifact.",
+        "coverage": {
+          "pct": null,
+          "note": "2/2 measured snapshots (≥2 required)."
+        },
+        "confidence": {
+          "band": "Moderate",
+          "note": "Confidence rises with the number of measured snapshots over time."
+        }
+      },
+      "data_flow": "progression-engine.buildProgression → ei_profile_snapshots over time (net delta between measured snapshots)."
+    },
+    "metadata": {
+      "pack_version": "1.0.0",
+      "measurable": true,
+      "honest_state": null,
+      "data_source": "progression-engine.buildProgression → ei_profile_snapshots over time (net delta between measured snapshots).",
+      "role_title": "Senior Product Manager"
+    }
+  },
+  {
+    "key": "employability_index",
+    "report_type": "employability_index",
+    "title": "Employability Index",
+    "measurable": true,
+    "generated_content": {
+      "sections": [
+        {
+          "type": "narrative",
+          "key": "executive_summary",
+          "title": "Executive Summary",
+          "text": "Sarah Johnson's Employability Index is 81.2/100 (Excellent), from 5 measurable dimensions."
+        },
+        {
+          "type": "narrative",
+          "key": "candidate_information",
+          "title": "Candidate Information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+        },
+        {
+          "type": "narrative",
+          "key": "assessment_summary",
+          "title": "Assessment Summary",
+          "text": "EI 81.2/100 (Excellent); coverage 100%. Dimension scores — Communication Readiness: 84; Workplace Readiness: 80; Problem-Solving Readiness: 81.2; Leadership Readiness: 81.2; Future Readiness: 79.4."
+        },
+        {
+          "type": "chart",
+          "key": "visualizations",
+          "title": "Visualizations",
+          "visualization": {
+            "title": "Employability dimensions",
+            "data_source": "employability",
+            "chart_type": "bar"
+          },
+          "resolved_data": {
+            "labels": [
+              "Communication Readiness",
+              "Workplace Readiness",
+              "Problem-Solving Readiness",
+              "Leadership Readiness",
+              "Future Readiness"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  84,
+                  80,
+                  81.2,
+                  81.2,
+                  79.4
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "narrative",
+          "key": "interpretation",
+          "title": "Interpretation",
+          "text": "The Employability Index aggregates dimension scores derived from measured competencies. It is a developmental indicator of overall job-readiness signal strength, not a hiring or promotion prediction."
+        },
+        {
+          "type": "narrative",
+          "key": "recommendations",
+          "title": "Recommendations",
+          "text": "No specific recommendations have been derived from the current measured inputs. Recommendations will appear once additional assessment evidence is captured.",
+          "callout": "honest"
+        },
+        {
+          "type": "narrative",
+          "key": "confidence_level",
+          "title": "Confidence Level",
+          "text": "Confidence band: Moderate (coverage 100%)."
+        },
+        {
+          "type": "narrative",
+          "key": "data_source",
+          "title": "Data Source",
+          "text": "employability-scoring-engine.computeEmployabilityScore → competency → dimension → EI roll-up."
+        },
+        {
+          "type": "narrative",
+          "key": "generated_timestamp",
+          "title": "Generated Timestamp",
+          "text": "This report was generated on 26 June 2026 at 02:12 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data."
+        }
+      ],
+      "axes": {
+        "activation": "Engine executed in-process and produced this artifact.",
+        "coverage": {
+          "pct": 100,
+          "note": "5/5 dimensions measurable."
+        },
+        "confidence": {
+          "band": "Moderate",
+          "note": "Confidence band reported by the employability scoring engine."
+        }
+      },
+      "data_flow": "employability-scoring-engine.computeEmployabilityScore → competency → dimension → EI roll-up."
+    },
+    "metadata": {
+      "pack_version": "1.0.0",
+      "measurable": true,
+      "honest_state": null,
+      "data_source": "employability-scoring-engine.computeEmployabilityScore → competency → dimension → EI roll-up.",
+      "role_title": "Senior Product Manager"
+    }
+  },
+  {
+    "key": "career_recommendations",
+    "report_type": "career_recommendations",
+    "title": "Career Recommendations",
+    "measurable": true,
+    "generated_content": {
+      "sections": [
+        {
+          "type": "narrative",
+          "key": "executive_summary",
+          "title": "Executive Summary",
+          "text": "6 recommendations are available for Sarah Johnson, 6 personalized to their profile."
+        },
+        {
+          "type": "narrative",
+          "key": "candidate_information",
+          "title": "Candidate Information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+        },
+        {
+          "type": "narrative",
+          "key": "assessment_summary",
+          "title": "Assessment Summary",
+          "text": "Recommendations span 6 type(s). Top item: Target role: AI Product Manager."
+        },
+        {
+          "type": "narrative",
+          "key": "visualizations",
+          "title": "Visualizations",
+          "text": "No chartable measured data points are available for this report yet; the metrics above summarise everything currently measured.",
+          "callout": "honest"
+        },
+        {
+          "type": "narrative",
+          "key": "interpretation",
+          "title": "Interpretation",
+          "text": "Recommendations are derived developmental suggestions ranked by relevance. Personalized items consume the candidate’s own profile; catalog items are general and flagged as provisional. None are directives."
+        },
+        {
+          "type": "insight",
+          "key": "recommendations",
+          "title": "Recommendations",
+          "insights": [
+            {
+              "text": "Target role: AI Product Manager — A strong current market signal (demand and growth) for AI Product Manager in the product function.",
+              "severity": "info"
+            },
+            {
+              "text": "Advance from a Advanced readiness base — Your present-state readiness is at the Advanced band. Consolidating Cognitive Development is the highest-leverage next move on your current track.",
+              "severity": "info"
+            },
+            {
+              "text": "Consider the research industry — The research industry shows strong aggregate role demand and growth in the catalog. (general)",
+              "severity": "info"
+            },
+            {
+              "text": "Consider the data function — The data function shows strong aggregate demand and growth across catalog roles. (general)",
+              "severity": "info"
+            },
+            {
+              "text": "Future-resilient role: GenAI Engineer — GenAI Engineer combines high projected growth with lower automation exposure — a more future-resilient target. (general)",
+              "severity": "info"
+            },
+            {
+              "text": "Alternative direction: GenAI Engineer — GenAI Engineer sits in the data function — a different direction from your current track, with healthy market signal. (general)",
+              "severity": "info"
+            }
+          ]
+        },
+        {
+          "type": "narrative",
+          "key": "confidence_level",
+          "title": "Confidence Level",
+          "text": "Confidence varies per recommendation; personalized items inherit the chain confidence, catalog items are Provisional."
+        },
+        {
+          "type": "narrative",
+          "key": "data_source",
+          "title": "Data Source",
+          "text": "career-recommendation-aggregator.buildCareerRecommendations → composed from competency, gap and market signals."
+        },
+        {
+          "type": "narrative",
+          "key": "generated_timestamp",
+          "title": "Generated Timestamp",
+          "text": "This report was generated on 26 June 2026 at 02:12 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data."
+        }
+      ],
+      "axes": {
+        "activation": "Engine executed in-process and produced this artifact.",
+        "coverage": {
+          "pct": null,
+          "note": "26 recommendation(s), 6 personalized."
+        },
+        "confidence": {
+          "band": "Moderate",
+          "note": "Per-recommendation confidence bands shown inline."
+        }
+      },
+      "data_flow": "career-recommendation-aggregator.buildCareerRecommendations → composed from competency, gap and market signals."
+    },
+    "metadata": {
+      "pack_version": "1.0.0",
+      "measurable": true,
+      "honest_state": null,
+      "data_source": "career-recommendation-aggregator.buildCareerRecommendations → composed from competency, gap and market signals.",
+      "role_title": "Senior Product Manager"
+    }
+  },
+  {
+    "key": "learning_roadmap",
+    "report_type": "learning_roadmap",
+    "title": "Learning Roadmap",
+    "measurable": true,
+    "generated_content": {
+      "sections": [
+        {
+          "type": "narrative",
+          "key": "executive_summary",
+          "title": "Executive Summary",
+          "text": "Sarah Johnson's roadmap has 3 milestones totalling ~4 weeks."
+        },
+        {
+          "type": "narrative",
+          "key": "candidate_information",
+          "title": "Candidate Information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+        },
+        {
+          "type": "narrative",
+          "key": "assessment_summary",
+          "title": "Assessment Summary",
+          "text": "Milestones — Immediate Focus (1 comps, ~4w); Near-Term Development (0 comps); Longer-Term Growth (0 comps)."
+        },
+        {
+          "type": "chart",
+          "key": "visualizations",
+          "title": "Visualizations",
+          "visualization": {
+            "title": "Estimated weeks per milestone",
+            "data_source": "career",
+            "chart_type": "bar"
+          },
+          "resolved_data": {
+            "labels": [
+              "Immediate Focus",
+              "Near-Term Development",
+              "Longer-Term Growth"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  4,
+                  0,
+                  0
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "narrative",
+          "key": "interpretation",
+          "title": "Interpretation",
+          "text": "The roadmap sequences development into time-boxed milestones ordered by priority band. Estimated effort is derived from the size of the competency gaps each milestone addresses."
+        },
+        {
+          "type": "insight",
+          "key": "recommendations",
+          "title": "Recommendations",
+          "insights": [
+            {
+              "text": "Immediate Focus: 1 competencies, ~4 weeks.",
+              "severity": "info"
+            },
+            {
+              "text": "Near-Term Development: 0 competencies.",
+              "severity": "info"
+            },
+            {
+              "text": "Longer-Term Growth: 0 competencies.",
+              "severity": "info"
+            }
+          ]
+        },
+        {
+          "type": "narrative",
+          "key": "confidence_level",
+          "title": "Confidence Level",
+          "text": "Confidence: Provisional — sequence and effort estimates depend on requirement coverage."
+        },
+        {
+          "type": "narrative",
+          "key": "data_source",
+          "title": "Data Source",
+          "text": "career-roadmap-engine.buildCareerRoadmap → milestones + development plan from gaps and role requirements."
+        },
+        {
+          "type": "narrative",
+          "key": "generated_timestamp",
+          "title": "Generated Timestamp",
+          "text": "This report was generated on 26 June 2026 at 02:12 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data."
+        }
+      ],
+      "axes": {
+        "activation": "Engine executed in-process and produced this artifact.",
+        "coverage": {
+          "pct": null,
+          "note": "3 milestone(s), 1 development item(s)."
+        },
+        "confidence": {
+          "band": "Provisional",
+          "note": "Roadmap composes role requirements and measured gaps."
+        }
+      },
+      "data_flow": "career-roadmap-engine.buildCareerRoadmap → milestones + development plan from gaps and role requirements."
+    },
+    "metadata": {
+      "pack_version": "1.0.0",
+      "measurable": true,
+      "honest_state": null,
+      "data_source": "career-roadmap-engine.buildCareerRoadmap → milestones + development plan from gaps and role requirements.",
+      "role_title": "Senior Product Manager"
+    }
+  },
+  {
+    "key": "skill_gap",
+    "report_type": "skill_gap",
+    "title": "Skill Gap",
+    "measurable": true,
+    "generated_content": {
+      "sections": [
+        {
+          "type": "narrative",
+          "key": "executive_summary",
+          "title": "Executive Summary",
+          "text": "Sarah Johnson has 1 skill gap(s); the most material is Agile Collaboration."
+        },
+        {
+          "type": "narrative",
+          "key": "candidate_information",
+          "title": "Candidate Information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+        },
+        {
+          "type": "narrative",
+          "key": "assessment_summary",
+          "title": "Assessment Summary",
+          "text": "Largest gaps — Agile Collaboration: need 4, currently 3 (gap 1)."
+        },
+        {
+          "type": "chart",
+          "key": "visualizations",
+          "title": "Visualizations",
+          "visualization": {
+            "title": "Gap size by competency",
+            "data_source": "career",
+            "chart_type": "bar"
+          },
+          "resolved_data": {
+            "labels": [
+              "Agile Collaboration"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  1
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "narrative",
+          "key": "interpretation",
+          "title": "Interpretation",
+          "text": "A gap is the distance between a required competency level and the measured level. Critical and blocking gaps are prioritised in the Action Plan and Learning Roadmap. Gaps are developmental, not disqualifying."
+        },
+        {
+          "type": "insight",
+          "key": "recommendations",
+          "title": "Recommendations",
+          "insights": [
+            {
+              "text": "Close gap in Agile Collaboration (need 4, currently 3).",
+              "severity": "critical"
+            }
+          ]
+        },
+        {
+          "type": "narrative",
+          "key": "confidence_level",
+          "title": "Confidence Level",
+          "text": "Confidence: Provisional — depends on requirement coverage and measurement granularity."
+        },
+        {
+          "type": "narrative",
+          "key": "data_source",
+          "title": "Data Source",
+          "text": "career-gap-engine.buildCareerGap → required vs actual competency levels."
+        },
+        {
+          "type": "narrative",
+          "key": "generated_timestamp",
+          "title": "Generated Timestamp",
+          "text": "This report was generated on 26 June 2026 at 02:12 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data."
+        }
+      ],
+      "axes": {
+        "activation": "Engine executed in-process and produced this artifact.",
+        "coverage": {
+          "pct": 100,
+          "note": "1 gap(s), 1 critical."
+        },
+        "confidence": {
+          "band": "Provisional",
+          "note": "Gaps compose measured scores against role requirements."
+        }
+      },
+      "data_flow": "career-gap-engine.buildCareerGap → required vs actual competency levels."
+    },
+    "metadata": {
+      "pack_version": "1.0.0",
+      "measurable": true,
+      "honest_state": null,
+      "data_source": "career-gap-engine.buildCareerGap → required vs actual competency levels.",
+      "role_title": "Senior Product Manager"
+    }
+  },
+  {
+    "key": "interview_readiness",
+    "report_type": "interview_readiness",
+    "title": "Interview Readiness",
+    "measurable": true,
+    "generated_content": {
+      "sections": [
+        {
+          "type": "narrative",
+          "key": "executive_summary",
+          "title": "Executive Summary",
+          "text": "Sarah Johnson has 4 recorded interview score(s); overall operator mean is 75%."
+        },
+        {
+          "type": "narrative",
+          "key": "candidate_information",
+          "title": "Candidate Information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+        },
+        {
+          "type": "narrative",
+          "key": "assessment_summary",
+          "title": "Assessment Summary",
+          "text": "Overall mean 75% across 2 panelist(s). Per criterion — Analytical Depth: 60%; Leadership: 80%; Product Strategy: 80%; Stakeholder Communication: 80%."
+        },
+        {
+          "type": "chart",
+          "key": "visualizations",
+          "title": "Visualizations",
+          "visualization": {
+            "title": "Interview scores by criterion",
+            "data_source": "career",
+            "chart_type": "bar"
+          },
+          "resolved_data": {
+            "labels": [
+              "Analytical Depth",
+              "Leadership",
+              "Product Strategy",
+              "Stakeholder Communication"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  60,
+                  80,
+                  80,
+                  80
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "narrative",
+          "key": "interpretation",
+          "title": "Interpretation",
+          "text": "Interview readiness summarises operator-recorded panelist scores per criterion. These are arithmetic averages of human inputs — a record of what panelists entered, NOT an algorithmic hire/reject verdict."
+        },
+        {
+          "type": "narrative",
+          "key": "recommendations",
+          "title": "Recommendations",
+          "text": "No specific recommendations have been derived from the current measured inputs. Recommendations will appear once additional assessment evidence is captured.",
+          "callout": "honest"
+        },
+        {
+          "type": "narrative",
+          "key": "confidence_level",
+          "title": "Confidence Level",
+          "text": "Operator-recorded — averages of panelist-entered scores, not a model prediction."
+        },
+        {
+          "type": "narrative",
+          "key": "data_source",
+          "title": "Data Source",
+          "text": "evaluation-engine.candidateEvaluation → interview_scores (operator/panelist entries, averaged per criterion)."
+        },
+        {
+          "type": "narrative",
+          "key": "generated_timestamp",
+          "title": "Generated Timestamp",
+          "text": "This report was generated on 26 June 2026 at 02:12 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data."
+        }
+      ],
+      "axes": {
+        "activation": "Engine executed in-process and produced this artifact.",
+        "coverage": {
+          "pct": null,
+          "note": "4 score(s) across 1 interview(s)."
+        },
+        "confidence": {
+          "band": "Operator-recorded",
+          "note": "Interview summaries average operator-entered scores; not an algorithmic verdict."
+        }
+      },
+      "data_flow": "evaluation-engine.candidateEvaluation → interview_scores (operator/panelist entries, averaged per criterion)."
+    },
+    "metadata": {
+      "pack_version": "1.0.0",
+      "measurable": true,
+      "honest_state": null,
+      "data_source": "evaluation-engine.candidateEvaluation → interview_scores (operator/panelist entries, averaged per criterion).",
+      "role_title": "Senior Product Manager"
+    }
+  },
+  {
+    "key": "employer_competency_match",
+    "report_type": "employer_competency_match",
+    "title": "Employer Competency Match",
+    "measurable": true,
+    "generated_content": {
+      "sections": [
+        {
+          "type": "narrative",
+          "key": "executive_summary",
+          "title": "Executive Summary",
+          "text": "Sarah Johnson's competency match to Senior Product Manager is 77.4%, covering 8/13 requirements (fit: fit)."
+        },
+        {
+          "type": "narrative",
+          "key": "candidate_information",
+          "title": "Candidate Information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+        },
+        {
+          "type": "narrative",
+          "key": "assessment_summary",
+          "title": "Assessment Summary",
+          "text": "Match 77.4%, coverage 61.8%. Fit signal: fit. Calibration: calibrated. 8 requirement gap(s)."
+        },
+        {
+          "type": "chart",
+          "key": "visualizations",
+          "title": "Visualizations",
+          "visualization": {
+            "title": "Match vs requirement coverage",
+            "data_source": "competency",
+            "chart_type": "bar"
+          },
+          "resolved_data": {
+            "labels": [
+              "Competency Match %",
+              "Requirement Coverage %"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  77.4,
+                  61.8
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "narrative",
+          "key": "interpretation",
+          "title": "Interpretation",
+          "text": "The match contrasts the candidate’s measured competencies with the role’s genome-derived requirements. The fit signal is decision-SUPPORT only — never a hire/no-hire verdict. Calibration reports whether realized outcomes back the signal."
+        },
+        {
+          "type": "insight",
+          "key": "recommendations",
+          "title": "Recommendations",
+          "insights": [
+            {
+              "text": "Requirement gap: Data-Driven Decision Making (need not yet measured, currently not yet measured).",
+              "severity": "warning"
+            },
+            {
+              "text": "Requirement gap: Structured Problem Solving (need not yet measured, currently not yet measured).",
+              "severity": "warning"
+            },
+            {
+              "text": "Requirement gap: Accountability & Ownership (need not yet measured, currently not yet measured).",
+              "severity": "warning"
+            }
+          ]
+        },
+        {
+          "type": "narrative",
+          "key": "confidence_level",
+          "title": "Confidence Level",
+          "text": "Calibration: calibrated (34 realized outcomes). The fit signal is decision-support, not a verdict."
+        },
+        {
+          "type": "narrative",
+          "key": "data_source",
+          "title": "Data Source",
+          "text": "employer-competency-hiring.computeCompetencyDrivenMatch → Role DNA (genome) requirements vs candidate competencies."
+        },
+        {
+          "type": "narrative",
+          "key": "generated_timestamp",
+          "title": "Generated Timestamp",
+          "text": "This report was generated on 26 June 2026 at 02:12 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data."
+        }
+      ],
+      "axes": {
+        "activation": "Engine executed in-process and produced this artifact.",
+        "coverage": {
+          "pct": 61.8,
+          "note": "8/13 requirements matched."
+        },
+        "confidence": {
+          "band": "Calibrated",
+          "note": "Fit signal is decision-support only; calibration state reflects realized-outcome history."
+        }
+      },
+      "data_flow": "employer-competency-hiring.computeCompetencyDrivenMatch → Role DNA (genome) requirements vs candidate competencies."
+    },
+    "metadata": {
+      "pack_version": "1.0.0",
+      "measurable": true,
+      "honest_state": null,
+      "data_source": "employer-competency-hiring.computeCompetencyDrivenMatch → Role DNA (genome) requirements vs candidate competencies.",
+      "role_title": "Senior Product Manager"
+    }
+  },
+  {
+    "key": "career_passport",
+    "report_type": "career_passport",
+    "title": "Career Passport",
+    "measurable": true,
+    "generated_content": {
+      "sections": [
+        {
+          "type": "narrative",
+          "key": "executive_summary",
+          "title": "Executive Summary",
+          "text": "Sarah Johnson's career passport has 6 of 6 sections populated (100% coverage)."
+        },
+        {
+          "type": "narrative",
+          "key": "candidate_information",
+          "title": "Candidate Information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+        },
+        {
+          "type": "narrative",
+          "key": "assessment_summary",
+          "title": "Assessment Summary",
+          "text": "Section status — competency profile: present; ei profile: present; career profile: present; career readiness: present; achievements: present; career journey: present."
+        },
+        {
+          "type": "chart",
+          "key": "visualizations",
+          "title": "Visualizations",
+          "visualization": {
+            "title": "Passport section coverage (1 = present)",
+            "data_source": "passport",
+            "chart_type": "bar"
+          },
+          "resolved_data": {
+            "labels": [
+              "competency profile",
+              "ei profile",
+              "career profile",
+              "career readiness",
+              "achievements",
+              "career journey"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "narrative",
+          "key": "interpretation",
+          "title": "Interpretation",
+          "text": "The career passport is a shareable, composed snapshot of the candidate’s verified platform artifacts. Each present section reflects a completed workflow; absent sections indicate workflows not yet completed. Contact details are never included in the published view."
+        },
+        {
+          "type": "narrative",
+          "key": "recommendations",
+          "title": "Recommendations",
+          "text": "No specific recommendations have been derived from the current measured inputs. Recommendations will appear once additional assessment evidence is captured.",
+          "callout": "honest"
+        },
+        {
+          "type": "narrative",
+          "key": "confidence_level",
+          "title": "Confidence Level",
+          "text": "Confidence: Moderate — composed from completed platform artifacts."
+        },
+        {
+          "type": "narrative",
+          "key": "data_source",
+          "title": "Data Source",
+          "text": "passport-generator.generateCareerPassport → composed snapshot of competency, EI, career and journey artifacts."
+        },
+        {
+          "type": "narrative",
+          "key": "generated_timestamp",
+          "title": "Generated Timestamp",
+          "text": "This report was generated on 26 June 2026 at 02:12 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data."
+        }
+      ],
+      "axes": {
+        "activation": "Engine executed in-process and produced this artifact.",
+        "coverage": {
+          "pct": 100,
+          "note": "6/6 sections present."
+        },
+        "confidence": {
+          "band": "Moderate",
+          "note": "Passport composes already-computed platform artifacts; contact details are never published."
+        }
+      },
+      "data_flow": "passport-generator.generateCareerPassport → composed snapshot of competency, EI, career and journey artifacts."
+    },
+    "metadata": {
+      "pack_version": "1.0.0",
+      "measurable": true,
+      "honest_state": null,
+      "data_source": "passport-generator.generateCareerPassport → composed snapshot of competency, EI, career and journey artifacts.",
+      "role_title": "Senior Product Manager"
+    }
+  },
+  {
+    "key": "action_plan",
+    "report_type": "action_plan",
+    "title": "Action Plan",
+    "measurable": true,
+    "generated_content": {
+      "sections": [
+        {
+          "type": "narrative",
+          "key": "executive_summary",
+          "title": "Executive Summary",
+          "text": "Sarah Johnson's action plan organises development into 5 streams."
+        },
+        {
+          "type": "narrative",
+          "key": "candidate_information",
+          "title": "Candidate Information",
+          "text": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
+        },
+        {
+          "type": "narrative",
+          "key": "assessment_summary",
+          "title": "Assessment Summary",
+          "text": "Streams — Behavioral Development (0 comps); Technical Development (0 comps); Functional Development (0 comps); Cognitive Development (1 comps, ~4w); Future Skills Development (0 comps)."
+        },
+        {
+          "type": "chart",
+          "key": "visualizations",
+          "title": "Visualizations",
+          "visualization": {
+            "title": "Effort by development stream",
+            "data_source": "career",
+            "chart_type": "bar"
+          },
+          "resolved_data": {
+            "labels": [
+              "Behavioral Development",
+              "Technical Development",
+              "Functional Development",
+              "Cognitive Development",
+              "Future Skills Development"
+            ],
+            "datasets": [
+              {
+                "data": [
+                  0,
+                  0,
+                  0,
+                  1,
+                  0
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "narrative",
+          "key": "interpretation",
+          "title": "Interpretation",
+          "text": "The action plan groups development into themed streams, each addressing a cluster of related gaps with a now/next/later horizon. Tracking compares effort over time once a baseline exists."
+        },
+        {
+          "type": "insight",
+          "key": "recommendations",
+          "title": "Recommendations",
+          "insights": [
+            {
+              "text": "Behavioral Development: How you work with others and regulate yourself — interpersonal, attitudinal and self-management behaviours..",
+              "severity": "info"
+            },
+            {
+              "text": "Technical Development: Tool, technology and domain-specific technical proficiency..",
+              "severity": "info"
+            },
+            {
+              "text": "Functional Development: Role and process execution capabilities that deliver work outcomes..",
+              "severity": "info"
+            }
+          ]
+        },
+        {
+          "type": "narrative",
+          "key": "confidence_level",
+          "title": "Confidence Level",
+          "text": "Confidence: Provisional — depends on gap and requirement coverage."
+        },
+        {
+          "type": "narrative",
+          "key": "data_source",
+          "title": "Data Source",
+          "text": "career-development-engine.buildCareerDevelopment → development streams + tracking from gaps and requirements."
+        },
+        {
+          "type": "narrative",
+          "key": "generated_timestamp",
+          "title": "Generated Timestamp",
+          "text": "This report was generated on 26 June 2026 at 02:12 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data."
+        }
+      ],
+      "axes": {
+        "activation": "Engine executed in-process and produced this artifact.",
+        "coverage": {
+          "pct": null,
+          "note": "5 development stream(s)."
+        },
+        "confidence": {
+          "band": "Provisional",
+          "note": "Action plan composes role requirements, gaps and development streams."
+        }
+      },
+      "data_flow": "career-development-engine.buildCareerDevelopment → development streams + tracking from gaps and requirements."
+    },
+    "metadata": {
+      "pack_version": "1.0.0",
+      "measurable": true,
+      "honest_state": null,
+      "data_source": "career-development-engine.buildCareerDevelopment → development streams + tracking from gaps and requirements.",
+      "role_title": "Senior Product Manager"
+    }
+  }
+]

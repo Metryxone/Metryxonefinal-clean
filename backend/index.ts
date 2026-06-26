@@ -4,6 +4,7 @@ import { createProxyMiddleware } from "http-proxy-middleware";
 import helmet from "helmet";
 
 import { connectMongo } from "./mongo";
+import { csrfProtection } from "./lib/csrf";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { registerChatRoutes } from "./replit_integrations/chat";
@@ -22,6 +23,13 @@ if (process.env.NODE_ENV === 'production' && !process.env.SESSION_SECRET) {
 
 const app = express();
 const httpServer = createServer(app);
+
+// ── CSRF protection (security control, defaults ON) ──────────────────────────
+// Mounted FIRST so the ENTIRE /api surface is gated — including the upload
+// reverse-proxy below and the /api/v1 version namespace — with no gaps. It reads
+// only headers/cookies (no body needed), issues/validates a signed double-submit
+// token, and fails CLOSED on internal errors. Kill-switch: CSRF_PROTECTION_DISABLED=1.
+app.use(csrfProtection());
 
 // ── Reverse-proxy: /api/v1/upload/* → FastAPI (port 8002) ──
 // Routes:

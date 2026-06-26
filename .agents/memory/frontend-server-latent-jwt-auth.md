@@ -28,3 +28,17 @@ impersonate. The header-trust fallback was removed from BOTH middlewares.
 must mint a real HS256 JWT (see `auth/jwt.ts` `mintToken`) rather than set
 `x-user-*` headers. A separate open finding: `auth/jwt.ts` has a hardcoded
 default JWT secret (still unfixed, out of that task's scope).
+
+## Dep hardening must include this separate package.json
+Repo-wide dependency remediation that bumps `backend/` + `frontend/` will MISS
+`frontend/server/package.json` — it is its own package and, because it is dormant
+(empty `node_modules`, no workflow), it is easy to overlook and silently retains
+vulnerable pins (e.g. it lagged on `multer`/`nodemailer` and the ReDoS-prone
+`xlsx 0.18.5` after the main app was already hardened).
+**How to apply:** when closing dep-vuln gaps "to 100%", also bump this file and
+regenerate its lockfile with `npm install --package-lock-only` (resolves without
+a heavy full install since the service isn't run). Verify the lock reflects the
+new versions; do NOT claim runtime/boot validation here — the service is dormant,
+so the honest claim is "declared + locked versions remediated, runtime not
+exercised". xlsx here uses only standard utils API → SheetJS CDN 0.20.3 is
+API-identical.

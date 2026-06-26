@@ -35,8 +35,20 @@ import {
   ensureModuleRegistry,
 } from '../services/wc7c/module-access-engine.js';
 import { ensureEntitlementGrantsSchema } from '../services/commercial/entitlement-grants-schema.js';
+import { z } from 'zod';
+import { validate } from '../lib/validate.js';
 
 const VERSION = '6.4.0';
+
+// Mirrors the grant handler's hard-required fields (email non-empty + module).
+// `email` is the grant identity key (lower(email) matched) → `.email()` hardening.
+// `module` validity (isModuleCode) stays in the handler so its rich {valid_modules}
+// error is preserved. The revoke handler is conditional (grantId OR email+module),
+// so its body is intentionally left to the handler (not a fixed schema).
+const grantBody = z.object({
+  email: z.string().trim().email(),
+  module: z.string().trim().min(1),
+});
 
 function principalEmail(req: Request): string | null {
   const raw = (req as any).user?.email;
@@ -115,6 +127,7 @@ export function registerEntitlementEngineRoutes(
     gate,
     requireAuth,
     requireSuperAdmin,
+    validate({ body: grantBody }),
     wrap(async (req, res) => {
       const b = req.body ?? {};
       const email = String(b.email ?? '').trim();

@@ -12,6 +12,20 @@ import type { Pool } from 'pg';
 import { ingestSessionSignals } from '../lib/signal-ingest';
 import { isEnabled } from '../services/feature-flags';
 import type { QuestionTiming } from '../services/signal-classifier';
+import { z } from 'zod';
+import { validate } from '../lib/validate';
+
+// telemetry: mirrors the handler's truthy check (`!session_id || !question_id`).
+// Both fields may be string OR number in legitimate clients (handler String()s them),
+// so we assert TRUTHY presence rather than a string type → byte-identical for valid input.
+// NOTE: /api/signals/ingest is intentionally NOT gated here — its flag-skip path
+// returns 200 BEFORE the session_id check, so a middleware required-field gate would
+// break the flag-off byte-identical behaviour. Its session_id check stays in-handler.
+const telemetryBody = z
+  .object({ session_id: z.any().optional(), question_id: z.any().optional() })
+  .refine((b) => !!b?.session_id && !!b?.question_id, {
+    message: 'session_id and question_id are required',
+  });
 
 /**
  * Defensive timings normaliser. The ingest pipeline expects `timings` as an
@@ -151,7 +165,7 @@ export function registerSignalCaptureRoutes(app: Application, pool: Pool): void 
   // the UI. Errors are swallowed (logged server-side) so transient DB blips
   // never surface as screen freezes during an assessment.
   // ─────────────────────────────────────────────────────────────────────────
-  app.post('/api/signals/telemetry', async (req: Request, res: Response) => {
+  app.post('/api/signals/telemetry', validate({ body: telemetryBody }), async (req: Request, res: Response) => {
     try {
       const { session_id, question_id } = req.body || {};
       if (!session_id || !question_id) {

@@ -12,13 +12,19 @@
 import type { Express } from 'express';
 import pg from 'pg';
 import { CANONICAL_SIGNAL_TYPES, ingestBehaviouralSignals } from '../lib/signal-ingest';
+import { z } from 'zod';
+import { validate } from '../lib/validate';
+
+// Mirrors the handler's hard requirement: a non-empty `signals` array.
+// session_id / user_email stay optional (handler treats them as optional).
+const biosIngestBody = z.object({ signals: z.array(z.any()).min(1) });
 
 export function registerBehaviouralSignalsRoutes(app: Express, pool: pg.Pool) {
 
   // POST /api/bios/signals/ingest — ingest one or many signals
   // Delegates write logic to shared ingestBehaviouralSignals() for canonical
   // taxonomy enforcement and consistent DB persistence.
-  app.post('/api/bios/signals/ingest', async (req, res) => {
+  app.post('/api/bios/signals/ingest', validate({ body: biosIngestBody }), async (req, res) => {
     const { session_id, user_email, signals } = req.body;
     if (!signals || !Array.isArray(signals) || signals.length === 0) {
       return res.status(400).json({ error: 'signals array required' });

@@ -31,8 +31,8 @@ We do NOT claim deep per-field validation on every handler — see Layer-2 table
 | Route files | 292 | `ls backend/routes \| wc -l` |
 | Total HTTP handlers | 3,233 | `rg '\.(get\|post\|put\|patch\|delete)\(' backend/routes \| wc -l` |
 | **Layer-1 baseline coverage** | **3,233 / 3,233 (100%)** | app-wide `globalInputHardening()` in `index.ts` |
-| Layer-2 files using `lib/validate` | 2 | `rg -l "from '../lib/validate'" backend/routes` |
-| Layer-2 `validate({...})` call sites | 15 | `rg "validate\(\{" backend/routes \| wc -l` |
+| Layer-2 files using `lib/validate` | 7 | `rg -l "from '../lib/validate'" backend/routes` |
+| Layer-2 `validate({...})` call sites | 23 | `rg "validate\(\{" backend/routes \| wc -l` |
 
 ## Layer 1 — universal baseline (what it rejects)
 
@@ -106,14 +106,45 @@ limits can be raised in `lib/validate.ts` if a legitimate use case needs it.
   `.refine()` schema in a later pass.
 - **`razorpay/webhook`**: signature-protected; body shape owned by Razorpay.
 
+### Deepening batch — entitlement / invoice / signal ingest (5 files, +8 sites)
+All mirror-only (require only the handler's own hard-required fields); applied
+**after** the auth/flag chain so flag-OFF still 503s before validation.
+
+| Method · Path | Schema (required) | Notes |
+| --- | --- | --- |
+| POST `/api/admin/entitlement/grants` | `email` (`.email()`), `feature` | `entitlement.ts` |
+| POST `/api/admin/entitlement/grants/:id/revoke` | `idParam` | `entitlement.ts` |
+| POST `/api/entitlement/admin/grant` | `email` (`.email()`), `module` | `entitlement-engine.ts`; `module` validity stays in-handler (rich `{valid_modules}` 400 preserved) |
+| POST `/api/invoice/admin/gst-preview` | `amount_paise` (`coerce.number().min(0)`) | `invoice-engine.ts`; mirrors `asNum` + `<0` check |
+| POST `/api/invoice/admin/invoices` | `doc_type`, `source_id` | `invoice-engine.ts`; `doc_type` validity stays in-handler |
+| POST `/api/invoice/admin/invoices/:id/email` | `idParam` | `invoice-engine.ts` |
+| POST `/api/signals/telemetry` | truthy `session_id` + `question_id` | `signal-capture.ts`; refine mirrors `!x` check (string OR number) |
+| POST `/api/bios/signals/ingest` | non-empty `signals` array | `behavioural-signals.ts` |
+
+Smoke-tested post-restart: telemetry `{}`→400, valid→202, numeric `question_id`→202;
+bios `signals:[]`→400, valid→200; **`/api/signals/ingest` flag-skip still 200** (not
+a new 400). Backend boots clean (health 200, no import/ReferenceError).
+
+#### Intentionally deferred in this batch (with reasons)
+- **`POST /api/signals/ingest`** — its flag-skip path returns `{ok,skipped}` **200
+  before** the in-handler `session_id` check; a middleware required-field gate would
+  turn that flag-OFF 200 into a 400 → breaks byte-identical flag-off behaviour. The
+  `session_id` check correctly stays in-handler (after the flag check).
+- **`POST /api/entitlement/admin/grant` revoke / `/api/entitlement/admin/revoke`** —
+  conditional requirement (`grantId` OR `email`+`module`); a flat schema would be
+  wrong. Candidate for a `.refine()` pass.
+- **`PUT /api/invoice/admin/seller-config`** — all fields optional (`COALESCE`).
+
 ## Layer-2 deepening (optional, priority order)
 
 Baseline (Layer 1) already covers 100% of handlers. Layer-2 deep per-field schemas
 are an **optional defense-in-depth deepening** — each adds early, specific rejection
 of business-rule-invalid input. They are NOT required for coverage. Priority order
 if/when deepening continues:
-1. **Other payment / commercial / entitlement writes** — `routes/invoice-*.ts`,
-   `routes/*entitlement*`, `routes/*commercial*` not yet covered.
+1. **Other payment / commercial / entitlement writes** — `entitlement.ts`,
+   `entitlement-engine.ts`, `invoice-engine.ts` now have their hard-required writes
+   covered (see deepening batch). Remaining: `routes/*commercial*` beyond
+   `commercial-spine.ts`, plus the deferred conditional/optional bodies above.
 2. **Super-admin write surfaces** — admin CRUD POST/PATCH/DELETE across
    `routes/*admin*`, framework panels (lbi/sdi/competency/concerns/short-assessments).
 3. **Auth / identity / MFA** — login, OTP, MFA verify, password flows.

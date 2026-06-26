@@ -67,3 +67,25 @@ from the handler (not the validator) is the proof the gate passed it through.
 ## Coverage math caveat
 `validate({` call-site count UNDER-counts covered handlers (one registrar edit
 covers 6 routes). Keep the tracker conservative; report call-sites, note the fan-out.
+
+## Layer-2 trap: flag-skip / early-200 precedes the required-field check
+When adding a middleware `validate({...})` with a REQUIRED field, confirm the
+handler doesn't have an EARLIER success path that returns 200 before its own
+required-field check. Example: `signals/ingest` returns `{ok,skipped}` 200 when the
+flag is OFF, BEFORE checking `session_id`. A middleware required-`session_id` gate
+would turn that flag-off 200 into a 400 → breaks byte-identical flag-off. Fix: leave
+that field's check in-handler (defer the schema), document the reason in the tracker.
+
+**Why:** middleware runs before the whole handler, so it also runs before an
+early-return skip/short-circuit the handler does for flag-off or no-op cases.
+
+**How to apply:** before wiring a required-field schema, grep the handler for an
+early `return res...200` (flag check, skip, idempotent no-op) that precedes the
+`if (!field) 400`. If one exists, the field is only conditionally required → defer.
+
+## Truthy (not typed) required fields
+Some handlers gate on `!x` (truthy), accepting string OR number (e.g. telemetry
+`question_id` can be `"q1"` or `5`). Mirror with a `.refine(b => !!b.x && !!b.y)`
+over `z.any().optional()` fields — NOT `z.string()`, which would reject the numeric
+form the handler accepts. `z.coerce.string()` is also wrong here (it turns `0` into
+`"0"`, but `!0` is true → handler 400s on `0`). The refine reproduces `!x` exactly.

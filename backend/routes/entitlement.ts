@@ -25,8 +25,19 @@ import { buildFeatureClassOverview } from '../services/wc7c/entitlement-engine';
 import { ensureEntitlementGrantsSchema } from '../services/commercial/entitlement-grants-schema';
 import { isCommercialEntitlementClassesEnabled } from '../config/feature-flags';
 import { isFeatureClass } from '../services/commercial/plan-features';
+import { z } from 'zod';
+import { validate, idParam } from '../lib/validate';
 
 type GuardMW = (req: any, res: any, next: any) => void;
+
+// Mirrors the handler's hard-required fields (`if (!email || !feature) return 400`).
+// `email` is the entitlement identity key (matched via lower(email)) → `.email()`
+// is a deliberate, documented hardening. Optional fields (reason, expires_at) and
+// the expires_at validity check stay in the handler.
+const grantBody = z.object({
+  email: z.string().trim().email(),
+  feature: z.string().trim().min(1),
+});
 
 export function registerEntitlementRoutes(
   app: Express,
@@ -98,7 +109,7 @@ export function registerEntitlementRoutes(
     }
   });
 
-  app.post('/api/admin/entitlement/grants', ...classesChain, async (req: any, res) => {
+  app.post('/api/admin/entitlement/grants', ...classesChain, validate({ body: grantBody }), async (req: any, res) => {
     try {
       const email = String(req.body?.email ?? '').trim();
       const feature = String(req.body?.feature ?? '').trim();
@@ -122,7 +133,7 @@ export function registerEntitlementRoutes(
     }
   });
 
-  app.post('/api/admin/entitlement/grants/:id/revoke', ...classesChain, async (req: any, res) => {
+  app.post('/api/admin/entitlement/grants/:id/revoke', ...classesChain, validate({ params: idParam }), async (req: any, res) => {
     try {
       const { id } = req.params;
       const revokedBy = req.user?.email ?? req.session?.email ?? 'super_admin';

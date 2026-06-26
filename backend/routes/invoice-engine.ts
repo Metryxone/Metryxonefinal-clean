@@ -26,6 +26,8 @@ import {
 } from '../services/invoice/invoice-runtime';
 import { renderInvoiceToPDF } from '../services/pdf-renderer';
 import { sendInvoiceEmail } from '../email';
+import { z } from 'zod';
+import { validate, idParam } from '../lib/validate';
 
 const asStr = (v: unknown): string | null => (typeof v === 'string' && v.trim() ? v.trim() : null);
 const asNum = (v: unknown): number | null => {
@@ -34,6 +36,18 @@ const asNum = (v: unknown): number | null => {
 };
 const rupees = (paise: number): string =>
   new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2 }).format(Number(paise) / 100);
+
+// Mirror-only schemas (handler keeps all other validation/coercion).
+// gst-preview: handler requires a finite, non-negative amount_paise (`asNum` +
+//   `amount < 0` check) → coerce.number().min(0) matches `asNum` (string→number) exactly.
+// generate-invoice: handler requires doc_type (isDocType) + non-empty source_id;
+//   we require both present (doc_type validity stays in the handler's isDocType 400).
+// seller-config (PUT) is all-optional (COALESCE) → no fixed schema (handler-owned).
+const gstPreviewBody = z.object({ amount_paise: z.coerce.number().min(0) });
+const generateInvoiceBody = z.object({
+  doc_type: z.string().trim().min(1),
+  source_id: z.string().trim().min(1),
+});
 
 function gate(_req: Request, res: Response, next: NextFunction): void {
   if (!isInvoiceGstEngineEnabled()) {
@@ -107,7 +121,7 @@ export function registerInvoiceRoutes(
   });
 
   // ── GST preview (pure compute, no persistence) ──
-  app.post('/api/invoice/admin/gst-preview', ...admin, async (req, res, next) => {
+  app.post('/api/invoice/admin/gst-preview', ...admin, validate({ body: gstPreviewBody }), async (req, res, next) => {
     try {
       const b = req.body || {};
       const amount = asNum(b.amount_paise);
@@ -217,7 +231,7 @@ export function registerInvoiceRoutes(
   });
 
   // ── Generate a document from a real source ──
-  app.post('/api/invoice/admin/invoices', ...admin, async (req, res, next) => {
+  app.post('/api/invoice/admin/invoices', ...admin, validate({ body: generateInvoiceBody }), async (req, res, next) => {
     try {
       const b = req.body || {};
       if (!isDocType(b.doc_type)) return res.status(400).json({ error: 'invalid doc_type' });
@@ -266,7 +280,7 @@ export function registerInvoiceRoutes(
   });
 
   // ── Email the document to the customer ──
-  app.post('/api/invoice/admin/invoices/:id/email', ...admin, async (req, res, next) => {
+  app.post('/api/invoice/admin/invoices/:id/email', ...admin, validate({ params: idParam }), async (req, res, next) => {
     try {
       const result = await getInvoiceWithItems(pool, req.params.id);
       if (!result) return res.status(404).json({ error: 'not found' });

@@ -5,6 +5,7 @@
  */
 import type { Pool } from 'pg';
 import type { Request } from 'express';
+import { redactJson } from '../lib/redact';
 
 export type AuditAction =
   | 'create' | 'update' | 'archive' | 'delete'
@@ -77,9 +78,9 @@ export async function logAudit(
         entry.entityType,
         entry.entityId != null ? String(entry.entityId) : null,
         entry.entityLabel ?? null,
-        entry.before  != null ? JSON.stringify(entry.before)  : null,
-        entry.after   != null ? JSON.stringify(entry.after)   : null,
-        entry.metadata != null ? JSON.stringify(entry.metadata) : null,
+        redactJson(entry.before),
+        redactJson(entry.after),
+        redactJson(entry.metadata),
         ip ?? null,
       ],
     );

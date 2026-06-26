@@ -5,6 +5,7 @@
  * All admin action handlers import from here instead of writing raw SQL directly.
  */
 import type { Pool } from 'pg';
+import { redactJson } from './redact';
 
 // ── Canonical event-type registry ─────────────────────────────────────────────
 export const AUDIT_EVENT = {
@@ -47,7 +48,7 @@ export async function writeAuditEvent(
         event.actor || 'system',
         event.user_id   ?? null,
         event.session_id ?? null,
-        JSON.stringify(event.payload ?? {}),
+        redactJson(event.payload ?? {}) ?? '{}',
       ],
     );
   } catch (err) {

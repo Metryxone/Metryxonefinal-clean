@@ -5,6 +5,7 @@ import helmet from "helmet";
 
 import { connectMongo } from "./mongo";
 import { csrfProtection } from "./lib/csrf";
+import { redactDeep } from "./lib/redact";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { registerChatRoutes } from "./replit_integrations/chat";
@@ -131,19 +132,8 @@ const SENSITIVE_BODY_PATHS = [
   "/api/login", "/api/admin/mfa", "/api/auth", "/api/register",
   "/api/forgot-password", "/api/reset-password",
 ];
-const SENSITIVE_KEY = /pass(word)?|secret|token|otp|mfa|code|authorization|cookie|ssn|aadhaar|card/i;
-function redactBody(value: any, depth = 0): any {
-  if (value == null || depth > 4) return value;
-  if (Array.isArray(value)) return value.slice(0, 20).map((v) => redactBody(v, depth + 1));
-  if (typeof value === "object") {
-    const out: Record<string, any> = {};
-    for (const [k, v] of Object.entries(value)) {
-      out[k] = SENSITIVE_KEY.test(k) ? "[REDACTED]" : redactBody(v, depth + 1);
-    }
-    return out;
-  }
-  return value;
-}
+// Redaction policy is shared with the DB audit writers (./lib/redact) so stdout
+// logs and the at-rest audit trail mask the same sensitive keys.
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -162,7 +152,7 @@ app.use((req, res, next) => {
       let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
       const isSensitive = SENSITIVE_BODY_PATHS.some((p) => path.startsWith(p));
       if (capturedJsonResponse && !isSensitive) {
-        let body = JSON.stringify(redactBody(capturedJsonResponse));
+        let body = JSON.stringify(redactDeep(capturedJsonResponse));
         if (body && body.length > 800) body = body.slice(0, 800) + "…[truncated]";
         logLine += ` :: ${body}`;
       }

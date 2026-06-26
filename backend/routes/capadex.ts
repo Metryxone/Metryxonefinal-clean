@@ -27,6 +27,7 @@ import { generateInterventionIntelligence } from '../services/intervention-intel
 import { explainSession } from '../services/capadex-insight-explainer';
 import { discoverStrengths } from '../services/strength-discovery-engine';
 import { computeItemScore, computeNormScore, buildSessionScoreTrace } from '../lib/scoring-utils';
+import { redactJson } from '../lib/redact';
 import { seedInitialState, updateStateOnStageComplete } from '../services/cognitive-state';
 import { buildOmegaXSkeleton, isPopulatedOmegaXPayload, calculateBayesianUpdate } from '../services/omega-x-payload';
 import { evaluateSafetyTrip, buildSafetyInterceptEnvelope } from '../services/capadex-safety-breaker';
@@ -2074,7 +2075,7 @@ export function registerCapadexRoutes(app: Express, pool: Pool) {
       pool.query(`
         INSERT INTO capadex_audit_events (session_id, event_type, payload, created_at)
         VALUES ($1, 'score_computed', $2, now())
-      `, [id, JSON.stringify({
+      `, [id, redactJson({
         stage_code:    session.stage_code,
         score,
         response_count: resp.length,
@@ -2084,7 +2085,7 @@ export function registerCapadexRoutes(app: Express, pool: Pool) {
         applied_edges: appliedEdges,
         formula:       (scoreTrace as any).ontology_backprop.formula,
         score_trace:   scoreTrace,
-      })]).catch(() => {/* non-critical */});
+      }) ?? '{}']).catch(() => {/* non-critical */});
 
       const stageLabel  = STAGES[stageIndex]?.label || '';
       const insight     = generateStageInsight(stageLabel, score, session.concern_name);
@@ -4168,7 +4169,7 @@ export function registerCapadexRoutes(app: Express, pool: Pool) {
          VALUES ($1, 'upgrade_interest', $2::jsonb, now())`,
         [
           session_id || null,
-          JSON.stringify({ stage_code, stage_name, price, phone: phone || null, concern_name, participant_name, email: email || null }),
+          redactJson({ stage_code, stage_name, price, phone: phone || null, concern_name, participant_name, email: email || null }) ?? '{}',
         ]
       ).catch(() => {
         // Fallback: just log if table insert fails

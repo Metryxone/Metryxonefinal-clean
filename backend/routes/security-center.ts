@@ -35,6 +35,7 @@
 
 import type { Express } from "express";
 import type { Pool } from "pg";
+import { buildUnifiedAuditTrail } from "../services/governance/unified-audit-trail";
 
 let schemaReady: Promise<void> | null = null;
 
@@ -227,6 +228,31 @@ export function registerSecurityCenterRoutes(
     out.liveReality.formalRbacPopulated =
       (out.roles?.length || 0) > 0 && (out.grants?.length || 0) > 0;
     res.json(out);
+  });
+
+  // ---- Unified Audit Trail (read-only) -------------------------------------
+  // Single chronological trail merging all FOUR audit substrates
+  // (admin_audit_logs, platform_audit_log, capadex_audit_events,
+  // rbac_failed_logins) into one normalised stream with a `source` discriminator
+  // and per-source substrate flags/counts. Surfaces metadata only (no raw state
+  // blobs), probes tables with to_regclass (no DDL), and never throws.
+  app.get("/api/admin/security/audit-trail/unified", guard, async (req, res) => {
+    try {
+      const limit = req.query.limit != null ? Number(req.query.limit) : 100;
+      res.json(await buildUnifiedAuditTrail(pool, limit));
+    } catch (err) {
+      // Defensive: the builder is itself never-throws, but degrade rather than 500.
+      res.json({
+        generated_at: new Date().toISOString(),
+        degraded: true,
+        sources: [],
+        totals: { events: 0, sources_present: 0 },
+        by_category: [],
+        by_source: [],
+        recent: [],
+        notes: ["unified audit trail unavailable"],
+      });
+    }
   });
 }
 

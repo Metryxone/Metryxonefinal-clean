@@ -10,6 +10,7 @@
 
 import type { Pool } from "pg";
 import { ensureGovernanceSchema } from "./rbac-schema";
+import { redactJson } from "../../lib/redact";
 
 export type AuditCategory =
   | "login" | "logout" | "create" | "update" | "delete"
@@ -46,8 +47,8 @@ export async function recordGovernanceAudit(pool: Pool, e: AuditEntry): Promise<
         e.category,
         e.targetType ?? e.category,
         e.targetId ?? e.category,
-        e.previousState != null ? JSON.stringify(e.previousState).slice(0, 4000) : null,
-        e.newState != null ? JSON.stringify(e.newState).slice(0, 4000) : null,
+        redactJson(e.previousState, 4000),
+        redactJson(e.newState, 4000),
         (e.notes ?? "").slice(0, 1000) || null,
         e.ip ?? null,
       ]

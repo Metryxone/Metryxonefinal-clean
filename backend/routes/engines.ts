@@ -10,6 +10,7 @@
 import type { Express, Request, Response, NextFunction } from 'express';
 import type { Pool } from 'pg';
 import { EventEmitter } from 'node:events';
+import { resolveEffectiveUserId } from './behavioural-memory';
 
 type Auth = (req: Request, res: Response, next: NextFunction) => void;
 
@@ -80,7 +81,11 @@ export function registerEngineRoutes(app: Express, pool: Pool, requireAuth: Auth
   // §11 — Confidence for a user × competency
   app.get('/api/engines/confidence/:userId/:competencyId', requireAuth, async (req, res, next) => {
     try {
-      const { userId, competencyId } = req.params;
+      const { competencyId } = req.params;
+      const resolved = resolveEffectiveUserId(req, req.params.userId);
+      if (resolved.forbidden) return res.status(403).json({ error: 'forbidden_cross_user' });
+      const userId = resolved.userId;
+      if (!userId) return res.status(400).json({ error: 'user_id_required' });
       const r = await pool.query(
         `SELECT
             COUNT(*)::int AS attempts,
@@ -114,7 +119,10 @@ export function registerEngineRoutes(app: Express, pool: Pool, requireAuth: Auth
   // §13 — Explainability summary for a user
   app.get('/api/engines/explain/:userId', requireAuth, async (req, res, next) => {
     try {
-      const { userId } = req.params;
+      const resolved = resolveEffectiveUserId(req, req.params.userId);
+      if (resolved.forbidden) return res.status(403).json({ error: 'forbidden_cross_user' });
+      const userId = resolved.userId;
+      if (!userId) return res.status(400).json({ error: 'user_id_required' });
       const r = await pool.query(
         `WITH user_avg AS (
            SELECT i.competency_id, AVG(cur.score_obtained)::float AS user_score

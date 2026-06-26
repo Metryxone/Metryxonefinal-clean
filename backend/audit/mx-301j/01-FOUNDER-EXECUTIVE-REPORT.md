@@ -1,6 +1,6 @@
 # MX-301J — Founder Executive Report
 
-_Generated 2026-06-26T02:12:26.211Z · MX-301J composer v301.10.0 · read-only (no DDL, no writes) · PII-masked_
+_Generated 2026-06-26T03:26:43.088Z · MX-301J composer v301.10.0 · read-only (no DDL, no writes) · PII-masked_
 
 > **There is deliberately NO single combined score.** These fourteen dimensions are
 > orthogonal axes and are reported **separately**. Folding them into one percentage would be
@@ -13,7 +13,7 @@ _Generated 2026-06-26T02:12:26.211Z · MX-301J composer v301.10.0 · read-only (
 | # | Dimension | Axis | Status | Headline |
 |:-:|-----------|------|:------:|----------|
 | 1 | **Platform Implementation** | Structural | 🟢 Ready | 100% structural readiness — 24/24 required tables present; 15/15 subsystems PASS. |
-| 2 | **Functional Readiness** | End-to-end journey | 🟡 Partial | Candidate journey 100% (5/5 steps); employer journey 33.3% (3/9 stages reachable). |
+| 2 | **Functional Readiness** | End-to-end journey | 🟢 Ready | Candidate journey 100% (5/5 steps); employer journey 100% (9/9 stages reachable). |
 | 3 | **Assessment Quality** | Coverage ⟂ Confidence | 🟡 Partial | 419 competencies carry mapped questions (coverage); 120 of 2665 templates are human-approved / assessment-ready (confidence). |
 | 4 | **Career Intelligence** | Structural + Adoption | 🟢 Ready | Career Builder, Candidate Intelligence, Career Passport all structurally PASS; live adoption is early (Career Builder 1, Candidate Intelligence 2, Career Passport 17 rows). |
 | 5 | **Employer Intelligence** | Structural + Adoption | 🟡 Partial | Employer Intelligence structurally PASS (2/2 tables) and activated, but adoption is dormant (0 live non-demo rows). |
@@ -23,14 +23,14 @@ _Generated 2026-06-26T02:12:26.211Z · MX-301J composer v301.10.0 · read-only (
 | 9 | **Security & Governance** | Structural/config + live gate | 🟢 Ready | Security & governance 100% structural; live super_admin gate authoritative; super-admin login is ALWAYS 2FA-gated (MX-301I G4 — dev bypass removed). |
 | 10 | **Data Integrity** | Structural + demo isolation | 🟢 Ready | Audit substrate present and not degraded; demo data is isolated and purgeable (career_seeker_profiles: 1 demo of 2 total, 50%). |
 | 11 | **Knowledge Completion** | Coverage (breadth) ⟂ Confidence (depth) | 🟡 Partial | Genome breadth complete: 422 active competencies, all domain-classified. Content depth shallow: indicators authored for 13 competencies (3.1%). |
-| 12 | **Activation** | Activation (gating flags on) | 🟠 Not ready | 8/15 subsystems have their gating flag ON (53.3%). |
+| 12 | **Activation** | Activation (gating flags on) | 🟢 Ready | 15/15 subsystems have their gating flag ON (100%). |
 | 13 | **Adoption** | Adoption (live non-demo rows) | 🟢 Ready | 11/15 subsystems show live non-demo rows (73.3%). Several remain at 0 — honest pre-launch dormancy, never coerced upward. |
 | 14 | **Outcome Confidence** | Outcome (calibrated ≥ k_min) | ⚫ Abstained | ABSTAINED — 0 of 6 outcome types are evidence-backed; strongest single-type evidence 0/30 realized pairs (k_min=30). Empirical accuracy is NOT claimed. |
 
 ## What this means for a founder
 
-- **Built and verified (8):** Platform Implementation, Career Intelligence, Report Quality, UI Quality, Performance & Scalability, Security & Governance, Data Integrity, Adoption.
-- **Built, partially exercised (4):** Functional Readiness, Assessment Quality, Employer Intelligence, Knowledge Completion. These are real and wired; what is "partial" is live usage / human-approval depth / gated rollout — not missing code.
+- **Built and verified (10):** Platform Implementation, Functional Readiness, Career Intelligence, Report Quality, UI Quality, Performance & Scalability, Security & Governance, Data Integrity, Activation, Adoption.
+- **Built, partially exercised (3):** Assessment Quality, Employer Intelligence, Knowledge Completion. These are real and wired; what is "partial" is live usage / human-approval depth / gated rollout — not missing code.
 - **Honestly awaiting live evidence (1):** Outcome Confidence. Outcome Confidence ABSTAINS until ≥30 real outcomes accrue — by design, not a failure.
 
 ## The honest headline

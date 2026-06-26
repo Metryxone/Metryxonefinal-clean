@@ -1,6 +1,6 @@
 # MX-301J — Product Demonstration Guide
 
-_Generated 2026-06-26T02:12:26.211Z · how to demonstrate each certified capability live_
+_Generated 2026-06-26T03:26:43.088Z · how to demonstrate each certified capability live_
 
 > This guide walks an evaluator through the platform so each of the 14 dimensions can be
 > seen first-hand. Where a dimension is honestly dormant/abstained, the guide says so.

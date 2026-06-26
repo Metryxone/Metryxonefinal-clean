@@ -1,6 +1,6 @@
 # MX-301J — Evidence Package
 
-_Generated 2026-06-26T02:12:26.211Z · read-only · PII-masked · raw folded outputs of every composer behind the 14 dimensions_
+_Generated 2026-06-26T03:26:43.088Z · read-only · PII-masked · raw folded outputs of every composer behind the 14 dimensions_
 
 **Process flag state at run:** FF_ENTERPRISE_CERTIFICATION=on, FF_GO_LIVE_CERTIFICATION=on, FF_OUTCOME_INTELLIGENCE_ACTIVATION=on, FF_LIVE_EMPLOYER_ECOSYSTEM=on, FF_RUNTIME_INTELLIGENCE_ACTIVATION=on, FF_COMMERCIAL_ACTIVATION=on, FF_CAREER_INTELLIGENCE_ACTIVATION=on, FF_AI_GOVERNANCE=on, FF_GOVERNANCE_RBAC_V2=on, FF_ENTERPRISE_ANALYTICS=on, FF_REPORT_FACTORY=on
 
@@ -47,7 +47,7 @@ _Generated 2026-06-26T02:12:26.211Z · read-only · PII-masked · raw folded out
         "missing": []
       },
       "activation": {
-        "switched_on": false,
+        "switched_on": true,
         "flag": "roleDnaGovernance",
         "always_on": false
       },
@@ -70,7 +70,7 @@ _Generated 2026-06-26T02:12:26.211Z · read-only · PII-masked · raw folded out
         "missing": []
       },
       "activation": {
-        "switched_on": false,
+        "switched_on": true,
         "flag": "onetCrosswalkGovernance",
         "always_on": false
       },
@@ -93,7 +93,7 @@ _Generated 2026-06-26T02:12:26.211Z · read-only · PII-masked · raw folded out
         "missing": []
       },
       "activation": {
-        "switched_on": false,
+        "switched_on": true,
         "flag": "competencyRuntime",
         "always_on": false
       },
@@ -116,7 +116,7 @@ _Generated 2026-06-26T02:12:26.211Z · read-only · PII-masked · raw folded out
         "missing": []
       },
       "activation": {
-        "switched_on": false,
+        "switched_on": true,
         "flag": "questionFactory",
         "always_on": false
       },
@@ -139,7 +139,7 @@ _Generated 2026-06-26T02:12:26.211Z · read-only · PII-masked · raw folded out
         "missing": []
       },
       "activation": {
-        "switched_on": false,
+        "switched_on": true,
         "flag": "adaptiveDifficultyActivation",
         "always_on": false
       },
@@ -185,7 +185,7 @@ _Generated 2026-06-26T02:12:26.211Z · read-only · PII-masked · raw folded out
         "missing": []
       },
       "activation": {
-        "switched_on": false,
+        "switched_on": true,
         "flag": "ecosystemActivation",
         "always_on": false
       },
@@ -231,7 +231,7 @@ _Generated 2026-06-26T02:12:26.211Z · read-only · PII-masked · raw folded out
         "missing": []
       },
       "activation": {
-        "switched_on": false,
+        "switched_on": true,
         "flag": "careerPassport",
         "always_on": false
       },
@@ -369,7 +369,7 @@ _Generated 2026-06-26T02:12:26.211Z · read-only · PII-masked · raw folded out
     "pass": 15,
     "partial": 0,
     "fail": 0,
-    "activated": 8,
+    "activated": 15,
     "adopted": 11
   },
   "enterprise_structural_pct": 100,
@@ -428,10 +428,10 @@ _Generated 2026-06-26T02:12:26.211Z · read-only · PII-masked · raw folded out
     "stages": [
       {
         "stage": "Employer Onboarding",
-        "status": "gated",
-        "coverage": "gated",
+        "status": "demo_only",
+        "coverage": "reachable",
         "confidence": "demo_only",
-        "flag_enabled": false,
+        "flag_enabled": true,
         "substrate_present": true,
         "real_rows": 0,
         "demo_rows": 1
@@ -458,50 +458,50 @@ _Generated 2026-06-26T02:12:26.211Z · read-only · PII-masked · raw folded out
       },
       {
         "stage": "Competencies",
-        "status": "gated",
-        "coverage": "gated",
+        "status": "operational",
+        "coverage": "reachable",
         "confidence": "real",
-        "flag_enabled": false,
+        "flag_enabled": true,
         "substrate_present": true,
         "real_rows": 422,
         "demo_rows": 0
       },
       {
         "stage": "Assessment",
-        "status": "gated",
-        "coverage": "gated",
+        "status": "demo_only",
+        "coverage": "reachable",
         "confidence": "demo_only",
-        "flag_enabled": false,
+        "flag_enabled": true,
         "substrate_present": true,
         "real_rows": 0,
         "demo_rows": 40
       },
       {
         "stage": "Candidate Match",
-        "status": "gated",
-        "coverage": "gated",
+        "status": "demo_only",
+        "coverage": "reachable",
         "confidence": "demo_only",
-        "flag_enabled": false,
+        "flag_enabled": true,
         "substrate_present": true,
         "real_rows": 0,
         "demo_rows": 41
       },
       {
         "stage": "Interview Intelligence",
-        "status": "gated",
-        "coverage": "gated",
+        "status": "empty",
+        "coverage": "reachable",
         "confidence": "demo_only",
-        "flag_enabled": false,
+        "flag_enabled": true,
         "substrate_present": true,
         "real_rows": 0,
         "demo_rows": 0
       },
       {
         "stage": "Hiring Decision",
-        "status": "gated",
-        "coverage": "gated",
+        "status": "demo_only",
+        "coverage": "reachable",
         "confidence": "demo_only",
-        "flag_enabled": false,
+        "flag_enabled": true,
         "substrate_present": true,
         "real_rows": 0,
         "demo_rows": 34
@@ -519,45 +519,14 @@ _Generated 2026-06-26T02:12:26.211Z · read-only · PII-masked · raw folded out
     ],
     "verdict": "PARTIAL",
     "completion": {
-      "coverage_reachable": 3,
+      "coverage_reachable": 9,
       "coverage_total": 9,
-      "coverage_pct": 33.3,
+      "coverage_pct": 100,
       "real_data_stages": 2
     }
   },
   "broken_links": [],
-  "dependency_gaps": [
-    {
-      "surface": "employer",
-      "step": "Employer Onboarding",
-      "reason": "gating flag OFF (configuration dependency)"
-    },
-    {
-      "surface": "employer",
-      "step": "Competencies",
-      "reason": "gating flag OFF (configuration dependency)"
-    },
-    {
-      "surface": "employer",
-      "step": "Assessment",
-      "reason": "gating flag OFF (configuration dependency)"
-    },
-    {
-      "surface": "employer",
-      "step": "Candidate Match",
-      "reason": "gating flag OFF (configuration dependency)"
-    },
-    {
-      "surface": "employer",
-      "step": "Interview Intelligence",
-      "reason": "gating flag OFF (configuration dependency)"
-    },
-    {
-      "surface": "employer",
-      "step": "Hiring Decision",
-      "reason": "gating flag OFF (configuration dependency)"
-    }
-  ],
+  "dependency_gaps": [],
   "notes": [
     "Candidate steps from MX-104X certification; employer stages from MX-103X audit (composed, not recomputed).",
     "Broken links = structural machinery absent. Dependency gaps = a gating flag is OFF. Reported SEPARATELY.",
@@ -655,10 +624,10 @@ _Generated 2026-06-26T02:12:26.211Z · read-only · PII-masked · raw folded out
       "axis": "activation",
       "label": "Activation",
       "measurable": true,
-      "score": 53.3,
-      "status": "not_ready",
+      "score": 100,
+      "status": "ready",
       "evidence": {
-        "activated_subsystems": 8,
+        "activated_subsystems": 15,
         "subsystems_total": 15
       },
       "source": "MX-105X recertification.summary.activated",
@@ -808,7 +777,7 @@ _Generated 2026-06-26T02:12:26.211Z · read-only · PII-masked · raw folded out
       "measurable": true,
       "data_governance_events_30d": 0,
       "detail": {
-        "generated_at": "2026-06-26T02:12:24.786Z",
+        "generated_at": "2026-06-26T03:26:41.978Z",
         "degraded": false,
         "substrate": {
           "admin_audit_logs": true,
@@ -961,9 +930,9 @@ _Generated 2026-06-26T02:12:26.211Z · read-only · PII-masked · raw folded out
       "id": "employer_journey_ready",
       "axis": "structural",
       "question": "Is the employer journey end-to-end structurally functional?",
-      "answer": "no",
+      "answer": "yes",
       "evidence": {
-        "employer_coverage_pct": 33.3,
+        "employer_coverage_pct": 100,
         "employer_broken_links": 0
       }
     },
@@ -1019,16 +988,16 @@ _Generated 2026-06-26T02:12:26.211Z · read-only · PII-masked · raw folded out
   ],
   "summary": {
     "total": 9,
-    "answered_yes": 7,
-    "answered_no": 2,
+    "answered_yes": 8,
+    "answered_no": 1,
     "abstained": 0
   },
-  "overall_checklist_pct": 77.8,
+  "overall_checklist_pct": 88.9,
   "overall_note": "Overall = share of the 9 go-live questions answered YES (checklist completion). It is reported ALONGSIDE the six axes — it is NOT an average of them.",
   "level": {
-    "index": 0,
-    "key": "prototype",
-    "label": "Prototype"
+    "index": 3,
+    "key": "market_ready",
+    "label": "Market Ready"
   },
   "ladder": [
     {
@@ -1058,12 +1027,12 @@ _Generated 2026-06-26T02:12:26.211Z · read-only · PII-masked · raw folded out
     }
   ],
   "gates": {
-    "production_ready": false,
-    "enterprise_ready": false,
-    "market_ready": false,
+    "production_ready": true,
+    "enterprise_ready": true,
+    "market_ready": true,
     "outcome_validated": false
   },
-  "recommendation": "NOT READY for production. Core structural gates (platform / assessment / candidate / employer journeys) are not all met. Resolve the unmet structural questions before any launch.",
+  "recommendation": "MARKET READY — structurally certified with real adoption present. Outcome evidence (≥ k_min realized outcomes, calibrated) is required to advance to Outcome Validated.",
   "read_only": true
 }
 ```

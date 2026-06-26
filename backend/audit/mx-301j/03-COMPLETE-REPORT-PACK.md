@@ -1,6 +1,6 @@
 # MX-301J — Complete Report Pack
 
-_Generated 2026-06-26T02:12:26.211Z · report-pack v1.0.0 · composed against the canonical demo subject (masked) · read-only_
+_Generated 2026-06-26T03:26:43.088Z · report-pack v1.0.0 · composed against the canonical demo subject (masked) · read-only_
 
 The platform's Report Factory composes **16 report types**, each enforced to contain the 9
 required sections with NO placeholder / TBD / empty content (the "no-empty" guard).

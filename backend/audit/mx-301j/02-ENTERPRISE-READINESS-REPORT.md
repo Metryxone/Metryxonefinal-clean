@@ -1,6 +1,6 @@
 # MX-301J — Enterprise Readiness Report
 
-_Generated 2026-06-26T02:12:26.211Z · MX-301J composer v301.10.0 · read-only · PII-masked_
+_Generated 2026-06-26T03:26:43.088Z · MX-301J composer v301.10.0 · read-only · PII-masked_
 
 **Process flag state at run:** FF_ENTERPRISE_CERTIFICATION=on, FF_GO_LIVE_CERTIFICATION=on, FF_OUTCOME_INTELLIGENCE_ACTIVATION=on, FF_LIVE_EMPLOYER_ECOSYSTEM=on, FF_RUNTIME_INTELLIGENCE_ACTIVATION=on, FF_COMMERCIAL_ACTIVATION=on, FF_CAREER_INTELLIGENCE_ACTIVATION=on, FF_AI_GOVERNANCE=on, FF_GOVERNANCE_RBAC_V2=on, FF_ENTERPRISE_ANALYTICS=on, FF_REPORT_FACTORY=on
 
@@ -30,19 +30,19 @@ _Generated 2026-06-26T02:12:26.211Z · MX-301J composer v301.10.0 · read-only �
     "pass": 15,
     "partial": 0,
     "fail": 0,
-    "activated": 8,
+    "activated": 15,
     "adopted": 11
   }
 }
 ```
 </details>
 
-## 2. Functional Readiness — 🟡 Partial
+## 2. Functional Readiness — 🟢 Ready
 
 - **Axis:** End-to-end journey
-- **Headline:** Candidate journey 100% (5/5 steps); employer journey 33.3% (3/9 stages reachable).
-- **Coverage (what exists):** Candidate: 5/5 steps. Employer: 3/9 stages; 2 stage(s) with real data.
-- **Confidence (is it trustworthy/sufficient):** 6 employer-side gaps are gating-flag/configuration dependencies, not broken code. Broken links: 0. The MX-301I gap-closure register (audit/mx-301i) records the prior-failing endpoints since re-verified.
+- **Headline:** Candidate journey 100% (5/5 steps); employer journey 100% (9/9 stages reachable).
+- **Coverage (what exists):** Candidate: 5/5 steps. Employer: 9/9 stages; 2 stage(s) with real data.
+- **Confidence (is it trustworthy/sufficient):** 0 employer-side gaps are gating-flag/configuration dependencies, not broken code. Broken links: 0. The MX-301I gap-closure register (audit/mx-301i) records the prior-failing endpoints since re-verified.
 - **Source (one source of truth):** MX-105X unifiedJourney + MX-301I gap-closure register
 - _Employer journey is reachability-capped by gating flags being OFF by design, not by missing implementation._
 
@@ -57,43 +57,12 @@ _Generated 2026-06-26T02:12:26.211Z · MX-301J composer v301.10.0 · read-only �
     "activation_live": 3
   },
   "employer": {
-    "coverage_reachable": 3,
+    "coverage_reachable": 9,
     "coverage_total": 9,
-    "coverage_pct": 33.3,
+    "coverage_pct": 100,
     "real_data_stages": 2
   },
-  "dependency_gaps": [
-    {
-      "surface": "employer",
-      "step": "Employer Onboarding",
-      "reason": "gating flag OFF (configuration dependency)"
-    },
-    {
-      "surface": "employer",
-      "step": "Competencies",
-      "reason": "gating flag OFF (configuration dependency)"
-    },
-    {
-      "surface": "employer",
-      "step": "Assessment",
-      "reason": "gating flag OFF (configuration dependency)"
-    },
-    {
-      "surface": "employer",
-      "step": "Candidate Match",
-      "reason": "gating flag OFF (configuration dependency)"
-    },
-    {
-      "surface": "employer",
-      "step": "Interview Intelligence",
-      "reason": "gating flag OFF (configuration dependency)"
-    },
-    {
-      "surface": "employer",
-      "step": "Hiring Decision",
-      "reason": "gating flag OFF (configuration dependency)"
-    }
-  ],
+  "dependency_gaps": [],
   "broken_links": []
 }
 ```
@@ -171,7 +140,7 @@ _Generated 2026-06-26T02:12:26.211Z · MX-301J composer v301.10.0 · read-only �
       "missing": []
     },
     "activation": {
-      "switched_on": false,
+      "switched_on": true,
       "flag": "ecosystemActivation",
       "always_on": false
     },
@@ -194,7 +163,7 @@ _Generated 2026-06-26T02:12:26.211Z · MX-301J composer v301.10.0 · read-only �
       "missing": []
     },
     "activation": {
-      "switched_on": false,
+      "switched_on": true,
       "flag": "careerPassport",
       "always_on": false
     },
@@ -248,9 +217,9 @@ _Generated 2026-06-26T02:12:26.211Z · MX-301J composer v301.10.0 · read-only �
     "status": "PASS"
   },
   "employer_journey": {
-    "coverage_reachable": 3,
+    "coverage_reachable": 9,
     "coverage_total": 9,
-    "coverage_pct": 33.3,
+    "coverage_pct": 100,
     "real_data_stages": 2
   }
 }
@@ -511,7 +480,7 @@ _Generated 2026-06-26T02:12:26.211Z · MX-301J composer v301.10.0 · read-only �
     "measurable": true,
     "data_governance_events_30d": 0,
     "detail": {
-      "generated_at": "2026-06-26T02:12:24.786Z",
+      "generated_at": "2026-06-26T03:26:41.978Z",
       "degraded": false,
       "substrate": {
         "admin_audit_logs": true,
@@ -575,12 +544,12 @@ _Generated 2026-06-26T02:12:26.211Z · MX-301J composer v301.10.0 · read-only �
 ```
 </details>
 
-## 12. Activation — 🟠 Not ready
+## 12. Activation — 🟢 Ready
 
 - **Axis:** Activation (gating flags on)
-- **Headline:** 8/15 subsystems have their gating flag ON (53.3%).
-- **Coverage (what exists):** Activated subsystems: 8 of 15.
-- **Confidence (is it trustworthy/sufficient):** 7 subsystems are intentionally flag-OFF (byte-identical-OFF discipline). Activation is a deliberate rollout lever, not a defect.
+- **Headline:** 15/15 subsystems have their gating flag ON (100%).
+- **Coverage (what exists):** Activated subsystems: 15 of 15.
+- **Confidence (is it trustworthy/sufficient):** 0 subsystems are intentionally flag-OFF (byte-identical-OFF discipline). Activation is a deliberate rollout lever, not a defect.
 - **Source (one source of truth):** MX-105X recertification.summary.activated / MX-106X sixAxis.activation
 - _Low activation is by design: additive phases ship flag-OFF until deliberately switched on._
 
@@ -588,10 +557,10 @@ _Generated 2026-06-26T02:12:26.211Z · MX-301J composer v301.10.0 · read-only �
 
 ```json
 {
-  "activated": 8,
+  "activated": 15,
   "total": 15,
-  "score": 53.3,
-  "status": "not_ready"
+  "score": 100,
+  "status": "ready"
 }
 ```
 </details>

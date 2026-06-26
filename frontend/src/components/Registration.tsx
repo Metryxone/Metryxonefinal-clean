@@ -701,7 +701,7 @@ export function Registration({ onNavigate }: RegistrationProps) {
                 {/* Full name */}
                 <div>
                   <Label htmlFor="fullname" className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1.5 block">Full Name</Label>
-                  <Input id="fullname" placeholder="Enter your full name" value={fullName} onChange={e => setFullName(e.target.value)}
+                  <Input id="fullname" autoComplete="name" placeholder="Enter your full name" value={fullName} onChange={e => setFullName(e.target.value)}
                     required className="h-10 rounded-lg border-gray-200 bg-white text-sm" data-testid="input-fullname" />
                 </div>
 
@@ -711,7 +711,7 @@ export function Registration({ onNavigate }: RegistrationProps) {
                     Email Address
                     {isGooglePrefilled && <span className="ml-1.5 text-[9px] font-medium text-teal-600 normal-case">(verified via Google)</span>}
                   </Label>
-                  <Input id="email" type="email" placeholder="name@example.com" value={email} onChange={e => !isGooglePrefilled && setEmail(e.target.value)}
+                  <Input id="email" type="email" autoComplete="email" placeholder="name@example.com" value={email} onChange={e => !isGooglePrefilled && setEmail(e.target.value)}
                     readOnly={isGooglePrefilled}
                     required className={`h-10 rounded-lg border-gray-200 text-sm ${isGooglePrefilled ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : 'bg-white'}`} data-testid="input-email" />
                 </div>
@@ -727,7 +727,7 @@ export function Registration({ onNavigate }: RegistrationProps) {
                       <span>+91</span>
                     </div>
                     <div className="relative flex-1">
-                      <Input id="mobile" type="tel" placeholder="10-digit number" value={mobileNumber}
+                      <Input id="mobile" type="tel" autoComplete="tel" placeholder="10-digit number" value={mobileNumber}
                         onChange={e => setMobileNumber(e.target.value.replace(/\D/g, '').slice(0, 10))}
                         className="h-10 rounded-lg border-gray-200 bg-white text-sm pr-8" data-testid="input-mobile" />
                       {mobileNumber.length === 10 && (
@@ -775,7 +775,7 @@ export function Registration({ onNavigate }: RegistrationProps) {
                         </div>
                         <div>
                           <Label htmlFor="parentEmail" className="text-[10px] font-semibold uppercase tracking-wide text-amber-700 mb-1 block">Parent / Guardian Email *</Label>
-                          <Input id="parentEmail" type="email" placeholder="parent@email.com" value={parentEmail} onChange={e => setParentEmail(e.target.value)}
+                          <Input id="parentEmail" type="email" autoComplete="email" placeholder="parent@email.com" value={parentEmail} onChange={e => setParentEmail(e.target.value)}
                             className="h-9 rounded-lg border-amber-300 bg-white text-sm" data-testid="input-parent-email" />
                         </div>
                         {parentConsentSent && (
@@ -879,7 +879,7 @@ export function Registration({ onNavigate }: RegistrationProps) {
                     <Label htmlFor="orgName" className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1.5 block">
                       {role === 'ngo' ? 'Organization Name' : role === 'corporate' ? 'Company Name' : 'Institution Name'}
                     </Label>
-                    <Input id="orgName" value={organizationName} onChange={e => setOrganizationName(e.target.value)} required
+                    <Input id="orgName" autoComplete="organization" value={organizationName} onChange={e => setOrganizationName(e.target.value)} required
                       placeholder={role === 'ngo' ? 'Enter NGO name' : role === 'corporate' ? 'Enter company name' : 'Enter institution name'}
                       className="h-10 rounded-lg border-gray-200 bg-white text-sm" data-testid="input-org-name" />
                   </div>
@@ -902,7 +902,7 @@ export function Registration({ onNavigate }: RegistrationProps) {
                         Password {isGooglePrefilled && <span className="font-normal normal-case">(Optional)</span>}
                       </Label>
                       <div className="relative">
-                        <Input id="password" type={showPassword ? 'text' : 'password'} placeholder="Min 6 characters"
+                        <Input id="password" autoComplete="new-password" type={showPassword ? 'text' : 'password'} placeholder="Min 6 characters"
                           value={password} onChange={e => setPassword(e.target.value)} required={!isGooglePrefilled}
                           className="h-10 pr-9 rounded-lg border-gray-200 bg-white text-sm" data-testid="input-password" />
                         <button type="button" onClick={() => setShowPassword(!showPassword)}
@@ -916,7 +916,7 @@ export function Registration({ onNavigate }: RegistrationProps) {
                         Confirm {isGooglePrefilled && <span className="font-normal normal-case">(Optional)</span>}
                       </Label>
                       <div className="relative">
-                        <Input id="confirmPassword" type={showConfirmPassword ? 'text' : 'password'} placeholder="Repeat password"
+                        <Input id="confirmPassword" autoComplete="new-password" type={showConfirmPassword ? 'text' : 'password'} placeholder="Repeat password"
                           value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required={!isGooglePrefilled}
                           className="h-10 pr-9 rounded-lg border-gray-200 bg-white text-sm" data-testid="input-confirm-password" />
                         <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}

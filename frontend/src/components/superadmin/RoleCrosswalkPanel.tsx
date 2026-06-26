@@ -133,7 +133,7 @@ export default function RoleCrosswalkPanel() {
             <SelectItem value="verified">Verified</SelectItem>
           </SelectContent>
         </Select>
-        <Button variant="outline" size="icon" onClick={() => qc.invalidateQueries({ queryKey: ['/api/ontology/role-crosswalk'] })}><RefreshCw className="h-4 w-4" /></Button>
+        <Button variant="outline" size="icon" aria-label="Refresh" onClick={() => qc.invalidateQueries({ queryKey: ['/api/ontology/role-crosswalk'] })}><RefreshCw className="h-4 w-4" /></Button>
       </div>
 
       {isLoading ? (

@@ -24,7 +24,7 @@ export function ExamReadyHeader({ showBack, onBack, title, showDashboardLink, on
             <Button 
               variant="ghost" 
               size="icon" 
-              onClick={onBack}
+              aria-label="Go back" onClick={onBack}
               className="text-gray-500 hover:text-gray-900 h-7 w-7"
               data-testid="btn-back"
             >

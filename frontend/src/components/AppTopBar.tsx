@@ -107,7 +107,7 @@ export function AppTopBar({
           <Button
             variant="ghost"
             size="icon"
-            onClick={onToggleDarkMode}
+            aria-label="Toggle dark mode" onClick={onToggleDarkMode}
             style={{ color: 'var(--text-muted)' }}
             data-testid="theme-toggle"
           >
@@ -119,7 +119,7 @@ export function AppTopBar({
           <Button
             variant="ghost"
             size="icon"
-            onClick={onLogout}
+            aria-label="Log out" onClick={onLogout}
             style={{ color: 'var(--text-muted)' }}
             data-testid="logout-button"
           >

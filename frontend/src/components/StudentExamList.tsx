@@ -284,7 +284,7 @@ export function StudentExamList({ onNavigate, onLogout, onSelectExam, initialTab
                   variant="ghost" 
                   size="sm" 
                   className={`${theme.textMuted} ${theme.hoverBg}`}
-                  onClick={() => setIsDarkMode(!isDarkMode)}
+                  aria-label="Toggle dark mode" onClick={() => setIsDarkMode(!isDarkMode)}
                   data-testid="button-theme-toggle-results-mobile"
                 >
                   {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
@@ -440,7 +440,7 @@ export function StudentExamList({ onNavigate, onLogout, onSelectExam, initialTab
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setIsDarkMode(!isDarkMode)}
+              aria-label="Toggle dark mode" onClick={() => setIsDarkMode(!isDarkMode)}
               className={isDarkMode ? 'text-gray-300 hover:text-white hover:bg-gray-700' : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100'}
               data-testid="button-theme-toggle-mobile"
             >
@@ -449,7 +449,7 @@ export function StudentExamList({ onNavigate, onLogout, onSelectExam, initialTab
             <Button
               variant="ghost"
               size="icon"
-              onClick={handleLogout}
+              aria-label="Log out" onClick={handleLogout}
               className={isDarkMode ? 'text-gray-300 hover:text-white hover:bg-gray-700' : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100'}
               data-testid="button-logout"
             >

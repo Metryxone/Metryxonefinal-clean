@@ -171,6 +171,7 @@ export function BotWidget({ mode, attemptId, context }: Props) {
             <Button
               variant="ghost"
               size="icon"
+              aria-label="Close chat"
               onClick={() => setIsOpen(false)}
               className="text-white hover:bg-white/20 h-8 w-8"
               data-testid="bot-widget-close"
@@ -236,6 +237,7 @@ export function BotWidget({ mode, attemptId, context }: Props) {
                 className="hover:opacity-90"
                 style={{ backgroundColor: '#4ECDC4' }}
                 size="icon"
+                aria-label="Send message"
                 data-testid="bot-send"
               >
                 <Send size={16} />

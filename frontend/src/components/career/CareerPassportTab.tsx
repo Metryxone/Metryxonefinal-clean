@@ -341,12 +341,12 @@ function VerifyRequestButton({ itemType, itemId }: { itemType: string; itemId: n
   return open ? (
     <div className="mt-2 p-2 rounded-lg border space-y-1.5" style={{ borderColor: BRAND.primary, background: BRAND.primaryLight }}>
       <p className="text-[10px] font-semibold text-gray-700">Request third-party verification</p>
-      <input placeholder="Verifier email *" value={email} onChange={e => setEmail(e.target.value)}
+      <input aria-label="Verifier email *" placeholder="Verifier email *" value={email} onChange={e => setEmail(e.target.value)}
         className="w-full border rounded px-2 py-1 text-[11px]" style={{ borderColor: BRAND.border }} />
       <div className="grid grid-cols-2 gap-1.5">
-        <input placeholder="Name (optional)" value={name} onChange={e => setName(e.target.value)}
+        <input aria-label="Name (optional)" placeholder="Name (optional)" value={name} onChange={e => setName(e.target.value)}
           className="border rounded px-2 py-1 text-[11px]" style={{ borderColor: BRAND.border }} />
-        <input placeholder="Organisation" value={org} onChange={e => setOrg(e.target.value)}
+        <input aria-label="Organisation" placeholder="Organisation" value={org} onChange={e => setOrg(e.target.value)}
           className="border rounded px-2 py-1 text-[11px]" style={{ borderColor: BRAND.border }} />
       </div>
       <div className="flex gap-1.5">
@@ -378,11 +378,11 @@ function AddExperienceForm({ onAdd, onCancel }: { onAdd: AddFn; onCancel: () => 
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>) => setF(p => ({...p,[k]:e.target.value}));
   return (
     <div className="p-3 rounded-lg border bg-white space-y-2 text-sm" style={{ borderColor: BRAND.primary }}>
-      <input placeholder="Organisation *" value={f.org??''} onChange={set('org')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
-      <input placeholder="Role / Job Title *" value={f.role??''} onChange={set('role')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+      <input aria-label="Organisation *" placeholder="Organisation *" value={f.org??''} onChange={set('org')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+      <input aria-label="Role / Job Title *" placeholder="Role / Job Title *" value={f.role??''} onChange={set('role')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
       <div className="grid grid-cols-2 gap-2">
-        <input type="month" placeholder="Start date *" value={f.start_date??''} onChange={set('start_date')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
-        <input type="month" placeholder="End date" value={f.end_date??''} onChange={set('end_date')} disabled={f.is_current==='true'} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+        <input type="month" aria-label="Start date *" placeholder="Start date *" value={f.start_date??''} onChange={set('start_date')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+        <input type="month" aria-label="End date" placeholder="End date" value={f.end_date??''} onChange={set('end_date')} disabled={f.is_current==='true'} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
       </div>
       <label className="flex items-center gap-1.5 text-xs text-gray-500 cursor-pointer">
         <input type="checkbox" checked={f.is_current==='true'} onChange={e=>setF(p=>({...p,is_current:e.target.checked?'true':'false'}))} />
@@ -391,8 +391,8 @@ function AddExperienceForm({ onAdd, onCancel }: { onAdd: AddFn; onCancel: () => 
       <select value={f.employment_type} onChange={set('employment_type')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }}>
         {['full_time','part_time','contract','freelance','internship','volunteer'].map(v=><option key={v} value={v}>{v.replace('_',' ')}</option>)}
       </select>
-      <textarea placeholder="Description" value={f.description??''} onChange={set('description')} rows={2} className="w-full border rounded px-2 py-1.5 text-xs resize-none" style={{ borderColor: BRAND.border }} />
-      <input placeholder="Skills used (comma-separated)" value={f.skills_str??''} onChange={set('skills_str')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+      <textarea aria-label="Description" placeholder="Description" value={f.description??''} onChange={set('description')} rows={2} className="w-full border rounded px-2 py-1.5 text-xs resize-none" style={{ borderColor: BRAND.border }} />
+      <input aria-label="Skills used (comma-separated)" placeholder="Skills used (comma-separated)" value={f.skills_str??''} onChange={set('skills_str')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
       <FormButtons onSave={() => onAdd('experience', { ...f, start_date: f.start_date ? f.start_date+'-01' : undefined, end_date: f.end_date ? f.end_date+'-01' : undefined, is_current: f.is_current==='true', skills_used: f.skills_str ? f.skills_str.split(',').map(s=>s.trim()).filter(Boolean) : [] })} onCancel={onCancel} />
     </div>
   );
@@ -404,15 +404,15 @@ function AddCompetencyForm({ onAdd, onCancel }: { onAdd: AddFn; onCancel: () => 
   const levels: Record<string,number> = { beginner:25, intermediate:55, advanced:75, expert:90 };
   return (
     <div className="p-3 rounded-lg border bg-white space-y-2 text-sm" style={{ borderColor: BRAND.primary }}>
-      <input placeholder="Skill name *" value={f.skill_name??''} onChange={set('skill_name')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
-      <input placeholder="Category (e.g. Data Analysis)" value={f.category??''} onChange={set('category')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+      <input aria-label="Skill name *" placeholder="Skill name *" value={f.skill_name??''} onChange={set('skill_name')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+      <input aria-label="Category (e.g. Data Analysis)" placeholder="Category (e.g. Data Analysis)" value={f.category??''} onChange={set('category')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
       <div className="grid grid-cols-2 gap-2">
         <select value={f.proficiency_level} onChange={e=>{setF(p=>({...p,proficiency_level:e.target.value,proficiency_score:String(levels[e.target.value]??55)}))}} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }}>
           {['beginner','intermediate','advanced','expert'].map(v=><option key={v}>{v}</option>)}
         </select>
-        <input type="number" min="0" max="100" placeholder="Score 0-100" value={f.proficiency_score??''} onChange={set('proficiency_score')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+        <input type="number" min="0" max="100" aria-label="Score 0-100" placeholder="Score 0-100" value={f.proficiency_score??''} onChange={set('proficiency_score')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
       </div>
-      <input placeholder="Evidence URL (optional)" value={f.evidence_url??''} onChange={set('evidence_url')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+      <input aria-label="Evidence URL (optional)" placeholder="Evidence URL (optional)" value={f.evidence_url??''} onChange={set('evidence_url')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
       <FormButtons onSave={() => onAdd('competencies', { ...f, proficiency_score: Number(f.proficiency_score)||undefined })} onCancel={onCancel} />
     </div>
   );
@@ -423,14 +423,14 @@ function AddCertificationForm({ onAdd, onCancel }: { onAdd: AddFn; onCancel: () 
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement>) => setF(p=>({...p,[k]:e.target.value}));
   return (
     <div className="p-3 rounded-lg border bg-white space-y-2 text-sm" style={{ borderColor: BRAND.primary }}>
-      <input placeholder="Certification title *" value={f.title??''} onChange={set('title')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
-      <input placeholder="Issuing organisation *" value={f.issuer??''} onChange={set('issuer')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
-      <input placeholder="Credential ID" value={f.credential_id??''} onChange={set('credential_id')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+      <input aria-label="Certification title *" placeholder="Certification title *" value={f.title??''} onChange={set('title')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+      <input aria-label="Issuing organisation *" placeholder="Issuing organisation *" value={f.issuer??''} onChange={set('issuer')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+      <input aria-label="Credential ID" placeholder="Credential ID" value={f.credential_id??''} onChange={set('credential_id')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
       <div className="grid grid-cols-2 gap-2">
         <div><label className="text-[10px] text-gray-400">Issue date</label><input type="date" value={f.issued_at??''} onChange={set('issued_at')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} /></div>
         <div><label className="text-[10px] text-gray-400">Expiry date</label><input type="date" value={f.expires_at??''} onChange={set('expires_at')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} /></div>
       </div>
-      <input placeholder="Credential URL" value={f.credential_url??''} onChange={set('credential_url')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+      <input aria-label="Credential URL" placeholder="Credential URL" value={f.credential_url??''} onChange={set('credential_url')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
       <FormButtons onSave={() => onAdd('certifications', f)} onCancel={onCancel} />
     </div>
   );
@@ -441,12 +441,12 @@ function AddProjectForm({ onAdd, onCancel }: { onAdd: AddFn; onCancel: () => voi
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => setF(p=>({...p,[k]:e.target.value}));
   return (
     <div className="p-3 rounded-lg border bg-white space-y-2 text-sm" style={{ borderColor: BRAND.primary }}>
-      <input placeholder="Project title *" value={f.title??''} onChange={set('title')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
-      <input placeholder="Organisation / Team" value={f.org??''} onChange={set('org')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
-      <textarea placeholder="Description" value={f.description??''} onChange={set('description')} rows={2} className="w-full border rounded px-2 py-1.5 text-xs resize-none" style={{ borderColor: BRAND.border }} />
-      <textarea placeholder="Key outcomes" value={f.outcomes??''} onChange={set('outcomes')} rows={1} className="w-full border rounded px-2 py-1.5 text-xs resize-none" style={{ borderColor: BRAND.border }} />
-      <input placeholder="Skills used (comma-separated)" value={f.skills_str??''} onChange={set('skills_str')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
-      <input placeholder="Project URL" value={f.url??''} onChange={set('url')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+      <input aria-label="Project title *" placeholder="Project title *" value={f.title??''} onChange={set('title')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+      <input aria-label="Organisation / Team" placeholder="Organisation / Team" value={f.org??''} onChange={set('org')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+      <textarea aria-label="Description" placeholder="Description" value={f.description??''} onChange={set('description')} rows={2} className="w-full border rounded px-2 py-1.5 text-xs resize-none" style={{ borderColor: BRAND.border }} />
+      <textarea aria-label="Key outcomes" placeholder="Key outcomes" value={f.outcomes??''} onChange={set('outcomes')} rows={1} className="w-full border rounded px-2 py-1.5 text-xs resize-none" style={{ borderColor: BRAND.border }} />
+      <input aria-label="Skills used (comma-separated)" placeholder="Skills used (comma-separated)" value={f.skills_str??''} onChange={set('skills_str')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+      <input aria-label="Project URL" placeholder="Project URL" value={f.url??''} onChange={set('url')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
       <FormButtons onSave={() => onAdd('projects', { ...f, skills_used: f.skills_str ? f.skills_str.split(',').map(s=>s.trim()).filter(Boolean) : [] })} onCancel={onCancel} />
     </div>
   );
@@ -457,15 +457,15 @@ function AddAchievementForm({ onAdd, onCancel }: { onAdd: AddFn; onCancel: () =>
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>) => setF(p=>({...p,[k]:e.target.value}));
   return (
     <div className="p-3 rounded-lg border bg-white space-y-2 text-sm" style={{ borderColor: BRAND.primary }}>
-      <input placeholder="Achievement title *" value={f.title??''} onChange={set('title')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+      <input aria-label="Achievement title *" placeholder="Achievement title *" value={f.title??''} onChange={set('title')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
       <div className="grid grid-cols-2 gap-2">
         <select value={f.category} onChange={set('category')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }}>
           {['milestone','award','recognition','honor','competition','publication'].map(v=><option key={v}>{v}</option>)}
         </select>
         <input type="date" value={f.issued_at??''} onChange={set('issued_at')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
       </div>
-      <input placeholder="Issuer / Grantor" value={f.issuer??''} onChange={set('issuer')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
-      <textarea placeholder="Description" value={f.description??''} onChange={set('description')} rows={2} className="w-full border rounded px-2 py-1.5 text-xs resize-none" style={{ borderColor: BRAND.border }} />
+      <input aria-label="Issuer / Grantor" placeholder="Issuer / Grantor" value={f.issuer??''} onChange={set('issuer')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+      <textarea aria-label="Description" placeholder="Description" value={f.description??''} onChange={set('description')} rows={2} className="w-full border rounded px-2 py-1.5 text-xs resize-none" style={{ borderColor: BRAND.border }} />
       <FormButtons onSave={() => onAdd('achievements', f)} onCancel={onCancel} />
     </div>
   );
@@ -476,18 +476,18 @@ function AddLearningForm({ onAdd, onCancel }: { onAdd: AddFn; onCancel: () => vo
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) => setF(p=>({...p,[k]:e.target.value}));
   return (
     <div className="p-3 rounded-lg border bg-white space-y-2 text-sm" style={{ borderColor: BRAND.primary }}>
-      <input placeholder="Title *" value={f.title??''} onChange={set('title')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+      <input aria-label="Title *" placeholder="Title *" value={f.title??''} onChange={set('title')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
       <div className="grid grid-cols-2 gap-2">
         <select value={f.activity_type} onChange={set('activity_type')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }}>
           {['course','program','workshop','bootcamp','book','assessment','certification','conference'].map(v=><option key={v}>{v}</option>)}
         </select>
-        <input placeholder="Provider" value={f.provider??''} onChange={set('provider')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+        <input aria-label="Provider" placeholder="Provider" value={f.provider??''} onChange={set('provider')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
       </div>
       <div className="grid grid-cols-2 gap-2">
         <input type="date" value={f.completed_at??''} onChange={set('completed_at')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
-        <input type="number" placeholder="Hours" value={f.hours??''} onChange={set('hours')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+        <input type="number" aria-label="Hours" placeholder="Hours" value={f.hours??''} onChange={set('hours')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
       </div>
-      <input placeholder="Skills covered (comma-separated)" value={f.skills_str??''} onChange={set('skills_str')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+      <input aria-label="Skills covered (comma-separated)" placeholder="Skills covered (comma-separated)" value={f.skills_str??''} onChange={set('skills_str')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
       <FormButtons onSave={() => onAdd('learning', { ...f, hours: f.hours ? Number(f.hours) : undefined, skills: f.skills_str ? f.skills_str.split(',').map(s=>s.trim()).filter(Boolean) : [] })} onCancel={onCancel} />
     </div>
   );
@@ -498,14 +498,14 @@ function AddGoalForm({ onAdd, onCancel }: { onAdd: AddFn; onCancel: () => void }
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>) => setF(p=>({...p,[k]:e.target.value}));
   return (
     <div className="p-3 rounded-lg border bg-white space-y-2 text-sm" style={{ borderColor: BRAND.primary }}>
-      <input placeholder="Goal title *" value={f.title??''} onChange={set('title')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+      <input aria-label="Goal title *" placeholder="Goal title *" value={f.title??''} onChange={set('title')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
       <div className="grid grid-cols-2 gap-2">
         <select value={f.goal_type} onChange={set('goal_type')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }}>
           {['role','skill','industry','certification','business','education','personal'].map(v=><option key={v}>{v}</option>)}
         </select>
-        <input type="date" placeholder="Target date" value={f.target_date??''} onChange={set('target_date')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+        <input type="date" aria-label="Target date" placeholder="Target date" value={f.target_date??''} onChange={set('target_date')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
       </div>
-      <textarea placeholder="Description" value={f.description??''} onChange={set('description')} rows={2} className="w-full border rounded px-2 py-1.5 text-xs resize-none" style={{ borderColor: BRAND.border }} />
+      <textarea aria-label="Description" placeholder="Description" value={f.description??''} onChange={set('description')} rows={2} className="w-full border rounded px-2 py-1.5 text-xs resize-none" style={{ borderColor: BRAND.border }} />
       <FormButtons onSave={() => onAdd('goals', f)} onCancel={onCancel} />
     </div>
   );
@@ -516,16 +516,16 @@ function AddAssessmentForm({ onAdd, onCancel }: { onAdd: AddFn; onCancel: () => 
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) => setF(p=>({...p,[k]:e.target.value}));
   return (
     <div className="p-3 rounded-lg border bg-white space-y-2 text-sm" style={{ borderColor: BRAND.primary }}>
-      <input placeholder="Assessment title *" value={f.title??''} onChange={set('title')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+      <input aria-label="Assessment title *" placeholder="Assessment title *" value={f.title??''} onChange={set('title')} className="w-full border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
       <div className="grid grid-cols-2 gap-2">
         <select value={f.assessment_type} onChange={set('assessment_type')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }}>
           {['external','skill_test','psychometric','competency','language','custom'].map(v=><option key={v}>{v.replace('_',' ')}</option>)}
         </select>
-        <input placeholder="Provider" value={f.provider??''} onChange={set('provider')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+        <input aria-label="Provider" placeholder="Provider" value={f.provider??''} onChange={set('provider')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
       </div>
       <div className="grid grid-cols-2 gap-2">
-        <input type="number" placeholder="Score" value={f.score??''} onChange={set('score')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
-        <input type="date" placeholder="Date completed" value={f.completed_at??''} onChange={set('completed_at')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+        <input type="number" aria-label="Score" placeholder="Score" value={f.score??''} onChange={set('score')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
+        <input type="date" aria-label="Date completed" placeholder="Date completed" value={f.completed_at??''} onChange={set('completed_at')} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: BRAND.border }} />
       </div>
       <FormButtons onSave={() => onAdd('assessments', { ...f, score: f.score ? Number(f.score) : undefined })} onCancel={onCancel} />
     </div>
@@ -671,7 +671,7 @@ function ShareModal({ onClose, passportId }: { onClose: () => void; passportId: 
         <div className="p-5 space-y-4">
           <p className="text-xs text-gray-500">Create a shareable link. Only sections marked as <em>connections</em> or <em>public</em> visibility will be included.</p>
           <div className="space-y-2">
-            <input placeholder="Label (optional)" value={label} onChange={e=>setLabel(e.target.value)} className="w-full border rounded px-3 py-2 text-sm" style={{ borderColor: BRAND.border }} />
+            <input aria-label="Label (optional)" placeholder="Label (optional)" value={label} onChange={e=>setLabel(e.target.value)} className="w-full border rounded px-3 py-2 text-sm" style={{ borderColor: BRAND.border }} />
             <div className="flex gap-2 items-center">
               <select value={days} onChange={e=>setDays(e.target.value)} className="border rounded px-3 py-2 text-sm flex-1" style={{ borderColor: BRAND.border }}>
                 <option value="7">Expires in 7 days</option>

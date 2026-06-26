@@ -516,7 +516,7 @@ export function UpcomingSchedule({ childId, eventTypes, maxItems = 5, compact = 
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6"
-                      onClick={() => completeMutation.mutate(event.id)}
+                      aria-label="Mark complete" onClick={() => completeMutation.mutate(event.id)}
                     >
                       <Check size={12} className="text-teal-600" />
                     </Button>
@@ -525,7 +525,7 @@ export function UpcomingSchedule({ childId, eventTypes, maxItems = 5, compact = 
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6"
-                      onClick={() => cancelMutation.mutate(event.id)}
+                      aria-label="Cancel" onClick={() => cancelMutation.mutate(event.id)}
                     >
                       <X size={12} className="text-red-500" />
                     </Button>

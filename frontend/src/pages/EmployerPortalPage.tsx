@@ -2807,7 +2807,7 @@ function CandidatesTab({ candidates, setCandidates, jobs }: { candidates: Candid
             {/* ── Real CSV / Excel Upload ── */}
             {importSource === 'excel' && (
               <div className="space-y-4">
-                <input ref={fileInputRef} type="file" accept=".csv,.xlsx,.xls" onChange={onFilePicked} className="hidden" />
+                <input ref={fileInputRef} type="file" aria-label="Upload candidate Excel or CSV file" accept=".csv,.xlsx,.xls" onChange={onFilePicked} className="hidden" />
                 {!excelParsed ? (
                   <>
                     <div

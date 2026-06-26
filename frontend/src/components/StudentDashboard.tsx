@@ -662,7 +662,7 @@ export function StudentDashboard({ onNavigate, onLogout, onSelectExam }: Props) 
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setIsDarkMode(!isDarkMode)}
+              aria-label="Toggle dark mode" onClick={() => setIsDarkMode(!isDarkMode)}
               className={isDarkMode ? 'text-gray-300 hover:text-white hover:bg-gray-700' : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100'}
               data-testid="theme-toggle"
             >
@@ -671,7 +671,7 @@ export function StudentDashboard({ onNavigate, onLogout, onSelectExam }: Props) 
             <Button
               variant="ghost"
               size="icon"
-              onClick={onLogout || (() => onNavigate('login'))}
+              aria-label="Log out" onClick={onLogout || (() => onNavigate('login'))}
               className={isDarkMode ? 'text-gray-300 hover:text-white hover:bg-gray-700' : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100'}
               data-testid="logout-button"
             >

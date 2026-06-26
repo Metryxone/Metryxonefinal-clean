@@ -62,7 +62,7 @@ export function InstituteHeader({
           <Button
             variant="ghost"
             size="icon"
-            onClick={onMenuToggle}
+            aria-label="Open menu" onClick={onMenuToggle}
             className={`lg:hidden h-8 w-8 ${isDarkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-500 hover:bg-gray-100'}`}
             data-testid="btn-menu-toggle"
           >
@@ -139,7 +139,7 @@ export function InstituteHeader({
           <Button
             variant="ghost"
             size="icon"
-            onClick={onToggleDarkMode}
+            aria-label="Toggle dark mode" onClick={onToggleDarkMode}
             className={
               isDarkMode
                 ? 'text-gray-300 hover:text-white hover:bg-gray-700'
@@ -155,7 +155,7 @@ export function InstituteHeader({
           <Button
             variant="ghost"
             size="icon"
-            onClick={onLogout}
+            aria-label="Log out" onClick={onLogout}
             className={
               isDarkMode
                 ? 'text-gray-300 hover:text-white hover:bg-gray-700'

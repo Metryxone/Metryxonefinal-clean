@@ -18,7 +18,7 @@ export function StudentConsentExplainer({ onNavigate }: Props) {
           <Button 
             variant="ghost" 
             size="icon" 
-            onClick={() => onNavigate('student-exam-list')}
+            aria-label="Go back" onClick={() => onNavigate('student-exam-list')}
             className="text-gray-400 hover:text-white hover:bg-gray-800"
             data-testid="button-back"
           >

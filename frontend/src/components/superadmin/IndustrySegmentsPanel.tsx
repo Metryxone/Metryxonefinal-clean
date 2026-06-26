@@ -202,7 +202,7 @@ export default function IndustrySegmentsPanel() {
             <SelectItem value="archived">Archived</SelectItem>
           </SelectContent>
         </Select>
-        <Button variant="outline" size="icon" onClick={() => qc.invalidateQueries({ queryKey: ['/api/ontology/industry-segments'] })}><RefreshCw className="h-4 w-4" /></Button>
+        <Button variant="outline" size="icon" aria-label="Refresh" onClick={() => qc.invalidateQueries({ queryKey: ['/api/ontology/industry-segments'] })}><RefreshCw className="h-4 w-4" /></Button>
       </div>
 
       {isLoading ? (

@@ -557,7 +557,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               </div>
               <CrisisAlertInbox onNavigateToEscalations={() => setActiveTab('rie-escalations')} />
               <NotificationCenter variant="light" />
-              <Button variant="ghost" size="icon" onClick={() => setActiveTab('settings')} data-testid="button-header-settings">
+              <Button variant="ghost" size="icon" aria-label="Settings" onClick={() => setActiveTab('settings')} data-testid="button-header-settings">
                 <Settings className="h-5 w-5" />
               </Button>
             </div>

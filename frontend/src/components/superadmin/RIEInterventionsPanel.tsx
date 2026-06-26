@@ -131,7 +131,7 @@ export default function RIEInterventionsPanel() {
             {['none', 'medium', 'high', 'critical'].map(s => <SelectItem key={s} value={s} className="capitalize">{s}</SelectItem>)}
           </SelectContent>
         </Select>
-        <Button variant="outline" size="icon" onClick={() => refetch()}><RefreshCw className="h-4 w-4" /></Button>
+        <Button variant="outline" size="icon" aria-label="Refresh" onClick={() => refetch()}><RefreshCw className="h-4 w-4" /></Button>
       </div>
 
       {isLoading ? (

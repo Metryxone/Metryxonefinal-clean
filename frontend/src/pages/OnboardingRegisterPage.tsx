@@ -240,7 +240,7 @@ export function OnboardingRegisterPage({ onNavigate }: OnboardingRegisterPagePro
               <form onSubmit={handleTrackStatus} className="flex gap-3">
                 <input
                   type="email"
-                  placeholder="your@email.com"
+                  autoComplete="email" placeholder="your@email.com"
                   value={trackEmail}
                   onChange={e => setTrackEmail(e.target.value)}
                   required
@@ -316,14 +316,14 @@ export function OnboardingRegisterPage({ onNavigate }: OnboardingRegisterPagePro
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-1" style={{ color: BRAND.text }}>Email Address *</label>
-                    <input name="entityEmail" type="email" value={form.entityEmail} onChange={handleChange} required
+                    <input name="entityEmail" type="email" autoComplete="email" value={form.entityEmail} onChange={handleChange} required
                       className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2"
                       style={{ borderColor: BRAND.border }}
                       placeholder="principal@school.edu.in" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-1" style={{ color: BRAND.text }}>Phone Number</label>
-                    <input name="entityPhone" type="tel" value={form.entityPhone} onChange={handleChange}
+                    <input name="entityPhone" type="tel" autoComplete="tel" value={form.entityPhone} onChange={handleChange}
                       className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2"
                       style={{ borderColor: BRAND.border }}
                       placeholder="98XXXXXXXX" />
@@ -331,7 +331,7 @@ export function OnboardingRegisterPage({ onNavigate }: OnboardingRegisterPagePro
                   {entityType !== 'mentor' && entityType !== 'parent' && (
                     <div>
                       <label className="block text-sm font-medium mb-1" style={{ color: BRAND.text }}>Organization / Trust / Society Name</label>
-                      <input name="organizationName" value={form.organizationName} onChange={handleChange}
+                      <input name="organizationName" autoComplete="organization" value={form.organizationName} onChange={handleChange}
                         className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2"
                         style={{ borderColor: BRAND.border }}
                         placeholder="Delhi Public School Society" />
@@ -347,7 +347,7 @@ export function OnboardingRegisterPage({ onNavigate }: OnboardingRegisterPagePro
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1" style={{ color: BRAND.text }}>Contact Person Name *</label>
-                      <input name="contactPerson" value={form.contactPerson} onChange={handleChange} required
+                      <input name="contactPerson" autoComplete="name" value={form.contactPerson} onChange={handleChange} required
                         className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2"
                         style={{ borderColor: BRAND.border }}
                         placeholder="Dr. Sunita Sharma" />
@@ -463,7 +463,7 @@ export function OnboardingRegisterPage({ onNavigate }: OnboardingRegisterPagePro
                     {entityConfig[entityType].fields.includes('website') && (
                       <div>
                         <label className="block text-sm font-medium mb-1" style={{ color: BRAND.text }}>Website URL</label>
-                        <input name="website" type="url" value={form.website} onChange={handleChange}
+                        <input name="website" type="url" autoComplete="url" value={form.website} onChange={handleChange}
                           className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2"
                           style={{ borderColor: BRAND.border }} placeholder="https://yourschool.edu.in" />
                       </div>

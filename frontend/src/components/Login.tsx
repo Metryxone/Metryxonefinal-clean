@@ -994,6 +994,7 @@ export function Login({ onNavigate }: LoginProps) {
                         <Input
                           id="usernameOrEmail"
                           type="text"
+                          autoComplete="username"
                           placeholder={lang.usernamePlaceholder}
                           value={usernameOrEmail}
                           onChange={(e) => { setUsernameOrEmail(e.target.value); setError(''); }}
@@ -1014,6 +1015,7 @@ export function Login({ onNavigate }: LoginProps) {
                         <Input
                           id="password"
                           type={showPassword ? 'text' : 'password'}
+                          autoComplete="current-password"
                           placeholder="••••••••"
                           value={password}
                           onChange={(e) => { setPassword(e.target.value); setError(''); }}
@@ -1023,6 +1025,7 @@ export function Login({ onNavigate }: LoginProps) {
                           data-testid="input-password"
                         />
                         <Button type="button" variant="ghost" size="icon"
+                          aria-label={showPassword ? 'Hide password' : 'Show password'}
                           className="absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10"
                           style={{ color: "var(--text-muted)" }}
                           onClick={() => setShowPassword(!showPassword)}

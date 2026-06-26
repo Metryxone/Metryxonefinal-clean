@@ -94,7 +94,7 @@ export default function CompetencyLevelsPanel() {
       <div className="flex gap-3">
         <div className="relative flex-1 max-w-xs"><Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" /><Input placeholder="Search competency…" value={search} onChange={e => setSearch(e.target.value)} className="pl-9" /></div>
         <Select value={levelFilter} onValueChange={setLevelFilter}><SelectTrigger className="w-40"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="all">All Levels</SelectItem>{LEVELS.map(l => <SelectItem key={l} value={l}>{l}</SelectItem>)}</SelectContent></Select>
-        <Button variant="outline" size="icon" onClick={() => qc.invalidateQueries({ queryKey: ['/api/ontology/competency-levels'] })}><RefreshCw className="h-4 w-4" /></Button>
+        <Button variant="outline" size="icon" aria-label="Refresh" onClick={() => qc.invalidateQueries({ queryKey: ['/api/ontology/competency-levels'] })}><RefreshCw className="h-4 w-4" /></Button>
       </div>
       {isLoading ? <div className="flex items-center justify-center h-40"><RefreshCw className="h-6 w-6 animate-spin text-gray-400" /></div> : (
         <div className="rounded-lg border overflow-hidden">

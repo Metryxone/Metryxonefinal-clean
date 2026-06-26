@@ -890,7 +890,7 @@ export function MetryxAI({ onNavigate, currentScreen, isLoggedIn }: MetryxAIProp
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => setIsMinimized(true)}
+                    aria-label="Minimize" onClick={() => setIsMinimized(true)}
                     className="text-white/70 hover:text-white hover:bg-white/10 h-8 w-8 rounded-lg"
                     data-testid="metryx-ai-minimize"
                   >
@@ -899,6 +899,7 @@ export function MetryxAI({ onNavigate, currentScreen, isLoggedIn }: MetryxAIProp
                   <Button
                     variant="ghost"
                     size="icon"
+                    aria-label="Close"
                     onClick={() => setIsOpen(false)}
                     className="text-white/70 hover:text-white hover:bg-white/10 h-8 w-8 rounded-lg"
                     data-testid="metryx-ai-close"

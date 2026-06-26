@@ -4368,9 +4368,9 @@ function ResumeUploadBlock({ userId, onProfileSaved, compact = false, onParsed }
         onDragOver={e => { e.preventDefault(); setDragging(true); }}
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
-        className={`block rounded-2xl border-2 border-dashed transition-all cursor-pointer ${compact ? 'p-6' : 'p-10'} text-center ${dragging ? 'border-blue-400 bg-blue-50/40' : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50/60'}`}
+        className={`block rounded-2xl border-2 border-dashed transition-all cursor-pointer focus-within:ring-2 focus-within:ring-blue-400 ${compact ? 'p-6' : 'p-10'} text-center ${dragging ? 'border-blue-400 bg-blue-50/40' : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50/60'}`}
         style={dragging ? { borderColor: BRAND.primary } : {}}>
-        <input type="file" className="hidden" accept=".pdf,.doc,.docx" onChange={onFileInput}/>
+        <input type="file" aria-label="Upload your resume file" className="sr-only" accept=".pdf,.doc,.docx" onChange={onFileInput}/>
         {file ? (
           <div className="flex flex-col items-center gap-2">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${BRAND.primary}15` }}>

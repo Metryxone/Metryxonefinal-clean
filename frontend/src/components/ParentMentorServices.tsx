@@ -22,14 +22,14 @@ import { useToast } from '@/hooks/use-toast';
 import { VideoCallRoom } from './video/VideoCallRoom';
 import { DPDPConsentModal } from './video/DPDPConsentModal';
 
-import mentor1 from '@/assets/images/mentor1.png';
-import mentor2 from '@/assets/images/mentor2.png';
-import mentor3 from '@/assets/images/mentor3.png';
-import mentor4 from '@/assets/images/mentor4.png';
-import mentor5 from '@/assets/images/mentor5.png';
-import mentor6 from '@/assets/images/mentor6.png';
-import mentor7 from '@/assets/images/mentor7.png';
-import mentor8 from '@/assets/images/mentor8.png';
+import mentor1 from '@/assets/images/mentor1.webp';
+import mentor2 from '@/assets/images/mentor2.webp';
+import mentor3 from '@/assets/images/mentor3.webp';
+import mentor4 from '@/assets/images/mentor4.webp';
+import mentor5 from '@/assets/images/mentor5.webp';
+import mentor6 from '@/assets/images/mentor6.webp';
+import mentor7 from '@/assets/images/mentor7.webp';
+import mentor8 from '@/assets/images/mentor8.webp';
 
 
 

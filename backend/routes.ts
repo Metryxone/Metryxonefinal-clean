@@ -390,6 +390,31 @@ export async function registerRoutes(
   app.use(passport.initialize());
   app.use(passport.session());
 
+  // ── Server-side timing for the auth/session-gated dimensions ──────────────
+  // The performance benchmarks could not measure assessment-completion and
+  // report-generation end-to-end (they require an authenticated session), so we
+  // emit a server-side processing-time line for exactly those paths to capture
+  // them in production. Purely additive: a single `res.on('finish')` log line,
+  // no behaviour change. Kill-switch: PERF_TIMING_DISABLED=1.
+  if (process.env.PERF_TIMING_DISABLED !== '1') {
+    const TIMED = [
+      /^\/api\/capadex\/session\/[^/]+\/complete$/, // assessment completion
+      /^\/api\/capadex\/session\/[^/]+\/reports?$/,  // report generation (json)
+      /^\/api\/capadex\/report\/[^/]+(\/pdf)?$/,     // report generation (incl. pdf)
+    ];
+    app.use((req, res, next) => {
+      const path = req.path;
+      if (TIMED.some((re) => re.test(path))) {
+        const start = process.hrtime.bigint();
+        res.on('finish', () => {
+          const ms = Number(process.hrtime.bigint() - start) / 1e6;
+          console.log(`[perf] ${req.method} ${path} ${ms.toFixed(1)}ms status=${res.statusCode}`);
+        });
+      }
+      next();
+    });
+  }
+
   passport.use(
     new LocalStrategy(async (username, password, done) => {
       try {

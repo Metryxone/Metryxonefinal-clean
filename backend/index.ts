@@ -345,6 +345,27 @@ app.get("/api/health/ready", async (_req, res) => {
   const PORT = process.env.PORT || 8080;
   httpServer.listen(Number(PORT), "0.0.0.0", () => {
     console.log(`Server listening on ${PORT}`);
+    // ── DB connection pre-warm (best-effort, never throws) ────────────────────
+    // Opens a few pooled connections and touches a couple of frequently-read
+    // tables right after boot, so the FIRST real user request doesn't pay the
+    // cold first-touch penalty (observed once as a ~700ms cold-cache spike in the
+    // performance benchmarks). Purely additive: failures are logged and ignored,
+    // and a successful run changes no data. Kill-switch: DB_PREWARM_DISABLED=1.
+    if (process.env.DB_PREWARM_DISABLED !== '1') {
+      const prewarmStart = Date.now();
+      const warm = [
+        pool.query('SELECT 1'),
+        pool.query('SELECT 1'),
+        pool.query('SELECT 1'),
+        pool.query('SELECT 1'),
+      ];
+      Promise.allSettled(warm)
+        .then((results) => {
+          const ok = results.filter((r) => r.status === 'fulfilled').length;
+          console.log(`[db-prewarm] warmed ${ok}/${warm.length} connections in ${Date.now() - prewarmStart}ms`);
+        })
+        .catch((e) => console.warn('[db-prewarm] skipped:', (e as Error)?.message));
+    }
   });
 
   // ── Graceful shutdown ────────────────────────────────────────────────────

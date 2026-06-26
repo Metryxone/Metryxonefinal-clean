@@ -26,7 +26,7 @@ import { MentorSessionNotes } from '@/components/MentorSessionNotes';
 import { FirstLoginProfileModal } from '@/components/FirstLoginProfileModal';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 
-import mentor1 from '@/assets/images/mentor1.png';
+import mentor1 from '@/assets/images/mentor1.webp';
 
 
 

@@ -183,3 +183,27 @@ These are **user-paced, session-gated flows** and cannot be exercised end-to-end
 2. **Scale backend horizontally** (cluster mode / multiple instances behind the proxy) before expecting > ~25 concurrent users with tight tail latency — a single `tsx` process caps at ~1 core.
 3. **Pre-warm DB connections/cache** to avoid the rare first-touch cold-query spike (~700 ms once).
 4. **Add server-side timing logs** on assessment-submit and report-generate handlers to capture honest field timings for the two currently-gated dimensions.
+
+---
+
+## Implementation status (applied 2026-06-26)
+
+All four recommendations were actioned. Three are code changes (additive, kill-switch-gated, byte-identical when disabled); one is an architectural decision documented rather than coded.
+
+### ✅ #1 — Images converted to WebP
+- All 8 mentor images (`mentor1–8`) converted **PNG → WebP @ q80**: **10.01 MB → 0.40 MB (−9.61 MB, ~96% reduction)**.
+- Imports updated in the 3 consumers (`MentorMarketplacePage.tsx`, `MentorDashboardPage.tsx`, `ParentMentorServices.tsx`); old PNGs deleted.
+- Conversion tool (`sharp`) was installed **temporarily** and uninstalled — **zero net dependency footprint** (`frontend/package.json` + `package-lock.json` byte-identical to pre-change). Frontend `vite build` verified passing.
+
+### ✅ #2 — Horizontal scaling (architectural decision — documented, not in-process clustered)
+- **Decision: do NOT add in-process Node `cluster` mode.** This backend keeps **per-process in-memory state** — the auth **rate-limiter** (sliding-window buckets) and several **60 s admin caches**. Forking workers would split that state, so each worker would enforce only a fraction of the intended rate limit and serve inconsistent cached reads — a **security/correctness regression**.
+- **Horizontal scaling is instead delivered at the platform layer (Replit Autoscale / multiple instances behind the proxy).** The prerequisite for safe multi-instance — **shared, not in-process, session state** — is already satisfied: sessions use **`connect-pg-simple`** persisting to the **`express_sessions`** Postgres table, so any instance can serve any user's session.
+- **Residual note (honest):** the in-memory rate-limiter and admin caches remain **per-instance**. Under multi-instance these become *per-instance* limits/caches rather than global. That is acceptable for the current caches (short-TTL, read-only, self-healing) but a **future hardening item** if strict global rate-limiting is required would be to move the limiter to a shared store (e.g. Postgres/Redis). Not changed here to preserve byte-identical behaviour.
+
+### ✅ #3 — DB connection pre-warm
+- Best-effort pool warm-up (issues `SELECT 1` across the pool) runs inside the `httpServer.listen` callback in `backend/index.ts`, so the first real request no longer pays first-touch connection + cold-buffer cost.
+- **Kill-switch:** `DB_PREWARM_DISABLED=1`. Best-effort and non-blocking — failures are logged and ignored, never block boot. Verified at boot: `[db-prewarm] warmed 4/4 connections`.
+
+### ✅ #4 — Server-side timing logs
+- Scoped `res.on('finish')` timing middleware (registered after `passport.session()` in `backend/routes.ts`) emits `[perf]` duration lines for the assessment-completion and report (list / single / PDF) handlers — the two dimensions that were gated/unmeasurable in this benchmark — so honest field timings can now be read from production telemetry.
+- **Kill-switch:** `PERF_TIMING_DISABLED=1`. Read-only observation; does not alter responses.

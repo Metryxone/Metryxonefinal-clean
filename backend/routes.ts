@@ -185,6 +185,7 @@ import { registerLDEGovernanceRoutes } from "./routes/lde-governance";
 import { registerRIERoutes } from "./routes/rie-engine";
 import { registerRIEAdminRoutes } from "./routes/rie-admin";
 import { registerSecurityCenterRoutes, createAdminAuditMiddleware, readActiveSessions } from "./routes/security-center";
+import { isFrameworkAdminPath } from "./lib/admin-path-gate";
 import { registerGovernanceRoutes } from "./routes/governance";
 import { seedRbac } from "./services/governance/rbac-seed";
 import { recordGovernanceAudit, recordFailedLogin } from "./services/governance/audit-engine";
@@ -4987,6 +4988,29 @@ ${context?.userName ? `- User name: ${context.userName}` : ""}
   // user (not only super_admin); its own requireAuth still applies.
   app.use('/api/admin', (req: any, res: any, next: any) => {
     if (req.path === '/lbi-catalog' || req.path === '/lbi-catalog/') return next();
+    requireAuth(req, res, () => requireSuperAdmin(req, res, next));
+  });
+
+  // STEP 11b — Structural per-framework admin gate.
+  //
+  // The /api/admin gate above only covers the literal /api/admin/* prefix.
+  // Admin endpoints living under per-framework prefixes (/api/lbi/admin,
+  // /api/sdi/admin, /api/competency/admin, /api/commercial/admin,
+  // /api/concerns/admin, /api/invoice/admin, /api/short-assessments/admin) and
+  // a few admin-only reads outside an /admin segment previously relied SOLELY on
+  // per-route inline guards — so a new sub-route that forgot its guard would
+  // ship public (the recurring "per-framework admin gap").
+  //
+  // This mount sits in the middleware stack BEFORE every framework route module
+  // (all registered far below) and so closes that whole class of bug
+  // structurally: any classified admin path must pass
+  // requireAuth → requireSuperAdmin regardless of whether its handler remembered
+  // its inline guards. The classification (incl. intentionally-public exempt
+  // reads) is the SINGLE shared source of truth in lib/admin-path-gate.ts, also
+  // consumed by tests/admin-auth-guard.test.ts so the two can never drift.
+  // req.path here is mount-relative to /api (e.g. '/lbi/admin/foo').
+  app.use('/api', (req: any, res: any, next: any) => {
+    if (!isFrameworkAdminPath(req.path)) return next();
     requireAuth(req, res, () => requireSuperAdmin(req, res, next));
   });
 

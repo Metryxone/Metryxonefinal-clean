@@ -8599,6 +8599,11 @@
       box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     }
   }
+  .focus-within\:ring-blue-400 {
+    &:focus-within {
+      --tw-ring-color: var(--color-blue-400);
+    }
+  }
   .focus-within\:ring-offset-0 {
     &:focus-within {
       --tw-ring-offset-width: 0px;

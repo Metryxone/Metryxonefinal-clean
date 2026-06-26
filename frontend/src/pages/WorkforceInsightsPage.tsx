@@ -39,24 +39,36 @@ export default function WorkforceInsightsPage(_: NavProps) {
   const [dist, setDist] = useState<Dist[]>([]);
   const [pipeline, setPipeline] = useState<Pipeline[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     (async () => {
-      const [h, m, d, p] = await Promise.all([
-        fetch('/api/workforce/heatmap').then(r => r.json()),
-        fetch('/api/workforce/metrics').then(r => r.json()),
-        fetch('/api/workforce/distribution').then(r => r.json()),
-        fetch('/api/workforce/pipeline').then(r => r.json()),
-      ]);
-      setCells(h.data?.heatmap ?? []);
-      setMetrics(m.data?.metrics ?? []);
-      setDist(d.data?.distribution ?? []);
-      setPipeline(p.data?.pipeline ?? []);
-      setLoading(false);
+      try {
+        const getJson = async (url: string) => {
+          const r = await fetch(url);
+          if (!r.ok) throw new Error(`${url} responded ${r.status}`);
+          return r.json();
+        };
+        const [h, m, d, p] = await Promise.all([
+          getJson('/api/workforce/heatmap'),
+          getJson('/api/workforce/metrics'),
+          getJson('/api/workforce/distribution'),
+          getJson('/api/workforce/pipeline'),
+        ]);
+        setCells(h.data?.heatmap ?? []);
+        setMetrics(m.data?.metrics ?? []);
+        setDist(d.data?.distribution ?? []);
+        setPipeline(p.data?.pipeline ?? []);
+      } catch {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
     })();
   }, []);
 
   if (loading) return <div style={{ background: C.bg, color: C.muted, padding: 32, minHeight: '100vh' }}>Loading workforce analytics…</div>;
+  if (error) return <div style={{ background: C.bg, color: C.warn, padding: 32, minHeight: '100vh' }}>Couldn't load workforce analytics. Please refresh to try again.</div>;
 
   const layers = Array.from(new Set(cells.map(c => c.layer_id))).map(id => cells.find(c => c.layer_id === id)!);
   const comps = Array.from(new Set(cells.map(c => c.competency_id))).slice(0, 13);
@@ -77,6 +89,11 @@ export default function WorkforceInsightsPage(_: NavProps) {
         audience="Admins · HR · People analytics"
       />
 
+      {metrics.length === 0 ? (
+        <section style={{ padding: '12px 32px' }}>
+          <div style={{ color: C.muted }}>No workforce metrics available yet.</div>
+        </section>
+      ) : (
       <section style={{ padding: '12px 32px', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
         {metrics.slice(0, 4).map(m => (
           <div key={m.metric_name} style={{ background: C.panel, padding: 14, borderRadius: 8, border: `1px solid ${C.border}` }}>
@@ -90,9 +107,13 @@ export default function WorkforceInsightsPage(_: NavProps) {
           </div>
         ))}
       </section>
+      )}
 
       <section style={{ margin: '12px 32px', background: C.panel, padding: 18, borderRadius: 10, border: `1px solid ${C.border}` }}>
         <h3 style={{ margin: '0 0 14px', fontSize: 14 }}>Organisational Capability Heatmap</h3>
+        {layers.length === 0 ? (
+          <div style={{ color: C.muted, padding: '24px 0', textAlign: 'center' }}>No heatmap data available yet.</div>
+        ) : (
         <div style={{ overflowX: 'auto' }}>
           <table style={{ borderCollapse: 'separate', borderSpacing: 2, fontSize: 11, color: C.text }}>
             <thead>
@@ -125,11 +146,13 @@ export default function WorkforceInsightsPage(_: NavProps) {
             </tbody>
           </table>
         </div>
+        )}
       </section>
 
       <section style={{ margin: '12px 32px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
         <div style={{ background: C.panel, padding: 18, borderRadius: 10, border: `1px solid ${C.border}` }}>
           <h3 style={{ margin: '0 0 14px', fontSize: 14 }}>Leadership Pipeline by Layer</h3>
+          {pipeline.length === 0 && <div style={{ color: C.muted, padding: '12px 0' }}>No pipeline data available yet.</div>}
           {pipeline.map(p => (
             <div key={p.layer_id} style={{ marginBottom: 10 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: C.text, marginBottom: 4 }}>
@@ -152,6 +175,7 @@ export default function WorkforceInsightsPage(_: NavProps) {
 
         <div style={{ background: C.panel, padding: 18, borderRadius: 10, border: `1px solid ${C.border}` }}>
           <h3 style={{ margin: '0 0 14px', fontSize: 14 }}>Capability Distribution (sample-weighted)</h3>
+          {dist.length === 0 && <div style={{ color: C.muted, padding: '12px 0' }}>No distribution data available yet.</div>}
           {dist.slice(0, 10).map(d => (
             <div key={d.competency_id} style={{ display: 'grid', gridTemplateColumns: '1fr 60px 80px 60px', gap: 8, fontSize: 12, padding: '6px 0', borderTop: `1px solid ${C.border}` }}>
               <div>{d.canonical_name}</div>

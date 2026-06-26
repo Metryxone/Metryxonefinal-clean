@@ -194,6 +194,7 @@ export function StudentDashboard({ onNavigate, onLogout, onSelectExam }: Props) 
   const [studentProfile, setStudentProfile] = useState<StudentProfile | null>(null);
   const [userData, setUserData] = useState<UserType | null>(null);
   const [loading, setLoading] = useState(true);
+  const [examsError, setExamsError] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedPieSegment, setSelectedPieSegment] = useState<string | null>(null);
   const [consentRequired, setConsentRequired] = useState(false);
@@ -463,6 +464,7 @@ export function StudentDashboard({ onNavigate, onLogout, onSelectExam }: Props) 
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
+      setExamsError(false);
       const [examsRes, profileRes, insightsRes, userRes] = await Promise.all([
         fetch('/api/student/exams', { credentials: 'include' }),
         fetch('/api/student/profile', { credentials: 'include' }),
@@ -473,6 +475,8 @@ export function StudentDashboard({ onNavigate, onLogout, onSelectExam }: Props) 
       if (examsRes.ok) {
         const data = await examsRes.json();
         setExams(data);
+      } else {
+        setExamsError(true);
       }
 
       if (profileRes.ok) {
@@ -491,6 +495,7 @@ export function StudentDashboard({ onNavigate, onLogout, onSelectExam }: Props) 
       }
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
+      setExamsError(true);
       toast({
         title: "Error",
         description: "Failed to load dashboard data",
@@ -1400,7 +1405,7 @@ export function StudentDashboard({ onNavigate, onLogout, onSelectExam }: Props) 
                 </div>
 
                 {/* Upcoming Exams */}
-                {upcomingExams.length > 0 && (
+                {upcomingExams.length > 0 ? (
                   <div className={`${theme.cardBg} border ${theme.cardBorder} rounded-2xl overflow-hidden`}>
                     <div className={`px-5 py-3.5 flex items-center justify-between border-b ${theme.cardBorder}`}>
                       <div className="flex items-center gap-2">
@@ -1426,6 +1431,12 @@ export function StudentDashboard({ onNavigate, onLogout, onSelectExam }: Props) 
                         );
                       })}
                     </div>
+                  </div>
+                ) : (
+                  <div className={`${theme.cardBg} border ${theme.cardBorder} rounded-2xl p-8 text-center`}>
+                    <Calendar size={24} className="mx-auto mb-2" style={{ color: examsError ? '#ef4444' : '#D97706' }} />
+                    <p className={`text-sm font-semibold ${theme.text}`}>{examsError ? "Couldn't load exams" : "No upcoming exams"}</p>
+                    <p className={`text-xs mt-1 ${theme.textMuted}`}>{examsError ? "Something went wrong while loading. Refresh the page to try again." : "You're all caught up — new exams appear here when scheduled."}</p>
                   </div>
                 )}
 
@@ -2170,7 +2181,7 @@ export function StudentDashboard({ onNavigate, onLogout, onSelectExam }: Props) 
         </div>
 
         {/* Recent Results */}
-        {recentExams.length > 0 && (
+        {recentExams.length > 0 ? (
           <Card className={`${theme.cardBg} ${theme.cardBorder} border mt-4`}>
             <CardHeader className="pb-2">
               <div className="flex items-center gap-2">
@@ -2190,6 +2201,14 @@ export function StudentDashboard({ onNavigate, onLogout, onSelectExam }: Props) 
                   </div>
                 ))}
               </div>
+            </CardContent>
+          </Card>
+        ) : (
+          <Card className={`${theme.cardBg} ${theme.cardBorder} border mt-4`}>
+            <CardContent className="py-8 text-center">
+              <Award size={24} className="mx-auto mb-2 opacity-50" style={{ color: examsError ? '#ef4444' : BRAND.accent }} />
+              <p className={`text-sm font-medium ${theme.text}`}>{examsError ? "Couldn't load results" : "No results yet"}</p>
+              <p className={`text-xs mt-1 ${theme.textMuted}`}>{examsError ? "Something went wrong while loading. Refresh the page to try again." : "Complete an exam to see your scores here."}</p>
             </CardContent>
           </Card>
         )}

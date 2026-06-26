@@ -113,7 +113,7 @@ export function HRDashboard({ onNavigate }: HRDashboardProps) {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [jobFilter, setJobFilter] = useState('all');
 
-  const { data: stats, isLoading: statsLoading } = useQuery<DashboardStats>({
+  const { data: stats, isLoading: statsLoading, isError: statsError } = useQuery<DashboardStats>({
     queryKey: ['/api/hr/dashboard/stats'],
   });
 
@@ -121,7 +121,7 @@ export function HRDashboard({ onNavigate }: HRDashboardProps) {
     if (!statsLoading && shouldShowTour('hr')) setShowTour(true);
   }, [statsLoading]);
 
-  const { data: jobs = [], isLoading: jobsLoading } = useQuery<Job[]>({
+  const { data: jobs = [], isLoading: jobsLoading, isError: jobsError } = useQuery<Job[]>({
     queryKey: ['/api/hr/jobs'],
   });
 
@@ -290,6 +290,16 @@ export function HRDashboard({ onNavigate }: HRDashboardProps) {
           </TabsList>
 
           <TabsContent value="overview">
+            {statsError ? (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 text-sm flex items-start gap-2">
+                <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" /> Failed to load dashboard statistics. Please refresh to try again.
+              </div>
+            ) : statsLoading ? (
+              <div className="flex items-center justify-center py-24 text-gray-400">
+                <RefreshCw className="w-5 h-5 animate-spin mr-2" /> Loading dashboard…
+              </div>
+            ) : (
+            <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
               <StatCard icon={Briefcase} label="Total Jobs" value={stats?.totalJobs || 0} color={brand.primary} />
               <StatCard icon={FileText} label="Published" value={stats?.publishedJobs || 0} color={brand.accent} />
@@ -349,6 +359,8 @@ export function HRDashboard({ onNavigate }: HRDashboardProps) {
                 </CardContent>
               </Card>
             </div>
+            </>
+            )}
           </TabsContent>
 
           <TabsContent value="jobs">
@@ -376,6 +388,15 @@ export function HRDashboard({ onNavigate }: HRDashboardProps) {
               </Button>
             </div>
 
+            {jobsLoading ? (
+              <div className="flex items-center justify-center py-24 text-gray-400">
+                <RefreshCw className="w-5 h-5 animate-spin mr-2" /> Loading jobs…
+              </div>
+            ) : jobsError ? (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 text-sm flex items-start gap-2">
+                <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" /> Failed to load job postings. Please refresh to try again.
+              </div>
+            ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredJobs.map(job => (
                 <JobCard key={job.id} job={job} />
@@ -387,6 +408,7 @@ export function HRDashboard({ onNavigate }: HRDashboardProps) {
                 </div>
               )}
             </div>
+            )}
           </TabsContent>
 
           <TabsContent value="approvals">
@@ -773,7 +795,7 @@ function ApprovalWorkflow({ jobs }: { jobs: Job[] }) {
 }
 
 function MentorManagement() {
-  const { data: mentors = [], isLoading } = useQuery<Mentor[]>({
+  const { data: mentors = [], isLoading, isError } = useQuery<Mentor[]>({
     queryKey: ['/api/hr/mentors'],
   });
 
@@ -803,6 +825,8 @@ function MentorManagement() {
         <CardContent>
           {isLoading ? (
             <p className="text-center py-8 text-gray-500">Loading mentors...</p>
+          ) : isError ? (
+            <p className="text-center py-8 text-red-600">Failed to load mentors. Please refresh to try again.</p>
           ) : mentors.length === 0 ? (
             <p className="text-center py-8 text-gray-500">No mentors found</p>
           ) : (
@@ -848,7 +872,7 @@ function MentorManagement() {
 }
 
 function ComplianceDashboard() {
-  const { data: violations = [], isLoading } = useQuery<any[]>({
+  const { data: violations = [], isLoading, isError } = useQuery<any[]>({
     queryKey: ['/api/hr/compliance/violations'],
   });
 
@@ -871,6 +895,11 @@ function ComplianceDashboard() {
         <CardContent>
           {isLoading ? (
             <p className="text-center py-8 text-gray-500">Loading violations...</p>
+          ) : isError ? (
+            <div className="text-center py-12">
+              <AlertTriangle size={48} className="mx-auto mb-4 text-red-500" />
+              <p className="text-red-600">Failed to load violations. Please refresh to try again.</p>
+            </div>
           ) : violations.length === 0 ? (
             <div className="text-center py-12">
               <CheckCircle size={48} className="mx-auto mb-4 text-teal-500" />

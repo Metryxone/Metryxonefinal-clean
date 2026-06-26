@@ -24,6 +24,17 @@ then restart Backend API. Scope it **development-only** (not `shared`) so produc
 stays OFF — honours a "flags default OFF + NO DEPLOY" preference and is fully
 reversible (`deleteEnvVars` + restart).
 
+**⚠️ Repo-visibility trap:** `setEnvVars({environment:'development'})` does NOT write
+to an invisible separate dev store — in this repl it edits the committed `.replit`
+`[env]` block, so the new `FF_*` line shows up in `git --no-optional-locks status`
+(` M .replit`) and would be swept into the task-end auto-commit (i.e. it can reach
+prod on deploy). If you only flipped the flag to TEMPORARILY validate a gated
+surface, you MUST revert before finishing: `deleteEnvVars` removes the `.replit`
+line (git returns clean) and a final Backend API restart drops it from the running
+process (the running process keeps the old env until restarted, so deleteEnvVars
+alone leaves the flag live in-memory). Verify both: `git status` clean AND the gated
+endpoint back to 503.
+
 **Why:** env-var override is equivalent to a command flag for the backend, survives
 restarts, and respects per-environment flag policy without touching the locked
 `.replit` workflow set.

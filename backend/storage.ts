@@ -4149,6 +4149,16 @@ export class DatabaseStorage implements IStorage {
 
     const initialPassword = process.env.SUPERADMIN_INITIAL_PASSWORD;
 
+    // If an operator supplied a seed/rotation password it MUST meet the platform
+    // password policy — never seed or rotate to a weak super-admin credential.
+    if (initialPassword) {
+      const { validatePasswordComplexity } = await import('./lib/password-policy');
+      const check = validatePasswordComplexity(initialPassword, { identifier: 'support@metryxone.com' });
+      if (!check.ok) {
+        throw new Error(`SUPERADMIN_INITIAL_PASSWORD does not meet password policy: ${check.errors.join(' ')}`);
+      }
+    }
+
     const existing = await db.select().from(users).where(eq(users.role, 'super_admin')).limit(1);
 
     const SUPER_ADMIN_EMAIL = 'support@metryxone.com';
@@ -4166,7 +4176,17 @@ export class DatabaseStorage implements IStorage {
       return;
     }
 
-    // No super_admin exists — create one
+    // No super_admin exists — create one.
+    // SECURITY: in production we refuse to seed the well-known default credential.
+    // The operator MUST provide a strong SUPERADMIN_INITIAL_PASSWORD; otherwise no
+    // super-admin is created (the thrown error is logged by the caller in index.ts)
+    // rather than booting with a publicly-documented password.
+    if (!initialPassword && process.env.NODE_ENV === 'production') {
+      throw new Error(
+        'Refusing to seed super-admin with the default credential in production. ' +
+        'Set SUPERADMIN_INITIAL_PASSWORD to a strong value and restart.',
+      );
+    }
     const password = initialPassword || 'admin123';
     const hashedPassword = await hashPassword(password);
 

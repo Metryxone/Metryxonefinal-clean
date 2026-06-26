@@ -189,6 +189,7 @@ import { isFrameworkAdminPath } from "./lib/admin-path-gate";
 import { registerGovernanceRoutes } from "./routes/governance";
 import { seedRbac } from "./services/governance/rbac-seed";
 import { recordGovernanceAudit, recordFailedLogin } from "./services/governance/audit-engine";
+import { assertPasswordAcceptable } from "./lib/password-policy";
 import { isGovernanceRbacEnabled } from "./config/feature-flags";
 import { registerCognitiveRuntimeRoutes } from "./routes/cognitive-runtime";
 import { registerIILCoreRoutes } from "./routes/iil-core";
@@ -455,6 +456,14 @@ export async function registerRoutes(
         return res.status(400).json({ message: "Invalid request data", errors: result.error.issues });
       }
 
+      // Enforce password policy (complexity + known-breach check) on the user-chosen password.
+      const pwCheck = await assertPasswordAcceptable(result.data.password, {
+        identifier: result.data.username || (result.data as any).email || null,
+      });
+      if (!pwCheck.ok) {
+        return res.status(400).json({ message: pwCheck.errors[0], errors: pwCheck.errors });
+      }
+
       const existingUser = await storage.getUserByUsername(result.data.username);
       if (existingUser) {
         return res.status(400).json({ message: "Username already exists" });
@@ -516,17 +525,87 @@ export async function registerRoutes(
     }
   });
 
-  app.post("/api/login", (req, res, next) => {
+  // ── Account lockout (defense-in-depth) ──────────────────────────────────────
+  // Enforces the documented security settings (max_login_attempts=5,
+  // lockout_duration_minutes=30) that previously existed only as admin DATA.
+  // Always-on and independent of the governance RBAC flag. Every DB op is
+  // best-effort: a database hiccup must never lock real users out of logging in
+  // (fail-open on availability — the anti-enumeration delay + governance audit
+  // remain as additional layers).
+  const LOGIN_MAX_ATTEMPTS = 5;
+  const LOGIN_LOCKOUT_MINUTES = 30;
+  let loginAttemptTableReady = false;
+  const ensureLoginAttemptTable = async () => {
+    if (loginAttemptTableReady) return;
+    await concernsPool.query(`
+      CREATE TABLE IF NOT EXISTS auth_login_attempts (
+        id BIGSERIAL PRIMARY KEY,
+        identifier TEXT NOT NULL,
+        ip TEXT,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      )`);
+    await concernsPool.query(
+      `CREATE INDEX IF NOT EXISTS idx_auth_login_attempts_id_time
+         ON auth_login_attempts (identifier, created_at)`);
+    loginAttemptTableReady = true;
+  };
+  const isLockedOut = async (identifier: string): Promise<{ locked: boolean; retryAfterSec: number }> => {
+    try {
+      await ensureLoginAttemptTable();
+      const r = await concernsPool.query(
+        `SELECT COUNT(*)::int AS n, MIN(created_at) AS first_at
+           FROM auth_login_attempts
+          WHERE identifier = $1 AND created_at > now() - ($2 || ' minutes')::interval`,
+        [identifier, String(LOGIN_LOCKOUT_MINUTES)],
+      );
+      const n: number = r.rows[0]?.n ?? 0;
+      if (n >= LOGIN_MAX_ATTEMPTS) {
+        const firstAt = r.rows[0]?.first_at ? new Date(r.rows[0].first_at).getTime() : Date.now();
+        const unlockAt = firstAt + LOGIN_LOCKOUT_MINUTES * 60 * 1000;
+        const retryAfterSec = Math.max(1, Math.ceil((unlockAt - Date.now()) / 1000));
+        return { locked: true, retryAfterSec };
+      }
+      return { locked: false, retryAfterSec: 0 };
+    } catch {
+      return { locked: false, retryAfterSec: 0 };
+    }
+  };
+  const recordLoginFailure = async (identifier: string, ip: string | null) => {
+    try {
+      await ensureLoginAttemptTable();
+      await concernsPool.query(
+        `INSERT INTO auth_login_attempts (identifier, ip) VALUES ($1, $2)`, [identifier, ip]);
+    } catch { /* best-effort */ }
+  };
+  const clearLoginFailures = async (identifier: string) => {
+    try {
+      await ensureLoginAttemptTable();
+      await concernsPool.query(`DELETE FROM auth_login_attempts WHERE identifier = $1`, [identifier]);
+    } catch { /* best-effort */ }
+  };
+
+  app.post("/api/login", async (req, res, next) => {
+    const loginIp = (req.headers["x-forwarded-for"]?.toString().split(",")[0].trim()) || req.ip || null;
+    const loginIdentifier = String(req.body?.username || req.body?.email || "").trim().toLowerCase();
+    if (loginIdentifier) {
+      const lock = await isLockedOut(loginIdentifier);
+      if (lock.locked) {
+        res.setHeader("Retry-After", String(lock.retryAfterSec));
+        return res.status(429).json({
+          message: `Too many failed login attempts. Please try again in about ${Math.ceil(lock.retryAfterSec / 60)} minute(s).`,
+        });
+      }
+    }
     passport.authenticate("local", async (err: any, user: Express.User | false, info: any) => {
       if (err) {
         return next(err);
       }
       if (!user) {
+        if (loginIdentifier) void recordLoginFailure(loginIdentifier, loginIp);
         if (isGovernanceRbacEnabled()) {
-          const ip = (req.headers["x-forwarded-for"]?.toString().split(",")[0].trim()) || req.ip || null;
           void recordFailedLogin(concernsPool, {
             email: req.body?.username || req.body?.email || null,
-            ip,
+            ip: loginIp,
             reason: info?.message || "invalid_credentials",
             userAgent: req.headers["user-agent"]?.toString() || null,
           });
@@ -534,6 +613,8 @@ export async function registerRoutes(
         return res.status(401).json({ message: info?.message || "Login failed" });
       }
       
+      if (loginIdentifier) void clearLoginFailures(loginIdentifier);
+
       const fullUser = await storage.getUser(user.id);
       const userRoles = fullUser?.roles || [fullUser?.role || ''];
       const isSuperAdmin = userRoles.includes('super_admin') || fullUser?.role === 'super_admin';
@@ -802,7 +883,11 @@ export async function registerRoutes(
       const otp = String(req.body?.otp || "").trim();
       const newPassword = String(req.body?.newPassword || "");
       if (!email || !otp) return res.status(400).json({ error: "OTP_INVALID", message: "Email and OTP are required." });
-      if (newPassword.length < 8) return res.status(400).json({ message: "Password must be at least 8 characters." });
+      // Enforce the same password policy as registration (complexity + known-breach check).
+      const pwReset = await assertPasswordAcceptable(newPassword, { identifier: email });
+      if (!pwReset.ok) {
+        return res.status(400).json({ error: "PASSWORD_WEAK", message: pwReset.errors[0], errors: pwReset.errors });
+      }
 
       await ensureResetOtpTable();
       // Atomic consume: the `used=false` guard inside the UPDATE prevents a

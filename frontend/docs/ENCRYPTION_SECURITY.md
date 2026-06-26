@@ -9,7 +9,7 @@
 | SQL Injection (Drizzle ORM) | ✅ Safe | — |
 | Cookies (httpOnly, sameSite) | ✅ Good | — |
 | PII encryption at rest | ❌ None | CRITICAL |
-| x-user-id header bypass | ❌ Auth bypass | CRITICAL |
+| x-user-id header bypass | ✅ Removed | — |
 | JWT default secret | ❌ Hardcoded | CRITICAL |
 | Rate limiting | ❌ Not implemented | HIGH |
 | File access control | ❌ Public static | HIGH |

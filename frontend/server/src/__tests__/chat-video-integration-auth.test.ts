@@ -1,14 +1,19 @@
 /**
  * Integration test: POST /api/chat/message returns correct video suggestions
- * when the request is authenticated (JWT bearer token or x-user-id header).
+ * for authenticated requests, and proves that identity is established ONLY from
+ * a cryptographically verified JWT.
  *
  * Covers the authenticated branch in chat.ts that queries chat_preferences
  * from the DB before selecting videos.  pool.query is stubbed via mock.method
  * so no live database connection is required.
  *
- * Two auth mechanisms are exercised:
- *   1. x-user-id / x-user-role headers (optionalAuth header-fallback path)
- *   2. Authorization: Bearer <JWT> (optionalAuth token-verification path)
+ * Auth is exercised via:
+ *   - Authorization: Bearer <JWT>  (optionalAuth token-verification path)
+ *
+ * SECURITY REGRESSION GUARD: the former `x-user-id` / `x-user-role` header
+ * fallback has been removed (it allowed trivial impersonation).  A dedicated
+ * test asserts that supplying those headers alone does NOT authenticate the
+ * request, so the user-scoped chat_preferences query is never reached.
  *
  * Run:
  *   node --import tsx/esm --test src/__tests__/chat-video-integration-auth.test.ts
@@ -100,28 +105,6 @@ interface ChatResponse {
   [key: string]: unknown;
 }
 
-async function postMessageHeader(
-  message: string,
-  sessionId: string,
-  userId: string,
-): Promise<ChatResponse> {
-  const res = await fetch(`${baseUrl}/api/chat/message`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-user-id': userId,
-      'x-user-role': 'user',
-    },
-    body: JSON.stringify({ message, sessionId }),
-  });
-  assert.equal(
-    res.status,
-    200,
-    `Expected HTTP 200 for header-auth message "${message}"; got ${res.status}`,
-  );
-  return res.json() as Promise<ChatResponse>;
-}
-
 async function postMessageJwt(
   message: string,
   sessionId: string,
@@ -145,54 +128,6 @@ async function postMessageJwt(
 }
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
-
-test('authenticated (header) — videoSuggestions is an array', async () => {
-  const body = await postMessageHeader(
-    'I need help with exams',
-    `auth-header-exam-${Date.now()}`,
-    'test-user-header-1',
-  );
-
-  assert.ok(
-    Array.isArray(body.videoSuggestions),
-    `Expected videoSuggestions to be an array; got: ${JSON.stringify(body.videoSuggestions)}`,
-  );
-});
-
-test('authenticated (header) — at least one exam-related video is returned', async () => {
-  const body = await postMessageHeader(
-    'I need help with exams',
-    `auth-header-exam2-${Date.now()}`,
-    'test-user-header-2',
-  );
-
-  assert.ok(Array.isArray(body.videoSuggestions), 'videoSuggestions must be an array');
-  assert.ok(
-    body.videoSuggestions!.length > 0,
-    'Expected at least one video suggestion for an exam-related message',
-  );
-
-  const ids = body.videoSuggestions!.map((v) => v.id);
-  const examVideoIds = ['v_exam_ready', 'v_board_prep'];
-  const hasExamVideo = ids.some((id) => examVideoIds.includes(id));
-
-  assert.ok(
-    hasExamVideo,
-    `Expected at least one of [${examVideoIds.join(', ')}] in videoSuggestions; got: [${ids.join(', ')}]`,
-  );
-});
-
-test('authenticated (header) — response JSON shape contains all required fields', async () => {
-  const body = await postMessageHeader(
-    'I need help with exams',
-    `auth-header-shape-${Date.now()}`,
-    'test-user-header-3',
-  );
-
-  for (const field of ['response', 'intent', 'userType', 'videoSuggestions']) {
-    assert.ok(field in body, `Response is missing required field: "${field}"`);
-  }
-});
 
 test('authenticated (JWT) — videoSuggestions is an array', async () => {
   const body = await postMessageJwt(
@@ -261,41 +196,6 @@ test('authenticated (JWT) — non-exam message does not return exam-specific vid
   );
 });
 
-test('authenticated (header) — pool.query is invoked with chat_preferences SQL and correct user ID', async () => {
-  const userId = `test-user-db-branch-${Date.now()}`;
-  const callsBefore = prefQueryCalls.length;
-
-  const body = await postMessageHeader(
-    'I need help with exams',
-    `auth-header-db-branch-${Date.now()}`,
-    userId,
-  );
-
-  // Assert the response still contains video suggestions.
-  assert.ok(
-    Array.isArray(body.videoSuggestions) && body.videoSuggestions.length > 0,
-    'videoSuggestions must be present and non-empty after the DB-preferences branch ran',
-  );
-
-  // Assert pool.query was actually called at least once more after this request.
-  assert.ok(
-    prefQueryCalls.length > callsBefore,
-    `pool.query for chat_preferences was not called for the authenticated request (callsBefore=${callsBefore}, callsAfter=${prefQueryCalls.length})`,
-  );
-
-  // Assert the most-recent call used the chat_preferences table and passed the user ID.
-  const lastCall = prefQueryCalls[prefQueryCalls.length - 1];
-  assert.ok(
-    lastCall.sql.includes('chat_preferences'),
-    `Expected pool.query SQL to mention chat_preferences; got: ${lastCall.sql}`,
-  );
-  assert.equal(
-    lastCall.userId,
-    userId,
-    `Expected pool.query to be called with user ID "${userId}"; got: ${String(lastCall.userId)}`,
-  );
-});
-
 test('authenticated (JWT) — pool.query is invoked with chat_preferences SQL and correct user ID', async () => {
   const userId = `test-user-jwt-db-branch-${Date.now()}`;
   const callsBefore = prefQueryCalls.length;
@@ -308,22 +208,65 @@ test('authenticated (JWT) — pool.query is invoked with chat_preferences SQL an
 
   assert.ok(
     Array.isArray(body.videoSuggestions) && body.videoSuggestions.length > 0,
-    'JWT: videoSuggestions must be present and non-empty after the DB-preferences branch ran',
+    'videoSuggestions must be present and non-empty after the DB-preferences branch ran',
   );
 
   assert.ok(
     prefQueryCalls.length > callsBefore,
-    `JWT: pool.query for chat_preferences was not called (callsBefore=${callsBefore}, callsAfter=${prefQueryCalls.length})`,
+    `pool.query for chat_preferences was not called (callsBefore=${callsBefore}, callsAfter=${prefQueryCalls.length})`,
   );
 
   const lastCall = prefQueryCalls[prefQueryCalls.length - 1];
   assert.ok(
     lastCall.sql.includes('chat_preferences'),
-    `JWT: Expected pool.query SQL to mention chat_preferences; got: ${lastCall.sql}`,
+    `Expected pool.query SQL to mention chat_preferences; got: ${lastCall.sql}`,
   );
   assert.equal(
     lastCall.userId,
     userId,
-    `JWT: Expected pool.query to be called with user ID "${userId}"; got: ${String(lastCall.userId)}`,
+    `Expected pool.query to be called with user ID "${userId}"; got: ${String(lastCall.userId)}`,
+  );
+});
+
+// ─── Security regression guard ────────────────────────────────────────────────
+// The removed `x-user-id` / `x-user-role` header fallback must NOT authenticate.
+// optionalAuth lets the request through anonymously (HTTP 200), but req.user must
+// be undefined, so the user-scoped chat_preferences query is never executed.
+
+test('security — x-user-id / x-user-role headers do NOT authenticate (no user-scoped DB query)', async () => {
+  const spoofedUserId = `attacker-spoof-${Date.now()}`;
+  const callsBefore = prefQueryCalls.length;
+
+  const res = await fetch(`${baseUrl}/api/chat/message`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-user-id': spoofedUserId,
+      'x-user-role': 'super_admin',
+    },
+    body: JSON.stringify({
+      message: 'I need help with exams',
+      sessionId: `spoof-${Date.now()}`,
+    }),
+  });
+
+  // optionalAuth does not reject anonymous requests — the route still answers.
+  assert.equal(
+    res.status,
+    200,
+    `Expected HTTP 200 (anonymous) for header-spoofed message; got ${res.status}`,
+  );
+
+  // But identity must NOT have been established, so no user-scoped preferences
+  // query may have run for the spoofed id.
+  const spoofedCalls = prefQueryCalls
+    .slice(callsBefore)
+    .filter((c) => c.userId === spoofedUserId);
+
+  assert.equal(
+    spoofedCalls.length,
+    0,
+    `x-user-id header must not authenticate: a chat_preferences query ran for the ` +
+      `spoofed id "${spoofedUserId}" (${spoofedCalls.length} call(s))`,
   );
 });

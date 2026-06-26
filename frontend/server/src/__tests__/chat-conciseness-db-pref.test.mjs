@@ -3,16 +3,17 @@
  * the client-sent responseStyle for authenticated users.
  *
  * Three cases:
- *   1. DB = 'concise', client sends responseStyle='standard' (header auth)
+ *   1. DB = 'concise', client sends responseStyle='standard'
  *      → response must be trimmed (concise), proving the DB preference wins.
- *   2. DB = 'standard', client sends responseStyle='concise' (header auth)
+ *   2. DB = 'standard', client sends responseStyle='concise'
  *      → response must NOT be shortened (standard), proving the DB preference wins.
  *   3. DB = 'concise', client sends responseStyle='standard' (JWT bearer token auth)
  *      → same outcome as case 1, but exercises the JWT parsing path in optionalAuth.
  *
- * Cases 1 & 2 use the x-user-id header fallback accepted by optionalAuth.
- * Case 3 mints a real HS256 JWT signed with the server's default dev secret so
- * the bearer-token verification path in auth.ts is covered.
+ * All authenticated requests mint a real HS256 JWT (signed with the server's
+ * dev secret) and send it as `Authorization: Bearer <token>`. The insecure
+ * `x-user-id` / `x-user-role` header fallback has been removed from auth.ts, so
+ * identity is established ONLY from a cryptographically verified token.
  *
  * Because chat_preferences.user_id references users(id), test users are
  * inserted directly via pg before each case and cleaned up afterwards.
@@ -55,8 +56,7 @@ async function setPref(userId, responseStyle) {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      'x-user-id': userId,
-      'x-user-role': 'user',
+      Authorization: `Bearer ${mintToken(userId)}`,
     },
     body: JSON.stringify({ responseStyle }),
   });
@@ -69,8 +69,7 @@ async function setLangPref(userId, preferredLanguage) {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      'x-user-id': userId,
-      'x-user-role': 'user',
+      Authorization: `Bearer ${mintToken(userId)}`,
     },
     body: JSON.stringify({ preferredLanguage }),
   });
@@ -83,8 +82,7 @@ async function setPausePref(userId, pausePref) {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      'x-user-id': userId,
-      'x-user-role': 'user',
+      Authorization: `Bearer ${mintToken(userId)}`,
     },
     body: JSON.stringify({ pausePref }),
   });
@@ -118,8 +116,7 @@ async function setPrefJwt(userId, responseStyle) {
 async function postChat(message, sessionId, responseStyle, userId) {
   const headers = { 'Content-Type': 'application/json' };
   if (userId) {
-    headers['x-user-id'] = userId;
-    headers['x-user-role'] = 'user';
+    headers['Authorization'] = `Bearer ${mintToken(userId)}`;
   }
   const res = await fetch(`${BASE}/api/chat/message`, {
     method: 'POST',
@@ -256,8 +253,7 @@ test('DB language preference is applied to chat responses for authenticated user
   const sessionId = uniqSession('lang_hindi_auth');
   const headers = {
     'Content-Type': 'application/json',
-    'x-user-id': userId,
-    'x-user-role': 'user',
+    Authorization: `Bearer ${mintToken(userId)}`,
   };
   const res = await fetch(`${BASE}/api/chat/message`, {
     method: 'POST',
@@ -320,7 +316,7 @@ test('DB pause preference is saved and returned correctly via GET', async () => 
 
   // Default should be 'none'
   const getRes1 = await fetch(`${BASE}/api/chat-preferences`, {
-    headers: { 'x-user-id': userId, 'x-user-role': 'user' },
+    headers: { Authorization: `Bearer ${mintToken(userId)}` },
   });
   if (!getRes1.ok) throw new Error(`GET /api/chat-preferences HTTP ${getRes1.status}`);
   const prefs1 = await getRes1.json();
@@ -335,7 +331,7 @@ test('DB pause preference is saved and returned correctly via GET', async () => 
 
   // Confirm the stored value is returned correctly
   const getRes2 = await fetch(`${BASE}/api/chat-preferences`, {
-    headers: { 'x-user-id': userId, 'x-user-role': 'user' },
+    headers: { Authorization: `Bearer ${mintToken(userId)}` },
   });
   if (!getRes2.ok) throw new Error(`GET /api/chat-preferences HTTP ${getRes2.status}`);
   const prefs2 = await getRes2.json();
@@ -348,7 +344,7 @@ test('DB pause preference is saved and returned correctly via GET', async () => 
   // Set pausePref back to 'none' and confirm
   await setPausePref(userId, 'none');
   const getRes3 = await fetch(`${BASE}/api/chat-preferences`, {
-    headers: { 'x-user-id': userId, 'x-user-role': 'user' },
+    headers: { Authorization: `Bearer ${mintToken(userId)}` },
   });
   if (!getRes3.ok) throw new Error(`GET /api/chat-preferences HTTP ${getRes3.status}`);
   const prefs3 = await getRes3.json();
@@ -363,8 +359,8 @@ test("pausePref 'session' is accepted by PUT and returned correctly by GET", asy
   const userId = uniqUserId('db_pause_session');
   await createTestUser(userId);
 
-  const headers = { 'Content-Type': 'application/json', 'x-user-id': userId, 'x-user-role': 'user' };
-  const getHeaders = { 'x-user-id': userId, 'x-user-role': 'user' };
+  const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${mintToken(userId)}` };
+  const getHeaders = { Authorization: `Bearer ${mintToken(userId)}` };
 
   // Default should be 'none'
   const defaultRes = await fetch(`${BASE}/api/chat-preferences`, { headers: getHeaders });
@@ -427,8 +423,7 @@ test('DB language preference wins over client-sent preferredLanguage for authent
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-user-id': userId,
-      'x-user-role': 'user',
+      Authorization: `Bearer ${mintToken(userId)}`,
     },
     body: JSON.stringify({
       message: TEST_MESSAGE,
@@ -463,8 +458,8 @@ test('GET /api/chat-preferences round-trips all three fields and partial PUT lea
   const userId = uniqUserId('roundtrip_all');
   await createTestUser(userId);
 
-  const headers = { 'Content-Type': 'application/json', 'x-user-id': userId, 'x-user-role': 'user' };
-  const getHeaders = { 'x-user-id': userId, 'x-user-role': 'user' };
+  const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${mintToken(userId)}` };
+  const getHeaders = { Authorization: `Bearer ${mintToken(userId)}` };
 
   // Step 1: Set all three fields in a single PUT
   const putRes = await fetch(`${BASE}/api/chat-preferences`, {
@@ -568,8 +563,7 @@ test('PUT /api/chat-preferences rejects invalid pausePref enum value with HTTP 4
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      'x-user-id': userId,
-      'x-user-role': 'user',
+      Authorization: `Bearer ${mintToken(userId)}`,
     },
     body: JSON.stringify({ pausePref: 'weekly' }),
   });
@@ -589,8 +583,7 @@ test('PUT /api/chat-preferences rejects invalid responseStyle enum value with HT
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      'x-user-id': userId,
-      'x-user-role': 'user',
+      Authorization: `Bearer ${mintToken(userId)}`,
     },
     body: JSON.stringify({ responseStyle: 'verbose' }),
   });
@@ -610,8 +603,7 @@ test('PUT /api/chat-preferences rejects invalid preferredLanguage enum value wit
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      'x-user-id': userId,
-      'x-user-role': 'user',
+      Authorization: `Bearer ${mintToken(userId)}`,
     },
     body: JSON.stringify({ preferredLanguage: 'klingon' }),
   });
@@ -631,8 +623,7 @@ test('PUT /api/chat-preferences rejects body with no recognised preference field
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      'x-user-id': userId,
-      'x-user-role': 'user',
+      Authorization: `Bearer ${mintToken(userId)}`,
     },
     body: JSON.stringify({ unknownField: 'value' }),
   });

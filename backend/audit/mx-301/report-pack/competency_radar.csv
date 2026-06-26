@@ -1,6 +1,6 @@
 ﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
-"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","executive_summary","narrative","Sarah Johnson's capability is measured across 4 competency types (domain-proxy), classification coverage 100%.",,,,,,
-"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","candidate_information","narrative","Name: Sarah Johnson
+"a6ea4b38-5cb6-4c43-a878-7cb068530872","competency_radar","executive_summary","narrative","Sarah Johnson's capability is measured across 4 competency types (domain-proxy), classification coverage 100%.",,,,,,
+"a6ea4b38-5cb6-4c43-a878-7cb068530872","competency_radar","candidate_information","narrative","Name: Sarah Johnson
 Reference (masked): user_4286d980cc6c
 Current role: Senior Product Manager
 Target role: Director of Product
@@ -10,16 +10,16 @@ Education: MBA
 Location: Bangalore, India
 
 Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
-"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","assessment_summary","narrative","Mean domain-proxy score by competency type — Behavioral: 80.4; Cognitive: 82; Functional: 74; Technical: 74.",,,,,,
-"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","visualizations","chart_datapoint","Behavioral",,"Behavioral","80.4",,,
-"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","visualizations","chart_datapoint","Cognitive",,"Cognitive","82",,,
-"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","visualizations","chart_datapoint","Functional",,"Functional","74",,,
-"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","visualizations","chart_datapoint","Technical",,"Technical","74",,,
-"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","interpretation","narrative","The radar contrasts capability across competency types (behavioural, cognitive, functional, technical, future-skills). Each type mean is a domain-proxy: every competency inherits the measured score of its onto-domain. A balanced shape indicates broad capability; a skewed shape highlights concentration.",,,,,,
-"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","recommendations","insight","Strongest: Cognitive (82).","positive",,,,,
-"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","recommendations","insight","Development priority: Technical (74).","warning",,,,,
-"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","confidence_level","narrative","Derived from 100% type-classification coverage (structural; not measured scores).",,,,,,
-"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","data_source","narrative","competency-runtime.computeTypeProfile → onto_competency_profiles domain scores, grouped by competency type (domain-PROXY mean per type; an onto-domain with no bank code, e.g. strategic, is unmeasurable and excluded).",,,,,,
-"403abd28-8b7c-415e-b87e-08cf4f152ba3","competency_radar","generated_timestamp","narrative","This report was generated on 25 June 2026 at 17:57 UTC.
+"a6ea4b38-5cb6-4c43-a878-7cb068530872","competency_radar","assessment_summary","narrative","Mean domain-proxy score by competency type — Behavioral: 80.4; Cognitive: 82; Functional: 74; Technical: 74.",,,,,,
+"a6ea4b38-5cb6-4c43-a878-7cb068530872","competency_radar","visualizations","chart_datapoint","Behavioral",,"Behavioral","80.4",,,
+"a6ea4b38-5cb6-4c43-a878-7cb068530872","competency_radar","visualizations","chart_datapoint","Cognitive",,"Cognitive","82",,,
+"a6ea4b38-5cb6-4c43-a878-7cb068530872","competency_radar","visualizations","chart_datapoint","Functional",,"Functional","74",,,
+"a6ea4b38-5cb6-4c43-a878-7cb068530872","competency_radar","visualizations","chart_datapoint","Technical",,"Technical","74",,,
+"a6ea4b38-5cb6-4c43-a878-7cb068530872","competency_radar","interpretation","narrative","The radar contrasts capability across competency types (behavioural, cognitive, functional, technical, future-skills). Each type mean is a domain-proxy: every competency inherits the measured score of its onto-domain. A balanced shape indicates broad capability; a skewed shape highlights concentration.",,,,,,
+"a6ea4b38-5cb6-4c43-a878-7cb068530872","competency_radar","recommendations","insight","Strongest: Cognitive (82).","positive",,,,,
+"a6ea4b38-5cb6-4c43-a878-7cb068530872","competency_radar","recommendations","insight","Development priority: Technical (74).","warning",,,,,
+"a6ea4b38-5cb6-4c43-a878-7cb068530872","competency_radar","confidence_level","narrative","Derived from 100% type-classification coverage (structural; not measured scores).",,,,,,
+"a6ea4b38-5cb6-4c43-a878-7cb068530872","competency_radar","data_source","narrative","competency-runtime.computeTypeProfile → onto_competency_profiles domain scores, grouped by competency type (domain-PROXY mean per type; an onto-domain with no bank code, e.g. strategic, is unmeasurable and excluded).",,,,,,
+"a6ea4b38-5cb6-4c43-a878-7cb068530872","competency_radar","generated_timestamp","narrative","This report was generated on 26 June 2026 at 00:51 UTC.
 
 Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

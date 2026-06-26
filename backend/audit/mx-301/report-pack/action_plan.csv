@@ -1,6 +1,6 @@
 ﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
-"3d3ce52a-4721-4cd2-9a4c-ded5fbc520f9","action_plan","executive_summary","narrative","Sarah Johnson's action plan organises development into 5 streams.",,,,,,
-"3d3ce52a-4721-4cd2-9a4c-ded5fbc520f9","action_plan","candidate_information","narrative","Name: Sarah Johnson
+"a3a9351f-ad88-418e-8d1e-427dca9ffaf6","action_plan","executive_summary","narrative","Sarah Johnson's action plan organises development into 5 streams.",,,,,,
+"a3a9351f-ad88-418e-8d1e-427dca9ffaf6","action_plan","candidate_information","narrative","Name: Sarah Johnson
 Reference (masked): user_4286d980cc6c
 Current role: Senior Product Manager
 Target role: Director of Product
@@ -10,18 +10,18 @@ Education: MBA
 Location: Bangalore, India
 
 Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
-"3d3ce52a-4721-4cd2-9a4c-ded5fbc520f9","action_plan","assessment_summary","narrative","Streams — Behavioral Development (0 comps); Technical Development (0 comps); Functional Development (0 comps); Cognitive Development (1 comps, ~4w); Future Skills Development (0 comps).",,,,,,
-"3d3ce52a-4721-4cd2-9a4c-ded5fbc520f9","action_plan","visualizations","chart_datapoint","Behavioral Development",,"Behavioral Development","0",,,
-"3d3ce52a-4721-4cd2-9a4c-ded5fbc520f9","action_plan","visualizations","chart_datapoint","Technical Development",,"Technical Development","0",,,
-"3d3ce52a-4721-4cd2-9a4c-ded5fbc520f9","action_plan","visualizations","chart_datapoint","Functional Development",,"Functional Development","0",,,
-"3d3ce52a-4721-4cd2-9a4c-ded5fbc520f9","action_plan","visualizations","chart_datapoint","Cognitive Development",,"Cognitive Development","1",,,
-"3d3ce52a-4721-4cd2-9a4c-ded5fbc520f9","action_plan","visualizations","chart_datapoint","Future Skills Development",,"Future Skills Development","0",,,
-"3d3ce52a-4721-4cd2-9a4c-ded5fbc520f9","action_plan","interpretation","narrative","The action plan groups development into themed streams, each addressing a cluster of related gaps with a now/next/later horizon. Tracking compares effort over time once a baseline exists.",,,,,,
-"3d3ce52a-4721-4cd2-9a4c-ded5fbc520f9","action_plan","recommendations","insight","Behavioral Development: How you work with others and regulate yourself — interpersonal, attitudinal and self-management behaviours..","info",,,,,
-"3d3ce52a-4721-4cd2-9a4c-ded5fbc520f9","action_plan","recommendations","insight","Technical Development: Tool, technology and domain-specific technical proficiency..","info",,,,,
-"3d3ce52a-4721-4cd2-9a4c-ded5fbc520f9","action_plan","recommendations","insight","Functional Development: Role and process execution capabilities that deliver work outcomes..","info",,,,,
-"3d3ce52a-4721-4cd2-9a4c-ded5fbc520f9","action_plan","confidence_level","narrative","Confidence: Provisional — depends on gap and requirement coverage.",,,,,,
-"3d3ce52a-4721-4cd2-9a4c-ded5fbc520f9","action_plan","data_source","narrative","career-development-engine.buildCareerDevelopment → development streams + tracking from gaps and requirements.",,,,,,
-"3d3ce52a-4721-4cd2-9a4c-ded5fbc520f9","action_plan","generated_timestamp","narrative","This report was generated on 25 June 2026 at 17:57 UTC.
+"a3a9351f-ad88-418e-8d1e-427dca9ffaf6","action_plan","assessment_summary","narrative","Streams — Behavioral Development (0 comps); Technical Development (0 comps); Functional Development (0 comps); Cognitive Development (1 comps, ~4w); Future Skills Development (0 comps).",,,,,,
+"a3a9351f-ad88-418e-8d1e-427dca9ffaf6","action_plan","visualizations","chart_datapoint","Behavioral Development",,"Behavioral Development","0",,,
+"a3a9351f-ad88-418e-8d1e-427dca9ffaf6","action_plan","visualizations","chart_datapoint","Technical Development",,"Technical Development","0",,,
+"a3a9351f-ad88-418e-8d1e-427dca9ffaf6","action_plan","visualizations","chart_datapoint","Functional Development",,"Functional Development","0",,,
+"a3a9351f-ad88-418e-8d1e-427dca9ffaf6","action_plan","visualizations","chart_datapoint","Cognitive Development",,"Cognitive Development","1",,,
+"a3a9351f-ad88-418e-8d1e-427dca9ffaf6","action_plan","visualizations","chart_datapoint","Future Skills Development",,"Future Skills Development","0",,,
+"a3a9351f-ad88-418e-8d1e-427dca9ffaf6","action_plan","interpretation","narrative","The action plan groups development into themed streams, each addressing a cluster of related gaps with a now/next/later horizon. Tracking compares effort over time once a baseline exists.",,,,,,
+"a3a9351f-ad88-418e-8d1e-427dca9ffaf6","action_plan","recommendations","insight","Behavioral Development: How you work with others and regulate yourself — interpersonal, attitudinal and self-management behaviours..","info",,,,,
+"a3a9351f-ad88-418e-8d1e-427dca9ffaf6","action_plan","recommendations","insight","Technical Development: Tool, technology and domain-specific technical proficiency..","info",,,,,
+"a3a9351f-ad88-418e-8d1e-427dca9ffaf6","action_plan","recommendations","insight","Functional Development: Role and process execution capabilities that deliver work outcomes..","info",,,,,
+"a3a9351f-ad88-418e-8d1e-427dca9ffaf6","action_plan","confidence_level","narrative","Confidence: Provisional — depends on gap and requirement coverage.",,,,,,
+"a3a9351f-ad88-418e-8d1e-427dca9ffaf6","action_plan","data_source","narrative","career-development-engine.buildCareerDevelopment → development streams + tracking from gaps and requirements.",,,,,,
+"a3a9351f-ad88-418e-8d1e-427dca9ffaf6","action_plan","generated_timestamp","narrative","This report was generated on 26 June 2026 at 00:51 UTC.
 
 Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

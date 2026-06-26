@@ -1,20 +1,20 @@
 {
   "schema_version": "1.0",
-  "exported_at": "2026-06-25T17:57:57.938Z",
+  "exported_at": "2026-06-26T00:51:50.002Z",
   "report": {
-    "uuid": "1a41879a-5853-4b9c-a0d3-eafdc6997f81",
+    "uuid": "37f62b1c-7180-4f79-bb92-29378d85f2b0",
     "type": "role_readiness",
     "language": "en",
     "status": "complete",
-    "created_at": "2026-06-25T17:57:57.915Z",
-    "completed_at": "2026-06-25T17:57:57.915Z",
+    "created_at": "2026-06-26T00:51:49.975Z",
+    "completed_at": "2026-06-26T00:51:49.975Z",
     "narrative_texts": {
       "data_source": "role-readiness-v2.computeRoleReadinessV2 → resolved role profile vs candidate competency scores.",
       "interpretation": "Readiness compares measured capability to the role’s required competency levels. Critical and blocking gaps cap readiness regardless of average score. This is a developmental signal, not a hiring or promotion decision.",
       "confidence_level": "Confidence: Moderate — measured against the resolved role profile.",
       "executive_summary": "Sarah Johnson's readiness for Product Manager is 95/100 (ready).",
       "assessment_summary": "Readiness 95/100, fit band partial, 1 critical gap(s), 1 blocking.",
-      "generated_timestamp": "This report was generated on 25 June 2026 at 17:57 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "generated_timestamp": "This report was generated on 26 June 2026 at 00:51 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
       "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
     },
     "insights": [
@@ -107,7 +107,7 @@
         },
         {
           "key": "generated_timestamp",
-          "text": "This report was generated on 25 June 2026 at 17:57 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "text": "This report was generated on 26 June 2026 at 00:51 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
           "type": "narrative",
           "title": "Generated Timestamp"
         }

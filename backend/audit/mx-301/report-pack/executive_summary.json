@@ -1,20 +1,20 @@
 {
   "schema_version": "1.0",
-  "exported_at": "2026-06-25T17:57:57.774Z",
+  "exported_at": "2026-06-26T00:51:49.847Z",
   "report": {
-    "uuid": "98193687-43ad-42d5-8b7e-88d69aadbdb6",
+    "uuid": "6a068573-457b-43f5-a77b-1530a20f3a54",
     "type": "executive_summary",
     "language": "en",
     "status": "complete",
-    "created_at": "2026-06-25T17:57:57.728Z",
-    "completed_at": "2026-06-25T17:57:57.728Z",
+    "created_at": "2026-06-26T00:51:49.789Z",
+    "completed_at": "2026-06-26T00:51:49.789Z",
     "narrative_texts": {
       "data_source": "Composed from competency-runtime (getProfile), ei-profile-engine, employability-scoring-engine, career-gap-engine, employer-competency-hiring (match) and career-recommendation-aggregator.",
       "interpretation": "This summary consolidates the candidate’s strongest evidence across competency, employability and role-fit lenses. Each headline metric is explored in its dedicated report; figures are developmental signals, not hiring or promotion decisions.",
       "confidence_level": "Overall confidence: Provisional. Domain-proxy scoring (aggregate domain level, not per-competency). Confidence rises to High once a competency-tagged assessment is scored. Coverage, Confidence and Activation are reported as separate axes and are never combined into a single figure.",
       "executive_summary": "Sarah Johnson (Senior Product Manager) has completed an enterprise competency assessment across 5 capability domains. The overall competency score is 77/100 (level 4). Employability Index stands at 81.2/100 (Excellent). Top strength: Communication Readiness (84). Most material development gap: Agile Collaboration. Match to Senior Product Manager is 77.4%.",
       "assessment_summary": "Headline metrics — Competency Score: 77; Employability Index: 81.2; EI Composite: 81.2; Role Match %: 77.4.",
-      "generated_timestamp": "This report was generated on 25 June 2026 at 17:57 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "generated_timestamp": "This report was generated on 26 June 2026 at 00:51 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
       "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
     },
     "insights": [
@@ -129,7 +129,7 @@
         },
         {
           "key": "generated_timestamp",
-          "text": "This report was generated on 25 June 2026 at 17:57 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "text": "This report was generated on 26 June 2026 at 00:51 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
           "type": "narrative",
           "title": "Generated Timestamp"
         }

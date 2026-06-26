@@ -1,6 +1,6 @@
 ﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","executive_summary","narrative","13 individual competencies are measured for Sarah Johnson; the heatmap surfaces the 13 highest-scoring.",,,,,,
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","candidate_information","narrative","Name: Sarah Johnson
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","executive_summary","narrative","13 individual competencies are measured for Sarah Johnson; the heatmap surfaces the 13 highest-scoring.",,,,,,
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","candidate_information","narrative","Name: Sarah Johnson
 Reference (masked): user_4286d980cc6c
 Current role: Senior Product Manager
 Target role: Director of Product
@@ -10,25 +10,25 @@ Education: MBA
 Location: Bangalore, India
 
 Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","assessment_summary","narrative","Top measured competencies — Stakeholder Management: 84; Active Listening: 84; Analytical Thinking: 82; Critical Thinking: 82; Decision-Making: 82; Accountability: 78; Adaptability: 78; Ambiguity Tolerance: 78….",,,,,,
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","visualizations","chart_datapoint","Stakeholder Management",,"Stakeholder Management","84",,,
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","visualizations","chart_datapoint","Active Listening",,"Active Listening","84",,,
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","visualizations","chart_datapoint","Analytical Thinking",,"Analytical Thinking","82",,,
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","visualizations","chart_datapoint","Critical Thinking",,"Critical Thinking","82",,,
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","visualizations","chart_datapoint","Decision-Making",,"Decision-Making","82",,,
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","visualizations","chart_datapoint","Accountability",,"Accountability","78",,,
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","visualizations","chart_datapoint","Adaptability",,"Adaptability","78",,,
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","visualizations","chart_datapoint","Ambiguity Tolerance",,"Ambiguity Tolerance","78",,,
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","visualizations","chart_datapoint","Prioritization",,"Prioritization","74",,,
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","visualizations","chart_datapoint","Project Management",,"Project Management","74",,,
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","visualizations","chart_datapoint","Time Management",,"Time Management","74",,,
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","visualizations","chart_datapoint","Technical Competence",,"Technical Competence","74",,,
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","visualizations","chart_datapoint","Technology Adoption",,"Technology Adoption","74",,,
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","interpretation","narrative","The heatmap ranks individual competencies by domain-proxy score (each inherits its onto-domain measurement), giving a granular view beneath the domain and type summaries. Use it to pinpoint specific strengths and targeted development items.",,,,,,
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","recommendations","insight","Strongest competency: Stakeholder Management (84).","positive",,,,,
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","recommendations","insight","Lowest measured: Technology Adoption (74).","warning",,,,,
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","confidence_level","narrative","Derived from 100% type-classification coverage (structural; not measured scores).",,,,,,
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","data_source","narrative","competency-runtime.computeTypeProfile → per-competency domain-PROXY scores (each competency inherits its onto-domain score; precise per-competency scoring requires onto_competency_question_map coverage).",,,,,,
-"176ab0b1-89e9-441c-80e1-b1cbb5f32569","competency_heatmap","generated_timestamp","narrative","This report was generated on 25 June 2026 at 17:57 UTC.
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","assessment_summary","narrative","Top measured competencies — Stakeholder Management: 84; Active Listening: 84; Analytical Thinking: 82; Critical Thinking: 82; Decision-Making: 82; Accountability: 78; Adaptability: 78; Ambiguity Tolerance: 78….",,,,,,
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","visualizations","chart_datapoint","Stakeholder Management",,"Stakeholder Management","84",,,
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","visualizations","chart_datapoint","Active Listening",,"Active Listening","84",,,
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","visualizations","chart_datapoint","Analytical Thinking",,"Analytical Thinking","82",,,
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","visualizations","chart_datapoint","Critical Thinking",,"Critical Thinking","82",,,
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","visualizations","chart_datapoint","Decision-Making",,"Decision-Making","82",,,
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","visualizations","chart_datapoint","Accountability",,"Accountability","78",,,
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","visualizations","chart_datapoint","Adaptability",,"Adaptability","78",,,
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","visualizations","chart_datapoint","Ambiguity Tolerance",,"Ambiguity Tolerance","78",,,
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","visualizations","chart_datapoint","Prioritization",,"Prioritization","74",,,
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","visualizations","chart_datapoint","Project Management",,"Project Management","74",,,
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","visualizations","chart_datapoint","Time Management",,"Time Management","74",,,
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","visualizations","chart_datapoint","Technical Competence",,"Technical Competence","74",,,
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","visualizations","chart_datapoint","Technology Adoption",,"Technology Adoption","74",,,
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","interpretation","narrative","The heatmap ranks individual competencies by domain-proxy score (each inherits its onto-domain measurement), giving a granular view beneath the domain and type summaries. Use it to pinpoint specific strengths and targeted development items.",,,,,,
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","recommendations","insight","Strongest competency: Stakeholder Management (84).","positive",,,,,
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","recommendations","insight","Lowest measured: Technology Adoption (74).","warning",,,,,
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","confidence_level","narrative","Derived from 100% type-classification coverage (structural; not measured scores).",,,,,,
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","data_source","narrative","competency-runtime.computeTypeProfile → per-competency domain-PROXY scores (each competency inherits its onto-domain score; precise per-competency scoring requires onto_competency_question_map coverage).",,,,,,
+"39a58e45-5852-4f84-9fce-d13ecbc6de82","competency_heatmap","generated_timestamp","narrative","This report was generated on 26 June 2026 at 00:51 UTC.
 
 Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

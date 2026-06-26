@@ -1,13 +1,13 @@
 {
   "schema_version": "1.0",
-  "exported_at": "2026-06-25T17:57:58.007Z",
+  "exported_at": "2026-06-26T00:51:50.058Z",
   "report": {
-    "uuid": "93b3e82e-ff5f-4c3e-87c6-752023233145",
+    "uuid": "8c1fec5f-a3aa-41fb-95a5-bb3919346c7b",
     "type": "career_recommendations",
     "language": "en",
     "status": "complete",
-    "created_at": "2026-06-25T17:57:57.988Z",
-    "completed_at": "2026-06-25T17:57:57.988Z",
+    "created_at": "2026-06-26T00:51:50.041Z",
+    "completed_at": "2026-06-26T00:51:50.041Z",
     "narrative_texts": {
       "data_source": "career-recommendation-aggregator.buildCareerRecommendations → composed from competency, gap and market signals.",
       "interpretation": "Recommendations are derived developmental suggestions ranked by relevance. Personalized items consume the candidate’s own profile; catalog items are general and flagged as provisional. None are directives.",
@@ -15,7 +15,7 @@
       "confidence_level": "Confidence varies per recommendation; personalized items inherit the chain confidence, catalog items are Provisional.",
       "executive_summary": "6 recommendations are available for Sarah Johnson, 6 personalized to their profile.",
       "assessment_summary": "Recommendations span 6 type(s). Top item: Target role: AI Product Manager.",
-      "generated_timestamp": "This report was generated on 25 June 2026 at 17:57 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+      "generated_timestamp": "This report was generated on 26 June 2026 at 00:51 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
       "candidate_information": "Name: Sarah Johnson\nReference (masked): user_4286d980cc6c\nCurrent role: Senior Product Manager\nTarget role: Director of Product\nIndustry: Technology\nExperience: 8 years\nEducation: MBA\nLocation: Bangalore, India\n\nProfile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership."
     },
     "insights": [
@@ -133,7 +133,7 @@
         },
         {
           "key": "generated_timestamp",
-          "text": "This report was generated on 25 June 2026 at 17:57 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
+          "text": "This report was generated on 26 June 2026 at 00:51 UTC.\n\nReport pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",
           "type": "narrative",
           "title": "Generated Timestamp"
         }

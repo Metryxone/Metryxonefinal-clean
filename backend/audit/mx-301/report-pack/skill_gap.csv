@@ -1,6 +1,6 @@
 ﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
-"5b414e52-e84b-4a21-bb57-757884d04605","skill_gap","executive_summary","narrative","Sarah Johnson has 1 skill gap(s); the most material is Agile Collaboration.",,,,,,
-"5b414e52-e84b-4a21-bb57-757884d04605","skill_gap","candidate_information","narrative","Name: Sarah Johnson
+"925d6df6-357a-46fa-8a6d-b91171bfe95f","skill_gap","executive_summary","narrative","Sarah Johnson has 1 skill gap(s); the most material is Agile Collaboration.",,,,,,
+"925d6df6-357a-46fa-8a6d-b91171bfe95f","skill_gap","candidate_information","narrative","Name: Sarah Johnson
 Reference (masked): user_4286d980cc6c
 Current role: Senior Product Manager
 Target role: Director of Product
@@ -10,12 +10,12 @@ Education: MBA
 Location: Bangalore, India
 
 Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
-"5b414e52-e84b-4a21-bb57-757884d04605","skill_gap","assessment_summary","narrative","Largest gaps — Agile Collaboration: need 4, currently 3 (gap 1).",,,,,,
-"5b414e52-e84b-4a21-bb57-757884d04605","skill_gap","visualizations","chart_datapoint","Agile Collaboration",,"Agile Collaboration","1",,,
-"5b414e52-e84b-4a21-bb57-757884d04605","skill_gap","interpretation","narrative","A gap is the distance between a required competency level and the measured level. Critical and blocking gaps are prioritised in the Action Plan and Learning Roadmap. Gaps are developmental, not disqualifying.",,,,,,
-"5b414e52-e84b-4a21-bb57-757884d04605","skill_gap","recommendations","insight","Close gap in Agile Collaboration (need 4, currently 3).","critical",,,,,
-"5b414e52-e84b-4a21-bb57-757884d04605","skill_gap","confidence_level","narrative","Confidence: Provisional — depends on requirement coverage and measurement granularity.",,,,,,
-"5b414e52-e84b-4a21-bb57-757884d04605","skill_gap","data_source","narrative","career-gap-engine.buildCareerGap → required vs actual competency levels.",,,,,,
-"5b414e52-e84b-4a21-bb57-757884d04605","skill_gap","generated_timestamp","narrative","This report was generated on 25 June 2026 at 17:57 UTC.
+"925d6df6-357a-46fa-8a6d-b91171bfe95f","skill_gap","assessment_summary","narrative","Largest gaps — Agile Collaboration: need 4, currently 3 (gap 1).",,,,,,
+"925d6df6-357a-46fa-8a6d-b91171bfe95f","skill_gap","visualizations","chart_datapoint","Agile Collaboration",,"Agile Collaboration","1",,,
+"925d6df6-357a-46fa-8a6d-b91171bfe95f","skill_gap","interpretation","narrative","A gap is the distance between a required competency level and the measured level. Critical and blocking gaps are prioritised in the Action Plan and Learning Roadmap. Gaps are developmental, not disqualifying.",,,,,,
+"925d6df6-357a-46fa-8a6d-b91171bfe95f","skill_gap","recommendations","insight","Close gap in Agile Collaboration (need 4, currently 3).","critical",,,,,
+"925d6df6-357a-46fa-8a6d-b91171bfe95f","skill_gap","confidence_level","narrative","Confidence: Provisional — depends on requirement coverage and measurement granularity.",,,,,,
+"925d6df6-357a-46fa-8a6d-b91171bfe95f","skill_gap","data_source","narrative","career-gap-engine.buildCareerGap → required vs actual competency levels.",,,,,,
+"925d6df6-357a-46fa-8a6d-b91171bfe95f","skill_gap","generated_timestamp","narrative","This report was generated on 26 June 2026 at 00:51 UTC.
 
 Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

@@ -1,6 +1,6 @@
 ﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
-"3ecff760-7fa1-4ac0-9ddd-19944900a5e1","interview_readiness","executive_summary","narrative","Sarah Johnson has 4 recorded interview score(s); overall operator mean is 75%.",,,,,,
-"3ecff760-7fa1-4ac0-9ddd-19944900a5e1","interview_readiness","candidate_information","narrative","Name: Sarah Johnson
+"cc7330cf-a447-4832-a502-5d9000d96320","interview_readiness","executive_summary","narrative","Sarah Johnson has 4 recorded interview score(s); overall operator mean is 75%.",,,,,,
+"cc7330cf-a447-4832-a502-5d9000d96320","interview_readiness","candidate_information","narrative","Name: Sarah Johnson
 Reference (masked): user_4286d980cc6c
 Current role: Senior Product Manager
 Target role: Director of Product
@@ -10,15 +10,15 @@ Education: MBA
 Location: Bangalore, India
 
 Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
-"3ecff760-7fa1-4ac0-9ddd-19944900a5e1","interview_readiness","assessment_summary","narrative","Overall mean 75% across 2 panelist(s). Per criterion — Analytical Depth: 60%; Leadership: 80%; Product Strategy: 80%; Stakeholder Communication: 80%.",,,,,,
-"3ecff760-7fa1-4ac0-9ddd-19944900a5e1","interview_readiness","visualizations","chart_datapoint","Analytical Depth",,"Analytical Depth","60",,,
-"3ecff760-7fa1-4ac0-9ddd-19944900a5e1","interview_readiness","visualizations","chart_datapoint","Leadership",,"Leadership","80",,,
-"3ecff760-7fa1-4ac0-9ddd-19944900a5e1","interview_readiness","visualizations","chart_datapoint","Product Strategy",,"Product Strategy","80",,,
-"3ecff760-7fa1-4ac0-9ddd-19944900a5e1","interview_readiness","visualizations","chart_datapoint","Stakeholder Communication",,"Stakeholder Communication","80",,,
-"3ecff760-7fa1-4ac0-9ddd-19944900a5e1","interview_readiness","interpretation","narrative","Interview readiness summarises operator-recorded panelist scores per criterion. These are arithmetic averages of human inputs — a record of what panelists entered, NOT an algorithmic hire/reject verdict.",,,,,,
-"3ecff760-7fa1-4ac0-9ddd-19944900a5e1","interview_readiness","recommendations","narrative","No specific recommendations have been derived from the current measured inputs. Recommendations will appear once additional assessment evidence is captured.",,,,,,
-"3ecff760-7fa1-4ac0-9ddd-19944900a5e1","interview_readiness","confidence_level","narrative","Operator-recorded — averages of panelist-entered scores, not a model prediction.",,,,,,
-"3ecff760-7fa1-4ac0-9ddd-19944900a5e1","interview_readiness","data_source","narrative","evaluation-engine.candidateEvaluation → interview_scores (operator/panelist entries, averaged per criterion).",,,,,,
-"3ecff760-7fa1-4ac0-9ddd-19944900a5e1","interview_readiness","generated_timestamp","narrative","This report was generated on 25 June 2026 at 17:57 UTC.
+"cc7330cf-a447-4832-a502-5d9000d96320","interview_readiness","assessment_summary","narrative","Overall mean 75% across 2 panelist(s). Per criterion — Analytical Depth: 60%; Leadership: 80%; Product Strategy: 80%; Stakeholder Communication: 80%.",,,,,,
+"cc7330cf-a447-4832-a502-5d9000d96320","interview_readiness","visualizations","chart_datapoint","Analytical Depth",,"Analytical Depth","60",,,
+"cc7330cf-a447-4832-a502-5d9000d96320","interview_readiness","visualizations","chart_datapoint","Leadership",,"Leadership","80",,,
+"cc7330cf-a447-4832-a502-5d9000d96320","interview_readiness","visualizations","chart_datapoint","Product Strategy",,"Product Strategy","80",,,
+"cc7330cf-a447-4832-a502-5d9000d96320","interview_readiness","visualizations","chart_datapoint","Stakeholder Communication",,"Stakeholder Communication","80",,,
+"cc7330cf-a447-4832-a502-5d9000d96320","interview_readiness","interpretation","narrative","Interview readiness summarises operator-recorded panelist scores per criterion. These are arithmetic averages of human inputs — a record of what panelists entered, NOT an algorithmic hire/reject verdict.",,,,,,
+"cc7330cf-a447-4832-a502-5d9000d96320","interview_readiness","recommendations","narrative","No specific recommendations have been derived from the current measured inputs. Recommendations will appear once additional assessment evidence is captured.",,,,,,
+"cc7330cf-a447-4832-a502-5d9000d96320","interview_readiness","confidence_level","narrative","Operator-recorded — averages of panelist-entered scores, not a model prediction.",,,,,,
+"cc7330cf-a447-4832-a502-5d9000d96320","interview_readiness","data_source","narrative","evaluation-engine.candidateEvaluation → interview_scores (operator/panelist entries, averaged per criterion).",,,,,,
+"cc7330cf-a447-4832-a502-5d9000d96320","interview_readiness","generated_timestamp","narrative","This report was generated on 26 June 2026 at 00:51 UTC.
 
 Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

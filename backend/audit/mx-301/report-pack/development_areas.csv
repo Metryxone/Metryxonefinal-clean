@@ -1,6 +1,6 @@
 ﻿report_uuid,report_type,section_key,content_type,content,severity,metric,user_score,peer_median,percentile,cohort_size
-"0571fb93-b367-4abc-9eda-9a52e9c1adaa","development_areas","executive_summary","narrative","Sarah Johnson's measured dimensions are all at/above the Strong band — no development areas below threshold.",,,,,,
-"0571fb93-b367-4abc-9eda-9a52e9c1adaa","development_areas","candidate_information","narrative","Name: Sarah Johnson
+"328e0b42-54be-48ec-a113-1aea5d32a182","development_areas","executive_summary","narrative","Sarah Johnson's measured dimensions are all at/above the Strong band — no development areas below threshold.",,,,,,
+"328e0b42-54be-48ec-a113-1aea5d32a182","development_areas","candidate_information","narrative","Name: Sarah Johnson
 Reference (masked): user_4286d980cc6c
 Current role: Senior Product Manager
 Target role: Director of Product
@@ -10,16 +10,16 @@ Education: MBA
 Location: Bangalore, India
 
 Profile summary: Senior Product Manager with 8 years across B2B SaaS, leading cross-functional teams and data-driven product strategy. MBA. Seeking director-level product leadership.",,,,,,
-"0571fb93-b367-4abc-9eda-9a52e9c1adaa","development_areas","assessment_summary","narrative","All measured dimensions reach the Strong band; no below-threshold development areas.",,,,,,
-"0571fb93-b367-4abc-9eda-9a52e9c1adaa","development_areas","visualizations","chart_datapoint","Future Readiness",,"Future Readiness","79.4",,,
-"0571fb93-b367-4abc-9eda-9a52e9c1adaa","development_areas","visualizations","chart_datapoint","Workplace Readiness",,"Workplace Readiness","80",,,
-"0571fb93-b367-4abc-9eda-9a52e9c1adaa","development_areas","visualizations","chart_datapoint","Problem-Solving Readiness",,"Problem-Solving Readiness","81.2",,,
-"0571fb93-b367-4abc-9eda-9a52e9c1adaa","development_areas","visualizations","chart_datapoint","Leadership Readiness",,"Leadership Readiness","81.2",,,
-"0571fb93-b367-4abc-9eda-9a52e9c1adaa","development_areas","visualizations","chart_datapoint","Communication Readiness",,"Communication Readiness","84",,,
-"0571fb93-b367-4abc-9eda-9a52e9c1adaa","development_areas","interpretation","narrative","No dimension falls below the Strong band — an honest measured result. Continued practice maintains these levels.",,,,,,
-"0571fb93-b367-4abc-9eda-9a52e9c1adaa","development_areas","recommendations","narrative","No specific recommendations have been derived from the current measured inputs. Recommendations will appear once additional assessment evidence is captured.",,,,,,
-"0571fb93-b367-4abc-9eda-9a52e9c1adaa","development_areas","confidence_level","narrative","Confidence band: Moderate.",,,,,,
-"0571fb93-b367-4abc-9eda-9a52e9c1adaa","development_areas","data_source","narrative","ei-profile-engine.buildEiProfile → development_areas (dimensions below the Strong band, with headroom).",,,,,,
-"0571fb93-b367-4abc-9eda-9a52e9c1adaa","development_areas","generated_timestamp","narrative","This report was generated on 25 June 2026 at 17:57 UTC.
+"328e0b42-54be-48ec-a113-1aea5d32a182","development_areas","assessment_summary","narrative","All measured dimensions reach the Strong band; no below-threshold development areas.",,,,,,
+"328e0b42-54be-48ec-a113-1aea5d32a182","development_areas","visualizations","chart_datapoint","Future Readiness",,"Future Readiness","79.4",,,
+"328e0b42-54be-48ec-a113-1aea5d32a182","development_areas","visualizations","chart_datapoint","Workplace Readiness",,"Workplace Readiness","80",,,
+"328e0b42-54be-48ec-a113-1aea5d32a182","development_areas","visualizations","chart_datapoint","Problem-Solving Readiness",,"Problem-Solving Readiness","81.2",,,
+"328e0b42-54be-48ec-a113-1aea5d32a182","development_areas","visualizations","chart_datapoint","Leadership Readiness",,"Leadership Readiness","81.2",,,
+"328e0b42-54be-48ec-a113-1aea5d32a182","development_areas","visualizations","chart_datapoint","Communication Readiness",,"Communication Readiness","84",,,
+"328e0b42-54be-48ec-a113-1aea5d32a182","development_areas","interpretation","narrative","No dimension falls below the Strong band — an honest measured result. Continued practice maintains these levels.",,,,,,
+"328e0b42-54be-48ec-a113-1aea5d32a182","development_areas","recommendations","narrative","No specific recommendations have been derived from the current measured inputs. Recommendations will appear once additional assessment evidence is captured.",,,,,,
+"328e0b42-54be-48ec-a113-1aea5d32a182","development_areas","confidence_level","narrative","Confidence band: Moderate.",,,,,,
+"328e0b42-54be-48ec-a113-1aea5d32a182","development_areas","data_source","narrative","ei-profile-engine.buildEiProfile → development_areas (dimensions below the Strong band, with headroom).",,,,,,
+"328e0b42-54be-48ec-a113-1aea5d32a182","development_areas","generated_timestamp","narrative","This report was generated on 26 June 2026 at 00:51 UTC.
 
 Report pack version: 1.0.0. It is a point-in-time snapshot; re-running the assessment workflow refreshes the underlying data.",,,,,,

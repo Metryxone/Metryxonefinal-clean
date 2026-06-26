@@ -7,7 +7,7 @@ live Report Factory and exported in **four formats each (64 files total)**.
 - **Candidate**: Sarah Johnson — Senior Product Manager, Technology, 8 yrs, MBA, Bangalore (demonstration data, purgeable).
 - **Subject (masked)**: `user_4286d980cc6c`
 - **White-label**: MetryxOne (primary `#0B2447`, accent `#2E8B8B`)
-- **Generated**: 2026-06-25T17:57:58.181Z
+- **Generated**: 2026-06-26T00:51:50.168Z
 - **Build / rollback**: `npx tsx backend/scripts/mx301-report-pack.ts [--rollback]`
 - **Provision candidate first**: `npx tsx backend/scripts/mx301-demo-candidate.ts`
 

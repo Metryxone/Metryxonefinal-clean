@@ -187,7 +187,9 @@ export function ChatWidget({ position = 'bottom-right', userName, userRole }: Ch
   const [introText,     setIntroText]     = useState('');
   const [sessionId]  = useState(() => `chat_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
   const [hasUnread,     setHasUnread]     = useState(false);
-  const [promptVisible, setPromptVisible] = useState(true);
+  // Resting state shows only the compact launcher; the promo teaser reveals on
+  // hover/focus so it never auto-overlaps page content (forms, cards, stats).
+  const [promptVisible, setPromptVisible] = useState(false);
   const [typewriter, setTypewriter] = useState<{ id: string; shown: string; done: boolean } | null>(null);
   const [concernInput, setConcernInput] = useState('');
   const [concernMatches, setConcernMatches] = useState<{id: number; category: string; concern_area: string; parent_worry: string; impact_on_child: string; assessment_type: string}[]>([]);
@@ -531,7 +533,13 @@ export function ChatWidget({ position = 'bottom-right', userName, userRole }: Ch
           .mx-core{animation:mxCorePulse 2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
           .mx-glow{animation:mxGlowBreath 2s ease-in-out infinite}
         `}</style>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}>
+        <div
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}
+          onMouseEnter={() => setPromptVisible(true)}
+          onMouseLeave={() => setPromptVisible(false)}
+          onFocus={() => setPromptVisible(true)}
+          onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setPromptVisible(false); }}
+        >
           {promptVisible && (
             <div key={featureIdx} style={{ background: '#ffffff', borderRadius: 14, padding: '13px 16px', boxShadow: '0 8px 32px rgba(29,62,139,0.14), 0 2px 8px rgba(29,62,139,0.08)', border: '1px solid #E0E5EE', position: 'relative', width: 220, animation: 'mxBubbleFade 4s ease-in-out' }}>
               <span style={{ display: 'inline-block', marginBottom: 6, fontSize: '9px', fontWeight: 700, letterSpacing: '0.2px', color: '#fff', background: '#1D3E8B', borderRadius: 4, padding: '2px 7px' }}>{prompt.tag.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())}</span>

@@ -677,12 +677,12 @@ export default function CompetencyDashboard({ onNavigate }: { onNavigate?: (scre
                       { label: 'Score range', value: '0 – 100 per competency' },
                       { label: 'Benchmark threshold', value: 'P75 of relevant cohort' },
                       { label: 'Gap calculation', value: 'Weighted distance below P75' },
-                      { label: 'Confidence adjustment', value: 'Applied to raw scores &lt; 60% confidence' },
+                      { label: 'Confidence adjustment', value: 'Applied to raw scores < 60% confidence' },
                       { label: 'Recalibration cycle', value: 'Cohort data refreshed quarterly' },
                     ].map(({ label, value }) => (
                       <div key={label} className="flex items-start justify-between text-xs gap-4 py-1.5 border-b border-gray-50 last:border-0">
                         <span className="text-gray-400 font-medium flex-shrink-0">{label}</span>
-                        <span className="text-gray-700 font-semibold text-right" dangerouslySetInnerHTML={{ __html: value }} />
+                        <span className="text-gray-700 font-semibold text-right">{value}</span>
                       </div>
                     ))}
                   </div>

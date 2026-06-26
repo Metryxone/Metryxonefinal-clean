@@ -36,7 +36,7 @@ export async function sendMfaCode(toEmail: string, code: string, adminEmail: str
             </div>
             <p style="color: #6b7280; font-size: 12px; text-align: center; margin: 0 0 16px 0;">This code expires in <strong>5 minutes</strong>.</p>
             <div style="padding: 12px; background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
-              <p style="color: #856404; font-size: 12px; margin: 0;"><strong>Admin:</strong> ${adminEmail}</p>
+              <p style="color: #856404; font-size: 12px; margin: 0;"><strong>Admin:</strong> ${escapeHtml(adminEmail)}</p>
               <p style="color: #856404; font-size: 12px; margin: 4px 0 0 0;"><strong>Time:</strong> ${new Date().toLocaleString()}</p>
             </div>
           </div>
@@ -72,7 +72,7 @@ export async function sendIntroVerificationOtp(toEmail: string, name: string, co
             <p style="color:rgba(255,255,255,0.65);margin:4px 0 0;font-size:12px;">CAPADEX Behavioural Intelligence</p>
           </div>
           <div style="padding:32px;">
-            <p style="color:#374151;font-size:15px;font-weight:600;margin:0 0 8px;">Hi ${name || 'there'},</p>
+            <p style="color:#374151;font-size:15px;font-weight:600;margin:0 0 8px;">Hi ${escapeHtml(name || 'there')},</p>
             <p style="color:#6b7280;font-size:13px;margin:0 0 24px;line-height:1.6;">
               Use the code below to verify your email and begin your behavioural assessment.
               This is a one-time code — valid for <strong>10 minutes</strong>.
@@ -117,7 +117,7 @@ export async function sendLoginOtp(toEmail: string, name: string, code: string, 
             <p style="color:rgba(255,255,255,0.65);margin:4px 0 0;font-size:12px;">Behavioral Intelligence Platform</p>
           </div>
           <div style="padding:32px;">
-            <p style="color:#374151;font-size:15px;font-weight:600;margin:0 0 8px;">Hi ${name || 'there'},</p>
+            <p style="color:#374151;font-size:15px;font-weight:600;margin:0 0 8px;">Hi ${escapeHtml(name || 'there')},</p>
             <p style="color:#6b7280;font-size:13px;margin:0 0 24px;line-height:1.6;">
               Your login code is below. Valid for <strong>${expiryMinutes} minutes</strong>.
             </p>
@@ -157,7 +157,7 @@ export async function sendCapadexOtp(toEmail: string, name: string, code: string
             <p style="color:rgba(255,255,255,0.65);margin:4px 0 0;font-size:12px;">Behavioral Intelligence Platform</p>
           </div>
           <div style="padding:32px;">
-            <p style="color:#374151;font-size:15px;font-weight:600;margin:0 0 8px;">Hi ${name || 'there'},</p>
+            <p style="color:#374151;font-size:15px;font-weight:600;margin:0 0 8px;">Hi ${escapeHtml(name || 'there')},</p>
             <p style="color:#6b7280;font-size:13px;margin:0 0 24px;line-height:1.6;">
               Your <strong>${otpStageHdr.label} Assessment</strong> is complete! Enter the code below to verify your email and view your personalised report.
             </p>
@@ -745,7 +745,7 @@ export function buildCapadexReportHtml(
   const isCareerConcern = /career|job|role|profession|transition|stuck|workplace|employ|purpose|direction|leadership|promotion|burnout|meaning|identity/.test(cl);
   const cat = isAttn ? 'attention' : isScreen ? 'screen' : 'default';
 
-  const nMap = NARRATIVE_MAP(firstName, report.concernName);
+  const nMap = NARRATIVE_MAP(escapeHtml(firstName), escapeHtml(report.concernName));
 
   const sortedSDs = [...report.subdomains].sort((a, b) => Number(b.avg_score) - Number(a.avg_score));
   const topSD   = sortedSDs[0];
@@ -768,16 +768,16 @@ export function buildCapadexReportHtml(
         // Headline: top construct label + confidence note
         const topInsight = dynReport.pattern_insights[0];
         const headline = topInsight.hypothesis_label
-          ? `${topInsight.hypothesis_label} — ${dynReport.confidence_transparency.note}`
+          ? `${escapeHtml(topInsight.hypothesis_label)} — ${escapeHtml(dynReport.confidence_transparency.note)}`
           : staticComputed.headline;
 
         // Story: behavioural_summary intro + top 3 pattern_insights texts
         const topInsightTexts = dynReport.pattern_insights
           .slice(0, 3)
-          .map((p, i) => `${i + 1}. ${p.text}`)
+          .map((p, i) => `${i + 1}. ${escapeHtml(p.text)}`)
           .join('\n\n');
         const story = dynReport.behavioural_summary
-          ? `${dynReport.behavioural_summary}\n\n${topInsightTexts}`
+          ? `${escapeHtml(dynReport.behavioural_summary)}\n\n${topInsightTexts}`
           : topInsightTexts || staticComputed.story;
 
         return { headline, story };
@@ -985,8 +985,8 @@ export function buildCapadexReportHtml(
       <tr>
         <td style="vertical-align:middle;">
           <p style="color:#94A3B8;font-size:11px;font-weight:400;margin:0 0 4px;">${stageHdr.label} Assessment &middot; Stage ${stageHdr.stageNum} of 4</p>
-          <p style="color:#1E2B4A;font-size:18px;font-weight:400;margin:0 0 3px;line-height:1.3;">${report.concernName}</p>
-          <p style="color:#6B7280;font-size:12px;font-weight:400;margin:0;">Prepared for ${name}</p>
+          <p style="color:#1E2B4A;font-size:18px;font-weight:400;margin:0 0 3px;line-height:1.3;">${escapeHtml(report.concernName)}</p>
+          <p style="color:#6B7280;font-size:12px;font-weight:400;margin:0;">Prepared for ${escapeHtml(name)}</p>
         </td>
         <td style="vertical-align:middle;text-align:right;white-space:nowrap;padding-left:12px;">
           <div style="display:inline-block;background:${sc.col};border-radius:50px;padding:8px 16px;text-align:center;line-height:1;">
@@ -1000,9 +1000,9 @@ export function buildCapadexReportHtml(
 
   <!-- ── Greeting ── -->
   <div style="padding:24px 28px 0;">
-    <p style="color:#1E2B4A;font-size:15px;font-weight:400;margin:0 0 6px;">Hi ${firstName},</p>
+    <p style="color:#1E2B4A;font-size:15px;font-weight:400;margin:0 0 6px;">Hi ${escapeHtml(firstName)},</p>
     <p style="color:#4A5568;font-size:13px;font-weight:400;margin:0;line-height:1.7;">
-      ${stageCopy.greeting(report.concernName)}
+      ${stageCopy.greeting(escapeHtml(report.concernName))}
     </p>
   </div>
 
@@ -1239,7 +1239,7 @@ export function buildCapadexReportHtml(
   <div style="margin:20px 28px 8px;background:#EEF2FA;border:1px solid #D4DBF0;border-radius:10px;padding:20px 22px;border-left:4px solid #344E86;">
     <p style="color:#1E2B4A;font-size:14px;font-weight:400;margin:0 0 8px;">${stageCopy.ctaHeadline}</p>
     <p style="color:#4A5568;font-size:12px;font-weight:400;margin:0 0 14px;line-height:1.7;">
-      ${stageCopy.ctaBody(report.concernName)}
+      ${stageCopy.ctaBody(escapeHtml(report.concernName))}
     </p>
     <a href="${appBase}${stageCopy.nextStageUrl(report.concernName)}" style="display:inline-block;background:#344E86;color:#ffffff;font-size:12px;font-weight:400;padding:10px 22px;border-radius:8px;text-decoration:none;">${stageCopy.ctaButton}</a>
   </div>
@@ -1348,17 +1348,17 @@ export async function sendCounsellorAssignmentAlert(params: {
     <p style="color:rgba(255,255,255,0.7);margin:4px 0 0;font-size:12px;">MetryxOne RIE — Counsellor Assignment</p>
   </div>
   <div style="border:1px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px;padding:24px 28px;background:#f8faff;">
-    <p style="color:#374151;font-size:14px;margin:0 0 20px;">Hi ${counsellorName || 'Counsellor'},<br><br>
+    <p style="color:#374151;font-size:14px;margin:0 0 20px;">Hi ${escapeHtml(counsellorName || 'Counsellor')},<br><br>
     A crisis escalation has been assigned to you and requires your immediate attention.</p>
     <div style="background:white;border-radius:10px;border-left:4px solid ${sevColor};padding:16px 20px;margin-bottom:20px;">
       <p style="margin:0 0 4px;font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;">Escalation Type</p>
       <p style="margin:0;font-size:16px;font-weight:700;color:#1f2937;">${typeLabel}</p>
     </div>
     <table style="width:100%;border-collapse:collapse;font-size:13px;">
-      <tr><td style="padding:6px 0;color:#6b7280;width:140px;">User</td><td style="font-weight:600;color:#1f2937;">${escalation.user_email}</td></tr>
+      <tr><td style="padding:6px 0;color:#6b7280;width:140px;">User</td><td style="font-weight:600;color:#1f2937;">${escapeHtml(escalation.user_email)}</td></tr>
       <tr><td style="padding:6px 0;color:#6b7280;">Severity</td><td><span style="font-weight:700;color:${sevColor};text-transform:uppercase;">${escalation.severity}</span></td></tr>
-      <tr><td style="padding:6px 0;color:#6b7280;">Trigger</td><td style="color:#374151;">${escalation.trigger_reason || 'Auto-detected'}</td></tr>
-      <tr><td style="padding:6px 0;color:#6b7280;">Assigned by</td><td style="color:#374151;">${assignedBy}</td></tr>
+      <tr><td style="padding:6px 0;color:#6b7280;">Trigger</td><td style="color:#374151;">${escapeHtml(escalation.trigger_reason || 'Auto-detected')}</td></tr>
+      <tr><td style="padding:6px 0;color:#6b7280;">Assigned by</td><td style="color:#374151;">${escapeHtml(assignedBy)}</td></tr>
       <tr><td style="padding:6px 0;color:#6b7280;">Time</td><td style="color:#374151;">${new Date().toLocaleString()}</td></tr>
     </table>
     <div style="margin-top:20px;padding:14px;background:#FEF2F2;border-radius:8px;border:1px solid #FECACA;">
@@ -1414,9 +1414,9 @@ export async function sendCrisisEscalationAlert(escalation: {
       <p style="margin:0;font-size:16px;font-weight:700;color:#1f2937;">${typeLabel}</p>
     </div>
     <table style="width:100%;border-collapse:collapse;font-size:13px;">
-      <tr><td style="padding:6px 0;color:#6b7280;width:140px;">User</td><td style="font-weight:600;color:#1f2937;">${escalation.user_email}</td></tr>
+      <tr><td style="padding:6px 0;color:#6b7280;width:140px;">User</td><td style="font-weight:600;color:#1f2937;">${escapeHtml(escalation.user_email)}</td></tr>
       <tr><td style="padding:6px 0;color:#6b7280;">Severity</td><td><span style="font-weight:700;color:${sevColor};text-transform:uppercase;">${escalation.severity}</span></td></tr>
-      <tr><td style="padding:6px 0;color:#6b7280;">Trigger</td><td style="color:#374151;">${escalation.trigger_reason || 'Auto-detected'}</td></tr>
+      <tr><td style="padding:6px 0;color:#6b7280;">Trigger</td><td style="color:#374151;">${escapeHtml(escalation.trigger_reason || 'Auto-detected')}</td></tr>
       <tr><td style="padding:6px 0;color:#6b7280;">Counsellor</td><td style="color:#374151;">${escalation.requires_counsellor ? '✅ Required' : 'Not required'}</td></tr>
       <tr><td style="padding:6px 0;color:#6b7280;">Time</td><td style="color:#374151;">${new Date().toLocaleString()}</td></tr>
     </table>
@@ -1488,7 +1488,7 @@ export async function sendPaymentConfirmationUser(p: PaymentConfirmationUserPara
       <div style="display:inline-block;background:${color}18;border:2px solid ${color}40;border-radius:50%;width:60px;height:60px;line-height:60px;font-size:28px;">✅</div>
     </div>
 
-    <p style="color:#374151;font-size:15px;font-weight:600;margin:0 0 6px;">Hi ${p.name || 'there'},</p>
+    <p style="color:#374151;font-size:15px;font-weight:600;margin:0 0 6px;">Hi ${escapeHtml(p.name || 'there')},</p>
     <p style="color:#6b7280;font-size:14px;margin:0 0 24px;line-height:1.6;">
       Your payment of <strong style="color:#111827;">₹${p.amountRupees}</strong> for the
       <strong style="color:${color};">${p.stageName} Stage</strong> has been confirmed.
@@ -1497,7 +1497,7 @@ export async function sendPaymentConfirmationUser(p: PaymentConfirmationUserPara
 
     <div style="background:${color}0D;border:1.5px solid ${color}30;border-radius:12px;padding:20px;margin-bottom:24px;">
       <p style="color:${color};font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 12px;">What's Unlocked</p>
-      <p style="color:#374151;font-size:14px;margin:0 0 8px;font-weight:600;">${p.stageName} Stage — "${p.concernName}"</p>
+      <p style="color:#374151;font-size:14px;margin:0 0 8px;font-weight:600;">${escapeHtml(p.stageName)} Stage — "${escapeHtml(p.concernName)}"</p>
       <p style="color:#6b7280;font-size:13px;margin:0;line-height:1.6;">${nextMsg}</p>
     </div>
 
@@ -1506,7 +1506,7 @@ export async function sendPaymentConfirmationUser(p: PaymentConfirmationUserPara
       <table style="width:100%;border-collapse:collapse;font-size:13px;">
         <tr><td style="color:#6b7280;padding:3px 0;width:40%;">Amount</td><td style="color:#111827;font-weight:600;">₹${p.amountRupees}</td></tr>
         <tr><td style="color:#6b7280;padding:3px 0;">Stage</td><td style="color:#111827;">${p.stageName}</td></tr>
-        <tr><td style="color:#6b7280;padding:3px 0;">Concern</td><td style="color:#111827;">${p.concernName || 'N/A'}</td></tr>
+        <tr><td style="color:#6b7280;padding:3px 0;">Concern</td><td style="color:#111827;">${escapeHtml(p.concernName || 'N/A')}</td></tr>
         <tr><td style="color:#6b7280;padding:3px 0;">Payment ID</td><td style="color:#111827;font-family:monospace;font-size:11px;">${p.paymentId}</td></tr>
       </table>
     </div>
@@ -1570,11 +1570,11 @@ export async function sendPaymentConfirmationAdmin(p: PaymentConfirmationAdminPa
     </div>
 
     <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px;">
-      <tr style="border-bottom:1px solid #f3f4f6;"><td style="color:#9ca3af;padding:8px 0;width:38%;">User Name</td><td style="color:#111827;font-weight:600;">${p.name || '—'}</td></tr>
-      <tr style="border-bottom:1px solid #f3f4f6;"><td style="color:#9ca3af;padding:8px 0;">Email</td><td style="color:#111827;">${p.userEmail}</td></tr>
-      <tr style="border-bottom:1px solid #f3f4f6;"><td style="color:#9ca3af;padding:8px 0;">Phone</td><td style="color:#111827;">${p.phone || 'Not provided'}</td></tr>
+      <tr style="border-bottom:1px solid #f3f4f6;"><td style="color:#9ca3af;padding:8px 0;width:38%;">User Name</td><td style="color:#111827;font-weight:600;">${escapeHtml(p.name || '—')}</td></tr>
+      <tr style="border-bottom:1px solid #f3f4f6;"><td style="color:#9ca3af;padding:8px 0;">Email</td><td style="color:#111827;">${escapeHtml(p.userEmail)}</td></tr>
+      <tr style="border-bottom:1px solid #f3f4f6;"><td style="color:#9ca3af;padding:8px 0;">Phone</td><td style="color:#111827;">${escapeHtml(p.phone || 'Not provided')}</td></tr>
       <tr style="border-bottom:1px solid #f3f4f6;"><td style="color:#9ca3af;padding:8px 0;">Stage</td><td style="color:${color};font-weight:600;">${p.stageName}</td></tr>
-      <tr style="border-bottom:1px solid #f3f4f6;"><td style="color:#9ca3af;padding:8px 0;">Concern</td><td style="color:#111827;">${p.concernName || 'N/A'}</td></tr>
+      <tr style="border-bottom:1px solid #f3f4f6;"><td style="color:#9ca3af;padding:8px 0;">Concern</td><td style="color:#111827;">${escapeHtml(p.concernName || 'N/A')}</td></tr>
       <tr style="border-bottom:1px solid #f3f4f6;"><td style="color:#9ca3af;padding:8px 0;">Amount</td><td style="color:#111827;font-weight:700;">₹${p.amountRupees}</td></tr>
       <tr style="border-bottom:1px solid #f3f4f6;"><td style="color:#9ca3af;padding:8px 0;">Payment ID</td><td style="color:#111827;font-family:monospace;font-size:11px;">${p.paymentId}</td></tr>
       <tr><td style="color:#9ca3af;padding:8px 0;">Order ID</td><td style="color:#111827;font-family:monospace;font-size:11px;">${p.orderId}</td></tr>
@@ -1684,10 +1684,10 @@ export async function sendAssessmentEmail(params: {
     <p style="color:rgba(255,255,255,0.75);margin:4px 0 0;font-size:13px;">Behavioural Intelligence Assessment</p>
   </div>
   <div style="padding:28px 24px;background:#f9fafb;border:1px solid #e5e7eb;border-top:none;">
-    <p style="color:#374151;font-size:14px;margin:0 0 16px;">Hi ${candidateName},</p>
+    <p style="color:#374151;font-size:14px;margin:0 0 16px;">Hi ${escapeHtml(candidateName)},</p>
     <p style="color:#374151;font-size:14px;margin:0 0 16px;">
-      <strong>${companyName}</strong> has invited you to complete a short behavioural assessment as part of your application for the
-      <strong>${jobTitle}</strong> role.
+      <strong>${escapeHtml(companyName)}</strong> has invited you to complete a short behavioural assessment as part of your application for the
+      <strong>${escapeHtml(jobTitle)}</strong> role.
     </p>
     <p style="color:#6b7280;font-size:13px;margin:0 0 20px;">
       This assessment takes approximately <strong>8–12 minutes</strong> and helps the hiring team understand your strengths, working style, and potential — beyond just your CV.
@@ -1738,26 +1738,26 @@ export async function sendOfferLetterEmail(params: {
       html: `
 <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
   <div style="text-align:center;padding:28px 24px;background:#344E86;border-radius:12px 12px 0 0;">
-    <h1 style="color:#fff;margin:0 0 4px;font-size:22px;">${companyName}</h1>
+    <h1 style="color:#fff;margin:0 0 4px;font-size:22px;">${escapeHtml(companyName)}</h1>
     <p style="color:rgba(255,255,255,0.75);margin:0;font-size:13px;">Offer of Employment</p>
   </div>
   <div style="padding:32px 28px;background:#fff;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px;">
-    <p style="font-size:15px;color:#374151;margin:0 0 20px;">Dear <strong>${candidateName}</strong>,</p>
+    <p style="font-size:15px;color:#374151;margin:0 0 20px;">Dear <strong>${escapeHtml(candidateName)}</strong>,</p>
     <p style="font-size:14px;color:#374151;margin:0 0 20px;">
-      We are delighted to extend this offer of employment for the position of <strong>${jobTitle}</strong> at <strong>${companyName}</strong>.
+      We are delighted to extend this offer of employment for the position of <strong>${escapeHtml(jobTitle)}</strong> at <strong>${escapeHtml(companyName)}</strong>.
     </p>
     <div style="background:#f9fafb;border-radius:10px;padding:20px 24px;margin-bottom:24px;">
       <table style="width:100%;border-collapse:collapse;font-size:13px;">
         <tr style="border-bottom:1px solid #e5e7eb;">
           <td style="padding:8px 0;color:#6b7280;font-weight:600;width:40%;">Position</td>
-          <td style="padding:8px 0;color:#111827;font-weight:600;">${jobTitle}</td>
+          <td style="padding:8px 0;color:#111827;font-weight:600;">${escapeHtml(jobTitle)}</td>
         </tr>
-        ${ctcStr ? `<tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:8px 0;color:#6b7280;font-weight:600;">Total Compensation</td><td style="padding:8px 0;color:#059669;font-weight:700;">${ctcStr}</td></tr>` : ''}
-        ${joiningDate ? `<tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:8px 0;color:#6b7280;font-weight:600;">Joining Date</td><td style="padding:8px 0;color:#111827;">${joiningDate}</td></tr>` : ''}
-        ${validity ? `<tr><td style="padding:8px 0;color:#6b7280;font-weight:600;">Offer Valid Until</td><td style="padding:8px 0;color:#dc2626;">${validity}</td></tr>` : ''}
+        ${ctcStr ? `<tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:8px 0;color:#6b7280;font-weight:600;">Total Compensation</td><td style="padding:8px 0;color:#059669;font-weight:700;">${escapeHtml(ctcStr)}</td></tr>` : ''}
+        ${joiningDate ? `<tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:8px 0;color:#6b7280;font-weight:600;">Joining Date</td><td style="padding:8px 0;color:#111827;">${escapeHtml(joiningDate)}</td></tr>` : ''}
+        ${validity ? `<tr><td style="padding:8px 0;color:#6b7280;font-weight:600;">Offer Valid Until</td><td style="padding:8px 0;color:#dc2626;">${escapeHtml(validity)}</td></tr>` : ''}
       </table>
     </div>
-    ${notes ? `<div style="padding:14px 18px;background:#fffbeb;border-left:4px solid #f59e0b;border-radius:6px;margin-bottom:20px;"><p style="font-size:13px;color:#92400e;margin:0;">${notes}</p></div>` : ''}
+    ${notes ? `<div style="padding:14px 18px;background:#fffbeb;border-left:4px solid #f59e0b;border-radius:6px;margin-bottom:20px;"><p style="font-size:13px;color:#92400e;margin:0;">${escapeHtml(notes)}</p></div>` : ''}
     <p style="font-size:13px;color:#6b7280;margin:0 0 20px;">
       To accept this offer, please reply to this email or contact your HR representative. Please review all terms carefully before accepting.
     </p>

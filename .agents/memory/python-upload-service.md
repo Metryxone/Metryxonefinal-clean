@@ -32,7 +32,7 @@ is dead (commented out in main, and has its own `job.meta`/`question_code` bugs)
   `question_code` column. Handler resolves question_code→QuestionBank.id first.
 - **Starlette ≥1.3 TemplateResponse** — new signature is
   `TemplateResponse(request, name)`, not `(name, {"request": request})`.
-- **Public port-8000 surface (FIXED, finding #14):** `.replit` publishes localPort
+- **Public port-8000 surface (now secured):** `.replit` publishes localPort
   8000 → externalPort 8000 (uneditable), so `/admin/*` was reachable on the public
   internet with NO auth. Fixed by an always-ON shared-secret gate `app/security.py`
   `require_upload_auth` (Depends on the router): constant-time `hmac.compare_digest`

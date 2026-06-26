@@ -538,18 +538,14 @@ export async function registerRoutes(
       const isSuperAdmin = userRoles.includes('super_admin') || fullUser?.role === 'super_admin';
       
       if (isSuperAdmin) {
-        // Dev bypass: skip MFA when ZOHO_EMAIL is not configured (no email delivery available)
-        const mfaDisabledInDev = process.env.NODE_ENV !== 'production' && !process.env.ZOHO_EMAIL;
-        if (mfaDisabledInDev) {
-          return new Promise<void>((resolve) => {
-            req.login(fullUser!, (err) => {
-              if (err) { next(err); resolve(); return; }
-              const { password: _pwd, ...safeUser } = fullUser as any;
-              res.json({ ...safeUser, mfaBypassed: true });
-              resolve();
-            });
-          });
-        }
+        // SECURITY (MX-301I G4): MFA is ALWAYS enforced for super-admin logins.
+        // The previous dev bypass (password-only session when ZOHO_EMAIL was unset)
+        // is removed so a password alone is never sufficient — important because dev
+        // and prod currently share one database (G5). When no email channel is
+        // configured (typically dev) the code is still issued + persisted; in
+        // non-production it is also written to the server console so an operator can
+        // complete login WITHOUT exposing the code over the network (it is never put
+        // in the HTTP response). Set ZOHO_EMAIL/ZOHO_APP_PASSWORD to deliver by email.
         try {
           const code = String(100000 + (randomBytes(4).readUInt32BE(0) % 900000));
           const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
@@ -558,6 +554,10 @@ export async function registerRoutes(
           await db.update(mfaCodes).set({ used: true }).where(and(eq(mfaCodes.userId, user.id), eq(mfaCodes.used, false)));
           await db.insert(mfaCodes).values({ userId: user.id, code, email: mfaEmail, attemptToken, expiresAt });
           const emailSent = await sendMfaCode(mfaEmail, code, user.username || '');
+          if (!emailSent && process.env.NODE_ENV !== 'production') {
+            const safeEmail = mfaEmail.replace(/[\r\n\t]/g, '');
+            console.warn(`[DEV MFA] No email channel configured — super-admin MFA code for ${safeEmail}: ${code} (valid 5 min). Enter it in the login screen.`);
+          }
           return res.json({ mfaRequired: true, attemptToken, mfaEmail: mfaEmail.replace(/(.{2})(.*)(@.*)/, '$1***$3'), emailSent, role: 'super_admin', roles: userRoles });
         } catch (mfaError: any) {
           console.error('MFA generation error:', mfaError);

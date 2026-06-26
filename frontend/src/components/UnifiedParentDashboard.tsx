@@ -1,4 +1,5 @@
 import { Screen } from '../App';
+import { BRAND } from '@/design-system/tokens';
 import { AppTopBar } from './AppTopBar';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -115,19 +116,19 @@ function AlertTicker({ alerts }: { alerts: AlertItem[] }) {
 
   if (!alerts.length) return (
     <div className="flex items-center gap-2 py-1.5">
-      <CheckCircle size={13} style={{ color: '#4ECDC4' }} />
-      <span className="text-[11px] font-semibold" style={{ color: '#4ECDC4' }}>All clear — no pending actions.</span>
+      <CheckCircle size={13} style={{ color: BRAND.accent }} />
+      <span className="text-xs font-semibold" style={{ color: BRAND.accent }}>All clear — no pending actions.</span>
     </div>
   );
 
   const alert = alerts[idx];
 
   const gradMap: Record<string, string> = {
-    action:  '#0B3C5D',
-    warning: '#4ECDC4',
-    info:    '#0B3C5D',
-    success: '#4ECDC4',
-    report:  '#0B3C5D',
+    action:  BRAND.navy,
+    warning: BRAND.accent,
+    info:    BRAND.navy,
+    success: BRAND.accent,
+    report:  BRAND.navy,
   };
   const glowMap: Record<string, string> = {
     action:  'rgba(11,60,93,0.35)',
@@ -137,10 +138,10 @@ function AlertTicker({ alerts }: { alerts: AlertItem[] }) {
     report:  'rgba(11,60,93,0.3)',
   };
   const dotMap: Record<string, string> = {
-    action: '#7a93c4', warning: '#4ECDC4', info: '#7a93c4', success: '#4ECDC4', report: '#7a93c4',
+    action: '#7a93c4', warning: BRAND.accent, info: '#7a93c4', success: BRAND.accent, report: '#7a93c4',
   };
   const accentMap: Record<string, string> = {
-    action: '#0B3C5D', warning: '#4ECDC4', info: '#0B3C5D', success: '#4ECDC4', report: '#0B3C5D',
+    action: BRAND.navy, warning: BRAND.accent, info: BRAND.navy, success: BRAND.accent, report: BRAND.navy,
   };
 
   const grad   = gradMap[alert.type]   || gradMap.info;
@@ -181,9 +182,9 @@ function AlertTicker({ alerts }: { alerts: AlertItem[] }) {
           }} />
         ))}
         <button onClick={() => go((idx - 1 + alerts.length) % alerts.length)}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8', fontSize: 15, lineHeight: 1, padding: '0 1px', marginLeft: 4 }}>‹</button>
+          style={{ background: 'none', border: 'none', cursor: 'pointer', color: BRAND.slate, fontSize: 15, lineHeight: 1, padding: '0 1px', marginLeft: 4 }}>‹</button>
         <button onClick={() => go((idx + 1) % alerts.length)}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8', fontSize: 15, lineHeight: 1, padding: '0 1px' }}>›</button>
+          style={{ background: 'none', border: 'none', cursor: 'pointer', color: BRAND.slate, fontSize: 15, lineHeight: 1, padding: '0 1px' }}>›</button>
       </div>
 
       {/* ── Card ── */}
@@ -213,8 +214,8 @@ function AlertTicker({ alerts }: { alerts: AlertItem[] }) {
           {/* Text */}
           <div className="flex-1 min-w-0">
             <p className="text-xs font-normal leading-relaxed">
-              <span style={{ color: '#0B3C5D' }}>{alert.title} — </span>
-              <span style={{ color: '#0B3C5D' }}>{alert.desc}</span>
+              <span style={{ color: BRAND.navy }}>{alert.title} — </span>
+              <span style={{ color: BRAND.navy }}>{alert.desc}</span>
             </p>
           </div>
         </div>
@@ -922,9 +923,9 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center" style={{ backgroundColor: '#f8fafc' }}>
+      <div className="flex h-screen items-center justify-center" style={{ backgroundColor: BRAND.bg }}>
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: '#0B3C5D' }}></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: BRAND.navy }}></div>
           <p className="text-sm text-gray-500">Loading dashboard...</p>
         </div>
       </div>
@@ -958,13 +959,13 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
             {sidebarOpen && (
               <div className="px-4 py-4 border-b border-gray-100">
                 <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold mb-2"
-                  style={{ background: '#0B3C5D' }}>
+                  style={{ background: BRAND.navy }}>
                   {getInitials(userData?.fullName || userData?.username)}
                 </div>
                 <div className="text-xs font-semibold text-gray-800 truncate">
                   {userData?.fullName || userData?.username || 'Parent'}
                 </div>
-                <div className="text-[10px] text-gray-400 truncate">
+                <div className="text-2xs text-gray-400 truncate">
                   Parent Portal &nbsp;·&nbsp; {dashboardData?.children?.length ?? 0} {dashboardData?.children?.length === 1 ? 'child' : 'children'}
                 </div>
 
@@ -973,10 +974,10 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   <div className="flex-1 h-1.5 rounded-full bg-gray-100 overflow-hidden">
                     <div className="h-full rounded-full" style={{
                       width: `${Math.min((dashboardData?.exams?.filter(e => e.status === 'completed').length ?? 0) * 20, 100)}%`,
-                      backgroundColor: '#4ECDC4'
+                      backgroundColor: BRAND.accent
                     }} />
                   </div>
-                  <span className="text-[9px] text-gray-400">{Math.min((dashboardData?.exams?.filter(e => e.status === 'completed').length ?? 0) * 20, 100)}%</span>
+                  <span className="text-2xs text-gray-400">{Math.min((dashboardData?.exams?.filter(e => e.status === 'completed').length ?? 0) * 20, 100)}%</span>
                 </div>
               </div>
             )}
@@ -999,7 +1000,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
                     activeMenuItem === t.id ? 'text-white shadow-sm' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'
                   }`}
-                  style={activeMenuItem === t.id ? { backgroundColor: '#0B3C5D' } : {}}>
+                  style={activeMenuItem === t.id ? { backgroundColor: BRAND.navy } : {}}>
                   <span className="shrink-0">{t.icon}</span>
                   {sidebarOpen && <span>{t.label}</span>}
                 </button>
@@ -1016,7 +1017,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
               <button
                 onClick={() => setShowTour(true)}
                 className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs hover:bg-gray-50 transition-colors"
-                style={{ color: '#4ECDC4' }}
+                style={{ color: BRAND.accent }}
               >
                 <Play size={15} />
                 {sidebarOpen && <span className="font-medium">Quick Tour</span>}
@@ -1039,7 +1040,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
               </button>
               {sidebarOpen && (
                 <div className="pt-2 pb-1">
-                  <p className="text-[9px] font-bold tracking-widest uppercase px-3 mb-1.5" style={{ color: '#9AA4B2' }}>Switch to</p>
+                  <p className="text-2xs font-bold tracking-widest uppercase px-3 mb-1.5" style={{ color: '#9AA4B2' }}>Switch to</p>
                   <div className="space-y-0.5">
                     {([
                       { label: 'Student view', icon: <BookOpen size={14} />, action: () => onNavigate('student-dashboard' as any), always: true },
@@ -1051,7 +1052,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                       .map((item) => (
                         <button key={item.label} onClick={item.action}
                           className="w-full flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs hover:bg-gray-50 transition-colors"
-                          style={{ color: '#0B3C5D' }}>
+                          style={{ color: BRAND.navy }}>
                           {item.icon}
                           <span className="font-medium">{item.label}</span>
                         </button>
@@ -1060,7 +1061,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 </div>
               )}
               <button onClick={handleLogout}
-                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-gray-400 hover:bg-[#EDF2F7] hover:text-[#0B3C5D]"
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-gray-400 hover:bg-[#EDF2F7] hover:text-brand-navy"
                 data-testid="button-logout">
                 <LogOut size={16} />
                 {sidebarOpen && <span>Sign Out</span>}
@@ -1075,22 +1076,22 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
           {dashboardData && selectedChild && (() => {
             const alerts: { icon: React.ReactNode; text: string; color: string; bg: string; action?: () => void }[] = [];
             if (!selectedChild.educationBoard)
-              alerts.push({ icon: <AlertCircle size={11} />, text: `Set ${selectedChild.name}'s board to unlock curriculum`, color: '#0B3C5D', bg: 'rgba(11,60,93,0.04)', action: () => { setPendingBoard(''); setShowSetBoardModal(true); } });
+              alerts.push({ icon: <AlertCircle size={11} />, text: `Set ${selectedChild.name}'s board to unlock curriculum`, color: BRAND.navy, bg: 'rgba(11,60,93,0.04)', action: () => { setPendingBoard(''); setShowSetBoardModal(true); } });
             if (!selectedChild.lbiConsent)
-              alerts.push({ icon: <Shield size={11} />, text: `Grant LBI consent for ${selectedChild.name} to start assessments`, color: '#0B3C5D', bg: '#EDF2F7' });
+              alerts.push({ icon: <Shield size={11} />, text: `Grant LBI consent for ${selectedChild.name} to start assessments`, color: BRAND.navy, bg: '#EDF2F7' });
             if (alerts.length === 0) return null;
             return (
               <div className="flex flex-wrap gap-2 mb-4">
                 {alerts.map((a, i) => (
                   a.action ? (
                     <button key={i} onClick={a.action}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10.5px] font-medium hover:opacity-80 transition-opacity"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-2xs font-medium hover:opacity-80 transition-opacity"
                       style={{ background: a.bg, border: `1px solid ${a.color}33`, color: a.color }}>
                       {a.icon} {a.text}
-                      <span className="text-[9px] font-bold ml-0.5">→ Fix</span>
+                      <span className="text-2xs font-bold ml-0.5">→ Fix</span>
                     </button>
                   ) : (
-                    <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10.5px] font-medium"
+                    <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-2xs font-medium"
                       style={{ background: a.bg, color: a.color }}>
                       {a.icon} {a.text}
                     </div>
@@ -1108,16 +1109,16 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 {/* Left: Avatar + greeting */}
                 <div className="flex items-center gap-3">
                   <div
-                    className="h-9 w-9 rounded-xl flex items-center justify-center text-[13px] font-bold text-white shrink-0"
-                    style={{ backgroundColor: '#0B3C5D' }}
+                    className="h-9 w-9 rounded-xl flex items-center justify-center text-sm font-bold text-white shrink-0"
+                    style={{ backgroundColor: BRAND.navy }}
                   >
                     {getInitials(userData?.fullName || userData?.username)}
                   </div>
                   <div>
-                    <h1 className="text-[13px] font-bold text-gray-900 leading-tight" data-testid="text-parent-greeting">
+                    <h1 className="text-sm font-bold text-gray-900 leading-tight" data-testid="text-parent-greeting">
                       Welcome back, {userData?.fullName?.split(' ')[0] || userData?.username || 'Parent'}
                     </h1>
-                    <p className="text-[10px] text-gray-400 leading-tight mt-0.5">
+                    <p className="text-2xs text-gray-400 leading-tight mt-0.5">
                       Parent Portal &nbsp;·&nbsp; {new Date().toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
                     </p>
                   </div>
@@ -1127,19 +1128,19 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 <div className="flex items-center gap-1.5">
                   <button
                     onClick={() => setShowSearch(true)}
-                    className="hidden sm:flex items-center gap-2 h-7 px-2.5 rounded-lg text-[11px] font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors"
+                    className="hidden sm:flex items-center gap-2 h-7 px-2.5 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors"
                     title="Search (⌘K)"
                     data-testid="btn-global-search"
                   >
                     <Search size={12} />
                     <span>Search</span>
-                    <kbd className="ml-0.5 text-[9px] px-1 py-0.5 rounded font-mono border border-gray-200 bg-gray-50">⌘K</kbd>
+                    <kbd className="ml-0.5 text-2xs px-1 py-0.5 rounded font-mono border border-gray-200 bg-gray-50">⌘K</kbd>
                   </button>
                   <NotificationCenter variant="dark" />
                   <button
                     onClick={() => setShowTour(true)}
-                    className="flex items-center gap-1.5 h-7 px-2.5 rounded-lg text-[11px] font-semibold border transition-colors"
-                    style={{ borderColor: '#4ECDC440', color: '#4ECDC4', background: '#4ECDC408' }}
+                    className="flex items-center gap-1.5 h-7 px-2.5 rounded-lg text-xs font-semibold border transition-colors"
+                    style={{ borderColor: `${BRAND.accent}40`, color: BRAND.accent, background: `${BRAND.accent}08` }}
                     title="Quick tour of the dashboard"
                   >
                     <Play size={11} />
@@ -1147,7 +1148,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   </button>
                   <button
                     onClick={() => setHelpOpen(true)}
-                    className="flex items-center gap-1.5 h-7 px-2.5 rounded-lg text-[11px] font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors border border-gray-200"
+                    className="flex items-center gap-1.5 h-7 px-2.5 rounded-lg text-xs font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors border border-gray-200"
                     data-testid="btn-help-panel"
                     title="Help & feature guides"
                   >
@@ -1156,7 +1157,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   </button>
                   <button
                     onClick={() => loadDashboard(selectedChild?.id)}
-                    className="flex items-center gap-1.5 h-7 px-2.5 rounded-lg text-[11px] font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors border border-gray-200"
+                    className="flex items-center gap-1.5 h-7 px-2.5 rounded-lg text-xs font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors border border-gray-200"
                     data-testid="btn-refresh-dashboard"
                   >
                     <RefreshCw size={12} />
@@ -1170,7 +1171,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                       variant="minimal"
                     />
                   )}
-                  <button onClick={handleLogout} className="flex items-center gap-1.5 h-7 px-2.5 rounded-lg text-[11px] font-medium text-gray-500 hover:text-[#0B3C5D] hover:bg-[#EDF2F7] transition-colors md:hidden border border-gray-200" data-testid="button-logout">
+                  <button onClick={handleLogout} className="flex items-center gap-1.5 h-7 px-2.5 rounded-lg text-xs font-medium text-gray-500 hover:text-brand-navy hover:bg-[#EDF2F7] transition-colors md:hidden border border-gray-200" data-testid="button-logout">
                     <LogOut size={12} />
                   </button>
                 </div>
@@ -1179,7 +1180,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
 
           {/* Row 2: Children selector strip */}
           {dashboardData && dashboardData.children.length > 0 && (
-            <div className="px-4 py-2.5 bg-white border-b" style={{ borderColor: '#E2E8F0' }}>
+            <div className="px-4 py-2.5 bg-white border-b" style={{ borderColor: BRAND.border }}>
               <div className="container max-w-7xl mx-auto">
                 <div className="flex items-center gap-2.5 overflow-x-auto scrollbar-hide">
                   {dashboardData.children.map((child) => {
@@ -1188,7 +1189,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     const ageBandLabel = { A: 'Primary', B: 'Middle', C: 'Senior' }[ageBand];
                     const completedExams = dashboardData.exams?.filter(e => e.status === 'completed').length ?? 0;
                     const childRisk = isSelected ? burnoutRisk : computeBurnoutRisk(dashboardData, child);
-                    const riskColor = childRisk.level === 'high' ? '#0B3C5D' : childRisk.level === 'moderate' ? '#0B3C5D' : '#4ECDC4';
+                    const riskColor = childRisk.level === 'high' ? BRAND.navy : childRisk.level === 'moderate' ? BRAND.navy : BRAND.accent;
 
                     return (
                       <button
@@ -1196,7 +1197,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         onClick={() => handleSwitchChild(child.id)}
                         className="shrink-0 text-left rounded-xl transition-all duration-150 overflow-hidden"
                         style={{
-                          border: isSelected ? '1.5px solid #0B3C5D' : '1.5px solid #E2E8F0',
+                          border: isSelected ? `1.5px solid ${BRAND.navy}` : `1.5px solid ${BRAND.border}`,
                           background: isSelected ? '#EDF2F7' : '#FAFBFC',
                           boxShadow: isSelected ? '0 1px 6px rgba(11,60,93,0.12)' : 'none',
                           minWidth: 200,
@@ -1205,14 +1206,14 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                       >
                         {/* Card top — selected accent bar */}
                         {isSelected && (
-                          <div className="h-0.5 w-full" style={{ background: '#0B3C5D' }} />
+                          <div className="h-0.5 w-full" style={{ background: BRAND.navy }} />
                         )}
 
                         <div className="flex items-start gap-2.5 px-3 py-2.5">
                           {/* Avatar */}
                           <div
-                            className="h-10 w-10 rounded-xl flex items-center justify-center text-[13px] font-bold text-white shrink-0"
-                            style={{ background: isSelected ? '#0B3C5D' : '#94A3B8' }}
+                            className="h-10 w-10 rounded-xl flex items-center justify-center text-sm font-bold text-white shrink-0"
+                            style={{ background: isSelected ? BRAND.navy : BRAND.slate }}
                           >
                             {getInitials(child.name)}
                           </div>
@@ -1222,13 +1223,13 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                             {/* Name + active check + burnout dot */}
                             <div className="flex items-center gap-1.5 mb-0.5">
                               <span
-                                className="text-[12.5px] font-bold truncate"
-                                style={{ color: isSelected ? '#0B3C5D' : '#2E3440' }}
+                                className="text-xs font-bold truncate"
+                                style={{ color: isSelected ? BRAND.navy : '#2E3440' }}
                               >
                                 {child.name}
                               </span>
                               {isSelected && (
-                                <CheckCircle size={12} style={{ color: '#4ECDC4', flexShrink: 0 }} />
+                                <CheckCircle size={12} style={{ color: BRAND.accent, flexShrink: 0 }} />
                               )}
                               <span
                                 title={`Burnout risk: ${childRisk.level}`}
@@ -1238,7 +1239,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                             </div>
 
                             {/* Grade · age · band */}
-                            <p className="text-[10px] mb-1.5" style={{ color: '#9AA4B2' }}>
+                            <p className="text-2xs mb-1.5" style={{ color: '#9AA4B2' }}>
                               {child.grade || 'No Grade'} &nbsp;·&nbsp; {child.age} yrs &nbsp;·&nbsp; Band {ageBand} ({ageBandLabel})
                             </p>
 
@@ -1246,10 +1247,10 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                             <div className="flex items-center gap-1.5 flex-wrap">
                               {/* Board status */}
                               <span
-                                className="inline-flex items-center gap-1 text-[9.5px] font-semibold px-1.5 py-0.5 rounded-md"
+                                className="inline-flex items-center gap-1 text-2xs font-semibold px-1.5 py-0.5 rounded-md"
                                 style={child.educationBoard
-                                  ? { background: 'rgba(11,60,93,0.08)', color: '#0B3C5D' }
-                                  : { background: 'rgba(11,60,93,0.04)', color: '#0B3C5D', border: '1px solid rgba(11,60,93,0.15)' }
+                                  ? { background: 'rgba(11,60,93,0.08)', color: BRAND.navy }
+                                  : { background: 'rgba(11,60,93,0.04)', color: BRAND.navy, border: '1px solid rgba(11,60,93,0.15)' }
                                 }
                               >
                                 {child.educationBoard ? (
@@ -1261,10 +1262,10 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
 
                               {/* LBI status */}
                               <span
-                                className="inline-flex items-center gap-1 text-[9.5px] font-semibold px-1.5 py-0.5 rounded-md"
+                                className="inline-flex items-center gap-1 text-2xs font-semibold px-1.5 py-0.5 rounded-md"
                                 style={child.lbiConsent
-                                  ? { background: 'rgba(78,205,196,0.10)', color: '#4ECDC4' }
-                                  : { background: '#EDF2F7', color: '#0B3C5D', border: '1px solid #FECDD3' }
+                                  ? { background: 'rgba(78,205,196,0.10)', color: BRAND.accent }
+                                  : { background: '#EDF2F7', color: BRAND.navy, border: '1px solid #FECDD3' }
                                 }
                               >
                                 {child.lbiConsent ? (
@@ -1277,8 +1278,8 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                               {/* Assessment count — only for selected child where we have data */}
                               {isSelected && completedExams > 0 && (
                                 <span
-                                  className="inline-flex items-center gap-1 text-[9.5px] font-semibold px-1.5 py-0.5 rounded-md"
-                                  style={{ background: '#F0FDFA', color: '#4ECDC4' }}
+                                  className="inline-flex items-center gap-1 text-2xs font-semibold px-1.5 py-0.5 rounded-md"
+                                  style={{ background: '#F0FDFA', color: BRAND.accent }}
                                 >
                                   <Award size={9} /> {completedExams} done
                                 </span>
@@ -1302,8 +1303,8 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                       color: '#5F6C80',
                     }}
                     onMouseEnter={e => {
-                      (e.currentTarget as HTMLElement).style.borderColor = '#0B3C5D';
-                      (e.currentTarget as HTMLElement).style.color = '#0B3C5D';
+                      (e.currentTarget as HTMLElement).style.borderColor = BRAND.navy;
+                      (e.currentTarget as HTMLElement).style.color = BRAND.navy;
                       (e.currentTarget as HTMLElement).style.background = '#EDF2F7';
                     }}
                     onMouseLeave={e => {
@@ -1317,10 +1318,10 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                       className="w-8 h-8 rounded-lg flex items-center justify-center mb-0.5"
                       style={{ background: '#EDF2F7' }}
                     >
-                      <Plus size={15} style={{ color: '#0B3C5D' }} />
+                      <Plus size={15} style={{ color: BRAND.navy }} />
                     </div>
-                    <span className="text-[10.5px] font-semibold">Add Child</span>
-                    <span className="text-[9px]" style={{ color: '#9AA4B2' }}>Track another child</span>
+                    <span className="text-2xs font-semibold">Add Child</span>
+                    <span className="text-2xs" style={{ color: '#9AA4B2' }}>Track another child</span>
                   </button>
                 </div>
               </div>
@@ -1333,16 +1334,16 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
             const pendingExams = dashboardData.exams?.filter(e => e.status === 'pending') || [];
             const completedExams = dashboardData.exams?.filter(e => e.status === 'completed') || [];
             if (!selectedChild.educationBoard)
-              alerts.push({ icon: <AlertCircle size={11} />, text: `Set ${selectedChild.name}'s education board to unlock curriculum content`, color: '#0B3C5D', bg: 'rgba(11,60,93,0.04)', action: () => { setPendingBoard(''); setShowSetBoardModal(true); } } as any);
+              alerts.push({ icon: <AlertCircle size={11} />, text: `Set ${selectedChild.name}'s education board to unlock curriculum content`, color: BRAND.navy, bg: 'rgba(11,60,93,0.04)', action: () => { setPendingBoard(''); setShowSetBoardModal(true); } } as any);
             if (!selectedChild.lbiConsent)
-              alerts.push({ icon: <Shield size={11} />, text: `Grant LBI consent for ${selectedChild.name} to start behavioural assessments`, color: '#0B3C5D', bg: '#EDF2F7' });
+              alerts.push({ icon: <Shield size={11} />, text: `Grant LBI consent for ${selectedChild.name} to start behavioural assessments`, color: BRAND.navy, bg: '#EDF2F7' });
             if (pendingExams.length > 0)
-              alerts.push({ icon: <Clock size={11} />, text: `${pendingExams.length} exam${pendingExams.length > 1 ? 's' : ''} pending for ${selectedChild.name}`, color: '#0B3C5D', bg: '#EDF2F7' });
+              alerts.push({ icon: <Clock size={11} />, text: `${pendingExams.length} exam${pendingExams.length > 1 ? 's' : ''} pending for ${selectedChild.name}`, color: BRAND.navy, bg: '#EDF2F7' });
             if (completedExams.length > 0 && selectedChild.lbiConsent)
-              alerts.push({ icon: <CheckCircle size={11} />, text: `${completedExams.length} assessment${completedExams.length > 1 ? 's' : ''} completed — AI report available`, color: '#4ECDC4', bg: '#F0FDFA' });
+              alerts.push({ icon: <CheckCircle size={11} />, text: `${completedExams.length} assessment${completedExams.length > 1 ? 's' : ''} completed — AI report available`, color: BRAND.accent, bg: '#F0FDFA' });
             if (alerts.length === 0) return null;
             return (
-              <div className="px-4 py-1.5 border-b overflow-x-auto scrollbar-hide" style={{ backgroundColor: '#FAFBFC', borderColor: '#E2E8F0' }}>
+              <div className="px-4 py-1.5 border-b overflow-x-auto scrollbar-hide" style={{ backgroundColor: '#FAFBFC', borderColor: BRAND.border }}>
                 <div className="container max-w-7xl mx-auto flex items-center gap-3">
                   {alerts.map((a: any, i: number) => (
                     a.action ? (
@@ -1353,13 +1354,13 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         style={{ background: a.bg, border: `1px solid ${a.color}33` }}
                       >
                         <span style={{ color: a.color }}>{a.icon}</span>
-                        <span className="text-[10.5px] font-medium" style={{ color: a.color }}>{a.text}</span>
-                        <span className="text-[9px] font-bold ml-0.5" style={{ color: a.color }}>→ Fix now</span>
+                        <span className="text-2xs font-medium" style={{ color: a.color }}>{a.text}</span>
+                        <span className="text-2xs font-bold ml-0.5" style={{ color: a.color }}>→ Fix now</span>
                       </button>
                     ) : (
                       <div key={i} className="flex items-center gap-1.5 px-2.5 py-1 rounded-full shrink-0" style={{ background: a.bg }}>
                         <span style={{ color: a.color }}>{a.icon}</span>
-                        <span className="text-[10.5px] font-medium" style={{ color: a.color }}>{a.text}</span>
+                        <span className="text-2xs font-medium" style={{ color: a.color }}>{a.text}</span>
                       </div>
                     )
                   ))}
@@ -1415,7 +1416,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
             <div className="overflow-hidden rounded-2xl shadow-xl border-0" data-testid="card-welcome-hero">
               <div 
                 className="p-8 text-white relative overflow-hidden"
-                style={{ backgroundColor: '#0B3C5D' }}
+                style={{ backgroundColor: BRAND.navy }}
               >
                 <div className="absolute inset-0 opacity-10">
                   <div className="absolute top-0 right-0 w-72 h-72 rounded-full bg-white/20 -translate-y-1/2 translate-x-1/2" />
@@ -1438,7 +1439,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                       <Button 
                         onClick={() => setIsAddChildOpen(true)} 
                         size="lg" 
-                        className="gap-2 bg-white hover:bg-white/90 text-[#0B3C5D] font-semibold shadow-lg"
+                        className="gap-2 bg-white hover:bg-white/90 text-brand-navy font-semibold shadow-lg"
                         data-testid="button-add-first-child"
                       >
                         <Plus size={18} />
@@ -1469,20 +1470,20 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
 
             {/* Stats Preview */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3" data-testid="stats-preview">
-              <div className="bg-white border-t-2 border border-gray-100 rounded-2xl p-3 text-center shadow-sm" style={{ borderTopColor: '#0B3C5D' }} data-testid="stat-students">
-                <p className="text-2xl font-bold" style={{ color: '#0B3C5D' }} data-testid="text-stat-students">50K+</p>
+              <div className="bg-white border-t-2 border border-gray-100 rounded-2xl p-3 text-center shadow-sm" style={{ borderTopColor: BRAND.navy }} data-testid="stat-students">
+                <p className="text-2xl font-bold" style={{ color: BRAND.navy }} data-testid="text-stat-students">50K+</p>
                 <p className="text-xs text-muted-foreground" data-testid="text-stat-students-label">Students</p>
               </div>
-              <div className="bg-white border-t-2 border border-gray-100 rounded-2xl p-3 text-center shadow-sm" style={{ borderTopColor: '#4ECDC4' }} data-testid="stat-satisfaction">
-                <p className="text-2xl font-bold" style={{ color: '#4ECDC4' }} data-testid="text-stat-satisfaction">98%</p>
+              <div className="bg-white border-t-2 border border-gray-100 rounded-2xl p-3 text-center shadow-sm" style={{ borderTopColor: BRAND.accent }} data-testid="stat-satisfaction">
+                <p className="text-2xl font-bold" style={{ color: BRAND.accent }} data-testid="text-stat-satisfaction">98%</p>
                 <p className="text-xs text-muted-foreground" data-testid="text-stat-satisfaction-label">Satisfaction</p>
               </div>
-              <div className="bg-white border-t-2 border border-gray-100 rounded-2xl p-3 text-center shadow-sm" style={{ borderTopColor: '#0B3C5D' }} data-testid="stat-modules">
-                <p className="text-2xl font-bold" style={{ color: '#0B3C5D' }} data-testid="text-stat-modules">19+</p>
+              <div className="bg-white border-t-2 border border-gray-100 rounded-2xl p-3 text-center shadow-sm" style={{ borderTopColor: BRAND.navy }} data-testid="stat-modules">
+                <p className="text-2xl font-bold" style={{ color: BRAND.navy }} data-testid="text-stat-modules">19+</p>
                 <p className="text-xs text-muted-foreground" data-testid="text-stat-modules-label">Modules</p>
               </div>
-              <div className="bg-white border-t-2 border border-gray-100 rounded-2xl p-3 text-center shadow-sm" style={{ borderTopColor: '#4ECDC4' }} data-testid="stat-agegroups">
-                <p className="text-2xl font-bold" style={{ color: '#4ECDC4' }} data-testid="text-stat-agegroups">4</p>
+              <div className="bg-white border-t-2 border border-gray-100 rounded-2xl p-3 text-center shadow-sm" style={{ borderTopColor: BRAND.accent }} data-testid="stat-agegroups">
+                <p className="text-2xl font-bold" style={{ color: BRAND.accent }} data-testid="text-stat-agegroups">4</p>
                 <p className="text-xs text-muted-foreground" data-testid="text-stat-agegroups-label">Age Groups</p>
               </div>
             </div>
@@ -1494,7 +1495,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm" data-testid="card-features">
                   <div className="mb-4">
                     <div className="flex items-center gap-2 mb-1">
-                      <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#0B3C5D' }}>
+                      <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: BRAND.navy }}>
                         <Award size={18} className="text-white" />
                       </div>
                       <h3 className="text-base font-semibold text-gray-800" data-testid="text-features-title">What You'll Get</h3>
@@ -1503,7 +1504,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div className="flex items-start gap-3 p-4 rounded-xl border hover:shadow-sm transition-shadow" data-testid="feature-academic">
-                        <div className="h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#0B3C5D' }}>
+                        <div className="h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: BRAND.navy }}>
                           <GraduationCap size={20} className="text-white" />
                         </div>
                         <div>
@@ -1512,7 +1513,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         </div>
                       </div>
                       <div className="flex items-start gap-3 p-4 rounded-xl border hover:shadow-sm transition-shadow" data-testid="feature-behavioral">
-                        <div className="h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#4ECDC4' }}>
+                        <div className="h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: BRAND.accent }}>
                           <Brain size={20} className="text-white" />
                         </div>
                         <div>
@@ -1521,7 +1522,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         </div>
                       </div>
                       <div className="flex items-start gap-3 p-4 rounded-xl border hover:shadow-sm transition-shadow" data-testid="feature-examready">
-                        <div className="h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#0B3C5D' }}>
+                        <div className="h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: BRAND.navy }}>
                           <Activity size={20} className="text-white" />
                         </div>
                         <div>
@@ -1530,7 +1531,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         </div>
                       </div>
                       <div className="flex items-start gap-3 p-4 rounded-xl border hover:shadow-sm transition-shadow" data-testid="feature-supervised">
-                        <div className="h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#4ECDC4' }}>
+                        <div className="h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: BRAND.accent }}>
                           <Eye size={20} className="text-white" />
                         </div>
                         <div>
@@ -1544,14 +1545,14 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 {/* How It Works */}
                 <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm" data-testid="card-how-it-works">
                   <div className="flex items-center gap-2 mb-4">
-                    <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#4ECDC4' }}>
+                    <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: BRAND.accent }}>
                       <Lightbulb size={18} className="text-white" />
                     </div>
                     <h3 className="text-base font-semibold text-gray-800" data-testid="text-howit-title">How It Works</h3>
                   </div>
                     <div className="flex flex-col md:flex-row gap-4">
                       <div className="flex-1 text-center p-4" data-testid="step-register">
-                        <div className="mx-auto w-12 h-12 rounded-full flex items-center justify-center text-white font-bold mb-3" style={{ backgroundColor: '#0B3C5D' }}>1</div>
+                        <div className="mx-auto w-12 h-12 rounded-full flex items-center justify-center text-white font-bold mb-3" style={{ backgroundColor: BRAND.navy }}>1</div>
                         <p className="font-semibold text-sm" data-testid="text-step-register">Register Child</p>
                         <p className="text-xs text-muted-foreground mt-1" data-testid="text-step-register-desc">Add your child's profile with required details</p>
                       </div>
@@ -1559,7 +1560,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         <ChevronDown className="rotate-[-90deg] text-muted-foreground" />
                       </div>
                       <div className="flex-1 text-center p-4" data-testid="step-consent">
-                        <div className="mx-auto w-12 h-12 rounded-full flex items-center justify-center text-white font-bold mb-3" style={{ backgroundColor: '#4ECDC4' }}>2</div>
+                        <div className="mx-auto w-12 h-12 rounded-full flex items-center justify-center text-white font-bold mb-3" style={{ backgroundColor: BRAND.accent }}>2</div>
                         <p className="font-semibold text-sm" data-testid="text-step-consent">Grant Consent</p>
                         <p className="text-xs text-muted-foreground mt-1" data-testid="text-step-consent-desc">Provide secure consent for assessments</p>
                       </div>
@@ -1567,7 +1568,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         <ChevronDown className="rotate-[-90deg] text-muted-foreground" />
                       </div>
                       <div className="flex-1 text-center p-4" data-testid="step-insights">
-                        <div className="mx-auto w-12 h-12 rounded-full flex items-center justify-center text-white font-bold mb-3" style={{ backgroundColor: '#0B3C5D' }}>3</div>
+                        <div className="mx-auto w-12 h-12 rounded-full flex items-center justify-center text-white font-bold mb-3" style={{ backgroundColor: BRAND.navy }}>3</div>
                         <p className="font-semibold text-sm" data-testid="text-step-insights">Get Insights</p>
                         <p className="text-xs text-muted-foreground mt-1" data-testid="text-step-insights-desc">Receive detailed reports and recommendations</p>
                       </div>
@@ -1583,7 +1584,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   <div className="space-y-3">
                     <div className="flex items-center gap-3 p-3 rounded-lg bg-[#EDF7F2]" data-testid="trust-badge-dpdp">
                       <div className="h-10 w-10 rounded-full bg-[#C9E8D8] flex items-center justify-center flex-shrink-0">
-                        <Shield size={20} className="text-[#4ECDC4]" />
+                        <Shield size={20} className="text-brand-accent" />
                       </div>
                       <div>
                         <p className="font-semibold text-xs" data-testid="text-dpdp-title">Data Protection Compliant</p>
@@ -1592,7 +1593,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     </div>
                     <div className="flex items-center gap-3 p-3 rounded-lg" style={{ backgroundColor: 'rgba(11,60,93,0.08)' }} data-testid="trust-badge-encryption">
                       <div className="h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'rgba(11,60,93,0.15)' }}>
-                        <Lock size={20} style={{ color: '#0B3C5D' }} />
+                        <Lock size={20} style={{ color: BRAND.navy }} />
                       </div>
                       <div>
                         <p className="font-semibold text-xs" data-testid="text-encryption-title">256-bit Encryption</p>
@@ -1601,7 +1602,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     </div>
                     <div className="flex items-center gap-3 p-3 rounded-lg" style={{ backgroundColor: 'rgba(78,205,196,0.08)' }} data-testid="trust-badge-development">
                       <div className="h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'rgba(78,205,196,0.15)' }}>
-                        <Target size={20} style={{ color: '#4ECDC4' }} />
+                        <Target size={20} style={{ color: BRAND.accent }} />
                       </div>
                       <div>
                         <p className="font-semibold text-xs" data-testid="text-development-title">Child-First Approach</p>
@@ -1610,7 +1611,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     </div>
                     <div className="flex items-center gap-3 p-3 rounded-lg" style={{ background: 'rgba(11,60,93,0.06)' }} data-testid="trust-badge-parental">
                       <div className="h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(11,60,93,0.12)' }}>
-                        <Users size={20} style={{ color: '#0B3C5D' }} />
+                        <Users size={20} style={{ color: BRAND.navy }} />
                       </div>
                       <div>
                         <p className="font-semibold text-xs" data-testid="text-parental-title">Parental Control</p>
@@ -1621,38 +1622,38 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 </div>
 
                 {/* Security Commitment */}
-                <div className="bg-white border-2 border border-gray-100 rounded-2xl p-5 shadow-sm" style={{ borderColor: '#4ECDC4' }} data-testid="card-security-commitment">
+                <div className="bg-white border-2 border border-gray-100 rounded-2xl p-5 shadow-sm" style={{ borderColor: BRAND.accent }} data-testid="card-security-commitment">
                   <div className="flex items-center gap-2 mb-3">
-                    <Shield size={18} style={{ color: '#4ECDC4' }} />
+                    <Shield size={18} style={{ color: BRAND.accent }} />
                     <p className="font-semibold text-sm" data-testid="text-security-title">Our Security Promise</p>
                   </div>
                   <ul className="space-y-2 text-xs text-muted-foreground" data-testid="text-security-description">
                     <li className="flex items-start gap-2">
-                      <CheckCircle size={14} className="text-[#4ECDC4] mt-0.5 flex-shrink-0" />
+                      <CheckCircle size={14} className="text-brand-accent mt-0.5 flex-shrink-0" />
                       <span data-testid="text-security-india">Data stored securely in India</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle size={14} className="text-[#4ECDC4] mt-0.5 flex-shrink-0" />
+                      <CheckCircle size={14} className="text-brand-accent mt-0.5 flex-shrink-0" />
                       <span data-testid="text-security-nosale">Never sold to third parties</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle size={14} className="text-[#4ECDC4] mt-0.5 flex-shrink-0" />
+                      <CheckCircle size={14} className="text-brand-accent mt-0.5 flex-shrink-0" />
                       <span data-testid="text-security-delete">Delete data anytime</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle size={14} className="text-[#4ECDC4] mt-0.5 flex-shrink-0" />
+                      <CheckCircle size={14} className="text-brand-accent mt-0.5 flex-shrink-0" />
                       <span data-testid="text-security-policies">Transparent usage policies</span>
                     </li>
                   </ul>
                 </div>
 
                 {/* CTA Card */}
-                <div className="rounded-2xl p-6 text-center text-white shadow-sm" style={{ backgroundColor: '#0B3C5D' }}>
+                <div className="rounded-2xl p-6 text-center text-white shadow-sm" style={{ backgroundColor: BRAND.navy }}>
                   <h3 className="font-bold mb-2" data-testid="text-cta-title">Ready to Start?</h3>
                   <p className="text-sm text-white/80 mb-4" data-testid="text-cta-desc">Register your child in under 2 minutes</p>
                   <Button 
                     onClick={() => setIsAddChildOpen(true)}
-                    className="w-full bg-white hover:bg-white/90 text-[#0B3C5D] font-semibold"
+                    className="w-full bg-white hover:bg-white/90 text-brand-navy font-semibold"
                     data-testid="button-cta-add-child"
                   >
                     <Plus size={16} className="mr-2" />
@@ -1670,20 +1671,20 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
             <div className="mb-4 px-4 py-2.5 bg-white rounded-xl border shadow-sm flex items-center justify-between gap-3 flex-wrap" data-testid="quick-actions-strip">
               <div className="flex items-center gap-2">
                 <div className="flex items-center gap-2 mr-2 pr-3 border-r">
-                  <div className="h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ backgroundColor: '#0B3C5D' }}>
+                  <div className="h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ backgroundColor: BRAND.navy }}>
                     {getInitials(selectedChild.name)}
                   </div>
-                  <span className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>{selectedChild.name}</span>
+                  <span className="text-sm font-semibold" style={{ color: BRAND.navy }}>{selectedChild.name}</span>
                   {dashboardData?.stats && dashboardData.stats.pending > 0 && (
-                    <Badge variant="outline" className="text-[10px] h-5 border-[#B8CCDA] text-[#0B3C5D]">
+                    <Badge variant="outline" className="text-2xs h-5 border-[#B8CCDA] text-brand-navy">
                       {dashboardData.stats.pending} pending
                     </Badge>
                   )}
                 </div>
                 <Button
                   size="sm"
-                  className="h-7 px-3 text-[11px] gap-1.5 text-white"
-                  style={{ backgroundColor: '#4ECDC4' }}
+                  className="h-7 px-3 text-xs gap-1.5 text-white"
+                  style={{ backgroundColor: BRAND.accent }}
                   onClick={() => onNavigate('parent-lbi', { childId: selectedChild.id })}
                   data-testid="quick-action-lbi"
                   title="Learning Behaviour Index — a 19-domain assessment that maps your child's behavioural intelligence. Grant consent first if your child is under 18."
@@ -1694,8 +1695,8 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 <Button
                   size="sm"
                   variant="outline"
-                  className="h-7 px-3 text-[11px] gap-1.5"
-                  style={{ borderColor: '#0B3C5D', color: '#0B3C5D' }}
+                  className="h-7 px-3 text-xs gap-1.5"
+                  style={{ borderColor: BRAND.navy, color: BRAND.navy }}
                   onClick={handleExamReadyStart}
                   data-testid="quick-action-examready"
                   title="Exam Readiness — measures how mentally prepared your child is for an upcoming exam. Reviews stress, confidence and time management."
@@ -1707,8 +1708,8 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   <Button
                     size="sm"
                     variant="outline"
-                    className="h-7 px-3 text-[11px] gap-1.5"
-                    style={{ borderColor: '#0B3C5D', color: '#0B3C5D' }}
+                    className="h-7 px-3 text-xs gap-1.5"
+                    style={{ borderColor: BRAND.navy, color: BRAND.navy }}
                     onClick={() => {
                       const pendingExam = dashboardData?.exams?.find(e => e.status === 'pending');
                       if (pendingExam) {
@@ -1727,8 +1728,8 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="h-7 px-3 text-[11px] gap-1.5"
-                  style={{ color: hasConsent ? '#4ECDC4' : '#0B3C5D' }}
+                  className="h-7 px-3 text-xs gap-1.5"
+                  style={{ color: hasConsent ? BRAND.accent : BRAND.navy }}
                   onClick={() => {
                     setConsentAction(hasConsent ? 'revoke' : 'grant');
                     setIsConsentDialogOpen(true);
@@ -1744,7 +1745,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
             {/* ── Horizontal Child Selector Strip ── */}
             {dashboardData && dashboardData.children.length > 0 && (
               <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-1">
-                <span className="text-[9px] font-semibold uppercase tracking-widest text-gray-400 whitespace-nowrap shrink-0">Viewing Child</span>
+                <span className="text-2xs font-semibold uppercase tracking-widest text-gray-400 whitespace-nowrap shrink-0">Viewing Child</span>
                 <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
                   {dashboardData.children.map(c => {
                     const active = selectedChild?.id === c.id;
@@ -1757,10 +1758,10 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                             ? 'border-transparent text-white shadow-sm'
                             : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50'
                         }`}
-                        style={active ? { backgroundColor: '#0B3C5D' } : {}}
+                        style={active ? { backgroundColor: BRAND.navy } : {}}
                       >
-                        <div className="text-[11px] font-semibold leading-tight">{c.name}</div>
-                        <div className={`text-[9px] leading-tight ${active ? 'text-[#B8CCDA]' : 'text-gray-400'}`}>
+                        <div className="text-xs font-semibold leading-tight">{c.name}</div>
+                        <div className={`text-2xs leading-tight ${active ? 'text-[#B8CCDA]' : 'text-gray-400'}`}>
                           {c.grade} · {c.age} yrs
                         </div>
                       </button>
@@ -1768,7 +1769,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   })}
                   <button
                     onClick={() => setIsAddChildOpen(true)}
-                    className="shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-xl border border-dashed border-gray-300 text-[11px] text-gray-400 hover:border-gray-400 hover:text-gray-600 bg-white transition-all"
+                    className="shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-xl border border-dashed border-gray-300 text-xs text-gray-400 hover:border-gray-400 hover:text-gray-600 bg-white transition-all"
                   >
                     <Plus size={11} /> Add Child
                   </button>
@@ -1782,7 +1783,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
               <TabsList className="flex flex-wrap w-full h-auto p-1 rounded-xl bg-gray-100 gap-0.5">
                 <TabsTrigger 
                   value="overview" 
-                  className="flex-1 basis-auto gap-1 px-2.5 py-1.5 rounded-lg text-[10.5px] font-medium text-gray-500 transition-all hover:text-gray-700 data-[state=active]:bg-white data-[state=active]:text-[#0B3C5D] data-[state=active]:font-semibold data-[state=active]:shadow-sm whitespace-nowrap"
+                  className="flex-1 basis-auto gap-1 px-2.5 py-1.5 rounded-lg text-2xs font-medium text-gray-500 transition-all hover:text-gray-700 data-[state=active]:bg-white data-[state=active]:text-brand-navy data-[state=active]:font-semibold data-[state=active]:shadow-sm whitespace-nowrap"
                   data-testid="tab-overview"
                 >
                   <Home size={12} />
@@ -1790,7 +1791,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 </TabsTrigger>
                 <TabsTrigger
                   value="goals"
-                  className="flex-1 basis-auto gap-1 px-2.5 py-1.5 rounded-lg text-[10.5px] font-medium text-gray-500 transition-all hover:text-gray-700 data-[state=active]:bg-white data-[state=active]:text-[#0B3C5D] data-[state=active]:font-semibold data-[state=active]:shadow-sm whitespace-nowrap"
+                  className="flex-1 basis-auto gap-1 px-2.5 py-1.5 rounded-lg text-2xs font-medium text-gray-500 transition-all hover:text-gray-700 data-[state=active]:bg-white data-[state=active]:text-brand-navy data-[state=active]:font-semibold data-[state=active]:shadow-sm whitespace-nowrap"
                   data-testid="tab-goals"
                 >
                   <Target size={12} />
@@ -1798,7 +1799,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 </TabsTrigger>
                 <TabsTrigger 
                   value="education" 
-                  className="flex-1 basis-auto gap-1 px-2.5 py-1.5 rounded-lg text-[10.5px] font-medium text-gray-500 transition-all hover:text-gray-700 data-[state=active]:bg-white data-[state=active]:text-[#0B3C5D] data-[state=active]:font-semibold data-[state=active]:shadow-sm whitespace-nowrap"
+                  className="flex-1 basis-auto gap-1 px-2.5 py-1.5 rounded-lg text-2xs font-medium text-gray-500 transition-all hover:text-gray-700 data-[state=active]:bg-white data-[state=active]:text-brand-navy data-[state=active]:font-semibold data-[state=active]:shadow-sm whitespace-nowrap"
                   data-testid="tab-education"
                 >
                   <Layers size={12} />
@@ -1806,7 +1807,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 </TabsTrigger>
                 <TabsTrigger 
                   value="exam-trends" 
-                  className="flex-1 basis-auto gap-1 px-2.5 py-1.5 rounded-lg text-[10.5px] font-medium text-gray-500 transition-all hover:text-gray-700 data-[state=active]:bg-white data-[state=active]:text-[#0B3C5D] data-[state=active]:font-semibold data-[state=active]:shadow-sm whitespace-nowrap"
+                  className="flex-1 basis-auto gap-1 px-2.5 py-1.5 rounded-lg text-2xs font-medium text-gray-500 transition-all hover:text-gray-700 data-[state=active]:bg-white data-[state=active]:text-brand-navy data-[state=active]:font-semibold data-[state=active]:shadow-sm whitespace-nowrap"
                   data-testid="tab-exam-trends"
                 >
                   <PieChart size={12} />
@@ -1814,7 +1815,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 </TabsTrigger>
                 <TabsTrigger 
                   value="lbi" 
-                  className="flex-1 basis-auto gap-1 px-2.5 py-1.5 rounded-lg text-[10.5px] font-medium text-gray-500 transition-all hover:text-gray-700 data-[state=active]:bg-white data-[state=active]:text-[#0B3C5D] data-[state=active]:font-semibold data-[state=active]:shadow-sm whitespace-nowrap"
+                  className="flex-1 basis-auto gap-1 px-2.5 py-1.5 rounded-lg text-2xs font-medium text-gray-500 transition-all hover:text-gray-700 data-[state=active]:bg-white data-[state=active]:text-brand-navy data-[state=active]:font-semibold data-[state=active]:shadow-sm whitespace-nowrap"
                   data-testid="tab-lbi"
                 >
                   <Brain size={12} />
@@ -1822,7 +1823,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 </TabsTrigger>
                 <TabsTrigger
                   value="mentor-services"
-                  className="flex-1 basis-auto gap-1 px-2.5 py-1.5 rounded-lg text-[10.5px] font-medium text-gray-500 transition-all hover:text-gray-700 data-[state=active]:bg-white data-[state=active]:text-[#0B3C5D] data-[state=active]:font-semibold data-[state=active]:shadow-sm whitespace-nowrap"
+                  className="flex-1 basis-auto gap-1 px-2.5 py-1.5 rounded-lg text-2xs font-medium text-gray-500 transition-all hover:text-gray-700 data-[state=active]:bg-white data-[state=active]:text-brand-navy data-[state=active]:font-semibold data-[state=active]:shadow-sm whitespace-nowrap"
                   data-testid="tab-mentor-services"
                 >
                   <Video size={12} />
@@ -1830,7 +1831,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 </TabsTrigger>
                 <TabsTrigger 
                   value="my-packages" 
-                  className="flex-1 basis-auto gap-1 px-2.5 py-1.5 rounded-lg text-[10.5px] font-medium text-gray-500 transition-all hover:text-gray-700 data-[state=active]:bg-white data-[state=active]:text-[#0B3C5D] data-[state=active]:font-semibold data-[state=active]:shadow-sm whitespace-nowrap"
+                  className="flex-1 basis-auto gap-1 px-2.5 py-1.5 rounded-lg text-2xs font-medium text-gray-500 transition-all hover:text-gray-700 data-[state=active]:bg-white data-[state=active]:text-brand-navy data-[state=active]:font-semibold data-[state=active]:shadow-sm whitespace-nowrap"
                   data-testid="tab-my-packages"
                 >
                   <Award size={12} />
@@ -1838,7 +1839,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 </TabsTrigger>
                 <TabsTrigger
                   value="learning-collab"
-                  className="flex-1 basis-auto gap-1 px-2.5 py-1.5 rounded-lg text-[10.5px] font-medium text-gray-500 transition-all hover:text-gray-700 data-[state=active]:bg-white data-[state=active]:text-[#0B3C5D] data-[state=active]:font-semibold data-[state=active]:shadow-sm whitespace-nowrap"
+                  className="flex-1 basis-auto gap-1 px-2.5 py-1.5 rounded-lg text-2xs font-medium text-gray-500 transition-all hover:text-gray-700 data-[state=active]:bg-white data-[state=active]:text-brand-navy data-[state=active]:font-semibold data-[state=active]:shadow-sm whitespace-nowrap"
                   data-testid="tab-learning-collab"
                 >
                   <Users size={12} />
@@ -1867,7 +1868,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   if (isMinor && !hasConsent) {
                     alerts.push({
                       type: 'action', category: 'LBI',
-                      icon: <Shield size={15} className="text-[#0B3C5D]" />,
+                      icon: <Shield size={15} className="text-brand-navy" />,
                       title: 'LBI Parental Consent Required',
                       desc: `Grant consent for ${selectedChild.name} to unlock behavioral intelligence & personalized learning insights`,
                       action: () => { setConsentAction('grant'); setIsConsentDialogOpen(true); },
@@ -1878,7 +1879,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   if (!selectedChild.educationBoard) {
                     alerts.push({
                       type: 'action', category: 'Profile',
-                      icon: <AlertCircle size={15} className="text-[#0B3C5D]" />,
+                      icon: <AlertCircle size={15} className="text-brand-navy" />,
                       title: 'Education Board Not Set',
                       desc: `${selectedChild.name}'s education board is missing — curriculum content, exam alignment and AI recommendations require it`,
                       action: () => { setPendingBoard(''); setShowSetBoardModal(true); },
@@ -1889,7 +1890,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   if (!selectedChild.grade) {
                     alerts.push({
                       type: 'action', category: 'Profile',
-                      icon: <AlertCircle size={15} className="text-[#0B3C5D]" />,
+                      icon: <AlertCircle size={15} className="text-brand-navy" />,
                       title: 'Grade / Class Not Set',
                       desc: `Add ${selectedChild.name}'s current grade to unlock grade-appropriate assessments and study plans`,
                       action: () => { setPendingBoard(''); setShowSetBoardModal(true); },
@@ -1907,7 +1908,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   if (overdueTasks.length > 0) {
                     alerts.push({
                       type: 'warning', category: 'Planner',
-                      icon: <Clock size={15} className="text-[#0B3C5D]" />,
+                      icon: <Clock size={15} className="text-brand-navy" />,
                       title: `${overdueTasks.length} Overdue Study Task${overdueTasks.length > 1 ? 's' : ''}`,
                       desc: `"${(overdueTasks[0] as any).title || (overdueTasks[0] as any).subject || 'Study task'}" is past due${overdueTasks.length > 1 ? ` and ${overdueTasks.length - 1} more` : ''} — review the planner`,
                       action: () => setActiveTab('education'),
@@ -1923,7 +1924,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   if (todayTasks.length > 0) {
                     alerts.push({
                       type: 'warning', category: 'Planner',
-                      icon: <CalendarDays size={15} className="text-[#0B3C5D]" />,
+                      icon: <CalendarDays size={15} className="text-brand-navy" />,
                       title: `${todayTasks.length} Task${todayTasks.length > 1 ? 's' : ''} Due Today`,
                       desc: `"${(todayTasks[0] as any).title || (todayTasks[0] as any).subject || 'Study task'}" scheduled for today${todayTasks.length > 1 ? ` + ${todayTasks.length - 1} more` : ''}`,
                       action: () => setActiveTab('education'),
@@ -1936,7 +1937,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   if (pendingExams.length > 0) {
                     alerts.push({
                       type: 'warning', category: 'Exam',
-                      icon: <FileText size={15} className="text-[#0B3C5D]" />,
+                      icon: <FileText size={15} className="text-brand-navy" />,
                       title: `${pendingExams.length} Pending Exam${pendingExams.length > 1 ? 's' : ''}`,
                       desc: `"${pendingExams[0].title}" is awaiting completion${pendingExams.length > 1 ? ` · ${pendingExams.length - 1} more pending` : ''}`,
                       action: () => setActiveTab('education'),
@@ -1952,10 +1953,10 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     alerts.push({
                       type: 'report', category: 'Daily Report',
                       icon: score >= 75
-                        ? <Award size={15} style={{ color: '#4ECDC4' }} />
+                        ? <Award size={15} style={{ color: BRAND.accent }} />
                         : score >= 50
-                          ? <BarChart3 size={15} style={{ color: '#0B3C5D' }} />
-                          : <TrendingDown size={15} className="text-[#0B3C5D]" />,
+                          ? <BarChart3 size={15} style={{ color: BRAND.navy }} />
+                          : <TrendingDown size={15} className="text-brand-navy" />,
                       title: `Latest Result: ${latest.title}`,
                       desc: `Score ${score}% · ${score >= 75 ? 'Strong performance — keep the momentum!' : score >= 50 ? 'On track — some topics may need review' : 'Below average — a mentor or extra practice is recommended'}`,
                       action: () => setActiveTab('exam-trends'),
@@ -1968,7 +1969,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   if (lowScoreExams.length > 0) {
                     alerts.push({
                       type: 'warning', category: 'Daily Report',
-                      icon: <TrendingDown size={15} className="text-[#0B3C5D]" />,
+                      icon: <TrendingDown size={15} className="text-brand-navy" />,
                       title: `${lowScoreExams.length} Score${lowScoreExams.length > 1 ? 's' : ''} Below 50%`,
                       desc: `"${lowScoreExams[0].title}" scored ${lowScoreExams[0].score}%${lowScoreExams.length > 1 ? ` · ${lowScoreExams.length - 1} more` : ''} — consider booking a mentor session`,
                       action: () => setActiveTab('exam-trends'),
@@ -1985,10 +1986,10 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     alerts.push({
                       type: 'report', category: 'Weekly Report',
                       icon: trend === 'up'
-                        ? <TrendingUp size={15} style={{ color: '#4ECDC4' }} />
+                        ? <TrendingUp size={15} style={{ color: BRAND.accent }} />
                         : trend === 'down'
-                          ? <TrendingDown size={15} className="text-[#0B3C5D]" />
-                          : <BarChart3 size={15} style={{ color: '#0B3C5D' }} />,
+                          ? <TrendingDown size={15} className="text-brand-navy" />
+                          : <BarChart3 size={15} style={{ color: BRAND.navy }} />,
                       title: `Weekly Performance: Avg ${avg}% · ${trend === 'up' ? 'Improving' : trend === 'down' ? 'Declining' : 'Stable'}`,
                       desc: `${completedExams.length} assessments completed · Recent 3-exam avg ${recentAvg}% ${trend === 'up' ? '↑ trending up' : trend === 'down' ? '↓ needs attention' : '→ holding steady'}`,
                       action: () => setActiveTab('exam-trends'),
@@ -2007,7 +2008,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                       const riskLevel = drop >= 15 ? 'High' : 'Moderate';
                       alerts.push({
                         type: 'warning', category: 'Predictive Alert',
-                        icon: <AlertTriangle size={15} className={riskLevel === 'High' ? 'text-[#0B3C5D]' : 'text-[#0B3C5D]'} />,
+                        icon: <AlertTriangle size={15} className={riskLevel === 'High' ? 'text-brand-navy' : 'text-brand-navy'} />,
                         title: `${riskLevel} Risk: ${upcomingInWindow.length} Exam${upcomingInWindow.length > 1 ? 's' : ''} in the Next 4–6 Weeks`,
                         desc: `Score trend declined ${drop}% in recent assessments. Based on trajectory, ${selectedChild.name} may need intervention before upcoming exams. Book a mentor session to course-correct now.`,
                         action: () => setActiveTab('mentor-services'),
@@ -2016,7 +2017,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     } else if (trend === 'stable' && recentAvg < 55 && upcomingInWindow.length > 0) {
                       alerts.push({
                         type: 'warning', category: 'Predictive Alert',
-                        icon: <AlertTriangle size={15} className="text-[#0B3C5D]" />,
+                        icon: <AlertTriangle size={15} className="text-brand-navy" />,
                         title: `Watch: ${upcomingInWindow.length} Upcoming Exam${upcomingInWindow.length > 1 ? 's' : ''} with Below-Average Score Base`,
                         desc: `Average score is ${recentAvg}% — below the 60% readiness threshold. Targeted practice now can significantly improve outcomes in the 4–6 week exam window.`,
                         action: () => setActiveTab('exam-trends'),
@@ -2029,7 +2030,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   if (hasConsent && (!dashboardData?.insights || dashboardData.insights.length === 0)) {
                     alerts.push({
                       type: 'info', category: 'LBI',
-                      icon: <Brain size={15} style={{ color: '#4ECDC4' }} />,
+                      icon: <Brain size={15} style={{ color: BRAND.accent }} />,
                       title: 'No LBI Assessments Yet',
                       desc: `Consent granted — start ${selectedChild.name}'s behavioral assessment to generate domain insights and a personalized learning roadmap`,
                       action: () => onNavigate('parent-lbi', { childId: selectedChild.id }),
@@ -2038,7 +2039,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   } else if (!hasConsent && !isMinor) {
                     alerts.push({
                       type: 'info', category: 'LBI',
-                      icon: <Brain size={15} style={{ color: '#4ECDC4' }} />,
+                      icon: <Brain size={15} style={{ color: BRAND.accent }} />,
                       title: 'LBI Assessment Available',
                       desc: `Map ${selectedChild.name}'s behavioral intelligence across 19 domains — unlock AI-driven study recommendations`,
                       action: () => onNavigate('parent-lbi', { childId: selectedChild.id }),
@@ -2053,7 +2054,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                       const d = lowDomains[0];
                       alerts.push({
                         type: 'info', category: 'LBI',
-                        icon: <Brain size={15} style={{ color: '#4ECDC4' }} />,
+                        icon: <Brain size={15} style={{ color: BRAND.accent }} />,
                         title: `LBI Alert: Low ${d.domain || d.label || 'Domain'} Score`,
                         desc: `${selectedChild.name} scored ${Math.round(d.value)}% in ${d.domain || d.label || 'this domain'} — targeted practice or a mentor session can help`,
                         action: () => setActiveTab('lbi'),
@@ -2066,7 +2067,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   if (burnoutRisk.level !== 'low') {
                     alerts.push({
                       type: 'warning', category: 'Wellness',
-                      icon: <Flame size={15} className={burnoutRisk.level === 'high' ? 'text-[#0B3C5D]' : 'text-[#0B3C5D]'} />,
+                      icon: <Flame size={15} className={burnoutRisk.level === 'high' ? 'text-brand-navy' : 'text-brand-navy'} />,
                       title: `${burnoutRisk.level === 'high' ? 'High' : 'Moderate'} Academic Pressure Detected`,
                       desc: burnoutRisk.reasons.join(' · '),
                       action: () => setActiveTab('mentor-services'),
@@ -2080,7 +2081,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     const dateLabel = new Date(s.scheduledDate + 'T12:00:00').toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' });
                     alerts.push({
                       type: 'success', category: 'Mentor',
-                      icon: <Video size={15} style={{ color: '#0B3C5D' }} />,
+                      icon: <Video size={15} style={{ color: BRAND.navy }} />,
                       title: `Mentor Session Confirmed`,
                       desc: `${s.mentor.name} · ${s.sessionType} for ${s.childName} · ${dateLabel} at ${s.scheduledTime} — invite link sent`,
                       action: () => setActiveTab('mentor-services'),
@@ -2092,7 +2093,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   if (lowScoreExams.length > 0 && childMentorSessions.length === 0) {
                     alerts.push({
                       type: 'info', category: 'Mentor',
-                      icon: <Users size={15} style={{ color: '#0B3C5D' }} />,
+                      icon: <Users size={15} style={{ color: BRAND.navy }} />,
                       title: 'Mentor Session Recommended',
                       desc: `${selectedChild.name} has ${lowScoreExams.length} low-scoring exam${lowScoreExams.length > 1 ? 's' : ''} — a mentor session can provide targeted support`,
                       action: () => setActiveTab('mentor-services'),
@@ -2106,7 +2107,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   if (hasNoActivity && childMentorSessions.length === 0 && hasConsent) {
                     alerts.push({
                       type: 'info', category: 'Mentor',
-                      icon: <Users size={15} style={{ color: '#0B3C5D' }} />,
+                      icon: <Users size={15} style={{ color: BRAND.navy }} />,
                       title: 'Explore Mentor Services',
                       desc: `Connect ${selectedChild.name} with AI-matched mentors for personalised academic coaching, behavioral support, and exam preparation`,
                       action: () => setActiveTab('mentor-services'),
@@ -2117,7 +2118,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   if (hasNoActivity && !pendingExams.length) {
                     alerts.push({
                       type: 'info', category: 'Exam',
-                      icon: <FileText size={15} style={{ color: '#4ECDC4' }} />,
+                      icon: <FileText size={15} style={{ color: BRAND.accent }} />,
                       title: 'Request a Practice Exam',
                       desc: `No assessments scheduled yet — assign a practice test to ${selectedChild.name} to baseline academic performance`,
                       action: () => setActiveTab('education'),
@@ -2128,7 +2129,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   if (studyTasks.length === 0) {
                     alerts.push({
                       type: 'info', category: 'Planner',
-                      icon: <CalendarDays size={15} className="text-[#0B3C5D]" />,
+                      icon: <CalendarDays size={15} className="text-brand-navy" />,
                       title: 'No Study Plan Yet',
                       desc: `Set up a weekly study schedule for ${selectedChild.name} to stay on track with curriculum goals and exam timelines`,
                       action: () => setActiveTab('education'),
@@ -2142,7 +2143,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     if (avg >= 80) {
                       alerts.push({
                         type: 'success', category: 'Achievement',
-                        icon: <Award size={15} style={{ color: '#4ECDC4' }} />,
+                        icon: <Award size={15} style={{ color: BRAND.accent }} />,
                         title: `Excellent Performance — ${avg}% Average!`,
                         desc: `${selectedChild.name} is averaging ${avg}% across ${completedExams.length} assessments — outstanding academic consistency`,
                       });
@@ -2152,7 +2153,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   if (completedExams.length === 5 || completedExams.length === 10 || completedExams.length === 25) {
                     alerts.push({
                       type: 'success', category: 'Milestone',
-                      icon: <Sparkles size={15} className="text-[#0B3C5D]" />,
+                      icon: <Sparkles size={15} className="text-brand-navy" />,
                       title: `Milestone: ${completedExams.length} Assessments Completed!`,
                       desc: `${selectedChild.name} has completed ${completedExams.length} assessments — great learning discipline`,
                     });
@@ -2177,14 +2178,14 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   const nextExam = pending[0];
 
                   const bullets: { dot: string; label: string; text: string; highlight?: boolean }[] = [];
-                  if (pending.length > 0) bullets.push({ dot: '#0B3C5D', label: 'EXAMS', text: `${pending.length} exam${pending.length > 1 ? 's' : ''} pending — ${nextExam?.title || 'view in Academics'}`, highlight: pending.length >= 2 });
-                  else bullets.push({ dot: '#4ECDC4', label: 'EXAMS', text: 'No pending exams this week — all caught up' });
-                  if (completed.length > 0) bullets.push({ dot: '#4ECDC4', label: 'SCORES', text: `${completed.length} assessment${completed.length > 1 ? 's' : ''} completed · Avg score ${avgScore}%` });
-                  if (insightCount > 0) bullets.push({ dot: '#0B3C5D', label: 'LBI', text: `${insightCount} behavioral domain${insightCount > 1 ? 's' : ''} mapped via LBI assessment` });
-                  else if (selectedChild?.lbiConsent) bullets.push({ dot: '#0B3C5D', label: 'LBI', text: 'LBI assessment pending — behavioral insights not yet generated', highlight: true });
-                  if (!selectedChild?.educationBoard) bullets.push({ dot: '#0B3C5D', label: 'PROFILE', text: 'Education board not set — curriculum content unavailable', highlight: true });
-                  if (burnoutRisk.level !== 'low') bullets.push({ dot: burnoutRisk.level === 'high' ? '#0B3C5D' : '#0B3C5D', label: 'WELLNESS', text: `Wellness: ${burnoutRisk.level === 'high' ? 'High pressure detected — consider reducing load' : 'Moderate load — monitor closely over the next week'}`, highlight: true });
-                  else bullets.push({ dot: '#4ECDC4', label: 'WELLNESS', text: `Wellness: ${selectedChild?.name} appears on track — no risk factors detected` });
+                  if (pending.length > 0) bullets.push({ dot: BRAND.navy, label: 'EXAMS', text: `${pending.length} exam${pending.length > 1 ? 's' : ''} pending — ${nextExam?.title || 'view in Academics'}`, highlight: pending.length >= 2 });
+                  else bullets.push({ dot: BRAND.accent, label: 'EXAMS', text: 'No pending exams this week — all caught up' });
+                  if (completed.length > 0) bullets.push({ dot: BRAND.accent, label: 'SCORES', text: `${completed.length} assessment${completed.length > 1 ? 's' : ''} completed · Avg score ${avgScore}%` });
+                  if (insightCount > 0) bullets.push({ dot: BRAND.navy, label: 'LBI', text: `${insightCount} behavioral domain${insightCount > 1 ? 's' : ''} mapped via LBI assessment` });
+                  else if (selectedChild?.lbiConsent) bullets.push({ dot: BRAND.navy, label: 'LBI', text: 'LBI assessment pending — behavioral insights not yet generated', highlight: true });
+                  if (!selectedChild?.educationBoard) bullets.push({ dot: BRAND.navy, label: 'PROFILE', text: 'Education board not set — curriculum content unavailable', highlight: true });
+                  if (burnoutRisk.level !== 'low') bullets.push({ dot: burnoutRisk.level === 'high' ? BRAND.navy : BRAND.navy, label: 'WELLNESS', text: `Wellness: ${burnoutRisk.level === 'high' ? 'High pressure detected — consider reducing load' : 'Moderate load — monitor closely over the next week'}`, highlight: true });
+                  else bullets.push({ dot: BRAND.accent, label: 'WELLNESS', text: `Wellness: ${selectedChild?.name} appears on track — no risk factors detected` });
 
                   return (
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4" data-testid="briefing-burnout-row">
@@ -2192,40 +2193,40 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                       <div className="lg:col-span-2">
                         <div
                           className="rounded-xl overflow-hidden border h-full"
-                          style={{ borderColor: '#0B3C5D', background: '#0B3C5D' }}
+                          style={{ borderColor: BRAND.navy, background: BRAND.navy }}
                           data-testid="weekly-briefing-card"
                         >
                           <div className="px-5 pt-4 pb-3 flex items-start justify-between gap-4">
                             <div>
-                              <span className="text-[9px] font-bold tracking-widest uppercase text-white/40">Weekly Intelligence Briefing</span>
+                              <span className="text-2xs font-bold tracking-widest uppercase text-white/40">Weekly Intelligence Briefing</span>
                               <h3 className="text-sm font-bold text-white leading-tight mt-0.5">
                                 {selectedChild?.name} · {fmt(weekStart)} – {fmt(weekEnd)}
                               </h3>
-                              <p className="text-[10px] text-white/50 mt-0.5">Auto-generated · {now.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+                              <p className="text-2xs text-white/50 mt-0.5">Auto-generated · {now.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
                             </div>
                             <div
-                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-bold shrink-0"
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-2xs font-bold shrink-0"
                               style={{
                                 background: burnoutRisk.level === 'high' ? 'rgba(11,60,93,0.12)' : burnoutRisk.level === 'moderate' ? 'rgba(11,60,93,0.08)' : 'rgba(78,205,196,0.15)',
-                                color: burnoutRisk.level === 'high' ? '#FCA5A5' : burnoutRisk.level === 'moderate' ? '#FCD34D' : '#4ECDC4',
+                                color: burnoutRisk.level === 'high' ? '#FCA5A5' : burnoutRisk.level === 'moderate' ? '#FCD34D' : BRAND.accent,
                                 border: `1px solid ${burnoutRisk.level === 'high' ? 'rgba(11,60,93,0.25)' : burnoutRisk.level === 'moderate' ? 'rgba(11,60,93,0.15)' : 'rgba(78,205,196,0.4)'}`,
                               }}
                             >
-                              <span className="w-1.5 h-1.5 rounded-full" style={{ background: burnoutRisk.level === 'high' ? '#0B3C5D' : burnoutRisk.level === 'moderate' ? '#0B3C5D' : '#4ECDC4' }} />
+                              <span className="w-1.5 h-1.5 rounded-full" style={{ background: burnoutRisk.level === 'high' ? BRAND.navy : burnoutRisk.level === 'moderate' ? BRAND.navy : BRAND.accent }} />
                               {burnoutRisk.level === 'high' ? 'High Pressure' : burnoutRisk.level === 'moderate' ? 'Moderate Load' : 'On Track'}
                             </div>
                           </div>
                           <div className="mx-5 mb-4 space-y-1">
                             {bullets.map((b, i) => (
                               <div key={i} className="flex items-start gap-3 px-3 py-2 rounded" style={{ background: b.highlight ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.04)', borderLeft: `2px solid ${b.dot}` }}>
-                                <span className="text-[8px] font-bold tracking-widest mt-0.5 shrink-0" style={{ color: b.dot, minWidth: 40 }}>{b.label}</span>
-                                <span className={`text-[11px] leading-snug ${b.highlight ? 'text-white' : 'text-white/65'}`}>{b.text}</span>
+                                <span className="text-2xs font-bold tracking-widest mt-0.5 shrink-0" style={{ color: b.dot, minWidth: 40 }}>{b.label}</span>
+                                <span className={`text-xs leading-snug ${b.highlight ? 'text-white' : 'text-white/65'}`}>{b.text}</span>
                               </div>
                             ))}
                           </div>
                           <div className="flex items-center justify-between px-5 py-2.5 border-t" style={{ borderColor: 'rgba(255,255,255,0.08)', background: 'rgba(0,0,0,0.12)' }}>
-                            <span className="text-[9px] text-white/30 font-medium tracking-wide uppercase">MetryxOne Intelligence Layer</span>
-                            <button className="text-[10px] font-semibold text-white/50 hover:text-white/90 transition-colors flex items-center gap-1" onClick={() => setActiveTab('exam-trends')}>
+                            <span className="text-2xs text-white/30 font-medium tracking-wide uppercase">MetryxOne Intelligence Layer</span>
+                            <button className="text-2xs font-semibold text-white/50 hover:text-white/90 transition-colors flex items-center gap-1" onClick={() => setActiveTab('exam-trends')}>
                               Full analytics <ChevronRight size={11} />
                             </button>
                           </div>
@@ -2242,37 +2243,37 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                           }}
                           data-testid="burnout-risk-card"
                         >
-                          <p className="text-[10px] font-bold tracking-widest uppercase mb-3" style={{ color: '#9AA4B2' }}>Burnout Risk Indicator</p>
+                          <p className="text-2xs font-bold tracking-widest uppercase mb-3" style={{ color: '#9AA4B2' }}>Burnout Risk Indicator</p>
                           <div className="flex items-center gap-3 mb-3">
                             <svg width="64" height="64" viewBox="0 0 64 64" className="shrink-0">
                               <circle cx="32" cy="32" r="26" fill="none" stroke="#E5E7EB" strokeWidth="6" />
                               <circle
                                 cx="32" cy="32" r="26" fill="none"
-                                stroke={burnoutRisk.level === 'high' ? '#0B3C5D' : burnoutRisk.level === 'moderate' ? '#0B3C5D' : '#4ECDC4'}
+                                stroke={burnoutRisk.level === 'high' ? BRAND.navy : burnoutRisk.level === 'moderate' ? BRAND.navy : BRAND.accent}
                                 strokeWidth="6" strokeLinecap="round"
                                 strokeDasharray={`${Math.min(burnoutRisk.score, 100) * 1.634} 163.4`}
                                 strokeDashoffset="40.85" transform="rotate(-90 32 32)"
                               />
-                              <text x="32" y="37" textAnchor="middle" fontSize="13" fontWeight="bold" fill={burnoutRisk.level === 'high' ? '#0B3C5D' : burnoutRisk.level === 'moderate' ? '#0B3C5D' : '#4ECDC4'}>
+                              <text x="32" y="37" textAnchor="middle" fontSize="13" fontWeight="bold" fill={burnoutRisk.level === 'high' ? BRAND.navy : burnoutRisk.level === 'moderate' ? BRAND.navy : BRAND.accent}>
                                 {burnoutRisk.score}
                               </text>
                             </svg>
                             <div>
                               <span
-                                className="text-[11px] font-bold px-2.5 py-1 rounded-full block mb-1"
+                                className="text-xs font-bold px-2.5 py-1 rounded-full block mb-1"
                                 style={{
                                   background: burnoutRisk.level === 'high' ? '#FEE2E2' : burnoutRisk.level === 'moderate' ? '#FEF3C7' : 'rgba(78,205,196,0.12)',
-                                  color: burnoutRisk.level === 'high' ? '#0B3C5D' : burnoutRisk.level === 'moderate' ? '#0B3C5D' : '#4ECDC4',
+                                  color: burnoutRisk.level === 'high' ? BRAND.navy : burnoutRisk.level === 'moderate' ? BRAND.navy : BRAND.accent,
                                 }}
                               >
                                 {burnoutRisk.level === 'high' ? '🔴 High Risk' : burnoutRisk.level === 'moderate' ? '🟡 Moderate' : '🟢 Low Risk'}
                               </span>
-                              <p className="text-[10px] text-gray-500">
+                              <p className="text-2xs text-gray-500">
                                 {burnoutRisk.level === 'high' ? 'Reduce workload' : burnoutRisk.level === 'moderate' ? 'Monitor closely' : 'Great balance'}
                               </p>
                             </div>
                           </div>
-                          <p className="text-[11px] text-gray-600 mb-2">
+                          <p className="text-xs text-gray-600 mb-2">
                             {burnoutRisk.level === 'high'
                               ? `${selectedChild?.name} is showing signs of high academic pressure.`
                               : burnoutRisk.level === 'moderate'
@@ -2282,11 +2283,11 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                           {burnoutRisk.reasons.length > 0 ? (
                             <div className="flex flex-wrap gap-1">
                               {burnoutRisk.reasons.map((r, i) => (
-                                <span key={i} className="text-[9px] px-1.5 py-0.5 rounded font-medium" style={{ background: 'rgba(0,0,0,0.06)', color: '#5F6C80' }}>{r}</span>
+                                <span key={i} className="text-2xs px-1.5 py-0.5 rounded font-medium" style={{ background: 'rgba(0,0,0,0.06)', color: '#5F6C80' }}>{r}</span>
                               ))}
                             </div>
                           ) : (
-                            <p className="text-[10px] font-medium" style={{ color: '#4ECDC4' }}>No risk factors detected!</p>
+                            <p className="text-2xs font-medium" style={{ color: BRAND.accent }}>No risk factors detected!</p>
                           )}
                         </div>
                       </div>
@@ -2308,12 +2309,12 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     : 'flat';
 
                   const stats = [
-                    { label: 'Total Exams', value: total, icon: <GraduationCap size={15} />, color: '#0B3C5D', bg: 'rgba(11,60,93,0.08)', suffix: '' },
-                    { label: 'Completed', value: done, icon: <CheckCircle size={15} />, color: '#4ECDC4', bg: 'rgba(78,205,196,0.08)', suffix: '' },
-                    { label: 'Pending', value: pending, icon: <Clock size={15} />, color: '#0B3C5D', bg: 'rgba(11,60,93,0.06)', suffix: '' },
-                    { label: 'Avg Score', value: avg, icon: <BarChart3 size={15} />, color: '#4ECDC4', bg: 'rgba(78,205,196,0.08)', suffix: '%', extra: trend === 'up' ? <TrendingUp size={11} style={{ color: '#4ECDC4' }} /> : trend === 'down' ? <TrendingDown size={11} className="text-[#0B3C5D]" /> : <Minus size={11} className="text-gray-400" /> },
-                    { label: 'Completion', value: completionRate, icon: <PieChart size={15} />, color: '#0B3C5D', bg: 'rgba(11,60,93,0.08)', suffix: '%' },
-                    { label: 'LBI Domains', value: lbiDomains, icon: <Brain size={15} />, color: '#0B3C5D', bg: 'rgba(11,60,93,0.08)', suffix: '' },
+                    { label: 'Total Exams', value: total, icon: <GraduationCap size={15} />, color: BRAND.navy, bg: 'rgba(11,60,93,0.08)', suffix: '' },
+                    { label: 'Completed', value: done, icon: <CheckCircle size={15} />, color: BRAND.accent, bg: 'rgba(78,205,196,0.08)', suffix: '' },
+                    { label: 'Pending', value: pending, icon: <Clock size={15} />, color: BRAND.navy, bg: 'rgba(11,60,93,0.06)', suffix: '' },
+                    { label: 'Avg Score', value: avg, icon: <BarChart3 size={15} />, color: BRAND.accent, bg: 'rgba(78,205,196,0.08)', suffix: '%', extra: trend === 'up' ? <TrendingUp size={11} style={{ color: BRAND.accent }} /> : trend === 'down' ? <TrendingDown size={11} className="text-brand-navy" /> : <Minus size={11} className="text-gray-400" /> },
+                    { label: 'Completion', value: completionRate, icon: <PieChart size={15} />, color: BRAND.navy, bg: 'rgba(11,60,93,0.08)', suffix: '%' },
+                    { label: 'LBI Domains', value: lbiDomains, icon: <Brain size={15} />, color: BRAND.navy, bg: 'rgba(11,60,93,0.08)', suffix: '' },
                   ];
 
                   return (
@@ -2327,7 +2328,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                             {s.extra && <span>{s.extra}</span>}
                           </div>
                           <p className="text-xl font-bold leading-none" style={{ color: s.color }}>{s.value}{s.suffix}</p>
-                          <p className="text-[10px] text-gray-500 leading-tight">{s.label}</p>
+                          <p className="text-2xs text-gray-500 leading-tight">{s.label}</p>
                         </div>
                       ))}
                     </div>
@@ -2360,40 +2361,40 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm h-full">
                           <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center gap-2">
-                              <span style={{ color: '#0B3C5D' }}><Activity size={14} /></span>
+                              <span style={{ color: BRAND.navy }}><Activity size={14} /></span>
                               <h3 className="text-sm font-semibold text-gray-800">Recent Exam Activity</h3>
                             </div>
-                            <button className="text-[10px] font-semibold flex items-center gap-1" style={{ color: '#0B3C5D' }} onClick={() => setActiveTab('education')}>
+                            <button className="text-2xs font-semibold flex items-center gap-1" style={{ color: BRAND.navy }} onClick={() => setActiveTab('education')}>
                               See all <ChevronRight size={11} />
                             </button>
                           </div>
                             {allExams.length > 0 ? (
                               <div className="divide-y divide-gray-50">
                                 {allExams.slice(0, 6).map((exam: any) => {
-                                  const scoreColor = exam.score >= 80 ? '#4ECDC4' : exam.score >= 60 ? '#4ECDC4' : exam.score >= 40 ? '#0B3C5D' : '#0B3C5D';
+                                  const scoreColor = exam.score >= 80 ? BRAND.accent : exam.score >= 60 ? BRAND.accent : exam.score >= 40 ? BRAND.navy : BRAND.navy;
                                   return (
                                     <div key={exam.id} className="flex items-center gap-3 py-2.5" data-testid={`recent-exam-${exam.id}`}>
                                       <div className="h-8 w-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: exam.status === 'completed' ? 'rgba(78,205,196,0.1)' : 'rgba(11,60,93,0.07)' }}>
-                                        {exam.status === 'completed' ? <CheckCircle size={14} style={{ color: '#4ECDC4' }} /> : <Clock size={14} className="text-[#0B3C5D]" />}
+                                        {exam.status === 'completed' ? <CheckCircle size={14} style={{ color: BRAND.accent }} /> : <Clock size={14} className="text-brand-navy" />}
                                       </div>
                                       <div className="flex-1 min-w-0">
                                         <p className="text-sm font-semibold truncate" style={{ color: '#2E3440' }}>{exam.title}</p>
                                         <div className="flex items-center gap-2 mt-0.5">
-                                          <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(11,60,93,0.08)', color: '#0B3C5D' }}>{exam.subject}</span>
-                                          <span className="text-[10px] text-gray-400">{exam.status === 'completed' ? 'Completed' : 'Awaiting'}</span>
+                                          <span className="text-2xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(11,60,93,0.08)', color: BRAND.navy }}>{exam.subject}</span>
+                                          <span className="text-2xs text-gray-400">{exam.status === 'completed' ? 'Completed' : 'Awaiting'}</span>
                                         </div>
                                       </div>
                                       {exam.status === 'completed' && exam.score !== null ? (
                                         <div className="text-right shrink-0">
                                           <p className="text-base font-bold" style={{ color: scoreColor }}>{exam.score}%</p>
-                                          <p className="text-[9px]" style={{ color: scoreColor }}>{exam.score >= 80 ? 'Excellent' : exam.score >= 60 ? 'Good' : exam.score >= 40 ? 'Fair' : 'Needs Work'}</p>
+                                          <p className="text-2xs" style={{ color: scoreColor }}>{exam.score >= 80 ? 'Excellent' : exam.score >= 60 ? 'Good' : exam.score >= 40 ? 'Fair' : 'Needs Work'}</p>
                                         </div>
                                       ) : exam.status === 'pending' && isMinor ? (
-                                        <Button size="sm" variant="outline" className="h-7 text-[10px] px-2 shrink-0" onClick={() => { setSupervisedExamId(exam.id); setIsSupervisedTestOpen(true); }}>
+                                        <Button size="sm" variant="outline" className="h-7 text-2xs px-2 shrink-0" onClick={() => { setSupervisedExamId(exam.id); setIsSupervisedTestOpen(true); }}>
                                           <Eye size={10} className="mr-1" /> Supervise
                                         </Button>
                                       ) : (
-                                        <span className="text-[10px] font-medium text-[#0B3C5D] shrink-0">Pending</span>
+                                        <span className="text-2xs font-medium text-brand-navy shrink-0">Pending</span>
                                       )}
                                     </div>
                                   );
@@ -2413,7 +2414,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         {/* Subject Performance Breakdown */}
                         <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
                           <div className="flex items-center gap-2 mb-3">
-                            <span style={{ color: '#0B3C5D' }}><BarChart2 size={14} /></span>
+                            <span style={{ color: BRAND.navy }}><BarChart2 size={14} /></span>
                             <h3 className="text-sm font-semibold text-gray-800">Subject Performance</h3>
                           </div>
                           {subjects.length > 0 ? (
@@ -2421,15 +2422,15 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                               {subjects.map((s, i) => (
                                 <div key={s.name}>
                                   <div className="flex items-center justify-between mb-1">
-                                    <span className="text-[11px] font-semibold truncate" style={{ color: '#2E3440', maxWidth: '60%' }}>{s.name}</span>
-                                    <span className="text-[11px] font-bold" style={{ color: s.avg !== null ? (s.avg >= 70 ? '#4ECDC4' : s.avg >= 50 ? '#0B3C5D' : '#0B3C5D') : '#9AA4B2' }}>
+                                    <span className="text-xs font-semibold truncate" style={{ color: '#2E3440', maxWidth: '60%' }}>{s.name}</span>
+                                    <span className="text-xs font-bold" style={{ color: s.avg !== null ? (s.avg >= 70 ? BRAND.accent : s.avg >= 50 ? BRAND.navy : BRAND.navy) : '#9AA4B2' }}>
                                       {s.avg !== null ? `${s.avg}%` : 'No scores'}
                                     </span>
                                   </div>
                                   <div className="h-1.5 rounded-full" style={{ background: '#F1F5F9' }}>
-                                    <div className="h-1.5 rounded-full transition-all" style={{ width: s.avg !== null ? `${s.avg}%` : '0%', background: s.avg !== null ? (s.avg >= 70 ? '#4ECDC4' : s.avg >= 50 ? '#0B3C5D' : '#0B3C5D') : '#E5E7EB' }} />
+                                    <div className="h-1.5 rounded-full transition-all" style={{ width: s.avg !== null ? `${s.avg}%` : '0%', background: s.avg !== null ? (s.avg >= 70 ? BRAND.accent : s.avg >= 50 ? BRAND.navy : BRAND.navy) : '#E5E7EB' }} />
                                   </div>
-                                  <p className="text-[9px] text-gray-400 mt-0.5">{s.count}/{s.total} scored</p>
+                                  <p className="text-2xs text-gray-400 mt-0.5">{s.count}/{s.total} scored</p>
                                 </div>
                               ))}
                             </div>
@@ -2441,27 +2442,27 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         {/* Upcoming Exams */}
                         <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
                           <div className="flex items-center gap-2 mb-3">
-                            <span style={{ color: '#0B3C5D' }}><CalendarDays size={14} /></span>
+                            <span style={{ color: BRAND.navy }}><CalendarDays size={14} /></span>
                             <h3 className="text-sm font-semibold text-gray-800">Upcoming Exams</h3>
-                            {pendingExams.length > 0 && <Badge variant="outline" className="text-[9px] h-4 ml-auto">{pendingExams.length}</Badge>}
+                            {pendingExams.length > 0 && <Badge variant="outline" className="text-2xs h-4 ml-auto">{pendingExams.length}</Badge>}
                           </div>
                           {pendingExams.length > 0 ? (
                             <div className="space-y-2">
                               {pendingExams.map((exam: any) => (
                                 <div key={exam.id} className="flex items-center gap-2 p-2 rounded-xl" style={{ background: 'rgba(11,60,93,0.06)', border: '1px solid rgba(11,60,93,0.12)' }}>
-                                  <Clock size={12} className="text-[#0B3C5D] shrink-0" />
+                                  <Clock size={12} className="text-brand-navy shrink-0" />
                                   <div className="flex-1 min-w-0">
-                                    <p className="text-[11px] font-semibold truncate" style={{ color: '#2E3440' }}>{exam.title}</p>
-                                    <p className="text-[9px] text-gray-400">{exam.subject}</p>
+                                    <p className="text-xs font-semibold truncate" style={{ color: '#2E3440' }}>{exam.title}</p>
+                                    <p className="text-2xs text-gray-400">{exam.subject}</p>
                                   </div>
-                                  <span className="text-[9px] font-bold text-[#0B3C5D] shrink-0">Due</span>
+                                  <span className="text-2xs font-bold text-brand-navy shrink-0">Due</span>
                                 </div>
                               ))}
                             </div>
                           ) : (
                             <div className="py-3 text-center">
-                              <CheckCircle size={18} className="mx-auto mb-1 opacity-60" style={{ color: '#4ECDC4' }} />
-                              <p className="text-[11px] text-gray-400">All caught up!</p>
+                              <CheckCircle size={18} className="mx-auto mb-1 opacity-60" style={{ color: BRAND.accent }} />
+                              <p className="text-xs text-gray-400">All caught up!</p>
                             </div>
                           )}
                         </div>
@@ -2469,33 +2470,33 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         {/* Quick Actions */}
                         <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
                           <div className="flex items-center gap-2 mb-3">
-                            <span style={{ color: '#0B3C5D' }}><Zap size={14} /></span>
+                            <span style={{ color: BRAND.navy }}><Zap size={14} /></span>
                             <h3 className="text-sm font-semibold text-gray-800">Quick Actions</h3>
                           </div>
                           <div className="space-y-1.5">
                             <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:opacity-80 transition-opacity" style={{ background: 'rgba(11,60,93,0.06)', border: '1px solid rgba(11,60,93,0.12)' }} onClick={() => setActiveTab('education')}>
-                              <GraduationCap size={13} style={{ color: '#0B3C5D' }} />
-                              <span className="text-[11px] font-semibold" style={{ color: '#0B3C5D' }}>Assign New Exam</span>
+                              <GraduationCap size={13} style={{ color: BRAND.navy }} />
+                              <span className="text-xs font-semibold" style={{ color: BRAND.navy }}>Assign New Exam</span>
                             </button>
                             <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:opacity-80 transition-opacity" style={{ background: 'rgba(78,205,196,0.06)', border: '1px solid rgba(78,205,196,0.15)' }} onClick={() => onNavigate('parent-lbi', { childId: selectedChild?.id })}>
-                              <Brain size={13} style={{ color: '#4ECDC4' }} />
-                              <span className="text-[11px] font-semibold" style={{ color: '#0B3C5D' }}>Start LBI Assessment</span>
+                              <Brain size={13} style={{ color: BRAND.accent }} />
+                              <span className="text-xs font-semibold" style={{ color: BRAND.navy }}>Start LBI Assessment</span>
                             </button>
                             <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:opacity-80 transition-opacity" style={{ background: 'rgba(11,60,93,0.06)', border: '1px solid rgba(11,60,93,0.12)' }} onClick={() => setActiveTab('exam-trends')}>
-                              <TrendingUp size={13} style={{ color: '#0B3C5D' }} />
-                              <span className="text-[11px] font-semibold" style={{ color: '#0B3C5D' }}>View Score Trends</span>
+                              <TrendingUp size={13} style={{ color: BRAND.navy }} />
+                              <span className="text-xs font-semibold" style={{ color: BRAND.navy }}>View Score Trends</span>
                             </button>
                             <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:opacity-80 transition-opacity" style={{ background: 'rgba(11,60,93,0.06)', border: '1px solid rgba(11,60,93,0.12)' }} onClick={handleExamReadyStart}>
-                              <Target size={13} style={{ color: '#0B3C5D' }} />
-                              <span className="text-[11px] font-semibold" style={{ color: '#0B3C5D' }}>ExamReadiness Index™</span>
+                              <Target size={13} style={{ color: BRAND.navy }} />
+                              <span className="text-xs font-semibold" style={{ color: BRAND.navy }}>ExamReadiness Index™</span>
                             </button>
                             <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:opacity-80 transition-opacity" style={{ background: 'rgba(78,205,196,0.06)', border: '1px solid rgba(78,205,196,0.15)' }} onClick={() => setActiveTab('learning-collab')}>
-                              <MessageSquare size={13} style={{ color: '#4ECDC4' }} />
-                              <span className="text-[11px] font-semibold" style={{ color: '#0B3C5D' }}>Learning collab</span>
+                              <MessageSquare size={13} style={{ color: BRAND.accent }} />
+                              <span className="text-xs font-semibold" style={{ color: BRAND.navy }}>Learning collab</span>
                             </button>
                             <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:opacity-80 transition-opacity" style={{ background: 'rgba(11,60,93,0.06)', border: '1px solid rgba(11,60,93,0.12)' }} onClick={() => onNavigate('student-dashboard' as any)}>
-                              <BookOpen size={13} style={{ color: '#0B3C5D' }} />
-                              <span className="text-[11px] font-semibold" style={{ color: '#0B3C5D' }}>Student view</span>
+                              <BookOpen size={13} style={{ color: BRAND.navy }} />
+                              <span className="text-xs font-semibold" style={{ color: BRAND.navy }}>Student view</span>
                             </button>
                           </div>
                         </div>
@@ -2509,41 +2510,41 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   {/* Wellbeing Snapshot */}
                   <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm" data-testid="overview-wellbeing">
                     <div className="flex items-center gap-2 mb-4">
-                      <span style={{ color: '#4ECDC4' }}><Heart size={14} /></span>
+                      <span style={{ color: BRAND.accent }}><Heart size={14} /></span>
                       <h3 className="text-sm font-semibold text-gray-800">Wellbeing Snapshot</h3>
                     </div>
                       <div className="grid grid-cols-2 gap-3">
                         {[
                           {
                             label: 'LBI Status', value: hasConsent ? 'Active' : 'Inactive',
-                            color: hasConsent ? '#4ECDC4' : '#0B3C5D',
+                            color: hasConsent ? BRAND.accent : BRAND.navy,
                             bg: hasConsent ? 'rgba(78,205,196,0.07)' : 'rgba(11,60,93,0.06)',
                             sub: hasConsent ? 'Behavioral insights on' : 'Consent needed'
                           },
                           {
                             label: 'DPDP Status', value: isMinor ? 'Protected' : 'Standard',
-                            color: '#0B3C5D', bg: 'rgba(11,60,93,0.07)',
+                            color: BRAND.navy, bg: 'rgba(11,60,93,0.07)',
                             sub: isMinor ? 'Minor safeguards active' : 'Adult account'
                           },
                           {
                             label: 'Academic Health',
                             value: (dashboardData?.stats?.avgScore || 0) >= 90 ? 'Excellent' : (dashboardData?.stats?.avgScore || 0) >= 70 ? 'Good' : (dashboardData?.stats?.avgScore || 0) >= 50 ? 'Fair' : dashboardData?.stats?.totalExams ? 'Needs Help' : 'No Data',
-                            color: (dashboardData?.stats?.avgScore || 0) >= 70 ? '#4ECDC4' : '#0B3C5D',
+                            color: (dashboardData?.stats?.avgScore || 0) >= 70 ? BRAND.accent : BRAND.navy,
                             bg: (dashboardData?.stats?.avgScore || 0) >= 70 ? 'rgba(78,205,196,0.07)' : 'rgba(11,60,93,0.06)',
                             sub: `Based on avg score ${dashboardData?.stats?.avgScore || 0}%`
                           },
                           {
                             label: 'Wellness Pulse',
                             value: burnoutRisk.level === 'high' ? 'High Pressure' : burnoutRisk.level === 'moderate' ? 'Moderate' : 'On Track',
-                            color: burnoutRisk.level === 'high' ? '#0B3C5D' : burnoutRisk.level === 'moderate' ? '#0B3C5D' : '#4ECDC4',
+                            color: burnoutRisk.level === 'high' ? BRAND.navy : burnoutRisk.level === 'moderate' ? BRAND.navy : BRAND.accent,
                             bg: burnoutRisk.level === 'high' ? 'rgba(11,60,93,0.06)' : burnoutRisk.level === 'moderate' ? 'rgba(11,60,93,0.06)' : 'rgba(78,205,196,0.07)',
                             sub: `Risk score: ${burnoutRisk.score}/100`
                           },
                         ].map((item) => (
                           <div key={item.label} className="p-3 rounded-xl" style={{ background: item.bg }}>
                             <p className="text-sm font-bold leading-tight" style={{ color: item.color }}>{item.value}</p>
-                            <p className="text-[10px] font-semibold text-gray-600 mt-0.5">{item.label}</p>
-                            <p className="text-[9px] text-gray-400 mt-0.5">{item.sub}</p>
+                            <p className="text-2xs font-semibold text-gray-600 mt-0.5">{item.label}</p>
+                            <p className="text-2xs text-gray-400 mt-0.5">{item.sub}</p>
                           </div>
                         ))}
                       </div>
@@ -2552,23 +2553,23 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   {/* Child Profile Card */}
                   <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
                     <div className="flex items-center gap-2 mb-4">
-                      <span style={{ color: '#0B3C5D' }}><User size={14} /></span>
+                      <span style={{ color: BRAND.navy }}><User size={14} /></span>
                       <h3 className="text-sm font-semibold text-gray-800">Child Profile</h3>
                     </div>
                       <div className="flex items-start gap-4 mb-4">
                         <div
                           className="h-12 w-12 rounded-xl flex items-center justify-center text-white font-bold text-lg shrink-0"
-                          style={{ background: '#0B3C5D' }}
+                          style={{ background: BRAND.navy }}
                         >
                           {getInitials(selectedChild?.name)}
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="text-base font-bold truncate" style={{ color: '#2E3440' }}>{selectedChild?.name}</h3>
-                          <p className="text-[11px] text-gray-500">
+                          <p className="text-xs text-gray-500">
                             {selectedChild?.age ? `Age ${selectedChild.age}` : 'Age N/A'} · {selectedChild?.age <= 10 ? 'Primary (Band A)' : selectedChild?.age <= 14 ? 'Middle School (Band B)' : 'Senior (Band C)'}
                           </p>
                           {isMinor && (
-                            <span className="inline-flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-full mt-1" style={{ background: 'rgba(11,60,93,0.1)', color: '#0B3C5D' }}>
+                            <span className="inline-flex items-center gap-1 text-2xs font-bold px-2 py-0.5 rounded-full mt-1" style={{ background: 'rgba(11,60,93,0.1)', color: BRAND.navy }}>
                               <Shield size={9} /> DPDP Protected
                             </span>
                           )}
@@ -2584,29 +2585,29 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                           <div
                             key={f.label}
                             className="p-2 rounded-lg"
-                            style={{ background: '#F8FAFC', cursor: f.onClick ? 'pointer' : 'default', border: f.onClick ? '1px solid rgba(11,60,93,0.15)' : 'none' }}
+                            style={{ background: BRAND.bg, cursor: f.onClick ? 'pointer' : 'default', border: f.onClick ? '1px solid rgba(11,60,93,0.15)' : 'none' }}
                             onClick={f.onClick}
                           >
-                            <div className="flex items-center gap-1 mb-0.5" style={{ color: f.onClick ? '#0B3C5D' : '#9AA4B2' }}>
+                            <div className="flex items-center gap-1 mb-0.5" style={{ color: f.onClick ? BRAND.navy : '#9AA4B2' }}>
                               {f.icon}
-                              <span className="text-[9px] font-semibold uppercase tracking-wide">{f.label}</span>
-                              {f.onClick && <span className="ml-auto text-[9px]" style={{ color: '#0B3C5D' }}>Tap to set</span>}
+                              <span className="text-2xs font-semibold uppercase tracking-wide">{f.label}</span>
+                              {f.onClick && <span className="ml-auto text-2xs" style={{ color: BRAND.navy }}>Tap to set</span>}
                             </div>
-                            <p className="text-[11px] font-semibold truncate" style={{ color: f.onClick ? '#0B3C5D' : '#2E3440' }}>{f.value}</p>
+                            <p className="text-xs font-semibold truncate" style={{ color: f.onClick ? BRAND.navy : '#2E3440' }}>{f.value}</p>
                           </div>
                         ))}
                       </div>
                       <div className="flex gap-2 mt-3 pt-3" style={{ borderTop: '1px solid #F1F5F9' }}>
                         <button
                           className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-opacity hover:opacity-80"
-                          style={{ background: '#0B3C5D', color: 'white' }}
+                          style={{ background: BRAND.navy, color: 'white' }}
                           onClick={() => onNavigate('student-dashboard' as any)}
                         >
                           <BookOpen size={12} /> Student view
                         </button>
                         <button
                           className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-opacity hover:opacity-80"
-                          style={{ background: 'rgba(78,205,196,0.1)', color: '#0B3C5D', border: '1px solid rgba(78,205,196,0.3)' }}
+                          style={{ background: 'rgba(78,205,196,0.1)', color: BRAND.navy, border: '1px solid rgba(78,205,196,0.3)' }}
                           onClick={() => setActiveTab('learning-collab')}
                         >
                           <MessageSquare size={12} /> Collab
@@ -2618,20 +2619,20 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 {/* ══ Platform connections — cross-dashboard nav ══ */}
                 <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm" data-testid="platform-connections">
                   <div className="flex items-center gap-2 mb-4">
-                    <Layers size={14} style={{ color: '#0B3C5D' }} />
+                    <Layers size={14} style={{ color: BRAND.navy }} />
                     <h3 className="text-sm font-semibold text-gray-800">Platform connections</h3>
-                    <span className="ml-auto text-[10px] font-medium text-gray-400">Switch dashboard or access linked portals</span>
+                    <span className="ml-auto text-2xs font-medium text-gray-400">Switch dashboard or access linked portals</span>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                     {([
-                      { label: 'Student view',       icon: <BookOpen size={14} />,     color: '#0B3C5D', bg: 'rgba(11,60,93,0.07)',  action: () => onNavigate('student-dashboard' as any),           always: true },
-                      { label: 'Mentor services',    icon: <Users size={14} />,         color: '#4ECDC4', bg: 'rgba(78,205,196,0.07)', action: () => setActiveTab('mentor-services'),                  always: true },
-                      { label: 'Mentor marketplace', icon: <Star size={14} />,          color: '#0B3C5D', bg: 'rgba(11,60,93,0.07)',  action: () => onNavigate('mentor-marketplace' as any),          always: true },
-                      { label: 'Learning collab',    icon: <MessageSquare size={14} />, color: '#4ECDC4', bg: 'rgba(78,205,196,0.07)', action: () => setActiveTab('learning-collab'),                  always: true },
-                      { label: 'LBI assessment',     icon: <Brain size={14} />,         color: '#0B3C5D', bg: 'rgba(11,60,93,0.07)',  action: () => onNavigate('parent-lbi', { childId: selectedChild?.id }), always: true },
-                      { label: 'Mentor dashboard',   icon: <BarChart2 size={14} />,     color: '#0B3C5D', bg: 'rgba(11,60,93,0.07)',  action: () => onNavigate('mentor-dashboard' as any),            show: userData?.roles?.includes('mentor') },
-                      { label: 'Institution portal', icon: <School size={14} />,        color: '#4ECDC4', bg: 'rgba(78,205,196,0.07)', action: () => onNavigate('unified-institute-dashboard' as any), show: userData?.roles?.includes('institute') },
-                      { label: 'Super admin',        icon: <Shield size={14} />,        color: '#4ECDC4', bg: 'rgba(78,205,196,0.07)', action: () => onNavigate('super-admin' as any),                 show: userData?.roles?.includes('admin') },
+                      { label: 'Student view',       icon: <BookOpen size={14} />,     color: BRAND.navy, bg: 'rgba(11,60,93,0.07)',  action: () => onNavigate('student-dashboard' as any),           always: true },
+                      { label: 'Mentor services',    icon: <Users size={14} />,         color: BRAND.accent, bg: 'rgba(78,205,196,0.07)', action: () => setActiveTab('mentor-services'),                  always: true },
+                      { label: 'Mentor marketplace', icon: <Star size={14} />,          color: BRAND.navy, bg: 'rgba(11,60,93,0.07)',  action: () => onNavigate('mentor-marketplace' as any),          always: true },
+                      { label: 'Learning collab',    icon: <MessageSquare size={14} />, color: BRAND.accent, bg: 'rgba(78,205,196,0.07)', action: () => setActiveTab('learning-collab'),                  always: true },
+                      { label: 'LBI assessment',     icon: <Brain size={14} />,         color: BRAND.navy, bg: 'rgba(11,60,93,0.07)',  action: () => onNavigate('parent-lbi', { childId: selectedChild?.id }), always: true },
+                      { label: 'Mentor dashboard',   icon: <BarChart2 size={14} />,     color: BRAND.navy, bg: 'rgba(11,60,93,0.07)',  action: () => onNavigate('mentor-dashboard' as any),            show: userData?.roles?.includes('mentor') },
+                      { label: 'Institution portal', icon: <School size={14} />,        color: BRAND.accent, bg: 'rgba(78,205,196,0.07)', action: () => onNavigate('unified-institute-dashboard' as any), show: userData?.roles?.includes('institute') },
+                      { label: 'Super admin',        icon: <Shield size={14} />,        color: BRAND.accent, bg: 'rgba(78,205,196,0.07)', action: () => onNavigate('super-admin' as any),                 show: userData?.roles?.includes('admin') },
                     ] as { label: string; icon: React.ReactNode; color: string; bg: string; action: () => void; always?: boolean; show?: boolean }[])
                       .filter(item => item.always || item.show)
                       .map((item) => (
@@ -2642,7 +2643,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         onClick={item.action}
                       >
                         <span style={{ color: item.color }}>{item.icon}</span>
-                        <span className="text-[11px] font-semibold leading-tight" style={{ color: '#0B3C5D' }}>{item.label}</span>
+                        <span className="text-xs font-semibold leading-tight" style={{ color: BRAND.navy }}>{item.label}</span>
                       </button>
                     ))}
                   </div>
@@ -2661,22 +2662,22 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   });
                   const topCats = Object.entries(catMap).sort((a, b) => b[1] - a[1]).slice(0, 5);
                   const maxCount = Math.max(...topCats.map(c => c[1]), 1);
-                  const DOMAIN_COLORS = ['#0B3C5D', '#4ECDC4', '#0B3C5D', '#4ECDC4', '#0B3C5D'];
+                  const DOMAIN_COLORS = [BRAND.navy, BRAND.accent, BRAND.navy, BRAND.accent, BRAND.navy];
                   const ageBand = selectedChild && (selectedChild.age <= 10 ? 'Primary (Band A)' : selectedChild.age <= 14 ? 'Middle School (Band B)' : 'Senior (Band C)');
 
                   return (
-                    <div className="rounded-xl border overflow-hidden" style={{ borderColor: '#E2E8F0' }} data-testid="fingerprint-card">
+                    <div className="rounded-xl border overflow-hidden" style={{ borderColor: BRAND.border }} data-testid="fingerprint-card">
                       <div className="px-5 pt-4 pb-3" style={{ background: '#F5F7FA' }}>
                         <div className="flex items-start justify-between gap-3">
                           <div>
-                            <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: '#9AA4B2' }}>Behavioral Fingerprint™</span>
-                            <h3 className="text-base font-bold mt-0.5" style={{ color: '#0B3C5D' }}>{selectedChild?.name}</h3>
-                            <p className="text-[11px] mt-0.5" style={{ color: '#9AA4B2' }}>{ageBand} &nbsp;·&nbsp; MetryxOne LBI Assessment</p>
+                            <span className="text-2xs font-bold tracking-widest uppercase" style={{ color: '#9AA4B2' }}>Behavioral Fingerprint™</span>
+                            <h3 className="text-base font-bold mt-0.5" style={{ color: BRAND.navy }}>{selectedChild?.name}</h3>
+                            <p className="text-xs mt-0.5" style={{ color: '#9AA4B2' }}>{ageBand} &nbsp;·&nbsp; MetryxOne LBI Assessment</p>
                           </div>
                           <button
                             onClick={downloadFingerprint}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold border transition-all hover:shadow-sm"
-                            style={{ borderColor: '#0B3C5D', color: '#0B3C5D', background: 'white' }}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all hover:shadow-sm"
+                            style={{ borderColor: BRAND.navy, color: BRAND.navy, background: 'white' }}
                             title={hasInsights ? 'Download fingerprint card' : 'Complete LBI assessment first'}
                           >
                             <Download size={12} />
@@ -2688,22 +2689,22 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                       <div ref={fingerprintRef} className="px-5 py-4" style={{ background: 'white' }}>
                         {hasInsights ? (
                           <div className="space-y-3">
-                            <p className="text-[10.5px] font-semibold uppercase tracking-wider" style={{ color: '#9AA4B2' }}>Top Behavioral Domains</p>
+                            <p className="text-2xs font-semibold uppercase tracking-wider" style={{ color: '#9AA4B2' }}>Top Behavioral Domains</p>
                             {topCats.map(([cat, count], i) => {
                               const pct = Math.round((count / maxCount) * 100);
-                              const colorHex = DOMAIN_COLORS[i] || '#0B3C5D';
+                              const colorHex = DOMAIN_COLORS[i] || BRAND.navy;
                               return (
                                 <div key={cat} className="flex items-center gap-3">
                                   <div
-                                    className="w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold text-white shrink-0"
+                                    className="w-7 h-7 rounded-lg flex items-center justify-center text-2xs font-bold text-white shrink-0"
                                     style={{ background: colorHex }}
                                   >
                                     {i + 1}
                                   </div>
                                   <div className="flex-1">
                                     <div className="flex items-center justify-between mb-1">
-                                      <span className="text-[12px] font-semibold" style={{ color: '#2E3440' }}>{cat}</span>
-                                      <span className="text-[10px] font-bold" style={{ color: colorHex }}>{count} insight{count > 1 ? 's' : ''}</span>
+                                      <span className="text-xs font-semibold" style={{ color: '#2E3440' }}>{cat}</span>
+                                      <span className="text-2xs font-bold" style={{ color: colorHex }}>{count} insight{count > 1 ? 's' : ''}</span>
                                     </div>
                                     <div className="h-2 rounded-full" style={{ background: '#F1F5F9' }}>
                                       <div
@@ -2717,12 +2718,12 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                             })}
                             <div className="mt-4 pt-3 border-t flex items-center justify-between" style={{ borderColor: '#F1F5F9' }}>
                               <div className="flex items-center gap-1.5">
-                                <div className="w-2 h-2 rounded-full" style={{ background: '#4ECDC4' }} />
-                                <span className="text-[10px]" style={{ color: '#9AA4B2' }}>{insights.length} total insights mapped</span>
+                                <div className="w-2 h-2 rounded-full" style={{ background: BRAND.accent }} />
+                                <span className="text-2xs" style={{ color: '#9AA4B2' }}>{insights.length} total insights mapped</span>
                               </div>
                               <div className="flex items-center gap-1.5">
-                                <div className="w-2 h-2 rounded-full" style={{ background: '#0B3C5D' }} />
-                                <span className="text-[10px]" style={{ color: '#9AA4B2' }}>MetryxOne · {new Date().getFullYear()}</span>
+                                <div className="w-2 h-2 rounded-full" style={{ background: BRAND.navy }} />
+                                <span className="text-2xs" style={{ color: '#9AA4B2' }}>MetryxOne · {new Date().getFullYear()}</span>
                               </div>
                             </div>
                           </div>
@@ -2732,17 +2733,17 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                               className="w-14 h-14 rounded-xl mx-auto mb-3 flex items-center justify-center"
                               style={{ background: 'rgba(11,60,93,0.06)', border: '2px dashed rgba(11,60,93,0.2)' }}
                             >
-                              <Fingerprint size={24} style={{ color: '#0B3C5D', opacity: 0.4 }} />
+                              <Fingerprint size={24} style={{ color: BRAND.navy, opacity: 0.4 }} />
                             </div>
-                            <p className="text-sm font-semibold mb-1" style={{ color: '#0B3C5D' }}>Fingerprint not yet generated</p>
-                            <p className="text-[11px] mb-4" style={{ color: '#9AA4B2' }}>
+                            <p className="text-sm font-semibold mb-1" style={{ color: BRAND.navy }}>Fingerprint not yet generated</p>
+                            <p className="text-xs mb-4" style={{ color: '#9AA4B2' }}>
                               {selectedChild?.lbiConsent
                                 ? 'Complete the LBI assessment to reveal your child\'s unique behavioral fingerprint'
                                 : 'Grant LBI consent to unlock behavioral fingerprinting'}
                             </p>
                             <button
-                              className="text-[11px] font-semibold px-4 py-2 rounded-lg text-white"
-                              style={{ background: '#0B3C5D' }}
+                              className="text-xs font-semibold px-4 py-2 rounded-lg text-white"
+                              style={{ background: BRAND.navy }}
                               onClick={() => selectedChild?.lbiConsent ? onNavigate('parent-lbi', { childId: selectedChild?.id }) : setIsConsentDialogOpen(true)}
                             >
                               {selectedChild?.lbiConsent ? 'Start LBI Assessment' : 'Grant Consent'}
@@ -2819,7 +2820,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                       data-testid={`learning-pill-${id}`}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
                       style={learningSection === id
-                        ? { backgroundColor: '#0B3C5D', color: '#fff' }
+                        ? { backgroundColor: BRAND.navy, color: '#fff' }
                         : { color: '#6B7280' }}
                     >
                       <Icon size={12} />
@@ -2834,23 +2835,23 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-3" data-testid="education-header">
                   <div className="flex items-center gap-4 flex-wrap">
                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg" style={{ backgroundColor: 'rgba(11, 60, 93, 0.08)' }} data-testid="kpi-total-exams">
-                      <GraduationCap size={14} style={{ color: '#0B3C5D' }} />
-                      <span className="text-sm font-bold" style={{ color: '#0B3C5D' }}>{dashboardData?.stats?.totalExams || 0}</span>
+                      <GraduationCap size={14} style={{ color: BRAND.navy }} />
+                      <span className="text-sm font-bold" style={{ color: BRAND.navy }}>{dashboardData?.stats?.totalExams || 0}</span>
                       <span className="text-xs text-gray-500">Exams</span>
                     </div>
                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg" style={{ background: 'rgba(78,205,196,0.1)' }} data-testid="kpi-completed">
-                      <CheckCircle size={14} style={{ color: '#4ECDC4' }} />
-                      <span className="text-sm font-bold" style={{ color: '#4ECDC4' }}>{dashboardData?.stats?.completed || 0}</span>
+                      <CheckCircle size={14} style={{ color: BRAND.accent }} />
+                      <span className="text-sm font-bold" style={{ color: BRAND.accent }}>{dashboardData?.stats?.completed || 0}</span>
                       <span className="text-xs text-gray-500">Done</span>
                     </div>
                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#EDF2F7]" data-testid="kpi-pending">
-                      <Clock size={14} className="text-[#0B3C5D]" />
-                      <span className="text-sm font-bold text-[#0B3C5D]">{dashboardData?.stats?.pending || 0}</span>
+                      <Clock size={14} className="text-brand-navy" />
+                      <span className="text-sm font-bold text-brand-navy">{dashboardData?.stats?.pending || 0}</span>
                       <span className="text-xs text-gray-500">Pending</span>
                     </div>
                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg" style={{ backgroundColor: 'rgba(78, 205, 196, 0.08)' }} data-testid="kpi-avg-score">
-                      <BarChart3 size={14} style={{ color: '#4ECDC4' }} />
-                      <span className="text-sm font-bold" style={{ color: '#4ECDC4' }}>{dashboardData?.stats?.avgScore || 0}%</span>
+                      <BarChart3 size={14} style={{ color: BRAND.accent }} />
+                      <span className="text-sm font-bold" style={{ color: BRAND.accent }}>{dashboardData?.stats?.avgScore || 0}%</span>
                       <span className="text-xs text-gray-500">Avg</span>
                     </div>
                   </div>
@@ -2858,7 +2859,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     <Button
                       size="sm"
                       className="h-8 px-3 text-xs gap-1.5 text-white"
-                      style={{ backgroundColor: '#4ECDC4' }}
+                      style={{ backgroundColor: BRAND.accent }}
                       onClick={() => {
                         setSelectedAssessmentGrade(selectedChild?.grade || '');
                         setIsAssessmentBrowserOpen(true);
@@ -2876,9 +2877,9 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">
-                        <span style={{ color: '#0B3C5D' }}><BookOpen size={16} /></span>
+                        <span style={{ color: BRAND.navy }}><BookOpen size={16} /></span>
                         <h3 className="text-sm font-semibold text-gray-800">Assigned Assessments</h3>
-                        <Badge variant="outline" className="text-[10px] h-5">{dashboardData.exams.length}</Badge>
+                        <Badge variant="outline" className="text-2xs h-5">{dashboardData.exams.length}</Badge>
                       </div>
                     </div>
                     <div className="space-y-2">
@@ -2887,18 +2888,18 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-semibold text-[#2E3440] truncate">{exam.title}</p>
                             <div className="flex items-center gap-2 mt-1 flex-wrap">
-                              <span className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: 'rgba(11,60,93,0.08)', color: '#0B3C5D' }}>{exam.subject}</span>
-                              {exam.duration > 0 && <span className="text-[10px] text-gray-400 flex items-center gap-1"><Clock size={10} /> {exam.duration} min</span>}
-                              {exam.totalMarks > 0 && <span className="text-[10px] text-gray-400">{exam.totalMarks} marks</span>}
+                              <span className="text-2xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: 'rgba(11,60,93,0.08)', color: BRAND.navy }}>{exam.subject}</span>
+                              {exam.duration > 0 && <span className="text-2xs text-gray-400 flex items-center gap-1"><Clock size={10} /> {exam.duration} min</span>}
+                              {exam.totalMarks > 0 && <span className="text-2xs text-gray-400">{exam.totalMarks} marks</span>}
                             </div>
                           </div>
                           <div className="shrink-0">
                             {exam.status === 'completed' ? (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-lg" style={{ backgroundColor: 'rgba(78,205,196,0.12)', color: '#4ECDC4' }}>
+                              <span className="inline-flex items-center gap-1 text-2xs font-semibold px-2 py-1 rounded-lg" style={{ backgroundColor: 'rgba(78,205,196,0.12)', color: BRAND.accent }}>
                                 <CheckCircle size={11} /> Done
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-lg bg-[#EDF2F7] text-[#0B3C5D]">
+                              <span className="inline-flex items-center gap-1 text-2xs font-semibold px-2 py-1 rounded-lg bg-[#EDF2F7] text-brand-navy">
                                 <Clock size={11} /> Pending
                               </span>
                             )}
@@ -2913,7 +2914,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 {dashboardData?.exams && dashboardData.exams.filter(e => e.status === 'completed').length > 0 && (
                   <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
                     <div className="flex items-center gap-2 mb-4">
-                      <span style={{ color: '#0B3C5D' }}><BarChart3 size={16} /></span>
+                      <span style={{ color: BRAND.navy }}><BarChart3 size={16} /></span>
                       <h3 className="text-sm font-semibold text-gray-800">Subject Performance</h3>
                     </div>
                       <div className="space-y-3">
@@ -2925,7 +2926,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                           });
                           return Object.entries(subjectScores).map(([subject, scores]) => {
                             const avg = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
-                            const color = avg >= 80 ? '#4ECDC4' : avg >= 60 ? '#0B3C5D' : '#0B3C5D';
+                            const color = avg >= 80 ? BRAND.accent : avg >= 60 ? BRAND.navy : BRAND.navy;
                             const subjectKey = subject.toLowerCase().replace(/\s+/g, '-');
                             return (
                               <div key={subject} className="flex items-center gap-3" data-testid={`row-subject-${subjectKey}`}>
@@ -2948,14 +2949,14 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
-                      <span style={{ color: '#0B3C5D' }}><GraduationCap size={16} /></span>
+                      <span style={{ color: BRAND.navy }}><GraduationCap size={16} /></span>
                       <h3 className="text-sm font-semibold text-gray-800">
                         Assessments
                         {selectedChild?.grade && <span className="text-xs font-normal text-gray-400 ml-1">• {selectedChild.grade}</span>}
                       </h3>
                     </div>
                     {dashboardData?.exams && dashboardData.exams.length > 5 && (
-                      <Button variant="ghost" size="sm" className="text-xs h-7" style={{ color: '#0B3C5D' }}>
+                      <Button variant="ghost" size="sm" className="text-xs h-7" style={{ color: BRAND.navy }}>
                         View All <ChevronRight size={14} />
                       </Button>
                     )}
@@ -2978,9 +2979,9 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                     <div className="flex items-center gap-4">
                                       <div className={`h-12 w-12 rounded-xl flex items-center justify-center`} style={{ background: exam.status === 'completed' ? 'rgba(78,205,196,0.12)' : 'rgba(11,60,93,0.08)' }}>
                                         {exam.status === 'completed' ? (
-                                          <CheckCircle size={24} style={{ color: '#4ECDC4' }} />
+                                          <CheckCircle size={24} style={{ color: BRAND.accent }} />
                                         ) : (
-                                          <Clock size={24} className="text-[#0B3C5D]" />
+                                          <Clock size={24} className="text-brand-navy" />
                                         )}
                                       </div>
                                       <div className="text-left">
@@ -2988,7 +2989,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                         <div className="flex items-center gap-2 mt-1">
                                           <Badge variant="outline" className="text-xs">{exam.subject}</Badge>
                                           {(exam as any).grade && (
-                                            <Badge variant="secondary" className="text-xs bg-[#EDF2F7] text-[#0B3C5D]">{(exam as any).grade}</Badge>
+                                            <Badge variant="secondary" className="text-xs bg-[#EDF2F7] text-brand-navy">{(exam as any).grade}</Badge>
                                           )}
                                           <span className="text-xs text-gray-400">•</span>
                                           <span className="text-xs text-gray-500">{exam.status === 'completed' ? 'Completed' : 'Pending'}</span>
@@ -2998,7 +2999,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                     <div className="flex items-center gap-3">
                                       {exam.status === 'completed' && exam.score !== null ? (
                                         <div className="text-right">
-                                          <p className="text-2xl font-bold" style={{ color: exam.score >= 70 ? '#4ECDC4' : exam.score >= 50 ? '#0B3C5D' : '#0B3C5D' }}>
+                                          <p className="text-2xl font-bold" style={{ color: exam.score >= 70 ? BRAND.accent : exam.score >= 50 ? BRAND.navy : BRAND.navy }}>
                                             {exam.score}%
                                           </p>
                                           <p className="text-xs text-gray-500">Score</p>
@@ -3015,13 +3016,13 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                       <div className="pt-4 space-y-4">
                                         {exam.improvedTopics && exam.improvedTopics.length > 0 && (
                                           <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(78,205,196,0.05)' }}>
-                                            <div className="flex items-center gap-2 text-sm font-semibold mb-2" style={{ color: '#4ECDC4' }}>
+                                            <div className="flex items-center gap-2 text-sm font-semibold mb-2" style={{ color: BRAND.accent }}>
                                               <TrendingUp size={16} />
                                               <span>Improved Topics</span>
                                             </div>
                                             <div className="flex flex-wrap gap-2">
                                               {exam.improvedTopics.map((topic, idx) => (
-                                                <Badge key={idx} className="border-0" style={{ background: 'rgba(78,205,196,0.12)', color: '#4ECDC4' }}>
+                                                <Badge key={idx} className="border-0" style={{ background: 'rgba(78,205,196,0.12)', color: BRAND.accent }}>
                                                   {topic}
                                                 </Badge>
                                               ))}
@@ -3031,13 +3032,13 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                         
                                         {exam.focusAreas && exam.focusAreas.length > 0 && (
                                           <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(245, 158, 11, 0.05)' }}>
-                                            <div className="flex items-center gap-2 text-sm font-semibold mb-2" style={{ color: '#0B3C5D' }}>
+                                            <div className="flex items-center gap-2 text-sm font-semibold mb-2" style={{ color: BRAND.navy }}>
                                               <Target size={16} />
                                               <span>Focus Areas for Improvement</span>
                                             </div>
                                             <div className="flex flex-wrap gap-2">
                                               {exam.focusAreas.map((area, idx) => (
-                                                <Badge key={idx} className="bg-[#FFF0C2] text-[#0B3C5D] border-0">
+                                                <Badge key={idx} className="bg-[#FFF0C2] text-brand-navy border-0">
                                                   {area}
                                                 </Badge>
                                               ))}
@@ -3048,7 +3049,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                         {exam.status === 'pending' && isMinor && (
                                           <Button 
                                             className="gap-2 w-full text-white"
-                                            style={{ backgroundColor: '#0B3C5D' }}
+                                            style={{ backgroundColor: BRAND.navy }}
                                             onClick={(e) => {
                                               e.stopPropagation();
                                               setSupervisedExamId(exam.id);
@@ -3081,8 +3082,8 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                           </div>
                         ) : (
                           <div className="text-center py-8">
-                            <BookOpen size={28} className="mx-auto mb-2 opacity-30" style={{ color: '#0B3C5D' }} />
-                            <p className="text-sm font-medium" style={{ color: '#0B3C5D' }}>No Assessments Yet</p>
+                            <BookOpen size={28} className="mx-auto mb-2 opacity-30" style={{ color: BRAND.navy }} />
+                            <p className="text-sm font-medium" style={{ color: BRAND.navy }}>No Assessments Yet</p>
                             <p className="text-xs text-gray-500 mt-1">Assign an assessment using the button above to get started.</p>
                           </div>
                         )}
@@ -3094,11 +3095,11 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   selectedChild ? (
                     <Tabs defaultValue="tests" className="w-full">
                       <TabsList className="w-full max-w-md h-9 p-0.5 bg-gray-100 rounded-lg">
-                        <TabsTrigger value="tests" className="flex-1 text-xs gap-1.5 rounded-md font-medium text-gray-500 transition-all hover:text-gray-700 data-[state=active]:bg-white data-[state=active]:text-[#0B3C5D] data-[state=active]:font-semibold data-[state=active]:shadow-sm" data-testid="subtab-tests">
+                        <TabsTrigger value="tests" className="flex-1 text-xs gap-1.5 rounded-md font-medium text-gray-500 transition-all hover:text-gray-700 data-[state=active]:bg-white data-[state=active]:text-brand-navy data-[state=active]:font-semibold data-[state=active]:shadow-sm" data-testid="subtab-tests">
                           <FileText size={12} />
                           Test Manager
                         </TabsTrigger>
-                        <TabsTrigger value="planner" className="flex-1 text-xs gap-1.5 rounded-md font-medium text-gray-500 transition-all hover:text-gray-700 data-[state=active]:bg-white data-[state=active]:text-[#0B3C5D] data-[state=active]:font-semibold data-[state=active]:shadow-sm" data-testid="subtab-planner">
+                        <TabsTrigger value="planner" className="flex-1 text-xs gap-1.5 rounded-md font-medium text-gray-500 transition-all hover:text-gray-700 data-[state=active]:bg-white data-[state=active]:text-brand-navy data-[state=active]:font-semibold data-[state=active]:shadow-sm" data-testid="subtab-planner">
                           <CalendarDays size={12} />
                           Study Planner
                         </TabsTrigger>
@@ -3132,8 +3133,8 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     </Tabs>
                   ) : (
                     <div className="bg-white border border-gray-100 rounded-2xl p-10 shadow-sm text-center">
-                      <FileText size={28} className="mx-auto mb-2 opacity-30" style={{ color: '#0B3C5D' }} />
-                      <p className="text-sm font-medium" style={{ color: '#0B3C5D' }}>Select a child to manage tests & planner</p>
+                      <FileText size={28} className="mx-auto mb-2 opacity-30" style={{ color: BRAND.navy }} />
+                      <p className="text-sm font-medium" style={{ color: BRAND.navy }}>Select a child to manage tests & planner</p>
                     </div>
                   )
                 )}
@@ -3150,7 +3151,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
               {/* Exam Trends Tab - Enhanced Analytics Dashboard */}
               <TabsContent value="exam-trends" className="mt-6 space-y-5">
                 {/* Compact Header with Key Metrics */}
-                <div className="rounded-2xl overflow-hidden shadow-lg py-5 px-6" style={{ backgroundColor: '#0B3C5D' }} data-testid="exam-trends-header">
+                <div className="rounded-2xl overflow-hidden shadow-lg py-5 px-6" style={{ backgroundColor: BRAND.navy }} data-testid="exam-trends-header">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-3">
                         <div className="h-12 w-12 rounded-xl bg-white/20 flex items-center justify-center">
@@ -3170,37 +3171,37 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     <div className="grid grid-cols-3 md:grid-cols-6 gap-3" data-testid="exam-trends-stats">
                       <div className="bg-white/15 rounded-lg p-3 text-center" data-testid="trends-total">
                         <p className="text-2xl font-bold text-white">{dashboardData?.stats?.totalExams || 0}</p>
-                        <p className="text-[10px] text-white/60">Total</p>
+                        <p className="text-2xs text-white/60">Total</p>
                       </div>
                       <div className="bg-white/15 rounded-lg p-3 text-center" data-testid="trends-completed">
-                        <p className="text-2xl font-bold" style={{ color: '#4ECDC4' }}>{dashboardData?.stats?.completed || 0}</p>
-                        <p className="text-[10px] text-white/60">Done</p>
+                        <p className="text-2xl font-bold" style={{ color: BRAND.accent }}>{dashboardData?.stats?.completed || 0}</p>
+                        <p className="text-2xs text-white/60">Done</p>
                       </div>
                       <div className="bg-white/15 rounded-lg p-3 text-center" data-testid="trends-avg">
-                        <p className="text-2xl font-bold" style={{ color: '#4ECDC4' }}>{dashboardData?.stats?.avgScore || 0}%</p>
-                        <p className="text-[10px] text-white/60">Avg</p>
+                        <p className="text-2xl font-bold" style={{ color: BRAND.accent }}>{dashboardData?.stats?.avgScore || 0}%</p>
+                        <p className="text-2xs text-white/60">Avg</p>
                       </div>
                       <div className="bg-white/15 rounded-lg p-3 text-center" data-testid="trends-highest">
-                        <p className="text-2xl font-bold" style={{ color: '#4ECDC4' }}>
+                        <p className="text-2xl font-bold" style={{ color: BRAND.accent }}>
                           {(() => {
                             const completed = dashboardData?.exams?.filter(e => e.status === 'completed' && e.score !== null) || [];
                             return completed.length > 0 ? Math.max(...completed.map(e => e.score!)) : 0;
                           })()}%
                         </p>
-                        <p className="text-[10px] text-white/60">Best</p>
+                        <p className="text-2xs text-white/60">Best</p>
                       </div>
                       <div className="bg-white/15 rounded-lg p-3 text-center" data-testid="trends-lowest">
-                        <p className="text-2xl font-bold text-[#0B3C5D]">
+                        <p className="text-2xl font-bold text-brand-navy">
                           {(() => {
                             const completed = dashboardData?.exams?.filter(e => e.status === 'completed' && e.score !== null) || [];
                             return completed.length > 0 ? Math.min(...completed.map(e => e.score!)) : 0;
                           })()}%
                         </p>
-                        <p className="text-[10px] text-white/60">Lowest</p>
+                        <p className="text-2xs text-white/60">Lowest</p>
                       </div>
                       <div className="bg-white/15 rounded-lg p-3 text-center" data-testid="trends-ontime">
                         <p className="text-2xl font-bold text-white">{dashboardData?.stats?.onTimeRate || 0}%</p>
-                        <p className="text-[10px] text-white/60">On-Time</p>
+                        <p className="text-2xs text-white/60">On-Time</p>
                       </div>
                     </div>
                 </div>
@@ -3212,13 +3213,13 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-xs text-gray-500 font-medium">Overall Grade</p>
-                          <p className="text-4xl font-bold mt-1" data-testid="text-trends-grade" style={{ color: (dashboardData?.stats?.avgScore || 0) >= 70 ? '#4ECDC4' : '#0B3C5D' }}>
+                          <p className="text-4xl font-bold mt-1" data-testid="text-trends-grade" style={{ color: (dashboardData?.stats?.avgScore || 0) >= 70 ? BRAND.accent : BRAND.navy }}>
                             {(dashboardData?.stats?.avgScore || 0) >= 90 ? 'A+' : (dashboardData?.stats?.avgScore || 0) >= 80 ? 'A' : (dashboardData?.stats?.avgScore || 0) >= 70 ? 'B+' : (dashboardData?.stats?.avgScore || 0) >= 60 ? 'B' : (dashboardData?.stats?.avgScore || 0) >= 50 ? 'C' : 'D'}
                           </p>
                           <p className="text-xs text-gray-400 mt-1">{dashboardData?.stats?.avgScore || 0}% average score</p>
                         </div>
                         <div className="h-16 w-16 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(11, 60, 93, 0.1)' }}>
-                          <Award size={28} style={{ color: '#0B3C5D' }} />
+                          <Award size={28} style={{ color: BRAND.navy }} />
                         </div>
                       </div>
                   </div>
@@ -3232,7 +3233,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                             <div className="flex items-center justify-between">
                               <div>
                                 <p className="text-xs text-gray-500 font-medium">Performance Trend</p>
-                                <p className="text-lg font-bold mt-1" style={{ color: '#0B3C5D' }}>More Data Needed</p>
+                                <p className="text-lg font-bold mt-1" style={{ color: BRAND.navy }}>More Data Needed</p>
                                 <p className="text-xs text-gray-400 mt-1">Complete 2+ exams to see trends</p>
                               </div>
                               <div className="h-16 w-16 rounded-full flex items-center justify-center bg-gray-100">
@@ -3250,13 +3251,13 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                           <div className="flex items-center justify-between">
                             <div>
                               <p className="text-xs text-gray-500 font-medium">Performance Trend</p>
-                              <p className="text-2xl font-bold mt-1" style={{ color: isImproving ? '#4ECDC4' : '#0B3C5D' }}>
+                              <p className="text-2xl font-bold mt-1" style={{ color: isImproving ? BRAND.accent : BRAND.navy }}>
                                 {diff > 0 ? '+' : ''}{diff}%
                               </p>
                               <p className="text-xs text-gray-400 mt-1">{isImproving ? 'Improving' : 'Declining'} over {recent.length} exams</p>
                             </div>
                             <div className="h-16 w-16 rounded-full flex items-center justify-center" style={{ backgroundColor: isImproving ? 'rgba(78,205,196,0.08)' : 'rgba(11,60,93,0.07)' }}>
-                              {isImproving ? <TrendingUp size={28} style={{ color: '#4ECDC4' }} /> : <TrendingDown size={28} className="text-[#0B3C5D]" />}
+                              {isImproving ? <TrendingUp size={28} style={{ color: BRAND.accent }} /> : <TrendingDown size={28} className="text-brand-navy" />}
                             </div>
                           </div>
                         );
@@ -3270,7 +3271,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm lg:col-span-8">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">
-                        <span style={{ color: '#0B3C5D' }}><BarChart3 size={18} /></span>
+                        <span style={{ color: BRAND.navy }}><BarChart3 size={18} /></span>
                         <h3 className="text-sm font-semibold text-gray-800">Score Timeline</h3>
                       </div>
                       <Badge variant="outline" className="text-xs">Last 8 exams</Badge>
@@ -3282,7 +3283,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                             const trend = exam.score! - (prevScore || 0);
                             return (
                               <div key={exam.id} className="flex items-center gap-3 py-1.5 border-b last:border-0" data-testid={`timeline-exam-${exam.id}`}>
-                                <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ backgroundColor: exam.score! >= 70 ? '#4ECDC4' : exam.score! >= 50 ? '#0B3C5D' : '#0B3C5D' }}>
+                                <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ backgroundColor: exam.score! >= 70 ? BRAND.accent : exam.score! >= 50 ? BRAND.navy : BRAND.navy }}>
                                   {idx + 1}
                                 </div>
                                 <div className="flex-1 min-w-0">
@@ -3291,11 +3292,11 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                 </div>
                                 <div className="flex items-center gap-2">
                                   {idx > 0 && trend !== 0 && (
-                                    <span className="text-xs font-medium px-1.5 py-0.5 rounded" style={{ background: trend > 0 ? 'rgba(78,205,196,0.12)' : 'rgba(11,60,93,0.07)', color: trend > 0 ? '#4ECDC4' : '#0B3C5D' }}>
+                                    <span className="text-xs font-medium px-1.5 py-0.5 rounded" style={{ background: trend > 0 ? 'rgba(78,205,196,0.12)' : 'rgba(11,60,93,0.07)', color: trend > 0 ? BRAND.accent : BRAND.navy }}>
                                       {trend > 0 ? '+' : ''}{trend}
                                     </span>
                                   )}
-                                  <span className="text-sm font-bold w-12 text-right" style={{ color: exam.score! >= 70 ? '#4ECDC4' : '#0B3C5D' }}>
+                                  <span className="text-sm font-bold w-12 text-right" style={{ color: exam.score! >= 70 ? BRAND.accent : BRAND.navy }}>
                                     {exam.score}%
                                   </span>
                                 </div>
@@ -3316,7 +3317,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     {/* Subject Rankings */}
                     <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
                       <div className="flex items-center gap-2 mb-3">
-                        <span style={{ color: '#0B3C5D' }}><Star size={16} /></span>
+                        <span style={{ color: BRAND.navy }}><Star size={16} /></span>
                         <h3 className="text-sm font-semibold text-gray-800">Subject Rankings</h3>
                       </div>
                         {dashboardData?.exams && dashboardData.exams.filter(e => e.status === 'completed').length > 0 ? (
@@ -3336,13 +3337,13 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                   const subjectKey = item.subject.toLowerCase().replace(/\s+/g, '-');
                                   return (
                                     <div key={item.subject} className="flex items-center gap-2" data-testid={`ranking-${subjectKey}`}>
-                                      <span className={`w-5 h-5 rounded text-xs font-bold flex items-center justify-center ${idx === 0 ? 'bg-[#FFF0C2] text-[#0B3C5D]' : 'bg-gray-100 text-gray-600'}`}>
+                                      <span className={`w-5 h-5 rounded text-xs font-bold flex items-center justify-center ${idx === 0 ? 'bg-[#FFF0C2] text-brand-navy' : 'bg-gray-100 text-gray-600'}`}>
                                         {idx + 1}
                                       </span>
                                       <div className="flex-1 min-w-0">
                                         <p className="text-xs font-medium truncate">{item.subject}</p>
                                       </div>
-                                      <span className="text-sm font-bold" style={{ color: item.avg >= 70 ? '#4ECDC4' : '#0B3C5D' }}>{item.avg}%</span>
+                                      <span className="text-sm font-bold" style={{ color: item.avg >= 70 ? BRAND.accent : BRAND.navy }}>{item.avg}%</span>
                                     </div>
                                   );
                                 });
@@ -3356,7 +3357,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     {/* Improvement Areas */}
                     <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
                       <div className="flex items-center gap-2 mb-3">
-                        <span style={{ color: '#0B3C5D' }}><Target size={16} /></span>
+                        <span style={{ color: BRAND.navy }}><Target size={16} /></span>
                         <h3 className="text-sm font-semibold text-gray-800">Focus Areas</h3>
                       </div>
                         {dashboardData?.exams && dashboardData.exams.filter(e => e.status === 'completed' && e.focusAreas?.length).length > 0 ? (
@@ -3369,7 +3370,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                 });
                               });
                               return allAreas.slice(0, 6).map((area, idx) => (
-                                <Badge key={idx} variant="outline" className="text-xs bg-[#FEF2F2] text-[#0B3C5D] border-[#E8ECF2]">
+                                <Badge key={idx} variant="outline" className="text-xs bg-[#FEF2F2] text-brand-navy border-[#E8ECF2]">
                                   {area}
                                 </Badge>
                               ));
@@ -3383,7 +3384,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     {/* Strong Topics */}
                     <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
                       <div className="flex items-center gap-2 mb-3">
-                        <span style={{ color: '#4ECDC4' }}><CheckCircle size={16} /></span>
+                        <span style={{ color: BRAND.accent }}><CheckCircle size={16} /></span>
                         <h3 className="text-sm font-semibold text-gray-800">Strong Topics</h3>
                       </div>
                         {dashboardData?.exams && dashboardData.exams.filter(e => e.status === 'completed' && e.improvedTopics?.length).length > 0 ? (
@@ -3396,7 +3397,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                 });
                               });
                               return allTopics.slice(0, 6).map((topic, idx) => (
-                                <Badge key={idx} variant="outline" className="text-xs border-0" style={{ background: 'rgba(78,205,196,0.1)', color: '#4ECDC4' }}>
+                                <Badge key={idx} variant="outline" className="text-xs border-0" style={{ background: 'rgba(78,205,196,0.1)', color: BRAND.accent }}>
                                   {topic}
                                 </Badge>
                               ));
@@ -3414,7 +3415,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   {/* Consistency Metric */}
                   <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
                       <div className="flex items-center gap-2 mb-3">
-                        <span style={{ color: '#0B3C5D' }}><Gauge size={16} /></span>
+                        <span style={{ color: BRAND.navy }}><Gauge size={16} /></span>
                         <span className="text-sm font-semibold text-gray-800">Consistency</span>
                       </div>
                       {(() => {
@@ -3427,7 +3428,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         const variance = scores.reduce((sum, s) => sum + Math.pow(s - avg, 2), 0) / scores.length;
                         const stdDev = Math.sqrt(variance);
                         const consistency = stdDev < 10 ? 'High' : stdDev < 20 ? 'Medium' : 'Low';
-                        const color = consistency === 'High' ? '#4ECDC4' : consistency === 'Medium' ? '#0B3C5D' : '#0B3C5D';
+                        const color = consistency === 'High' ? BRAND.accent : consistency === 'Medium' ? BRAND.navy : BRAND.navy;
                         return (
                           <div className="flex items-center justify-between">
                             <div>
@@ -3445,12 +3446,12 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   {/* Completion Rate */}
                   <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
                       <div className="flex items-center gap-2 mb-3">
-                        <span style={{ color: '#0B3C5D' }}><Timer size={16} /></span>
+                        <span style={{ color: BRAND.navy }}><Timer size={16} /></span>
                         <span className="text-sm font-semibold text-gray-800">Completion Rate</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-xl font-bold" style={{ color: '#4ECDC4' }}>
+                          <p className="text-xl font-bold" style={{ color: BRAND.accent }}>
                             {dashboardData?.stats?.totalExams ? Math.round((dashboardData.stats.completed / dashboardData.stats.totalExams) * 100) : 0}%
                           </p>
                           <p className="text-xs text-gray-400">{dashboardData?.stats?.completed || 0}/{dashboardData?.stats?.totalExams || 0} exams</p>
@@ -3465,14 +3466,14 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   {/* Quick Actions */}
                   <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
                       <div className="flex items-center gap-2 mb-3">
-                        <span style={{ color: '#4ECDC4' }}><Zap size={16} /></span>
+                        <span style={{ color: BRAND.accent }}><Zap size={16} /></span>
                         <span className="text-sm font-semibold text-gray-800">Quick Actions</span>
                       </div>
                       <div className="flex gap-2">
-                        <Button size="sm" variant="outline" className="flex-1 text-xs h-8" style={{ borderColor: '#0B3C5D', color: '#0B3C5D' }} onClick={() => setActiveTab('education')} data-testid="trends-action-exams">
+                        <Button size="sm" variant="outline" className="flex-1 text-xs h-8" style={{ borderColor: BRAND.navy, color: BRAND.navy }} onClick={() => setActiveTab('education')} data-testid="trends-action-exams">
                           <GraduationCap size={12} className="mr-1" /> Exams
                         </Button>
-                        <Button size="sm" variant="outline" className="flex-1 text-xs h-8" style={{ borderColor: '#4ECDC4', color: '#4ECDC4' }} onClick={() => onNavigate('parent-lbi', { childId: selectedChild?.id })} data-testid="trends-action-lbi">
+                        <Button size="sm" variant="outline" className="flex-1 text-xs h-8" style={{ borderColor: BRAND.accent, color: BRAND.accent }} onClick={() => onNavigate('parent-lbi', { childId: selectedChild?.id })} data-testid="trends-action-lbi">
                           <Brain size={12} className="mr-1" /> LBI
                         </Button>
                       </div>
@@ -3495,7 +3496,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
               {/* LBI Tab - Learning Behaviour Insights */}
               <TabsContent value="lbi" className="mt-6 space-y-6">
                 {/* LBI KPI Modules Header */}
-                <div className="rounded-2xl overflow-hidden shadow-lg py-6 px-6" style={{ backgroundColor: '#0B3C5D' }} data-testid="lbi-kpi-header">
+                <div className="rounded-2xl overflow-hidden shadow-lg py-6 px-6" style={{ backgroundColor: BRAND.navy }} data-testid="lbi-kpi-header">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="h-10 w-10 rounded-xl bg-white/20 flex items-center justify-center">
                         <Brain size={24} className="text-white" />
@@ -3510,59 +3511,59 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4" data-testid="lbi-kpi-grid">
                       <div className="bg-white/10 rounded-lg p-3 backdrop-blur-sm" data-testid="lbi-kpi-academic-cognitive">
                         <div className="flex items-center gap-2 mb-2">
-                          <Lightbulb size={16} className="text-[#0B3C5D]" />
+                          <Lightbulb size={16} className="text-brand-navy" />
                           <span className="text-xs font-semibold text-white/90">Academic & Cognitive</span>
                         </div>
-                        <p className="text-[10px] text-white/60 leading-relaxed">Learning efficiency • Conceptual Understanding • Working Memory • Sustained Attention • Learning Style • Processing Stability</p>
+                        <p className="text-2xs text-white/60 leading-relaxed">Learning efficiency • Conceptual Understanding • Working Memory • Sustained Attention • Learning Style • Processing Stability</p>
                       </div>
                       <div className="bg-white/10 rounded-lg p-3 backdrop-blur-sm" data-testid="lbi-kpi-analytical-thinking">
                         <div className="flex items-center gap-2 mb-2">
                           <Target size={16} className="text-[#B8CCDA]" />
                           <span className="text-xs font-semibold text-white/90">Analytical Thinking</span>
                         </div>
-                        <p className="text-[10px] text-white/60 leading-relaxed">Critical Thinking • Decision Quality • Judgment • Managing Complexity • Strategy Execution • Complexity Tolerance</p>
+                        <p className="text-2xs text-white/60 leading-relaxed">Critical Thinking • Decision Quality • Judgment • Managing Complexity • Strategy Execution • Complexity Tolerance</p>
                       </div>
                       <div className="bg-white/10 rounded-lg p-3 backdrop-blur-sm" data-testid="lbi-kpi-social-emotional">
                         <div className="flex items-center gap-2 mb-2">
-                          <Heart size={16} className="text-[#4ECDC4]" />
+                          <Heart size={16} className="text-brand-accent" />
                           <span className="text-xs font-semibold text-white/90">Social & Emotional</span>
                         </div>
-                        <p className="text-[10px] text-white/60 leading-relaxed">Emotional Regulation • Relationships • Trust • Inclusion • EQ Assessment • Social Judgment</p>
+                        <p className="text-2xs text-white/60 leading-relaxed">Emotional Regulation • Relationships • Trust • Inclusion • EQ Assessment • Social Judgment</p>
                       </div>
                       <div className="bg-white/10 rounded-lg p-3 backdrop-blur-sm" data-testid="lbi-kpi-adjustment">
                         <div className="flex items-center gap-2 mb-2">
-                          <Users size={16} className="text-[#4ECDC4]" />
+                          <Users size={16} className="text-brand-accent" />
                           <span className="text-xs font-semibold text-white/90">Adjustment</span>
                         </div>
-                        <p className="text-[10px] text-white/60 leading-relaxed">Academic Adjustment • Emotional Adjustment • Social Adjustment • Family Adjustment</p>
+                        <p className="text-2xs text-white/60 leading-relaxed">Academic Adjustment • Emotional Adjustment • Social Adjustment • Family Adjustment</p>
                       </div>
                       <div className="bg-white/10 rounded-lg p-3 backdrop-blur-sm" data-testid="lbi-kpi-discipline">
                         <div className="flex items-center gap-2 mb-2">
                           <Clock size={16} className="text-[#1B6B9A]" />
                           <span className="text-xs font-semibold text-white/90">Discipline</span>
                         </div>
-                        <p className="text-[10px] text-white/60 leading-relaxed">Time Management • Priority Management • Accountability • Execution • Plan-Execution Alignment • Consistency</p>
+                        <p className="text-2xs text-white/60 leading-relaxed">Time Management • Priority Management • Accountability • Execution • Plan-Execution Alignment • Consistency</p>
                       </div>
                       <div className="bg-white/10 rounded-lg p-3 backdrop-blur-sm" data-testid="lbi-kpi-communication">
                         <div className="flex items-center gap-2 mb-2">
-                          <MessageSquare size={16} className="text-[#0B3C5D]" />
+                          <MessageSquare size={16} className="text-brand-navy" />
                           <span className="text-xs font-semibold text-white/90">Communication</span>
                         </div>
-                        <p className="text-[10px] text-white/60 leading-relaxed">Listening • Expression • Influence • Conflict Handling • Instruction Comprehension</p>
+                        <p className="text-2xs text-white/60 leading-relaxed">Listening • Expression • Influence • Conflict Handling • Instruction Comprehension</p>
                       </div>
                       <div className="bg-white/10 rounded-lg p-3 backdrop-blur-sm" data-testid="lbi-kpi-drive-integrity">
                         <div className="flex items-center gap-2 mb-2">
                           <Flame size={16} className="text-[#94A3B8]" />
                           <span className="text-xs font-semibold text-white/90">Drive & Integrity</span>
                         </div>
-                        <p className="text-[10px] text-white/60 leading-relaxed">Commitment Stability • Integrity • Ownership Patterns • Effort Persistence • Identity Alignment</p>
+                        <p className="text-2xs text-white/60 leading-relaxed">Commitment Stability • Integrity • Ownership Patterns • Effort Persistence • Identity Alignment</p>
                       </div>
                       <div className="bg-white/10 rounded-lg p-3 backdrop-blur-sm" data-testid="lbi-kpi-external-pressures">
                         <div className="flex items-center gap-2 mb-2">
-                          <AlertTriangle size={16} className="text-[#0B3C5D]" />
+                          <AlertTriangle size={16} className="text-brand-navy" />
                           <span className="text-xs font-semibold text-white/90">External Pressures</span>
                         </div>
-                        <p className="text-[10px] text-white/60 leading-relaxed">Digital Distraction • Sleep Quality • Parental Pressure • Institutional Pressure</p>
+                        <p className="text-2xs text-white/60 leading-relaxed">Digital Distraction • Sleep Quality • Parental Pressure • Institutional Pressure</p>
                       </div>
                     </div>
                 </div>
@@ -3570,9 +3571,9 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 {!canAccessLBI ? (
                   <div className="bg-white border-2 border-dashed rounded-2xl py-12 px-6 text-center shadow-sm" style={{ borderColor: 'rgba(11,60,93,0.25)' }}>
                     <div className="mx-auto h-16 w-16 rounded-xl flex items-center justify-center mb-4" style={{ background: 'rgba(11,60,93,0.08)' }}>
-                      <Lock size={32} style={{ color: '#0B3C5D' }} />
+                      <Lock size={32} style={{ color: BRAND.navy }} />
                     </div>
-                    <h3 className="text-lg font-bold mb-2" style={{ color: '#0B3C5D' }}>Parental Consent Required</h3>
+                    <h3 className="text-lg font-bold mb-2" style={{ color: BRAND.navy }}>Parental Consent Required</h3>
                     <p className="text-gray-500 max-w-md mx-auto mb-6">
                       To access Learning Behaviour Insights for {selectedChild.name} (Age {selectedChild.age}), 
                       you need to provide parental consent under DPDP Act 2023. This enables comprehensive psychometric assessments without academic pressure.
@@ -3583,7 +3584,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         setIsConsentDialogOpen(true);
                       }}
                       className="gap-2 rounded-lg font-semibold text-white"
-                      style={{ backgroundColor: '#4ECDC4' }}
+                      style={{ backgroundColor: BRAND.accent }}
                       data-testid="button-grant-consent-lbi"
                     >
                       <Unlock size={16} />
@@ -3593,8 +3594,8 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 ) : (
                   <>
                     {/* Consent Status Banner */}
-                    <div className="rounded-2xl py-3 px-4 shadow-sm" style={{ backgroundColor: 'rgba(78,205,196,0.08)', borderLeft: '4px solid #4ECDC4' }}>
-                      <div className="flex items-center gap-2" style={{ color: '#4ECDC4' }}>
+                    <div className="rounded-2xl py-3 px-4 shadow-sm" style={{ backgroundColor: 'rgba(78,205,196,0.08)', borderLeft: `4px solid ${BRAND.accent}` }}>
+                      <div className="flex items-center gap-2" style={{ color: BRAND.accent }}>
                         <CheckCircle size={18} />
                         <span className="font-semibold">
                           {isMinor 
@@ -3621,7 +3622,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                           const completedModules = lbiInsights.length;
                           
                           return (
-                            <div className="rounded-2xl text-white py-6 px-6 shadow-lg" style={{ background: '#0B3C5D' }}>
+                            <div className="rounded-2xl text-white py-6 px-6 shadow-lg" style={{ background: BRAND.navy }}>
                                 <div className="flex items-center justify-between mb-4">
                                   <div className="flex items-center gap-3">
                                     <div className="h-12 w-12 rounded-full bg-white/20 flex items-center justify-center">
@@ -3636,7 +3637,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                     <button
                                       onClick={() => setShowShareLBIReport(true)}
                                       className="flex items-center gap-1.5 rounded-xl px-3 py-1.5 transition-all duration-200"
-                                      style={{ backgroundColor: 'rgba(78,205,196,0.18)', border: '1px solid rgba(78,205,196,0.35)', color: '#4ECDC4', fontSize: '12px', fontWeight: 700 }}
+                                      style={{ backgroundColor: 'rgba(78,205,196,0.18)', border: '1px solid rgba(78,205,196,0.35)', color: BRAND.accent, fontSize: '12px', fontWeight: 700 }}
                                       onMouseEnter={e => { e.currentTarget.style.backgroundColor='rgba(78,205,196,0.30)'; }}
                                       onMouseLeave={e => { e.currentTarget.style.backgroundColor='rgba(78,205,196,0.18)'; }}>
                                       <Share2 size={13} />
@@ -3650,11 +3651,11 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                 </div>
                                 <div className="grid grid-cols-3 gap-4 mt-4">
                                   <div className="bg-white/10 rounded-lg p-3 text-center">
-                                    <div className="text-2xl font-bold text-[#4ECDC4]">{strongAreas}</div>
+                                    <div className="text-2xl font-bold text-brand-accent">{strongAreas}</div>
                                     <p className="text-xs text-white/70">Strong Areas</p>
                                   </div>
                                   <div className="bg-white/10 rounded-lg p-3 text-center">
-                                    <div className="text-2xl font-bold text-[#0B3C5D]">{growthAreas}</div>
+                                    <div className="text-2xl font-bold text-brand-navy">{growthAreas}</div>
                                     <p className="text-xs text-white/70">Growth Areas</p>
                                   </div>
                                   <div className="bg-white/10 rounded-lg p-3 text-center">
@@ -3742,7 +3743,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                               <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
                                 <div className="mb-3">
                                   <div className="flex items-center gap-2">
-                                    <span style={{ color: '#0B3C5D' }}><Activity size={18} /></span>
+                                    <span style={{ color: BRAND.navy }}><Activity size={18} /></span>
                                     <h3 className="text-sm font-semibold text-gray-800">Progress Over Time</h3>
                                   </div>
                                   <p className="text-xs text-gray-400 mt-0.5">{latestByCategory.length} categories (latest score per module)</p>
@@ -3774,7 +3775,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                                 const xStep = 100 / Math.min(latestByCategory.length, 10);
                                                 const x = (idx + 0.5) * xStep;
                                                 const y = 100 - point.score;
-                                                const color = point.score >= 80 ? '#4ECDC4' : point.score >= 60 ? '#0B3C5D' : point.score >= 40 ? '#0B3C5D' : '#0B3C5D';
+                                                const color = point.score >= 80 ? BRAND.accent : point.score >= 60 ? BRAND.navy : point.score >= 40 ? BRAND.navy : BRAND.navy;
                                                 
                                                 return (
                                                   <g key={`${point.module}-${idx}`}>
@@ -3791,7 +3792,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                                         y1={`${100 - latestByCategory[idx - 1].score}%`}
                                                         x2={`${x}%`}
                                                         y2={`${y}%`}
-                                                        stroke="#0B3C5D"
+                                                        stroke={BRAND.navy}
                                                         strokeWidth="2"
                                                         opacity="0.5"
                                                       />
@@ -3822,7 +3823,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                   <div className="mt-4 p-3 bg-gray-50 rounded-lg" data-testid="cycles-history">
                                     <div className="flex items-center justify-between mb-3">
                                       <p className="text-sm font-medium">Last 5 Cycles Performance</p>
-                                      <Badge variant="outline" className="text-xs bg-[#EDF2F7] text-[#0B3C5D] border-[#B8CCDA]">Projected</Badge>
+                                      <Badge variant="outline" className="text-xs bg-[#EDF2F7] text-brand-navy border-[#B8CCDA]">Projected</Badge>
                                     </div>
                                     {(() => {
                                       // Projected historical data based on current score
@@ -3844,13 +3845,13 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                             
                                             return (
                                               <div key={cycle.label} className="flex items-center gap-2">
-                                                <span className={`text-xs w-20 ${idx === 0 ? 'font-semibold text-[#0B3C5D]' : 'text-muted-foreground'}`}>
+                                                <span className={`text-xs w-20 ${idx === 0 ? 'font-semibold text-brand-navy' : 'text-muted-foreground'}`}>
                                                   {cycle.label}
                                                 </span>
                                                 <div className="flex-1 h-5 bg-gray-200 rounded-full overflow-hidden relative">
                                                   <div 
                                                     className={`h-full rounded-full transition-all duration-500 ${
-                                                      idx === 0 ? 'bg-[#4ECDC4]' : 'bg-[#0B3C5D]/60'
+                                                      idx === 0 ? 'bg-brand-accent' : 'bg-brand-navy/60'
                                                     }`}
                                                     style={{ width: `${barWidth}%` }}
                                                   />
@@ -3860,7 +3861,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                                 </div>
                                                 {idx < cycles.length - 1 && (
                                                   <span className={`text-xs w-12 text-right font-medium ${
-                                                    improvement > 0 ? 'text-[#4ECDC4]' : improvement < 0 ? 'text-[#0B3C5D]' : 'text-gray-500'
+                                                    improvement > 0 ? 'text-brand-accent' : improvement < 0 ? 'text-brand-navy' : 'text-gray-500'
                                                   }`}>
                                                     {improvement > 0 ? '+' : ''}{improvement}%
                                                   </span>
@@ -3874,8 +3875,8 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                           <div className="flex items-center justify-between pt-2 mt-2 border-t">
                                             <span className="text-xs text-muted-foreground">Total Growth (2 years)</span>
                                             <div className="flex items-center gap-1">
-                                              <TrendingUp size={14} className="text-[#4ECDC4]" />
-                                              <span className="text-sm font-bold text-[#4ECDC4]">
+                                              <TrendingUp size={14} className="text-brand-accent" />
+                                              <span className="text-sm font-bold text-brand-accent">
                                                 +{cycles[0].score - cycles[cycles.length - 1].score}%
                                               </span>
                                             </div>
@@ -3890,7 +3891,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                               <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
                                 <div className="mb-3">
                                   <div className="flex items-center gap-2">
-                                    <span style={{ color: '#0B3C5D' }}><PieChart size={18} /></span>
+                                    <span style={{ color: BRAND.navy }}><PieChart size={18} /></span>
                                     <h3 className="text-sm font-semibold text-gray-800">Score Distribution</h3>
                                   </div>
                                   <p className="text-xs text-gray-400 mt-0.5">Click segments to see details</p>
@@ -3901,10 +3902,10 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                       <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
                                         {(() => {
                                           const pieData = [
-                                            { value: strong, color: '#4ECDC4', hoverColor: '#4ECDC4', label: 'Strong', range: '80%+' },
-                                            { value: moderate, color: '#0B3C5D', hoverColor: '#0B3C5D', label: 'Moderate', range: '60-79%' },
-                                            { value: developing, color: '#0B3C5D', hoverColor: '#0B3C5D', label: 'Developing', range: '40-59%' },
-                                            { value: needsAttention, color: '#0B3C5D', hoverColor: '#0B3C5D', label: 'Needs Attention', range: '<40%' }
+                                            { value: strong, color: BRAND.accent, hoverColor: BRAND.accent, label: 'Strong', range: '80%+' },
+                                            { value: moderate, color: BRAND.navy, hoverColor: BRAND.navy, label: 'Moderate', range: '60-79%' },
+                                            { value: developing, color: BRAND.navy, hoverColor: BRAND.navy, label: 'Developing', range: '40-59%' },
+                                            { value: needsAttention, color: BRAND.navy, hoverColor: BRAND.navy, label: 'Needs Attention', range: '<40%' }
                                           ].filter(d => d.value > 0);
                                           
                                           if (pieData.length === 0) {
@@ -3970,16 +3971,16 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                       <div className="absolute inset-0 flex flex-col items-center justify-center">
                                         {selectedPieSegment ? (
                                           <>
-                                            <span className="text-lg font-bold text-[#0B3C5D]">
+                                            <span className="text-lg font-bold text-brand-navy">
                                               {selectedPieSegment === 'Strong' ? strong : 
                                                selectedPieSegment === 'Moderate' ? moderate :
                                                selectedPieSegment === 'Developing' ? developing : needsAttention}
                                             </span>
-                                            <span className="text-[10px] text-muted-foreground text-center leading-tight px-1">{selectedPieSegment}</span>
+                                            <span className="text-2xs text-muted-foreground text-center leading-tight px-1">{selectedPieSegment}</span>
                                           </>
                                         ) : (
                                           <>
-                                            <span className="text-lg font-bold text-[#0B3C5D]">{total}</span>
+                                            <span className="text-lg font-bold text-brand-navy">{total}</span>
                                             <span className="text-xs text-muted-foreground">Modules</span>
                                           </>
                                         )}
@@ -3999,7 +4000,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                           data-testid={`legend-item-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
                                           className={`flex items-center gap-2 p-1.5 rounded cursor-pointer transition-all duration-200 ${
                                             selectedPieSegment === item.label 
-                                              ? 'bg-gray-100 ring-2 ring-[#0B3C5D]/30' 
+                                              ? 'bg-gray-100 ring-2 ring-brand-navy/30' 
                                               : 'hover:bg-gray-50'
                                           } ${item.value === 0 ? 'opacity-40 cursor-not-allowed' : ''}`}
                                           onClick={() => item.value > 0 && setSelectedPieSegment(selectedPieSegment === item.label ? null : item.label)}
@@ -4015,7 +4016,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                   {/* Selected Segment Details */}
                                   {selectedPieSegment && (
                                     <div className="mt-4 p-3 bg-gray-50 rounded-lg border">
-                                      <p className="text-sm font-medium text-[#0B3C5D] mb-2">
+                                      <p className="text-sm font-medium text-brand-navy mb-2">
                                         {selectedPieSegment} Categories ({
                                           selectedPieSegment === 'Strong' ? strong : 
                                           selectedPieSegment === 'Moderate' ? moderate :
@@ -4055,10 +4056,10 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                               const trendValue = insight.trendValue;
                               
                               const getScoreColor = (s: number) => {
-                                if (s >= 80) return 'text-[#4ECDC4]';
-                                if (s >= 60) return 'text-[#0B3C5D]';
-                                if (s >= 40) return 'text-[#0B3C5D]';
-                                return 'text-[#0B3C5D]';
+                                if (s >= 80) return 'text-brand-accent';
+                                if (s >= 60) return 'text-brand-navy';
+                                if (s >= 40) return 'text-brand-navy';
+                                return 'text-brand-navy';
                               };
                               
                               const getProgressColor = (s: number) => {
@@ -4069,8 +4070,8 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                               };
                               
                               const getTrendIcon = () => {
-                                if (trend === 'up') return <TrendingUp size={16} className="text-[#4ECDC4]" />;
-                                if (trend === 'down') return <TrendingDown size={16} className="text-[#0B3C5D]" />;
+                                if (trend === 'up') return <TrendingUp size={16} className="text-brand-accent" />;
+                                if (trend === 'down') return <TrendingDown size={16} className="text-brand-navy" />;
                                 if (trend === 'stable') return <Minus size={16} className="text-gray-500" />;
                                 return null;
                               };
@@ -4079,15 +4080,15 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                 <div key={insight.id} className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm overflow-hidden">
                                   <div className="flex items-center justify-between mb-4">
                                     <div className="flex items-center gap-2">
-                                      <span style={{ color: '#0B3C5D' }}><BarChart3 size={18} /></span>
+                                      <span style={{ color: BRAND.navy }}><BarChart3 size={18} /></span>
                                       <h3 className="text-sm font-semibold text-gray-800">{insight.category}</h3>
                                     </div>
                                     <Badge 
                                       variant="outline" 
-                                      className={`${score >= 80 ? 'bg-[#EDF7F2] text-[#4ECDC4] border-[#A8D5BB]' : 
-                                        score >= 60 ? 'bg-[#EDF2F7] text-[#0B3C5D] border-[#B8CCDA]' : 
-                                        score >= 40 ? 'bg-[#EDF2F7] text-[#0B3C5D] border-[#B8CCDA]' : 
-                                        'bg-[#FEF2F2] text-[#0B3C5D] border-[#E8ECF2]'}`}
+                                      className={`${score >= 80 ? 'bg-[#EDF7F2] text-brand-accent border-[#A8D5BB]' : 
+                                        score >= 60 ? 'bg-[#EDF2F7] text-brand-navy border-[#B8CCDA]' : 
+                                        score >= 40 ? 'bg-[#EDF2F7] text-brand-navy border-[#B8CCDA]' : 
+                                        'bg-[#FEF2F2] text-brand-navy border-[#E8ECF2]'}`}
                                     >
                                       {score >= 80 ? 'Strong' : score >= 60 ? 'Good' : score >= 40 ? 'Developing' : 'Needs Focus'}
                                     </Badge>
@@ -4101,8 +4102,8 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                             {getTrendIcon()}
                                             {trendValue !== null && (
                                               <span className={`text-sm font-medium ${
-                                                trend === 'up' ? 'text-[#4ECDC4]' : 
-                                                trend === 'down' ? 'text-[#0B3C5D]' : 'text-gray-500'
+                                                trend === 'up' ? 'text-brand-accent' : 
+                                                trend === 'down' ? 'text-brand-navy' : 'text-gray-500'
                                               }`}>
                                                 {trendValue > 0 ? '+' : ''}{trendValue}%
                                               </span>
@@ -4131,7 +4132,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                     {/* Stats Row */}
                                     <div className="flex items-center justify-between text-sm border-t pt-3">
                                       <div className="flex items-center gap-1 text-muted-foreground">
-                                        <CheckCircle size={14} className="text-[#4ECDC4]" />
+                                        <CheckCircle size={14} className="text-brand-accent" />
                                         <span>Completed: <strong className="text-foreground">
                                           {insight.completedAt ? new Date(insight.completedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'N/A'}
                                         </strong></span>
@@ -4161,7 +4162,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                 {Object.entries(insightsByCategory).map(([category, insights]) => (
                                   <div key={category} className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
                                     <div className="flex items-center gap-2 mb-4">
-                                      <span style={{ color: '#0B3C5D' }}><BarChart3 size={18} /></span>
+                                      <span style={{ color: BRAND.navy }}><BarChart3 size={18} /></span>
                                       <h3 className="text-sm font-semibold text-gray-800">{category}</h3>
                                     </div>
                                     <div className="space-y-3">
@@ -4195,8 +4196,8 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                           <div className="bg-white border border-[#A8D5BB] rounded-2xl p-5 shadow-sm">
                             <div className="mb-3">
                               <div className="flex items-center gap-2">
-                                <Award size={18} className="text-[#4ECDC4]" />
-                                <h3 className="text-sm font-semibold text-[#4ECDC4]">Key Strengths</h3>
+                                <Award size={18} className="text-brand-accent" />
+                                <h3 className="text-sm font-semibold text-brand-accent">Key Strengths</h3>
                               </div>
                               <p className="text-xs text-gray-400 mt-0.5">Areas where {selectedChild.name} excels</p>
                             </div>
@@ -4206,7 +4207,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                 .map((insight: any) => (
                                   <Badge 
                                     key={insight.id} 
-                                    className="bg-[#C9E8D8] text-[#4ECDC4] border-[#A8D5BB]"
+                                    className="bg-[#C9E8D8] text-brand-accent border-[#A8D5BB]"
                                   >
                                     {(insight.source === 'LBI' || insight.source === 'Lbi') ? insight.category : insight.metric}
                                   </Badge>
@@ -4221,8 +4222,8 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                           <div className="bg-white border border-[#B8CCDA] rounded-2xl p-5 shadow-sm">
                             <div className="mb-3">
                               <div className="flex items-center gap-2">
-                                <Target size={18} className="text-[#0B3C5D]" />
-                                <h3 className="text-sm font-semibold text-[#0B3C5D]">Growth Opportunities</h3>
+                                <Target size={18} className="text-brand-navy" />
+                                <h3 className="text-sm font-semibold text-brand-navy">Growth Opportunities</h3>
                               </div>
                               <p className="text-xs text-gray-400 mt-0.5">Areas for focused development</p>
                             </div>
@@ -4232,7 +4233,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                 .map((insight: any) => (
                                   <Badge 
                                     key={insight.id} 
-                                    className="bg-[#FFF0C2] text-[#0B3C5D] border-[#B8CCDA]"
+                                    className="bg-[#FFF0C2] text-brand-navy border-[#B8CCDA]"
                                   >
                                     {(insight.source === 'LBI' || insight.source === 'Lbi') ? insight.category : insight.metric}
                                   </Badge>
@@ -4249,14 +4250,14 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         {hasConsent && (
                           <div className="flex items-center justify-between px-4 py-3 rounded-2xl mt-2" style={{ background: 'rgba(11,60,93,0.04)', border: '1px solid rgba(11,60,93,0.1)' }}>
                             <div>
-                              <p className="text-[12px] font-semibold" style={{ color: '#0B3C5D' }}>Take remaining LBI modules</p>
-                              <p className="text-[10px] text-gray-400 mt-0.5">Completing all 8 modules unlocks the full behavioural profile</p>
+                              <p className="text-xs font-semibold" style={{ color: BRAND.navy }}>Take remaining LBI modules</p>
+                              <p className="text-2xs text-gray-400 mt-0.5">Completing all 8 modules unlocks the full behavioural profile</p>
                             </div>
                             <Button
                               size="sm"
                               onClick={() => onNavigate('parent-lbi', { childId: selectedChild.id, lbiTab: 'assessments' })}
                               className="text-white font-semibold text-xs"
-                              style={{ backgroundColor: '#0B3C5D' }}
+                              style={{ backgroundColor: BRAND.navy }}
                               data-testid="button-continue-lbi"
                             >
                               <Brain className="w-3 h-3 mr-1.5" />
@@ -4278,7 +4279,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                           <Button 
                             onClick={() => onNavigate('parent-lbi', { childId: selectedChild.id, lbiTab: 'assessments' })}
                             className="text-gray-900 font-semibold hover:opacity-90"
-                            style={{ backgroundColor: '#4ECDC4' }}
+                            style={{ backgroundColor: BRAND.accent }}
                             data-testid="button-start-lbi"
                           >
                             <Brain className="w-4 h-4 mr-2" />
@@ -4307,8 +4308,8 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 <Card className="border shadow-sm" data-testid="my-packages-header">
                   <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-base flex items-center gap-2" style={{ color: '#0B3C5D' }}>
-                        <Award size={18} style={{ color: '#4ECDC4' }} />
+                      <CardTitle className="text-base flex items-center gap-2" style={{ color: BRAND.navy }}>
+                        <Award size={18} style={{ color: BRAND.accent }} />
                         My Children's Packages
                       </CardTitle>
                     </div>
@@ -4320,18 +4321,18 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         <div key={child.id} className="p-3 rounded-lg border space-y-2" data-testid={`child-packages-${child.id}`}>
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                              <div className="h-9 w-9 rounded-full flex items-center justify-center text-white font-semibold text-sm" style={{ backgroundColor: '#0B3C5D' }}>
+                              <div className="h-9 w-9 rounded-full flex items-center justify-center text-white font-semibold text-sm" style={{ backgroundColor: BRAND.navy }}>
                                 {child.name?.charAt(0) || 'C'}
                               </div>
                               <div>
-                                <p className="text-sm font-medium" style={{ color: '#0B3C5D' }}>{child.name}</p>
+                                <p className="text-sm font-medium" style={{ color: BRAND.navy }}>{child.name}</p>
                                 <p className="text-xs text-muted-foreground">{child.grade || 'Grade not set'}</p>
                               </div>
                             </div>
                             <Button
                               size="sm"
-                              className="h-7 px-3 text-[11px] text-white"
-                              style={{ backgroundColor: '#4ECDC4' }}
+                              className="h-7 px-3 text-xs text-white"
+                              style={{ backgroundColor: BRAND.accent }}
                               onClick={handleExamReadyStart}
                               data-testid={`btn-buy-package-${child.id}`}
                             >
@@ -4344,16 +4345,16 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                               {subs.map((sub: any) => (
                                 <div key={sub.id} className="flex items-center justify-between p-2 rounded-lg bg-gray-50 border">
                                   <div className="flex items-center gap-2">
-                                    <Award size={14} style={{ color: '#4ECDC4' }} />
+                                    <Award size={14} style={{ color: BRAND.accent }} />
                                     <div>
-                                      <p className="text-xs font-semibold" style={{ color: '#0B3C5D' }}>{sub.productName}</p>
-                                      <p className="text-[10px] text-muted-foreground">
+                                      <p className="text-xs font-semibold" style={{ color: BRAND.navy }}>{sub.productName}</p>
+                                      <p className="text-2xs text-muted-foreground">
                                         {sub.category} • {sub.billingType}{sub.expiryDate ? ` • Expires ${new Date(sub.expiryDate).toLocaleDateString()}` : ''}
                                       </p>
                                     </div>
                                   </div>
                                   <Badge
-                                    className={`text-[10px] ${sub.status === 'active' ? 'bg-[#C9E8D8] text-[#4ECDC4]' : sub.status === 'expired' ? 'bg-[#EDF2F7] text-[#0B3C5D]' : 'bg-gray-100 text-gray-600'}`}
+                                    className={`text-2xs ${sub.status === 'active' ? 'bg-[#C9E8D8] text-brand-accent' : sub.status === 'expired' ? 'bg-[#EDF2F7] text-brand-navy' : 'bg-gray-100 text-gray-600'}`}
                                   >
                                     {sub.status}
                                   </Badge>
@@ -4372,7 +4373,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 {/* Available Packages */}
                 <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm" data-testid="available-packages">
                   <div className="flex items-center gap-2 mb-1">
-                    <span style={{ color: '#4ECDC4' }}><Target size={18} /></span>
+                    <span style={{ color: BRAND.accent }}><Target size={18} /></span>
                     <h3 className="text-base font-semibold text-gray-800">Available Assessment Packages</h3>
                   </div>
                   <p className="text-xs text-gray-400 mb-4">Choose a package to get started</p>
@@ -4381,25 +4382,25 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         <div
                           key={pkg.id}
                           className="p-4 rounded-2xl border border-gray-100 hover:shadow-md transition-all cursor-pointer relative bg-gray-50/50"
-                          style={{ borderColor: pkg.isRecommended ? '#4ECDC4' : '#e5e7eb' }}
+                          style={{ borderColor: pkg.isRecommended ? BRAND.accent : '#e5e7eb' }}
                           onClick={handleExamReadyStart}
                           data-testid={`pkg-card-${pkg.id}`}
                         >
                           {pkg.isRecommended && (
-                            <span className="absolute top-2 right-2 text-[10px] px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: '#4ECDC4' }}>
+                            <span className="absolute top-2 right-2 text-2xs px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: BRAND.accent }}>
                               Recommended
                             </span>
                           )}
-                          <h4 className="text-sm font-semibold mb-1" style={{ color: '#0B3C5D' }}>{pkg.productName}</h4>
+                          <h4 className="text-sm font-semibold mb-1" style={{ color: BRAND.navy }}>{pkg.productName}</h4>
                           <p className="text-xs text-muted-foreground mb-2">{pkg.studentSegment}</p>
                           <div className="flex flex-wrap gap-1 mb-3">
                             {pkg.domainsCovered?.slice(0, 3).map((d, i) => (
-                              <span key={i} className="text-[9px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-600">{d}</span>
+                              <span key={i} className="text-2xs px-1.5 py-0.5 rounded bg-gray-100 text-gray-600">{d}</span>
                             ))}
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-sm font-bold" style={{ color: '#0B3C5D' }}>₹{pkg.price}</span>
-                            <span className="text-[11px] font-medium" style={{ color: '#4ECDC4' }}>View Details</span>
+                            <span className="text-sm font-bold" style={{ color: BRAND.navy }}>₹{pkg.price}</span>
+                            <span className="text-xs font-medium" style={{ color: BRAND.accent }}>View Details</span>
                           </div>
                         </div>
                       ))}
@@ -4533,7 +4534,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Target className="h-5 w-5" style={{ color: '#0B3C5D' }} />
+              <Target className="h-5 w-5" style={{ color: BRAND.navy }} />
               Start ExamReadiness Assessment
             </DialogTitle>
             <DialogDescription>
@@ -4554,13 +4555,13 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                       onClick={() => setExamReadySelectedChildId(child.id)}
                       className="w-full flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left"
                       style={{
-                        borderColor: isSelected ? '#0B3C5D' : '#E2E8F0',
+                        borderColor: isSelected ? BRAND.navy : BRAND.border,
                         backgroundColor: isSelected ? '#EDF2F7' : '#FAFBFC',
                       }}
                     >
                       <div
                         className="h-10 w-10 rounded-xl flex items-center justify-center text-sm font-bold text-white shrink-0"
-                        style={{ background: isSelected ? '#0B3C5D' : '#94A3B8' }}
+                        style={{ background: isSelected ? BRAND.navy : BRAND.slate }}
                       >
                         {getInitials(child.name)}
                       </div>
@@ -4573,7 +4574,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         </p>
                       </div>
                       {isSelected && (
-                        <CheckCircle className="h-5 w-5 shrink-0" style={{ color: '#0B3C5D' }} />
+                        <CheckCircle className="h-5 w-5 shrink-0" style={{ color: BRAND.navy }} />
                       )}
                     </button>
                   );
@@ -4592,7 +4593,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 <label
                   className="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all"
                   style={{
-                    borderColor: examTakenBy === 'child' ? '#0B3C5D' : '#E2E8F0',
+                    borderColor: examTakenBy === 'child' ? BRAND.navy : BRAND.border,
                     backgroundColor: examTakenBy === 'child' ? '#EDF2F7' : '#FAFBFC',
                   }}
                 >
@@ -4605,7 +4606,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 <label
                   className="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all"
                   style={{
-                    borderColor: examTakenBy === 'parent' ? '#0B3C5D' : '#E2E8F0',
+                    borderColor: examTakenBy === 'parent' ? BRAND.navy : BRAND.border,
                     backgroundColor: examTakenBy === 'parent' ? '#EDF2F7' : '#FAFBFC',
                   }}
                 >
@@ -4623,7 +4624,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
             <Button variant="outline" onClick={() => setIsExamReadyPickerOpen(false)}>Cancel</Button>
             <Button
               className="text-white"
-              style={{ backgroundColor: '#0B3C5D' }}
+              style={{ backgroundColor: BRAND.navy }}
               disabled={!examReadySelectedChildId}
               onClick={handleExamReadyConfirm}
             >
@@ -4687,14 +4688,14 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
             <div className="flex items-center gap-4">
               <div 
                 className="h-12 w-12 rounded-xl flex items-center justify-center shadow-lg"
-                style={{ backgroundColor: '#0B3C5D' }}
+                style={{ backgroundColor: BRAND.navy }}
               >
                 <UserPlus size={24} className="text-white" />
               </div>
               <div className="flex-1">
-                <DialogTitle className="text-xl font-bold" style={{ color: '#0B3C5D' }}>Register Your Child</DialogTitle>
+                <DialogTitle className="text-xl font-bold" style={{ color: BRAND.navy }}>Register Your Child</DialogTitle>
                 <DialogDescription className="text-sm mt-1">
-                  <span style={{ color: '#4ECDC4', fontWeight: 600 }}>Step {addChildStep}</span>
+                  <span style={{ color: BRAND.accent, fontWeight: 600 }}>Step {addChildStep}</span>
                   <span className="mx-2 text-gray-300">|</span>
                   <span className="text-gray-600">{addChildStep === 1 ? 'Personal Information' : addChildStep === 2 ? 'Education Details' : addChildStep === 3 ? 'Learning Profile' : addChildStep === 4 ? 'Consents & Privacy' : 'Set First Goal'}</span>
                 </DialogDescription>
@@ -4713,12 +4714,12 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 <div key={step} className="flex-1 flex items-center gap-1">
                   <div 
                     className={`h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold transition-all shrink-0 ${step <= addChildStep ? 'text-white shadow-md' : 'text-gray-400 bg-gray-100'}`}
-                    style={{ backgroundColor: step <= addChildStep ? (step === addChildStep ? '#4ECDC4' : '#0B3C5D') : undefined }}
+                    style={{ backgroundColor: step <= addChildStep ? (step === addChildStep ? BRAND.accent : BRAND.navy) : undefined }}
                   >
                     {step < addChildStep ? <CheckCircle size={14} /> : <Icon size={13} />}
                   </div>
-                  <span className={`text-[10px] font-medium hidden sm:block ${step <= addChildStep ? 'text-gray-800' : 'text-gray-400'}`}>{label}</span>
-                  {step < 5 && <div className="flex-1 h-0.5 rounded-full mx-1" style={{ backgroundColor: step < addChildStep ? '#4ECDC4' : '#e5e7eb' }} />}
+                  <span className={`text-2xs font-medium hidden sm:block ${step <= addChildStep ? 'text-gray-800' : 'text-gray-400'}`}>{label}</span>
+                  {step < 5 && <div className="flex-1 h-0.5 rounded-full mx-1" style={{ backgroundColor: step < addChildStep ? BRAND.accent : '#e5e7eb' }} />}
                 </div>
               ))}
             </div>
@@ -4729,14 +4730,14 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
             <div className="grid gap-5 py-5">
               <div 
                 className="p-4 rounded-xl border-l-4"
-                style={{ backgroundColor: 'rgba(11,60,93,0.04)', borderLeftColor: '#0B3C5D' }}
+                style={{ backgroundColor: 'rgba(11,60,93,0.04)', borderLeftColor: BRAND.navy }}
               >
                 <div className="flex items-start gap-3">
-                  <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#0B3C5D' }}>
+                  <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: BRAND.navy }}>
                     <Shield size={16} className="text-white" />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Secure Data Collection</p>
+                    <p className="text-sm font-semibold" style={{ color: BRAND.navy }}>Secure Data Collection</p>
                     <p className="text-xs text-gray-600 mt-1">
                       Your child's data is encrypted and protected under DPDP Act 2023 compliance.
                     </p>
@@ -4746,19 +4747,19 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
               
               <div className="grid gap-4">
                 <div className="grid gap-2">
-                  <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Full Name <span style={{ color: '#4ECDC4' }}>*</span></Label>
+                  <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>Full Name <span style={{ color: BRAND.accent }}>*</span></Label>
                   <Input 
                     value={newChildName} 
                     onChange={(e) => setNewChildName(e.target.value)}
                     placeholder="Enter child's full name"
-                    className="h-11 rounded-lg border-gray-200 focus:border-[#4ECDC4] focus:ring-[#4ECDC4]"
+                    className="h-11 rounded-lg border-gray-200 focus:border-brand-accent focus:ring-brand-accent"
                     data-testid="input-child-name-standalone"
                   />
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
-                    <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Date of Birth <span style={{ color: '#4ECDC4' }}>*</span></Label>
+                    <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>Date of Birth <span style={{ color: BRAND.accent }}>*</span></Label>
                     <Input 
                       type="date"
                       value={newChildDOB} 
@@ -4772,7 +4773,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Gender <span style={{ color: '#4ECDC4' }}>*</span></Label>
+                    <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>Gender <span style={{ color: BRAND.accent }}>*</span></Label>
                     <Select value={newChildGender} onValueChange={setNewChildGender}>
                       <SelectTrigger className="h-11 rounded-lg" data-testid="select-child-gender-standalone">
                         <SelectValue placeholder="Select gender" />
@@ -4788,7 +4789,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
-                    <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Blood Group</Label>
+                    <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>Blood Group</Label>
                     <Select value={newChildBloodGroup} onValueChange={setNewChildBloodGroup}>
                       <SelectTrigger className="h-11 rounded-lg" data-testid="select-child-blood-standalone">
                         <SelectValue placeholder="Select" />
@@ -4801,7 +4802,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     </Select>
                   </div>
                   <div className="grid gap-2">
-                    <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Primary Language <span style={{ color: '#4ECDC4' }}>*</span></Label>
+                    <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>Primary Language <span style={{ color: BRAND.accent }}>*</span></Label>
                     <Select value={newChildLanguage} onValueChange={setNewChildLanguage}>
                       <SelectTrigger className="h-11 rounded-lg" data-testid="select-child-language-standalone">
                         <SelectValue placeholder="Select language" />
@@ -4817,7 +4818,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
-                    <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Your Relationship <span style={{ color: '#4ECDC4' }}>*</span></Label>
+                    <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>Your Relationship <span style={{ color: BRAND.accent }}>*</span></Label>
                     <Select value={newChildRelationship} onValueChange={setNewChildRelationship}>
                       <SelectTrigger className="h-11 rounded-lg" data-testid="select-child-relationship-standalone">
                         <SelectValue placeholder="Select relationship" />
@@ -4830,7 +4831,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     </Select>
                   </div>
                   <div className="grid gap-2">
-                    <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Emergency Contact</Label>
+                    <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>Emergency Contact</Label>
                     <Input 
                       value={newChildEmergencyContact} 
                       onChange={(e) => setNewChildEmergencyContact(e.target.value)}
@@ -4849,14 +4850,14 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
             <div className="grid gap-5 py-5">
               <div 
                 className="p-4 rounded-xl border-l-4"
-                style={{ backgroundColor: 'rgba(78,205,196,0.05)', borderLeftColor: '#4ECDC4' }}
+                style={{ backgroundColor: 'rgba(78,205,196,0.05)', borderLeftColor: BRAND.accent }}
               >
                 <div className="flex items-start gap-3">
-                  <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#4ECDC4' }}>
+                  <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: BRAND.accent }}>
                     <GraduationCap size={16} className="text-white" />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Education Information</p>
+                    <p className="text-sm font-semibold" style={{ color: BRAND.navy }}>Education Information</p>
                     <p className="text-xs text-gray-600 mt-1">
                       This helps us tailor content to your child's curriculum and academic level.
                     </p>
@@ -4867,7 +4868,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
               <div className="grid gap-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
-                    <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Grade/Class <span style={{ color: '#4ECDC4' }}>*</span></Label>
+                    <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>Grade/Class <span style={{ color: BRAND.accent }}>*</span></Label>
                     <Select value={newChildGrade} onValueChange={setNewChildGrade}>
                       <SelectTrigger className="h-11 rounded-lg" data-testid="select-child-grade-standalone">
                         <SelectValue placeholder="Select grade" />
@@ -4880,7 +4881,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     </Select>
                   </div>
                   <div className="grid gap-2">
-                    <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Education Board <span style={{ color: '#4ECDC4' }}>*</span></Label>
+                    <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>Education Board <span style={{ color: BRAND.accent }}>*</span></Label>
                     <Select value={newChildBoard} onValueChange={setNewChildBoard}>
                       <SelectTrigger className="h-11 rounded-lg" data-testid="select-child-board-standalone">
                         <SelectValue placeholder="Select board" />
@@ -4896,7 +4897,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
-                    <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>School Type</Label>
+                    <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>School Type</Label>
                     <Select value={newChildSchoolType} onValueChange={setNewChildSchoolType}>
                       <SelectTrigger className="h-11 rounded-lg" data-testid="select-child-school-type-standalone">
                         <SelectValue placeholder="Select type" />
@@ -4909,7 +4910,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     </Select>
                   </div>
                   <div className="grid gap-2">
-                    <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Medium of Instruction</Label>
+                    <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>Medium of Instruction</Label>
                     <Select value={newChildMedium} onValueChange={setNewChildMedium}>
                       <SelectTrigger className="h-11 rounded-lg" data-testid="select-child-medium-standalone">
                         <SelectValue placeholder="Select medium" />
@@ -4924,7 +4925,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 </div>
 
                 <div className="grid gap-2">
-                  <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>School/Institution Name</Label>
+                  <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>School/Institution Name</Label>
                   <Input 
                     value={newChildSchool} 
                     onChange={(e) => setNewChildSchool(e.target.value)}
@@ -4936,7 +4937,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
-                    <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>City</Label>
+                    <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>City</Label>
                     <Input 
                       value={newChildCity} 
                       onChange={(e) => setNewChildCity(e.target.value)}
@@ -4946,7 +4947,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>State</Label>
+                    <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>State</Label>
                     <Select value={newChildState} onValueChange={setNewChildState}>
                       <SelectTrigger className="h-11 rounded-lg" data-testid="select-child-state-standalone">
                         <SelectValue placeholder="Select state" />
@@ -4968,14 +4969,14 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
             <div className="grid gap-5 py-5">
               <div 
                 className="p-4 rounded-xl border-l-4"
-                style={{ backgroundColor: 'rgba(11,60,93,0.04)', borderLeftColor: '#0B3C5D' }}
+                style={{ backgroundColor: 'rgba(11,60,93,0.04)', borderLeftColor: BRAND.navy }}
               >
                 <div className="flex items-start gap-3">
-                  <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#0B3C5D' }}>
+                  <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: BRAND.navy }}>
                     <Brain size={16} className="text-white" />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Learning Profile</p>
+                    <p className="text-sm font-semibold" style={{ color: BRAND.navy }}>Learning Profile</p>
                     <p className="text-xs text-gray-600 mt-1">
                       This helps us provide personalized learning recommendations and insights.
                     </p>
@@ -4986,7 +4987,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
               <div className="grid gap-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
-                    <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Learning Style</Label>
+                    <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>Learning Style</Label>
                     <Select value={newChildLearningStyle} onValueChange={setNewChildLearningStyle}>
                       <SelectTrigger className="h-11 rounded-lg" data-testid="select-child-learning-style-standalone">
                         <SelectValue placeholder="Select style" />
@@ -4999,7 +5000,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     </Select>
                   </div>
                   <div className="grid gap-2">
-                    <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Daily Study Hours</Label>
+                    <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>Daily Study Hours</Label>
                     <Select value={newChildStudyHours} onValueChange={setNewChildStudyHours}>
                       <SelectTrigger className="h-11 rounded-lg" data-testid="select-child-study-hours-standalone">
                         <SelectValue placeholder="Select hours" />
@@ -5014,7 +5015,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 </div>
 
                 <div className="grid gap-2">
-                  <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Favorite Subjects <span className="text-xs font-normal text-gray-500">(Select up to 3)</span></Label>
+                  <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>Favorite Subjects <span className="text-xs font-normal text-gray-500">(Select up to 3)</span></Label>
                   <div className="flex flex-wrap gap-2">
                     {SUBJECTS.map(subject => (
                       <button
@@ -5029,7 +5030,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         }}
                         className={`px-3 py-2 text-xs font-medium rounded-lg border-2 transition-all`}
                         style={newChildFavoriteSubjects.includes(subject) 
-                          ? { borderColor: '#4ECDC4', backgroundColor: 'rgba(78,205,196,0.08)', color: '#0B3C5D' }
+                          ? { borderColor: BRAND.accent, backgroundColor: 'rgba(78,205,196,0.08)', color: BRAND.navy }
                           : { borderColor: '#e5e7eb', backgroundColor: 'white' }
                         }
                         data-testid={`chip-favorite-subject-${subject.toLowerCase().replace(/\s+/g, '-')}`}
@@ -5042,7 +5043,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 </div>
 
                 <div className="grid gap-2">
-                  <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Needs Improvement <span className="text-xs font-normal text-gray-500">(Select up to 3)</span></Label>
+                  <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>Needs Improvement <span className="text-xs font-normal text-gray-500">(Select up to 3)</span></Label>
                   <div className="flex flex-wrap gap-2">
                     {SUBJECTS.map(subject => (
                       <button
@@ -5057,7 +5058,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         }}
                         className={`px-3 py-2 text-xs font-medium rounded-lg border-2 transition-all`}
                         style={newChildWeakSubjects.includes(subject) 
-                          ? { borderColor: '#0B3C5D', backgroundColor: 'rgba(245, 158, 11, 0.1)', color: '#92400e' }
+                          ? { borderColor: BRAND.navy, backgroundColor: 'rgba(245, 158, 11, 0.1)', color: '#92400e' }
                           : { borderColor: '#e5e7eb', backgroundColor: 'white' }
                         }
                         data-testid={`chip-weak-subject-${subject.toLowerCase().replace(/\s+/g, '-')}`}
@@ -5070,7 +5071,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 </div>
 
                 <div className="grid gap-2">
-                  <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Career Interest</Label>
+                  <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>Career Interest</Label>
                   <Select value={newChildCareerInterest} onValueChange={setNewChildCareerInterest}>
                     <SelectTrigger className="h-11 rounded-lg" data-testid="select-child-career-standalone">
                       <SelectValue placeholder="Select career interest" />
@@ -5084,7 +5085,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 </div>
 
                 <div className="grid gap-2">
-                  <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Extracurricular Activities</Label>
+                  <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>Extracurricular Activities</Label>
                   <Input 
                     value={newChildExtracurricular} 
                     onChange={(e) => setNewChildExtracurricular(e.target.value)}
@@ -5096,7 +5097,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
-                    <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Learning Support Needs</Label>
+                    <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>Learning Support Needs</Label>
                     <Input 
                       value={newChildSpecialNeeds} 
                       onChange={(e) => setNewChildSpecialNeeds(e.target.value)}
@@ -5106,7 +5107,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Medical Conditions</Label>
+                    <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>Medical Conditions</Label>
                     <Input 
                       value={newChildMedicalConditions} 
                       onChange={(e) => setNewChildMedicalConditions(e.target.value)}
@@ -5125,7 +5126,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
             <div className="grid gap-5 py-5">
               <div 
                 className="p-5 rounded-xl text-white shadow-lg"
-                style={{ backgroundColor: '#0B3C5D' }}
+                style={{ backgroundColor: BRAND.navy }}
               >
                 <div className="flex items-center gap-3 mb-3">
                   <div className="h-10 w-10 rounded-lg flex items-center justify-center bg-white/20">
@@ -5144,13 +5145,13 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 style={{ backgroundColor: 'rgba(11,60,93,0.04)' }}
               >
                 <div className="flex items-center gap-2">
-                  <div className="h-6 w-6 rounded-full flex items-center justify-center" style={{ backgroundColor: '#0B3C5D' }}>
+                  <div className="h-6 w-6 rounded-full flex items-center justify-center" style={{ backgroundColor: BRAND.navy }}>
                     <FileText size={12} className="text-white" />
                   </div>
-                  <span className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Required Consents</span>
+                  <span className="text-sm font-semibold" style={{ color: BRAND.navy }}>Required Consents</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-xs font-medium" style={{ color: '#4ECDC4' }}>
+                  <span className="text-xs font-medium" style={{ color: BRAND.accent }}>
                     {[consentDataCollection, consentDPDP, acknowledgeDevelopment].filter(Boolean).length}/3 completed
                   </span>
                   <div className="w-28 h-2.5 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(11,60,93,0.08)' }}>
@@ -5158,7 +5159,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                       className="h-full rounded-full transition-all"
                       style={{ 
                         width: `${([consentDataCollection, consentDPDP, acknowledgeDevelopment].filter(Boolean).length / 3) * 100}%`,
-                        backgroundColor: '#0B3C5D'
+                        backgroundColor: BRAND.navy
                       }}
                     />
                   </div>
@@ -5169,7 +5170,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 <label 
                   className="flex items-start gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all"
                   style={consentDataCollection 
-                    ? { borderColor: '#4ECDC4', backgroundColor: 'rgba(78,205,196,0.05)' }
+                    ? { borderColor: BRAND.accent, backgroundColor: 'rgba(78,205,196,0.05)' }
                     : { borderColor: '#e5e7eb' }
                   }
                 >
@@ -5178,13 +5179,13 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     checked={consentDataCollection}
                     onChange={(e) => setConsentDataCollection(e.target.checked)}
                     className="mt-0.5 w-5 h-5 rounded"
-                    style={{ accentColor: '#4ECDC4' }}
+                    style={{ accentColor: BRAND.accent }}
                     data-testid="checkbox-consent-data-standalone"
                   />
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Data Collection Consent <span style={{ color: '#4ECDC4' }}>*</span></span>
-                      {consentDataCollection && <CheckCircle size={18} style={{ color: '#4ECDC4' }} />}
+                      <span className="text-sm font-semibold" style={{ color: BRAND.navy }}>Data Collection Consent <span style={{ color: BRAND.accent }}>*</span></span>
+                      {consentDataCollection && <CheckCircle size={18} style={{ color: BRAND.accent }} />}
                     </div>
                     <p className="text-xs text-gray-600 mt-1.5 leading-relaxed">
                       I consent to the collection and processing of my child's educational data for personalized insights.
@@ -5195,7 +5196,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 <label 
                   className="flex items-start gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all"
                   style={consentDPDP 
-                    ? { borderColor: '#4ECDC4', backgroundColor: 'rgba(78,205,196,0.05)' }
+                    ? { borderColor: BRAND.accent, backgroundColor: 'rgba(78,205,196,0.05)' }
                     : { borderColor: '#e5e7eb' }
                   }
                 >
@@ -5204,13 +5205,13 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     checked={consentDPDP}
                     onChange={(e) => setConsentDPDP(e.target.checked)}
                     className="mt-0.5 w-5 h-5 rounded"
-                    style={{ accentColor: '#4ECDC4' }}
+                    style={{ accentColor: BRAND.accent }}
                     data-testid="checkbox-consent-dpdp-standalone"
                   />
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>DPDP Act 2023 Compliance <span style={{ color: '#4ECDC4' }}>*</span></span>
-                      {consentDPDP && <CheckCircle size={18} style={{ color: '#4ECDC4' }} />}
+                      <span className="text-sm font-semibold" style={{ color: BRAND.navy }}>DPDP Act 2023 Compliance <span style={{ color: BRAND.accent }}>*</span></span>
+                      {consentDPDP && <CheckCircle size={18} style={{ color: BRAND.accent }} />}
                     </div>
                     <p className="text-xs text-gray-600 mt-1.5 leading-relaxed">
                       I am the legal guardian and consent to data processing per DPDP Act, 2023.
@@ -5221,7 +5222,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 <label 
                   className="flex items-start gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all"
                   style={acknowledgeDevelopment 
-                    ? { borderColor: '#4ECDC4', backgroundColor: 'rgba(78,205,196,0.05)' }
+                    ? { borderColor: BRAND.accent, backgroundColor: 'rgba(78,205,196,0.05)' }
                     : { borderColor: '#e5e7eb' }
                   }
                 >
@@ -5230,13 +5231,13 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     checked={acknowledgeDevelopment}
                     onChange={(e) => setAcknowledgeDevelopment(e.target.checked)}
                     className="mt-0.5 w-5 h-5 rounded"
-                    style={{ accentColor: '#4ECDC4' }}
+                    style={{ accentColor: BRAND.accent }}
                     data-testid="checkbox-acknowledge-dev-standalone"
                   />
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Purpose & Data Retention <span style={{ color: '#4ECDC4' }}>*</span></span>
-                      {acknowledgeDevelopment && <CheckCircle size={18} style={{ color: '#4ECDC4' }} />}
+                      <span className="text-sm font-semibold" style={{ color: BRAND.navy }}>Purpose & Data Retention <span style={{ color: BRAND.accent }}>*</span></span>
+                      {acknowledgeDevelopment && <CheckCircle size={18} style={{ color: BRAND.accent }} />}
                     </div>
                     <p className="text-xs text-gray-600 mt-1.5 leading-relaxed">
                       I understand data will be used for educational development and retained until deletion request.
@@ -5245,11 +5246,11 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 </label>
 
                 <div className="pt-2">
-                  <p className="text-xs font-semibold mb-2" style={{ color: '#0B3C5D' }}>Optional Enhancement</p>
+                  <p className="text-xs font-semibold mb-2" style={{ color: BRAND.navy }}>Optional Enhancement</p>
                   <label 
                     className="flex items-start gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all"
                     style={consentBehavioral 
-                      ? { borderColor: '#0B3C5D', backgroundColor: 'rgba(11,60,93,0.04)' }
+                      ? { borderColor: BRAND.navy, backgroundColor: 'rgba(11,60,93,0.04)' }
                       : { borderColor: '#e5e7eb' }
                     }
                   >
@@ -5258,13 +5259,13 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                       checked={consentBehavioral}
                       onChange={(e) => setConsentBehavioral(e.target.checked)}
                       className="mt-0.5 w-5 h-5 rounded"
-                      style={{ accentColor: '#0B3C5D' }}
+                      style={{ accentColor: BRAND.navy }}
                       data-testid="checkbox-consent-behavioral-standalone"
                     />
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Behavioral Assessment</span>
-                        <Badge className="text-xs text-white px-2 py-0.5" style={{ backgroundColor: '#4ECDC4' }}>Recommended</Badge>
+                        <span className="text-sm font-semibold" style={{ color: BRAND.navy }}>Behavioral Assessment</span>
+                        <Badge className="text-xs text-white px-2 py-0.5" style={{ backgroundColor: BRAND.accent }}>Recommended</Badge>
                       </div>
                       <p className="text-xs text-gray-600 mt-1.5 leading-relaxed">
                         Enable Learning Behavior Index (LBI) assessments for comprehensive understanding.
@@ -5281,11 +5282,11 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
             <div className="grid gap-5 py-5">
               {/* Success banner */}
               <div className="flex items-center gap-3 p-4 rounded-xl" style={{ backgroundColor: 'rgba(78,205,196,0.08)', border: '1.5px solid rgba(78,205,196,0.25)' }}>
-                <div className="h-10 w-10 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: '#4ECDC4' }}>
+                <div className="h-10 w-10 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: BRAND.accent }}>
                   <CheckCircle size={20} className="text-white" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold" style={{ color: '#4ECDC4' }}>{newChildName} has been registered!</p>
+                  <p className="text-sm font-semibold" style={{ color: BRAND.accent }}>{newChildName} has been registered!</p>
                   <p className="text-xs text-gray-500 mt-0.5">Now set your first goal contract — or skip and do it later from the Goals tab.</p>
                 </div>
               </div>
@@ -5293,7 +5294,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
               {/* Goal form */}
               <div className="grid gap-4">
                 <div className="grid gap-2">
-                  <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>
+                  <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>
                     Goal Title <span className="text-xs font-normal text-gray-400 ml-1">(optional)</span>
                   </Label>
                   <input
@@ -5301,18 +5302,18 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     value={firstGoalTitle}
                     onChange={e => setFirstGoalTitle(e.target.value)}
                     placeholder="e.g. Improve Mathematics score by 15%"
-                    className="h-11 w-full rounded-lg border border-gray-200 px-3 text-sm focus:outline-none focus:border-[#4ECDC4] focus:ring-1 focus:ring-[#4ECDC4]"
+                    className="h-11 w-full rounded-lg border border-gray-200 px-3 text-sm focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent"
                     data-testid="input-first-goal-title"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
-                    <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Category</Label>
+                    <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>Category</Label>
                     <select
                       value={firstGoalCategory}
                       onChange={e => setFirstGoalCategory(e.target.value as 'academic' | 'behaviour' | 'wellness' | 'career')}
-                      className="h-11 w-full rounded-lg border border-gray-200 px-3 text-sm focus:outline-none focus:border-[#4ECDC4]"
+                      className="h-11 w-full rounded-lg border border-gray-200 px-3 text-sm focus:outline-none focus:border-brand-accent"
                       data-testid="select-first-goal-category"
                     >
                       <option value="academic">Academic</option>
@@ -5322,33 +5323,33 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     </select>
                   </div>
                   <div className="grid gap-2">
-                    <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Target Date</Label>
+                    <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>Target Date</Label>
                     <input
                       type="date"
                       value={firstGoalTargetDate}
                       onChange={e => setFirstGoalTargetDate(e.target.value)}
                       min={new Date().toISOString().slice(0, 10)}
-                      className="h-11 w-full rounded-lg border border-gray-200 px-3 text-sm focus:outline-none focus:border-[#4ECDC4]"
+                      className="h-11 w-full rounded-lg border border-gray-200 px-3 text-sm focus:outline-none focus:border-brand-accent"
                       data-testid="input-first-goal-date"
                     />
                   </div>
                 </div>
 
                 <div className="grid gap-2">
-                  <Label className="text-sm font-semibold" style={{ color: '#0B3C5D' }}>Description <span className="text-xs font-normal text-gray-400 ml-1">(optional)</span></Label>
+                  <Label className="text-sm font-semibold" style={{ color: BRAND.navy }}>Description <span className="text-xs font-normal text-gray-400 ml-1">(optional)</span></Label>
                   <textarea
                     value={firstGoalDescription}
                     onChange={e => setFirstGoalDescription(e.target.value)}
                     placeholder="Describe what success looks like..."
                     rows={2}
-                    className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm resize-none focus:outline-none focus:border-[#4ECDC4] focus:ring-1 focus:ring-[#4ECDC4]"
+                    className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm resize-none focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent"
                     data-testid="input-first-goal-desc"
                   />
                 </div>
 
                 {/* Suggested quick-picks */}
                 <div>
-                  <p className="text-xs font-semibold mb-2" style={{ color: '#0B3C5D' }}>Quick suggestions</p>
+                  <p className="text-xs font-semibold mb-2" style={{ color: BRAND.navy }}>Quick suggestions</p>
                   <div className="flex flex-wrap gap-2">
                     {[
                       { title: 'Improve Mathematics Score', category: 'academic' as const },
@@ -5361,9 +5362,9 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         onClick={() => { setFirstGoalTitle(s.title); setFirstGoalCategory(s.category); }}
                         className="text-xs px-3 py-1.5 rounded-full border transition-all hover:shadow-sm"
                         style={{
-                          borderColor: firstGoalTitle === s.title ? '#4ECDC4' : 'rgba(11,60,93,0.15)',
+                          borderColor: firstGoalTitle === s.title ? BRAND.accent : 'rgba(11,60,93,0.15)',
                           backgroundColor: firstGoalTitle === s.title ? 'rgba(78,205,196,0.08)' : 'transparent',
-                          color: firstGoalTitle === s.title ? '#4ECDC4' : '#0B3C5D',
+                          color: firstGoalTitle === s.title ? BRAND.accent : BRAND.navy,
                         }}
                       >
                         {s.title}
@@ -5381,7 +5382,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 variant="outline" 
                 onClick={() => setAddChildStep(addChildStep - 1)}
                 className="rounded-lg h-11 px-5"
-                style={{ borderColor: '#0B3C5D', color: '#0B3C5D' }}
+                style={{ borderColor: BRAND.navy, color: BRAND.navy }}
                 data-testid="button-prev-step-standalone"
               >
                 <ChevronLeft size={16} className="mr-1" />
@@ -5405,7 +5406,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   (addChildStep === 2 && (!newChildGrade || !newChildBoard))
                 }
                 className="rounded-lg h-11 px-6 font-semibold text-white shadow-md hover:shadow-lg transition-all"
-                style={{ backgroundColor: '#0B3C5D' }}
+                style={{ backgroundColor: BRAND.navy }}
                 data-testid="button-next-step-standalone"
               >
                 Continue
@@ -5416,7 +5417,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 onClick={handleAddChild}
                 disabled={!consentDataCollection || !consentDPDP || !acknowledgeDevelopment || isAddingChild}
                 className="rounded-lg h-11 px-6 font-semibold text-white shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
-                style={{ backgroundColor: (!consentDataCollection || !consentDPDP || !acknowledgeDevelopment || isAddingChild) ? '#9ca3af' : '#0B3C5D' }}
+                style={{ backgroundColor: (!consentDataCollection || !consentDPDP || !acknowledgeDevelopment || isAddingChild) ? '#9ca3af' : BRAND.navy }}
                 data-testid="button-submit-add-child-standalone"
               >
                 {isAddingChild ? (
@@ -5432,7 +5433,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   variant="outline"
                   onClick={() => handleSaveFirstGoal(true)}
                   className="rounded-lg h-11 px-5"
-                  style={{ borderColor: '#0B3C5D', color: '#0B3C5D' }}
+                  style={{ borderColor: BRAND.navy, color: BRAND.navy }}
                   data-testid="button-skip-goal"
                 >
                   Skip for now
@@ -5441,7 +5442,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                   onClick={() => handleSaveFirstGoal(false)}
                   disabled={!firstGoalTitle.trim()}
                   className="rounded-lg h-11 px-6 font-semibold text-white shadow-md hover:shadow-lg transition-all disabled:opacity-40"
-                  style={{ backgroundColor: firstGoalTitle.trim() ? '#4ECDC4' : '#9ca3af' }}
+                  style={{ backgroundColor: firstGoalTitle.trim() ? BRAND.accent : '#9ca3af' }}
                   data-testid="button-save-first-goal"
                 >
                   <Target size={16} className="mr-2" />
@@ -5464,11 +5465,11 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
           </DialogHeader>
           <div className="py-4">
             <div className="rounded-lg border p-4 bg-[#EDF2F7]">
-              <div className="flex items-center gap-2 text-[#0B3C5D] mb-2">
+              <div className="flex items-center gap-2 text-brand-navy mb-2">
                 <Eye size={18} />
                 <p className="font-medium">Supervised Mode Features:</p>
               </div>
-              <ul className="text-sm text-[#0B3C5D] space-y-1">
+              <ul className="text-sm text-brand-navy space-y-1">
                 <li>• Real-time progress monitoring</li>
                 <li>• Question-by-question visibility</li>
                 <li>• Time tracking and alerts</li>
@@ -5476,7 +5477,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
               </ul>
             </div>
             <div className="mt-4 rounded-lg border p-4 bg-[#EDF2F7]">
-              <p className="text-sm text-[#0B3C5D]">
+              <p className="text-sm text-brand-navy">
                 <strong>Note:</strong> Supervised test mode is available for minors (under 18) to ensure a secure testing environment with parental oversight.
               </p>
             </div>
@@ -5534,7 +5535,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
       }}>
         <DialogContent className="sm:max-w-[900px] max-h-[90vh] overflow-hidden flex flex-col">
           <DialogHeader>
-            <DialogTitle className="text-lg font-bold flex items-center gap-2" style={{ color: '#0B3C5D' }}>
+            <DialogTitle className="text-lg font-bold flex items-center gap-2" style={{ color: BRAND.navy }}>
               <BookOpen size={20} />
               {examSubmitted ? 'Exam Results' : 'Supervised Exam'} - {monitoringExam?.title}
             </DialogTitle>
@@ -5548,17 +5549,17 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
           
           {loadingMonitoring ? (
             <div className="flex items-center justify-center py-12">
-              <RefreshCw className="animate-spin" size={24} style={{ color: '#0B3C5D' }} />
+              <RefreshCw className="animate-spin" size={24} style={{ color: BRAND.navy }} />
             </div>
           ) : examSubmitted && examResult ? (
             <div className="flex-1 overflow-y-auto py-4">
               {/* Results View */}
               <div className="text-center py-8">
                 <div className="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center" 
-                  style={{ backgroundColor: examResult.percentage >= 60 ? '#4ECDC4' : '#0B3C5D' }}>
+                  style={{ backgroundColor: examResult.percentage >= 60 ? BRAND.accent : BRAND.navy }}>
                   <span className="text-3xl font-bold text-white">{examResult.percentage}%</span>
                 </div>
-                <h3 className="text-2xl font-bold mb-2" style={{ color: '#0B3C5D' }}>
+                <h3 className="text-2xl font-bold mb-2" style={{ color: BRAND.navy }}>
                   {examResult.percentage >= 80 ? 'Excellent!' : examResult.percentage >= 60 ? 'Good Job!' : 'Keep Practicing!'}
                 </h3>
                 <p className="text-lg text-gray-600 mb-6">
@@ -5578,11 +5579,11 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                           <div className="flex-1">
                             <p className="text-sm text-gray-800">{q.questionText}</p>
                             <p className="text-xs mt-1">
-                              Your answer: <span className={isCorrect ? 'text-[#4ECDC4] font-medium' : 'text-[#0B3C5D] font-medium'}>{userAnswer || 'Not answered'}</span>
-                              {!isCorrect && <span className="text-[#4ECDC4] ml-2">Correct: {q.correctOption}</span>}
+                              Your answer: <span className={isCorrect ? 'text-brand-accent font-medium' : 'text-brand-navy font-medium'}>{userAnswer || 'Not answered'}</span>
+                              {!isCorrect && <span className="text-brand-accent ml-2">Correct: {q.correctOption}</span>}
                             </p>
                           </div>
-                          {isCorrect ? <CheckCircle size={18} className="text-[#4ECDC4]" /> : <AlertTriangle size={18} className="text-[#0B3C5D]" />}
+                          {isCorrect ? <CheckCircle size={18} className="text-brand-accent" /> : <AlertTriangle size={18} className="text-brand-navy" />}
                         </div>
                       </div>
                     );
@@ -5603,7 +5604,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     className="h-2 rounded-full transition-all" 
                     style={{ 
                       width: `${(Object.keys(studentAnswers).length / monitoringQuestions.length) * 100}%`,
-                      backgroundColor: '#0B3C5D'
+                      backgroundColor: BRAND.navy
                     }}
                   />
                 </div>
@@ -5614,7 +5615,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 {monitoringQuestions.map((q, idx) => (
                   <div key={q.id} className="p-4 rounded-lg border bg-white">
                     <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm" style={{ backgroundColor: '#0B3C5D' }}>
+                      <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm" style={{ backgroundColor: BRAND.navy }}>
                         {idx + 1}
                       </div>
                       <div className="flex-1">
@@ -5630,13 +5631,13 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                                 onClick={() => setStudentAnswers(prev => ({ ...prev, [q.id]: opt }))}
                                 className={`p-3 rounded-lg border text-sm text-left transition-all ${
                                   isSelected 
-                                    ? 'bg-[#C5D7E6] border-[#0B3C5D] text-[#0B3C5D] ring-2 ring-[#0B3C5D]' 
+                                    ? 'bg-[#C5D7E6] border-brand-navy text-brand-navy ring-2 ring-brand-navy' 
                                     : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
                                 }`}
                                 data-testid={`option-${q.id}-${opt}`}
                               >
                                 <span className="font-medium">{opt}.</span> {optionText}
-                                {isSelected && <CheckCircle size={16} className="inline ml-2 text-[#0B3C5D]" />}
+                                {isSelected && <CheckCircle size={16} className="inline ml-2 text-brand-navy" />}
                               </button>
                             );
                           })}
@@ -5654,7 +5655,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
 
           <DialogFooter className="border-t pt-4">
             {examSubmitted ? (
-              <Button onClick={closeMonitoringDialog} style={{ backgroundColor: '#0B3C5D' }}>
+              <Button onClick={closeMonitoringDialog} style={{ backgroundColor: BRAND.navy }}>
                 Close & Return to Dashboard
               </Button>
             ) : (
@@ -5665,7 +5666,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 <Button 
                   onClick={submitSupervisedExam}
                   disabled={submittingExam || Object.keys(studentAnswers).length === 0}
-                  style={{ backgroundColor: '#4ECDC4' }}
+                  style={{ backgroundColor: BRAND.accent }}
                   data-testid="button-submit-exam"
                 >
                   {submittingExam ? (
@@ -5692,7 +5693,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
           <button
             onClick={() => { setActiveMenuItem('dashboard'); setActiveTab('overview'); }}
             className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg ${
-              activeTab === 'overview' ? 'text-[#0B3C5D]' : 'text-muted-foreground'
+              activeTab === 'overview' ? 'text-brand-navy' : 'text-muted-foreground'
             }`}
             data-testid="nav-overview"
           >
@@ -5702,7 +5703,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
           <button
             onClick={() => { setActiveMenuItem('education'); setActiveTab('education'); }}
             className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg ${
-              activeTab === 'education' ? 'text-[#0B3C5D]' : 'text-muted-foreground'
+              activeTab === 'education' ? 'text-brand-navy' : 'text-muted-foreground'
             }`}
             data-testid="nav-education"
           >
@@ -5720,7 +5721,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
           <button
             onClick={() => { setActiveMenuItem('exam-trends'); setActiveTab('exam-trends'); }}
             className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg ${
-              activeTab === 'exam-trends' ? 'text-[#0B3C5D]' : 'text-muted-foreground'
+              activeTab === 'exam-trends' ? 'text-brand-navy' : 'text-muted-foreground'
             }`}
             data-testid="nav-trends"
           >
@@ -5736,17 +5737,17 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
       <Dialog open={isAssessmentBrowserOpen} onOpenChange={(open) => { setIsAssessmentBrowserOpen(open); if (!open) setSelectedAssessmentGrade(''); }}>
         <DialogContent className="sm:max-w-[700px] max-h-[85vh] overflow-hidden flex flex-col">
           <DialogHeader>
-            <DialogTitle className="text-lg font-bold" style={{ color: '#0B3C5D' }}>
+            <DialogTitle className="text-lg font-bold" style={{ color: BRAND.navy }}>
               Assessments for {selectedChild?.name}
             </DialogTitle>
             <DialogDescription className="flex items-center gap-2 flex-wrap mt-1">
               {selectedChild?.grade ? (
                 <>
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold" style={{ backgroundColor: 'rgba(11,60,93,0.08)', color: '#0B3C5D' }}>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold" style={{ backgroundColor: 'rgba(11,60,93,0.08)', color: BRAND.navy }}>
                     <GraduationCap size={11} /> {selectedChild.grade}
                   </span>
                   {selectedChild?.educationBoard && (
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold" style={{ backgroundColor: 'rgba(78,205,196,0.10)', color: '#4ECDC4' }}>
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold" style={{ backgroundColor: 'rgba(78,205,196,0.10)', color: BRAND.accent }}>
                       <BookOpen size={11} /> {selectedChild.educationBoard}
                     </span>
                   )}
@@ -5760,7 +5761,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
           <ScrollArea className="flex-1 pr-4">
             {loadingAssessments ? (
               <div className="flex items-center justify-center py-12">
-                <RefreshCw className="animate-spin" size={24} style={{ color: '#0B3C5D' }} />
+                <RefreshCw className="animate-spin" size={24} style={{ color: BRAND.navy }} />
               </div>
             ) : availableAssessments.length === 0 ? (
               <div className="text-center py-12">
@@ -5779,28 +5780,28 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1 flex-wrap">
-                          <h4 className="font-semibold text-base" style={{ color: '#0B3C5D' }}>
+                          <h4 className="font-semibold text-base" style={{ color: BRAND.navy }}>
                             {assessment.title}
                           </h4>
                           <Badge 
                             variant="outline" 
-                            className="text-[10px]"
+                            className="text-2xs"
                             style={{ 
-                              borderColor: assessment.difficulty === 'Easy' ? '#4ECDC4' : assessment.difficulty === 'Hard' ? '#0B3C5D' : '#0B3C5D',
-                              color: assessment.difficulty === 'Easy' ? '#4ECDC4' : assessment.difficulty === 'Hard' ? '#0B3C5D' : '#0B3C5D'
+                              borderColor: assessment.difficulty === 'Easy' ? BRAND.accent : assessment.difficulty === 'Hard' ? BRAND.navy : BRAND.navy,
+                              color: assessment.difficulty === 'Easy' ? BRAND.accent : assessment.difficulty === 'Hard' ? BRAND.navy : BRAND.navy
                             }}
                           >
                             {assessment.difficulty}
                           </Badge>
                           {assessment.isRecommended && (
-                            <Badge className="text-[10px] bg-[#EDF2F7] text-[#0B3C5D] border border-[#B8CCDA]">
+                            <Badge className="text-2xs bg-[#EDF2F7] text-brand-navy border border-[#B8CCDA]">
                               Recommended
                             </Badge>
                           )}
                         </div>
                         <p className="text-sm text-gray-600 mb-2">{assessment.description}</p>
                         <div className="flex flex-wrap items-center gap-2">
-                          <Badge variant="secondary" className="text-xs bg-[#EDF2F7] text-[#0B3C5D]">
+                          <Badge variant="secondary" className="text-xs bg-[#EDF2F7] text-brand-navy">
                             {assessment.subject}
                           </Badge>
                           <Badge variant="secondary" className="text-xs bg-gray-100">
@@ -5817,14 +5818,14 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                         </div>
                       </div>
                       {assessment.assigned ? (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold shrink-0" style={{ backgroundColor: 'rgba(78,205,196,0.12)', color: '#4ECDC4' }}>
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold shrink-0" style={{ backgroundColor: 'rgba(78,205,196,0.12)', color: BRAND.accent }}>
                           <CheckCircle size={13} /> Assigned
                         </span>
                       ) : (
                         <Button
                           size="sm"
                           className="text-xs text-white shrink-0"
-                          style={{ backgroundColor: '#4ECDC4' }}
+                          style={{ backgroundColor: BRAND.accent }}
                           disabled={assigningAssessment === assessment.id}
                           onClick={() => assignAssessmentToChild(assessment.id)}
                           data-testid={`btn-assign-${assessment.id}`}
@@ -5861,16 +5862,16 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
             <div className="px-6 pt-6 pb-4" style={{ borderBottom: '1px solid #E2E8F0' }}>
               <div className="flex items-center gap-3 mb-1">
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'rgba(11,60,93,0.04)' }}>
-                  <BookOpen size={18} style={{ color: '#0B3C5D' }} />
+                  <BookOpen size={18} style={{ color: BRAND.navy }} />
                 </div>
                 <div>
-                  <h2 className="text-base font-bold" style={{ color: '#2E3470' }}>Set Education Board</h2>
-                  <p className="text-[11px]" style={{ color: '#9AA4B2' }}>{selectedChild?.name}</p>
+                  <h2 className="text-base font-bold" style={{ color: BRAND.text }}>Set Education Board</h2>
+                  <p className="text-xs" style={{ color: '#9AA4B2' }}>{selectedChild?.name}</p>
                 </div>
               </div>
             </div>
             <div className="px-6 py-5 space-y-3">
-              <p className="text-xs" style={{ color: '#64748B', lineHeight: 1.6 }}>
+              <p className="text-xs" style={{ color: BRAND.muted, lineHeight: 1.6 }}>
                 Choosing the correct board unlocks curriculum-aligned exam content, subject mapping, and board-specific study plans.
               </p>
               <div className="grid grid-cols-2 gap-2">
@@ -5881,8 +5882,8 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                     className="px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition-all"
                     style={
                       pendingBoard === b
-                        ? { backgroundColor: '#0B3C5D', color: '#fff', border: '2px solid #0B3C5D' }
-                        : { backgroundColor: '#F8FAFC', color: '#2E3470', border: '2px solid #E2E8F0' }
+                        ? { backgroundColor: BRAND.navy, color: '#fff', border: `2px solid ${BRAND.navy}` }
+                        : { backgroundColor: BRAND.bg, color: BRAND.text, border: '2px solid #E2E8F0' }
                     }
                   >
                     {b}
@@ -5894,7 +5895,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
               <button
                 onClick={() => setShowSetBoardModal(false)}
                 className="flex-1 h-10 rounded-xl text-sm font-semibold border transition-colors"
-                style={{ borderColor: '#E2E8F0', color: '#64748B' }}
+                style={{ borderColor: BRAND.border, color: BRAND.muted }}
               >
                 Cancel
               </button>
@@ -5902,7 +5903,7 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
                 onClick={handleSetBoard}
                 disabled={!pendingBoard || savingBoard}
                 className="flex-1 h-10 rounded-xl text-sm font-semibold text-white transition-all disabled:opacity-50"
-                style={{ backgroundColor: '#0B3C5D' }}
+                style={{ backgroundColor: BRAND.navy }}
               >
                 {savingBoard ? 'Saving…' : 'Save Board'}
               </button>

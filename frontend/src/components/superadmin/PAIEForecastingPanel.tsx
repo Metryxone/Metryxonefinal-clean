@@ -1,4 +1,4 @@
-import { BRAND } from '@/design-system/tokens';
+import { BRAND, STATUS } from '@/design-system/tokens';
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -147,11 +147,11 @@ export default function PAIEForecastingPanel() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <KpiCard label="Total Signals" value={master.signals?.total} sub={`${master.signals?.anomalies} anomalies`} />
             <KpiCard label="Temporal Users" value={master.temporal?.users} />
-            <KpiCard label="Avg Disengagement" value={pct(master.behavioural?.avg_dis)} color="#ef4444" />
-            <KpiCard label="Avg Burnout" value={pct(master.emotional?.avg_burnout)} color="#f97316" />
-            <KpiCard label="Avg Overload" value={pct(master.cognitive?.avg_overload)} color="#a855f7" />
-            <KpiCard label="Black Swan Events" value={master.black_swan?.total} sub={`${master.black_swan?.critical} critical`} color="#dc2626" />
-            <KpiCard label="Early Warnings" value={master.early_warnings?.total} sub={`${master.early_warnings?.critical} critical`} color="#f59e0b" />
+            <KpiCard label="Avg Disengagement" value={pct(master.behavioural?.avg_dis)} color={STATUS.danger} />
+            <KpiCard label="Avg Burnout" value={pct(master.emotional?.avg_burnout)} color={STATUS.caution} />
+            <KpiCard label="Avg Overload" value={pct(master.cognitive?.avg_overload)} color={STATUS.info} />
+            <KpiCard label="Black Swan Events" value={master.black_swan?.total} sub={`${master.black_swan?.critical} critical`} color={STATUS.critical} />
+            <KpiCard label="Early Warnings" value={master.early_warnings?.total} sub={`${master.early_warnings?.critical} critical`} color={STATUS.warning} />
             <KpiCard label="Avg Trust Score" value={pct(master.trust?.avg_trust)} sub={`${master.trust?.degraded} degraded`} />
           </div>
 
@@ -191,8 +191,8 @@ export default function PAIEForecastingPanel() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <KpiCard label="Total Signals" value={sigQ.data.kpi?.total} />
                 <KpiCard label="Avg Confidence" value={pct(sigQ.data.kpi?.avg_confidence)} />
-                <KpiCard label="Anomalies" value={sigQ.data.kpi?.anomaly_count} color="#ef4444" />
-                <KpiCard label="Avg Entropy" value={num(sigQ.data.kpi?.avg_entropy, 3)} color="#a855f7" />
+                <KpiCard label="Anomalies" value={sigQ.data.kpi?.anomaly_count} color={STATUS.danger} />
+                <KpiCard label="Avg Entropy" value={num(sigQ.data.kpi?.avg_entropy, 3)} color={STATUS.info} />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <Card>
@@ -231,8 +231,8 @@ export default function PAIEForecastingPanel() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <KpiCard label="Users Forecasted" value={tempQ.data.kpi?.users} />
                 <KpiCard label="Avg Confidence" value={pct(tempQ.data.kpi?.avg_confidence)} />
-                <KpiCard label="Avg Volatility" value={pct(tempQ.data.kpi?.avg_volatility)} color="#f97316" />
-                <KpiCard label="Silent Risk" value={pct(tempQ.data.kpi?.avg_silent_risk)} color="#dc2626" />
+                <KpiCard label="Avg Volatility" value={pct(tempQ.data.kpi?.avg_volatility)} color={STATUS.caution} />
+                <KpiCard label="Silent Risk" value={pct(tempQ.data.kpi?.avg_silent_risk)} color={STATUS.critical} />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <Card>
@@ -267,9 +267,9 @@ export default function PAIEForecastingPanel() {
             <>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <KpiCard label="Users" value={behQ.data.kpi?.users} />
-                <KpiCard label="Avg Disengagement" value={pct(behQ.data.kpi?.avg_disengagement)} color="#ef4444" />
-                <KpiCard label="Avg Volatility" value={pct(behQ.data.kpi?.avg_volatility)} color="#f97316" />
-                <KpiCard label="High Risk Count" value={behQ.data.kpi?.high_risk_count} color="#dc2626" />
+                <KpiCard label="Avg Disengagement" value={pct(behQ.data.kpi?.avg_disengagement)} color={STATUS.danger} />
+                <KpiCard label="Avg Volatility" value={pct(behQ.data.kpi?.avg_volatility)} color={STATUS.caution} />
+                <KpiCard label="High Risk Count" value={behQ.data.kpi?.high_risk_count} color={STATUS.critical} />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <Card>
@@ -304,9 +304,9 @@ export default function PAIEForecastingPanel() {
             <>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <KpiCard label="Users" value={cogQ.data.kpi?.users} />
-                <KpiCard label="Avg Overload" value={pct(cogQ.data.kpi?.avg_overload)} color="#a855f7" />
-                <KpiCard label="Avg Fatigue" value={pct(cogQ.data.kpi?.avg_fatigue)} color="#f97316" />
-                <KpiCard label="Avg Recovery" value={pct(cogQ.data.kpi?.avg_recovery)} color="#10b981" />
+                <KpiCard label="Avg Overload" value={pct(cogQ.data.kpi?.avg_overload)} color={STATUS.info} />
+                <KpiCard label="Avg Fatigue" value={pct(cogQ.data.kpi?.avg_fatigue)} color={STATUS.caution} />
+                <KpiCard label="Avg Recovery" value={pct(cogQ.data.kpi?.avg_recovery)} color={STATUS.positive} />
               </div>
               <Card>
                 <CardHeader><CardTitle className="text-sm">Cognitive Trajectories</CardTitle></CardHeader>
@@ -330,9 +330,9 @@ export default function PAIEForecastingPanel() {
             <>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <KpiCard label="Users" value={emoQ.data.kpi?.users} />
-                <KpiCard label="Avg Burnout" value={pct(emoQ.data.kpi?.avg_burnout)} color="#ef4444" />
-                <KpiCard label="Avg Resilience" value={pct(emoQ.data.kpi?.avg_resilience)} color="#10b981" />
-                <KpiCard label="Escalation Flags" value={emoQ.data.kpi?.escalation_flags} color="#dc2626" />
+                <KpiCard label="Avg Burnout" value={pct(emoQ.data.kpi?.avg_burnout)} color={STATUS.danger} />
+                <KpiCard label="Avg Resilience" value={pct(emoQ.data.kpi?.avg_resilience)} color={STATUS.positive} />
+                <KpiCard label="Escalation Flags" value={emoQ.data.kpi?.escalation_flags} color={STATUS.critical} />
               </div>
               <Card>
                 <CardHeader><CardTitle className="text-sm">Emotional Trajectories</CardTitle></CardHeader>
@@ -385,9 +385,9 @@ export default function PAIEForecastingPanel() {
               <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                 <KpiCard label="Total Events" value={bsQ.data.kpi?.total} />
                 <KpiCard label="Affected Users" value={bsQ.data.kpi?.affected_users} />
-                <KpiCard label="Critical" value={bsQ.data.kpi?.critical} color="#dc2626" />
-                <KpiCard label="High" value={bsQ.data.kpi?.high} color="#f97316" />
-                <KpiCard label="Silent Collapses" value={bsQ.data.kpi?.silent_collapses} color="#a855f7" />
+                <KpiCard label="Critical" value={bsQ.data.kpi?.critical} color={STATUS.critical} />
+                <KpiCard label="High" value={bsQ.data.kpi?.high} color={STATUS.caution} />
+                <KpiCard label="Silent Collapses" value={bsQ.data.kpi?.silent_collapses} color={STATUS.info} />
               </div>
               <Card>
                 <CardHeader><CardTitle className="text-sm">Active Black Swan Events</CardTitle></CardHeader>
@@ -461,9 +461,9 @@ export default function PAIEForecastingPanel() {
             <>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <KpiCard label="Users" value={trustQ.data.kpi?.users} />
-                <KpiCard label="Avg Trust" value={pct(trustQ.data.kpi?.avg_trust)} color="#10b981" />
-                <KpiCard label="Avg Uncertainty" value={pct(trustQ.data.kpi?.avg_uncertainty)} color="#f97316" />
-                <KpiCard label="Degraded" value={trustQ.data.kpi?.degraded_count} color="#dc2626" />
+                <KpiCard label="Avg Trust" value={pct(trustQ.data.kpi?.avg_trust)} color={STATUS.positive} />
+                <KpiCard label="Avg Uncertainty" value={pct(trustQ.data.kpi?.avg_uncertainty)} color={STATUS.caution} />
+                <KpiCard label="Degraded" value={trustQ.data.kpi?.degraded_count} color={STATUS.critical} />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <Card>

@@ -64,7 +64,7 @@ const USE_CASES = [
     'Manage exam stress with evidence-based techniques',
     'Receive instant answers to academic questions',
   ]},
-  { role: 'Educators', icon: BookOpen, color: '#0B3C5D', items: [
+  { role: 'Educators', icon: BookOpen, color: BRAND.navy, items: [
     'Interpret batch LBI results for classroom interventions',
     'Identify students at risk of underperformance',
     'Design group activities targeting specific domains',
@@ -142,10 +142,10 @@ export function MetryxAIAssistantPage({ role = 'parent', onOpenChat, onNavigate 
           <div className="grid lg:grid-cols-2 gap-8 items-center">
             <div className="text-white">
               <div className="flex items-center gap-2 mb-4">
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wide uppercase bg-white/10 text-white/90">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-2xs font-semibold tracking-wide uppercase bg-white/10 text-white/90">
                   <MessageCircle size={11} /> AI Assistant
                 </span>
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wide uppercase" style={{ backgroundColor: 'rgba(78,205,196,0.2)', color: BRAND.accent }}>
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-2xs font-semibold tracking-wide uppercase" style={{ backgroundColor: 'rgba(78,205,196,0.2)', color: BRAND.accent }}>
                   <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
                   Always On
                 </span>
@@ -183,7 +183,7 @@ export function MetryxAIAssistantPage({ role = 'parent', onOpenChat, onNavigate 
                 </Button>
               </div>
 
-              <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-[11px] text-white/55">
+              <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-white/55">
                 {[
                   { icon: Clock, label: 'Available 24/7' },
                   { icon: Globe, label: '10+ Languages' },
@@ -206,8 +206,8 @@ export function MetryxAIAssistantPage({ role = 'parent', onOpenChat, onNavigate 
               ].map((stat, idx) => (
                 <div key={idx} className="bg-white/[0.07] rounded-xl px-4 py-3 text-center" data-testid={`metryxai-stat-${idx}`}>
                   <p className="text-xl font-bold text-white tracking-tight">{stat.value}</p>
-                  <p className="text-[11px] font-semibold text-white/75 mt-0.5">{stat.label}</p>
-                  <p className="text-[10px] text-white/35">{stat.sub}</p>
+                  <p className="text-xs font-semibold text-white/75 mt-0.5">{stat.label}</p>
+                  <p className="text-2xs text-white/35">{stat.sub}</p>
                 </div>
               ))}
             </div>
@@ -228,7 +228,7 @@ export function MetryxAIAssistantPage({ role = 'parent', onOpenChat, onNavigate 
             </div>
             <div>
               <p className="text-xs font-bold" style={{ color: BRAND.primary }}>{item.label}</p>
-              <p className="text-[10px] text-gray-400 leading-snug">{item.text}</p>
+              <p className="text-2xs text-gray-400 leading-snug">{item.text}</p>
             </div>
           </div>
         ))}
@@ -313,14 +313,14 @@ export function MetryxAIAssistantPage({ role = 'parent', onOpenChat, onNavigate 
                   </div>
                   <div className="text-white">
                     <p className="text-xs font-bold">MetryxAI Assistant</p>
-                    <p className="text-[9px] text-white/60 flex items-center gap-1">
+                    <p className="text-2xs text-white/60 flex items-center gap-1">
                       <span className="w-1.5 h-1.5 rounded-full bg-teal-400" /> Online
                     </p>
                   </div>
                 </div>
                 <CardContent className="p-4 space-y-3" style={{ backgroundColor: '#fafbfc' }}>
                   <div className="flex items-start gap-2.5">
-                    <div className="h-6 w-6 rounded-full flex items-center justify-center shrink-0 text-white text-[9px] font-bold" style={{ backgroundColor: BRAND.primary }}>
+                    <div className="h-6 w-6 rounded-full flex items-center justify-center shrink-0 text-white text-2xs font-bold" style={{ backgroundColor: BRAND.primary }}>
                       <User size={12} />
                     </div>
                     <div className="p-2.5 rounded-xl rounded-tl-sm text-xs max-w-[80%]" style={{ backgroundColor: `${BRAND.primary}08`, color: 'var(--text-primary, #1e293b)' }}>
@@ -342,7 +342,7 @@ export function MetryxAIAssistantPage({ role = 'parent', onOpenChat, onNavigate 
                     </div>
                   </div>
                   <div className="flex items-start gap-2.5">
-                    <div className="h-6 w-6 rounded-full flex items-center justify-center shrink-0 text-white text-[9px] font-bold" style={{ backgroundColor: BRAND.primary }}>
+                    <div className="h-6 w-6 rounded-full flex items-center justify-center shrink-0 text-white text-2xs font-bold" style={{ backgroundColor: BRAND.primary }}>
                       <User size={12} />
                     </div>
                     <div className="p-2.5 rounded-xl rounded-tl-sm text-xs max-w-[80%]" style={{ backgroundColor: `${BRAND.primary}08`, color: 'var(--text-primary, #1e293b)' }}>
@@ -443,14 +443,14 @@ export function MetryxAIAssistantPage({ role = 'parent', onOpenChat, onNavigate 
                 <CardContent className="p-4">
                   <Badge 
                     variant="outline" 
-                    className="text-[9px] font-bold mb-3 px-2 py-0.5"
+                    className="text-2xs font-bold mb-3 px-2 py-0.5"
                     style={{ borderColor: i % 2 === 0 ? BRAND.primary : BRAND.accent, color: i % 2 === 0 ? BRAND.primary : BRAND.accent }}
                   >
                     {conv.tag}
                   </Badge>
                   <div className="flex items-start gap-2 mb-3">
                     <div 
-                      className="h-7 w-7 rounded-full flex items-center justify-center shrink-0 text-white text-[9px] font-bold"
+                      className="h-7 w-7 rounded-full flex items-center justify-center shrink-0 text-white text-2xs font-bold"
                       style={{ backgroundColor: BRAND.primary }}
                     >
                       <User size={13} />
@@ -600,7 +600,7 @@ export function MetryxAIAssistantPage({ role = 'parent', onOpenChat, onNavigate 
               Request a Demo
             </Button>
           </div>
-          <div className="flex flex-wrap justify-center gap-5 text-white/50 text-[11px]" data-testid="cta-trust-badges">
+          <div className="flex flex-wrap justify-center gap-5 text-white/50 text-xs" data-testid="cta-trust-badges">
             <span className="flex items-center gap-1.5" data-testid="cta-trust-instant"><Zap size={12} /> Instant responses</span>
             <span className="flex items-center gap-1.5" data-testid="cta-trust-privacy"><Shield size={12} /> 100% privacy compliant</span>
             <span className="flex items-center gap-1.5" data-testid="cta-trust-free"><CheckCircle2 size={12} /> No credit card required</span>
@@ -698,7 +698,7 @@ function InstituteDashboard({ onOpenChat, onNavigate }: { onOpenChat?: () => voi
             { icon: Users, value: '847', label: 'Students Assessed', change: '+32 this week', color: BRAND.primary },
             { icon: MessageCircle, value: '1,284', label: 'AI Conversations', change: '+156 this month', color: BRAND.accent },
             { icon: Brain, value: '68.4', label: 'Avg LBI Score', change: '+2.1 from last cycle', color: BRAND.primary },
-            { icon: AlertTriangle, value: '23', label: 'At-Risk Flagged', change: '-4 from last week', color: '#ef4444' },
+            { icon: AlertTriangle, value: '23', label: 'At-Risk Flagged', change: '-4 from last week', color: BRAND.danger },
           ].map((stat, idx) => (
             <Card key={idx} className="border shadow-sm" data-testid={`inst-stat-${idx}`}>
               <CardContent className="p-4">
@@ -710,7 +710,7 @@ function InstituteDashboard({ onOpenChat, onNavigate }: { onOpenChat?: () => voi
                 </div>
                 <p className="text-2xl font-bold tracking-tight" style={{ color: BRAND.primary }}>{stat.value}</p>
                 <p className="text-xs font-medium text-muted-foreground mt-0.5">{stat.label}</p>
-                <p className="text-[10px] mt-1" style={{ color: BRAND.accent }}>{stat.change}</p>
+                <p className="text-2xs mt-1" style={{ color: BRAND.accent }}>{stat.change}</p>
               </CardContent>
             </Card>
           ))}
@@ -739,7 +739,7 @@ function InstituteDashboard({ onOpenChat, onNavigate }: { onOpenChat?: () => voi
                     <History size={12} className="inline mr-1.5" /> History
                   </button>
                 </div>
-                <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                <div className="flex items-center gap-1.5 text-2xs text-muted-foreground">
                   <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />
                   MetryxAI Engine v2.1
                 </div>
@@ -771,7 +771,7 @@ function InstituteDashboard({ onOpenChat, onNavigate }: { onOpenChat?: () => voi
                           {msg.content}
                         </div>
                         {msg.role === 'user' && (
-                          <div className="h-7 w-7 rounded-full flex items-center justify-center shrink-0 text-white text-[10px] font-bold" style={{ backgroundColor: BRAND.primary }}>
+                          <div className="h-7 w-7 rounded-full flex items-center justify-center shrink-0 text-white text-2xs font-bold" style={{ backgroundColor: BRAND.primary }}>
                             <User size={14} />
                           </div>
                         )}
@@ -834,14 +834,14 @@ function InstituteDashboard({ onOpenChat, onNavigate }: { onOpenChat?: () => voi
                     >
                       <div className="flex items-start justify-between gap-2 mb-1">
                         <div className="flex items-center gap-2 min-w-0">
-                          {conv.starred && <Star size={12} className="shrink-0" style={{ color: '#f59e0b', fill: '#f59e0b' }} />}
+                          {conv.starred && <Star size={12} className="shrink-0" style={{ color: BRAND.warning, fill: BRAND.warning }} />}
                           <p className="text-sm font-semibold truncate" style={{ color: BRAND.primary }}>{conv.title}</p>
                         </div>
-                        <span className="text-[10px] text-muted-foreground shrink-0">{conv.time}</span>
+                        <span className="text-2xs text-muted-foreground shrink-0">{conv.time}</span>
                       </div>
                       <p className="text-xs text-muted-foreground line-clamp-2 mb-1.5">{conv.preview}</p>
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                        <Badge variant="outline" className="text-2xs px-1.5 py-0">
                           <MessageCircle size={10} className="mr-0.5" /> {conv.messages} msgs
                         </Badge>
                       </div>
@@ -910,8 +910,8 @@ function InstituteDashboard({ onOpenChat, onNavigate }: { onOpenChat?: () => voi
                   ))}
                 </div>
                 <div className="mt-4 pt-3 border-t flex items-center justify-between">
-                  <span className="text-[10px] text-muted-foreground">Total: 759 queries</span>
-                  <span className="text-[10px] font-semibold" style={{ color: BRAND.accent }}>Unlimited plan</span>
+                  <span className="text-2xs text-muted-foreground">Total: 759 queries</span>
+                  <span className="text-2xs font-semibold" style={{ color: BRAND.accent }}>Unlimited plan</span>
                 </div>
               </CardContent>
             </Card>

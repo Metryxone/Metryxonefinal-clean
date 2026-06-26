@@ -150,3 +150,18 @@ export const BRAND = {
 // student/parent education flows). Keeps the navy identity while tokenizing it.
 // To converge to a single uniform brand later, set `primary: COLOR.primary` here.
 export const BRAND_NAVY = { ...BRAND, primary: BRAND.navy } as const;
+
+// ---------------------------------------------------------------------------
+// Status / severity ramp — semantic home for metric-severity colors that were
+// previously hardcoded as inline hex in analytics panels (e.g. PAIE forecasting
+// KpiCards). Values are the exact Tailwind palette hues already in use, so
+// referencing these tokens is byte-identical to the literals they replace.
+// ---------------------------------------------------------------------------
+export const STATUS = {
+  critical: '#dc2626', // red-600   — most severe / black-swan
+  danger:   '#ef4444', // red-500   — high risk / anomaly
+  warning:  '#f59e0b', // amber-500 — early warning
+  caution:  '#f97316', // orange-500 — elevated / volatility
+  info:     '#a855f7', // purple-500 — informational / entropy
+  positive: '#10b981', // emerald-500 — healthy / resilience
+} as const;

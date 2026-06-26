@@ -145,6 +145,20 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Design-system brand tokens (mirror design-system/tokens.ts BRAND).
+ * Registered so brand colors are first-class utilities (bg-brand-accent,
+ * text-brand-navy, …) instead of hardcoded arbitrary classes like
+ * `text-[#0B3C5D]`. Values are identical to the hex they replace. */
+@theme {
+  --color-brand-primary: #344E86;
+  --color-brand-accent: #4ECDC4;
+  --color-brand-navy: #0B3C5D;
+  /* Smallest design-system step (10px) — names the prior text-[10px]/[9px]/[8px]
+   * micro-label sizes. font-size only (no paired line-height) to match the
+   * arbitrary utilities it replaces. */
+  --text-2xs: 0.625rem;
+}
+
 @layer base {
   /* MetryxOne brand typography — Plus Jakarta Sans */
   :root {

@@ -251,6 +251,9 @@
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
     --color-border: var(--border);
+    --color-brand-accent: #4ECDC4;
+    --color-brand-navy: #0B3C5D;
+    --text-2xs: 0.625rem;
   }
 }
 @layer base {
@@ -3564,6 +3567,9 @@
       border-color: color-mix(in oklab, var(--border) 50%, transparent);
     }
   }
+  .border-brand-navy {
+    border-color: var(--color-brand-navy);
+  }
   .border-current {
     border-color: currentcolor;
   }
@@ -4044,9 +4050,6 @@
   .bg-\[\#0B3C5D\]\/15 {
     background-color: color-mix(in oklab, #0B3C5D 15%, transparent);
   }
-  .bg-\[\#0B3C5D\]\/60 {
-    background-color: color-mix(in oklab, #0B3C5D 60%, transparent);
-  }
   .bg-\[\#0c1220\] {
     background-color: #0c1220;
   }
@@ -4526,6 +4529,15 @@
   }
   .bg-border {
     background-color: var(--border);
+  }
+  .bg-brand-accent {
+    background-color: var(--color-brand-accent);
+  }
+  .bg-brand-navy\/60 {
+    background-color: color-mix(in srgb, #0B3C5D 60%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-brand-navy) 60%, transparent);
+    }
   }
   .bg-card {
     background-color: var(--card);
@@ -6096,6 +6108,9 @@
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
   }
+  .text-2xs {
+    font-size: var(--text-2xs);
+  }
   .text-\[0\.8rem\] {
     font-size: 0.8rem;
   }
@@ -6554,6 +6569,12 @@
   }
   .text-blue-900 {
     color: var(--color-blue-900);
+  }
+  .text-brand-accent {
+    color: var(--color-brand-accent);
+  }
+  .text-brand-navy {
+    color: var(--color-brand-navy);
   }
   .text-card-foreground {
     color: var(--card-foreground);
@@ -7359,9 +7380,6 @@
       --tw-shadow-color: color-mix(in oklab, color-mix(in oklab, var(--color-rose-500) 30%, transparent) var(--tw-shadow-alpha), transparent);
     }
   }
-  .ring-\[\#0B3C5D\] {
-    --tw-ring-color: #0B3C5D;
-  }
   .ring-\[\#0B3C5D\]\/30 {
     --tw-ring-color: color-mix(in oklab, #0B3C5D 30%, transparent);
   }
@@ -7400,6 +7418,15 @@
   }
   .ring-blue-500 {
     --tw-ring-color: var(--color-blue-500);
+  }
+  .ring-brand-navy {
+    --tw-ring-color: var(--color-brand-navy);
+  }
+  .ring-brand-navy\/30 {
+    --tw-ring-color: color-mix(in srgb, #0B3C5D 30%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      --tw-ring-color: color-mix(in oklab, var(--color-brand-navy) 30%, transparent);
+    }
   }
   .ring-gray-400 {
     --tw-ring-color: var(--color-gray-400);
@@ -9999,13 +10026,6 @@
       }
     }
   }
-  .hover\:text-\[\#0B3C5D\] {
-    &:hover {
-      @media (hover: hover) {
-        color: #0B3C5D;
-      }
-    }
-  }
   .hover\:text-\[\#1F3C88\] {
     &:hover {
       @media (hover: hover) {
@@ -10115,6 +10135,13 @@
     &:hover {
       @media (hover: hover) {
         color: var(--color-blue-800);
+      }
+    }
+  }
+  .hover\:text-brand-navy {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-brand-navy);
       }
     }
   }
@@ -10649,6 +10676,11 @@
       border-color: var(--color-blue-500);
     }
   }
+  .focus\:border-brand-accent {
+    &:focus {
+      border-color: var(--color-brand-accent);
+    }
+  }
   .focus\:border-cyan-300 {
     &:focus {
       border-color: var(--color-cyan-300);
@@ -10813,6 +10845,11 @@
       @supports (color: color-mix(in lab, red, red)) {
         --tw-ring-color: color-mix(in oklab, var(--color-blue-500) 20%, transparent);
       }
+    }
+  }
+  .focus\:ring-brand-accent {
+    &:focus {
+      --tw-ring-color: var(--color-brand-accent);
     }
   }
   .focus\:ring-cyan-200 {
@@ -11642,6 +11679,11 @@
   .data-\[state\=active\]\:text-\[\#0B3C5D\] {
     &[data-state="active"] {
       color: #0B3C5D;
+    }
+  }
+  .data-\[state\=active\]\:text-brand-navy {
+    &[data-state="active"] {
+      color: var(--color-brand-navy);
     }
   }
   .data-\[state\=active\]\:text-foreground {

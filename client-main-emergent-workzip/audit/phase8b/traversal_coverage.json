@@ -1,9 +1,0 @@
-{
-  "sampled_concern_anchors": 40,
-  "anchors_with_downstream_dependencies": 40,
-  "traversal_coverage": 1,
-  "traversals_validated": 1376,
-  "broken_paths": 0,
-  "no_broken_paths": true,
-  "no_infinite_loops": true
-}

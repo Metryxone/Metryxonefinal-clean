@@ -1,7 +1,0 @@
-{
-  "similarity_coverage": 0.6764,
-  "explainability_coverage": 1,
-  "false_match_rate": 0.6931,
-  "similarity_readiness_score": 0.7319,
-  "formula": "0.4*similarity_coverage + 0.4*explainability_coverage + 0.2*(1 - false_match_rate)"
-}

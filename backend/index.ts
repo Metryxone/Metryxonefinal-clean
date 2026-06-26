@@ -70,13 +70,30 @@ app.use(
 app.use(express.urlencoded({ extended: false, limit: '8mb' }));
 
 // ── Security headers (helmet) ────────────────────────────────────────────────
-// CSP is ENABLED with a policy tuned to the SPA's actual resource origins:
-// self + Razorpay checkout + Google Fonts. 'unsafe-inline' is allowed for STYLES
-// only (the shadcn chart injects an inline <style> and many CSS-in-JS libs use
-// inline style attributes); SCRIPTS are restricted to 'self' + Razorpay — the
-// Vite production build emits hashed module scripts under /assets with no inline
-// JS, so valid behaviour is preserved because every origin the app already uses
-// is allowlisted. Instant kill-switch: CSP_DISABLED=1 reverts to no CSP.
+// CSP is ENABLED with a policy tuned to the SPA's actual resource origins
+// (verified by auditing every external reference in the built SPA + src):
+//   script-src : self + Razorpay checkout.js (Vite emits hashed module scripts
+//                under /assets with no inline JS) — the primary XSS defense.
+//   style-src  : self + Google Fonts CSS + 'unsafe-inline' (shadcn chart injects
+//                an inline <style>; many CSS-in-JS libs use inline style attrs).
+//   font-src   : self + fonts.gstatic.com + data:.
+//   img-src    : self + data:/blob: + https: (avatars/remote thumbnails).
+//   connect-src: self (/api XHR + EventSource /api/notifications/stream) +
+//                *.razorpay.com + lumberjack.razorpay.com + wss: (runtime-sync
+//                WebSocket + WebRTC signaling via socket.io 'websocket' transport).
+//                NOTE: VideoCallRoom signaling targets a cross-port (:8000) origin.
+//                Its 'websocket' transport is covered by wss:; the socket.io
+//                'polling' (XHR) fallback to that cross-port origin is intentionally
+//                NOT allowlisted (host is the dynamic deploy domain; standard
+//                single-port deployments don't expose :8000). Pre-existing cross-
+//                port architecture — not a CSP regression; broadening connect-src
+//                to https: would weaken exfil protection for no real-prod gain.
+//   frame-src  : self + Razorpay + blob: (résumé PDF preview iframe via
+//                URL.createObjectURL) + YouTube embeds (VideoPopup iframe).
+//                (CapadexReports email preview uses srcDoc → covered by 'self'.)
+// Anchor links (wa.me / social-share / metryx.one) and WebRTC STUN gathering are
+// navigation/peer-connection, not CSP fetch directives, so no entry is required.
+// Instant kill-switch: CSP_DISABLED=1 reverts to no CSP.
 const cspEnabled = process.env.CSP_DISABLED !== '1';
 app.use(
   helmet({
@@ -90,7 +107,7 @@ app.use(
             fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
             imgSrc: ["'self'", 'data:', 'blob:', 'https:'],
             connectSrc: ["'self'", 'https://*.razorpay.com', 'https://lumberjack.razorpay.com', 'wss:'],
-            frameSrc: ["'self'", 'https://*.razorpay.com', 'https://api.razorpay.com'],
+            frameSrc: ["'self'", 'blob:', 'https://*.razorpay.com', 'https://api.razorpay.com', 'https://www.youtube.com', 'https://www.youtube-nocookie.com'],
             objectSrc: ["'none'"],
             baseUri: ["'self'"],
             formAction: ["'self'", 'https://*.razorpay.com'],

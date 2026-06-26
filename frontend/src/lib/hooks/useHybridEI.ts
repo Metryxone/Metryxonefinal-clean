@@ -112,20 +112,6 @@ export interface HybridEIState {
   refresh:        () => void;                // force-resync ignoring debounce
 }
 
-/** Read user id from a few common spots (sessionStorage, localStorage, window). */
-function readUserId(): string | null {
-  try {
-    if (typeof window === 'undefined') return null;
-    const w = window as any;
-    if (w.__metryxUserId) return String(w.__metryxUserId);
-    const ss = window.sessionStorage?.getItem('userId') || window.sessionStorage?.getItem('user_id');
-    if (ss) return ss;
-    const ls = window.localStorage?.getItem('userId') || window.localStorage?.getItem('user_id');
-    if (ls) return ls;
-  } catch { /* noop */ }
-  return null;
-}
-
 const DEBOUNCE_MS = 600;
 
 function extractInput(p: CareerProfile | null | undefined) {
@@ -188,9 +174,10 @@ export function useHybridEI(profile: CareerProfile | null | undefined): HybridEI
       inflight.current = ac;
       setIsLoading(true);
       try {
-        const uid = readUserId();
+        // Identity is established server-side from the authenticated session/token.
+        // We never send a client-supplied X-User-Id header (it is ignored and would
+        // be a spoofable identity vector).
         const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-        if (uid) headers['X-User-Id'] = uid;
         const r = await fetch('/api/ei/resolve', {
           method: 'POST',
           headers,

@@ -167,7 +167,10 @@ app.get("/api/health/ready", async (_req, res) => {
     await pool.query("SELECT 1");
     res.json({ status: "ready", db: "ok", ts: new Date().toISOString() });
   } catch (e: any) {
-    res.status(503).json({ status: "not_ready", db: "error", error: e?.message ?? "db unreachable" });
+    // Log the real error server-side; never return DB error details to the client.
+    // Driver/connection-string fragments can leak through e.message (info disclosure).
+    console.error("[health/ready] DB readiness check failed:", e?.message ?? e);
+    res.status(503).json({ status: "not_ready", db: "error", ts: new Date().toISOString() });
   }
 });
 

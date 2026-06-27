@@ -889,9 +889,11 @@ function FirstJobGuide() {
 
 interface FresherHubTabProps {
   profile: any;
+  // MX-302A — user-facing title override ("Career Launchpad" when flag ON).
+  title?: string;
 }
 
-export function FresherHubTab({ profile }: FresherHubTabProps) {
+export function FresherHubTab({ profile, title }: FresherHubTabProps) {
   const [subTab, setSubTab]     = useState<FresherSubTab>('readiness');
   const [drives, setDrives]     = useState<CampusDrive[]>(() => ls(LS_DRIVES, []));
   const [projects, setProjects] = useState<Project[]>(() => ls(LS_PROJECTS, []));
@@ -905,7 +907,7 @@ export function FresherHubTab({ profile }: FresherHubTabProps) {
             <GraduationCap size={22} />
           </div>
           <div>
-            <h1 className="text-lg font-extrabold text-gray-900">Fresher Hub</h1>
+            <h1 className="text-lg font-extrabold text-gray-900">{title || 'Fresher Hub'}</h1>
             <p className="text-xs text-gray-500 mt-0.5">Your complete toolkit for landing your first job — campus drives, projects, aptitude prep, and more.</p>
           </div>
         </div>

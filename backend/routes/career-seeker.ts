@@ -5,6 +5,20 @@ import { propagateModuleUpdate } from "../services/competency-intelligence-orche
 import { ADAPTIVE_EVENTS } from "../services/adaptive-event-bus";
 import { calculateAndPersistLBI } from "./lbi-engine";
 import { onGoalCompleted, onJobStageChanged } from "./career-evidence";
+import { isCareerLaunchpadEnabled } from "../config/feature-flags";
+import { logAudit } from "../services/platform-audit";
+import {
+  CAREER_STAGES,
+  EXPERIENCES,
+  isCareerStage,
+  isExperienceId,
+  allowedExperiences,
+  effectiveExperience,
+  readEffectiveStage,
+  persistPreferredExperience,
+  STAGE_TO_EXPERIENCE,
+  type ExperienceId,
+} from "../services/experience-routing";
 
 // ─── Completeness scoring (mirrors cv-parser weights) ───────────────────────
 const CORE_WEIGHTS: Record<string, number> = {
@@ -388,6 +402,122 @@ export function registerCareerSeekerRoutes(app: Express): void {
     } catch (err) {
       console.error("[career-seeker] delete goal error:", err);
       return res.status(500).json({ success: false, message: "Failed to delete goal" });
+    }
+  });
+
+  // ── MX-302A — Career Launchpad & Experience Routing ─────────────────────────
+  // All three routes are flag-gated: with `careerLaunchpad` OFF they 503 BEFORE
+  // any auth / DB / ensure-schema touch, so the feature is byte-identical-OFF.
+
+  // Probe: the frontend calls this to decide whether to render the experience
+  // switcher + show the Career Launchpad label (res.ok === true means ON).
+  app.get("/api/career/experience/enabled", (_req, res) => {
+    if (!isCareerLaunchpadEnabled()) {
+      return res.status(503).json({ enabled: false, message: "Career Launchpad is not enabled" });
+    }
+    return res.json({ enabled: true });
+  });
+
+  // Read the user's effective stage + the experiences they may switch between.
+  app.get("/api/career/experience", requireAuth, async (req, res) => {
+    if (!isCareerLaunchpadEnabled()) {
+      return res.status(503).json({ success: false, message: "Career Launchpad is not enabled" });
+    }
+    try {
+      const u = sessionUser(req);
+      if (!u) return res.status(401).json({ success: false, message: "Not authenticated" });
+
+      const { stage, stored, derived, preferred } = await readEffectiveStage(pool as any, u.id);
+      // Effective experience honours a valid stored preference, else the stage's
+      // default (Command Center when no stage is derivable — no regression).
+      const experience = effectiveExperience(stage, preferred);
+      return res.json({
+        success: true,
+        enabled: true,
+        stage,
+        stageStored: stored,
+        stageDerived: derived,
+        experience: experience.id,
+        targetTab: experience.targetTab,
+        available: experience.available,
+        note: experience.note ?? null,
+        stages: CAREER_STAGES,
+        experiences: allowedExperiences(stage).map((e) => ({
+          id: e.id, label: e.label, targetTab: e.targetTab, available: e.available, note: e.note ?? null,
+        })),
+      });
+    } catch (err) {
+      console.error("[career-seeker] get experience error:", err);
+      return res.status(500).json({ success: false, message: "Failed to load experience" });
+    }
+  });
+
+  // Switch experience (or set stage directly). Updates the stored stage and
+  // writes the routing decision to the redacted platform audit trail.
+  app.post("/api/career/experience", requireAuth, async (req, res) => {
+    if (!isCareerLaunchpadEnabled()) {
+      return res.status(503).json({ success: false, message: "Career Launchpad is not enabled" });
+    }
+    try {
+      const u = sessionUser(req);
+      if (!u) return res.status(401).json({ success: false, message: "Not authenticated" });
+
+      // AUTHORIZATION (role): career-stage/experience state is meaningful only for
+      // career seekers — unrelated roles must never mutate it.
+      const ru = (req as any).user ?? {};
+      const role = String(ru.role ?? "").toLowerCase();
+      const roles: string[] = Array.isArray(ru.roles) ? ru.roles.map((r: any) => String(r).toLowerCase()) : [];
+      const isCareerSeeker =
+        role === "career_seeker" || role === "job_seeker" ||
+        roles.includes("career_seeker") || roles.includes("job_seeker");
+      if (!isCareerSeeker) {
+        return res.status(403).json({ success: false, message: "Experience switching is only available to career seekers" });
+      }
+
+      const body = (req.body ?? {}) as { stage?: string; experience?: string };
+      // Resolve the REQUESTED experience. The switcher sends an experience id; a
+      // stage is also accepted and mapped to its experience. We never mutate the
+      // canonical career_stage here — switching only changes the chosen experience
+      // (navigation), so a request can never escalate the user's stage/role.
+      let requested: ExperienceId | null = isExperienceId(body.experience) ? body.experience : null;
+      if (!requested && isCareerStage(body.stage)) requested = STAGE_TO_EXPERIENCE[body.stage];
+      if (!requested) {
+        return res.status(400).json({ success: false, message: "A valid stage or experience is required" });
+      }
+
+      // AUTHORIZATION (transition): the requested experience MUST be within the
+      // set allowed for the user's effective stage. The client dropdown is only a
+      // hint — this server-side gate is authoritative.
+      const prev = await readEffectiveStage(pool as any, u.id);
+      const allowed = allowedExperiences(prev.stage);
+      if (!allowed.some((e) => e.id === requested)) {
+        return res.status(403).json({ success: false, message: "That experience is not available for your career stage" });
+      }
+
+      await persistPreferredExperience(pool as any, u.id, requested);
+      const experience = EXPERIENCES[requested];
+
+      void logAudit(pool as any, req, {
+        action: "update",
+        entityType: "career_experience",
+        entityId: u.id,
+        entityLabel: requested,
+        before: { stage: prev.stage, experience: prev.preferred },
+        after: { stage: prev.stage, experience: experience.id, targetTab: experience.targetTab },
+        metadata: { source: "experience-switcher" },
+      }).catch(() => {});
+
+      return res.json({
+        success: true,
+        stage: prev.stage,
+        experience: experience.id,
+        targetTab: experience.targetTab,
+        available: experience.available,
+        note: experience.note ?? null,
+      });
+    } catch (err) {
+      console.error("[career-seeker] set experience error:", err);
+      return res.status(500).json({ success: false, message: "Failed to update experience" });
     }
   });
 }

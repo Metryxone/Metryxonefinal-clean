@@ -695,7 +695,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     id: 'all-student-career',
     title: 'Student Career Portal',
     description: 'Explore internships, fresher jobs and career paths aligned to your LBI profile.',
-    keywords: ['student career', 'internship', 'fresher', 'job', 'career portal', 'placement', 'campus'],
+    keywords: ['student career', 'internship', 'fresher', 'career launchpad', 'launchpad', 'job', 'career portal', 'placement', 'campus'],
     icon: Rocket, iconColor: '#4ECDC4', roles: ['student'], category: 'navigation',
     action: { type: 'navigate', screen: 'student-career-portal' },
   },

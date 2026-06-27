@@ -1515,6 +1515,16 @@ export const FEATURE_FLAGS = {
    *  created → byte-identical legacy behaviour incl. schema; the panel sub-sections hide.
    *  Env: `FF_ASSESSMENT_READINESS`. */
   assessmentReadiness: false,
+
+  /** MX-302A — Career Launchpad & Experience Routing. Renames the entry-level
+   *  "Fresher Hub" → "Career Launchpad", captures a Career Stage + short
+   *  education/career profile at registration, and routes career seekers to the
+   *  experience matching their stage (with an in-app experience switcher).
+   *  Default OFF → byte-identical legacy behaviour INCL. schema (the lazy
+   *  ensure-schema for career_seeker_profiles.career_stage is reached only on
+   *  this flag's ON path); all new UI hides and protected routes 503.
+   *  Env: `FF_CAREER_LAUNCHPAD`. */
+  careerLaunchpad: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1663,6 +1673,13 @@ export function isAssessmentReadinessEnabled(): boolean {
 
 export function isOnetActivationEnabled(): boolean {
   return isFlagEnabled('onetActivation');
+}
+
+/** MX-302A — Career Launchpad & Experience Routing. Default OFF → registration
+ *  stage capture + experience switcher hide, the experience routes 503 before
+ *  any auth/DB/ensure-schema, and the "Fresher Hub" label is unchanged. */
+export function isCareerLaunchpadEnabled(): boolean {
+  return isFlagEnabled('careerLaunchpad');
 }
 
 export function isOnetCrosswalkGovernanceEnabled(): boolean {

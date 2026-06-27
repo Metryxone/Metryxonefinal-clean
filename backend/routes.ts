@@ -190,7 +190,13 @@ import { registerGovernanceRoutes } from "./routes/governance";
 import { seedRbac } from "./services/governance/rbac-seed";
 import { recordGovernanceAudit, recordFailedLogin } from "./services/governance/audit-engine";
 import { assertPasswordAcceptable } from "./lib/password-policy";
-import { isGovernanceRbacEnabled } from "./config/feature-flags";
+import { isGovernanceRbacEnabled, isCareerLaunchpadEnabled } from "./config/feature-flags";
+import { logAudit as logPlatformAudit } from "./services/platform-audit";
+import {
+  isCareerStage as isCareerStageMx302a,
+  resolveExperience as resolveExperienceMx302a,
+  persistCareerStage as persistCareerStageMx302a,
+} from "./services/experience-routing";
 import { registerCognitiveRuntimeRoutes } from "./routes/cognitive-runtime";
 import { registerIILCoreRoutes } from "./routes/iil-core";
 import { registerIILEvolutionRoutes } from "./routes/iil-evolution";
@@ -543,6 +549,36 @@ export async function registerRoutes(
         });
       }
 
+      // ── MX-302A — Career Launchpad: capture Career Stage + route the new user
+      // to the experience matching their stage. Flag-gated: with `careerLaunchpad`
+      // OFF none of this runs (no extra DB write, no ensure-schema, no
+      // dashboardTarget) so registration is byte-identical-OFF. Only applies to
+      // career seekers; failures are swallowed so they never break sign-up.
+      let mx302aDashboardTarget: string | null = null;
+      let mx302aCareerStage: string | null = null;
+      if (isCareerLaunchpadEnabled() && (canonicalRole === 'career_seeker' || canonicalRole === 'job_seeker')) {
+        try {
+          const meta = (req.body?.metadata ?? {}) as { careerStage?: string; careerProfile?: Record<string, unknown> };
+          if (isCareerStageMx302a(meta.careerStage)) {
+            mx302aCareerStage = meta.careerStage;
+            const careerProfile = (meta.careerProfile && typeof meta.careerProfile === 'object') ? meta.careerProfile : null;
+            await persistCareerStageMx302a(concernsPool, user.id, meta.careerStage, careerProfile);
+            const experience = resolveExperienceMx302a(meta.careerStage);
+            mx302aDashboardTarget = `career-builder?tab=${experience.targetTab}`;
+            void logPlatformAudit(concernsPool, req, {
+              action: 'create',
+              entityType: 'career_stage',
+              entityId: user.id,
+              entityLabel: meta.careerStage,
+              after: { stage: meta.careerStage, experience: experience.id, targetTab: experience.targetTab },
+              metadata: { source: 'registration' },
+            }).catch(() => {});
+          }
+        } catch (e) {
+          console.error('[MX-302A] register stage persist error:', e);
+        }
+      }
+
       req.login({ id: user.id, username: user.username, fullName: user.fullName, role: user.role, roles: user.roles || [user.role] }, (err) => {
         if (err) {
           return next(err);
@@ -553,6 +589,8 @@ export async function registerRoutes(
           fullName: user.fullName,
           role: user.role,
           roles: user.roles || [user.role],
+          // Additive (flag-ON only): the frontend already routes on dashboardTarget.
+          ...(mx302aDashboardTarget ? { dashboardTarget: mx302aDashboardTarget, careerStage: mx302aCareerStage } : {}),
         });
       });
     } catch (error) {

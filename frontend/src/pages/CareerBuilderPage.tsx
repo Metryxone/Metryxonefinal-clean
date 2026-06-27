@@ -1,6 +1,7 @@
 import { BRAND } from '@/design-system/tokens';
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { FresherHubTab } from './career/FresherHubTab';
+import type { CareerStage, ExperienceId } from '@/lib/career/experienceRouting';
 import { SimulationsTab } from './career/SimulationsTab';
 import { MarketIntelTab } from './career/MarketIntelTab';
 import { CareerVelocityTab } from './career/CareerVelocityTab';
@@ -816,6 +817,18 @@ function ProfileWizard({ userId, onComplete, onSkip, initialProfile }: {
   );
 }
 
+// MX-302A — shape returned by GET /api/career/experience.
+interface ExperienceState {
+  stage: CareerStage | null;
+  stageStored?: CareerStage | null;
+  stageDerived?: CareerStage | null;
+  experience: ExperienceId;
+  targetTab: string;
+  available: boolean;
+  note?: string | null;
+  experiences: { id: ExperienceId; label: string; targetTab: string; available: boolean; note?: string | null }[];
+}
+
 export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
   // Allow deep-linking directly to a sub-tab (e.g. ?tab=assessment from
   // landing page hero, Adaptive Intelligence dashboards, and CAPADEX /
@@ -835,6 +848,9 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
   // MX-75X — validationLoop flag probe: gate the Prediction Trust tab so flag-OFF is byte-identical.
   const [validationLoopEnabled, setValidationLoopEnabled] = useState(false);
   const [myWorkforceEnabled, setMyWorkforceEnabled] = useState(false);
+  // MX-302A — Career Launchpad flag probe + effective experience state.
+  const [launchpadEnabled, setLaunchpadEnabled] = useState(false);
+  const [experience, setExperience] = useState<ExperienceState | null>(null);
 
   const tokenUser = getUser();
   const [sessionUser, setSessionUser] = useState<any>(null);
@@ -854,6 +870,46 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
     fetch('/api/my-workforce/_meta/status', { headers: authHeader() as HeadersInit })
       .then(r => setMyWorkforceEnabled(r.ok))
       .catch(() => setMyWorkforceEnabled(false));
+    // MX-302A — probe Career Launchpad; when ON, load the effective experience
+    // AND route the user to its tab. URL-tab precedence: an explicit ?tab= in the
+    // URL (deep-link) always wins, so we only auto-route when none was supplied.
+    fetch('/api/career/experience/enabled', { credentials: 'include' })
+      .then(r => {
+        setLaunchpadEnabled(r.ok);
+        if (r.ok) {
+          fetch('/api/career/experience', { headers: authHeader() as HeadersInit, credentials: 'include' })
+            .then(er => er.ok ? er.json() : null)
+            .then(d => {
+              if (d?.success) {
+                setExperience(d as ExperienceState);
+                const urlHasTab = typeof window !== 'undefined'
+                  && new URLSearchParams(window.location.search).has('tab');
+                if (!urlHasTab && d.targetTab) setTab(d.targetTab as TabId);
+              }
+            })
+            .catch(() => {});
+        }
+      })
+      .catch(() => setLaunchpadEnabled(false));
+  }, []);
+
+  // MX-302A — switch experience: persist the chosen experience as a navigation
+  // preference (server validates it's allowed for the user's stage), then land on its tab.
+  const switchExperience = useCallback((experienceId: ExperienceId) => {
+    fetch('/api/career/experience', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...(authHeader() as Record<string, string>) },
+      credentials: 'include',
+      body: JSON.stringify({ experience: experienceId }),
+    })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        if (d?.success) {
+          setExperience(prev => prev ? { ...prev, stage: d.stage, experience: d.experience, targetTab: d.targetTab, available: d.available, note: d.note } : prev);
+          if (d.targetTab) setTab(d.targetTab as TabId);
+        }
+      })
+      .catch(() => {});
   }, []);
   const user = tokenUser ?? sessionUser;
   const userId = user?.id || user?.userId || sessionUser?.id || '';
@@ -1068,6 +1124,25 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
                   </div>
                   <span className="text-[9px] text-gray-400">{profile?.competencyProfile?.completeness || 0}%</span>
                 </div>
+
+                {/* MX-302A — Experience switcher (flag-gated; hidden when OFF) */}
+                {launchpadEnabled && experience && (
+                  <div className="mt-3 pt-3 border-t border-gray-100">
+                    <div className="text-[9px] uppercase tracking-wider text-gray-400 font-semibold mb-1.5">Your Experience</div>
+                    <select
+                      value={experience.experience}
+                      onChange={(e) => switchExperience(e.target.value as ExperienceId)}
+                      data-testid="select-experience-switcher"
+                      className="w-full h-8 px-2 rounded-lg border border-gray-200 bg-white text-[11px] font-medium text-gray-700 appearance-none cursor-pointer">
+                      {experience.experiences.map((ex) => (
+                        <option key={ex.id} value={ex.id}>{ex.label}{ex.available ? '' : ' (soon)'}</option>
+                      ))}
+                    </select>
+                    {experience.note && (
+                      <p className="text-[9px] text-gray-400 mt-1 leading-tight">{experience.note}</p>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 
@@ -1086,6 +1161,8 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
                     )}
                     {items.map((t) => {
                       const isActive = !t.screen && tab === t.id;
+                      // MX-302A — user-facing rename (internal tab id unchanged).
+                      const label = (t.id === 'fresher-hub' && launchpadEnabled) ? 'Career Launchpad' : t.label;
                       return (
                         <button key={`${t.id}-${t.label}`} onClick={() => {
                             if (!t.screen) { setTab(t.id); return; }
@@ -1096,7 +1173,7 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
                             const qs = params.toString();
                             onNavigate(qs ? `${t.screen}?${qs}` : t.screen);
                           }}
-                          title={t.desc ? `${t.label} — ${t.desc}` : t.label}
+                          title={t.desc ? `${label} — ${t.desc}` : label}
                           className={`w-full flex items-start gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
                             isActive
                               ? 'text-white shadow-sm'
@@ -1106,7 +1183,7 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
                           <span className="shrink-0 mt-0.5">{t.icon}</span>
                           {sidebarOpen && (
                             <span className="flex-1 min-w-0 text-left">
-                              <span className="block leading-tight">{t.label}</span>
+                              <span className="block leading-tight">{label}</span>
                               {t.desc && (
                                 <span
                                   className={`block text-[10px] font-normal mt-0.5 leading-tight truncate ${
@@ -1144,7 +1221,7 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
 
         {/* ── Main content ──────────────────────────────────────── */}
         <main className="flex-1 min-w-0 space-y-6">
-          {tab === 'dashboard'   && <DashboardTab profile={profile} loading={loadingProfile} eiScore={eiScore} eiBreakdown={eiBreakdown} jobs={jobs} goals={goals} onTabChange={setTab} onNavigate={onNavigate} onOpenWizard={() => setShowWelcomeUpload(true)} userId={userId} />}
+          {tab === 'dashboard'   && <DashboardTab profile={profile} loading={loadingProfile} eiScore={eiScore} eiBreakdown={eiBreakdown} jobs={jobs} goals={goals} onTabChange={setTab} onNavigate={onNavigate} onOpenWizard={() => setShowWelcomeUpload(true)} userId={userId} launchpadEnabled={launchpadEnabled} />}
           {tab === 'assessment'  && <AssessmentTab userId={userId} profile={profile} onTabChange={setTab} />}
           {tab === 'future-map'  && <FutureMapTab profile={profile} onTabChange={setTab} behavior={careerBrain.behaviorProfile} />}
           {tab === 'development' && <DevelopmentPlanTab profile={profile} onTabChange={setTab} behavior={careerBrain.behaviorProfile} />}
@@ -1162,7 +1239,7 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
           )}
           {tab === 'mentors'    && <MentorsTab profile={profile} />}
           {tab === 'goals'      && <GoalsTab goals={goals} setGoals={setGoals} userId={userId} />}
-          {tab === 'fresher-hub'  && <FresherHubTab profile={profile} />}
+          {tab === 'fresher-hub'  && <FresherHubTab profile={profile} title={launchpadEnabled ? 'Career Launchpad' : undefined} />}
           {tab === 'simulations'  && <SimulationsTab profile={profile} eiScore={eiScore} />}
           {tab === 'market-intel' && <MarketIntelTab profile={profile} eiScore={eiScore} />}
           {tab === 'velocity'     && <CareerVelocityTab profile={profile} eiScore={eiScore} userId={userId} />}
@@ -1296,6 +1373,7 @@ function DashboardTab({ profile, loading, eiScore, eiBreakdown, jobs, goals, onT
   onNavigate: (s: Screen | string, d?: Record<string, unknown>) => void;
   onOpenWizard: () => void;
   userId: string;
+  launchpadEnabled?: boolean;
 }) {
   const [showEIDetails, setShowEIDetails] = useState(false);
   const [showProfileDetails, setShowProfileDetails] = useState(false);
@@ -1446,13 +1524,13 @@ function DashboardTab({ profile, loading, eiScore, eiBreakdown, jobs, goals, onT
             <GraduationCap size={20} />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-bold text-gray-800">Looks like you're a fresher 🎓</p>
-            <p className="text-xs text-gray-500 mt-0.5">Check out the <strong>Fresher Hub</strong> — campus drive tracker, project portfolio, aptitude prep &amp; your first job guide.</p>
+            <p className="text-sm font-bold text-gray-800">Looks like you're starting out 🎓</p>
+            <p className="text-xs text-gray-500 mt-0.5">Check out the <strong>{launchpadEnabled ? 'Career Launchpad' : 'Fresher Hub'}</strong> — campus drive tracker, project portfolio, aptitude prep &amp; your first job guide.</p>
           </div>
           <button onClick={() => onTabChange('fresher-hub')}
             className="shrink-0 text-xs font-semibold text-white px-4 py-2 rounded-xl whitespace-nowrap"
             style={{ backgroundColor: '#4ECDC4' }}>
-            Go to Fresher Hub →
+            Go to {launchpadEnabled ? 'Career Launchpad' : 'Fresher Hub'} →
           </button>
         </div>
       )}

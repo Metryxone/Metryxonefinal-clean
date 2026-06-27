@@ -10,6 +10,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Screen } from '../App';
 import { CVParserPreview, type ParsedCVProfile } from './CVParserPreview';
+import { CAREER_STAGES } from '@/lib/career/experienceRouting';
 import { saveProfileSetupFlag } from './FirstLoginProfileModal';
 import {
   Eye, EyeOff, User, School, BookOpen, Shield,
@@ -189,6 +190,12 @@ export function Registration({ onNavigate }: RegistrationProps) {
   const [role, setRole] = useState<UserRole>('career_seeker');
   const [age, setAge] = useState('');
   const [grade, setGrade] = useState('');
+  // MX-302A — Career Launchpad: stage capture (flag-gated; hidden when OFF).
+  const [launchpadEnabled, setLaunchpadEnabled] = useState(false);
+  const [careerStage, setCareerStage] = useState('');
+  const [fieldOfStudy, setFieldOfStudy] = useState('');
+  const [yearsExperience, setYearsExperience] = useState('');
+  const [currentRole, setCurrentRole] = useState('');
   const [organizationName, setOrganizationName] = useState('');
   const [parentEmail, setParentEmail] = useState('');
   const [parentConsentSent, setParentConsentSent] = useState(false);
@@ -307,6 +314,16 @@ export function Registration({ onNavigate }: RegistrationProps) {
     return () => clearInterval(t);
   }, []);
 
+  // MX-302A — probe the flag so the Career Stage capture only renders when ON
+  // (flag OFF → endpoint 503s → byte-identical legacy form).
+  useEffect(() => {
+    let alive = true;
+    fetch('/api/career/experience/enabled')
+      .then(r => { if (alive) setLaunchpadEnabled(r.ok); })
+      .catch(() => { if (alive) setLaunchpadEnabled(false); });
+    return () => { alive = false; };
+  }, []);
+
   const consentCount = [agreeTerms, agreePrivacy, agreeDataProcessing].filter(Boolean).length;
   const allRequired = agreeTerms && agreePrivacy && agreeDataProcessing;
 
@@ -330,6 +347,10 @@ export function Registration({ onNavigate }: RegistrationProps) {
         setLoading(false); return;
       }
     }
+    if (role === 'career_seeker' && launchpadEnabled && !careerStage) {
+      setError('Please select your career stage so we can route you to the right experience.');
+      setLoading(false); return;
+    }
     if (!allRequired) { setError('Please accept all required consents to continue.'); setLoading(false); return; }
 
     try {
@@ -347,6 +368,15 @@ export function Registration({ onNavigate }: RegistrationProps) {
           ...(isGooglePrefilled && { oauthProvider: 'firebase_google' }),
           metadata: {
             ...(role === 'student' && { age: parseInt(age), grade, ...(parseInt(age) < 18 && { parentEmail, requiresParentConsent: true }) }),
+            ...(role === 'career_seeker' && launchpadEnabled && careerStage && {
+              careerStage,
+              careerProfile: {
+                highestQualification: grade || undefined,
+                fieldOfStudy: fieldOfStudy || undefined,
+                yearsExperience: yearsExperience ? Number(yearsExperience) : undefined,
+                currentRole: currentRole || undefined,
+              },
+            }),
             ...(organizationName && { organizationName }),
             ...(isGooglePrefilled && { oauth_provider: 'firebase_google' }),
             consents: {
@@ -822,6 +852,40 @@ export function Registration({ onNavigate }: RegistrationProps) {
                         )}
                       </div>
                     )}
+                  </div>
+                )}
+
+                {/* MX-302A — Career Stage capture (flag-gated, career seekers only) */}
+                {role === 'career_seeker' && launchpadEnabled && (
+                  <div className="rounded-xl border p-3 space-y-3" style={{ borderColor: `${BRAND.accent}40`, backgroundColor: `${BRAND.accent}08` }}>
+                    <div>
+                      <Label htmlFor="careerStage" className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1.5 block">
+                        Career Stage <span className="text-red-400">*</span>
+                      </Label>
+                      <select id="careerStage" value={careerStage} onChange={e => setCareerStage(e.target.value)} data-testid="select-career-stage"
+                        className="w-full h-10 px-3 rounded-lg border border-gray-200 bg-white text-sm appearance-none cursor-pointer text-gray-700">
+                        <option value="">Select your stage</option>
+                        {CAREER_STAGES.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
+                      </select>
+                      <p className="text-[10px] text-gray-400 mt-1">We&apos;ll route you to the experience that fits your stage. You can switch later.</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label htmlFor="fieldOfStudy" className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1.5 block">Field of Study <span className="font-normal normal-case">(Optional)</span></Label>
+                        <Input id="fieldOfStudy" value={fieldOfStudy} onChange={e => setFieldOfStudy(e.target.value)} placeholder="e.g. Computer Science"
+                          className="h-10 rounded-lg border-gray-200 bg-white text-sm" data-testid="input-field-of-study" />
+                      </div>
+                      <div>
+                        <Label htmlFor="yearsExperience" className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1.5 block">Years of Experience <span className="font-normal normal-case">(Optional)</span></Label>
+                        <Input id="yearsExperience" type="number" min="0" max="60" value={yearsExperience} onChange={e => setYearsExperience(e.target.value)} placeholder="e.g. 3"
+                          className="h-10 rounded-lg border-gray-200 bg-white text-sm" data-testid="input-years-experience" />
+                      </div>
+                    </div>
+                    <div>
+                      <Label htmlFor="currentRole" className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1.5 block">Current / Target Role <span className="font-normal normal-case">(Optional)</span></Label>
+                      <Input id="currentRole" value={currentRole} onChange={e => setCurrentRole(e.target.value)} placeholder="e.g. Software Engineer"
+                        className="h-10 rounded-lg border-gray-200 bg-white text-sm" data-testid="input-current-role" />
+                    </div>
                   </div>
                 )}
 

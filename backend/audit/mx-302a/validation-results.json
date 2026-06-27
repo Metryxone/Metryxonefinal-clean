@@ -1,0 +1,69 @@
+{
+  "task": "MX-302A — Career Launchpad & Experience Routing",
+  "generatedAt": "2026-06-27T02:11:12.868Z",
+  "verdict": "PASS",
+  "passed": 10,
+  "total": 10,
+  "checks": [
+    {
+      "id": "C1",
+      "name": "8 canonical career stages",
+      "pass": true,
+      "detail": "stages = [student, graduate, postgraduate, internship-seeker, early-career, mid-career, senior-leadership, executive]"
+    },
+    {
+      "id": "C2",
+      "name": "every stage → a defined experience",
+      "pass": true,
+      "detail": "student → launchpad (tab=fresher-hub, available=true) · graduate → launchpad (tab=fresher-hub, available=true) · postgraduate → launchpad (tab=fresher-hub, available=true) · internship-seeker → launchpad (tab=fresher-hub, available=true) · early-career → launchpad (tab=fresher-hub, available=true) · mid-career → command-center (tab=dashboard, available=true) · senior-leadership → leadership-studio (tab=dashboard, available=false) · executive → executive-studio (tab=dashboard, available=false)"
+    },
+    {
+      "id": "C3",
+      "name": "4 experiences; leadership/executive flagged not-yet-available",
+      "pass": true,
+      "detail": "launchpad:live · command-center:live · leadership-studio:soon · executive-studio:soon"
+    },
+    {
+      "id": "C4",
+      "name": "experience → representative stage → experience round-trip",
+      "pass": true,
+      "detail": "launchpad → early-career → launchpad · command-center → mid-career → command-center · leadership-studio → senior-leadership → leadership-studio · executive-studio → executive → executive-studio"
+    },
+    {
+      "id": "C5",
+      "name": "allowedExperiences widens with seniority (2→2→3→4)",
+      "pass": true,
+      "detail": "null:2 · student:2 · graduate:2 · postgraduate:2 · internship-seeker:2 · early-career:2 · mid-career:2 · senior-leadership:3 · executive:4"
+    },
+    {
+      "id": "C6",
+      "name": "deriveStage maps existing-user signals (null when nothing derivable)",
+      "pass": true,
+      "detail": "{\"role\":\"student\"}→student · {\"seniority\":\"VP of Engineering\"}→executive · {\"seniority\":\"Senior Software Engineer\"}→senior-leadership · {\"yearsExp\":20}→executive · {\"yearsExp\":10}→senior-leadership · {\"yearsExp\":5}→mid-career · {\"yearsExp\":2}→early-career · {\"yearsExp\":0}→graduate · {\"hasExperience\":true}→mid-career · {\"hasExperience\":false}→graduate · {}→null"
+    },
+    {
+      "id": "C7",
+      "name": "isCareerStage / isExperienceId guard against junk input",
+      "pass": true,
+      "detail": "valid accepted; unknown / empty / null / wrong-type rejected"
+    },
+    {
+      "id": "C8",
+      "name": "careerLaunchpad flag exists & defaults OFF",
+      "pass": true,
+      "detail": "registered=true · enabled=false (expected false in this process)"
+    },
+    {
+      "id": "C9",
+      "name": "one user = one record (column on career_seeker_profiles; no new table)",
+      "pass": true,
+      "detail": "migration 20260627_career_stage.sql is ALTER-only; persist UPSERTs the existing PK row"
+    },
+    {
+      "id": "C10",
+      "name": "experience switching is authorization-bounded (no escalation)",
+      "pass": true,
+      "detail": "early-career +pref(executive-studio) → launchpad · executive +pref(command-center) → command-center · mid-career +pref(none) → command-center · every stage default ∈ its allowed set: true"
+    }
+  ]
+}

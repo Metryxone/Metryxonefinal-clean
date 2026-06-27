@@ -66,7 +66,7 @@ interface Phase { code: string; name: string; flag: string; env: string; routeFi
 const PHASES: Phase[] = [
   { code: 'A', name: 'Career Launchpad',          flag: 'careerLaunchpad',          env: 'FF_CAREER_LAUNCHPAD',          routeFile: 'career-launchpad.ts',          enabledPath: '/api/career-launchpad/enabled' },
   { code: 'B', name: 'Career Discovery',          flag: 'careerDiscovery',          env: 'FF_CAREER_DISCOVERY',          routeFile: 'career-discovery.ts',          enabledPath: '/api/career-discovery/enabled' },
-  { code: 'C', name: 'Launchpad Dashboard',       flag: 'launchpadDashboard',       env: 'FF_LAUNCHPAD_DASHBOARD',       routeFile: null,                           enabledPath: null },
+  { code: 'C', name: 'Launchpad Dashboard',       flag: 'launchpadDashboard',       env: 'FF_LAUNCHPAD_DASHBOARD',       routeFile: 'launchpad-dashboard.ts',       enabledPath: '/api/launchpad-dashboard/enabled' },
   { code: 'D', name: 'Student Career Builder',    flag: 'studentCareerBuilder',     env: 'FF_STUDENT_CAREER_BUILDER',    routeFile: 'student-career-builder.ts',    enabledPath: '/api/student-career-builder/enabled' },
   { code: 'E', name: 'Campus Placement',          flag: 'campusPlacement',          env: 'FF_CAMPUS_PLACEMENT',          routeFile: 'campus-placement.ts',          enabledPath: '/api/campus-placement/enabled' },
   { code: 'F', name: 'Employability Studio',      flag: 'employabilityStudio',      env: 'FF_EMPLOYABILITY_STUDIO',      routeFile: 'employability-studio.ts',      enabledPath: '/api/employability-studio/enabled' },

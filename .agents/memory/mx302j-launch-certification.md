@@ -35,10 +35,17 @@ column. The TRUE activation axis is the live HTTP `/enabled` response from the B
 workflow, whose flags come from `.replit [userenv.development]`. Flags don't seed data, so
 dormant pipelines correctly read 0 in adoption/outcome — that's honest, not a bug.
 
-## Phase C (Launchpad Dashboard) is a real structural gap — don't fake it
-Phase C is a **frontend-composition** phase: NO flag in `feature-flags.ts`, NO backend route
-file. The composer reports it `merged=false` (8/9). Do NOT invent a flag/route to make it 9/9 —
-the honest finding is that this phase is not yet backend-merged.
+## Phase C (Launchpad Dashboard) — now backend-merged (9/9 structural)
+Phase C WAS a frontend-composition gap (no flag, no route → `merged=false`, 8/9). It is now a
+real backend surface: flag `launchpadDashboard` (`FF_LAUNCHPAD_DASHBOARD`, default OFF) +
+`routes/launchpad-dashboard.ts` (`registerLaunchpadDashboardRoutes`) exposing the ungated
+`/api/launchpad-dashboard/enabled` probe + gated `/summary` (read-only widget-availability +
+placement-readiness checklist composed from `career_seeker_profiles.data`, mirroring the
+dashboard's own `readinessChecks`) + `/telemetry`. The cert's PHASE map for C now points at this
+file → structural is 9/9. **Why it's honest, not faked:** the route does real read-only
+composition (no DDL, never-throws, null≠0), flag-OFF is byte-identical (503 before auth/DB).
+Activation stays a SEPARATE axis — the flag is OFF in the live workflow so `live_enabled=false`
+(3/9 activated); structural 9/9 must NOT be read as activated/production-ready.
 
 ## vite build is environment-blocked here — validate the real change surface instead
 Full `vite build` on these monolith files is pathologically slow / OOM-prone (dies without

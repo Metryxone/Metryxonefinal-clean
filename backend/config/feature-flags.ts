@@ -1666,6 +1666,23 @@ export const FEATURE_FLAGS = {
    *  fabricates. Env: `FF_CAREER_DISCOVERY`. */
   careerDiscovery: false,
 
+  /** MX-302C — Career Launchpad Dashboard (backend surface). The dashboard itself
+   *  is a frontend-composition decision surface (15 widgets composed from already-
+   *  existing metrics/engines, gated by `careerLaunchpad`). This flag adds the real
+   *  backend surface at `/api/launchpad-dashboard/*`: a read-only, never-throws
+   *  summary that composes the authenticated seeker's launchpad widget availability
+   *  + placement-readiness checklist completion server-side (subject pinned to the
+   *  session principal — no IDOR), plus a metadata-only render telemetry POST.
+   *  COMPOSE-NEVER-RECOMPUTE: it reads `career_seeker_profiles.data` (to_regclass-
+   *  probed) and derives the SAME deterministic readiness checklist the dashboard
+   *  renders — it computes no new score, runs NO DDL, fabricates nothing (absent
+   *  profile → honest nulls, null ≠ 0). Default OFF → every data route 503s BEFORE
+   *  any auth/DB touch (byte-identical legacy incl. schema; no new tables); the
+   *  `/api/launchpad-dashboard/enabled` probe is a persona-agnostic flag gate that
+   *  always returns 200 `{enabled:false}` when OFF so the SPA hides the surface
+   *  byte-identically. Env: `FF_LAUNCHPAD_DASHBOARD`. */
+  launchpadDashboard: false,
+
   /** MX-302D — Student Career Builder Exposure. Makes the full, EXISTING Career
    *  Builder a first-class destination for students (role `student` /
    *  `campus_student`) and applies student-appropriate framing on the SHARED
@@ -1857,6 +1874,13 @@ export function isOnetActivationEnabled(): boolean {
  *  any auth/DB/ensure-schema, and the "Fresher Hub" label is unchanged. */
 export function isCareerLaunchpadEnabled(): boolean {
   return isFlagEnabled('careerLaunchpad');
+}
+
+/** MX-302C — Career Launchpad Dashboard backend surface. Default OFF → every
+ *  `/api/launchpad-dashboard/*` data route 503s before any auth/DB touch and the
+ *  `/enabled` probe reports false (byte-identical legacy incl. schema). */
+export function isLaunchpadDashboardEnabled(): boolean {
+  return isFlagEnabled('launchpadDashboard');
 }
 
 /** MX-302D — Student Career Builder Exposure. Default OFF → student dashboard /

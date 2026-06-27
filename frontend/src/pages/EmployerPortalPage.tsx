@@ -5565,16 +5565,22 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
       setScreenStatus(s => ({ ...s, [cid]: 'recording' }));
       setActiveCallId(cid);
       setSession(s => s ? { ...s, phase: 'recording', sessionId: sid, questions: qs, starting: false, currentIndex: 0, avatarLoadingVideos: true, avatarMsg: null } : null);
-      // Kick off the HeyGen renders (idempotent + cached server-side), then poll.
+      // Kick off the HeyGen renders (idempotent + cached server-side). Only poll
+      // when generation actually started — on a hard failure (e.g. unconfigured)
+      // surface the honest message and stop, rather than polling for videos that
+      // will never exist.
       fetch(`/api/employer/voice-screening/avatar/sessions/${sid}/videos`, { method: 'POST', headers: authHdr() })
         .then(async (r) => {
           const d = await r.json().catch(() => ({}));
           if (!r.ok) {
-            setSession(s => (s && s.sessionId === sid) ? { ...s, avatarMsg: d.message || (d.avatarUnavailable ? 'Avatar video is not configured.' : 'Avatar video generation failed.') } : s);
+            setSession(s => (s && s.sessionId === sid)
+              ? { ...s, avatarLoadingVideos: false, avatarMsg: d.message || (d.avatarUnavailable ? 'Avatar video is not configured.' : 'Avatar video generation failed.') }
+              : s);
+            return;
           }
+          void pollAvatarVideos(sid);
         })
-        .catch(() => { /* poll will surface state */ })
-        .finally(() => { void pollAvatarVideos(sid); });
+        .catch(() => { void pollAvatarVideos(sid); });
     } catch (e: any) {
       setSession(s => s ? { ...s, starting: false, error: e?.message || 'Could not start avatar session' } : null);
     }
@@ -5951,6 +5957,13 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
                       <Video size={12} /> Video Avatar
                     </button>
                   )}
+                  {(!status || status === 'not_started') && avatar.enabled && !avatar.configured && (
+                    <div title={avatar.message || undefined}
+                      className="flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl border"
+                      style={{ borderColor: `${BRAND.purple}40`, color: BRAND.purple, backgroundColor: `${BRAND.purple}08` }}>
+                      <Video size={12} /> Video Avatar not configured
+                    </div>
+                  )}
                   {busy && (
                     <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl text-white" style={{ backgroundColor: status === 'recording' ? BRAND.red : BRAND.purple }}>
                       <RefreshCw size={11} className="animate-spin" />
@@ -6126,6 +6139,13 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
               {session.error && (
                 <div className="mb-3 p-3 rounded-xl border text-[11px]" style={{ borderColor: `${BRAND.red}40`, backgroundColor: `${BRAND.red}08`, color: BRAND.red }}>
                   {session.error}
+                </div>
+              )}
+
+              {session.mode === 'avatar' && session.avatarMsg && (
+                <div className="mb-3 flex items-start gap-2 p-3 rounded-xl border text-[11px]" style={{ borderColor: `${BRAND.orange}40`, backgroundColor: `${BRAND.orange}08`, color: '#9a3412' }}>
+                  <AlertCircle size={13} className="shrink-0 mt-0.5" style={{ color: BRAND.orange }} />
+                  <span>{session.avatarMsg} The candidate can still read each question and record a video answer.</span>
                 </div>
               )}
 

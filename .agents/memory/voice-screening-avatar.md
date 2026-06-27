@@ -98,3 +98,23 @@ the shared scorer (abstains/null≠0 preserved).
 served `private, no-store`. Report block keys on `result.channel === 'live_avatar'` (🔴 badge +
 transcript via `/turns` + full-session recording via `/live/sessions/:id/video`), and needs a
 `liveSessionIds` map (from finalize AND hydrate) to survive a refresh — same pattern as Option A.
+
+## Three interview modes are each gated by an INDEPENDENT flag
+The employer screening tab surfaces three modes — Voice, Video(avatar), Live — each
+behind its own flag: `voiceScreening`/`FF_VOICE_SCREENING`, `avatarInterview`/`FF_AVATAR_INTERVIEW`,
+`liveAvatarInterview`/`FF_LIVE_AVATAR_INTERVIEW`. They are orthogonal; turning one on does
+not affect the others.
+
+**Trap — UI edits to `RealVoiceScreeningTab` are INVISIBLE while `voiceScreening` is OFF.**
+`ScreeningTab` probes `GET /api/employer/voice-screening/enabled`; when `enabled!==true` it
+renders `LegacyScreeningSimulationTab` (the old "AI Voice Bot Screening" simulation) instead,
+so any change to `RealVoiceScreeningTab` (header rename, the Interview Mode selector, etc.) only
+appears once `FF_VOICE_SCREENING` is enabled. If a user reports "I don't see my change", check
+this flag first.
+**Why:** the real tab is the flag-gated additive surface; legacy is the byte-identical-OFF path.
+
+**Honest mode states (panel chips):** flag OFF → "Turned off"; flag ON but provider keys
+missing → "Not configured" (Voice needs `OPENAI_API_KEY`; Video needs HeyGen key+avatar+voice;
+Live needs both). Only fully-keyed modes become launchable. Enable flags in the **development**
+env (`setEnvVars`, dev-only) to preview without altering production — see
+`workflow-limit-flag-via-env-var.md`.

@@ -510,7 +510,10 @@ export function registerVoiceScreeningRoutes(
     avatarFlagGate,
     requireAuth,
     (_req: Request, res: Response) => {
-      res.json({ enabled: isAvatarInterviewEnabled(), ...avatarStatus() });
+      const status = avatarStatus();
+      // `configured` is an explicit alias of the honest `connected` flag so the
+      // frontend CTA gate (avatar.enabled && avatar.configured) has a stable field.
+      res.json({ enabled: isAvatarInterviewEnabled(), configured: status.connected, ...status });
     },
   );
 

@@ -38,8 +38,16 @@ existing `/finalize` endpoint are reused verbatim. Do NOT build a parallel score
 - Video stream endpoint is employer-scoped (`WHERE answer_id=$1 AND employer_id=$2`) +
   `Cache-Control: private, no-store` — keep it that way (IDOR/privacy).
 
+**Probe contract trap:** `avatarStatus()` exposes `connected` (honest credential flag), but
+the frontend CTA gate reads `configured`. The `/avatar/enabled` route MUST return BOTH
+(`configured` aliased from `connected`) or the "Video Avatar" button never appears even when
+HeyGen is fully configured. Keep API + UI field names aligned.
+**Why:** a silent field-name mismatch passes build + flag-OFF checks but blocks the whole
+feature when ON.
+
 **Activation (founder step, NOT done in build):** set HEYGEN_API_KEY / HEYGEN_AVATAR_ID /
 HEYGEN_VOICE_ID and flip `FF_AVATAR_INTERVIEW=1` in the live workflow. Unconfigured →
 honest 503 via `AvatarUnavailable`; never fabricate a video.
 
-Task #218 (Option B, live conversational) is the queued follow-on — do not duplicate this.
+A live-conversational variant (avatar talks back in real time) is the natural follow-on —
+this Option A is record-and-score only; do not conflate the two.

@@ -21,6 +21,15 @@ Read-only, flag-gated (`outcomeIntelligenceActivation`, env `FF_OUTCOME_INTELLIG
 ## Honest dev state
 ~0 realized non-demo outcomes (never deployed). Verdict **PARTIAL**, accuracy ABSTAINED, realized_coverage 0, evidence_pairs 0 — the honest state, not a defect, never inflated. C3/C7 cert checks stay PARTIAL until k_min.
 
+## Write-side capture wiring (the durable recorders behind Coverage)
+- **`validation-loop-intake.ts` is the SINGLE write path** for the 4 calibratable types. Generic `recordValidationOutcome({outcomeType,...})` parameterises `outcome_type` (validated against `['hiring','performance','promotion','retention']`); thin wrappers `recordHiringOutcome`/`recordPerformanceOutcome`/`recordPromotionOutcome`/`recordRetentionOutcome` delegate to it. ALL share ONE contract: flag-gated (`validationLoop`, default ON), never-throws (returns `{recorded,reason}`), demo-aware (`@example.com`→`is_demo=true`), idempotent on `(outcome_type, ref_id)` (ON CONFLICT UPDATEs, never duplicates). A null/out-of-[0,1] prediction is kept NULL (Coverage-only) — never coerced. Per-type default `predicted_basis` in `DEFAULT_BASIS`.
+- **Wired to GENUINE employer decision events (no fabrication):**
+  - hiring ← candidate terminal stage Hired/Rejected (`snapshotDecisionProb`, ref `employer_candidate:<id>`).
+  - performance ← interview PUT recommendation (`recordInterviewPerformanceOutcome`): Strong Hire/Hire→1, No Hire→0, Maybe/blank→skip. Prediction = `match_score/100` (0/uninitialised→NULL). ref `employer_interview:<id>`.
+  - retention ← offer PUT terminal status (`recordOfferRetentionOutcome`): Accepted→1, Declined/Withdrawn/Expired→0, Draft/Sent/Negotiating→skip. Prediction = `predicted_prob_at_decision` else `match_score/100` else NULL. ref `employer_offer:<id>`.
+- **promotion has NO realized in-app event** (only a PREDICTION surface, `ti_outcome_predictions.promotion_probability`). It gets the recorder + the HTTP intake `POST /api/validation-loop/outcomes` as its durable capture path — but is deliberately NOT auto-wired to a fake event. **Why:** honesty>optimism — wiring a non-realized event (e.g. a saved career-path intent) would fabricate an outcome. Realized promotions arrive via intake/HRIS, same posture as career/learning being off-surface.
+- **Trap: `employer_candidates` has NO `candidate_user_id`/`user_id` column** — the hiring snapshot read them off `SELECT *` so they were silently `undefined`→null. Explicit-column SELECTs must use real cols only (`email`, `match_score`, `predicted_prob_at_decision`, `capadex_session_id`); use `capadex_session_id` as `assessmentRef`, leave `subjectUserId` null.
+
 ## Surfaces
 - Engine `backend/services/outcome-intelligence-engine.ts` (`composeOverview/composeType/composeLedger/composeCertification`, `pseudonym` = sha256 `user_<12hex>`, to_regclass probe + `safeCount` null-on-error).
 - Routes `backend/routes/outcome-intelligence.ts` (GET `/enabled` no-auth · `/overview` `/ledger` `/certification` `/type/:type` all flagGate→requireAuth→requireSuperAdmin; literal-before-:param).

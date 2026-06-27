@@ -28,7 +28,7 @@ import {
   checkApprovalRequired, createApproval, checkSSOEnforcement,
 } from './employer-security';
 import { computeSuccessProbability, parseSkills } from './employer-tig';
-import { recordHiringOutcome } from '../services/validation-loop-intake';
+import { recordHiringOutcome, recordPerformanceOutcome, recordRetentionOutcome } from '../services/validation-loop-intake';
 import { resolveCuratedRoleByTitle, getMatchableCuratedRoles } from '../services/role-title-crosswalk';
 import { isTalentMatchingEnabled } from '../config/feature-flags';
 import { ensureEmployerJobsSchema } from '../services/employer-jobs-schema';
@@ -397,6 +397,87 @@ async function snapshotDecisionProb(pool: Pool, employerId: string, candidateId:
       detail: { employer_candidate_id: candidateId, job_id: row.job_id, match_score: row.match_score ?? null, stage: st },
     });
   } catch { /* never throw — snapshot is best-effort */ }
+}
+
+// ── Realized PERFORMANCE outcome (interviewer verdict) ───────────────────────────────
+// When an interviewer records a definite recommendation, that human verdict is a realized
+// performance outcome the pre-hire assessment can be calibrated against: Strong Hire/Hire → 1,
+// No Hire → 0; Maybe/blank carry no binary verdict → skipped. The candidate's assessment-derived
+// match score (0..100) is the decision-time prediction (treated as ABSENT when 0/uninitialised —
+// never coerced into a fake 0-probability pair). Flag-gated/demo-aware/idempotent inside the recorder.
+function recommendationToOutcome(rec: string): 0 | 1 | null {
+  const r = rec.trim().toLowerCase();
+  if (r === 'strong hire' || r === 'hire') return 1;
+  if (r === 'no hire') return 0;
+  return null; // Maybe / blank / unknown → no realized binary verdict
+}
+
+async function recordInterviewPerformanceOutcome(pool: Pool, employerId: string, interviewId: string): Promise<void> {
+  try {
+    const ir = await pool.query(`SELECT * FROM employer_interviews WHERE id = $1 AND employer_id = $2`, [interviewId, employerId]);
+    const iv = ir.rows[0];
+    if (!iv) return;
+    const outcome = recommendationToOutcome(String(iv.recommendation ?? ''));
+    if (outcome == null) return; // no terminal verdict yet → nothing realized to record
+    if (!iv.candidate_id) return;
+    const cr = await pool.query(
+      `SELECT email, match_score, capadex_session_id FROM employer_candidates WHERE id = $1 AND employer_id = $2`,
+      [iv.candidate_id, employerId],
+    );
+    const cand = cr.rows[0];
+    const email = String(cand?.email ?? '').trim();
+    if (!email) return; // no subject → cannot attribute the outcome
+    const ms = Number(cand?.match_score ?? 0);
+    const pred = Number.isFinite(ms) && ms > 0 ? ms / 100 : null; // 0/uninitialised → absent
+    await recordPerformanceOutcome(pool, {
+      subjectEmail: email,
+      assessmentRef: cand?.capadex_session_id ?? null,
+      outcomeValue: outcome,
+      predictedProb: pred,
+      refId: `employer_interview:${interviewId}`,
+      detail: { employer_interview_id: interviewId, candidate_id: iv.candidate_id, job_id: iv.job_id ?? null, recommendation: iv.recommendation ?? null, rating: iv.rating ?? null },
+    });
+  } catch { /* never throw — best-effort */ }
+}
+
+// ── Realized RETENTION / yield outcome (offer outcome) ───────────────────────────────
+// An offer reaching a terminal yield state is a realized retention/yield outcome: Accepted (the
+// selected candidate joined) → 1; Declined/Withdrawn/Expired (did not join) → 0. Draft/Sent/
+// Negotiating/pending_approval are non-terminal → skipped. The candidate's decision-time success
+// probability (predicted_prob_at_decision, else match score) is the prediction (0/absent → NULL).
+function offerStatusToRetention(status: string): 0 | 1 | null {
+  const s = status.trim().toLowerCase();
+  if (s === 'accepted') return 1;
+  if (s === 'declined' || s === 'withdrawn' || s === 'expired') return 0;
+  return null; // Draft/Sent/Negotiating/pending_approval → not a terminal yield outcome
+}
+
+async function recordOfferRetentionOutcome(pool: Pool, employerId: string, offerId: string): Promise<void> {
+  try {
+    const or = await pool.query(`SELECT * FROM employer_offers WHERE id = $1 AND employer_id = $2`, [offerId, employerId]);
+    const off = or.rows[0];
+    if (!off) return;
+    const outcome = offerStatusToRetention(String(off.status ?? ''));
+    if (outcome == null) return; // non-terminal → nothing realized to record
+    if (!off.candidate_id) return;
+    const cr = await pool.query(
+      `SELECT email, match_score, predicted_prob_at_decision, capadex_session_id FROM employer_candidates WHERE id = $1 AND employer_id = $2`,
+      [off.candidate_id, employerId],
+    );
+    const cand = cr.rows[0];
+    const email = String(cand?.email ?? '').trim();
+    if (!email) return;
+    let pred: number | null = cand?.predicted_prob_at_decision != null ? Number(cand.predicted_prob_at_decision) : null;
+    if (pred == null) { const ms = Number(cand?.match_score ?? 0); pred = Number.isFinite(ms) && ms > 0 ? ms / 100 : null; }
+    await recordRetentionOutcome(pool, {
+      subjectEmail: email,
+      assessmentRef: cand?.capadex_session_id ?? null,
+      outcomeValue: outcome,
+      predictedProb: pred,
+      refId: `employer_offer:${offerId}`,
+      detail: { employer_offer_id: offerId, candidate_id: off.candidate_id, job_id: off.job_id ?? null, status: off.status ?? null },
+    });
+  } catch { /* never throw — best-effort */ }
 }
 
 // ── Résumé / CV validation (shared by the authenticated upload AND the public flows) ──
@@ -1888,6 +1969,9 @@ export function registerEmployerPortalRoutes(
       [req.params.id, eid(req)],
     );
     if (!row.rows[0]) return res.status(404).json({ error: 'Not found' });
+    // Validation loop: a definite interviewer recommendation is a realized PERFORMANCE outcome.
+    // Fire-and-forget + never-throws — recorder is flag-gated/demo-aware/idempotent.
+    if ('recommendation' in b) void recordInterviewPerformanceOutcome(pool, eid(req), req.params.id);
     res.json({ success: true, interview: toInterview(row.rows[0]) });
   }));
 
@@ -1971,6 +2055,9 @@ export function registerEmployerPortalRoutes(
       [req.params.id, eid(req)],
     );
     if (!row.rows[0]) return res.status(404).json({ error: 'Not found' });
+    // Validation loop: an offer reaching a terminal status is a realized RETENTION / yield outcome.
+    // Fire-and-forget + never-throws — recorder is flag-gated/demo-aware/idempotent.
+    if ('status' in b) void recordOfferRetentionOutcome(pool, eid(req), req.params.id);
     res.json({ success: true, offer: toOffer(row.rows[0]) });
   }));
 

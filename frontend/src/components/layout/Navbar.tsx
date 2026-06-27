@@ -268,7 +268,7 @@ const MENUS: PrimaryMenu[] = [
           { label: "Competency Benchmarking", slug: "competency-intelligence", desc: "Benchmark roles against 50 competencies across 7 industries — identify who's ready, who needs growth", icon: Gauge, featured: true, badge: "New" },
           { label: "Campus Recruitment", slug: "campus-recruit", desc: "University-to-workforce talent signals & matching", icon: GraduationCap, badge: "New" },
           { label: "Workforce Analytics", slug: "workforce-analytics", desc: "Team performance patterns, leadership readiness & skill gaps", icon: BarChart3 },
-          { label: "Role Transition & Hiring Prediction", slug: "competency-roletransition", desc: "Probability-scored role-fit, gap analysis & personalised learning paths for career progression", icon: GitMerge },
+          { label: "Role Transition & Hiring Prediction", slug: "competency-role-transition", desc: "Probability-scored role-fit, gap analysis & personalised learning paths for career progression", icon: GitMerge },
           { label: "L&D Integration", slug: "ld-integration", desc: "Plug into existing LMS, HRIS & corporate learning platforms", icon: Layers },
         ],
       },

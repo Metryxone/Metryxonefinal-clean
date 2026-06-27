@@ -93,3 +93,22 @@ The platform grew in numbered phases (Phase 2.4, Phase 6, WC-3/5/7, MX-1xx/3xx�
 1. Approve the one-line dead-link fix now? (Y/N)
 2. Proceed to **Phase 2 — CAPADEX Assessment E2E**? (or pick another phase)
 3. Should P2/P3 consolidation items be filed as backlog tasks now, or revisited after the full audit?
+
+---
+
+## IMPLEMENTATION — approved structural improvements applied (2026-06-27)
+
+> Scope strictly limited to the one **verified, unambiguous, low-risk** fix. P2 (renames that change live API bases) and P3 (refactors) were NOT applied — they remain recommendations in the Optimization Report, pending Founder approval, to honour the audit-only + stop-for-approval contract.
+
+1. **Dead nav link fixed** — `Navbar.tsx:274` slug `competency-roletransition` → `competency-role-transition` (canonical hyphenated slug already rendered by `App.tsx:884`). One-line, zero-risk: the correct destination already existed and matches the menu label.
+
+## VALIDATION — post-fix navigation sweep (evidence)
+
+Compared **all 33 distinct Navbar megamenu slugs** against **118 App.tsx render branches** (`currentScreen === '…'`).
+
+- **Before fix:** 2 nav slugs had no render branch → `competency-roletransition`, `leadership-readiness`.
+- **After fix:** `competency-roletransition` resolves (0 remaining references; `competency-role-transition` render branch confirmed). **31 of 33 nav slugs now resolve.**
+- **1 remaining dead link — NEEDS FOUNDER DECISION:** `leadership-readiness` (Navbar.tsx:95, under Intelligence › Human Capital Intelligence) has **no matching screen anywhere** (not in Screen union, not in `isValidScreen`, no render branch — only the unrelated `leadership` company page exists). I did **not** auto-repoint it, because choosing its destination is a product decision, not a typo fix.
+  - **Options:** (a) repoint to an existing screen — most plausible `competency-intelligence` or `workforce-analytics`; (b) build a dedicated Leadership Readiness page; (c) remove the menu item. **Founder to choose.**
+
+**Validation result:** Navigation integrity raised from 2 broken links → 1 (the remaining one parked on a Founder decision). Routing, module ownership, and discoverability findings unchanged from the audit above.

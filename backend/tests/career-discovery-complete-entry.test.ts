@@ -236,6 +236,62 @@ function captureCompleteChain(pool: Pool): Array<any> {
   return chain!;
 }
 
+// ── Capture the POST /complete chain with a requireAuth SPY ──────────────────
+// Lets the flag-OFF guard assert the gate short-circuits BEFORE requireAuth runs
+// (no auth touch) in addition to before any DB touch.
+function captureCompleteChainWithAuthSpy(pool: Pool): { chain: any[]; authCalls: () => number } {
+  let chain: any[] | null = null;
+  let authCalls = 0;
+  const fakeApp: any = {
+    use: () => {},
+    get: () => {},
+    post: (path: string, ...handlers: any[]) => {
+      if (path.endsWith('/career-discovery/complete')) chain = handlers;
+    },
+  };
+  const requireAuth = (req: any, _res: any, next: () => void) => {
+    authCalls++;
+    if (!req.user) req.user = { id: req._testUserId ?? 'student-test' };
+    next();
+  };
+  registerCareerDiscoveryRoutes(fakeApp, pool, requireAuth);
+  assert.ok(chain, 'POST /api/career-discovery/complete route was registered');
+  return { chain: chain!, authCalls: () => authCalls };
+}
+
+// ── Capture the (ungated) GET /enabled probe handler ─────────────────────────
+function captureEnabledProbe(pool: Pool): any {
+  let handler: any = null;
+  const fakeApp: any = {
+    use: () => {},
+    post: () => {},
+    get: (path: string, ...handlers: any[]) => {
+      if (path.endsWith('/career-discovery/enabled')) handler = handlers[handlers.length - 1];
+    },
+  };
+  const requireAuth = (_req: any, _res: any, next: () => void) => next();
+  registerCareerDiscoveryRoutes(fakeApp, pool, requireAuth);
+  assert.ok(handler, 'GET /api/career-discovery/enabled route was registered');
+  return handler;
+}
+
+function runEnabledProbe(handler: any): { status: number; body: any } {
+  let statusCode = 200;
+  let payload: any = null;
+  const res: any = {
+    status(code: number) {
+      statusCode = code;
+      return res;
+    },
+    json(p: any) {
+      payload = p;
+      return res;
+    },
+  };
+  handler({}, res, () => {});
+  return { status: statusCode, body: payload };
+}
+
 async function runComplete(chain: any[], userId: string, body: any) {
   const req: any = { body, _testUserId: userId };
   let statusCode = 200;
@@ -368,4 +424,95 @@ test('fake pool ACCEPTS the COALESCEd profile default (the shipped fix)', async 
     ),
   );
   assert.equal(pool.store['fixed-user'].profile, '{}', 'COALESCE supplies the {} default for a null profile');
+});
+
+// ── 4. Flag-OFF byte-identical-OFF discipline (Task #267) ────────────────────
+// The complement of the flag-ON skip/complete guard above: when
+// FF_CAREER_DISCOVERY is OFF, POST /api/career-discovery/complete must 503 from
+// the flag gate BEFORE any auth or DB touch, so flag-OFF is byte-identical incl.
+// schema (the lazy ensure-schema is only reached on the flag-ON path). The
+// /enabled probe stays UNGATED (200 {enabled:false}) so the SPA can cheaply
+// detect the flag state without 503ing.
+//
+// The flag is read from process.env at call time (no caching), so each test here
+// forces it OFF for the duration and restores the prior value afterwards (the
+// module forced it ON at import for the flag-ON tests above).
+
+/** Run `fn` with FF_CAREER_DISCOVERY forced OFF, restoring the prior value. */
+async function withFlagOff(fn: () => void | Promise<void>): Promise<void> {
+  const prev = process.env.FF_CAREER_DISCOVERY;
+  process.env.FF_CAREER_DISCOVERY = '0';
+  try {
+    await fn();
+  } finally {
+    if (prev === undefined) delete process.env.FF_CAREER_DISCOVERY;
+    else process.env.FF_CAREER_DISCOVERY = prev;
+  }
+}
+
+test('flag OFF → POST /complete 503s from the gate BEFORE any auth or DB touch (no queries captured)', async () => {
+  await withFlagOff(async () => {
+    const pool = new FakeDiscoveryPool();
+    const { chain, authCalls } = captureCompleteChainWithAuthSpy(pool as unknown as Pool);
+
+    const { status, body } = await runComplete(chain, 'student-flag-off', { skip: true });
+
+    assert.equal(status, 503, 'a flag-OFF request is 503ed by the gate');
+    assert.equal(body.ok, false);
+    assert.equal(body.enabled, false, 'the 503 envelope reports the flag is disabled');
+
+    // Byte-identical-OFF: the gate short-circuited before requireAuth ran …
+    assert.equal(authCalls(), 0, 'requireAuth was never reached (no auth touch when OFF)');
+    // … and before the handler issued ANY query (no DB/ensure-schema touch).
+    assert.equal(
+      pool.captured.length,
+      0,
+      'no SQL was issued when OFF — the lazy ensure-schema/INSERT is never reached',
+    );
+    assert.equal(
+      Object.keys(pool.store).length,
+      0,
+      'no career_discovery_results row was created on the inert flag-OFF path',
+    );
+  });
+});
+
+test('flag OFF → the /complete handler never executes (meta: prove the gate, not the handler, ended it)', async () => {
+  // A defense against a future refactor that moves the 503 INTO the handler (which
+  // would have already touched auth/DB). With the spy at 0 auth calls AND 0 queries
+  // above, the only middleware that could have ended the response is the gate.
+  await withFlagOff(async () => {
+    const pool = new FakeDiscoveryPool();
+    const chain = captureCompleteChain(pool as unknown as Pool);
+    const { status } = await runComplete(chain, 'student-flag-off-2', {});
+    assert.equal(status, 503);
+    assert.equal((pool as unknown as FakeDiscoveryPool).captured.length, 0, 'still no DB touch when OFF');
+  });
+});
+
+test('flag OFF → GET /enabled stays UNGATED: 200 {ok:true, enabled:false}', async () => {
+  await withFlagOff(async () => {
+    const pool = new FakeDiscoveryPool();
+    const handler = captureEnabledProbe(pool as unknown as Pool);
+
+    const { status, body } = runEnabledProbe(handler);
+
+    assert.equal(status, 200, 'the probe is never 503ed (it is intentionally ungated)');
+    assert.equal(body.ok, true);
+    assert.equal(body.enabled, false, 'the probe honestly reports the flag is OFF');
+    assert.equal(pool.captured.length, 0, 'the probe reads no DB (pure flag check)');
+  });
+});
+
+test('flag ON → GET /enabled reports 200 {enabled:true} (probe tracks the live flag state)', async () => {
+  // Sanity counterpart to the OFF probe: with the flag ON (module default) the
+  // SAME ungated probe flips to enabled:true, proving it reflects the live flag.
+  const pool = new FakeDiscoveryPool();
+  const handler = captureEnabledProbe(pool as unknown as Pool);
+
+  const { status, body } = runEnabledProbe(handler);
+
+  assert.equal(status, 200);
+  assert.equal(body.ok, true);
+  assert.equal(body.enabled, true, 'flag ON (module default) → probe reports enabled:true');
 });

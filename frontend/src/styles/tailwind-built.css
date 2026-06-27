@@ -5992,6 +5992,9 @@
   .pl-10 {
     padding-left: calc(var(--spacing) * 10);
   }
+  .pl-11 {
+    padding-left: calc(var(--spacing) * 11);
+  }
   .pl-12 {
     padding-left: calc(var(--spacing) * 12);
   }
@@ -12027,6 +12030,11 @@
   .sm\:col-span-1 {
     @media (width >= 40rem) {
       grid-column: span 1 / span 1;
+    }
+  }
+  .sm\:col-span-2 {
+    @media (width >= 40rem) {
+      grid-column: span 2 / span 2;
     }
   }
   .sm\:col-span-3 {

@@ -18,6 +18,16 @@
  *   • career-seeker.ts  PUT/PATCH /api/cv/profile/:userId
  *       → writes `career_seeker_profiles.data`. Guard `resolveUserId` rejects a
  *         cross-user :userId (403) BEFORE any DB touch.
+ *   • career-seeker.ts  POST /api/cv/save-profile, POST /api/cv/init-profile,
+ *       PUT /api/career/studio-data, POST /api/career/experience
+ *       → BODY-keyed writes into `career_seeker_profiles` that derive the subject
+ *         SOLELY from the session principal (`u.id`) and never read an id out of
+ *         the request body. There is no `:userId` URL guard here because there is
+ *         no client-supplied id to guard — the subject is implicit. Section E is
+ *         the regression that pins this: an attacker-supplied id in the body
+ *         (`user_id` / `userId` / `id`) must NEVER become the user_id write param.
+ *         A future refactor that starts trusting a body id would re-open a silent
+ *         write IDOR; these tests would catch it.
  *
  * Each surface ALREADY keys correctly on the session principal today; this test
  * is the regression that keeps it that way. It mounts the REAL route registrars
@@ -30,6 +40,7 @@
 import http, { type Server } from 'node:http';
 import assert from 'node:assert/strict';
 import express, { type Request, type Response, type NextFunction } from 'express';
+import { PgDialect } from 'drizzle-orm/pg-core';
 import { registerBehaviouralMemoryRoutes, resolveEffectiveUserId } from '../routes/behavioural-memory';
 import { registerEmployabilityPassportRoutes } from '../routes/employability-passport';
 import { registerCareerSeekerRoutes, resolveUserId } from '../routes/career-seeker';
@@ -301,6 +312,164 @@ async function sectionCareerSeeker() {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
+// Section E — career-seeker.ts BODY-keyed writes (no :userId in the URL).
+//   POST /api/cv/save-profile, POST /api/cv/init-profile, PUT /api/career/studio-data
+//   all persist into career_seeker_profiles keyed on the SESSION principal (u.id)
+//   and never read an id from the request body. POST /api/career/experience does
+//   the same via persistPreferredExperience(pool, u.id, …). These have no URL
+//   guard because there is no client-supplied id to trust — so a future refactor
+//   that begins reading body.user_id (etc.) would silently re-open a write IDOR
+//   with no failing test. This section is that test.
+//
+//   Harness: career-seeker uses drizzle `db.execute(sql\`…\`)` for the three
+//   /api/cv* + /api/career/studio-data writes — we stub `storageDb.execute` and
+//   compile each drizzle SQL via PgDialect to recover the real ($1,$2,…) params,
+//   so we can assert the user_id write param is the session uid (never the
+//   attacker id from the body). The experience write goes through the module
+//   `pool` (pg-style), so we stub `storagePool.query` and read params directly.
+// ════════════════════════════════════════════════════════════════════════════
+async function sectionCareerSeekerBodyKeyed() {
+  console.log('\nCareer Seeker body-keyed writes — self-only WRITE (no :userId)');
+
+  const dialect = new PgDialect();
+  // Records every DB touch with REAL compiled SQL + params. The same probe backs
+  // both the drizzle (db.execute) and pg (pool.query) stubs.
+  const probe: { queries: Array<{ sql: string; params: any[] }> } = { queries: [] };
+
+  // drizzle db.execute(sqlObj) — compile to { sql, params } so params are visible.
+  (storageDb as any).execute = async (query: any) => {
+    const compiled = dialect.sqlToQuery(query);
+    probe.queries.push({ sql: compiled.sql, params: compiled.params as any[] });
+    // init-profile / studio-data SELECT first; return empty so the INSERT path runs.
+    return { rows: [] };
+  };
+  // pg pool.query(sql, params) — the experience write + any fire-and-forget side
+  // effects (LBI / propagation) flow through here; record and answer benignly.
+  (storagePool as any).query = async (sql: string, params?: any[]) => {
+    probe.queries.push({ sql, params: params ?? [] });
+    // readEffectiveStage SELECT: report a stored 'executive' stage so EVERY
+    // experience is within allowedExperiences() and the persist path is reached.
+    if (/FROM users u\s+LEFT JOIN career_seeker_profiles/i.test(sql)) {
+      return { rows: [{ profile_user_id: SESSION_UID, career_stage: 'executive', data: {}, role: 'career_seeker', roles: ['career_seeker'] }] };
+    }
+    return { rows: [], rowCount: 0 };
+  };
+
+  process.env.FF_CAREER_LAUNCHPAD = '1'; // unlock studio-data + experience writes.
+
+  const app = express();
+  app.use(express.json());
+  // career-seeker uses its OWN internal requireAuth (req.isAuthenticated() + req.user);
+  // a career_seeker role is required by the experience write specifically.
+  app.use((req: Request, _res: Response, next: NextFunction) => {
+    if (req.headers['x-test-auth'] === '1') {
+      (req as any).user = {
+        id: SESSION_UID,
+        role: (req.headers['x-test-role'] as string) || undefined,
+        email: 'self@example.com', username: 'self',
+      };
+      (req as any).isAuthenticated = () => true;
+    } else {
+      (req as any).isAuthenticated = () => false;
+    }
+    next();
+  });
+  registerCareerSeekerRoutes(app);
+  const server = http.createServer(app);
+  const base: string = await new Promise((resolve) => {
+    server.listen(0, () => {
+      const addr = server.address();
+      const port = typeof addr === 'object' && addr ? addr.port : 0;
+      resolve(`http://127.0.0.1:${port}`);
+    });
+  });
+
+  // Helper: the user_id write param for an INSERT/UPDATE into career_seeker_profiles
+  // is $1 (the first bind in every write in this file). Returns it for assertion.
+  const profileWrites = () =>
+    probe.queries.filter((q) => /(INSERT INTO|UPDATE)\s+career_seeker_profiles/i.test(q.sql));
+
+  // A body laced with the attacker's id under every key a naive refactor might read.
+  const malice = { user_id: ATTACKER_UID, userId: ATTACKER_UID, id: ATTACKER_UID };
+  const noAttackerLeak = (label: string) => {
+    const leaked = probe.queries.filter((q) => (q.params ?? []).some((p) => String(p) === ATTACKER_UID));
+    assert.equal(leaked.length, 0, `${label}: attacker id reached the DB layer (params)`);
+  };
+
+  // ── (1) POST /api/cv/save-profile ──────────────────────────────────────────
+  probe.queries = [];
+  const save = await call(base, 'POST', '/api/cv/save-profile', {
+    auth: true,
+    body: { ...malice, profile: { summary: 'mine', personal: { name: 'Self' } } },
+  });
+  await test('save-profile self → 200', () => {
+    assert.equal(save.status, 200);
+    assert.equal(save.json?.success, true);
+  });
+  await test('save-profile → user_id write param is the SESSION uid (body id ignored)', () => {
+    const w = profileWrites();
+    assert.ok(w.length > 0, 'expected a profile write');
+    for (const q of w) assert.equal(q.params[0], SESSION_UID, `write keyed on a non-session id: ${q.params[0]}`);
+  });
+  await test('save-profile → attacker body id never reaches the DB (no write IDOR A→B)', () => noAttackerLeak('save-profile'));
+
+  // ── (2) POST /api/cv/init-profile ──────────────────────────────────────────
+  probe.queries = [];
+  const init = await call(base, 'POST', '/api/cv/init-profile', {
+    auth: true,
+    body: { ...malice, name: 'Self', email: 'self@example.com' },
+  });
+  await test('init-profile self → 200', () => {
+    assert.equal(init.status, 200);
+    assert.equal(init.json?.success, true);
+  });
+  await test('init-profile → INSERT keyed on the SESSION uid (body id ignored)', () => {
+    const w = profileWrites().filter((q) => /INSERT INTO/i.test(q.sql));
+    assert.ok(w.length > 0, 'expected an init INSERT');
+    for (const q of w) assert.equal(q.params[0], SESSION_UID, `INSERT keyed on a non-session id: ${q.params[0]}`);
+  });
+  await test('init-profile → attacker body id never reaches the DB (no write IDOR A→B)', () => noAttackerLeak('init-profile'));
+
+  // ── (3) PUT /api/career/studio-data ────────────────────────────────────────
+  probe.queries = [];
+  const studio = await call(base, 'PUT', '/api/career/studio-data', {
+    auth: true,
+    body: { ...malice, leadership: { team: [{ name: 'A' }] } },
+  });
+  await test('studio-data self → 200', () => {
+    assert.equal(studio.status, 200);
+    assert.equal(studio.json?.success, true);
+  });
+  await test('studio-data → write keyed on the SESSION uid (body id ignored)', () => {
+    const w = profileWrites();
+    assert.ok(w.length > 0, 'expected a studio write');
+    for (const q of w) assert.equal(q.params[0], SESSION_UID, `write keyed on a non-session id: ${q.params[0]}`);
+  });
+  await test('studio-data → attacker body id never reaches the DB (no write IDOR A→B)', () => noAttackerLeak('studio-data'));
+
+  // ── (4) POST /api/career/experience (subject implicit; never from body) ─────
+  probe.queries = [];
+  const exp = await call(base, 'POST', '/api/career/experience', {
+    auth: true,
+    role: 'career_seeker',
+    body: { ...malice, experience: 'command-center' },
+  });
+  await test('experience switch self → 200', () => {
+    assert.equal(exp.status, 200);
+    assert.equal(exp.json?.success, true);
+  });
+  await test('experience switch → persist keyed on the SESSION uid (body id ignored)', () => {
+    // persistPreferredExperience: INSERT INTO career_seeker_profiles (...) VALUES ($1, …) — $1 is the user id.
+    const w = probe.queries.filter((q) => /INSERT INTO career_seeker_profiles/i.test(q.sql));
+    assert.ok(w.length > 0, 'expected a preferred-experience persist');
+    for (const q of w) assert.equal(q.params[0], SESSION_UID, `persist keyed on a non-session id: ${q.params[0]}`);
+  });
+  await test('experience switch → attacker body id never reaches the DB (no write IDOR A→B)', () => noAttackerLeak('experience'));
+
+  await new Promise<void>((resolve) => server.close(() => resolve()));
+}
+
+// ════════════════════════════════════════════════════════════════════════════
 // Section D — the shared guards, as pure functions (the single source of truth
 //   both DB-backed write surfaces above resolve their subject through).
 // ════════════════════════════════════════════════════════════════════════════
@@ -352,6 +521,7 @@ async function main() {
   await sectionBehaviouralMemory();
   await sectionPassport();
   await sectionCareerSeeker();
+  await sectionCareerSeekerBodyKeyed();
 
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed > 0) process.exit(1);

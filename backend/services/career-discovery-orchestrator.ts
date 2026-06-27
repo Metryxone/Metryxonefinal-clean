@@ -160,11 +160,11 @@ export async function markDiscovery(
   }
   await pool.query(
     `INSERT INTO career_discovery_results (user_id, status, completed_at, profile, compatibility_score)
-       VALUES ($1, $2, NOW(), $3::jsonb, $4)
+       VALUES ($1, $2, NOW(), COALESCE($3::jsonb, '{}'::jsonb), $4)
      ON CONFLICT (user_id) DO UPDATE
        SET status              = EXCLUDED.status,
            completed_at        = NOW(),
-           profile             = COALESCE(EXCLUDED.profile, career_discovery_results.profile),
+           profile             = COALESCE($3::jsonb, career_discovery_results.profile),
            compatibility_score = COALESCE(EXCLUDED.compatibility_score, career_discovery_results.compatibility_score),
            updated_at          = NOW()`,
     [userId, status, profile ? JSON.stringify(profile) : null, compatibility],

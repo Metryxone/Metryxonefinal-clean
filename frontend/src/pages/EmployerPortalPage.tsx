@@ -17,7 +17,7 @@ import {
   Building, Layers, ChevronLeft, Flag, Users2, Flame,
   ClipboardList, Dna, Radar, HeartPulse, Network, GraduationCap,
   Percent, Gauge, ListChecks, Cpu,
-  Mic, Link2, Copy, PhoneCall, BotMessageSquare, Wand2,
+  Mic, Link2, Copy, PhoneCall, BotMessageSquare, Wand2, Radio,
   Timer, BadgeCheck, SlidersHorizontal, PlayCircle, Pause, Volume2,
   Repeat, ExternalLink, Hash, MailCheck, Info,
   FileSpreadsheet, Database, UserPlus, ArrowUpRight, Table,
@@ -5369,6 +5369,27 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
   const [answerVideoUrls, setAnswerVideoUrls] = useState<Record<string, string>>({});
   const hydratedRef = useRef(false);
 
+  // ── Live conversational avatar (Option B) — separate flag, separate probe ─────
+  interface LiveTurn { role: 'avatar' | 'candidate'; text: string; questionId?: string | null; isFollowUp?: boolean; }
+  interface LiveSession {
+    candidateId: string;
+    candidateName: string;
+    sessionId: string | null;
+    phase: 'connecting' | 'live' | 'ending' | 'scoring';
+    transcript: LiveTurn[];
+    done: boolean;
+    avatarSpeaking: boolean;
+    remainingMs: number;
+    error: string | null;
+    statusMsg: string;
+  }
+  const [live, setLive] = useState<{ loading: boolean; enabled: boolean; configured: boolean; aiReady: boolean; ready: boolean; message: string; maxDurationMs: number }>(
+    { loading: true, enabled: false, configured: false, aiReady: false, ready: false, message: '', maxDurationMs: 12 * 60 * 1000 });
+  const [liveSession, setLiveSession] = useState<LiveSession | null>(null);
+  const [liveSessionIds, setLiveSessionIds] = useState<Record<string, string>>({});
+  const [liveTranscripts, setLiveTranscripts] = useState<Record<string, LiveTurn[]>>({});
+  const [liveVideoUrls, setLiveVideoUrls] = useState<Record<string, string>>({});
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const videoChunksRef = useRef<Blob[]>([]);
@@ -5376,6 +5397,21 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
   const recStartRef = useRef<number>(0);
   const livePreviewRef = useRef<HTMLVideoElement | null>(null);
   const avatarPollRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Live-avatar runtime refs (SDK instance + media + loop guards live OUTSIDE state).
+  const liveAvatarRef = useRef<any>(null);
+  const liveSdkEventsRef = useRef<any>({});
+  const liveSdkTaskTypeRef = useRef<any>({});
+  const liveSessionIdRef = useRef<string | null>(null);
+  const liveStreamVideoRef = useRef<HTMLVideoElement | null>(null);
+  const liveWebcamRef = useRef<HTMLVideoElement | null>(null);
+  const liveWebcamStreamRef = useRef<MediaStream | null>(null);
+  const liveRecorderRef = useRef<MediaRecorder | null>(null);
+  const liveChunksRef = useRef<Blob[]>([]);
+  const liveStartRef = useRef<number>(0);
+  const liveTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const liveBusyRef = useRef<boolean>(false);
+  const liveEndingRef = useRef<boolean>(false);
 
   const DIM_COLOR: Record<string, string> = {
     communication_clarity: BRAND.primary,
@@ -5432,15 +5468,52 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
     return () => { alive = false; };
   }, []);
 
+  // ── Probe the (separately flag-gated) LIVE conversational-avatar layer ────────
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const res = await fetch('/api/employer/voice-screening/live/enabled', { headers: authHdr() });
+        if (!alive) return;
+        if (res.ok) {
+          const d = await res.json();
+          setLive({
+            loading: false,
+            enabled: !!d.enabled,
+            configured: !!d.configured,
+            aiReady: !!d.aiReady,
+            ready: !!d.ready,
+            message: d.message || '',
+            maxDurationMs: Number(d.maxDurationMs) || 12 * 60 * 1000,
+          });
+        } else {
+          setLive(l => ({ ...l, loading: false, enabled: false, ready: false }));
+        }
+      } catch {
+        if (alive) setLive(l => ({ ...l, loading: false, enabled: false, ready: false }));
+      }
+    })();
+    return () => { alive = false; };
+  }, []);
+
   // Mirror the latest blob URLs into a ref so the unmount-only cleanup revokes the
   // final set WITHOUT re-running on every change (which would revoke still-shown URLs).
   const answerVideoUrlsRef = useRef<Record<string, string>>({});
   useEffect(() => { answerVideoUrlsRef.current = answerVideoUrls; }, [answerVideoUrls]);
 
   // ── Stop any in-flight avatar poll + release any object URLs on unmount ───────
+  const liveVideoUrlsRef = useRef<Record<string, string>>({});
+  useEffect(() => { liveVideoUrlsRef.current = liveVideoUrls; }, [liveVideoUrls]);
   useEffect(() => () => {
     if (avatarPollRef.current) clearTimeout(avatarPollRef.current);
     Object.values(answerVideoUrlsRef.current).forEach(u => { try { URL.revokeObjectURL(u); } catch { /* noop */ } });
+    Object.values(liveVideoUrlsRef.current).forEach(u => { try { URL.revokeObjectURL(u); } catch { /* noop */ } });
+    // Tear down any in-flight live avatar session (SDK + media + timer).
+    if (liveTimerRef.current) { clearInterval(liveTimerRef.current); liveTimerRef.current = null; }
+    try { liveAvatarRef.current?.stopAvatar?.(); } catch { /* noop */ }
+    liveAvatarRef.current = null;
+    liveWebcamStreamRef.current?.getTracks().forEach(t => { try { t.stop(); } catch { /* noop */ } });
+    liveWebcamStreamRef.current = null;
   }, []);
 
   // ── Hydrate persisted state once enabled: honest phone-leg status + the latest
@@ -5483,6 +5556,9 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
           setScreenStatus(s => ({ ...s, [id]: 'completed' }));
           if (sess.channel === 'avatar' && sess._id) {
             setAvatarSessionIds(m => ({ ...m, [id]: sess._id }));
+          }
+          if (sess.channel === 'live_avatar' && sess._id) {
+            setLiveSessionIds(m => ({ ...m, [id]: sess._id }));
           }
           if (Array.isArray(sess.questions) && sess.questions.length) {
             setUsedQuestions(q => ({ ...q, [id]: sess.questions }));
@@ -5774,6 +5850,307 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
     setSession(null);
   };
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // LIVE CONVERSATIONAL AVATAR (Option B) — real-time two-way interview
+  // ---------------------------------------------------------------------------
+  // The HeyGen Streaming Avatar SDK is loaded on demand from a CDN ESM build so
+  // we never add it to the frontend npm tree (which would trip the mockup-sandbox
+  // prune trap). The browser opens the WebRTC stream with ONLY a short-lived
+  // session token minted server-side — no HeyGen key ever reaches the client.
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  const fmtClock = (ms: number) => {
+    const s = Math.max(0, Math.floor(ms / 1000));
+    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  };
+
+  // Stop the webcam stream + recorder + countdown WITHOUT tearing down the avatar.
+  const stopLiveMedia = () => {
+    if (liveTimerRef.current) { clearInterval(liveTimerRef.current); liveTimerRef.current = null; }
+    try { if (liveRecorderRef.current && liveRecorderRef.current.state !== 'inactive') liveRecorderRef.current.stop(); } catch { /* noop */ }
+    liveWebcamStreamRef.current?.getTracks().forEach(t => { try { t.stop(); } catch { /* noop */ } });
+    if (liveWebcamRef.current) liveWebcamRef.current.srcObject = null;
+  };
+
+  const teardownLiveAvatar = () => {
+    try { liveAvatarRef.current?.stopAvatar?.(); } catch { /* noop */ }
+    liveAvatarRef.current = null;
+    if (liveStreamVideoRef.current) liveStreamVideoRef.current.srcObject = null;
+  };
+
+  const postLiveTurn = async (sid: string, role: 'avatar' | 'candidate', text: string, questionId: string | null) => {
+    try {
+      await fetch(`/api/employer/voice-screening/live/sessions/${sid}/turns`, {
+        method: 'POST', headers: authHdr(),
+        body: JSON.stringify({ role, text, questionId }),
+      });
+    } catch { /* a dropped turn is surfaced via the running transcript; never fabricate */ }
+  };
+
+  // Ask the server for the avatar's next utterance, persist it, then speak it.
+  // Returns true when the interview is complete (caller ends the session).
+  const runNextTurn = async (): Promise<boolean> => {
+    const sid = liveSessionIdRef.current;
+    if (!sid || liveBusyRef.current || liveEndingRef.current) return false;
+    liveBusyRef.current = true;
+    try {
+      const res = await fetch(`/api/employer/voice-screening/live/sessions/${sid}/next`, { method: 'POST', headers: authHdr() });
+      const data = await res.json().catch(() => ({}));
+      // Server-authoritative duration cap reached — stop cleanly and score what we have.
+      if (res.status === 409 && data.expired) {
+        return true;
+      }
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || (data.aiUnavailable ? 'AI interviewer is not configured.' : 'Could not get the next question.'));
+      }
+      const utterance: string = data.utterance || '';
+      setLiveSession(s => s ? {
+        ...s,
+        transcript: [...s.transcript, { role: 'avatar', text: utterance, questionId: data.questionId ?? null, isFollowUp: !!data.isFollowUp }],
+        done: !!data.done,
+      } : s);
+      if (utterance && liveAvatarRef.current?.speak) {
+        setLiveSession(s => s ? { ...s, avatarSpeaking: true } : s);
+        try {
+          await liveAvatarRef.current.speak({
+            text: utterance,
+            taskType: liveSdkTaskTypeRef.current?.REPEAT || 'repeat',
+            taskMode: 'sync',
+          });
+        } catch { /* speech failure is non-fatal — transcript already shows the prompt */ }
+        setLiveSession(s => s ? { ...s, avatarSpeaking: false } : s);
+      }
+      return !!data.done;
+    } catch (e: any) {
+      setLiveSession(s => s ? { ...s, error: e?.message || 'Could not get the next question.' } : s);
+      return false;
+    } finally {
+      liveBusyRef.current = false;
+    }
+  };
+
+  // Candidate finished speaking → record their REAL turn, then advance the avatar.
+  const handleCandidateUtterance = async (text: string) => {
+    const sid = liveSessionIdRef.current;
+    const clean = (text || '').trim();
+    if (!sid || !clean || liveEndingRef.current) return;
+    setLiveSession(s => s ? { ...s, transcript: [...s.transcript, { role: 'candidate', text: clean }] } : s);
+    await postLiveTurn(sid, 'candidate', clean, null);
+    const done = await runNextTurn();
+    if (done) void endLiveInterview();
+  };
+
+  // Upload the full webcam recording, then score via the shared finalizer.
+  const finalizeLiveSession = async (sid: string, cid: string) => {
+    setLiveSession(s => s ? { ...s, phase: 'scoring', statusMsg: 'Scoring the interview…' } : s);
+    setScreenStatus(s => ({ ...s, [cid]: 'scoring' }));
+    try {
+      // Upload the captured webcam video (best-effort — scoring uses the transcript).
+      if (liveChunksRef.current.length) {
+        const blob = new Blob(liveChunksRef.current, { type: liveChunksRef.current[0]?.type || 'video/webm' });
+        const fd = new FormData();
+        fd.append('video', blob, 'live-interview.webm');
+        fd.append('durationMs', String(Date.now() - liveStartRef.current));
+        try { await fetch(`/api/employer/voice-screening/live/sessions/${sid}/video`, { method: 'POST', headers: tokenHdr(), body: fd }); } catch { /* video is supplementary */ }
+      }
+      const res = await fetch(`/api/employer/voice-screening/live/sessions/${sid}/finalize`, { method: 'POST', headers: authHdr() });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.message || (data.aiUnavailable ? 'AI scoring is not configured.' : 'Scoring failed'));
+      const sess = data.session;
+      setVoiceResults(r => ({ ...r, [cid]: {
+        overallScore: sess.overallScore ?? null,
+        recommendation: sess.recommendation ?? null,
+        summary: sess.summary || '',
+        dimensions: sess.dimensions || [],
+        abstained: !!sess.abstained,
+        answeredCount: sess.answeredCount ?? 0,
+        questionCount: sess.questionCount ?? 0,
+        provenance: sess.provenance || '',
+        channel: sess.channel || 'live_avatar',
+      } }));
+      if (Array.isArray(sess.questions) && sess.questions.length) setUsedQuestions(q => ({ ...q, [cid]: sess.questions }));
+      setScreenStatus(s => ({ ...s, [cid]: 'completed' }));
+      setLiveSessionIds(m => ({ ...m, [cid]: sid }));
+      setActiveCallId(null);
+      setExpandedId(cid);
+      setLiveSession(null);
+      void loadLiveTranscript(cid, sid);
+    } catch (e: any) {
+      setScreenStatus(s => ({ ...s, [cid]: 'recording' }));
+      setLiveSession(s => s ? { ...s, phase: 'live', error: e?.message || 'Scoring failed', statusMsg: '' } : s);
+    }
+  };
+
+  // End the live interview: stop listening + media, tear down the avatar, finalize.
+  const endLiveInterview = async () => {
+    if (liveEndingRef.current) return;
+    liveEndingRef.current = true;
+    const sid = liveSessionIdRef.current;
+    const cid = liveSession?.candidateId || null;
+    setLiveSession(s => s ? { ...s, phase: 'ending', statusMsg: 'Wrapping up the interview…', avatarSpeaking: false } : s);
+    try { await liveAvatarRef.current?.closeVoiceChat?.(); } catch { /* noop */ }
+
+    // Recorder onstop will fire AFTER we call stop(); finalize once the blob is ready.
+    const rec = liveRecorderRef.current;
+    const doFinalize = () => { if (sid && cid) void finalizeLiveSession(sid, cid); };
+    if (rec && rec.state !== 'inactive') {
+      rec.onstop = () => { teardownLiveAvatar(); doFinalize(); };
+      stopLiveMedia();
+    } else {
+      stopLiveMedia();
+      teardownLiveAvatar();
+      doFinalize();
+    }
+  };
+
+  // Begin a live interview: create the session, load the SDK, open the stream.
+  const startLiveInterview = async (c: Candidate) => {
+    liveEndingRef.current = false;
+    liveBusyRef.current = false;
+    liveChunksRef.current = [];
+    setActiveCallId(c._id);
+    setScreenStatus(s => ({ ...s, [c._id]: 'recording' }));
+    setLiveSession({
+      candidateId: c._id, candidateName: c.name, sessionId: null, phase: 'connecting',
+      transcript: [], done: false, avatarSpeaking: false, remainingMs: live.maxDurationMs,
+      error: null, statusMsg: 'Connecting to the live avatar…',
+    });
+    try {
+      // 1. Create the server-side session (mints the HeyGen token; honest 503 if unconfigured).
+      const sres = await fetch('/api/employer/voice-screening/live/sessions', {
+        method: 'POST', headers: authHdr(), body: JSON.stringify({ candidateId: c._id }),
+      });
+      const sdata = await sres.json().catch(() => ({}));
+      if (!sres.ok || !sdata.success) {
+        throw new Error(sdata.message || (sdata.aiUnavailable ? 'AI interviewer is not configured.' : sdata.avatarUnavailable ? 'Live avatar is not configured.' : 'Could not start the live interview.'));
+      }
+      const sid: string = sdata.session._id;
+      const liveTok = sdata.live || {};
+      const token: string = liveTok.token;
+      const avatarId: string = liveTok.avatarId;
+      const voiceId: string | undefined = liveTok.voiceId;
+      const maxDurationMs: number = Number(liveTok.maxDurationMs) || live.maxDurationMs;
+      liveSessionIdRef.current = sid;
+      setLiveSession(s => s ? { ...s, sessionId: sid, remainingMs: maxDurationMs, statusMsg: 'Starting the avatar…' } : s);
+
+      // 2. Load the HeyGen Streaming Avatar SDK from a CDN ESM build (no npm install).
+      const mod: any = await import(/* @vite-ignore */ 'https://esm.sh/@heygen/streaming-avatar@2.0.16');
+      const StreamingAvatarCtor = mod.default || mod.StreamingAvatar;
+      const EV = mod.StreamingEvents || {};
+      const TT = mod.TaskType || {};
+      const QUALITY = mod.AvatarQuality || {};
+      liveSdkEventsRef.current = EV;
+      liveSdkTaskTypeRef.current = TT;
+      if (!StreamingAvatarCtor) throw new Error('Live avatar runtime could not be loaded.');
+
+      const avatar = new StreamingAvatarCtor({ token });
+      liveAvatarRef.current = avatar;
+
+      // 3. Wire stream + ASR events BEFORE starting the avatar.
+      avatar.on?.(EV.STREAM_READY || 'stream_ready', (ev: any) => {
+        const stream = ev?.detail;
+        if (stream && liveStreamVideoRef.current) {
+          liveStreamVideoRef.current.srcObject = stream;
+          void liveStreamVideoRef.current.play?.().catch(() => { /* autoplay guard */ });
+        }
+      });
+      avatar.on?.(EV.STREAM_DISCONNECTED || 'stream_disconnected', () => {
+        if (!liveEndingRef.current) void endLiveInterview();
+      });
+      // Final candidate utterance for a turn → record + advance.
+      avatar.on?.(EV.USER_END_MESSAGE || 'user_end_message', (ev: any) => {
+        const msg = ev?.detail?.message || ev?.detail?.text || '';
+        if (msg) void handleCandidateUtterance(String(msg));
+      });
+
+      // 4. Start the avatar stream.
+      const startCfg: any = { quality: QUALITY.Low || 'low', avatarName: avatarId, language: 'en' };
+      if (voiceId) startCfg.voice = { voiceId };
+      if (typeof avatar.createStartAvatar === 'function') await avatar.createStartAvatar(startCfg);
+      else if (typeof avatar.startAvatar === 'function') await avatar.startAvatar(startCfg);
+      else throw new Error('Live avatar runtime is incompatible.');
+
+      // 5. Capture the candidate webcam (video + audio) for the recorded artifact.
+      try {
+        const cam = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        liveWebcamStreamRef.current = cam;
+        if (liveWebcamRef.current) {
+          liveWebcamRef.current.srcObject = cam;
+          liveWebcamRef.current.muted = true;
+          void liveWebcamRef.current.play?.().catch(() => { /* autoplay guard */ });
+        }
+        const mr = MediaRecorder.isTypeSupported('video/webm')
+          ? new MediaRecorder(cam, { mimeType: 'video/webm' })
+          : new MediaRecorder(cam);
+        liveRecorderRef.current = mr;
+        mr.ondataavailable = (e) => { if (e.data && e.data.size > 0) liveChunksRef.current.push(e.data); };
+        liveStartRef.current = Date.now();
+        mr.start(1000);
+      } catch {
+        setLiveSession(s => s ? { ...s, error: 'Camera/microphone access was blocked. The interview will continue without a recording.' } : s);
+      }
+
+      // 6. Start listening for the candidate's speech (HeyGen ASR / voice chat).
+      try { await avatar.startVoiceChat?.({ useSilencePrompt: false }); } catch { /* voice chat optional; avatar can still speak */ }
+
+      // 7. Start the max-duration countdown (realtime minutes are billable).
+      setLiveSession(s => s ? { ...s, phase: 'live', statusMsg: '', remainingMs: maxDurationMs } : s);
+      const endAt = Date.now() + maxDurationMs;
+      liveTimerRef.current = setInterval(() => {
+        const remaining = endAt - Date.now();
+        setLiveSession(s => s ? { ...s, remainingMs: Math.max(0, remaining) } : s);
+        if (remaining <= 0 && !liveEndingRef.current) void endLiveInterview();
+      }, 1000);
+
+      // 8. Kick off the interview — avatar greets + asks the first authored question.
+      const done = await runNextTurn();
+      if (done) void endLiveInterview();
+    } catch (e: any) {
+      stopLiveMedia();
+      teardownLiveAvatar();
+      liveSessionIdRef.current = null;
+      setScreenStatus(s => { const n = { ...s }; delete n[c._id]; return n; });
+      setActiveCallId(null);
+      setLiveSession(s => s ? { ...s, phase: 'live', error: e?.message || 'Could not start the live interview.', statusMsg: '' } : s);
+    }
+  };
+
+  // Cancel an in-flight live interview WITHOUT scoring (employer aborted).
+  const cancelLiveInterview = () => {
+    const cid = liveSession?.candidateId;
+    liveEndingRef.current = true;
+    stopLiveMedia();
+    teardownLiveAvatar();
+    liveSessionIdRef.current = null;
+    if (cid && screenStatus[cid] === 'recording') {
+      setScreenStatus(s => { const n = { ...s }; delete n[cid]; return n; });
+    }
+    setActiveCallId(null);
+    setLiveSession(null);
+  };
+
+  // ── Load a completed live interview's transcript (for the report) ────────────
+  const loadLiveTranscript = async (cid: string, sid: string) => {
+    try {
+      const res = await fetch(`/api/employer/voice-screening/live/sessions/${sid}/turns`, { headers: authHdr() });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success && Array.isArray(data.turns)) {
+        setLiveTranscripts(t => ({ ...t, [cid]: data.turns.map((x: any) => ({ role: x.role, text: x.text, questionId: x.questionId ?? null, isFollowUp: !!x.isFollowUp })) }));
+      }
+    } catch { /* transcript view is best-effort */ }
+  };
+
+  // ── Load the stored full-interview webcam recording (auth-gated → blob URL) ───
+  const loadLiveVideo = async (cid: string, sid: string) => {
+    if (liveVideoUrls[cid]) return;
+    try {
+      const res = await fetch(`/api/employer/voice-screening/live/sessions/${sid}/video`, { headers: tokenHdr() });
+      if (!res.ok) return;
+      const blob = await res.blob();
+      setLiveVideoUrls(m => ({ ...m, [cid]: URL.createObjectURL(blob) }));
+    } catch { /* playback is best-effort */ }
+  };
+
   const eligible = candidates.filter(c => c.assessmentScore >= fitThreshold && c.stage !== 'Rejected');
   const roles = ['All', ...Array.from(new Set(candidates.map(c => c.jobTitle).filter(Boolean)))];
   const displayList = filterRole === 'All' ? eligible : eligible.filter(c => c.jobTitle === filterRole);
@@ -5964,6 +6341,21 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
                       <Video size={12} /> Video Avatar not configured
                     </div>
                   )}
+                  {(!status || status === 'not_started') && live.enabled && live.ready && (
+                    <button onClick={() => startLiveInterview(c)} disabled={!!activeCallId}
+                      title="A live avatar speaks and listens in real time; the candidate converses on camera"
+                      className="flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl text-white"
+                      style={{ backgroundColor: activeCallId ? '#94a3b8' : BRAND.red }}>
+                      <Radio size={12} /> Live Interview
+                    </button>
+                  )}
+                  {(!status || status === 'not_started') && live.enabled && !live.ready && (
+                    <div title={live.message || undefined}
+                      className="flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl border"
+                      style={{ borderColor: `${BRAND.red}40`, color: BRAND.red, backgroundColor: `${BRAND.red}08` }}>
+                      <Radio size={12} /> Live Interview not configured
+                    </div>
+                  )}
                   {busy && (
                     <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl text-white" style={{ backgroundColor: status === 'recording' ? BRAND.red : BRAND.purple }}>
                       <RefreshCw size={11} className="animate-spin" />
@@ -5993,7 +6385,9 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
                       <div className="flex items-center gap-2 mb-2">
                         <BotMessageSquare size={14} style={{ color: BRAND.primary }} />
                         <span className="text-xs font-semibold text-gray-800">AI Screening Summary</span>
-                        {result.channel === 'avatar'
+                        {result.channel === 'live_avatar'
+                          ? <Chip label="🔴 Live Interview" color={BRAND.red} size="xs" />
+                          : result.channel === 'avatar'
                           ? <Chip label="🎥 Video Interview" color={BRAND.purple} size="xs" />
                           : <Chip label="🎙 Voice" color={BRAND.accent} size="xs" />}
                       </div>
@@ -6103,12 +6497,162 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
                       )}
                     </div>
                   )}
+                  {/* Live interview — full conversation transcript + recording */}
+                  {result.channel === 'live_avatar' && (
+                    <div className="mt-4 border-t pt-3">
+                      <div className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+                        <Radio size={9} /> Live interview recording & transcript
+                      </div>
+                      {/* Full-session webcam recording */}
+                      {liveVideoUrls[c._id] ? (
+                        <video key={liveVideoUrls[c._id]} src={liveVideoUrls[c._id]} controls playsInline className="w-full max-h-64 rounded-lg bg-black mb-3" />
+                      ) : liveSessionIds[c._id] ? (
+                        <button onClick={() => loadLiveVideo(c._id, liveSessionIds[c._id])}
+                          className="flex items-center gap-1.5 text-[10px] font-medium px-3 py-1.5 rounded-lg text-white mb-3" style={{ backgroundColor: BRAND.red }}>
+                          <Video size={10} /> Play interview recording
+                        </button>
+                      ) : (
+                        <p className="text-[10px] text-gray-400 mb-3">No recording is available for this interview.</p>
+                      )}
+                      {/* Turn-by-turn transcript */}
+                      {!liveTranscripts[c._id] ? (
+                        liveSessionIds[c._id] ? (
+                          <button onClick={() => loadLiveTranscript(c._id, liveSessionIds[c._id])}
+                            className="text-[10px] font-medium px-3 py-1.5 rounded-lg border" style={{ borderColor: `${BRAND.red}30`, color: BRAND.red }}>
+                            Load conversation transcript
+                          </button>
+                        ) : (
+                          <p className="text-[10px] text-gray-400">The transcript isn't available for this report.</p>
+                        )
+                      ) : liveTranscripts[c._id].length === 0 ? (
+                        <p className="text-[10px] text-gray-400">No conversation was recorded for this interview.</p>
+                      ) : (
+                        <div className="space-y-2">
+                          {liveTranscripts[c._id].map((t, i) => (
+                            <div key={i} className={`flex ${t.role === 'avatar' ? 'justify-start' : 'justify-end'}`}>
+                              <div className="max-w-[80%] px-3 py-2 rounded-xl text-[10px] leading-relaxed"
+                                style={t.role === 'avatar'
+                                  ? { backgroundColor: `${BRAND.red}08`, border: `1px solid ${BRAND.red}20`, color: '#374151' }
+                                  : { backgroundColor: '#f1f5f9', border: '1px solid #e2e8f0', color: '#374151' }}>
+                                <div className="text-[8px] font-bold uppercase tracking-wider mb-0.5" style={{ color: t.role === 'avatar' ? BRAND.red : '#64748b' }}>
+                                  {t.role === 'avatar' ? (t.isFollowUp ? 'Interviewer · follow-up' : 'Interviewer') : 'Candidate'}
+                                </div>
+                                {t.text?.trim() ? t.text : <span className="italic text-gray-400">(No speech detected.)</span>}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
           );
         })}
       </div>
+
+      {/* ── Live Interview Modal (real-time two-way conversation) ───────────── */}
+      {liveSession && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between p-5 border-b shrink-0">
+              <div>
+                <h2 className="text-sm font-bold text-gray-800 flex items-center gap-2">
+                  <Radio size={14} style={{ color: BRAND.red }} /> Live Avatar Interview
+                </h2>
+                <p className="text-[10px] text-gray-400 mt-0.5">
+                  {liveSession.candidateName} · a real-time avatar speaks and listens; the conversation is transcribed & scored
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                {liveSession.phase === 'live' && (
+                  <span className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-lg"
+                    style={{ color: liveSession.remainingMs < 60000 ? BRAND.red : '#475569', backgroundColor: liveSession.remainingMs < 60000 ? `${BRAND.red}10` : '#f1f5f9' }}>
+                    <Timer size={11} /> {fmtClock(liveSession.remainingMs)}
+                  </span>
+                )}
+                <button onClick={cancelLiveInterview} className="text-gray-400 hover:text-gray-600" title="End the interview without scoring">
+                  <X size={15} />
+                </button>
+              </div>
+            </div>
+
+            {/* Body */}
+            <div className="flex-1 overflow-y-auto p-5">
+              {liveSession.error && (
+                <div className="mb-3 flex items-start gap-2 p-3 rounded-xl border text-[11px]" style={{ borderColor: `${BRAND.red}40`, backgroundColor: `${BRAND.red}08`, color: BRAND.red }}>
+                  <AlertCircle size={13} className="shrink-0 mt-0.5" />
+                  <span>{liveSession.error}</span>
+                </div>
+              )}
+              {(liveSession.phase === 'connecting' || liveSession.phase === 'ending' || liveSession.phase === 'scoring') && (
+                <div className="mb-3 flex items-center justify-center gap-2 p-3 rounded-xl border text-[11px] text-gray-600" style={{ borderColor: '#e5e7eb', backgroundColor: '#f9fafb' }}>
+                  <RefreshCw size={12} className="animate-spin" /> {liveSession.statusMsg || 'Working…'}
+                </div>
+              )}
+
+              {/* Video stage: avatar + candidate side by side */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-xl overflow-hidden border border-gray-100 bg-black relative">
+                  <video ref={liveStreamVideoRef} autoPlay playsInline className="w-full aspect-video bg-black object-cover" />
+                  <div className="absolute bottom-1.5 left-1.5 text-[9px] font-semibold text-white px-1.5 py-0.5 rounded" style={{ backgroundColor: `${BRAND.red}cc` }}>
+                    {liveSession.avatarSpeaking ? '🔴 Interviewer speaking…' : 'AI Interviewer'}
+                  </div>
+                </div>
+                <div className="rounded-xl overflow-hidden border border-gray-100 bg-black relative">
+                  <video ref={liveWebcamRef} muted playsInline className="w-full aspect-video bg-black object-cover" />
+                  <div className="absolute bottom-1.5 left-1.5 text-[9px] font-semibold text-white px-1.5 py-0.5 rounded bg-black/60">
+                    {liveSession.candidateName}
+                  </div>
+                </div>
+              </div>
+
+              {/* Live transcript */}
+              <div className="mt-4">
+                <div className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+                  <MessageSquare size={9} /> Live transcript
+                </div>
+                {liveSession.transcript.length === 0 ? (
+                  <p className="text-[10px] text-gray-400 italic">The conversation will appear here as it happens…</p>
+                ) : (
+                  <div className="space-y-2">
+                    {liveSession.transcript.map((t, i) => (
+                      <div key={i} className={`flex ${t.role === 'avatar' ? 'justify-start' : 'justify-end'}`}>
+                        <div className="max-w-[80%] px-3 py-2 rounded-xl text-[10px] leading-relaxed"
+                          style={t.role === 'avatar'
+                            ? { backgroundColor: `${BRAND.red}08`, border: `1px solid ${BRAND.red}20`, color: '#374151' }
+                            : { backgroundColor: '#f1f5f9', border: '1px solid #e2e8f0', color: '#374151' }}>
+                          <div className="text-[8px] font-bold uppercase tracking-wider mb-0.5" style={{ color: t.role === 'avatar' ? BRAND.red : '#64748b' }}>
+                            {t.role === 'avatar' ? (t.isFollowUp ? 'Interviewer · follow-up' : 'Interviewer') : 'Candidate'}
+                          </div>
+                          {t.text?.trim() ? t.text : <span className="italic text-gray-400">…</span>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="flex items-center justify-between gap-3 p-5 border-t bg-gray-50/50 shrink-0">
+              <div className="text-[10px] text-gray-400">
+                Real-time conversation — assistive screening aid, not a hiring decision. Speak naturally; the avatar listens between questions.
+              </div>
+              <button onClick={() => void endLiveInterview()}
+                disabled={liveSession.phase !== 'live'}
+                className="flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl text-white font-medium disabled:opacity-50"
+                style={{ backgroundColor: liveSession.phase === 'live' ? BRAND.green : '#94a3b8' }}>
+                {liveSession.phase === 'scoring' || liveSession.phase === 'ending'
+                  ? <><RefreshCw size={11} className="animate-spin" /> Finishing…</>
+                  : <><CheckCircle size={11} /> End & Score</>}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── Screening Modal (preview → record) ─────────────────────────────── */}
       {session && (

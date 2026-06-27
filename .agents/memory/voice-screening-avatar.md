@@ -51,3 +51,50 @@ honest 503 via `AvatarUnavailable`; never fabricate a video.
 
 A live-conversational variant (avatar talks back in real time) is the natural follow-on —
 this Option A is record-and-score only; do not conflate the two.
+
+# Live avatar interview (Option B) — real-time two-way conversation
+
+Option B is a SECOND additive layer on the SAME employer voice screening, gated by an
+INDEPENDENT flag `liveAvatarInterview` / `FF_LIVE_AVATAR_INTERVIEW` (default OFF, distinct
+from Option A's `avatarInterview`). channel = `'live_avatar'`. Same flag-OFF-byte-identical-
+including-schema rule, same honesty contract, and it REUSES Option A's HeyGen seam +
+`scoreScreening` verbatim — do not duplicate the provider seam or the scorer.
+
+**Provider split — token vs API key.** Option A drives a server-side video render; Option B
+uses HeyGen's **Streaming/Interactive Avatar** (WebRTC) in the BROWSER. So the live seam mints
+a short-lived **streaming token** server-side (`createLiveAvatarToken()` → POST
+`/v1/streaming.create_token`) and the browser SDK (`@heygen/streaming-avatar`, dynamic-imported
+from esm.sh — never `npm install` into `frontend/`, mockup-prune trap) connects with that token.
+The API key NEVER reaches the browser. Needs BOTH HeyGen (token) AND OpenAI (orchestrator) →
+`/live/enabled` returns `ready = connected && aiReady`; either missing → honest 503, never a
+fabricated session.
+
+**Wire contract (easy to get wrong — verified):** `POST /live/sessions` returns the token
+NESTED under `live: { token, avatarId, voiceId, maxDurationMs }` (not flat). `/next` returns
+FLAT `{utterance,questionId,isFollowUp,done,source}`. `/turns` GET returns `{turns:[...]}`,
+`/finalize` returns `{session}`. Video upload field name is `video` + `durationMs` (multipart →
+use the Authorization-only header, not the JSON header).
+
+**Orchestration = interviewer prompts only, never the candidate's answers.** `orchestrateNextTurn`
+asks the LLM for the next interviewer turn as strict JSON; on any error/unconfigured it degrades
+DETERMINISTICALLY to the next un-asked AUTHORED question (authored = not fabricated). Candidate
+turns carry REAL captured ASR text. Finalize groups candidate turns by the authored questionId
+they answered (falling back to the most-recent authored question delivered) → `AnswerInput[]` →
+the shared scorer (abstains/null≠0 preserved).
+
+**Two server-authoritative guards a prompt alone can't enforce (added after review):**
+- **Max-duration is billable** → enforce server-side, not just the UI countdown. Compute elapsed
+  from session `created_at` vs `LIVE_AVATAR_MAX_DURATION_MS` and reject `/next` + `/turns` with
+  **409 `{expired:true}`** once over the cap (leave `/video` + `/finalize` OPEN so the partial
+  recording + score still save). The frontend treats 409-expired as a clean "done" → finalize.
+  **Why:** a tampered client could otherwise run realtime avatar minutes indefinitely.
+- **≤1 follow-up per authored question** → prompt-only is not enough. The `/next` route derives
+  `followUpUsedForActiveQuestion` from the persisted turns (resets on each new authored question)
+  and passes it to the orchestrator, which converts a drifting second follow-up into the next
+  authored question. **Why:** repeated follow-ups inflate turns/cost and delay coverage.
+
+**Own tables:** `voice_live_avatar_turns` (turn-by-turn transcript) + `voice_live_avatar_videos`
+(BYTEA, one per session, replace-on-reupload). All live routes employer_id-scoped (IDOR); video
+served `private, no-store`. Report block keys on `result.channel === 'live_avatar'` (🔴 badge +
+transcript via `/turns` + full-session recording via `/live/sessions/:id/video`), and needs a
+`liveSessionIds` map (from finalize AND hydrate) to survive a refresh — same pattern as Option A.

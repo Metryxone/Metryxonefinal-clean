@@ -201,3 +201,62 @@ export async function fetchAvatarVideoStatus(providerVideoId: string): Promise<A
     : null;
   return { status, url: status === 'completed' ? url : null, error };
 }
+
+// ════════════════════════════════════════════════════════════════════════════
+// LIVE / INTERACTIVE STREAMING AVATAR (Option B) — real-time two-way interview
+// ----------------------------------------------------------------------------
+// The same HeyGen credentials (key + avatar + voice) power the Interactive
+// Streaming Avatar. To keep the API key server-side, the server mints a
+// short-lived SESSION TOKEN via `/v1/streaming.create_token`; the browser then
+// uses HeyGen's @heygen/streaming-avatar SDK with ONLY that token to open the
+// WebRTC stream, speak (REPEAT mode), and capture the candidate's speech. No
+// credential ever reaches the browser. Honesty contract is identical: when the
+// avatar is unconfigured, `createLiveAvatarToken()` throws AvatarUnavailable
+// (503) — nothing here fabricates a live session.
+// ════════════════════════════════════════════════════════════════════════════
+
+/** Hard cap on a single live interview — realtime avatar minutes are billable. */
+export const LIVE_AVATAR_MAX_DURATION_MS = 12 * 60 * 1000; // 12 minutes
+
+/** True only when genuine HeyGen credentials are present (same seam as Option A). */
+export function isLiveAvatarConfigured(): boolean {
+  return isAvatarConfigured();
+}
+
+/** Honest status for the live (interactive) avatar leg. */
+export function liveAvatarStatus(): AvatarStatus & { channel: 'live_avatar' } {
+  const base = avatarStatus();
+  return {
+    ...base,
+    channel: 'live_avatar',
+    message: base.connected
+      ? 'Live conversational avatar is configured (HeyGen Interactive Avatar).'
+      : base.message,
+  };
+}
+
+export interface LiveAvatarToken {
+  token: string;
+  avatarId: string;
+  voiceId: string;
+  maxDurationMs: number;
+}
+
+/**
+ * Mint a short-lived HeyGen streaming session token for the browser SDK.
+ * Throws `AvatarUnavailable` (503) when HeyGen is not configured or the request
+ * fails. Never returns a fabricated/placeholder token.
+ */
+export async function createLiveAvatarToken(): Promise<LiveAvatarToken> {
+  const { avatarId, voiceId } = requireConfig();
+  const json = await heygenFetch('/v1/streaming.create_token', {
+    method: 'POST',
+    body: JSON.stringify({}),
+    timeoutMs: 20000,
+  });
+  const token = json?.data?.token || json?.token;
+  if (!token) {
+    throw new AvatarUnavailable('HeyGen did not return a streaming session token.');
+  }
+  return { token: String(token), avatarId, voiceId, maxDurationMs: LIVE_AVATAR_MAX_DURATION_MS };
+}

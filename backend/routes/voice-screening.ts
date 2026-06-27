@@ -23,16 +23,22 @@ import type { Express, Request, Response } from 'express';
 import type { Pool } from 'pg';
 import multer from 'multer';
 import { randomUUID } from 'crypto';
-import { isVoiceScreeningEnabled, isAvatarInterviewEnabled } from '../config/feature-flags';
+import {
+  isVoiceScreeningEnabled,
+  isAvatarInterviewEnabled,
+  isLiveAvatarInterviewEnabled,
+} from '../config/feature-flags';
 import { selectScreeningQuestions } from '../services/interview-question-store';
 import {
   VOICE_DIMENSIONS,
   transcribeAudio,
   scoreScreening,
+  orchestrateNextTurn,
   isAIConfigured,
   VoiceAIUnavailable,
   AI_PROVENANCE,
   type AnswerInput,
+  type ConversationTurn,
 } from '../services/voice-screening-engine';
 import {
   twilioStatus,
@@ -45,6 +51,10 @@ import {
   requestAvatarVideo,
   fetchAvatarVideoStatus,
   AvatarUnavailable,
+  isLiveAvatarConfigured,
+  liveAvatarStatus,
+  createLiveAvatarToken,
+  LIVE_AVATAR_MAX_DURATION_MS,
 } from '../services/voice-screening-avatar';
 import { createHash } from 'crypto';
 
@@ -162,6 +172,59 @@ async function ensureAvatarSchema(pool: Pool): Promise<void> {
     CREATE INDEX IF NOT EXISTS idx_vaav_session ON voice_avatar_answer_videos(session_id);
   `);
   avatarSchemaReady = true;
+}
+
+// ── Live avatar layer (Option B) — own flag, own schema, byte-identical when OFF ─
+// Every live route 503s BEFORE any auth/DB/AI/schema touch when the flag is off,
+// so no live tables are ever created and Option A + the base voice-screening
+// surface stay byte-identical regardless of this flag.
+function liveAvatarFlagGate(_req: Request, res: Response, next: any) {
+  if (!isLiveAvatarInterviewEnabled()) {
+    return res.status(503).json({ enabled: false, message: 'live_avatar_interview_disabled' });
+  }
+  next();
+}
+
+// Server-authoritative session age (realtime avatar minutes are billable). The
+// frontend countdown is convenience only — this is the enforced backstop so a
+// tampered client cannot keep a live session running past the cap.
+function liveSessionExpired(createdAt: any): boolean {
+  const started = new Date(createdAt).getTime();
+  if (!Number.isFinite(started)) return false; // never block on an unparseable timestamp
+  return Date.now() - started > LIVE_AVATAR_MAX_DURATION_MS;
+}
+
+let liveAvatarSchemaReady = false;
+async function ensureLiveAvatarSchema(pool: Pool): Promise<void> {
+  if (liveAvatarSchemaReady) return;
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS voice_live_avatar_turns (
+      id           TEXT PRIMARY KEY,
+      session_id   TEXT NOT NULL,
+      employer_id  TEXT NOT NULL,
+      turn_index   INTEGER DEFAULT 0,
+      role         TEXT NOT NULL,
+      question_id  TEXT DEFAULT '',
+      is_follow_up BOOLEAN DEFAULT false,
+      source       TEXT DEFAULT '',
+      text         TEXT DEFAULT '',
+      created_at   TIMESTAMPTZ DEFAULT now()
+    );
+    CREATE INDEX IF NOT EXISTS idx_vlat_session ON voice_live_avatar_turns(session_id);
+
+    CREATE TABLE IF NOT EXISTS voice_live_avatar_videos (
+      id           TEXT PRIMARY KEY,
+      session_id   TEXT NOT NULL,
+      employer_id  TEXT NOT NULL,
+      mime         TEXT DEFAULT 'video/webm',
+      bytes        INTEGER DEFAULT 0,
+      duration_ms  INTEGER DEFAULT 0,
+      data         BYTEA,
+      created_at   TIMESTAMPTZ DEFAULT now()
+    );
+    CREATE INDEX IF NOT EXISTS idx_vlav_session ON voice_live_avatar_videos(session_id);
+  `);
+  liveAvatarSchemaReady = true;
 }
 
 const scriptHash = (text: string): string =>
@@ -851,6 +914,481 @@ export function registerVoiceScreeningRoutes(
         res.send(row.data);
       } catch (err: any) {
         res.status(500).json({ message: err?.message || 'video_fetch_failed' });
+      }
+    },
+  );
+
+  // ════════════════════════════════════════════════════════════════════════════
+  // LIVE AVATAR LAYER (Option B) — real-time two-way conversational interview.
+  // A HeyGen Interactive/Streaming Avatar (WebRTC, driven by the browser SDK with
+  // a server-minted token) speaks AND listens live; an OpenAI LLM conducts the
+  // dialogue (authored questions + brief in-scope follow-ups under safety
+  // guardrails). The candidate webcam video + full turn-by-turn transcript are
+  // captured, then scored by the EXISTING 5-dimension rubric (same honesty
+  // contract — abstain when no usable signal). Own flag, own schema, own routes;
+  // OFF → 503 before any auth/DB/AI/schema touch (byte-identical legacy).
+  // ════════════════════════════════════════════════════════════════════════════
+
+  // ── Live flag + provider/AI readiness probe (employer-gated; no schema) ──────
+  app.get(
+    '/api/employer/voice-screening/live/enabled',
+    liveAvatarFlagGate,
+    requireAuth,
+    (_req: Request, res: Response) => {
+      const status = liveAvatarStatus();
+      const aiReady = isAIConfigured();
+      res.json({
+        enabled: isLiveAvatarInterviewEnabled(),
+        // The live flow needs BOTH the avatar provider AND the LLM orchestrator.
+        configured: status.connected,
+        aiReady,
+        ready: status.connected && aiReady,
+        maxDurationMs: LIVE_AVATAR_MAX_DURATION_MS,
+        dimensions: VOICE_DIMENSIONS,
+        provenance: AI_PROVENANCE,
+        ...status,
+      });
+    },
+  );
+
+  // ── Start a live session: create the row + mint a HeyGen streaming token ─────
+  //    Needs HeyGen (token) AND OpenAI (orchestration). Honest 503 when either is
+  //    unconfigured — never fabricates a session or token.
+  app.post(
+    '/api/employer/voice-screening/live/sessions',
+    liveAvatarFlagGate,
+    requireAuth,
+    async (req: Request, res: Response) => {
+      try {
+        if (!isLiveAvatarConfigured()) {
+          return res.status(503).json({ message: liveAvatarStatus().message, avatarUnavailable: true });
+        }
+        if (!isAIConfigured()) {
+          return res.status(503).json({
+            message:
+              'AI not configured — set OPENAI_API_KEY (or connect the OpenAI integration) to run a live interview.',
+            aiUnavailable: true,
+          });
+        }
+        await ensureVoiceSchema(pool);
+        await ensureLiveAvatarSchema(pool);
+        const eid = employerId(req);
+        const candidateId = String((req.body as any)?.candidateId ?? '').trim();
+        if (!candidateId) return res.status(400).json({ message: 'candidateId_required' });
+
+        const c = await pool.query(
+          `SELECT id, name, job_id, job_title, candidate_role FROM employer_candidates WHERE id = $1 AND employer_id = $2`,
+          [candidateId, eid],
+        );
+        if (c.rowCount === 0) return res.status(404).json({ message: 'candidate_not_found' });
+        const cand = c.rows[0];
+        const jobTitle = cand.job_title || cand.candidate_role || '';
+        const questions = await selectScreeningQuestions(pool, { role: jobTitle });
+
+        // Mint the streaming token FIRST so we never persist a session we can't run.
+        const tok = await createLiveAvatarToken();
+
+        const id = `vss_${randomUUID()}`;
+        await pool.query(
+          `INSERT INTO voice_screening_sessions
+             (id, employer_id, candidate_id, candidate_name, job_id, job_title, channel, status, questions, question_count, answered_count)
+           VALUES ($1,$2,$3,$4,$5,$6,'live_avatar','in_progress',$7::jsonb,$8,0)`,
+          [id, eid, candidateId, cand.name ?? '', cand.job_id ?? '', jobTitle, JSON.stringify(questions), questions.length],
+        );
+
+        const row = (await pool.query(`SELECT * FROM voice_screening_sessions WHERE id = $1`, [id])).rows[0];
+        res.json({
+          success: true,
+          session: sessionToJson(row),
+          live: {
+            token: tok.token,
+            avatarId: tok.avatarId,
+            voiceId: tok.voiceId,
+            maxDurationMs: tok.maxDurationMs,
+          },
+        });
+      } catch (err: any) {
+        const status = err instanceof AvatarUnavailable ? 503 : 500;
+        res.status(status).json({
+          message: err?.message || 'failed_to_start_live_session',
+          avatarUnavailable: status === 503,
+        });
+      }
+    },
+  );
+
+  // ── Append one conversation turn (avatar or candidate) to the transcript ─────
+  //    The candidate's turns carry the REAL captured speech (never fabricated).
+  app.post(
+    '/api/employer/voice-screening/live/sessions/:id/turns',
+    liveAvatarFlagGate,
+    requireAuth,
+    async (req: Request, res: Response) => {
+      try {
+        await ensureVoiceSchema(pool);
+        await ensureLiveAvatarSchema(pool);
+        const eid = employerId(req);
+        const sessionId = req.params.id;
+        const sess = await pool.query(
+          `SELECT id, questions, created_at FROM voice_screening_sessions WHERE id = $1 AND employer_id = $2 AND channel = 'live_avatar'`,
+          [sessionId, eid],
+        );
+        if (sess.rowCount === 0) return res.status(404).json({ message: 'session_not_found' });
+        if (liveSessionExpired(sess.rows[0].created_at)) {
+          return res.status(409).json({ message: 'live_session_expired', expired: true, maxDurationMs: LIVE_AVATAR_MAX_DURATION_MS });
+        }
+
+        const role = String((req.body as any)?.role ?? '').trim();
+        if (role !== 'avatar' && role !== 'candidate') {
+          return res.status(400).json({ message: 'role_must_be_avatar_or_candidate' });
+        }
+        const text = String((req.body as any)?.text ?? '').trim();
+        if (!text) return res.status(400).json({ message: 'text_required' });
+
+        // Validate questionId (if provided) against the session's stored set.
+        const stored: any[] = Array.isArray(sess.rows[0].questions) ? sess.rows[0].questions : [];
+        let questionId = String((req.body as any)?.questionId ?? '').trim();
+        if (questionId && !stored.some((q) => String(q?.id ?? '') === questionId)) {
+          questionId = '';
+        }
+        const isFollowUp = (req.body as any)?.isFollowUp === true;
+
+        const nextIdx = (
+          await pool.query(
+            `SELECT COALESCE(MAX(turn_index), -1) + 1 AS n FROM voice_live_avatar_turns WHERE session_id = $1`,
+            [sessionId],
+          )
+        ).rows[0].n;
+
+        const turnId = `vlat_${randomUUID()}`;
+        await pool.query(
+          `INSERT INTO voice_live_avatar_turns
+             (id, session_id, employer_id, turn_index, role, question_id, is_follow_up, source, text)
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+          [turnId, sessionId, eid, nextIdx, role, questionId, isFollowUp, 'client', text],
+        );
+
+        res.json({ success: true, turnId, turnIndex: nextIdx });
+      } catch (err: any) {
+        res.status(500).json({ message: err?.message || 'turn_append_failed' });
+      }
+    },
+  );
+
+  // ── Decide + persist the avatar's NEXT utterance (LLM orchestrator) ──────────
+  //    Reads the stored questions, which authored ids have been asked, and the
+  //    running transcript; produces the next avatar turn and persists it.
+  app.post(
+    '/api/employer/voice-screening/live/sessions/:id/next',
+    liveAvatarFlagGate,
+    requireAuth,
+    async (req: Request, res: Response) => {
+      try {
+        await ensureVoiceSchema(pool);
+        await ensureLiveAvatarSchema(pool);
+        const eid = employerId(req);
+        const sessionId = req.params.id;
+        const sess = await pool.query(
+          `SELECT * FROM voice_screening_sessions WHERE id = $1 AND employer_id = $2 AND channel = 'live_avatar'`,
+          [sessionId, eid],
+        );
+        if (sess.rowCount === 0) return res.status(404).json({ message: 'session_not_found' });
+        const row = sess.rows[0];
+        if (liveSessionExpired(row.created_at)) {
+          return res.status(409).json({ message: 'live_session_expired', expired: true, maxDurationMs: LIVE_AVATAR_MAX_DURATION_MS });
+        }
+        const stored: any[] = Array.isArray(row.questions) ? row.questions : [];
+
+        const turns = (
+          await pool.query(
+            `SELECT role, text, question_id, is_follow_up FROM voice_live_avatar_turns
+               WHERE session_id = $1 ORDER BY turn_index ASC`,
+            [sessionId],
+          )
+        ).rows;
+
+        const transcript: ConversationTurn[] = turns.map((t) => ({
+          role: t.role === 'candidate' ? 'candidate' : 'avatar',
+          text: t.text ?? '',
+          questionId: t.question_id || null,
+        }));
+        // Authored ids already DELIVERED (avatar turns that named an authored id).
+        const askedQuestionIds = Array.from(
+          new Set(
+            turns
+              .filter((t) => t.role === 'avatar' && !t.is_follow_up && t.question_id)
+              .map((t) => String(t.question_id)),
+          ),
+        );
+
+        // Has a follow-up ALREADY been asked for the most-recent authored question?
+        // (Resets each time a new authored question is delivered.) Server-side
+        // backstop for the "≤1 follow-up per authored question" rule.
+        let followUpUsedForActiveQuestion = false;
+        for (const t of turns) {
+          if (t.role !== 'avatar') continue;
+          if (!t.is_follow_up && t.question_id) followUpUsedForActiveQuestion = false;
+          else if (t.is_follow_up) followUpUsedForActiveQuestion = true;
+        }
+
+        const result = await orchestrateNextTurn({
+          jobTitle: row.job_title ?? '',
+          questions: stored.map((q) => ({ id: String(q?.id ?? ''), question: String(q?.question ?? '') })),
+          askedQuestionIds,
+          transcript,
+          followUpUsedForActiveQuestion,
+        });
+
+        // Persist the avatar's utterance as the next transcript turn.
+        const nextIdx = (
+          await pool.query(
+            `SELECT COALESCE(MAX(turn_index), -1) + 1 AS n FROM voice_live_avatar_turns WHERE session_id = $1`,
+            [sessionId],
+          )
+        ).rows[0].n;
+        const turnId = `vlat_${randomUUID()}`;
+        await pool.query(
+          `INSERT INTO voice_live_avatar_turns
+             (id, session_id, employer_id, turn_index, role, question_id, is_follow_up, source, text)
+           VALUES ($1,$2,$3,$4,'avatar',$5,$6,$7,$8)`,
+          [turnId, sessionId, eid, nextIdx, result.questionId ?? '', result.isFollowUp, result.source, result.utterance],
+        );
+
+        res.json({
+          success: true,
+          utterance: result.utterance,
+          questionId: result.questionId,
+          isFollowUp: result.isFollowUp,
+          done: result.done,
+          source: result.source,
+          turnIndex: nextIdx,
+        });
+      } catch (err: any) {
+        const status = err instanceof VoiceAIUnavailable ? 503 : 500;
+        res.status(status).json({ message: err?.message || 'orchestration_failed', aiUnavailable: status === 503 });
+      }
+    },
+  );
+
+  // ── Fetch the full conversation transcript for review/replay ─────────────────
+  app.get(
+    '/api/employer/voice-screening/live/sessions/:id/turns',
+    liveAvatarFlagGate,
+    requireAuth,
+    async (req: Request, res: Response) => {
+      try {
+        await ensureVoiceSchema(pool);
+        await ensureLiveAvatarSchema(pool);
+        const eid = employerId(req);
+        const sessionId = req.params.id;
+        const sess = await pool.query(
+          `SELECT id FROM voice_screening_sessions WHERE id = $1 AND employer_id = $2 AND channel = 'live_avatar'`,
+          [sessionId, eid],
+        );
+        if (sess.rowCount === 0) return res.status(404).json({ message: 'session_not_found' });
+        const rows = (
+          await pool.query(
+            `SELECT turn_index, role, question_id, is_follow_up, source, text, created_at
+               FROM voice_live_avatar_turns WHERE session_id = $1 ORDER BY turn_index ASC`,
+            [sessionId],
+          )
+        ).rows;
+        res.json({
+          success: true,
+          turns: rows.map((r) => ({
+            turnIndex: r.turn_index,
+            role: r.role,
+            questionId: r.question_id || null,
+            isFollowUp: !!r.is_follow_up,
+            source: r.source || '',
+            text: r.text ?? '',
+            createdAt: r.created_at,
+          })),
+        });
+      } catch (err: any) {
+        res.status(500).json({ message: err?.message || 'turns_fetch_failed' });
+      }
+    },
+  );
+
+  // ── Upload the candidate's full webcam recording (one per live session) ──────
+  app.post(
+    '/api/employer/voice-screening/live/sessions/:id/video',
+    liveAvatarFlagGate,
+    requireAuth,
+    videoUpload.single('video'),
+    async (req: Request, res: Response) => {
+      try {
+        await ensureVoiceSchema(pool);
+        await ensureLiveAvatarSchema(pool);
+        const eid = employerId(req);
+        const sessionId = req.params.id;
+        const sess = await pool.query(
+          `SELECT id FROM voice_screening_sessions WHERE id = $1 AND employer_id = $2 AND channel = 'live_avatar'`,
+          [sessionId, eid],
+        );
+        if (sess.rowCount === 0) return res.status(404).json({ message: 'session_not_found' });
+
+        const file = (req as any).file;
+        if (!file || !file.buffer || file.buffer.length === 0) {
+          return res.status(400).json({ message: 'video_required' });
+        }
+        const mime = String(file.mimetype || 'video/webm');
+        const durationMs = Number((req.body as any)?.durationMs ?? 0) || 0;
+
+        // One stored recording per live session (replace on re-upload).
+        await pool.query(`DELETE FROM voice_live_avatar_videos WHERE session_id = $1 AND employer_id = $2`, [
+          sessionId,
+          eid,
+        ]);
+        const videoId = `vlav_${randomUUID()}`;
+        await pool.query(
+          `INSERT INTO voice_live_avatar_videos
+             (id, session_id, employer_id, mime, bytes, duration_ms, data)
+           VALUES ($1,$2,$3,$4,$5,$6,$7)`,
+          [videoId, sessionId, eid, mime, file.buffer.length, durationMs, file.buffer],
+        );
+        res.json({ success: true, videoId, bytes: file.buffer.length });
+      } catch (err: any) {
+        res.status(500).json({ message: err?.message || 'video_upload_failed' });
+      }
+    },
+  );
+
+  // ── Stream the stored candidate recording (employer-scoped) ─────────────────
+  app.get(
+    '/api/employer/voice-screening/live/sessions/:id/video',
+    liveAvatarFlagGate,
+    requireAuth,
+    async (req: Request, res: Response) => {
+      try {
+        await ensureLiveAvatarSchema(pool);
+        const eid = employerId(req);
+        const row = (
+          await pool.query(
+            `SELECT mime, bytes, data FROM voice_live_avatar_videos WHERE session_id = $1 AND employer_id = $2`,
+            [req.params.id, eid],
+          )
+        ).rows[0];
+        if (!row || !row.data) return res.status(404).json({ message: 'video_not_found' });
+        res.setHeader('Content-Type', row.mime || 'video/webm');
+        res.setHeader('Content-Length', String(row.bytes || (row.data as Buffer).length));
+        res.setHeader('Cache-Control', 'private, no-store');
+        res.send(row.data);
+      } catch (err: any) {
+        res.status(500).json({ message: err?.message || 'video_fetch_failed' });
+      }
+    },
+  );
+
+  // ── Finalize: score the conversation transcript across the SAME 5 dimensions ─
+  //    Candidate turns are grouped by the authored questionId they answered,
+  //    paired with the authored rubric, and scored by the EXISTING scorer (which
+  //    abstains honestly when no usable signal exists).
+  app.post(
+    '/api/employer/voice-screening/live/sessions/:id/finalize',
+    liveAvatarFlagGate,
+    requireAuth,
+    async (req: Request, res: Response) => {
+      try {
+        await ensureVoiceSchema(pool);
+        await ensureLiveAvatarSchema(pool);
+        const eid = employerId(req);
+        const sessionId = req.params.id;
+        const sess = await pool.query(
+          `SELECT * FROM voice_screening_sessions WHERE id = $1 AND employer_id = $2 AND channel = 'live_avatar'`,
+          [sessionId, eid],
+        );
+        if (sess.rowCount === 0) return res.status(404).json({ message: 'session_not_found' });
+        const row = sess.rows[0];
+        const stored: any[] = Array.isArray(row.questions) ? row.questions : [];
+
+        const turns = (
+          await pool.query(
+            `SELECT role, question_id, text FROM voice_live_avatar_turns
+               WHERE session_id = $1 ORDER BY turn_index ASC`,
+            [sessionId],
+          )
+        ).rows;
+
+        // Collect candidate speech per authored question. A candidate turn with no
+        // explicit questionId is attributed to the most-recent authored question
+        // the avatar delivered (tracked while iterating in order).
+        const candidateByQuestion = new Map<string, string[]>();
+        let activeQuestionId = '';
+        for (const t of turns) {
+          if (t.role === 'avatar') {
+            if (t.question_id) activeQuestionId = String(t.question_id);
+          } else if (t.role === 'candidate') {
+            const key = (t.question_id && String(t.question_id)) || activeQuestionId;
+            if (!key) continue; // candidate speech before any authored question — skip
+            const txt = String(t.text ?? '').trim();
+            if (!txt) continue;
+            const arr = candidateByQuestion.get(key) || [];
+            arr.push(txt);
+            candidateByQuestion.set(key, arr);
+          }
+        }
+
+        const answers: AnswerInput[] = stored.map((q) => {
+          const qid = String(q?.id ?? '');
+          const spoken = (candidateByQuestion.get(qid) || []).join(' ').trim();
+          return {
+            question: String(q?.question ?? ''),
+            transcript: spoken.length > 0 ? spoken : null,
+            expectedResponse: q?.expectedResponse ?? null,
+            scoringCriteria: q?.scoringCriteria ?? null,
+          };
+        });
+
+        const report = await scoreScreening({ jobTitle: row.job_title ?? '', answers });
+
+        await pool.query(
+          `UPDATE voice_screening_sessions
+             SET status = 'completed', overall_score = $1, recommendation = $2, summary = $3,
+                 dimension_scores = $4::jsonb, abstained = $5, ai_provenance = $6,
+                 answered_count = $7, updated_at = now(), completed_at = now()
+           WHERE id = $8`,
+          [
+            report.overallScore,
+            report.recommendation,
+            report.summary,
+            JSON.stringify(report.dimensions),
+            report.abstained,
+            report.provenance,
+            report.answeredCount,
+            sessionId,
+          ],
+        );
+
+        const updated = (await pool.query(`SELECT * FROM voice_screening_sessions WHERE id = $1`, [sessionId])).rows[0];
+        res.json({ success: true, session: sessionToJson(updated) });
+      } catch (err: any) {
+        const status = err instanceof VoiceAIUnavailable ? 503 : 500;
+        res.status(status).json({ message: err?.message || 'finalize_failed', aiUnavailable: status === 503 });
+      }
+    },
+  );
+
+  // ── Fetch one live session (metadata + report) ──────────────────────────────
+  app.get(
+    '/api/employer/voice-screening/live/sessions/:id',
+    liveAvatarFlagGate,
+    requireAuth,
+    async (req: Request, res: Response) => {
+      try {
+        await ensureVoiceSchema(pool);
+        const eid = employerId(req);
+        const row = (
+          await pool.query(
+            `SELECT * FROM voice_screening_sessions WHERE id = $1 AND employer_id = $2 AND channel = 'live_avatar'`,
+            [req.params.id, eid],
+          )
+        ).rows[0];
+        if (!row) return res.status(404).json({ message: 'session_not_found' });
+        res.json({ success: true, session: sessionToJson(row) });
+      } catch (err: any) {
+        res.status(500).json({ message: err?.message || 'fetch_failed' });
       }
     },
   );

@@ -1347,6 +1347,22 @@ export const FEATURE_FLAGS = {
    *  Env: `FF_AVATAR_INTERVIEW`. */
   avatarInterview: false,
 
+  /** LIVE AVATAR INTERVIEW (Option B) — additive REAL-TIME two-way conversational video-interview
+   *  layer on top of the (separately flagged) VOICE SCREENING feature, INDEPENDENT of the Option A
+   *  `avatarInterview` flag. When ON, an employer can run a live interview where a HeyGen Interactive/
+   *  Streaming Avatar (WebRTC) speaks AND listens in near real-time, while an OpenAI LLM conducts the
+   *  dialogue — asking the authored screening questions, acknowledging answers, and probing with brief
+   *  IN-SCOPE follow-ups under safety guardrails. The candidate's webcam video and the full turn-by-turn
+   *  conversation transcript are captured; the transcript is then scored by the EXISTING 5-dimension
+   *  rubric scorer (same honesty contract — abstain when there is no usable signal). Strictly additive +
+   *  flag-gated: OFF → every live route 503s BEFORE any auth/DB/AI touch and NO live tables are created
+   *  (Option A + the base voice-screening schema/endpoints are byte-identical regardless of this flag).
+   *  Honest-by-construction: if HeyGen or OpenAI is not configured the live endpoints return a clear 503
+   *  ("not configured") rather than fabricating a session, transcript, or score. Realtime avatar minutes
+   *  are metered/billable, so sessions carry a max-duration limit. Live transcript turns + the candidate
+   *  video are employer-scoped (IDOR-safe via employer_id = orgId/user.id). Env: `FF_LIVE_AVATAR_INTERVIEW`. */
+  liveAvatarInterview: false,
+
   /** MX-302E — Campus Placement & Company Intelligence. When ON, two NET-NEW student-facing
    *  surfaces activate: a Placement Hub (calendar, internship marketplace, graduate programs,
    *  company drives, application + offer trackers, placement readiness, eligibility checker,
@@ -2275,6 +2291,10 @@ export function isVoiceScreeningEnabled(): boolean {
 
 export function isAvatarInterviewEnabled(): boolean {
   return isFlagEnabled('avatarInterview');
+}
+
+export function isLiveAvatarInterviewEnabled(): boolean {
+  return isFlagEnabled('liveAvatarInterview');
 }
 
 export function isCampusPlacementEnabled(): boolean {

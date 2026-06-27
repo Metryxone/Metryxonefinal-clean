@@ -35,13 +35,17 @@ flag-gated** (`careerLaunchpad`, default **OFF**); with the flag OFF the product
 |------------|----------|--------------------|:------:|
 | **Career Launchpad** | `fresher-hub` | student · graduate · postgraduate · internship-seeker · early-career | **Live** |
 | **Career Command Center** | `dashboard` | mid-career | **Live** |
-| **Leadership Studio** | `dashboard` | senior-leadership | _Coming soon_ |
-| **Executive Studio** | `dashboard` | executive | _Coming soon_ |
+| **Leadership Studio** | `leadership-studio` | senior-leadership | **Live** |
+| **Executive Studio** | `executive-studio` | executive | **Live** |
 
-> Leadership Studio and Executive Studio have **no dedicated surface yet**, so they honestly
-> route to the nearest real surface (Command Center) and are labelled "(soon)" in the
-> switcher rather than faking a tier. This is the honest-over-optimistic choice; building
-> those dedicated surfaces is future scope.
+> **Update (MX-302A follow-up):** Leadership Studio and Executive Studio now each render a
+> **dedicated surface** tailored to senior and executive users — they no longer borrow the
+> Command Center. Leadership Studio ships a leadership-readiness gauge, a team roster, a
+> stakeholder map, and a leadership playbook; Executive Studio ships an executive-readiness
+> gauge, a strategic-priorities tracker, a board/stakeholder map, and an executive playbook.
+> Both flipped to `available: true`, the "(soon)" label is gone, and the switcher routes each
+> stage to its own tab. The dedicated nav entries appear only for stages that unlock them
+> (server-authoritative `allowedExperiences`).
 
 ## Success-criteria certification
 
@@ -49,7 +53,7 @@ flag-gated** (`careerLaunchpad`, default **OFF**); with the flag OFF the product
 |---|-----------|:------:|----------|
 | C1 | 8 canonical career stages | **PASS** | All 8 stages present in the single-source engine. |
 | C2 | Every stage routes to a defined experience | **PASS** | All 8 stages resolve to a mapped, defined experience. |
-| C3 | 4 experiences with honest availability split | **PASS** | Launchpad + Command Center live; Leadership + Executive flagged not-yet-available. |
+| C3 | 4 experiences, each with a dedicated live surface | **PASS** | All four (Launchpad, Command Center, Leadership Studio, Executive Studio) are `available: true` and route to their own tab. |
 | C4 | Experience ↔ representative-stage round-trip | **PASS** | The switcher's experience→stage choice re-resolves to the same experience. |
 | C5 | Allowed experiences widen with seniority | **PASS** | 2 (junior/mid) → 3 (senior) → 4 (executive); never below 2. |
 | C6 | Existing users get a derived stage | **PASS** | Deriver covers role/seniority/years/history; returns null only when nothing is derivable (defaults to Command Center). |
@@ -82,8 +86,9 @@ derived); the preference only changes which allowed surface they land on.
 - **No adoption claim.** This is a structural certification of the routing contract, not a
   measure of how many users chose a stage. Adoption is a separate axis, measurable only on
   the live DB once the flag is ON.
-- **No fabricated tiers.** Leadership/Executive Studio route to a real surface and are
-  marked "coming soon"; we did not stand up empty shells and call them experiences.
+- **No fabricated tiers.** Leadership/Executive Studio now each render a real dedicated
+  surface (readiness gauge + working trackers + playbook); we did not ship empty shells.
+  Their readiness gauges are developmental self-snapshots, never performance verdicts.
 - **No schema drift when OFF.** The column is added by a lazy ensure-schema that fires
   **only on the flag-ON path**; with the flag OFF, registration and the schema are unchanged.
 

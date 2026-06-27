@@ -6,11 +6,11 @@
  * config must match the backend, since the backend persists/audits the stage
  * and the frontend renders/routes from it.
  *
- * Honesty note: Career Launchpad and Career Command Center map to REAL existing
- * surfaces; Leadership Studio / Executive Studio have no dedicated surface yet,
- * so they route to the nearest real surface (Command Center) and are flagged
- * `available: false` so the UI labels them "coming soon" rather than faking a
- * tier.
+ * All four experiences map to REAL dedicated surfaces (Career Launchpad →
+ * fresher-hub, Command Center → dashboard, Leadership Studio →
+ * leadership-studio, Executive Studio → executive-studio) and are flagged
+ * `available: true`. The senior/executive studios are unlocked only for the
+ * stages that map to them.
  */
 
 export type CareerStage =
@@ -53,12 +53,10 @@ export const EXPERIENCES: Record<ExperienceId, ExperienceConfig> = {
   'launchpad': { id: 'launchpad', label: 'Career Launchpad', targetTab: 'fresher-hub', available: true },
   'command-center': { id: 'command-center', label: 'Career Command Center', targetTab: 'dashboard', available: true },
   'leadership-studio': {
-    id: 'leadership-studio', label: 'Leadership Studio', targetTab: 'dashboard', available: false,
-    note: 'Dedicated Leadership Studio is coming soon — routing to the Command Center (nearest existing surface).',
+    id: 'leadership-studio', label: 'Leadership Studio', targetTab: 'leadership-studio', available: true,
   },
   'executive-studio': {
-    id: 'executive-studio', label: 'Executive Studio', targetTab: 'dashboard', available: false,
-    note: 'Dedicated Executive Studio is coming soon — routing to the Command Center (nearest existing surface).',
+    id: 'executive-studio', label: 'Executive Studio', targetTab: 'executive-studio', available: true,
   },
 };
 

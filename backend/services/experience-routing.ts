@@ -5,11 +5,11 @@
  * backward-compat deriver for users who have no stored stage. Mirrors the
  * frontend engine (frontend/src/lib/career/experienceRouting.ts) one-for-one.
  *
- * Honesty: the entry-level (Career Launchpad) and Command Center experiences
- * map to REAL existing surfaces. Leadership Studio / Executive Studio do NOT
- * yet have dedicated individual surfaces, so they route to the nearest real
- * surface (Command Center) and are flagged `available: false` so the UI can
- * label them as such — we never fabricate a tier.
+ * All four experiences now map to REAL dedicated surfaces: Career Launchpad
+ * (fresher-hub), Command Center (dashboard), Leadership Studio
+ * (leadership-studio) and Executive Studio (executive-studio). Each is flagged
+ * `available: true`. The senior/executive studios are unlocked only for the
+ * stages that map to them (see `allowedExperiences`).
  *
  * Persistence: the canonical career_stage lives on the EXISTING
  * career_seeker_profiles table (one user = one record). The lazy ensure-schema
@@ -76,16 +76,14 @@ export const EXPERIENCES: Record<ExperienceId, ExperienceConfig> = {
   'leadership-studio': {
     id: 'leadership-studio',
     label: 'Leadership Studio',
-    targetTab: 'dashboard',
-    available: false,
-    note: 'Dedicated Leadership Studio is coming soon — routing to the Command Center (nearest existing surface).',
+    targetTab: 'leadership-studio',
+    available: true,
   },
   'executive-studio': {
     id: 'executive-studio',
     label: 'Executive Studio',
-    targetTab: 'dashboard',
-    available: false,
-    note: 'Dedicated Executive Studio is coming soon — routing to the Command Center (nearest existing surface).',
+    targetTab: 'executive-studio',
+    available: true,
   },
 };
 

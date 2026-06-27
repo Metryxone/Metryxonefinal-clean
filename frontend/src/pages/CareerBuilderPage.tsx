@@ -1,6 +1,8 @@
 import { BRAND } from '@/design-system/tokens';
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { FresherHubTab } from './career/FresherHubTab';
+import { LeadershipStudioTab } from './career/LeadershipStudioTab';
+import { ExecutiveStudioTab } from './career/ExecutiveStudioTab';
 import type { CareerStage, ExperienceId } from '@/lib/career/experienceRouting';
 import { SimulationsTab } from './career/SimulationsTab';
 import { MarketIntelTab } from './career/MarketIntelTab';
@@ -20,7 +22,7 @@ import {
   PieChart, Lightbulb, Flag, CheckSquare, Square, Settings, Bell,
   LogOut, TrendingDown, Minus, RefreshCw, Upload, Eye, Bookmark,
   ClipboardList, Trophy, Percent, Gauge, BookMarked, Info,
-  CalendarCheck, Rocket, History, Network, Route, Layers, ArrowUpRight, ShieldCheck, Compass
+  CalendarCheck, Rocket, History, Network, Route, Layers, ArrowUpRight, ShieldCheck, Compass, Crown
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -97,6 +99,8 @@ type TabId =
   | 'mentors' | 'goals' | 'assessment'
   | 'future-map' | 'development' | 'visibility'
   | 'fresher-hub'
+  // ── MX-302A — dedicated Leadership / Executive Studio experiences ──
+  | 'leadership-studio' | 'executive-studio'
   | 'simulations' | 'market-intel' | 'velocity' | 'workforce'
   // ── Phase 5 — Career Operating System (additive) ──
   | 'weekly-plan' | 'next-actions' | 'behavioral-growth' | 'career-memory'
@@ -160,6 +164,9 @@ const TABS: { id: TabId; label: string; icon: React.ReactNode; screen?: string; 
   { id: 'development', label: 'Development Plan',       icon: <ClipboardList size={16} />, zone: 'execution' },
   { id: 'learning',    label: 'Learning Hub',           icon: <BookOpen size={16} />,      zone: 'execution' },
   { id: 'fresher-hub', label: 'Fresher Hub',            icon: <GraduationCap size={16} />, zone: 'execution' },
+  // ── MX-302A — dedicated senior / executive experiences (nav-gated to allowed stages) ──
+  { id: 'leadership-studio', label: 'Leadership Studio', icon: <Users size={16} />,    zone: 'command', desc: 'Develop your team, map stakeholders, and sharpen how you lead' },
+  { id: 'executive-studio',  label: 'Executive Studio',  icon: <Crown size={16} />,    zone: 'command', desc: 'Set your strategic agenda and govern your stakeholder network' },
   // ── Growth & memory ───────────────────────────────────────────────────────
   { id: 'behavioral-growth', label: 'Behavioural Growth', icon: <Activity size={16} />, zone: 'growth' },
   { id: 'career-memory',     label: 'Career Memory',      icon: <History size={16} />,  zone: 'growth' },
@@ -914,6 +921,14 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
   const user = tokenUser ?? sessionUser;
   const userId = user?.id || user?.userId || sessionUser?.id || '';
 
+  // MX-302A — the set of experiences the user's stage unlocks (server-authoritative).
+  // Gates the dedicated Leadership / Executive Studio nav entries so they only show
+  // for users whose stage actually maps to them.
+  const allowedExperienceIds = useMemo(
+    () => new Set<ExperienceId>((experience?.experiences ?? []).map((e) => e.id)),
+    [experience],
+  );
+
   // ── Profile load (returns empty skeleton when no CV uploaded) ─────────────
   const loadProfile = useCallback(async () => {
     if (!userId) { setLoadingProfile(false); return; }
@@ -1150,7 +1165,10 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
             <nav className="p-2 space-y-0.5">
               {ZONE_ORDER.map((zone) => {
                 const items = TABS.filter((t) => (t.zone ?? 'command') === zone)
-                  .filter((t) => (t.id !== 'prediction-trust' || validationLoopEnabled) && (t.id !== 'my-workforce' || myWorkforceEnabled));
+                  .filter((t) => (t.id !== 'prediction-trust' || validationLoopEnabled) && (t.id !== 'my-workforce' || myWorkforceEnabled))
+                  // MX-302A — the dedicated senior/executive studios appear in nav only
+                  // when the user's stage unlocks them (server-authoritative allowed list).
+                  .filter((t) => (t.id !== 'leadership-studio' || allowedExperienceIds.has('leadership-studio')) && (t.id !== 'executive-studio' || allowedExperienceIds.has('executive-studio')));
                 if (items.length === 0) return null;
                 return (
                   <div key={zone} className="pb-1">
@@ -1240,6 +1258,8 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
           {tab === 'mentors'    && <MentorsTab profile={profile} />}
           {tab === 'goals'      && <GoalsTab goals={goals} setGoals={setGoals} userId={userId} />}
           {tab === 'fresher-hub'  && <FresherHubTab profile={profile} title={launchpadEnabled ? 'Career Launchpad' : undefined} />}
+          {tab === 'leadership-studio' && <LeadershipStudioTab profile={profile} />}
+          {tab === 'executive-studio'  && <ExecutiveStudioTab profile={profile} />}
           {tab === 'simulations'  && <SimulationsTab profile={profile} eiScore={eiScore} />}
           {tab === 'market-intel' && <MarketIntelTab profile={profile} eiScore={eiScore} />}
           {tab === 'velocity'     && <CareerVelocityTab profile={profile} eiScore={eiScore} userId={userId} />}
@@ -2403,7 +2423,7 @@ function StageGuidancePanel({
                         try {
                           const u = new URL(s.cta.route, window.location.origin);
                           const t = u.searchParams.get('tab') as TabId | null;
-                          const validTabs: TabId[] = ['dashboard','profile','skills','resume','jobs','interview','learning','pathways','mentors','goals','assessment','future-map','development','visibility','fresher-hub','simulations','market-intel','velocity','workforce','weekly-plan','next-actions','behavioral-growth','career-memory','career-graph','career-recs','career-tracks','career-paths','learning-intel','lbi','future-readiness','career-passport','forecast-dashboard','growth-roadmap','what-if','rec-history','intelligence-hub','hiring-readiness','prediction-trust','my-workforce'];
+                          const validTabs: TabId[] = ['dashboard','profile','skills','resume','jobs','interview','learning','pathways','mentors','goals','assessment','future-map','development','visibility','fresher-hub','leadership-studio','executive-studio','simulations','market-intel','velocity','workforce','weekly-plan','next-actions','behavioral-growth','career-memory','career-graph','career-recs','career-tracks','career-paths','learning-intel','lbi','future-readiness','career-passport','forecast-dashboard','growth-roadmap','what-if','rec-history','intelligence-hub','hiring-readiness','prediction-trust','my-workforce'];
                           onGoToTab(t && validTabs.includes(t) ? t : 'skills');
                         } catch { onGoToTab('skills'); }
                       }}

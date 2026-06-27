@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import type { Screen } from '../../App';
+import InstitutionCareerRealView from './InstitutionCareerRealView';
 import {
   Brain, Target, BookOpen, Users, Star, Award, BarChart3, TrendingUp,
   CheckCircle, Clock, ChevronRight, Sparkles, Zap, Building2, Trophy,
@@ -67,6 +68,23 @@ function heatColor(score: number) {
 export default function InstitutionCareerPage({ onNavigate }: InstitutionCareerPageProps) {
   const [tab, setTab] = useState<Tab>('heatmap');
   const [search, setSearch] = useState('');
+
+  // MX-302H — probe the institutionalIntelligence flag. Default OFF: the probe
+  // 503s, `enabled` stays false, and the legacy MOCK dashboard below renders
+  // byte-identically. ON: render the live, k-anonymity-gated real view instead.
+  const [institutionalEnabled, setInstitutionalEnabled] = useState(false);
+  useEffect(() => {
+    let alive = true;
+    fetch('/api/institutional-intelligence/enabled', { credentials: 'include' })
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => { if (alive && d && d.enabled === true) setInstitutionalEnabled(true); })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, []);
+
+  if (institutionalEnabled) {
+    return <InstitutionCareerRealView onNavigate={onNavigate} />;
+  }
 
   const NAV: { id: Tab; label: string; icon: React.ReactNode }[] = [
     { id: 'heatmap', label: 'Competency Heatmap', icon: <Brain size={16} /> },

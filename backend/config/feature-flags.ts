@@ -1649,6 +1649,24 @@ export const FEATURE_FLAGS = {
    *  existing career-seeker framing. No schema, no DDL, no persistence change.
    *  Env: `FF_STUDENT_CAREER_BUILDER`. */
   studentCareerBuilder: false,
+
+  /** MX-302H — University, Faculty, Placement Officer & Parent Institutional
+   *  Intelligence. An additive, flag-gated, READ-ONLY composition layer that wires
+   *  the existing MOCK institutional dashboards (InstitutionCareerPage placement /
+   *  heatmap / gaps constants) to REAL institute-scoped aggregation: student career
+   *  readiness (`career_readiness_history`), competency profiles, employer offers,
+   *  and accreditation — every score aggregate passed through `cohort-gating`
+   *  (masked n<30 / provisional 30–99 / verified ≥100). Composes existing engines;
+   *  builds NO new scoring. Strictly tenant-scoped (institute via
+   *  `institutes.admin_user_id`; parent via `parent_student_links` + DPDP consent).
+   *  Default OFF → byte-identical legacy behaviour INCL. schema: every route 503s
+   *  before any auth/DB touch (no DDL anywhere — pure SELECT over existing tables),
+   *  the `/enabled` probe reports `{enabled:false}`, and the institutional dashboards
+   *  render their existing mock content unchanged. Never-throws; null ≠ 0; honest
+   *  empty/masked states; never fabricates placement/department numbers. Department
+   *  analytics aggregate by existing `batches` (no `departments` table — no
+   *  fabricated splits). Env: `FF_INSTITUTIONAL_INTELLIGENCE`. */
+  institutionalIntelligence: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;

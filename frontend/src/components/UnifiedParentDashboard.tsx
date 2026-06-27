@@ -24,6 +24,7 @@ import { RoleSwitcher } from "./RoleSwitcher";
 import { ParentEnterpriseHub } from "./ParentEnterpriseHub";
 import { ParentEducationPlanner } from "./ParentEducationPlanner";
 import { AIPoweredReports } from "./AIPoweredReports";
+import ParentPlacementReadinessCard from "./career/ParentPlacementReadinessCard";
 
 import { LBIProductPage } from "./LBIProductPage";
 import { ExamReadinessPage } from "./ExamReadinessPage";
@@ -1849,6 +1850,10 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
 
               {/* Overview Tab - Alerts, Summary, Quick Navigation */}
               <TabsContent value="overview" className="mt-6 space-y-5">
+                {/* MX-302H — institutional placement-readiness (flag-gated; renders nothing when OFF) */}
+                {selectedChild && (
+                  <ParentPlacementReadinessCard childId={selectedChild.id} childName={selectedChild.name} />
+                )}
                 {/* Alerts & Notifications Panel */}
                 {(() => {
                   type AlertEntry = {

@@ -14240,6 +14240,9 @@ Rules:
   registerCampusPlacementRoutes(app, concernsPool, requireAuth);
   // ── MX-302F Resume, Portfolio & Interview Studio (flag employabilityStudio) ──
   registerEmployabilityStudioRoutes(app, concernsPool, requireAuth);
+  // ── MX-302H University/Faculty/Placement/Parent Intelligence (flag institutionalIntelligence) ──
+  const { registerInstitutionalIntelligenceRoutes } = await import('./routes/institutional-intelligence');
+  registerInstitutionalIntelligenceRoutes(app, concernsPool, requireAuth);
   // ── Super-Admin Employer Onboarding (create org + admin login) ───────────────
   const { registerEmployerAdminRoutes } = await import('./routes/employer-admin');
   registerEmployerAdminRoutes(app, concernsPool, requireAuth, requireSuperAdmin, crypto.hash);

@@ -5310,7 +5310,7 @@ function LegacyScreeningSimulationTab({ candidates, setCandidates, jobs, onTabCh
 // ═══════════════════════════════════════════════════════════════════════════════
 // REAL VOICE SCREENING TAB (flag-ON) — browser-recorded answers, AI transcribe+score
 // ═══════════════════════════════════════════════════════════════════════════════
-function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, onNavigate }: {
+export function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, onNavigate }: {
   candidates: Candidate[];
   setCandidates: (c: Candidate[]) => void;
   jobs: EmployerJob[];
@@ -5406,6 +5406,10 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
   const liveSdkEventsRef = useRef<any>({});
   const liveSdkTaskTypeRef = useRef<any>({});
   const liveSessionIdRef = useRef<string | null>(null);
+  // The candidate id also lives in a ref so the avatar's async end paths (over-cap
+  // 409, timer expiry, stream disconnect) finalize against the RIGHT candidate even
+  // though their event callbacks close over the (stale, pre-start) `liveSession`.
+  const liveCandidateIdRef = useRef<string | null>(null);
   const liveStreamVideoRef = useRef<HTMLVideoElement | null>(null);
   const liveWebcamRef = useRef<HTMLVideoElement | null>(null);
   const liveWebcamStreamRef = useRef<MediaStream | null>(null);
@@ -5989,7 +5993,7 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
     if (liveEndingRef.current) return;
     liveEndingRef.current = true;
     const sid = liveSessionIdRef.current;
-    const cid = liveSession?.candidateId || null;
+    const cid = liveCandidateIdRef.current || liveSession?.candidateId || null;
     setLiveSession(s => s ? { ...s, phase: 'ending', statusMsg: 'Wrapping up the interview…', avatarSpeaking: false } : s);
     try { await liveAvatarRef.current?.closeVoiceChat?.(); } catch { /* noop */ }
 
@@ -6034,6 +6038,7 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
       const voiceId: string | undefined = liveTok.voiceId;
       const maxDurationMs: number = Number(liveTok.maxDurationMs) || live.maxDurationMs;
       liveSessionIdRef.current = sid;
+      liveCandidateIdRef.current = c._id;
       setLiveSession(s => s ? { ...s, sessionId: sid, remainingMs: maxDurationMs, statusMsg: 'Starting the avatar…' } : s);
 
       // 2. Load the HeyGen Streaming Avatar SDK from a CDN ESM build (no npm install).
@@ -6125,6 +6130,7 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
     stopLiveMedia();
     teardownLiveAvatar();
     liveSessionIdRef.current = null;
+    liveCandidateIdRef.current = null;
     if (cid && screenStatus[cid] === 'recording') {
       setScreenStatus(s => { const n = { ...s }; delete n[cid]; return n; });
     }

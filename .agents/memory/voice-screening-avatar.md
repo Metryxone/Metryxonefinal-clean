@@ -93,6 +93,25 @@ the shared scorer (abstains/null≠0 preserved).
   and passes it to the orchestrator, which converts a drifting second follow-up into the next
   authored question. **Why:** repeated follow-ups inflate turns/cost and delay coverage.
 
+**Stale-closure trap on the avatar end paths (caught by a regression test).** The HeyGen
+SDK event callbacks (`USER_END_MESSAGE`, `STREAM_DISCONNECTED`) AND the duration `setInterval`
+are registered ONCE inside `startLiveInterview`, so they close over that render's
+`handleCandidateUtterance`/`endLiveInterview` — whose `liveSession` state is the pre-start value
+(**null**, since the start button's render had no live session yet). Anything those auto-end
+paths read from `liveSession` state is therefore STALE. `endLiveInterview` derived
+`cid = liveSession?.candidateId` → null → `doFinalize` skipped → **the partial recording uploaded
+but `/finalize` was NEVER called**, silently dropping the candidate's score on the over-cap (409
+`{expired:true}`) cut-off and on timer-expiry/disconnect. (The "End & Score" BUTTON worked because
+its onClick is re-created each render with fresh state.)
+**Fix:** keep the candidate id in a ref (`liveCandidateIdRef`, set alongside `liveSessionIdRef` at
+start, cleared on cancel) and read `liveCandidateIdRef.current` in `endLiveInterview`, exactly like
+`sid` already comes from `liveSessionIdRef`.
+**Rule:** any value an avatar event/timer callback needs at end-time must come from a REF, not
+component state — those callbacks never see later state. Regression coverage:
+`EmployerPortalPage.RealVoiceScreening.expired.test.tsx` drives the real component with the SDK +
+media stack stubbed and asserts the clean-end contract (uploads `/video`, calls `/finalize` once,
+no error toast, `/next` hit exactly twice → no retry loop).
+
 **Own tables:** `voice_live_avatar_turns` (turn-by-turn transcript) + `voice_live_avatar_videos`
 (BYTEA, one per session, replace-on-reupload). All live routes employer_id-scoped (IDOR); video
 served `private, no-store`. Report block keys on `result.channel === 'live_avatar'` (🔴 badge +

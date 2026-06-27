@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { ChatSettingsPopover } from './ChatSettingsPopover';
@@ -115,31 +115,43 @@ describe('ChatWidget — preferred language flows to API calls', () => {
   }, 10000);
 
   it('ChatWidget includes preferredLanguage: "hindi" in POST /api/chat/message after language is set', async () => {
-    // Pre-seed both localStorage AND the server-side GET response with 'hindi'.
-    // The hook calls GET /api/chat-preferences on mount; if that returns {} the
-    // hook normalises missing preferredLanguage to 'english' and overwrites the
-    // localStorage value, so the mock must agree with the stored preference.
-    localStorage.setItem('mx-preferred-language', 'hindi');
-    fetchMock.mockImplementation((url) => {
-      const u = url.toString();
-      if (u.includes('/api/chat/match-concerns')) return Promise.resolve(makeOkResponse({ matches: [] }));
-      if (u.includes('/api/chat/message')) return Promise.resolve(makeOkResponse(MOCK_CHAT_RESPONSE));
-      if (u.includes('/api/chat-preferences')) return Promise.resolve(makeOkResponse({ preferredLanguage: 'hindi' }));
-      return Promise.resolve(makeOkResponse({}));
-    });
+    // The starter cards only render once the intro typewriter finishes (a
+    // ~155-char × 18 ms ≈ 2.8 s `setInterval` animation). Under a loaded,
+    // parallel full-suite run that wall-clock timing can starve and blow past
+    // any real-time `findByText` budget, making this test flaky. Drive the
+    // animation with fake timers so completion is deterministic regardless of
+    // host load. `fireEvent` (synchronous) is used for the click — `userEvent`
+    // deadlocks against the widget's background intervals under fake timers.
+    vi.useFakeTimers();
+    try {
+      // Pre-seed both localStorage AND the server-side GET response with 'hindi'.
+      // The hook calls GET /api/chat-preferences on mount; if that returns {} the
+      // hook normalises missing preferredLanguage to 'english' and overwrites the
+      // localStorage value, so the mock must agree with the stored preference.
+      localStorage.setItem('mx-preferred-language', 'hindi');
+      fetchMock.mockImplementation((url) => {
+        const u = url.toString();
+        if (u.includes('/api/chat/match-concerns')) return Promise.resolve(makeOkResponse({ matches: [] }));
+        if (u.includes('/api/chat/message')) return Promise.resolve(makeOkResponse(MOCK_CHAT_RESPONSE));
+        if (u.includes('/api/chat-preferences')) return Promise.resolve(makeOkResponse({ preferredLanguage: 'hindi' }));
+        return Promise.resolve(makeOkResponse({}));
+      });
 
-    render(<ChatWidget />);
+      render(<ChatWidget />);
 
-    // The typewriter animation runs for ~155 chars × 28 ms ≈ 4.3 s before
-    // the starter-card buttons appear.  Give it up to 8 s to be safe.
-    const starterBtn = await screen.findByText(/How it works/i, {}, { timeout: 8000 });
+      // Fast-forward through the intro typewriter (and flush the mount-time
+      // GET /api/chat-preferences microtasks) so the starter cards render.
+      await act(async () => { await vi.advanceTimersByTimeAsync(6000); });
 
-    // Clicking a starter card calls sendMessage(text) directly without needing
-    // the text input, which avoids controlled-input testing complexity.
-    await userEvent.click(starterBtn);
+      // Clicking a starter card calls sendMessage(text) directly without needing
+      // the text input, which avoids controlled-input testing complexity. The
+      // POST /api/chat/message fetch fires synchronously inside sendMessage, so
+      // the call is recorded during the click; a microtask flush settles it.
+      const starterBtn = screen.getByText(/How it works/i);
+      await act(async () => { fireEvent.click(starterBtn); });
+      await act(async () => { await vi.advanceTimersByTimeAsync(100); });
 
-    // Verify POST /api/chat/message body includes preferredLanguage: 'hindi'.
-    await waitFor(() => {
+      // Verify POST /api/chat/message body includes preferredLanguage: 'hindi'.
       const postCalls = fetchMock.mock.calls.filter(
         ([url, init]) =>
           url.toString().includes('/api/chat/message') &&
@@ -148,6 +160,8 @@ describe('ChatWidget — preferred language flows to API calls', () => {
       expect(postCalls.length).toBeGreaterThanOrEqual(1);
       const body = JSON.parse((postCalls[0][1] as RequestInit).body as string) as Record<string, unknown>;
       expect(body.preferredLanguage).toBe('hindi');
-    }, { timeout: 5000 });
+    } finally {
+      vi.useRealTimers();
+    }
   }, 20000);
 });

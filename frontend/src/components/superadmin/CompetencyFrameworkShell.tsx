@@ -31,6 +31,7 @@ export const COMPETENCY_WIZARD_STEPS: WizardStep[] = [
       'ont-import-export', 'ont-overview',
       'ont-sectors', 'ont-industries', 'ont-industry-segments',
       'ont-functions', 'ont-departments', 'ont-role-families', 'ont-roles', 'ont-role-crosswalk',
+      'onet-crosswalk-governance',
     ],
   },
   {
@@ -42,6 +43,7 @@ export const COMPETENCY_WIZARD_STEPS: WizardStep[] = [
       'cmp-master', 'cmp-micro-framework',
       'ont-competency-core',
       'ont-competency-levels', 'cmp-level-profiles', 'ont-indicators', 'ont-future-skills',
+      'global-region-content',
     ],
   },
   {
@@ -53,6 +55,7 @@ export const COMPETENCY_WIZARD_STEPS: WizardStep[] = [
       'cmp-role-profile', 'cmp-role-families',
       'cmp-blueprints', 'cmp-blueprint-mappings',
       'ont-career-tracks', 'ont-career-paths', 'ont-learning-paths',
+      'competency-match-intelligence',
     ],
   },
   {
@@ -64,6 +67,7 @@ export const COMPETENCY_WIZARD_STEPS: WizardStep[] = [
       'cmp-questions', 'cmp-questionbank', 'cmp-question-map',
       'cmp-custom-modules', 'cmp-assessment-mapping',
       'ont-concern-mapping', 'ont-ai-rules',
+      'question-factory',
     ],
   },
   {
@@ -78,7 +82,12 @@ export const COMPETENCY_WIZARD_STEPS: WizardStep[] = [
     title: 'Validate & Report',
     description: 'Search the framework, review intelligence and surface the reporting output.',
     icon: Search,
-    tabIds: ['cmp-search-discovery', 'cmp-intelligence', 'cmp-framework-intel', 'cmp-command-center'],
+    tabIds: [
+      'cmp-search-discovery', 'cmp-intelligence', 'cmp-framework-intel', 'cmp-command-center',
+      'competency-coverage-matrices', 'global-intelligence', 'enterprise-workforce-console',
+      'ecosystem-activation', 'enterprise-certification', 'go-live-center', 'founder-go-live',
+      'platform-completion', 'mx203-knowledge-center',
+    ],
   },
 ];
 

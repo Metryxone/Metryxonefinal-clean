@@ -167,6 +167,7 @@ const TABS: { id: TabId; label: string; icon: React.ReactNode; screen?: string; 
   { id: 'interview',   label: 'Interview Prep',         icon: <MessageSquare size={16} />, zone: 'execution' },
   { id: 'visibility',  label: 'Recruiter Visibility',   icon: <Eye size={16} />,           zone: 'execution' },
   { id: 'mentors',     label: 'Mentor Connect',         icon: <Users size={16} />,         zone: 'execution' },
+  { id: 'mentors',     label: 'Community & Ecosystem',   icon: <Users size={16} />,         screen: 'ecosystem-community', zone: 'execution', desc: 'Alumni, career stories, forums, study groups, hackathons & referrals' },
   { id: 'goals',       label: 'Goals',                  icon: <Target size={16} />,        zone: 'execution' },
   { id: 'development', label: 'Development Plan',       icon: <ClipboardList size={16} />, zone: 'execution' },
   { id: 'learning',    label: 'Learning Hub',           icon: <BookOpen size={16} />,      zone: 'execution' },
@@ -898,6 +899,16 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
       .then(j => setEmployabilityStudioEnabled(!!j?.enabled))
       .catch(() => setEmployabilityStudioEnabled(false));
   }, []);
+  // MX-302I — Community & Ecosystem flag probe. The /enabled probe 503s when OFF,
+  // so this stays false → the Community tab is hidden and the surface is
+  // byte-identical to legacy. ON → the Community & Ecosystem tab appears.
+  const [ecosystemCommunityEnabled, setEcosystemCommunityEnabled] = useState(false);
+  useEffect(() => {
+    fetch('/api/ecosystem/enabled', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(j => setEcosystemCommunityEnabled(!!j?.enabled))
+      .catch(() => setEcosystemCommunityEnabled(false));
+  }, []);
 
   const tokenUser = getUser();
   const [sessionUser, setSessionUser] = useState<any>(null);
@@ -1237,7 +1248,7 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
             <nav className="p-2 space-y-0.5">
               {ZONE_ORDER.map((zone) => {
                 const items = TABS.filter((t) => (t.zone ?? 'command') === zone)
-                  .filter((t) => (t.id !== 'prediction-trust' || validationLoopEnabled) && (t.id !== 'my-workforce' || myWorkforceEnabled) && (t.id !== 'placement-hub' || campusPlacementEnabled) && (t.id !== 'employability-studio' || employabilityStudioEnabled))
+                  .filter((t) => (t.id !== 'prediction-trust' || validationLoopEnabled) && (t.id !== 'my-workforce' || myWorkforceEnabled) && (t.id !== 'placement-hub' || campusPlacementEnabled) && (t.id !== 'employability-studio' || employabilityStudioEnabled) && (t.screen !== 'ecosystem-community' || ecosystemCommunityEnabled))
                   // MX-302A — the dedicated senior/executive studios appear in nav only
                   // when the user's stage unlocks them (server-authoritative allowed list).
                   .filter((t) => (t.id !== 'leadership-studio' || allowedExperienceIds.has('leadership-studio')) && (t.id !== 'executive-studio' || allowedExperienceIds.has('executive-studio')));
@@ -5400,13 +5411,184 @@ function PathwaysTab({ profile }: { profile: any }) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// MENTORS TAB — REAL (MX-302I, flag ecosystemCommunity ON)
+// Wired to GET /api/ecosystem/mentors (real mentor_profiles, status='active') +
+// POST /api/ecosystem/mentors/:id/book (real mentor_bookings). Honest empty state
+// when no active mentors exist — never the static mock. No fabricated "match %".
+// ═══════════════════════════════════════════════════════════════════════════
+interface RealMentor {
+  id: string; name: string; photo: string | null; bio: string | null;
+  specializations: string[]; qualifications: string[]; languages: string[];
+  availability: string | null; rating: number | null;
+  total_sessions: number; completed_sessions: number;
+}
+function RealMentorsTab() {
+  const [search, setSearch] = useState('');
+  const [selected, setSelected] = useState<string | null>(null);
+  const [mentors, setMentors] = useState<RealMentor[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [booked, setBooked] = useState<Record<string, boolean>>({});
+  const [topic, setTopic] = useState('');
+  const [message, setMessage] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  const load = () => {
+    setLoading(true); setError(false);
+    fetch('/api/ecosystem/mentors', { headers: authHeader() as HeadersInit, credentials: 'include' })
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(j => setMentors(Array.isArray(j?.mentors) ? j.mentors : []))
+      .catch(() => setError(true))
+      .finally(() => setLoading(false));
+  };
+  useEffect(load, []);
+
+  const initials = (n: string) => n.split(' ').map(w => w[0]).filter(Boolean).slice(0, 2).join('').toUpperCase();
+  const filtered = mentors.filter(m => {
+    if (!search) return true;
+    const q = search.toLowerCase();
+    return m.name.toLowerCase().includes(q) || (m.bio ?? '').toLowerCase().includes(q) ||
+      m.specializations.some(s => s.toLowerCase().includes(q)) ||
+      m.qualifications.some(s => s.toLowerCase().includes(q));
+  });
+
+  const book = (id: string) => {
+    setBusy(true);
+    fetch(`/api/ecosystem/mentors/${id}/book`, {
+      method: 'POST',
+      headers: { ...(authHeader() as Record<string, string>), 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ topic: topic || null, message: message || null }),
+    })
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(() => { setBooked(prev => ({ ...prev, [id]: true })); setTopic(''); setMessage(''); })
+      .catch(() => {})
+      .finally(() => setBusy(false));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-gray-900">Mentor Connect</h1>
+          <p className="text-xs text-gray-400 mt-0.5">Connect with verified mentors on the platform · {mentors.length} available</p>
+        </div>
+      </div>
+
+      <div className="relative">
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by name, expertise, or qualification&hellip;"
+          className="w-full h-10 pl-8 pr-4 text-xs border border-gray-200 rounded-xl focus:outline-none bg-white shadow-sm" />
+      </div>
+
+      {loading ? (
+        <div className="text-center py-16 text-xs text-gray-400">Loading mentors&hellip;</div>
+      ) : error ? (
+        <div className="text-center py-16">
+          <p className="text-sm text-gray-500">Couldn&rsquo;t load mentors right now.</p>
+          <button onClick={load} className="mt-2 text-xs font-medium px-3 py-1.5 rounded-lg text-white" style={{ backgroundColor: BRAND.primary }}>Retry</button>
+        </div>
+      ) : mentors.length === 0 ? (
+        <div className="text-center py-16 border border-dashed border-gray-200 rounded-2xl bg-white">
+          <p className="text-sm font-medium text-gray-700">No mentors are available yet</p>
+          <p className="text-xs text-gray-400 mt-1 max-w-sm mx-auto">As verified mentors join and activate their profiles, they&rsquo;ll appear here. Check back soon.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {filtered.map(m => (
+            <div key={m.id} onClick={() => setSelected(selected === m.id ? null : m.id)}
+              className={`bg-white border rounded-2xl p-4 shadow-sm cursor-pointer transition-all hover:shadow-md ${selected === m.id ? 'border-blue-200 shadow-md' : 'border-gray-100'}`}>
+              <div className="flex items-start gap-3 mb-3">
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-bold text-sm shrink-0 overflow-hidden" style={{ background: BRAND.primary }}>
+                  {m.photo ? <img src={m.photo} alt={m.name} className="w-full h-full object-cover" /> : initials(m.name)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-sm font-semibold text-gray-800">{m.name}</span>
+                  {m.bio && <div className="text-xs text-gray-500 line-clamp-2">{m.bio}</div>}
+                  {m.availability && <div className="text-[10px] text-gray-400 mt-0.5">{m.availability}</div>}
+                </div>
+              </div>
+              {m.specializations.length > 0 && (
+                <div className="flex flex-wrap gap-1 mb-3">
+                  {m.specializations.slice(0, 6).map(sp => <Chip key={sp} label={sp} color={BRAND.primary} />)}
+                </div>
+              )}
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-3 text-gray-500">
+                  {m.rating != null && <span className="flex items-center gap-1"><Star size={11} style={{ color: '#f59e0b' }} />{m.rating.toFixed(1)}</span>}
+                  <span>{m.completed_sessions} session{m.completed_sessions !== 1 ? 's' : ''} completed</span>
+                </div>
+              </div>
+
+              {selected === m.id && (
+                <div className="mt-3 pt-3 border-t border-gray-100" onClick={e => e.stopPropagation()}>
+                  {booked[m.id] ? (
+                    <div className="flex items-center justify-center gap-2 py-2 rounded-xl" style={{ backgroundColor: `${BRAND.green}10`, border: `1px solid ${BRAND.green}30` }}>
+                      <CheckCircle size={13} style={{ color: BRAND.green }} />
+                      <span className="text-xs font-medium" style={{ color: BRAND.green }}>Request sent &mdash; the mentor will respond to confirm</span>
+                    </div>
+                  ) : (
+                    <>
+                      <input value={topic} onChange={e => setTopic(e.target.value)} placeholder="Topic (optional)"
+                        className="w-full h-8 px-2.5 mb-2 text-xs border border-gray-200 rounded-lg focus:outline-none" />
+                      <textarea value={message} onChange={e => setMessage(e.target.value)} placeholder="A short message (optional)" rows={2}
+                        className="w-full px-2.5 py-1.5 mb-2 text-xs border border-gray-200 rounded-lg focus:outline-none resize-none" />
+                      <button disabled={busy} onClick={() => book(m.id)}
+                        className="w-full text-xs font-medium py-2 rounded-xl text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                        style={{ backgroundColor: BRAND.primary }}>
+                        {busy ? 'Sending&hellip;' : `Request Session with ${m.name.split(' ')[0]}`}
+                      </button>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // MENTORS TAB
 // ═══════════════════════════════════════════════════════════════════════════
 function MentorsTab({ profile }: { profile: any }) {
+  // MX-302I — Mentorship flag probe. /api/ecosystem/enabled 503s when the flag is OFF,
+  // so this stays false → the EXISTING mock path below renders byte-identically. When ON,
+  // we swap to the real mentor directory wired to mentor_profiles + real mentor_bookings.
+  const [ecoEnabled, setEcoEnabled] = useState<boolean | null>(null);
+  useEffect(() => {
+    let alive = true;
+    fetch('/api/ecosystem/enabled', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(j => { if (alive) setEcoEnabled(!!j?.enabled); })
+      .catch(() => { if (alive) setEcoEnabled(false); });
+    return () => { alive = false; };
+  }, []);
+
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<string | null>(null);
   const [requested, setRequested] = useState<string[]>([]);
   const [filter, setFilter] = useState<string>('All');
+
+  // Tri-state (hooks above always run first to keep hook order stable):
+  //  • null  → probe unresolved: render a neutral skeleton, NEVER the mock (so flag-ON
+  //            users never momentarily see hardcoded mentors presented as live).
+  //  • true  → flag ON: real data surface wired to mentor_profiles + mentor_bookings.
+  //  • false → flag OFF: byte-identical legacy mock path below.
+  if (ecoEnabled === null) {
+    return (
+      <div className="space-y-4">
+        <div className="h-6 w-40 bg-gray-100 rounded animate-pulse" />
+        <div className="h-10 bg-gray-100 rounded-xl animate-pulse" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {[0, 1, 2, 3].map(i => <div key={i} className="h-32 bg-gray-100 rounded-2xl animate-pulse" />)}
+        </div>
+      </div>
+    );
+  }
+  if (ecoEnabled === true) return <RealMentorsTab />;
 
   const TAGS = ['All', 'AI/ML Expert', 'Leadership', 'Product', 'Full Stack', 'HR/Recruitment', 'DevOps'];
 

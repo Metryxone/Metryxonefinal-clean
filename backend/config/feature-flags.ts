@@ -220,6 +220,23 @@ export const FEATURE_FLAGS = {
    *  route 503 before any auth/DB touch (byte-identical legacy; no new tables). Super-admin gated
    *  (requireAuth → requireSuperAdmin). Env: `FF_ECOSYSTEM_ACTIVATION`. */
   ecosystemActivation: false,
+  /** MX-302I — Employer, Community & Ecosystem. When ON, an ADDITIVE flag-gated surface at
+   *  `/api/ecosystem/*` connects students to the wider career ecosystem across three pillars:
+   *  (1) Employer Experience — a read-only composer over the EXISTING hiring substrate
+   *  (employer_jobs / job_postings graduate-vs-internship, campus_drives, employer invitations
+   *  via employer_team_members / employer_pool_outreach, talent-matching counts) presented as one
+   *  employer surface; (2) Alumni Network — a REAL consented alumni directory + connection model,
+   *  the consumer Mentorship surface WIRED to real mentor_profiles + real mentor_bookings (replacing
+   *  the hardcoded mock), B2C student referrals, and user-authored consented Career Stories; (3)
+   *  Community — career discussion forums (net-new eco_forum_* — distinct from the academic
+   *  child/test-scoped forum_* tables), generalized study groups, and hackathons. All new content is
+   *  persisted with honest empty states (null ≠ 0) and consent on user-authored content; nothing
+   *  mock/static is presented as live. Strictly additive + reversible: flag OFF → every /api/ecosystem
+   *  route 503 before any auth/DB touch (the lazy ensure-schema is NEVER reached so no eco_* table is
+   *  created), and the consumer MentorsTab + static testimonials stay byte-identical. The
+   *  `/api/ecosystem/enabled` probe is a persona-agnostic flag gate so the SPA hides the new surfaces
+   *  byte-identically when OFF. Env: `FF_ECOSYSTEM_COMMUNITY`. */
+  ecosystemCommunity: false,
   /** MX-105X — Enterprise Certification & Platform Activation. When ON, a thin TOP-LEVEL read-only
    *  COMPOSER at `/api/admin/enterprise-certification/*` (super-admin) aggregates the already-built
    *  activation / certification / health / outcome engines into ONE unified enterprise certification:

@@ -221,6 +221,7 @@ import { registerTalentReadinessEngineRoutes } from "./routes/talent-readiness-e
 import { registerTalentOutcomePredictionRoutes } from "./routes/talent-outcome-prediction";
 import { registerValidationLoopRoutes } from "./routes/validation-loop";
 import { registerOutcomeIntelligenceRoutes } from "./routes/outcome-intelligence";
+import { registerEcosystemCommunityRoutes } from "./routes/ecosystem-community";
 import { registerEmployerEcosystemRoutes } from "./routes/employer-ecosystem";
 import { registerGlobalCompetencyRoutes } from "./routes/global-competency";
 import { registerGlobalIntelligenceRoutes } from "./routes/global-intelligence";
@@ -14085,6 +14086,8 @@ Rules:
   registerTalentOutcomePredictionRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerValidationLoopRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerOutcomeIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  // ── Employer, Community & Ecosystem (MX-302I): flag-gated additive ecosystem surface ──
+  registerEcosystemCommunityRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Live Employer Ecosystem (MX-103X): read-only audit + certification over the employer hiring funnel ──
   registerEmployerEcosystemRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Global Competency (Phase 8): additive region dimension + per-region coverage ──

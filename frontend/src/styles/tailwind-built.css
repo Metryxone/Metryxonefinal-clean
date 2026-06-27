@@ -3804,6 +3804,9 @@
   .border-rose-300 {
     border-color: var(--color-rose-300);
   }
+  .border-rose-400 {
+    border-color: var(--color-rose-400);
+  }
   .border-rose-500\/30 {
     border-color: color-mix(in srgb, oklch(64.5% 0.246 16.439) 30%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
@@ -3851,6 +3854,9 @@
   }
   .border-slate-800 {
     border-color: var(--color-slate-800);
+  }
+  .border-slate-900 {
+    border-color: var(--color-slate-900);
   }
   .border-teal-100 {
     border-color: var(--color-teal-100);
@@ -10927,6 +10933,11 @@
       --tw-ring-color: var(--color-slate-300);
     }
   }
+  .focus\:ring-slate-400 {
+    &:focus {
+      --tw-ring-color: var(--color-slate-400);
+    }
+  }
   .focus\:ring-white\/25 {
     &:focus {
       --tw-ring-color: color-mix(in srgb, #fff 25%, transparent);
@@ -12571,6 +12582,11 @@
   .md\:rounded-2xl {
     @media (width >= 48rem) {
       border-radius: var(--radius-2xl);
+    }
+  }
+  .md\:p-5 {
+    @media (width >= 48rem) {
+      padding: calc(var(--spacing) * 5);
     }
   }
   .md\:p-6 {

@@ -21,3 +21,6 @@ Flag `careerDiscovery` / `FF_CAREER_DISCOVERY` (default OFF, byte-identical incl
 
 ## Verify live
 - Backend runs on tsx (not typechecked); root `tsconfig.json` is absent so `tsc --noEmit` surfaces pre-existing drizzle/node_modules + unrelated-file errors — only your own files matter. Real gate = frontend `vite build`. Founder validation: `cd backend && FF_CAREER_DISCOVERY=true npx tsx scripts/mx302b-founder-validation.ts`.
+
+## Dev blocker: "Skip to Career Builder" crashes (careerDiscovery ON)
+When `FF_CAREER_DISCOVERY` is ON in dev, a fresh student cannot reach Career Builder: clicking "Skip to Career Builder" fails with a Postgres NOT NULL violation `null value in column "profile"` (also seen for `career_discovery_results`), the screen stays on Career Discovery, and `CareerBuilderPage/DashboardTab` throws into its error boundary. **Why it matters:** the mount gate runs unconditionally, so ANY Career Builder UI (incl. the MX-302I Mentor Connect tab / RealMentorsTab) is unreachable via the browser in dev until this save path is fixed. **How to apply:** to browser-test a Career Builder surface in dev either (a) fix the skip/complete insert (supply a non-null `profile`/results payload) or (b) verify that surface at the API level instead. The ecosystem `/api/ecosystem/mentors` returns honest empty (0 active mentors) independently of this.

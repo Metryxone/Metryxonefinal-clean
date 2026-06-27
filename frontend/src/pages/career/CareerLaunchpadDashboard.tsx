@@ -57,6 +57,24 @@ interface Guidance {
   weekly_goals: string[];
 }
 
+// ── MX-302C backend summary shape (server-computed readiness — device-independent).
+//    Read from `career_seeker_profiles.data`; absent profile → has_profile=false,
+//    readiness=null (null ≠ 0; never fabricated). See routes/launchpad-dashboard.ts. ──
+interface ReadinessCheck { key: string; label: string; done: boolean; pts: number; }
+interface DashboardSummary {
+  ok: boolean;
+  has_profile: boolean | null;
+  degraded?: boolean;
+  readiness: {
+    percent: number | null;
+    earned_points: number;
+    possible_points: number;
+    completed: number;
+    total: number;
+    checks: ReadinessCheck[];
+  } | null;
+}
+
 interface Props {
   profile: any;
   brain: CareerBrain;
@@ -137,8 +155,49 @@ export default function CareerLaunchpadDashboard({
   const [guidance, setGuidance] = useState<Guidance | null>(null);
   const [guidanceState, setGuidanceState] = useState<'loading' | 'ready' | 'unavailable'>('loading');
 
+  // ── MX-302C: server-computed readiness (device-independent). `summaryState`
+  //    drives which readiness source the Placement-Readiness bar trusts:
+  //      'loading' → flag/profile not resolved yet (render local meanwhile)
+  //      'server'  → flag ON + profile present → use server readiness (synced)
+  //      'local'   → flag OFF (byte-identical, NO summary fetch) OR no profile OR
+  //                  degraded → fall back to the device-local computation.
+  //    Flag-OFF stays byte-identical: the /enabled probe short-circuits and the
+  //    summary endpoint is never called. ──
+  const [summary, setSummary] = useState<DashboardSummary | null>(null);
+  const [summaryState, setSummaryState] = useState<'loading' | 'server' | 'local'>('loading');
+
   const drives = ls<Drive[]>(LS_DRIVES, []);
   const projects = ls<Project[]>(LS_PROJECTS, []);
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        // Cheap flag probe (ungated, 200 {enabled:false} when OFF). When OFF we
+        // never touch the summary endpoint → flag-OFF is byte-identical.
+        const probe = await fetch('/api/launchpad-dashboard/enabled', { credentials: 'include' });
+        if (!alive) return;
+        const probeJson = probe.ok ? await probe.json().catch(() => null) : null;
+        if (!probeJson?.enabled) { setSummaryState('local'); return; }
+
+        const r = await fetch('/api/launchpad-dashboard/summary', { credentials: 'include' });
+        if (!alive) return;
+        if (!r.ok) { setSummaryState('local'); return; }
+        const data: DashboardSummary = await r.json();
+        // Only trust the server readiness when a real profile yielded a percent.
+        // No profile / degraded → honest fall-back to local (null ≠ 0).
+        if (data?.ok && data.has_profile === true && data.readiness && data.readiness.percent != null) {
+          setSummary(data);
+          setSummaryState('server');
+        } else {
+          setSummaryState('local');
+        }
+      } catch {
+        if (alive) setSummaryState('local');
+      }
+    })();
+    return () => { alive = false; };
+  }, [userId]);
 
   // ── Daily AI Brief / Recommendations / Weekly Goals from MX-302B (best-effort).
   // If the careerDiscovery flag is OFF (503) or unauthenticated, we degrade to the
@@ -285,13 +344,22 @@ export default function CareerLaunchpadDashboard({
     </SectionCard>
   );
 
-  // 3 — Placement Readiness — the existing Fresher 10-item checklist.
+  // 3 — Placement Readiness — server-computed checklist when the MX-302C surface
+  //     is ON (device-independent, read from the persisted profile); otherwise the
+  //     existing device-local Fresher 10-item checklist (byte-identical fall-back).
   const PlacementReadiness = () => {
-    const checks = readinessChecks(profile, drives, projects);
-    const earned = checks.filter((c) => c.done).reduce((s, c) => s + c.pts, 0);
-    const total = checks.reduce((s, c) => s + c.pts, 0);
-    const score = Math.round((earned / total) * 100);
-    const remaining = checks.filter((c) => !c.done).length;
+    const useServer = summaryState === 'server' && summary?.readiness?.percent != null;
+    const localChecks = readinessChecks(profile, drives, projects);
+
+    const earned = useServer ? summary!.readiness!.earned_points
+      : localChecks.filter((c) => c.done).reduce((s, c) => s + c.pts, 0);
+    const total = useServer ? summary!.readiness!.possible_points
+      : localChecks.reduce((s, c) => s + c.pts, 0);
+    const score = useServer ? summary!.readiness!.percent!
+      : Math.round((earned / total) * 100);
+    const remaining = useServer ? (summary!.readiness!.total - summary!.readiness!.completed)
+      : localChecks.filter((c) => !c.done).length;
+
     return (
       <SectionCard title="Placement Readiness" icon={<Target size={16} />}
         action={<span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: `${bandColor(score)}1a`, color: bandColor(score) }}>{score}%</span>}>
@@ -299,6 +367,11 @@ export default function CareerLaunchpadDashboard({
           <div className="h-full rounded-full transition-all" style={{ width: `${score}%`, background: bandColor(score) }} />
         </div>
         <p className="text-[11px] text-gray-500 mt-2">{earned} of {total} points · {remaining} item{remaining !== 1 ? 's' : ''} left</p>
+        {useServer && (
+          <p className="text-[10px] text-gray-400 mt-1 flex items-center gap-1">
+            <Info size={10} /> Synced from your saved profile — consistent across every device. Campus-drive &amp; project tracking still lives on this device.
+          </p>
+        )}
         <CtaLink label="Open readiness checklist" onClick={() => setView('toolkit')} />
       </SectionCard>
     );

@@ -1471,6 +1471,85 @@ function DashboardTab({ profile, loading, eiScore, eiBreakdown, jobs, goals, onT
   const hour = new Date().getHours();
   const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
 
+  /* ── Brand-new user welcome state ───────────────────────────────────────────
+   * A brand-new user (no CV uploaded, no skills/experience/education, no
+   * assessment) has no career data for the Command Center's stage-trajectory,
+   * future-role and competency-radar widgets to work with. Rather than render
+   * those data-driven widgets (which assume real profile signal and previously
+   * tripped the tab error boundary for empty profiles), we show a welcoming
+   * onboarding screen that points them at building their profile or taking the
+   * assessment. This runs AFTER all hooks above, so hook order stays stable;
+   * once any real profile signal exists, the full dashboard renders unchanged. */
+  const projCount = (profile?.projects || []).length;
+  const hasProfileSignal = !!(profile && (
+    techSkills > 0 || expCount > 0 || eduCount > 0 || certCount > 0 ||
+    projCount > 0 || !!profile?.summary || completeness > 0 ||
+    eiScore > 0 || goals.length > 0
+  ));
+  if (!loading && !hasProfileSignal) {
+    return (
+      <div className="space-y-6">
+        {/* Welcome hero */}
+        <div className="rounded-2xl p-7 text-white relative overflow-hidden shadow-sm" style={{ background: '#1D3E8B' }}>
+          <div className="absolute -top-12 -right-12 w-44 h-44 rounded-full" style={{ background: BRAND.accent, opacity: 0.85 }} />
+          <div className="relative flex items-start gap-4">
+            <img src="/bots/bot4-white.png" alt="" className="w-16 h-16 shrink-0" style={{ animation: 'cbBobLite 3.2s ease-in-out infinite' }} />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1.5">
+                <Sparkles size={14} style={{ color: BRAND.accent }} />
+                <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: BRAND.accent }}>Welcome to your Career Command Center</span>
+              </div>
+              <h1 className="text-xl font-bold">{greet}, {userName} 👋</h1>
+              <p className="text-xs opacity-90 leading-relaxed mt-1.5 max-w-xl">
+                This is your personal hub for building an employable, recruiter-ready profile — your
+                Employability Index, skill gaps, future-role predictions and a daily plan all live here.
+                Let's add your details to unlock it.
+              </p>
+              <div className="flex flex-wrap gap-2 mt-4">
+                <button onClick={onOpenWizard}
+                  className="text-xs font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5 transition-all"
+                  style={{ backgroundColor: BRAND.accent, color: '#0d2354' }}>
+                  <Rocket size={13}/> Build my profile
+                </button>
+                <button onClick={() => onTabChange('assessment')}
+                  className="text-xs font-medium px-4 py-2 rounded-lg border border-white/25 text-white hover:bg-white/10 transition-all flex items-center gap-1.5">
+                  <Zap size={13}/> Take the assessment
+                </button>
+              </div>
+            </div>
+          </div>
+          <style>{`@keyframes cbBobLite { 0%,100%{transform:translateY(0) rotate(-1deg)} 50%{transform:translateY(-3px) rotate(1deg)} }`}</style>
+        </div>
+
+        {/* Getting-started steps */}
+        <div className="rounded-2xl p-6 bg-white border border-gray-100 shadow-sm">
+          <h2 className="text-sm font-semibold text-gray-800 mb-1">Three quick steps to get started</h2>
+          <p className="text-[11px] text-gray-500 mb-4">Each step lifts your Employability Index and unlocks personalised guidance.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {[
+              { icon: <Upload size={18}/>, title: 'Add your profile', desc: 'Upload a CV or fill in your details — skills, experience and education.', cta: 'Start', onClick: onOpenWizard },
+              { icon: <Zap size={18}/>,    title: 'Take the assessment', desc: 'A short diagnostic that scores your readiness and surfaces strengths.', cta: 'Begin', onClick: () => onTabChange('assessment') },
+              { icon: <Target size={18}/>, title: 'Set a goal', desc: 'Pick a target role so we can tailor your development plan.', cta: 'Set goal', onClick: () => onTabChange('goals') },
+            ].map((s, i) => (
+              <div key={i} className="p-4 rounded-xl border border-gray-100 flex flex-col">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white mb-3" style={{ background: BRAND.primary }}>
+                  {s.icon}
+                </div>
+                <p className="text-sm font-semibold text-gray-800">{s.title}</p>
+                <p className="text-[11px] text-gray-500 mt-1 leading-snug flex-1">{s.desc}</p>
+                <button onClick={s.onClick}
+                  className="mt-3 self-start text-[11px] font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1"
+                  style={{ backgroundColor: `${BRAND.primary}12`, color: BRAND.primary }}>
+                  {s.cta} <ArrowRight size={11}/>
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   /* ── Stage trajectory ── */
   const STAGES = [
     { key: 'starter',      label: 'Starter',      min: 0  },

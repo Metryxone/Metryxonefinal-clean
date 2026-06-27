@@ -30,24 +30,26 @@ type UserRole = 'parent' | 'institute' | 'student' | 'career_seeker' | 'ngo' | '
 
 const PLATFORM_ROLES: UserRole[] = ['parent', 'student', 'institute', 'career_seeker', 'ngo', 'corporate'];
 
-const ROLE_CONFIG: Record<UserRole, { label: string; sublabel?: string; icon: ReactNode; description: string; fields?: string[] }> = {
-  parent:          { label: 'Parent / Guardian',  icon: <User size={16} strokeWidth={1.25} />,         description: 'Track your child\'s learning progress and behavioral development insights' },
-  student:         { label: 'Student',              icon: <BookOpen size={16} strokeWidth={1.25} />,     description: 'Access psychometric assessments and personalised learning insights. Ages 11-17 require a parent approval.', fields: ['age', 'grade'] },
-  institute:       { label: 'School / College',    icon: <School size={16} strokeWidth={1.25} />,       description: 'Institutional assessment partnership — bulk enrol and track cohorts', fields: ['instituteName'] },
+const ROLE_CONFIG: Record<UserRole, { label: string; sublabel?: string; icon: ReactNode; description: string; next: string; fields?: string[] }> = {
+  parent:          { label: 'Parent / Guardian',  icon: <User size={16} strokeWidth={1.25} />,         description: 'Track your child\'s learning progress and behavioral development insights', next: 'your Parent Dashboard' },
+  student:         { label: 'Student',              icon: <BookOpen size={16} strokeWidth={1.25} />,     description: 'Access psychometric assessments and personalised learning insights. Ages 11-17 require a parent approval.', next: 'your Student Dashboard', fields: ['age', 'grade'] },
+  institute:       { label: 'School / College',    icon: <School size={16} strokeWidth={1.25} />,       description: 'Institutional assessment partnership — bulk enrol and track cohorts', next: 'your Institute Dashboard', fields: ['instituteName'] },
   career_seeker:   {
     label: 'Career Seeker',
     sublabel: 'Employability Index™',
     icon: <LineChart size={16} strokeWidth={1.25} />,
     description: 'Subscribe to Employability Index™ — score your career readiness & benchmark against 50K+ candidate profiles',
+    next: 'Career Discovery, then your Career Launchpad',
     fields: ['qualification'],
   },
-  ngo:             { label: 'NGO Partner',         icon: <Heart size={16} strokeWidth={1.25} />,        description: 'Community assessment programs — access subsidised tools for social impact', fields: ['organizationName'] },
-  corporate:       { label: 'Corporate / HR',      icon: <Building2 size={16} strokeWidth={1.25} />,    description: 'Talent assessment, hiring intelligence and employee development at scale', fields: ['companyName'] },
+  ngo:             { label: 'NGO Partner',         icon: <Heart size={16} strokeWidth={1.25} />,        description: 'Community assessment programs — access subsidised tools for social impact', next: 'your NGO Dashboard', fields: ['organizationName'] },
+  corporate:       { label: 'Corporate / HR',      icon: <Building2 size={16} strokeWidth={1.25} />,    description: 'Talent assessment, hiring intelligence and employee development at scale', next: 'your Employer Portal', fields: ['companyName'] },
   metryx_applicant:{
     label: 'Join MetryxOne',
     sublabel: 'Mentor · Evaluator · Trainer',
     icon: <GraduationCap size={16} strokeWidth={1.25} />,
     description: 'Apply to work with MetryxOne as a Subject Mentor, Assessment Evaluator, Content Trainer, or Counsellor',
+    next: 'your Mentor Dashboard',
     fields: ['qualification'],
   },
 };
@@ -717,10 +719,22 @@ export function Registration({ onNavigate }: RegistrationProps) {
                     })()}
                   </div>
 
-                  {/* Active role description */}
-                  {role !== 'metryx_applicant' && (
-                    <p className="text-[10px] text-gray-400 leading-relaxed">{ROLE_CONFIG[role].description}</p>
-                  )}
+                  {/* Selected-persona feedback — what you get + where you'll start */}
+                  <div className="rounded-xl border p-3" style={{ borderColor: `${BRAND.primary}20`, backgroundColor: `${BRAND.primary}06` }}>
+                    <div className="flex items-start gap-2.5">
+                      <span className="mt-0.5 flex-shrink-0" style={{ color: BRAND.primary }}>{ROLE_CONFIG[role].icon}</span>
+                      <div className="min-w-0">
+                        <p className="text-[11px] font-semibold leading-tight" style={{ color: BRAND.primary }}>
+                          You're signing up as {ROLE_CONFIG[role].label}
+                        </p>
+                        <p className="text-[10px] text-gray-500 leading-relaxed mt-0.5">{ROLE_CONFIG[role].description}</p>
+                        <div className="flex items-center gap-1.5 mt-1.5 text-[10px] font-medium" style={{ color: BRAND.accent }}>
+                          <ArrowRight size={11} className="flex-shrink-0" />
+                          <span>After sign-up you'll go straight to {ROLE_CONFIG[role].next}.</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Google prefill banner */}

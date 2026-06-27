@@ -42,6 +42,9 @@ const CATEGORY_TO_DIMENSION: Record<string, string> = {
 const dimensionFor = (category: string): string =>
   CATEGORY_TO_DIMENSION[category] || 'communication_clarity';
 
+/** Public alias so other modules (e.g. the DB-backed store) derive dimensions identically. */
+export const dimensionForCategory = (category: string): string => dimensionFor(category);
+
 let _seq = 0;
 const q = (
   question: string,

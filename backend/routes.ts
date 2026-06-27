@@ -241,6 +241,7 @@ import { registerHiringAssessmentEngineRoutes } from "./routes/hiring-assessment
 import { registerCandidateComparisonEngineRoutes } from "./routes/candidate-comparison-engine";
 import { registerShortlistingEngineRoutes } from "./routes/shortlisting-engine";
 import { registerInterviewIntelligenceRoutes } from "./routes/interview-intelligence";
+import { registerInterviewQuestionsRoutes } from "./routes/interview-questions";
 import { registerHiringIntelligenceEngineRoutes } from "./routes/hiring-intelligence";
 import { registerWorkforceIntelligenceEngineRoutes } from "./routes/workforce-intelligence";
 import { registerEnterpriseWorkforceConsoleRoutes } from "./routes/enterprise-workforce-console";
@@ -13891,6 +13892,7 @@ Rules:
   registerCandidateComparisonEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerShortlistingEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerInterviewIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerInterviewQuestionsRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerHiringIntelligenceEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerWorkforceIntelligenceEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerEmployerDashboardsRoutes(app, concernsPool, requireAuth, requireSuperAdmin);

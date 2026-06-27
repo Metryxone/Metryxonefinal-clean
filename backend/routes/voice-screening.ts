@@ -24,9 +24,9 @@ import type { Pool } from 'pg';
 import multer from 'multer';
 import { randomUUID } from 'crypto';
 import { isVoiceScreeningEnabled } from '../config/feature-flags';
+import { selectScreeningQuestions } from '../services/interview-question-store';
 import {
   VOICE_DIMENSIONS,
-  buildQuestionSet,
   transcribeAudio,
   scoreScreening,
   isAIConfigured,
@@ -170,7 +170,8 @@ export function registerVoiceScreeningRoutes(
           );
           jobTitle = c.rows[0]?.job_title || c.rows[0]?.candidate_role || '';
         }
-        res.json({ success: true, questions: buildQuestionSet(jobTitle) });
+        const questions = await selectScreeningQuestions(pool, { role: jobTitle });
+        res.json({ success: true, questions });
       } catch (err: any) {
         res.status(500).json({ success: false, message: err?.message || 'failed_to_build_questions' });
       }
@@ -196,7 +197,7 @@ export function registerVoiceScreeningRoutes(
         if (c.rowCount === 0) return res.status(404).json({ message: 'candidate_not_found' });
         const cand = c.rows[0];
         const jobTitle = cand.job_title || cand.candidate_role || '';
-        const questions = buildQuestionSet(jobTitle);
+        const questions = await selectScreeningQuestions(pool, { role: jobTitle });
         const id = `vss_${randomUUID()}`;
 
         await pool.query(

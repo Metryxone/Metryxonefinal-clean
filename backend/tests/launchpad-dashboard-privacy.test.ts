@@ -239,6 +239,111 @@ async function main() {
     );
   });
 
+  // ── Tracker (WRITE surface): the higher-impact IDOR. PUT /tracker persists
+  //    campus-drive / project / checklist data into
+  //    `career_seeker_profiles.data.fresherHub`. Lock in that BOTH the read AND
+  //    the UPDATE key on the SESSION principal — a client-supplied id in the
+  //    query OR body must NEVER reach the WHERE clause, so student A cannot
+  //    overwrite student B's profile data. ──
+
+  // (a) Flag OFF: the WRITE surface 503s BEFORE any auth/DB touch (byte-identical).
+  process.env[FF] = 'false';
+  probe.reset();
+  const trackerOffPut = await call(base, 'PUT', '/api/launchpad-dashboard/tracker', {
+    auth: true,
+    body: { drives: [{ company: 'Acme' }] },
+  });
+  test('flag OFF → PUT /tracker returns 503', () => {
+    assert.equal(trackerOffPut.status, 503);
+    assert.equal(trackerOffPut.json?.enabled, false);
+  });
+  test('flag OFF → PUT /tracker 503 fires BEFORE auth (requireAuth not reached)', () => {
+    assert.equal(probe.authCalls, 0, 'requireAuth ran before the flag gate');
+  });
+  test('flag OFF → PUT /tracker 503 fires BEFORE any DB touch (pool not queried)', () => {
+    assert.equal(probe.dbQueries.length, 0, 'the DB was queried while the flag was OFF');
+  });
+
+  // (b) Flag ON again for the IDOR assertions.
+  process.env[FF] = 'true';
+
+  // GET /tracker — read keyed by the SESSION uid; attacker id never reaches DB.
+  probe.reset();
+  const trackerGet = await call(
+    base,
+    'GET',
+    `/api/launchpad-dashboard/tracker?id=${ATTACKER_UID}&user_id=${ATTACKER_UID}&subject=${ATTACKER_UID}`,
+    { auth: true },
+  );
+  test('flag ON → GET /tracker 200 for an authenticated seeker', () => {
+    assert.equal(trackerGet.status, 200);
+    assert.equal(trackerGet.json?.ok, true);
+  });
+  test('flag ON → GET /tracker subject is the SESSION principal, NOT the client-supplied id', () => {
+    assert.equal(trackerGet.json?.subject, SESSION_UID, `subject leaked: got ${trackerGet.json?.subject}`);
+    assert.notEqual(trackerGet.json?.subject, ATTACKER_UID);
+  });
+  test('flag ON → GET /tracker read was keyed by the SESSION uid (no IDOR at the DB layer)', () => {
+    const read = probe.dbQueries.find((q) => /career_seeker_profiles\s+WHERE\s+user_id/i.test(q.sql));
+    assert.ok(read, 'expected a profile read query');
+    assert.equal(read!.params[0], SESSION_UID, `DB read used a client-supplied id: ${read!.params[0]}`);
+    assert.ok(
+      !probe.dbQueries.some((q) => (q.params ?? []).some((p) => String(p) === ATTACKER_UID)),
+      "a client-supplied id reached the DB layer on the tracker read",
+    );
+  });
+
+  // PUT /tracker — the WRITE. Both the SELECT and the UPDATE must key on the
+  // SESSION uid; the attacker's id (query OR body) must NEVER appear in any
+  // query param, so the UPDATE's WHERE can only ever target the session row.
+  probe.reset();
+  const trackerPut = await call(
+    base,
+    'PUT',
+    `/api/launchpad-dashboard/tracker?id=${ATTACKER_UID}&user_id=${ATTACKER_UID}&subject=${ATTACKER_UID}`,
+    {
+      auth: true,
+      body: {
+        // A real slice so the handler reaches its UPDATE (not the 400 no-op),
+        // alongside attacker ids the handler must ignore for subject resolution.
+        drives: [{ company: 'Acme', stage: 'applied' }],
+        id: ATTACKER_UID,
+        user_id: ATTACKER_UID,
+        subject: ATTACKER_UID,
+      },
+    },
+  );
+  test('flag ON → PUT /tracker 200 for an authenticated seeker', () => {
+    assert.equal(trackerPut.status, 200);
+    assert.equal(trackerPut.json?.ok, true);
+  });
+  test('flag ON → PUT /tracker subject is the SESSION principal, NOT the client-supplied id', () => {
+    assert.equal(trackerPut.json?.subject, SESSION_UID, `subject leaked: got ${trackerPut.json?.subject}`);
+    assert.notEqual(trackerPut.json?.subject, ATTACKER_UID);
+  });
+  test('flag ON → PUT /tracker SELECT was keyed by the SESSION uid', () => {
+    const read = probe.dbQueries.find((q) => /SELECT\s+data\s+FROM\s+career_seeker_profiles\s+WHERE\s+user_id/i.test(q.sql));
+    assert.ok(read, 'expected a pre-update profile read query');
+    assert.equal(read!.params[0], SESSION_UID, `pre-update read used a client-supplied id: ${read!.params[0]}`);
+  });
+  test("flag ON → PUT /tracker UPDATE's WHERE keys on the SESSION uid (cannot target student B's row)", () => {
+    const update = probe.dbQueries.find((q) => /UPDATE\s+career_seeker_profiles\s+SET/i.test(q.sql));
+    assert.ok(update, 'expected an UPDATE query');
+    // The UPDATE is `... WHERE user_id = $2` with params [json, uid].
+    assert.equal(update!.params[1], SESSION_UID, `UPDATE WHERE used a client-supplied id: ${update!.params[1]}`);
+    assert.notEqual(update!.params[1], ATTACKER_UID);
+  });
+  test("flag ON → PUT /tracker: an attacker's id NEVER reaches ANY DB query param (no write IDOR A→B)", () => {
+    assert.ok(probe.dbQueries.length > 0, 'expected the tracker write to query the DB');
+    const leaked = probe.dbQueries.filter((q) => (q.params ?? []).some((p) => String(p).includes(ATTACKER_UID)));
+    assert.equal(
+      leaked.length,
+      0,
+      `a client-supplied id reached the DB layer in ${leaked.length} quer${leaked.length === 1 ? 'y' : 'ies'}: ` +
+        leaked.map((q) => q.sql.replace(/\s+/g, ' ').trim().slice(0, 80)).join(' | '),
+    );
+  });
+
   // ══════════════════════════════════════════════════════════════════════════
   // Career Discovery (MX-302B) — same self-only guarantee on /guidance.
   // ══════════════════════════════════════════════════════════════════════════

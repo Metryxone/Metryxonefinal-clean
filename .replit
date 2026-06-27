@@ -35,6 +35,10 @@ args = "Upload Service"
 task = "workflow.run"
 args = "live-avatar-billing-cap"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "live-avatar-degradation"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -89,6 +93,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx scripts/task223-live-avatar-billing-cap.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "live-avatar-degradation"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx tests/live-avatar-degradation.test.ts"
 
 [workflows.workflow.metadata]
 isValidation = true

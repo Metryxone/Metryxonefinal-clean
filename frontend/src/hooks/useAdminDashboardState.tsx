@@ -594,6 +594,17 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
     enabled: isAuthenticated,
   });
 
+  // MX-302I Ecosystem & Community flag (ecosystemCommunity) — when OFF the /enabled probe
+  // 503s and the "Hackathons & Events" admin nav item self-hides, keeping flag-OFF byte-identical.
+  const { data: ecosystemCommunityEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/ecosystem/enabled', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/ecosystem/enabled', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
   // Phase 6.9 Enterprise Governance console flag — when OFF the /console/ping probe
   // 503s and the "Enterprise Governance" nav item self-hides, keeping flag-OFF byte-identical.
   const { data: enterpriseGovernanceEnabled = false } = useQuery<boolean>({
@@ -2877,6 +2888,7 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
         { id: 'outcome-validation',   icon: Target,    label: 'Outcome Validation' },
         { id: 'outcome-intelligence', icon: Target,    label: 'Outcome Intelligence' },
         { id: 'employer-ecosystem',   icon: Building2, label: 'Live Employer Ecosystem' },
+        { id: 'hackathons-admin',     icon: Award,     label: 'Hackathons & Events' },
       ]
     },
     // ── Commercial ──────────────────────────────────────────────────────────
@@ -3020,6 +3032,11 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
       employerEcosystemEnabled
         ? group
         : { ...group, items: group.items.filter(it => it.id !== 'employer-ecosystem') }
+    )
+    .map(group =>
+      ecosystemCommunityEnabled
+        ? group
+        : { ...group, items: group.items.filter(it => it.id !== 'hackathons-admin') }
     )
     .map(group =>
       enterpriseGovernanceEnabled

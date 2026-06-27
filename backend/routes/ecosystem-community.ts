@@ -734,6 +734,46 @@ export function registerEcosystemCommunityRoutes(
     res.json({ ok: true, hackathon: r.rows[0] });
   }));
 
+  // Edit / retire an existing hackathon (super-admin only). Only fields present in the
+  // body are updated; omitted fields are left untouched. Setting status to 'retired'
+  // (or 'archived') removes it from the active listing semantics while preserving the row.
+  app.patch('/api/ecosystem/hackathons/:id', flagGate, requireAuth, requireSuperAdmin, withSchemaWrite(async (req, res) => {
+    const id = s(req.params.id, 64);
+    if (!id) { res.status(400).json({ ok: false, error: 'id_required' }); return; }
+    const b = req.body ?? {};
+    const has = (k: string) => Object.prototype.hasOwnProperty.call(b, k);
+    const d = (v: unknown) => { const t = s(v, 30); return t || null; };
+
+    const sets: string[] = [];
+    const vals: unknown[] = [];
+    const add = (col: string, v: unknown) => { vals.push(v); sets.push(`${col} = $${vals.length}`); };
+
+    if (has('title')) {
+      const title = s(b.title, 200);
+      if (!title) { res.status(400).json({ ok: false, error: 'title_required' }); return; }
+      add('title', title);
+    }
+    if (has('theme')) add('theme', sOrNull(b.theme, 200));
+    if (has('description')) add('description', sOrNull(b.description, 4000));
+    if (has('mode')) add('mode', s(b.mode, 20) || 'online');
+    if (has('start_date')) add('start_date', d(b.start_date));
+    if (has('end_date')) add('end_date', d(b.end_date));
+    if (has('registration_deadline')) add('registration_deadline', d(b.registration_deadline));
+    if (has('prize_pool')) add('prize_pool', sOrNull(b.prize_pool, 120));
+    if (has('external_url')) add('external_url', sOrNull(b.external_url, 500));
+    if (has('status')) add('status', s(b.status, 20) || 'upcoming');
+
+    if (sets.length === 0) { res.status(400).json({ ok: false, error: 'no_fields' }); return; }
+    sets.push('updated_at = now()');
+    vals.push(id);
+    const r = await pool.query(
+      `UPDATE eco_hackathons SET ${sets.join(', ')} WHERE id = $${vals.length} RETURNING *`,
+      vals,
+    );
+    if (r.rowCount === 0) { res.status(404).json({ ok: false, error: 'hackathon_not_found' }); return; }
+    res.json({ ok: true, hackathon: r.rows[0] });
+  }));
+
   app.post('/api/ecosystem/hackathons/:id/join', flagGate, requireAuth, withSchemaWrite(async (req, res) => {
     const id = s(req.params.id, 64);
     const h = await pool.query(`SELECT 1 FROM eco_hackathons WHERE id = $1`, [id]);

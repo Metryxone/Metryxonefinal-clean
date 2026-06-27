@@ -128,6 +128,7 @@ const UsageMeteringPanel = lazy(() => import('./superadmin/UsageMeteringPanel'))
 const CustomerSuccessPanel = lazy(() => import('./superadmin/CustomerSuccessPanel'));
 const OutcomeValidationPanel = lazy(() => import('./superadmin/OutcomeValidationPanel'));
 const OutcomeIntelligencePanel = lazy(() => import('./superadmin/OutcomeIntelligencePanel'));
+const HackathonsAdminPanel = lazy(() => import('./superadmin/HackathonsAdminPanel'));
 const Mx203KnowledgeCenterPanel = lazy(() => import('./superadmin/Mx203KnowledgeCenterPanel'));
 const CompetencyMatchIntelligencePanel = lazy(() => import('./superadmin/CompetencyMatchIntelligencePanel'));
 const EmployerEcosystemPanel = lazy(() => import('./superadmin/EmployerEcosystemPanel'));
@@ -616,6 +617,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               {activeTab === 'outcome-validation' && <OutcomeValidationPanel />}
               {activeTab === 'outcome-intelligence' && <OutcomeIntelligencePanel />}
               {activeTab === 'employer-ecosystem' && <EmployerEcosystemPanel />}
+              {activeTab === 'hackathons-admin' && <HackathonsAdminPanel />}
               {activeTab === 'enterprise-governance' && <EnterpriseGovernancePanel />}
               {activeTab === 'platform-intelligence' && <PlatformIntelligencePanel />}
               {activeTab === 'multi-tenant-architecture' && <MultiTenantArchitecturePanel />}

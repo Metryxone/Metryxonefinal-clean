@@ -5390,6 +5390,9 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
   const [liveTranscripts, setLiveTranscripts] = useState<Record<string, LiveTurn[]>>({});
   const [liveVideoUrls, setLiveVideoUrls] = useState<Record<string, string>>({});
 
+  // ── Interview mode the recruiter is screening with (Voice / Video / Live) ──────
+  const [interviewMode, setInterviewMode] = useState<'voice' | 'avatar' | 'live'>('voice');
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const videoChunksRef = useRef<Blob[]>([]);
@@ -6175,8 +6178,8 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-gray-900">AI Voice Bot Screening</h1>
-          <p className="text-xs text-gray-500 mt-0.5">AI-powered phone screening for fitment-qualified candidates — automated calls, instant analysis</p>
+          <h1 className="text-xl font-bold text-gray-900">AI Screening</h1>
+          <p className="text-xs text-gray-500 mt-0.5">AI-powered screening for fitment-qualified candidates — choose a Voice, Video, or Live interview, with instant analysis</p>
         </div>
         <div className="flex items-center gap-2">
           <button onClick={() => onTabChange('assessments')}
@@ -6211,6 +6214,58 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
           <span><span className="font-semibold text-gray-700">Outbound phone screening (coming soon):</span> {phone.message || 'Phone screening is not configured yet.'} Browser-based recording below is fully active.</span>
         </div>
       )}
+
+      {/* Interview mode — all three options, always visible with honest availability */}
+      <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
+        <div className="flex items-center gap-2 mb-3">
+          <BotMessageSquare size={15} style={{ color: BRAND.primary }} />
+          <h3 className="text-sm font-semibold text-gray-800">Interview Mode</h3>
+          <span className="text-[10px] text-gray-400">Pick how candidates are screened — each candidate below uses the selected mode</span>
+        </div>
+        <div className="grid grid-cols-3 gap-3">
+          {([
+            {
+              key: 'voice' as const, icon: <Mic size={16} />, color: BRAND.primary,
+              title: 'Voice Interview',
+              desc: 'Candidate records spoken answers, one question at a time.',
+              available: feature.enabled && feature.aiReady,
+              statusText: !feature.enabled ? 'Turned off' : (!feature.aiReady ? 'AI not configured' : 'Available'),
+            },
+            {
+              key: 'avatar' as const, icon: <Video size={16} />, color: BRAND.purple,
+              title: 'Video Interview',
+              desc: 'An avatar asks each question; the candidate records a video answer.',
+              available: avatar.enabled && avatar.configured && feature.aiReady,
+              statusText: !avatar.enabled ? 'Turned off' : (!avatar.configured ? 'Not configured' : (!feature.aiReady ? 'AI not configured' : 'Available')),
+            },
+            {
+              key: 'live' as const, icon: <Radio size={16} />, color: BRAND.red,
+              title: 'Live Interview',
+              desc: 'Real-time two-way conversation with a live avatar on camera.',
+              available: live.enabled && live.ready,
+              statusText: !live.enabled ? 'Turned off' : (!live.ready ? 'Not configured' : 'Available'),
+            },
+          ]).map(m => {
+            const selected = interviewMode === m.key;
+            return (
+              <button key={m.key} type="button" onClick={() => setInterviewMode(m.key)}
+                className="text-left p-3 rounded-xl border transition-all hover:border-gray-300"
+                style={{
+                  borderColor: selected ? m.color : '#e5e7eb',
+                  backgroundColor: selected ? `${m.color}08` : '#fff',
+                  boxShadow: selected ? `0 0 0 1px ${m.color}` : undefined,
+                }}>
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${m.color}15`, color: m.color }}>{m.icon}</div>
+                  <Chip label={m.statusText} color={m.available ? BRAND.green : '#94a3b8'} size="xs" />
+                </div>
+                <div className="text-xs font-semibold text-gray-800">{m.title}</div>
+                <p className="text-[10px] text-gray-500 leading-relaxed mt-0.5">{m.desc}</p>
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
       {/* KPIs */}
       <div className="grid grid-cols-4 gap-3">
@@ -6318,7 +6373,7 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
                       </div>
                     </div>
                   )}
-                  {(!status || status === 'not_started') && (
+                  {interviewMode === 'voice' && (!status || status === 'not_started') && (
                     <button onClick={() => openPreview(c)} disabled={!!activeCallId || !feature.aiReady}
                       title={!feature.aiReady ? 'Voice screening AI is not configured yet' : undefined}
                       className="flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl text-white"
@@ -6326,7 +6381,7 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
                       <Mic size={12} /> Preview & Screen
                     </button>
                   )}
-                  {(!status || status === 'not_started') && avatar.enabled && avatar.configured && (
+                  {interviewMode === 'avatar' && (!status || status === 'not_started') && avatar.enabled && avatar.configured && (
                     <button onClick={() => openPreview(c, 'avatar')} disabled={!!activeCallId || !feature.aiReady}
                       title={!feature.aiReady ? 'Transcription AI is not configured yet' : 'Avatar presents each question; candidate records a video answer'}
                       className="flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl text-white"
@@ -6334,14 +6389,14 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
                       <Video size={12} /> Video Avatar
                     </button>
                   )}
-                  {(!status || status === 'not_started') && avatar.enabled && !avatar.configured && (
+                  {interviewMode === 'avatar' && (!status || status === 'not_started') && avatar.enabled && !avatar.configured && (
                     <div title={avatar.message || undefined}
                       className="flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl border"
                       style={{ borderColor: `${BRAND.purple}40`, color: BRAND.purple, backgroundColor: `${BRAND.purple}08` }}>
                       <Video size={12} /> Video Avatar not configured
                     </div>
                   )}
-                  {(!status || status === 'not_started') && live.enabled && live.ready && (
+                  {interviewMode === 'live' && (!status || status === 'not_started') && live.enabled && live.ready && (
                     <button onClick={() => startLiveInterview(c)} disabled={!!activeCallId}
                       title="A live avatar speaks and listens in real time; the candidate converses on camera"
                       className="flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl text-white"
@@ -6349,11 +6404,19 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
                       <Radio size={12} /> Live Interview
                     </button>
                   )}
-                  {(!status || status === 'not_started') && live.enabled && !live.ready && (
+                  {interviewMode === 'live' && (!status || status === 'not_started') && live.enabled && !live.ready && (
                     <div title={live.message || undefined}
                       className="flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl border"
                       style={{ borderColor: `${BRAND.red}40`, color: BRAND.red, backgroundColor: `${BRAND.red}08` }}>
                       <Radio size={12} /> Live Interview not configured
+                    </div>
+                  )}
+                  {(!status || status === 'not_started') && (
+                    (interviewMode === 'avatar' && !avatar.enabled) ||
+                    (interviewMode === 'live' && !live.enabled)
+                  ) && (
+                    <div className="text-[10px] text-gray-400 px-3 py-2 rounded-xl border border-dashed border-gray-200">
+                      This interview mode is turned off — switch mode above.
                     </div>
                   )}
                   {busy && (

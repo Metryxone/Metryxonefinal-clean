@@ -177,10 +177,12 @@ export function registerLaunchpadDashboardRoutes(app: Express, pool: Pool, requi
     const availability = (body.widget_availability && typeof body.widget_availability === 'object')
       ? body.widget_availability as Record<string, unknown>
       : {};
+    // Coerce to a clean boolean map + counts (never trust client cardinality blindly).
     const map: Record<string, boolean> = {};
     for (const [k, v] of Object.entries(availability)) map[String(k)] = v === true;
     const widgetsTotal = Number(body.widgets_total) || Object.keys(map).length;
     const widgetsWithData = Object.values(map).filter(Boolean).length;
+    const aiMode = body.ai_mode === 'llm' || body.ai_mode === 'rule_based' ? body.ai_mode : null;
     const event = typeof body.event === 'string' ? body.event.slice(0, 64) : 'launchpad_dashboard_render';
 
     void logAudit(pool, req, {
@@ -191,6 +193,7 @@ export function registerLaunchpadDashboardRoutes(app: Express, pool: Pool, requi
         event,
         widgets_total: widgetsTotal,
         widgets_with_data: widgetsWithData,
+        ai_mode: aiMode,
         widget_availability: map,
       },
     });

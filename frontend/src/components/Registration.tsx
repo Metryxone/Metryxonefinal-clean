@@ -17,7 +17,7 @@ import {
   Briefcase, Heart, Building2, CheckCircle, Star, Users,
   TrendingUp, Award, Lock, Zap, Upload, FileText, X, Phone, Check,
   ArrowRight, Brain, BarChart3, MapPin, Sparkles, Target, FlaskConical, Activity,
-  GraduationCap, LineChart, ChevronRight
+  GraduationCap, LineChart, ChevronRight, Rocket
 } from 'lucide-react';
 
 interface RegistrationProps {
@@ -60,6 +60,13 @@ const STATS = [
 ];
 
 const FEATURES = [
+  {
+    icon: Rocket,
+    tag: 'Career Launchpad',
+    title: 'Launch Your Career with a Plan',
+    body: 'Go from profile to a personalized launch plan — role matches, skill-gap roadmaps, and an Employability Passport™ that shows employers exactly where you stand.',
+    accent: '#0B3C5D',
+  },
   {
     icon: Brain,
     tag: 'LBI™ Engine',
@@ -132,6 +139,7 @@ const LIVE_ACTIVITY = [
   { icon: MapPin,   text: '47 new users joined from Chennai today',           time: '8 min ago' },
   { icon: Award,    text: 'Tech Mahindra added 120 employees to their portal', time: '12 min ago' },
   { icon: Activity, text: 'Preethi completed LBI™ profiling in 18 minutes',   time: '15 min ago' },
+  { icon: Rocket,   text: 'Karthik launched his career plan on Career Launchpad', time: '18 min ago' },
 ];
 
 function ConsentCheck({
@@ -482,7 +490,7 @@ export function Registration({ onNavigate }: RegistrationProps) {
               <div>
                 <h2 className="text-xl font-extrabold mb-1" style={{ color: BRAND.primary }}>Unlock Your Potential</h2>
                 <p className="text-sm text-gray-500 leading-relaxed">
-                  Join India's leading behavioral intelligence platform for students, parents, and institutions.
+                  Join India's leading behavioral intelligence platform for students, career seekers, parents, and institutions.
                 </p>
               </div>
 
@@ -599,6 +607,7 @@ export function Registration({ onNavigate }: RegistrationProps) {
                 <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2.5">What you'll get access to:</p>
                 <div className="grid grid-cols-2 gap-x-3 gap-y-1.5">
                   {[
+                    'Career Launchpad', 'Employability Passport™',
                     'ExamReadiness Index™', 'LBI™ Cognitive Insights',
                     'AI Personalized Reports', 'Progress Dashboards',
                     'Expert Recommendations', 'Bank-Grade Security',

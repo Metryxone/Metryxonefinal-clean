@@ -415,7 +415,7 @@ export function SiteMap({ onNavigate }: SiteMapProps) {
                     {category.pages.map((page, idx) => (
                       page.href ? (
                         <a
-                          key={page.href}
+                          key={`${page.href}-${idx}`}
                           href={page.href}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -437,7 +437,7 @@ export function SiteMap({ onNavigate }: SiteMapProps) {
                         </a>
                       ) : page.screen ? (
                       <Button
-                        key={page.screen}
+                        key={`${page.screen}-${idx}`}
                         variant="outline"
                         className="h-auto p-4 flex flex-col items-start gap-2 text-left hover:border-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/5 transition-all"
                         onClick={() => onNavigate(page.screen!)}

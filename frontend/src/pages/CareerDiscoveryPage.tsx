@@ -287,7 +287,7 @@ function Shell({ onNavigate, children }: { onNavigate: (s: Screen) => void; chil
     <div style={{ minHeight: '100vh', background: BRAND.bg, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", display: 'flex', flexDirection: 'column' }}>
       <Navbar onNavigate={onNavigate} currentScreen="career-discovery" />
       <div style={{ flex: 1, padding: '32px 20px' }}>
-        <div style={{ maxWidth: 880, margin: '0 auto' }}>
+        <div style={{ maxWidth: 1080, margin: '0 auto' }}>
           <header
             style={{
               marginBottom: 24,
@@ -394,7 +394,7 @@ function EmptyNote({ children }: { children: React.ReactNode }) {
 // ── Steps ────────────────────────────────────────────────────────────────────
 function IntroStep({ status, onStart, onSkip, busy }: { status: DiscoveryStatus | null; onStart: () => void; onSkip: () => void; busy: boolean }) {
   return (
-    <div style={card}>
+    <div style={{ ...card, maxWidth: 760, margin: '0 auto' }}>
       <h2 style={{ color: BRAND.text, marginTop: 0 }}>Before you build, let’s discover what fits</h2>
       <p style={{ color: BRAND.muted, lineHeight: 1.6 }}>
         Career Discovery takes a few minutes. We’ll capture what you value at work, then compose your
@@ -423,49 +423,114 @@ function ValuesStep({
   onSubmit: () => void;
   busy: boolean;
 }) {
+  const total = questions.length;
   const answered = questions.filter((q) => responses[q.id] != null).length;
+  const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+  const allDone = total > 0 && answered === total;
+  const progressMsg =
+    answered === 0 ? 'Pick the answer that feels true — there are no wrong choices.'
+    : allDone ? 'All set! See how your values shape your direction.'
+    : answered >= total * 0.6 ? 'Great progress — you’re almost there.'
+    : 'Nice start — keep going.';
+
+  if (total === 0) {
+    return <div style={{ ...card, maxWidth: 760, margin: '0 auto' }}><EmptyNote>No values questions are available right now.</EmptyNote></div>;
+  }
+
   return (
-    <div style={card}>
-      <h2 style={{ color: BRAND.text, marginTop: 0 }}>Work Values Inventory</h2>
-      <p style={{ color: BRAND.muted }}>Rate how much you agree with each statement. You can leave any blank.</p>
-      {questions.length === 0 ? (
-        <EmptyNote>No values questions are available right now.</EmptyNote>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 18, marginTop: 16 }}>
-          {questions.map((q) => (
-            <div key={q.id} style={{ borderBottom: `1px solid ${BRAND.border}`, paddingBottom: 14 }}>
-              <div style={{ color: BRAND.text, fontWeight: 500, marginBottom: 10 }}>{q.prompt}</div>
-              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                <span style={{ fontSize: 11, color: BRAND.muted, width: 90 }}>{q.scale.lowLabel}</span>
-                {[1, 2, 3, 4, 5].map((v) => {
-                  const sel = responses[q.id] === v;
-                  return (
-                    <button
-                      key={v}
-                      onClick={() => setResponse(q.id, v)}
-                      style={{
-                        width: 40, height: 40, borderRadius: RADIUS.full,
-                        border: `1px solid ${sel ? BRAND.primary : BRAND.border}`,
-                        background: sel ? BRAND.primary : BRAND.cardBg,
-                        color: sel ? '#fff' : BRAND.muted, fontWeight: 600, cursor: 'pointer',
-                      }}
-                    >
-                      {v}
-                    </button>
-                  );
-                })}
-                <span style={{ fontSize: 11, color: BRAND.muted, width: 90, textAlign: 'right' }}>{q.scale.highLabel}</span>
+    <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+      {/* Questions column */}
+      <div style={{ flex: '3 1 460px', minWidth: 300, display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div style={card}>
+          <h2 style={{ color: BRAND.text, marginTop: 0, marginBottom: 4 }}>Work Values Inventory</h2>
+          <p style={{ color: BRAND.muted, margin: 0, lineHeight: 1.6 }}>
+            Rate how much you agree with each statement. There are no right answers — go with your gut. You can leave any blank.
+          </p>
+        </div>
+
+        {questions.map((q, i) => {
+          const sel = responses[q.id];
+          const done = sel != null;
+          return (
+            <div key={q.id} style={{ ...card, padding: 18, border: `1px solid ${done ? BRAND.accent : BRAND.border}` }}>
+              <div style={{ display: 'flex', gap: 12 }}>
+                <div style={{
+                  width: 26, height: 26, borderRadius: RADIUS.full, flexShrink: 0,
+                  background: done ? BRAND.accentLight : BRAND.bg, color: done ? BRAND.green : BRAND.muted,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700,
+                }}>{done ? '✓' : i + 1}</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ color: BRAND.text, fontWeight: 600, marginBottom: 12, lineHeight: 1.45 }}>{q.prompt}</div>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    {[1, 2, 3, 4, 5].map((v) => {
+                      const on = sel === v;
+                      return (
+                        <button
+                          key={v}
+                          onClick={() => setResponse(q.id, v)}
+                          aria-label={`${q.prompt} — ${v}`}
+                          style={{
+                            flex: '1 1 0', minWidth: 0, padding: '11px 4px', borderRadius: RADIUS.md,
+                            border: `1px solid ${on ? 'transparent' : BRAND.border}`,
+                            background: on ? BRAND_GRADIENT : BRAND.cardBg,
+                            color: on ? '#fff' : BRAND.muted, fontWeight: 700, fontSize: 14, cursor: 'pointer',
+                          }}
+                        >
+                          {v}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
+                    <span style={{ fontSize: 11, color: BRAND.muted }}>{q.scale.lowLabel}</span>
+                    <span style={{ fontSize: 11, color: BRAND.muted }}>{q.scale.highLabel}</span>
+                  </div>
+                </div>
               </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Sticky conversion sidebar */}
+      <aside style={{ flex: '1 1 280px', minWidth: 260, position: 'sticky', top: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={card}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
+            <span style={{ color: BRAND.text, fontWeight: 700 }}>Your progress</span>
+            <span style={{ color: BRAND.green, fontWeight: 700 }}>{answered}/{total}</span>
+          </div>
+          <div style={{ height: 8, borderRadius: RADIUS.full, background: BRAND.bg, overflow: 'hidden' }}>
+            <div style={{ width: `${pct}%`, height: '100%', background: BRAND_GRADIENT, transition: 'width 240ms ease' }} />
+          </div>
+          <p style={{ color: BRAND.muted, fontSize: 13, lineHeight: 1.5, margin: '12px 0 16px' }}>{progressMsg}</p>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <PrimaryBtn onClick={onSubmit} disabled={busy || answered === 0}>
+              {busy ? 'Saving…' : 'See my profile'}
+            </PrimaryBtn>
+          </div>
+          <div style={{ fontSize: 12, color: BRAND.slate, marginTop: 10, textAlign: 'center' }}>Takes about 3 minutes</div>
+        </div>
+
+        <div style={card}>
+          <div style={{ color: BRAND.text, fontWeight: 700, marginBottom: 12 }}>What you’ll unlock</div>
+          {[
+            'A personalised values profile',
+            'Roles that match how you work',
+            'Tailored guidance & next steps',
+          ].map((t) => (
+            <div key={t} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', marginBottom: 9 }}>
+              <span style={{ color: BRAND.green, fontWeight: 800, lineHeight: 1.4 }}>✓</span>
+              <span style={{ color: BRAND.muted, fontSize: 13, lineHeight: 1.45 }}>{t}</span>
             </div>
           ))}
         </div>
-      )}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 20 }}>
-        <span style={{ color: BRAND.muted, fontSize: 13 }}>{answered} of {questions.length} answered</span>
-        <PrimaryBtn onClick={onSubmit} disabled={busy || answered === 0}>
-          {busy ? 'Saving…' : 'See my profile'}
-        </PrimaryBtn>
-      </div>
+
+        <div style={{ ...card, background: BRAND.bg, border: `1px dashed ${BRAND.border}` }}>
+          <p style={{ color: BRAND.muted, fontSize: 12.5, lineHeight: 1.55, margin: 0 }}>
+            This isn’t a hiring or suitability test — it’s a private, developmental starting point. Answer honestly; you can change anything later.
+          </p>
+        </div>
+      </aside>
     </div>
   );
 }

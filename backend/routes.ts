@@ -303,6 +303,7 @@ import { registerCareerSimulationRoutes }  from "./routes/career-simulations";
 import { registerCareerIntelligenceHubRoutes } from "./routes/career-intelligence-hub";
 import { registerEmployerPortalRoutes }        from "./routes/employer-portal";
 import { registerVoiceScreeningRoutes }        from "./routes/voice-screening";
+import { registerCampusPlacementRoutes }       from "./routes/campus-placement";
 import { requireModuleAccess } from "./services/wc7c/require-module-access";
 import { rateLimit } from "./services/security-middleware";
 import { createProxyMiddleware } from "http-proxy-middleware";
@@ -14232,6 +14233,7 @@ Rules:
   registerEmployerPortalRoutes(app, concernsPool, requireAuth);
   // ── Voice Screening (flag voiceScreening, OFF byte-identical incl. schema) ────
   registerVoiceScreeningRoutes(app, concernsPool, requireAuth);
+  registerCampusPlacementRoutes(app, concernsPool, requireAuth);
   // ── Super-Admin Employer Onboarding (create org + admin login) ───────────────
   const { registerEmployerAdminRoutes } = await import('./routes/employer-admin');
   registerEmployerAdminRoutes(app, concernsPool, requireAuth, requireSuperAdmin, crypto.hash);

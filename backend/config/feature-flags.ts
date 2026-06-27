@@ -1347,6 +1347,24 @@ export const FEATURE_FLAGS = {
    *  Env: `FF_AVATAR_INTERVIEW`. */
   avatarInterview: false,
 
+  /** MX-302E — Campus Placement & Company Intelligence. When ON, two NET-NEW student-facing
+   *  surfaces activate: a Placement Hub (calendar, internship marketplace, graduate programs,
+   *  company drives, application + offer trackers, placement readiness, eligibility checker,
+   *  package analytics) and a Company Explorer (Company DNA composed from real Role-DNA
+   *  distribution + market salary signal, hiring competencies, role DNA, interview/assessment
+   *  patterns, prep checklist, learning recommendations). Unlike MX-302A–D this phase is
+   *  substantially net-new and introduces real schema (companies, campus_drives, internships,
+   *  graduate_programs, placement_calendar, campus_applications, offers, campus_student_profiles)
+   *  created lazily on the flag-gated path only. Honesty mandates: null ≠ 0, no fabricated CTC
+   *  (package analytics back onto real offers + m3_salary_trends or show an honest empty state),
+   *  Company DNA only from genuine role-DNA/market signal (behavioural/cultural side omitted, never
+   *  invented), cross-company package benchmarks suppressed below k_min=30, multi-tenant isolation
+   *  (company data tenant-scoped; student personal data user-scoped). Strictly additive + reversible:
+   *  flag OFF → every route 503 before any auth/DB touch, the ensure-schema is NEVER reached so no
+   *  new tables are created → byte-identical legacy behaviour incl. schema. GET reads probe via
+   *  to_regclass and degrade honestly. Env: `FF_CAMPUS_PLACEMENT`. */
+  campusPlacement: false,
+
   /** PHASE 5.14 — Notifications & Workflows. A PURE READ / compose-never-recompute layer that DERIVES
    *  operational notification items (Job / Application / Interview / Offer / Employer / Recruiter
    *  alerts + Status Changes), workflow next-actions, and message previews from operator-recorded
@@ -2257,6 +2275,10 @@ export function isVoiceScreeningEnabled(): boolean {
 
 export function isAvatarInterviewEnabled(): boolean {
   return isFlagEnabled('avatarInterview');
+}
+
+export function isCampusPlacementEnabled(): boolean {
+  return isFlagEnabled('campusPlacement');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

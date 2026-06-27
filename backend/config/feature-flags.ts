@@ -1321,6 +1321,18 @@ export const FEATURE_FLAGS = {
    *  cross-employer rows never leak). Env: `FF_EMPLOYER_DASHBOARDS`. */
   employerDashboards: false,
 
+  /** VOICE SCREENING — real end-to-end AI voice screening for the employer portal.
+   *  Browser MediaRecorder captures the candidate's spoken answers → uploaded per
+   *  question → transcribed with OpenAI Whisper (gpt-4o-mini-transcribe) → scored by an
+   *  LLM rubric across five screening dimensions. Strictly additive + flag-gated: OFF →
+   *  every route 503s BEFORE auth/DB and NO tables are created (byte-identical legacy,
+   *  incl. schema). Honest-by-construction: per-dimension score is null when there is no
+   *  evidence, the overall score ABSTAINS (null) when no answer is captured, and nothing
+   *  is ever fabricated. If no OpenAI key is configured the pipeline returns a clear 503
+   *  rather than inventing transcripts or scores. Employer-scoped (IDOR-safe via
+   *  employer_id = orgId/user.id). Env: `FF_VOICE_SCREENING`. */
+  voiceScreening: false,
+
   /** PHASE 5.14 — Notifications & Workflows. A PURE READ / compose-never-recompute layer that DERIVES
    *  operational notification items (Job / Application / Interview / Offer / Employer / Recruiter
    *  alerts + Status Changes), workflow next-actions, and message previews from operator-recorded
@@ -2180,6 +2192,10 @@ export function isEnterpriseCertificationEnabled(): boolean {
 
 export function isPlatformCompletionEnabled(): boolean {
   return isFlagEnabled('platformCompletion');
+}
+
+export function isVoiceScreeningEnabled(): boolean {
+  return isFlagEnabled('voiceScreening');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

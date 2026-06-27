@@ -1,5 +1,5 @@
 import { BRAND } from '@/design-system/tokens';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Users, Target, Network, BookOpen, Gauge, Plus, Trash2, Edit3, X,
   CheckCircle, Circle, Info, Compass, TrendingUp, ShieldCheck, MessageSquare,
@@ -37,6 +37,9 @@ function ls<T>(key: string, fallback: T): T {
   try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; }
 }
 function lsSet(key: string, v: unknown) { try { localStorage.setItem(key, JSON.stringify(v)); } catch {} }
+function authHeader(): Record<string, string> {
+  try { const t = localStorage.getItem('metryx_token'); return t ? { Authorization: `Bearer ${t}` } : {}; } catch { return {}; }
+}
 
 // ─── Sub-tabs ─────────────────────────────────────────────────────────────────
 const LEADERSHIP_TABS = [
@@ -154,10 +157,10 @@ function TeamRoster({ team, setTeam }: { team: TeamMember[]; setTeam: (t: TeamMe
     const updated = editing
       ? team.map(m => m.id === editing ? { ...form, id: editing } : m)
       : [{ ...form, id: uid() }, ...team];
-    setTeam(updated); lsSet(LS_TEAM, updated);
+    setTeam(updated);
     setShowForm(false); setEditing(null); setForm(BLANK_MEMBER);
   };
-  const del = (id: string) => { const u = team.filter(m => m.id !== id); setTeam(u); lsSet(LS_TEAM, u); };
+  const del = (id: string) => { const u = team.filter(m => m.id !== id); setTeam(u); };
   const startEdit = (m: TeamMember) => {
     setForm({ name: m.name, role: m.role, focus: m.focus, status: m.status });
     setEditing(m.id); setShowForm(true);
@@ -255,10 +258,10 @@ function StakeholderMap({ stakeholders, setStakeholders }: { stakeholders: Stake
     const updated = editing
       ? stakeholders.map(s => s.id === editing ? { ...form, id: editing } : s)
       : [{ ...form, id: uid() }, ...stakeholders];
-    setStakeholders(updated); lsSet(LS_STAKEHOLDERS, updated);
+    setStakeholders(updated);
     setShowForm(false); setEditing(null); setForm(BLANK_STAKEHOLDER);
   };
-  const del = (id: string) => { const u = stakeholders.filter(s => s.id !== id); setStakeholders(u); lsSet(LS_STAKEHOLDERS, u); };
+  const del = (id: string) => { const u = stakeholders.filter(s => s.id !== id); setStakeholders(u); };
   const startEdit = (s: Stakeholder) => {
     setForm({ name: s.name, relationship: s.relationship, influence: s.influence, alignment: s.alignment });
     setEditing(s.id); setShowForm(true);
@@ -434,6 +437,51 @@ export function LeadershipStudioTab({ profile }: LeadershipStudioTabProps) {
   const [subTab, setSubTab] = useState<LeadershipSubTab>('readiness');
   const [team, setTeam] = useState<TeamMember[]>(() => ls(LS_TEAM, []));
   const [stakeholders, setStakeholders] = useState<Stakeholder[]>(() => ls(LS_STAKEHOLDERS, []));
+  // Server persistence is gated by the careerLaunchpad flag. When the GET below
+  // 503s (flag OFF / unauthenticated), serverEnabled stays false and the tab
+  // behaves byte-identically to the legacy localStorage-only flow.
+  const serverEnabled = useRef(false);
+
+  // Load the trackers from the server so they follow the user across devices.
+  // If the server has no data yet but localStorage does, migrate it up once.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const r = await fetch('/api/career/studio-data', { headers: authHeader() as HeadersInit, credentials: 'include' });
+        if (!r.ok) return;
+        const j = await r.json();
+        if (cancelled || !j?.enabled) return;
+        serverEnabled.current = true;
+        const srvTeam: TeamMember[] = Array.isArray(j?.leadership?.team) ? j.leadership.team : [];
+        const srvStake: Stakeholder[] = Array.isArray(j?.leadership?.stakeholders) ? j.leadership.stakeholders : [];
+        if (srvTeam.length || srvStake.length) {
+          setTeam(srvTeam); setStakeholders(srvStake);
+          lsSet(LS_TEAM, srvTeam); lsSet(LS_STAKEHOLDERS, srvStake);
+        } else {
+          const localTeam = ls<TeamMember[]>(LS_TEAM, []);
+          const localStake = ls<Stakeholder[]>(LS_STAKEHOLDERS, []);
+          if (localTeam.length || localStake.length) {
+            void persist({ team: localTeam, stakeholders: localStake });
+          }
+        }
+      } catch { /* offline → localStorage only */ }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  const persist = (patch: { team?: TeamMember[]; stakeholders?: Stakeholder[] }) => {
+    if (!serverEnabled.current) return;
+    fetch('/api/career/studio-data', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...(authHeader() as Record<string, string>) },
+      credentials: 'include',
+      body: JSON.stringify({ leadership: patch }),
+    }).catch(() => {});
+  };
+
+  const updateTeam = (t: TeamMember[]) => { setTeam(t); lsSet(LS_TEAM, t); persist({ team: t }); };
+  const updateStakeholders = (s: Stakeholder[]) => { setStakeholders(s); lsSet(LS_STAKEHOLDERS, s); persist({ stakeholders: s }); };
 
   return (
     <div className="space-y-0" data-testid="tab-leadership-studio">
@@ -467,8 +515,8 @@ export function LeadershipStudioTab({ profile }: LeadershipStudioTabProps) {
 
       {/* Sub-tab content */}
       {subTab === 'readiness'    && <LeadershipReadiness profile={profile} team={team} stakeholders={stakeholders} />}
-      {subTab === 'team'         && <TeamRoster team={team} setTeam={setTeam} />}
-      {subTab === 'stakeholders' && <StakeholderMap stakeholders={stakeholders} setStakeholders={setStakeholders} />}
+      {subTab === 'team'         && <TeamRoster team={team} setTeam={updateTeam} />}
+      {subTab === 'stakeholders' && <StakeholderMap stakeholders={stakeholders} setStakeholders={updateStakeholders} />}
       {subTab === 'playbook'     && <LeadershipPlaybook />}
     </div>
   );

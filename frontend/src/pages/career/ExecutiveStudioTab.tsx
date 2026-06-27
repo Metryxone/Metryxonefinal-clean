@@ -1,5 +1,5 @@
 import { BRAND } from '@/design-system/tokens';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Briefcase, Target, BookOpen, Gauge, Plus, Trash2, Edit3, X,
   CheckCircle, Circle, Info, Crown, TrendingUp, ShieldCheck, Landmark,
@@ -38,6 +38,9 @@ function ls<T>(key: string, fallback: T): T {
   try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; }
 }
 function lsSet(key: string, v: unknown) { try { localStorage.setItem(key, JSON.stringify(v)); } catch {} }
+function authHeader(): Record<string, string> {
+  try { const t = localStorage.getItem('metryx_token'); return t ? { Authorization: `Bearer ${t}` } : {}; } catch { return {}; }
+}
 
 // ─── Sub-tabs ─────────────────────────────────────────────────────────────────
 const EXEC_TABS = [
@@ -163,10 +166,10 @@ function StrategicPriorities({ priorities, setPriorities }: { priorities: Strate
     const updated = editing
       ? priorities.map(p => p.id === editing ? { ...clamped, id: editing } : p)
       : [{ ...clamped, id: uid() }, ...priorities];
-    setPriorities(updated); lsSet(LS_PRIORITIES, updated);
+    setPriorities(updated);
     setShowForm(false); setEditing(null); setForm(BLANK_PRIORITY);
   };
-  const del = (id: string) => { const u = priorities.filter(p => p.id !== id); setPriorities(u); lsSet(LS_PRIORITIES, u); };
+  const del = (id: string) => { const u = priorities.filter(p => p.id !== id); setPriorities(u); };
   const startEdit = (p: StrategicPriority) => {
     setForm({ title: p.title, objective: p.objective, horizon: p.horizon, health: p.health, progress: p.progress });
     setEditing(p.id); setShowForm(true);
@@ -277,10 +280,10 @@ function BoardStakeholders({ board, setBoard }: { board: BoardContact[]; setBoar
     const updated = editing
       ? board.map(b => b.id === editing ? { ...form, id: editing } : b)
       : [{ ...form, id: uid() }, ...board];
-    setBoard(updated); lsSet(LS_BOARD, updated);
+    setBoard(updated);
     setShowForm(false); setEditing(null); setForm(BLANK_BOARD);
   };
-  const del = (id: string) => { const u = board.filter(b => b.id !== id); setBoard(u); lsSet(LS_BOARD, u); };
+  const del = (id: string) => { const u = board.filter(b => b.id !== id); setBoard(u); };
   const startEdit = (b: BoardContact) => {
     setForm({ name: b.name, role: b.role, type: b.type });
     setEditing(b.id); setShowForm(true);
@@ -447,6 +450,51 @@ export function ExecutiveStudioTab({ profile }: ExecutiveStudioTabProps) {
   const [subTab, setSubTab] = useState<ExecSubTab>('readiness');
   const [priorities, setPriorities] = useState<StrategicPriority[]>(() => ls(LS_PRIORITIES, []));
   const [board, setBoard] = useState<BoardContact[]>(() => ls(LS_BOARD, []));
+  // Server persistence is gated by the careerLaunchpad flag. When the GET below
+  // 503s (flag OFF / unauthenticated), serverEnabled stays false and the tab
+  // behaves byte-identically to the legacy localStorage-only flow.
+  const serverEnabled = useRef(false);
+
+  // Load the trackers from the server so they follow the user across devices.
+  // If the server has no data yet but localStorage does, migrate it up once.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const r = await fetch('/api/career/studio-data', { headers: authHeader() as HeadersInit, credentials: 'include' });
+        if (!r.ok) return;
+        const j = await r.json();
+        if (cancelled || !j?.enabled) return;
+        serverEnabled.current = true;
+        const srvPri: StrategicPriority[] = Array.isArray(j?.executive?.priorities) ? j.executive.priorities : [];
+        const srvBoard: BoardContact[] = Array.isArray(j?.executive?.board) ? j.executive.board : [];
+        if (srvPri.length || srvBoard.length) {
+          setPriorities(srvPri); setBoard(srvBoard);
+          lsSet(LS_PRIORITIES, srvPri); lsSet(LS_BOARD, srvBoard);
+        } else {
+          const localPri = ls<StrategicPriority[]>(LS_PRIORITIES, []);
+          const localBoard = ls<BoardContact[]>(LS_BOARD, []);
+          if (localPri.length || localBoard.length) {
+            void persist({ priorities: localPri, board: localBoard });
+          }
+        }
+      } catch { /* offline → localStorage only */ }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  const persist = (patch: { priorities?: StrategicPriority[]; board?: BoardContact[] }) => {
+    if (!serverEnabled.current) return;
+    fetch('/api/career/studio-data', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...(authHeader() as Record<string, string>) },
+      credentials: 'include',
+      body: JSON.stringify({ executive: patch }),
+    }).catch(() => {});
+  };
+
+  const updatePriorities = (p: StrategicPriority[]) => { setPriorities(p); lsSet(LS_PRIORITIES, p); persist({ priorities: p }); };
+  const updateBoard = (b: BoardContact[]) => { setBoard(b); lsSet(LS_BOARD, b); persist({ board: b }); };
 
   return (
     <div className="space-y-0" data-testid="tab-executive-studio">
@@ -481,8 +529,8 @@ export function ExecutiveStudioTab({ profile }: ExecutiveStudioTabProps) {
 
       {/* Sub-tab content */}
       {subTab === 'readiness'  && <ExecutiveReadiness profile={profile} priorities={priorities} board={board} />}
-      {subTab === 'priorities' && <StrategicPriorities priorities={priorities} setPriorities={setPriorities} />}
-      {subTab === 'board'      && <BoardStakeholders board={board} setBoard={setBoard} />}
+      {subTab === 'priorities' && <StrategicPriorities priorities={priorities} setPriorities={updatePriorities} />}
+      {subTab === 'board'      && <BoardStakeholders board={board} setBoard={updateBoard} />}
       {subTab === 'playbook'   && <ExecutivePlaybook />}
     </div>
   );

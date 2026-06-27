@@ -81,6 +81,73 @@ function withCompleteness(profile: any): any {
   return { ...profile, competencyProfile: { completeness, sectionsFilled } };
 }
 
+// ─── Leadership / Executive Studio tracker persistence (MX-302A) ────────────
+// Stored additively under career_seeker_profiles.data.studio (mirrors the
+// profile JSONB snapshot pattern). Sanitised on write: unknown fields dropped,
+// strings/array sizes capped, enum-typed fields coerced to a known value so a
+// crafted payload can never bloat or corrupt the profile row.
+const MAX_STUDIO_ITEMS = 200;
+const cStr = (v: unknown, max = 300): string => (typeof v === "string" ? v.slice(0, max) : "");
+const cId = (v: unknown): string =>
+  (typeof v === "string" && v.trim() ? v.slice(0, 64) : Date.now().toString(36) + Math.random().toString(36).slice(2));
+const cArr = (v: unknown): any[] => (Array.isArray(v) ? v.slice(0, MAX_STUDIO_ITEMS) : []);
+const oneOf = <T extends string>(v: unknown, allowed: readonly T[], fallback: T): T =>
+  (typeof v === "string" && (allowed as readonly string[]).includes(v) ? (v as T) : fallback);
+const cPct = (v: unknown): number => {
+  const n = Math.round(Number(v));
+  return Number.isFinite(n) ? Math.max(0, Math.min(100, n)) : 0;
+};
+
+const REPORT_STATUSES = ["Thriving", "Steady", "Needs Support", "At Risk"] as const;
+const INFLUENCES = ["High", "Medium", "Low"] as const;
+const ALIGNMENTS = ["Aligned", "Neutral", "Resistant"] as const;
+const HORIZONS = ["This Quarter", "This Year", "Multi-Year"] as const;
+const PRIORITY_HEALTHS = ["On Track", "At Risk", "Off Track"] as const;
+const BOARD_TYPES = ["Board Member", "Investor", "Exec Peer", "Advisor", "Key Partner"] as const;
+
+function sanitizeStudio(raw: any): {
+  leadership: { team: any[]; stakeholders: any[] };
+  executive: { priorities: any[]; board: any[] };
+} {
+  const s = raw && typeof raw === "object" ? raw : {};
+  const lead = s.leadership && typeof s.leadership === "object" ? s.leadership : {};
+  const exec = s.executive && typeof s.executive === "object" ? s.executive : {};
+  return {
+    leadership: {
+      team: cArr(lead.team).map((m: any) => ({
+        id: cId(m?.id),
+        name: cStr(m?.name),
+        role: cStr(m?.role),
+        focus: cStr(m?.focus, 500),
+        status: oneOf(m?.status, REPORT_STATUSES, "Steady"),
+      })),
+      stakeholders: cArr(lead.stakeholders).map((k: any) => ({
+        id: cId(k?.id),
+        name: cStr(k?.name),
+        relationship: cStr(k?.relationship),
+        influence: oneOf(k?.influence, INFLUENCES, "Medium"),
+        alignment: oneOf(k?.alignment, ALIGNMENTS, "Neutral"),
+      })),
+    },
+    executive: {
+      priorities: cArr(exec.priorities).map((p: any) => ({
+        id: cId(p?.id),
+        title: cStr(p?.title),
+        objective: cStr(p?.objective, 500),
+        horizon: oneOf(p?.horizon, HORIZONS, "This Quarter"),
+        health: oneOf(p?.health, PRIORITY_HEALTHS, "On Track"),
+        progress: cPct(p?.progress),
+      })),
+      board: cArr(exec.board).map((b: any) => ({
+        id: cId(b?.id),
+        name: cStr(b?.name),
+        role: cStr(b?.role),
+        type: oneOf(b?.type, BOARD_TYPES, "Board Member"),
+      })),
+    },
+  };
+}
+
 // ─── Auth helper (cookie session OR allow self by URL param) ────────────────
 function requireAuth(req: Request, res: Response, next: NextFunction) {
   // @ts-expect-error passport extends req
@@ -92,6 +159,16 @@ function sessionUser(req: Request): { id: string; fullName?: string; email?: str
   // @ts-expect-error passport user
   const u = req.user;
   return u && u.id ? u : null;
+}
+
+// Flag-gate the studio-data routes BEFORE any auth / DB touch, so that with the
+// careerLaunchpad flag OFF the response is byte-identical (503) regardless of
+// whether the caller is authenticated.
+function requireCareerLaunchpad(_req: Request, res: Response, next: NextFunction) {
+  if (!isCareerLaunchpadEnabled()) {
+    return res.status(503).json({ enabled: false, message: "Career Launchpad is not enabled" });
+  }
+  return next();
 }
 
 // Returns the URL :userId if it matches the session user; otherwise the session user's id.
@@ -520,6 +597,81 @@ export function registerCareerSeekerRoutes(app: Express): void {
     } catch (err) {
       console.error("[career-seeker] set experience error:", err);
       return res.status(500).json({ success: false, message: "Failed to update experience" });
+    }
+  });
+
+  // ── MX-302A — Leadership / Executive Studio tracker persistence ─────────────
+  // Persists the four senior/executive trackers (team roster, stakeholder map,
+  // strategic priorities, board & stakeholders) server-side so they follow the
+  // user across devices instead of living in browser localStorage. Stored as an
+  // additive JSONB snapshot under career_seeker_profiles.data.studio, scoped to
+  // the authenticated user. Flag-gated (careerLaunchpad): OFF → 503 BEFORE any
+  // auth / DB touch, so the trackers fall back to their byte-identical
+  // localStorage behaviour.
+
+  // Read the studio trackers for the authenticated user.
+  app.get("/api/career/studio-data", requireCareerLaunchpad, requireAuth, async (req, res) => {
+    try {
+      const u = sessionUser(req);
+      if (!u) return res.status(401).json({ success: false, message: "Not authenticated" });
+
+      const row: any = await db.execute(sql`
+        SELECT data FROM career_seeker_profiles WHERE user_id = ${u.id} LIMIT 1
+      `);
+      const data = (row.rows?.[0] ?? row[0])?.data ?? {};
+      const studio = sanitizeStudio(data?.studio);
+      return res.json({ enabled: true, success: true, ...studio });
+    } catch (err) {
+      console.error("[career-seeker] get studio-data error:", err);
+      return res.status(500).json({ success: false, message: "Failed to load studio data" });
+    }
+  });
+
+  // Persist the studio trackers (partial deep-merge: a bucket omitted from the
+  // payload is preserved, so the Leadership and Executive tabs can each save
+  // independently without clobbering the other). Never recomputes completeness.
+  app.put("/api/career/studio-data", requireCareerLaunchpad, requireAuth, async (req, res) => {
+    try {
+      const u = sessionUser(req);
+      if (!u) return res.status(401).json({ success: false, message: "Not authenticated" });
+
+      const body = (req.body ?? {}) as any;
+      const row: any = await db.execute(sql`
+        SELECT data, completeness FROM career_seeker_profiles WHERE user_id = ${u.id} LIMIT 1
+      `);
+      const existingRow = row.rows?.[0] ?? row[0];
+      const base = existingRow?.data ?? skeletonProfile({ name: u.fullName, email: u.email, phone: u.mobile });
+      const prev = sanitizeStudio(base?.studio);
+
+      const lead = body?.leadership && typeof body.leadership === "object" ? body.leadership : {};
+      const exec = body?.executive && typeof body.executive === "object" ? body.executive : {};
+      const merged = sanitizeStudio({
+        leadership: {
+          team: Array.isArray(lead.team) ? lead.team : prev.leadership.team,
+          stakeholders: Array.isArray(lead.stakeholders) ? lead.stakeholders : prev.leadership.stakeholders,
+        },
+        executive: {
+          priorities: Array.isArray(exec.priorities) ? exec.priorities : prev.executive.priorities,
+          board: Array.isArray(exec.board) ? exec.board : prev.executive.board,
+        },
+      });
+
+      const nextData = { ...base, studio: merged };
+      const completeness =
+        existingRow?.completeness ?? computeCompleteness(nextData).completeness;
+
+      await db.execute(sql`
+        INSERT INTO career_seeker_profiles (user_id, data, completeness)
+        VALUES (${u.id}, ${JSON.stringify(nextData)}::jsonb, ${completeness})
+        ON CONFLICT (user_id) DO UPDATE
+          SET data = EXCLUDED.data,
+              updated_at = NOW()
+      `);
+
+      return res.json({ enabled: true, success: true, ...merged });
+    } catch (err) {
+      console.error("[career-seeker] put studio-data error:", err);
+      return res.status(500).json({ success: false, message: "Failed to save studio data" });
     }
   });
 }

@@ -20,11 +20,16 @@
  */
 import { useEffect, useState, useCallback } from 'react';
 import { BRAND, RADIUS, SHADOW } from '../design-system/tokens';
+import { Navbar } from '@/components/layout/Navbar';
+import { Footer } from '@/components/layout/Footer';
 
 type Screen = string;
 interface Props {
   onNavigate: (screen: Screen) => void;
 }
+
+// MetryxOne brand identity gradient (deep-navy → teal accent).
+const BRAND_GRADIENT = `linear-gradient(135deg, ${BRAND.navy} 0%, ${BRAND.primary} 55%, ${BRAND.accent} 100%)`;
 
 function authHeader(): Record<string, string> {
   const t = localStorage.getItem('metryx_token');
@@ -217,7 +222,7 @@ export function CareerDiscoveryPage({ onNavigate }: Props) {
   // ── Loading / disabled states ─────────────────────────────────────────────
   if (loading) {
     return (
-      <Shell>
+      <Shell onNavigate={onNavigate}>
         <div style={{ ...card, textAlign: 'center' }}>Loading Career Discovery…</div>
       </Shell>
     );
@@ -225,7 +230,7 @@ export function CareerDiscoveryPage({ onNavigate }: Props) {
 
   if (enabled === false) {
     return (
-      <Shell>
+      <Shell onNavigate={onNavigate}>
         <div style={{ ...card, textAlign: 'center', maxWidth: 560, margin: '0 auto' }}>
           <h2 style={{ color: BRAND.text, marginBottom: 8 }}>Career Discovery isn’t available yet</h2>
           <p style={{ color: BRAND.muted, marginBottom: 20 }}>
@@ -239,7 +244,7 @@ export function CareerDiscoveryPage({ onNavigate }: Props) {
   }
 
   return (
-    <Shell>
+    <Shell onNavigate={onNavigate}>
       <StepNav step={step} setStep={(s) => {
         setStep(s);
         if (s === 'profile' && !profile) void loadProfile();
@@ -277,16 +282,34 @@ export function CareerDiscoveryPage({ onNavigate }: Props) {
 }
 
 // ── Layout primitives ────────────────────────────────────────────────────────
-function Shell({ children }: { children: React.ReactNode }) {
+function Shell({ onNavigate, children }: { onNavigate: (s: Screen) => void; children: React.ReactNode }) {
   return (
-    <div style={{ minHeight: '100vh', background: BRAND.bg, padding: '32px 20px', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
-      <div style={{ maxWidth: 880, margin: '0 auto' }}>
-        <header style={{ marginBottom: 24 }}>
-          <div style={{ fontSize: 13, fontWeight: 600, color: BRAND.accent, letterSpacing: 0.5 }}>CAREER DISCOVERY</div>
-          <h1 style={{ fontSize: 28, fontWeight: 700, color: BRAND.text, margin: '4px 0 0' }}>Discover your direction</h1>
-        </header>
-        {children}
+    <div style={{ minHeight: '100vh', background: BRAND.bg, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", display: 'flex', flexDirection: 'column' }}>
+      <Navbar onNavigate={onNavigate} currentScreen="career-discovery" />
+      <div style={{ flex: 1, padding: '32px 20px' }}>
+        <div style={{ maxWidth: 880, margin: '0 auto' }}>
+          <header
+            style={{
+              marginBottom: 24,
+              padding: '32px 28px',
+              borderRadius: RADIUS.xl,
+              background: BRAND_GRADIENT,
+              boxShadow: SHADOW.md,
+              color: '#fff',
+            }}
+          >
+            <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.2, textTransform: 'uppercase', opacity: 0.85 }}>
+              Career Discovery
+            </div>
+            <h1 style={{ fontSize: 30, fontWeight: 800, margin: '8px 0 6px', color: '#fff' }}>Discover your direction</h1>
+            <p style={{ fontSize: 15, lineHeight: 1.6, opacity: 0.92, margin: 0, maxWidth: 560 }}>
+              A guided, few-minute journey to surface what fits — before you build your career.
+            </p>
+          </header>
+          {children}
+        </div>
       </div>
+      <Footer onNavigate={onNavigate} />
     </div>
   );
 }
@@ -313,9 +336,9 @@ function StepNav({ step, setStep }: { step: Step; setStep: (s: Step) => void }) 
             disabled={!done && !active}
             style={{
               flex: '1 1 auto', minWidth: 90, padding: '8px 12px', borderRadius: RADIUS.full,
-              border: `1px solid ${active ? BRAND.primary : BRAND.border}`,
-              background: active ? BRAND.primary : done ? BRAND.primaryLight : BRAND.cardBg,
-              color: active ? '#fff' : done ? BRAND.primary : BRAND.muted,
+              border: `1px solid ${active ? 'transparent' : done ? BRAND.accent : BRAND.border}`,
+              background: active ? BRAND_GRADIENT : done ? BRAND.accentLight : BRAND.cardBg,
+              color: active ? '#fff' : done ? BRAND.green : BRAND.muted,
               fontWeight: 600, fontSize: 13, cursor: done ? 'pointer' : 'default',
             }}
           >
@@ -334,8 +357,9 @@ function PrimaryBtn({ children, onClick, disabled }: { children: React.ReactNode
       disabled={disabled}
       style={{
         padding: '12px 22px', borderRadius: RADIUS.md, border: 'none',
-        background: disabled ? BRAND.slate : BRAND.primary, color: '#fff',
+        background: disabled ? BRAND.slate : BRAND_GRADIENT, color: '#fff',
         fontWeight: 600, fontSize: 15, cursor: disabled ? 'not-allowed' : 'pointer',
+        boxShadow: disabled ? 'none' : SHADOW.sm,
       }}
     >
       {children}

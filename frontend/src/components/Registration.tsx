@@ -431,8 +431,8 @@ export function Registration({ onNavigate }: RegistrationProps) {
           ngo: 'ngo-dashboard',
           hr_recruiter: 'employer-portal',
           corporate: 'employer-portal',
-          job_seeker: 'career-builder',
-          career_seeker: 'career-builder',
+          job_seeker: 'career-discovery',
+          career_seeker: 'career-discovery',
         };
         const target = userData?.dashboardTarget
           ?? roleToTarget[(userData?.role ?? apiRole ?? role).toLowerCase().trim()];

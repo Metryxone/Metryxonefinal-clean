@@ -28,6 +28,7 @@ import {
   checkApprovalRequired, createApproval, checkSSOEnforcement,
 } from './employer-security';
 import { computeSuccessProbability, parseSkills } from './employer-tig';
+import { recordHiringOutcome } from '../services/validation-loop-intake';
 import { resolveCuratedRoleByTitle, getMatchableCuratedRoles } from '../services/role-title-crosswalk';
 import { isTalentMatchingEnabled } from '../config/feature-flags';
 import { ensureEmployerJobsSchema } from '../services/employer-jobs-schema';
@@ -384,6 +385,17 @@ async function snapshotDecisionProb(pool: Pool, employerId: string, candidateId:
         WHERE id = $2 AND predicted_prob_at_decision IS NULL`,
       [predicted, candidateId],
     );
+    // Validation loop: durably RECORD the realized hiring outcome + its decision-time prediction
+    // snapshot so the calibration surfaces can move past ABSTAIN once non-demo pairs reach k_min.
+    // Flag-gated + never-throws (best-effort) — demo (@example.com) rows are recorded is_demo=true.
+    await recordHiringOutcome(pool, {
+      subjectEmail: String(row.email ?? ''),
+      subjectUserId: row.candidate_user_id ?? row.user_id ?? null,
+      outcomeValue: st === 'Hired' ? 1 : 0,
+      predictedProb: predicted,
+      refId: `employer_candidate:${candidateId}`,
+      detail: { employer_candidate_id: candidateId, job_id: row.job_id, match_score: row.match_score ?? null, stage: st },
+    });
   } catch { /* never throw — snapshot is best-effort */ }
 }
 
@@ -1378,18 +1390,9 @@ export function registerEmployerPortalRoutes(
     // must never fail the candidate update itself.
     const st = String(updated.stage ?? '');
     if ((st === 'Hired' || st === 'Rejected') && updated.predicted_prob_at_decision == null && updated.job_id) {
-      pool.query(`SELECT skills FROM employer_jobs WHERE id = $1 AND employer_id = $2`, [updated.job_id, eid(req)])
-        .then(jr => {
-          const predicted = computeSuccessProbability(
-            parseSkills(updated.skills), Number(updated.match_score ?? 0), parseSkills(jr.rows[0]?.skills),
-          );
-          return pool.query(
-            `UPDATE employer_candidates SET predicted_prob_at_decision = $1, decision_at = now()
-              WHERE id = $2 AND predicted_prob_at_decision IS NULL`,
-            [predicted, updated.id],
-          );
-        })
-        .catch((e: any) => console.error('[employer-portal] decision snapshot failed', e?.message ?? e));
+      // Snapshot the decision-time prediction AND durably record the realized hiring outcome into
+      // the validation loop (shared helper — single source of truth with the bulk-move path).
+      void snapshotDecisionProb(pool, eid(req), String(updated.id));
     }
 
     res.json({ success: true, candidate: toCandidate(updated) });

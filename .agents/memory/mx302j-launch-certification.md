@@ -72,3 +72,21 @@ employability_index, placement_readiness, resume_intelligence, interview_report,
 career_passport). The legacy 16-pack `BUILDERS` stays byte-identical. Empty report sections are
 HONEST (absent substrate), never fabricated. Route `GET /api/rf/launchpad-suite/:subject`
 (report-factory.ts) is auth-before-flag (401 unauth, 503 flag-OFF) with `?export=pdf|csv|json`.
+
+## Outcome-confidence axis substrate (T-247)
+The cert's `outcome_confidence` must count **realized prediction-bearing pairs**, NOT a raw
+`COUNT(*) FROM offers` (campus offers carry no decision-time prediction → always wrong substrate).
+Correct substrate = `validation_loop_outcomes` (hiring/binary/outcome∈{0,1}/pred∈[0,1], demo-excluded)
+∪ employer terminal feeder (`terminalCandidatesToPairs`), reported `by_source`. ABSTAIN < k_min(30),
+MEASURABLE ≥ 30, `null` when both substrates unreadable (never coerce to 0). `realized_offers` is kept
+as coverage-only context. In dev the honest answer is 0 pairs (all 34 employer terminal candidates are
+@example.com demo) → ABSTAIN is correct, not a defect; backfills don't reach prod.
+
+## Durable hiring-outcome recording (`services/validation-loop-intake.ts`)
+`recordHiringOutcome(pool,{subjectEmail,outcomeValue,predictedProb,refId})` durably writes the realized
+{prediction,outcome} pair so the cert can move past ABSTAIN. Flag-gated `validationLoop` (default code-ON
+→ fires in the live workflow even without `FF_VALIDATION_LOOP` in the command), never-throws, demo-aware
+(`is_demo` from @example.com), idempotent on `ref_id`, keeps prediction only if finite in [0,1] (else NULL
+= coverage but not a pair). Wired into employer terminal decisions via `snapshotDecisionProb` in
+`employer-portal.ts` (single-PUT + bulk-move share the one helper). `ensureValidationLoopSchema(pool)` is
+the single shared schema fn imported by both the intake service and `routes/validation-loop.ts`.

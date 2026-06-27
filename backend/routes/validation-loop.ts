@@ -18,9 +18,8 @@
 
 import type { Express, Request, Response, NextFunction } from 'express';
 import type { Pool } from 'pg';
-import fs from 'fs';
-import path from 'path';
 import { isFlagEnabled } from '../config/feature-flags';
+import { ensureValidationLoopSchema } from '../services/validation-loop-intake';
 import {
   OUTCOME_TYPES,
   isValidOutcomeType,
@@ -36,16 +35,6 @@ import {
 import { buildCalibrationModel } from './employer-tig';
 
 type Mw = (req: Request, res: Response, next: NextFunction) => void;
-
-let schemaReady = false;
-async function ensureSchema(pool: Pool): Promise<void> {
-  if (schemaReady) return;
-  const p = path.join(__dirname, '../migrations/20260623_validation_loop_outcomes.sql');
-  const sql = fs.readFileSync(p, 'utf-8');
-  await pool.query(sql);
-  await pool.query('SELECT 1 FROM validation_loop_outcomes LIMIT 1');
-  schemaReady = true;
-}
 
 function flagGate(_req: Request, res: Response, next: NextFunction) {
   if (!isFlagEnabled('validationLoop')) {
@@ -82,7 +71,7 @@ export function registerValidationLoopRoutes(
   // ── POST intake — the missing front-half realized-outcome capture ───────────────────────────────
   app.post('/api/validation-loop/outcomes', flagGate, requireAuth, requireSuperAdmin, async (req: Request, res: Response) => {
     try {
-      await ensureSchema(pool);
+      await ensureValidationLoopSchema(pool);
       const b = (req.body ?? {}) as Record<string, any>;
       const type = String(b.outcome_type ?? '').toLowerCase();
       if (!isValidOutcomeType(type)) {

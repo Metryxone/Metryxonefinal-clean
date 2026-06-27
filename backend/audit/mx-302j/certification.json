@@ -2,7 +2,7 @@
   "meta": {
     "phase": "MX-302J",
     "version": "302J.0.0",
-    "ts": "2026-06-27T10:54:41.820Z",
+    "ts": "2026-06-27T11:02:58.163Z",
     "node": "v20.20.0",
     "doctrine": "Four axes Structural⟂Activation⟂Adoption⟂Outcome-Confidence NEVER composited; null≠0; demo excluded; PII masked; read-only."
   },
@@ -24,10 +24,15 @@
     },
     "outcome_confidence": {
       "k_min": 30,
+      "realized_pairs": 0,
+      "by_source": {
+        "validation_loop_outcomes": 0,
+        "employer_terminal_feeder": 0
+      },
       "realized_offers": 0,
       "measurable": false,
       "verdict": "ABSTAIN",
-      "note": "Realized predicted→outcome pairs below k_min (or absent); outcome confidence is not measurable. Never coerced to a score."
+      "note": "Realized {prediction,outcome} pairs below k_min (or absent); outcome confidence is not measurable. Never coerced to a score."
     }
   },
   "report_suite": {

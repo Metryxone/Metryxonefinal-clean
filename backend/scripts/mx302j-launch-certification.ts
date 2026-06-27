@@ -173,18 +173,44 @@ async function main() {
   const uiScan = readJsonSafe(path.join(REPO_ROOT, 'backend/audit/mx-301e/scan.json'));
   const priorLaunchCert = readJsonSafe(path.join(REPO_ROOT, 'backend/audit/mx-400/certification.json'));
 
-  // ── Outcome-confidence (axis 4): abstain unless realized pairs ≥ k_min ────────────────────
+  // ── Outcome-confidence (axis 4): abstain unless realized {prediction,outcome} pairs ≥ k_min ──
+  // Confidence is driven by realized pairs that carry a DECISION-TIME prediction (the only thing
+  // the calibration surfaces can train on) — NOT by a raw offer count. Coverage (offers recorded)
+  // and Confidence (calibration trust) are kept on SEPARATE axes (offers_real stays in adoption).
+  // Substrate = validation_loop_outcomes (durably recorded hiring pairs) ∪ employer terminal feeder.
+  // Demo (@example.com) is excluded on EVERY count; out-of-range/absent predictions never qualify.
   const K_MIN = 30;
+  const vloPairs = await scalar(
+    `SELECT COUNT(*) FROM validation_loop_outcomes
+      WHERE COALESCE(is_demo,false) = false
+        AND outcome_type = 'hiring' AND outcome_kind = 'binary' AND outcome_value IN (0,1)
+        AND predicted_prob_at_decision IS NOT NULL AND predicted_prob_at_decision BETWEEN 0 AND 1
+        AND lower(subject_email) NOT LIKE '%@example.com'`,
+  );
+  const employerPairs = await scalar(
+    `SELECT COUNT(*) FROM employer_candidates
+      WHERE stage IN ('Hired','Rejected')
+        AND predicted_prob_at_decision IS NOT NULL AND predicted_prob_at_decision BETWEEN 0 AND 1
+        AND lower(email) NOT LIKE '%@example.com'`,
+  );
+  // null only when BOTH substrates are unreadable (null ≠ 0 — never coerce a missing table to 0).
+  const realizedPairs = (vloPairs == null && employerPairs == null)
+    ? null
+    : Number(vloPairs ?? 0) + Number(employerPairs ?? 0);
   const outcomeConfidence = {
     k_min: K_MIN,
-    realized_offers: adoption.offers_real,
+    realized_pairs: realizedPairs,
+    by_source: { validation_loop_outcomes: vloPairs, employer_terminal_feeder: employerPairs },
+    realized_offers: adoption.offers_real, // coverage reference only (campus offers carry no decision-time prediction)
     measurable: false,
     verdict: 'ABSTAIN',
-    note: 'Realized predicted→outcome pairs below k_min (or absent); outcome confidence is not measurable. Never coerced to a score.',
+    note: 'Realized {prediction,outcome} pairs below k_min (or absent); outcome confidence is not measurable. Never coerced to a score.',
   };
-  if (typeof adoption.offers_real === 'number' && adoption.offers_real >= K_MIN) {
+  if (typeof realizedPairs === 'number' && realizedPairs >= K_MIN) {
     outcomeConfidence.measurable = true; outcomeConfidence.verdict = 'MEASURABLE';
-    outcomeConfidence.note = 'Realized offers ≥ k_min — outcome confidence can be computed by the validation-loop/employer-tig calibration surfaces (not recomputed here).';
+    outcomeConfidence.note = `Realized pairs (${realizedPairs}) ≥ k_min — outcome confidence can be computed by the validation-loop/employer-tig calibration surfaces (not recomputed here).`;
+  } else if (typeof realizedPairs === 'number' && realizedPairs > 0) {
+    outcomeConfidence.note = `Realized pairs (${realizedPairs}/${K_MIN}) below k_min — outcome confidence ABSTAINS; approaching measurable as non-demo pairs accrue. Never coerced to a score.`;
   }
 
   // ── Verdict (STRUCTURAL-only; axes reported separately, NEVER composited) ──────────────────
@@ -230,7 +256,7 @@ ${cert.meta.doctrine}
 - **Production-ready:** ❌ NO (withheld by design until A→I merged+activated and outcome confidence measurable).
 - **Structural:** ${structuralVerdict}
 - **Activation (live workflow):** ${activatedCount}/${PHASES.length} A→I phases report \`enabled:true\` on the running Backend API.
-- **Outcome confidence:** ${outcomeConfidence.verdict} (realized offers=${outcomeConfidence.realized_offers ?? 'null'}, k_min=${K_MIN}).
+- **Outcome confidence:** ${outcomeConfidence.verdict} (realized {prediction,outcome} pairs=${outcomeConfidence.realized_pairs ?? 'null'} [vlo=${vloPairs ?? 'null'} + employer=${employerPairs ?? 'null'}], realized offers=${outcomeConfidence.realized_offers ?? 'null'}, k_min=${K_MIN}).
 
 > The four axes above are reported **separately and never combined into a single score.** A high structural number does not imply activation or outcome confidence.
 

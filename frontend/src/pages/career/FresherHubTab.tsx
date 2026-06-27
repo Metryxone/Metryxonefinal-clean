@@ -1,5 +1,5 @@
 import { BRAND } from '@/design-system/tokens';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   GraduationCap, Building2, Code, BookOpen, CheckSquare, Square, Plus, X,
   Github, ExternalLink, ChevronDown, ChevronUp, Star, Trophy, Zap,
@@ -306,13 +306,12 @@ function CampusDriveTracker({ drives, setDrives }: { drives: CampusDrive[]; setD
       updated = [{ ...form, id: uid() }, ...drives];
     }
     setDrives(updated);
-    lsSet(LS_DRIVES, updated);
     setShowForm(false); setEditing(null); setForm(BLANK_DRIVE);
   };
 
   const del = (id: string) => {
     const updated = drives.filter(d => d.id !== id);
-    setDrives(updated); lsSet(LS_DRIVES, updated);
+    setDrives(updated);
   };
 
   const advanceStage = (id: string) => {
@@ -323,7 +322,7 @@ function CampusDriveTracker({ drives, setDrives }: { drives: CampusDrive[]; setD
       const status: DriveStatus = next === 'Offer' ? 'Selected' : next === 'Rejected' ? 'Rejected' : 'Active';
       return { ...d, currentStage: next, status };
     });
-    setDrives(updated); lsSet(LS_DRIVES, updated);
+    setDrives(updated);
   };
 
   const visible = filterStatus === 'All' ? drives : drives.filter(d => d.status === filterStatus);
@@ -491,18 +490,18 @@ function ProjectPortfolio({ projects, setProjects }: { projects: Project[]; setP
     } else {
       updated = [{ ...form, id: uid() }, ...projects];
     }
-    setProjects(updated); lsSet(LS_PROJECTS, updated);
+    setProjects(updated);
     setShowForm(false); setEditing(null); setForm(BLANK_PROJECT);
   };
 
   const del = (id: string) => {
     const updated = projects.filter(p => p.id !== id);
-    setProjects(updated); lsSet(LS_PROJECTS, updated);
+    setProjects(updated);
   };
 
   const toggleFeatured = (id: string) => {
     const updated = projects.map(p => p.id === id ? { ...p, featured: !p.featured } : p);
-    setProjects(updated); lsSet(LS_PROJECTS, updated);
+    setProjects(updated);
   };
 
   const startEdit = (p: Project) => {
@@ -797,14 +796,10 @@ function AptitudePrepHub() {
 // FIRST JOB GUIDE
 // ══════════════════════════════════════════════════════════════════════════════
 
-function FirstJobGuide() {
+function FirstJobGuide({ checkedItems, onToggle }: { checkedItems: Record<string, boolean>; onToggle: (key: string) => void }) {
   const [openSection, setOpenSection]   = useState<string | null>('pre-joining');
-  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>(() => ls(LS_CHECKLIST, {}));
 
-  const toggleItem = (key: string) => {
-    const updated = { ...checkedItems, [key]: !checkedItems[key] };
-    setCheckedItems(updated); lsSet(LS_CHECKLIST, updated);
-  };
+  const toggleItem = (key: string) => onToggle(key);
 
   const totalItems  = GUIDE_SECTIONS.reduce((s, sec) => s + sec.items.length, 0);
   const doneItems   = GUIDE_SECTIONS.reduce((s, sec) => s + sec.items.filter((_, i) => checkedItems[`${sec.id}-${i}`]).length, 0);
@@ -895,8 +890,81 @@ interface FresherHubTabProps {
 
 export function FresherHubTab({ profile, title }: FresherHubTabProps) {
   const [subTab, setSubTab]     = useState<FresherSubTab>('readiness');
-  const [drives, setDrives]     = useState<CampusDrive[]>(() => ls(LS_DRIVES, []));
-  const [projects, setProjects] = useState<Project[]>(() => ls(LS_PROJECTS, []));
+  // Seed instantly from the device-local cache, then reconcile with the
+  // account-level copy once the MX-302C tracker surface resolves (below).
+  const [drives, setDrives]       = useState<CampusDrive[]>(() => ls(LS_DRIVES, []));
+  const [projects, setProjects]   = useState<Project[]>(() => ls(LS_PROJECTS, []));
+  const [checklist, setChecklist] = useState<Record<string, boolean>>(() => ls(LS_CHECKLIST, {}));
+  // Whether the launchpad-dashboard tracker surface is available (flag ON). When
+  // OFF every write stays byte-identical (localStorage only).
+  const serverEnabled = useRef(false);
+
+  // PUT a slice of the tracker to the seeker's account (best-effort; the
+  // localStorage copy is always the offline fallback so nothing is ever lost).
+  const persistTracker = (patch: { drives?: CampusDrive[]; projects?: Project[]; checklist?: Record<string, boolean> }) => {
+    if (!serverEnabled.current) return;
+    fetch('/api/launchpad-dashboard/tracker', {
+      method: 'PUT',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(patch),
+    }).catch(() => {});
+  };
+
+  const commitDrives = (updated: CampusDrive[]) => {
+    setDrives(updated); lsSet(LS_DRIVES, updated); persistTracker({ drives: updated });
+  };
+  const commitProjects = (updated: Project[]) => {
+    setProjects(updated); lsSet(LS_PROJECTS, updated); persistTracker({ projects: updated });
+  };
+  const commitChecklistItem = (key: string) => {
+    const updated = { ...checklist, [key]: !checklist[key] };
+    setChecklist(updated); lsSet(LS_CHECKLIST, updated); persistTracker({ checklist: updated });
+  };
+
+  // ── MX-302C: load the account-level tracker so campus drives / projects /
+  //    first-job checklist follow the student across devices. Flag-OFF (503) or
+  //    any failure → silently keep the localStorage copy (byte-identical). When
+  //    the account is empty but this device has local data, migrate it up once. ──
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const probe = await fetch('/api/launchpad-dashboard/enabled', { credentials: 'include' });
+        const pj = probe.ok ? await probe.json().catch(() => null) : null;
+        const enabled = !!pj?.enabled;
+        if (!alive) return;
+        serverEnabled.current = enabled;
+        if (!enabled) return; // byte-identical: localStorage only
+
+        const r = await fetch('/api/launchpad-dashboard/tracker', { credentials: 'include' });
+        if (!alive || !r.ok) return;
+        const d = await r.json().catch(() => null);
+        if (!alive || !d?.ok || d.has_profile !== true) return;
+
+        const sDrives = Array.isArray(d.drives) ? d.drives as CampusDrive[] : [];
+        const sProjects = Array.isArray(d.projects) ? d.projects as Project[] : [];
+        const sChecklist = (d.checklist && typeof d.checklist === 'object') ? d.checklist as Record<string, boolean> : {};
+        const serverHasData = sDrives.length > 0 || sProjects.length > 0 || Object.keys(sChecklist).length > 0;
+
+        if (serverHasData) {
+          // Account is the source of truth — adopt it and refresh the cache.
+          setDrives(sDrives); setProjects(sProjects); setChecklist(sChecklist);
+          lsSet(LS_DRIVES, sDrives); lsSet(LS_PROJECTS, sProjects); lsSet(LS_CHECKLIST, sChecklist);
+        } else {
+          // Empty account: lift any device-local data up so it's no longer device-bound.
+          const lDrives = ls<CampusDrive[]>(LS_DRIVES, []);
+          const lProjects = ls<Project[]>(LS_PROJECTS, []);
+          const lChecklist = ls<Record<string, boolean>>(LS_CHECKLIST, {});
+          if (lDrives.length || lProjects.length || Object.keys(lChecklist).length) {
+            persistTracker({ drives: lDrives, projects: lProjects, checklist: lChecklist });
+          }
+        }
+      } catch { /* keep localStorage copy */ }
+    })();
+    return () => { alive = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="space-y-0">
@@ -929,10 +997,10 @@ export function FresherHubTab({ profile, title }: FresherHubTabProps) {
 
       {/* Sub-tab content */}
       {subTab === 'readiness' && <ReadinessScore profile={profile} drives={drives} projects={projects} />}
-      {subTab === 'drives'    && <CampusDriveTracker drives={drives} setDrives={setDrives} />}
-      {subTab === 'projects'  && <ProjectPortfolio projects={projects} setProjects={setProjects} />}
+      {subTab === 'drives'    && <CampusDriveTracker drives={drives} setDrives={commitDrives} />}
+      {subTab === 'projects'  && <ProjectPortfolio projects={projects} setProjects={commitProjects} />}
       {subTab === 'aptitude'  && <AptitudePrepHub />}
-      {subTab === 'guide'     && <FirstJobGuide />}
+      {subTab === 'guide'     && <FirstJobGuide checkedItems={checklist} onToggle={commitChecklistItem} />}
     </div>
   );
 }

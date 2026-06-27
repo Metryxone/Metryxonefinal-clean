@@ -43,8 +43,12 @@ function selfId(req: Request): string | null {
  */
 function readinessChecks(profile: any): Array<{ key: string; label: string; done: boolean; pts: number }> {
   const p = profile && typeof profile === 'object' ? profile : {};
-  const drives = Array.isArray(p.drives) ? p.drives : [];
-  const projects = Array.isArray(p.projects) ? p.projects : [];
+  // Campus-drive / project tracking is persisted under the device-independent
+  // `fresherHub` namespace (PUT /tracker). Fall back to any legacy top-level
+  // fields so existing rows stay byte-identical until they're re-saved.
+  const fh = (p.fresherHub && typeof p.fresherHub === 'object') ? p.fresherHub : {};
+  const drives = Array.isArray(fh.drives) ? fh.drives : (Array.isArray(p.drives) ? p.drives : []);
+  const projects = Array.isArray(fh.projects) ? fh.projects : (Array.isArray(p.projects) ? p.projects : []);
   return [
     { key: 'photo',       label: 'Add a profile photo',           done: !!p.photo,                                       pts: 5 },
     { key: 'education',   label: 'Fill your education section',    done: Array.isArray(p.education) && p.education.length > 0, pts: 15 },
@@ -164,6 +168,115 @@ export function registerLaunchpadDashboardRoutes(app: Express, pool: Pool, requi
         widgets: null,
         note: 'Summary temporarily unavailable (degraded, not fabricated).',
       });
+    }
+  });
+
+  // ── Tracker: device-independent persistence of the Fresher toolkit's campus
+  //    drives / project portfolio / first-job checklist. Stored under the
+  //    seeker's OWN profile JSONB (`data.fresherHub`) so they appear on every
+  //    device. Self principal only (resolved server-side) — no IDOR surface.
+  //    Gated: flag-OFF → 503 before any auth/DB touch (byte-identical; the client
+  //    falls back to localStorage). Never fabricates: absent profile → honest
+  //    nulls (null ≠ 0); never throws. ──
+  const FRESHER_KEY = 'fresherHub';
+
+  app.get(`${BASE}/tracker`, gate, requireAuth, async (req, res) => {
+    const uid = selfId(req);
+    if (!uid) return res.status(401).json({ ok: false, message: 'Unauthorized' });
+
+    try {
+      const reg = await pool.query("SELECT to_regclass('public.career_seeker_profiles') AS t");
+      if (!reg.rows[0]?.t) {
+        return res.json({
+          ok: true, subject: uid, has_profile: false,
+          drives: null, projects: null, checklist: null,
+          note: 'No career profile substrate present — honest empty state.',
+        });
+      }
+
+      const r = await pool.query(
+        'SELECT data FROM career_seeker_profiles WHERE user_id = $1 LIMIT 1',
+        [uid],
+      );
+      const data = r.rows[0]?.data ?? null;
+      if (data == null || typeof data !== 'object') {
+        return res.json({
+          ok: true, subject: uid, has_profile: false,
+          drives: null, projects: null, checklist: null,
+          note: 'No profile for this user yet — null ≠ 0.',
+        });
+      }
+
+      const fh = (data[FRESHER_KEY] && typeof data[FRESHER_KEY] === 'object') ? data[FRESHER_KEY] : {};
+      return res.json({
+        ok: true,
+        subject: uid,
+        has_profile: true,
+        drives: Array.isArray(fh.drives) ? fh.drives : [],
+        projects: Array.isArray(fh.projects) ? fh.projects : [],
+        checklist: (fh.checklist && typeof fh.checklist === 'object' && !Array.isArray(fh.checklist)) ? fh.checklist : {},
+      });
+    } catch {
+      return res.json({
+        ok: true, degraded: true, subject: uid, has_profile: null,
+        drives: null, projects: null, checklist: null,
+        note: 'Tracker temporarily unavailable (degraded, not fabricated).',
+      });
+    }
+  });
+
+  app.put(`${BASE}/tracker`, gate, requireAuth, async (req, res) => {
+    const uid = selfId(req);
+    if (!uid) return res.status(401).json({ ok: false, message: 'Unauthorized' });
+
+    const body = (req.body && typeof req.body === 'object') ? req.body : {};
+    // Only accept the three tracked slices; never let the client reshape the
+    // rest of the profile through this surface.
+    const patch: Record<string, unknown> = {};
+    if (Array.isArray(body.drives)) patch.drives = body.drives;
+    if (Array.isArray(body.projects)) patch.projects = body.projects;
+    if (body.checklist && typeof body.checklist === 'object' && !Array.isArray(body.checklist)) patch.checklist = body.checklist;
+    if (Object.keys(patch).length === 0) {
+      return res.status(400).json({ ok: false, message: 'Nothing to persist (expected drives[], projects[] and/or checklist{}).' });
+    }
+
+    try {
+      const reg = await pool.query("SELECT to_regclass('public.career_seeker_profiles') AS t");
+      if (!reg.rows[0]?.t) {
+        return res.status(409).json({ ok: false, message: 'No career profile substrate present.' });
+      }
+
+      const r = await pool.query(
+        'SELECT data FROM career_seeker_profiles WHERE user_id = $1 LIMIT 1',
+        [uid],
+      );
+      const existing = r.rows[0]?.data;
+      if (existing == null || typeof existing !== 'object') {
+        // Honest: the profile is created/seeded by the profile surface, not here.
+        // The client keeps its localStorage copy so nothing is lost.
+        return res.status(409).json({ ok: false, message: 'No profile for this user yet — open your profile first.' });
+      }
+
+      const prevFh = (existing[FRESHER_KEY] && typeof existing[FRESHER_KEY] === 'object') ? existing[FRESHER_KEY] : {};
+      const nextFh = { ...prevFh, ...patch };
+      const nextData = { ...existing, [FRESHER_KEY]: nextFh };
+
+      await pool.query(
+        'UPDATE career_seeker_profiles SET data = $1::jsonb, updated_at = NOW() WHERE user_id = $2',
+        [JSON.stringify(nextData), uid],
+      );
+
+      return res.json({
+        ok: true,
+        subject: uid,
+        saved: {
+          drives: Array.isArray(nextFh.drives) ? nextFh.drives.length : 0,
+          projects: Array.isArray(nextFh.projects) ? nextFh.projects.length : 0,
+          checklist_items: (nextFh.checklist && typeof nextFh.checklist === 'object') ? Object.keys(nextFh.checklist).length : 0,
+        },
+      });
+    } catch {
+      return res.status(500).json({ ok: false, message: 'Failed to persist tracker.' });
     }
   });
 

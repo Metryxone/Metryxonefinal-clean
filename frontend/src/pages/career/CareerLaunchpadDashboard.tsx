@@ -16,8 +16,13 @@
  * data (null ≠ 0); no fabricated scores. The Daily AI Brief degrades honestly to
  * a deterministic rule-based brief (inherited from MX-302B), always labelled.
  *
- * Device-local note: the Campus-Drive / Project / checklist state still lives in
- * localStorage (carry-over from FresherHubTab); the widgets that read it say so.
+ * Device-independence (MX-302C): the Campus-Drive / Project tracker is persisted
+ * to the student's account (GET /api/launchpad-dashboard/tracker) when the flag
+ * is ON, so the Career Timeline / Placement / Internship widgets follow them
+ * across devices. Flag-OFF or no account data → honest fall-back to the
+ * device-local localStorage copy (byte-identical legacy). The readiness
+ * checklist ITEM list is sourced from the server `/summary` `readiness.checks`
+ * when synced, with a local fall-back otherwise.
  */
 import React, { useEffect, useMemo, useState } from 'react';
 import {
@@ -106,6 +111,15 @@ function readinessChecks(profile: any, drives: Drive[], projects: Project[]) {
   ];
 }
 
+// Maps the server readiness-check `key` (routes/launchpad-dashboard.ts
+// readinessChecks) back to the deep-link tab so server-sourced items navigate
+// the same way the local checklist does.
+const CHECK_TAB: Record<string, string> = {
+  photo: 'profile', education: 'profile', skills: 'skills', resume: 'resume',
+  assessment: 'assessment', drives: 'fresher-hub', projects: 'fresher-hub',
+  goal: 'profile', linkedin: 'profile', github: 'profile',
+};
+
 // Honest, transparent resume-readiness from concrete profile fields (no ATS
 // score is computed client-side — this is a deterministic completeness derived
 // from real CV fields, never a fabricated number).
@@ -171,8 +185,14 @@ export default function CareerLaunchpadDashboard({
   // it stays byte-identical to legacy (posts to /api/career-launchpad/telemetry).
   const [phaseEnabled, setPhaseEnabled] = useState<boolean | null>(null);
 
-  const drives = ls<Drive[]>(LS_DRIVES, []);
-  const projects = ls<Project[]>(LS_PROJECTS, []);
+  // Campus-drive / project tracker. Seeded from the device-local cache, then
+  // reconciled with the student's account copy when the flag is ON (below) so the
+  // Career Timeline / Placement / Internship widgets follow them across devices.
+  const [drives, setDrives] = useState<Drive[]>(() => ls<Drive[]>(LS_DRIVES, []));
+  const [projects, setProjects] = useState<Project[]>(() => ls<Project[]>(LS_PROJECTS, []));
+  // True once the tracker has been adopted from the account (drives/projects are
+  // device-independent); drives the "synced" vs "on this device" widget notes.
+  const [trackerSynced, setTrackerSynced] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -185,6 +205,23 @@ export default function CareerLaunchpadDashboard({
         const probeJson = probe.ok ? await probe.json().catch(() => null) : null;
         setPhaseEnabled(!!probeJson?.enabled);
         if (!probeJson?.enabled) { setSummaryState('local'); return; }
+
+        // Load the account-level tracker so the drive/project widgets are
+        // device-independent. Account data → adopt it; empty/absent → keep the
+        // local cache (null ≠ 0; never fabricate).
+        try {
+          const tr = await fetch('/api/launchpad-dashboard/tracker', { credentials: 'include' });
+          if (alive && tr.ok) {
+            const td = await tr.json().catch(() => null);
+            if (td?.ok && td.has_profile === true) {
+              const sDrives = Array.isArray(td.drives) ? td.drives as Drive[] : [];
+              const sProjects = Array.isArray(td.projects) ? td.projects as Project[] : [];
+              setDrives(sDrives);
+              setProjects(sProjects);
+              setTrackerSynced(true);
+            }
+          }
+        } catch { /* keep local cache */ }
 
         const r = await fetch('/api/launchpad-dashboard/summary', { credentials: 'include' });
         if (!alive) return;
@@ -204,6 +241,18 @@ export default function CareerLaunchpadDashboard({
     })();
     return () => { alive = false; };
   }, [userId]);
+
+  // ── Effective readiness checklist — server `readiness.checks` (device-
+  //    independent) when the summary synced, else the device-local computation.
+  //    The server check `key` is mapped back to a deep-link tab for navigation. ──
+  const effectiveChecks = useMemo(() => {
+    if (summaryState === 'server' && summary?.readiness?.checks?.length) {
+      return summary.readiness.checks.map((c) => ({
+        label: c.label, done: c.done, pts: c.pts, tab: CHECK_TAB[c.key] ?? 'profile',
+      }));
+    }
+    return readinessChecks(profile, drives, projects);
+  }, [summaryState, summary, profile, drives, projects]);
 
   // ── Daily AI Brief / Recommendations / Weekly Goals from MX-302B (best-effort).
   // If the careerDiscovery flag is OFF (503) or unauthenticated, we degrade to the
@@ -387,7 +436,7 @@ export default function CareerLaunchpadDashboard({
         <p className="text-[11px] text-gray-500 mt-2">{earned} of {total} points · {remaining} item{remaining !== 1 ? 's' : ''} left</p>
         {useServer && (
           <p className="text-[10px] text-gray-400 mt-1 flex items-center gap-1">
-            <Info size={10} /> Synced from your saved profile — consistent across every device. Campus-drive &amp; project tracking still lives on this device.
+            <Info size={10} /> Synced from your saved profile — consistent across every device.{trackerSynced ? ' Campus-drive & project tracking is saved to your account too.' : ' Campus-drive & project tracking still lives on this device.'}
           </p>
         )}
         <CtaLink label="Open readiness checklist" onClick={() => setView('toolkit')} />
@@ -458,7 +507,7 @@ export default function CareerLaunchpadDashboard({
       <SectionCard title="Career Timeline" icon={<CalendarClock size={16} />}>
         {events.length === 0 ? (
           <EmptyState icon={<CalendarClock size={28} />} title="No milestones yet"
-            description="Tracked campus drives appear here as a chronology. This data is stored on this device."
+            description={trackerSynced ? "Tracked campus drives appear here as a chronology. Saved to your account — available on every device." : "Tracked campus drives appear here as a chronology. This data is stored on this device."}
             action={<CtaLink label="Track a drive" onClick={() => setView('toolkit')} />} />
         ) : (
           <ul className="space-y-2.5">
@@ -649,7 +698,7 @@ export default function CareerLaunchpadDashboard({
 
   // 13 — Upcoming Tasks — readiness checklist gaps + job-tracker pipeline.
   const UpcomingTasks = () => {
-    const pending = readinessChecks(profile, drives, projects).filter((c) => !c.done).slice(0, 5);
+    const pending = effectiveChecks.filter((c) => !c.done).slice(0, 5);
     const tasks: { label: string; tab: string }[] = [...pending.map((c) => ({ label: c.label, tab: c.tab }))];
     if (openJobs > 0) tasks.unshift({ label: `Follow up on ${openJobs} active application${openJobs !== 1 ? 's' : ''}`, tab: 'jobs' });
     return (
@@ -680,7 +729,7 @@ export default function CareerLaunchpadDashboard({
       <SectionCard title="Internship Progress" icon={<GraduationCap size={16} />}>
         {internships.length === 0 ? (
           <EmptyState icon={<GraduationCap size={28} />} title="No internships logged"
-            description="Add internship projects to your portfolio to track them here. Stored on this device."
+            description={trackerSynced ? "Add internship projects to your portfolio to track them here. Saved to your account — available on every device." : "Add internship projects to your portfolio to track them here. Stored on this device."}
             action={<CtaLink label="Add internship" onClick={() => setView('toolkit')} />} />
         ) : (
           <div>
@@ -707,7 +756,7 @@ export default function CareerLaunchpadDashboard({
       <SectionCard title="Placement Progress" icon={<Briefcase size={16} />}>
         {drives.length === 0 ? (
           <EmptyState icon={<Briefcase size={28} />} title="No drives tracked"
-            description="Track your campus drives to see your placement pipeline. Stored on this device."
+            description={trackerSynced ? "Track your campus drives to see your placement pipeline. Saved to your account — available on every device." : "Track your campus drives to see your placement pipeline. Stored on this device."}
             action={<CtaLink label="Track a drive" onClick={() => setView('toolkit')} />} />
         ) : (
           <div className="grid grid-cols-3 gap-2">

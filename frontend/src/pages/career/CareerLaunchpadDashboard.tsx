@@ -165,6 +165,11 @@ export default function CareerLaunchpadDashboard({
   //    summary endpoint is never called. ──
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [summaryState, setSummaryState] = useState<'loading' | 'server' | 'local'>('loading');
+  // MX-302C phase-flag state (launchpadDashboard / FF_LAUNCHPAD_DASHBOARD). null
+  // until the /enabled probe resolves. When true, the render telemetry is posted
+  // to THIS phase's own surface (/api/launchpad-dashboard/telemetry); when false
+  // it stays byte-identical to legacy (posts to /api/career-launchpad/telemetry).
+  const [phaseEnabled, setPhaseEnabled] = useState<boolean | null>(null);
 
   const drives = ls<Drive[]>(LS_DRIVES, []);
   const projects = ls<Project[]>(LS_PROJECTS, []);
@@ -178,6 +183,7 @@ export default function CareerLaunchpadDashboard({
         const probe = await fetch('/api/launchpad-dashboard/enabled', { credentials: 'include' });
         if (!alive) return;
         const probeJson = probe.ok ? await probe.json().catch(() => null) : null;
+        setPhaseEnabled(!!probeJson?.enabled);
         if (!probeJson?.enabled) { setSummaryState('local'); return; }
 
         const r = await fetch('/api/launchpad-dashboard/summary', { credentials: 'include' });
@@ -193,7 +199,7 @@ export default function CareerLaunchpadDashboard({
           setSummaryState('local');
         }
       } catch {
-        if (alive) setSummaryState('local');
+        if (alive) { setPhaseEnabled(false); setSummaryState('local'); }
       }
     })();
     return () => { alive = false; };
@@ -282,11 +288,23 @@ export default function CareerLaunchpadDashboard({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile, brain, eiScore, hasAssessment, openJobs, guidance, guidanceState, recommendationCards, hasWeeklyGoals]);
 
+  // Fire the render telemetry exactly once, after BOTH the guidance snapshot has
+  // resolved (so the availability map is complete) AND the MX-302C phase-flag
+  // probe has resolved (so we know which surface to post to). When the
+  // launchpadDashboard flag is ON the telemetry goes to this phase's OWN surface
+  // (/api/launchpad-dashboard/telemetry); when OFF it stays byte-identical to the
+  // legacy MX-302A/B path (/api/career-launchpad/telemetry). Both are gated +
+  // metadata-only (counts + boolean availability map; never user content).
+  const telemetrySent = React.useRef(false);
   useEffect(() => {
-    // Fire once guidance has resolved so the availability snapshot is complete.
-    if (guidanceState === 'loading') return;
+    if (telemetrySent.current) return;
+    if (guidanceState === 'loading' || phaseEnabled === null) return;
+    telemetrySent.current = true;
     const available = Object.values(widgetAvailability).filter(Boolean).length;
-    fetch('/api/career-launchpad/telemetry', {
+    const endpoint = phaseEnabled
+      ? '/api/launchpad-dashboard/telemetry'
+      : '/api/career-launchpad/telemetry';
+    fetch(endpoint, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -299,7 +317,7 @@ export default function CareerLaunchpadDashboard({
       }),
     }).catch(() => {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [guidanceState]);
+  }, [guidanceState, phaseEnabled]);
 
   // ════════════════════════════════════════════════════════════════════════
   // WIDGETS

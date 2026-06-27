@@ -1,5 +1,6 @@
 import { createRoot } from "react-dom/client";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { GlobalErrorBoundary } from "./components/GlobalErrorBoundary";
 import App from "./App.tsx";
 import "./styles/tailwind-built.css";
 import "./lib/i18n";
@@ -12,7 +13,9 @@ installCsrfFetch();
 void ensureCsrfToken();
 
 createRoot(document.getElementById("root")!).render(
-  <ThemeProvider>
-    <App />
-  </ThemeProvider>
+  <GlobalErrorBoundary>
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
+  </GlobalErrorBoundary>
 );

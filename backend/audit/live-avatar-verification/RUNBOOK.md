@@ -129,17 +129,27 @@ Run **one full interview** in the Employer Portal → candidate → AI Voice Scr
 
 ## Sign-off
 
+Each verification attempt and its honest outcome is recorded in
+`VERIFICATION-LOG.md` (dated). The latest observed state is below.
+
 | Criterion | Verified? | Notes |
 | --- | --- | --- |
-| Server seams (Part A, positive) | ☐ | harness 4/4 with keys |
-| B1 greet + authored order | ☐ | |
-| B2 ≤1 follow-up | ☐ | |
-| B3 off-topic redirect | ☐ | |
-| B4 closing | ☐ | |
-| B5 recording + transcript (survives refresh) | ☐ | |
-| B6 5-dim score + honest abstain | ☐ | |
-| B7 max-duration cap → scored report | ☐ | |
-| B8 End & Score → scored report | ☐ | |
+| Server seams (Part A, **degradation**, no keys) | ✅ 2026-06-27 | harness 4/4 in DEGRADATION mode — honest no-op confirmed (no fabricated token/session/answer) |
+| Server seams (Part A, **positive**, with keys) | ❌ NOT VERIFIED | requires real paid HeyGen + OpenAI keys (absent); cannot be procured by an agent |
+| B1 greet + authored order | ❌ NOT VERIFIED | needs a human at a webcam + mic driving live WebRTC |
+| B2 ≤1 follow-up | ❌ NOT VERIFIED | needs live browser interview |
+| B3 off-topic redirect | ❌ NOT VERIFIED | needs live browser interview |
+| B4 closing | ❌ NOT VERIFIED | needs live browser interview |
+| B5 recording + transcript (survives refresh) | ❌ NOT VERIFIED | needs live browser interview |
+| B6 5-dim score + honest abstain | ❌ NOT VERIFIED | needs live browser interview |
+| B7 max-duration cap → scored report | ❌ NOT VERIFIED | needs live browser interview |
+| B8 End & Score → scored report | ❌ NOT VERIFIED | needs live browser interview |
 
 Launch only when **every** row is checked and notes record what was actually observed.
 Any unobservable row stays **NOT VERIFIED** — do not assume.
+
+> ⚠️ As of 2026-06-27 this feature is **NOT launch-ready**: only the automatable
+> degradation seams have been observed. The positive harness run and the full live
+> browser interview (B1–B8) are deferred to a human with paid HeyGen Interactive /
+> Streaming Avatar keys + an OpenAI key and a webcam + mic. See the "Prerequisites"
+> section above and `VERIFICATION-LOG.md`.

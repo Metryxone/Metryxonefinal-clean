@@ -1417,7 +1417,7 @@ function CompetencyRingWidget({ onNavigate }: { onNavigate: (s: string) => void 
   );
 }
 
-function DashboardTab({ profile, loading, eiScore, eiBreakdown, jobs, goals, onTabChange, onNavigate, onOpenWizard, userId }: {
+export function DashboardTab({ profile, loading, eiScore, eiBreakdown, jobs, goals, onTabChange, onNavigate, onOpenWizard, userId, launchpadEnabled }: {
   profile: any; loading: boolean; eiScore: number;
   eiBreakdown: { total: number; components: EIComponent[] };
   jobs: JobApp[]; goals: CareerGoal[];

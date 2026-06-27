@@ -1333,6 +1333,20 @@ export const FEATURE_FLAGS = {
    *  employer_id = orgId/user.id). Env: `FF_VOICE_SCREENING`. */
   voiceScreening: false,
 
+  /** AVATAR INTERVIEW (Option A) — additive presentation + video-capture layer on top of
+   *  the (separately flagged) VOICE SCREENING feature. When ON, an AI avatar (HeyGen) speaks
+   *  each authored screening question to the candidate as a pre-rendered talking-head video,
+   *  and the candidate records a WEBCAM VIDEO answer. The audio track still flows through the
+   *  EXISTING Whisper STT + 5-dimension rubric scorer — the avatar layer adds presentation +
+   *  video review, it NEVER invents transcripts or scores. Strictly additive + flag-gated: OFF
+   *  → every avatar route 503s BEFORE any auth/DB/AI touch and NO avatar tables are created
+   *  (the existing voice-screening schema/endpoints are byte-identical regardless of this
+   *  flag). Honest-by-construction: if HeyGen is not configured the avatar endpoints return a
+   *  clear 503 (honest "not configured") rather than fabricating a video. Avatar tables and
+   *  captured candidate videos are employer-scoped (IDOR-safe via employer_id = orgId/user.id).
+   *  Env: `FF_AVATAR_INTERVIEW`. */
+  avatarInterview: false,
+
   /** PHASE 5.14 — Notifications & Workflows. A PURE READ / compose-never-recompute layer that DERIVES
    *  operational notification items (Job / Application / Interview / Offer / Employer / Recruiter
    *  alerts + Status Changes), workflow next-actions, and message previews from operator-recorded
@@ -2239,6 +2253,10 @@ export function isPlatformCompletionEnabled(): boolean {
 
 export function isVoiceScreeningEnabled(): boolean {
   return isFlagEnabled('voiceScreening');
+}
+
+export function isAvatarInterviewEnabled(): boolean {
+  return isFlagEnabled('avatarInterview');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

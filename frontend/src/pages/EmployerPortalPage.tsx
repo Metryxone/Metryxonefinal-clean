@@ -5328,12 +5328,15 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
     answeredCount: number;
     questionCount: number;
     provenance: string;
+    channel: string;
   }
   interface BankQuestion { id: string; question: string; category: string; difficulty: string; dimension?: string; }
+  interface AvatarVid { status: string; url: string | null; error: string | null; }
   interface ScreenSession {
     candidateId: string;
     candidateName: string;
     phase: 'preview' | 'recording';
+    mode: 'audio' | 'avatar';
     sessionId: string | null;
     questions: BankQuestion[];
     loading: boolean;
@@ -5344,6 +5347,9 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
     uploading: boolean;
     finalizing: boolean;
     error: string | null;
+    avatarVideos: Record<number, AvatarVid>;
+    avatarLoadingVideos: boolean;
+    avatarMsg: string | null;
   }
 
   const [feature, setFeature] = useState<{ loading: boolean; enabled: boolean; aiReady: boolean }>({ loading: true, enabled: false, aiReady: false });
@@ -5356,12 +5362,20 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
   const [activeCallId, setActiveCallId] = useState<string | null>(null);
   const [session, setSession] = useState<ScreenSession | null>(null);
   const [phone, setPhone] = useState<{ loading: boolean; connected: boolean; message: string }>({ loading: true, connected: false, message: '' });
+  // ── Avatar (video interview) — separate honest probe; recording still needs AI ──
+  const [avatar, setAvatar] = useState<{ loading: boolean; enabled: boolean; configured: boolean; message: string }>({ loading: true, enabled: false, configured: false, message: '' });
+  const [avatarAnswers, setAvatarAnswers] = useState<Record<string, { answerId: string; questionIndex: number; questionText: string; transcript: string | null; hasVideo: boolean }[]>>({});
+  const [avatarSessionIds, setAvatarSessionIds] = useState<Record<string, string>>({});
+  const [answerVideoUrls, setAnswerVideoUrls] = useState<Record<string, string>>({});
   const hydratedRef = useRef(false);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  const videoChunksRef = useRef<Blob[]>([]);
   const streamRef = useRef<MediaStream | null>(null);
   const recStartRef = useRef<number>(0);
+  const livePreviewRef = useRef<HTMLVideoElement | null>(null);
+  const avatarPollRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const DIM_COLOR: Record<string, string> = {
     communication_clarity: BRAND.primary,
@@ -5396,6 +5410,37 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
       }
     })();
     return () => { alive = false; };
+  }, []);
+
+  // ── Probe the (separately flag-gated) avatar video-interview layer ────────────
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const res = await fetch('/api/employer/voice-screening/avatar/enabled', { headers: authHdr() });
+        if (!alive) return;
+        if (res.ok) {
+          const d = await res.json();
+          setAvatar({ loading: false, enabled: !!d.enabled, configured: !!d.configured, message: d.message || '' });
+        } else {
+          setAvatar({ loading: false, enabled: false, configured: false, message: '' });
+        }
+      } catch {
+        if (alive) setAvatar({ loading: false, enabled: false, configured: false, message: '' });
+      }
+    })();
+    return () => { alive = false; };
+  }, []);
+
+  // Mirror the latest blob URLs into a ref so the unmount-only cleanup revokes the
+  // final set WITHOUT re-running on every change (which would revoke still-shown URLs).
+  const answerVideoUrlsRef = useRef<Record<string, string>>({});
+  useEffect(() => { answerVideoUrlsRef.current = answerVideoUrls; }, [answerVideoUrls]);
+
+  // ── Stop any in-flight avatar poll + release any object URLs on unmount ───────
+  useEffect(() => () => {
+    if (avatarPollRef.current) clearTimeout(avatarPollRef.current);
+    Object.values(answerVideoUrlsRef.current).forEach(u => { try { URL.revokeObjectURL(u); } catch { /* noop */ } });
   }, []);
 
   // ── Hydrate persisted state once enabled: honest phone-leg status + the latest
@@ -5433,8 +5478,12 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
             answeredCount: sess.answeredCount ?? 0,
             questionCount: sess.questionCount ?? 0,
             provenance: sess.provenance || '',
+            channel: sess.channel || 'browser',
           } }));
           setScreenStatus(s => ({ ...s, [id]: 'completed' }));
+          if (sess.channel === 'avatar' && sess._id) {
+            setAvatarSessionIds(m => ({ ...m, [id]: sess._id }));
+          }
           if (Array.isArray(sess.questions) && sess.questions.length) {
             setUsedQuestions(q => ({ ...q, [id]: sess.questions }));
           }
@@ -5445,8 +5494,8 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
   }, [feature.loading, feature.enabled, candidates]);
 
   // ── Open the question preview (real authored, role-tailored question set) ─────
-  const openPreview = async (c: Candidate) => {
-    setSession({ candidateId: c._id, candidateName: c.name, phase: 'preview', sessionId: null, questions: [], loading: true, starting: false, currentIndex: 0, transcripts: {}, recording: false, uploading: false, finalizing: false, error: null });
+  const openPreview = async (c: Candidate, mode: 'audio' | 'avatar' = 'audio') => {
+    setSession({ candidateId: c._id, candidateName: c.name, phase: 'preview', mode, sessionId: null, questions: [], loading: true, starting: false, currentIndex: 0, transcripts: {}, recording: false, uploading: false, finalizing: false, error: null, avatarVideos: {}, avatarLoadingVideos: false, avatarMsg: null });
     try {
       const params = new URLSearchParams({ candidateId: c._id });
       if (c.jobTitle) params.set('role', c.jobTitle);
@@ -5478,6 +5527,133 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
     } catch (e: any) {
       setSession(s => s ? { ...s, starting: false, error: e?.message || 'Could not start session' } : null);
     }
+  };
+
+  // ── Poll the avatar question-video renders until each is completed/failed ─────
+  const pollAvatarVideos = async (sessionId: string) => {
+    try {
+      const res = await fetch(`/api/employer/voice-screening/avatar/sessions/${sessionId}/videos`, { headers: authHdr() });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success && Array.isArray(data.videos)) {
+        const map: Record<number, AvatarVid> = {};
+        for (const v of data.videos) map[v.questionIndex] = { status: v.status, url: v.url, error: v.error };
+        const stillPending = data.videos.some((v: any) => v.status !== 'completed' && v.status !== 'failed');
+        setSession(s => (s && s.sessionId === sessionId) ? { ...s, avatarVideos: map, avatarLoadingVideos: stillPending } : s);
+        if (stillPending) avatarPollRef.current = setTimeout(() => { void pollAvatarVideos(sessionId); }, 5000);
+      } else {
+        setSession(s => (s && s.sessionId === sessionId) ? { ...s, avatarLoadingVideos: false } : s);
+      }
+    } catch {
+      avatarPollRef.current = setTimeout(() => { void pollAvatarVideos(sessionId); }, 8000);
+    }
+  };
+
+  // ── Start an avatar (video-interview) session, then kick off question renders ─
+  const beginAvatarInterview = async () => {
+    if (!session) return;
+    const cid = session.candidateId;
+    setSession(s => s ? { ...s, starting: true, error: null } : null);
+    try {
+      const res = await fetch('/api/employer/voice-screening/avatar/sessions', {
+        method: 'POST', headers: authHdr(), body: JSON.stringify({ candidateId: cid }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.message || 'Could not start avatar session');
+      const qs: BankQuestion[] = data.session?.questions?.length ? data.session.questions : session.questions;
+      const sid = data.session._id;
+      setUsedQuestions(q => ({ ...q, [cid]: qs }));
+      setScreenStatus(s => ({ ...s, [cid]: 'recording' }));
+      setActiveCallId(cid);
+      setSession(s => s ? { ...s, phase: 'recording', sessionId: sid, questions: qs, starting: false, currentIndex: 0, avatarLoadingVideos: true, avatarMsg: null } : null);
+      // Kick off the HeyGen renders (idempotent + cached server-side), then poll.
+      fetch(`/api/employer/voice-screening/avatar/sessions/${sid}/videos`, { method: 'POST', headers: authHdr() })
+        .then(async (r) => {
+          const d = await r.json().catch(() => ({}));
+          if (!r.ok) {
+            setSession(s => (s && s.sessionId === sid) ? { ...s, avatarMsg: d.message || (d.avatarUnavailable ? 'Avatar video is not configured.' : 'Avatar video generation failed.') } : s);
+          }
+        })
+        .catch(() => { /* poll will surface state */ })
+        .finally(() => { void pollAvatarVideos(sid); });
+    } catch (e: any) {
+      setSession(s => s ? { ...s, starting: false, error: e?.message || 'Could not start avatar session' } : null);
+    }
+  };
+
+  // ── Webcam (video + audio) capture for the avatar channel ────────────────────
+  const startVideoRec = async () => {
+    if (!session) return;
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      streamRef.current = stream;
+      if (livePreviewRef.current) {
+        livePreviewRef.current.srcObject = stream;
+        livePreviewRef.current.muted = true;
+        void livePreviewRef.current.play().catch(() => { /* autoplay guard */ });
+      }
+      videoChunksRef.current = [];
+      const mr = MediaRecorder.isTypeSupported('video/webm')
+        ? new MediaRecorder(stream, { mimeType: 'video/webm' })
+        : new MediaRecorder(stream);
+      mediaRecorderRef.current = mr;
+      mr.ondataavailable = (ev) => { if (ev.data && ev.data.size > 0) videoChunksRef.current.push(ev.data); };
+      mr.onstop = () => { void uploadVideoAnswer(); };
+      recStartRef.current = Date.now();
+      mr.start();
+      setSession(s => s ? { ...s, recording: true, error: null } : null);
+    } catch {
+      setSession(s => s ? { ...s, error: 'Camera/microphone access was blocked. Allow access to record a video answer.' } : null);
+    }
+  };
+
+  const uploadVideoAnswer = async () => {
+    const blob = new Blob(videoChunksRef.current, { type: videoChunksRef.current[0]?.type || 'video/webm' });
+    if (livePreviewRef.current) livePreviewRef.current.srcObject = null;
+    releaseStream();
+    setSession(curr => {
+      if (!curr || !curr.sessionId) return curr;
+      const idx = curr.currentIndex;
+      const q = curr.questions[idx];
+      const fd = new FormData();
+      fd.append('video', blob, `answer-${idx}.webm`);
+      fd.append('questionIndex', String(idx));
+      fd.append('questionId', q?.id || '');
+      fd.append('questionText', q?.question || '');
+      fd.append('durationMs', String(Date.now() - recStartRef.current));
+      fetch(`/api/employer/voice-screening/avatar/sessions/${curr.sessionId}/answers`, { method: 'POST', headers: tokenHdr(), body: fd })
+        .then(async (res) => {
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(data.message || (data.aiUnavailable ? 'AI transcription is not configured.' : 'Transcription failed'));
+          setSession(s => s ? { ...s, uploading: false, transcripts: { ...s.transcripts, [idx]: data.transcript || '' } } : null);
+        })
+        .catch((e) => {
+          setSession(s => s ? { ...s, uploading: false, error: e?.message || 'Transcription failed' } : null);
+        });
+      return { ...curr, uploading: true };
+    });
+  };
+
+  // ── Load + cache a stored candidate video answer (auth-gated → blob URL) ──────
+  const loadAnswerVideo = async (answerId: string) => {
+    if (answerVideoUrls[answerId]) return;
+    try {
+      const res = await fetch(`/api/employer/voice-screening/avatar/answers/${answerId}/video`, { headers: tokenHdr() });
+      if (!res.ok) return;
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      setAnswerVideoUrls(m => ({ ...m, [answerId]: url }));
+    } catch { /* playback is best-effort */ }
+  };
+
+  // ── Fetch the stored avatar answers (transcripts + which have video) ──────────
+  const loadAvatarAnswers = async (cid: string, sessionId: string) => {
+    try {
+      const res = await fetch(`/api/employer/voice-screening/avatar/sessions/${sessionId}/answers`, { headers: authHdr() });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success && Array.isArray(data.answers)) {
+        setAvatarAnswers(a => ({ ...a, [cid]: data.answers }));
+      }
+    } catch { /* best-effort */ }
   };
 
   const releaseStream = () => {
@@ -5540,13 +5716,17 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
   const advanceQuestion = () => setSession(s => s ? { ...s, currentIndex: Math.min(s.currentIndex + 1, s.questions.length - 1) } : null);
 
   // ── Finalize → score + persist, then surface the honest report ───────────────
+  //    Avatar + browser sessions share ONE scorer (avatar answers are written into
+  //    the same answers table) — so /finalize is reused verbatim for both channels.
   const finalizeSession = async () => {
     if (!session?.sessionId) return;
     const cid = session.candidateId;
+    const isAvatar = session.mode === 'avatar';
+    const sid = session.sessionId;
     setSession(s => s ? { ...s, finalizing: true, error: null } : null);
     setScreenStatus(s => ({ ...s, [cid]: 'scoring' }));
     try {
-      const res = await fetch(`/api/employer/voice-screening/sessions/${session.sessionId}/finalize`, { method: 'POST', headers: authHdr() });
+      const res = await fetch(`/api/employer/voice-screening/sessions/${sid}/finalize`, { method: 'POST', headers: authHdr() });
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.message || (data.aiUnavailable ? 'AI scoring is not configured.' : 'Scoring failed'));
       const sess = data.session;
@@ -5559,12 +5739,18 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
         answeredCount: sess.answeredCount ?? 0,
         questionCount: sess.questionCount ?? 0,
         provenance: sess.provenance || '',
+        channel: sess.channel || (isAvatar ? 'avatar' : 'browser'),
       } }));
       setScreenStatus(s => ({ ...s, [cid]: 'completed' }));
       setActiveCallId(null);
       setExpandedId(cid);
+      if (avatarPollRef.current) { clearTimeout(avatarPollRef.current); avatarPollRef.current = null; }
       releaseStream();
       setSession(null);
+      if (isAvatar) {
+        setAvatarSessionIds(m => ({ ...m, [cid]: sid }));
+        void loadAvatarAnswers(cid, sid);
+      }
     } catch (e: any) {
       setScreenStatus(s => ({ ...s, [cid]: 'recording' }));
       setSession(s => s ? { ...s, finalizing: false, error: e?.message || 'Scoring failed' } : null);
@@ -5572,6 +5758,8 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
   };
 
   const closeSession = () => {
+    if (avatarPollRef.current) { clearTimeout(avatarPollRef.current); avatarPollRef.current = null; }
+    if (livePreviewRef.current) livePreviewRef.current.srcObject = null;
     releaseStream();
     if (session && screenStatus[session.candidateId] === 'recording') {
       setScreenStatus(s => { const n = { ...s }; delete n[session.candidateId]; return n; });
@@ -5755,6 +5943,14 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
                       <Mic size={12} /> Preview & Screen
                     </button>
                   )}
+                  {(!status || status === 'not_started') && avatar.enabled && avatar.configured && (
+                    <button onClick={() => openPreview(c, 'avatar')} disabled={!!activeCallId || !feature.aiReady}
+                      title={!feature.aiReady ? 'Transcription AI is not configured yet' : 'Avatar presents each question; candidate records a video answer'}
+                      className="flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl text-white"
+                      style={{ backgroundColor: (activeCallId || !feature.aiReady) ? '#94a3b8' : BRAND.purple }}>
+                      <Video size={12} /> Video Avatar
+                    </button>
+                  )}
                   {busy && (
                     <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl text-white" style={{ backgroundColor: status === 'recording' ? BRAND.red : BRAND.purple }}>
                       <RefreshCw size={11} className="animate-spin" />
@@ -5784,6 +5980,9 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
                       <div className="flex items-center gap-2 mb-2">
                         <BotMessageSquare size={14} style={{ color: BRAND.primary }} />
                         <span className="text-xs font-semibold text-gray-800">AI Screening Summary</span>
+                        {result.channel === 'avatar'
+                          ? <Chip label="🎥 Video Interview" color={BRAND.purple} size="xs" />
+                          : <Chip label="🎙 Voice" color={BRAND.accent} size="xs" />}
                       </div>
                       <p className="text-[11px] text-gray-600 leading-relaxed italic">"{result.summary}"</p>
                       <p className="text-[9px] text-gray-400 mt-1">{result.answeredCount}/{result.questionCount} questions answered · assistive screening aid — the final hiring decision stays with your team.</p>
@@ -5848,6 +6047,49 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
                       </div>
                     </div>
                   )}
+                  {/* Recorded video answers (avatar channel only) */}
+                  {result.channel === 'avatar' && (
+                    <div className="mt-4 border-t pt-3">
+                      <div className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+                        <Video size={9} /> Recorded video answers
+                      </div>
+                      {!avatarAnswers[c._id] ? (
+                        avatarSessionIds[c._id] ? (
+                          <button onClick={() => loadAvatarAnswers(c._id, avatarSessionIds[c._id])}
+                            className="text-[10px] font-medium px-3 py-1.5 rounded-lg border" style={{ borderColor: `${BRAND.purple}30`, color: BRAND.purple }}>
+                            Load video answers
+                          </button>
+                        ) : (
+                          <p className="text-[10px] text-gray-400">Video answers aren't available for this report.</p>
+                        )
+                      ) : avatarAnswers[c._id].length === 0 ? (
+                        <p className="text-[10px] text-gray-400">No video answers were stored for this screening.</p>
+                      ) : (
+                        <div className="space-y-2.5">
+                          {avatarAnswers[c._id].map((a, i) => (
+                            <div key={a.answerId} className="p-2.5 rounded-xl border border-gray-100 bg-white">
+                              <p className="text-[10px] text-gray-600 font-medium mb-1.5 leading-relaxed">{i + 1}. {a.questionText || `Question ${i + 1}`}</p>
+                              {a.hasVideo ? (
+                                answerVideoUrls[a.answerId] ? (
+                                  <video key={answerVideoUrls[a.answerId]} src={answerVideoUrls[a.answerId]} controls playsInline className="w-full max-h-56 rounded-lg bg-black" />
+                                ) : (
+                                  <button onClick={() => loadAnswerVideo(a.answerId)}
+                                    className="flex items-center gap-1.5 text-[10px] font-medium px-3 py-1.5 rounded-lg text-white" style={{ backgroundColor: BRAND.purple }}>
+                                    <Video size={10} /> Play video answer
+                                  </button>
+                                )
+                              ) : (
+                                <p className="text-[9px] text-gray-400 italic">No video stored for this answer.</p>
+                              )}
+                              {a.transcript != null && (
+                                <p className="text-[10px] text-gray-500 mt-1.5 leading-relaxed">{a.transcript.trim() ? a.transcript : '(No speech detected.)'}</p>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -5863,11 +6105,15 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
             <div className="flex items-center justify-between p-5 border-b shrink-0">
               <div>
                 <h2 className="text-sm font-bold text-gray-800 flex items-center gap-2">
-                  <Mic size={14} style={{ color: BRAND.primary }} />
-                  {session.phase === 'preview' ? 'AI Screening Preview' : 'Recorded Voice Screening'}
+                  {session.mode === 'avatar' ? <Video size={14} style={{ color: BRAND.purple }} /> : <Mic size={14} style={{ color: BRAND.primary }} />}
+                  {session.mode === 'avatar'
+                    ? (session.phase === 'preview' ? 'Video Avatar Interview Preview' : 'Recorded Video Interview')
+                    : (session.phase === 'preview' ? 'AI Screening Preview' : 'Recorded Voice Screening')}
                 </h2>
                 <p className="text-[10px] text-gray-400 mt-0.5">
-                  {session.candidateName} · {session.phase === 'preview' ? 'Review the questions, then record spoken answers' : `Question ${session.currentIndex + 1} of ${session.questions.length}`}
+                  {session.candidateName} · {session.phase === 'preview'
+                    ? (session.mode === 'avatar' ? 'An avatar presents each question; candidate records a video answer' : 'Review the questions, then record spoken answers')
+                    : `Question ${session.currentIndex + 1} of ${session.questions.length}`}
                 </p>
               </div>
               <button onClick={closeSession} className="text-gray-400 hover:text-gray-600">
@@ -5924,6 +6170,8 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
                   const idx = session.currentIndex;
                   const q = session.questions[idx];
                   const t = session.transcripts[idx];
+                  const isAvatar = session.mode === 'avatar';
+                  const av = isAvatar ? session.avatarVideos[idx] : undefined;
                   return (
                     <div className="space-y-4">
                       <div className="p-4 rounded-xl border border-gray-100 bg-gray-50">
@@ -5931,18 +6179,47 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
                         <p className="text-sm text-gray-800 font-medium leading-relaxed">{q?.question}</p>
                       </div>
 
+                      {isAvatar && (
+                        <div className="rounded-xl overflow-hidden border border-gray-100 bg-black">
+                          {av?.status === 'completed' && av.url ? (
+                            <video key={av.url} src={av.url} controls autoPlay playsInline className="w-full max-h-56 bg-black" />
+                          ) : av?.status === 'failed' ? (
+                            <div className="flex flex-col items-center justify-center py-8 text-center text-[11px] text-gray-300 bg-gray-800">
+                              <AlertCircle size={18} className="mb-2" style={{ color: BRAND.orange }} />
+                              The avatar video for this question couldn't be generated. The candidate can still read the question above and record an answer.
+                            </div>
+                          ) : (
+                            <div className="flex flex-col items-center justify-center py-8 text-[11px] text-gray-300 bg-gray-800">
+                              <RefreshCw size={18} className="animate-spin mb-2" />
+                              Preparing the avatar video for this question…
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {isAvatar && (
+                        <div className="rounded-xl overflow-hidden border border-gray-100 bg-black relative">
+                          <video ref={livePreviewRef} muted playsInline className="w-full max-h-56 bg-black" />
+                          {!session.recording && (
+                            <div className="absolute inset-0 flex items-center justify-center text-[11px] text-gray-300 bg-black/50 pointer-events-none">
+                              Your camera preview appears here while recording
+                            </div>
+                          )}
+                        </div>
+                      )}
+
                       <div className="flex flex-col items-center justify-center py-4">
                         {session.recording ? (
                           <button onClick={stopRec} className="w-16 h-16 rounded-full flex items-center justify-center text-white animate-pulse" style={{ backgroundColor: BRAND.red }}>
                             <Square size={22} />
                           </button>
                         ) : (
-                          <button onClick={startRec} disabled={session.uploading} className="w-16 h-16 rounded-full flex items-center justify-center text-white" style={{ backgroundColor: session.uploading ? '#94a3b8' : BRAND.primary }}>
-                            <Mic size={24} />
+                          <button onClick={isAvatar ? startVideoRec : startRec} disabled={session.uploading} className="w-16 h-16 rounded-full flex items-center justify-center text-white" style={{ backgroundColor: session.uploading ? '#94a3b8' : (isAvatar ? BRAND.purple : BRAND.primary) }}>
+                            {isAvatar ? <Video size={24} /> : <Mic size={24} />}
                           </button>
                         )}
                         <div className="text-[10px] text-gray-500 mt-2">
-                          {session.recording ? 'Recording… tap to stop' : session.uploading ? 'Transcribing…' : t != null ? 'Re-record if needed' : 'Tap to record this answer'}
+                          {session.recording ? 'Recording… tap to stop' : session.uploading ? (isAvatar ? 'Uploading & transcribing…' : 'Transcribing…') : t != null ? 'Re-record if needed' : (isAvatar ? 'Tap to record a video answer' : 'Tap to record this answer')}
                         </div>
                       </div>
 
@@ -5979,10 +6256,10 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
                       className="text-xs px-3 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-100">
                       Cancel
                     </button>
-                    <button onClick={beginRecording} disabled={session.loading || session.starting || session.questions.length === 0}
+                    <button onClick={session.mode === 'avatar' ? beginAvatarInterview : beginRecording} disabled={session.loading || session.starting || session.questions.length === 0}
                       className="flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl text-white font-medium"
-                      style={{ backgroundColor: (session.loading || session.starting || session.questions.length === 0) ? '#94a3b8' : BRAND.primary }}>
-                      {session.starting ? <RefreshCw size={11} className="animate-spin" /> : <Mic size={11} />} Begin Recording
+                      style={{ backgroundColor: (session.loading || session.starting || session.questions.length === 0) ? '#94a3b8' : (session.mode === 'avatar' ? BRAND.purple : BRAND.primary) }}>
+                      {session.starting ? <RefreshCw size={11} className="animate-spin" /> : (session.mode === 'avatar' ? <Video size={11} /> : <Mic size={11} />)} {session.mode === 'avatar' ? 'Begin Interview' : 'Begin Recording'}
                     </button>
                   </div>
                 </>

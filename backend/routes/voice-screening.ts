@@ -23,7 +23,7 @@ import type { Express, Request, Response } from 'express';
 import type { Pool } from 'pg';
 import multer from 'multer';
 import { randomUUID } from 'crypto';
-import { isVoiceScreeningEnabled } from '../config/feature-flags';
+import { isVoiceScreeningEnabled, isAvatarInterviewEnabled } from '../config/feature-flags';
 import { selectScreeningQuestions } from '../services/interview-question-store';
 import {
   VOICE_DIMENSIONS,
@@ -39,12 +39,26 @@ import {
   initiateOutboundCall,
   TwilioUnavailable,
 } from '../services/voice-screening-twilio';
+import {
+  avatarStatus,
+  isAvatarConfigured,
+  requestAvatarVideo,
+  fetchAvatarVideoStatus,
+  AvatarUnavailable,
+} from '../services/voice-screening-avatar';
+import { createHash } from 'crypto';
 
 type Middleware = (req: Request, res: Response, next: any) => void;
 
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 25 * 1024 * 1024 }, // 25MB per recorded answer
+});
+
+// Candidate webcam video answers run larger than audio-only clips.
+const videoUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 60 * 1024 * 1024 }, // 60MB per recorded video answer
 });
 
 let schemaReady = false;
@@ -100,6 +114,58 @@ function flagGate(_req: Request, res: Response, next: any) {
   }
   next();
 }
+
+// ── Avatar layer (Option A) — own flag, own schema, byte-identical when OFF ────
+// Avatar routes 503 BEFORE any DB/AI/schema touch when the flag is off, so no
+// avatar tables are ever created and the existing voice-screening surface is
+// unchanged regardless of this flag.
+function avatarFlagGate(_req: Request, res: Response, next: any) {
+  if (!isAvatarInterviewEnabled()) {
+    return res.status(503).json({ enabled: false, message: 'avatar_interview_disabled' });
+  }
+  next();
+}
+
+let avatarSchemaReady = false;
+async function ensureAvatarSchema(pool: Pool): Promise<void> {
+  if (avatarSchemaReady) return;
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS voice_avatar_question_videos (
+      id                TEXT PRIMARY KEY,
+      employer_id       TEXT NOT NULL,
+      session_id        TEXT DEFAULT '',
+      question_id       TEXT NOT NULL,
+      script_hash       TEXT NOT NULL,
+      provider          TEXT DEFAULT 'heygen',
+      provider_video_id TEXT DEFAULT '',
+      status            TEXT DEFAULT 'pending',
+      video_url         TEXT DEFAULT '',
+      error             TEXT DEFAULT '',
+      created_at        TIMESTAMPTZ DEFAULT now(),
+      updated_at        TIMESTAMPTZ DEFAULT now()
+    );
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_vaqv_key
+      ON voice_avatar_question_videos(employer_id, question_id, script_hash);
+
+    CREATE TABLE IF NOT EXISTS voice_avatar_answer_videos (
+      id             TEXT PRIMARY KEY,
+      answer_id      TEXT DEFAULT '',
+      session_id     TEXT NOT NULL,
+      employer_id    TEXT NOT NULL,
+      question_index INTEGER DEFAULT 0,
+      question_id    TEXT DEFAULT '',
+      mime           TEXT DEFAULT 'video/webm',
+      bytes          INTEGER DEFAULT 0,
+      data           BYTEA,
+      created_at     TIMESTAMPTZ DEFAULT now()
+    );
+    CREATE INDEX IF NOT EXISTS idx_vaav_session ON voice_avatar_answer_videos(session_id);
+  `);
+  avatarSchemaReady = true;
+}
+
+const scriptHash = (text: string): string =>
+  createHash('sha256').update(String(text || '')).digest('hex').slice(0, 32);
 
 function employerId(req: Request): string {
   return (req as any).orgId ?? (req.user as any)?.id ?? 'anonymous';
@@ -427,6 +493,361 @@ export function registerVoiceScreeningRoutes(
           message: err?.message || 'phone_call_failed',
           phoneUnavailable: status === 503,
         });
+      }
+    },
+  );
+
+  // ════════════════════════════════════════════════════════════════════════════
+  // AVATAR LAYER (Option A) — avatar presents each question; candidate records a
+  // webcam video answer. Own flag, own schema, own endpoints. The audio track of
+  // each video answer is transcribed + scored by the EXISTING pipeline (unchanged):
+  // avatar answers write a row into voice_screening_answers and reuse /finalize.
+  // ════════════════════════════════════════════════════════════════════════════
+
+  // ── Avatar flag + provider-readiness probe (employer-gated; no schema) ───────
+  app.get(
+    '/api/employer/voice-screening/avatar/enabled',
+    avatarFlagGate,
+    requireAuth,
+    (_req: Request, res: Response) => {
+      res.json({ enabled: isAvatarInterviewEnabled(), ...avatarStatus() });
+    },
+  );
+
+  // ── Start an avatar-channel session (mirrors the browser session, channel='avatar') ──
+  app.post(
+    '/api/employer/voice-screening/avatar/sessions',
+    avatarFlagGate,
+    requireAuth,
+    async (req: Request, res: Response) => {
+      try {
+        await ensureVoiceSchema(pool);
+        const eid = employerId(req);
+        const candidateId = String((req.body as any)?.candidateId ?? '').trim();
+        if (!candidateId) return res.status(400).json({ message: 'candidateId_required' });
+
+        const c = await pool.query(
+          `SELECT id, name, job_id, job_title, candidate_role FROM employer_candidates WHERE id = $1 AND employer_id = $2`,
+          [candidateId, eid],
+        );
+        if (c.rowCount === 0) return res.status(404).json({ message: 'candidate_not_found' });
+        const cand = c.rows[0];
+        const jobTitle = cand.job_title || cand.candidate_role || '';
+        const questions = await selectScreeningQuestions(pool, { role: jobTitle });
+        const id = `vss_${randomUUID()}`;
+
+        await pool.query(
+          `INSERT INTO voice_screening_sessions
+             (id, employer_id, candidate_id, candidate_name, job_id, job_title, channel, status, questions, question_count, answered_count)
+           VALUES ($1,$2,$3,$4,$5,$6,'avatar','in_progress',$7::jsonb,$8,0)`,
+          [id, eid, candidateId, cand.name ?? '', cand.job_id ?? '', jobTitle, JSON.stringify(questions), questions.length],
+        );
+
+        const row = (await pool.query(`SELECT * FROM voice_screening_sessions WHERE id = $1`, [id])).rows[0];
+        res.json({ success: true, session: sessionToJson(row) });
+      } catch (err: any) {
+        res.status(500).json({ message: err?.message || 'failed_to_start_session' });
+      }
+    },
+  );
+
+  // ── Request avatar videos for the session's questions (idempotent, cached) ───
+  //    Each question's script is rendered once per (employer, question, script);
+  //    re-requesting reuses the cached HeyGen render. Returns honest per-question
+  //    status. 503 (avatarUnavailable) when HeyGen is not configured.
+  app.post(
+    '/api/employer/voice-screening/avatar/sessions/:id/videos',
+    avatarFlagGate,
+    requireAuth,
+    async (req: Request, res: Response) => {
+      try {
+        if (!isAvatarConfigured()) {
+          return res.status(503).json({ message: avatarStatus().message, avatarUnavailable: true });
+        }
+        await ensureVoiceSchema(pool);
+        await ensureAvatarSchema(pool);
+        const eid = employerId(req);
+        const sessionId = req.params.id;
+        const sess = await pool.query(
+          `SELECT * FROM voice_screening_sessions WHERE id = $1 AND employer_id = $2`,
+          [sessionId, eid],
+        );
+        if (sess.rowCount === 0) return res.status(404).json({ message: 'session_not_found' });
+        const storedQuestions: any[] = Array.isArray(sess.rows[0].questions) ? sess.rows[0].questions : [];
+
+        const out: Array<{ questionId: string; questionIndex: number; status: string; url: string | null; error: string | null }> = [];
+        for (let i = 0; i < storedQuestions.length; i++) {
+          const q = storedQuestions[i];
+          const questionId = String(q?.id ?? `q-${i}`);
+          const script = String(q?.question ?? '');
+          const hash = scriptHash(script);
+
+          const existing = await pool.query(
+            `SELECT * FROM voice_avatar_question_videos WHERE employer_id = $1 AND question_id = $2 AND script_hash = $3`,
+            [eid, questionId, hash],
+          );
+          let rowv = existing.rows[0];
+
+          if (!rowv) {
+            // Kick off a fresh render.
+            const vid = `vaqv_${randomUUID()}`;
+            try {
+              const { providerVideoId } = await requestAvatarVideo(script);
+              await pool.query(
+                `INSERT INTO voice_avatar_question_videos
+                   (id, employer_id, session_id, question_id, script_hash, provider, provider_video_id, status)
+                 VALUES ($1,$2,$3,$4,$5,'heygen',$6,'processing')
+                 ON CONFLICT (employer_id, question_id, script_hash) DO UPDATE
+                   SET provider_video_id = EXCLUDED.provider_video_id, status = 'processing',
+                       error = '', updated_at = now()`,
+                [vid, eid, sessionId, questionId, hash, providerVideoId],
+              );
+            } catch (e: any) {
+              if (e instanceof AvatarUnavailable) throw e;
+              await pool.query(
+                `INSERT INTO voice_avatar_question_videos
+                   (id, employer_id, session_id, question_id, script_hash, provider, status, error)
+                 VALUES ($1,$2,$3,$4,$5,'heygen','failed',$6)
+                 ON CONFLICT (employer_id, question_id, script_hash) DO UPDATE
+                   SET status = 'failed', error = EXCLUDED.error, updated_at = now()`,
+                [vid, eid, sessionId, questionId, hash, String(e?.message || 'render_request_failed')],
+              );
+            }
+            rowv = (await pool.query(
+              `SELECT * FROM voice_avatar_question_videos WHERE employer_id = $1 AND question_id = $2 AND script_hash = $3`,
+              [eid, questionId, hash],
+            )).rows[0];
+          }
+
+          // Poll HeyGen for any not-yet-completed render.
+          if (rowv && rowv.status !== 'completed' && rowv.status !== 'failed' && rowv.provider_video_id) {
+            try {
+              const st = await fetchAvatarVideoStatus(rowv.provider_video_id);
+              await pool.query(
+                `UPDATE voice_avatar_question_videos
+                   SET status = $1, video_url = $2, error = $3, updated_at = now()
+                 WHERE id = $4`,
+                [st.status, st.url ?? '', st.error ?? '', rowv.id],
+              );
+              rowv.status = st.status;
+              rowv.video_url = st.url ?? '';
+              rowv.error = st.error ?? '';
+            } catch (e: any) {
+              if (e instanceof AvatarUnavailable) throw e;
+            }
+          }
+
+          out.push({
+            questionId,
+            questionIndex: i,
+            status: rowv?.status ?? 'pending',
+            url: rowv?.status === 'completed' ? (rowv?.video_url || null) : null,
+            error: rowv?.error || null,
+          });
+        }
+
+        res.json({ success: true, videos: out });
+      } catch (err: any) {
+        const status = err instanceof AvatarUnavailable ? 503 : 500;
+        res.status(status).json({
+          message: err?.message || 'avatar_video_failed',
+          avatarUnavailable: status === 503,
+        });
+      }
+    },
+  );
+
+  // ── Poll avatar video status for a session's questions (no new renders) ──────
+  app.get(
+    '/api/employer/voice-screening/avatar/sessions/:id/videos',
+    avatarFlagGate,
+    requireAuth,
+    async (req: Request, res: Response) => {
+      try {
+        await ensureVoiceSchema(pool);
+        await ensureAvatarSchema(pool);
+        const eid = employerId(req);
+        const sessionId = req.params.id;
+        const sess = await pool.query(
+          `SELECT * FROM voice_screening_sessions WHERE id = $1 AND employer_id = $2`,
+          [sessionId, eid],
+        );
+        if (sess.rowCount === 0) return res.status(404).json({ message: 'session_not_found' });
+        const storedQuestions: any[] = Array.isArray(sess.rows[0].questions) ? sess.rows[0].questions : [];
+
+        const out: Array<{ questionId: string; questionIndex: number; status: string; url: string | null; error: string | null }> = [];
+        for (let i = 0; i < storedQuestions.length; i++) {
+          const q = storedQuestions[i];
+          const questionId = String(q?.id ?? `q-${i}`);
+          const hash = scriptHash(String(q?.question ?? ''));
+          let rowv = (await pool.query(
+            `SELECT * FROM voice_avatar_question_videos WHERE employer_id = $1 AND question_id = $2 AND script_hash = $3`,
+            [eid, questionId, hash],
+          )).rows[0];
+
+          // Refresh in-flight renders if HeyGen is configured.
+          if (rowv && isAvatarConfigured() && rowv.status !== 'completed' && rowv.status !== 'failed' && rowv.provider_video_id) {
+            try {
+              const st = await fetchAvatarVideoStatus(rowv.provider_video_id);
+              await pool.query(
+                `UPDATE voice_avatar_question_videos SET status = $1, video_url = $2, error = $3, updated_at = now() WHERE id = $4`,
+                [st.status, st.url ?? '', st.error ?? '', rowv.id],
+              );
+              rowv = { ...rowv, status: st.status, video_url: st.url ?? '', error: st.error ?? '' };
+            } catch { /* transient poll error — keep last known state */ }
+          }
+
+          out.push({
+            questionId,
+            questionIndex: i,
+            status: rowv?.status ?? 'pending',
+            url: rowv?.status === 'completed' ? (rowv?.video_url || null) : null,
+            error: rowv?.error || null,
+          });
+        }
+        res.json({ success: true, videos: out });
+      } catch (err: any) {
+        res.status(500).json({ message: err?.message || 'avatar_video_status_failed' });
+      }
+    },
+  );
+
+  // ── Upload one candidate WEBCAM VIDEO answer ────────────────────────────────
+  //    Stores the video (employer-scoped) for review AND transcribes its audio
+  //    track via the EXISTING engine, writing a row into voice_screening_answers
+  //    so the unchanged /finalize scorer grades it. Never fabricates a transcript.
+  app.post(
+    '/api/employer/voice-screening/avatar/sessions/:id/answers',
+    avatarFlagGate,
+    requireAuth,
+    videoUpload.single('video'),
+    async (req: Request, res: Response) => {
+      try {
+        await ensureVoiceSchema(pool);
+        await ensureAvatarSchema(pool);
+        const eid = employerId(req);
+        const sessionId = req.params.id;
+        const sess = await pool.query(
+          `SELECT id FROM voice_screening_sessions WHERE id = $1 AND employer_id = $2`,
+          [sessionId, eid],
+        );
+        if (sess.rowCount === 0) return res.status(404).json({ message: 'session_not_found' });
+
+        const file = (req as any).file;
+        if (!file || !file.buffer || file.buffer.length === 0) {
+          return res.status(400).json({ message: 'video_required' });
+        }
+        const questionIndex = Number((req.body as any)?.questionIndex ?? 0) || 0;
+        const questionId = String((req.body as any)?.questionId ?? '');
+        const questionText = String((req.body as any)?.questionText ?? '');
+        const durationMs = Number((req.body as any)?.durationMs ?? 0) || 0;
+        const mime = String(file.mimetype || 'video/webm');
+
+        // Transcribe the audio track from the video container (Whisper accepts
+        // webm/mp4). Throws VoiceAIUnavailable (503) when AI is unconfigured.
+        const { transcript, format, bytes } = await transcribeAudio(file.buffer);
+
+        const answerId = `vsa_${randomUUID()}`;
+        await pool.query(
+          `INSERT INTO voice_screening_answers
+             (id, session_id, employer_id, question_index, question_id, question_text, transcript, audio_format, audio_bytes, duration_ms)
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+          [answerId, sessionId, eid, questionIndex, questionId, questionText, transcript, format, bytes, durationMs],
+        );
+
+        // Persist the candidate video (employer-scoped) for reviewer playback.
+        const videoId = `vaav_${randomUUID()}`;
+        await pool.query(
+          `INSERT INTO voice_avatar_answer_videos
+             (id, answer_id, session_id, employer_id, question_index, question_id, mime, bytes, data)
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+          [videoId, answerId, sessionId, eid, questionIndex, questionId, mime, file.buffer.length, file.buffer],
+        );
+
+        const cnt = await pool.query(
+          `SELECT COUNT(*)::int AS n FROM voice_screening_answers
+             WHERE session_id = $1 AND transcript IS NOT NULL AND trim(transcript) <> ''`,
+          [sessionId],
+        );
+        await pool.query(
+          `UPDATE voice_screening_sessions SET answered_count = $1, updated_at = now() WHERE id = $2`,
+          [cnt.rows[0].n, sessionId],
+        );
+
+        res.json({ success: true, transcript, format, answerId, answeredCount: cnt.rows[0].n });
+      } catch (err: any) {
+        const status = err instanceof VoiceAIUnavailable ? 503 : 500;
+        res.status(status).json({ message: err?.message || 'transcription_failed', aiUnavailable: status === 503 });
+      }
+    },
+  );
+
+  // ── List a session's answers + which have a stored candidate video ──────────
+  app.get(
+    '/api/employer/voice-screening/avatar/sessions/:id/answers',
+    avatarFlagGate,
+    requireAuth,
+    async (req: Request, res: Response) => {
+      try {
+        await ensureVoiceSchema(pool);
+        await ensureAvatarSchema(pool);
+        const eid = employerId(req);
+        const sessionId = req.params.id;
+        const sess = await pool.query(
+          `SELECT id FROM voice_screening_sessions WHERE id = $1 AND employer_id = $2`,
+          [sessionId, eid],
+        );
+        if (sess.rowCount === 0) return res.status(404).json({ message: 'session_not_found' });
+
+        const rows = (await pool.query(
+          `SELECT a.id, a.question_index, a.question_id, a.question_text, a.transcript,
+                  v.id AS video_id, v.mime AS video_mime, v.bytes AS video_bytes
+             FROM voice_screening_answers a
+             LEFT JOIN voice_avatar_answer_videos v ON v.answer_id = a.id
+            WHERE a.session_id = $1
+            ORDER BY a.question_index ASC`,
+          [sessionId],
+        )).rows;
+
+        res.json({
+          success: true,
+          answers: rows.map((r) => ({
+            answerId: r.id,
+            questionIndex: r.question_index,
+            questionId: r.question_id,
+            questionText: r.question_text,
+            transcript: r.transcript ?? null,
+            hasVideo: !!r.video_id,
+            videoMime: r.video_mime ?? null,
+            videoBytes: r.video_bytes ?? 0,
+          })),
+        });
+      } catch (err: any) {
+        res.status(500).json({ message: err?.message || 'answers_fetch_failed' });
+      }
+    },
+  );
+
+  // ── Stream one stored candidate video answer (employer-scoped) ──────────────
+  app.get(
+    '/api/employer/voice-screening/avatar/answers/:answerId/video',
+    avatarFlagGate,
+    requireAuth,
+    async (req: Request, res: Response) => {
+      try {
+        await ensureAvatarSchema(pool);
+        const eid = employerId(req);
+        const row = (await pool.query(
+          `SELECT mime, bytes, data FROM voice_avatar_answer_videos WHERE answer_id = $1 AND employer_id = $2`,
+          [req.params.answerId, eid],
+        )).rows[0];
+        if (!row || !row.data) return res.status(404).json({ message: 'video_not_found' });
+        res.setHeader('Content-Type', row.mime || 'video/webm');
+        res.setHeader('Content-Length', String(row.bytes || (row.data as Buffer).length));
+        res.setHeader('Cache-Control', 'private, no-store');
+        res.send(row.data);
+      } catch (err: any) {
+        res.status(500).json({ message: err?.message || 'video_fetch_failed' });
       }
     },
   );

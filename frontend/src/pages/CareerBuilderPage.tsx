@@ -23,7 +23,7 @@ import {
   PieChart, Lightbulb, Flag, CheckSquare, Square, Settings, Bell,
   LogOut, TrendingDown, Minus, RefreshCw, Upload, Eye, Bookmark,
   ClipboardList, Trophy, Percent, Gauge, BookMarked, Info,
-  CalendarCheck, Rocket, History, Network, Route, Layers, ArrowUpRight, ShieldCheck, Compass, Crown
+  CalendarCheck, Rocket, History, Network, Route, Layers, ArrowUpRight, ShieldCheck, Compass, Crown, Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -1503,6 +1503,63 @@ export function DashboardTab({ profile, loading, eiScore, eiBreakdown, jobs, goa
     projCount > 0 || !!profile?.summary || completeness > 0 ||
     eiScore > 0 || goals.length > 0
   ));
+  /* ── Still-loading state ────────────────────────────────────────────────────
+   * While the profile is being fetched (loading=true) we don't yet know whether
+   * this is a brand-new user (→ welcome screen) or a returning user with data
+   * (→ full dashboard). Rendering the data-driven widgets now would briefly flash
+   * zeroed/empty values, which looks broken on slow connections. Show a light
+   * skeleton with a friendly message instead; it runs AFTER all hooks above so
+   * hook order stays stable, and clears once the fetch resolves. */
+  if (loading) {
+    return (
+      <div className="space-y-6" aria-busy="true" aria-live="polite">
+        <span className="sr-only">Loading your Command Center…</span>
+        {/* Hero skeleton */}
+        <div className="rounded-2xl p-7 relative overflow-hidden shadow-sm" style={{ background: '#1D3E8B' }}>
+          <div className="absolute -top-12 -right-12 w-44 h-44 rounded-full" style={{ background: BRAND.accent, opacity: 0.35 }} />
+          <div className="relative flex items-start gap-4">
+            <img src="/bots/bot4-white.png" alt="" className="w-16 h-16 shrink-0 opacity-90" style={{ animation: 'cbBobLite 3.2s ease-in-out infinite' }} />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-2 text-white/90">
+                <Loader2 size={14} className="animate-spin" style={{ color: BRAND.accent }} />
+                <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: BRAND.accent }}>Loading your Command Center…</span>
+              </div>
+              <div className="h-5 w-48 rounded bg-white/25 animate-pulse mb-2.5" />
+              <div className="h-3 w-full max-w-xl rounded bg-white/15 animate-pulse mb-1.5" />
+              <div className="h-3 w-3/4 max-w-xl rounded bg-white/15 animate-pulse" />
+            </div>
+          </div>
+          <style>{`@keyframes cbBobLite { 0%,100%{transform:translateY(0) rotate(-1deg)} 50%{transform:translateY(-3px) rotate(1deg)} }`}</style>
+        </div>
+
+        {/* Stat-card skeletons */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {[0, 1, 2, 3].map(i => (
+            <div key={i} className="rounded-2xl p-5 bg-white border border-gray-100 shadow-sm">
+              <div className="h-3 w-20 rounded bg-gray-200 animate-pulse mb-3" />
+              <div className="h-7 w-16 rounded bg-gray-200 animate-pulse mb-2" />
+              <div className="h-2.5 w-24 rounded bg-gray-100 animate-pulse" />
+            </div>
+          ))}
+        </div>
+
+        {/* Wide panel skeletons */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {[0, 1].map(i => (
+            <div key={i} className="rounded-2xl p-6 bg-white border border-gray-100 shadow-sm">
+              <div className="h-4 w-40 rounded bg-gray-200 animate-pulse mb-4" />
+              <div className="space-y-2.5">
+                <div className="h-3 w-full rounded bg-gray-100 animate-pulse" />
+                <div className="h-3 w-5/6 rounded bg-gray-100 animate-pulse" />
+                <div className="h-3 w-2/3 rounded bg-gray-100 animate-pulse" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   if (!loading && !hasProfileSignal) {
     return (
       <div className="space-y-6">

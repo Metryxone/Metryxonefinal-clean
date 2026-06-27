@@ -173,7 +173,9 @@ function requireCareerLaunchpad(_req: Request, res: Response, next: NextFunction
 }
 
 // Returns the URL :userId if it matches the session user; otherwise the session user's id.
-function resolveUserId(req: Request): string | null {
+// Exported so the IDOR regression can lock in that a cross-user :userId is rejected
+// (never trusted) — a client-supplied id must never steer a write away from self.
+export function resolveUserId(req: Request): string | null {
   const u = sessionUser(req);
   if (!u) return null;
   const param = req.params.userId;

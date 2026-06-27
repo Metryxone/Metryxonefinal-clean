@@ -19,6 +19,8 @@ import {
   createQuestion,
   updateQuestion,
   deleteQuestion,
+  exportToCsv,
+  importFromCsv,
 } from '../services/interview-question-store';
 
 type Middleware = (req: Request, res: Response, next: any) => void;
@@ -40,6 +42,31 @@ export function registerInterviewQuestionsRoutes(
       res.json({ success: true, ...stats });
     } catch (err: any) {
       res.status(500).json({ success: false, error: err?.message || 'failed_to_load_stats' });
+    }
+  });
+
+  // CSV export — literal path before /:id. requireAuth (a read).
+  app.get('/api/interview-questions/export.csv', requireAuth, async (_req: Request, res: Response) => {
+    try {
+      const csv = await exportToCsv(pool);
+      const stamp = new Date().toISOString().slice(0, 10);
+      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+      res.setHeader('Content-Disposition', `attachment; filename="interview-questions-${stamp}.csv"`);
+      res.send(csv);
+    } catch (err: any) {
+      res.status(500).json({ success: false, error: err?.message || 'failed_to_export' });
+    }
+  });
+
+  // CSV bulk import — super-admin only (mutates the shared catalog).
+  app.post('/api/interview-questions/import', requireAuth, requireSuperAdmin, async (req: Request, res: Response) => {
+    try {
+      const csv = String(req.body?.csv ?? '');
+      if (!csv.trim()) return res.status(400).json({ success: false, error: 'csv_required' });
+      const result = await importFromCsv(pool, csv, actorId(req));
+      res.json({ success: true, ...result });
+    } catch (err: any) {
+      res.status(500).json({ success: false, error: err?.message || 'failed_to_import' });
     }
   });
 

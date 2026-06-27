@@ -1,10 +1,10 @@
 import { BRAND_NAVY as BRAND } from '@/design-system/tokens';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   BookOpen, Plus, Search, Filter, Edit2, Trash2, Eye, EyeOff,
   ChevronDown, ChevronUp, X, Save, RefreshCw, Tag, Layers,
   BarChart3, Users, Briefcase, TrendingUp, CheckCircle2,
-  AlertCircle, ArrowLeft, Database, Download,
+  AlertCircle, ArrowLeft, Database, Download, Upload,
 } from 'lucide-react';
 import { AppTopBar } from '@/components/AppTopBar';
 
@@ -286,9 +286,15 @@ function QuestionCard({
 }
 
 // ─── Main Page ─────────────────────────────────────────────────────────────────
-interface Props { onNavigate?: (screen: string) => void }
+interface Props {
+  onNavigate?: (screen: string) => void;
+  /** When true, render as a centred popup/modal overlay instead of a full screen. */
+  asModal?: boolean;
+  /** Close handler used in modal mode (and by the back/X button). */
+  onClose?: () => void;
+}
 
-export default function InterviewQuestionBankPage({ onNavigate }: Props) {
+export default function InterviewQuestionBankPage({ onNavigate, asModal = false, onClose }: Props) {
   const [questions, setQuestions]   = useState<IQuestion[]>([]);
   const [stats, setStats]           = useState<any>(null);
   const [loading, setLoading]       = useState(true);
@@ -363,6 +369,64 @@ export default function InterviewQuestionBankPage({ onNavigate }: Props) {
     fetchData();
   };
 
+  // ── CSV export / import ──────────────────────────────────────────────────────
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [importing, setImporting] = useState(false);
+  const [notice, setNotice] = useState('');
+
+  const handleExport = async () => {
+    setError('');
+    try {
+      const res = await fetch('/api/interview-questions/export.csv', { headers: authHeader() });
+      if (!res.ok) throw new Error('Export failed');
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `interview-questions-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (e: any) {
+      setError(e.message || 'Export failed');
+    }
+  };
+
+  const handleImportFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImporting(true);
+    setError('');
+    setNotice('');
+    try {
+      const csv = await file.text();
+      const res = await fetch('/api/interview-questions/import', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...authHeader() },
+        body: JSON.stringify({ csv }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        throw new Error(
+          json?.error === 'forbidden' || res.status === 403
+            ? 'Only platform admins can import questions.'
+            : json?.error || 'Import failed',
+        );
+      }
+      const parts = [`Imported ${json.imported} question${json.imported === 1 ? '' : 's'}`];
+      if (json.skipped) parts.push(`${json.skipped} skipped`);
+      if (json.errors?.length) parts.push(`${json.errors.length} row error${json.errors.length === 1 ? '' : 's'}`);
+      setNotice(parts.join(' · '));
+      await fetchData();
+    } catch (err: any) {
+      setError(err.message || 'Import failed');
+    } finally {
+      setImporting(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
   // ── Filtered list ──────────────────────────────────────────────────────────
   const filtered = questions.filter(q => {
     if (!showInactive && !q.isActive) return false;
@@ -392,54 +456,51 @@ export default function InterviewQuestionBankPage({ onNavigate }: Props) {
 
   const selCls = 'text-xs border border-gray-200 rounded-lg px-2.5 h-8 focus:outline-none bg-white text-gray-700';
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <AppTopBar
-        title="Interview Question Bank"
-        onSearch={() => window.dispatchEvent(new Event('metryx:open-search'))}
-        onNavigate={onNavigate}
+  // ── Shared header actions (Refresh · Import · Export · Add) ─────────────────
+  const headerActions = (
+    <div className="flex items-center gap-2">
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".csv,text/csv"
+        className="hidden"
+        onChange={handleImportFile}
       />
+      <button onClick={fetchData} className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50">
+        <RefreshCw size={11} /> Refresh
+      </button>
+      <button onClick={() => fileInputRef.current?.click()} disabled={importing}
+        className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-50">
+        <Upload size={11} /> {importing ? 'Importing…' : 'Import CSV'}
+      </button>
+      <button onClick={handleExport}
+        className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50">
+        <Download size={11} /> Export CSV
+      </button>
+      <button onClick={() => setFormModal({ open: true, q: null })}
+        className="flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl text-white font-medium shadow-sm"
+        style={{ backgroundColor: BRAND.primary }}>
+        <Plus size={12} /> Add Question
+      </button>
+    </div>
+  );
 
-      <div className="max-w-7xl mx-auto px-6 py-6">
-        {/* Page header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            {onNavigate && (
-              <button onClick={() => onNavigate('employer-portal')}
-                className="p-2 rounded-xl border border-gray-200 text-gray-500 hover:bg-gray-100 transition-colors">
-                <ArrowLeft size={14} />
-              </button>
-            )}
-            <div>
-              <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                <BookOpen size={20} style={{ color: BRAND.primary }} />
-                Interview Question Bank
-              </h1>
-              <p className="text-xs text-gray-500 mt-0.5">
-                Manage questions used by the Pragati AI Voice Screener — categorised by role, industry, level, and type.
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <button onClick={fetchData} className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50">
-              <RefreshCw size={11} /> Refresh
-            </button>
-            <button onClick={() => setFormModal({ open: true, q: null })}
-              className="flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl text-white font-medium shadow-sm"
-              style={{ backgroundColor: BRAND.primary }}>
-              <Plus size={12} /> Add Question
-            </button>
-          </div>
+  // ── Shared body (alerts · stats · distribution · filters · list) ────────────
+  const inner = (
+    <>
+      {error && (
+        <div className="flex items-center gap-2 p-4 mb-5 rounded-2xl bg-red-50 border border-red-200 text-xs text-red-600">
+          <AlertCircle size={14} />{error}
         </div>
+      )}
+      {notice && (
+        <div className="flex items-center gap-2 p-4 mb-5 rounded-2xl bg-green-50 border border-green-200 text-xs text-green-700">
+          <CheckCircle2 size={14} />{notice}
+        </div>
+      )}
 
-        {error && (
-          <div className="flex items-center gap-2 p-4 mb-5 rounded-2xl bg-red-50 border border-red-200 text-xs text-red-600">
-            <AlertCircle size={14} />{error}
-          </div>
-        )}
-
-        {/* Stats */}
-        <StatsBar stats={stats} />
+      {/* Stats */}
+      <StatsBar stats={stats} />
 
         {/* Distribution chart */}
         {stats && (
@@ -550,9 +611,12 @@ export default function InterviewQuestionBankPage({ onNavigate }: Props) {
             ))}
           </div>
         )}
-      </div>
+    </>
+  );
 
-      {/* Form modal */}
+  // ── Modals shared by both layouts (z-50 — above the popup overlay's z-40) ────
+  const overlays = (
+    <>
       {formModal.open && (
         <QuestionFormModal
           initial={formModal.q}
@@ -560,8 +624,6 @@ export default function InterviewQuestionBankPage({ onNavigate }: Props) {
           onClose={() => setFormModal({ open: false, q: null })}
         />
       )}
-
-      {/* Delete confirmation */}
       {deleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">
@@ -582,6 +644,84 @@ export default function InterviewQuestionBankPage({ onNavigate }: Props) {
           </div>
         </div>
       )}
+    </>
+  );
+
+  // ── Popup / modal layout ───────────────────────────────────────────────────
+  if (asModal) {
+    return (
+      <>
+        {/* Backdrop — click-outside closes. Child overlays are rendered as SIBLINGS
+            (below) so their clicks don't bubble into this onClose handler. */}
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
+          <div
+            className="bg-gray-50 rounded-2xl shadow-2xl w-full max-w-6xl max-h-[92vh] flex flex-col overflow-hidden"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-4 p-5 border-b border-gray-100 bg-white">
+              <div className="min-w-0">
+                <h1 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                  <BookOpen size={18} style={{ color: BRAND.primary }} />
+                  Interview Question Bank
+                </h1>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Manage questions used by the Pragati AI Voice Screener — categorised by role, industry, level, and type.
+                </p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                {headerActions}
+                <button onClick={onClose} aria-label="Close"
+                  className="p-2 rounded-xl border border-gray-200 text-gray-500 hover:bg-gray-100 transition-colors">
+                  <X size={16} />
+                </button>
+              </div>
+            </div>
+            <div className="flex-1 overflow-y-auto px-6 py-5">
+              {inner}
+            </div>
+          </div>
+        </div>
+        {overlays}
+      </>
+    );
+  }
+
+  // ── Full-screen layout ─────────────────────────────────────────────────────
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <AppTopBar
+        title="Interview Question Bank"
+        onSearch={() => window.dispatchEvent(new Event('metryx:open-search'))}
+        onNavigate={onNavigate}
+      />
+
+      <div className="max-w-7xl mx-auto px-6 py-6">
+        {/* Page header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            {(onClose || onNavigate) && (
+              <button onClick={() => (onClose ? onClose() : onNavigate?.('employer-portal'))}
+                className="p-2 rounded-xl border border-gray-200 text-gray-500 hover:bg-gray-100 transition-colors">
+                <ArrowLeft size={14} />
+              </button>
+            )}
+            <div>
+              <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                <BookOpen size={20} style={{ color: BRAND.primary }} />
+                Interview Question Bank
+              </h1>
+              <p className="text-xs text-gray-500 mt-0.5">
+                Manage questions used by the Pragati AI Voice Screener — categorised by role, industry, level, and type.
+              </p>
+            </div>
+          </div>
+          {headerActions}
+        </div>
+
+        {inner}
+      </div>
+
+      {overlays}
     </div>
   );
 }

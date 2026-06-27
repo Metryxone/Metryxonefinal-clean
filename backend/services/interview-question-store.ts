@@ -12,6 +12,7 @@
  * graceful fallback to the static bank if the store is empty or errors.
  */
 import type { Pool } from 'pg';
+import { parse as parseCsv } from 'csv-parse/sync';
 import { getQuestionBank, selectQuestions, dimensionForCategory, type BankQuestion } from './interview-question-bank';
 
 export interface ApiQuestion {
@@ -246,6 +247,101 @@ export async function deleteQuestion(pool: Pool, id: string): Promise<boolean> {
   await ensureInterviewQuestionSchema(pool);
   const { rowCount } = await pool.query(`DELETE FROM interview_questions WHERE id = $1`, [id]);
   return (rowCount ?? 0) > 0;
+}
+
+// ── CSV export / import ─────────────────────────────────────────────────────
+const CSV_COLUMNS = [
+  'id', 'question', 'expectedResponse', 'scoringCriteria', 'category',
+  'industry', 'role', 'positionLevel', 'difficulty', 'isActive', 'tags',
+] as const;
+
+function csvCell(v: string): string {
+  const s = v ?? '';
+  return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+/** Export ALL questions (active + inactive) as a CSV string the import path round-trips. */
+export async function exportToCsv(pool: Pool): Promise<string> {
+  await ensureInterviewQuestionSchema(pool);
+  const { rows } = await pool.query(
+    `SELECT * FROM interview_questions ORDER BY created_at ASC, id ASC`,
+  );
+  const lines: string[] = [CSV_COLUMNS.join(',')];
+  for (const r of rows) {
+    const q = rowToApi(r);
+    lines.push([
+      q.id,
+      q.question,
+      q.expectedResponse ?? '',
+      q.scoringCriteria ?? '',
+      q.category,
+      q.industry,
+      q.role,
+      q.positionLevel,
+      q.difficulty,
+      q.isActive ? 'true' : 'false',
+      q.tags.join('|'),
+    ].map((c) => csvCell(String(c))).join(','));
+  }
+  return lines.join('\r\n');
+}
+
+const truthy = (v: any) => {
+  const s = String(v ?? '').trim().toLowerCase();
+  return s === '' ? true : ['true', '1', 'yes', 'y', 'active'].includes(s);
+};
+
+/**
+ * Bulk-import questions from a CSV string. Each row CREATES a new question (the `id`
+ * column, if present, is ignored so imports never clobber existing rows). Rows with no
+ * `question` are skipped. Returns counts + per-row errors — never throws on bad rows.
+ */
+export async function importFromCsv(
+  pool: Pool,
+  csvText: string,
+  createdBy: string | null,
+): Promise<{ imported: number; skipped: number; errors: string[] }> {
+  await ensureInterviewQuestionSchema(pool);
+  let records: Record<string, any>[];
+  try {
+    records = parseCsv(csvText, { columns: true, skip_empty_lines: true, trim: true, bom: true });
+  } catch (e: any) {
+    return { imported: 0, skipped: 0, errors: [`Could not parse CSV: ${e?.message || 'invalid format'}`] };
+  }
+  let imported = 0;
+  let skipped = 0;
+  const errors: string[] = [];
+  let line = 1; // header is line 1
+  for (const rec of records) {
+    line += 1;
+    const question = String(rec.question ?? rec.Question ?? '').trim();
+    if (!question) { skipped += 1; continue; }
+    const tagsRaw = String(rec.tags ?? '').trim();
+    try {
+      await createQuestion(
+        pool,
+        {
+          question,
+          expectedResponse: rec.expectedResponse ?? rec.expected_response ?? null,
+          scoringCriteria: rec.scoringCriteria ?? rec.scoring_criteria ?? null,
+          category: rec.category || undefined,
+          industry: rec.industry || undefined,
+          role: rec.role || undefined,
+          positionLevel: rec.positionLevel ?? rec.position_level ?? undefined,
+          difficulty: rec.difficulty || undefined,
+          isActive: rec.isActive === undefined && rec.is_active === undefined
+            ? true
+            : truthy(rec.isActive ?? rec.is_active),
+          tags: tagsRaw ? tagsRaw.split(/[|;]/).map((t) => t.trim()).filter(Boolean) : [],
+        },
+        createdBy,
+      );
+      imported += 1;
+    } catch (e: any) {
+      errors.push(`Row ${line}: ${e?.message || 'failed to import'}`);
+    }
+  }
+  return { imported, skipped, errors };
 }
 
 const norm = (s: string) => s.trim().toLowerCase();

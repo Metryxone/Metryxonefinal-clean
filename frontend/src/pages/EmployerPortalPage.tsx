@@ -4,6 +4,7 @@ import * as XLSX from 'xlsx';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import type { Screen } from '../App';
+import InterviewQuestionBankPage from './InterviewQuestionBankPage';
 import {
   Briefcase, Users, BarChart3, Building2, Settings, Target,
   Plus, X, Edit3, Trash2, ChevronRight, ChevronDown, ChevronUp,
@@ -289,6 +290,13 @@ export function EmployerPortalPage({ onNavigate }: EmployerPortalPageProps) {
   const [validationLoopEnabled, setValidationLoopEnabled] = useState(false);
   // MX-77X — enterpriseWorkforceConsole flag probe: gate the Workforce Intelligence tab so flag-OFF is byte-identical.
   const [workforceEnabled, setWorkforceEnabled] = useState(false);
+  // Interview Question Bank popup — opened from tab headers / preview modal via a window event.
+  const [showQuestionBank, setShowQuestionBank] = useState(false);
+  useEffect(() => {
+    const open = () => setShowQuestionBank(true);
+    window.addEventListener('metryx:open-question-bank', open);
+    return () => window.removeEventListener('metryx:open-question-bank', open);
+  }, []);
 
   const user = getUser();
 
@@ -335,6 +343,10 @@ export function EmployerPortalPage({ onNavigate }: EmployerPortalPageProps) {
   return (
     <div className="min-h-screen bg-[#f8fafc] flex flex-col">
       <Navbar onNavigate={onNavigate} />
+
+      {showQuestionBank && (
+        <InterviewQuestionBankPage asModal onClose={() => setShowQuestionBank(false)} />
+      )}
 
       <div className="flex flex-1 max-w-[1440px] mx-auto w-full px-4 py-6 gap-5">
         {/* ── Sidebar ─────────────────────────────────────────────────────── */}
@@ -4985,7 +4997,7 @@ function LegacyScreeningSimulationTab({ candidates, setCandidates, jobs, onTabCh
             <Brain size={12} /> Fitment Scores
           </button>
           {onNavigate && (
-            <button onClick={() => onNavigate('interview-bank-admin')}
+            <button onClick={() => window.dispatchEvent(new Event('metryx:open-question-bank'))}
               className="flex items-center gap-2 text-xs font-medium px-3 py-2 rounded-xl border text-white"
               style={{ backgroundColor: BRAND.accent, borderColor: BRAND.accent }}>
               <Database size={12} /> Question Bank
@@ -5268,7 +5280,7 @@ function LegacyScreeningSimulationTab({ candidates, setCandidates, jobs, onTabCh
                   Cancel
                 </button>
                 {onNavigate && (
-                  <button onClick={() => { setPreviewModal(null); onNavigate('interview-bank-admin'); }}
+                  <button onClick={() => { setPreviewModal(null); window.dispatchEvent(new Event('metryx:open-question-bank')); }}
                     className="text-xs px-3 py-2 rounded-xl border text-gray-700 hover:bg-gray-100"
                     style={{ borderColor: BRAND.accent, color: BRAND.accent }}>
                     <Database size={10} className="inline mr-1" /> Edit Bank
@@ -5601,7 +5613,7 @@ function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, o
             <Brain size={12} /> Fitment Scores
           </button>
           {onNavigate && (
-            <button onClick={() => onNavigate('interview-bank-admin')}
+            <button onClick={() => window.dispatchEvent(new Event('metryx:open-question-bank'))}
               className="flex items-center gap-2 text-xs font-medium px-3 py-2 rounded-xl border text-white"
               style={{ backgroundColor: BRAND.accent, borderColor: BRAND.accent }}>
               <Database size={12} /> Question Bank

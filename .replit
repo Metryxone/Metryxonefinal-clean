@@ -43,6 +43,10 @@ args = "live-avatar-degradation"
 task = "workflow.run"
 args = "isolation"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "voice-screening-degradation"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -119,6 +123,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npm run test:isolation"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "voice-screening-degradation"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx tests/voice-screening-degradation.test.ts"
 
 [workflows.workflow.metadata]
 isValidation = true

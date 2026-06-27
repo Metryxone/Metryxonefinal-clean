@@ -1,0 +1,33 @@
+{
+  "task": "MX-302A — Career Launchpad adoption measurement",
+  "generatedAt": "2026-06-27T02:22:04.646Z",
+  "flag": {
+    "name": "FF_CAREER_LAUNCHPAD",
+    "enabledInThisProcess": true
+  },
+  "structuralAxis": {
+    "verdict": "PASS",
+    "passed": 10,
+    "total": 10
+  },
+  "provisioning": {
+    "profilesTable": true,
+    "stageColumnProvisioned": false,
+    "auditTable": true
+  },
+  "adoptionAxis": {
+    "verdict": "UNMEASURABLE",
+    "realSeekersWithStage": null,
+    "unknownStageRows": 0,
+    "stageDistribution": null,
+    "experienceDistribution": null,
+    "registrationRoutes": 0,
+    "registrationByStage": {},
+    "switching": {
+      "totalSwitches": 0,
+      "distinctSwitchers": 0,
+      "switchesPerSwitcher": null,
+      "switchesToExperience": {}
+    }
+  }
+}

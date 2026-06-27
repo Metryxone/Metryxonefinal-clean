@@ -2,11 +2,12 @@
  * PRIVACY E2E SUITE RUNNER — wires the per-student IDOR regressions into one
  * named validation step (Task #282).
  *
- * Tasks #277/#279/#280 each added a LIVE two-student IDOR e2e against the running
+ * Tasks #277/#279/#280/#274 each added a LIVE two-student IDOR e2e against the running
  * Backend API for a distinct per-student store:
  *   - task277-profile-privacy-e2e.ts            (resume/profile/jobs/goals)
  *   - task279-studio-privacy-e2e.ts             (Leadership/Executive Studio trackers)
  *   - task280-behavioural-memory-privacy-e2e.ts (behavioural-memory snapshots + graph)
+ *   - task274-tracker-privacy-e2e.ts            (Launchpad Dashboard cross-device tracker)
  *
  * Each is a standalone tsx script that hits http://localhost:8080 exactly as a
  * browser would (live session-auth + CSRF + real Postgres), exits non-zero on a
@@ -22,20 +23,23 @@
  *   2. Otherwise, boot the backend in-process (`npx tsx index.ts`), wait for it to
  *      report ready, run the suite, then tear DOWN only the server this runner
  *      started (the dev workflow, if any, is never disturbed).
- *   3. Run all three harnesses sequentially (a shared live server + @example.com
+ *   3. Run all harnesses sequentially (a shared live server + @example.com
  *      self-clean make serial the safe ordering), collect each exit code, and
  *      exit non-zero if ANY harness failed (or if the server never came up).
  *
  * Honesty: this runner adds NO assertions of its own — it is pure orchestration.
- * The pass/fail verdict is exactly the union of the three harnesses' own exit
+ * The pass/fail verdict is exactly the union of the harnesses' own exit
  * codes, so it cannot mask a real privacy regression.
  *
  * Operator note: the PREFERRED way to run this is with the Backend API workflow
  * already up on :8080 (case 1) — then the suite uses that server's real env/flags.
  * The auto-boot (case 2) is a FALLBACK for headless/CI runs; it inherits whatever
- * env the runner has, so a flag-gated surface (e.g. task279 if its flag is OFF) could
- * fail on flag-gating rather than a true privacy regression. Run against the live
- * workflow when in doubt.
+ * env the runner has, so a flag-gated surface (e.g. task279 if its careerLaunchpad flag
+ * or task274 if its launchpadDashboard flag is OFF) could fail on flag-gating rather than
+ * a true privacy regression. The live Backend API workflow enables these via .replit
+ * [userenv.development] (FF_CAREER_LAUNCHPAD, FF_EMPLOYABILITY_STUDIO, FF_LAUNCHPAD_DASHBOARD);
+ * each flag-gated harness probes its /enabled route and fails honestly (never a false pass)
+ * if the flag is OFF. Run against the live workflow when in doubt.
  *
  * Run:  cd backend && npx tsx scripts/privacy-e2e-suite.ts
  */
@@ -49,6 +53,7 @@ const HARNESSES = [
   { name: 'profile (resume/profile/jobs/goals) — Task #277', script: 'scripts/task277-profile-privacy-e2e.ts' },
   { name: 'studio (leadership/executive trackers) — Task #279', script: 'scripts/task279-studio-privacy-e2e.ts' },
   { name: 'behavioural-memory (snapshots/graph) — Task #280', script: 'scripts/task280-behavioural-memory-privacy-e2e.ts' },
+  { name: 'launchpad-dashboard tracker (campus/fresher) — Task #274', script: 'scripts/task274-tracker-privacy-e2e.ts' },
 ];
 
 const BOOT_TIMEOUT_MS = 90_000; // server seeds at boot; give it generous headroom
@@ -56,9 +61,9 @@ const POLL_INTERVAL_MS = 1_000;
 
 // Each harness registers two @example.com students via POST /api/register. That
 // endpoint is protected by the always-on auth rate limiter (max 5 registrations
-// per 60s per IP — backend/routes.ts authRegisterLimiter). Running all three
-// harnesses back-to-back creates 6 accounts from one IP inside the window and
-// the third harness gets a 429 during setup. The rate limiter is a real security
+// per 60s per IP — backend/routes.ts authRegisterLimiter). Running all four
+// harnesses back-to-back creates 8 accounts from one IP inside the window and a
+// later harness gets a 429 during setup. The rate limiter is a real security
 // control with no test bypass, so the suite stays WITHIN it: we wait past the
 // register window between harnesses rather than weakening the limiter. Override
 // with PRIVACY_SUITE_GAP_MS=0 when the limiter isn't in play (e.g. a context that
@@ -162,7 +167,7 @@ async function teardownBackend(child: ChildProcess): Promise<void> {
 }
 
 async function main() {
-  console.log('PRIVACY E2E SUITE — per-student IDOR regressions (Tasks #277/#279/#280)');
+  console.log('PRIVACY E2E SUITE — per-student IDOR regressions (Tasks #277/#279/#280/#274)');
   console.log(`base=${BASE}\n`);
 
   let startedServer: ChildProcess | null = null;

@@ -5,11 +5,31 @@ description: Real browser-recorded voice screening (MediaRecorder->Whisper STT->
 
 # Voice Screening (Employer Portal)
 
-Replaced the candidateId-seeded ScreeningTab simulation with a real flow:
-browser MediaRecorder -> Whisper STT (gpt-4o-mini-transcribe) -> LLM rubric
-scoring across 5 voice dimensions. Flag `voiceScreening` (default OFF).
+The employer ScreeningTab has TWO implementations that must stay separable: the
+original candidateId-seeded **simulation** (`LegacyScreeningSimulationTab`) and a
+real flow (`RealVoiceScreeningTab`: browser MediaRecorder -> Whisper STT
+(gpt-4o-mini-transcribe) -> LLM rubric scoring across 5 voice dimensions). Flag
+`voiceScreening` (default OFF).
 
 ## Durable lessons / traps
+- **Flag-OFF byte-identical requires the LEGACY code path, not a disabled real
+  view:** a thin `ScreeningTab` wrapper probes `/enabled` and renders
+  `LegacyScreeningSimulationTab` while probing OR when `enabled !== true`; only
+  `enabled === true` mounts the real tab. **Why:** "flag-off = byte-identical"
+  means the user sees the EXACT prior simulation UI/behavior, so keep the original
+  verbatim as its own component rather than gating branches inside the real one.
+- **Rubric must travel with the stored question set, keyed by question id:** the
+  authored `expectedResponse`/`scoringCriteria` live on the bank
+  (`interview-question-bank.ts` `selectQuestions`, 4-tier role->industry->General
+  ->whole-bank fallback). They are persisted on `session.questions` JSONB and, at
+  finalize, re-attached to each answer via a `question_id` map before scoring.
+  **Why:** the scorer can only grade against a rubric if finalize rejoins answers
+  to their authored question; answers table alone has no rubric.
+- **Phone-leg is a provider seam, honest-disabled, never faked:**
+  `voice-screening-twilio.ts` `initiateOutboundCall` ALWAYS throws
+  `TwilioUnavailable` (-> 503) and `isTwilioConfigured()` reflects env only; UI
+  shows a "coming soon" card while browser recording stays fully active. **Why:**
+  scaffolding a future channel must not imply it works.
 - **Flag-gate ordering for byte-identical-OFF including schema:** every mutating/
   read route applies `flagGate` BEFORE the handler, and `ensureVoiceSchema()` is
   called only INSIDE flag-gated handlers — so no voice DDL is reachable when the

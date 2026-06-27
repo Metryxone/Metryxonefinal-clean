@@ -34,6 +34,11 @@ import {
   AI_PROVENANCE,
   type AnswerInput,
 } from '../services/voice-screening-engine';
+import {
+  twilioStatus,
+  initiateOutboundCall,
+  TwilioUnavailable,
+} from '../services/voice-screening-twilio';
 
 type Middleware = (req: Request, res: Response, next: any) => void;
 
@@ -282,14 +287,27 @@ export function registerVoiceScreeningRoutes(
         const row = sess.rows[0];
 
         const ans = await pool.query(
-          `SELECT question_text, transcript FROM voice_screening_answers
+          `SELECT question_index, question_id, question_text, transcript FROM voice_screening_answers
              WHERE session_id = $1 ORDER BY question_index ASC`,
           [sessionId],
         );
-        const answers: AnswerInput[] = ans.rows.map((a) => ({
-          question: a.question_text ?? '',
-          transcript: a.transcript ?? null,
-        }));
+        // Enrich each answer with the authored grading rubric carried on the
+        // session's stored question set (matched by question id), so the scorer
+        // grades against expectedResponse + scoringCriteria.
+        const storedQuestions: any[] = Array.isArray(row.questions) ? row.questions : [];
+        const rubricById = new Map<string, any>();
+        for (const q of storedQuestions) {
+          if (q && q.id) rubricById.set(String(q.id), q);
+        }
+        const answers: AnswerInput[] = ans.rows.map((a) => {
+          const rubric = rubricById.get(String(a.question_id ?? ''));
+          return {
+            question: a.question_text ?? '',
+            transcript: a.transcript ?? null,
+            expectedResponse: rubric?.expectedResponse ?? null,
+            scoringCriteria: rubric?.scoringCriteria ?? null,
+          };
+        });
 
         const report = await scoreScreening({ jobTitle: row.job_title ?? '', answers });
 
@@ -376,6 +394,38 @@ export function registerVoiceScreeningRoutes(
         res.json({ success: true, session: sessionToJson(row, ans) });
       } catch (err: any) {
         res.status(500).json({ message: err?.message || 'fetch_failed' });
+      }
+    },
+  );
+
+  // ── Phone-leg (Twilio) v2 scaffold — honestly disabled until configured ─────
+  // Reports the REAL connection state; never pretends the phone channel works.
+  app.get(
+    '/api/employer/voice-screening/phone/enabled',
+    flagGate,
+    requireAuth,
+    (_req: Request, res: Response) => {
+      res.json({ enabled: isVoiceScreeningEnabled(), ...twilioStatus() });
+    },
+  );
+
+  // Initiating a phone screen always 503s until the phone leg is built/configured.
+  app.post(
+    '/api/employer/voice-screening/phone/call',
+    flagGate,
+    requireAuth,
+    async (req: Request, res: Response) => {
+      try {
+        const sessionId = String((req.body as any)?.sessionId ?? '').trim();
+        const toNumber = String((req.body as any)?.toNumber ?? '').trim();
+        await initiateOutboundCall({ sessionId, toNumber });
+        res.json({ success: true }); // unreachable until implemented
+      } catch (err: any) {
+        const status = err instanceof TwilioUnavailable ? 503 : 500;
+        res.status(status).json({
+          message: err?.message || 'phone_call_failed',
+          phoneUnavailable: status === 503,
+        });
       }
     },
   );

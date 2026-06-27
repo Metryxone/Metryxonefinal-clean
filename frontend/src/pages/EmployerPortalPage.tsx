@@ -4822,8 +4822,483 @@ function AssessmentsTab({ candidates, setCandidates, jobs, onTabChange }: { cand
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // VOICE SCREENING TAB
+// ───────────────────────────────────────────────────────────────────────────────
+// Wrapper dispatches on the flag-gated backend probe. Flag-OFF (or while probing)
+// renders the ORIGINAL simulation (LegacyScreeningSimulationTab) byte-identically;
+// only enabled===true mounts the real voice-screening implementation.
 // ═══════════════════════════════════════════════════════════════════════════════
-function ScreeningTab({ candidates, setCandidates, jobs, onTabChange, onNavigate }: {
+function ScreeningTab(props: {
+  candidates: Candidate[];
+  setCandidates: (c: Candidate[]) => void;
+  jobs: EmployerJob[];
+  onTabChange: (t: TabId) => void;
+  onNavigate?: (screen: string) => void;
+}) {
+  const [enabled, setEnabled] = useState<boolean | null>(null);
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const res = await fetch('/api/employer/voice-screening/enabled', { headers: authHdr() });
+        if (!alive) return;
+        if (res.ok) {
+          const d = await res.json();
+          setEnabled(d.enabled === true);
+        } else setEnabled(false);
+      } catch { if (alive) setEnabled(false); }
+    })();
+    return () => { alive = false; };
+  }, []);
+  // While probing or when disabled → byte-identical original simulation.
+  if (enabled !== true) return <LegacyScreeningSimulationTab {...props} />;
+  return <RealVoiceScreeningTab {...props} />;
+}
+
+// ═══ LEGACY SIMULATION (flag-OFF path — byte-identical to pre-voice-screening) ═══
+function LegacyScreeningSimulationTab({ candidates, setCandidates, jobs, onTabChange, onNavigate }: {
+  candidates: Candidate[];
+  setCandidates: (c: Candidate[]) => void;
+  jobs: EmployerJob[];
+  onTabChange: (t: TabId) => void;
+  onNavigate?: (screen: string) => void;
+}) {
+  type ScreenStatus = 'not_started' | 'initiating' | 'in_call' | 'processing' | 'completed';
+  interface VoiceResult { overallScore: number; recommendation: 'Advance' | 'Hold' | 'Reject'; summary: string; dims: { label: string; score: number; color: string; note: string }[] }
+  interface BankQuestion { id: string; question: string; category: string; difficulty: string; expectedResponse?: string | null; }
+  interface PreviewModal { candidateId: string; candidateName: string; questions: BankQuestion[]; loading: boolean; }
+
+  const [screenStatus, setScreenStatus] = useState<Record<string, ScreenStatus>>({});
+  const [voiceResults, setVoiceResults] = useState<Record<string, VoiceResult>>({});
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [filterRole, setFilterRole] = useState('All');
+  const [fitThreshold, setFitThreshold] = useState(60);
+  const [activeCallId, setActiveCallId] = useState<string | null>(null);
+  const [previewModal, setPreviewModal] = useState<PreviewModal | null>(null);
+  const [usedQuestions, setUsedQuestions] = useState<Record<string, BankQuestion[]>>({});
+
+  const VOICE_DIMS = [
+    { label: 'Communication Clarity',   color: BRAND.primary   },
+    { label: 'Role Knowledge',          color: BRAND.accent    },
+    { label: 'Confidence & Composure',  color: BRAND.green     },
+    { label: 'Cultural Alignment',      color: BRAND.purple    },
+    { label: 'Responsiveness',          color: BRAND.orange    },
+  ];
+  const VOICE_NOTES: Record<string, string[]> = {
+    'Communication Clarity':  ['Excellent articulation throughout','Clear and structured responses','Minor filler words noted','Struggled with complex explanations'],
+    'Role Knowledge':         ['Deep domain expertise demonstrated','Good understanding of core concepts','Some gaps in advanced topics','Limited knowledge of role requirements'],
+    'Confidence & Composure': ['Poised and assured throughout','Maintained composure under pressure','Slight nervousness at start, recovered well','Appeared stressed when challenged'],
+    'Cultural Alignment':     ['Strong value alignment observed','Collaborative mindset evident','Growth orientation strongly expressed','Limited team experience shared'],
+    'Responsiveness':         ['Quick, relevant answers throughout','Answered all questions completely','Occasionally paused before responding','Several questions left partially answered'],
+  };
+
+  // ── Fetch questions from the question bank for a candidate's role/industry ──
+  const openPreview = async (c: Candidate) => {
+    setPreviewModal({ candidateId: c._id, candidateName: c.name, questions: [], loading: true });
+    try {
+      const params = new URLSearchParams({ active: 'true', limit: '12' });
+      if (c.jobTitle) params.set('role', c.jobTitle);
+      const res = await fetch(`/api/interview-questions?${params}`);
+      const data = await res.json();
+      const qs: BankQuestion[] = data.success ? (data.questions || []).slice(0, 10) : [];
+      // fallback: pick generic questions if no role-specific ones exist
+      if (qs.length < 5) {
+        const res2 = await fetch('/api/interview-questions?active=true&limit=10');
+        const data2 = await res2.json();
+        const generic: BankQuestion[] = data2.success ? data2.questions || [] : [];
+        const merged = [...qs, ...generic.filter(q => !qs.find(x => x.id === q.id))].slice(0, 10);
+        setPreviewModal(m => m ? { ...m, questions: merged, loading: false } : null);
+      } else {
+        setPreviewModal(m => m ? { ...m, questions: qs, loading: false } : null);
+      }
+    } catch {
+      // If API fails, show fallback questions list based on categories
+      const fallback: BankQuestion[] = VOICE_DIMS.map((d, i) => ({
+        id: `fallback-${i}`,
+        question: ['Tell me about yourself and your experience relevant to this role.',
+          'Describe a challenging project — your role and outcome.',
+          'How do you prioritise competing tasks and deadlines?',
+          'Give an example of resolving a conflict in a team.',
+          'Where do you see yourself in 3–5 years in this field?'][i] || '',
+        category: d.label, difficulty: 'Medium',
+      }));
+      setPreviewModal(m => m ? { ...m, questions: fallback, loading: false } : null);
+    }
+  };
+
+  const runScreenCall = (candidateId: string, questions: BankQuestion[]) => {
+    setPreviewModal(null);
+    setUsedQuestions(q => ({ ...q, [candidateId]: questions }));
+    setScreenStatus(s => ({ ...s, [candidateId]: 'initiating' }));
+    setActiveCallId(candidateId);
+    setTimeout(() => {
+      setScreenStatus(s => ({ ...s, [candidateId]: 'in_call' }));
+      setTimeout(() => {
+        setScreenStatus(s => ({ ...s, [candidateId]: 'processing' }));
+        setTimeout(() => {
+          const seed = candidateId.charCodeAt(0) + candidateId.charCodeAt(candidateId.length - 1);
+          const dimScores = VOICE_DIMS.map((_, i) => Math.min(95, Math.max(35, 55 + (seed * (i + 2)) % 35)));
+          const overall = Math.round(dimScores.reduce((a, b) => a + b, 0) / dimScores.length);
+          const result: VoiceResult = {
+            overallScore: overall,
+            recommendation: overall >= 72 ? 'Advance' : overall >= 55 ? 'Hold' : 'Reject',
+            summary: overall >= 72
+              ? `Strong candidate — demonstrates clear communication, solid role knowledge, and high cultural alignment. Recommended for next round.`
+              : overall >= 55
+              ? `Decent performance overall. Some areas need improvement but shows potential. Recommend a technical panel follow-up.`
+              : `Below expectations on key screening parameters. Role knowledge and communication clarity need significant improvement.`,
+            dims: VOICE_DIMS.map((d, i) => ({ label: d.label, score: dimScores[i], color: d.color, note: VOICE_NOTES[d.label][dimScores[i] >= 75 ? 0 : dimScores[i] >= 60 ? 1 : dimScores[i] >= 45 ? 2 : 3] })),
+          };
+          setVoiceResults(r => ({ ...r, [candidateId]: result }));
+          setScreenStatus(s => ({ ...s, [candidateId]: 'completed' }));
+          setActiveCallId(null);
+          setExpandedId(candidateId);
+        }, 2500);
+      }, 4000);
+    }, 1500);
+  };
+
+  const eligible = candidates.filter(c => c.assessmentScore >= fitThreshold && c.stage !== 'Rejected');
+  const roles = ['All', ...Array.from(new Set(candidates.map(c => c.jobTitle).filter(Boolean)))];
+  const displayList = filterRole === 'All' ? eligible : eligible.filter(c => c.jobTitle === filterRole);
+
+  const completedScreens = Object.values(screenStatus).filter(s => s === 'completed').length;
+  const avgVoiceScore = completedScreens > 0 ? Math.round(Object.values(voiceResults).reduce((s, r) => s + r.overallScore, 0) / completedScreens) : 0;
+  const advanceCount = Object.values(voiceResults).filter(r => r.recommendation === 'Advance').length;
+
+  const getStatusLabel = (id: string) => {
+    const s = screenStatus[id];
+    if (!s || s === 'not_started') return null;
+    return { initiating: { label: 'Initiating call…', color: BRAND.orange }, in_call: { label: '🔴 Live Call', color: BRAND.red }, processing: { label: 'AI Analysing…', color: BRAND.purple }, completed: { label: 'Completed', color: BRAND.green } }[s];
+  };
+
+  return (
+    <div className="space-y-5">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-gray-900">AI Voice Bot Screening</h1>
+          <p className="text-xs text-gray-500 mt-0.5">AI-powered phone screening for fitment-qualified candidates — automated calls, instant analysis</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <button onClick={() => onTabChange('assessments')}
+            className="flex items-center gap-2 text-xs font-medium px-3 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50">
+            <Brain size={12} /> Fitment Scores
+          </button>
+          {onNavigate && (
+            <button onClick={() => onNavigate('interview-bank-admin')}
+              className="flex items-center gap-2 text-xs font-medium px-3 py-2 rounded-xl border text-white"
+              style={{ backgroundColor: BRAND.accent, borderColor: BRAND.accent }}>
+              <Database size={12} /> Question Bank
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* KPIs */}
+      <div className="grid grid-cols-4 gap-3">
+        <KPICard label="Eligible for Screen" value={eligible.length} icon={<Users size={16} />} color={BRAND.primary} sub={`≥${fitThreshold}% fitment`} />
+        <KPICard label="Screens Done" value={completedScreens} icon={<Mic size={16} />} color={BRAND.accent} />
+        <KPICard label="Avg Voice Score" value={avgVoiceScore || '—'} icon={<Volume2 size={16} />} color={BRAND.green} />
+        <KPICard label="Advance to Interview" value={advanceCount} icon={<UserCheck size={16} />} color={BRAND.orange} trend="up" />
+      </div>
+
+      {/* How it works */}
+      <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+        <div className="flex items-center gap-2 mb-4">
+          <BotMessageSquare size={16} style={{ color: BRAND.primary }} />
+          <h3 className="text-sm font-semibold text-gray-800">How AI Voice Screening Works</h3>
+        </div>
+        <div className="grid grid-cols-4 gap-4">
+          {[
+            { step: '1', icon: <PhoneCall size={18} />, title: 'Automated Call', desc: 'Pragati AI places a call to the candidate\'s registered phone number.', color: BRAND.primary },
+            { step: '2', icon: <BotMessageSquare size={18} />, title: 'Structured Interview', desc: '8–10 role-specific questions covering knowledge, behaviour, and culture fit.', color: BRAND.accent },
+            { step: '3', icon: <Mic size={18} />, title: 'AI Analysis', desc: 'Voice patterns, answer quality, and confidence analysed in real-time by AI.', color: BRAND.green },
+            { step: '4', icon: <BadgeCheck size={18} />, title: 'Instant Report', desc: 'Score report with dimension breakdown + recommendation available within minutes.', color: BRAND.purple },
+          ].map(s => (
+            <div key={s.step} className="text-center">
+              <div className="w-10 h-10 rounded-full mx-auto mb-2 flex items-center justify-center text-white font-bold text-sm" style={{ backgroundColor: s.color }}>{s.step}</div>
+              <div className="w-8 h-8 rounded-xl mx-auto mb-2 flex items-center justify-center" style={{ backgroundColor: `${s.color}15`, color: s.color }}>{s.icon}</div>
+              <div className="text-xs font-semibold text-gray-800 mb-1">{s.title}</div>
+              <p className="text-[10px] text-gray-500 leading-relaxed">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Threshold + Role filter */}
+      <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm flex items-center gap-4 flex-wrap">
+        <div className="flex items-center gap-2">
+          <SlidersHorizontal size={13} style={{ color: BRAND.primary }} />
+          <span className="text-xs font-semibold text-gray-700">Fitment Threshold:</span>
+          <input type="range" min={30} max={90} step={5} value={fitThreshold} onChange={e => setFitThreshold(+e.target.value)}
+            className="w-24 h-1.5 rounded" style={{ accentColor: BRAND.primary }} />
+          <span className="text-xs font-bold" style={{ color: BRAND.primary }}>≥{fitThreshold}%</span>
+        </div>
+        <div className="flex items-center gap-2 ml-auto">
+          <span className="text-xs text-gray-500">Filter by role:</span>
+          <select value={filterRole} onChange={e => setFilterRole(e.target.value)} className="text-xs border border-gray-200 rounded-lg px-2 h-8 focus:outline-none">
+            {roles.map(r => <option key={r}>{r}</option>)}
+          </select>
+        </div>
+      </div>
+
+      {/* Active call banner */}
+      {activeCallId && (
+        <div className="flex items-center gap-3 p-4 rounded-2xl border-2 animate-pulse" style={{ borderColor: BRAND.red, backgroundColor: `${BRAND.red}06` }}>
+          <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: BRAND.red }}>
+            <PhoneCall size={14} className="text-white" />
+          </div>
+          <div>
+            <div className="text-sm font-bold text-red-600">🔴 Live Voice Call in Progress</div>
+            <div className="text-xs text-gray-500">Pragati AI is conducting structured screening for {candidates.find(c => c._id === activeCallId)?.name}…</div>
+          </div>
+        </div>
+      )}
+
+      {/* Candidate screening list */}
+      <div className="space-y-3">
+        {displayList.length === 0 ? (
+          <div className="bg-white border border-gray-100 rounded-2xl p-10 text-center shadow-sm">
+            <Mic size={28} className="mx-auto mb-2 text-gray-300" />
+            <div className="text-sm text-gray-500 font-medium mb-1">No candidates qualify yet</div>
+            <p className="text-xs text-gray-400">Lower the fitment threshold or send assessments to more candidates.</p>
+            <button onClick={() => onTabChange('assessments')} className="mt-3 text-xs font-medium px-4 py-2 rounded-xl text-white" style={{ backgroundColor: BRAND.primary }}>
+              Go to Assessments →
+            </button>
+          </div>
+        ) : displayList.map(c => {
+          const status = screenStatus[c._id];
+          const result = voiceResults[c._id];
+          const statusLabel = getStatusLabel(c._id);
+          return (
+            <div key={c._id} className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+              <div className="flex items-center justify-between p-4 gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="relative">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold shrink-0"
+                      style={{ background: `${BRAND.primary}` }}>{c.name.charAt(0)}</div>
+                    {status === 'in_call' && <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white bg-red-500 animate-pulse" />}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold text-gray-800">{c.name}</div>
+                    <div className="text-[10px] text-gray-400">{c.currentRole || c.jobTitle || '—'} · {c.phone || 'No phone on file'}</div>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <Chip label={`Fitment ${c.assessmentScore}%`} color={c.assessmentScore >= 75 ? BRAND.green : BRAND.accent} size="xs" />
+                      {statusLabel && <Chip label={statusLabel.label} color={statusLabel.color} size="xs" />}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  {result && (
+                    <div className="text-center mr-2">
+                      <div className="text-lg font-bold" style={{ color: result.recommendation === 'Advance' ? BRAND.green : result.recommendation === 'Hold' ? BRAND.orange : BRAND.red }}>
+                        {result.overallScore}
+                      </div>
+                      <div className="text-[9px] font-semibold" style={{ color: result.recommendation === 'Advance' ? BRAND.green : result.recommendation === 'Hold' ? BRAND.orange : BRAND.red }}>
+                        {result.recommendation}
+                      </div>
+                    </div>
+                  )}
+                  {(!status || status === 'not_started') && (
+                    <button onClick={() => openPreview(c)} disabled={!!activeCallId}
+                      className="flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl text-white"
+                      style={{ backgroundColor: activeCallId ? '#94a3b8' : BRAND.primary }}>
+                      <PhoneCall size={12} /> Preview & Screen
+                    </button>
+                  )}
+                  {(status === 'initiating' || status === 'in_call' || status === 'processing') && (
+                    <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl text-white" style={{ backgroundColor: status === 'in_call' ? BRAND.red : BRAND.orange }}>
+                      <RefreshCw size={11} className="animate-spin" />
+                      {status === 'initiating' ? 'Calling…' : status === 'in_call' ? 'In Call' : 'Analysing…'}
+                    </div>
+                  )}
+                  {status === 'completed' && result && (
+                    <button onClick={() => setExpandedId(expandedId === c._id ? null : c._id)}
+                      className="text-[10px] font-medium px-3 py-2 rounded-xl border" style={{ borderColor: `${BRAND.primary}30`, color: BRAND.primary }}>
+                      {expandedId === c._id ? 'Hide Report' : 'View Report'}
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Expanded voice screening report */}
+              {expandedId === c._id && result && (
+                <div className="border-t border-gray-100 p-5 bg-gray-50/50">
+                  <div className="flex items-start justify-between mb-4 gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <BotMessageSquare size={14} style={{ color: BRAND.primary }} />
+                        <span className="text-xs font-semibold text-gray-800">AI Screening Summary</span>
+                      </div>
+                      <p className="text-[11px] text-gray-600 leading-relaxed italic">"{result.summary}"</p>
+                    </div>
+                    <div className="text-center shrink-0">
+                      <div className="text-3xl font-black" style={{ color: result.recommendation === 'Advance' ? BRAND.green : result.recommendation === 'Hold' ? BRAND.orange : BRAND.red }}>
+                        {result.overallScore}
+                      </div>
+                      <div className="text-[10px] text-gray-500">Voice Score</div>
+                      <div className="mt-1 px-2 py-0.5 rounded-lg text-[10px] font-bold text-white"
+                        style={{ backgroundColor: result.recommendation === 'Advance' ? BRAND.green : result.recommendation === 'Hold' ? BRAND.orange : BRAND.red }}>
+                        {result.recommendation}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-2.5">
+                    {result.dims.map(d => (
+                      <div key={d.label}>
+                        <div className="flex justify-between text-[10px] mb-1">
+                          <span className="font-medium text-gray-700">{d.label}</span>
+                          <span className="font-bold" style={{ color: d.color }}>{d.score}/100</span>
+                        </div>
+                        <div className="h-2 rounded-full bg-gray-200 overflow-hidden mb-0.5">
+                          <div className="h-full rounded-full transition-all duration-700" style={{ width: `${d.score}%`, backgroundColor: d.color }} />
+                        </div>
+                        <div className="text-[9px] text-gray-400 italic">{d.note}</div>
+                      </div>
+                    ))}
+                  </div>
+                  {result.recommendation === 'Advance' && (
+                    <div className="mt-4 flex items-center justify-between p-3 rounded-xl border" style={{ borderColor: `${BRAND.green}30`, backgroundColor: `${BRAND.green}06` }}>
+                      <div className="flex items-center gap-2 text-xs font-medium text-gray-700">
+                        <CheckCircle size={13} style={{ color: BRAND.green }} />
+                        This candidate is cleared for interview scheduling
+                      </div>
+                      <button onClick={() => onTabChange('interviews')}
+                        className="text-[10px] font-medium px-3 py-1.5 rounded-lg text-white flex items-center gap-1"
+                        style={{ backgroundColor: BRAND.green }}>
+                        <Calendar size={10} /> Schedule Interview
+                      </button>
+                    </div>
+                  )}
+                  {/* Questions Asked in this screening */}
+                  {usedQuestions[c._id] && usedQuestions[c._id].length > 0 && (
+                    <div className="mt-4 border-t pt-3">
+                      <div className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+                        <Database size={9} /> Questions used in this screening
+                      </div>
+                      <div className="space-y-1.5">
+                        {usedQuestions[c._id].map((q, i) => (
+                          <div key={q.id} className="flex gap-2 items-start">
+                            <span className="w-4 h-4 rounded-full flex items-center justify-center text-white text-[8px] font-bold shrink-0 mt-0.5"
+                              style={{ backgroundColor: BRAND.primary }}>
+                              {i + 1}
+                            </span>
+                            <p className="text-[10px] text-gray-500 leading-relaxed">{q.question}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ── Question Preview Modal ─────────────────────────────────────────── */}
+      {previewModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col">
+            {/* Modal header */}
+            <div className="flex items-center justify-between p-5 border-b shrink-0">
+              <div>
+                <h2 className="text-sm font-bold text-gray-800 flex items-center gap-2">
+                  <Mic size={14} style={{ color: BRAND.primary }} />
+                  AI Screening Preview
+                </h2>
+                <p className="text-[10px] text-gray-400 mt-0.5">
+                  {previewModal.candidateName} · These questions will guide the Pragati AI voice call
+                </p>
+              </div>
+              <button onClick={() => setPreviewModal(null)} className="text-gray-400 hover:text-gray-600">
+                <X size={15} />
+              </button>
+            </div>
+
+            {/* Questions list */}
+            <div className="flex-1 overflow-y-auto p-5">
+              {previewModal.loading ? (
+                <div className="flex flex-col items-center justify-center py-10 text-gray-400">
+                  <RefreshCw size={20} className="animate-spin mb-2" />
+                  <span className="text-xs">Loading questions from bank…</span>
+                </div>
+              ) : previewModal.questions.length === 0 ? (
+                <div className="text-center py-8 text-gray-400 text-xs">
+                  No questions available in the bank. Add questions via the Question Bank admin.
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <p className="text-[10px] text-gray-400 mb-3">
+                    {previewModal.questions.length} questions selected from the bank — AI will adapt depth based on responses:
+                  </p>
+                  {previewModal.questions.map((q, idx) => (
+                    <div key={q.id} className="flex gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50">
+                      <div className="w-6 h-6 rounded-full flex items-center justify-center text-white text-[10px] font-bold shrink-0"
+                        style={{ backgroundColor: BRAND.primary }}>
+                        {idx + 1}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[11px] text-gray-700 font-medium leading-relaxed">{q.question}</p>
+                        <div className="flex items-center gap-1.5 mt-1.5">
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-full font-medium"
+                            style={{ backgroundColor: `${BRAND.primary}15`, color: BRAND.primary }}>
+                            {q.category}
+                          </span>
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-full font-medium"
+                            style={{ backgroundColor: q.difficulty === 'Hard' ? '#ef444415' : q.difficulty === 'Easy' ? '#22c55e15' : '#f9731615', color: q.difficulty === 'Hard' ? '#ef4444' : q.difficulty === 'Easy' ? '#22c55e' : '#f97316' }}>
+                            {q.difficulty}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Modal footer */}
+            <div className="flex items-center justify-between gap-3 p-5 border-t bg-gray-50/50 shrink-0">
+              <div className="text-[10px] text-gray-400">
+                Call will auto-analyse voice, tone & answer quality via Pragati AI
+              </div>
+              <div className="flex gap-2">
+                <button onClick={() => setPreviewModal(null)}
+                  className="text-xs px-3 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-100">
+                  Cancel
+                </button>
+                {onNavigate && (
+                  <button onClick={() => { setPreviewModal(null); onNavigate('interview-bank-admin'); }}
+                    className="text-xs px-3 py-2 rounded-xl border text-gray-700 hover:bg-gray-100"
+                    style={{ borderColor: BRAND.accent, color: BRAND.accent }}>
+                    <Database size={10} className="inline mr-1" /> Edit Bank
+                  </button>
+                )}
+                <button
+                  onClick={() => runScreenCall(previewModal.candidateId, previewModal.questions)}
+                  disabled={previewModal.loading}
+                  className="flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl text-white font-medium"
+                  style={{ backgroundColor: previewModal.loading ? '#94a3b8' : BRAND.primary }}>
+                  <PhoneCall size={11} /> Start Call
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// INTERVIEW HUB TAB
+// ═══════════════════════════════════════════════════════════════════════════════
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// REAL VOICE SCREENING TAB (flag-ON) — browser-recorded answers, AI transcribe+score
+// ═══════════════════════════════════════════════════════════════════════════════
+function RealVoiceScreeningTab({ candidates, setCandidates, jobs, onTabChange, onNavigate }: {
   candidates: Candidate[];
   setCandidates: (c: Candidate[]) => void;
   jobs: EmployerJob[];
@@ -4868,6 +5343,8 @@ function ScreeningTab({ candidates, setCandidates, jobs, onTabChange, onNavigate
   const [fitThreshold, setFitThreshold] = useState(60);
   const [activeCallId, setActiveCallId] = useState<string | null>(null);
   const [session, setSession] = useState<ScreenSession | null>(null);
+  const [phone, setPhone] = useState<{ loading: boolean; connected: boolean; message: string }>({ loading: true, connected: false, message: '' });
+  const hydratedRef = useRef(false);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -4908,6 +5385,52 @@ function ScreeningTab({ candidates, setCandidates, jobs, onTabChange, onNavigate
     })();
     return () => { alive = false; };
   }, []);
+
+  // ── Hydrate persisted state once enabled: honest phone-leg status + the latest
+  //    completed report per candidate (so reports survive a refresh). ───────────
+  useEffect(() => {
+    if (feature.loading || !feature.enabled || hydratedRef.current || candidates.length === 0) return;
+    hydratedRef.current = true;
+    let alive = true;
+    (async () => {
+      // Phone-leg honest status (v2 scaffold — disabled until configured).
+      try {
+        const pr = await fetch('/api/employer/voice-screening/phone/enabled', { headers: authHdr() });
+        if (alive && pr.ok) {
+          const pd = await pr.json();
+          setPhone({ loading: false, connected: !!pd.connected, message: pd.message || '' });
+        } else if (alive) setPhone(p => ({ ...p, loading: false }));
+      } catch { if (alive) setPhone(p => ({ ...p, loading: false })); }
+
+      // Rehydrate the latest completed screening per candidate.
+      for (const id of candidates.map(c => c._id)) {
+        if (!alive) return;
+        try {
+          const res = await fetch(`/api/employer/voice-screening/candidates/${id}/latest`, { headers: authHdr() });
+          if (!res.ok) continue;
+          const data = await res.json();
+          const sess = data?.session;
+          if (!sess || sess.status !== 'completed') continue;
+          if (!alive) return;
+          setVoiceResults(r => ({ ...r, [id]: {
+            overallScore: sess.overallScore ?? null,
+            recommendation: sess.recommendation ?? null,
+            summary: sess.summary || '',
+            dimensions: sess.dimensions || [],
+            abstained: !!sess.abstained,
+            answeredCount: sess.answeredCount ?? 0,
+            questionCount: sess.questionCount ?? 0,
+            provenance: sess.provenance || '',
+          } }));
+          setScreenStatus(s => ({ ...s, [id]: 'completed' }));
+          if (Array.isArray(sess.questions) && sess.questions.length) {
+            setUsedQuestions(q => ({ ...q, [id]: sess.questions }));
+          }
+        } catch { /* per-candidate hydration is best-effort */ }
+      }
+    })();
+    return () => { alive = false; };
+  }, [feature.loading, feature.enabled, candidates]);
 
   // ── Open the question preview (real authored, role-tailored question set) ─────
   const openPreview = async (c: Candidate) => {
@@ -5096,6 +5619,13 @@ function ScreeningTab({ candidates, setCandidates, jobs, onTabChange, onNavigate
       {!feature.loading && feature.enabled && !feature.aiReady && (
         <div className="p-4 rounded-2xl border text-xs" style={{ borderColor: `${BRAND.orange}40`, backgroundColor: `${BRAND.orange}08`, color: '#92400e' }}>
           Voice screening is enabled, but the AI provider isn't configured yet — recording is disabled until an OpenAI key is connected. No scores are produced or fabricated in the meantime.
+        </div>
+      )}
+      {/* Phone-leg (v2) — honestly disabled until configured; browser recording stays active */}
+      {!phone.loading && feature.enabled && !phone.connected && (
+        <div className="p-4 rounded-2xl border text-xs flex items-start gap-2" style={{ borderColor: '#e5e7eb', backgroundColor: '#f9fafb', color: '#6b7280' }}>
+          <PhoneCall size={13} style={{ marginTop: 1, flexShrink: 0 }} />
+          <span><span className="font-semibold text-gray-700">Outbound phone screening (coming soon):</span> {phone.message || 'Phone screening is not configured yet.'} Browser-based recording below is fully active.</span>
         </div>
       )}
 

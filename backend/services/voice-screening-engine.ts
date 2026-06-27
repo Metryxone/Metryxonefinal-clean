@@ -21,6 +21,7 @@
  */
 import OpenAI, { toFile } from 'openai';
 import { detectAudioFormat } from '../replit_integrations/audio/client';
+import { selectQuestions } from './interview-question-bank';
 
 export const VOICE_DIMENSIONS = [
   { key: 'communication_clarity', label: 'Communication Clarity' },
@@ -72,69 +73,35 @@ export interface ScreeningQuestion {
   category: string;
   difficulty: string;
   dimension: string;
+  expectedResponse?: string;
+  scoringCriteria?: string;
 }
 
-export function buildQuestionSet(jobTitle?: string): ScreeningQuestion[] {
-  const role = (jobTitle || '').trim() || 'this role';
-  const dimLabel = (k: string) => VOICE_DIMENSIONS.find((d) => d.key === k)!.label;
-  return [
-    {
-      id: 'vs-intro',
-      dimension: 'communication_clarity',
-      category: dimLabel('communication_clarity'),
-      difficulty: 'Easy',
-      question: `To start, tell me about yourself and the experience that makes you a strong fit for ${role}.`,
-    },
-    {
-      id: 'vs-role-core',
-      dimension: 'role_knowledge',
-      category: dimLabel('role_knowledge'),
-      difficulty: 'Medium',
-      question: `What do you see as the core responsibilities of ${role}, and how have you handled them in your past work?`,
-    },
-    {
-      id: 'vs-role-depth',
-      dimension: 'role_knowledge',
-      category: dimLabel('role_knowledge'),
-      difficulty: 'Hard',
-      question: `Walk me through a challenging problem in ${role} that you solved — what made it hard and what did you do?`,
-    },
-    {
-      id: 'vs-confidence',
-      dimension: 'confidence_composure',
-      category: dimLabel('confidence_composure'),
-      difficulty: 'Medium',
-      question: `Describe a high-pressure situation at work. How did you stay composed and what was the outcome?`,
-    },
-    {
-      id: 'vs-prioritise',
-      dimension: 'responsiveness',
-      category: dimLabel('responsiveness'),
-      difficulty: 'Medium',
-      question: `How do you prioritise competing tasks and deadlines when everything feels urgent?`,
-    },
-    {
-      id: 'vs-conflict',
-      dimension: 'cultural_alignment',
-      category: dimLabel('cultural_alignment'),
-      difficulty: 'Medium',
-      question: `Tell me about a time you disagreed with a teammate or manager. How did you handle it?`,
-    },
-    {
-      id: 'vs-values',
-      dimension: 'cultural_alignment',
-      category: dimLabel('cultural_alignment'),
-      difficulty: 'Easy',
-      question: `What kind of work environment helps you do your best work, and what do you value in a team?`,
-    },
-    {
-      id: 'vs-growth',
-      dimension: 'communication_clarity',
-      category: dimLabel('communication_clarity'),
-      difficulty: 'Easy',
-      question: `Where do you want to grow in the next 2–3 years, and how does ${role} fit that path?`,
-    },
-  ];
+/**
+ * Build a role/industry-tailored screening set from the structured, rubric-bearing
+ * interview question bank (authored content — nothing fabricated). Each returned
+ * question carries its grading rubric (expectedResponse + scoringCriteria) so the
+ * scorer can grade against the authored criteria.
+ */
+export function buildQuestionSet(
+  jobTitle?: string,
+  opts: { industry?: string; level?: string; limit?: number } = {},
+): ScreeningQuestion[] {
+  const selected = selectQuestions({
+    role: jobTitle,
+    industry: opts.industry,
+    level: opts.level,
+    limit: opts.limit ?? 8,
+  });
+  return selected.map((q) => ({
+    id: q.id,
+    question: q.question,
+    category: q.category,
+    difficulty: q.difficulty,
+    dimension: q.dimension,
+    expectedResponse: q.expectedResponse,
+    scoringCriteria: q.scoringCriteria,
+  }));
 }
 
 // ── Transcription ────────────────────────────────────────────────────────────
@@ -173,6 +140,8 @@ export async function transcribeAudio(buffer: Buffer): Promise<TranscriptionResu
 export interface AnswerInput {
   question: string;
   transcript: string | null;
+  expectedResponse?: string | null;
+  scoringCriteria?: string | null;
 }
 
 export interface DimScore {
@@ -230,6 +199,7 @@ export async function scoreScreening(opts: {
     `You are an expert hiring screener. Score a candidate's spoken interview answers across exactly these five dimensions: ${dimList}.\n` +
     `Rules:\n` +
     `- Score each dimension 0-100 using ONLY evidence found in the transcripts.\n` +
+    `- Where a question provides an "Expected" answer and a "Scoring guide", grade the candidate's response AGAINST that authored rubric — reward evidence that matches the expected response and the scoring guide, and note where it falls short.\n` +
     `- If a dimension has no supporting evidence, set its score to null and explain why in the note. Never guess a number.\n` +
     `- Do NOT invent facts. Be specific and cite what the candidate actually said.\n` +
     `- These are screening signals to ASSIST a human recruiter — never a final hiring decision.\n` +
@@ -237,9 +207,17 @@ export async function scoreScreening(opts: {
     `{"dimensions":[{"key":"communication_clarity","score":<0-100 or null>,"note":"..."}, ... all five keys ...],` +
     `"summary":"2-3 sentence honest summary","recommendation":"Advance" | "Hold" | "Reject"}`;
   const user =
-    `Role: ${opts.jobTitle || '(unspecified)'}\n\nTranscribed answers:\n` +
+    `Role: ${opts.jobTitle || '(unspecified)'}\n\nTranscribed answers (with grading rubric where authored):\n` +
     answered
-      .map((a, i) => `Q${i + 1}: ${a.question}\nAnswer: ${(a.transcript || '').trim()}`)
+      .map((a, i) => {
+        const parts = [`Q${i + 1}: ${a.question}`];
+        const expected = (a.expectedResponse || '').trim();
+        const criteria = (a.scoringCriteria || '').trim();
+        if (expected) parts.push(`Expected: ${expected}`);
+        if (criteria) parts.push(`Scoring guide: ${criteria}`);
+        parts.push(`Answer: ${(a.transcript || '').trim()}`);
+        return parts.join('\n');
+      })
       .join('\n\n');
 
   let parsed: any = {};

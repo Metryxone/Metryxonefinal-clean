@@ -1104,3 +1104,9 @@ id = "olMkMU2zFKNlaZvclx54N"
 uri = "file://backend/audit/mx-700/phase-2-business-model-audit.md"
 type = "text"
 title = "MX-700 Phase 2 — CAPADEX Business Model Audit"
+
+[[outputs]]
+id = "7B4I_ciZzfco9JDTqu0Ym"
+uri = "file://backend/audit/mx-700/phase-3-global-research-benchmarking.md"
+type = "text"
+title = "MX-700 Phase 3 — Global Research & Benchmarking"

@@ -1,6 +1,7 @@
 import { BRAND } from '@/design-system/tokens';
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { FresherHubTab } from './career/FresherHubTab';
+import CareerLaunchpadDashboard from './career/CareerLaunchpadDashboard';
 import { LeadershipStudioTab } from './career/LeadershipStudioTab';
 import { ExecutiveStudioTab } from './career/ExecutiveStudioTab';
 import type { CareerStage, ExperienceId } from '@/lib/career/experienceRouting';
@@ -1285,7 +1286,9 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
           )}
           {tab === 'mentors'    && <MentorsTab profile={profile} />}
           {tab === 'goals'      && <GoalsTab goals={goals} setGoals={setGoals} userId={userId} />}
-          {tab === 'fresher-hub'  && <FresherHubTab profile={profile} title={launchpadEnabled ? 'Career Launchpad' : undefined} />}
+          {tab === 'fresher-hub'  && (launchpadEnabled
+            ? <CareerLaunchpadDashboard profile={profile} brain={careerBrain} eiScore={eiScore} eiBreakdown={eiBreakdown} jobs={jobs} goals={goals} userId={userId} hasAssessment={hasAssessment} openJobs={openJobsCount} onTabChange={setTab} />
+            : <FresherHubTab profile={profile} />)}
           {tab === 'leadership-studio' && <LeadershipStudioTab profile={profile} />}
           {tab === 'executive-studio'  && <ExecutiveStudioTab profile={profile} />}
           {tab === 'simulations'  && <SimulationsTab profile={profile} eiScore={eiScore} />}

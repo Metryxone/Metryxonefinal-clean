@@ -94,6 +94,7 @@ import { registerAdaptiveBenchmarkRoutes } from "./routes/adaptive-benchmark";
 import { registerMobilityRoutes } from "./routes/mobility";
 import { registerCareerStageGuidanceRoutes } from "./routes/career-stage-guidance";
 import { registerCareerDiscoveryRoutes } from "./routes/career-discovery";
+import { registerCareerLaunchpadRoutes } from "./routes/career-launchpad";
 import { registerLongitudinalRoutes } from "./routes/longitudinal";
 import { registerWorkforceAnalyticsRoutes } from "./routes/workforce-analytics";
 import { registerGovernanceWorkflowRoutes } from "./routes/governance-workflow";
@@ -13907,6 +13908,7 @@ Rules:
   registerCompetencyAssessmentRuntime({ app, pool: concernsPool, requireAuth });
   registerCareerStageGuidanceRoutes({ app, pool: concernsPool });
   registerCareerDiscoveryRoutes(app, concernsPool, requireAuth);
+  registerCareerLaunchpadRoutes(app, concernsPool, requireAuth);
   registerLongitudinalRoutes({ app, pool: concernsPool });
   registerWorkforceAnalyticsRoutes({ app, pool: concernsPool });
   registerGovernanceWorkflowRoutes({ app, pool: concernsPool });

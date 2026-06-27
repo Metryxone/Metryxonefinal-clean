@@ -118,3 +118,14 @@ missing → "Not configured" (Voice needs `OPENAI_API_KEY`; Video needs HeyGen k
 Live needs both). Only fully-keyed modes become launchable. Enable flags in the **development**
 env (`setEnvVars`, dev-only) to preview without altering production — see
 `workflow-limit-flag-via-env-var.md`.
+
+**Pre-launch E2E verification is split — only HALF is agent-automatable.** The true end-to-end
+(avatar speaks/listens over WebRTC, live STT, webcam capture, off-topic redirect, 5-dim score)
+REQUIRES (a) real PAID HeyGen *Interactive/Streaming* Avatar keys + OpenAI AND (b) a human in a
+browser with a mic+webcam — an agent cannot drive the conversation. What IS automatable is the
+server-side seam: token mint (`createLiveAvatarToken` → AvatarUnavailable when unconfigured),
+`/live/enabled` `ready = connected && aiReady`, and `orchestrateNextTurn` (LLM when configured,
+deterministic `authored_fallback` otherwise). Harness `backend/audit/live-avatar-verification/
+verify-live-avatar.ts` is dual-mode (no-keys→honest-degradation 4/4, keys→positive path); the
+human steps live in `RUNBOOK.md` (mapped to each acceptance criterion). Don't fabricate a
+"verified" result for the browser half — mark unobservable steps NOT VERIFIED.

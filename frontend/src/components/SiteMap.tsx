@@ -12,7 +12,7 @@ import {
   BarChart3, Search, Star, LayoutDashboard, Beaker,
   Gauge, GitMerge, UserCheck, TrendingUp, FileSignature, Upload,
   Network, Video, Gamepad2, ListChecks, Swords, ShieldCheck, Baby,
-  ExternalLink, Zap
+  ExternalLink, Zap, Compass
 } from 'lucide-react';
 
 interface SiteMapProps {
@@ -239,11 +239,40 @@ const categories: PageCategory[] = [
     ]
   },
   {
+    title: "Adaptive Intelligence",
+    description: "Ontology, benchmarking and adaptive career intelligence",
+    color: "#344E86",
+    pages: [
+      { screen: 'ontology-explorer', label: 'Ontology Explorer', description: 'Explore the competency ontology and behavioural signal taxonomy', icon: <Network size={20} /> },
+      { screen: 'scientific-competency', label: 'Scientific Competency Intelligence', description: 'Evidence-based competency measurement and scoring methodology', icon: <Beaker size={20} /> },
+      { screen: 'benchmark-dashboard', label: 'Adaptive Benchmark Dashboard', description: 'Adaptive benchmarking across cohorts, roles and industries', icon: <BarChart3 size={20} /> },
+      { screen: 'career-mobility', label: 'Career Mobility & Pathways', description: 'Career mobility and pathway intelligence across roles', icon: <GitMerge size={20} /> },
+      { screen: 'trajectory-dashboard', label: 'Trajectory Dashboard', description: 'Longitudinal growth trajectory tracked over time', icon: <TrendingUp size={20} /> },
+      { screen: 'adaptive-causal', label: 'Adaptive Causal Intelligence', description: 'Causal drivers behind behavioural and career outcomes', icon: <Cpu size={20} /> },
+      { screen: 'market-intelligence', label: 'Market Intelligence', description: 'Labour-market demand signals and emerging skills trends', icon: <TrendingUp size={20} /> },
+    ]
+  },
+  {
+    title: "Enterprise & Workforce Intelligence",
+    description: "Enterprise-scale workforce analytics and governance",
+    color: "#0B3C5D",
+    pages: [
+      { screen: 'employer-dashboard', label: 'Employer Dashboard', description: 'Persona dashboard hosting workforce insights and Enterprise Workforce OS', icon: <Building2 size={20} /> },
+      { screen: 'workforce-insights', label: 'Workforce Insights', description: 'Aggregate workforce behavioural analytics and intelligence', icon: <Users size={20} /> },
+      { screen: 'workforce-os', label: 'Workforce OS', description: 'Operating system for workforce intelligence and planning', icon: <LayoutDashboard size={20} /> },
+      { screen: 'enterprise-workforce-os', label: 'Enterprise Workforce OS', description: 'Enterprise-scale workforce operating system', icon: <Network size={20} /> },
+      { screen: 'enterprise-intelligence', label: 'Enterprise Intelligence', description: 'Organisation-wide intelligence, reporting and insights', icon: <BarChart3 size={20} /> },
+      { screen: 'governance-console', label: 'Governance Console', description: 'Data governance, RBAC and compliance controls', icon: <ShieldCheck size={20} /> },
+      { screen: 'ai-governance', label: 'AI Governance', description: 'AI model governance and hallucination monitoring', icon: <ShieldCheck size={20} /> },
+    ]
+  },
+  {
     title: "Career Builder Portal",
     description: "AI-powered career development tools for job seekers",
     color: "#4ECDC4",
     pages: [
       { screen: 'career-builder', label: 'Career Builder Portal', description: 'Full career development hub — EI gauge, resume studio, job tracker, interview prep, learning hub, mentors, goals', icon: <Briefcase size={20} /> },
+      { screen: 'career-discovery', label: 'Career Discovery', description: 'Explore career options and pathways matched to your strengths and interests', icon: <Compass size={20} /> },
     ]
   },
   {

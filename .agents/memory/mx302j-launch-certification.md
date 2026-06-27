@@ -19,6 +19,16 @@ null≠0; demo `@example.com` excluded; PII masked.
 **Why:** a high structural count must never read as "ready". The honest current state was
 8/9 phases merged, 3/9 activated live, outcome ABSTAIN.
 
+**Dev-first activation:** the A→I activation set is 5 dev env flags (`FF_CAREER_LAUNCHPAD`,
+`FF_STUDENT_CAREER_BUILDER`, `FF_EMPLOYABILITY_STUDIO`, `FF_INSTITUTIONAL_INTELLIGENCE`,
+`FF_ECOSYSTEM_COMMUNITY`) on top of the 3 already in `.replit [userenv.development]`
+(`FF_CAREER_DISCOVERY`/`FF_CAMPUS_PLACEMENT`/`FF_LEARNING_PASSPORT_LOOP`). With all 8 ON,
+Activation hits its **ceiling of 8/9** — Phase C has no backend flag/route so it can never
+report `enabled:true`. Verdict still STRUCTURAL-PARTIAL / not production-ready: outcome still
+ABSTAINS (realized offers 0 < k_min=30) and adoption stayed 0 after the flip — live proof that
+flags do NOT seed data. Set dev-scope only (prod stays OFF; reverse with `deleteEnvVars` +
+Backend API restart).
+
 ## Activation must be probed live, not from the cert process env
 The composer's own `process.env` FF_* only labels the informational "flag env (this proc)"
 column. The TRUE activation axis is the live HTTP `/enabled` response from the Backend API

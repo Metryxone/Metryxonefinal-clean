@@ -2,7 +2,7 @@
   "meta": {
     "phase": "MX-302J",
     "version": "302J.0.0",
-    "ts": "2026-06-27T10:27:54.017Z",
+    "ts": "2026-06-27T10:44:15.494Z",
     "node": "v20.20.0",
     "doctrine": "Four axes Structural⟂Activation⟂Adoption⟂Outcome-Confidence NEVER composited; null≠0; demo excluded; PII masked; read-only."
   },
@@ -13,7 +13,7 @@
       "verdict": "STRUCTURAL-PARTIAL (8/9 phases merged)"
     },
     "activation": {
-      "activated": 3,
+      "activated": 8,
       "total": 9,
       "note": "First-hand from the live Backend API /enabled probes (the real workflow flag-set). Flags do not seed data — dormant pipes read 0 honestly."
     },
@@ -199,7 +199,7 @@
       "flag_defined": true,
       "route_present": true,
       "flag_env_on": true,
-      "live_enabled": false,
+      "live_enabled": true,
       "live_probe_status": 200,
       "note": "Flag defined + backend route merged."
     },
@@ -235,7 +235,7 @@
       "flag_defined": true,
       "route_present": true,
       "flag_env_on": true,
-      "live_enabled": false,
+      "live_enabled": true,
       "live_probe_status": 200,
       "note": "Flag defined + backend route merged."
     },
@@ -259,7 +259,7 @@
       "flag_defined": true,
       "route_present": true,
       "flag_env_on": true,
-      "live_enabled": false,
+      "live_enabled": true,
       "live_probe_status": 200,
       "note": "Flag defined + backend route merged."
     },
@@ -283,7 +283,7 @@
       "flag_defined": true,
       "route_present": true,
       "flag_env_on": true,
-      "live_enabled": false,
+      "live_enabled": true,
       "live_probe_status": 200,
       "note": "Flag defined + backend route merged."
     },
@@ -295,8 +295,8 @@
       "flag_defined": true,
       "route_present": true,
       "flag_env_on": true,
-      "live_enabled": false,
-      "live_probe_status": 503,
+      "live_enabled": true,
+      "live_probe_status": 200,
       "note": "Flag defined + backend route merged."
     }
   ],

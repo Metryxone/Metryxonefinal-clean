@@ -1,0 +1,416 @@
+{
+  "meta": {
+    "ts": "2026-06-27T10:20:19.689Z",
+    "host": "127.0.0.1",
+    "port": 8080,
+    "backendPid": 1220,
+    "node": "v20.20.0",
+    "partial_note": "Authed/flag-gated compose paths reported as PARTIAL (gate latency only)."
+  },
+  "dist_weight": {
+    "built": true,
+    "total_kb": 16407.4,
+    "js_kb": 12979.1,
+    "js_files": 350,
+    "css_kb": 311,
+    "css_files": 1,
+    "file_count": 399,
+    "largest_js_kb": 1576.4,
+    "top15": [
+      {
+        "file": "assets/index-Dv135DbK.js",
+        "kb": 1576.4
+      },
+      {
+        "file": "pragati-avatar.png",
+        "kb": 1494.8
+      },
+      {
+        "file": "assets/CareerBuilderPage-BMR4Q6Tb.js",
+        "kb": 1193.3
+      },
+      {
+        "file": "assets/EmployerPortalPage-jK4KTbem.js",
+        "kb": 1130.5
+      },
+      {
+        "file": "assets/vendor-pdf-BDK5NnXM.js",
+        "kb": 730.6
+      },
+      {
+        "file": "assets/UnifiedParentDashboard-CXHV74am.js",
+        "kb": 448.6
+      },
+      {
+        "file": "assets/vendor-charts-BnkZFVhQ.js",
+        "kb": 436.8
+      },
+      {
+        "file": "assets/SuperAdminDashboard-DOqt9Jkb.js",
+        "kb": 415
+      },
+      {
+        "file": "assets/index-CHor4HPy.css",
+        "kb": 311
+      },
+      {
+        "file": "assets/StudentDashboard-DFSMImlV.js",
+        "kb": 215
+      },
+      {
+        "file": "assets/ParentMentorServices-Z5lnbt4g.js",
+        "kb": 207.5
+      },
+      {
+        "file": "assets/metryx-logo-transparent-dark-CEMEZg-c.png",
+        "kb": 172.1
+      },
+      {
+        "file": "assets/index-DLhnv1yX.js",
+        "kb": 170.7
+      },
+      {
+        "file": "assets/UnifiedInstituteDashboard-DhxDpGDv.js",
+        "kb": 168.4
+      },
+      {
+        "file": "assets/vendor-react-CFEOOqub.js",
+        "kb": 161.6
+      }
+    ],
+    "note": "Bundle is not gzipped on disk; transfer size over HTTP will be smaller. Largest single JS chunk indicates code-split opportunity."
+  },
+  "latency": {
+    "health (trivial)": {
+      "path": "/api/health",
+      "note": null,
+      "samples": 150,
+      "errors": 0,
+      "statusCodes": {
+        "200": 150
+      },
+      "total_ms": {
+        "n": 150,
+        "min": 0.597,
+        "mean": 1.494,
+        "p50": 1.379,
+        "p90": 2.217,
+        "p95": 2.721,
+        "p99": 3.209,
+        "max": 4.085
+      },
+      "ttfb_ms": {
+        "n": 150,
+        "min": 0.586,
+        "mean": 1.471,
+        "p50": 1.35,
+        "p90": 2.163,
+        "p95": 2.702,
+        "p99": 3.191,
+        "max": 4.065
+      }
+    },
+    "capadex_concerns (read)": {
+      "path": "/api/capadex/concerns",
+      "note": null,
+      "samples": 150,
+      "errors": 0,
+      "statusCodes": {
+        "200": 150
+      },
+      "total_ms": {
+        "n": 150,
+        "min": 1.495,
+        "mean": 2.609,
+        "p50": 2.373,
+        "p90": 3.622,
+        "p95": 4.918,
+        "p99": 7.681,
+        "max": 8.176
+      },
+      "ttfb_ms": {
+        "n": 150,
+        "min": 1.485,
+        "mean": 2.597,
+        "p50": 2.362,
+        "p90": 3.609,
+        "p95": 4.907,
+        "p99": 7.668,
+        "max": 8.162
+      }
+    },
+    "report_factory_templates (AUTH-gated)": {
+      "path": "/api/rf/templates",
+      "note": "PARTIAL: 401 gate latency only",
+      "samples": 150,
+      "errors": 0,
+      "statusCodes": {
+        "401": 150
+      },
+      "total_ms": {
+        "n": 150,
+        "min": 1.493,
+        "mean": 2.165,
+        "p50": 1.829,
+        "p90": 2.506,
+        "p95": 3.925,
+        "p99": 7.979,
+        "max": 11.866
+      },
+      "ttfb_ms": {
+        "n": 150,
+        "min": 1.487,
+        "mean": 2.152,
+        "p50": 1.809,
+        "p90": 2.499,
+        "p95": 3.896,
+        "p99": 7.962,
+        "max": 11.855
+      }
+    },
+    "launchpad_suite (AUTH-gated)": {
+      "path": "/api/rf/launchpad-suite/test%40example.com",
+      "note": "PARTIAL: 401 gate latency only — authed compose (8-report suite) NOT measured without a super-admin session",
+      "samples": 150,
+      "errors": 0,
+      "statusCodes": {
+        "401": 150
+      },
+      "total_ms": {
+        "n": 150,
+        "min": 1.607,
+        "mean": 2.185,
+        "p50": 1.971,
+        "p90": 2.434,
+        "p95": 3.329,
+        "p99": 5.407,
+        "max": 8.743
+      },
+      "ttfb_ms": {
+        "n": 150,
+        "min": 1.6,
+        "mean": 2.177,
+        "p50": 1.964,
+        "p90": 2.427,
+        "p95": 3.322,
+        "p99": 5.399,
+        "max": 8.734
+      }
+    },
+    "outcome_intel_enabled (flag probe)": {
+      "path": "/api/outcome-intelligence/enabled",
+      "note": null,
+      "samples": 150,
+      "errors": 0,
+      "statusCodes": {
+        "200": 150
+      },
+      "total_ms": {
+        "n": 150,
+        "min": 1.476,
+        "mean": 2.213,
+        "p50": 1.977,
+        "p90": 2.61,
+        "p95": 3.617,
+        "p99": 7.143,
+        "max": 7.39
+      },
+      "ttfb_ms": {
+        "n": 150,
+        "min": 1.468,
+        "mean": 2.203,
+        "p50": 1.967,
+        "p90": 2.602,
+        "p95": 3.608,
+        "p99": 7.134,
+        "max": 7.382
+      }
+    }
+  },
+  "concurrency_health": [
+    {
+      "concurrency": 1,
+      "requests": 600,
+      "wall_s": 0.758,
+      "throughput_rps": 792.1,
+      "errors": 0,
+      "statusCodes": {
+        "200": 600
+      },
+      "latency_ms": {
+        "n": 600,
+        "min": 0.419,
+        "mean": 1.212,
+        "p50": 1.101,
+        "p90": 1.623,
+        "p95": 1.995,
+        "p99": 4.153,
+        "max": 6.792
+      },
+      "backend": {
+        "cpu_seconds": 0,
+        "cores_used": 0,
+        "cpu_pct": 0,
+        "rss_kb_after": 58028
+      }
+    },
+    {
+      "concurrency": 10,
+      "requests": 600,
+      "wall_s": 0.69,
+      "throughput_rps": 870,
+      "errors": 0,
+      "statusCodes": {
+        "200": 600
+      },
+      "latency_ms": {
+        "n": 600,
+        "min": 0.796,
+        "mean": 11.378,
+        "p50": 11.667,
+        "p90": 15.373,
+        "p95": 16.71,
+        "p99": 21.771,
+        "max": 27.695
+      },
+      "backend": {
+        "cpu_seconds": 0,
+        "cores_used": 0,
+        "cpu_pct": 0,
+        "rss_kb_after": 58028
+      }
+    },
+    {
+      "concurrency": 25,
+      "requests": 600,
+      "wall_s": 0.52,
+      "throughput_rps": 1154.7,
+      "errors": 0,
+      "statusCodes": {
+        "200": 600
+      },
+      "latency_ms": {
+        "n": 600,
+        "min": 2.766,
+        "mean": 21.358,
+        "p50": 19.743,
+        "p90": 25.788,
+        "p95": 27.011,
+        "p99": 131.148,
+        "max": 272.911
+      },
+      "backend": {
+        "cpu_seconds": 0,
+        "cores_used": 0,
+        "cpu_pct": 0,
+        "rss_kb_after": 58028
+      }
+    },
+    {
+      "concurrency": 50,
+      "requests": 600,
+      "wall_s": 0.551,
+      "throughput_rps": 1088.1,
+      "errors": 0,
+      "statusCodes": {
+        "200": 600
+      },
+      "latency_ms": {
+        "n": 600,
+        "min": 9.289,
+        "mean": 44.886,
+        "p50": 27.616,
+        "p90": 38.567,
+        "p95": 71.502,
+        "p99": 547.333,
+        "max": 550.549
+      },
+      "backend": {
+        "cpu_seconds": 0,
+        "cores_used": 0,
+        "cpu_pct": 0,
+        "rss_kb_after": 58028
+      }
+    }
+  ],
+  "concurrency_read": [
+    {
+      "concurrency": 1,
+      "requests": 300,
+      "wall_s": 0.735,
+      "throughput_rps": 407.9,
+      "errors": 0,
+      "statusCodes": {
+        "200": 300
+      },
+      "latency_ms": {
+        "n": 300,
+        "min": 1.467,
+        "mean": 2.421,
+        "p50": 2.003,
+        "p90": 2.771,
+        "p95": 4.77,
+        "p99": 11.218,
+        "max": 17.804
+      },
+      "backend": {
+        "cpu_seconds": 0,
+        "cores_used": 0,
+        "cpu_pct": 0,
+        "rss_kb_after": 58028
+      }
+    },
+    {
+      "concurrency": 10,
+      "requests": 300,
+      "wall_s": 0.423,
+      "throughput_rps": 709.7,
+      "errors": 0,
+      "statusCodes": {
+        "200": 300
+      },
+      "latency_ms": {
+        "n": 300,
+        "min": 1.718,
+        "mean": 13.809,
+        "p50": 12.058,
+        "p90": 19.199,
+        "p95": 23.857,
+        "p99": 68.887,
+        "max": 102.478
+      },
+      "backend": {
+        "cpu_seconds": 0,
+        "cores_used": 0,
+        "cpu_pct": 0,
+        "rss_kb_after": 58028
+      }
+    },
+    {
+      "concurrency": 25,
+      "requests": 300,
+      "wall_s": 0.413,
+      "throughput_rps": 726.7,
+      "errors": 0,
+      "statusCodes": {
+        "200": 300
+      },
+      "latency_ms": {
+        "n": 300,
+        "min": 10.313,
+        "mean": 33.523,
+        "p50": 28.47,
+        "p90": 45.651,
+        "p95": 83.164,
+        "p99": 109.209,
+        "max": 114.604
+      },
+      "backend": {
+        "cpu_seconds": 0,
+        "cores_used": 0,
+        "cpu_pct": 0,
+        "rss_kb_after": 58028
+      }
+    }
+  ]
+}

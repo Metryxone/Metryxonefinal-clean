@@ -11,6 +11,10 @@ import {
 } from '../services/pdf-renderer';
 import { computeBenchmark } from '../services/benchmark-engine';
 import { resolveVizData } from '../services/viz-data-resolver';
+import {
+  buildLaunchpadSnapshot, composeLaunchpadSuite, validateLaunchpadSuite,
+  LAUNCHPAD_SUITE_NAMES, maskSubject,
+} from '../services/report-pack';
 
 // ── Feature flag ───────────────────────────────────────────────────────────
 const FLAG = 'FF_REPORT_FACTORY';
@@ -20,6 +24,17 @@ function isEnabled(): boolean {
 }
 function gate(res: Response): boolean {
   if (!isEnabled()) { res.status(503).json({ error: 'Report Factory is not enabled', flag: FLAG }); return false; }
+  return true;
+}
+
+// ── MX-302J Launch Certification flag (distinct from FF_REPORT_FACTORY) ──────
+const LAUNCH_FLAG = 'FF_LAUNCH_CERTIFICATION';
+function launchEnabled(): boolean {
+  const v = (process.env[LAUNCH_FLAG] ?? '').trim().toLowerCase();
+  return v === '1' || v === 'true' || v === 'yes';
+}
+function launchGate(res: Response): boolean {
+  if (!launchEnabled()) { res.status(503).json({ error: 'Launch Certification is not enabled', flag: LAUNCH_FLAG }); return false; }
   return true;
 }
 
@@ -849,6 +864,51 @@ export function registerReportFactoryRoutes(
         return res.status(403).json({ error: 'Forbidden' });
       }
       res.json({ report });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
+  // ── MX-302J — Career Launchpad report suite (flag FF_LAUNCH_CERTIFICATION) ──
+  // Read-only composer: builds the 8-report launchpad suite for ONE subject by
+  // composing the existing report-pack builders + the new Resume/Placement/
+  // Interview builders. Recomputes no score, writes no row, runs no DDL. The
+  // subject id (an email) is masked in the response. Super-admin only.
+  // Optional ?export=pdf|csv|json&report=<key> streams a single report file.
+  app.get('/api/rf/launchpad-suite/:subject', requireAuth, requireSuperAdmin, async (req: Request, res: Response) => {
+    if (!launchGate(res)) return;
+    const subject = String(req.params.subject);
+    try {
+      const snapshot = await buildLaunchpadSnapshot(pool, subject);
+      const reports = composeLaunchpadSuite(snapshot);
+      const violations = validateLaunchpadSuite(reports);
+
+      const exportFmt = String(req.query.export ?? '').toLowerCase();
+      if (exportFmt) {
+        if (!['pdf', 'csv', 'json'].includes(exportFmt)) {
+          return res.status(400).json({ error: 'Unsupported export format', supported: ['pdf', 'csv', 'json'] });
+        }
+        const key = String(req.query.report ?? reports[0]?.key);
+        const report = reports.find((r) => r.key === key) ?? reports[0];
+        if (!report) return res.status(404).json({ error: 'No report to export' });
+        res.setHeader('Content-Type', getContentType(exportFmt));
+        res.setHeader('Content-Disposition', `attachment; filename="launchpad_${report.key}.${exportFmt}"`);
+        if (exportFmt === 'pdf') {
+          const filePath = await renderReportToPDF(report as unknown as Record<string, unknown>);
+          return res.sendFile(filePath);
+        }
+        const body = exportFmt === 'csv'
+          ? renderReportToCSV(report as unknown as Record<string, unknown>)
+          : renderReportToJSON(report as unknown as Record<string, unknown>);
+        return res.send(body);
+      }
+
+      res.json({
+        subject: maskSubject(subject),
+        suite: LAUNCHPAD_SUITE_NAMES,
+        report_count: reports.length,
+        valid: violations.length === 0,
+        violations,
+        reports,
+      });
     } catch (e: any) { res.status(500).json({ error: e.message }); }
   });
 }

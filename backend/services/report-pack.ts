@@ -45,6 +45,7 @@ import { buildCareerDevelopment } from './career-development-engine.js';
 import { generateCareerPassport } from './passport-generator.js';
 import { computeCompetencyDrivenMatch } from './employer-competency-hiring.js';
 import { candidateEvaluation } from './evaluation-engine.js';
+import { INTERVIEW_QUESTION_BANK } from './employability-studio-engine.js';
 
 export const REPORT_PACK_VERSION = '1.0.0';
 export const MX301_ROLE_TITLE = 'Senior Product Manager';
@@ -1258,6 +1259,345 @@ function topAndBottom(items: any[], nameKey: string, scoreKey: string): { text: 
   const out = [{ text: `Strongest: ${clean[0].name} (${clean[0].v}).`, severity: 'positive' }];
   if (clean.length > 1) out.push({ text: `Development priority: ${clean[clean.length - 1].name} (${clean[clean.length - 1].v}).`, severity: 'warning' });
   return out;
+}
+
+// ============================================================================
+// MX-302J — Career Launchpad report suite (additive; flag launchCertification).
+// Two NET-NEW honest builders (Resume + Placement) + a richer standalone
+// Interview builder, plus the launchpad-snapshot extension that loads the extra
+// substrate. The 16-report MX-301 pack (BUILDERS + composePack + validatePack)
+// is left BYTE-IDENTICAL — these are separate exports.
+// ============================================================================
+
+// ── Resume section-confidence model (ported from the pure frontend engine) ──
+interface ResumeSectionScore {
+  section: string;
+  confidence: number;
+  present: boolean;
+  quality: 'high' | 'medium' | 'low' | 'missing';
+  note?: string;
+}
+
+function scoreResumeSection(value: unknown, label: string): ResumeSectionScore {
+  if (!value) return { section: label, confidence: 0, present: false, quality: 'missing', note: `${label} not detected in resume` };
+  if (Array.isArray(value)) {
+    if (value.length === 0) return { section: label, confidence: 10, present: false, quality: 'missing', note: `${label} is empty` };
+    const quality: ResumeSectionScore['quality'] = value.length >= 3 ? 'high' : 'medium';
+    return { section: label, confidence: value.length >= 3 ? 90 : 65, present: true, quality };
+  }
+  if (typeof value === 'string') {
+    const len = value.trim().length;
+    if (len < 10) return { section: label, confidence: 20, present: true, quality: 'low', note: `${label} is very short` };
+    if (len < 60) return { section: label, confidence: 55, present: true, quality: 'medium' };
+    return { section: label, confidence: 90, present: true, quality: 'high' };
+  }
+  if (typeof value === 'object') {
+    const keys = Object.keys(value as Record<string, unknown>).filter((k) => (value as Record<string, unknown>)[k]);
+    if (keys.length >= 4) return { section: label, confidence: 88, present: true, quality: 'high' };
+    if (keys.length >= 2) return { section: label, confidence: 60, present: true, quality: 'medium' };
+    if (keys.length === 1) return { section: label, confidence: 30, present: true, quality: 'low', note: `${label} has minimal data` };
+    return { section: label, confidence: 0, present: false, quality: 'missing', note: `${label} not detected in resume` };
+  }
+  return { section: label, confidence: 50, present: true, quality: 'medium' };
+}
+
+function runResumeScoring(data: any): { sections: ResumeSectionScore[]; overall: number } | null {
+  if (!data || typeof data !== 'object') return null;
+  const skills = (data.skills && typeof data.skills === 'object') ? data.skills : {};
+  const skillsArr = [...arr(skills.technical), ...arr(skills.soft), ...arr(skills.tools)];
+  const sections: ResumeSectionScore[] = [
+    scoreResumeSection(data.personal, 'Personal Info'),
+    scoreResumeSection(str(data.summary), 'Summary'),
+    scoreResumeSection(arr(data.experience ?? data.workExperience), 'Experience'),
+    scoreResumeSection(skillsArr, 'Skills'),
+    scoreResumeSection(arr(data.education), 'Education'),
+    scoreResumeSection(arr(data.certifications), 'Certifications'),
+    scoreResumeSection(arr(data.projects), 'Projects'),
+  ];
+  const overall = Math.round(sections.reduce((sum, x) => sum + x.confidence, 0) / sections.length);
+  return { sections, overall };
+}
+
+// ── Launchpad snapshot extension — loads resume + placement + interview bank ─
+// Strictly additive: extends the SAME snapshot the 16-pack uses with extra
+// engine keys. The 16 builders never read these keys, so composePack is
+// unaffected.
+async function loadPlacementSubstrate(
+  pool: Pool,
+  userId: string,
+): Promise<{ tablesPresent: boolean; applications: any[]; offers: any[]; openDrives: number | null }> {
+  const out = { tablesPresent: false, applications: [] as any[], offers: [] as any[], openDrives: null as number | null };
+  const has = async (t: string): Promise<boolean> => {
+    try { const { rows } = await pool.query(`SELECT to_regclass($1) AS x`, [t]); return !!rows[0]?.x; }
+    catch { return false; }
+  };
+  const hasApps = await has('campus_applications');
+  const hasOffers = await has('offers');
+  const hasDrives = await has('campus_drives');
+  out.tablesPresent = hasApps || hasOffers || hasDrives;
+  if (hasApps) {
+    try {
+      const { rows } = await pool.query(
+        `SELECT company_name, role_title, status FROM campus_applications WHERE user_id = $1 LIMIT 100`, [userId]);
+      out.applications = rows;
+    } catch { /* honest: leave empty */ }
+  }
+  if (hasOffers) {
+    try {
+      const { rows } = await pool.query(
+        `SELECT company_name, role_title, ctc, currency, status FROM offers WHERE user_id = $1 LIMIT 100`, [userId]);
+      out.offers = rows;
+    } catch { /* honest: leave empty */ }
+  }
+  if (hasDrives) {
+    try {
+      const { rows } = await pool.query(`SELECT COUNT(*)::int AS n FROM campus_drives WHERE status IN ('open','active','published')`);
+      out.openDrives = num(rows[0]?.n);
+    } catch { /* honest: leave null */ }
+  }
+  return out;
+}
+
+export async function buildLaunchpadSnapshot(pool: Pool, subjectId: string): Promise<PackSnapshot> {
+  const s = await buildPackSnapshot(pool, subjectId);
+  // Resume substrate (full structured resume JSONB).
+  try {
+    const { rows } = await pool.query(`SELECT data FROM career_seeker_profiles WHERE user_id = $1`, [subjectId]);
+    s.engines.resume = rows[0]?.data ?? null;
+  } catch (e: any) {
+    s.engines.resume = null;
+    s.errors['resume'] = String(e?.message ?? e).slice(0, 200);
+  }
+  // Campus-placement substrate (probe-guarded; honest empty when absent).
+  try {
+    s.engines.placement = await loadPlacementSubstrate(pool, subjectId);
+  } catch (e: any) {
+    s.engines.placement = null;
+    s.errors['placement'] = String(e?.message ?? e).slice(0, 200);
+  }
+  // Interview question-bank coverage (static, structural).
+  const byCat = INTERVIEW_QUESTION_BANK.reduce((acc: Record<string, number>, q) => {
+    acc[q.category] = (acc[q.category] ?? 0) + 1; return acc;
+  }, {});
+  s.engines.interviewBank = { total: INTERVIEW_QUESTION_BANK.length, byCategory: byCat };
+  return s;
+}
+
+// ── Resume Intelligence report (NET-NEW) ────────────────────────────────────
+const buildResumeReport: Builder = (s) => {
+  const scored = runResumeScoring(s.engines.resume ?? null);
+  const sections = scored?.sections ?? [];
+  const present = sections.filter((x) => x.present);
+  const measurable = !!scored && present.length > 0;
+  const overall = scored?.overall ?? null;
+  const chart = measurable ? cleanChart(sections.map((x) => x.section), sections.map((x) => x.confidence)) : { labels: [], values: [] };
+
+  return {
+    key: 'resume_intelligence',
+    report_type: 'resume_intelligence',
+    title: 'Resume Intelligence',
+    measurable,
+    coverage: {
+      pct: measurable ? Math.round((present.length / sections.length) * 100) : null,
+      note: measurable ? `${present.length}/${sections.length} resume sections populated.` : 'No structured resume captured.',
+    },
+    confidence: {
+      band: measurable ? (overall! >= 80 ? 'High' : overall! >= 55 ? 'Moderate' : 'Provisional') : null,
+      note: 'Reflects per-section completeness of the authored resume — NOT an external verification of its claims.',
+    },
+    activation: ACTIVATION,
+    data_source: 'resume-intelligence section-confidence model over career_seeker_profiles.data (structured resume sections).',
+    executive: measurable
+      ? `${s.candidate.name}'s resume parses to ${overall}% overall completeness across ${present.length} populated section(s).`
+      : `No structured resume is on file for ${s.candidate.name}, so resume intelligence is not yet measurable.`,
+    assessment: measurable
+      ? `Section completeness — ${sections.map((x) => `${x.section}: ${x.present ? `${x.confidence}% (${x.quality})` : 'absent'}`).join('; ')}.`
+      : 'No resume sections are available to assess.',
+    chart: measurable ? { title: 'Resume section completeness', data_source: 'career', chart_type: 'bar', ...chart } : null,
+    interpretation: measurable
+      ? 'Each section is scored for completeness only — the presence, length and structure of what the candidate authored. This is a readiness signal for the resume artifact itself, NOT a verification of the underlying claims nor a hireability verdict.'
+      : 'Resume intelligence becomes measurable once the candidate completes their structured resume (experience, skills, education and related sections).',
+    recommendations: measurable
+      ? sections.filter((x) => x.quality === 'missing' || x.quality === 'low').slice(0, 3).map((x) => ({ text: `Strengthen the ${x.section} section${x.note ? ` — ${x.note}` : ''}.`, severity: 'warning' }))
+      : [],
+    confidence_text: measurable
+      ? `Overall completeness ${overall}% — a structural readiness signal for the resume artifact, not a claim verification.`
+      : 'Confidence not applicable — no resume captured.',
+    honest: measurable
+      ? null
+      : {
+          why: 'No structured resume exists in career_seeker_profiles for this candidate.',
+          workflow: 'Complete the resume builder (personal, summary, experience, skills, education) in the Career Launchpad.',
+          needed: 'A populated structured resume in career_seeker_profiles.data.',
+          expected: 'Per-section completeness scores with an overall readiness percentage.',
+        },
+  };
+};
+
+// ── Placement report (NET-NEW; campus substrate + employer match) ───────────
+const buildPlacementReport: Builder = (s) => {
+  const pl = s.engines.placement ?? {};
+  const m = s.engines.match ?? {};
+  const rr = s.engines.readiness ?? {};
+  const apps = arr(pl.applications);
+  const offers = arr(pl.offers);
+  const openDrives = num(pl.openDrives);
+  const matchPct = num(m.competencyMatch);
+  const readinessScore = rr?.readiness?.measured === true ? num(rr?.readiness?.score) : null;
+  const hasActivity = apps.length > 0 || offers.length > 0;
+  const measurable = hasActivity || matchPct != null || readinessScore != null;
+
+  const metrics: { label: string; value: number }[] = [];
+  if (apps.length) metrics.push({ label: 'Applications', value: apps.length });
+  if (offers.length) metrics.push({ label: 'Offers', value: offers.length });
+  if (matchPct != null) metrics.push({ label: 'Competency Match %', value: matchPct });
+  if (readinessScore != null) metrics.push({ label: 'Role Readiness', value: readinessScore });
+  const chart = metrics.length ? cleanChart(metrics.map((x) => x.label), metrics.map((x) => x.value)) : { labels: [], values: [] };
+
+  const offerLine = offers.length
+    ? `${offers.length} offer(s) recorded${offers.some((o: any) => String(o.status).toLowerCase() === 'accepted') ? ' (incl. accepted)' : ''}`
+    : 'no offers recorded';
+  const appLine = apps.length ? `${apps.length} application(s)` : 'no applications';
+  const driveLine = openDrives != null ? `${openDrives} open drive(s) on the platform` : 'drive availability not tracked here';
+
+  return {
+    key: 'placement_readiness',
+    report_type: 'placement_readiness',
+    title: 'Placement Readiness',
+    measurable,
+    coverage: {
+      pct: null,
+      note: pl?.tablesPresent
+        ? `${appLine}, ${offers.length} offer(s); ${driveLine}.`
+        : 'Campus-placement substrate not provisioned on this path.',
+    },
+    confidence: {
+      band: hasActivity ? 'Operator-recorded' : (matchPct != null ? 'Provisional' : null),
+      note: 'Application/offer counts are operator-recorded facts; competency match is decision-support only, never a placement guarantee.',
+    },
+    activation: ACTIVATION,
+    data_source: 'campus-placement substrate (campus_applications/offers/campus_drives) + employer-competency-hiring.computeCompetencyDrivenMatch + role-readiness-v2.',
+    executive: measurable
+      ? `${s.candidate.name}'s placement picture: ${appLine}, ${offerLine}${matchPct != null ? `; competency match to ${MX301_ROLE_TITLE} ${matchPct}%` : ''}.`
+      : `No placement activity, competency match or role readiness is available for ${s.candidate.name} yet.`,
+    assessment: measurable
+      ? `${appLine}, ${offerLine}. ${driveLine}.${matchPct != null ? ` Competency match ${matchPct}%.` : ''}${readinessScore != null ? ` Role readiness ${readinessScore}/100.` : ''}`
+      : 'No placement substrate, match or readiness data is available.',
+    chart: metrics.length ? { title: 'Placement signals', data_source: 'career', chart_type: 'bar', ...chart } : null,
+    interpretation: measurable
+      ? 'Placement readiness combines operator-recorded campus activity (applications, offers) with a decision-support competency match and role-readiness signal. The match and readiness figures are developmental indicators only — they are NEVER a guarantee of placement or a hire/reject verdict.'
+      : 'Placement readiness becomes measurable once the candidate engages campus drives (applications/offers are recorded) or a competency match to a profiled role can be computed.',
+    recommendations: measurable
+      ? [
+          ...(apps.length === 0 && openDrives ? [{ text: `Apply to one of the ${openDrives} open campus drive(s) to begin a placement trail.`, severity: 'info' }] : []),
+          ...(matchPct != null && matchPct < 60 ? [{ text: `Competency match to ${MX301_ROLE_TITLE} is ${matchPct}% — close priority gaps before applying to similar roles.`, severity: 'warning' }] : []),
+          ...arr(m.gaps).slice(0, 2).map((g: any) => ({ text: `Address requirement gap: ${str(g.competency_name) ?? str(g.name)}.`, severity: 'warning' })),
+        ].slice(0, 3)
+      : [],
+    confidence_text: hasActivity
+      ? 'Operator-recorded placement activity; the competency match is decision-support and not a placement guarantee.'
+      : (matchPct != null ? 'Provisional — based on a computed competency match, not realized placement outcomes.' : 'Confidence not applicable — no placement signal yet.'),
+    honest: measurable
+      ? null
+      : {
+          why: 'No campus applications/offers exist and no competency match or role readiness could be computed for this candidate.',
+          workflow: 'Engage campus placement (apply to a drive) and/or complete a competency assessment so a match to a profiled role can be computed.',
+          needed: 'At least one application/offer record, or a measurable competency profile against a profiled role.',
+          expected: 'Application/offer counts with a decision-support competency match and role-readiness signal.',
+        },
+  };
+};
+
+// ── Interview report (NET-NEW; richer standalone over operator scores + bank) ─
+const buildInterviewReport: Builder = (s) => {
+  const ev = s.engines.evaluation ?? {};
+  const data = ev?.data ?? {};
+  const bank = s.engines.interviewBank ?? { total: 0, byCategory: {} };
+  const criteria = arr(data.criteria).filter((c) => num(c.mean_pct) != null);
+  const operatorScored = (ev?.ok !== false) && num(data.total_scores) != null && (num(data.total_scores) ?? 0) > 0;
+  const bankReady = num(bank.total) != null && (num(bank.total) ?? 0) > 0;
+  // Measurable on EITHER axis: real operator scores OR a structural practice bank.
+  const measurable = operatorScored || bankReady;
+  const catEntries = Object.entries(bank.byCategory ?? {}) as [string, number][];
+  const chart = operatorScored && criteria.length
+    ? cleanChart(criteria.map((c) => str(c.criterion)), criteria.map((c) => num(c.mean_pct)))
+    : (catEntries.length ? cleanChart(catEntries.map(([k]) => k), catEntries.map(([, v]) => v)) : { labels: [], values: [] });
+
+  return {
+    key: 'interview_report',
+    report_type: 'interview_report',
+    title: 'Interview Report',
+    measurable,
+    coverage: {
+      pct: null,
+      note: operatorScored
+        ? `${num(data.total_scores)} operator score(s) across ${num(data.interviews_scored) ?? 0} interview(s); ${num(bank.total)} practice question(s) available.`
+        : `No operator interview scores; ${num(bank.total) ?? 0} practice question(s) available across ${catEntries.length} track(s).`,
+    },
+    confidence: {
+      band: operatorScored ? 'Operator-recorded' : (bankReady ? 'Structural' : null),
+      note: 'Operator interview scores are averaged human inputs; the practice bank is a structural readiness resource, not a measured score.',
+    },
+    activation: ACTIVATION,
+    data_source: 'evaluation-engine.candidateEvaluation (operator interview scores) + employability-studio-engine INTERVIEW_QUESTION_BANK (structured practice questions).',
+    executive: operatorScored
+      ? `${s.candidate.name} has ${num(data.total_scores)} recorded interview score(s); overall operator mean is ${pctOrPhrase(data.overall_mean_pct)}. A ${num(bank.total)}-question practice bank is available for further preparation.`
+      : `No interview has been scored for ${s.candidate.name} yet; a ${num(bank.total) ?? 0}-question practice bank across ${catEntries.length} track(s) is ready to support preparation.`,
+    assessment: operatorScored
+      ? `Overall mean ${pctOrPhrase(data.overall_mean_pct)} across ${num(data.distinct_panelists) ?? 0} panelist(s). Per criterion — ${criteria.map((c) => `${str(c.criterion)}: ${pctOrPhrase(c.mean_pct)}`).join('; ')}. Practice bank — ${catEntries.map(([k, v]) => `${k}: ${v}`).join(', ')}.`
+      : `No operator scores captured. Practice bank coverage — ${catEntries.map(([k, v]) => `${k}: ${v} question(s)`).join(', ') || 'none'}.`,
+    chart: chart.labels.length
+      ? { title: operatorScored ? 'Interview scores by criterion' : 'Practice questions by track', data_source: 'career', chart_type: 'bar', ...chart }
+      : null,
+    interpretation: operatorScored
+      ? 'This report combines operator-recorded panelist scores (arithmetic averages of human inputs — a record, NOT an algorithmic hire/reject verdict) with a structured practice bank for continued preparation.'
+      : 'No interview has been scored yet, so the report surfaces the structured practice bank by track. Once a panelist records scores, per-criterion operator means appear alongside.',
+    recommendations: operatorScored
+      ? criteria.filter((c) => (num(c.mean_pct) ?? 100) < 60).slice(0, 3).map((c) => ({ text: `Strengthen interview performance on ${str(c.criterion)} (${num(c.mean_pct)}%).`, severity: 'warning' }))
+      : catEntries.slice(0, 3).map(([k, v]) => ({ text: `Practice the ${k} track (${v} question(s)) before your next interview.`, severity: 'info' })),
+    confidence_text: operatorScored
+      ? 'Operator-recorded — averages of panelist-entered scores, not a model prediction.'
+      : (bankReady ? 'Structural — a practice resource, not a measured interview score.' : 'Confidence not applicable — no interview signal yet.'),
+    honest: measurable
+      ? null
+      : {
+          why: 'No interview was scored and no practice bank is available.',
+          workflow: 'Schedule an interview and record panelist scores, or use the practice bank to prepare.',
+          needed: 'At least one recorded interview score, or a populated interview practice bank.',
+          expected: 'Per-criterion operator means and/or a structured practice bank by track.',
+        },
+  };
+};
+
+// ── Launchpad suite registry (8 named reports; COMPOSES existing + new) ──────
+interface SuiteEntry { name: string; builder: Builder }
+const LAUNCHPAD_SUITE: SuiteEntry[] = [
+  { name: 'Executive Summary', builder: buildExecutiveSummary },
+  { name: 'Career',            builder: buildCareerRecs },
+  { name: 'Employability',     builder: buildEmployabilityIndex },
+  { name: 'Placement',         builder: buildPlacementReport },
+  { name: 'Resume',            builder: buildResumeReport },
+  { name: 'Interview',         builder: buildInterviewReport },
+  { name: 'Learning',          builder: buildLearningRoadmap },
+  { name: 'Career Passport',   builder: buildCareerPassport },
+];
+
+export const LAUNCHPAD_SUITE_NAMES = LAUNCHPAD_SUITE.map((e) => e.name);
+
+/** Compose the 8-report Career Launchpad suite. Each entry is the SAME 9-section
+ *  ComposedReport shape the renderers + preview consume. Pass a snapshot built
+ *  via buildLaunchpadSnapshot so Resume + Placement substrate is loaded. */
+export function composeLaunchpadSuite(snapshot: PackSnapshot): ComposedReport[] {
+  return LAUNCHPAD_SUITE.map((e) => composeReport(e.builder(snapshot), snapshot.candidate, snapshot.generated_at));
+}
+
+/** Validate the suite: exactly 8 reports, each obeying the no-empty 9-section
+ *  contract (reuses validateReport). Returns a flat list of violations. */
+export function validateLaunchpadSuite(reports: ComposedReport[]): string[] {
+  const v: string[] = [];
+  if (reports.length !== LAUNCHPAD_SUITE.length) v.push(`expected ${LAUNCHPAD_SUITE.length} launchpad reports, got ${reports.length}`);
+  for (const r of reports) v.push(...validateReport(r));
+  return v;
 }
 
 // ── The 16-report registry (stable order) ───────────────────────────────────

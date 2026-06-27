@@ -110,8 +110,12 @@ function analyze(file: string): FileFinding {
   // loading: hook flags, the common useState `[loading,setLoading]` pattern, or render guards
   const hasLoading = /isLoading|isPending|isFetching|setLoading|loading\s*[&?]|\{\s*loading|Skeleton|Spinner|LoadingState|animate-pulse/i.test(src);
   const hasEmpty = /EmptyState|<Empty\b|no (data|results|records)|isEmpty|length\s*===\s*0|\.length\s*\?/i.test(src);
-  // error: hook flags, the common useState `[error,setError]` pattern, try/catch, or alert UI
-  const hasError = /ErrorState|isError|setError|error\s*[&?]|\{\s*error|catch\s*\(|\.catch\(|<Alert\b|onError|errorMsg/i.test(src);
+  // error: hook flags, the common useState `[error,setError]` pattern, try/catch (incl. bare
+  // `catch {`), discriminated-union error/forbidden state branches, or alert UI. The union
+  // branch + bare-catch patterns are ADDED to raise precision (recognise valid error handling
+  // the prior regex missed, e.g. an `ApiState<T>` with `status:'error'` and a `} catch {` block);
+  // this REDUCES false TRUE-gaps — it never relaxes the bar (each pattern is a real error branch).
+  const hasError = /ErrorState|isError|setError|error\s*[&?]|\{\s*error|catch\s*[({]|\.catch\(|<Alert\b|onError|errorMsg|status:\s*['"](error|forbidden)['"]|===\s*['"](error|forbidden)['"]/i.test(src);
 
   // placeholders: intentional (toast) vs defect (rendered text)
   const csLines = src.split('\n').filter((l) => /coming soon|under construction|not implemented/i.test(l));

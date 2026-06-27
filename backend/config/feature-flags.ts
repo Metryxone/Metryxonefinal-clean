@@ -679,6 +679,19 @@ export const FEATURE_FLAGS = {
    *  Flag OFF → all /api/rf/* and /api/admin/rf/* routes return 503, zero schema change.
    *  Env: `FF_REPORT_FACTORY`. */
   reportFactory: false,
+  /** MX-302J — Launch Certification & Report Suite. When ON, the additive Career Launchpad
+   *  report suite (Career · Employability · Placement · Resume · Interview · Learning ·
+   *  Career Passport · Executive Summary) is composable and the route
+   *  `GET /api/rf/launchpad-suite/:subject` serves it (super-admin). The suite COMPOSES the
+   *  already-built report-pack builders + two NET-NEW honest builders (Placement over the
+   *  campus-placement substrate + employer-match; Resume over the resume-intelligence
+   *  section-confidence model) — it recomputes no score, writes no row, runs no DDL.
+   *  Coverage ⟂ Confidence ⟂ Activation kept separate; absent → null, never a fabricated 0.
+   *  Strictly additive + reversible: flag OFF → the route 503s and the 16-report MX-301 pack
+   *  is byte-identical → byte-identical legacy behaviour incl. schema. The read-only
+   *  certification/audit scripts (`scripts/mx302j-launch-certification.ts`) run regardless of
+   *  this flag. Env: `FF_LAUNCH_CERTIFICATION`. */
+  launchCertification: false,
   /** Enterprise Analytics — 12-table analytics warehouse (anl_*) with ETL materializers,
    *  KPI engine, cohort analysis, benchmark snapshots, predictive feature store, data lake,
    *  and executive dashboard. Additive + read-only from operational tables.

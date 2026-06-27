@@ -1,0 +1,309 @@
+{
+  "meta": {
+    "phase": "MX-302J",
+    "version": "302J.0.0",
+    "ts": "2026-06-27T10:27:54.017Z",
+    "node": "v20.20.0",
+    "doctrine": "Four axes Structural⟂Activation⟂Adoption⟂Outcome-Confidence NEVER composited; null≠0; demo excluded; PII masked; read-only."
+  },
+  "axes": {
+    "structural": {
+      "merged": 8,
+      "total": 9,
+      "verdict": "STRUCTURAL-PARTIAL (8/9 phases merged)"
+    },
+    "activation": {
+      "activated": 3,
+      "total": 9,
+      "note": "First-hand from the live Backend API /enabled probes (the real workflow flag-set). Flags do not seed data — dormant pipes read 0 honestly."
+    },
+    "adoption": {
+      "seeker_profiles_real": 2,
+      "campus_applications_real": 0,
+      "offers_real": 0
+    },
+    "outcome_confidence": {
+      "k_min": 30,
+      "realized_offers": 0,
+      "measurable": false,
+      "verdict": "ABSTAIN",
+      "note": "Realized predicted→outcome pairs below k_min (or absent); outcome confidence is not measurable. Never coerced to a score."
+    }
+  },
+  "report_suite": {
+    "measurable": true,
+    "subject_masked": "user_20c5d74bc655",
+    "report_count": 8,
+    "suite_names": [
+      "Executive Summary",
+      "Career",
+      "Employability",
+      "Placement",
+      "Resume",
+      "Interview",
+      "Learning",
+      "Career Passport"
+    ],
+    "valid": true,
+    "violations": [],
+    "per_report": [
+      {
+        "key": "executive_summary",
+        "type": "executive_summary",
+        "sections": 9,
+        "sections_with_content": 1
+      },
+      {
+        "key": "career_recommendations",
+        "type": "career_recommendations",
+        "sections": 9,
+        "sections_with_content": 1
+      },
+      {
+        "key": "employability_index",
+        "type": "employability_index",
+        "sections": 9,
+        "sections_with_content": 0
+      },
+      {
+        "key": "placement_readiness",
+        "type": "placement_readiness",
+        "sections": 9,
+        "sections_with_content": 0
+      },
+      {
+        "key": "resume_intelligence",
+        "type": "resume_intelligence",
+        "sections": 9,
+        "sections_with_content": 1
+      },
+      {
+        "key": "interview_report",
+        "type": "interview_report",
+        "sections": 9,
+        "sections_with_content": 1
+      },
+      {
+        "key": "learning_roadmap",
+        "type": "learning_roadmap",
+        "sections": 9,
+        "sections_with_content": 1
+      },
+      {
+        "key": "career_passport",
+        "type": "career_passport",
+        "sections": 9,
+        "sections_with_content": 1
+      }
+    ]
+  },
+  "performance": {
+    "measured": true,
+    "dist_weight": {
+      "built": true,
+      "total_kb": 16407.4,
+      "js_kb": 12979.1,
+      "js_files": 350,
+      "css_kb": 311,
+      "css_files": 1,
+      "file_count": 399,
+      "largest_js_kb": 1576.4,
+      "top15": [
+        {
+          "file": "assets/index-Dv135DbK.js",
+          "kb": 1576.4
+        },
+        {
+          "file": "pragati-avatar.png",
+          "kb": 1494.8
+        },
+        {
+          "file": "assets/CareerBuilderPage-BMR4Q6Tb.js",
+          "kb": 1193.3
+        },
+        {
+          "file": "assets/EmployerPortalPage-jK4KTbem.js",
+          "kb": 1130.5
+        },
+        {
+          "file": "assets/vendor-pdf-BDK5NnXM.js",
+          "kb": 730.6
+        },
+        {
+          "file": "assets/UnifiedParentDashboard-CXHV74am.js",
+          "kb": 448.6
+        },
+        {
+          "file": "assets/vendor-charts-BnkZFVhQ.js",
+          "kb": 436.8
+        },
+        {
+          "file": "assets/SuperAdminDashboard-DOqt9Jkb.js",
+          "kb": 415
+        },
+        {
+          "file": "assets/index-CHor4HPy.css",
+          "kb": 311
+        },
+        {
+          "file": "assets/StudentDashboard-DFSMImlV.js",
+          "kb": 215
+        },
+        {
+          "file": "assets/ParentMentorServices-Z5lnbt4g.js",
+          "kb": 207.5
+        },
+        {
+          "file": "assets/metryx-logo-transparent-dark-CEMEZg-c.png",
+          "kb": 172.1
+        },
+        {
+          "file": "assets/index-DLhnv1yX.js",
+          "kb": 170.7
+        },
+        {
+          "file": "assets/UnifiedInstituteDashboard-DhxDpGDv.js",
+          "kb": 168.4
+        },
+        {
+          "file": "assets/vendor-react-CFEOOqub.js",
+          "kb": 161.6
+        }
+      ],
+      "note": "Bundle is not gzipped on disk; transfer size over HTTP will be smaller. Largest single JS chunk indicates code-split opportunity."
+    },
+    "latency_p95": {
+      "health (trivial)": 2.721,
+      "capadex_concerns (read)": 4.918,
+      "report_factory_templates (AUTH-gated)": 3.925,
+      "launchpad_suite (AUTH-gated)": 3.329,
+      "outcome_intel_enabled (flag probe)": 3.617
+    }
+  },
+  "uiux": {
+    "measured": true,
+    "scanned": null,
+    "true_state_gaps": [],
+    "placeholder_defect_files": []
+  },
+  "prior_launch_cert": {
+    "present": true,
+    "source": "backend/audit/mx-400/certification.json"
+  },
+  "phases": [
+    {
+      "code": "A",
+      "name": "Career Launchpad",
+      "flag": "careerLaunchpad",
+      "merged": true,
+      "flag_defined": true,
+      "route_present": true,
+      "flag_env_on": true,
+      "live_enabled": false,
+      "live_probe_status": 200,
+      "note": "Flag defined + backend route merged."
+    },
+    {
+      "code": "B",
+      "name": "Career Discovery",
+      "flag": "careerDiscovery",
+      "merged": true,
+      "flag_defined": true,
+      "route_present": true,
+      "flag_env_on": true,
+      "live_enabled": true,
+      "live_probe_status": 200,
+      "note": "Flag defined + backend route merged."
+    },
+    {
+      "code": "C",
+      "name": "Launchpad Dashboard",
+      "flag": "launchpadDashboard",
+      "merged": false,
+      "flag_defined": false,
+      "route_present": false,
+      "flag_env_on": false,
+      "live_enabled": null,
+      "live_probe_status": null,
+      "note": "No backend route file (frontend-composition phase); structural = flag-defined only."
+    },
+    {
+      "code": "D",
+      "name": "Student Career Builder",
+      "flag": "studentCareerBuilder",
+      "merged": true,
+      "flag_defined": true,
+      "route_present": true,
+      "flag_env_on": true,
+      "live_enabled": false,
+      "live_probe_status": 200,
+      "note": "Flag defined + backend route merged."
+    },
+    {
+      "code": "E",
+      "name": "Campus Placement",
+      "flag": "campusPlacement",
+      "merged": true,
+      "flag_defined": true,
+      "route_present": true,
+      "flag_env_on": true,
+      "live_enabled": true,
+      "live_probe_status": 200,
+      "note": "Flag defined + backend route merged."
+    },
+    {
+      "code": "F",
+      "name": "Employability Studio",
+      "flag": "employabilityStudio",
+      "merged": true,
+      "flag_defined": true,
+      "route_present": true,
+      "flag_env_on": true,
+      "live_enabled": false,
+      "live_probe_status": 200,
+      "note": "Flag defined + backend route merged."
+    },
+    {
+      "code": "G",
+      "name": "Learning Passport Loop",
+      "flag": "learningPassportLoop",
+      "merged": true,
+      "flag_defined": true,
+      "route_present": true,
+      "flag_env_on": true,
+      "live_enabled": true,
+      "live_probe_status": 200,
+      "note": "Flag defined + backend route merged."
+    },
+    {
+      "code": "H",
+      "name": "Institutional Intelligence",
+      "flag": "institutionalIntelligence",
+      "merged": true,
+      "flag_defined": true,
+      "route_present": true,
+      "flag_env_on": true,
+      "live_enabled": false,
+      "live_probe_status": 200,
+      "note": "Flag defined + backend route merged."
+    },
+    {
+      "code": "I",
+      "name": "Ecosystem & Community",
+      "flag": "ecosystemCommunity",
+      "merged": true,
+      "flag_defined": true,
+      "route_present": true,
+      "flag_env_on": true,
+      "live_enabled": false,
+      "live_probe_status": 503,
+      "note": "Flag defined + backend route merged."
+    }
+  ],
+  "verdict": {
+    "overall": "STRUCTURAL-PARTIAL — NOT production-ready (phases unmerged/unactivated and/or outcome confidence not measurable)",
+    "structural": "STRUCTURAL-PARTIAL (8/9 phases merged)",
+    "production_ready": false,
+    "note": "Verdict is STRUCTURAL-only and PARTIAL. A production-ready claim is withheld until all A→I phases are merged + activated AND outcome confidence is measurable (≥ k_min realized pairs). STOP for founder approval — never auto-deploy."
+  }
+}

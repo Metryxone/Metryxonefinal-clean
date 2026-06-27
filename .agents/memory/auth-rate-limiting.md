@@ -35,3 +35,14 @@ client IP behind the Replit proxy, so the bucket is correct — do NOT re-parse 
 **Known residual (pre-existing, not a regression):** limiter state is in-process memory,
 so counters reset on restart and aren't shared across multi-instance scale-out. Migrate to
 shared storage (Redis/Postgres) only if multi-instance deploy becomes active.
+
+## Batching live-HTTP harnesses that each register users
+A suite that runs several live two-student privacy harnesses back-to-back (each
+registers ~2 `@example.com` students via `POST /api/register`) trips the **register
+limiter (max 5 / 60s / IP)** by the third harness — they all come from one IP. The
+limiter is a real always-ON control with no test bypass, so the honest fix is to
+operate WITHIN it: space harnesses past the 60s window (the privacy-e2e suite runner
+waits `PRIVACY_SUITE_GAP_MS`, default 65s, between harnesses), NOT weaken the limiter
+or spoof XFF. Counters reset on restart, so a fresh-booted server starts the suite
+clean. **Why:** lowering/bypassing the limiter to make a test pass would erode a live
+brute-force defense; spacing keeps the test honest about prod behavior.

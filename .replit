@@ -47,6 +47,10 @@ args = "isolation"
 task = "workflow.run"
 args = "voice-screening-degradation"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "privacy"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -137,6 +141,17 @@ args = "cd backend && npx tsx tests/voice-screening-degradation.test.ts"
 
 [workflows.workflow.metadata]
 isValidation = true
+
+[[workflows.workflow]]
+name = "privacy"
+author = "agent"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx scripts/privacy-e2e-suite.ts"
 
 [[ports]]
 localPort = 5000

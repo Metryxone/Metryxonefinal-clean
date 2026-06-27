@@ -239,6 +239,17 @@ export function StudentDashboard({ onNavigate, onLogout, onSelectExam }: Props) 
   const [claimingLogin, setClaimingLogin] = useState(false);
   const [redeemingId, setRedeemingId] = useState<number | null>(null);
   const [gamificationLoaded, setGamificationLoaded] = useState(false);
+  // MX-302D — Student Career Builder Exposure flag probe. Default OFF →
+  // byte-identical: the "Career Intel" quick-action keeps routing to the
+  // existing student career portal. When ON, it becomes a first-class entry to
+  // the full Career Builder (same engines as career seekers).
+  const [careerBuilderExposed, setCareerBuilderExposed] = useState(false);
+  useEffect(() => {
+    fetch('/api/student-career-builder/enabled', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(j => setCareerBuilderExposed(!!j?.enabled))
+      .catch(() => setCareerBuilderExposed(false));
+  }, []);
 
   const gToken = () => localStorage.getItem('metryx_token');
   const gHeaders = () => { const t = gToken(); return t ? { Authorization: `Bearer ${t}` } : {}; };
@@ -1550,7 +1561,7 @@ export function StudentDashboard({ onNavigate, onLogout, onSelectExam }: Props) 
                       { label: 'Study Planner', icon: CalendarDays,  color: '#0B3C5D', action: () => setActiveView('study-planner') },
                       { label: 'Assignments',   icon: ClipboardList, color: '#D97706', action: () => setActiveView('assignments') },
                       { label: 'Wellness',      icon: HeartPulse,    color: '#4ECDC4', action: () => setActiveView('wellness') },
-                      { label: 'Career Intel',  icon: Briefcase,     color: BRAND.primary, action: () => onNavigate('student-career-portal') },
+                      { label: careerBuilderExposed ? 'Career Builder' : 'Career Intel', icon: Briefcase, color: BRAND.primary, action: () => onNavigate(careerBuilderExposed ? 'career-builder' : 'student-career-portal') },
                       { label: 'Exam Portal',   icon: GraduationCap, color: '#4ECDC4',     action: () => onNavigate('competitive-exam-portal') },
                       { label: 'Forum',         icon: MessageCircle, color: BRAND.accent, action: () => setActiveView('forum') },
                       { label: 'Collab Hub',    icon: Users,         color: '#0B3C5D', action: () => setActiveView('collab') },

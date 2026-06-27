@@ -1554,6 +1554,20 @@ export const FEATURE_FLAGS = {
    *  existing engines + never-throws; null ≠ 0; honest empty states; never
    *  fabricates. Env: `FF_CAREER_DISCOVERY`. */
   careerDiscovery: false,
+
+  /** MX-302D — Student Career Builder Exposure. Makes the full, EXISTING Career
+   *  Builder a first-class destination for students (role `student` /
+   *  `campus_student`) and applies student-appropriate framing on the SHARED
+   *  CareerBuilderPage — it forks NO engine, route or page; students use the same
+   *  recommendation / market / competency / employability engines as career
+   *  seekers. Pure exposure + framing: this flag gates ONLY the new student entry
+   *  points (StudentDashboard quick-action repoint, student-framed Career Builder
+   *  header) and a cheap `/api/student-career-builder/enabled` probe. Default OFF →
+   *  byte-identical legacy behaviour: the student dashboard/portal are unchanged,
+   *  the probe reports `{enabled:false}`, and the Career Builder renders its
+   *  existing career-seeker framing. No schema, no DDL, no persistence change.
+   *  Env: `FF_STUDENT_CAREER_BUILDER`. */
+  studentCareerBuilder: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1714,6 +1728,13 @@ export function isOnetActivationEnabled(): boolean {
  *  any auth/DB/ensure-schema, and the "Fresher Hub" label is unchanged. */
 export function isCareerLaunchpadEnabled(): boolean {
   return isFlagEnabled('careerLaunchpad');
+}
+
+/** MX-302D — Student Career Builder Exposure. Default OFF → student dashboard /
+ *  portal byte-identical, the `/enabled` probe reports false, and the shared
+ *  Career Builder keeps its existing framing. */
+export function isStudentCareerBuilderEnabled(): boolean {
+  return isFlagEnabled('studentCareerBuilder');
 }
 
 export function isOnetCrosswalkGovernanceEnabled(): boolean {

@@ -95,6 +95,7 @@ import { registerMobilityRoutes } from "./routes/mobility";
 import { registerCareerStageGuidanceRoutes } from "./routes/career-stage-guidance";
 import { registerCareerDiscoveryRoutes } from "./routes/career-discovery";
 import { registerCareerLaunchpadRoutes } from "./routes/career-launchpad";
+import { registerStudentCareerBuilderRoutes } from "./routes/student-career-builder";
 import { registerLongitudinalRoutes } from "./routes/longitudinal";
 import { registerWorkforceAnalyticsRoutes } from "./routes/workforce-analytics";
 import { registerGovernanceWorkflowRoutes } from "./routes/governance-workflow";
@@ -13909,6 +13910,7 @@ Rules:
   registerCareerStageGuidanceRoutes({ app, pool: concernsPool });
   registerCareerDiscoveryRoutes(app, concernsPool, requireAuth);
   registerCareerLaunchpadRoutes(app, concernsPool, requireAuth);
+  registerStudentCareerBuilderRoutes(app);
   registerLongitudinalRoutes({ app, pool: concernsPool });
   registerWorkforceAnalyticsRoutes({ app, pool: concernsPool });
   registerGovernanceWorkflowRoutes({ app, pool: concernsPool });

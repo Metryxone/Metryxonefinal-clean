@@ -859,6 +859,17 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
   // MX-302A — Career Launchpad flag probe + effective experience state.
   const [launchpadEnabled, setLaunchpadEnabled] = useState(false);
   const [experience, setExperience] = useState<ExperienceState | null>(null);
+  // MX-302D — Student Career Builder Exposure flag probe. When ON AND the
+  // signed-in user is a student/campus_student, the SHARED Career Builder shows
+  // student-appropriate framing (no forked page, no duplicated engine). Default
+  // OFF → byte-identical career-seeker framing.
+  const [studentExposureEnabled, setStudentExposureEnabled] = useState(false);
+  useEffect(() => {
+    fetch('/api/student-career-builder/enabled', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(j => setStudentExposureEnabled(!!j?.enabled))
+      .catch(() => setStudentExposureEnabled(false));
+  }, []);
 
   const tokenUser = getUser();
   const [sessionUser, setSessionUser] = useState<any>(null);
@@ -948,6 +959,11 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
   }, []);
   const user = tokenUser ?? sessionUser;
   const userId = user?.id || user?.userId || sessionUser?.id || '';
+  // MX-302D — student-framing flag: ON only when the exposure flag is enabled
+  // AND the signed-in user is a student/campus_student. Pure framing of the
+  // SHARED page (labels/copy) — it changes no engine, route, tab or data.
+  const userRole = String(user?.role ?? '').toLowerCase();
+  const isStudentFraming = studentExposureEnabled && (userRole === 'student' || userRole === 'campus_student');
 
   // MX-302A — the set of experiences the user's stage unlocks (server-authoritative).
   // Gates the dedicated Leadership / Executive Studio nav entries so they only show
@@ -1156,7 +1172,7 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
                   {(profile?.personal?.name || user?.name || 'U').charAt(0).toUpperCase()}
                 </div>
                 <div className="text-xs font-semibold text-gray-800 truncate">
-                  {profile?.personal?.name || user?.name || 'Career Seeker'}
+                  {profile?.personal?.name || user?.name || (isStudentFraming ? 'Student' : 'Career Seeker')}
                 </div>
                 <div className="text-[10px] text-gray-400 truncate">
                   {profile?.personal?.location || 'Location not set'}
@@ -1268,7 +1284,7 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
         {/* ── Main content ──────────────────────────────────────── */}
         <main className="flex-1 min-w-0 space-y-6">
           <TabContentErrorBoundary key={tab}>
-          {tab === 'dashboard'   && <DashboardTab profile={profile} loading={loadingProfile} eiScore={eiScore} eiBreakdown={eiBreakdown} jobs={jobs} goals={goals} onTabChange={setTab} onNavigate={onNavigate} onOpenWizard={() => setShowWelcomeUpload(true)} userId={userId} launchpadEnabled={launchpadEnabled} />}
+          {tab === 'dashboard'   && <DashboardTab profile={profile} loading={loadingProfile} eiScore={eiScore} eiBreakdown={eiBreakdown} jobs={jobs} goals={goals} onTabChange={setTab} onNavigate={onNavigate} onOpenWizard={() => setShowWelcomeUpload(true)} userId={userId} launchpadEnabled={launchpadEnabled} studentFraming={isStudentFraming} />}
           {tab === 'assessment'  && <AssessmentTab userId={userId} profile={profile} onTabChange={setTab} />}
           {tab === 'future-map'  && <FutureMapTab profile={profile} onTabChange={setTab} behavior={careerBrain.behaviorProfile} />}
           {tab === 'development' && <DevelopmentPlanTab profile={profile} onTabChange={setTab} behavior={careerBrain.behaviorProfile} />}
@@ -1426,6 +1442,7 @@ export function DashboardTab({ profile, loading, eiScore, eiBreakdown, jobs, goa
   onOpenWizard: () => void;
   userId: string;
   launchpadEnabled?: boolean;
+  studentFraming?: boolean;
 }) {
   const [showEIDetails, setShowEIDetails] = useState(false);
   const [showProfileDetails, setShowProfileDetails] = useState(false);
@@ -1467,7 +1484,7 @@ export function DashboardTab({ profile, loading, eiScore, eiBreakdown, jobs, goa
   const eduCount = (profile?.education || []).length;
   const openJobs = jobs.filter(j => !['Accepted','Rejected'].includes(j.status)).length;
   const completedGoals = goals.filter(g => g.completed).length;
-  const userName = (profile?.personal?.name || 'Career Seeker').split(' ')[0];
+  const userName = (profile?.personal?.name || (studentFraming ? 'Student' : 'Career Seeker')).split(' ')[0];
   const hour = new Date().getHours();
   const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
 
@@ -1497,13 +1514,13 @@ export function DashboardTab({ profile, loading, eiScore, eiBreakdown, jobs, goa
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1.5">
                 <Sparkles size={14} style={{ color: BRAND.accent }} />
-                <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: BRAND.accent }}>Welcome to your Career Command Center</span>
+                <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: BRAND.accent }}>{studentFraming ? 'Welcome to your Employability Dashboard' : 'Welcome to your Career Command Center'}</span>
               </div>
               <h1 className="text-xl font-bold">{greet}, {userName} 👋</h1>
               <p className="text-xs opacity-90 leading-relaxed mt-1.5 max-w-xl">
-                This is your personal hub for building an employable, recruiter-ready profile — your
-                Employability Index, skill gaps, future-role predictions and a daily plan all live here.
-                Let's add your details to unlock it.
+                {studentFraming
+                  ? <>This is your hub for becoming placement- and recruiter-ready — your Employability Index, skill gaps, best-fit roles, future skills and a daily plan all live here, powered by the same intelligence employers use. Let's add your details to unlock it.</>
+                  : <>This is your personal hub for building an employable, recruiter-ready profile — your Employability Index, skill gaps, future-role predictions and a daily plan all live here. Let's add your details to unlock it.</>}
               </p>
               <div className="flex flex-wrap gap-2 mt-4">
                 <button onClick={onOpenWizard}

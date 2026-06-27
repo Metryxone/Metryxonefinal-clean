@@ -272,6 +272,7 @@ const categories: PageCategory[] = [
     color: "#4ECDC4",
     pages: [
       { screen: 'career-builder', label: 'Career Builder Portal', description: 'Full career development hub — EI gauge, resume studio, job tracker, interview prep, learning hub, mentors, goals', icon: <Briefcase size={20} /> },
+      { screen: 'career-builder', label: 'Career Launchpad', description: 'Personalized starting hub for students, freshers and early-career users — readiness snapshot, quick actions and guided next steps', icon: <Rocket size={20} /> },
       { screen: 'career-discovery', label: 'Career Discovery', description: 'Explore career options and pathways matched to your strengths and interests', icon: <Compass size={20} /> },
     ]
   },

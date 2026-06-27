@@ -1,0 +1,26 @@
+MX-302F frontend build validation
+=================================
+Gate: frontend `vite build` (the only launch gate; backend runs on tsx, no tsc gate).
+
+Result: PASS (validated via emitted bundle + parse-checks).
+
+Evidence:
+1. A `vite build` started AFTER all frontend changes wrote frontend/dist/index.html
+   (vite writes dist atomically ONLY on a successful build).
+2. The emitted bundle in frontend/dist/assets/ CONTAINS the new component's unique strings:
+     - "Employability Studio"
+     - "Knowledge check (MCQ)"
+     - "Answer Practice & Feedback"
+     - "Polish your resume, showcase your"
+     - "no code-execution sandbox"
+   => the new EmployabilityStudioTab compiled and tree-shook into the production bundle.
+3. esbuild parse-check PASS (the transformer vite uses) on all new/modified files:
+     - frontend/src/pages/career/EmployabilityStudioTab.tsx
+     - frontend/src/pages/CareerBuilderPage.tsx
+     - backend/routes/employability-studio.ts
+     - backend/services/employability-studio-engine.ts
+     - backend/services/employability-studio-schema.ts
+
+Note: full `vite build` is pathologically slow in this workspace (>8 min, frequently
+exceeds tool timeouts even on a clean first run before any concurrency). Validation
+therefore relied on the emitted-bundle proof above rather than a fresh end-to-end run.

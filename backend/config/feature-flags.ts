@@ -1381,6 +1381,25 @@ export const FEATURE_FLAGS = {
    *  to_regclass and degrade honestly. Env: `FF_CAMPUS_PLACEMENT`. */
   campusPlacement: false,
 
+  /** MX-302F — Resume, Portfolio & Interview Studio. When ON, a NET-NEW consolidated student
+   *  employability surface ("Employability Studio") activates with three studios — Resume,
+   *  Portfolio, Interview — composed over the EXISTING surfaces (ResumeStudio, ATS scorer,
+   *  cover-letter, Fresher Hub portfolio, behavioural simulations, interview banks, career
+   *  brain readiness) PLUS genuinely-new gaps built behind this flag: backend resume versions
+   *  (`career_resume_versions`), an AI resume analyzer, real LLM bullet suggestions, LinkedIn
+   *  review, structured Research + Publications portfolio entries (`career_portfolio_entries`),
+   *  a curated coding-assessment (MCQ + structured self-review — NO execution sandbox), a group-
+   *  discussion module, and AI feedback on free-form answers. HONESTY MANDATES: every AI-dependent
+   *  feature requires an LLM key (currently unset) and degrades HONESTLY — when no key is present
+   *  it returns a clearly-labelled rule-based / "AI unavailable" result and NEVER presents static
+   *  content as AI-generated (the legacy "AI bullet picker" is a static library, surfaced as such).
+   *  null ≠ 0; empty states are honest. Strictly additive + reversible: flag OFF → every data route
+   *  503s BEFORE any auth/DB touch, the ensure-schema is NEVER reached so no new tables are created,
+   *  and the existing Resume/Fresher-Hub/Interview tabs are byte-identical legacy. `/enabled` is an
+   *  UNGATED flag probe (platform convention). User-scoped rows are IDOR-safe (user_id = users.id).
+   *  Env: `FF_EMPLOYABILITY_STUDIO`. */
+  employabilityStudio: false,
+
   /** PHASE 5.14 — Notifications & Workflows. A PURE READ / compose-never-recompute layer that DERIVES
    *  operational notification items (Job / Application / Interview / Offer / Employer / Recruiter
    *  alerts + Status Changes), workflow next-actions, and message previews from operator-recorded
@@ -2299,6 +2318,10 @@ export function isLiveAvatarInterviewEnabled(): boolean {
 
 export function isCampusPlacementEnabled(): boolean {
   return isFlagEnabled('campusPlacement');
+}
+
+export function isEmployabilityStudioEnabled(): boolean {
+  return isFlagEnabled('employabilityStudio');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

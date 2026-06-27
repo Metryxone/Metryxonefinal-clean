@@ -2,6 +2,7 @@ import { BRAND } from '@/design-system/tokens';
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { FresherHubTab } from './career/FresherHubTab';
 import { PlacementHubTab } from './career/PlacementHubTab';
+import { EmployabilityStudioTab } from './career/EmployabilityStudioTab';
 import CareerLaunchpadDashboard from './career/CareerLaunchpadDashboard';
 import { LeadershipStudioTab } from './career/LeadershipStudioTab';
 import { ExecutiveStudioTab } from './career/ExecutiveStudioTab';
@@ -127,7 +128,9 @@ type TabId =
   // ── MX-77X — My Workforce Outlook (self-scoped, additive) ──
   | 'my-workforce'
   // ── MX-302E — Campus Placement & Company Intelligence (flag campusPlacement) ──
-  | 'placement-hub';
+  | 'placement-hub'
+  // ── MX-302F — Resume, Portfolio & Interview Studio (flag employabilityStudio) ──
+  | 'employability-studio';
 
 // 5-zone workspace grouping for the sidebar (Phase 5). Order here = render order.
 type Zone = 'command' | 'profile' | 'intelligence' | 'execution' | 'growth' | 'adaptive';
@@ -169,6 +172,7 @@ const TABS: { id: TabId; label: string; icon: React.ReactNode; screen?: string; 
   { id: 'learning',    label: 'Learning Hub',           icon: <BookOpen size={16} />,      zone: 'execution' },
   { id: 'fresher-hub', label: 'Fresher Hub',            icon: <GraduationCap size={16} />, zone: 'execution' },
   { id: 'placement-hub', label: 'Placement Hub',        icon: <GraduationCap size={16} />, zone: 'execution', desc: 'Campus drives, internships, offers & company intelligence' },
+  { id: 'employability-studio', label: 'Employability Studio', icon: <FileText size={16} />, zone: 'execution', desc: 'Resume polish, portfolio, coding/GD & interview practice' },
   // ── MX-302A — dedicated senior / executive experiences (nav-gated to allowed stages) ──
   { id: 'leadership-studio', label: 'Leadership Studio', icon: <Users size={16} />,    zone: 'command', desc: 'Develop your team, map stakeholders, and sharpen how you lead' },
   { id: 'executive-studio',  label: 'Executive Studio',  icon: <Crown size={16} />,    zone: 'command', desc: 'Set your strategic agenda and govern your stakeholder network' },
@@ -884,6 +888,16 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
       .then(j => setCampusPlacementEnabled(!!j?.enabled))
       .catch(() => setCampusPlacementEnabled(false));
   }, []);
+  // MX-302F — Employability Studio flag probe. /enabled is ungated (200 with the
+  // flag state); when OFF this stays false → the tab is hidden and the surface is
+  // byte-identical to legacy. ON → the Employability Studio tab appears.
+  const [employabilityStudioEnabled, setEmployabilityStudioEnabled] = useState(false);
+  useEffect(() => {
+    fetch('/api/employability-studio/enabled', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(j => setEmployabilityStudioEnabled(!!j?.enabled))
+      .catch(() => setEmployabilityStudioEnabled(false));
+  }, []);
 
   const tokenUser = getUser();
   const [sessionUser, setSessionUser] = useState<any>(null);
@@ -1223,7 +1237,7 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
             <nav className="p-2 space-y-0.5">
               {ZONE_ORDER.map((zone) => {
                 const items = TABS.filter((t) => (t.zone ?? 'command') === zone)
-                  .filter((t) => (t.id !== 'prediction-trust' || validationLoopEnabled) && (t.id !== 'my-workforce' || myWorkforceEnabled) && (t.id !== 'placement-hub' || campusPlacementEnabled))
+                  .filter((t) => (t.id !== 'prediction-trust' || validationLoopEnabled) && (t.id !== 'my-workforce' || myWorkforceEnabled) && (t.id !== 'placement-hub' || campusPlacementEnabled) && (t.id !== 'employability-studio' || employabilityStudioEnabled))
                   // MX-302A — the dedicated senior/executive studios appear in nav only
                   // when the user's stage unlocks them (server-authoritative allowed list).
                   .filter((t) => (t.id !== 'leadership-studio' || allowedExperienceIds.has('leadership-studio')) && (t.id !== 'executive-studio' || allowedExperienceIds.has('executive-studio')));
@@ -1336,6 +1350,7 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
           {tab === 'prediction-trust' && validationLoopEnabled && <PredictionTrustTab />}
           {tab === 'my-workforce' && myWorkforceEnabled && <MyWorkforcePanel />}
           {tab === 'placement-hub' && campusPlacementEnabled && <PlacementHubTab profile={profile} userId={userId} />}
+          {tab === 'employability-studio' && employabilityStudioEnabled && <EmployabilityStudioTab profile={profile} userId={userId} onNavigate={setTab} />}
           {tab === 'career-passport' && <CareerPassportTab userId={userId} profile={profile} />}
           {tab === 'career-graph'      && <CareerGraphTab userId={userId} />}
           {tab === 'career-recs'       && <CareerRecommendationsTab userId={userId} />}

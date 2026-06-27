@@ -7,7 +7,7 @@ import {
   Loader2, XCircle, ArrowUp, ArrowDown, Minus, Activity, Briefcase,
   Building2, Star, Zap, Flag, Search, Eye, BarChart2, Users, Layers,
   Clock, CheckSquare, AlertCircle, Link2, Server, Database, GitMerge,
-  Download, Upload, X,
+  Download, Upload, X, Maximize2, Minimize2,
 } from 'lucide-react';
 
 interface PillarDef { id: number; label: string; group: string; icon: React.ReactNode; route: string; badge?: string; }
@@ -2107,6 +2107,8 @@ export default function EIOSCockpit() {
   const [cert, setCert]             = useState<any>(null);
   const [showCert, setShowCert]     = useState(false);
   const [error, setError]           = useState<string | null>(null);
+  const [winState, setWinState]     = useState<'normal' | 'max' | 'min'>('normal');
+  const [closed, setClosed]         = useState(false);
 
   const loadPillar = useCallback(async (id: number) => {
     const pillar = PILLARS.find(p => p.id === id);
@@ -2135,8 +2137,40 @@ export default function EIOSCockpit() {
     1: 'Security Dashboard (W1)', 2: 'Employer Portal Commercial', 4: 'Talent Intelligence Graph (W2)', 5: 'Hiring Intelligence (W3)',
   };
 
+  const windowControls = (
+    <div className="flex items-center gap-1">
+      <button onClick={() => setWinState(s => (s === 'min' ? 'normal' : 'min'))} title="Minimize" className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-slate-700/60 transition-colors"><Minus size={14} /></button>
+      <button onClick={() => setWinState(s => (s === 'max' ? 'normal' : 'max'))} title={winState === 'max' ? 'Restore' : 'Maximize'} className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-slate-700/60 transition-colors">{winState === 'max' ? <Minimize2 size={14} /> : <Maximize2 size={14} />}</button>
+      <button onClick={() => setClosed(true)} title="Close" className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-rose-500/80 transition-colors"><X size={14} /></button>
+    </div>
+  );
+
+  if (closed) {
+    return (
+      <div className="flex items-center h-full bg-slate-900 text-white p-4">
+        <button onClick={() => setClosed(false)} className="flex items-center gap-2 text-sm bg-blue-600 hover:bg-blue-500 text-white rounded-lg px-4 py-2 transition-colors">
+          <LayoutDashboard size={16} /> Open EIOS Cockpit
+        </button>
+      </div>
+    );
+  }
+
+  if (winState === 'min') {
+    return (
+      <div className="flex items-center gap-2 bg-slate-800 border border-slate-700/50 rounded-lg px-4 py-2.5 m-2 text-white">
+        <LayoutDashboard size={15} className="text-blue-400" />
+        <span className="text-sm font-semibold">EIOS Cockpit</span>
+        <span className="text-xs text-slate-400">— minimized</span>
+        <div className="ml-auto flex items-center gap-1">
+          <button onClick={() => setWinState('normal')} title="Restore" className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-slate-700/60 transition-colors"><Maximize2 size={14} /></button>
+          <button onClick={() => setClosed(true)} title="Close" className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-rose-500/80 transition-colors"><X size={14} /></button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex h-full bg-slate-900 text-white">
+    <div className={winState === 'max' ? 'fixed inset-0 z-50 flex bg-slate-900 text-white' : 'flex h-full bg-slate-900 text-white'}>
       {/* Left Sidebar */}
       <div className="w-52 flex-shrink-0 border-r border-slate-700/50 overflow-y-auto bg-slate-900/80">
         <div className="p-3 border-b border-slate-700/50">
@@ -2173,7 +2207,10 @@ export default function EIOSCockpit() {
             <div className="flex items-center gap-3 mb-5">
               <Award size={20} className="text-amber-400" />
               <h2 className="text-lg font-bold">EIOS World-Class Certification</h2>
-              <button onClick={() => setShowCert(false)} className="ml-auto text-xs text-slate-400 hover:text-white">← Back</button>
+              <div className="ml-auto flex items-center gap-3">
+                <button onClick={() => setShowCert(false)} className="text-xs text-slate-400 hover:text-white">← Back</button>
+                {windowControls}
+              </div>
             </div>
             <CertificationPanel data={cert} />
           </div>
@@ -2185,9 +2222,12 @@ export default function EIOSCockpit() {
                 <h2 className="text-lg font-bold">P{selectedPillar}: {currentPillar?.label}</h2>
                 <div className="text-xs text-slate-400">{currentPillar?.group} · {data?.name || ''}</div>
               </div>
-              <button onClick={() => { setPillarData(prev => { const n = { ...prev }; delete n[selectedPillar]; return n; }); setTimeout(() => loadPillar(selectedPillar), 50); }} className="ml-auto text-slate-400 hover:text-white p-1" title="Refresh">
-                <RefreshCw size={14} />
-              </button>
+              <div className="ml-auto flex items-center gap-1">
+                <button onClick={() => { setPillarData(prev => { const n = { ...prev }; delete n[selectedPillar]; return n; }); setTimeout(() => loadPillar(selectedPillar), 50); }} className="text-slate-400 hover:text-white p-1.5 rounded hover:bg-slate-700/60" title="Refresh">
+                  <RefreshCw size={14} />
+                </button>
+                {windowControls}
+              </div>
             </div>
             {currentPillar && !currentPillar.route && (
               <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 text-sm text-blue-300 flex items-center gap-3">

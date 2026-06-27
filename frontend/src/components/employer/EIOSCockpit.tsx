@@ -924,27 +924,50 @@ function lensVal(metric: any): number {
   return Number(metric) || 0;
 }
 function LensCard({ metricKey, metric, label }: { metricKey: string; metric: any; label: string }) {
+  // No lens reading yet → show an honest "No data yet" state, never a fabricated 0 (null ≠ 0).
   if (!metric || typeof metric !== 'object' || !metric.current_state) {
-    return <KPI label={label} value={`${Number(metric) || 0}%`} />;
+    const raw = Number(metric);
+    const hasReading = metric != null && metric !== '' && Number.isFinite(raw);
+    return (
+      <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-4">
+        <div className="text-xs font-medium text-slate-300 mb-2">{label}</div>
+        {hasReading ? (
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-3xl font-bold text-white tabular-nums">{raw}</span>
+            <span className="text-xs text-slate-500">/ 100</span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1.5 text-slate-500"><Minus size={14} /><span className="text-sm">No data yet</span></div>
+        )}
+      </div>
+    );
   }
   const v = metric.current_state.value ?? 0;
   const trend = metric.trend?.direction ?? 'stable';
   const risk  = metric.risk?.level ?? 'low';
   const trendColor = trend === 'improving' ? 'text-emerald-400' : trend === 'declining' ? 'text-rose-400' : 'text-slate-400';
-  const riskColor  = risk  === 'high'      ? 'text-rose-400'    : risk  === 'moderate'  ? 'text-amber-400' : 'text-emerald-400';
+  const trendArrow = trend === 'improving' ? '↑' : trend === 'declining' ? '↓' : '→';
+  const scoreText  = v >= 75 ? 'text-emerald-300' : v >= 55 ? 'text-amber-300' : 'text-rose-300';
+  const barColor   = v >= 75 ? 'bg-emerald-500'   : v >= 55 ? 'bg-amber-500'   : 'bg-rose-500';
   return (
-    <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3">
-      <div className="text-xs text-slate-400 mb-1">{label}</div>
-      <div className="flex items-end gap-2">
-        <ScoreBadge score={v} size="md" />
-        <span className={`text-xs ${trendColor}`}>{trend === 'improving' ? '↑' : trend === 'declining' ? '↓' : '→'} {trend}</span>
+    <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-4 hover:border-slate-600/60 transition-colors">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-xs font-medium text-slate-300">{label}</span>
+        <RiskBadge risk={risk} />
       </div>
-      <div className="flex gap-2 mt-1.5 text-xs">
-        <span className={`${riskColor}`}>Risk: {risk}</span>
-        {metric.forecast?.value_3m != null && <span className="text-slate-500">3m: {metric.forecast.value_3m}</span>}
+      <div className="flex items-baseline gap-1.5">
+        <span className={`text-3xl font-bold tabular-nums ${scoreText}`}>{v}</span>
+        <span className="text-xs text-slate-500">/ 100</span>
+        <span className={`ml-auto text-xs flex items-center gap-0.5 ${trendColor}`}>{trendArrow} {trend}</span>
       </div>
+      <div className="mt-2.5"><Bar value={v} color={barColor} /></div>
+      {metric.forecast?.value_3m != null && (
+        <div className="text-xs text-slate-500 mt-2">Forecast 3m: <span className="text-slate-300">{metric.forecast.value_3m}</span></div>
+      )}
       {metric.intervention?.action && (
-        <div className="text-xs text-slate-500 mt-1 leading-tight truncate" title={metric.intervention.action}>→ {metric.intervention.action}</div>
+        <div className="text-xs text-slate-400 mt-2 leading-tight flex items-start gap-1 truncate" title={metric.intervention.action}>
+          <ChevronRight size={11} className="mt-0.5 shrink-0 text-blue-400" /><span className="truncate">{metric.intervention.action}</span>
+        </div>
       )}
     </div>
   );
@@ -990,6 +1013,19 @@ function LongitudinalPanel({ longitudinal }: { longitudinal: any }) {
   );
 }
 
+const COCKPIT_STATS: { key: string; label: string; icon: React.ComponentType<any>; accent: string; glow: string }[] = [
+  { key: 'totalCandidates',  label: 'Candidates',  icon: Users,       accent: 'text-sky-300',     glow: 'from-sky-500/15' },
+  { key: 'totalJobs',        label: 'Open Roles',  icon: Briefcase,   accent: 'text-violet-300',  glow: 'from-violet-500/15' },
+  { key: 'totalAssessments', label: 'Assessments', icon: CheckSquare, accent: 'text-amber-300',   glow: 'from-amber-500/15' },
+  { key: 'totalNodes',       label: 'TIG Nodes',   icon: Network,     accent: 'text-emerald-300', glow: 'from-emerald-500/15' },
+  { key: 'hired',            label: 'Hired',       icon: Award,       accent: 'text-rose-300',    glow: 'from-rose-500/15' },
+];
+const VIEW_META: Record<string, { label: string; icon: React.ComponentType<any>; focus: string }> = {
+  ceo:  { label: 'CEO',  icon: Building2, focus: 'Enterprise health' },
+  chro: { label: 'CHRO', icon: Users,     focus: 'Talent & succession' },
+  coo:  { label: 'COO',  icon: Activity,  focus: 'Operational capacity' },
+  clo:  { label: 'CLO',  icon: BookOpen,  focus: 'Learning & development' },
+};
 function P21Panel({ data, onRefresh }: { data: any; onRefresh?: () => void }) {
   const [view, setView] = useState<'ceo' | 'chro' | 'coo' | 'clo'>('ceo');
   const summary = data.summary || {};
@@ -1028,19 +1064,57 @@ function P21Panel({ data, onRefresh }: { data: any; onRefresh?: () => void }) {
   const cloMetrics    = [['learningReadiness','Learning Readiness'],['developmentCoverage','Development Coverage'],['learningROI','Learning ROI']];
   const metricsMap: Record<string, [string,string][]> = { ceo: ceoMetrics, chro: chroMetrics, coo: cooMetrics, clo: cloMetrics };
   const activeMetrics = metricsMap[view] || ceoMetrics;
+  const isFirstRun = (summary.totalCandidates ?? 0) === 0 && (summary.totalJobs ?? 0) === 0 && (summary.totalAssessments ?? 0) === 0;
 
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        <KPI label="Candidates" value={summary.totalCandidates ?? 0} />
-        <KPI label="Open Roles" value={summary.totalJobs ?? 0} />
-        <KPI label="Assessments" value={summary.totalAssessments ?? 0} />
-        <KPI label="TIG Nodes" value={summary.totalNodes ?? 0} />
-        <KPI label="Hired" value={summary.hired ?? 0} />
+        {COCKPIT_STATS.map(s => {
+          const Icon = s.icon;
+          const val = summary[s.key] ?? 0;
+          return (
+            <div key={s.key} className="relative overflow-hidden bg-slate-800/60 border border-slate-700/50 rounded-xl p-4">
+              <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${s.glow} to-transparent`} />
+              <div className="relative flex items-center gap-3">
+                <div className={`shrink-0 w-9 h-9 rounded-lg bg-slate-900/40 border border-slate-700/50 flex items-center justify-center ${s.accent}`}><Icon size={18} /></div>
+                <div className="min-w-0">
+                  <div className="text-2xl font-bold text-white leading-none tabular-nums">{val}</div>
+                  <div className="text-xs text-slate-400 mt-1 truncate">{s.label}</div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
       {lensFramework && (
         <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg px-3 py-2 text-xs text-blue-300 flex items-center gap-2">
           <LayoutDashboard size={12} /> {lensFramework}
+        </div>
+      )}
+      {isFirstRun && (
+        <div className="relative overflow-hidden bg-gradient-to-br from-blue-500/10 via-slate-800/40 to-transparent border border-blue-500/25 rounded-xl p-4">
+          <div className="flex items-start gap-3">
+            <div className="shrink-0 w-9 h-9 rounded-lg bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-blue-300"><Target size={18} /></div>
+            <div className="flex-1">
+              <div className="text-sm font-semibold text-white">Your cockpit is ready — let's bring it to life</div>
+              <div className="text-xs text-slate-400 mt-0.5">Executive intelligence populates from real activity. Nothing here is simulated.</div>
+              <div className="grid sm:grid-cols-3 gap-2 mt-3">
+                {[
+                  { n: 1, t: 'Post a role', d: 'Open a position on the Job Board' },
+                  { n: 2, t: 'Assess candidates', d: 'Invite applicants and run assessments' },
+                  { n: 3, t: 'Read the intelligence', d: 'Health, risk & forecasts appear here' },
+                ].map(step => (
+                  <div key={step.n} className="bg-slate-900/30 border border-slate-700/40 rounded-lg p-2.5">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-300 text-xs font-bold flex items-center justify-center">{step.n}</span>
+                      <span className="text-xs font-semibold text-white">{step.t}</span>
+                    </div>
+                    <div className="text-xs text-slate-400 leading-tight">{step.d}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       )}
       {data.worldClass && (
@@ -1051,10 +1125,22 @@ function P21Panel({ data, onRefresh }: { data: any; onRefresh?: () => void }) {
           <button onClick={() => downloadExport('/api/employer/eios/p21/export.csv', 'eios_executive_longitudinal.csv', setExportMsg)} className="bg-emerald-600/80 hover:bg-emerald-600 text-white text-xs px-3 py-1.5 rounded flex items-center gap-1.5"><Download size={11} /> Export CSV</button>
         </div>
       )}
-      <div className="flex gap-1 bg-slate-800/40 rounded-lg p-1 border border-slate-700/50">
-        {TABS.map(t => (
-          <button key={t.id} onClick={() => setView(t.id as any)} className={`flex-1 text-xs font-semibold py-1.5 rounded transition-all ${view === t.id ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}>{t.label} View</button>
-        ))}
+      <div>
+        <div className="text-xs text-slate-500 mb-1.5 flex items-center gap-1.5"><Eye size={11} /> Executive lens</div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {TABS.map(t => {
+            const meta = VIEW_META[t.id] || { label: t.label, icon: LayoutDashboard, focus: '' };
+            const Icon = meta.icon;
+            const active = view === t.id;
+            return (
+              <button key={t.id} onClick={() => setView(t.id as any)}
+                className={`text-left rounded-lg p-2.5 border transition-all ${active ? 'bg-blue-600/90 border-blue-500 text-white shadow-lg shadow-blue-900/30' : 'bg-slate-800/40 border-slate-700/50 text-slate-400 hover:text-white hover:border-slate-600'}`}>
+                <div className="flex items-center gap-1.5"><Icon size={13} /><span className="text-xs font-semibold">{meta.label}</span></div>
+                <div className={`text-xs mt-0.5 leading-tight ${active ? 'text-blue-100' : 'text-slate-500'}`}>{meta.focus}</div>
+              </button>
+            );
+          })}
+        </div>
       </div>
       <div className="grid grid-cols-2 gap-3">
         {activeMetrics.map(([key, label]) => (

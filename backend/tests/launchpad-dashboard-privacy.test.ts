@@ -1,27 +1,44 @@
 /**
- * Launchpad Dashboard — Privacy / Flag-Gate / Self-Only Regression Test
+ * Launchpad Dashboard + Career Discovery — Privacy / Flag-Gate / Self-Only
+ * Regression Test
  * ----------------------------------------------------------------------------
- * MX-302C — the `/api/launchpad-dashboard/*` surface is flag-gated
- * (`launchpadDashboard` / FF_LAUNCHPAD_DASHBOARD, default OFF) and reads a
- * seeker's OWN profile (the subject is pinned to the authenticated principal —
- * there is no IDOR surface). This test locks in three privacy guarantees so a
- * future refactor cannot silently open the surface or introduce an IDOR:
+ * Two flag-gated student-facing read surfaces resolve their subject from the
+ * authenticated SESSION principal only — never a client-supplied id — so there
+ * is no IDOR surface:
  *
- *   (a) flag OFF  → /summary + /telemetry 503 BEFORE any auth/DB touch
- *                   (byte-identical legacy: requireAuth never runs, pool never
- *                   queried), and /enabled → 200 {enabled:false}
+ *   • MX-302C  `/api/launchpad-dashboard/*`  (`launchpadDashboard` /
+ *              FF_LAUNCHPAD_DASHBOARD, default OFF) — reads a seeker's OWN
+ *              placement-readiness profile.
+ *   • MX-302B  `/api/career-discovery/*`     (`careerDiscovery` /
+ *              FF_CAREER_DISCOVERY, default OFF) — composes a seeker's OWN
+ *              discovery profile + AI guidance.
+ *
+ * This test locks in the privacy guarantees so a future server refactor (e.g.
+ * one that "refactors the dashboard reads to take an id") cannot silently open
+ * the surface or introduce an IDOR that the frontend regression alone (task
+ * #266) would not catch:
+ *
+ *   (a) flag OFF  → data routes 503 BEFORE any auth/DB touch (byte-identical
+ *                   legacy: requireAuth never runs, pool never queried), and
+ *                   /enabled → 200 {enabled:false}
  *   (b) flag ON   → /enabled → 200 {enabled:true}; the data routes fall through
  *                   the gate to requireAuth (401 without a session)
- *   (c) flag ON   → /summary resolves the subject from the SESSION principal
+ *   (c) flag ON   → the read resolves the subject from the SESSION principal
  *                   ONLY — a client-supplied id/user_id/subject in the query or
- *                   body is NEVER honored (no other seeker's readiness can leak)
+ *                   body is NEVER honored. The DB layer is keyed by the SESSION
+ *                   uid, and an attacker's id NEVER reaches a query param — so
+ *                   an authenticated student A cannot retrieve student B's
+ *                   readiness (/summary) or AI guidance (/guidance) by passing
+ *                   B's id. This is asserted for BOTH surfaces.
  *
- * It mounts the REAL `registerLaunchpadDashboardRoutes` onto a throwaway Express
- * server (listen(0)) with a stub requireAuth and a stub pool that record whether
- * they were touched and with what params — so the assertions exercise the actual
- * production gate + handler code, headlessly, without a real database. The flag
- * is read from process.env at request time (`envOverride`), so a single server
- * can be driven through both OFF and ON states deterministically.
+ * It mounts the REAL `registerLaunchpadDashboardRoutes` +
+ * `registerCareerDiscoveryRoutes` onto a throwaway Express server (listen(0))
+ * with a stub requireAuth and a stub pool that record whether they were touched
+ * and with what params — so the assertions exercise the actual production gate +
+ * handler code (and, for guidance, the real composing engines), headlessly,
+ * without a real database. The flags are read from process.env at request time
+ * (`envOverride`), so a single server can be driven through OFF and ON states
+ * deterministically.
  *
  * Run with:  npx tsx backend/tests/launchpad-dashboard-privacy.test.ts
  */
@@ -29,8 +46,18 @@ import http, { type Server } from 'node:http';
 import assert from 'node:assert/strict';
 import express, { type Request, type Response } from 'express';
 import { registerLaunchpadDashboardRoutes } from '../routes/launchpad-dashboard';
+import { registerCareerDiscoveryRoutes } from '../routes/career-discovery';
+
+// Force the AI coach down its DETERMINISTIC rule-based path so the guidance
+// composition never attempts a network call (no LLM key/base URL in the test).
+delete process.env.AI_INTEGRATIONS_OPENAI_API_KEY;
+delete process.env.AI_INTEGRATIONS_OPENAI_BASE_URL;
+delete process.env.OPENAI_API_KEY;
+delete process.env.OPENAI_BASE_URL;
+delete process.env.EMERGENT_LLM_KEY;
 
 const FF = 'FF_LAUNCHPAD_DASHBOARD';
+const FF_CD = 'FF_CAREER_DISCOVERY';
 const SESSION_UID = 'session-self-001';
 const ATTACKER_UID = 'victim-other-999';
 
@@ -77,7 +104,9 @@ const pool = {
   query: async (sql: string, params?: any[]) => {
     probe.dbQueries.push({ sql, params: params ?? [] });
     if (/to_regclass/i.test(sql)) {
-      return { rows: [{ t: 'public.career_seeker_profiles' }] };
+      // Both shapes used in the codebase: `... AS t` (launchpad) and
+      // `to_regclass($1) AS reg` (career-discovery tableExists).
+      return { rows: [{ t: 'public.career_seeker_profiles', reg: params?.[0] ?? 'public.career_seeker_profiles' }] };
     }
     if (/career_seeker_profiles\s+WHERE\s+user_id/i.test(sql)) {
       return {
@@ -100,6 +129,7 @@ function buildServer(): Promise<{ server: Server; base: string }> {
   const app = express();
   app.use(express.json());
   registerLaunchpadDashboardRoutes(app, pool, requireAuth);
+  registerCareerDiscoveryRoutes(app, pool, requireAuth);
   const server = http.createServer(app);
   return new Promise((resolve) => {
     server.listen(0, () => {
@@ -206,6 +236,82 @@ async function main() {
     assert.ok(
       !probe.dbQueries.some((q) => (q.params ?? []).includes(ATTACKER_UID)),
       'a client-supplied id reached the DB layer',
+    );
+  });
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // Career Discovery (MX-302B) — same self-only guarantee on /guidance.
+  // ══════════════════════════════════════════════════════════════════════════
+  console.log('\nCareer Discovery privacy / flag-gate / self-only');
+
+  // ── (a) Flag OFF: /guidance 503 BEFORE auth/DB; /enabled honest false. ──
+  delete process.env[FF_CD];
+  process.env[FF_CD] = 'false';
+
+  probe.reset();
+  const cdOff = await call(base, 'GET', '/api/career-discovery/guidance', { auth: true });
+  test('CD flag OFF → GET /guidance returns 503', () => {
+    assert.equal(cdOff.status, 503);
+    assert.equal(cdOff.json?.enabled, false);
+  });
+  test('CD flag OFF → /guidance 503 fires BEFORE auth (requireAuth not reached)', () => {
+    assert.equal(probe.authCalls, 0, 'requireAuth ran before the flag gate');
+  });
+  test('CD flag OFF → /guidance 503 fires BEFORE any DB touch (pool not queried)', () => {
+    assert.equal(probe.dbQueries.length, 0, 'the DB was queried while the flag was OFF');
+  });
+
+  const cdOffEnabled = await call(base, 'GET', '/api/career-discovery/enabled');
+  test('CD flag OFF → GET /enabled returns 200 {enabled:false}', () => {
+    assert.equal(cdOffEnabled.status, 200);
+    assert.equal(cdOffEnabled.json?.ok, true);
+    assert.equal(cdOffEnabled.json?.enabled, false);
+  });
+
+  // ── (b) Flag ON: probe true; /guidance passes the gate to requireAuth. ──
+  process.env[FF_CD] = 'true';
+
+  const cdOnEnabled = await call(base, 'GET', '/api/career-discovery/enabled');
+  test('CD flag ON → GET /enabled returns 200 {enabled:true}', () => {
+    assert.equal(cdOnEnabled.status, 200);
+    assert.equal(cdOnEnabled.json?.enabled, true);
+  });
+
+  probe.reset();
+  const cdNoAuth = await call(base, 'GET', '/api/career-discovery/guidance');
+  test('CD flag ON → GET /guidance without a session returns 401 (gate fell through to auth)', () => {
+    assert.equal(cdNoAuth.status, 401);
+    assert.ok(probe.authCalls >= 1, 'requireAuth should run once the flag is ON');
+  });
+
+  // ── (c) Flag ON: subject resolved from the SESSION only — no client id. The
+  //    guidance envelope has no client-facing `subject` field, so the IDOR
+  //    guarantee is proven at the DB layer: every composed read is keyed by the
+  //    SESSION uid and the attacker's id NEVER reaches a query param. ──
+  probe.reset();
+  const cdIdor = await call(
+    base,
+    'GET',
+    `/api/career-discovery/guidance?id=${ATTACKER_UID}&user_id=${ATTACKER_UID}&subject=${ATTACKER_UID}`,
+    { auth: true, body: { id: ATTACKER_UID, user_id: ATTACKER_UID, subject: ATTACKER_UID } },
+  );
+  test('CD flag ON → /guidance 200 for an authenticated seeker', () => {
+    assert.equal(cdIdor.status, 200);
+    assert.equal(cdIdor.json?.ok, true);
+  });
+  test('CD flag ON → /guidance composed reads are keyed by the SESSION uid (the profile substrate was read for self)', () => {
+    const read = probe.dbQueries.find((q) => /career_seeker_profiles\s+WHERE\s+user_id/i.test(q.sql));
+    assert.ok(read, 'expected a profile read query during guidance composition');
+    assert.equal(read!.params[0], SESSION_UID, `DB read used a client-supplied id: ${read!.params[0]}`);
+  });
+  test("CD flag ON → an attacker's id NEVER reaches any DB query param (no IDOR student A→B)", () => {
+    assert.ok(probe.dbQueries.length > 0, 'expected the guidance composition to query the DB');
+    const leaked = probe.dbQueries.filter((q) => (q.params ?? []).some((p) => String(p) === ATTACKER_UID));
+    assert.equal(
+      leaked.length,
+      0,
+      `a client-supplied id reached the DB layer in ${leaked.length} quer${leaked.length === 1 ? 'y' : 'ies'}: ` +
+        leaked.map((q) => q.sql.replace(/\s+/g, ' ').trim().slice(0, 80)).join(' | '),
     );
   });
 

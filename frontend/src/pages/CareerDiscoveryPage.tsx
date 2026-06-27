@@ -28,9 +28,6 @@ interface Props {
   onNavigate: (screen: Screen) => void;
 }
 
-// MetryxOne brand identity gradient (deep-navy → teal accent).
-const BRAND_GRADIENT = `linear-gradient(135deg, ${BRAND.navy} 0%, ${BRAND.primary} 55%, ${BRAND.accent} 100%)`;
-
 function authHeader(): Record<string, string> {
   const t = localStorage.getItem('metryx_token');
   return t ? { Authorization: `Bearer ${t}` } : {};
@@ -293,7 +290,7 @@ function Shell({ onNavigate, children }: { onNavigate: (s: Screen) => void; chil
               marginBottom: 24,
               padding: '32px 28px',
               borderRadius: RADIUS.xl,
-              background: BRAND_GRADIENT,
+              background: BRAND.navy,
               boxShadow: SHADOW.md,
               color: '#fff',
             }}
@@ -337,7 +334,7 @@ function StepNav({ step, setStep }: { step: Step; setStep: (s: Step) => void }) 
             style={{
               flex: '1 1 auto', minWidth: 90, padding: '8px 12px', borderRadius: RADIUS.full,
               border: `1px solid ${active ? 'transparent' : done ? BRAND.accent : BRAND.border}`,
-              background: active ? BRAND_GRADIENT : done ? BRAND.accentLight : BRAND.cardBg,
+              background: active ? BRAND.navy : done ? BRAND.accentLight : BRAND.cardBg,
               color: active ? '#fff' : done ? BRAND.green : BRAND.muted,
               fontWeight: 600, fontSize: 13, cursor: done ? 'pointer' : 'default',
             }}
@@ -357,7 +354,7 @@ function PrimaryBtn({ children, onClick, disabled }: { children: React.ReactNode
       disabled={disabled}
       style={{
         padding: '12px 22px', borderRadius: RADIUS.md, border: 'none',
-        background: disabled ? BRAND.slate : BRAND_GRADIENT, color: '#fff',
+        background: disabled ? BRAND.slate : BRAND.navy, color: '#fff',
         fontWeight: 600, fontSize: 15, cursor: disabled ? 'not-allowed' : 'pointer',
         boxShadow: disabled ? 'none' : SHADOW.sm,
       }}
@@ -472,7 +469,7 @@ function ValuesStep({
                           style={{
                             flex: '1 1 0', minWidth: 0, padding: '11px 4px', borderRadius: RADIUS.md,
                             border: `1px solid ${on ? 'transparent' : BRAND.border}`,
-                            background: on ? BRAND_GRADIENT : BRAND.cardBg,
+                            background: on ? BRAND.navy : BRAND.cardBg,
                             color: on ? '#fff' : BRAND.muted, fontWeight: 700, fontSize: 14, cursor: 'pointer',
                           }}
                         >
@@ -500,7 +497,7 @@ function ValuesStep({
             <span style={{ color: BRAND.green, fontWeight: 700 }}>{answered}/{total}</span>
           </div>
           <div style={{ height: 8, borderRadius: RADIUS.full, background: BRAND.bg, overflow: 'hidden' }}>
-            <div style={{ width: `${pct}%`, height: '100%', background: BRAND_GRADIENT, transition: 'width 240ms ease' }} />
+            <div style={{ width: `${pct}%`, height: '100%', background: BRAND.navy, transition: 'width 240ms ease' }} />
           </div>
           <p style={{ color: BRAND.muted, fontSize: 13, lineHeight: 1.5, margin: '12px 0 16px' }}>{progressMsg}</p>
           <div style={{ display: 'flex', flexDirection: 'column' }}>

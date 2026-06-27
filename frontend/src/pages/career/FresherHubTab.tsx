@@ -5,7 +5,7 @@ import {
   Github, ExternalLink, ChevronDown, ChevronUp, Star, Trophy, Zap,
   Target, Users, AlertCircle, CheckCircle, Clock, ArrowRight, Sparkles,
   Briefcase, Brain, MessageSquare, TrendingUp, Flag, RotateCcw, Info,
-  Edit3, Trash2, Award, Gauge
+  Edit3, Trash2, Award, Gauge, Circle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 

@@ -62,6 +62,25 @@ Executive Studio) from a Career Stage chosen at registration.
   row) or an empty no-profile row would falsely read hasExperience=false→'graduate'.
 - **Routing applies on page load too** (not just on switch), but an explicit `?tab=`
   deep-link always wins — auto-route only when the URL carries no tab.
+- **A tab render-crash strands the no-profile user (rendered-UI gotcha).**
+  `CareerBuilderPage` renders the initial `dashboard` tab INLINE, before the async
+  load-time experience-routing effect can switch the tab. If any tab subtree throws
+  during that first render, the throw propagates up through `CareerBuilderPage` so the
+  page never commits → the routing effect never runs → blank white screen, and the
+  no-profile user never reaches Launchpad. **Why:** effects only run after a successful
+  commit; an inline child throw aborts the parent's commit. **How:** the main tab switch
+  is wrapped in `TabContentErrorBoundary key={tab}` — a crash renders a fallback, the
+  parent commits, the routing effect runs, and the tab-keyed boundary remounts cleanly
+  on the switch. No-op (byte-identical) unless a tab actually throws. Corollary: a
+  rendered-UI E2E (login as a real no-profile user) catches crashes that an API/DB
+  read-path harness cannot — both `FresherHubTab` (missing `Circle` lucide import) and
+  the dashboard subtree crashes were only visible through the browser.
+- **Rendered-UI E2E harness:** `backend/audit/mx-302a/ui-e2e-seed.ts` seeds two
+  loginable no-profile @example.com fixtures (career_seeker + student role);
+  `ui-e2e-plan.md` is the Playwright plan, `ui-e2e-results.md` the last run. Flag is
+  enabled in dev via the `FF_CAREER_LAUNCHPAD` env var (not a workflow flag — `.replit`
+  is at its workflow limit; see `workflow-limit-flag-via-env-var.md`); revert the env
+  var + run `clean` to restore byte-identical-OFF.
 - **Engine is mirrored, not shared:** the pure backend engine has a frontend twin.
   Keep the 8 stages / 4 experiences / stage→experience map in lockstep across both.
 - **Structural ⟂ Adoption:** the founder report certifies the routing *contract*

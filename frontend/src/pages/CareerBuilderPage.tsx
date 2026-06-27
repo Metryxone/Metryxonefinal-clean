@@ -1266,6 +1266,7 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
 
         {/* ── Main content ──────────────────────────────────────── */}
         <main className="flex-1 min-w-0 space-y-6">
+          <TabContentErrorBoundary key={tab}>
           {tab === 'dashboard'   && <DashboardTab profile={profile} loading={loadingProfile} eiScore={eiScore} eiBreakdown={eiBreakdown} jobs={jobs} goals={goals} onTabChange={setTab} onNavigate={onNavigate} onOpenWizard={() => setShowWelcomeUpload(true)} userId={userId} launchpadEnabled={launchpadEnabled} />}
           {tab === 'assessment'  && <AssessmentTab userId={userId} profile={profile} onTabChange={setTab} />}
           {tab === 'future-map'  && <FutureMapTab profile={profile} onTabChange={setTab} behavior={careerBrain.behaviorProfile} />}
@@ -1337,6 +1338,7 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
               />
             </div>
           )}
+          </TabContentErrorBoundary>
         </main>
       </div>
 
@@ -2283,6 +2285,51 @@ class StageGuidanceErrorBoundary extends React.Component<
             </p>
           </div>
           {this.props.fallback}
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+// MX-302A — Tab-content error boundary. A render crash inside an individual tab
+// (e.g. an unguarded access for a no-profile user) used to throw all the way up
+// through CareerBuilderPage, so the page never committed and its load-time
+// experience-routing effect never ran — leaving a returning no-profile user on
+// a white screen instead of auto-landing on Career Launchpad. Wrapping the tab
+// switch (keyed by tab) lets the parent commit + route; when the tab changes the
+// key remounts the boundary so the destination tab renders fresh. No-op unless a
+// tab actually throws, so non-crashing renders are byte-identical.
+class TabContentErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { error: Error | null }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { error: null };
+  }
+  static getDerivedStateFromError(error: Error) { return { error }; }
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    // eslint-disable-next-line no-console
+    console.error('[CareerBuilder] tab render crash:', error, info.componentStack);
+  }
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="p-6">
+          <div className="max-w-lg mx-auto mt-8 p-5 rounded-2xl bg-red-50 border border-red-200 text-center">
+            <p className="text-sm font-semibold text-red-800">This view couldn’t be displayed.</p>
+            <p className="text-[12px] text-red-700 mt-1 leading-snug">
+              {this.state.error.message || 'An unexpected error occurred.'} You can switch tabs or reload to continue.
+            </p>
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="mt-3 px-4 py-2 rounded-lg text-[12px] font-medium text-white"
+              style={{ background: BRAND.primary }}>
+              Reload
+            </button>
+          </div>
         </div>
       );
     }

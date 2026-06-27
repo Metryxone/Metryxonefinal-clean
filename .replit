@@ -31,6 +31,10 @@ args = "build"
 task = "workflow.run"
 args = "Upload Service"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "live-avatar-billing-cap"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -77,6 +81,17 @@ waitForPort = 8000
 
 [workflows.workflow.metadata]
 outputType = "console"
+
+[[workflows.workflow]]
+name = "live-avatar-billing-cap"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx scripts/task223-live-avatar-billing-cap.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
 
 [[ports]]
 localPort = 5000

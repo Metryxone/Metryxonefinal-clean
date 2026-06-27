@@ -46,9 +46,9 @@ const PILLARS: PillarDef[] = [
 
 const GROUPS = ['Foundation', 'Intelligence', 'Workforce', 'Learning', 'Advanced', 'Governance', 'Enterprise', 'Operations'];
 const GROUP_COLORS: Record<string, string> = {
-  Foundation: 'text-purple-400', Intelligence: 'text-blue-400', Workforce: 'text-teal-400',
-  Learning: 'text-green-400', Advanced: 'text-amber-400', Governance: 'text-rose-400',
-  Enterprise: 'text-indigo-400', Operations: 'text-cyan-400',
+  Foundation: 'text-purple-600', Intelligence: 'text-blue-600', Workforce: 'text-teal-600',
+  Learning: 'text-green-600', Advanced: 'text-amber-600', Governance: 'text-rose-600',
+  Enterprise: 'text-indigo-600', Operations: 'text-cyan-600',
 };
 
 async function apiFetch(url: string) {
@@ -94,36 +94,36 @@ function parseCsv(text: string): string[][] {
 }
 
 function ScoreBadge({ score, size = 'md' }: { score: number; size?: 'sm' | 'md' | 'lg' }) {
-  const color = score >= 75 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
-              : score >= 55 ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
-              : 'bg-rose-500/20 text-rose-300 border-rose-500/30';
+  const color = score >= 75 ? 'bg-emerald-500/20 text-emerald-700 border-emerald-500/30'
+              : score >= 55 ? 'bg-amber-500/20 text-amber-700 border-amber-500/30'
+              : 'bg-rose-500/20 text-rose-700 border-rose-500/30';
   const sz = size === 'lg' ? 'text-2xl font-bold px-3 py-1' : size === 'sm' ? 'text-xs px-2 py-0.5' : 'text-sm font-semibold px-2 py-1';
   return <span className={`rounded border ${color} ${sz}`}>{score}</span>;
 }
 
 function RiskBadge({ risk }: { risk: string }) {
   const map: Record<string, string> = {
-    critical: 'bg-rose-500/20 text-rose-300', high: 'bg-orange-500/20 text-orange-300',
-    moderate: 'bg-amber-500/20 text-amber-300', low: 'bg-emerald-500/20 text-emerald-300',
-    monitoring: 'bg-blue-500/20 text-blue-300',
+    critical: 'bg-rose-500/20 text-rose-700', high: 'bg-orange-500/20 text-orange-700',
+    moderate: 'bg-amber-500/20 text-amber-700', low: 'bg-emerald-500/20 text-emerald-700',
+    monitoring: 'bg-blue-500/20 text-blue-700',
   };
-  return <span className={`text-xs px-2 py-0.5 rounded capitalize ${map[risk] || 'bg-slate-700 text-slate-300'}`}>{risk}</span>;
+  return <span className={`text-xs px-2 py-0.5 rounded capitalize ${map[risk] || 'bg-slate-200 text-slate-600'}`}>{risk}</span>;
 }
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
-    active: 'bg-emerald-500/20 text-emerald-300', available: 'bg-emerald-500/20 text-emerald-300',
-    roadmap: 'bg-blue-500/20 text-blue-300', operational: 'bg-emerald-500/20 text-emerald-300',
-    monitoring: 'bg-amber-500/20 text-amber-300', no_data: 'bg-slate-600 text-slate-400',
-    enabled: 'bg-emerald-500/20 text-emerald-300', ready: 'bg-blue-500/20 text-blue-300',
+    active: 'bg-emerald-500/20 text-emerald-700', available: 'bg-emerald-500/20 text-emerald-700',
+    roadmap: 'bg-blue-500/20 text-blue-700', operational: 'bg-emerald-500/20 text-emerald-700',
+    monitoring: 'bg-amber-500/20 text-amber-700', no_data: 'bg-slate-300 text-slate-500',
+    enabled: 'bg-emerald-500/20 text-emerald-700', ready: 'bg-blue-500/20 text-blue-700',
   };
   const normalized = status?.toLowerCase().replace(/[^a-z_]/g, '_') || 'unknown';
-  return <span className={`text-xs px-2 py-0.5 rounded capitalize ${map[normalized] || 'bg-slate-700 text-slate-300'}`}>{status}</span>;
+  return <span className={`text-xs px-2 py-0.5 rounded capitalize ${map[normalized] || 'bg-slate-200 text-slate-600'}`}>{status}</span>;
 }
 
 function Bar({ value, max = 100, color = 'bg-blue-500' }: { value: number; max?: number; color?: string }) {
   return (
-    <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+    <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
       <div className={`h-full ${color} rounded-full transition-all`} style={{ width: `${Math.min(100, value / max * 100)}%` }} />
     </div>
   );
@@ -131,12 +131,12 @@ function Bar({ value, max = 100, color = 'bg-blue-500' }: { value: number; max?:
 
 function KPI({ label, value, sub, delta }: { label: string; value: string | number | React.ReactNode; sub?: string; delta?: number }) {
   return (
-    <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3">
-      <div className="text-xs text-slate-400 mb-1">{label}</div>
-      <div className="text-xl font-bold text-white">{value}</div>
-      {sub && <div className="text-xs text-slate-500 mt-0.5">{sub}</div>}
+    <div className="bg-white border border-slate-200 rounded-lg p-3">
+      <div className="text-xs text-slate-500 mb-1">{label}</div>
+      <div className="text-xl font-bold text-slate-900">{value}</div>
+      {sub && <div className="text-xs text-slate-400 mt-0.5">{sub}</div>}
       {delta !== undefined && (
-        <div className={`text-xs mt-1 flex items-center gap-1 ${delta > 0 ? 'text-emerald-400' : delta < 0 ? 'text-rose-400' : 'text-slate-400'}`}>
+        <div className={`text-xs mt-1 flex items-center gap-1 ${delta > 0 ? 'text-emerald-600' : delta < 0 ? 'text-rose-600' : 'text-slate-500'}`}>
           {delta > 0 ? <ArrowUp size={10} /> : delta < 0 ? <ArrowDown size={10} /> : <Minus size={10} />}
           {Math.abs(delta)} vs industry
         </div>
@@ -148,15 +148,15 @@ function KPI({ label, value, sub, delta }: { label: string; value: string | numb
 function SectionHeader({ title, sub }: { title: string; sub?: string }) {
   return (
     <div className="mb-3">
-      <div className="text-sm font-semibold text-white">{title}</div>
-      {sub && <div className="text-xs text-slate-500">{sub}</div>}
+      <div className="text-sm font-semibold text-slate-900">{title}</div>
+      {sub && <div className="text-xs text-slate-400">{sub}</div>}
     </div>
   );
 }
 
 function EmptyState({ message, icon }: { message: string; icon?: React.ReactNode }) {
   return (
-    <div className="text-center py-10 text-slate-500 text-sm">
+    <div className="text-center py-10 text-slate-400 text-sm">
       <div className="mb-2 opacity-40">{icon || <Database size={24} className="mx-auto" />}</div>
       {message}
     </div>
@@ -177,26 +177,26 @@ function P3Panel({ data }: { data: any }) {
       {profiles.length === 0 ? <EmptyState message="No roles found. Post jobs to see competency profiles." icon={<Cpu size={24} className="mx-auto" />} /> : (
         <div className="space-y-3">
           {profiles.slice(0, 6).map((p: any) => (
-            <div key={p.jobId} className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+            <div key={p.jobId} className="bg-white border border-slate-200 rounded-lg p-4">
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <div className="font-semibold text-white text-sm">{p.roleName}</div>
-                  <div className="text-xs text-slate-400">{p.department} · {p.seniority} · {p.candidateCount} candidates</div>
+                  <div className="font-semibold text-slate-900 text-sm">{p.roleName}</div>
+                  <div className="text-xs text-slate-500">{p.department} · {p.seniority} · {p.candidateCount} candidates</div>
                 </div>
                 <ScoreBadge score={p.readinessIndex} />
               </div>
               <div className="grid grid-cols-3 gap-3 mb-3">
                 {[['Behavioral', p.behavioralMatch], ['Functional', p.functionalMatch], ['Cognitive', p.cognitiveMatch]].map(([label, val]) => (
                   <div key={label as string}>
-                    <div className="flex justify-between text-xs mb-1"><span className="text-slate-400">{label}</span><span className="text-white">{val}%</span></div>
+                    <div className="flex justify-between text-xs mb-1"><span className="text-slate-500">{label}</span><span className="text-slate-900">{val}%</span></div>
                     <Bar value={val as number} color="bg-blue-500" />
                   </div>
                 ))}
               </div>
               {p.competencyGaps?.slice(0, 3).map((g: any) => (
-                <div key={g.name} className="flex items-center justify-between text-xs py-1 border-t border-slate-700/30">
-                  <span className="text-slate-300">{g.name}</span>
-                  <div className="flex items-center gap-2"><RiskBadge risk={g.severity} /><span className="text-slate-400">Gap: {g.gap}</span></div>
+                <div key={g.name} className="flex items-center justify-between text-xs py-1 border-t border-slate-200">
+                  <span className="text-slate-600">{g.name}</span>
+                  <div className="flex items-center gap-2"><RiskBadge risk={g.severity} /><span className="text-slate-500">Gap: {g.gap}</span></div>
                 </div>
               ))}
             </div>
@@ -223,11 +223,11 @@ function P6Panel({ data }: { data: any }) {
         <KPI label="Pipeline Conversion" value={`${sc.pipelineConversionRate ?? 0}%`} />
         <KPI label="Interview Conversion" value={`${sc.interviewConversionRate ?? 0}%`} />
       </div>
-      <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <SectionHeader title="Source Effectiveness" />
         {Object.entries(sc.sourceEffectiveness || {}).map(([src, pct]: any) => (
           <div key={src} className="mb-2">
-            <div className="flex justify-between text-xs mb-1 capitalize"><span className="text-slate-400">{src}</span><span className="text-white">{pct}%</span></div>
+            <div className="flex justify-between text-xs mb-1 capitalize"><span className="text-slate-500">{src}</span><span className="text-slate-900">{pct}%</span></div>
             <Bar value={pct} color={src === 'referral' ? 'bg-emerald-500' : src === 'direct' ? 'bg-blue-500' : 'bg-purple-500'} />
           </div>
         ))}
@@ -241,14 +241,14 @@ function P7Panel({ data }: { data: any }) {
   const { matrix = [], summary = {}, classifications = {}, talent_pools = {} } = data;
   const CLASS_COLORS: Record<string, string> = {
     'Future Leader': 'bg-emerald-500', 'High Potential': 'bg-blue-500', 'Critical Talent': 'bg-purple-500',
-    'Emerging Talent': 'bg-teal-500', 'Effective Performer': 'bg-sky-500', 'Consistent Performer': 'bg-slate-500',
+    'Emerging Talent': 'bg-teal-500', 'Effective Performer': 'bg-sky-500', 'Consistent Performer': 'bg-slate-300',
     'At-Risk Talent': 'bg-rose-500', 'Development Candidate': 'bg-amber-500',
   };
   const POOL_COLORS: Record<string, string> = {
-    high_potential: 'border-emerald-500/30 bg-emerald-500/5 text-emerald-300',
-    high_performer: 'border-blue-500/30 bg-blue-500/5 text-blue-300',
-    future_leader:  'border-purple-500/30 bg-purple-500/5 text-purple-300',
-    at_risk:        'border-rose-500/30 bg-rose-500/5 text-rose-300',
+    high_potential: 'border-emerald-500/30 bg-emerald-500/5 text-emerald-700',
+    high_performer: 'border-blue-500/30 bg-blue-500/5 text-blue-700',
+    future_leader:  'border-purple-500/30 bg-purple-500/5 text-purple-700',
+    at_risk:        'border-rose-500/30 bg-rose-500/5 text-rose-700',
   };
   return (
     <div className="space-y-4">
@@ -259,11 +259,11 @@ function P7Panel({ data }: { data: any }) {
         <KPI label="At-Risk" value={summary.atRisk ?? 0} />
       </div>
       {Object.keys(talent_pools).length > 0 && (
-        <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+        <div className="bg-white border border-slate-200 rounded-lg p-4">
           <SectionHeader title="Talent Pools" sub="4 pools — High Potential · High Performer · Future Leader · At-Risk" />
           <div className="grid grid-cols-2 gap-3">
             {Object.entries(talent_pools).map(([key, pool]: any) => (
-              <div key={key} className={`border rounded-lg p-3 ${POOL_COLORS[key] || 'border-slate-600/40 bg-slate-700/30 text-slate-300'}`}>
+              <div key={key} className={`border rounded-lg p-3 ${POOL_COLORS[key] || 'border-slate-300 bg-slate-100 text-slate-600'}`}>
                 <div className="flex justify-between items-start mb-1">
                   <div className="text-xs font-semibold">{pool.label}</div>
                   <div className="text-xl font-bold">{pool.count}</div>
@@ -283,34 +283,34 @@ function P7Panel({ data }: { data: any }) {
           </div>
         </div>
       )}
-      <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <SectionHeader title="Performance × Potential Matrix" />
         <div className="grid grid-cols-3 gap-1.5 mb-4 text-center text-xs">
           {['At-Risk Talent', 'Emerging Talent', 'Future Leader',
             'Development Candidate', 'Effective Performer', 'High Potential',
             'Consistent Performer', 'Core Contributor', 'Critical Talent'].map((cls) => (
-            <div key={cls} className="bg-slate-700/50 rounded p-2 border border-slate-600/40">
-              <div className={`w-2 h-2 rounded-full ${CLASS_COLORS[cls] || 'bg-slate-500'} mx-auto mb-1`} />
-              <div className="text-slate-300 leading-tight">{cls}</div>
-              <div className="text-white font-bold mt-0.5">{classifications[cls] ?? 0}</div>
+            <div key={cls} className="bg-slate-100 rounded p-2 border border-slate-300">
+              <div className={`w-2 h-2 rounded-full ${CLASS_COLORS[cls] || 'bg-slate-300'} mx-auto mb-1`} />
+              <div className="text-slate-600 leading-tight">{cls}</div>
+              <div className="text-slate-900 font-bold mt-0.5">{classifications[cls] ?? 0}</div>
             </div>
           ))}
         </div>
-        <div className="text-xs text-slate-500 flex justify-between"><span>← Low Performance</span><span>High Performance →</span></div>
+        <div className="text-xs text-slate-400 flex justify-between"><span>← Low Performance</span><span>High Performance →</span></div>
       </div>
       {data.behavioralEnrichment && (
-        <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-3 text-xs text-blue-300 flex items-center gap-2">
+        <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-3 text-xs text-blue-700 flex items-center gap-2">
           <Activity size={12} /> Behavioral spine enriched from WCL-0 intelligence ({data.behavioralEnrichment.enriched} / {data.behavioralEnrichment.total} candidates)
         </div>
       )}
       {matrix.slice(0, 8).map((m: any) => (
-        <div key={m.candidateId} className="flex items-center justify-between bg-slate-800/40 border border-slate-700/30 rounded p-3 text-sm">
-          <div><div className="text-white font-medium">{m.name}</div><div className="text-xs text-slate-400">{m.department}</div></div>
+        <div key={m.candidateId} className="flex items-center justify-between bg-slate-50 border border-slate-200 rounded p-3 text-sm">
+          <div><div className="text-slate-900 font-medium">{m.name}</div><div className="text-xs text-slate-500">{m.department}</div></div>
           <div className="flex items-center gap-3">
-            <div className="text-center"><div className="text-xs text-slate-400">Perf</div><ScoreBadge score={m.performanceScore} size="sm" /></div>
-            <div className="text-center"><div className="text-xs text-slate-400">Pot</div><ScoreBadge score={m.potentialScore} size="sm" /></div>
-            {m.behavioralScore !== undefined && <div className="text-center"><div className="text-xs text-slate-400">Behav</div><ScoreBadge score={m.behavioralScore} size="sm" /></div>}
-            <span className={`text-xs px-2 py-0.5 rounded-full text-white ${CLASS_COLORS[m.classification] || 'bg-slate-600'}`}>{m.classification}</span>
+            <div className="text-center"><div className="text-xs text-slate-500">Perf</div><ScoreBadge score={m.performanceScore} size="sm" /></div>
+            <div className="text-center"><div className="text-xs text-slate-500">Pot</div><ScoreBadge score={m.potentialScore} size="sm" /></div>
+            {m.behavioralScore !== undefined && <div className="text-center"><div className="text-xs text-slate-500">Behav</div><ScoreBadge score={m.behavioralScore} size="sm" /></div>}
+            <span className={`text-xs px-2 py-0.5 rounded-full text-white ${CLASS_COLORS[m.classification] || 'bg-slate-400'}`}>{m.classification}</span>
           </div>
         </div>
       ))}
@@ -322,10 +322,10 @@ function P7Panel({ data }: { data: any }) {
 function P8Panel({ data }: { data: any }) {
   const { summary = {}, pipeline = [], succession_timeline = [] } = data;
   const TIMELINE_COLORS: Record<string, string> = {
-    emerald: 'border-emerald-500/30 bg-emerald-500/5 text-emerald-300',
-    blue:    'border-blue-500/30 bg-blue-500/5 text-blue-300',
-    amber:   'border-amber-500/30 bg-amber-500/5 text-amber-300',
-    slate:   'border-slate-500/30 bg-slate-700/30 text-slate-300',
+    emerald: 'border-emerald-500/30 bg-emerald-500/5 text-emerald-700',
+    blue:    'border-blue-500/30 bg-blue-500/5 text-blue-700',
+    amber:   'border-amber-500/30 bg-amber-500/5 text-amber-700',
+    slate:   'border-slate-300 bg-slate-100 text-slate-600',
   };
   return (
     <div className="space-y-4">
@@ -341,7 +341,7 @@ function P8Panel({ data }: { data: any }) {
         <KPI label="Successor Risk" value={<RiskBadge risk={summary.successorRisk || 'low'} />} />
       </div>
       {succession_timeline.length > 0 && (
-        <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+        <div className="bg-white border border-slate-200 rounded-lg p-4">
           <SectionHeader title="Succession Timeline" sub="Ready Now · 6M · 12M · 24M" />
           <div className="grid grid-cols-2 gap-3">
             {succession_timeline.map((t: any) => (
@@ -360,12 +360,12 @@ function P8Panel({ data }: { data: any }) {
         </div>
       )}
       {pipeline.slice(0, 8).map((p: any) => (
-        <div key={p.candidateId} className="flex items-center justify-between bg-slate-800/40 border border-slate-700/30 rounded p-3 text-sm">
-          <div><div className="text-white font-medium">{p.name}</div><div className="text-xs text-slate-400">{p.role} · {p.department}</div></div>
+        <div key={p.candidateId} className="flex items-center justify-between bg-slate-50 border border-slate-200 rounded p-3 text-sm">
+          <div><div className="text-slate-900 font-medium">{p.name}</div><div className="text-xs text-slate-500">{p.role} · {p.department}</div></div>
           <div className="flex items-center gap-2">
-            {p.behavioralScore !== undefined && <div className="text-center"><div className="text-xs text-slate-400">Behav</div><ScoreBadge score={p.behavioralScore} size="sm" /></div>}
+            {p.behavioralScore !== undefined && <div className="text-center"><div className="text-xs text-slate-500">Behav</div><ScoreBadge score={p.behavioralScore} size="sm" /></div>}
             <ScoreBadge score={p.readinessScore} size="sm" />
-            <span className={`text-xs px-2 py-0.5 rounded ${p.successionStage === 'ready_now' ? 'bg-emerald-500/20 text-emerald-300' : p.successionStage === 'ready_6m' ? 'bg-blue-500/20 text-blue-300' : p.successionStage === 'ready_12m' ? 'bg-amber-500/20 text-amber-300' : 'bg-slate-600 text-slate-300'}`}>
+            <span className={`text-xs px-2 py-0.5 rounded ${p.successionStage === 'ready_now' ? 'bg-emerald-500/20 text-emerald-700' : p.successionStage === 'ready_6m' ? 'bg-blue-500/20 text-blue-700' : p.successionStage === 'ready_12m' ? 'bg-amber-500/20 text-amber-700' : 'bg-slate-300 text-slate-600'}`}>
               {p.successionStage.replace(/_/g, ' ')}
             </span>
           </div>
@@ -387,16 +387,16 @@ function P9Panel({ data }: { data: any }) {
         <KPI label="Single Point Dependencies" value={summary.singlePointDependencies ?? 0} />
       </div>
       {roles.slice(0, 8).map((r: any) => (
-        <div key={r.jobId} className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+        <div key={r.jobId} className="bg-white border border-slate-200 rounded-lg p-4">
           <div className="flex justify-between mb-2">
-            <div><div className="font-semibold text-white text-sm">{r.roleName}</div><div className="text-xs text-slate-400">{r.department}</div></div>
+            <div><div className="font-semibold text-slate-900 text-sm">{r.roleName}</div><div className="text-xs text-slate-500">{r.department}</div></div>
             <RiskBadge risk={r.vacancyRisk} />
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-            <div><span className="text-slate-400">Dependency: </span><RiskBadge risk={r.dependencyRisk} /></div>
-            <div><span className="text-slate-400">Capability Exposure: </span><span className="text-white">{r.capabilityExposure}%</span></div>
-            <div><span className="text-slate-400">Time to Replace: </span><span className="text-white">{r.timeToReplace}d</span></div>
-            <div><span className="text-slate-400">SPDR: </span><span className={r.singlePointDependency ? 'text-rose-400' : 'text-emerald-400'}>{r.singlePointDependency ? 'Yes' : 'No'}</span></div>
+            <div><span className="text-slate-500">Dependency: </span><RiskBadge risk={r.dependencyRisk} /></div>
+            <div><span className="text-slate-500">Capability Exposure: </span><span className="text-slate-900">{r.capabilityExposure}%</span></div>
+            <div><span className="text-slate-500">Time to Replace: </span><span className="text-slate-900">{r.timeToReplace}d</span></div>
+            <div><span className="text-slate-500">SPDR: </span><span className={r.singlePointDependency ? 'text-rose-600' : 'text-emerald-600'}>{r.singlePointDependency ? 'Yes' : 'No'}</span></div>
           </div>
         </div>
       ))}
@@ -425,15 +425,15 @@ function P10Panel({ data }: { data: any }) {
       {heatmap.length === 0 ? <EmptyState message="No department data. Assign candidates to jobs." /> : (
         <div className="space-y-3">
           {heatmap.map((h: any) => (
-            <div key={h.department} className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+            <div key={h.department} className="bg-white border border-slate-200 rounded-lg p-4">
               <div className="flex justify-between mb-3">
-                <div className="font-semibold text-white text-sm">{h.department}</div>
-                <div className="text-xs text-slate-400">{h.headcount} people</div>
+                <div className="font-semibold text-slate-900 text-sm">{h.department}</div>
+                <div className="text-xs text-slate-500">{h.headcount} people</div>
               </div>
               <div className="space-y-2">
                 {DIMS.map(d => (
                   <div key={d.key}>
-                    <div className="flex justify-between text-xs mb-1"><span className="text-slate-400">{d.label}</span><span className="text-white">{(h as any)[d.key]}%</span></div>
+                    <div className="flex justify-between text-xs mb-1"><span className="text-slate-500">{d.label}</span><span className="text-slate-900">{(h as any)[d.key]}%</span></div>
                     <Bar value={(h as any)[d.key]} color={d.color} />
                   </div>
                 ))}
@@ -458,12 +458,12 @@ function P11Panel({ data }: { data: any }) {
         <KPI label="Coverage" value={`${summary.coverage ?? 0}%`} />
       </div>
       {jobCoverage.map((j: any) => (
-        <div key={j.jobId} className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3">
+        <div key={j.jobId} className="bg-white border border-slate-200 rounded-lg p-3">
           <div className="flex justify-between mb-2">
-            <div className="text-sm text-white">{j.roleName}<span className="text-slate-400 text-xs ml-2">{j.department}</span></div>
-            <span className={`text-xs px-2 py-0.5 rounded ${j.status === 'complete' ? 'bg-emerald-500/20 text-emerald-300' : j.status === 'in_progress' ? 'bg-blue-500/20 text-blue-300' : 'bg-slate-600 text-slate-400'}`}>{j.status}</span>
+            <div className="text-sm text-slate-900">{j.roleName}<span className="text-slate-500 text-xs ml-2">{j.department}</span></div>
+            <span className={`text-xs px-2 py-0.5 rounded ${j.status === 'complete' ? 'bg-emerald-500/20 text-emerald-700' : j.status === 'in_progress' ? 'bg-blue-500/20 text-blue-700' : 'bg-slate-300 text-slate-500'}`}>{j.status}</span>
           </div>
-          <div className="flex justify-between text-xs text-slate-400 mb-1"><span>{j.assessed}/{j.totalCandidates} assessed</span><span>{j.coverageRate}%</span></div>
+          <div className="flex justify-between text-xs text-slate-500 mb-1"><span>{j.assessed}/{j.totalCandidates} assessed</span><span>{j.coverageRate}%</span></div>
           <Bar value={j.coverageRate} color="bg-teal-500" />
         </div>
       ))}
@@ -483,16 +483,16 @@ function P12Panel({ data }: { data: any }) {
         <KPI label="Reskilling Ready" value={summary.reskillingReady ?? 0} />
       </div>
       {marketplace.slice(0, 5).map((m: any) => (
-        <div key={m.jobId} className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
-          <div className="font-semibold text-white text-sm mb-2">{m.roleName} <span className="text-slate-400 text-xs">{m.department}</span></div>
+        <div key={m.jobId} className="bg-white border border-slate-200 rounded-lg p-4">
+          <div className="font-semibold text-slate-900 text-sm mb-2">{m.roleName} <span className="text-slate-500 text-xs">{m.department}</span></div>
           <div className="flex gap-3 text-xs mb-3">
-            <span className="bg-emerald-500/10 text-emerald-300 px-2 py-0.5 rounded">Promotion: {m.promotionMatch}</span>
-            <span className="bg-blue-500/10 text-blue-300 px-2 py-0.5 rounded">Career Path: {m.careerPathMatch}</span>
-            <span className="bg-amber-500/10 text-amber-300 px-2 py-0.5 rounded">Reskilling: {m.reskillingMatch}</span>
+            <span className="bg-emerald-500/10 text-emerald-700 px-2 py-0.5 rounded">Promotion: {m.promotionMatch}</span>
+            <span className="bg-blue-500/10 text-blue-700 px-2 py-0.5 rounded">Career Path: {m.careerPathMatch}</span>
+            <span className="bg-amber-500/10 text-amber-700 px-2 py-0.5 rounded">Reskilling: {m.reskillingMatch}</span>
           </div>
           {m.internalMatches?.slice(0, 2).map((match: any) => (
-            <div key={match.candidateId} className="flex items-center justify-between text-xs py-1.5 border-t border-slate-700/30">
-              <div className="text-slate-300">{match.name}<span className="text-slate-500 ml-2">{match.currentRole}</span></div>
+            <div key={match.candidateId} className="flex items-center justify-between text-xs py-1.5 border-t border-slate-200">
+              <div className="text-slate-600">{match.name}<span className="text-slate-400 ml-2">{match.currentRole}</span></div>
               <ScoreBadge score={match.fitScore} size="sm" />
             </div>
           ))}
@@ -521,23 +521,23 @@ function P13Panel({ data }: { data: any }) {
           <KPI label="Capability Improvement" value={`+${data.capabilityImprovement ?? 0} pts`} />
         </div>
       )}
-      <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <SectionHeader title="Learner Distribution" sub="Based on Future Readiness Index (FRI)" />
         {!hasData ? (
           <EmptyState message="Future Readiness Profile data not yet available for your candidates." icon={<BookOpen size={24} className="mx-auto" />} />
         ) : (
           <div className="space-y-3">
             {[
-              { label: 'High Learners (FRI ≥70)', count: di.highLearners || 0, color: 'bg-emerald-500', textColor: 'text-emerald-300' },
-              { label: 'Mid Learners (FRI 50–69)', count: di.midLearners || 0, color: 'bg-amber-500', textColor: 'text-amber-300' },
-              { label: 'At-Risk Learners (FRI <50)', count: di.atRiskLearners || 0, color: 'bg-rose-500', textColor: 'text-rose-300' },
+              { label: 'High Learners (FRI ≥70)', count: di.highLearners || 0, color: 'bg-emerald-500', textColor: 'text-emerald-700' },
+              { label: 'Mid Learners (FRI 50–69)', count: di.midLearners || 0, color: 'bg-amber-500', textColor: 'text-amber-700' },
+              { label: 'At-Risk Learners (FRI <50)', count: di.atRiskLearners || 0, color: 'bg-rose-500', textColor: 'text-rose-700' },
             ].map(({ label, count, color, textColor }) => {
               const pct = totalLearners > 0 ? Math.round(count / totalLearners * 100) : 0;
               return (
                 <div key={label}>
                   <div className="flex justify-between text-xs mb-1">
                     <span className={textColor}>{label}</span>
-                    <span className="text-white">{count} <span className="text-slate-500">({pct}%)</span></span>
+                    <span className="text-slate-900">{count} <span className="text-slate-400">({pct}%)</span></span>
                   </div>
                   <Bar value={pct} color={color} />
                 </div>
@@ -547,7 +547,7 @@ function P13Panel({ data }: { data: any }) {
         )}
       </div>
       {data.wcl0Enriched && (
-        <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-3 text-xs text-blue-300 flex items-center gap-2">
+        <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-3 text-xs text-blue-700 flex items-center gap-2">
           <Activity size={12} /> Behavioural intelligence enriched from WCL-0 ({data.wcl0Coverage ?? 0}% candidates with behavioural profiles)
         </div>
       )}
@@ -575,7 +575,7 @@ function P14Panel({ data }: { data: any }) {
         <KPI label="Conversion Rate" value={`${li.conversionRate ?? 0}%`} />
         <KPI label="Onboarding Readiness" value={data.onboardingReadiness ?? '—'} />
       </div>
-      <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <SectionHeader title="Lifecycle Stage Distribution" />
         <div className="space-y-2.5">
           {Object.entries(stages).map(([stage, count]: any) => {
@@ -583,30 +583,30 @@ function P14Panel({ data }: { data: any }) {
             return (
               <div key={stage}>
                 <div className="flex justify-between text-xs mb-1">
-                  <span className="text-slate-300 capitalize">{STAGE_LABELS[stage] || stage}</span>
-                  <span className="text-white">{count} <span className="text-slate-500">({pct}%)</span></span>
+                  <span className="text-slate-600 capitalize">{STAGE_LABELS[stage] || stage}</span>
+                  <span className="text-slate-900">{count} <span className="text-slate-400">({pct}%)</span></span>
                 </div>
-                <Bar value={pct} color={STAGE_COLORS[stage] || 'bg-slate-500'} />
+                <Bar value={pct} color={STAGE_COLORS[stage] || 'bg-slate-300'} />
               </div>
             );
           })}
         </div>
       </div>
       <div className="grid grid-cols-3 gap-3">
-        <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3">
-          <div className="text-xs text-slate-400 mb-1">Promotion Ready</div>
-          <div className="text-xl font-bold text-purple-300">{data.promotionReadiness ?? 0}</div>
-          <div className="text-xs text-slate-500">EI score ≥75</div>
+        <div className="bg-white border border-slate-200 rounded-lg p-3">
+          <div className="text-xs text-slate-500 mb-1">Promotion Ready</div>
+          <div className="text-xl font-bold text-purple-700">{data.promotionReadiness ?? 0}</div>
+          <div className="text-xs text-slate-400">EI score ≥75</div>
         </div>
-        <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3">
-          <div className="text-xs text-slate-400 mb-1">Retention Risk</div>
-          <div className="text-xl font-bold text-rose-300">{data.retentionRisk ?? 0}</div>
-          <div className="text-xs text-slate-500">EI score &lt;50</div>
+        <div className="bg-white border border-slate-200 rounded-lg p-3">
+          <div className="text-xs text-slate-500 mb-1">Retention Risk</div>
+          <div className="text-xl font-bold text-rose-700">{data.retentionRisk ?? 0}</div>
+          <div className="text-xs text-slate-400">EI score &lt;50</div>
         </div>
-        <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3">
-          <div className="text-xs text-slate-400 mb-1">Exit Risk</div>
-          <div className="text-xl font-bold text-amber-300">{data.exitRisk ?? 0}</div>
-          <div className="text-xs text-slate-500">High talent, rejected</div>
+        <div className="bg-white border border-slate-200 rounded-lg p-3">
+          <div className="text-xs text-slate-500 mb-1">Exit Risk</div>
+          <div className="text-xl font-bold text-amber-700">{data.exitRisk ?? 0}</div>
+          <div className="text-xs text-slate-400">High talent, rejected</div>
         </div>
       </div>
     </div>
@@ -629,39 +629,39 @@ function P15Panel({ data }: { data: any }) {
         <EmptyState message="No Talent Intelligence Graph data yet. Build your TIG network to unlock org network analysis." icon={<Globe size={24} className="mx-auto" />} />
       ) : (
         <>
-          <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+          <div className="bg-white border border-slate-200 rounded-lg p-4">
             <SectionHeader title="Node Type Distribution" />
             <div className="grid grid-cols-3 gap-2">
               {Object.entries(nodesByType).map(([type, count]: any) => (
-                <div key={type} className="text-center bg-slate-700/40 rounded p-2">
-                  <div className="text-xs text-slate-400 capitalize mb-1">{type}</div>
-                  <div className="text-white font-bold">{count}</div>
+                <div key={type} className="text-center bg-slate-100 rounded p-2">
+                  <div className="text-xs text-slate-500 capitalize mb-1">{type}</div>
+                  <div className="text-slate-900 font-bold">{count}</div>
                 </div>
               ))}
             </div>
           </div>
-          <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+          <div className="bg-white border border-slate-200 rounded-lg p-4">
             <SectionHeader title="Top Org Connectors" sub="Highest-degree nodes by connection count" />
             {connectors.length === 0 ? (
               <EmptyState message="No edge data available." />
             ) : connectors.map((c: any, i: number) => (
-              <div key={c.nodeId} className="flex items-center justify-between py-2 border-b border-slate-700/30 last:border-0 text-sm">
+              <div key={c.nodeId} className="flex items-center justify-between py-2 border-b border-slate-200 last:border-0 text-sm">
                 <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 bg-blue-500/20 text-blue-300 rounded-full text-xs flex items-center justify-center font-bold">{i + 1}</div>
-                  <div><div className="text-white">{c.name}</div><div className="text-xs text-slate-400 capitalize">{c.type}</div></div>
+                  <div className="w-5 h-5 bg-blue-500/20 text-blue-700 rounded-full text-xs flex items-center justify-center font-bold">{i + 1}</div>
+                  <div><div className="text-slate-900">{c.name}</div><div className="text-xs text-slate-500 capitalize">{c.type}</div></div>
                 </div>
-                <div className="text-xs text-slate-300">{c.degree} connections</div>
+                <div className="text-xs text-slate-600">{c.degree} connections</div>
               </div>
             ))}
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3">
-              <div className="text-xs text-slate-400 mb-1">Knowledge Risk</div>
+            <div className="bg-white border border-slate-200 rounded-lg p-3">
+              <div className="text-xs text-slate-500 mb-1">Knowledge Risk</div>
               <RiskBadge risk={data.knowledgeRisk || 'monitoring'} />
             </div>
-            <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3">
-              <div className="text-xs text-slate-400 mb-1">Data Source</div>
-              <div className="text-xs text-white">{data.dataSource || 'tig_nodes'}</div>
+            <div className="bg-white border border-slate-200 rounded-lg p-3">
+              <div className="text-xs text-slate-500 mb-1">Data Source</div>
+              <div className="text-xs text-slate-900">{data.dataSource || 'tig_nodes'}</div>
             </div>
           </div>
         </>
@@ -684,19 +684,19 @@ function P16Panel({ data }: { data: any }) {
         <KPI label="Attrition Forecast" value={data.attritionForecast ?? 0} sub="12% annual" />
         <KPI label="Hiring Demand" value={data.hiringDemand ?? 0} sub="Open roles" />
       </div>
-      <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <SectionHeader title="Capability Supply vs Demand Forecast" />
         <div className="space-y-3">
           {periods.map(([label, period]: any) => period && (
             <div key={label}>
-              <div className="flex justify-between text-xs mb-1 text-slate-400"><span className="font-medium text-white">{label} horizon</span><span>Supply {period.supply} · Demand {period.demand}</span></div>
+              <div className="flex justify-between text-xs mb-1 text-slate-500"><span className="font-medium text-slate-900">{label} horizon</span><span>Supply {period.supply} · Demand {period.demand}</span></div>
               <div className="grid grid-cols-2 gap-1">
                 <div>
-                  <div className="text-xs text-slate-500 mb-0.5">Supply</div>
+                  <div className="text-xs text-slate-400 mb-0.5">Supply</div>
                   <Bar value={period.supply} max={Math.max(1, period.supply, period.demand)} color="bg-emerald-500" />
                 </div>
                 <div>
-                  <div className="text-xs text-slate-500 mb-0.5">Demand</div>
+                  <div className="text-xs text-slate-400 mb-0.5">Demand</div>
                   <Bar value={period.demand} max={Math.max(1, period.supply, period.demand)} color="bg-rose-500" />
                 </div>
               </div>
@@ -705,24 +705,24 @@ function P16Panel({ data }: { data: any }) {
         </div>
       </div>
       <div className="grid grid-cols-2 gap-3">
-        <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+        <div className="bg-white border border-slate-200 rounded-lg p-4">
           <SectionHeader title="Hiring Forecast" />
           <div className="space-y-1 text-sm">
-            <div className="flex justify-between"><span className="text-slate-400">Projected Hires</span><span className="text-white">{hf.projectedHires ?? 0}</span></div>
-            <div className="flex justify-between"><span className="text-slate-400">Avg Pipeline Size</span><span className="text-white">{hf.avgPipelineSize ?? 0}</span></div>
-            <div className="flex justify-between"><span className="text-slate-400">Fill Rate</span><span className="text-white">{hf.fillRate ?? 0}%</span></div>
+            <div className="flex justify-between"><span className="text-slate-500">Projected Hires</span><span className="text-slate-900">{hf.projectedHires ?? 0}</span></div>
+            <div className="flex justify-between"><span className="text-slate-500">Avg Pipeline Size</span><span className="text-slate-900">{hf.avgPipelineSize ?? 0}</span></div>
+            <div className="flex justify-between"><span className="text-slate-500">Fill Rate</span><span className="text-slate-900">{hf.fillRate ?? 0}%</span></div>
           </div>
         </div>
-        <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+        <div className="bg-white border border-slate-200 rounded-lg p-4">
           <SectionHeader title="Leadership Forecast" />
           <div className="space-y-1 text-sm">
-            <div className="flex justify-between"><span className="text-slate-400">6M Ready</span><span className="text-white">{lf['6m'] ?? 0}</span></div>
-            <div className="flex justify-between"><span className="text-slate-400">12M Ready</span><span className="text-white">{lf['12m'] ?? 0}</span></div>
+            <div className="flex justify-between"><span className="text-slate-500">6M Ready</span><span className="text-slate-900">{lf['6m'] ?? 0}</span></div>
+            <div className="flex justify-between"><span className="text-slate-500">12M Ready</span><span className="text-slate-900">{lf['12m'] ?? 0}</span></div>
           </div>
         </div>
       </div>
       {data.frpEnriched && (
-        <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-3 text-xs text-blue-300 flex items-center gap-2">
+        <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-3 text-xs text-blue-700 flex items-center gap-2">
           <Zap size={12} /> Forecast enriched with Future Readiness Platform projections
         </div>
       )}
@@ -742,11 +742,11 @@ function P18Panel({ data }: { data: any }) {
         <KPI label="k-Anonymity" value={kAnonymity.enforced ? `k=${kAnonymity.kMin}` : 'Off'} sub={kAnonymity.suppressed ? 'Suppressed' : `Pool: ${kAnonymity.poolSize} orgs`} />
       </div>
       {suppressionNote ? (
-        <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 text-sm text-amber-300 flex items-center gap-3">
+        <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 text-sm text-amber-700 flex items-center gap-3">
           <AlertCircle size={16} /> {suppressionNote}
         </div>
       ) : industry ? (
-        <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+        <div className="bg-white border border-slate-200 rounded-lg p-4">
           <SectionHeader title="Your Organisation vs Industry Benchmarks" sub={industry.label} />
           <div className="space-y-4">
             {[
@@ -755,19 +755,19 @@ function P18Panel({ data }: { data: any }) {
             ].map(({ label, yours, industry: ind, delta }) => (
               <div key={label}>
                 <div className="flex justify-between text-xs mb-1">
-                  <span className="text-slate-300">{label}</span>
-                  <span className={`font-medium ${(delta ?? 0) >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>{(delta ?? 0) >= 0 ? '+' : ''}{delta ?? 0} vs industry avg {ind}</span>
+                  <span className="text-slate-600">{label}</span>
+                  <span className={`font-medium ${(delta ?? 0) >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>{(delta ?? 0) >= 0 ? '+' : ''}{delta ?? 0} vs industry avg {ind}</span>
                 </div>
                 <div className="grid grid-cols-2 gap-1">
-                  <div><div className="text-xs text-slate-500 mb-0.5">Your Org</div><Bar value={yours ?? 0} color={(delta ?? 0) >= 0 ? 'bg-emerald-500' : 'bg-rose-500'} /></div>
-                  <div><div className="text-xs text-slate-500 mb-0.5">Industry Avg</div><Bar value={ind ?? 0} color="bg-slate-500" /></div>
+                  <div><div className="text-xs text-slate-400 mb-0.5">Your Org</div><Bar value={yours ?? 0} color={(delta ?? 0) >= 0 ? 'bg-emerald-500' : 'bg-rose-500'} /></div>
+                  <div><div className="text-xs text-slate-400 mb-0.5">Industry Avg</div><Bar value={ind ?? 0} color="bg-slate-300" /></div>
                 </div>
               </div>
             ))}
           </div>
-          <div className="mt-4 pt-3 border-t border-slate-700/40 grid grid-cols-2 gap-3 text-xs">
-            <div className="text-slate-400">Leadership Readiness Index: <span className="text-white">{data.leadership?.readinessIndex ?? 0}</span></div>
-            <div className="text-slate-400">Top Performer Threshold: <span className="text-white">≥{industry.topPerformerThreshold}</span></div>
+          <div className="mt-4 pt-3 border-t border-slate-200 grid grid-cols-2 gap-3 text-xs">
+            <div className="text-slate-500">Leadership Readiness Index: <span className="text-slate-900">{data.leadership?.readinessIndex ?? 0}</span></div>
+            <div className="text-slate-500">Top Performer Threshold: <span className="text-slate-900">≥{industry.topPerformerThreshold}</span></div>
           </div>
         </div>
       ) : null}
@@ -778,7 +778,7 @@ function P18Panel({ data }: { data: any }) {
 // ─── P19: AI Readiness ────────────────────────────────────────────────────────
 function P19Panel({ data }: { data: any }) {
   const deptReadiness = data.deptReadiness || [];
-  const classColor = (c: string) => c === 'AI Ready' ? 'text-emerald-300 bg-emerald-500/20' : c === 'AI Emerging' ? 'text-amber-300 bg-amber-500/20' : 'text-rose-300 bg-rose-500/20';
+  const classColor = (c: string) => c === 'AI Ready' ? 'text-emerald-700 bg-emerald-500/20' : c === 'AI Emerging' ? 'text-amber-700 bg-amber-500/20' : 'text-rose-700 bg-rose-500/20';
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -787,31 +787,31 @@ function P19Panel({ data }: { data: any }) {
         <KPI label="Future Readiness" value={data.futureReadinessIndex ?? 0} />
         <KPI label="Org Classification" value={<span className={`text-sm px-2 py-0.5 rounded ${classColor(data.orgClassification)}`}>{data.orgClassification || '—'}</span>} />
       </div>
-      <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <SectionHeader title="AI Readiness Distribution" />
         <div className="grid grid-cols-3 gap-3 text-center">
           {[
-            { label: 'AI Ready', count: data.aiReady ?? 0, color: 'text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/30' },
-            { label: 'AI Emerging', count: data.aiEmerging ?? 0, color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/30' },
-            { label: 'AI Risk', count: data.aiRisk ?? 0, color: 'text-rose-400', bg: 'bg-rose-500/10 border-rose-500/30' },
+            { label: 'AI Ready', count: data.aiReady ?? 0, color: 'text-emerald-600', bg: 'bg-emerald-500/10 border-emerald-500/30' },
+            { label: 'AI Emerging', count: data.aiEmerging ?? 0, color: 'text-amber-600', bg: 'bg-amber-500/10 border-amber-500/30' },
+            { label: 'AI Risk', count: data.aiRisk ?? 0, color: 'text-rose-600', bg: 'bg-rose-500/10 border-rose-500/30' },
           ].map(({ label, count, color, bg }) => (
             <div key={label} className={`border rounded-lg p-3 ${bg}`}>
               <div className={`text-2xl font-bold ${color}`}>{count}</div>
-              <div className="text-xs text-slate-400 mt-1">{label}</div>
+              <div className="text-xs text-slate-500 mt-1">{label}</div>
             </div>
           ))}
         </div>
       </div>
       {deptReadiness.length > 0 && (
-        <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+        <div className="bg-white border border-slate-200 rounded-lg p-4">
           <SectionHeader title="Department AI Readiness" />
           <div className="space-y-2">
             {deptReadiness.map((d: any) => (
               <div key={d.department} className="flex items-center gap-3">
                 <div className="flex-1">
                   <div className="flex justify-between text-xs mb-1">
-                    <span className="text-slate-300">{d.department}</span>
-                    <span className="text-white">{d.aiReadiness}% · {d.headcount} people</span>
+                    <span className="text-slate-600">{d.department}</span>
+                    <span className="text-slate-900">{d.aiReadiness}% · {d.headcount} people</span>
                   </div>
                   <Bar value={d.aiReadiness} color={d.aiReadiness >= 70 ? 'bg-emerald-500' : d.aiReadiness >= 50 ? 'bg-amber-500' : 'bg-rose-500'} />
                 </div>
@@ -860,18 +860,18 @@ function P20Panel({ data }: { data: any }) {
         <KPI label="Open Roles" value={da.jobs ?? 0} />
         <KPI label="Assessments" value={da.assessments ?? 0} />
       </div>
-      <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3 text-xs text-slate-400 flex gap-2">
+      <div className="bg-white border border-slate-200 rounded-lg p-3 text-xs text-slate-500 flex gap-2">
         <FileText size={12} className="shrink-0 mt-0.5" />
         <span>Reports compose from all 28 intelligence pillars. Generated reports are persisted to the Report Factory archive.</span>
       </div>
       {data.worldClass && (
-        <div className="bg-slate-800/60 border border-amber-500/30 rounded-lg p-3">
+        <div className="bg-white border border-amber-500/30 rounded-lg p-3">
           <div className="flex items-center gap-3 flex-wrap">
-            <span className="text-xs text-slate-300 flex items-center gap-1.5"><Download size={12} /> Export executive report:</span>
+            <span className="text-xs text-slate-600 flex items-center gap-1.5"><Download size={12} /> Export executive report:</span>
             <button onClick={() => downloadExport('/api/employer/eios/p20/export.pdf?reportType=executive', 'eios_executive_report.pdf', setExportMsg)} className="bg-rose-600/80 hover:bg-rose-600 text-white text-xs px-3 py-1.5 rounded flex items-center gap-1.5"><FileText size={11} /> PDF</button>
             <button onClick={() => downloadExport('/api/employer/eios/p20/export.csv', 'eios_report.csv', setExportMsg)} className="bg-emerald-600/80 hover:bg-emerald-600 text-white text-xs px-3 py-1.5 rounded flex items-center gap-1.5"><Database size={11} /> CSV</button>
           </div>
-          {exportMsg && <div className="text-xs text-amber-300 mt-2">{exportMsg}</div>}
+          {exportMsg && <div className="text-xs text-amber-700 mt-2">{exportMsg}</div>}
         </div>
       )}
       <div className="grid grid-cols-1 gap-3">
@@ -879,14 +879,14 @@ function P20Panel({ data }: { data: any }) {
           const res = results[rt.id];
           const isGen = generating === rt.id;
           return (
-            <div key={rt.id} className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+            <div key={rt.id} className="bg-white border border-slate-200 rounded-lg p-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3">
-                  <div className="text-blue-400 mt-0.5">{ICONS[rt.id] || <FileText size={14} />}</div>
+                  <div className="text-blue-600 mt-0.5">{ICONS[rt.id] || <FileText size={14} />}</div>
                   <div>
-                    <div className="text-sm font-semibold text-white">{rt.label}</div>
-                    <div className="text-xs text-slate-400 mt-0.5">{rt.description}</div>
-                    <div className="text-xs text-slate-500 mt-1">For: {rt.readyFor}</div>
+                    <div className="text-sm font-semibold text-slate-900">{rt.label}</div>
+                    <div className="text-xs text-slate-500 mt-0.5">{rt.description}</div>
+                    <div className="text-xs text-slate-400 mt-1">For: {rt.readyFor}</div>
                   </div>
                 </div>
                 <button onClick={() => generate(rt.id)} disabled={!!generating} className="shrink-0 bg-blue-600/80 hover:bg-blue-600 disabled:opacity-40 text-white text-xs px-3 py-1.5 rounded flex items-center gap-1.5">
@@ -895,15 +895,15 @@ function P20Panel({ data }: { data: any }) {
                 </button>
               </div>
               {res && (
-                <div className="mt-3 pt-3 border-t border-slate-700/40">
+                <div className="mt-3 pt-3 border-t border-slate-200">
                   <div className="flex gap-4 text-xs mb-2">
-                    <span className="text-slate-400">Candidates: <span className="text-white">{res.scores?.candidateCount ?? 0}</span></span>
-                    <span className="text-slate-400">Avg Fit: <span className="text-white">{res.scores?.avgFitScore ?? 0}%</span></span>
-                    <span className="text-slate-400">Confidence: <span className="text-white capitalize">{res.confidence?.replace(/_/g, ' ')}</span></span>
+                    <span className="text-slate-500">Candidates: <span className="text-slate-900">{res.scores?.candidateCount ?? 0}</span></span>
+                    <span className="text-slate-500">Avg Fit: <span className="text-slate-900">{res.scores?.avgFitScore ?? 0}%</span></span>
+                    <span className="text-slate-500">Confidence: <span className="text-slate-900 capitalize">{res.confidence?.replace(/_/g, ' ')}</span></span>
                   </div>
                   <div className="space-y-1">
                     {(res.insights || []).map((insight: string, i: number) => (
-                      <div key={i} className="text-xs text-slate-300 flex items-start gap-1.5"><CheckCircle2 size={10} className="text-emerald-400 mt-0.5 shrink-0" />{insight}</div>
+                      <div key={i} className="text-xs text-slate-600 flex items-start gap-1.5"><CheckCircle2 size={10} className="text-emerald-600 mt-0.5 shrink-0" />{insight}</div>
                     ))}
                   </div>
                 </div>
@@ -929,15 +929,15 @@ function LensCard({ metricKey, metric, label }: { metricKey: string; metric: any
     const raw = Number(metric);
     const hasReading = metric != null && metric !== '' && Number.isFinite(raw);
     return (
-      <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-4">
-        <div className="text-xs font-medium text-slate-300 mb-2">{label}</div>
+      <div className="bg-white border border-slate-200 rounded-xl p-4">
+        <div className="text-xs font-medium text-slate-600 mb-2">{label}</div>
         {hasReading ? (
           <div className="flex items-baseline gap-1.5">
-            <span className="text-3xl font-bold text-white tabular-nums">{raw}</span>
-            <span className="text-xs text-slate-500">/ 100</span>
+            <span className="text-3xl font-bold text-slate-900 tabular-nums">{raw}</span>
+            <span className="text-xs text-slate-400">/ 100</span>
           </div>
         ) : (
-          <div className="flex items-center gap-1.5 text-slate-500"><Minus size={14} /><span className="text-sm">No data yet</span></div>
+          <div className="flex items-center gap-1.5 text-slate-400"><Minus size={14} /><span className="text-sm">No data yet</span></div>
         )}
       </div>
     );
@@ -945,28 +945,28 @@ function LensCard({ metricKey, metric, label }: { metricKey: string; metric: any
   const v = metric.current_state.value ?? 0;
   const trend = metric.trend?.direction ?? 'stable';
   const risk  = metric.risk?.level ?? 'low';
-  const trendColor = trend === 'improving' ? 'text-emerald-400' : trend === 'declining' ? 'text-rose-400' : 'text-slate-400';
+  const trendColor = trend === 'improving' ? 'text-emerald-600' : trend === 'declining' ? 'text-rose-600' : 'text-slate-500';
   const trendArrow = trend === 'improving' ? '↑' : trend === 'declining' ? '↓' : '→';
-  const scoreText  = v >= 75 ? 'text-emerald-300' : v >= 55 ? 'text-amber-300' : 'text-rose-300';
+  const scoreText  = v >= 75 ? 'text-emerald-700' : v >= 55 ? 'text-amber-700' : 'text-rose-700';
   const barColor   = v >= 75 ? 'bg-emerald-500'   : v >= 55 ? 'bg-amber-500'   : 'bg-rose-500';
   return (
-    <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-4 hover:border-slate-600/60 transition-colors">
+    <div className="bg-white border border-slate-200 rounded-xl p-4 hover:border-slate-300 transition-colors">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-medium text-slate-300">{label}</span>
+        <span className="text-xs font-medium text-slate-600">{label}</span>
         <RiskBadge risk={risk} />
       </div>
       <div className="flex items-baseline gap-1.5">
         <span className={`text-3xl font-bold tabular-nums ${scoreText}`}>{v}</span>
-        <span className="text-xs text-slate-500">/ 100</span>
+        <span className="text-xs text-slate-400">/ 100</span>
         <span className={`ml-auto text-xs flex items-center gap-0.5 ${trendColor}`}>{trendArrow} {trend}</span>
       </div>
       <div className="mt-2.5"><Bar value={v} color={barColor} /></div>
       {metric.forecast?.value_3m != null && (
-        <div className="text-xs text-slate-500 mt-2">Forecast 3m: <span className="text-slate-300">{metric.forecast.value_3m}</span></div>
+        <div className="text-xs text-slate-400 mt-2">Forecast 3m: <span className="text-slate-600">{metric.forecast.value_3m}</span></div>
       )}
       {metric.intervention?.action && (
-        <div className="text-xs text-slate-400 mt-2 leading-tight flex items-start gap-1 truncate" title={metric.intervention.action}>
-          <ChevronRight size={11} className="mt-0.5 shrink-0 text-blue-400" /><span className="truncate">{metric.intervention.action}</span>
+        <div className="text-xs text-slate-500 mt-2 leading-tight flex items-start gap-1 truncate" title={metric.intervention.action}>
+          <ChevronRight size={11} className="mt-0.5 shrink-0 text-blue-600" /><span className="truncate">{metric.intervention.action}</span>
         </div>
       )}
     </div>
@@ -982,28 +982,28 @@ const LONG_METRIC_LABELS: Record<string, string> = {
 function LongitudinalPanel({ longitudinal }: { longitudinal: any }) {
   const metrics = longitudinal.metrics || {};
   return (
-    <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+    <div className="bg-white border border-slate-200 rounded-lg p-4">
       <SectionHeader title="Longitudinal Intelligence" sub="Trend & forecast from persisted daily snapshots" />
-      <div className="bg-blue-500/5 border border-blue-500/20 rounded px-3 py-2 text-xs text-blue-300 mb-3">
+      <div className="bg-blue-500/5 border border-blue-500/20 rounded px-3 py-2 text-xs text-blue-700 mb-3">
         {longitudinal.mode === 'real_history' ? 'Real history' : longitudinal.mode} · depth {longitudinal.snapshotDepth ?? 0} snapshots. Coverage (data availability) and Confidence (trustworthiness) are reported separately — never composited. No synthetic deltas.
       </div>
-      {longitudinal.captureNote && <div className="text-xs text-amber-300 mb-3 flex items-center gap-1.5"><Clock size={11} /> {longitudinal.captureNote}</div>}
+      {longitudinal.captureNote && <div className="text-xs text-amber-700 mb-3 flex items-center gap-1.5"><Clock size={11} /> {longitudinal.captureNote}</div>}
       <div className="space-y-2">
         {Object.entries(metrics).map(([key, m]: any) => {
           const dir = m.trend?.direction ?? 'insufficient_history';
-          const tColor = dir === 'improving' ? 'text-emerald-400' : dir === 'declining' ? 'text-rose-400' : 'text-slate-400';
+          const tColor = dir === 'improving' ? 'text-emerald-600' : dir === 'declining' ? 'text-rose-600' : 'text-slate-500';
           const arrow = dir === 'improving' ? '↑' : dir === 'declining' ? '↓' : dir === 'stable' ? '→' : '•';
           return (
-            <div key={key} className="bg-slate-700/30 rounded p-3">
+            <div key={key} className="bg-slate-100 rounded p-3">
               <div className="flex justify-between items-center mb-1.5">
-                <span className="text-sm text-white">{LONG_METRIC_LABELS[key] || key}</span>
+                <span className="text-sm text-slate-900">{LONG_METRIC_LABELS[key] || key}</span>
                 <span className={`text-xs ${tColor}`}>{arrow} {String(dir).replace(/_/g, ' ')}{m.trend?.delta_pts != null ? ` (${m.trend.delta_pts > 0 ? '+' : ''}${m.trend.delta_pts} pts/mo)` : ''}</span>
               </div>
               <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-                <div className="text-slate-400">Forecast 3m: <span className="text-white">{m.forecast?.value_3m ?? '—'}</span></div>
-                <div className="text-slate-400">Forecast 6m: <span className="text-white">{m.forecast?.value_6m ?? '—'}</span></div>
-                <div className="text-slate-500">Coverage: <span className="text-slate-300">{m.coverage?.snapshotCount ?? 0} snaps · {m.coverage?.daysSpan ?? 0}d</span></div>
-                <div className="text-slate-500">Confidence: <span className="text-slate-300 capitalize">{String(m.confidence?.grade ?? 'baseline_only').replace(/_/g, ' ')}</span></div>
+                <div className="text-slate-500">Forecast 3m: <span className="text-slate-900">{m.forecast?.value_3m ?? '—'}</span></div>
+                <div className="text-slate-500">Forecast 6m: <span className="text-slate-900">{m.forecast?.value_6m ?? '—'}</span></div>
+                <div className="text-slate-400">Coverage: <span className="text-slate-600">{m.coverage?.snapshotCount ?? 0} snaps · {m.coverage?.daysSpan ?? 0}d</span></div>
+                <div className="text-slate-400">Confidence: <span className="text-slate-600 capitalize">{String(m.confidence?.grade ?? 'baseline_only').replace(/_/g, ' ')}</span></div>
               </div>
             </div>
           );
@@ -1014,11 +1014,11 @@ function LongitudinalPanel({ longitudinal }: { longitudinal: any }) {
 }
 
 const COCKPIT_STATS: { key: string; label: string; icon: React.ComponentType<any>; accent: string; glow: string }[] = [
-  { key: 'totalCandidates',  label: 'Candidates',  icon: Users,       accent: 'text-sky-300',     glow: 'from-sky-500/15' },
-  { key: 'totalJobs',        label: 'Open Roles',  icon: Briefcase,   accent: 'text-violet-300',  glow: 'from-violet-500/15' },
-  { key: 'totalAssessments', label: 'Assessments', icon: CheckSquare, accent: 'text-amber-300',   glow: 'from-amber-500/15' },
-  { key: 'totalNodes',       label: 'TIG Nodes',   icon: Network,     accent: 'text-emerald-300', glow: 'from-emerald-500/15' },
-  { key: 'hired',            label: 'Hired',       icon: Award,       accent: 'text-rose-300',    glow: 'from-rose-500/15' },
+  { key: 'totalCandidates',  label: 'Candidates',  icon: Users,       accent: 'text-sky-700',     glow: 'from-sky-500/15' },
+  { key: 'totalJobs',        label: 'Open Roles',  icon: Briefcase,   accent: 'text-violet-700',  glow: 'from-violet-500/15' },
+  { key: 'totalAssessments', label: 'Assessments', icon: CheckSquare, accent: 'text-amber-700',   glow: 'from-amber-500/15' },
+  { key: 'totalNodes',       label: 'TIG Nodes',   icon: Network,     accent: 'text-emerald-700', glow: 'from-emerald-500/15' },
+  { key: 'hired',            label: 'Hired',       icon: Award,       accent: 'text-rose-700',    glow: 'from-rose-500/15' },
 ];
 const VIEW_META: Record<string, { label: string; icon: React.ComponentType<any>; focus: string }> = {
   ceo:  { label: 'CEO',  icon: Building2, focus: 'Enterprise health' },
@@ -1073,13 +1073,13 @@ function P21Panel({ data, onRefresh }: { data: any; onRefresh?: () => void }) {
           const Icon = s.icon;
           const val = summary[s.key] ?? 0;
           return (
-            <div key={s.key} className="relative overflow-hidden bg-slate-800/60 border border-slate-700/50 rounded-xl p-4">
+            <div key={s.key} className="relative overflow-hidden bg-white border border-slate-200 rounded-xl p-4">
               <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${s.glow} to-transparent`} />
               <div className="relative flex items-center gap-3">
-                <div className={`shrink-0 w-9 h-9 rounded-lg bg-slate-900/40 border border-slate-700/50 flex items-center justify-center ${s.accent}`}><Icon size={18} /></div>
+                <div className={`shrink-0 w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center ${s.accent}`}><Icon size={18} /></div>
                 <div className="min-w-0">
-                  <div className="text-2xl font-bold text-white leading-none tabular-nums">{val}</div>
-                  <div className="text-xs text-slate-400 mt-1 truncate">{s.label}</div>
+                  <div className="text-2xl font-bold text-slate-900 leading-none tabular-nums">{val}</div>
+                  <div className="text-xs text-slate-500 mt-1 truncate">{s.label}</div>
                 </div>
               </div>
             </div>
@@ -1087,29 +1087,29 @@ function P21Panel({ data, onRefresh }: { data: any; onRefresh?: () => void }) {
         })}
       </div>
       {lensFramework && (
-        <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg px-3 py-2 text-xs text-blue-300 flex items-center gap-2">
+        <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg px-3 py-2 text-xs text-blue-700 flex items-center gap-2">
           <LayoutDashboard size={12} /> {lensFramework}
         </div>
       )}
       {isFirstRun && (
-        <div className="relative overflow-hidden bg-gradient-to-br from-blue-500/10 via-slate-800/40 to-transparent border border-blue-500/25 rounded-xl p-4">
+        <div className="relative overflow-hidden bg-gradient-to-br from-blue-500/10 via-slate-100 to-transparent border border-blue-500/25 rounded-xl p-4">
           <div className="flex items-start gap-3">
-            <div className="shrink-0 w-9 h-9 rounded-lg bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-blue-300"><Target size={18} /></div>
+            <div className="shrink-0 w-9 h-9 rounded-lg bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-blue-700"><Target size={18} /></div>
             <div className="flex-1">
-              <div className="text-sm font-semibold text-white">Your cockpit is ready — let's bring it to life</div>
-              <div className="text-xs text-slate-400 mt-0.5">Executive intelligence populates from real activity. Nothing here is simulated.</div>
+              <div className="text-sm font-semibold text-slate-900">Your cockpit is ready — let's bring it to life</div>
+              <div className="text-xs text-slate-500 mt-0.5">Executive intelligence populates from real activity. Nothing here is simulated.</div>
               <div className="grid sm:grid-cols-3 gap-2 mt-3">
                 {[
                   { n: 1, t: 'Post a role', d: 'Open a position on the Job Board' },
                   { n: 2, t: 'Assess candidates', d: 'Invite applicants and run assessments' },
                   { n: 3, t: 'Read the intelligence', d: 'Health, risk & forecasts appear here' },
                 ].map(step => (
-                  <div key={step.n} className="bg-slate-900/30 border border-slate-700/40 rounded-lg p-2.5">
+                  <div key={step.n} className="bg-slate-100 border border-slate-200 rounded-lg p-2.5">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-300 text-xs font-bold flex items-center justify-center">{step.n}</span>
-                      <span className="text-xs font-semibold text-white">{step.t}</span>
+                      <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-700 text-xs font-bold flex items-center justify-center">{step.n}</span>
+                      <span className="text-xs font-semibold text-slate-900">{step.t}</span>
                     </div>
-                    <div className="text-xs text-slate-400 leading-tight">{step.d}</div>
+                    <div className="text-xs text-slate-500 leading-tight">{step.d}</div>
                   </div>
                 ))}
               </div>
@@ -1119,14 +1119,14 @@ function P21Panel({ data, onRefresh }: { data: any; onRefresh?: () => void }) {
       )}
       {data.worldClass && (
         <div className="flex items-center justify-end gap-2">
-          {captureMsg && <span className="text-xs text-blue-300">{captureMsg}</span>}
-          {exportMsg && <span className="text-xs text-amber-300">{exportMsg}</span>}
+          {captureMsg && <span className="text-xs text-blue-700">{captureMsg}</span>}
+          {exportMsg && <span className="text-xs text-amber-700">{exportMsg}</span>}
           <button onClick={captureSnapshot} disabled={capturing} className="bg-blue-600/80 hover:bg-blue-600 disabled:opacity-50 text-white text-xs px-3 py-1.5 rounded flex items-center gap-1.5">{capturing ? <Loader2 size={11} className="animate-spin" /> : <Clock size={11} />} Capture snapshot</button>
           <button onClick={() => downloadExport('/api/employer/eios/p21/export.csv', 'eios_executive_longitudinal.csv', setExportMsg)} className="bg-emerald-600/80 hover:bg-emerald-600 text-white text-xs px-3 py-1.5 rounded flex items-center gap-1.5"><Download size={11} /> Export CSV</button>
         </div>
       )}
       <div>
-        <div className="text-xs text-slate-500 mb-1.5 flex items-center gap-1.5"><Eye size={11} /> Executive lens</div>
+        <div className="text-xs text-slate-400 mb-1.5 flex items-center gap-1.5"><Eye size={11} /> Executive lens</div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {TABS.map(t => {
             const meta = VIEW_META[t.id] || { label: t.label, icon: LayoutDashboard, focus: '' };
@@ -1134,9 +1134,9 @@ function P21Panel({ data, onRefresh }: { data: any; onRefresh?: () => void }) {
             const active = view === t.id;
             return (
               <button key={t.id} onClick={() => setView(t.id as any)}
-                className={`text-left rounded-lg p-2.5 border transition-all ${active ? 'bg-blue-600/90 border-blue-500 text-white shadow-lg shadow-blue-900/30' : 'bg-slate-800/40 border-slate-700/50 text-slate-400 hover:text-white hover:border-slate-600'}`}>
+                className={`text-left rounded-lg p-2.5 border transition-all ${active ? 'bg-blue-600/90 border-blue-500 text-white shadow-lg shadow-blue-900/30' : 'bg-slate-50 border-slate-200 text-slate-500 hover:text-slate-900 hover:border-slate-300'}`}>
                 <div className="flex items-center gap-1.5"><Icon size={13} /><span className="text-xs font-semibold">{meta.label}</span></div>
-                <div className={`text-xs mt-0.5 leading-tight ${active ? 'text-blue-100' : 'text-slate-500'}`}>{meta.focus}</div>
+                <div className={`text-xs mt-0.5 leading-tight ${active ? 'text-blue-100' : 'text-slate-400'}`}>{meta.focus}</div>
               </button>
             );
           })}
@@ -1148,16 +1148,16 @@ function P21Panel({ data, onRefresh }: { data: any; onRefresh?: () => void }) {
         ))}
       </div>
       {(view === 'ceo' || view === 'chro') && vd.riskIntelligence && (
-        <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+        <div className="bg-white border border-slate-200 rounded-lg p-4">
           <SectionHeader title="Risk & Forecast Intelligence" />
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div className="space-y-2">
-              <div className="flex justify-between"><span className="text-slate-400">At-Risk Talent</span><span className="text-rose-300">{vd.riskIntelligence.atRisk ?? 0}</span></div>
-              <div className="flex justify-between"><span className="text-slate-400">Open Critical Roles</span><span className="text-amber-300">{vd.riskIntelligence.criticalRoles ?? 0}</span></div>
+              <div className="flex justify-between"><span className="text-slate-500">At-Risk Talent</span><span className="text-rose-700">{vd.riskIntelligence.atRisk ?? 0}</span></div>
+              <div className="flex justify-between"><span className="text-slate-500">Open Critical Roles</span><span className="text-amber-700">{vd.riskIntelligence.criticalRoles ?? 0}</span></div>
             </div>
             <div className="space-y-2">
-              <div className="flex justify-between"><span className="text-slate-400">Projected Hires 90d</span><span className="text-emerald-300">{vd.forecastIntelligence?.projectedHires90d ?? 0}</span></div>
-              <div className="flex justify-between"><span className="text-slate-400">Conversion Rate</span><span className="text-white">{vd.outcomeIntelligence?.conversionRate ?? 0}%</span></div>
+              <div className="flex justify-between"><span className="text-slate-500">Projected Hires 90d</span><span className="text-emerald-700">{vd.forecastIntelligence?.projectedHires90d ?? 0}</span></div>
+              <div className="flex justify-between"><span className="text-slate-500">Conversion Rate</span><span className="text-slate-900">{vd.outcomeIntelligence?.conversionRate ?? 0}%</span></div>
             </div>
           </div>
         </div>
@@ -1187,27 +1187,27 @@ function P22Panel({ data }: { data: any }) {
         <KPI label="Leadership Attribution" value={attribution.leadershipEffectiveness === 'pending_outcome_data' ? 'Pending' : attribution.leadershipEffectiveness} />
         <KPI label="Learning Attribution" value={attribution.learningEffectiveness === 'pending_outcome_data' ? 'Pending' : attribution.learningEffectiveness} />
       </div>
-      <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <SectionHeader title="Outcome Tracking by Type" sub="Track real-world outcomes against assessment predictions" />
         <div className="space-y-2">
           {OUTCOME_TYPES.map(({ key, label, icon }) => {
             const oc = outcomes[key] || {};
             const tracked = oc.tracked ?? 0;
             return (
-              <div key={key} className="flex items-center justify-between py-2 border-b border-slate-700/30 last:border-0 text-sm">
-                <div className="flex items-center gap-2 text-slate-300">
-                  <span className="text-slate-500">{icon}</span>{label}
+              <div key={key} className="flex items-center justify-between py-2 border-b border-slate-200 last:border-0 text-sm">
+                <div className="flex items-center gap-2 text-slate-600">
+                  <span className="text-slate-400">{icon}</span>{label}
                 </div>
                 <div className="flex items-center gap-3">
-                  {oc.effectiveness !== undefined && <span className="text-xs text-slate-400">{oc.effectiveness}% effective</span>}
-                  <span className={`text-xs px-2 py-0.5 rounded ${tracked > 0 ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-600 text-slate-400'}`}>{tracked > 0 ? `${tracked} tracked` : 'No data'}</span>
+                  {oc.effectiveness !== undefined && <span className="text-xs text-slate-500">{oc.effectiveness}% effective</span>}
+                  <span className={`text-xs px-2 py-0.5 rounded ${tracked > 0 ? 'bg-emerald-500/20 text-emerald-700' : 'bg-slate-300 text-slate-500'}`}>{tracked > 0 ? `${tracked} tracked` : 'No data'}</span>
                 </div>
               </div>
             );
           })}
         </div>
       </div>
-      <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-3 text-xs text-blue-300">
+      <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-3 text-xs text-blue-700">
         Use <code className="bg-blue-500/10 px-1 rounded">POST /api/employer/eios/p22/outcomes</code> to track real-world outcomes against predictions.
       </div>
     </div>
@@ -1216,8 +1216,8 @@ function P22Panel({ data }: { data: any }) {
 
 // ─── P23: Assessment Effectiveness ───────────────────────────────────────────
 function P23Panel({ data }: { data: any }) {
-  const reliabilityColor = data.assessmentReliability === 'high' ? 'text-emerald-300' : data.assessmentReliability === 'moderate' ? 'text-amber-300' : 'text-rose-300';
-  const predictColor = data.assessmentPredictiveness === 'high' ? 'text-emerald-300' : data.assessmentPredictiveness === 'moderate' ? 'text-amber-300' : 'text-slate-400';
+  const reliabilityColor = data.assessmentReliability === 'high' ? 'text-emerald-700' : data.assessmentReliability === 'moderate' ? 'text-amber-700' : 'text-rose-700';
+  const predictColor = data.assessmentPredictiveness === 'high' ? 'text-emerald-700' : data.assessmentPredictiveness === 'moderate' ? 'text-amber-700' : 'text-slate-500';
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -1226,39 +1226,39 @@ function P23Panel({ data }: { data: any }) {
         <KPI label="Quality Index" value={data.qualityIndex ?? 0} sub="Accuracy + Coverage" />
         <KPI label="Confidence Index" value={data.confidenceIndex ?? 0} />
       </div>
-      <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <SectionHeader title="Effectiveness Indicators" />
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <div className="text-xs text-slate-400 mb-1">Predictiveness</div>
+            <div className="text-xs text-slate-500 mb-1">Predictiveness</div>
             <div className={`font-semibold capitalize ${predictColor}`}>{data.assessmentPredictiveness?.replace(/_/g, ' ') || '—'}</div>
           </div>
           <div>
-            <div className="text-xs text-slate-400 mb-1">Reliability</div>
+            <div className="text-xs text-slate-500 mb-1">Reliability</div>
             <div className={`font-semibold capitalize ${reliabilityColor}`}>{data.assessmentReliability?.replace(/_/g, ' ') || '—'}</div>
           </div>
           <div>
-            <div className="text-xs text-slate-400 mb-1">Drift Status</div>
-            <div className="text-blue-300 capitalize">{data.assessmentDrift || 'monitoring'}</div>
+            <div className="text-xs text-slate-500 mb-1">Drift Status</div>
+            <div className="text-blue-700 capitalize">{data.assessmentDrift || 'monitoring'}</div>
           </div>
           <div>
-            <div className="text-xs text-slate-400 mb-1">ROI Attribution</div>
-            <div className="text-slate-300 capitalize">{data.assessmentROI?.replace(/_/g, ' ') || '—'}</div>
+            <div className="text-xs text-slate-500 mb-1">ROI Attribution</div>
+            <div className="text-slate-600 capitalize">{data.assessmentROI?.replace(/_/g, ' ') || '—'}</div>
           </div>
         </div>
       </div>
       <div className="grid grid-cols-3 gap-3 text-center">
-        <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3">
-          <div className="text-xl font-bold text-white">{data.totalAssessments ?? 0}</div>
-          <div className="text-xs text-slate-400 mt-1">Total Assessments</div>
+        <div className="bg-white border border-slate-200 rounded-lg p-3">
+          <div className="text-xl font-bold text-slate-900">{data.totalAssessments ?? 0}</div>
+          <div className="text-xs text-slate-500 mt-1">Total Assessments</div>
         </div>
-        <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3">
-          <div className="text-xl font-bold text-teal-300">{data.covered ?? 0}</div>
-          <div className="text-xs text-slate-400 mt-1">Candidates Covered</div>
+        <div className="bg-white border border-slate-200 rounded-lg p-3">
+          <div className="text-xl font-bold text-teal-700">{data.covered ?? 0}</div>
+          <div className="text-xs text-slate-500 mt-1">Candidates Covered</div>
         </div>
-        <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3">
-          <div className="text-xl font-bold text-slate-300">{data.total ?? 0}</div>
-          <div className="text-xs text-slate-400 mt-1">Total Candidates</div>
+        <div className="bg-white border border-slate-200 rounded-lg p-3">
+          <div className="text-xl font-bold text-slate-600">{data.total ?? 0}</div>
+          <div className="text-xs text-slate-500 mt-1">Total Candidates</div>
         </div>
       </div>
     </div>
@@ -1281,7 +1281,7 @@ function P24Panel({ data }: { data: any }) {
         <KPI label="Fill Rate" value={`${hp.currentFillRate ?? 0}%`} sub={`Target: ${hp.targetFillRate ?? 80}%`} />
       </div>
       <div className="grid grid-cols-2 gap-3">
-        <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+        <div className="bg-white border border-slate-200 rounded-lg p-4">
           <SectionHeader title="Capability Distribution" />
           <div className="space-y-2">
             {[
@@ -1293,43 +1293,43 @@ function P24Panel({ data }: { data: any }) {
               const pct = total > 0 ? Math.round(count / total * 100) : 0;
               return (
                 <div key={label}>
-                  <div className="flex justify-between text-xs mb-1"><span className="text-slate-400">{label}</span><span className="text-white">{count}</span></div>
+                  <div className="flex justify-between text-xs mb-1"><span className="text-slate-500">{label}</span><span className="text-slate-900">{count}</span></div>
                   <Bar value={pct} color={color} />
                 </div>
               );
             })}
-            <div className="text-xs text-slate-500 pt-1">Capability gaps: {cap.gapCount ?? 0} unfilled roles</div>
+            <div className="text-xs text-slate-400 pt-1">Capability gaps: {cap.gapCount ?? 0} unfilled roles</div>
           </div>
         </div>
-        <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+        <div className="bg-white border border-slate-200 rounded-lg p-4">
           <SectionHeader title="Succession Planning" />
           <div className="space-y-2 text-sm">
-            <div className="flex justify-between"><span className="text-slate-400">Ready Now (EI≥80)</span><span className="text-emerald-300 font-bold">{sp.readyNow ?? 0}</span></div>
-            <div className="flex justify-between"><span className="text-slate-400">Ready 6M (EI≥65)</span><span className="text-blue-300 font-bold">{sp.ready6m ?? 0}</span></div>
+            <div className="flex justify-between"><span className="text-slate-500">Ready Now (EI≥80)</span><span className="text-emerald-700 font-bold">{sp.readyNow ?? 0}</span></div>
+            <div className="flex justify-between"><span className="text-slate-500">Ready 6M (EI≥65)</span><span className="text-blue-700 font-bold">{sp.ready6m ?? 0}</span></div>
           </div>
         </div>
       </div>
       {Object.keys(byDept).length > 0 && (
-        <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+        <div className="bg-white border border-slate-200 rounded-lg p-4">
           <SectionHeader title="Headcount by Department" />
           <div className="space-y-1.5">
             {Object.entries(byDept).map(([dept, count]: any) => (
               <div key={dept} className="flex items-center gap-3 text-xs">
-                <div className="flex-1 text-slate-300">{dept}</div>
+                <div className="flex-1 text-slate-600">{dept}</div>
                 <Bar value={count} max={Math.max(...Object.values(byDept).map(Number))} color="bg-blue-500" />
-                <div className="text-white w-6 text-right">{count}</div>
+                <div className="text-slate-900 w-6 text-right">{count}</div>
               </div>
             ))}
           </div>
         </div>
       )}
       {(data.savedPlans || []).length > 0 && (
-        <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+        <div className="bg-white border border-slate-200 rounded-lg p-4">
           <SectionHeader title="Saved Workforce Plans" />
           {data.savedPlans.map((plan: any) => (
-            <div key={plan.id} className="flex justify-between items-center py-2 border-b border-slate-700/30 last:border-0 text-sm">
-              <span className="text-white">{plan.plan_name}</span>
-              <span className="text-xs text-slate-400">{new Date(plan.created_at).toLocaleDateString()}</span>
+            <div key={plan.id} className="flex justify-between items-center py-2 border-b border-slate-200 last:border-0 text-sm">
+              <span className="text-slate-900">{plan.plan_name}</span>
+              <span className="text-xs text-slate-500">{new Date(plan.created_at).toLocaleDateString()}</span>
             </div>
           ))}
         </div>
@@ -1350,22 +1350,22 @@ function P25Panel({ data }: { data: any }) {
     <div className="space-y-4">
       <div className="grid grid-cols-3 gap-3">
         <div className={`border rounded-lg p-4 ${data.governanceScore >= 80 ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-amber-500/30 bg-amber-500/5'}`}>
-          <div className="text-xs text-slate-400 mb-1">Governance Score</div>
-          <div className="text-2xl font-bold text-white">{data.governanceScore ?? 0}</div>
+          <div className="text-xs text-slate-500 mb-1">Governance Score</div>
+          <div className="text-2xl font-bold text-slate-900">{data.governanceScore ?? 0}</div>
           <Bar value={data.governanceScore ?? 0} color="bg-blue-500" />
         </div>
         <div className={`border rounded-lg p-4 ${data.complianceScore >= 80 ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-amber-500/30 bg-amber-500/5'}`}>
-          <div className="text-xs text-slate-400 mb-1">Compliance Score</div>
-          <div className="text-2xl font-bold text-white">{data.complianceScore ?? 0}</div>
+          <div className="text-xs text-slate-500 mb-1">Compliance Score</div>
+          <div className="text-2xl font-bold text-slate-900">{data.complianceScore ?? 0}</div>
           <Bar value={data.complianceScore ?? 0} color="bg-emerald-500" />
         </div>
         <div className={`border rounded-lg p-4 ${data.riskScore <= 25 ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-rose-500/30 bg-rose-500/5'}`}>
-          <div className="text-xs text-slate-400 mb-1">Risk Score</div>
-          <div className="text-2xl font-bold text-white">{data.riskScore ?? 0}</div>
+          <div className="text-xs text-slate-500 mb-1">Risk Score</div>
+          <div className="text-2xl font-bold text-slate-900">{data.riskScore ?? 0}</div>
           <Bar value={data.riskScore ?? 0} color="bg-rose-500" />
         </div>
       </div>
-      <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <SectionHeader title="AI & Bias Governance" />
         <div className="grid grid-cols-3 gap-3 text-center text-sm">
           {[
@@ -1373,32 +1373,32 @@ function P25Panel({ data }: { data: any }) {
             { label: 'Bias Monitoring', status: data.biasMonitoring?.status },
             { label: 'DEI Monitoring', status: data.deiMonitoring?.status },
           ].map(({ label, status }) => (
-            <div key={label} className="bg-slate-700/40 rounded p-2">
-              <div className="text-xs text-slate-400 mb-1.5">{label}</div>
+            <div key={label} className="bg-slate-100 rounded p-2">
+              <div className="text-xs text-slate-500 mb-1.5">{label}</div>
               <StatusBadge status={status || 'unknown'} />
             </div>
           ))}
         </div>
       </div>
-      <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <SectionHeader title="Policy Compliance" />
         <div className="space-y-2">
           {POLICY_KEYS.map(key => (
-            <div key={key} className="flex justify-between items-center text-sm py-1 border-b border-slate-700/30 last:border-0">
-              <span className="text-slate-300 capitalize">{key.replace(/([A-Z])/g, ' $1')}</span>
+            <div key={key} className="flex justify-between items-center text-sm py-1 border-b border-slate-200 last:border-0">
+              <span className="text-slate-600 capitalize">{key.replace(/([A-Z])/g, ' $1')}</span>
               <StatusBadge status={policies[key] || 'unknown'} />
             </div>
           ))}
         </div>
       </div>
       <div className="grid grid-cols-2 gap-3 text-xs">
-        <div className="bg-slate-800/60 border border-slate-700/50 rounded p-3">
-          <span className="text-slate-400">Audit Logs: </span>
-          <span className="text-white">{data.auditCompliance?.logsPresent ?? 0} entries</span>
+        <div className="bg-white border border-slate-200 rounded p-3">
+          <span className="text-slate-500">Audit Logs: </span>
+          <span className="text-slate-900">{data.auditCompliance?.logsPresent ?? 0} entries</span>
         </div>
-        <div className="bg-slate-800/60 border border-slate-700/50 rounded p-3">
-          <span className="text-slate-400">Explainability: </span>
-          <span className="text-emerald-300">{data.assessmentCompliance?.explainability || 'full'}</span>
+        <div className="bg-white border border-slate-200 rounded p-3">
+          <span className="text-slate-500">Explainability: </span>
+          <span className="text-emerald-700">{data.assessmentCompliance?.explainability || 'full'}</span>
         </div>
       </div>
     </div>
@@ -1408,7 +1408,7 @@ function P25Panel({ data }: { data: any }) {
 // ─── P26: Model Monitoring ────────────────────────────────────────────────────
 function P26Panel({ data }: { data: any }) {
   const models = data.models || [];
-  const modelStatusColor = (s: string) => s === 'active' ? 'text-emerald-300 bg-emerald-500/10 border-emerald-500/30' : s === 'monitoring' ? 'text-blue-300 bg-blue-500/10 border-blue-500/30' : 'text-slate-400 bg-slate-700/40 border-slate-600/30';
+  const modelStatusColor = (s: string) => s === 'active' ? 'text-emerald-700 bg-emerald-500/10 border-emerald-500/30' : s === 'monitoring' ? 'text-blue-700 bg-blue-500/10 border-blue-500/30' : 'text-slate-500 bg-slate-100 border-slate-300';
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -1442,9 +1442,9 @@ function P26Panel({ data }: { data: any }) {
           { label: 'False Negatives', val: data.falseNegatives },
           { label: 'Calibration', val: data.calibration },
         ].map(({ label, val }) => (
-          <div key={label} className="bg-slate-800/60 border border-slate-700/50 rounded p-2">
-            <div className="text-slate-400 mb-1">{label}</div>
-            <div className="text-white capitalize">{String(val || '—').replace(/_/g, ' ')}</div>
+          <div key={label} className="bg-white border border-slate-200 rounded p-2">
+            <div className="text-slate-500 mb-1">{label}</div>
+            <div className="text-slate-900 capitalize">{String(val || '—').replace(/_/g, ' ')}</div>
           </div>
         ))}
       </div>
@@ -1466,34 +1466,34 @@ function P27Panel({ data }: { data: any }) {
     <div className="space-y-4">
       <div className="grid grid-cols-3 gap-3 text-center">
         <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-3">
-          <div className="text-2xl font-bold text-emerald-300">{available.length}</div>
-          <div className="text-xs text-slate-400 mt-1">Available Now</div>
+          <div className="text-2xl font-bold text-emerald-700">{available.length}</div>
+          <div className="text-xs text-slate-500 mt-1">Available Now</div>
         </div>
         <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
-          <div className="text-2xl font-bold text-blue-300">{roadmap.length}</div>
-          <div className="text-xs text-slate-400 mt-1">On Roadmap</div>
+          <div className="text-2xl font-bold text-blue-700">{roadmap.length}</div>
+          <div className="text-xs text-slate-500 mt-1">On Roadmap</div>
         </div>
-        <div className="bg-slate-700/30 border border-slate-600/40 rounded-lg p-3">
-          <div className="text-2xl font-bold text-white">{integrations.length}</div>
-          <div className="text-xs text-slate-400 mt-1">Total Integrations</div>
+        <div className="bg-slate-100 border border-slate-300 rounded-lg p-3">
+          <div className="text-2xl font-bold text-slate-900">{integrations.length}</div>
+          <div className="text-xs text-slate-500 mt-1">Total Integrations</div>
         </div>
       </div>
       <div className="space-y-2">
         {integrations.map((intg: any) => (
-          <div key={intg.id} className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3 flex items-center gap-3">
-            <div className={`p-2 rounded ${intg.status === 'available' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-slate-700/50 text-slate-500'}`}>
+          <div key={intg.id} className="bg-white border border-slate-200 rounded-lg p-3 flex items-center gap-3">
+            <div className={`p-2 rounded ${intg.status === 'available' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-slate-100 text-slate-400'}`}>
               {ICONS[intg.id] || <Link2 size={14} />}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-sm font-medium text-white">{intg.label}</div>
-              <div className="text-xs text-slate-400 truncate">{intg.description}</div>
+              <div className="text-sm font-medium text-slate-900">{intg.label}</div>
+              <div className="text-xs text-slate-500 truncate">{intg.description}</div>
             </div>
             <StatusBadge status={intg.status} />
           </div>
         ))}
       </div>
-      <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3 text-xs text-slate-400">
-        <div className="font-medium text-slate-300 mb-1">Authentication</div>
+      <div className="bg-white border border-slate-200 rounded-lg p-3 text-xs text-slate-500">
+        <div className="font-medium text-slate-600 mb-1">Authentication</div>
         <span>{data.apiAuthentication?.method?.replace(/_/g, ' ')} · {data.apiAuthentication?.scope?.replace(/_/g, ' ')}</span>
       </div>
     </div>
@@ -1514,40 +1514,40 @@ function P28Panel({ data }: { data: any }) {
         <KPI label="TIG Nodes" value={org.networkNodes ?? 0} />
         <KPI label="Departments" value={(org.departments || []).length} />
       </div>
-      <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <div className="flex justify-between items-center mb-3">
           <SectionHeader title="Twin Completeness" sub="Based on data coverage across all pillars" />
-          <span className={`text-lg font-bold ${completeness >= 70 ? 'text-emerald-400' : completeness >= 40 ? 'text-amber-400' : 'text-rose-400'}`}>{completeness}%</span>
+          <span className={`text-lg font-bold ${completeness >= 70 ? 'text-emerald-600' : completeness >= 40 ? 'text-amber-600' : 'text-rose-600'}`}>{completeness}%</span>
         </div>
         <Bar value={completeness} color={completeness >= 70 ? 'bg-emerald-500' : completeness >= 40 ? 'bg-amber-500' : 'bg-rose-500'} />
         <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
           <div className="flex items-center gap-1.5">
-            {twin.people?.length > 0 ? <CheckCircle2 size={11} className="text-emerald-400" /> : <XCircle size={11} className="text-slate-500" />}
-            <span className="text-slate-400">People layer</span>
+            {twin.people?.length > 0 ? <CheckCircle2 size={11} className="text-emerald-600" /> : <XCircle size={11} className="text-slate-400" />}
+            <span className="text-slate-500">People layer</span>
           </div>
           <div className="flex items-center gap-1.5">
-            {org.networkNodes > 0 ? <CheckCircle2 size={11} className="text-emerald-400" /> : <XCircle size={11} className="text-slate-500" />}
-            <span className="text-slate-400">Network layer (TIG)</span>
+            {org.networkNodes > 0 ? <CheckCircle2 size={11} className="text-emerald-600" /> : <XCircle size={11} className="text-slate-400" />}
+            <span className="text-slate-500">Network layer (TIG)</span>
           </div>
           <div className="flex items-center gap-1.5">
-            {org.openRoles > 0 ? <CheckCircle2 size={11} className="text-emerald-400" /> : <XCircle size={11} className="text-slate-500" />}
-            <span className="text-slate-400">Role layer</span>
+            {org.openRoles > 0 ? <CheckCircle2 size={11} className="text-emerald-600" /> : <XCircle size={11} className="text-slate-400" />}
+            <span className="text-slate-500">Role layer</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <CheckCircle2 size={11} className="text-emerald-400" />
-            <span className="text-slate-400">Intelligence base</span>
+            <CheckCircle2 size={11} className="text-emerald-600" />
+            <span className="text-slate-500">Intelligence base</span>
           </div>
         </div>
       </div>
-      <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <SectionHeader title="Available Simulations" sub="Use the Scenario Intelligence pillar (P17) to run these" />
         <div className="grid grid-cols-2 gap-2">
           {Object.entries(simulations).map(([key, sim]: any) => (
-            <div key={key} className="flex items-start gap-2 text-xs bg-slate-700/30 rounded p-2">
-              <Play size={10} className="text-slate-500 mt-0.5 shrink-0" />
+            <div key={key} className="flex items-start gap-2 text-xs bg-slate-100 rounded p-2">
+              <Play size={10} className="text-slate-400 mt-0.5 shrink-0" />
               <div>
-                <div className="text-slate-300 capitalize font-medium">{key.replace(/_/g, ' ')}</div>
-                <div className="text-slate-500">{sim.description}</div>
+                <div className="text-slate-600 capitalize font-medium">{key.replace(/_/g, ' ')}</div>
+                <div className="text-slate-400">{sim.description}</div>
               </div>
             </div>
           ))}
@@ -1561,38 +1561,38 @@ function P28Panel({ data }: { data: any }) {
 function GenericPanel({ data, pillarId }: { data: any; pillarId: number }) {
   const entries = Object.entries(data).filter(([k]) => !['pillar', 'name', 'dataSource', 'suppressionNote'].includes(k));
   const render = (key: string, val: any): React.ReactNode => {
-    if (val === null || val === undefined) return <span className="text-slate-500 italic">no data</span>;
+    if (val === null || val === undefined) return <span className="text-slate-400 italic">no data</span>;
     if (typeof val === 'object' && !Array.isArray(val)) {
       return (
         <div className="ml-3 space-y-1">
           {Object.entries(val).map(([k2, v2]) => (
-            <div key={k2} className="text-xs"><span className="text-slate-400 capitalize">{k2.replace(/_/g, ' ')}: </span>{render(k2, v2)}</div>
+            <div key={k2} className="text-xs"><span className="text-slate-500 capitalize">{k2.replace(/_/g, ' ')}: </span>{render(k2, v2)}</div>
           ))}
         </div>
       );
     }
     if (Array.isArray(val)) {
-      if (val.length === 0) return <span className="text-slate-500 italic">empty</span>;
+      if (val.length === 0) return <span className="text-slate-400 italic">empty</span>;
       return (
         <div className="space-y-1 ml-3">
           {val.slice(0, 5).map((item: any, i: number) => (
-            <div key={i} className="text-xs text-slate-300">
+            <div key={i} className="text-xs text-slate-600">
               {typeof item === 'object' ? Object.entries(item).slice(0, 3).map(([k, v]) => `${k}: ${v}`).join(' · ') : String(item)}
             </div>
           ))}
-          {val.length > 5 && <div className="text-xs text-slate-500">+{val.length - 5} more</div>}
+          {val.length > 5 && <div className="text-xs text-slate-400">+{val.length - 5} more</div>}
         </div>
       );
     }
     if (typeof val === 'number') return <ScoreBadge score={val} size="sm" />;
-    if (typeof val === 'boolean') return <span className={val ? 'text-emerald-400' : 'text-rose-400'}>{val ? '✓' : '✗'}</span>;
-    return <span className="text-white">{String(val)}</span>;
+    if (typeof val === 'boolean') return <span className={val ? 'text-emerald-600' : 'text-rose-600'}>{val ? '✓' : '✗'}</span>;
+    return <span className="text-slate-900">{String(val)}</span>;
   };
   return (
     <div className="space-y-3">
       {entries.map(([key, val]) => (
-        <div key={key} className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3">
-          <div className="text-xs font-semibold text-slate-300 capitalize mb-1">{key.replace(/_/g, ' ')}</div>
+        <div key={key} className="bg-white border border-slate-200 rounded-lg p-3">
+          <div className="text-xs font-semibold text-slate-600 capitalize mb-1">{key.replace(/_/g, ' ')}</div>
           {render(key, val)}
         </div>
       ))}
@@ -1631,10 +1631,10 @@ function CertificationPanel({ data }: { data: any }) {
   const isDataBound = (axis: string) => ACTIVATION_AXES.has(axis);
 
   const verdictColor = data.verdict === 'GO'
-    ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
+    ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-700'
     : data.verdict === 'CONDITIONAL_GO'
-    ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
-    : 'bg-rose-500/20 border-rose-500/40 text-rose-300';
+    ? 'bg-amber-500/20 border-amber-500/40 text-amber-700'
+    : 'bg-rose-500/20 border-rose-500/40 text-rose-700';
 
   // Use new structural score if available, fall back to legacy
   const structuralScore  = data.structuralScore  ?? data.structural ?? 0;
@@ -1674,7 +1674,7 @@ function CertificationPanel({ data }: { data: any }) {
         <div className="bg-indigo-500/5 border border-indigo-500/20 rounded-lg p-4">
           <SectionHeader title="WS15 World-Class Dimensions" sub={`${ws15.passed}/${ws15.total} checks — all structural`} />
           <Bar value={ws15.score} color="bg-indigo-500" />
-          <div className="text-xs text-indigo-300 mt-2">{ws15.score}% — {ws15.score === 100 ? '✓ All 31 WS15 structural dimensions certified' : `${ws15.total - ws15.passed} pending`}</div>
+          <div className="text-xs text-indigo-700 mt-2">{ws15.score}% — {ws15.score === 100 ? '✓ All 31 WS15 structural dimensions certified' : `${ws15.total - ws15.passed} pending`}</div>
         </div>
       )}
 
@@ -1689,16 +1689,16 @@ function CertificationPanel({ data }: { data: any }) {
           </div>
           {(data.ws15Verification.failing || []).length > 0 ? (
             <div className="space-y-1">
-              <div className="text-xs text-rose-300 mb-1">Failing checks ({data.ws15Verification.failing.length}) — re-derived from live router + schema, not asserted:</div>
+              <div className="text-xs text-rose-700 mb-1">Failing checks ({data.ws15Verification.failing.length}) — re-derived from live router + schema, not asserted:</div>
               {data.ws15Verification.failing.map((f: any) => (
-                <div key={f.id} className="text-xs bg-slate-800/60 rounded p-2">
-                  <span className="text-rose-300 font-mono">{f.id}</span>
-                  {Array.isArray(f.missing) && f.missing.length > 0 && <span className="text-slate-500"> — missing: {f.missing.join(', ')}</span>}
+                <div key={f.id} className="text-xs bg-white rounded p-2">
+                  <span className="text-rose-700 font-mono">{f.id}</span>
+                  {Array.isArray(f.missing) && f.missing.length > 0 && <span className="text-slate-400"> — missing: {f.missing.join(', ')}</span>}
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-xs text-emerald-300 flex items-center gap-1.5"><CheckCircle2 size={12} /> All {data.ws15Verification.total} WS15 checks verified at runtime (routes registered + tables exist + seed rows present).</div>
+            <div className="text-xs text-emerald-700 flex items-center gap-1.5"><CheckCircle2 size={12} /> All {data.ws15Verification.total} WS15 checks verified at runtime (routes registered + tables exist + seed rows present).</div>
           )}
         </div>
       )}
@@ -1707,13 +1707,13 @@ function CertificationPanel({ data }: { data: any }) {
       {activationScore < 100 && (
         <div className="bg-amber-500/5 border border-amber-500/20 rounded-lg p-4">
           <SectionHeader title="Activation Intelligence" sub="Data-bound — needs live employer data" />
-          <p className="text-xs text-slate-400 mb-3">{data.activationNote || 'Import candidates and run assessments to activate all intelligence layers.'}</p>
+          <p className="text-xs text-slate-500 mb-3">{data.activationNote || 'Import candidates and run assessments to activate all intelligence layers.'}</p>
           <button onClick={runSeedDemo} disabled={seeding} className="bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white text-xs px-4 py-2 rounded flex items-center gap-2">
             {seeding ? <Loader2 size={12} className="animate-spin" /> : <Zap size={12} />}
             Seed Demo Data (10 candidates + 7 assessments)
           </button>
           {seedResult && (
-            <div className={`mt-3 text-xs p-2 rounded ${seedResult.success ? 'bg-emerald-500/10 text-emerald-300' : 'bg-rose-500/10 text-rose-300'}`}>
+            <div className={`mt-3 text-xs p-2 rounded ${seedResult.success ? 'bg-emerald-500/10 text-emerald-700' : 'bg-rose-500/10 text-rose-700'}`}>
               {seedResult.message || seedResult.error}
             </div>
           )}
@@ -1721,17 +1721,17 @@ function CertificationPanel({ data }: { data: any }) {
       )}
 
       {/* ── Structural Axes ── */}
-      <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <div className="flex justify-between items-center mb-3">
           <SectionHeader title="Structural Readiness by Axis" />
-          <button onClick={() => setShowAllAxes(v => !v)} className="text-xs text-slate-400 hover:text-white">{showAllAxes ? 'Hide WS15' : 'Show all'}</button>
+          <button onClick={() => setShowAllAxes(v => !v)} className="text-xs text-slate-500 hover:text-slate-900">{showAllAxes ? 'Hide WS15' : 'Show all'}</button>
         </div>
         <div className="space-y-2">
           {structuralAxes.map(([axis, scores]: any) => (
             <div key={axis}>
               <div className="flex justify-between text-xs mb-1">
-                <span className="text-slate-400">{AXIS_LABELS[axis] || axis}</span>
-                <span className="text-white">{scores.pct}% <span className="text-slate-500">({scores.passed}/{scores.total})</span>{data.targets?.[axis] && scores.pct < data.targets[axis] && <span className="text-rose-400 ml-1">↓ {data.targets[axis]}%</span>}</span>
+                <span className="text-slate-500">{AXIS_LABELS[axis] || axis}</span>
+                <span className="text-slate-900">{scores.pct}% <span className="text-slate-400">({scores.passed}/{scores.total})</span>{data.targets?.[axis] && scores.pct < data.targets[axis] && <span className="text-rose-600 ml-1">↓ {data.targets[axis]}%</span>}</span>
               </div>
               <Bar value={scores.pct} color={scores.pct >= (data.targets?.[axis] || 95) ? 'bg-emerald-500' : 'bg-amber-500'} />
             </div>
@@ -1740,23 +1740,23 @@ function CertificationPanel({ data }: { data: any }) {
           {showAllAxes && ws15Axes.map(([axis, scores]: any) => (
             <div key={axis}>
               <div className="flex justify-between text-xs mb-1">
-                <span className="text-indigo-400">{AXIS_LABELS[axis] || axis}</span>
-                <span className="text-white">{scores.pct}% <span className="text-slate-500">({scores.passed}/{scores.total})</span></span>
+                <span className="text-indigo-600">{AXIS_LABELS[axis] || axis}</span>
+                <span className="text-slate-900">{scores.pct}% <span className="text-slate-400">({scores.passed}/{scores.total})</span></span>
               </div>
               <Bar value={scores.pct} color="bg-indigo-500" />
             </div>
           ))}
           {/* Data-bound axes — clearly labelled */}
           {dataAxes.length > 0 && (
-            <div className="pt-2 border-t border-slate-700/40">
-              <div className="text-xs text-slate-500 mb-2">Data-bound (excluded from verdict)</div>
+            <div className="pt-2 border-t border-slate-200">
+              <div className="text-xs text-slate-400 mb-2">Data-bound (excluded from verdict)</div>
               {dataAxes.map(([axis, scores]: any) => (
                 <div key={axis}>
                   <div className="flex justify-between text-xs mb-1">
-                    <span className="text-slate-500">{AXIS_LABELS[axis] || axis}</span>
-                    <span className="text-slate-400">{scores.pct}% <span className="text-slate-600">({scores.passed}/{scores.total})</span></span>
+                    <span className="text-slate-400">{AXIS_LABELS[axis] || axis}</span>
+                    <span className="text-slate-500">{scores.pct}% <span className="text-slate-400">({scores.passed}/{scores.total})</span></span>
                   </div>
-                  <Bar value={scores.pct} color="bg-slate-600" />
+                  <Bar value={scores.pct} color="bg-slate-300" />
                 </div>
               ))}
             </div>
@@ -1765,16 +1765,16 @@ function CertificationPanel({ data }: { data: any }) {
       </div>
 
       {/* ── 29 Pillars ── */}
-      <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <SectionHeader title="29 Intelligence Pillars" />
         <div className="grid grid-cols-2 gap-1.5">
           {(data.pillars || []).map((p: any) => (
             <div key={p.id} className="flex items-center gap-2 text-xs">
               {p.passCount > 0 || p.totalCount === 0
-                ? <CheckCircle2 size={12} className={p.status === 'complete' ? 'text-emerald-400' : 'text-amber-400'} />
-                : <XCircle size={12} className="text-rose-400" />}
-              <span className="text-slate-300"><span className="text-slate-500 mr-1">P{p.id}</span>{p.name}</span>
-              {p.totalCount > 0 && <span className="text-slate-500 ml-auto">{p.passCount}/{p.totalCount}</span>}
+                ? <CheckCircle2 size={12} className={p.status === 'complete' ? 'text-emerald-600' : 'text-amber-600'} />
+                : <XCircle size={12} className="text-rose-600" />}
+              <span className="text-slate-600"><span className="text-slate-400 mr-1">P{p.id}</span>{p.name}</span>
+              {p.totalCount > 0 && <span className="text-slate-400 ml-auto">{p.passCount}/{p.totalCount}</span>}
             </div>
           ))}
         </div>
@@ -1806,15 +1806,15 @@ function P17Panel({ data: initialData }: { data: any }) {
 
   return (
     <div className="space-y-4">
-      <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <SectionHeader title="Configure & Run Scenario" />
         <div className="grid grid-cols-2 gap-3 mb-3">
-          <select value={selected} onChange={e => setSelected(e.target.value)} className="bg-slate-700 border border-slate-600 rounded px-3 py-2 text-sm text-white">
+          <select value={selected} onChange={e => setSelected(e.target.value)} className="bg-slate-200 border border-slate-300 rounded px-3 py-2 text-sm text-slate-900">
             {(initialData.availableScenarios || []).map((s: any) => <option key={s.id} value={s.id}>{s.label}</option>)}
           </select>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-400">Magnitude %:</span>
-            <input type="number" value={magnitude} onChange={e => setMagnitude(Number(e.target.value))} min={1} max={100} className="bg-slate-700 border border-slate-600 rounded px-3 py-2 text-sm text-white w-20" />
+            <span className="text-xs text-slate-500">Magnitude %:</span>
+            <input type="number" value={magnitude} onChange={e => setMagnitude(Number(e.target.value))} min={1} max={100} className="bg-slate-200 border border-slate-300 rounded px-3 py-2 text-sm text-slate-900 w-20" />
           </div>
         </div>
         <button onClick={runSim} disabled={loading} className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded flex items-center gap-2 disabled:opacity-50">
@@ -1822,18 +1822,18 @@ function P17Panel({ data: initialData }: { data: any }) {
         </button>
       </div>
       {result && (
-        <div className="bg-slate-800/60 border border-emerald-500/30 rounded-lg p-4">
-          <div className="text-sm font-semibold text-emerald-400 mb-3">Simulation Result — {result.scenario} ({result.magnitude}%)</div>
+        <div className="bg-white border border-emerald-500/30 rounded-lg p-4">
+          <div className="text-sm font-semibold text-emerald-600 mb-3">Simulation Result — {result.scenario} ({result.magnitude}%)</div>
           <div className="grid grid-cols-2 gap-3 text-sm">
             {[['Capability Impact', result.capabilityImpact], ['Cost Impact', result.costImpact], ['Leadership Impact', result.leadershipImpact], ['Readiness Impact', result.readinessImpact], ['Time to Impact', result.timeToImpact], ['People Affected', result.peopleAffected]].map(([label, val]) => (
-              <div key={label as string} className="bg-slate-700/50 rounded p-2">
-                <div className="text-xs text-slate-400 mb-1">{label}</div>
-                <div className="text-white font-medium">{val}</div>
+              <div key={label as string} className="bg-slate-100 rounded p-2">
+                <div className="text-xs text-slate-500 mb-1">{label}</div>
+                <div className="text-slate-900 font-medium">{val}</div>
               </div>
             ))}
           </div>
           {result.frpContext && (
-            <div className="mt-3 pt-3 border-t border-slate-700/40 text-xs text-blue-300 flex items-center gap-1.5">
+            <div className="mt-3 pt-3 border-t border-slate-200 text-xs text-blue-700 flex items-center gap-1.5">
               <Zap size={11} /> FRP enrichment: avg Future Readiness Index {result.frpContext.avgFRI}, {result.frpContext.frpCoverage}% coverage
             </div>
           )}
@@ -1841,9 +1841,9 @@ function P17Panel({ data: initialData }: { data: any }) {
       )}
       <div className="space-y-2">
         {(initialData.availableScenarios || []).map((s: any) => (
-          <div key={s.id} className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${selected === s.id ? 'border-blue-500/50 bg-blue-500/10' : 'border-slate-700/50 bg-slate-800/40 hover:border-slate-600'}`} onClick={() => setSelected(s.id)}>
-            <Play size={14} className="text-slate-400" />
-            <div><div className="text-sm text-white">{s.label}</div><div className="text-xs text-slate-400">{s.description}</div></div>
+          <div key={s.id} className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${selected === s.id ? 'border-blue-500/50 bg-blue-500/10' : 'border-slate-200 bg-slate-50 hover:border-slate-300'}`} onClick={() => setSelected(s.id)}>
+            <Play size={14} className="text-slate-500" />
+            <div><div className="text-sm text-slate-900">{s.label}</div><div className="text-xs text-slate-500">{s.description}</div></div>
           </div>
         ))}
       </div>
@@ -1938,26 +1938,26 @@ function P29WorkforcePanel({ data }: { data: any }) {
       </div>
 
       {wc && (
-        <div className="bg-slate-800/60 border border-cyan-500/30 rounded-lg p-4">
+        <div className="bg-white border border-cyan-500/30 rounded-lg p-4">
           <SectionHeader title="Bulk CSV Upload" sub="Columns: email (required), full_name, role_code, department, seniority" />
           <label className="inline-flex items-center gap-2 bg-cyan-600/80 hover:bg-cyan-600 text-white text-xs px-3 py-1.5 rounded cursor-pointer w-fit">
             <Upload size={12} /> Choose CSV
             <input type="file" accept=".csv,text/csv" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) onCsvFile(f); e.target.value = ''; }} />
           </label>
-          {csvError && <div className="text-xs text-rose-300 mt-2 flex items-center gap-1.5"><AlertCircle size={11} /> {csvError}</div>}
+          {csvError && <div className="text-xs text-rose-700 mt-2 flex items-center gap-1.5"><AlertCircle size={11} /> {csvError}</div>}
           {csvRows && (
             <div className="mt-3">
-              <div className="text-xs text-slate-400 mb-2">Preview — {csvRows.length} row{csvRows.length === 1 ? '' : 's'} ready (showing first 10):</div>
-              <div className="max-h-48 overflow-y-auto border border-slate-700/50 rounded">
+              <div className="text-xs text-slate-500 mb-2">Preview — {csvRows.length} row{csvRows.length === 1 ? '' : 's'} ready (showing first 10):</div>
+              <div className="max-h-48 overflow-y-auto border border-slate-200 rounded">
                 <table className="w-full text-xs">
-                  <thead className="bg-slate-800 sticky top-0">
-                    <tr className="text-slate-400 text-left">
+                  <thead className="bg-white sticky top-0">
+                    <tr className="text-slate-500 text-left">
                       <th className="px-2 py-1">Email</th><th className="px-2 py-1">Name</th><th className="px-2 py-1">Role</th><th className="px-2 py-1">Dept</th><th className="px-2 py-1">Seniority</th>
                     </tr>
                   </thead>
                   <tbody>
                     {csvRows.slice(0, 10).map((e, i) => (
-                      <tr key={i} className="border-t border-slate-700/30 text-slate-300">
+                      <tr key={i} className="border-t border-slate-200 text-slate-600">
                         <td className="px-2 py-1">{e.email}</td><td className="px-2 py-1">{e.full_name || '—'}</td><td className="px-2 py-1">{e.role_code || '—'}</td><td className="px-2 py-1">{e.department || '—'}</td><td className="px-2 py-1">{e.seniority || '—'}</td>
                       </tr>
                     ))}
@@ -1969,36 +1969,36 @@ function P29WorkforcePanel({ data }: { data: any }) {
                   {csvImporting ? <Loader2 size={12} className="animate-spin" /> : <CheckCircle2 size={12} />}
                   Import {csvRows.length} Employee{csvRows.length === 1 ? '' : 's'}
                 </button>
-                <button onClick={() => { setCsvRows(null); setCsvMsg(null); }} className="text-slate-400 hover:text-white text-xs px-3 py-1.5 rounded border border-slate-700">Cancel</button>
+                <button onClick={() => { setCsvRows(null); setCsvMsg(null); }} className="text-slate-500 hover:text-slate-900 text-xs px-3 py-1.5 rounded border border-slate-200">Cancel</button>
               </div>
             </div>
           )}
-          {csvMsg && <div className="text-xs text-emerald-300 mt-2">{csvMsg}</div>}
+          {csvMsg && <div className="text-xs text-emerald-700 mt-2">{csvMsg}</div>}
         </div>
       )}
 
       {total === 0 ? (
-        <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-6 text-center">
-          <Users size={32} className="mx-auto text-slate-600 mb-3" />
-          <div className="text-slate-400 text-sm mb-4">No employees imported yet.</div>
+        <div className="bg-white border border-slate-200 rounded-lg p-6 text-center">
+          <Users size={32} className="mx-auto text-slate-400 mb-3" />
+          <div className="text-slate-500 text-sm mb-4">No employees imported yet.</div>
           <div className="flex flex-col gap-2 items-center">
             <button onClick={seedEmployees} disabled={importing} className="bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white text-xs px-4 py-2 rounded flex items-center gap-2">
               {importing ? <Loader2 size={12} className="animate-spin" /> : <Zap size={12} />}
               Seed Sample Employees (5 across 6-role hierarchy)
             </button>
-            <div className="text-xs text-slate-500">Or POST to /api/employer/eios/employees/import with your employee list</div>
+            <div className="text-xs text-slate-400">Or POST to /api/employer/eios/employees/import with your employee list</div>
           </div>
-          {importMsg && <div className="mt-3 text-xs text-emerald-300">{importMsg}</div>}
+          {importMsg && <div className="mt-3 text-xs text-emerald-700">{importMsg}</div>}
         </div>
       ) : (
         <>
           {Object.keys(byDepartment).length > 0 && (
-            <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+            <div className="bg-white border border-slate-200 rounded-lg p-4">
               <SectionHeader title="By Department" />
               <div className="space-y-2">
                 {Object.entries(byDepartment).map(([dept, count]: any) => (
                   <div key={dept}>
-                    <div className="flex justify-between text-xs mb-1"><span className="text-slate-400">{dept}</span><span className="text-white">{count}</span></div>
+                    <div className="flex justify-between text-xs mb-1"><span className="text-slate-500">{dept}</span><span className="text-slate-900">{count}</span></div>
                     <Bar value={Math.round(count / total * 100)} color="bg-cyan-500" />
                   </div>
                 ))}
@@ -2006,42 +2006,42 @@ function P29WorkforcePanel({ data }: { data: any }) {
             </div>
           )}
           {employees.slice(0, 8).map((e: any) => (
-            <div key={e.id} onClick={() => wc && setSelected(e)} className={`flex items-center justify-between bg-slate-800/40 border border-slate-700/30 rounded p-3 text-sm ${wc ? 'cursor-pointer hover:border-cyan-500/40 transition-colors' : ''}`}>
+            <div key={e.id} onClick={() => wc && setSelected(e)} className={`flex items-center justify-between bg-slate-50 border border-slate-200 rounded p-3 text-sm ${wc ? 'cursor-pointer hover:border-cyan-500/40 transition-colors' : ''}`}>
               <div>
-                <div className="text-white font-medium">{e.full_name || e.email}</div>
-                <div className="text-xs text-slate-400">{e.department} · {e.seniority || 'Unknown'}</div>
+                <div className="text-slate-900 font-medium">{e.full_name || e.email}</div>
+                <div className="text-xs text-slate-500">{e.department} · {e.seniority || 'Unknown'}</div>
               </div>
               <div className="flex items-center gap-2 text-xs">
-                {e.role_name && <span className="bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded">{e.role_name}</span>}
-                <span className={`px-2 py-0.5 rounded ${e.status === 'active' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-600 text-slate-400'}`}>{e.status}</span>
-                {wc && <ChevronRight size={14} className="text-slate-500" />}
+                {e.role_name && <span className="bg-indigo-500/20 text-indigo-700 px-2 py-0.5 rounded">{e.role_name}</span>}
+                <span className={`px-2 py-0.5 rounded ${e.status === 'active' ? 'bg-emerald-500/20 text-emerald-700' : 'bg-slate-300 text-slate-500'}`}>{e.status}</span>
+                {wc && <ChevronRight size={14} className="text-slate-400" />}
               </div>
             </div>
           ))}
         </>
       )}
 
-      <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <SectionHeader title="Competency Architecture" sub="6-role canonical hierarchy — import by role_code" />
         <div className="grid grid-cols-2 gap-2 text-xs">
           {['CEO','CXO','VP','DIRECTOR','MANAGER','CRITICAL_SPECIALIST'].map(code => (
-            <div key={code} className="flex items-center gap-2 bg-slate-700/30 rounded p-2">
-              <span className="text-indigo-400 font-mono">{code}</span>
+            <div key={code} className="flex items-center gap-2 bg-slate-100 rounded p-2">
+              <span className="text-indigo-600 font-mono">{code}</span>
             </div>
           ))}
         </div>
-        <div className="text-xs text-slate-500 mt-2">Full architecture: GET /api/employer/eios/competency-architecture</div>
+        <div className="text-xs text-slate-400 mt-2">Full architecture: GET /api/employer/eios/competency-architecture</div>
       </div>
 
       {wc && selected && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => setSelected(null)}>
-          <div className="bg-slate-900 border border-slate-700 rounded-xl max-w-lg w-full p-5" onClick={e => e.stopPropagation()}>
+          <div className="bg-slate-50 border border-slate-200 rounded-xl max-w-lg w-full p-5" onClick={e => e.stopPropagation()}>
             <div className="flex justify-between items-start mb-4">
               <div>
-                <div className="text-lg font-bold text-white">{selected.full_name || selected.email}</div>
-                <div className="text-xs text-slate-400">{selected.email}</div>
+                <div className="text-lg font-bold text-slate-900">{selected.full_name || selected.email}</div>
+                <div className="text-xs text-slate-500">{selected.email}</div>
               </div>
-              <button onClick={() => setSelected(null)} className="text-slate-400 hover:text-white"><X size={18} /></button>
+              <button onClick={() => setSelected(null)} className="text-slate-500 hover:text-slate-900"><X size={18} /></button>
             </div>
             <div className="grid grid-cols-2 gap-3 text-sm">
               {[
@@ -2053,9 +2053,9 @@ function P29WorkforcePanel({ data }: { data: any }) {
                 ['Status', selected.status],
                 ['Imported', selected.imported_at ? new Date(selected.imported_at).toLocaleDateString() : null],
               ].map(([label, value]) => (
-                <div key={label as string} className="bg-slate-800/60 rounded p-2">
-                  <div className="text-[10px] uppercase tracking-wide text-slate-500">{label}</div>
-                  <div className="text-slate-200">{value || '—'}</div>
+                <div key={label as string} className="bg-white rounded p-2">
+                  <div className="text-[10px] uppercase tracking-wide text-slate-400">{label}</div>
+                  <div className="text-slate-800">{value || '—'}</div>
                 </div>
               ))}
             </div>
@@ -2139,15 +2139,15 @@ export default function EIOSCockpit() {
 
   const windowControls = (
     <div className="flex items-center gap-1">
-      <button onClick={() => setWinState(s => (s === 'min' ? 'normal' : 'min'))} title="Minimize" className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-slate-700/60 transition-colors"><Minus size={14} /></button>
-      <button onClick={() => setWinState(s => (s === 'max' ? 'normal' : 'max'))} title={winState === 'max' ? 'Restore' : 'Maximize'} className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-slate-700/60 transition-colors">{winState === 'max' ? <Minimize2 size={14} /> : <Maximize2 size={14} />}</button>
-      <button onClick={() => setClosed(true)} title="Close" className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-rose-500/80 transition-colors"><X size={14} /></button>
+      <button onClick={() => setWinState(s => (s === 'min' ? 'normal' : 'min'))} title="Minimize" className="p-1.5 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200 transition-colors"><Minus size={14} /></button>
+      <button onClick={() => setWinState(s => (s === 'max' ? 'normal' : 'max'))} title={winState === 'max' ? 'Restore' : 'Maximize'} className="p-1.5 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200 transition-colors">{winState === 'max' ? <Minimize2 size={14} /> : <Maximize2 size={14} />}</button>
+      <button onClick={() => setClosed(true)} title="Close" className="p-1.5 rounded text-slate-500 hover:text-slate-900 hover:bg-rose-500/80 transition-colors"><X size={14} /></button>
     </div>
   );
 
   if (closed) {
     return (
-      <div className="flex items-center h-full bg-slate-900 text-white p-4">
+      <div className="flex items-center h-full bg-slate-50 text-slate-900 p-4">
         <button onClick={() => setClosed(false)} className="flex items-center gap-2 text-sm bg-blue-600 hover:bg-blue-500 text-white rounded-lg px-4 py-2 transition-colors">
           <LayoutDashboard size={16} /> Open EIOS Cockpit
         </button>
@@ -2157,28 +2157,28 @@ export default function EIOSCockpit() {
 
   if (winState === 'min') {
     return (
-      <div className="flex items-center gap-2 bg-slate-800 border border-slate-700/50 rounded-lg px-4 py-2.5 m-2 text-white">
-        <LayoutDashboard size={15} className="text-blue-400" />
+      <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-4 py-2.5 m-2 text-slate-900">
+        <LayoutDashboard size={15} className="text-blue-600" />
         <span className="text-sm font-semibold">EIOS Cockpit</span>
-        <span className="text-xs text-slate-400">— minimized</span>
+        <span className="text-xs text-slate-500">— minimized</span>
         <div className="ml-auto flex items-center gap-1">
-          <button onClick={() => setWinState('normal')} title="Restore" className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-slate-700/60 transition-colors"><Maximize2 size={14} /></button>
-          <button onClick={() => setClosed(true)} title="Close" className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-rose-500/80 transition-colors"><X size={14} /></button>
+          <button onClick={() => setWinState('normal')} title="Restore" className="p-1.5 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200 transition-colors"><Maximize2 size={14} /></button>
+          <button onClick={() => setClosed(true)} title="Close" className="p-1.5 rounded text-slate-500 hover:text-slate-900 hover:bg-rose-500/80 transition-colors"><X size={14} /></button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={winState === 'max' ? 'fixed inset-0 z-50 flex bg-slate-900 text-white' : 'flex h-full bg-slate-900 text-white'}>
+    <div className={winState === 'max' ? 'fixed inset-0 z-50 flex bg-slate-50 text-slate-900' : 'flex h-full bg-slate-50 text-slate-900'}>
       {/* Left Sidebar */}
-      <div className="w-52 flex-shrink-0 border-r border-slate-700/50 overflow-y-auto bg-slate-900/80">
-        <div className="p-3 border-b border-slate-700/50">
-          <div className="text-xs font-bold text-slate-300 tracking-widest uppercase">EIOS</div>
-          <div className="text-xs text-slate-500">29 Intelligence Pillars</div>
+      <div className="w-52 flex-shrink-0 border-r border-slate-200 overflow-y-auto bg-white">
+        <div className="p-3 border-b border-slate-200">
+          <div className="text-xs font-bold text-slate-600 tracking-widest uppercase">EIOS</div>
+          <div className="text-xs text-slate-400">29 Intelligence Pillars</div>
         </div>
         <div className="px-3 py-2">
-          <button onClick={loadCertification} className="w-full flex items-center gap-2 text-xs bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 rounded px-2 py-1.5 transition-all">
+          <button onClick={loadCertification} className="w-full flex items-center gap-2 text-xs bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-700 rounded px-2 py-1.5 transition-all">
             <Award size={12} /> Run Certification
           </button>
         </div>
@@ -2188,12 +2188,12 @@ export default function EIOSCockpit() {
             {PILLARS.filter(p => p.group === group).map(pillar => (
               <button key={pillar.id}
                 onClick={() => { setSelectedPillar(pillar.id); setShowCert(false); }}
-                className={`w-full flex items-center gap-2 px-3 py-2 text-xs text-left transition-all ${selectedPillar === pillar.id && !showCert ? 'bg-blue-500/20 text-white border-l-2 border-blue-400' : 'text-slate-400 hover:text-white hover:bg-slate-800/60 border-l-2 border-transparent'}`}
+                className={`w-full flex items-center gap-2 px-3 py-2 text-xs text-left transition-all ${selectedPillar === pillar.id && !showCert ? 'bg-blue-500/20 text-slate-900 border-l-2 border-blue-400' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100 border-l-2 border-transparent'}`}
               >
                 {pillar.icon}
                 <span className="flex-1 leading-tight">{pillar.label}</span>
-                {pillar.badge && <span className="text-xs bg-slate-700 text-slate-400 px-1 rounded">{pillar.badge}</span>}
-                <span className="text-slate-600 text-xs">P{pillar.id}</span>
+                {pillar.badge && <span className="text-xs bg-slate-200 text-slate-500 px-1 rounded">{pillar.badge}</span>}
+                <span className="text-slate-400 text-xs">P{pillar.id}</span>
               </button>
             ))}
           </div>
@@ -2205,10 +2205,10 @@ export default function EIOSCockpit() {
         {showCert && cert ? (
           <div className="p-6">
             <div className="flex items-center gap-3 mb-5">
-              <Award size={20} className="text-amber-400" />
+              <Award size={20} className="text-amber-600" />
               <h2 className="text-lg font-bold">EIOS World-Class Certification</h2>
               <div className="ml-auto flex items-center gap-3">
-                <button onClick={() => setShowCert(false)} className="text-xs text-slate-400 hover:text-white">← Back</button>
+                <button onClick={() => setShowCert(false)} className="text-xs text-slate-500 hover:text-slate-900">← Back</button>
                 {windowControls}
               </div>
             </div>
@@ -2217,27 +2217,27 @@ export default function EIOSCockpit() {
         ) : (
           <div className="p-6">
             <div className="flex items-center gap-3 mb-5">
-              {currentPillar?.icon && <span className="text-blue-400">{currentPillar.icon}</span>}
+              {currentPillar?.icon && <span className="text-blue-600">{currentPillar.icon}</span>}
               <div>
                 <h2 className="text-lg font-bold">P{selectedPillar}: {currentPillar?.label}</h2>
-                <div className="text-xs text-slate-400">{currentPillar?.group} · {data?.name || ''}</div>
+                <div className="text-xs text-slate-500">{currentPillar?.group} · {data?.name || ''}</div>
               </div>
               <div className="ml-auto flex items-center gap-1">
-                <button onClick={() => { setPillarData(prev => { const n = { ...prev }; delete n[selectedPillar]; return n; }); setTimeout(() => loadPillar(selectedPillar), 50); }} className="text-slate-400 hover:text-white p-1.5 rounded hover:bg-slate-700/60" title="Refresh">
+                <button onClick={() => { setPillarData(prev => { const n = { ...prev }; delete n[selectedPillar]; return n; }); setTimeout(() => loadPillar(selectedPillar), 50); }} className="text-slate-500 hover:text-slate-900 p-1.5 rounded hover:bg-slate-200" title="Refresh">
                   <RefreshCw size={14} />
                 </button>
                 {windowControls}
               </div>
             </div>
             {currentPillar && !currentPillar.route && (
-              <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 text-sm text-blue-300 flex items-center gap-3">
+              <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 text-sm text-blue-700 flex items-center gap-3">
                 <Eye size={16} />
                 <span>This pillar is served by: <strong>{LINKED_LABELS[selectedPillar]}</strong>. Navigate to that tab in the portal sidebar for the full experience.</span>
               </div>
             )}
-            {error && <div className="bg-rose-500/10 border border-rose-500/30 rounded p-3 text-sm text-rose-300 mb-4">{error}</div>}
+            {error && <div className="bg-rose-500/10 border border-rose-500/30 rounded p-3 text-sm text-rose-700 mb-4">{error}</div>}
             {loading && !data ? (
-              <div className="flex items-center justify-center py-16"><Loader2 size={24} className="animate-spin text-blue-400" /></div>
+              <div className="flex items-center justify-center py-16"><Loader2 size={24} className="animate-spin text-blue-600" /></div>
             ) : data && !data._linked ? (
               <PillarContent pillarId={selectedPillar} data={data} onRefresh={() => { setPillarData(prev => { const n = { ...prev }; delete n[selectedPillar]; return n; }); setTimeout(() => loadPillar(selectedPillar), 50); }} />
             ) : null}

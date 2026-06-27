@@ -717,6 +717,90 @@ function buildOmegaSectionsHtml(
   return sections.join('\n');
 }
 
+export async function sendOnboardingConfirmation(
+  toEmail: string,
+  name: string,
+  entityType: string,
+  trackingToken?: string
+): Promise<boolean> {
+  try {
+    const transporter = getTransporter();
+    const fromEmail = process.env.ZOHO_EMAIL || 'notifications@metryxone.com';
+    const safeName = escapeHtml(name || 'there');
+    const safeType = escapeHtml(entityType);
+    const safeToken = trackingToken ? escapeHtml(trackingToken) : '';
+    const trackingBlock = safeToken
+      ? `<div style="margin:16px 0 0;padding:12px 14px;background:#f1f5ff;border:1px solid #dbe4ff;border-radius:10px;">
+            <p style="color:#374151;font-size:13px;font-weight:600;margin:0 0 6px;">Your tracking code</p>
+            <p style="font-family:monospace;font-size:13px;color:#344E86;word-break:break-all;margin:0;">${safeToken}</p>
+            <p style="color:#6b7280;font-size:11px;margin:8px 0 0;">Keep this code — you'll need it together with your email to check your application status.</p>
+          </div>`
+      : '';
+    await transporter.sendMail({
+      from: `"MetryxOne" <${fromEmail}>`,
+      to: toEmail,
+      subject: 'We received your MetryxOne onboarding application',
+      html: `
+        <div style="font-family:'Segoe UI',Arial,sans-serif;max-width:520px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden;border:1px solid #e5e7eb;">
+          <div style="background:#344E86;padding:24px 32px;">
+            <h1 style="color:#fff;margin:0;font-size:20px;">MetryxOne</h1>
+            <p style="color:rgba(255,255,255,0.75);margin:4px 0 0;font-size:13px;">Partner Onboarding</p>
+          </div>
+          <div style="padding:28px 32px;">
+            <p style="color:#374151;font-size:15px;font-weight:600;margin:0 0 10px;">Hi ${safeName},</p>
+            <p style="color:#4b5563;font-size:14px;line-height:1.6;margin:0 0 12px;">
+              Thank you — we've received your <strong>${safeType}</strong> onboarding application.
+              Our team will review your details and get back to you. You can check your
+              application status any time using your registered email and the tracking code below.
+            </p>
+            ${trackingBlock}
+            <p style="color:#6b7280;font-size:12px;margin:16px 0 0;">If you didn't submit this, you can safely ignore this email.</p>
+          </div>
+          <div style="text-align:center;padding:14px;background:#f8f9fa;">
+            <p style="color:#9ca3af;font-size:11px;margin:0;">&copy; 2026 MetryxOne</p>
+          </div>
+        </div>`,
+    });
+    return true;
+  } catch (error: any) {
+    console.error('Failed to send onboarding confirmation:', error?.message || error);
+    return false;
+  }
+}
+
+export async function sendOnboardingAdminAlert(
+  toEmail: string,
+  adminName: string,
+  entityName: string,
+  entityType: string,
+  entityEmail: string
+): Promise<boolean> {
+  try {
+    const transporter = getTransporter();
+    const fromEmail = process.env.ZOHO_EMAIL || 'notifications@metryxone.com';
+    await transporter.sendMail({
+      from: `"MetryxOne" <${fromEmail}>`,
+      to: toEmail,
+      subject: `New onboarding application: ${entityName} (${entityType})`,
+      html: `
+        <div style="font-family:'Segoe UI',Arial,sans-serif;max-width:520px;margin:0 auto;background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:24px 28px;">
+          <p style="color:#374151;font-size:15px;font-weight:600;margin:0 0 10px;">Hi ${escapeHtml(adminName || 'Admin')},</p>
+          <p style="color:#4b5563;font-size:14px;line-height:1.6;margin:0 0 12px;">A new partner onboarding application is awaiting review.</p>
+          <table style="font-size:13px;color:#374151;border-collapse:collapse;">
+            <tr><td style="padding:3px 10px 3px 0;color:#6b7280;">Organisation</td><td>${escapeHtml(entityName)}</td></tr>
+            <tr><td style="padding:3px 10px 3px 0;color:#6b7280;">Type</td><td>${escapeHtml(entityType)}</td></tr>
+            <tr><td style="padding:3px 10px 3px 0;color:#6b7280;">Email</td><td>${escapeHtml(entityEmail)}</td></tr>
+          </table>
+          <p style="color:#6b7280;font-size:12px;margin:16px 0 0;">Review it in the Super Admin → Onboarding panel.</p>
+        </div>`,
+    });
+    return true;
+  } catch (error: any) {
+    console.error('Failed to send onboarding admin alert:', error?.message || error);
+    return false;
+  }
+}
+
 export function buildCapadexReportHtml(
   name: string,
   report: CapadexReportInput

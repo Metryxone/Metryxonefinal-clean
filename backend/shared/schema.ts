@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp, integer, boolean, real, date } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, integer, boolean, real, date, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -2175,6 +2175,9 @@ export const onboardingApprovals = pgTable("onboarding_approvals", {
   rejectionReason: text("rejection_reason"),
   documentsVerified: boolean("documents_verified").default(false),
   kycVerified: boolean("kyc_verified").default(false),
+  // Extended partner-onboarding fields (org/address/registration/website/etc.)
+  // that have no dedicated column — preserved here so public submissions are lossless.
+  metadata: jsonb("metadata").default(sql`'{}'::jsonb`),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

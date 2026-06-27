@@ -242,7 +242,7 @@ export function Login({ onNavigate }: LoginProps) {
     }
   };
 
-  const getNavigationTarget = (role: string): Screen => {
+  const getNavigationTarget = (role?: string): Screen => {
     const roleMap: Record<string, Screen> = {
       parent: 'unified-parent-dashboard',
       institute: 'unified-institute-dashboard',
@@ -265,21 +265,27 @@ export function Login({ onNavigate }: LoginProps) {
       corporate: 'employer-portal',
       metryx_applicant: 'mentor-dashboard',
     };
-    const target = roleMap[role.toLowerCase().trim()];
+    const target = roleMap[(role || '').toLowerCase().trim()];
     if (target) return target;
-    console.warn('[Login] Unknown role, defaulting to landing:', role);
-    return 'landing';
+    console.warn('[Login] Unknown/absent role, routing to role selection:', role);
+    return 'role-selection';
   };
 
   const handleLoginSuccess = (
     userData: { fullName?: string; username?: string; role?: string; roles?: string[]; id?: string; isVerified?: boolean; mobile?: string; email?: string; dashboardTarget?: string },
     token?: string
   ) => {
-    const primaryRole = userData.role || 'parent';
-    const rawRoles = (userData.roles && userData.roles.length ? userData.roles : [primaryRole]);
+    const primaryRole = userData.role || '';
+    const rawRoles = (userData.roles && userData.roles.length
+      ? userData.roles
+      : (primaryRole ? [primaryRole] : []));
     // Self-heal: ensure the user's primary role is always included (handles legacy
-    // accounts where the `roles` array was never populated and defaulted to ['parent'])
-    const merged = rawRoles.includes(primaryRole) ? rawRoles : [primaryRole, ...rawRoles];
+    // accounts where the `roles` array was never populated). When the role is
+    // genuinely absent we route to a neutral role-selection screen rather than
+    // silently defaulting to the parent dashboard.
+    const merged = !primaryRole
+      ? rawRoles
+      : (rawRoles.includes(primaryRole) ? rawRoles : [primaryRole, ...rawRoles]);
     const uniqueRoles = Array.from(new Set(merged));
     const displayName = userData.fullName || userData.username || 'there';
     setUserName(displayName);
@@ -295,7 +301,7 @@ export function Login({ onNavigate }: LoginProps) {
         role: (userData.role ?? 'parent') as Parameters<typeof saveSession>[1]['role'],
         roles: uniqueRoles as Parameters<typeof saveSession>[1]['roles'],
         isVerified: userData.isVerified ?? false,
-        dashboardTarget: userData.dashboardTarget ?? getNavigationTarget(userData.role ?? 'parent'),
+        dashboardTarget: userData.dashboardTarget ?? getNavigationTarget(primaryRole),
       });
     }
 

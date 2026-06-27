@@ -60,6 +60,7 @@ export function OnboardingRegisterPage({ onNavigate }: OnboardingRegisterPagePro
   const [error, setError] = useState('');
   const [submittedRequest, setSubmittedRequest] = useState<any>(null);
   const [trackEmail, setTrackEmail] = useState('');
+  const [trackCode, setTrackCode] = useState('');
   const [trackingResult, setTrackingResult] = useState<any>(null);
   const [trackingLoading, setTrackingLoading] = useState(false);
 
@@ -132,6 +133,10 @@ export function OnboardingRegisterPage({ onNavigate }: OnboardingRegisterPagePro
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Registration failed');
       setSubmittedRequest(data.request);
+      // Persist the tracking token so status lookups work on this device.
+      if (data.trackingToken) {
+        try { localStorage.setItem('onb_track_' + String(form.entityEmail).trim().toLowerCase(), data.trackingToken); } catch { /* ignore */ }
+      }
       setStep('success');
     } catch (err: any) {
       setError(err.message);
@@ -145,7 +150,16 @@ export function OnboardingRegisterPage({ onNavigate }: OnboardingRegisterPagePro
     setTrackingLoading(true);
     setTrackingResult(null);
     try {
-      const res = await fetch(`/api/onboarding/status/${encodeURIComponent(trackEmail)}`);
+      const emailKey = String(trackEmail).trim().toLowerCase();
+      let token = trackCode.trim();
+      if (!token) {
+        try { token = localStorage.getItem('onb_track_' + emailKey) || ''; } catch { /* ignore */ }
+      }
+      if (!token) {
+        setTrackingResult({ error: 'Enter the tracking code from your confirmation email (or check status on the device you registered on).' });
+        return;
+      }
+      const res = await fetch(`/api/onboarding/status/${encodeURIComponent(emailKey)}?token=${encodeURIComponent(token)}`);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Not found');
       // API returns the object directly (not nested under 'request')
@@ -236,21 +250,29 @@ export function OnboardingRegisterPage({ onNavigate }: OnboardingRegisterPagePro
             {/* Track Status */}
             <div className="bg-white rounded-xl border p-6" style={{ borderColor: BRAND.border }}>
               <h3 className="font-semibold mb-3" style={{ color: BRAND.text }}>Track Your Application Status</h3>
-              <p className="text-sm text-gray-500 mb-4">Already submitted a registration? Enter your email to check the status.</p>
-              <form onSubmit={handleTrackStatus} className="flex gap-3">
+              <p className="text-sm text-gray-500 mb-4">Already submitted a registration? Enter your email and the tracking code from your confirmation email to check the status.</p>
+              <form onSubmit={handleTrackStatus} className="space-y-3">
                 <input
                   type="email"
                   autoComplete="email" placeholder="your@email.com"
                   value={trackEmail}
                   onChange={e => setTrackEmail(e.target.value)}
                   required
-                  className="flex-1 px-4 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2"
+                  className="w-full px-4 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2"
+                  style={{ borderColor: BRAND.border, '--tw-ring-color': BRAND.primary } as any}
+                />
+                <input
+                  type="text"
+                  placeholder="Tracking code (from your confirmation email)"
+                  value={trackCode}
+                  onChange={e => setTrackCode(e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg border text-sm font-mono focus:outline-none focus:ring-2"
                   style={{ borderColor: BRAND.border, '--tw-ring-color': BRAND.primary } as any}
                 />
                 <button
                   type="submit"
                   disabled={trackingLoading}
-                  className="px-5 py-2 rounded-lg text-white text-sm font-medium transition-opacity disabled:opacity-60"
+                  className="w-full px-5 py-2 rounded-lg text-white text-sm font-medium transition-opacity disabled:opacity-60"
                   style={{ backgroundColor: BRAND.primary }}
                 >
                   {trackingLoading ? 'Checking…' : 'Check Status'}
@@ -259,14 +281,14 @@ export function OnboardingRegisterPage({ onNavigate }: OnboardingRegisterPagePro
               {trackingResult && !trackingResult.error && (
                 <div className="mt-4 p-4 rounded-lg bg-gray-50 border" style={{ borderColor: BRAND.border }}>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="font-semibold text-sm">{trackingResult.request?.entityName}</span>
+                    <span className="font-semibold text-sm">{trackingResult.request?.entity_name ?? trackingResult.request?.entityName}</span>
                     <StatusBadge status={trackingResult.request?.status} />
                   </div>
                   <div className="text-xs text-gray-500 space-y-1">
-                    <div>Type: <span className="font-medium">{formatEntityType(trackingResult.request?.entityType)}</span></div>
-                    <div>Submitted: {new Date(trackingResult.request?.submittedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
-                    {trackingResult.request?.reviewNotes && (
-                      <div className="mt-2 p-2 rounded bg-blue-50 text-blue-700">Note: {trackingResult.request.reviewNotes}</div>
+                    <div>Type: <span className="font-medium">{formatEntityType(trackingResult.request?.entity_type ?? trackingResult.request?.entityType)}</span></div>
+                    <div>Submitted: {new Date(trackingResult.request?.submitted_at ?? trackingResult.request?.submittedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
+                    {(trackingResult.request?.rejection_reason ?? trackingResult.request?.reviewNotes) && (
+                      <div className="mt-2 p-2 rounded bg-blue-50 text-blue-700">Note: {trackingResult.request.rejection_reason ?? trackingResult.request.reviewNotes}</div>
                     )}
                   </div>
                 </div>

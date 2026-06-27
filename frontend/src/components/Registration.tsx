@@ -342,9 +342,15 @@ export function Registration({ onNavigate }: RegistrationProps) {
     setLoading(true);
     setError('');
 
-    if (!isGooglePrefilled) {
+    if (!isGooglePrefilled || password || confirmPassword) {
       if (password !== confirmPassword) { setError('Passwords do not match'); setLoading(false); return; }
-      if (password.length < 6) { setError('Password must be at least 6 characters'); setLoading(false); return; }
+    }
+    if (!isGooglePrefilled || password) {
+      if (password.length < 12) { setError('Password must be at least 12 characters'); setLoading(false); return; }
+      if (!/[a-z]/.test(password)) { setError('Password must include a lowercase letter'); setLoading(false); return; }
+      if (!/[A-Z]/.test(password)) { setError('Password must include an uppercase letter'); setLoading(false); return; }
+      if (!/[0-9]/.test(password)) { setError('Password must include a number'); setLoading(false); return; }
+      if (!/[^A-Za-z0-9]/.test(password)) { setError('Password must include a symbol'); setLoading(false); return; }
     }
     if (role === 'student') {
       const ageNum = parseInt(age);
@@ -989,7 +995,7 @@ export function Registration({ onNavigate }: RegistrationProps) {
                         Password {isGooglePrefilled && <span className="font-normal normal-case">(Optional)</span>}
                       </Label>
                       <div className="relative">
-                        <Input id="password" autoComplete="new-password" type={showPassword ? 'text' : 'password'} placeholder="Min 6 characters"
+                        <Input id="password" autoComplete="new-password" type={showPassword ? 'text' : 'password'} placeholder="Min 12 characters"
                           value={password} onChange={e => setPassword(e.target.value)} required={!isGooglePrefilled}
                           className="h-10 pr-9 rounded-lg border-gray-200 bg-white text-sm" data-testid="input-password" />
                         <button type="button" onClick={() => setShowPassword(!showPassword)}
@@ -997,6 +1003,21 @@ export function Registration({ onNavigate }: RegistrationProps) {
                           {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
                         </button>
                       </div>
+                      {(!isGooglePrefilled || password) && password.length > 0 && (
+                        <ul className="mt-1.5 space-y-0.5">
+                          {([
+                            ['At least 12 characters', password.length >= 12],
+                            ['One uppercase letter', /[A-Z]/.test(password)],
+                            ['One lowercase letter', /[a-z]/.test(password)],
+                            ['One number', /[0-9]/.test(password)],
+                            ['One symbol', /[^A-Za-z0-9]/.test(password)],
+                          ] as [string, boolean][]).map(([label, ok]) => (
+                            <li key={label} className={`text-[10px] flex items-center gap-1 ${ok ? 'text-green-600' : 'text-gray-400'}`}>
+                              <span aria-hidden>{ok ? '✓' : '○'}</span>{label}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
                     <div>
                       <Label htmlFor="confirmPassword" className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1.5 block">

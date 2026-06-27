@@ -666,6 +666,111 @@ export async function registerRoutes(
     } catch { /* best-effort */ }
   };
 
+  // ── Public partner onboarding (institute / mentor / NGO / parent / LEI) ──
+  // Writes to onboarding_approvals — the SAME table the Super Admin Onboarding
+  // panel reads + approves from — so public submissions actually reach review.
+  // Extended partner fields (org/address/registration/etc.) are preserved in a
+  // metadata JSONB column so no submitted data is lost.
+  let _onbMetaEnsured = false;
+  const ensureOnboardingMetaColumn = async () => {
+    if (_onbMetaEnsured) return;
+    try {
+      await concernsPool.query(
+        `ALTER TABLE onboarding_approvals ADD COLUMN IF NOT EXISTS metadata jsonb DEFAULT '{}'::jsonb`
+      );
+    } catch { /* best-effort; column may already exist */ }
+    _onbMetaEnsured = true;
+  };
+  const ONBOARDING_ENTITY_TYPES = ['institute', 'mentor', 'ngo', 'parent', 'lei'];
+
+  app.post("/api/onboarding/register", authRegisterLimiter, async (req, res) => {
+    try {
+      await ensureOnboardingMetaColumn();
+      const b = req.body || {};
+      const entityType = String(b.entityType || '').trim().toLowerCase();
+      const entityName = String(b.entityName || b.organizationName || '').trim();
+      const entityEmail = String(b.entityEmail || '').trim().toLowerCase();
+      const entityPhone = String(b.entityPhone || '').trim();
+      if (!ONBOARDING_ENTITY_TYPES.includes(entityType)) {
+        return res.status(400).json({ error: `entityType must be one of ${ONBOARDING_ENTITY_TYPES.join(', ')}` });
+      }
+      if (!entityName) return res.status(400).json({ error: 'entityName is required' });
+      if (!entityEmail || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(entityEmail)) {
+        return res.status(400).json({ error: 'A valid entityEmail is required' });
+      }
+      // Duplicate-pending guard so a partner can't flood review with the same app.
+      const dup = await concernsPool.query(
+        `SELECT id FROM onboarding_approvals WHERE lower(entity_email) = $1 AND status = 'pending' LIMIT 1`,
+        [entityEmail]
+      );
+      if (dup.rows.length) {
+        return res.status(409).json({ error: 'A pending application already exists for this email.' });
+      }
+      // Preserve every extra partner field (no dedicated column → metadata).
+      const known = new Set(['entityType', 'entityName', 'entityEmail', 'entityPhone', 'trackingToken']);
+      const metadata: Record<string, any> = {};
+      for (const [k, v] of Object.entries(b)) {
+        if (!known.has(k) && v !== undefined && v !== null && v !== '') metadata[k] = v;
+      }
+      // Unguessable tracking token — the ONLY way to read status back. Set after
+      // the field-copy loop so a client-supplied `trackingToken` can never forge it.
+      const trackingToken = randomBytes(32).toString('hex');
+      metadata.trackingToken = trackingToken;
+      const entityId = `onb_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+      const ins = await concernsPool.query(
+        `INSERT INTO onboarding_approvals (entity_type, entity_id, entity_name, entity_email, entity_phone, status, metadata)
+         VALUES ($1,$2,$3,$4,$5,'pending',$6::jsonb)
+         RETURNING id, entity_type, entity_name, entity_email, status, submitted_at`,
+        [entityType, entityId, entityName, entityEmail, entityPhone || null, JSON.stringify(metadata)]
+      );
+      const request = ins.rows[0];
+      // Best-effort notifications — never block (or fail) the submission.
+      const contactName = String(b.contactPerson || entityName);
+      void (async () => {
+        try {
+          const email = await import('./email.js');
+          await email.sendOnboardingConfirmation(entityEmail, contactName, entityType, trackingToken);
+          const admins = await concernsPool.query(
+            `SELECT email, full_name FROM users WHERE role IN ('super_admin','superadmin','admin') AND email IS NOT NULL`
+          );
+          for (const a of admins.rows) {
+            await email.sendOnboardingAdminAlert(a.email, a.full_name || 'Admin', entityName, entityType, entityEmail);
+          }
+        } catch { /* best-effort */ }
+      })();
+      // trackingToken is returned ONCE so the applicant can check status later.
+      return res.status(201).json({ ok: true, request, trackingToken });
+    } catch (e: any) {
+      return res.status(500).json({ error: e?.message || 'Onboarding registration failed' });
+    }
+  });
+
+  // Status lookup is gated by the unguessable tracking token (proof of control),
+  // NOT by email alone — otherwise it is an email-enumeration / disclosure surface.
+  // Every miss returns an identical 404 so existence is never revealed.
+  app.get("/api/onboarding/status/:email", authRegisterLimiter, async (req, res) => {
+    const notFound = () => res.status(404).json({ error: 'No application found for this email and tracking code.' });
+    try {
+      const email = String(req.params.email || '').trim().toLowerCase();
+      const token = String(req.query.token || '');
+      if (!email || !token) return notFound();
+      const r = await concernsPool.query(
+        `SELECT id, entity_type, entity_name, status, submitted_at, reviewed_at, rejection_reason, metadata
+         FROM onboarding_approvals WHERE lower(entity_email) = $1 ORDER BY submitted_at DESC LIMIT 1`,
+        [email]
+      );
+      if (!r.rows.length) return notFound();
+      const stored = String(r.rows[0].metadata?.trackingToken || '');
+      const a = Buffer.from(token);
+      const b = Buffer.from(stored);
+      if (!stored || a.length !== b.length || !timingSafeEqual(a, b)) return notFound();
+      const { metadata, ...safe } = r.rows[0];
+      return res.json({ ok: true, request: safe });
+    } catch (e: any) {
+      return res.status(500).json({ error: e?.message || 'Lookup failed' });
+    }
+  });
+
   app.post("/api/login", authLoginLimiter, async (req, res, next) => {
     const loginIp = (req.headers["x-forwarded-for"]?.toString().split(",")[0].trim()) || req.ip || null;
     const loginIdentifier = String(req.body?.username || req.body?.email || "").trim().toLowerCase();

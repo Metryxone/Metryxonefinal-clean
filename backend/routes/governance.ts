@@ -11,6 +11,7 @@
 import type { Express } from "express";
 import type { Pool } from "pg";
 import { isGovernanceRbacEnabled } from "../config/feature-flags";
+import { requirePermission } from "../services/security-middleware";
 import { ensureGovernanceSchema } from "../services/governance/rbac-schema";
 import { seedRbac } from "../services/governance/rbac-seed";
 import {
@@ -101,7 +102,7 @@ export function registerGovernanceRoutes(
   });
 
   // Grant / revoke (literal sub-paths under /roles before the :roleName param route).
-  app.post("/api/admin/governance/roles/:roleId/grant", guard, async (req, res) => {
+  app.post("/api/admin/governance/roles/:roleId/grant", [...guard, requirePermission(pool, "permissions.grant")], async (req, res) => {
     const { permissionId } = req.body || {};
     if (!req.params.roleId || !permissionId) {
       return res.status(400).json({ error: "roleId and permissionId required" });
@@ -113,7 +114,7 @@ export function registerGovernanceRoutes(
       res.status(500).json({ ok: false, error: e?.message || "grant failed" });
     }
   });
-  app.post("/api/admin/governance/roles/:roleId/revoke", guard, async (req, res) => {
+  app.post("/api/admin/governance/roles/:roleId/revoke", [...guard, requirePermission(pool, "permissions.revoke")], async (req, res) => {
     const { permissionId } = req.body || {};
     if (!req.params.roleId || !permissionId) {
       return res.status(400).json({ error: "roleId and permissionId required" });

@@ -8,6 +8,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import type { Pool } from 'pg';
 import { auditFramework } from './governance-engine.js';
+import { resolveEffectivePermissions } from './governance/rbac-engine.js';
 
 // True sliding-window rate limiter: per-bucket ring of request timestamps,
 // trimmed to the active window on every check.
@@ -84,6 +85,85 @@ export function requireGovAdmin(pool?: Pool) {
       return;
     }
     next();
+  };
+}
+
+// ── B1: live RBAC enforcement primitives ───────────────────────────────────
+// Bridge between the two historically-disjoint role vocabularies: login persona
+// roles (institute, hr_recruiter, mentor…) → formal role_definitions names. This
+// is the single mapping so persona sessions resolve to formal permissions.
+export const PERSONA_TO_RBAC_ROLE: Record<string, string> = {
+  super_admin: 'super_admin', 'super-admin': 'super_admin', superadmin: 'super_admin', admin: 'super_admin',
+  platform_admin: 'platform_admin',
+  institute: 'institution_admin', college: 'institution_admin', school: 'institution_admin', skilling_partner: 'institution_admin',
+  hr_recruiter: 'recruiter', corporate: 'employer_admin', hr: 'employer_admin', ld_manager: 'employer_admin',
+  faculty: 'faculty', assessor: 'assessor',
+  mentor: 'counselor', metryx_applicant: 'counselor',
+  student: 'student', campus_student: 'student',
+  career_seeker: 'candidate', job_seeker: 'candidate', employee_candidate: 'candidate',
+};
+
+const SUPER_ROLES = new Set(['super_admin', 'super-admin', 'superadmin', 'admin']);
+
+function identityRolesOf(req: Request): string[] {
+  const u = (req as Request & { user?: any }).user;
+  const sess = (req as Request & { session?: { user?: any } }).session?.user;
+  const out: string[] = [];
+  const push = (r: any) => { if (typeof r === 'string' && r.trim()) out.push(r.toLowerCase().trim()); };
+  push(u?.role); push(sess?.role);
+  for (const src of [u?.roles, sess?.roles]) {
+    if (Array.isArray(src)) src.forEach(push);
+    else if (typeof src === 'string') {
+      try { const a = JSON.parse(src); Array.isArray(a) ? a.forEach(push) : push(src); } catch { push(src); }
+    }
+  }
+  return Array.from(new Set(out));
+}
+
+function govTokenOk(req: Request): boolean {
+  const adminToken = process.env.GOV_ADMIN_TOKEN || '';
+  if (!adminToken) return false;
+  const auth = req.get('authorization') || '';
+  const bearer = auth.toLowerCase().startsWith('bearer ') ? auth.slice(7) : '';
+  return bearer === adminToken || (req.get('x-gov-admin') || '') === adminToken;
+}
+
+/**
+ * requireRole — live RBAC role gate. super_admin inherits all; GOV_ADMIN_TOKEN
+ * parity with requireGovAdmin (strict superset). Otherwise the caller's persona
+ * role(s) must map to one of `roles`. Fail-closed (401 no identity / 403 denied).
+ */
+export function requireRole(...roles: string[]) {
+  const want = new Set(roles.map((r) => r.toLowerCase().trim()));
+  return function (req: Request, res: Response, next: NextFunction) {
+    const ids = identityRolesOf(req);
+    if (ids.some((r) => SUPER_ROLES.has(r)) || govTokenOk(req)) return next();
+    if (!ids.length) { res.status(401).json({ ok: false, error: 'unauthenticated' }); return; }
+    const mapped = ids.map((r) => PERSONA_TO_RBAC_ROLE[r] ?? r);
+    if (ids.some((r) => want.has(r)) || mapped.some((r) => want.has(r))) return next();
+    res.status(403).json({ ok: false, error: 'forbidden', need_role: roles });
+  };
+}
+
+/**
+ * requirePermission — live RBAC permission gate backed by the formal model.
+ * super_admin / GOV_ADMIN_TOKEN pass (strict superset of requireGovAdmin).
+ * Otherwise resolves persona→formal role effective permissions and requires
+ * `permKey`. Fail-closed: any resolution error or missing permission → 403.
+ */
+export function requirePermission(pool: Pool, permKey: string) {
+  return async function (req: Request, res: Response, next: NextFunction) {
+    const ids = identityRolesOf(req);
+    if (ids.some((r) => SUPER_ROLES.has(r)) || govTokenOk(req)) return next();
+    if (!ids.length) { res.status(401).json({ ok: false, error: 'unauthenticated' }); return; }
+    try {
+      const formal = Array.from(new Set(ids.map((r) => PERSONA_TO_RBAC_ROLE[r] ?? r)));
+      for (const role of formal) {
+        const { effective } = await resolveEffectivePermissions(pool, role);
+        if (effective.includes(permKey)) return next();
+      }
+    } catch { /* fall through to fail-closed */ }
+    res.status(403).json({ ok: false, error: 'forbidden', need_permission: permKey });
   };
 }
 

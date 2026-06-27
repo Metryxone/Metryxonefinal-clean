@@ -154,7 +154,7 @@ export async function getPermissionMatrix(pool: Pool): Promise<any> {
     grants,
     populated: roles.length > 0 && grants.length > 0,
     honesty:
-      "Formal RBAC definitions. Live enforcement remains the single super_admin gate on /api/admin/*; these grants are advisory and are not the runtime authorization path.",
+      "Formal RBAC definitions. Reusable, unit-tested enforcement primitives (requireRole / requirePermission, fail-closed) are now available and are wired as defense-in-depth on the grant/revoke routes. HONEST SCOPE: those routes still sit behind the existing super_admin gate (and the platform-wide /api/admin super_admin gate), so super_admin remains the SOLE effective gate there today — requirePermission is belt-and-suspenders, not yet the deciding authority for any reachable caller. Genuine delegated enforcement (a non-super_admin acting via a granted formal role) requires making a reachable surface permission-aware; that is the documented next phase, deliberately not done here to avoid lockout risk.",
   };
 }
 

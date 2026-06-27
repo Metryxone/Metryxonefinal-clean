@@ -1110,3 +1110,9 @@ id = "7B4I_ciZzfco9JDTqu0Ym"
 uri = "file://backend/audit/mx-700/phase-3-global-research-benchmarking.md"
 type = "text"
 title = "MX-700 Phase 3 — Global Research & Benchmarking"
+
+[[outputs]]
+id = "G-fNGvQC2ejgvXEsU0Q8R"
+uri = "file://backend/audit/mx-700/capadex-end-to-end.md"
+type = "text"
+title = "CAPADEX — End-to-End Document"

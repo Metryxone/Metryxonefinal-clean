@@ -22,6 +22,12 @@ param feeds two columns of different types — here the INSERT target
 **How to apply:** cast every occurrence to one type (`$1::text`, `$3::numeric`).
 Manual psql with string LITERALS hides the bug (no params) — reproduce with a
 parameterized query, not a literal one.
+Also bites idempotent `INSERT ... SELECT $1,$2,... WHERE NOT EXISTS (... = $1 ... = $5)`:
+a bare param in the SELECT list is NOT inferred from the target column, so its
+type clashes with its WHERE use → "inconsistent types deduced for parameter $N".
+Cast EVERY param in both the SELECT list and the WHERE (`$1::int`, `$5::varchar`).
+The error surfaces only inside an engine's swallowed catch (returns false / 0
+rows) — instrument the exact insert to see it; literal-value repro will lie.
 
 ## never-throws engine = wrap EVERY db read
 A "never-throws" compute engine must wrap ALL its DB reads, not just the first

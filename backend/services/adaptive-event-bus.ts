@@ -49,6 +49,9 @@ export const ADAPTIVE_EVENTS = {
   PROJECT_UPDATED:     'career.project.updated',
   APPLICATION_UPDATED: 'career.application.updated',
   GOAL_UPDATED:        'career.goal.updated',
+  // MX-302G — Learning Intelligence ↔ Career Passport loop. Emitted (flag-gated) when a
+  // learning/development activity completes, so the passport auto-syncs from platform data.
+  LEARNING_ACTIVITY_COMPLETED: 'career.learning.completed',
 } as const;
 
 export type AdaptiveEventType = (typeof ADAPTIVE_EVENTS)[keyof typeof ADAPTIVE_EVENTS];

@@ -529,6 +529,55 @@ export async function rankRolesForCandidate(
   return ok({ candidate_id: candidate.id, candidate_name: candidate.name, roles: ranked.slice(0, limit) });
 }
 
+// ── in-memory candidate → role ranking (MX-302G Career Passport) ─────────────
+// Career-seeker passport owners are NOT guaranteed an `employer_candidates` row
+// (that table is keyed by employer-added email). Rather than fabricate one, the
+// passport composes an in-memory candidate from the OWNER'S OWN measured platform
+// data (competencies/skills/scores) and ranks the SAME active role profiles with
+// the SAME pure pipeline (resolveCandidateActuals → computeMatch). Identical
+// honesty: measured/inferred/none evidence mix, Coverage⟂Confidence, abstain on
+// roles without a real profile — never an endorsement, only a developmental
+// "roles your evidence aligns with" signal.
+export type CandidateProfileInput = {
+  id: string;
+  name?: string | null;
+  candidate_role?: string | null;
+  skills?: any;
+  competency_profile?: any;
+  ei_score?: number | null;
+  assessment_score?: number | null;
+  match_score?: number | null;
+};
+
+export async function rankRolesForCandidateProfile(
+  pool: Pool,
+  input: CandidateProfileInput,
+  opts: { limit?: number } = {},
+): Promise<EngineResult<{ candidate_id: string; candidate_name: string | null; roles: RankedMatch[] }>> {
+  const cid = String(input?.id ?? '').trim();
+  if (!cid) return err('invalid_input', 'candidate id is required');
+  const candidate: CandidateRow = {
+    id: cid,
+    name: input.name ?? null,
+    candidate_role: input.candidate_role ?? null,
+    skills: input.skills ?? null,
+    competency_profile: input.competency_profile ?? null,
+    ei_score: input.ei_score ?? null,
+    assessment_score: input.assessment_score ?? null,
+    match_score: input.match_score ?? null,
+  };
+
+  const profiles = await safeRoleProfiles(pool);
+  const ranked: RankedMatch[] = [];
+  for (const role of profiles) {
+    if (role.weight_total <= 0) continue; // only roles with a real profile are matchable
+    ranked.push(toRanked(await computeMatch(pool, candidate, role)));
+  }
+  ranked.sort(byFitThenMatch);
+  const limit = Math.max(1, Math.min(100, opts.limit ?? 50));
+  return ok({ candidate_id: cid, candidate_name: candidate.name, roles: ranked.slice(0, limit) });
+}
+
 // ── title / job crosswalk → candidate ranking ───────────────────────────────
 // Real employers post jobs with a FREE-TEXT role title, not a curated role id.
 // These orchestrators crosswalk that title to a curated Role-DNA role (via

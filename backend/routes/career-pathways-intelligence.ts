@@ -12,6 +12,7 @@ import type { Express, Request, Response } from 'express';
 import type { Pool } from 'pg';
 import { attachCareerIntelligence } from './career-intelligence-enrich.js';
 import { resolveEffectiveUserId } from './behavioural-memory.js';
+import { emitLearningActivityCompleted } from '../services/learning-passport-loop';
 
 const FLAG = 'FF_CAREER_GRAPH';
 const flagOn = () => process.env[FLAG] === '1';
@@ -324,12 +325,19 @@ export function registerCareerPathwaysIntelligenceRoutes(
     if (!allowed.includes(status)) return res.status(400).json({ ok: false, error: `status must be one of ${allowed.join(',')}` });
     try {
       await ensureSchema(pool);
-      const result = await pool.query(
+      const result = await pool.query<{ title: string }>(
         `UPDATE cpi_growth_plans SET status=$3, notes=COALESCE($4, notes), updated_at=NOW()
-         WHERE user_id=$1 AND item_id=$2`,
+         WHERE user_id=$1 AND item_id=$2 RETURNING title`,
         [userId, itemId, status, notes ?? null]
       );
       if (result.rowCount === 0) return res.status(404).json({ ok: false, error: 'Item not found' });
+      // MX-302G — auto-sync the Career Passport when a development item is completed (no-op when flag OFF).
+      if (status === 'completed') {
+        emitLearningActivityCompleted(pool, {
+          userId: String(userId), activityType: 'development', refId: String(itemId),
+          title: String(result.rows[0]?.title ?? 'Development activity completed'),
+        });
+      }
       res.json({ ok: true, updated: itemId, status });
     } catch (err: any) {
       res.status(500).json({ ok: false, error: String(err.message) });

@@ -14185,6 +14185,9 @@ Rules:
   // ── Career Passport ───────────────────────────────────────────────────────────
   const { registerCareerPassportRoutes } = await import('./routes/career-passport');
   registerCareerPassportRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  // ── MX-302G — Learning Intelligence ↔ Career Passport loop ──────────────────────
+  const { registerLearningPassportRoutes } = await import('./routes/learning-passport');
+  registerLearningPassportRoutes(app, concernsPool, requireAuth);
   // ── Design Report Factory ─────────────────────────────────────────────────────
   const { registerReportFactoryRoutes } = await import('./routes/report-factory');
   registerReportFactoryRoutes(app, concernsPool, requireAuth, requireSuperAdmin);

@@ -722,7 +722,139 @@ function ShareModal({ onClose, passportId }: { onClose: () => void; passportId: 
   );
 }
 
-// ── Main component ─────────────────────────────────────────────────────────
+// ── MX-302G: Learning Hub panel (composed, read-only) ──────────────────────
+function LearningHubPanel({ hub, loading }: { hub: any; loading: boolean }) {
+  if (loading) return (
+    <div className="py-8 flex justify-center">
+      <div className="w-5 h-5 border-2 rounded-full animate-spin" style={{ borderColor: BRAND.primary, borderTopColor: 'transparent' }} />
+    </div>
+  );
+  if (!hub?.available || !hub?.hub) return (
+    <div className="py-8 text-center text-gray-400 text-sm">
+      <GraduationCap size={28} className="mx-auto mb-2 opacity-30" />
+      {hub?.message || 'No learning data yet. Complete activities to populate your Learning Hub.'}
+    </div>
+  );
+  const h = hub.hub;
+  const Section = ({ title, section, render }: { title: string; section: any; render: (s: any) => React.ReactNode }) => (
+    <div className="rounded-xl border p-3" style={{ borderColor: BRAND.border }}>
+      <div className="flex items-center justify-between mb-2">
+        <p className="text-xs font-semibold text-gray-700">{title}</p>
+        <span className="text-[10px] text-gray-400">{section?.available ? `${section.count} item${section.count !== 1 ? 's' : ''}` : 'No data'}</span>
+      </div>
+      {section?.available ? render(section) : <p className="text-[11px] text-gray-400">{section?.note || 'Nothing here yet.'}</p>}
+    </div>
+  );
+  return (
+    <div className="space-y-3">
+      <div className="rounded-lg p-2.5 text-[11px] text-gray-500" style={{ background: '#f8fafc' }}>
+        Composed from your existing learning surfaces · {h.coverage?.sections_with_data}/{h.coverage?.sections_total} sections with data.
+      </div>
+      <Section title="Development Plan" section={h.growth_plan} render={(s) => (
+        <div className="space-y-1">
+          <div className="flex gap-3 text-[11px] text-gray-500 mb-1">
+            <span>Planned {s.summary?.planned ?? 0}</span><span>In progress {s.summary?.in_progress ?? 0}</span>
+            <span className="text-green-600">Completed {s.summary?.completed ?? 0}</span>
+          </div>
+          {s.items.slice(0, 6).map((i: any) => (
+            <div key={i.item_id} className="flex items-center justify-between text-xs">
+              <span className="text-gray-700 truncate">{i.title}</span>
+              <span className="text-[10px] capitalize text-gray-400 shrink-0 ml-2">{i.status?.replace('_', ' ')}</span>
+            </div>
+          ))}
+        </div>
+      )} />
+      <Section title="Learning Activity" section={h.learning_history} render={(s) => (
+        <div className="space-y-1">{s.items.slice(0, 6).map((i: any, k: number) => (
+          <div key={k} className="flex items-center justify-between text-xs">
+            <span className="text-gray-700 truncate">{i.title}</span>
+            <span className="text-[10px] text-gray-400 shrink-0 ml-2 capitalize">{i.activity_type}</span>
+          </div>
+        ))}</div>
+      )} />
+      <Section title="Certifications" section={h.certifications} render={(s) => (
+        <div className="space-y-1">
+          <p className="text-[10px] text-gray-400 mb-1">{s.note}</p>
+          {s.items.slice(0, 6).map((i: any, k: number) => (
+            <div key={k} className="flex items-center justify-between text-xs">
+              <span className="text-gray-700 truncate">{i.title} <span className="text-gray-400">· {i.issuer}</span></span>
+              {i.verified
+                ? <span className="text-[9px] font-semibold text-green-600 flex items-center gap-0.5 shrink-0"><BadgeCheck size={11} />Verified</span>
+                : <span className="text-[9px] text-gray-400 shrink-0">Self-declared</span>}
+            </div>
+          ))}
+        </div>
+      )} />
+      <Section title="Future-Readiness Skills" section={h.future_skills} render={(s) => (
+        <div className="flex flex-wrap gap-1">{s.items.slice(0, 12).map((i: any, k: number) => (
+          <span key={k} className="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">{i.skill_name} · {i.proficiency ?? '—'}</span>
+        ))}</div>
+      )} />
+      <Section title="Competency Development" section={h.competency_development} render={(s) => (
+        <div className="space-y-1">{s.items.slice(0, 6).map((i: any, k: number) => (
+          <div key={k} className="flex items-center justify-between text-xs">
+            <span className="text-gray-700 truncate">{i.domain_code}</span>
+            <span className="text-[10px] text-gray-500 shrink-0 ml-2">{i.best_score ?? '—'} · {i.attempts} attempt{i.attempts !== 1 ? 's' : ''}</span>
+          </div>
+        ))}</div>
+      )} />
+      <Section title="Learning Behaviour Index" section={h.lbi} render={(s) => (
+        s.latest ? (
+          <div className="flex items-center gap-3 text-xs">
+            <span className="text-lg font-bold" style={{ color: BRAND.primary }}>{s.latest.overall_lbi ?? '—'}</span>
+            <div className="text-[11px] text-gray-500">
+              <p className="capitalize">{s.latest.lbi_band ?? '—'} · {s.latest.learning_style || 'style n/a'}</p>
+              <p className="text-gray-400">{s.latest.sessions_analyzed ?? 0} session{s.latest.sessions_analyzed !== 1 ? 's' : ''} analysed</p>
+            </div>
+          </div>
+        ) : <p className="text-[11px] text-gray-400">No LBI computed yet.</p>
+      )} />
+    </div>
+  );
+}
+
+// ── MX-302G: Employer Matches panel (talent engine; honest, not an endorsement) ─
+function EmployerMatchesPanel({ data, loading }: { data: any; loading: boolean }) {
+  if (loading) return (
+    <div className="py-8 flex justify-center">
+      <div className="w-5 h-5 border-2 rounded-full animate-spin" style={{ borderColor: BRAND.primary, borderTopColor: 'transparent' }} />
+    </div>
+  );
+  if (!data?.available) return (
+    <div className="py-8 text-center text-gray-400 text-sm">
+      <Briefcase size={28} className="mx-auto mb-2 opacity-30" />
+      {data?.message || 'Employer matches unavailable.'}
+    </div>
+  );
+  const matches = data.matches ?? [];
+  return (
+    <div className="space-y-3">
+      <div className="rounded-lg p-2.5 text-[11px] text-amber-700" style={{ background: '#fffbeb' }}>
+        {data.disclaimer || 'Developmental alignment from your own evidence — not a hiring decision.'}
+      </div>
+      {!data.measurable || matches.length === 0 ? (
+        <div className="py-6 text-center text-gray-400 text-sm">{data.message || 'No role alignment available yet — add skills to your passport.'}</div>
+      ) : matches.map((m: any, k: number) => (
+        <div key={m.role_id ?? k} className="rounded-xl border p-3" style={{ borderColor: BRAND.border }}>
+          <div className="flex items-center justify-between mb-1.5">
+            <p className="text-sm font-semibold text-gray-800 truncate">{m.role_title || 'Role'}</p>
+            {m.fit_label && <span className="text-[10px] text-gray-400 capitalize shrink-0 ml-2">{m.fit_label}</span>}
+          </div>
+          <div className="grid grid-cols-3 gap-2 text-center">
+            {[['Match', m.match_pct], ['Fit', m.fit_pct], ['Confidence', m.confidence_pct]].map(([label, val]: any) => (
+              <div key={label}>
+                <p className="text-[9px] text-gray-400 uppercase tracking-wide">{label}</p>
+                <p className="text-sm font-bold" style={{ color: BRAND.primary }}>{val == null ? '—' : `${Math.round(val)}%`}</p>
+              </div>
+            ))}
+          </div>
+          {m.capped_by_critical && <p className="text-[10px] text-amber-600 mt-1.5">Fit capped by a critical gap</p>}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function CareerPassportTab({ userId, profile }: { userId: string; profile?: any }) {
   const [overview, setOverview]   = useState<any>(null);
   const [activeSection, setActiveSection] = useState<string>('overview');
@@ -733,6 +865,47 @@ export default function CareerPassportTab({ userId, profile }: { userId: string;
   const [syncing, setSyncing]     = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [flagOff, setFlagOff]     = useState(false);
+  // MX-302G — learning↔passport loop (hidden entirely when the flag is OFF)
+  const [loopEnabled, setLoopEnabled] = useState(false);
+  const [freshness, setFreshness]     = useState<any>(null);
+  const [hub, setHub]                 = useState<any>(null);
+  const [hubLoading, setHubLoading]   = useState(false);
+  const [matches, setMatches]         = useState<any>(null);
+  const [matchesLoading, setMatchesLoading] = useState(false);
+
+  const loadFreshness = useCallback(async () => {
+    try {
+      const r = await fetch('/api/passport/freshness', { credentials: 'include' });
+      if (!r.ok) return;
+      setFreshness(await r.json());
+    } catch { /* ignore */ }
+  }, []);
+
+  const loadHub = useCallback(async () => {
+    setHubLoading(true);
+    try {
+      const r = await fetch('/api/passport/learning-hub', { credentials: 'include' });
+      setHub(await r.json());
+    } catch { setHub(null); } finally { setHubLoading(false); }
+  }, []);
+
+  const loadMatches = useCallback(async () => {
+    setMatchesLoading(true);
+    try {
+      const r = await fetch('/api/passport/employer-matches', { credentials: 'include' });
+      setMatches(await r.json());
+    } catch { setMatches(null); } finally { setMatchesLoading(false); }
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const r = await fetch('/api/passport/loop/enabled', { credentials: 'include' });
+        const d = await r.json();
+        if (d?.enabled) { setLoopEnabled(true); loadFreshness(); }
+      } catch { /* ignore */ }
+    })();
+  }, [loadFreshness]);
 
   const loadOverview = useCallback(async () => {
     setLoading(true);
@@ -757,6 +930,11 @@ export default function CareerPassportTab({ userId, profile }: { userId: string;
 
   useEffect(() => { loadOverview(); }, [loadOverview]);
   useEffect(() => { loadSection(activeSection); }, [activeSection, loadSection]);
+  useEffect(() => {
+    if (!loopEnabled) return;
+    if (activeSection === 'learning-hub') loadHub();
+    if (activeSection === 'employer-matches') loadMatches();
+  }, [activeSection, loopEnabled, loadHub, loadMatches]);
 
   const handleAdd: AddFn = async (section, body) => {
     try {
@@ -782,6 +960,11 @@ export default function CareerPassportTab({ userId, profile }: { userId: string;
       await fetch('/api/passport/sync', { method: 'POST', credentials: 'include' });
       await loadOverview();
       if (activeSection !== 'overview') await loadSection(activeSection);
+      if (loopEnabled) {
+        await loadFreshness();
+        if (activeSection === 'learning-hub') await loadHub();
+        if (activeSection === 'employer-matches') await loadMatches();
+      }
     } finally { setSyncing(false); }
   };
 
@@ -845,6 +1028,18 @@ export default function CareerPassportTab({ userId, profile }: { userId: string;
             </button>
           </div>
         </div>
+        {/* MX-302G — freshness / auto-sync indicator (only when the loop is enabled) */}
+        {loopEnabled && freshness?.available && (
+          <div className="mt-3 flex items-center gap-2 text-[11px] rounded-lg px-2.5 py-1.5"
+            style={{ background: freshness.stale ? '#fffbeb' : '#f0fdf4', color: freshness.stale ? '#b45309' : '#15803d' }}>
+            {freshness.stale ? <AlertTriangle size={12} /> : <CheckCircle2 size={12} />}
+            <span className="flex-1">{freshness.message}</span>
+            <span className="text-[10px] opacity-70">Auto-sync on</span>
+            {freshness.stale && (
+              <button onClick={handleSync} disabled={syncing} className="underline font-semibold shrink-0">Refresh</button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* ── Section counts grid ── */}
@@ -897,7 +1092,7 @@ export default function CareerPassportTab({ userId, profile }: { userId: string;
       )}
 
       {/* ── Section navigation ── */}
-      {activeSection !== 'overview' && (
+      {activeSection !== 'overview' && activeSection !== 'learning-hub' && activeSection !== 'employer-matches' && (
         <>
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-xs text-gray-500">
@@ -955,6 +1150,26 @@ export default function CareerPassportTab({ userId, profile }: { userId: string;
         <IntelligenceLayers title="Career Intelligence Layers" userId={userId} />
       )}
 
+      {loopEnabled && activeSection === 'learning-hub' && (
+        <>
+          <div className="flex items-center gap-2 text-xs text-gray-500">
+            <button onClick={() => setActiveSection('overview')} className="hover:text-indigo-600">Overview</button>
+            <span>/</span><span className="font-semibold text-gray-700">Learning Hub</span>
+          </div>
+          <LearningHubPanel hub={hub} loading={hubLoading} />
+        </>
+      )}
+
+      {loopEnabled && activeSection === 'employer-matches' && (
+        <>
+          <div className="flex items-center gap-2 text-xs text-gray-500">
+            <button onClick={() => setActiveSection('overview')} className="hover:text-indigo-600">Overview</button>
+            <span>/</span><span className="font-semibold text-gray-700">Employer Matches</span>
+          </div>
+          <EmployerMatchesPanel data={matches} loading={matchesLoading} />
+        </>
+      )}
+
       {/* Horizontal section tabs (shown in all views) */}
       <div className="flex gap-1.5 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
         <button onClick={() => setActiveSection('overview')}
@@ -967,6 +1182,20 @@ export default function CareerPassportTab({ userId, profile }: { userId: string;
           style={{ background: activeSection === 'intelligence' ? BRAND.primary : '#f3f4f6', color: activeSection === 'intelligence' ? '#fff' : BRAND.muted }}>
           Intelligence
         </button>
+        {loopEnabled && (
+          <>
+            <button onClick={() => setActiveSection('learning-hub')}
+              className="shrink-0 text-[11px] font-semibold px-3 py-1.5 rounded-full transition-colors flex items-center gap-1"
+              style={{ background: activeSection === 'learning-hub' ? BRAND.primary : '#f3f4f6', color: activeSection === 'learning-hub' ? '#fff' : BRAND.muted }}>
+              <GraduationCap size={11} /> Learning Hub
+            </button>
+            <button onClick={() => setActiveSection('employer-matches')}
+              className="shrink-0 text-[11px] font-semibold px-3 py-1.5 rounded-full transition-colors flex items-center gap-1"
+              style={{ background: activeSection === 'employer-matches' ? BRAND.primary : '#f3f4f6', color: activeSection === 'employer-matches' ? '#fff' : BRAND.muted }}>
+              <Briefcase size={11} /> Employer Matches
+            </button>
+          </>
+        )}
         {Object.entries(SECTION_META).map(([sec, meta]) => (
           <button key={sec} onClick={() => setActiveSection(sec)}
             className="shrink-0 text-[11px] font-semibold px-3 py-1.5 rounded-full transition-colors flex items-center gap-1"

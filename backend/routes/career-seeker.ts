@@ -6,6 +6,7 @@ import { ADAPTIVE_EVENTS } from "../services/adaptive-event-bus";
 import { calculateAndPersistLBI } from "./lbi-engine";
 import { onGoalCompleted, onJobStageChanged } from "./career-evidence";
 import { isCareerLaunchpadEnabled } from "../config/feature-flags";
+import { emitLearningActivityCompleted } from "../services/learning-passport-loop";
 import { logAudit } from "../services/platform-audit";
 import {
   CAREER_STAGES,
@@ -459,6 +460,11 @@ export function registerCareerSeekerRoutes(app: Express): void {
       if (row.completed && !existingRow.completed) {
         const goalSrc = String((row.data ?? {}).source ?? "");
         void onGoalCompleted(pool, { userId: u.id, goalId: row.id, isDemo: /demo/i.test(goalSrc) }).catch(() => {});
+        // MX-302G — auto-sync the Career Passport on goal completion (no-op when flag OFF).
+        emitLearningActivityCompleted(pool, {
+          userId: String(u.id), activityType: "goal", refId: String(row.id),
+          title: String((row.data ?? {}).title ?? "Career goal achieved"), isDemo: /demo/i.test(goalSrc),
+        });
       }
       return res.json({ success: true, goal: { ...(row.data ?? {}), _id: row.id, completed: row.completed, updatedAt: row.updated_at } });
     } catch (err) {

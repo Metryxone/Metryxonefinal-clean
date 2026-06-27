@@ -1400,6 +1400,20 @@ export const FEATURE_FLAGS = {
    *  Env: `FF_EMPLOYABILITY_STUDIO`. */
   employabilityStudio: false,
 
+  /** MX-302G — Learning Intelligence ↔ Career Passport loop. When ON, completing a learning
+   *  activity (career goal, growth-plan / IDP item) emits through the adaptive event bus and the
+   *  passport auto-syncs via the EXISTING `syncPassportFromPlatform` (additive `ON CONFLICT DO
+   *  NOTHING`, append-only) — no manual "Sync" needed. It ALSO unlocks the additive read-only
+   *  passport surfaces: a composed Learning Hub (`/api/passport/learning-hub`), Employer Matches
+   *  (`/api/passport/employer-matches`, sourced from the talent-matching engine, Coverage⟂Confidence,
+   *  honest evidence mix — never a fabricated endorsement), and a freshness/stale indicator
+   *  (`/api/passport/freshness`). The Career Passport itself stays under `careerPassport`/FF_CAREER_PASSPORT.
+   *  Strictly additive + reversible: flag OFF → the emit helper is a no-op (no event row, no auto-sync),
+   *  every new data route 503s BEFORE any auth/DB touch (no ensure-schema, zero new tables), and the
+   *  passport remains manual-sync only with the Learning Hub unchanged → byte-identical legacy. `/api/passport/loop/enabled`
+   *  is an UNGATED flag probe (platform convention). Env: `FF_LEARNING_PASSPORT_LOOP`. */
+  learningPassportLoop: false,
+
   /** PHASE 5.14 — Notifications & Workflows. A PURE READ / compose-never-recompute layer that DERIVES
    *  operational notification items (Job / Application / Interview / Offer / Employer / Recruiter
    *  alerts + Status Changes), workflow next-actions, and message previews from operator-recorded
@@ -2322,6 +2336,10 @@ export function isCampusPlacementEnabled(): boolean {
 
 export function isEmployabilityStudioEnabled(): boolean {
   return isFlagEnabled('employabilityStudio');
+}
+
+export function isLearningPassportLoopEnabled(): boolean {
+  return isFlagEnabled('learningPassportLoop');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

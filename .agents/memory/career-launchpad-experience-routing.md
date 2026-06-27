@@ -42,9 +42,24 @@ Executive Studio) from a Career Stage chosen at registration.
 - **jsonb preference write = nested merge, not shallow `||`.** Persisting the preference
   must merge at the `careerProfile` level (preserve field-of-study / years / role);
   a shallow `data || EXCLUDED.data` would wipe the sibling profile fields.
-- **Existing users get a DERIVED stage** (role → seniority text → years → has-history),
-  returns null only when nothing is derivable (UI defaults to Command Center). Never
-  fabricate a stage.
+- **Existing users get a DERIVED stage** (platform role → seniority text → years →
+  has-history); stage stays null only when nothing is derivable. Never fabricate a stage.
+- **Unknown-stage default = Career Launchpad, NOT Command Center (product decision
+  2026-06-27).** A returning user who registered but never built a profile has NO
+  `career_seeker_profiles` row → `readEffectiveStage` yields stage null → the default
+  experience must be the no-presumption ENTRY surface (Launchpad), not the mid-career
+  Command Center. **Why:** Command Center presumes seniority we can't substantiate from
+  zero signal; an EMPTY profile row already derived 'graduate'→Launchpad, so a no-row
+  user (even less signal) landing on the MORE advanced surface was backwards; the
+  switcher lets anyone move UP, so the entry default can never trap a senior user.
+  **How:** `effectiveExperience(null, _)` returns `EXPERIENCES[DEFAULT_EXPERIENCE_WHEN_UNKNOWN='launchpad']`
+  (single const). Stage stays null (honest "unknown"); only the *default experience*
+  changed — we don't fabricate a stage.
+- **`readEffectiveStage` now LEFT JOINs `users`** to feed the platform `role` into the
+  deriver even when there is NO profile row (so a `student` role → 'student' stage →
+  Launchpad via a REAL signal, derived=true). `profile_user_id` is the present-row
+  marker — `hasExperience` must key off PROFILE presence (not the always-present user
+  row) or an empty no-profile row would falsely read hasExperience=false→'graduate'.
 - **Routing applies on page load too** (not just on switch), but an explicit `?tab=`
   deep-link always wins — auto-route only when the URL carries no tab.
 - **Engine is mirrored, not shared:** the pure backend engine has a frontend twin.

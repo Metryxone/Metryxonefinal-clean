@@ -429,7 +429,9 @@ export function registerCareerSeekerRoutes(app: Express): void {
 
       const { stage, stored, derived, preferred } = await readEffectiveStage(pool as any, u.id);
       // Effective experience honours a valid stored preference, else the stage's
-      // default (Command Center when no stage is derivable — no regression).
+      // default (Career Launchpad when no stage is derivable — the no-presumption
+      // entry surface; a returning no-profile user is never dumped into Command
+      // Center. See experience-routing.ts header product decision 2026-06-27).
       const experience = effectiveExperience(stage, preferred);
       return res.json({
         success: true,

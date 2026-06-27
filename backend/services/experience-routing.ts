@@ -11,6 +11,23 @@
  * `available: true`. The senior/executive studios are unlocked only for the
  * stages that map to them (see `allowedExperiences`).
  *
+ * Unknown-stage default (PRODUCT DECISION, 2026-06-27): when nothing is
+ * derivable about a user — most importantly a RETURNING user who registered but
+ * never built a profile (no career_seeker_profiles row) — the effective
+ * experience defaults to **Career Launchpad**, NOT Command Center. Rationale:
+ *   • Launchpad is the universally-accessible entry surface; Command Center
+ *     presumes mid-career seniority we cannot substantiate from zero signal.
+ *   • It removes an inconsistency: an EMPTY profile row already derives
+ *     'graduate' → Launchpad, yet a no-row user (even LESS signal) previously
+ *     landed on the more advanced Command Center — backwards.
+ *   • The experience switcher lets anyone move UP to Command Center/Leadership
+ *     when appropriate, so starting from the no-presumption entry surface can
+ *     never trap a senior user (it is one click to switch).
+ * To keep this honest we still feed a REAL additional signal before defaulting:
+ * the user's platform `role` (a `student` role → 'student' stage). The stage
+ * itself stays null when genuinely unknown (we never fabricate a stage); only
+ * the *default experience* for a null stage is Launchpad.
+ *
  * Persistence: the canonical career_stage lives on the EXISTING
  * career_seeker_profiles table (one user = one record). The lazy ensure-schema
  * mirror below applies the additive column ONLY on the flag-ON code path, so
@@ -181,10 +198,15 @@ export async function ensureCareerStageColumn(pool: Pool): Promise<void> {
   _careerStageColumnReady = true;
 }
 
+/** The experience an unknown (null) stage falls back to. See the header
+ *  product decision: the no-presumption entry surface, NOT Command Center. */
+export const DEFAULT_EXPERIENCE_WHEN_UNKNOWN: ExperienceId = 'launchpad';
+
 /**
  * The experience a user effectively sees: their chosen navigation preference
  * when it is STILL allowed for their stage, otherwise the stage's default
- * experience (Command Center when no stage is derivable — no regression).
+ * experience (Career Launchpad when no stage is derivable — the no-presumption
+ * entry surface; see header product decision 2026-06-27).
  *
  * Authorization note: a stale/forbidden preference is silently ignored here, so
  * even if a preference was somehow persisted out of band it can never widen what
@@ -198,7 +220,7 @@ export function effectiveExperience(
     const allowed = allowedExperiences(stage);
     if (allowed.some((e) => e.id === preferred)) return EXPERIENCES[preferred];
   }
-  return stage ? resolveExperience(stage) : EXPERIENCES['command-center'];
+  return stage ? resolveExperience(stage) : EXPERIENCES[DEFAULT_EXPERIENCE_WHEN_UNKNOWN];
 }
 
 /**
@@ -212,11 +234,18 @@ export async function readEffectiveStage(
   userId: string,
 ): Promise<{ stage: CareerStage | null; stored: boolean; derived: boolean; preferred: ExperienceId | null }> {
   await ensureCareerStageColumn(pool);
+  // LEFT JOIN users so we still get the platform role even when no profile row
+  // exists. `profile_user_id` is the marker for "a profile row is present" — a
+  // returning user who never built a profile has u.* but NULL csp.* columns.
   const r = await pool.query(
-    `SELECT career_stage, data FROM career_seeker_profiles WHERE user_id = $1 LIMIT 1`,
+    `SELECT csp.user_id AS profile_user_id, csp.career_stage, csp.data, u.role, u.roles
+       FROM users u
+       LEFT JOIN career_seeker_profiles csp ON csp.user_id = u.id
+      WHERE u.id = $1 LIMIT 1`,
     [userId],
   );
   const row = r.rows?.[0];
+  const profileExists = !!row?.profile_user_id;
   const data = (row?.data ?? {}) as any;
   const cp = data.careerProfile ?? {};
   const preferred: ExperienceId | null = isExperienceId(cp.preferredExperience) ? cp.preferredExperience : null;
@@ -224,13 +253,20 @@ export async function readEffectiveStage(
   const storedRaw = row?.career_stage;
   if (isCareerStage(storedRaw)) return { stage: storedRaw, stored: true, derived: false, preferred };
 
+  // Platform role as an additional derivation signal: a `student` role yields a
+  // 'student' stage even with no profile, so a returning student is routed to
+  // Launchpad by a REAL signal rather than the blind unknown-stage default.
+  const platformRole: string | null =
+    (typeof row?.role === 'string' && row.role) ||
+    (Array.isArray(row?.roles) && row.roles.length ? String(row.roles[0]) : null) || null;
+
   const exp = Array.isArray(data.experience) ? data.experience : [];
   const latestTitle = exp.length ? (exp[0]?.title ?? exp[0]?.role ?? '') : '';
   const derived = deriveStage({
     yearsExp: typeof cp.yearsExperience === 'number' ? cp.yearsExperience : null,
     seniority: cp.currentRole || latestTitle || null,
-    role: null,
-    hasExperience: row ? exp.length > 0 : null,
+    role: platformRole,
+    hasExperience: profileExists ? exp.length > 0 : null,
   });
   return { stage: derived, stored: false, derived: derived != null, preferred };
 }

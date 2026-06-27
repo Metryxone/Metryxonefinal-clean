@@ -189,10 +189,12 @@ async function main() {
       add('E1', 'existing profiles resolve to a defined experience (flag ON, no throw)', ok, rows.join(' · '));
     }
 
-    // E2 — the genuine null-derivation case: a user with NO profile row at all.
-    // This is the ONLY read-path that yields stage=null (a present row always
-    // sets hasExperience true/false, so it derives at least 'graduate'). It must
-    // never throw and must default to Command Center (no regression).
+    // E2 — the genuine null-derivation case: a returning user with NO profile
+    // row at all and a non-student platform role. There is no signal to derive a
+    // stage (stage stays null — we never fabricate one), but the PRODUCT DECISION
+    // (2026-06-27) routes the unknown-stage default to **Career Launchpad**, the
+    // no-presumption entry surface — NOT Command Center. This is exactly what a
+    // returning user who registered but never built a profile hits on day one.
     {
       const ins = await pool.query<{ id: string }>(
         `INSERT INTO users (username, password, role, roles) VALUES ($1, 'x', 'career_seeker', ARRAY['career_seeker'])
@@ -206,12 +208,38 @@ async function main() {
         const eff = await readEffectiveStage(pool, uid);
         const experience = effectiveExperience(eff.stage, eff.preferred);
         ok = eff.stage === null && eff.stored === false && eff.derived === false &&
-          experience.id === 'command-center';
-        detail = `no-row → stage=${eff.stage} stored=${eff.stored} derived=${eff.derived} → exp=${experience.id} (want null → command-center)`;
+          experience.id === 'launchpad';
+        detail = `no-row → stage=${eff.stage} stored=${eff.stored} derived=${eff.derived} → exp=${experience.id} (want null → launchpad, NOT command-center)`;
       } catch (err: any) {
         detail = `THREW: ${err?.message ?? err}`;
       }
-      add('E2', 'null-derivation (no profile row) defaults to Command Center, no throw', ok, detail);
+      add('E2', 'no-profile-row returning user defaults to Career Launchpad (not Command Center), no throw', ok, detail);
+    }
+
+    // E3 — the wired additional signal: a returning user with NO profile row but
+    // a `student` platform ROLE. The read path joins `users` and feeds the role
+    // into the deriver, so the stage is DERIVED to 'student' (derived=true, not a
+    // blind default) → Launchpad. This proves the role signal is doing real work
+    // and distinguishes a known-junior user from the signal-less E2 case.
+    {
+      const ins = await pool.query<{ id: string }>(
+        `INSERT INTO users (username, password, role, roles) VALUES ($1, 'x', 'student', ARRAY['student'])
+         RETURNING id`,
+        [uname('no-profile-student-role')],
+      );
+      const uid = ins.rows[0].id;
+      let ok = false;
+      let detail = '';
+      try {
+        const eff = await readEffectiveStage(pool, uid);
+        const experience = effectiveExperience(eff.stage, eff.preferred);
+        ok = eff.stage === 'student' && eff.stored === false && eff.derived === true &&
+          experience.id === 'launchpad';
+        detail = `no-row+student-role → stage=${eff.stage} stored=${eff.stored} derived=${eff.derived} → exp=${experience.id} (want student → launchpad via role signal)`;
+      } catch (err: any) {
+        detail = `THREW: ${err?.message ?? err}`;
+      }
+      add('E3', 'student platform role derives a real stage with no profile row (role signal wired)', ok, detail);
     }
   } finally {
     await cleanup(pool).catch((err) =>

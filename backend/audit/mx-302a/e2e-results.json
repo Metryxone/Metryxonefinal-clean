@@ -1,9 +1,9 @@
 {
   "task": "MX-302A — Career Launchpad & Experience Routing · E2E (flag ON, live DB)",
-  "generatedAt": "2026-06-27T02:24:59.681Z",
+  "generatedAt": "2026-06-27T02:32:17.801Z",
   "verdict": "PASS",
-  "passed": 3,
-  "total": 3,
+  "passed": 4,
+  "total": 4,
   "checks": [
     {
       "id": "E0",
@@ -19,9 +19,15 @@
     },
     {
       "id": "E2",
-      "name": "null-derivation (no profile row) defaults to Command Center, no throw",
+      "name": "no-profile-row returning user defaults to Career Launchpad (not Command Center), no throw",
       "pass": true,
-      "detail": "no-row → stage=null stored=false derived=false → exp=command-center (want null → command-center)"
+      "detail": "no-row → stage=null stored=false derived=false → exp=launchpad (want null → launchpad, NOT command-center)"
+    },
+    {
+      "id": "E3",
+      "name": "student platform role derives a real stage with no profile row (role signal wired)",
+      "pass": true,
+      "detail": "no-row+student-role → stage=student stored=false derived=true → exp=launchpad (want student → launchpad via role signal)"
     }
   ]
 }

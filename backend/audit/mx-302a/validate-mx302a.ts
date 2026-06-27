@@ -120,7 +120,7 @@ const add = (id: string, name: string, pass: boolean, detail: string) =>
     { sig: { yearsExp: 0 }, want: 'graduate' },
     { sig: { hasExperience: true }, want: 'mid-career' },
     { sig: { hasExperience: false }, want: 'graduate' },
-    { sig: {}, want: null }, // nothing derivable → null (no regression; defaults to Command Center)
+    { sig: {}, want: null }, // nothing derivable → null stage; effectiveExperience defaults it to Career Launchpad (see C10c)
   ];
   const rows: string[] = [];
   let ok = true;
@@ -186,6 +186,14 @@ const add = (id: string, name: string, pass: boolean, detail: string) =>
   const cGood = noPref.id === resolveExperience('mid-career').id;
   ok = ok && cGood;
   rows.push(`mid-career +pref(none) → ${noPref.id}${cGood ? '' : ' ✗'}`);
+
+  // (c2) UNKNOWN stage (null) defaults to Career Launchpad — the no-presumption
+  //      entry surface — NOT Command Center (product decision 2026-06-27). A
+  //      returning user with no derivable stage is never dumped into Command Center.
+  const unknownDefault = effectiveExperience(null, null);
+  const c2Good = unknownDefault.id === 'launchpad';
+  ok = ok && c2Good;
+  rows.push(`null-stage +pref(none) → ${unknownDefault.id} (want launchpad, NOT command-center)${c2Good ? '' : ' ✗'}`);
 
   // (d) Every stage's default experience is always within its own allowed set
   //     (so the server gate can never lock a user out of their home experience).

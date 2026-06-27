@@ -1537,6 +1537,23 @@ export const FEATURE_FLAGS = {
    *  this flag's ON path); all new UI hides and protected routes 503.
    *  Env: `FF_CAREER_LAUNCHPAD`. */
   careerLaunchpad: false,
+
+  /** MX-302B — Career Discovery & AI Guidance. An additive, flag-gated
+   *  orchestration/composition layer that runs a Career Discovery experience
+   *  BEFORE the user lands in Career Builder. Composes existing engines (CAPADEX,
+   *  competency, LBI, MEI, career-graph, occupation, labor-market, match,
+   *  simulation, recommendation, roadmap, development, nudge) plus ONE net-new
+   *  light Values inventory into: (1) an assessment battery, (2) a Career
+   *  Explorer, and (3) AI Guidance that DEGRADES HONESTLY to deterministic
+   *  rule-based guidance when no LLM key is configured. Guidance precedes
+   *  recommendations via a per-user `hasCompletedDiscovery` flag. Default OFF →
+   *  byte-identical legacy behaviour INCL. schema: every new route 503s before
+   *  any auth/DB touch and the lazy ensure-schema for `career_discovery_results`
+   *  is reached only on this flag's ON path; all new UI hides. Independent of the
+   *  career-suite master switch (NOT in CAREER_SUITE_FLAGS). Read-only over
+   *  existing engines + never-throws; null ≠ 0; honest empty states; never
+   *  fabricates. Env: `FF_CAREER_DISCOVERY`. */
+  careerDiscovery: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1635,6 +1652,11 @@ export function isGoLiveCertificationEnabled(): boolean {
 
 export function isCompetencyMatchIntelligenceEnabled(): boolean {
   return isFlagEnabled('competencyMatchIntelligence');
+}
+
+/** MX-302B — Career Discovery & AI Guidance master switch. */
+export function isCareerDiscoveryEnabled(): boolean {
+  return isFlagEnabled('careerDiscovery');
 }
 
 export function isUcipEnabled(): boolean {

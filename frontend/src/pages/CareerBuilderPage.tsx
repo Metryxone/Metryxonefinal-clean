@@ -900,6 +900,33 @@ export function CareerBuilderPage({ onNavigate }: CareerBuilderPageProps) {
       .catch(() => setLaunchpadEnabled(false));
   }, []);
 
+  // MX-302B — Career Discovery gate. Flag-gated: the /enabled probe returns
+  // {enabled:false} when OFF, so this is a no-op (byte-identical legacy flow).
+  // When ON and the user has NOT yet completed (or skipped) discovery, route
+  // them to the discovery experience FIRST so guidance precedes recommendations.
+  // The gate runs unconditionally (a ?tab= deep-link does NOT bypass it) — an
+  // incomplete user is always routed to discovery first; once they complete or
+  // skip it, the gate is satisfied and normal tab routing resumes.
+  useEffect(() => {
+    let alive = true;
+    fetch('/api/career-discovery/enabled', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(j => {
+        if (!alive || !j?.enabled) return;
+        fetch('/api/career-discovery/status', { headers: authHeader() as HeadersInit, credentials: 'include' })
+          .then(sr => sr.ok ? sr.json() : null)
+          .then(s => {
+            if (!alive || !s?.ok) return;
+            const done = s.hasCompletedDiscovery
+              || s.status === 'completed' || s.status === 'skipped';
+            if (!done) onNavigate('career-discovery');
+          })
+          .catch(() => {});
+      })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, [onNavigate]);
+
   // MX-302A — switch experience: persist the chosen experience as a navigation
   // preference (server validates it's allowed for the user's stage), then land on its tab.
   const switchExperience = useCallback((experienceId: ExperienceId) => {

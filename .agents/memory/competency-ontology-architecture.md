@@ -62,5 +62,8 @@ Validated against `ref_lifecycle_transitions` at `POST /api/ontology/lifecycle/t
 - **Honest coverage gap (NOT a bug)**: only **879 of 1016** occupations carry skill/ability ratings in O*NET 29.0; the other 137 (aggregate codes like `15-1252.00` Software Developers) genuinely have no ratings → those roles import with zero links. Don't "fix" by fabricating links.
 - Verified dev counts: 1016 roles, 136 competencies, 49,149 links, 0 orphan FKs.
 
+## Runtime profile keying
+- `onto_competency_profiles` keys on **`subject_id` (text)** — there is **no `user_id` column**. The career match/simulation engines pass `subjectId == the user id` into `subject_id`. Any per-user presence probe that queries `WHERE user_id = $1` silently errors (→ false/null), under-reporting completion. **Why:** caught a battery probe + audit count both mis-keyed on `user_id`. **How to apply:** filter `onto_competency_profiles` by `subject_id`, not `user_id`.
+
 ## Authoritative docs
 `docs/ONTOLOGY_ARCHITECTURE.md` — full table reference, API surface, bridging rules, lifecycle diagram, quality gate table, namespace constraints.

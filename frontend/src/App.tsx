@@ -150,6 +150,7 @@ const MentorCareerPage = lazy(() => import('./pages/career-seeker/MentorCareerPa
 const DocumentUploadPage = lazy(() => import('./pages/DocumentUploadPage'));
 const MentorAgreementPage = lazy(() => import('./pages/MentorAgreementPage'));
 const CareerBuilderPage  = lazy(() => import('./pages/CareerBuilderPage').then(m => ({ default: m.CareerBuilderPage })));
+const CareerDiscoveryPage = lazy(() => import('./pages/CareerDiscoveryPage').then(m => ({ default: m.CareerDiscoveryPage })));
 const EmployerPortalPage = lazy(() => import('./pages/EmployerPortalPage').then(m => ({ default: m.EmployerPortalPage })));
 const ParentConsentApprovePage = lazy(() => import('./pages/ParentConsentApprovePage').then(m => ({ default: m.ParentConsentApprovePage })));
 const PassportRecruiterView = lazy(() => import('./components/passport/EmployabilityPassport').then(m => ({ default: m.PassportRecruiterView })));
@@ -301,6 +302,7 @@ export type Screen =
   | 'competency-growth-simulation'
   | 'competency-learning-paths'
   | 'career-builder'
+  | 'career-discovery'
   | 'employer-portal'
   | 'interview-bank-admin'
   | 'student-career-portal'
@@ -367,6 +369,7 @@ export default function App() {
       'competency-role-transition', 'competency-hiring-prediction',
       'competency-growth-simulation', 'competency-learning-paths',
       'career-builder',
+      'career-discovery',
       'employer-portal',
       'job-apply',
       'complete-application',
@@ -880,6 +883,7 @@ export default function App() {
         {currentScreen === 'competency-growth-simulation' && <CompetencyGrowthSimulationPage onNavigate={handleNavigate} />}
         {currentScreen === 'competency-learning-paths' && <CompetencyLearningPathsPage onNavigate={handleNavigate} />}
         {currentScreen === 'career-builder'          && <CareerBuilderPage       onNavigate={handleNavigate} />}
+        {currentScreen === 'career-discovery'        && <CareerDiscoveryPage     onNavigate={handleNavigate} />}
         {currentScreen === 'employer-portal'         && <EmployerPortalPage      onNavigate={handleNavigate} />}
         {currentScreen === 'interview-bank-admin'    && <InterviewQuestionBankPage onNavigate={handleNavigate} />}
         {currentScreen === 'competitive-exam-portal' && <CompetitiveExamPortal    onNavigate={handleNavigate} />}

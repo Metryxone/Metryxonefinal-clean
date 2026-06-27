@@ -93,6 +93,7 @@ import { registerCommercialArchitectureRoutes } from "./routes/commercial-archit
 import { registerAdaptiveBenchmarkRoutes } from "./routes/adaptive-benchmark";
 import { registerMobilityRoutes } from "./routes/mobility";
 import { registerCareerStageGuidanceRoutes } from "./routes/career-stage-guidance";
+import { registerCareerDiscoveryRoutes } from "./routes/career-discovery";
 import { registerLongitudinalRoutes } from "./routes/longitudinal";
 import { registerWorkforceAnalyticsRoutes } from "./routes/workforce-analytics";
 import { registerGovernanceWorkflowRoutes } from "./routes/governance-workflow";
@@ -13903,6 +13904,7 @@ Rules:
   registerMobilityRoutes({ app, pool: concernsPool });
   registerCompetencyAssessmentRuntime({ app, pool: concernsPool, requireAuth });
   registerCareerStageGuidanceRoutes({ app, pool: concernsPool });
+  registerCareerDiscoveryRoutes(app, concernsPool, requireAuth);
   registerLongitudinalRoutes({ app, pool: concernsPool });
   registerWorkforceAnalyticsRoutes({ app, pool: concernsPool });
   registerGovernanceWorkflowRoutes({ app, pool: concernsPool });

@@ -1,0 +1,22 @@
+Short answer: No — Voice Screening is not 100% implemented. It's a high-fidelity prototype/simulation, not a working voice bot. Here's the honest breakdown of what's real versus mocked.
+
+What's actually real
+The UI — the whole AI Voice Bot Screening page (ScreeningTab in EmployerPortalPage.tsx) is fully built and polished: the funnel stats, the 4-step explainer, fitment threshold filter, call banner, and report layout.
+The question bank — Step 2's questions are genuinely pulled from a real PostgreSQL table (interview_question_bank, ~350 categorized questions) via /api/interview-questions, selected by role/industry.
+What's simulated / mocked
+Advertised step	Status	Reality
+1. Automated Call ("Pragati AI calls the candidate")	Stub	No telephony at all. The "call" is three setTimeout timers (~8s total) in the browser. No Twilio/Vonage/phone provider exists. No call is ever placed.
+2. Structured Interview	Partial	Real questions are loaded, but there's no actual interaction — nothing is asked or answered.
+3. AI Analysis	Stub	The "Voice Score" and dimension scores are produced by a formula seeded off the candidate's ID string — 55 + (seed * (i+2)) % 35. No audio, no speech-to-text, no text analysis.
+4. Instant Report	Stub	Displays the mocked scores mapped to hardcoded notes ("Excellent articulation", etc.).
+Structural gaps
+No backend — there is no /api/employer/voice-screening (or equivalent) endpoint. All "call" logic lives in the frontend.
+No persistence — results live only in React state and vanish on refresh; nothing is written to a DB.
+Pragati ≠ voice — backend/routes/pragati.ts exists, but it's a text-based conversational FSM with regex keyword matching, not a telephony/audio system. The screening feature doesn't even call it.
+No feature flag — unlike the platform's additive-phase convention, this isn't gated; the tab just shows for fitment-qualified candidates.
+What "100% functional" would actually require
+A telephony integration (e.g. Twilio Voice) to place the outbound call — needs an account + secrets.
+Real-time speech-to-text + audio capture (and likely an LLM, which is currently inert — OPENAI_API_KEY/EMERGENT_LLM_KEY are unset).
+A backend voice-screening service + tables to drive the call, score genuine responses, and persist results.
+Wiring the existing question bank into the live call flow, then a real report off measured data.
+So today it's a convincing demo of the workflow, not a production voice bot. If you want, I can scope this as a proper phase (telephony + STT + scoring + persistence, flag-gated) — but it needs external service credentials and an LLM key to be genuinely functional, so I'd want your go-ahead before building.

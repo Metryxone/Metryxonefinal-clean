@@ -30,6 +30,14 @@
  *                   an authenticated student A cannot retrieve student B's
  *                   readiness (/summary) or AI guidance (/guidance) by passing
  *                   B's id. This is asserted for BOTH surfaces.
+ *   (d) flag ON   → the SAME self-only guarantee is locked across the OTHER
+ *                   Career Discovery composing reads (`/status`, `/battery`,
+ *                   `/profile`, `/explorer`, `/explorer/market`,
+ *                   `/explorer/role/:roleId`). Task #268 covered `/guidance`;
+ *                   these reads also expose a seeker's private discovery status,
+ *                   compatibility score and role matches, so each is asserted to
+ *                   scope every composed DB read to the SESSION uid and to keep
+ *                   an attacker's id out of every query param.
  *
  * It mounts the REAL `registerLaunchpadDashboardRoutes` +
  * `registerCareerDiscoveryRoutes` onto a throwaway Express server (listen(0))
@@ -103,6 +111,14 @@ const requireAuth = (req: Request, res: Response, next: () => void) => {
 const pool = {
   query: async (sql: string, params?: any[]) => {
     probe.dbQueries.push({ sql, params: params ?? [] });
+    // competencyRuntimeReady() probe: count how many of the supplied relations
+    // exist. Report ALL present so the composed career-match engine proceeds to
+    // its subject-keyed signal composition (instead of short-circuiting) — this
+    // lets the explorer reads exercise their real self-scoped DB path.
+    if (/unnest\(\$1::text\[\]\)/i.test(sql) && /to_regclass/i.test(sql)) {
+      const arr = Array.isArray(params?.[0]) ? params![0] : [];
+      return { rows: [{ n: arr.length }] };
+    }
     if (/to_regclass/i.test(sql)) {
       // Both shapes used in the codebase: `... AS t` (launchpad) and
       // `to_regclass($1) AS reg` (career-discovery tableExists).
@@ -419,6 +435,56 @@ async function main() {
         leaked.map((q) => q.sql.replace(/\s+/g, ' ').trim().slice(0, 80)).join(' | '),
     );
   });
+
+  // ── (d) Flag ON: the OTHER self-only Career Discovery reads are scoped the
+  //    SAME way. Task #268 locked `/guidance`; this composes a seeker's private
+  //    data through several MORE self-only reads (`/status`, `/battery`,
+  //    `/profile`, `/explorer`, `/explorer/market`, `/explorer/role/:roleId`).
+  //    Each resolves its subject from `selfId(req)` (the SESSION principal) — so
+  //    a future refactor that added an id parameter to any of them would leak one
+  //    student's discovery status / compatibility score / role matches to
+  //    another. Each route is hit with an attacker's id planted in EVERY
+  //    client-controllable channel (?id / ?user_id / ?subject in the query string
+  //    AND the JSON body). The guarantee is proven at the DB layer: every
+  //    composed read is keyed by the SESSION uid and the attacker's id NEVER
+  //    reaches a query param, so student A can never pull student B's data. ──
+  const ATTACK_QS = `id=${ATTACKER_UID}&user_id=${ATTACKER_UID}&subject=${ATTACKER_UID}`;
+  const selfOnlyReads: Array<{ name: string; path: string }> = [
+    { name: '/status', path: `/api/career-discovery/status?${ATTACK_QS}` },
+    { name: '/battery', path: `/api/career-discovery/battery?${ATTACK_QS}` },
+    { name: '/profile', path: `/api/career-discovery/profile?${ATTACK_QS}` },
+    { name: '/explorer', path: `/api/career-discovery/explorer?${ATTACK_QS}` },
+    { name: '/explorer/market', path: `/api/career-discovery/explorer/market?${ATTACK_QS}` },
+    { name: '/explorer/role/:roleId', path: `/api/career-discovery/explorer/role/42?${ATTACK_QS}` },
+  ];
+
+  for (const route of selfOnlyReads) {
+    probe.reset();
+    const r = await call(base, 'GET', route.path, {
+      auth: true,
+      body: { id: ATTACKER_UID, user_id: ATTACKER_UID, subject: ATTACKER_UID },
+    });
+    test(`CD flag ON → GET ${route.name} 200 for an authenticated seeker`, () => {
+      assert.equal(r.status, 200, `expected 200, got ${r.status}`);
+      assert.equal(r.json?.ok, true);
+    });
+    test(`CD flag ON → ${route.name} composed reads ran keyed by the SESSION uid`, () => {
+      assert.ok(probe.dbQueries.length > 0, 'expected the read to query the DB');
+      assert.ok(
+        probe.dbQueries.some((q) => (q.params ?? []).some((p) => String(p) === SESSION_UID)),
+        'no composed DB read was keyed by the SESSION uid',
+      );
+    });
+    test(`CD flag ON → ${route.name} attacker id NEVER reaches any DB query param (no IDOR A→B)`, () => {
+      const leaked = probe.dbQueries.filter((q) => (q.params ?? []).some((p) => String(p) === ATTACKER_UID));
+      assert.equal(
+        leaked.length,
+        0,
+        `a client-supplied id reached the DB layer in ${leaked.length} quer${leaked.length === 1 ? 'y' : 'ies'}: ` +
+          leaked.map((q) => q.sql.replace(/\s+/g, ' ').trim().slice(0, 80)).join(' | '),
+      );
+    });
+  }
 
   await new Promise<void>((resolve) => server.close(() => resolve()));
 

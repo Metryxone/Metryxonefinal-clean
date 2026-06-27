@@ -39,6 +39,10 @@ args = "live-avatar-billing-cap"
 task = "workflow.run"
 args = "live-avatar-degradation"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "isolation"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -104,6 +108,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx tests/live-avatar-degradation.test.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "isolation"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npm run test:isolation"
 
 [workflows.workflow.metadata]
 isValidation = true

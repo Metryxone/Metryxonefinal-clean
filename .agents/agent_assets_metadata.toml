@@ -1092,3 +1092,9 @@ id = "4JhBXPHEsr0TyVaPHqHLp"
 uri = "file://backend/audit/performance/PERFORMANCE_BENCHMARKS.md"
 type = "text"
 title = "MetryxOne Performance Benchmarks (PART 6)"
+
+[[outputs]]
+id = "-RN8vdJAE0Xu2iUk9IIro"
+uri = "file://backend/audit/mx-700/phase-1-current-state-discovery.md"
+type = "text"
+title = "MX-700 Phase 1 — CAPADEX Current State Discovery"

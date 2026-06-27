@@ -1,0 +1,27 @@
+{
+  "task": "MX-302A — Career Launchpad & Experience Routing · E2E (flag ON, live DB)",
+  "generatedAt": "2026-06-27T02:24:59.681Z",
+  "verdict": "PASS",
+  "passed": 3,
+  "total": 3,
+  "checks": [
+    {
+      "id": "E0",
+      "name": "careerLaunchpad flag is ON for this process",
+      "pass": true,
+      "detail": "isCareerLaunchpadEnabled()=true (FF_CAREER_LAUNCHPAD=1)"
+    },
+    {
+      "id": "E1",
+      "name": "existing profiles resolve to a defined experience (flag ON, no throw)",
+      "pass": true,
+      "detail": "exec-by-title → stage=executive (stored=false, derived=true) → exp=executive-studio · senior-by-title → stage=senior-leadership (stored=false, derived=true) → exp=leadership-studio · midcareer-by-years → stage=mid-career (stored=false, derived=true) → exp=command-center · early-by-years → stage=early-career (stored=false, derived=true) → exp=launchpad · graduate-by-zero-years → stage=graduate (stored=false, derived=true) → exp=launchpad · senior-by-experience-title → stage=senior-leadership (stored=false, derived=true) → exp=leadership-studio · midcareer-by-has-experience → stage=mid-career (stored=false, derived=true) → exp=command-center · empty-profile-present-row → stage=graduate (stored=false, derived=true) → exp=launchpad"
+    },
+    {
+      "id": "E2",
+      "name": "null-derivation (no profile row) defaults to Command Center, no throw",
+      "pass": true,
+      "detail": "no-row → stage=null stored=false derived=false → exp=command-center (want null → command-center)"
+    }
+  ]
+}

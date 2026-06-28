@@ -1158,3 +1158,9 @@ id = "TkwLisFfsPhk7FlXbP0am"
 uri = "file://backend/audit/mx-700/phase-1.3-parts-21-26-stage-progression-evolution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.3 Parts 21–26: Stage, Progression & Evolution (Product Constitution freeze)"
+
+[[outputs]]
+id = "r5KuW5nJeuw-hgm-8MAGj"
+uri = "file://backend/audit/mx-700/phase-1.4-ux-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.4: UX Constitution (Experience Bible)"

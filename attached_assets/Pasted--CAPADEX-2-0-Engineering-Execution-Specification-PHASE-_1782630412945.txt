@@ -1,0 +1,1028 @@
+# CAPADEX 2.0 — Engineering Execution Specification
+
+# PHASE 1.4 — UX CONSTITUTION (Experience Bible)
+
+> **Execution Mode:** ENHANCEMENT ONLY
+>
+> **DO NOT IMPLEMENT UI CHANGES**
+>
+> **DO NOT REBUILD THE FRONTEND**
+>
+> **DO NOT MODIFY BUSINESS LOGIC**
+>
+> This phase establishes the permanent UX Constitution that every future enhancement must follow.
+
+---
+
+# MISSION
+
+Create the permanent User Experience Constitution for CAPADEX.
+
+CAPADEX is not a collection of pages.
+
+It is a continuous Behaviour Intelligence experience.
+
+Every screen, interaction, recommendation, assessment, journey, report and AI conversation must feel like one unified product.
+
+This constitution defines that experience.
+
+---
+
+# PRIMARY OBJECTIVES
+
+Establish one UX philosophy.
+
+Standardize every user interaction.
+
+Define world-class experience principles.
+
+Transform CAPADEX from a traditional assessment platform into an engaging Behaviour Intelligence platform.
+
+Ensure every future enhancement improves usability.
+
+---
+
+# MANDATORY RULES
+
+Never redesign a screen without understanding its existing purpose.
+
+Never duplicate workflows.
+
+Never introduce inconsistent navigation.
+
+Never create different interaction patterns for similar features.
+
+Reuse existing components wherever possible.
+
+Enhance before replacing.
+
+Consistency always wins over novelty.
+
+---
+
+# PART 1 — CURRENT UX AUDIT
+
+Audit the existing implementation.
+
+Document
+
+Landing Experience
+
+Authentication Experience
+
+Registration Experience
+
+Navigation
+
+Persona Selection
+
+Concern Selection
+
+Assessment Flow
+
+Question Experience
+
+Report Experience
+
+Dashboard Experience
+
+Career Experience
+
+Learning Experience
+
+Pragati Experience
+
+Enterprise Experience
+
+SuperAdmin Experience
+
+Mobile Experience
+
+Accessibility
+
+Loading States
+
+Error States
+
+Empty States
+
+Animations
+
+Micro-interactions
+
+Identify
+
+Strengths
+
+Weaknesses
+
+UX Friction
+
+Duplicated Experiences
+
+Broken Journeys
+
+Dormant UX
+
+User Pain Points
+
+Improvement Opportunities
+
+---
+
+# PART 2 — UX PHILOSOPHY
+
+CAPADEX UX must feel
+
+Intelligent
+
+Personal
+
+Professional
+
+Conversational
+
+Adaptive
+
+Human
+
+Simple
+
+Premium
+
+Continuous
+
+Motivating
+
+Calm
+
+Trustworthy
+
+Explainable
+
+Every screen should reduce cognitive load.
+
+Every interaction should help users progress.
+
+---
+
+# PART 3 — EXPERIENCE PRINCIPLES
+
+Every experience must satisfy
+
+Clarity
+
+Speed
+
+Consistency
+
+Accessibility
+
+Trust
+
+Personalization
+
+Context Awareness
+
+Behaviour Awareness
+
+Journey Awareness
+
+Progress Awareness
+
+AI Explainability
+
+Enterprise Readiness
+
+---
+
+# PART 4 — FIRST IMPRESSION CONSTITUTION
+
+The first 60 seconds determine whether users continue.
+
+Audit and redesign the complete first experience.
+
+Landing
+
+Welcome
+
+Value Proposition
+
+Call to Action
+
+Persona Selection
+
+Concern Selection
+
+Assessment Entry
+
+Progress Preview
+
+Expected Outcome
+
+Trust Indicators
+
+Privacy
+
+Estimated Time
+
+Completion Benefits
+
+The first experience must immediately answer
+
+Why CAPADEX?
+
+Why now?
+
+Why me?
+
+---
+
+# PART 5 — PERSONA SELECTION EXPERIENCE
+
+Current implementation must be audited.
+
+Future UX must
+
+Present personas visually.
+
+Explain each persona.
+
+Recommend likely personas.
+
+Support search.
+
+Support enterprise personas.
+
+Support academic personas.
+
+Support corporate personas.
+
+Support future personas.
+
+Never overwhelm.
+
+One clear decision.
+
+---
+
+# PART 6 — CONCERN SELECTION EXPERIENCE
+
+Concern selection must become guided.
+
+Never show an unstructured list.
+
+Organize concerns using
+
+Categories
+
+Subcategories
+
+Popular
+
+Trending
+
+Recommended
+
+Recently Selected
+
+AI Suggested
+
+Enterprise Required
+
+Learning
+
+Career
+
+Leadership
+
+Mental Health
+
+Relationships
+
+Finance
+
+Technology
+
+Health
+
+Life
+
+Each concern should display
+
+Description
+
+Expected Outcomes
+
+Estimated Assessment Time
+
+Related Journeys
+
+Recommended Subscription
+
+---
+
+# PART 7 — ASSESSMENT EXPERIENCE
+
+Assessments must feel like conversations.
+
+Not forms.
+
+Not surveys.
+
+Not exams.
+
+Support
+
+Adaptive questioning.
+
+Real-time progress.
+
+Behaviour insights.
+
+Contextual guidance.
+
+Pause and resume.
+
+Estimated completion.
+
+Confidence indicators.
+
+Question explanations.
+
+Encouragement.
+
+Dynamic transitions.
+
+---
+
+# PART 8 — QUESTION EXPERIENCE
+
+Every question should provide
+
+Clear wording.
+
+Purpose.
+
+Context.
+
+Examples when needed.
+
+Progress indicator.
+
+Optional clarification.
+
+Accessibility.
+
+Keyboard navigation.
+
+Voice compatibility.
+
+Mobile friendliness.
+
+---
+
+# PART 9 — JOURNEY EXPERIENCE
+
+Every completed assessment starts a journey.
+
+Journey dashboard must display
+
+Current stage.
+
+Previous stage.
+
+Next stage.
+
+Progress.
+
+Achievements.
+
+Milestones.
+
+Recommendations.
+
+Learning.
+
+Career.
+
+Life.
+
+Behaviour.
+
+Decision readiness.
+
+---
+
+# PART 10 — REPORT EXPERIENCE
+
+Reports become living experiences.
+
+Not static PDFs.
+
+Support
+
+Interactive charts.
+
+Behaviour trends.
+
+Evidence.
+
+Confidence.
+
+Recommendations.
+
+Alternative recommendations.
+
+Explainability.
+
+AI conversations.
+
+Progress tracking.
+
+Benchmark comparisons.
+
+Action plans.
+
+---
+
+# PART 11 — PRAGATI EXPERIENCE
+
+Pragati becomes the user's Behaviour Intelligence Companion.
+
+Experience must include
+
+Natural conversations.
+
+Memory.
+
+Context awareness.
+
+Stage awareness.
+
+Behaviour awareness.
+
+Career coaching.
+
+Learning coaching.
+
+Decision support.
+
+Explainability.
+
+Conversation history.
+
+Suggested follow-ups.
+
+---
+
+# PART 12 — DASHBOARD EXPERIENCE
+
+Dashboards must answer
+
+Where am I?
+
+What changed?
+
+What should I do next?
+
+What deserves attention?
+
+Support
+
+Widgets.
+
+Cards.
+
+Timelines.
+
+Insights.
+
+Recommendations.
+
+Goals.
+
+Progress.
+
+Notifications.
+
+Achievements.
+
+Subscriptions.
+
+---
+
+# PART 13 — LEARNING EXPERIENCE
+
+Learning should feel personalized.
+
+Display
+
+Learning Path.
+
+Courses.
+
+Skills.
+
+Competencies.
+
+Behaviour Improvements.
+
+Achievements.
+
+Certifications.
+
+Recommendations.
+
+Learning Progress.
+
+---
+
+# PART 14 — CAREER EXPERIENCE
+
+Career UX should present
+
+Career Readiness.
+
+Role Match.
+
+Skill Gaps.
+
+Behaviour Fit.
+
+Market Trends.
+
+Career Timeline.
+
+Interview Readiness.
+
+Growth Plan.
+
+Salary Insights.
+
+Next Steps.
+
+---
+
+# PART 15 — ENTERPRISE EXPERIENCE
+
+Enterprise users require
+
+Organization dashboards.
+
+Department insights.
+
+Team analytics.
+
+Behaviour trends.
+
+Compliance.
+
+Permissions.
+
+Reports.
+
+Actionable insights.
+
+Bulk operations.
+
+Governance.
+
+---
+
+# PART 16 — SUPERADMIN EXPERIENCE
+
+SuperAdmin must provide
+
+Mission Control.
+
+Platform Health.
+
+Feature Flags.
+
+Ontology.
+
+Questions.
+
+Concerns.
+
+Journeys.
+
+Subscriptions.
+
+AI.
+
+Analytics.
+
+Configuration.
+
+Audit Trails.
+
+No duplicated administration.
+
+---
+
+# PART 17 — DESIGN SYSTEM CONSTITUTION
+
+Every UI element must follow one design system.
+
+Define standards for
+
+Typography.
+
+Color.
+
+Spacing.
+
+Icons.
+
+Buttons.
+
+Inputs.
+
+Cards.
+
+Tables.
+
+Charts.
+
+Dialogs.
+
+Badges.
+
+Notifications.
+
+Empty States.
+
+Loading States.
+
+Error States.
+
+Animations.
+
+Responsive behaviour.
+
+Dark Mode.
+
+Light Mode.
+
+Design Tokens.
+
+---
+
+# PART 18 — INTERACTION CONSTITUTION
+
+Interactions must be
+
+Predictable.
+
+Smooth.
+
+Responsive.
+
+Accessible.
+
+Every action should provide feedback.
+
+Hover.
+
+Focus.
+
+Pressed.
+
+Loading.
+
+Success.
+
+Failure.
+
+Undo where appropriate.
+
+---
+
+# PART 19 — ACCESSIBILITY CONSTITUTION
+
+Target WCAG 2.2 AA.
+
+Support
+
+Keyboard.
+
+Screen readers.
+
+High contrast.
+
+Reduced motion.
+
+Focus management.
+
+ARIA.
+
+Responsive layouts.
+
+Readable typography.
+
+Accessible colours.
+
+---
+
+# PART 20 — MOBILE EXPERIENCE
+
+Mobile UX must be first-class.
+
+Support
+
+Touch gestures.
+
+Responsive layouts.
+
+Offline resilience where applicable.
+
+Optimized forms.
+
+Fast loading.
+
+Accessible navigation.
+
+---
+
+# PART 21 — PERSONALIZATION CONSTITUTION
+
+Every user should experience
+
+Personalized home.
+
+Personalized dashboard.
+
+Personalized assessments.
+
+Personalized recommendations.
+
+Personalized journeys.
+
+Personalized learning.
+
+Personalized subscriptions.
+
+Personalized AI.
+
+---
+
+# PART 22 — MICRO-INTERACTIONS
+
+Standardize
+
+Transitions.
+
+Animations.
+
+Success states.
+
+Warnings.
+
+Celebrations.
+
+Progress.
+
+Loading.
+
+Empty states.
+
+Feedback.
+
+---
+
+# PART 23 — ERROR & RECOVERY EXPERIENCE
+
+Errors should
+
+Explain what happened.
+
+Explain why.
+
+Provide recovery.
+
+Provide retry.
+
+Never expose technical messages.
+
+Support graceful degradation.
+
+---
+
+# PART 24 — TRUST EXPERIENCE
+
+Every recommendation must display
+
+Evidence.
+
+Confidence.
+
+Source.
+
+Reasoning.
+
+Alternatives.
+
+Privacy statement.
+
+Data usage.
+
+Consent.
+
+---
+
+# PART 25 — UX SUCCESS METRICS
+
+Measure
+
+Time to first value.
+
+Assessment completion.
+
+Journey continuation.
+
+Recommendation usage.
+
+Pragati engagement.
+
+Subscription conversion.
+
+Dashboard engagement.
+
+User satisfaction.
+
+Accessibility.
+
+Task completion.
+
+---
+
+# PART 26 — UX GOVERNANCE
+
+Every UX enhancement must answer
+
+What existing UX is being improved?
+
+What existing components are reused?
+
+Does it reduce friction?
+
+Does it improve accessibility?
+
+Does it improve clarity?
+
+Does it improve progression?
+
+Does it align with Product Constitution?
+
+Does it align with Engineering Constitution?
+
+---
+
+# PART 27 — UX REVIEW BOARD
+
+Approval required from
+
+Founder
+
+Product
+
+UX
+
+Behaviour Science
+
+Engineering
+
+AI
+
+Accessibility
+
+Enterprise
+
+QA
+
+---
+
+# PART 28 — UX DEFINITION OF DONE
+
+A UX enhancement is complete only when
+
+Existing UX reused.
+
+No duplicate workflows.
+
+No duplicate components.
+
+Navigation consistent.
+
+Accessibility verified.
+
+Responsive verified.
+
+Loading states implemented.
+
+Error states implemented.
+
+Empty states implemented.
+
+Micro-interactions implemented.
+
+Documentation updated.
+
+Analytics updated.
+
+Founder approval obtained.
+
+---
+
+# PART 29 — WORLD-CLASS UX BENCHMARK
+
+Evaluate every future enhancement against
+
+Apple
+
+Google
+
+Microsoft
+
+Not by visual imitation, but by measurable UX qualities:
+
+* Simplicity
+* Discoverability
+* Consistency
+* Responsiveness
+* Accessibility
+* Performance
+* Trust
+* Personalization
+* Explainability
+* Continuous engagement
+
+Document gaps and improvements before implementation.
+
+---
+
+# PART 30 — DELIVERABLES
+
+Generate
+
+1. UX Constitution
+
+2. Experience Principles
+
+3. First Experience Constitution
+
+4. Persona Experience Constitution
+
+5. Concern Experience Constitution
+
+6. Assessment Experience Constitution
+
+7. Journey Experience Constitution
+
+8. Report Experience Constitution
+
+9. Pragati Experience Constitution
+
+10. Dashboard Experience Constitution
+
+11. Learning Experience Constitution
+
+12. Career Experience Constitution
+
+13. Enterprise Experience Constitution
+
+14. SuperAdmin Experience Constitution
+
+15. Design System Constitution
+
+16. Accessibility Constitution
+
+17. Mobile Constitution
+
+18. Personalization Constitution
+
+19. Interaction Constitution
+
+20. Trust Experience Constitution
+
+21. UX Governance Model
+
+22. UX Success Metrics
+
+23. UX Definition of Done
+
+24. UX Benchmark Framework
+
+---
+
+# STOP
+
+Freeze this UX Constitution after approval.
+
+Do not implement any UX redesign in this phase.
+
+All future frontend, design system, dashboard, assessment, report, Pragati, journey and SuperAdmin enhancement phases must comply with this UX Constitution.
+
+This document becomes the permanent UX Bible for CAPADEX.

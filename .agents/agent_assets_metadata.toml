@@ -1164,3 +1164,9 @@ id = "r5KuW5nJeuw-hgm-8MAGj"
 uri = "file://backend/audit/mx-700/phase-1.4-ux-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.4: UX Constitution (Experience Bible)"
+
+[[outputs]]
+id = "DgB5N_PN6qsmbGdGOXHLi"
+uri = "file://backend/audit/mx-700/phase-1.5-frontend-architecture-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.5: Frontend Architecture Constitution"

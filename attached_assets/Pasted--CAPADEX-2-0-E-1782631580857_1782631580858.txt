@@ -1,0 +1,1034 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.5
+#
+# FRONTEND ARCHITECTURE CONSTITUTION
+#
+# EXECUTION MODE
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT REWRITE
+# DO NOT IMPLEMENT NEW FEATURES
+# DO NOT MODIFY BUSINESS LOGIC
+# DO NOT MODIFY EXISTING UI
+#
+# THIS PHASE ESTABLISHES THE PERMANENT FRONTEND ARCHITECTURE CONSTITUTION
+# ==============================================================================
+
+MISSION
+
+Create the permanent Frontend Architecture Constitution for CAPADEX.
+
+This document defines how every frontend enhancement must be designed,
+implemented, reviewed and maintained.
+
+The objective is to evolve the existing frontend into a world-class enterprise
+architecture WITHOUT rebuilding it.
+
+Repository remains the source of truth.
+
+==============================================================================
+
+PRIMARY OBJECTIVES
+
+Standardize frontend architecture.
+
+Protect existing implementation.
+
+Maximize reuse.
+
+Improve maintainability.
+
+Improve scalability.
+
+Reduce technical debt.
+
+Increase consistency.
+
+Prepare the platform for long-term evolution.
+
+==============================================================================
+
+MANDATORY RULES
+
+Before changing any frontend code
+
+Search the repository.
+
+Locate the existing implementation.
+
+Understand why it exists.
+
+Document current behaviour.
+
+Enhance existing implementation.
+
+Never create duplicate components.
+
+Never create duplicate pages.
+
+Never create duplicate layouts.
+
+Never create duplicate hooks.
+
+Never create duplicate stores.
+
+Never create duplicate contexts.
+
+Never create duplicate UI primitives.
+
+==============================================================================
+
+PART 1
+
+CURRENT FRONTEND ARCHITECTURE AUDIT
+
+Audit the complete frontend.
+
+Document
+
+Framework
+
+Routing
+
+Layouts
+
+Pages
+
+Components
+
+Shared Components
+
+UI Library
+
+Design Tokens
+
+Theme
+
+Contexts
+
+Stores
+
+Hooks
+
+Utilities
+
+Feature Flags
+
+Forms
+
+Validation
+
+Charts
+
+Tables
+
+Navigation
+
+Dialogs
+
+Drawers
+
+Modals
+
+Animations
+
+Responsive Behaviour
+
+Accessibility
+
+Loading States
+
+Error States
+
+Empty States
+
+Technical Debt
+
+Duplicate Components
+
+Monolithic Components
+
+Large Pages
+
+Large Hooks
+
+Circular Dependencies
+
+==============================================================================
+
+PART 2
+
+FRONTEND PHILOSOPHY
+
+Frontend exists to
+
+Present
+
+Guide
+
+Educate
+
+Explain
+
+Visualize
+
+Engage
+
+Every screen must communicate
+
+Purpose
+
+Context
+
+Progress
+
+Confidence
+
+Evidence
+
+Recommendations
+
+Next Action
+
+Never display information without context.
+
+==============================================================================
+
+PART 3
+
+PAGE ARCHITECTURE
+
+Audit every page.
+
+Define standards.
+
+Every page shall contain
+
+Header
+
+Context
+
+Primary Action
+
+Secondary Actions
+
+Progress
+
+Content
+
+Feedback
+
+Footer
+
+Error Recovery
+
+Accessibility
+
+Analytics
+
+Feature Flags
+
+Permissions
+
+==============================================================================
+
+PART 4
+
+COMPONENT ARCHITECTURE
+
+Every component shall be
+
+Reusable
+
+Composable
+
+Small
+
+Independent
+
+Typed
+
+Accessible
+
+Testable
+
+Feature Flag Aware
+
+Analytics Aware
+
+Theme Aware
+
+Never duplicate components.
+
+Enhance existing ones.
+
+Document
+
+Component Hierarchy
+
+Dependency Graph
+
+Reusable Library
+
+Business Components
+
+Presentation Components
+
+Container Components
+
+==============================================================================
+
+PART 5
+
+LAYOUT ARCHITECTURE
+
+Audit existing layouts.
+
+Standardize
+
+Public Layout
+
+Authenticated Layout
+
+Assessment Layout
+
+Dashboard Layout
+
+Enterprise Layout
+
+SuperAdmin Layout
+
+Report Layout
+
+Conversation Layout
+
+Learning Layout
+
+Career Layout
+
+Mobile Layout
+
+==============================================================================
+
+PART 6
+
+ROUTING ARCHITECTURE
+
+Audit existing routing.
+
+Document
+
+Navigation
+
+Protected Routes
+
+Public Routes
+
+Deep Linking
+
+Lazy Loading
+
+Breadcrumbs
+
+Navigation Guards
+
+History
+
+URL Strategy
+
+Feature Flags
+
+Future Routing Evolution
+
+==============================================================================
+
+PART 7
+
+STATE MANAGEMENT CONSTITUTION
+
+Audit
+
+React State
+
+Context
+
+Zustand
+
+Redux
+
+Query Cache
+
+Session
+
+Local Storage
+
+Persistent Storage
+
+Feature Flags
+
+Document
+
+Ownership
+
+Dependencies
+
+Lifecycle
+
+Synchronization
+
+Performance
+
+==============================================================================
+
+PART 8
+
+HOOK ARCHITECTURE
+
+Audit every custom hook.
+
+Document
+
+Purpose
+
+Consumers
+
+Dependencies
+
+Performance
+
+Reusability
+
+Lifecycle
+
+Side Effects
+
+Duplicate Hooks
+
+Large Hooks
+
+Refactor Candidates
+
+==============================================================================
+
+PART 9
+
+FORM ARCHITECTURE
+
+Standardize
+
+Validation
+
+Autosave
+
+Progress
+
+Error Messages
+
+Accessibility
+
+Keyboard Support
+
+Mobile
+
+Recovery
+
+Versioning
+
+==============================================================================
+
+PART 10
+
+DESIGN SYSTEM IMPLEMENTATION
+
+Use existing Design Tokens.
+
+Reuse existing primitives.
+
+Never hardcode
+
+Colors
+
+Spacing
+
+Typography
+
+Icons
+
+Shadows
+
+Radius
+
+Transitions
+
+Every UI element must inherit from the design system.
+
+==============================================================================
+
+PART 11
+
+TABLE ARCHITECTURE
+
+Standardize
+
+Sorting
+
+Filtering
+
+Searching
+
+Pagination
+
+Selection
+
+Bulk Actions
+
+Export
+
+Responsive Behaviour
+
+Accessibility
+
+==============================================================================
+
+PART 12
+
+CHART ARCHITECTURE
+
+Standardize
+
+Behavior Charts
+
+Journey Charts
+
+Progress Charts
+
+Career Charts
+
+Learning Charts
+
+Enterprise Charts
+
+Accessibility
+
+Performance
+
+Color Tokens
+
+==============================================================================
+
+PART 13
+
+DASHBOARD ARCHITECTURE
+
+Every dashboard must be composed from reusable widgets.
+
+Widgets shall be
+
+Independent
+
+Configurable
+
+Role Aware
+
+Permission Aware
+
+Responsive
+
+Feature Flag Aware
+
+==============================================================================
+
+PART 14
+
+REPORT COMPONENT ARCHITECTURE
+
+Standardize
+
+Summary Cards
+
+Behaviour Cards
+
+Evidence Cards
+
+Confidence Cards
+
+Journey Cards
+
+Recommendation Cards
+
+Progress Cards
+
+Benchmark Cards
+
+Subscription Cards
+
+Action Cards
+
+Never duplicate report widgets.
+
+==============================================================================
+
+PART 15
+
+PRAGATI FRONTEND ARCHITECTURE
+
+Standardize
+
+Conversation Window
+
+History
+
+Memory
+
+Suggestions
+
+Context
+
+Evidence
+
+Confidence
+
+Actions
+
+Session
+
+Accessibility
+
+==============================================================================
+
+PART 16
+
+PERFORMANCE CONSTITUTION
+
+Audit
+
+Bundle Size
+
+Chunk Size
+
+Rendering
+
+Re-renders
+
+Memoization
+
+Suspense
+
+Lazy Loading
+
+Code Splitting
+
+Virtualization
+
+Caching
+
+Network Requests
+
+==============================================================================
+
+PART 17
+
+ACCESSIBILITY IMPLEMENTATION
+
+Target WCAG 2.2 AA.
+
+Audit
+
+ARIA
+
+Focus
+
+Keyboard
+
+Contrast
+
+Announcements
+
+Motion
+
+Forms
+
+Dialogs
+
+Charts
+
+==============================================================================
+
+PART 18
+
+RESPONSIVE CONSTITUTION
+
+Desktop
+
+Tablet
+
+Mobile
+
+Large Screens
+
+Touch
+
+Landscape
+
+Portrait
+
+Minimum Width
+
+Maximum Width
+
+Adaptive Layouts
+
+==============================================================================
+
+PART 19
+
+PERSONALIZATION ARCHITECTURE
+
+Every page must support
+
+Persona Context
+
+Concern Context
+
+Journey Context
+
+Learning Context
+
+Career Context
+
+Enterprise Context
+
+Behavior Context
+
+AI Context
+
+==============================================================================
+
+PART 20
+
+FEATURE FLAG ARCHITECTURE
+
+Every enhancement must support
+
+Feature Flags
+
+Progressive Rollout
+
+Environment Control
+
+Role Control
+
+Tenant Control
+
+Kill Switch
+
+==============================================================================
+
+PART 21
+
+ERROR ARCHITECTURE
+
+Standardize
+
+Loading
+
+Retry
+
+Timeout
+
+Offline
+
+Recovery
+
+Validation
+
+Empty States
+
+Permission Errors
+
+Network Errors
+
+==============================================================================
+
+PART 22
+
+ANIMATION CONSTITUTION
+
+Standardize
+
+Transitions
+
+Micro Animations
+
+Loading
+
+Success
+
+Warning
+
+Celebration
+
+Reduced Motion
+
+Performance
+
+==============================================================================
+
+PART 23
+
+FRONTEND SECURITY
+
+Protect
+
+Routes
+
+Sessions
+
+Tokens
+
+Permissions
+
+Sensitive Data
+
+Client Storage
+
+API Calls
+
+XSS
+
+Clickjacking
+
+==============================================================================
+
+PART 24
+
+FRONTEND ANALYTICS
+
+Every interaction should support
+
+Page Views
+
+Journey Progress
+
+Assessment Progress
+
+Report Usage
+
+Recommendation Usage
+
+Pragati Usage
+
+Subscription Events
+
+Performance
+
+Errors
+
+==============================================================================
+
+PART 25
+
+FRONTEND TESTING
+
+Standardize
+
+Component Tests
+
+Integration Tests
+
+Accessibility Tests
+
+Visual Regression
+
+Performance Tests
+
+Snapshot Tests
+
+Feature Flag Tests
+
+==============================================================================
+
+PART 26
+
+FRONTEND DOCUMENTATION
+
+Maintain
+
+Component Documentation
+
+Architecture
+
+Storybook Strategy
+
+API Usage
+
+Hook Documentation
+
+Design Tokens
+
+Patterns
+
+==============================================================================
+
+PART 27
+
+FRONTEND QUALITY GATES
+
+Every enhancement must verify
+
+Existing component reused
+
+No duplicate component
+
+No duplicate page
+
+No duplicate hook
+
+No duplicate layout
+
+No duplicate state
+
+Performance maintained
+
+Accessibility maintained
+
+Responsive behaviour verified
+
+Analytics updated
+
+Documentation updated
+
+==============================================================================
+
+PART 28
+
+FRONTEND REVIEW BOARD
+
+Mandatory approvals
+
+Founder
+
+Frontend Architect
+
+UX Architect
+
+Product
+
+AI
+
+Behavior Science
+
+Accessibility
+
+Security
+
+QA
+
+==============================================================================
+
+PART 29
+
+FRONTEND DEFINITION OF DONE
+
+Frontend enhancement completes only if
+
+Existing implementation enhanced
+
+No duplicate frontend
+
+Existing components reused
+
+Existing hooks reused
+
+Existing layouts reused
+
+Existing stores reused
+
+Feature Flags respected
+
+Performance maintained
+
+Accessibility verified
+
+Analytics updated
+
+Documentation updated
+
+No regressions
+
+==============================================================================
+
+PART 30
+
+DELIVERABLES
+
+Generate
+
+01 Frontend Architecture Constitution
+
+02 Frontend Architecture Report
+
+03 Component Architecture
+
+04 Layout Architecture
+
+05 Routing Architecture
+
+06 State Management Constitution
+
+07 Hook Constitution
+
+08 Design System Implementation Guide
+
+09 Dashboard Architecture
+
+10 Report Component Architecture
+
+11 Pragati Frontend Architecture
+
+12 Responsive Constitution
+
+13 Accessibility Constitution
+
+14 Feature Flag Architecture
+
+15 Frontend Security Constitution
+
+16 Frontend Analytics Constitution
+
+17 Frontend Testing Constitution
+
+18 Frontend Documentation Standards
+
+19 Frontend Quality Gates
+
+20 Frontend Definition of Done
+
+21 Frontend Review Board
+
+==============================================================================
+
+STOP
+
+Do not implement frontend changes.
+
+Do not redesign pages.
+
+Do not refactor components.
+
+Do not rebuild architecture.
+
+Do not modify routing.
+
+Do not change business logic.
+
+This phase defines the permanent Frontend Architecture Constitution.
+
+Every future frontend enhancement phase must comply with this constitution.
+
+Freeze after approval.

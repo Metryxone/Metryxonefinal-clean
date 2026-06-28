@@ -1344,3 +1344,9 @@ id = "i7fh6opNTK4lFroOJR7fi"
 uri = "file://backend/audit/mx-700/phase-1.34-devops-delivery-intelligence-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.34: DevOps & Delivery Intelligence Constitution (CI/CD + Release Management + Build System + Feature Flags + Deployment Governance + Change Management + Operational Readiness)"
+
+[[outputs]]
+id = "wTjRTuBj8ndJ_My_1fIxK"
+uri = "file://backend/audit/mx-700/phase-1.35-platform-operations-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.35: Platform Operations Intelligence Constitution (Production Operations + Incident Management + Service Management + SRE + SLA/SLO + Capacity + Availability + Operational Governance)"

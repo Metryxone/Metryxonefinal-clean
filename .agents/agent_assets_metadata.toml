@@ -1152,3 +1152,9 @@ id = "98UVujGdPTcaLfp8wC9hC"
 uri = "file://backend/audit/mx-700/phase-1.3-product-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.3: Product Constitution (Product Bible)"
+
+[[outputs]]
+id = "TkwLisFfsPhk7FlXbP0am"
+uri = "file://backend/audit/mx-700/phase-1.3-parts-21-26-stage-progression-evolution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.3 Parts 21–26: Stage, Progression & Evolution (Product Constitution freeze)"

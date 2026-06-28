@@ -1,0 +1,108 @@
+The remaining 0.5%
+
+I would only add six sections before freezing this permanently.
+
+PART 21 — Stage Constitution
+
+This is missing, and it's one of the most important pieces because your entire CAPADEX vision revolves around stages.
+
+It should formally define:
+
+Behaviour Stage
+Assessment Stage
+Journey Stage
+Learning Stage
+Career Stage
+Life Stage
+Conversation Stage (Pragati)
+Decision Stage
+Intervention Stage
+
+For each stage:
+
+Purpose
+Inputs
+Outputs
+Owner
+AI involvement
+Behaviour involvement
+Reports
+SuperAdmin visibility
+Stage completion criteria
+Transition criteria
+PART 22 — Progression Constitution
+
+Every user should always know:
+
+Current Stage
+Previous Stage
+Next Stage
+Completion %
+Behaviour Growth
+Learning Growth
+Career Growth
+Life Growth
+Subscription Progression
+
+This becomes the product rule for all future UX.
+
+PART 23 — Explainability Constitution
+
+Every recommendation must explain:
+
+Why this recommendation?
+Which behaviours influenced it?
+Which concerns contributed?
+Which evidence was used?
+Confidence level
+Alternative recommendations
+Why alternatives were not selected
+
+This becomes mandatory for AI and reports.
+
+PART 24 — Evidence & Confidence Constitution
+
+You already mention evidence and confidence, but it deserves its own governing section.
+
+Define:
+
+Evidence sources
+Evidence weighting
+Confidence calculation
+Low-confidence handling
+Abstention rules
+User-facing confidence presentation
+PART 25 — Subscription Progression Constitution
+
+This is one of the biggest opportunities for CAPADEX.
+
+Subscriptions should not simply unlock features.
+
+They should evolve based on:
+
+Persona
+Concern
+Behaviour maturity
+Journey stage
+Career stage
+Learning stage
+Life stage
+Enterprise role
+AI usage
+
+The constitution should state that subscription progression is personalized and continuous.
+
+PART 26 — Future Evolution Constitution
+
+Define that CAPADEX is designed to evolve through:
+
+New behaviour models
+New concern domains
+New personas
+New AI capabilities
+New stages
+New enterprise modules
+New analytics
+New industries
+
+without breaking the core architecture or existing user journeys.

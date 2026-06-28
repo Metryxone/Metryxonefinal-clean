@@ -1,0 +1,1175 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.22
+#
+# CAREER INTELLIGENCE CONSTITUTION
+# (CAREER OS + CAREER BUILDER + CAREER DISCOVERY + EMPLOYABILITY PASSPORT)
+#
+# EXECUTION MODE
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT CREATE A SECOND CAREER ENGINE
+# DO NOT REPLACE CAREER OS
+# DO NOT REPLACE CAREER BUILDER
+# DO NOT REPLACE EMPLOYABILITY PASSPORT
+# DO NOT MODIFY BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT CAREER CAPABILITIES
+#
+# THIS PHASE ESTABLISHES THE PERMANENT
+# CAREER INTELLIGENCE CONSTITUTION
+# ==============================================================================
+
+MISSION
+
+Create the permanent Career Intelligence Constitution for CAPADEX.
+
+Career Intelligence converts measurable capability into employability,
+career growth,
+career mobility,
+career readiness,
+career success,
+and lifelong professional development.
+
+Assessment Intelligence discovers.
+
+Behaviour Intelligence understands.
+
+Conversation Intelligence guides.
+
+Decision Intelligence prioritizes.
+
+Journey Intelligence plans.
+
+Intervention Intelligence develops.
+
+Learning Intelligence builds capability.
+
+Career Intelligence converts capability into opportunity.
+
+Life Intelligence sustains professional wellbeing.
+
+Enterprise Intelligence connects talent with opportunity.
+
+Repository remains the Single Source of Truth.
+
+Governance only.
+
+No implementation.
+
+==============================================================================
+HONESTY CONTRACT
+==============================================================================
+
+Measured = Live Repository + Live Database
+
+Derived = Career Science Interpretation
+
+Career ≠ Job
+
+Job ≠ Role
+
+Role ≠ Competency
+
+Competency ≠ Employability
+
+Employability ≠ Employment
+
+Employment ≠ Career Success
+
+Career Match ≠ Hiring Decision
+
+Career Recommendation ≠ Job Offer
+
+Career Readiness ≠ Guaranteed Placement
+
+Evidence ≠ Confidence
+
+Confidence ≠ Probability
+
+Potential ≠ Outcome
+
+AI ≠ Career Counselor
+
+Human remains responsible.
+
+Built ≠ Activated
+
+Flag Enabled ≠ Runtime Active
+
+Seeded Framework ≠ Career Ecosystem
+
+Null ≠ Zero
+
+==============================================================================
+
+PRIMARY OBJECTIVES
+
+Protect Career OS
+
+Protect Career Builder
+
+Protect Career Discovery
+
+Protect Career DNA
+
+Protect Role DNA
+
+Protect Opportunity Intelligence
+
+Protect Employability Passport
+
+Protect Resume Intelligence
+
+Protect Interview Intelligence
+
+Protect Career Analytics
+
+Protect Career Intelligence IP
+
+==============================================================================
+
+MANDATORY RULES
+
+Before modifying Career Intelligence
+
+Search repository
+
+Locate Career OS
+
+Locate Career Builder
+
+Locate Career Discovery
+
+Locate Career DNA
+
+Locate Role DNA
+
+Locate Career Graph
+
+Locate Employability Passport
+
+Locate Resume Intelligence
+
+Locate Interview Intelligence
+
+Locate Competency Intelligence
+
+Locate Learning Intelligence
+
+Locate Behaviour Intelligence
+
+Locate Decision Intelligence
+
+Locate Enterprise Intelligence
+
+Locate Reports
+
+Locate APIs
+
+Locate Database
+
+Never create another Career Engine.
+
+Never duplicate Career Intelligence.
+
+Never bypass Competency Intelligence.
+
+Never bypass Learning Intelligence.
+
+Never bypass Decision Intelligence.
+
+Enhance existing implementation only.
+
+==============================================================================
+
+PART 1
+
+CURRENT CAREER INTELLIGENCE AUDIT
+
+Audit
+
+Career OS
+
+Career Builder
+
+Career Discovery Engine
+
+Career DNA
+
+Role DNA
+
+Career Graph
+
+Career Recommendation Engine
+
+Career Match Engine
+
+Career Mobility Engine
+
+Career Path Engine
+
+Employability Passport
+
+Resume Intelligence
+
+Resume Builder
+
+Interview Intelligence
+
+Interview Preparation
+
+Job Matching
+
+Career Analytics
+
+Career Reports
+
+Career APIs
+
+Career AI
+
+Career Dashboard
+
+Career Technical Debt
+
+Career Duplication
+
+Dormant Career Components
+
+Activation Readiness
+
+==============================================================================
+
+PART 2
+
+CAREER PHILOSOPHY
+
+Career Intelligence exists to
+
+Discover
+
+Develop
+
+Prepare
+
+Guide
+
+Match
+
+Recommend
+
+Grow
+
+Transform
+
+Career Intelligence never guarantees
+
+Employment
+
+Promotion
+
+Salary
+
+Hiring
+
+Selection
+
+Career Intelligence augments professional decision making.
+
+==============================================================================
+
+PART 3
+
+CAREER DOMAIN ARCHITECTURE
+
+Career Core
+
+Career OS
+
+Career Builder
+
+Career Discovery
+
+Career DNA
+
+Role DNA
+
+Career Graph
+
+Opportunity Intelligence
+
+Resume Intelligence
+
+Interview Intelligence
+
+Career Analytics
+
+Career Reports
+
+Career AI
+
+Career Governance
+
+==============================================================================
+
+PART 4
+
+CAREER OS CONSTITUTION
+
+Career OS remains
+
+The only Career Intelligence Engine.
+
+Never replace Career OS.
+
+Never create Career OS V2.
+
+Never duplicate Career orchestration.
+
+Enhance only.
+
+Protect
+
+Career Logic
+
+Career Pipeline
+
+Career Memory
+
+Career Explainability
+
+==============================================================================
+
+PART 5
+
+CAREER BUILDER CONSTITUTION
+
+Protect
+
+Career Roadmaps
+
+Career Planning
+
+Career Milestones
+
+Career Goals
+
+Career Development
+
+Career Progress
+
+Career Reviews
+
+Career Builder originates from Decision Intelligence.
+
+==============================================================================
+
+PART 6
+
+CAREER DISCOVERY CONSTITUTION
+
+Career Discovery uses
+
+Behaviour
+
+Assessment
+
+Competencies
+
+Learning
+
+Decision
+
+Journey
+
+Career History
+
+Career Goals
+
+Confidence
+
+Every career recommendation explains WHY.
+
+==============================================================================
+
+PART 7
+
+CAREER DNA CONSTITUTION
+
+Protect
+
+Career DNA
+
+Career Profiles
+
+Professional Identity
+
+Career Characteristics
+
+Career Evolution
+
+Career Analytics
+
+Career Evidence
+
+==============================================================================
+
+PART 8
+
+ROLE DNA CONSTITUTION
+
+Protect
+
+Role Profiles
+
+Role Competencies
+
+Role Expectations
+
+Role Relationships
+
+Role Evolution
+
+Role Matching
+
+Never duplicate Role Intelligence.
+
+==============================================================================
+
+PART 9
+
+OPPORTUNITY INTELLIGENCE CONSTITUTION
+
+Support
+
+Career Opportunities
+
+Internal Mobility
+
+External Mobility
+
+Future Roles
+
+Emerging Careers
+
+Career Trends
+
+Opportunity Mapping
+
+==============================================================================
+
+PART 10
+
+EMPLOYABILITY PASSPORT CONSTITUTION
+
+Protect
+
+Employability Passport
+
+Competencies
+
+Evidence
+
+Projects
+
+Achievements
+
+Experience
+
+Learning Records
+
+Career Readiness
+
+Passport remains append-only.
+
+==============================================================================
+
+PART 11
+
+RESUME INTELLIGENCE CONSTITUTION
+
+Support
+
+Resume Builder
+
+Resume Analysis
+
+Resume Optimization
+
+Resume Evidence
+
+Resume Recommendations
+
+Resume Quality
+
+Resume Versions
+
+==============================================================================
+
+PART 12
+
+INTERVIEW INTELLIGENCE CONSTITUTION
+
+Support
+
+Interview Preparation
+
+Mock Interviews
+
+Interview Readiness
+
+Question Intelligence
+
+Feedback
+
+Interview Analytics
+
+Confidence Building
+
+==============================================================================
+
+PART 13
+
+CAREER EVIDENCE CONSTITUTION
+
+Evidence originates from
+
+Assessment
+
+Behaviour
+
+Competencies
+
+Learning
+
+Projects
+
+Achievements
+
+Career History
+
+Interview Performance
+
+Evidence contains
+
+Source
+
+Coverage
+
+Confidence
+
+Quality
+
+==============================================================================
+
+PART 14
+
+CAREER CONFIDENCE CONSTITUTION
+
+Separate
+
+Coverage
+
+Evidence
+
+Confidence
+
+Career Readiness
+
+Employability
+
+Capability
+
+Trust
+
+Never combine into one metric.
+
+==============================================================================
+
+PART 15
+
+CAREER EXPLAINABILITY CONSTITUTION
+
+Every recommendation explains
+
+Why
+
+Evidence
+
+Competency Drivers
+
+Behaviour Drivers
+
+Career Drivers
+
+Confidence
+
+Alternatives
+
+Trade-offs
+
+Expected Outcome
+
+==============================================================================
+
+PART 16
+
+CAREER AI CONSTITUTION
+
+AI
+
+Explains
+
+Guides
+
+Compares
+
+Summarizes
+
+Personalizes
+
+Supports
+
+Never guarantees employment.
+
+Never fabricates opportunities.
+
+Never bypasses governance.
+
+==============================================================================
+
+PART 17
+
+CAREER ANALYTICS CONSTITUTION
+
+Protect
+
+Career KPIs
+
+Career Readiness
+
+Employability
+
+Mobility
+
+Opportunity Fit
+
+Resume Quality
+
+Interview Readiness
+
+Career Trends
+
+==============================================================================
+
+PART 18
+
+CAREER REPORT CONSTITUTION
+
+Every report contains
+
+Career Summary
+
+Career DNA
+
+Role Match
+
+Opportunity Match
+
+Resume Quality
+
+Interview Readiness
+
+Evidence
+
+Confidence
+
+Recommendations
+
+Next Steps
+
+==============================================================================
+
+PART 19
+
+LONGITUDINAL CAREER CONSTITUTION
+
+Protect
+
+Career History
+
+Career Evolution
+
+Competency Evolution
+
+Learning Evolution
+
+Career Mobility
+
+Career Timeline
+
+Never overwrite career history.
+
+==============================================================================
+
+PART 20
+
+ENTERPRISE CAREER CONSTITUTION
+
+Support
+
+Internal Mobility
+
+Career Development
+
+Leadership Pipeline
+
+Succession Planning
+
+Talent Growth
+
+Career Programs
+
+Human approval required.
+
+==============================================================================
+
+PART 21
+
+SUPERADMIN CAREER CONSTITUTION
+
+Support
+
+Career Frameworks
+
+Role Libraries
+
+Career DNA
+
+Career Rules
+
+Matching Rules
+
+Analytics
+
+Reports
+
+Monitoring
+
+==============================================================================
+
+PART 22
+
+CAREER SECURITY CONSTITUTION
+
+Protect
+
+Career Data
+
+Resume Data
+
+Interview Data
+
+Career Evidence
+
+Reports
+
+Permissions
+
+Consent
+
+PII
+
+Tenant Isolation
+
+==============================================================================
+
+PART 23
+
+CAREER OBSERVABILITY
+
+Monitor
+
+Career OS
+
+Career Builder
+
+Career Discovery
+
+Matching
+
+Recommendations
+
+Latency
+
+Failures
+
+Quality
+
+==============================================================================
+
+PART 24
+
+CAREER TESTING CONSTITUTION
+
+Standardize
+
+Career Tests
+
+Matching Tests
+
+Resume Tests
+
+Interview Tests
+
+Regression Tests
+
+Performance Tests
+
+==============================================================================
+
+PART 25
+
+CAREER DOCUMENTATION
+
+Maintain
+
+Career Catalog
+
+Career DNA Catalog
+
+Role Catalog
+
+Career API Guide
+
+Career Analytics Guide
+
+==============================================================================
+
+PART 26
+
+CAREER GOVERNANCE
+
+Every Career enhancement answers
+
+Why is Career changing?
+
+What existing capability is reused?
+
+Does this duplicate Career Intelligence?
+
+Does this improve employability?
+
+Does this preserve Learning Intelligence?
+
+==============================================================================
+
+PART 27
+
+CAREER QUALITY GATES
+
+Verify
+
+Career OS reused
+
+Learning reused
+
+Competencies reused
+
+Behaviour reused
+
+Decision reused
+
+Journey reused
+
+Evidence exposed
+
+Confidence exposed
+
+Explainability complete
+
+Documentation updated
+
+==============================================================================
+
+PART 28
+
+CAREER REVIEW BOARD
+
+Mandatory Approval
+
+Founder
+
+Career Architect
+
+Behaviour Scientist
+
+Learning Architect
+
+Competency Architect
+
+Enterprise Architect
+
+AI Architect
+
+Research
+
+Security
+
+QA
+
+==============================================================================
+
+PART 29
+
+CAREER DEFINITION OF DONE
+
+Career enhancement completes only if
+
+Existing Career OS reused
+
+Career Builder preserved
+
+Career DNA preserved
+
+Role DNA preserved
+
+Competencies preserved
+
+Evidence exposed
+
+Confidence exposed
+
+Explainability complete
+
+Career history preserved
+
+Documentation updated
+
+No regressions
+
+==============================================================================
+
+PART 30
+
+CAREER MATURITY MODEL
+
+Assess
+
+Career OS
+
+Career Builder
+
+Career Discovery
+
+Career DNA
+
+Role DNA
+
+Opportunity Intelligence
+
+Employability Passport
+
+Resume Intelligence
+
+Interview Intelligence
+
+Career Analytics
+
+Levels
+
+1 Operational
+
+2 Guided
+
+3 Adaptive
+
+4 Intelligent
+
+5 Continuous Career Intelligence
+
+==============================================================================
+
+PART 31
+
+CAREER SCIENTIFIC VALIDATION
+
+Document
+
+Career Development Theory
+
+Vocational Psychology
+
+Career Construction Theory
+
+Competency Science
+
+Human Capital Theory
+
+Labour Market Intelligence
+
+Evidence Quality
+
+Bias Review
+
+Ethics
+
+Population Applicability
+
+==============================================================================
+
+PART 32
+
+CAREER EVOLUTION STRATEGY
+
+Future evolution supports
+
+New Career Models
+
+New Career DNA Models
+
+New Role DNA Models
+
+New Labour Market Models
+
+New AI Career Advisors
+
+New Enterprise Career Programs
+
+without breaking
+
+Assessment Intelligence
+
+Behaviour Intelligence
+
+Conversation Intelligence
+
+Decision Intelligence
+
+Intervention Intelligence
+
+Learning Intelligence
+
+Life Intelligence
+
+Enterprise Intelligence
+
+==============================================================================
+
+PART 33
+
+DELIVERABLES
+
+Generate
+
+01 Career Intelligence Constitution
+
+02 Career Architecture Report
+
+03 Career OS Constitution
+
+04 Career Builder Constitution
+
+05 Career Discovery Constitution
+
+06 Career DNA Constitution
+
+07 Role DNA Constitution
+
+08 Opportunity Intelligence Constitution
+
+09 Employability Passport Constitution
+
+10 Resume Intelligence Constitution
+
+11 Interview Intelligence Constitution
+
+12 Career Evidence Constitution
+
+13 Career Confidence Constitution
+
+14 Career Explainability Constitution
+
+15 Career AI Constitution
+
+16 Career Analytics Constitution
+
+17 Career Report Constitution
+
+18 Longitudinal Career Constitution
+
+19 Enterprise Career Constitution
+
+20 SuperAdmin Career Constitution
+
+21 Career Governance Constitution
+
+22 Career Quality Gates
+
+23 Career Review Board
+
+24 Career Definition of Done
+
+25 Career Scientific Validation
+
+26 Career Evolution Strategy
+
+27 Career Maturity Assessment
+
+==============================================================================
+
+STOP
+
+Do not modify Career OS.
+
+Do not replace Career Builder.
+
+Do not replace Employability Passport.
+
+Do not create another Career Engine.
+
+Do not activate dormant Career capabilities.
+
+Do not modify business logic.
+
+Do not bypass Assessment Intelligence.
+
+Do not bypass Behaviour Intelligence.
+
+Do not bypass Decision Intelligence.
+
+Do not bypass Learning Intelligence.
+
+Do not bypass Competency Intelligence.
+
+Freeze this Career Intelligence Constitution after approval.
+
+Every future
+
+Career Intelligence enhancement,
+
+Career OS enhancement,
+
+Career Builder enhancement,
+
+Career Discovery enhancement,
+
+Career DNA enhancement,
+
+Role DNA enhancement,
+
+Employability Passport enhancement,
+
+Resume Intelligence enhancement,
+
+Interview Intelligence enhancement,
+
+Career Analytics enhancement,
+
+and Career AI enhancement
+
+must comply with this Constitution.

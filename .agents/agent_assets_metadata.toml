@@ -1320,3 +1320,9 @@ id = "b6zzAShuD-Nov41R7_Oed"
 uri = "file://backend/audit/mx-700/phase-1.30-security-intelligence-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.30: Security Intelligence Constitution (Zero Trust + Identity + Authentication + Authorization + Threat + Audit Intelligence)"
+
+[[outputs]]
+id = "VRiroGq-WyYkz5TnlgFTE"
+uri = "file://backend/audit/mx-700/phase-1.31-data-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.31: Data Intelligence Constitution (Master Data + Data Governance + Data Quality + Data Lineage + Data Lifecycle + Data Observability)"

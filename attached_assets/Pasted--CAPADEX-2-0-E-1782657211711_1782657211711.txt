@@ -1,0 +1,1131 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.31
+#
+# DATA INTELLIGENCE CONSTITUTION
+# (MASTER DATA + DATA GOVERNANCE + DATA QUALITY + DATA LINEAGE +
+# DATA LIFECYCLE + DATA OBSERVABILITY)
+#
+# EXECUTION MODE
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT CREATE A SECOND DATA PLATFORM
+# DO NOT REPLACE DATA ARCHITECTURE
+# DO NOT CREATE DATA V2
+# DO NOT MODIFY BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT DATA CAPABILITIES
+#
+# THIS PHASE ESTABLISHES THE PERMANENT
+# DATA INTELLIGENCE CONSTITUTION
+#
+# ==============================================================================
+
+MISSION
+
+Create the permanent Data Intelligence Constitution for CAPADEX.
+
+Data Intelligence is the foundation upon which every intelligence layer operates.
+
+Assessment Intelligence consumes data.
+
+Behaviour Intelligence derives behavioural models.
+
+Concern Intelligence derives semantic meaning.
+
+Competency Intelligence derives capability models.
+
+Decision Intelligence derives explainable decisions.
+
+Learning Intelligence derives growth.
+
+Career Intelligence derives employability.
+
+Report Intelligence communicates.
+
+Analytics Intelligence measures.
+
+AI Intelligence augments.
+
+Enterprise Intelligence governs.
+
+Security Intelligence protects.
+
+Data Intelligence ensures every piece of information remains
+accurate,
+trusted,
+governed,
+traceable,
+recoverable,
+auditable,
+and reusable.
+
+Repository remains the Single Source of Truth.
+
+Governance only.
+
+No implementation.
+
+==============================================================================
+HONESTY CONTRACT
+==============================================================================
+
+Measured = Live Repository + Live Database using exact SELECT COUNT(*)
+
+Derived = Data Architecture Interpretation
+
+Data ≠ Information
+
+Information ≠ Knowledge
+
+Knowledge ≠ Intelligence
+
+Schema ≠ Data
+
+Table ≠ Entity
+
+Entity ≠ Record
+
+Record ≠ Truth
+
+Null ≠ Zero
+
+Missing ≠ Empty
+
+Duplicate ≠ Same
+
+Snapshot ≠ History
+
+History ≠ Version
+
+Archive ≠ Backup
+
+Backup ≠ Recovery
+
+Migration ≠ Synchronization
+
+Validation ≠ Cleansing
+
+Lineage ≠ Ownership
+
+Ownership ≠ Stewardship
+
+Coverage ≠ Confidence
+
+Evidence ≠ Confidence
+
+Human remains accountable.
+
+Built ≠ Activated
+
+Flag Enabled ≠ Runtime Active
+
+Never fabricate.
+
+Never estimate.
+
+Never use n_live_tup.
+
+==============================================================================
+PRIMARY OBJECTIVES
+==============================================================================
+
+Protect Data Intelligence
+
+Protect Master Data
+
+Protect Data Governance
+
+Protect Data Lineage
+
+Protect Data Quality
+
+Protect Data Integrity
+
+Protect Data Lifecycle
+
+Protect Data Contracts
+
+Protect Data Observability
+
+Protect Data Intelligence IP
+
+==============================================================================
+MANDATORY RULES
+==============================================================================
+
+Before modifying Data Intelligence
+
+Search repository
+
+Locate Master Tables
+
+Locate Transaction Tables
+
+Locate Ontology Tables
+
+Locate Concern Master
+
+Locate Competency Data
+
+Locate Behaviour Data
+
+Locate Assessment Data
+
+Locate Journey Data
+
+Locate Decision Data
+
+Locate Report Data
+
+Locate Analytics Data
+
+Locate AI Data
+
+Locate Enterprise Data
+
+Locate Security Data
+
+Locate Migration Scripts
+
+Locate Schema Validators
+
+Locate Database
+
+Never create another data platform.
+
+Never duplicate master data.
+
+Never duplicate schemas.
+
+Never duplicate entity ownership.
+
+Enhance existing implementation only.
+
+==============================================================================
+PART 1
+
+CURRENT DATA INTELLIGENCE AUDIT
+
+Perform complete repository audit.
+
+Perform complete database audit.
+
+Measure
+
+Master Data
+
+Reference Data
+
+Configuration Data
+
+Transactional Data
+
+Ontology Tables
+
+Concern Master
+
+Behaviour Data
+
+Assessment Data
+
+Competency Data
+
+Journey Data
+
+Decision Data
+
+Report Data
+
+Analytics Data
+
+AI Data
+
+Enterprise Data
+
+Security Data
+
+Data Warehouse
+
+Materialized Views
+
+Indexes
+
+Constraints
+
+Foreign Keys
+
+Views
+
+Stored Procedures
+
+Schema Migrations
+
+Data Contracts
+
+Data Validators
+
+Duplicate Tables
+
+Orphan Tables
+
+Dead Tables
+
+Dormant Tables
+
+Technical Debt
+
+Activation Readiness
+
+Classify every component
+
+LIVE
+
+PARTIAL
+
+SEEDED
+
+DORMANT
+
+BROKEN
+
+EMPTY
+
+TECH DEBT
+
+MISSING
+
+Explicitly identify
+
+Repository implementation
+
+Database population
+
+Runtime activation
+
+Duplicate entities
+
+Broken relationships
+
+Broken foreign keys
+
+Broken migrations
+
+Broken integrity
+
+==============================================================================
+PART 2
+
+DATA PHILOSOPHY
+
+Data Intelligence exists to
+
+Store
+
+Protect
+
+Validate
+
+Govern
+
+Relate
+
+Version
+
+Recover
+
+Reuse
+
+Data never
+
+Creates intelligence
+
+Changes business meaning
+
+Duplicates ownership
+
+Breaks integrity
+
+==============================================================================
+PART 3
+
+DATA DOMAIN ARCHITECTURE
+
+Master Data
+
+Reference Data
+
+Transactional Data
+
+Ontology
+
+Metadata
+
+Lineage
+
+Governance
+
+Lifecycle
+
+Observability
+
+Integrity
+
+Contracts
+
+Recovery
+
+==============================================================================
+PART 4
+
+MASTER DATA CONSTITUTION
+
+Master Data remains
+
+the canonical source.
+
+Protect
+
+Concern Master
+
+Competency Master
+
+Ontology
+
+Persona Master
+
+Role Master
+
+Permission Master
+
+Organization Master
+
+Never duplicate master entities.
+
+==============================================================================
+PART 5
+
+REFERENCE DATA CONSTITUTION
+
+Protect
+
+Lookup Tables
+
+Enums
+
+Categories
+
+Domains
+
+Status Codes
+
+Mappings
+
+Localization
+
+==============================================================================
+
+PART 6
+
+DATA LINEAGE CONSTITUTION
+
+Every data element records
+
+Origin
+
+Transformation
+
+Ownership
+
+Consumers
+
+Dependencies
+
+Version
+
+Never lose lineage.
+
+==============================================================================
+
+PART 7
+
+DATA QUALITY CONSTITUTION
+
+Protect
+
+Completeness
+
+Consistency
+
+Validity
+
+Accuracy
+
+Uniqueness
+
+Timeliness
+
+Integrity
+
+==============================================================================
+
+PART 8
+
+DATA INTEGRITY CONSTITUTION
+
+Protect
+
+Primary Keys
+
+Foreign Keys
+
+Constraints
+
+Transactions
+
+Relationships
+
+Referential Integrity
+
+==============================================================================
+
+PART 9
+
+DATA CONTRACT CONSTITUTION
+
+Protect
+
+API Contracts
+
+Schema Contracts
+
+Integration Contracts
+
+Version Compatibility
+
+Backward Compatibility
+
+==============================================================================
+
+PART 10
+
+DATA LIFECYCLE CONSTITUTION
+
+Protect
+
+Creation
+
+Validation
+
+Storage
+
+Usage
+
+Versioning
+
+Archival
+
+Retention
+
+Deletion
+
+==============================================================================
+
+PART 11
+
+DATA VERSIONING CONSTITUTION
+
+Protect
+
+Schema Versions
+
+Entity Versions
+
+Migration History
+
+Audit Versions
+
+Historical Snapshots
+
+==============================================================================
+
+PART 12
+
+DATA EVIDENCE CONSTITUTION
+
+Evidence originates from
+
+Assessment
+
+Behaviour
+
+Concern
+
+Competency
+
+Decision
+
+Learning
+
+Career
+
+Reports
+
+Analytics
+
+AI
+
+Enterprise
+
+Security
+
+Evidence contains
+
+Source
+
+Coverage
+
+Confidence
+
+Quality
+
+==============================================================================
+
+PART 13
+
+DATA CONFIDENCE CONSTITUTION
+
+Separate
+
+Coverage
+
+Evidence
+
+Confidence
+
+Integrity
+
+Trust
+
+==============================================================================
+
+PART 14
+
+DATA EXPLAINABILITY CONSTITUTION
+
+Every dataset documents
+
+Purpose
+
+Owner
+
+Source
+
+Lineage
+
+Consumers
+
+Limitations
+
+==============================================================================
+
+PART 15
+
+DATA OBSERVABILITY CONSTITUTION
+
+Monitor
+
+Freshness
+
+Completeness
+
+Latency
+
+Failures
+
+Replication
+
+Integrity
+
+Schema Drift
+
+==============================================================================
+
+PART 16
+
+DATA GOVERNANCE CONSTITUTION
+
+Protect
+
+Ownership
+
+Stewardship
+
+Classification
+
+Retention
+
+Compliance
+
+Approval
+
+==============================================================================
+
+PART 17
+
+DATA SECURITY CONSTITUTION
+
+Protect
+
+PII
+
+Sensitive Data
+
+Encryption
+
+Masking
+
+Access Control
+
+Consent
+
+==============================================================================
+
+PART 18
+
+BACKUP & RECOVERY CONSTITUTION
+
+Protect
+
+Backups
+
+Snapshots
+
+Recovery
+
+Disaster Recovery
+
+Restore Validation
+
+==============================================================================
+
+PART 19
+
+DATA MIGRATION CONSTITUTION
+
+Protect
+
+Migration Scripts
+
+Rollback
+
+Forward Compatibility
+
+Idempotency
+
+Schema Evolution
+
+==============================================================================
+
+PART 20
+
+DATA ARCHIVAL CONSTITUTION
+
+Protect
+
+Cold Storage
+
+Historical Data
+
+Retention
+
+Legal Hold
+
+Recovery
+
+==============================================================================
+
+PART 21
+
+SUPERADMIN DATA CONSTITUTION
+
+Support
+
+Schema Management
+
+Reference Data
+
+Master Data
+
+Policies
+
+Monitoring
+
+==============================================================================
+
+PART 22
+
+DATA TESTING CONSTITUTION
+
+Standardize
+
+Schema Tests
+
+Migration Tests
+
+Integrity Tests
+
+Contract Tests
+
+Regression Tests
+
+==============================================================================
+
+PART 23
+
+DATA DOCUMENTATION
+
+Maintain
+
+Data Dictionary
+
+Entity Catalog
+
+Schema Catalog
+
+Lineage Catalog
+
+Migration Guide
+
+Data API Guide
+
+==============================================================================
+
+PART 24
+
+DATA GOVERNANCE REVIEW
+
+Every enhancement answers
+
+Why is Data changing?
+
+What existing capability is reused?
+
+Does this duplicate master data?
+
+Does this preserve integrity?
+
+Does this preserve lineage?
+
+==============================================================================
+
+PART 25
+
+DATA QUALITY GATES
+
+Verify
+
+Master Data reused
+
+Integrity preserved
+
+Lineage preserved
+
+Contracts preserved
+
+Evidence exposed
+
+Confidence exposed
+
+Documentation updated
+
+==============================================================================
+
+PART 26
+
+DATA REVIEW BOARD
+
+Founder
+
+Chief Data Architect
+
+Database Architect
+
+Enterprise Architect
+
+Data Governance Lead
+
+Security Architect
+
+Research
+
+QA
+
+==============================================================================
+
+PART 27
+
+DATA DEFINITION OF DONE
+
+Data enhancement completes only if
+
+Master Data preserved
+
+Integrity preserved
+
+Lineage preserved
+
+Contracts preserved
+
+Documentation updated
+
+No regressions
+
+==============================================================================
+
+PART 28
+
+DATA MATURITY MODEL
+
+Assess
+
+Master Data
+
+Reference Data
+
+Lineage
+
+Quality
+
+Governance
+
+Observability
+
+Contracts
+
+Recovery
+
+Levels
+
+1 Operational
+
+2 Guided
+
+3 Managed
+
+4 Intelligent
+
+5 Self-Governing Data Platform
+
+Human approval remains mandatory.
+
+==============================================================================
+
+PART 29
+
+DATA SCIENTIFIC VALIDATION
+
+Document
+
+Database Engineering
+
+Data Governance
+
+Information Architecture
+
+Metadata Management
+
+Master Data Management
+
+Data Quality
+
+Data Modeling
+
+Distributed Databases
+
+Privacy Engineering
+
+==============================================================================
+
+PART 30
+
+DATA EVOLUTION STRATEGY
+
+Future evolution supports
+
+New Domains
+
+New Schemas
+
+New Ontologies
+
+New Master Data
+
+New Integrations
+
+New Data Products
+
+without breaking
+
+Assessment Intelligence
+
+Behaviour Intelligence
+
+Concern Intelligence
+
+Competency Intelligence
+
+Decision Intelligence
+
+Learning Intelligence
+
+Career Intelligence
+
+Intervention Intelligence
+
+Report Intelligence
+
+Analytics Intelligence
+
+AI Intelligence
+
+Enterprise Intelligence
+
+Security Intelligence
+
+==============================================================================
+
+PART 31
+
+DELIVERABLES
+
+Generate
+
+01 Data Intelligence Constitution
+
+02 Repository Data Audit
+
+03 Master Data Constitution
+
+04 Reference Data Constitution
+
+05 Data Lineage Constitution
+
+06 Data Quality Constitution
+
+07 Data Integrity Constitution
+
+08 Data Contract Constitution
+
+09 Data Lifecycle Constitution
+
+10 Data Versioning Constitution
+
+11 Data Evidence Constitution
+
+12 Data Confidence Constitution
+
+13 Data Explainability Constitution
+
+14 Data Observability Constitution
+
+15 Data Governance Constitution
+
+16 Data Security Constitution
+
+17 Backup & Recovery Constitution
+
+18 Data Migration Constitution
+
+19 Data Archival Constitution
+
+20 SuperAdmin Data Constitution
+
+21 Data Governance Review
+
+22 Data Quality Gates
+
+23 Data Review Board
+
+24 Data Definition of Done
+
+25 Data Scientific Validation
+
+26 Data Evolution Strategy
+
+27 Data Maturity Assessment
+
+==============================================================================
+
+STOP
+
+Do not modify Data Architecture.
+
+Do not replace Master Data.
+
+Do not create another Data Platform.
+
+Do not activate dormant Data capabilities.
+
+Do not modify business logic.
+
+Do not bypass Data Governance.
+
+Do not bypass Data Integrity.
+
+Do not bypass Master Data.
+
+Do not bypass Assessment Intelligence.
+
+Do not bypass Behaviour Intelligence.
+
+Do not bypass Concern Intelligence.
+
+Do not bypass Competency Intelligence.
+
+Do not bypass Decision Intelligence.
+
+Do not bypass Learning Intelligence.
+
+Do not bypass Career Intelligence.
+
+Do not bypass Intervention Intelligence.
+
+Do not bypass Report Intelligence.
+
+Do not bypass Analytics Intelligence.
+
+Do not bypass AI Intelligence.
+
+Do not bypass Enterprise Intelligence.
+
+Do not bypass Security Intelligence.
+
+Freeze this Data Intelligence Constitution after approval.
+
+Every future
+
+Data enhancement,
+
+Master Data enhancement,
+
+Schema enhancement,
+
+Migration enhancement,
+
+Data Governance enhancement,
+
+Data Quality enhancement,
+
+Data Lineage enhancement,
+
+Data Observability enhancement,
+
+Data Security enhancement,
+
+and Data Architecture enhancement
+
+must comply with this Constitution.

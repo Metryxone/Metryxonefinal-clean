@@ -1272,3 +1272,9 @@ id = "OHGubsP7pk1Gb97vMnv8O"
 uri = "file://backend/audit/mx-700/phase-1.22-career-intelligence-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.22: Career Intelligence Constitution (Career OS + Career Builder + Career Discovery + Employability Passport)"
+
+[[outputs]]
+id = "Q8EUqp4Tl-GhPv7JKl5kF"
+uri = "file://backend/audit/mx-700/phase-1.23-competency-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.23: Competency Intelligence Constitution (onto_* Genome + Competency Graph + Competency Intelligence Engine)"

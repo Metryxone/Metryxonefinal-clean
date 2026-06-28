@@ -1,0 +1,1063 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.23
+#
+# COMPETENCY INTELLIGENCE CONSTITUTION
+# (ONTO_* GENOME + COMPETENCY GRAPH + COMPETENCY INTELLIGENCE ENGINE)
+#
+# EXECUTION MODE
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT CREATE A SECOND COMPETENCY ENGINE
+# DO NOT REPLACE THE ONTO_* GENOME
+# DO NOT CREATE COMPETENCY V2
+# DO NOT MODIFY BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT COMPETENCY CAPABILITIES
+#
+# THIS PHASE ESTABLISHES THE PERMANENT
+# COMPETENCY INTELLIGENCE CONSTITUTION
+# ==============================================================================
+
+MISSION
+
+Create the permanent Competency Intelligence Constitution for CAPADEX.
+
+Competency Intelligence is the canonical capability layer that transforms
+behaviour,
+knowledge,
+skills,
+experience,
+learning,
+performance,
+and evidence
+into measurable human competencies.
+
+Assessment Intelligence measures.
+
+Behaviour Intelligence explains.
+
+Conversation Intelligence guides.
+
+Decision Intelligence prioritizes.
+
+Learning Intelligence develops.
+
+Career Intelligence applies.
+
+Competency Intelligence defines capability.
+
+Repository remains the Single Source of Truth.
+
+Governance only.
+
+No implementation.
+
+==============================================================================
+HONESTY CONTRACT
+==============================================================================
+
+Measured = Live Repository + Live Database
+
+Derived = Competency Science Interpretation
+
+Competency ≠ Skill
+
+Skill ≠ Knowledge
+
+Knowledge ≠ Experience
+
+Experience ≠ Performance
+
+Performance ≠ Capability
+
+Capability ≠ Competency
+
+Competency ≠ Employability
+
+Evidence ≠ Confidence
+
+Confidence ≠ Competence
+
+Competence ≠ Mastery
+
+Mastery ≠ Expertise
+
+Ontology ≠ Runtime
+
+Seeded Taxonomy ≠ Competency Ecosystem
+
+AI ≠ Competency Evaluator
+
+Human remains responsible.
+
+Built ≠ Activated
+
+Flag Enabled ≠ Runtime Active
+
+Null ≠ Zero
+
+==============================================================================
+PRIMARY OBJECTIVES
+==============================================================================
+
+Protect onto_* Genome
+
+Protect Competency Intelligence
+
+Protect Competency Graph
+
+Protect Competency Relationships
+
+Protect Competency Evolution
+
+Protect Competency Evidence
+
+Protect Competency Analytics
+
+Protect Competency Recommendations
+
+Protect Competency Explainability
+
+Protect Competency Intelligence IP
+
+==============================================================================
+MANDATORY RULES
+==============================================================================
+
+Before modifying Competency Intelligence
+
+Search repository
+
+Locate onto_*
+
+Locate Competency Engine
+
+Locate Competency Intelligence
+
+Locate Competency Graph
+
+Locate Competency Relationships
+
+Locate Competency Evolution
+
+Locate Competency Mapping
+
+Locate Learning Intelligence
+
+Locate Behaviour Intelligence
+
+Locate Assessment Intelligence
+
+Locate Career Intelligence
+
+Locate Decision Intelligence
+
+Locate Reports
+
+Locate APIs
+
+Locate Database
+
+Never create another Competency Engine.
+
+Never duplicate Competency Intelligence.
+
+Never bypass onto_*.
+
+Never bypass Behaviour Intelligence.
+
+Never bypass Learning Intelligence.
+
+Enhance existing implementation only.
+
+==============================================================================
+PART 1
+
+CURRENT COMPETENCY INTELLIGENCE AUDIT
+
+Perform a repository-wide and database-wide audit.
+
+Measure and classify:
+
+• onto_* competency framework
+• onto_competencies
+• onto_domains
+• onto_clusters
+• onto_categories
+• onto_subcategories
+• competency bridge tables
+• competency graph
+• competency mappings
+• competency evidence
+• competency history
+• competency analytics
+• competency reports
+• competency APIs
+• competency AI
+• competency dashboards
+• competency technical debt
+• duplicate competency implementations
+• dormant competency runtime
+• activation readiness
+
+For every component classify as
+
+LIVE
+
+PARTIAL
+
+SEEDED
+
+DORMANT
+
+BROKEN
+
+EMPTY
+
+TECH DEBT
+
+MISSING
+
+Provide a measured repository report.
+
+Never estimate.
+
+==============================================================================
+
+PART 2
+
+COMPETENCY PHILOSOPHY
+
+Competency Intelligence exists to
+
+Define
+
+Measure
+
+Develop
+
+Validate
+
+Strengthen
+
+Transfer
+
+Evolve
+
+Explain
+
+Competency Intelligence never guarantees
+
+Performance
+
+Employment
+
+Promotion
+
+Leadership
+
+Success
+
+Competencies describe capability.
+
+They do not predict destiny.
+
+==============================================================================
+
+PART 3
+
+COMPETENCY DOMAIN ARCHITECTURE
+
+Competency Core
+
+onto_* Genome
+
+Competency Intelligence
+
+Competency Graph
+
+Competency Relationships
+
+Competency Evolution
+
+Competency Evidence
+
+Competency Analytics
+
+Competency Reports
+
+Competency AI
+
+Competency Governance
+
+==============================================================================
+
+PART 4
+
+ONTO_* GENOME CONSTITUTION
+
+The onto_* framework remains
+
+the only canonical competency genome.
+
+Never replace onto_*.
+
+Never create onto_v2.
+
+Never fork competencies.
+
+Never duplicate competency ontology.
+
+Enhance only.
+
+Protect
+
+Competencies
+
+Domains
+
+Clusters
+
+Categories
+
+Relationships
+
+Inheritance
+
+Mappings
+
+Evolution
+
+==============================================================================
+
+PART 5
+
+COMPETENCY GRAPH CONSTITUTION
+
+Protect
+
+Competency Nodes
+
+Competency Relationships
+
+Competency Dependencies
+
+Competency Paths
+
+Competency Evolution
+
+Competency Provenance
+
+Competency Timeline
+
+Graph remains canonical.
+
+==============================================================================
+
+PART 6
+
+COMPETENCY RELATIONSHIP CONSTITUTION
+
+Protect
+
+Prerequisites
+
+Dependencies
+
+Transferability
+
+Complementary Competencies
+
+Role Relationships
+
+Learning Relationships
+
+Behaviour Relationships
+
+Career Relationships
+
+==============================================================================
+
+PART 7
+
+COMPETENCY EVOLUTION CONSTITUTION
+
+Track
+
+Competency Development
+
+Competency Progress
+
+Competency Reinforcement
+
+Competency Decay
+
+Competency History
+
+Competency Versions
+
+Competency evolution is append-only.
+
+==============================================================================
+
+PART 8
+
+COMPETENCY MAPPING CONSTITUTION
+
+Support mappings between
+
+Behaviour
+
+Learning
+
+Career
+
+Assessment
+
+Decision
+
+Role DNA
+
+Career DNA
+
+Interview Intelligence
+
+Resume Intelligence
+
+Never duplicate mappings.
+
+==============================================================================
+
+PART 9
+
+COMPETENCY EVIDENCE CONSTITUTION
+
+Evidence originates from
+
+Assessment
+
+Behaviour
+
+Learning
+
+Projects
+
+Experience
+
+Career
+
+Achievements
+
+Historical Evidence
+
+Evidence contains
+
+Source
+
+Coverage
+
+Confidence
+
+Quality
+
+==============================================================================
+
+PART 10
+
+COMPETENCY RECOMMENDATION CONSTITUTION
+
+Every recommendation evaluates
+
+Behaviour
+
+Assessment
+
+Learning
+
+Career
+
+Evidence
+
+Confidence
+
+Transferability
+
+Dependencies
+
+Never recommend without evidence.
+
+==============================================================================
+
+PART 11
+
+COMPETENCY CONFIDENCE CONSTITUTION
+
+Separate
+
+Coverage
+
+Evidence
+
+Confidence
+
+Capability
+
+Mastery
+
+Competence
+
+Trust
+
+Never combine into one metric.
+
+==============================================================================
+
+PART 12
+
+COMPETENCY EXPLAINABILITY CONSTITUTION
+
+Every competency explains
+
+Why
+
+Evidence
+
+Dependencies
+
+Relationships
+
+Confidence
+
+Alternatives
+
+Limitations
+
+Expected Development
+
+==============================================================================
+
+PART 13
+
+COMPETENCY AI CONSTITUTION
+
+AI
+
+Explains
+
+Maps
+
+Summarizes
+
+Supports
+
+Personalizes
+
+Never invent competencies.
+
+Never fabricate mastery.
+
+Never bypass governance.
+
+==============================================================================
+
+PART 14
+
+COMPETENCY ANALYTICS CONSTITUTION
+
+Protect
+
+Competency KPIs
+
+Competency Growth
+
+Competency Distribution
+
+Competency Coverage
+
+Competency Trends
+
+Transferability
+
+Development Velocity
+
+==============================================================================
+
+PART 15
+
+COMPETENCY REPORT CONSTITUTION
+
+Every report contains
+
+Competency Summary
+
+Competency Graph
+
+Evidence
+
+Confidence
+
+Relationships
+
+Recommendations
+
+Next Development
+
+==============================================================================
+
+PART 16
+
+LONGITUDINAL COMPETENCY CONSTITUTION
+
+Protect
+
+Competency History
+
+Competency Evolution
+
+Competency Growth
+
+Transferability
+
+Development Timeline
+
+Never overwrite competency history.
+
+==============================================================================
+
+PART 17
+
+ENTERPRISE COMPETENCY CONSTITUTION
+
+Support
+
+Competency Frameworks
+
+Role Frameworks
+
+Leadership Competencies
+
+Department Competencies
+
+Capability Planning
+
+Competency Benchmarking
+
+Human approval required.
+
+==============================================================================
+
+PART 18
+
+SUPERADMIN COMPETENCY CONSTITUTION
+
+Support
+
+Competency Libraries
+
+Ontology Management
+
+Competency Rules
+
+Competency Relationships
+
+Competency Policies
+
+Analytics
+
+Monitoring
+
+==============================================================================
+
+PART 19
+
+COMPETENCY SECURITY CONSTITUTION
+
+Protect
+
+Competency Data
+
+Evidence
+
+Mappings
+
+Reports
+
+Permissions
+
+Consent
+
+PII
+
+Tenant Isolation
+
+==============================================================================
+
+PART 20
+
+COMPETENCY OBSERVABILITY
+
+Monitor
+
+Competency Engine
+
+Ontology
+
+Graph
+
+Mappings
+
+Latency
+
+Failures
+
+Coverage
+
+Quality
+
+==============================================================================
+
+PART 21
+
+COMPETENCY TESTING CONSTITUTION
+
+Standardize
+
+Ontology Tests
+
+Relationship Tests
+
+Graph Tests
+
+Mapping Tests
+
+Regression Tests
+
+Performance Tests
+
+==============================================================================
+
+PART 22
+
+COMPETENCY DOCUMENTATION
+
+Maintain
+
+Competency Catalog
+
+Ontology Catalog
+
+Relationship Catalog
+
+Competency API Guide
+
+Competency Analytics Guide
+
+==============================================================================
+
+PART 23
+
+COMPETENCY GOVERNANCE
+
+Every enhancement answers
+
+Why is Competency changing?
+
+What existing capability is reused?
+
+Does this duplicate onto_*?
+
+Does this improve competency science?
+
+Does this preserve Behaviour Intelligence?
+
+==============================================================================
+
+PART 24
+
+COMPETENCY QUALITY GATES
+
+Verify
+
+onto_* reused
+
+Behaviour reused
+
+Assessment reused
+
+Learning reused
+
+Career reused
+
+Evidence exposed
+
+Confidence exposed
+
+Explainability complete
+
+Documentation updated
+
+==============================================================================
+
+PART 25
+
+COMPETENCY REVIEW BOARD
+
+Mandatory Approval
+
+Founder
+
+Competency Architect
+
+Behaviour Scientist
+
+Learning Architect
+
+Career Architect
+
+Ontology Architect
+
+AI Architect
+
+Research
+
+Security
+
+QA
+
+==============================================================================
+
+PART 26
+
+COMPETENCY DEFINITION OF DONE
+
+Competency enhancement completes only if
+
+Existing onto_* reused
+
+Competency Graph preserved
+
+Mappings preserved
+
+Relationships preserved
+
+Evidence exposed
+
+Confidence exposed
+
+Explainability complete
+
+History preserved
+
+Documentation updated
+
+No regressions
+
+==============================================================================
+
+PART 27
+
+COMPETENCY MATURITY MODEL
+
+Assess
+
+onto_* Genome
+
+Competency Graph
+
+Relationships
+
+Mappings
+
+Evolution
+
+Analytics
+
+Reports
+
+Enterprise Competencies
+
+Levels
+
+1 Operational
+
+2 Guided
+
+3 Adaptive
+
+4 Intelligent
+
+5 Continuous Competency Intelligence
+
+==============================================================================
+
+PART 28
+
+COMPETENCY SCIENTIFIC VALIDATION
+
+Document
+
+Competency Science
+
+Ontology Engineering
+
+Knowledge Representation
+
+Capability Modeling
+
+Behaviour Science
+
+Learning Science
+
+Evidence Quality
+
+Bias Review
+
+Ethics
+
+Population Applicability
+
+==============================================================================
+
+PART 29
+
+COMPETENCY EVOLUTION STRATEGY
+
+Future evolution supports
+
+New Competency Models
+
+New Ontologies
+
+New Role Frameworks
+
+New Industry Competencies
+
+New AI Mapping Models
+
+New Enterprise Competency Programs
+
+without breaking
+
+Assessment Intelligence
+
+Behaviour Intelligence
+
+Conversation Intelligence
+
+Decision Intelligence
+
+Intervention Intelligence
+
+Learning Intelligence
+
+Career Intelligence
+
+Life Intelligence
+
+Enterprise Intelligence
+
+==============================================================================
+
+PART 30
+
+DELIVERABLES
+
+Generate
+
+01 Competency Intelligence Constitution
+
+02 Repository Competency Audit
+
+03 onto_* Constitution
+
+04 Competency Graph Constitution
+
+05 Competency Relationship Constitution
+
+06 Competency Evolution Constitution
+
+07 Competency Mapping Constitution
+
+08 Competency Evidence Constitution
+
+09 Competency Recommendation Constitution
+
+10 Competency Confidence Constitution
+
+11 Competency Explainability Constitution
+
+12 Competency AI Constitution
+
+13 Competency Analytics Constitution
+
+14 Competency Report Constitution
+
+15 Longitudinal Competency Constitution
+
+16 Enterprise Competency Constitution
+
+17 SuperAdmin Competency Constitution
+
+18 Competency Governance Constitution
+
+19 Competency Quality Gates
+
+20 Competency Review Board
+
+21 Competency Definition of Done
+
+22 Competency Scientific Validation
+
+23 Competency Evolution Strategy
+
+24 Competency Maturity Assessment
+
+==============================================================================
+
+STOP
+
+Do not modify onto_*.
+
+Do not replace Competency Intelligence.
+
+Do not create another Competency Engine.
+
+Do not activate dormant Competency capabilities.
+
+Do not modify business logic.
+
+Do not bypass Assessment Intelligence.
+
+Do not bypass Behaviour Intelligence.
+
+Do not bypass Decision Intelligence.
+
+Do not bypass Learning Intelligence.
+
+Do not bypass Career Intelligence.
+
+Freeze this Competency Intelligence Constitution after approval.
+
+Every future
+
+Competency Intelligence enhancement,
+
+onto_* enhancement,
+
+Competency Graph enhancement,
+
+Competency Mapping enhancement,
+
+Competency Recommendation enhancement,
+
+Competency Analytics enhancement,
+
+Enterprise Competency enhancement,
+
+and Competency AI enhancement
+
+must comply with this Constitution.

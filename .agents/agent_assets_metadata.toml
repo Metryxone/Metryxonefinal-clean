@@ -1128,3 +1128,9 @@ id = "FCViYHbmR4PZvVpLKY-NR"
 uri = "file://backend/audit/mx-700/phase-0.1-repository-intelligence-model.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 0.1: Repository Intelligence Model"
+
+[[outputs]]
+id = "7wCrgmTG7piSD0kkFaXDX"
+uri = "file://backend/audit/mx-700/engineering-constitution-capability-report.md"
+type = "text"
+title = "CAPADEX 2.0 — Engineering Constitution: Capability Report & Classification"

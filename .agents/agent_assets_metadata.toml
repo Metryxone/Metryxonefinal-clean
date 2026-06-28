@@ -1206,3 +1206,9 @@ id = "K52PoyOk49cudKeiD3qty"
 uri = "file://backend/audit/mx-700/phase-1.11-decision-intelligence-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.11: Decision Intelligence Constitution"
+
+[[outputs]]
+id = "TudPpkZ2aeJs2on_1txx-"
+uri = "file://backend/audit/mx-700/phase-1.12-journey-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.12: Journey Intelligence Constitution"

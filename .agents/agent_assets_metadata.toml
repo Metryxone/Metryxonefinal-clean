@@ -1188,3 +1188,9 @@ id = "u9RWBACSswJYKkOJz8kif"
 uri = "file://backend/audit/mx-700/phase-1.8-api-architecture-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.8: API Architecture Constitution"
+
+[[outputs]]
+id = "6o12OKXLB6biaQ_85H7uU"
+uri = "file://backend/audit/mx-700/phase-1.9-ai-architecture-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.9: AI Architecture Constitution"

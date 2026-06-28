@@ -1,0 +1,1143 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.9
+#
+# AI ARCHITECTURE CONSTITUTION
+#
+# EXECUTION MODE
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT BUILD A NEW AI SYSTEM
+# DO NOT CREATE A SECOND AI ASSISTANT
+# DO NOT REBUILD PRAGATI
+# DO NOT CHANGE BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT AI CAPABILITIES
+#
+# THIS PHASE ESTABLISHES THE PERMANENT AI ARCHITECTURE CONSTITUTION
+# ==============================================================================
+
+MISSION
+
+Create the permanent Artificial Intelligence Constitution for CAPADEX.
+
+This constitution governs every AI capability including
+
+Pragati
+
+Behaviour Intelligence
+
+Decision Intelligence
+
+Recommendation Intelligence
+
+Career Intelligence
+
+Learning Intelligence
+
+Conversation Intelligence
+
+Assessment Intelligence
+
+Enterprise Intelligence
+
+Report Intelligence
+
+Predictive Intelligence
+
+Generative Intelligence
+
+Explainability
+
+Memory
+
+Reasoning
+
+Prompt Engineering
+
+Safety
+
+Evaluation
+
+Observability
+
+Repository remains the single source of truth.
+
+This phase establishes governance only.
+
+No implementation.
+
+==============================================================================
+
+PRIMARY OBJECTIVES
+
+Protect existing AI investment.
+
+Protect Pragati.
+
+Create one unified AI architecture.
+
+Prevent duplicate AI systems.
+
+Standardize reasoning.
+
+Standardize explainability.
+
+Standardize evidence.
+
+Standardize confidence.
+
+Standardize AI governance.
+
+Prepare AI for enterprise scale.
+
+==============================================================================
+
+MANDATORY RULES
+
+Before modifying any AI capability
+
+Search repository.
+
+Locate AI implementation.
+
+Locate Prompt.
+
+Locate Services.
+
+Locate Consumers.
+
+Locate Reports.
+
+Locate Behaviour dependencies.
+
+Locate Decision dependencies.
+
+Locate Journey dependencies.
+
+Locate Memory.
+
+Locate Context.
+
+Understand existing reasoning.
+
+Never assume AI capability is missing.
+
+Never duplicate AI services.
+
+Never duplicate prompts.
+
+Never create another assistant.
+
+Never bypass Pragati.
+
+==============================================================================
+
+PART 1
+
+CURRENT AI ARCHITECTURE AUDIT
+
+Audit
+
+Pragati
+
+OpenAI
+
+LLM Providers
+
+Prompt Library
+
+Prompt Registry
+
+Reasoning
+
+Conversation Engine
+
+Memory
+
+Session Management
+
+Behaviour Intelligence
+
+Decision Intelligence
+
+Assessment Intelligence
+
+Career Intelligence
+
+Learning Intelligence
+
+Recommendation Intelligence
+
+Report Intelligence
+
+Speech
+
+Whisper
+
+HeyGen
+
+Embeddings
+
+Vector Search
+
+AI Configuration
+
+Feature Flags
+
+Safety
+
+Moderation
+
+Evaluation
+
+Observability
+
+Technical Debt
+
+Duplicate Prompts
+
+Duplicate Services
+
+Unused AI Modules
+
+Dormant AI
+
+==============================================================================
+
+PART 2
+
+AI PHILOSOPHY
+
+AI exists to
+
+Understand
+
+Explain
+
+Coach
+
+Guide
+
+Educate
+
+Recommend
+
+Predict
+
+Summarize
+
+Never replace
+
+Behaviour Science
+
+Psychology
+
+Evidence
+
+Human judgement
+
+AI augments humans.
+
+AI never becomes the decision maker.
+
+==============================================================================
+
+PART 3
+
+AI DOMAIN ARCHITECTURE
+
+Document
+
+Conversation Intelligence
+
+Behaviour Intelligence
+
+Assessment Intelligence
+
+Decision Intelligence
+
+Journey Intelligence
+
+Learning Intelligence
+
+Career Intelligence
+
+Life Intelligence
+
+Enterprise Intelligence
+
+Analytics Intelligence
+
+Recommendation Intelligence
+
+Knowledge Intelligence
+
+Administration Intelligence
+
+Every AI capability belongs to one domain.
+
+==============================================================================
+
+PART 4
+
+PRAGATI CONSTITUTION
+
+Pragati remains the single AI companion.
+
+Never create
+
+Assistant V2
+
+Coach V2
+
+Career AI
+
+Learning AI
+
+Decision AI
+
+Report AI
+
+as separate assistants.
+
+Everything extends Pragati.
+
+Pragati owns
+
+Conversation
+
+Memory
+
+Reasoning
+
+Guidance
+
+Behaviour Understanding
+
+Context
+
+Journey Awareness
+
+Recommendation
+
+Explainability
+
+==============================================================================
+
+PART 5
+
+PROMPT ARCHITECTURE CONSTITUTION
+
+Every prompt documents
+
+Purpose
+
+Owner
+
+Consumers
+
+Inputs
+
+Outputs
+
+Variables
+
+Dependencies
+
+Version
+
+Safety Rules
+
+Evaluation Rules
+
+Fallback
+
+Never duplicate prompts.
+
+Reuse.
+
+Version.
+
+Enhance.
+
+==============================================================================
+
+PART 6
+
+CONTEXT ARCHITECTURE
+
+AI context contains
+
+Persona
+
+Concern
+
+Behaviour
+
+Assessment
+
+Journey
+
+Learning
+
+Career
+
+Life
+
+Enterprise
+
+History
+
+Preferences
+
+Subscriptions
+
+Goals
+
+Permissions
+
+Context must be assembled.
+
+Never fabricated.
+
+==============================================================================
+
+PART 7
+
+MEMORY ARCHITECTURE
+
+Document
+
+Short Term Memory
+
+Long Term Memory
+
+Conversation Memory
+
+Behaviour Memory
+
+Assessment Memory
+
+Journey Memory
+
+Learning Memory
+
+Career Memory
+
+Enterprise Memory
+
+Memory Lifecycle
+
+Retention
+
+Expiry
+
+Privacy
+
+Consent
+
+Never invent memory.
+
+==============================================================================
+
+PART 8
+
+REASONING CONSTITUTION
+
+Every reasoning chain must include
+
+Context
+
+Evidence
+
+Behaviour
+
+Confidence
+
+Alternatives
+
+Explanation
+
+Recommendation
+
+Next Step
+
+Reasoning must remain deterministic where possible.
+
+AI cannot skip evidence.
+
+==============================================================================
+
+PART 9
+
+BEHAVIOUR INTELLIGENCE CONSTITUTION
+
+Behaviour Intelligence remains the foundation.
+
+AI consumes
+
+Signals
+
+Patterns
+
+Competencies
+
+Evidence
+
+Confidence
+
+Strengths
+
+Concerns
+
+AI never bypasses Behaviour Engine.
+
+==============================================================================
+
+PART 10
+
+DECISION INTELLIGENCE CONSTITUTION
+
+Document
+
+Decision Context
+
+Evidence
+
+Alternatives
+
+Confidence
+
+Outcome Projection
+
+Decision History
+
+Decision Explanation
+
+Dormant Capabilities
+
+No activation.
+
+==============================================================================
+
+PART 11
+
+ASSESSMENT INTELLIGENCE CONSTITUTION
+
+Protect
+
+Adaptive Questioning
+
+Assessment Guidance
+
+Assessment Summary
+
+Behaviour Insights
+
+Completion Guidance
+
+Journey Trigger
+
+AI explanations
+
+==============================================================================
+
+PART 12
+
+RECOMMENDATION CONSTITUTION
+
+Every recommendation includes
+
+Why
+
+Evidence
+
+Confidence
+
+Alternatives
+
+Behaviour Factors
+
+Concern Factors
+
+Journey Impact
+
+Learning Impact
+
+Career Impact
+
+Subscription Impact
+
+==============================================================================
+
+PART 13
+
+EXPLAINABILITY CONSTITUTION
+
+Every AI output explains
+
+Why
+
+How
+
+Evidence
+
+Confidence
+
+Assumptions
+
+Alternatives
+
+Limitations
+
+Sources
+
+Abstention Reasons
+
+==============================================================================
+
+PART 14
+
+EVIDENCE & CONFIDENCE CONSTITUTION
+
+Separate
+
+Coverage
+
+Confidence
+
+Evidence
+
+Probability
+
+Trust
+
+Every output exposes
+
+Evidence Source
+
+Evidence Quality
+
+Confidence Band
+
+Missing Evidence
+
+No fabricated confidence.
+
+==============================================================================
+
+PART 15
+
+SAFETY CONSTITUTION
+
+Protect against
+
+Hallucination
+
+Prompt Injection
+
+Jailbreak
+
+Bias
+
+Toxicity
+
+Unsafe Advice
+
+Medical Diagnosis
+
+Legal Advice
+
+Financial Advice
+
+Self Harm
+
+Crisis Escalation
+
+Human Review
+
+==============================================================================
+
+PART 16
+
+HUMAN-IN-THE-LOOP CONSTITUTION
+
+AI proposes.
+
+Humans approve.
+
+Enterprise decisions
+
+Clinical interpretations
+
+Hiring decisions
+
+Promotions
+
+Disciplinary actions
+
+Never become fully automated.
+
+==============================================================================
+
+PART 17
+
+AI OBSERVABILITY
+
+Audit
+
+Latency
+
+Token Usage
+
+Cost
+
+Prompt Versions
+
+Failures
+
+Fallbacks
+
+Model Usage
+
+Safety Events
+
+User Feedback
+
+Quality Scores
+
+==============================================================================
+
+PART 18
+
+AI EVALUATION
+
+Evaluate
+
+Accuracy
+
+Consistency
+
+Grounding
+
+Behaviour Alignment
+
+Explainability
+
+Recommendation Quality
+
+Safety
+
+User Satisfaction
+
+Regression
+
+==============================================================================
+
+PART 19
+
+AI SECURITY
+
+Protect
+
+Prompts
+
+Secrets
+
+Keys
+
+Models
+
+Memory
+
+PII
+
+Enterprise Data
+
+Prompt Injection
+
+Output Filtering
+
+==============================================================================
+
+PART 20
+
+MODEL MANAGEMENT
+
+Document
+
+Model Registry
+
+Versioning
+
+Fallback Models
+
+Routing
+
+Temperature
+
+Top P
+
+Max Tokens
+
+Streaming
+
+Selection Rules
+
+==============================================================================
+
+PART 21
+
+MULTI-MODEL ARCHITECTURE
+
+Support
+
+OpenAI
+
+Azure OpenAI
+
+Anthropic
+
+Gemini
+
+Local Models
+
+Future Models
+
+Never lock architecture to one provider.
+
+==============================================================================
+
+PART 22
+
+AI FEATURE FLAGS
+
+Every AI enhancement supports
+
+Environment Flags
+
+Tenant Flags
+
+Role Flags
+
+Model Flags
+
+Prompt Flags
+
+Kill Switch
+
+==============================================================================
+
+PART 23
+
+AI PERFORMANCE
+
+Audit
+
+Latency
+
+Streaming
+
+Caching
+
+Memory Usage
+
+Concurrency
+
+Cost
+
+Scaling
+
+Rate Limits
+
+==============================================================================
+
+PART 24
+
+AI TESTING
+
+Standardize
+
+Prompt Tests
+
+Regression Tests
+
+Evaluation Suites
+
+Grounding Tests
+
+Safety Tests
+
+Performance Tests
+
+Hallucination Tests
+
+Red Team Tests
+
+==============================================================================
+
+PART 25
+
+AI DOCUMENTATION
+
+Maintain
+
+Prompt Catalog
+
+Model Catalog
+
+Reasoning Catalog
+
+Memory Catalog
+
+Evaluation Reports
+
+Safety Reports
+
+Architecture
+
+Configuration
+
+==============================================================================
+
+PART 26
+
+AI GOVERNANCE
+
+Every AI enhancement must answer
+
+Why is AI required?
+
+Can existing AI perform this?
+
+Does Pragati already support this?
+
+Does it duplicate prompts?
+
+Does it duplicate reasoning?
+
+Does it improve Behaviour Intelligence?
+
+Does it improve user outcomes?
+
+==============================================================================
+
+PART 27
+
+AI QUALITY GATES
+
+Verify
+
+Existing AI reused
+
+Pragati reused
+
+Existing prompts reused
+
+Existing reasoning reused
+
+Evidence exposed
+
+Confidence exposed
+
+Safety verified
+
+Evaluation passed
+
+Documentation updated
+
+==============================================================================
+
+PART 28
+
+AI REVIEW BOARD
+
+Mandatory Approval
+
+Founder
+
+AI Architect
+
+Behaviour Scientist
+
+Psychologist
+
+Product
+
+Enterprise
+
+Security
+
+Legal
+
+QA
+
+==============================================================================
+
+PART 29
+
+AI DEFINITION OF DONE
+
+AI enhancement completes only if
+
+Existing AI enhanced
+
+Pragati enhanced
+
+No duplicate assistant
+
+No duplicate prompts
+
+Behaviour integrated
+
+Decision integrated
+
+Journey integrated
+
+Evidence exposed
+
+Confidence exposed
+
+Explainability complete
+
+Safety verified
+
+Evaluation passed
+
+Documentation updated
+
+No regressions
+
+==============================================================================
+
+PART 30
+
+AI MATURITY MODEL
+
+Assess
+
+Conversation Intelligence
+
+Behaviour Intelligence
+
+Assessment Intelligence
+
+Decision Intelligence
+
+Journey Intelligence
+
+Learning Intelligence
+
+Career Intelligence
+
+Recommendation Intelligence
+
+Enterprise Intelligence
+
+Report Intelligence
+
+Levels
+
+1 Operational
+
+2 Assisted
+
+3 Context Aware
+
+4 Reasoning
+
+5 Behaviour Intelligence
+
+Document
+
+Current maturity
+
+Target maturity
+
+Enhancement roadmap
+
+==============================================================================
+
+PART 31
+
+DELIVERABLES
+
+Generate
+
+01 AI Architecture Constitution
+
+02 AI Architecture Report
+
+03 Pragati Constitution
+
+04 Prompt Architecture Constitution
+
+05 Context Constitution
+
+06 Memory Constitution
+
+07 Behaviour Intelligence Constitution
+
+08 Decision Intelligence Constitution
+
+09 Assessment Intelligence Constitution
+
+10 Recommendation Constitution
+
+11 Explainability Constitution
+
+12 Evidence Constitution
+
+13 Confidence Constitution
+
+14 Safety Constitution
+
+15 Human-in-the-Loop Constitution
+
+16 Model Management Constitution
+
+17 AI Observability Constitution
+
+18 AI Evaluation Constitution
+
+19 AI Security Constitution
+
+20 AI Testing Constitution
+
+21 AI Governance Constitution
+
+22 AI Quality Gates
+
+23 AI Review Board
+
+24 AI Definition of Done
+
+25 AI Maturity Assessment
+
+==============================================================================
+
+STOP
+
+Do not modify AI services.
+
+Do not create new assistants.
+
+Do not replace Pragati.
+
+Do not modify prompts.
+
+Do not activate dormant AI.
+
+Do not rebuild reasoning.
+
+Do not change business logic.
+
+Freeze this AI Architecture Constitution after approval.
+
+Every future AI enhancement, Behaviour Intelligence enhancement,
+Decision Intelligence enhancement, Recommendation enhancement,
+Conversation enhancement and Enterprise AI enhancement must comply
+with this constitution.

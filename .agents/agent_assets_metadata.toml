@@ -1248,3 +1248,9 @@ id = "sEQzHILDtY4QPivxpTizQ"
 uri = "file://backend/audit/mx-700/phase-1.18-conversation-intelligence-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.18: Conversation Intelligence Constitution (Pragati)"
+
+[[outputs]]
+id = "gd5JEogGm-C9AeMrAkd6c"
+uri = "file://backend/audit/mx-700/phase-1.19-decision-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.19: Decision Intelligence Constitution (WC-3 + Decision Orchestrator)"

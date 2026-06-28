@@ -1308,3 +1308,9 @@ id = "kLpDxKkYc1hYuhKPJGqGD"
 uri = "file://backend/audit/mx-700/phase-1.28-ai-intelligence-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.28: AI Intelligence Constitution (AI Gateway + Model Registry + Prompt Registry + AI Orchestration)"
+
+[[outputs]]
+id = "lreQGsIfTbOAPynmMk1s2"
+uri = "file://backend/audit/mx-700/phase-1.29-enterprise-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.29: Enterprise Intelligence Constitution (Multi-Tenant + RBAC + Governance + Organizational Intelligence + Enterprise Orchestration)"

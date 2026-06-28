@@ -1134,3 +1134,9 @@ id = "7wCrgmTG7piSD0kkFaXDX"
 uri = "file://backend/audit/mx-700/engineering-constitution-capability-report.md"
 type = "text"
 title = "CAPADEX 2.0 — Engineering Constitution: Capability Report & Classification"
+
+[[outputs]]
+id = "BFWKTDFTgKCnpY1w8dZMI"
+uri = "file://backend/audit/mx-700/phase-1.2-engineering-standards-manual.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.2: Engineering Standards & Code Architecture"

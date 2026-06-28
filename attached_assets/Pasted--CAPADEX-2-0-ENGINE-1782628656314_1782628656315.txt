@@ -1,0 +1,673 @@
+===============================================================================
+CAPADEX 2.0
+ENGINEERING EXECUTION SPECIFICATION
+
+PHASE 1.2
+
+ENGINEERING STANDARDS & CODE ARCHITECTURE
+
+EXECUTION MODE
+
+ENHANCEMENT ONLY
+
+DO NOT REBUILD
+
+DO NOT REWRITE
+
+DO NOT DUPLICATE
+
+DO NOT ACTIVATE DORMANT FEATURES YET
+
+ONLY STANDARDIZE THE ENGINEERING FOUNDATION
+
+==============================================================================
+
+MISSION
+
+Establish a single engineering standard for the entire CAPADEX platform.
+
+This phase defines HOW engineering is performed.
+
+It does NOT redesign business functionality.
+
+It does NOT activate new capabilities.
+
+It creates the engineering rules every future enhancement must follow.
+
+==============================================================================
+
+PRIMARY OBJECTIVES
+
+1. Audit current engineering architecture.
+
+2. Identify architectural inconsistencies.
+
+3. Define engineering standards.
+
+4. Remove ambiguity.
+
+5. Protect existing architecture.
+
+6. Reduce technical debt through standards.
+
+7. Improve maintainability.
+
+8. Improve scalability.
+
+9. Improve readability.
+
+10. Prepare repository for future enhancement.
+
+==============================================================================
+
+MANDATORY RULES
+
+Repository is source of truth.
+
+Never replace existing architecture without evidence.
+
+Never duplicate implementation.
+
+Never introduce parallel systems.
+
+Never change business behaviour.
+
+Never activate dormant functionality.
+
+Never redesign workflows.
+
+==============================================================================
+
+PART 1
+
+ENGINEERING ARCHITECTURE AUDIT
+
+Audit
+
+Frontend Architecture
+
+Backend Architecture
+
+Database Architecture
+
+API Architecture
+
+Authentication
+
+Authorization
+
+AI Architecture
+
+Assessment Architecture
+
+Behaviour Architecture
+
+Decision Architecture
+
+Reporting Architecture
+
+Subscription Architecture
+
+SuperAdmin Architecture
+
+Analytics Architecture
+
+Configuration Architecture
+
+Feature Flag Architecture
+
+Event Architecture
+
+Integration Architecture
+
+==============================================================================
+
+PART 2
+
+CODEBASE ORGANIZATION
+
+Audit current folder structure.
+
+Document
+
+Strengths
+
+Weaknesses
+
+Duplications
+
+Unused folders
+
+Unused modules
+
+Circular dependencies
+
+Repository organization
+
+Recommend improvements WITHOUT restructuring code.
+
+==============================================================================
+
+PART 3
+
+CODING STANDARDS
+
+Standardize
+
+Naming Conventions
+
+File Naming
+
+Folder Naming
+
+Component Naming
+
+Hook Naming
+
+Context Naming
+
+Store Naming
+
+Service Naming
+
+API Naming
+
+Database Naming
+
+Migration Naming
+
+Environment Variable Naming
+
+Feature Flag Naming
+
+AI Prompt Naming
+
+Report Naming
+
+==============================================================================
+
+PART 4
+
+FRONTEND ENGINEERING STANDARDS
+
+Audit existing implementation.
+
+Define standards for
+
+Pages
+
+Layouts
+
+Components
+
+Composition
+
+Hooks
+
+Contexts
+
+Stores
+
+Routing
+
+State Management
+
+Forms
+
+Validation
+
+Tables
+
+Charts
+
+Dialogs
+
+Modals
+
+Animations
+
+Accessibility
+
+Responsive Design
+
+Error Handling
+
+Loading States
+
+Empty States
+
+==============================================================================
+
+PART 5
+
+BACKEND ENGINEERING STANDARDS
+
+Audit
+
+Routes
+
+Controllers
+
+Services
+
+Repositories
+
+Middleware
+
+Validation
+
+Authentication
+
+Authorization
+
+Caching
+
+Logging
+
+Exception Handling
+
+Configuration
+
+Background Workers
+
+==============================================================================
+
+PART 6
+
+DATABASE ENGINEERING STANDARDS
+
+Review existing schema.
+
+Define standards for
+
+Master Tables
+
+Transaction Tables
+
+History Tables
+
+Audit Tables
+
+Indexes
+
+Constraints
+
+Relationships
+
+Naming
+
+Versioning
+
+Migrations
+
+Soft Delete
+
+Audit Columns
+
+==============================================================================
+
+PART 7
+
+API ENGINEERING STANDARDS
+
+Review every API.
+
+Define standards for
+
+REST
+
+Versioning
+
+Response Models
+
+Error Models
+
+Validation
+
+Pagination
+
+Filtering
+
+Sorting
+
+Authentication
+
+Authorization
+
+Rate Limiting
+
+Documentation
+
+==============================================================================
+
+PART 8
+
+AI ENGINEERING STANDARDS
+
+Audit current AI implementation.
+
+Define standards for
+
+Prompt Management
+
+Memory
+
+Context
+
+Confidence
+
+Evidence
+
+Reasoning
+
+Fallback
+
+Versioning
+
+Observability
+
+Evaluation
+
+==============================================================================
+
+PART 9
+
+SUPERADMIN ENGINEERING
+
+Audit current implementation.
+
+Define standards for
+
+Configuration
+
+CRUD
+
+Permissions
+
+Approval Workflows
+
+Audit Trails
+
+Dashboards
+
+Monitoring
+
+Feature Flags
+
+Analytics
+
+==============================================================================
+
+PART 10
+
+CONFIGURATION MANAGEMENT
+
+Audit
+
+Environment Variables
+
+Configuration Files
+
+Secrets
+
+Runtime Configuration
+
+Feature Flags
+
+AI Configuration
+
+Subscription Configuration
+
+==============================================================================
+
+PART 11
+
+ERROR HANDLING
+
+Define platform-wide standards.
+
+Client Errors
+
+Server Errors
+
+Validation Errors
+
+AI Errors
+
+Database Errors
+
+Network Errors
+
+Logging
+
+Recovery
+
+==============================================================================
+
+PART 12
+
+LOGGING
+
+Audit existing logging.
+
+Define standards for
+
+Application Logs
+
+Security Logs
+
+Audit Logs
+
+AI Logs
+
+Performance Logs
+
+Database Logs
+
+==============================================================================
+
+PART 13
+
+PERFORMANCE STANDARDS
+
+Audit
+
+Bundle Size
+
+Rendering
+
+API Latency
+
+Database Queries
+
+Caching
+
+Memory
+
+Network Calls
+
+==============================================================================
+
+PART 14
+
+SECURITY STANDARDS
+
+Audit
+
+Authentication
+
+Authorization
+
+Encryption
+
+Secrets
+
+Roles
+
+Permissions
+
+Session Management
+
+CSRF
+
+XSS
+
+Injection
+
+==============================================================================
+
+PART 15
+
+ACCESSIBILITY STANDARDS
+
+Audit
+
+WCAG
+
+Keyboard Navigation
+
+Screen Readers
+
+Contrast
+
+Focus States
+
+Responsive Behaviour
+
+==============================================================================
+
+PART 16
+
+TESTING STANDARDS
+
+Audit
+
+Unit Tests
+
+Integration Tests
+
+API Tests
+
+Frontend Tests
+
+AI Tests
+
+Regression Tests
+
+Accessibility Tests
+
+==============================================================================
+
+PART 17
+
+DOCUMENTATION STANDARDS
+
+Every enhancement must update
+
+Architecture
+
+API
+
+Database
+
+Configuration
+
+Deployment
+
+User Documentation
+
+Developer Documentation
+
+==============================================================================
+
+PART 18
+
+TECHNICAL DEBT
+
+Identify
+
+High Priority
+
+Medium Priority
+
+Low Priority
+
+Do NOT fix yet.
+
+Document only.
+
+==============================================================================
+
+PART 19
+
+QUALITY GATES
+
+Before every future phase verify
+
+No duplicate code
+
+No duplicate services
+
+No duplicate APIs
+
+No duplicate components
+
+No duplicate tables
+
+No breaking changes
+
+Backward compatibility maintained
+
+==============================================================================
+
+PART 20
+
+DELIVERABLES
+
+Produce
+
+Engineering Standards Manual
+
+Code Architecture Report
+
+Technical Debt Report
+
+Naming Convention Guide
+
+Repository Organization Guide
+
+Frontend Standards
+
+Backend Standards
+
+Database Standards
+
+API Standards
+
+AI Standards
+
+Security Standards
+
+Testing Standards
+
+Documentation Standards
+
+Quality Gate Checklist
+
+==============================================================================
+
+STOP
+
+Do NOT modify business logic.
+
+Do NOT redesign workflows.
+
+Do NOT activate dormant capabilities.
+
+Do NOT build new features.
+
+Do NOT restructure repository.
+
+This phase establishes engineering standards only.
+
+After approval, freeze these standards and use them as mandatory rules for every remaining CAPADEX engineering phase.

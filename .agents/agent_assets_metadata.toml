@@ -1230,3 +1230,9 @@ id = "Fi0MicwHbWvCAM9CY96zy"
 uri = "file://backend/audit/mx-700/phase-1.15-life-intelligence-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.15: Life Intelligence Constitution"
+
+[[outputs]]
+id = "rN39y3i5aXl5sLwPuy8S7"
+uri = "file://backend/audit/mx-700/phase-1.16-enterprise-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.16: Enterprise Intelligence Constitution"

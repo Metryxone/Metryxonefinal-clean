@@ -1332,3 +1332,9 @@ id = "B9hAJN0tZqqiqGQhuEhhe"
 uri = "file://backend/audit/mx-700/phase-1.32-integration-intelligence-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.32: Integration Intelligence Constitution (API Platform + Event Bus + Webhooks + Connectors + Orchestration + Synchronization + Interoperability)"
+
+[[outputs]]
+id = "6V8ioLQhA1V4O00jZMsQA"
+uri = "file://backend/audit/mx-700/phase-1.33-infrastructure-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.33: Infrastructure Intelligence Constitution (Platform Infrastructure + Compute + Storage + Network + Deployment + Scalability + Resiliency + Observability)"

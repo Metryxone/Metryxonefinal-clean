@@ -8,29 +8,53 @@ Generated 2026-06-28 · Initiative MX-700 · Phase 1.22.
 
 ---
 
+## ⚠️ MEASUREMENT-INTEGRITY CORRECTION (regenerated with exact `COUNT(*)`)
+
+This phase was originally measured with `pg_stat_user_tables.n_live_tup`, which reads 0 for bulk-seeded tables until autovacuum analyzes them (see Phase 1.23 and `.agents/memory/n-live-tup-stale-population-audit.md`). It therefore **under-reported population and wrongly concluded "the MATCHING half is entirely DORMANT."** That headline is **materially wrong** — matching has in fact run. Honesty cuts both ways — *empty-when-full* is as much a fabrication as *full-when-empty*. This section has been **regenerated with exact `SELECT COUNT(*)`**. Corrected values:
+
+| Table | Was (n_live_tup) | **Now (COUNT\*)** | Correction |
+|---|---|---|---|
+| `map_role_competency` | 0 (DORMANT) | **52,362** | Role-DNA genome LIVE |
+| `onto_role_weights` | 0 (DORMANT) | **121** | LIVE |
+| `onto_role_competency_profiles` | 0 (match abstains) | **76** | match TARGET populated |
+| `role_dna_master_profiles` | 0 (DORMANT) | **38** | LIVE |
+| `cg_role_edges` | 0 (DORMANT) | **500** | career graph LIVE |
+| `cg_user_role_readiness` | 0 | **5** | LIVE |
+| `cp_passport` | 0 (DORMANT) | **1** | passport PUBLISHED |
+| `employer_jobs` | 0 (DORMANT) | **2** | jobs EXIST |
+| `career_match_history` | 0 (DORMANT) | **11** | matches HAVE run |
+| `career_readiness_history` | 0 | **4** | LIVE |
+| `frp_role_evolution` | 770 (stale) | **10,290** | LIVE |
+| `m3_market_roles` / `m3_role_trends` / `m3_canonical_role_mappings` | 0 (EMPTY) | **5 / 5 / 4** | seeded |
+| `interview_schedules` | 0 | **1** | LIVE |
+
+Genuinely 0 (re-confirmed by exact count): `role_competency_weights`, `role_execution_profiles`, `job_applications`, `career_history`, `career_simulation_runs`, `interview_feedback`, `career_seeker_jobs`, `career_seeker_goals`. Seeker volume is now `career_seeker_profiles`=**3** (`career_discovery_results`=1, `career_memory_snapshots`=1) — still far below k-anonymity (≥30).
+
+---
+
 ## PART 1 — Current Career Intelligence Audit (MEASURED)
 
 | Component | Substrate | **Live runtime in THIS DB** | Verdict |
 |---|---|---|---|
 | Career engine family `routes/career-*.ts` (~40 routes) | code | present (OS · builder · discovery · genome · graph · match · readiness · recommendation · roadmap · simulation · passport · launchpad · trajectory · velocity · workforce …) | **BUILT** |
-| Career seekers `career_seeker_profiles` | runtime | **4** | **LIVE (sparse)** |
+| Career seekers `career_seeker_profiles` | runtime | **3** | **LIVE (sparse)** |
 | Career discovery `career_discovery_results` | runtime | **1** | **LIVE (sparse)** |
 | Career memory `career_memory_snapshots` | runtime | **1** | **LIVE (sparse)** |
-| Seeker jobs / goals `career_seeker_jobs` / `career_seeker_goals` | runtime | **1 / 1** | **LIVE (sparse)** |
+| Seeker jobs / goals `career_seeker_jobs` / `career_seeker_goals` | runtime | **0 / 0** | DORMANT |
 | Interview questions `interview_questions` | catalog | **45** | **LIVE (seeded)** |
 | Role definitions `role_definitions` | reference | **10** | SEEDED |
-| Role evolution `frp_role_evolution` | reference | **770** | SEEDED |
-| **Role-DNA matching genome** `onto_role_weights` / `map_role_competency` / `role_dna_master_profiles` / `role_competency_weights` / `role_execution_profiles` | matching substrate | **0 / 0 / 0 / 0 / 0** | DORMANT |
-| Career graph `cg_role_edges` / `cg_user_role_readiness` | graph | **0 / 0** | DORMANT |
-| Employability passport `cp_passport` | snapshot | **0** | DORMANT |
-| Job substrate `employer_jobs` / `job_applications` / `career_match_history` | opportunity | **0 / 0 / 0** | DORMANT |
-| Career history / readiness history / simulation runs | longitudinal | `career_history` **0** · `career_readiness_history` **0** · `career_simulation_runs` **0** | DORMANT |
-| Interview schedules / feedback `interview_schedules` / `interview_feedback` | runtime | **0 / 0** | DORMANT |
-| Market roles `m3_market_roles` / `m3_role_trends` / `m3_canonical_role_mappings` | market | **0** (all) | EMPTY |
+| Role evolution `frp_role_evolution` | reference | **10,290** | SEEDED |
+| **Role-DNA matching genome** `map_role_competency` / `onto_role_weights` / `role_dna_master_profiles` / `onto_role_competency_profiles` / `role_competency_weights` / `role_execution_profiles` | matching substrate | **52,362 / 121 / 38 / 76 / 0 / 0** | **LIVE (legacy weights/exec-profiles empty)** |
+| Career graph `cg_role_edges` / `cg_user_role_readiness` | graph | **500 / 5** | **LIVE** |
+| Employability passport `cp_passport` | snapshot | **1** | **PUBLISHED (sparse)** |
+| Job substrate `employer_jobs` / `job_applications` / `career_match_history` | opportunity | **2 / 0 / 11** | **PARTIAL (jobs + matches LIVE; applications 0)** |
+| Career history / readiness history / simulation runs | longitudinal | `career_history` **0** · `career_readiness_history` **4** · `career_simulation_runs` **0** | **PARTIAL (readiness history LIVE)** |
+| Interview schedules / feedback `interview_schedules` / `interview_feedback` | runtime | **1 / 0** | **PARTIAL (schedule LIVE; feedback 0)** |
+| Market roles `m3_market_roles` / `m3_role_trends` / `m3_canonical_role_mappings` | market | **5 / 5 / 4** | **SEEDED** |
 
-**CRITICAL HONEST FINDING (DERIVED):** Career Intelligence is **the most code-rich AND the most LIVE layer in the platform so far — the first with genuine end-user runtime.** It carries ~40 career routes (OS, builder, discovery, genome, graph, match, readiness, recommendation, roadmap, simulation, passport, launchpad, trajectory, velocity, workforce) AND it is the only layer with real seeker activity in this DB: **4 career-seeker profiles with discovery results, memory snapshots, jobs, and goals attached** (sparse but real), plus a seeded interview-question bank (45) and role reference data (`role_definitions`=10, `frp_role_evolution`=770). **BUT the MATCHING half is entirely DORMANT: the Role-DNA matching genome is empty (`onto_role_weights`/`map_role_competency`/`role_dna_master_profiles`/`role_competency_weights`/`role_execution_profiles` all = 0), the Employability Passport snapshot is empty (`cp_passport`=0), and the opportunity/job substrate is empty (`employer_jobs`/`job_applications`/`career_match_history`=0).** So Career Intelligence can **capture and remember seekers but cannot truly MATCH, RANK against real roles, or PUBLISH passports here** — the engine has learners but no role genome to score them against and no jobs to match them to. This is a textbook **Coverage ⟂ Confidence split: presence of seeker rows ≠ a functioning matching ecosystem; seeded framework ≠ career ecosystem; built ≠ activated.** Free-text job titles must crosswalk to `onto_role_competency_profiles` (NOT `ont_roles`) — and that target is empty here, so matching abstains rather than fabricates. Populating the Role-DNA genome + job substrate + activating passport publication is a separate, approved phase; **NOT performed here.**
+**CRITICAL HONEST FINDING (MEASURED, exact COUNT\* + DERIVED):** Career Intelligence is **the most code-rich AND the most LIVE layer in the platform so far — the first with genuine end-user runtime on BOTH halves.** It carries ~40 career routes (OS, builder, discovery, genome, graph, match, readiness, recommendation, roadmap, simulation, passport, launchpad, trajectory, velocity, workforce) AND it has real seeker activity in this DB: **3 career-seeker profiles with discovery + memory snapshots** (sparse but real), plus a seeded interview-question bank (45) and role reference data (`role_definitions`=10, `frp_role_evolution`=10,290). **Contrary to the original n_live_tup measurement, the MATCHING half is NOT dormant — it is LIVE: the Role-DNA matching genome is populated (`map_role_competency`=52,362, `onto_role_weights`=121, `role_dna_master_profiles`=38, and the canonical match target `onto_role_competency_profiles`=76), the career graph is populated (`cg_role_edges`=500, `cg_user_role_readiness`=5), the Employability Passport HAS been published (`cp_passport`=1), jobs exist (`employer_jobs`=2), matches HAVE run (`career_match_history`=11), readiness history is recorded (`career_readiness_history`=4), and market roles are seeded (`m3_market_roles`/`m3_role_trends`/`m3_canonical_role_mappings`=5/5/4).** So Career Intelligence can and DOES capture seekers AND match/rank them against a real role genome AND publish passports here. **What remains thin/empty** is the seeker-side tracking + downstream loop: `career_seeker_jobs`/`career_seeker_goals`=0, `job_applications`=0, `career_history`=0, `career_simulation_runs`=0, `interview_feedback`=0, and the legacy `role_competency_weights`/`role_execution_profiles`=0 (the live genome lives in `map_role_competency`/`onto_*`, not these legacy shells). The binding constraint is now **VOLUME, not capability**: with only 3 seekers and 11 matches the system is far below k-anonymity (≥30), so cohort analytics stay suppressed — Coverage ⟂ Confidence. Free-text job titles crosswalk to `onto_role_competency_profiles` (NOT `ont_roles`), and that target IS populated here, so matching scores rather than abstains. Scaling volume + wiring seeker-side job/application tracking is a separate, approved phase; **NOT performed here.**
 
-**Strengths (DERIVED):** the only platform layer with real user runtime (4 seekers, discovery/memory/jobs/goals); single canonical Career OS orchestrating ~40 routes (no fork); interview-question bank seeded (45); rich role reference data (`frp_role_evolution`=770); passport is append-only by contract; per-job ranking uses a per-row feature (not a user scalar); behaviour bridge adopted ONLY when `session_id` non-null (absent → identical to before). **Technical debt / GAPS (DERIVED):** Role-DNA matching genome empty (canonical match target `onto_role_competency_profiles` unpopulated → match abstains); passport snapshot never published (`cp_passport`=0); no job postings / applications (`employer_jobs`=0 — depends on Employer Portal, Phase 1.16); market role intelligence empty (`m3_*`=0); seeker volume too low for any cohort statistic (k-anonymity ≥30 not met → benchmarks suppressed); readiness/match/simulation history all empty (Coverage⟂Confidence reported separately). **Dormant:** Role-DNA genome + career graph + passport publication + opportunity/job matching + market roles + longitudinal career history — documented, not activated.
+**Strengths (DERIVED):** the only platform layer live on BOTH halves (capture AND matching) — real seekers (3) PLUS a populated Role-DNA genome (`map_role_competency`=52,362 / `onto_role_competency_profiles`=76), career graph (`cg_role_edges`=500), a published passport (`cp_passport`=1), real jobs (`employer_jobs`=2), and a match history (`career_match_history`=11); single canonical Career OS orchestrating ~40 routes (no fork); interview-question bank seeded (45); rich role reference (`frp_role_evolution`=10,290); passport append-only by contract; per-job ranking uses a per-row feature (not a user scalar); behaviour bridge adopted ONLY when `session_id` non-null (absent → identical to before). **Technical debt / GAPS (DERIVED):** seeker-side tracking empty (`career_seeker_jobs`/`career_seeker_goals`/`job_applications`=0 — no application funnel yet); legacy `role_competency_weights`/`role_execution_profiles`=0 (superseded by the live `map_role_competency`/`onto_*` genome — don't re-populate the shells); job postings still thin (`employer_jobs`=2 — depends on Employer Portal, Phase 1.16); seeker/match VOLUME too low for any cohort statistic (k-anonymity ≥30 not met → benchmarks suppressed); `career_history`/`career_simulation_runs`/`interview_feedback`=0 (Coverage⟂Confidence reported separately). **Dormant:** seeker-side job/application tracking + career simulation + interview feedback + longitudinal career history + legacy role-weight shells — documented, not activated.
 
 ---
 
@@ -60,15 +84,15 @@ Protect Career DNA · Career profiles · Professional identity · Career charact
 
 ## PART 8 — Role DNA Constitution
 
-Protect Role profiles · Role competencies · Role expectations · Role relationships · Role evolution · Role matching. **Never duplicate Role Intelligence.** Binding: canonical match target is `onto_role_competency_profiles` (NOT `ont_roles`) — **empty here, so matching ABSTAINS, never fabricates;** distinctive-token guard; Career Match ≠ Hiring Decision.
+Protect Role profiles · Role competencies · Role expectations · Role relationships · Role evolution · Role matching. **Never duplicate Role Intelligence.** Binding: canonical match target is `onto_role_competency_profiles` (NOT `ont_roles`) — **populated here (`onto_role_competency_profiles`=76, `map_role_competency`=52,362), so matching SCORES; it abstains only on titles with no crosswalk, never fabricates;** distinctive-token guard; Career Match ≠ Hiring Decision.
 
 ## PART 9 — Opportunity Intelligence Constitution
 
-Support Career opportunities · Internal / External mobility · Future roles · Emerging careers · Career trends · Opportunity mapping. Binding: canonical job substrate is `job_postings` (`employer_jobs` fallback) — empty here; Career Recommendation ≠ Job Offer.
+Support Career opportunities · Internal / External mobility · Future roles · Emerging careers · Career trends · Opportunity mapping. Binding: canonical job substrate is `job_postings` (`employer_jobs` fallback) — `employer_jobs`=2 here (thin but live); Career Recommendation ≠ Job Offer.
 
 ## PART 10 — Employability Passport Constitution
 
-Protect Passport · Competencies · Evidence · Projects · Achievements · Experience · Learning records · Career readiness. **Passport remains append-only.** Binding: snapshot at `career_seeker_profiles.data.passport` JSONB; **contact NEVER published;** `cp_passport`=0 here (publication dormant).
+Protect Passport · Competencies · Evidence · Projects · Achievements · Experience · Learning records · Career readiness. **Passport remains append-only.** Binding: snapshot at `career_seeker_profiles.data.passport` JSONB; **contact NEVER published;** `cp_passport`=1 here (publication LIVE but sparse).
 
 ## PART 11 — Resume Intelligence Constitution
 
@@ -155,17 +179,17 @@ Verdict: APPROVE / REJECT — <reason>
 | Component | Current (DERIVED) | Target |
 |---|---|---|
 | Career OS | L2 Guided (rich; sparse live runtime) | L4 Intelligent |
-| Career Builder | L2 Guided (live monolith, 4 seekers) | L4 Intelligent |
+| Career Builder | L2 Guided (live monolith, 3 seekers) | L4 Intelligent |
 | Career Discovery | L2 Guided (1 live result) | L4 Intelligent |
 | Career DNA | L1 Operational (profiles present, DNA sparse) | L3 Adaptive |
-| Role DNA | **L1 Operational** (matching genome EMPTY → abstains) | L4 Intelligent |
-| Opportunity Intelligence | L0 Not-Activated (no jobs/applications) | L3 Adaptive |
-| Employability Passport | L1 Operational (`cp_passport`=0, publication dormant) | L4 Intelligent |
+| Role DNA | **L2 Guided** (matching genome LIVE: `map_role_competency`=52,362 / `onto_role_competency_profiles`=76 → scores) | L4 Intelligent |
+| Opportunity Intelligence | L1 Operational (`employer_jobs`=2 / `career_match_history`=11; applications 0) | L3 Adaptive |
+| Employability Passport | L1 Operational (`cp_passport`=1, publication live but sparse) | L4 Intelligent |
 | Resume Intelligence | L2 Guided (ResumeStudio built) | L4 Intelligent |
-| Interview Intelligence | L2 Guided (bank=45 seeded) | L4 Intelligent |
-| Career Analytics | L1 Operational (n=4 < k_min=30) | L3 Adaptive |
+| Interview Intelligence | L2 Guided (bank=45 seeded; `interview_schedules`=1) | L4 Intelligent |
+| Career Analytics | L1 Operational (n=3 seekers / 11 matches < k_min=30) | L3 Adaptive |
 
-Levels: 1 Operational · 2 Guided · 3 Adaptive · 4 Intelligent · 5 Continuous Career Intelligence. **Roadmap:** (separate approved phases) populate the Role-DNA matching genome (`onto_role_competency_profiles` — match abstains until then) → wire the opportunity/job substrate (`job_postings`/`employer_jobs`, depends on Employer Portal Phase 1.16) → publish Employability Passports (`cp_passport`, contact never published) → grow seeker volume past k-anonymity (≥30) before any cohort analytics → keep append-only history + Coverage⟂Confidence + developmental-signals-only language. **Career Intelligence augments professional decision-making; it never guarantees outcomes.**
+Levels: 1 Operational · 2 Guided · 3 Adaptive · 4 Intelligent · 5 Continuous Career Intelligence. **Roadmap:** (separate approved phases) the Role-DNA matching genome is now LIVE (`map_role_competency`=52,362 / `onto_role_competency_profiles`=76 — matching scores) → wire the seeker-side opportunity loop (`career_seeker_jobs`/`job_applications`, plus more `employer_jobs` via Employer Portal Phase 1.16) → grow passport publication beyond the first snapshot (`cp_passport`, contact never published) → grow seeker/match VOLUME past k-anonymity (≥30) before any cohort analytics → keep append-only history + Coverage⟂Confidence + developmental-signals-only language. **Career Intelligence augments professional decision-making; it never guarantees outcomes.**
 
 ## PART 31 — Career Scientific Validation
 
@@ -199,4 +223,4 @@ Future evolution supports New career / Career-DNA / Role-DNA / labour-market mod
 ---
 
 **STOP — Phase 1.22 complete; Career Intelligence Constitution ready to FREEZE on approval. Career OS not modified, Career Builder not replaced, Employability Passport not replaced, no second career engine created, no dormant career capabilities activated, business logic not changed, Assessment + Behaviour + Decision + Learning + Competency Intelligence not bypassed.**
-Honesty caveats: counts are MEASURED from the live shared Postgres today. Career Intelligence is the most code-rich AND most LIVE layer so far — the first with real end-user runtime: **4 career-seeker profiles with discovery / memory / jobs / goals attached** (sparse but real), interview bank=45, role reference (`role_definitions`=10, `frp_role_evolution`=770). BUT the MATCHING half is entirely DORMANT: the Role-DNA matching genome (`onto_role_weights`/`map_role_competency`/`role_dna_master_profiles`/`role_competency_weights`) = 0, the Employability Passport snapshot (`cp_passport`) = 0, and the opportunity/job substrate (`employer_jobs`/`job_applications`/`career_match_history`) = 0. So the engine can capture and remember seekers but cannot truly MATCH, RANK, or PUBLISH passports here. Presence of seeker rows ≠ a functioning matching ecosystem; seeded framework ≠ career ecosystem; built ≠ activated; null ≠ 0. Free-text titles crosswalk to `onto_role_competency_profiles` (empty here → match ABSTAINS, never fabricates). n=4 is below k-anonymity (≥30) so cohort analytics are suppressed. Career Match ≠ Hiring Decision; Career Recommendation ≠ Job Offer; AI ≠ Career Counselor; human remains responsible. Populating the Role-DNA genome + job substrate + passport publication is a separate, approved phase — NOT performed here.
+Honesty caveats: counts are MEASURED via exact `SELECT COUNT(*)` from the live shared Postgres today (this phase was REGENERATED after an original `n_live_tup` measurement under-reported population — see the Measurement-Integrity Correction above). Career Intelligence is the most code-rich AND most LIVE layer so far — live on BOTH halves: **3 career-seeker profiles with discovery / memory snapshots** (sparse but real), interview bank=45, role reference (`role_definitions`=10, `frp_role_evolution`=10,290). Contrary to the original reading, the MATCHING half is NOT dormant — it is LIVE: the Role-DNA matching genome (`map_role_competency`=52,362 / `onto_role_weights`=121 / `role_dna_master_profiles`=38 / `onto_role_competency_profiles`=76), the career graph (`cg_role_edges`=500), the Employability Passport (`cp_passport`=1), the job substrate (`employer_jobs`=2), and the match history (`career_match_history`=11) are all populated. So the engine DOES capture, MATCH/RANK against a real role genome, and PUBLISH passports here. What remains thin/empty is seeker-side tracking + downstream (`career_seeker_jobs`/`career_seeker_goals`/`job_applications`/`career_history`/`career_simulation_runs`/`interview_feedback`=0) and the legacy `role_competency_weights`/`role_execution_profiles`=0 shells (superseded by the live genome). The binding constraint is VOLUME, not capability: n=3 seekers / 11 matches is below k-anonymity (≥30) so cohort analytics are suppressed — Coverage ⟂ Confidence. built ≠ activated; **null ≠ 0 in BOTH directions** (each table reported exactly). Free-text titles crosswalk to `onto_role_competency_profiles` (populated here → match SCORES; abstains only on titles with no crosswalk, never fabricates). Career Match ≠ Hiring Decision; Career Recommendation ≠ Job Offer; AI ≠ Career Counselor; human remains responsible. Scaling volume + wiring seeker-side job/application tracking is a separate, approved phase — NOT performed here.

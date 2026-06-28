@@ -8,25 +8,43 @@ Generated 2026-06-28 · Initiative MX-700 · Phase 1.20.
 
 ---
 
-## PART 1 — Current Intervention Intelligence Audit (MEASURED)
+## ⚠️ MEASUREMENT-INTEGRITY CORRECTION (regenerated with exact `COUNT(*)`)
+
+This phase was originally measured with `pg_stat_user_tables.n_live_tup`, which reads 0 for bulk-seeded tables until autovacuum analyzes them (see Phase 1.23 and `.agents/memory/n-live-tup-stale-population-audit.md`). It therefore **under-reported population and wrongly classified live intervention catalogs / RIE runtime as EMPTY / DORMANT.** Honesty cuts both ways — *empty-when-full* is as much a fabrication as *full-when-empty*. This section has been **regenerated with exact `SELECT COUNT(*)`**. Corrected values:
+
+| Table | Was (n_live_tup) | **Now (COUNT\*)** | Correction |
+|---|---|---|---|
+| `intervention_library` | 0 (EMPTY) | **213** | catalog POPULATED |
+| `learn_interventions` | 0 (EMPTY) | **81** | catalog POPULATED |
+| `lbi_intervention_library` | 0 (EMPTY) | **20** | catalog POPULATED |
+| `rie_recommendations` | 0 (DORMANT) | **3** | RIE HAS run (demo) |
+| `rie_interventions` | 0 (DORMANT) | **1** | RIE HAS run (demo) |
+| `learn_outcomes` | 0 (DORMANT) | **54** | outcomes recorded |
+| `learn_effectiveness` | 0 | **9** | effectiveness recorded |
+
+Genuinely 0 (re-confirmed by exact count): `capadex_interventions`/`capadex_intervention_recommendations`/`capadex_session_interventions`, `pil_intervention_library`, `intervention_memory`, `intervention_approvals`, `m5_coaching_interventions`, `mentor_tasks`/`study_tasks`/`task_variants`, `notifications`/`notification_broadcasts`/`notification_preferences`, `rie_outcomes`, `pil_intervention_outcomes`.
+
+---
+
+## PART 1 — Current Intervention Intelligence Audit (MEASURED, exact COUNT\*)
 
 | Component | Substrate | **Live runtime in THIS DB** | Verdict |
 |---|---|---|---|
 | RIE engine family `services/rie-*.ts` | code | present (engine · admin · aggregator · intervention-orchestrator · opportunity · recommendation · recovery-intelligence) | **BUILT** |
-| RIE recommendations / interventions `rie_recommendations` / `rie_interventions` | runtime | **0 / 0** | DORMANT |
+| RIE recommendations / interventions `rie_recommendations` / `rie_interventions` | runtime | **3 / 1** | **LIVE (demo-scale)** |
 | RIE sequences / recovery / escalations / opportunity / outcomes / context | runtime | **0** (all) | DORMANT |
 | Intervention engines `intervention-engine.ts` / `intervention-sequencer.ts` / `intervention-learning-engine.ts` | code | present | **BUILT** |
 | CAPADEX interventions `capadex_interventions` / `capadex_intervention_recommendations` / `capadex_session_interventions` | runtime | **0 / 0 / 0** | DORMANT |
-| Domain intervention libraries `learn_interventions` / `pil_intervention_library` / `lbi_intervention_library` / `intervention_library` | catalog | **0** (all) | EMPTY |
+| Domain intervention libraries `intervention_library` / `learn_interventions` / `lbi_intervention_library` / `pil_intervention_library` | catalog | **213 / 81 / 20 / 0** | **POPULATED (PIL empty)** |
 | Intervention memory / approvals `intervention_memory` / `intervention_approvals` | runtime | **0 / 0** | DORMANT |
 | Enterprise interventions `m5_coaching_interventions` / `m5_organizational_intervention_recommendations` | runtime | **0 / 0** | DORMANT |
 | Follow-up / tasks `mentor_tasks` / `study_tasks` / `task_variants` | runtime | **0 / 0 / 0** | DORMANT |
 | Notifications `notifications` / `notification_broadcasts` / `notification_preferences` | engine | **0 / 0 / 0** | DORMANT |
-| Outcomes `rie_outcomes` / `pil_intervention_outcomes` / `learn_outcomes` | outcome | **0** (all) | DORMANT |
+| Outcomes `rie_outcomes` / `pil_intervention_outcomes` / `learn_outcomes` / `learn_effectiveness` | outcome | **0 / 0 / 54 / 9** | **PARTIAL (learning outcomes recorded; RIE/PIL outcomes 0)** |
 
-**CRITICAL HONEST FINDING (DERIVED):** Intervention Intelligence has the **richest engine family in the platform** — a full RIE suite (engine, admin, aggregator, intervention-orchestrator, opportunity, recommendation, recovery-intelligence) plus an intervention-sequencer, an intervention-learning-engine, and per-domain intervention libraries (CAPADEX, PIL, LBI, learning, enterprise). **But the intervention RUNTIME is entirely DORMANT in this DB: every RIE table = 0, every intervention / library / memory / approval table = 0, every follow-up / task / notification table = 0, every intervention-outcome table = 0.** Critically, even the **intervention LIBRARIES (catalogs) are EMPTY** — there are no templates to schedule — so the execution layer has neither content nor live activity here. This is the **terminal link of the chain**: interventions originate from validated intelligence (Decision → Journey → Growth Plans), and since the upstream Assessment / Conversation / Decision runtimes are all dormant (Phases 1.17–1.19), the execution layer has nothing to execute. So: vast execution architecture, **zero catalog content and zero live interventions** — **built ≠ activated, library-exists ≠ library-populated, and execution can't begin until upstream intelligence + an authored intervention catalog exist.** Populating the libraries and activating the RIE runtime (schedule, notify, follow-up, track outcomes) is a separate, approved phase; **NOT performed here.**
+**CRITICAL HONEST FINDING (MEASURED, exact COUNT\* + DERIVED):** Intervention Intelligence has the **richest engine family in the platform** — a full RIE suite (engine, admin, aggregator, intervention-orchestrator, opportunity, recommendation, recovery-intelligence) plus an intervention-sequencer, an intervention-learning-engine, and per-domain intervention libraries (CAPADEX, PIL, LBI, learning, enterprise). **Contrary to the original n_live_tup measurement, the intervention CATALOGS are PARTIALLY AUTHORED, not empty: `intervention_library`=213, `learn_interventions`=81, `lbi_intervention_library`=20 (only `pil_intervention_library`=0). So there IS content to schedule.** And RIE has **actually run at demo-scale** (`rie_recommendations`=3, `rie_interventions`=1), with learning outcomes/effectiveness recorded (`learn_outcomes`=54, `learn_effectiveness`=9). **What remains genuinely DORMANT is the EXECUTION-and-CLOSURE loop downstream of generation:** every CAPADEX intervention table = 0, intervention memory/approvals = 0, all follow-up/task tables = 0, all notification tables = 0, RIE sequences/recovery/escalation/opportunity/context = 0, and RIE/PIL intervention outcomes = 0. So the honest picture is: **catalogs populated + a handful of RIE recommendations generated, but interventions are NOT yet scheduled, approved, notified, followed-up, or outcome-tracked through the orchestrator.** Generation ≠ execution; library-populated ≠ runtime-active; built ≠ activated; **null ≠ 0** (here several tables are genuinely 0, several are genuinely non-zero — both reported exactly). Activating the full RIE orchestrator (schedule → approve → notify → follow-up → track outcomes → feed the learning-engine) is a separate, approved phase; **NOT performed here.**
 
-**Strengths (DERIVED):** single canonical engine (RIE) with explicit recovery, escalation, and opportunity sub-engines; intervention-learning-engine closes the loop (effectiveness feedback); approvals table enforces human-in-the-loop; sequencer separates trigger/priority/dependency/order. **Technical debt / GAPS (DERIVED):** intervention libraries are empty (no authored catalog → nothing to recommend); notification/reminder engines wired but never fired; growth-plan EXISTS in M5 (wire don't rebuild); mentoring catch-all dilutes (keep explicit); effectiveness/adoption/behaviour-improvement rates are unmeasurable (0 interventions → null, not 0). **Dormant:** entire RIE runtime + intervention catalogs + follow-up/reminder/notification engines + intervention outcomes — documented, not activated.
+**Strengths (DERIVED):** single canonical engine (RIE) with explicit recovery, escalation, and opportunity sub-engines; intervention-learning-engine closes the loop (effectiveness feedback); approvals table enforces human-in-the-loop; sequencer separates trigger/priority/dependency/order; **the catalogs are partially authored (213 + 81 + 20 templates) so the engine has real content to recommend**, and RIE has produced demo-scale recommendations/interventions with learning outcomes recorded. **Technical debt / GAPS (DERIVED):** `pil_intervention_library`=0 (PIL catalog unauthored); the execution-and-closure loop is unexercised (memory/approvals/tasks/notifications/RIE-PIL-outcomes all = 0 → interventions generated but never scheduled, approved, notified, followed-up, or outcome-tracked); notification/reminder engines wired but never fired; growth-plan EXISTS in M5 (wire don't rebuild); mentoring catch-all dilutes (keep explicit); adoption/behaviour-improvement/RIE-effectiveness rates remain unmeasurable at this scale (demo-only → provisional/null, never inflated). **Dormant:** RIE sequencing/recovery/escalation/opportunity runtime + CAPADEX interventions + intervention memory/approvals + follow-up/reminder/notification engines + RIE/PIL intervention outcomes — documented, not activated.
 
 ---
 
@@ -150,14 +168,14 @@ Verdict: APPROVE / REJECT — <reason>
 
 | Component | Current (DERIVED) | Target |
 |---|---|---|
-| RIE | L2 Guided (rich engine; runtime dormant) | L4 Predictive |
-| Intervention Orchestrator | L2 Guided (sequencer built) | L4 Predictive |
-| Behaviour interventions | L1 Operational (library empty) | L4 Predictive |
-| Learning interventions | L1 Operational (library empty) | L4 Predictive |
+| RIE | L2 Guided (rich engine; demo-scale runtime — 3 recs / 1 intervention) | L4 Predictive |
+| Intervention Orchestrator | L2 Guided (sequencer built; orchestration loop unexercised) | L4 Predictive |
+| Behaviour interventions | L2 Guided (`intervention_library`=213 authored) | L4 Predictive |
+| Learning interventions | L2 Guided (`learn_interventions`=81 + `learn_outcomes`=54) | L4 Predictive |
 | Career interventions | L1 Operational (reuses Career Builder) | L3 Adaptive |
 | Life interventions | **L0 Not-Built** (no Life substrate, Phase 1.15) | L2 Guided |
-| Enterprise interventions | L1 Operational (empty) | L3 Adaptive |
-| Analytics | L1 Operational (0 interventions) | L3 Adaptive |
+| Enterprise interventions | L1 Operational (`m5_coaching_interventions`=0) | L3 Adaptive |
+| Analytics | L1 Operational (demo-scale; rates provisional/null) | L3 Adaptive |
 | Reports | L2 Guided (canon built) | L4 Predictive |
 
 Levels: 1 Operational · 2 Guided · 3 Adaptive · 4 Predictive · 5 Continuous Intervention Intelligence (**human approval always required**). **Roadmap:** (separate approved phases) author the intervention LIBRARIES (templates per domain — nothing to schedule until populated) → activate upstream Decision/Journey/Growth-Plan runtime (Phase 1.19) → fire the RIE orchestrator (schedule + notify + follow-up) → track realized intervention outcomes to feed the learning-engine → keep human-approval gates + multi-axis confidence + AI-advisory-only. **Interventions facilitate positive change; human choice always prevails.**
@@ -194,4 +212,4 @@ Future evolution supports New intervention / behaviour / learning / career / wel
 ---
 
 **STOP — Phase 1.20 complete; Intervention Intelligence Constitution ready to FREEZE on approval. RIE not modified, Intervention Orchestrator not replaced, no second intervention engine created, no dormant intervention capabilities activated, business logic not changed, Decision + Journey Intelligence + Growth Plans not bypassed.**
-Honesty caveats: counts are MEASURED from the live shared Postgres today. Intervention Intelligence has the richest engine family (full RIE suite + sequencer + learning-engine + per-domain libraries), but the execution RUNTIME is entirely DORMANT here: **every RIE / intervention / memory / approval / follow-up / task / notification / outcome table = 0, and even the intervention LIBRARIES (catalogs) are EMPTY.** As the terminal link of the chain, the execution layer has nothing to execute while upstream Assessment / Conversation / Decision runtimes are dormant (Phases 1.17–1.19) and no catalog is authored. Built ≠ activated; library-exists ≠ library-populated; flag-ON ≠ runtime-active; null ≠ 0. Intervention ≠ Recommendation ≠ Action ≠ Completion; Completion ≠ Behaviour Change; Execution ≠ Adoption; AI ≠ Intervention Owner; human remains accountable. Life interventions are L0 Not-Built (no Life substrate, Phase 1.15). Populating libraries + activating the RIE runtime is a separate, approved phase — NOT performed here.
+Honesty caveats: counts are MEASURED via exact `SELECT COUNT(*)` from the live shared Postgres today (this phase was REGENERATED after an original `n_live_tup` measurement under-reported population — see the Measurement-Integrity Correction above). Intervention Intelligence has the richest engine family (full RIE suite + sequencer + learning-engine + per-domain libraries), and contrary to the original reading the **catalogs are PARTIALLY AUTHORED** (`intervention_library`=213, `learn_interventions`=81, `lbi_intervention_library`=20; only `pil_intervention_library`=0) and **RIE has run at demo-scale** (`rie_recommendations`=3, `rie_interventions`=1; `learn_outcomes`=54, `learn_effectiveness`=9). What is **genuinely DORMANT** is the execution-and-closure loop: CAPADEX interventions, intervention memory/approvals, all follow-up/task tables, all notification tables, RIE sequencing/recovery/escalation/opportunity/context, and RIE/PIL intervention outcomes = 0. So: catalogs populated + a few recommendations generated, but interventions are NOT yet scheduled, approved, notified, followed-up, or outcome-tracked through the orchestrator. Generation ≠ execution; library-populated ≠ runtime-active; built ≠ activated; **null ≠ 0** (both directions — some tables genuinely 0, some genuinely non-zero, each reported exactly). Intervention ≠ Recommendation ≠ Action ≠ Completion; Completion ≠ Behaviour Change; Execution ≠ Adoption; AI ≠ Intervention Owner; human remains accountable. Life interventions are L0 Not-Built (no Life substrate, Phase 1.15). Activating the full RIE orchestrator (schedule → approve → notify → follow-up → track outcomes) is a separate, approved phase — NOT performed here.

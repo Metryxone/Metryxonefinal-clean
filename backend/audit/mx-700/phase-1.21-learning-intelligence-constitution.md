@@ -8,23 +8,46 @@ Generated 2026-06-28 · Initiative MX-700 · Phase 1.21.
 
 ---
 
-## PART 1 — Current Learning Intelligence Audit (MEASURED)
+## ⚠️ MEASUREMENT-INTEGRITY CORRECTION (regenerated with exact `COUNT(*)`)
+
+This phase was originally measured with `pg_stat_user_tables.n_live_tup`, which reads 0 for bulk-seeded tables until autovacuum analyzes them (see Phase 1.23 and `.agents/memory/n-live-tup-stale-population-audit.md`). It therefore **under-reported population and wrongly concluded "only `frp_skill_taxonomy`=27 is populated; the learning runtime is almost entirely dormant."** That headline is **materially wrong.** Honesty cuts both ways — *empty-when-full* is as much a fabrication as *full-when-empty*. This section has been **regenerated with exact `SELECT COUNT(*)`**. Corrected values:
+
+| Table | Was (n_live_tup) | **Now (COUNT\*)** | Correction |
+|---|---|---|---|
+| `skills` | 0 | **131** | skill graph nodes LIVE |
+| `skill_proficiency_levels` | 0 (EMPTY) | **655** | LIVE |
+| `occupation_skills` | 0 (EMPTY) | **355** | LIVE |
+| `occupation_pathways` | 0 (EMPTY) | **89** | LIVE |
+| `lip_catalog_courses` | 0 (EMPTY) | **15** | catalog POPULATED |
+| `cg_learning_resources` | 0 | **76** | resources POPULATED |
+| `cg_user_learning_recs` | 0 | **29** | recs LIVE |
+| `cg_user_career_path` | 0 | **4** | paths LIVE (sparse) |
+| `learn_outcomes` | 0 (DORMANT) | **54** | outcomes recorded |
+| `learn_effectiveness` | 0 | **9** | effectiveness recorded |
+| `learn_transfer_edges` | 0 | **7** | transfer edges LIVE |
+| `skill_adjacency` | 0 | **2** | sparse |
+
+Genuinely 0 (re-confirmed by exact count): `skill_aliases`, `skill_relationships`, `inferred_skills`, `learning_plan_templates`, `lbi_modules`, `lbi_sub_modules`, `lip_user_course_enrollments`, `p4_learning_progression`, `frp_user_skill_profile`, `bios_meta_learning`, `meta_learning_profiles`.
+
+---
+
+## PART 1 — Current Learning Intelligence Audit (MEASURED, exact COUNT\*)
 
 | Component | Substrate | **Live runtime in THIS DB** | Verdict |
 |---|---|---|---|
 | Learning engine family `services/learning-*.ts`, `skill-*.ts` | code | present (learning-path-engine · learning-roi-engine v1/v2 · learning-hub-composer · learning-passport-loop · lip-learning-need-engine · skill-graph · skill-inventory-engine · career-learning-rec-engine · career-skill-gap-engine · frp-skill-bridge · intervention-learning-engine) | **BUILT** |
 | Skill taxonomy `frp_skill_taxonomy` | reference (seeded) | **27** | SEEDED CATALOG |
-| Skill graph `skills` / `skill_aliases` / `skill_relationships` / `skill_adjacency` / `inferred_skills` | runtime | **0** (all) | DORMANT |
-| Occupation↔skill `occupation_skills` / `occupation_pathways` / `skill_proficiency_levels` | reference | **0** (all) | EMPTY |
-| Learning catalog `lip_catalog_courses` / `cg_learning_resources` / `learning_plan_templates` / `lbi_modules` / `lbi_sub_modules` | catalog | **0** (all) | EMPTY |
-| Learning paths `learning-path` / `cg_user_career_path` / `cg_user_learning_recs` / `mobility_*_pathways` | runtime | **0** (all) | DORMANT |
+| Skill graph `skills` / `skill_aliases` / `skill_relationships` / `skill_adjacency` / `inferred_skills` | runtime | **131 / 0 / 0 / 2 / 0** | **PARTIAL (nodes LIVE; edges/aliases empty)** |
+| Occupation↔skill `occupation_skills` / `occupation_pathways` / `skill_proficiency_levels` | reference | **355 / 89 / 655** | **LIVE** |
+| Learning catalog `lip_catalog_courses` / `cg_learning_resources` / `learning_plan_templates` / `lbi_modules` / `lbi_sub_modules` | catalog | **15 / 76 / 0 / 0 / 0** | **PARTIAL (courses+resources POPULATED; templates/modules empty)** |
+| Learning paths `cg_user_career_path` / `cg_user_learning_recs` | runtime | **4 / 29** | **LIVE (sparse)** |
 | Enrollments / progress `lip_user_course_enrollments` / `p4_learning_progression` / `frp_user_skill_profile` | runtime | **0** (all) | DORMANT |
-| Outcomes / effectiveness `learn_outcomes` / `learn_effectiveness` / `learn_transfer_edges` | outcome | **0** (all) | DORMANT |
+| Outcomes / effectiveness `learn_outcomes` / `learn_effectiveness` / `learn_transfer_edges` | outcome | **54 / 9 / 7** | **LIVE** |
 | Meta-learning `bios_meta_learning` / `meta_learning_profiles` | runtime | **0 / 0** | DORMANT |
 
-**CRITICAL HONEST FINDING (DERIVED):** Learning Intelligence is **one of the most code-rich layers in the platform** — a deep engine family (learning-path, learning-ROI v1/v2, hub-composer, passport-loop, need-engine, skill-graph, skill-inventory, career-learning-rec, career-skill-gap, frp-skill-bridge, intervention-learning) plus a dozen routes (learning-path, learning-passport, ontology-learning-paths, ontology-future-skills, talent-learning-catalog, competency-skill-intelligence). **But the learning RUNTIME is almost entirely DORMANT in this DB. The ONLY populated table is `frp_skill_taxonomy` = 27 — a seeded reference taxonomy** — while every operational table is 0: the skill graph (`skills`/`aliases`/`relationships`/`adjacency`), the learning CATALOG (`lip_catalog_courses`/`cg_learning_resources`/`learning_plan_templates`/`lbi_modules`), learning paths, enrollments, progression, user-skill-profiles, and every learning OUTCOME / effectiveness table. So: **a 27-row seeded skill taxonomy is NOT a learning ecosystem — seeded catalog ≠ learning ecosystem, table-exists ≠ catalog-populated, and built ≠ activated.** There are no authored courses, no learning paths, no enrolled learners, and no recorded learning outcomes in this environment. Critically, Learning Intelligence sits DOWNSTREAM of Decision (paths originate from Decision Intelligence) and Competency (it must not duplicate Competency Intelligence) — both of which are dormant/empty here (Phases 1.19, plus the competency genome `onto_competencies`=422 is the ONE live upstream asset) — so the development layer has a real competency genome to map against but no authored learning content to deliver. Authoring the catalog + activating the learning runtime is a separate, approved phase; **NOT performed here.**
+**CRITICAL HONEST FINDING (MEASURED, exact COUNT\* + DERIVED):** Learning Intelligence is **one of the most code-rich layers in the platform** — a deep engine family (learning-path, learning-ROI v1/v2, hub-composer, passport-loop, need-engine, skill-graph, skill-inventory, career-learning-rec, career-skill-gap, frp-skill-bridge, intervention-learning) plus a dozen routes (learning-path, learning-passport, ontology-learning-paths, ontology-future-skills, talent-learning-catalog, competency-skill-intelligence). **Contrary to the original n_live_tup measurement, the learning runtime is PARTIALLY LIVE, not "almost entirely dormant."** The skill graph has real nodes (`skills`=131) with occupation linkage (`occupation_skills`=355, `occupation_pathways`=89, `skill_proficiency_levels`=655); the learning CATALOG is partially authored (`lip_catalog_courses`=15, `cg_learning_resources`=76); learning paths/recs exist sparsely (`cg_user_career_path`=4, `cg_user_learning_recs`=29); and learning OUTCOMES are recorded (`learn_outcomes`=54, `learn_effectiveness`=9, `learn_transfer_edges`=7). **What is genuinely DORMANT** is the *learner-state* runtime: enrollments (`lip_user_course_enrollments`=0), progression (`p4_learning_progression`=0), user-skill-profiles (`frp_user_skill_profile`=0), meta-learning (`bios_meta_learning`/`meta_learning_profiles`=0), and the skill *graph edges* (`skill_relationships`/`skill_aliases`/`inferred_skills`=0, `skill_adjacency`=2 only) plus higher-order catalog templates (`learning_plan_templates`/`lbi_modules`/`lbi_sub_modules`=0). So the honest picture: **a real (if partial) skill graph + course catalog + recommendation/outcome layer EXISTS, but no learners are enrolled or progressing through it.** seeded catalog ≠ learning ecosystem still holds for the enrollment loop; but table-exists-but-empty was the WRONG verdict for skills/courses/outcomes here. The competency genome (`onto_competencies`=422) remains the canonical upstream anchor. Densifying skill-graph edges + activating the enrollment/progression loop is a separate, approved phase; **NOT performed here.**
 
-**Strengths (DERIVED):** single canonical Learning Engine with explicit ROI, skill-gap, and need sub-engines; skill-graph + skill-inventory separate the skill ONTOLOGY from learner state; learning-passport-loop closes the evidence loop; the competency genome (`onto_competencies`=422, Phase 1.17) is a real upstream anchor for competency-based learning; ROI engine has a v2 (iterating, not duplicating). **Technical debt / GAPS (DERIVED):** learning CATALOG empty (no courses/modules → nothing to recommend or enroll in); skill graph unpopulated (W9 needs O*NET/ESCO bulk import, not manual seed — `occupation_skills`/`skill_proficiency_levels`=0); learning paths depend on Decision Intelligence runtime (dormant); must NOT duplicate Competency Intelligence (`onto_*` is canonical) — extend, don't fork; completion/retention/mastery/competency-growth rates unmeasurable (0 learners → null, not 0). **Dormant:** entire learning runtime + catalog + skill graph + paths + enrollments + outcomes + meta-learning — documented, not activated.
+**Strengths (DERIVED):** single canonical Learning Engine with explicit ROI, skill-gap, and need sub-engines; skill-graph + skill-inventory separate the skill ONTOLOGY from learner state; **the skill graph nodes (131) + occupation linkage (355/89/655) + course catalog (15) + resources (76) + recommendations (29) + recorded outcomes (54) are real, populated assets** (not the empty shell the original reading implied); learning-passport-loop closes the evidence loop; the competency genome (`onto_competencies`=422, Phase 1.17) is a real upstream anchor; ROI engine has a v2 (iterating, not duplicating). **Technical debt / GAPS (DERIVED):** skill-graph EDGES sparse (`skill_relationships`/`skill_aliases`/`inferred_skills`=0, `skill_adjacency`=2 — nodes without a dense relationship graph; W9 needs O*NET/ESCO bulk edge import); higher-order catalog templates empty (`learning_plan_templates`/`lbi_modules`/`lbi_sub_modules`=0); learner-state loop unexercised (`lip_user_course_enrollments`/`p4_learning_progression`/`frp_user_skill_profile`=0 → no enrolled, progressing learners); must NOT duplicate Competency Intelligence (`onto_*` is canonical) — extend, don't fork; completion/retention/mastery rates unmeasurable at this scale (no enrolled learners → null, not 0). **Dormant:** enrollment/progression/user-skill-profile runtime + meta-learning + skill-graph edges + higher-order catalog templates — documented, not activated.
 
 ---
 
@@ -140,14 +163,14 @@ Verdict: APPROVE / REJECT — <reason>
 
 | Component | Current (DERIVED) | Target |
 |---|---|---|
-| Learning Engine | L2 Guided (rich engine; runtime dormant) | L4 Intelligent |
-| Learning Paths | L1 Operational (depend on dormant Decision) | L4 Intelligent |
+| Learning Engine | L2 Guided (rich engine; partially live runtime) | L4 Intelligent |
+| Learning Paths | L2 Guided (`cg_user_career_path`=4 / `cg_user_learning_recs`=29 live, sparse) | L4 Intelligent |
 | Adaptive Learning | L2 Guided (built, explainable) | L4 Intelligent |
 | Competency Learning | L2 Guided (real `onto_*` genome upstream) | L4 Intelligent |
-| Skill Intelligence | L1 Operational (only seeded `frp_skill_taxonomy`=27; graph empty) | L3 Adaptive |
-| Learning Analytics | L1 Operational (0 learners) | L3 Adaptive |
+| Skill Intelligence | L2 Guided (`skills`=131 + occupation linkage 355/89/655; edges sparse) | L3 Adaptive |
+| Learning Analytics | L1 Operational (outcomes recorded but no enrolled learners) | L3 Adaptive |
 | Learning Reports | L2 Guided (canon built) | L4 Intelligent |
-| Enterprise Learning | L1 Operational (empty) | L3 Adaptive |
+| Enterprise Learning | L1 Operational (`lbi_modules`=0) | L3 Adaptive |
 
 Levels: 1 Operational · 2 Guided · 3 Adaptive · 4 Intelligent · 5 Continuous Learning Intelligence. **Roadmap:** (separate approved phases) bulk-import the skill graph (O*NET/ESCO, not hand-seed) → author the learning CATALOG (courses/modules/templates — nothing to deliver until populated) → activate upstream Decision runtime so paths can originate (Phase 1.19) → map learning to the canonical `onto_*` competency genome (extend, never fork) → enroll learners + record learning OUTCOMES to feed the ROI/effectiveness engines → keep append-only history + multi-axis confidence + AI-never-certifies. **Learning develops measurable capability; learning never ends.**
 
@@ -182,4 +205,4 @@ Future evolution supports New learning / adaptive / competency-framework / skill
 ---
 
 **STOP — Phase 1.21 complete; Learning Intelligence Constitution ready to FREEZE on approval. Learning Engine not modified, Learning Intelligence not replaced, no second learning engine created, no dormant learning capabilities activated, business logic not changed, Assessment + Behaviour + Decision + Journey + Intervention + Competency Intelligence not bypassed.**
-Honesty caveats: counts are MEASURED from the live shared Postgres today. Learning Intelligence is one of the most code-rich layers (deep engine family + a dozen routes), but the learning RUNTIME is almost entirely DORMANT here: **the ONLY populated table is `frp_skill_taxonomy`=27 (a seeded reference taxonomy)** — the skill graph, learning catalog (courses/modules/templates), learning paths, enrollments, progression, user-skill-profiles, and every learning outcome/effectiveness table all = 0. A 27-row seeded taxonomy is NOT a learning ecosystem: seeded catalog ≠ learning ecosystem; table-exists ≠ catalog-populated; built ≠ activated; flag-ON ≠ runtime-active; null ≠ 0. Learning ≠ Course ≠ Competency ≠ Skill ≠ Capability; Completion ≠ Learning; AI ≠ Teacher; human remains responsible. The competency genome (`onto_competencies`=422) is the ONE real upstream anchor; learning paths additionally depend on the dormant Decision runtime (Phase 1.19). Authoring the catalog + bulk-importing the skill graph + activating the runtime is a separate, approved phase — NOT performed here.
+Honesty caveats: counts are MEASURED via exact `SELECT COUNT(*)` from the live shared Postgres today (this phase was REGENERATED after an original `n_live_tup` measurement under-reported population — see the Measurement-Integrity Correction above). Learning Intelligence is one of the most code-rich layers (deep engine family + a dozen routes), and contrary to the original reading the learning runtime is **PARTIALLY LIVE**: skill graph nodes (`skills`=131) + occupation linkage (`occupation_skills`=355, `occupation_pathways`=89, `skill_proficiency_levels`=655), a partial CATALOG (`lip_catalog_courses`=15, `cg_learning_resources`=76), sparse paths/recs (`cg_user_career_path`=4, `cg_user_learning_recs`=29) and recorded outcomes (`learn_outcomes`=54, `learn_effectiveness`=9, `learn_transfer_edges`=7). What is **genuinely DORMANT** is the learner-state loop (enrollments / progression / user-skill-profiles = 0), meta-learning (= 0), skill-graph EDGES (`skill_relationships`/`aliases`/`inferred_skills`=0, `skill_adjacency`=2) and higher-order catalog templates (`learning_plan_templates`/`lbi_modules`/`lbi_sub_modules`=0). So: a real (if partial) graph + catalog + outcome layer EXISTS, but no learners are enrolled or progressing. seeded catalog ≠ learning ecosystem (still true of the enrollment loop); but table-exists-but-empty was the WRONG verdict for skills/courses/outcomes here. built ≠ activated; flag-ON ≠ runtime-active; **null ≠ 0 in BOTH directions** (each table reported exactly). Learning ≠ Course ≠ Competency ≠ Skill ≠ Capability; Completion ≠ Learning; AI ≠ Teacher; human remains responsible. The competency genome (`onto_competencies`=422) is the canonical upstream anchor. Densifying skill-graph edges (O*NET/ESCO) + activating the enrollment/progression loop is a separate, approved phase — NOT performed here.

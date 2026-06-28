@@ -163,11 +163,36 @@ async function waitForReady(deadline: number): Promise<boolean> {
   return false;
 }
 
+/** Feature flags the flag-gated harnesses require ON to exercise the REAL privacy
+ *  logic instead of 503-ing on flag-gating. On the live-server path these come from
+ *  the running workflow's env (.replit [userenv.development]); when we auto-boot a
+ *  temporary instance ourselves (headless/CI), the spawned process only inherits the
+ *  runner's env, which may not carry them — so we set them explicitly here. We do NOT
+ *  override flags already present in the runner env (a deliberate FF_*=0 still wins).
+ *    - FF_CAREER_LAUNCHPAD     → Employability Studio harness (#279)
+ *    - FF_EMPLOYABILITY_STUDIO → Employability Studio harness (#279)
+ *    - FF_LAUNCHPAD_DASHBOARD  → Launchpad tracker harness (#274) */
+const REQUIRED_HARNESS_FLAGS = [
+  'FF_CAREER_LAUNCHPAD',
+  'FF_EMPLOYABILITY_STUDIO',
+  'FF_LAUNCHPAD_DASHBOARD',
+] as const;
+
 function bootBackend(): ChildProcess {
   log('Backend API not reachable on :8080 — booting a temporary instance (npx tsx index.ts)…');
+  const flagEnv: Record<string, string> = {};
+  for (const key of REQUIRED_HARNESS_FLAGS) {
+    // Only set a default when the runner hasn't already provided the flag, so an
+    // explicit FF_*=0 in the environment is still honoured (no verdict weakening).
+    if (process.env[key] == null) flagEnv[key] = '1';
+  }
+  const enabled = REQUIRED_HARNESS_FLAGS.filter((k) => flagEnv[k] === '1');
+  if (enabled.length) {
+    log(`  enabling flag-gated harness flags for the temporary instance: ${enabled.join(', ')}`);
+  }
   const child = spawn('npx', ['tsx', 'index.ts'], {
     cwd: process.cwd(),
-    env: { ...process.env },
+    env: { ...process.env, ...flagEnv },
     stdio: ['ignore', 'pipe', 'pipe'],
     detached: true, // own process group so we can kill the whole tree on teardown
   });

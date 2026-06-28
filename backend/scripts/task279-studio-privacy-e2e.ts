@@ -120,9 +120,22 @@ async function registerStudent(email: string): Promise<{ session: ReturnType<typ
     throw new Error(`CSRF bootstrap failed for ${email}: status ${csrf.status}`);
   }
   // 1 — register (auto-logs in → sets mx.sid session cookie).
-  const r = await session.api('POST', '/api/register', {
+  let r = await session.api('POST', '/api/register', {
     username: email, email, password: PW, fullName: 'E2E 279 Student', role: 'job_seeker',
   });
+  // /api/register is protected by the always-on auth rate limiter (a real security
+  // control with NO test bypass). When the register window is already partly consumed
+  // (e.g. by earlier validation steps on the same IP) a registration can come back 429;
+  // honour the server's retry_after and retry rather than failing the privacy check on
+  // a throttle (a 429 is never a privacy leak). The limiter stays fully intact.
+  for (let attempt = 0; attempt < 5 && r.status === 429; attempt += 1) {
+    const waitS = Math.min(70, Math.max(2, Number(r.json?.retry_after_seconds ?? 15) + 1));
+    console.log(`     … register for ${email} rate-limited (429); waiting ${waitS}s then retrying (attempt ${attempt + 1}/5)`);
+    await new Promise((res) => setTimeout(res, waitS * 1000));
+    r = await session.api('POST', '/api/register', {
+      username: email, email, password: PW, fullName: 'E2E 279 Student', role: 'job_seeker',
+    });
+  }
   const userId = String(r.json?.id ?? '');
   if (r.status !== 200 || !userId) throw new Error(`register failed for ${email}: ${r.status} ${JSON.stringify(r.json)}`);
   if (!session.jar.get('mx.sid')) throw new Error(`no session cookie after register for ${email}`);
@@ -205,6 +218,28 @@ async function main() {
   const aStudioBefore = await readStudioFromDb(userIdA);
   assert(aStudioBefore?.leadership?.team?.[0]?.name === 'Aisha Report', `DB baseline: A's data.studio holds A's leadership team`);
   assert(aStudioBefore?.executive?.board?.[0]?.name === 'A Board Member', `DB baseline: A's data.studio holds A's board`);
+
+  // ── POSITIVE CONTROL: A's OWN studio data must actually exist AND be readable ──
+  //    by A over the live path BEFORE we conclude "no cross-user leak". An empty
+  //    data.studio means nothing to cross-read, so the IDOR assertions below would
+  //    pass VACUOUSLY — fail LOUDLY ("no data exercised") instead of silently passing.
+  step('Positive control: A actually wrote studio data and can read its OWN back (else "no data exercised")');
+  {
+    const teamRows = aStudioBefore?.leadership?.team?.length ?? 0;
+    const stakeholderRows = aStudioBefore?.leadership?.stakeholders?.length ?? 0;
+    const priorityRows = aStudioBefore?.executive?.priorities?.length ?? 0;
+    const boardRows = aStudioBefore?.executive?.board?.length ?? 0;
+    const rowsExercised = teamRows + stakeholderRows + priorityRows + boardRows;
+    if (rowsExercised === 0) {
+      failures += 1;
+      console.error('     ✗ FAIL: no data exercised — A\'s data.studio is EMPTY, so the privacy assertions below would pass vacuously. Aborting.');
+      return;
+    }
+    assert(rowsExercised > 0, `positive control: A's data.studio holds ${rowsExercised} row(s) across team/stakeholders/priorities/board (write was exercised)`);
+    // Read back over the LIVE HTTP path as A — confirms A's own write is visible to A.
+    const r = await A.session.api('GET', '/api/career/studio-data');
+    assert(r.status === 200 && r.json?.leadership?.team?.[0]?.name === 'Aisha Report', `positive control: A reads its OWN studio trackers back over HTTP`);
+  }
 
   // ── ATTACK: B saves studio data while smuggling A's id into the body. ───────
   //    The route resolves the subject from the session principal only, so this

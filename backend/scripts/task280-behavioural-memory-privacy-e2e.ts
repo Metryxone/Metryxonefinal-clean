@@ -124,9 +124,22 @@ async function registerStudent(email: string): Promise<{ session: ReturnType<typ
     throw new Error(`CSRF bootstrap failed for ${email}: status ${csrf.status}`);
   }
   // 1 — register (auto-logs in → sets mx.sid session cookie).
-  const r = await session.api('POST', '/api/register', {
+  let r = await session.api('POST', '/api/register', {
     username: email, email, password: PW, fullName: 'E2E 280 Student', role: 'job_seeker',
   });
+  // /api/register is protected by the always-on auth rate limiter (a real security
+  // control with NO test bypass). When the register window is already partly consumed
+  // (e.g. by earlier validation steps on the same IP) a registration can come back 429;
+  // honour the server's retry_after and retry rather than failing the privacy check on
+  // a throttle (a 429 is never a privacy leak). The limiter stays fully intact.
+  for (let attempt = 0; attempt < 5 && r.status === 429; attempt += 1) {
+    const waitS = Math.min(70, Math.max(2, Number(r.json?.retry_after_seconds ?? 15) + 1));
+    console.log(`     … register for ${email} rate-limited (429); waiting ${waitS}s then retrying (attempt ${attempt + 1}/5)`);
+    await new Promise((res) => setTimeout(res, waitS * 1000));
+    r = await session.api('POST', '/api/register', {
+      username: email, email, password: PW, fullName: 'E2E 280 Student', role: 'job_seeker',
+    });
+  }
   const userId = String(r.json?.id ?? '');
   if (r.status !== 200 || !userId) throw new Error(`register failed for ${email}: ${r.status} ${JSON.stringify(r.json)}`);
   if (!session.jar.get('mx.sid')) throw new Error(`no session cookie after register for ${email}`);
@@ -215,6 +228,25 @@ async function main() {
   assert(aBefore.snapshots === 1, `DB baseline: A has exactly 1 snapshot row`);
   assert(aBefore.series === 4, `DB baseline: A has 4 time-series rows (signal/pattern/intervention/outcome)`);
   assert(aBefore.firstStage === 'A-confidential-stage', `DB baseline: A's snapshot holds A's confidential stage`);
+
+  // ── POSITIVE CONTROL: A's OWN behavioural memory must actually exist AND be ──
+  //    readable by A over the live path BEFORE we conclude "no cross-user leak".
+  //    An empty store means nothing to cross-read, so the IDOR assertions below
+  //    would pass VACUOUSLY — fail LOUDLY ("no data exercised"), never silently pass.
+  step('Positive control: A actually wrote behavioural memory and can read it back (else "no data exercised")');
+  {
+    const rowsExercised = aBefore.snapshots + aBefore.series;
+    if (rowsExercised === 0) {
+      failures += 1;
+      console.error('     ✗ FAIL: no data exercised — A\'s behavioural-memory store is EMPTY, so the privacy assertions below would pass vacuously. Aborting.');
+      return;
+    }
+    assert(aBefore.snapshots > 0, `positive control: A has ≥1 snapshot row (write was exercised)`);
+    assert(aBefore.series > 0, `positive control: A has ≥1 time-series row (write was exercised)`);
+    // Read back over the LIVE HTTP path as A — confirms A's own write is visible to A.
+    const r = await A.session.api('GET', `/api/career/behavioural-memory/${encodeURIComponent(userIdA)}`);
+    assert(r.status === 200 && r.json?.ok === true && (r.json?.snapshot_count ?? 0) > 0, `positive control: A reads its OWN behavioural memory back over HTTP`);
+  }
 
   // ── ATTACK 1: B reads A's behavioural memory by putting A's id in the path. ─
   step("Student B reads A's behavioural memory by id (GET /behavioural-memory/:A as B) — must 403, no leak");

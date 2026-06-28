@@ -119,9 +119,22 @@ async function registerStudent(email: string): Promise<{ session: ReturnType<typ
   }
   // 1 — register (auto-logs in → sets mx.sid session cookie). job_seeker is the
   //     fresher/student persona the launchpad tracker exists for.
-  const r = await session.api('POST', '/api/register', {
+  let r = await session.api('POST', '/api/register', {
     username: email, email, password: PW, fullName: 'E2E 274 Student', role: 'job_seeker',
   });
+  // /api/register is protected by the always-on auth rate limiter (a real security
+  // control with NO test bypass). When the register window is already partly consumed
+  // (e.g. by earlier validation steps on the same IP) a registration can come back 429;
+  // honour the server's retry_after and retry rather than failing the privacy check on
+  // a throttle (a 429 is never a privacy leak). The limiter stays fully intact.
+  for (let attempt = 0; attempt < 5 && r.status === 429; attempt += 1) {
+    const waitS = Math.min(70, Math.max(2, Number(r.json?.retry_after_seconds ?? 15) + 1));
+    console.log(`     … register for ${email} rate-limited (429); waiting ${waitS}s then retrying (attempt ${attempt + 1}/5)`);
+    await new Promise((res) => setTimeout(res, waitS * 1000));
+    r = await session.api('POST', '/api/register', {
+      username: email, email, password: PW, fullName: 'E2E 274 Student', role: 'job_seeker',
+    });
+  }
   const userId = String(r.json?.id ?? '');
   if (r.status !== 200 || !userId) throw new Error(`register failed for ${email}: ${r.status} ${JSON.stringify(r.json)}`);
   if (!session.jar.get('mx.sid')) throw new Error(`no session cookie after register for ${email}`);
@@ -188,6 +201,26 @@ async function main() {
   // Snapshot A's row straight from Postgres as the integrity baseline.
   const aHubBefore = await readFresherHubFromDb(userIdA);
   assert(Array.isArray(aHubBefore?.drives) && aHubBefore.drives.length === 2, `DB baseline: A's fresherHub has 2 drives`);
+
+  // ── POSITIVE CONTROL: A's OWN tracker must actually exist AND be readable by A ──
+  //    over the live path BEFORE we conclude "no cross-user leak". An empty
+  //    fresherHub means nothing to cross-read, so the IDOR assertions below would
+  //    pass VACUOUSLY — fail LOUDLY ("no data exercised") instead of silently passing.
+  step('Positive control: A actually wrote tracker data and can read its OWN back (else "no data exercised")');
+  {
+    const driveRows = Array.isArray(aHubBefore?.drives) ? aHubBefore.drives.length : 0;
+    const projectRows = Array.isArray(aHubBefore?.projects) ? aHubBefore.projects.length : 0;
+    const rowsExercised = driveRows + projectRows;
+    if (rowsExercised === 0) {
+      failures += 1;
+      console.error('     ✗ FAIL: no data exercised — A\'s fresherHub tracker is EMPTY, so the privacy assertions below would pass vacuously. Aborting.');
+      return;
+    }
+    assert(rowsExercised > 0, `positive control: A's fresherHub holds ${rowsExercised} tracker row(s) across drives/projects (write was exercised)`);
+    // Read back over the LIVE HTTP path as A — confirms A's own write is visible to A.
+    const r = await A.session.api('GET', '/api/launchpad-dashboard/tracker');
+    assert(r.status === 200 && r.json?.subject === userIdA && (r.json?.drives?.length ?? 0) > 0, `positive control: A reads its OWN tracker back over HTTP`);
+  }
 
   step("Student B reads with A's id in query AND body (GET /tracker as B) — must NOT see A's data");
   {

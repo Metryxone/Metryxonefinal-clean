@@ -125,9 +125,22 @@ async function registerStudent(email: string): Promise<{ session: ReturnType<typ
   }
   // 1 — register (auto-logs in → sets mx.sid session cookie). job_seeker is the
   //     student/fresher persona these career-seeker surfaces exist for.
-  const r = await session.api('POST', '/api/register', {
+  let r = await session.api('POST', '/api/register', {
     username: email, email, password: PW, fullName: 'E2E 277 Student', role: 'job_seeker',
   });
+  // /api/register is protected by the always-on auth rate limiter (a real security
+  // control with NO test bypass). When the register window is already partly consumed
+  // (e.g. by earlier validation steps on the same IP) a registration can come back 429;
+  // honour the server's retry_after and retry rather than failing the privacy check on
+  // a throttle (a 429 is never a privacy leak). The limiter stays fully intact.
+  for (let attempt = 0; attempt < 5 && r.status === 429; attempt += 1) {
+    const waitS = Math.min(70, Math.max(2, Number(r.json?.retry_after_seconds ?? 15) + 1));
+    console.log(`     … register for ${email} rate-limited (429); waiting ${waitS}s then retrying (attempt ${attempt + 1}/5)`);
+    await new Promise((res) => setTimeout(res, waitS * 1000));
+    r = await session.api('POST', '/api/register', {
+      username: email, email, password: PW, fullName: 'E2E 277 Student', role: 'job_seeker',
+    });
+  }
   const userId = String(r.json?.id ?? '');
   if (r.status !== 200 || !userId) throw new Error(`register failed for ${email}: ${r.status} ${JSON.stringify(r.json)}`);
   if (!session.jar.get('mx.sid')) throw new Error(`no session cookie after register for ${email}`);
@@ -213,6 +226,30 @@ async function main() {
   assert(aProfileBefore?.summary === A_PROFILE.summary, `DB baseline: A's profile holds A's summary`);
   assert(aJobsBefore.length === 1 && aJobsBefore[0].data?.company === 'A-Corp', `DB baseline: A has 1 job (A-Corp)`);
   assert(aGoalsBefore.length === 1, `DB baseline: A has 1 goal`);
+
+  // ── POSITIVE CONTROL: A's OWN write must actually exist AND be readable by A ──
+  //    over the live path BEFORE we conclude "no cross-user leak". If the store is
+  //    empty there is nothing to cross-read, so every IDOR assertion below would
+  //    pass VACUOUSLY — fail LOUDLY ("no data exercised") instead of silently passing.
+  step('Positive control: A actually wrote data and can read its OWN profile/jobs/goals back (else "no data exercised")');
+  {
+    const rowsExercised = (aProfileBefore ? 1 : 0) + aJobsBefore.length + aGoalsBefore.length;
+    if (rowsExercised === 0) {
+      failures += 1;
+      console.error('     ✗ FAIL: no data exercised — A\'s profile/jobs/goals store is EMPTY, so the privacy assertions below would pass vacuously. Aborting.');
+      return;
+    }
+    assert(!!aProfileBefore, `positive control: A's profile row exists (write was exercised)`);
+    assert(aJobsBefore.length > 0, `positive control: A has ≥1 job row (write was exercised)`);
+    assert(aGoalsBefore.length > 0, `positive control: A has ≥1 goal row (write was exercised)`);
+    // Read back over the LIVE HTTP path as A — confirms A's own write is visible to A.
+    const rp = await A.session.api('GET', `/api/cv/profile/${userIdA}`);
+    assert(rp.status === 200 && rp.json?.profile?.summary === A_PROFILE.summary, `positive control: A reads its OWN profile back over HTTP`);
+    const rj = await A.session.api('GET', `/api/cv/jobs/${userIdA}`);
+    assert(rj.status === 200 && (rj.json?.jobs?.length ?? 0) > 0, `positive control: A reads its OWN job(s) back over HTTP`);
+    const rg = await A.session.api('GET', `/api/cv/goals/${userIdA}`);
+    assert(rg.status === 200 && (rg.json?.goals?.length ?? 0) > 0, `positive control: A reads its OWN goal(s) back over HTTP`);
+  }
 
   // ── ATTACK 1: B tries to READ A's profile via the :userId param route. ─────
   step("Student B reads A's profile (GET /api/cv/profile/:A as B) — must be 403, never A's data");

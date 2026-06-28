@@ -1146,3 +1146,9 @@ id = "Spc9SigQqoHfMrcAaC6Vd"
 uri = "file://backend/audit/mx-700/phase-1.2-parts-21-25-protection-reuse-governance.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.2 Parts 21–25: Protection, Reuse & Governance"
+
+[[outputs]]
+id = "98UVujGdPTcaLfp8wC9hC"
+uri = "file://backend/audit/mx-700/phase-1.3-product-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.3: Product Constitution (Product Bible)"

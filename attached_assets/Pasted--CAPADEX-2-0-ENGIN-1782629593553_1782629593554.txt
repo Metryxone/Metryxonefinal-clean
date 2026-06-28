@@ -1,0 +1,782 @@
+==============================================================================
+CAPADEX 2.0
+
+ENGINEERING EXECUTION SPECIFICATION
+
+PHASE 1.3
+
+PRODUCT CONSTITUTION
+
+Execution Mode
+
+ENHANCEMENT ONLY
+
+DO NOT REBUILD
+
+DO NOT REDESIGN FROM SCRATCH
+
+DO NOT REPLACE EXISTING PRODUCT CAPABILITIES
+
+ONLY EVOLVE THE EXISTING PRODUCT
+
+==============================================================================
+
+MISSION
+
+Define the permanent Product Constitution for CAPADEX.
+
+This document governs every future feature, workflow, user experience,
+subscription, AI interaction, assessment, journey, recommendation,
+SuperAdmin capability and enterprise implementation.
+
+The Product Constitution is the Product Bible.
+
+Every future enhancement must comply.
+
+==============================================================================
+
+PRIMARY OBJECTIVES
+
+Create one unified product philosophy.
+
+Protect existing product investment.
+
+Define product principles.
+
+Standardize behaviour intelligence.
+
+Standardize assessment philosophy.
+
+Standardize journey philosophy.
+
+Standardize AI philosophy.
+
+Standardize subscription philosophy.
+
+Standardize enterprise philosophy.
+
+Ensure every enhancement increases product quality.
+
+==============================================================================
+
+MANDATORY RULES
+
+Repository remains source of truth.
+
+Existing functionality must be analysed before enhancement.
+
+Never redesign an existing feature without understanding its purpose.
+
+Never replace working product capabilities.
+
+Never introduce duplicate workflows.
+
+Never introduce duplicate user journeys.
+
+Never create multiple ways of achieving the same outcome.
+
+==============================================================================
+
+PART 1
+
+CURRENT PRODUCT AUDIT
+
+Audit the existing product exactly as implemented.
+
+Document
+
+Current Product Vision
+
+Current Modules
+
+Current Capabilities
+
+Current Personas
+
+Current Concerns
+
+Current Assessments
+
+Current Journeys
+
+Current Reports
+
+Current AI
+
+Current Enterprise Features
+
+Current Commercial Features
+
+Current Dashboards
+
+Current Learning Features
+
+Current Career Features
+
+Current Behaviour Features
+
+Current SuperAdmin Features
+
+Identify
+
+Strengths
+
+Weaknesses
+
+Gaps
+
+Duplications
+
+Dormant Capabilities
+
+Missing User Value
+
+==============================================================================
+
+PART 2
+
+PRODUCT VISION
+
+Define the permanent CAPADEX vision.
+
+CAPADEX is not an assessment platform.
+
+CAPADEX is not a reporting platform.
+
+CAPADEX is a continuous Behaviour Intelligence Platform.
+
+Its purpose is
+
+Understand
+
+Measure
+
+Predict
+
+Guide
+
+Improve
+
+Human Behaviour
+
+Throughout Life.
+
+Every enhancement must support this vision.
+
+==============================================================================
+
+PART 3
+
+PRODUCT PRINCIPLES
+
+Every future feature must satisfy
+
+Behaviour First
+
+Decision First
+
+Journey First
+
+Learning First
+
+Career First
+
+Life First
+
+Conversation First
+
+Evidence First
+
+Explainability First
+
+Continuous Growth
+
+AI Assisted
+
+Human Controlled
+
+Enterprise Ready
+
+Privacy First
+
+Accessibility First
+
+Composable
+
+Scalable
+
+Maintainable
+
+==============================================================================
+
+PART 4
+
+BEHAVIOUR CONSTITUTION
+
+Behaviour is the foundation.
+
+Everything must originate from behaviour.
+
+Assessments measure behaviour.
+
+Journeys improve behaviour.
+
+Reports explain behaviour.
+
+Recommendations influence behaviour.
+
+Learning develops behaviour.
+
+Career decisions reflect behaviour.
+
+AI understands behaviour.
+
+Never design features that bypass the Behaviour Engine.
+
+==============================================================================
+
+PART 5
+
+PERSONA CONSTITUTION
+
+Audit existing personas.
+
+Do not replace.
+
+Enhance.
+
+Identify
+
+Missing personas
+
+Duplicate personas
+
+Unused personas
+
+Industry personas
+
+Education personas
+
+Corporate personas
+
+Government personas
+
+Healthcare personas
+
+Student personas
+
+Professional personas
+
+Executive personas
+
+Founder personas
+
+Future personas
+
+Generate
+
+Persona maturity model.
+
+Persona hierarchy.
+
+Persona relationships.
+
+==============================================================================
+
+PART 6
+
+CONCERN CONSTITUTION
+
+Audit current Concern Master.
+
+Never replace.
+
+Improve.
+
+Document
+
+Categories
+
+Subcategories
+
+Relationships
+
+Dependencies
+
+Market Trends
+
+Future Workforce Concerns
+
+Mental Health
+
+Learning
+
+Career
+
+Leadership
+
+Organisation
+
+Life
+
+Wellbeing
+
+Finance
+
+Relationships
+
+Health
+
+Technology
+
+Generate
+
+Concern taxonomy maturity.
+
+==============================================================================
+
+PART 7
+
+ASSESSMENT PHILOSOPHY
+
+Assessments are conversations.
+
+Not questionnaires.
+
+Not forms.
+
+Not psychometric sheets.
+
+Assessments must
+
+Adapt
+
+Learn
+
+Predict
+
+Guide
+
+Explain
+
+Recommend
+
+Continue
+
+Every assessment must begin a journey.
+
+Never end with a score.
+
+==============================================================================
+
+PART 8
+
+JOURNEY CONSTITUTION
+
+Every assessment creates
+
+Behaviour Journey
+
+Learning Journey
+
+Career Journey
+
+Life Journey
+
+Leadership Journey
+
+Organisation Journey
+
+Decision Journey
+
+Subscription Journey
+
+AI Journey
+
+Every journey must continue after the report.
+
+==============================================================================
+
+PART 9
+
+AI PRODUCT PRINCIPLES
+
+AI exists to
+
+Explain
+
+Coach
+
+Guide
+
+Educate
+
+Predict
+
+Recommend
+
+Never diagnose.
+
+Never fabricate.
+
+Never replace evidence.
+
+Never replace behaviour science.
+
+Every AI output requires
+
+Evidence
+
+Confidence
+
+Explanation
+
+Alternatives
+
+==============================================================================
+
+PART 10
+
+REPORT CONSTITUTION
+
+Reports are
+
+Interactive
+
+Living
+
+Continuous
+
+Actionable
+
+Explainable
+
+Adaptive
+
+Never static PDFs.
+
+Audit current reports.
+
+Improve
+
+Visualisation
+
+Storytelling
+
+Recommendations
+
+Progress Tracking
+
+Benchmarks
+
+Comparisons
+
+Journey Integration
+
+==============================================================================
+
+PART 11
+
+SUBSCRIPTION PHILOSOPHY
+
+Subscriptions must never be generic.
+
+Generate personalised subscriptions using
+
+Persona
+
+Concern
+
+Behaviour
+
+Career
+
+Learning
+
+Journey
+
+Enterprise
+
+Goals
+
+Budget
+
+Usage
+
+Recommendations
+
+Subscriptions evolve continuously.
+
+==============================================================================
+
+PART 12
+
+PRODUCT EXPERIENCE PRINCIPLES
+
+Every screen must answer
+
+Who am I?
+
+Why am I here?
+
+What should I do next?
+
+What value do I receive?
+
+How am I progressing?
+
+Every interaction must reduce friction.
+
+==============================================================================
+
+PART 13
+
+ENTERPRISE PRODUCT PRINCIPLES
+
+Audit enterprise capabilities.
+
+Improve
+
+Configuration
+
+Administration
+
+Reporting
+
+Governance
+
+Analytics
+
+Compliance
+
+Security
+
+Departments
+
+Managers
+
+Teams
+
+Institutions
+
+Universities
+
+Government
+
+Corporate
+
+NGO
+
+==============================================================================
+
+PART 14
+
+SUPERADMIN PRODUCT PRINCIPLES
+
+SuperAdmin exists to
+
+Configure
+
+Monitor
+
+Approve
+
+Measure
+
+Analyse
+
+Govern
+
+The product.
+
+Never duplicate administration.
+
+==============================================================================
+
+PART 15
+
+PRODUCT QUALITY STANDARDS
+
+Every enhancement must improve
+
+Usability
+
+Accessibility
+
+Performance
+
+Maintainability
+
+Discoverability
+
+Explainability
+
+Consistency
+
+Trust
+
+==============================================================================
+
+PART 16
+
+PRODUCT SUCCESS METRICS
+
+Measure
+
+Activation
+
+Completion
+
+Journey Continuation
+
+Behaviour Improvement
+
+Learning Progress
+
+Career Progress
+
+Subscription Conversion
+
+Enterprise Adoption
+
+Retention
+
+Recommendation Accuracy
+
+AI Confidence
+
+Decision Quality
+
+==============================================================================
+
+PART 17
+
+PRODUCT GOVERNANCE
+
+Every new feature must answer
+
+Why does it exist?
+
+What existing capability does it enhance?
+
+Which existing modules does it reuse?
+
+Does it duplicate functionality?
+
+Can an existing feature achieve the same outcome?
+
+How does it improve behaviour intelligence?
+
+==============================================================================
+
+PART 18
+
+PRODUCT REVIEW BOARD
+
+Every future product enhancement requires review by
+
+Founder
+
+Product
+
+Behaviour Science
+
+Psychology
+
+UX
+
+Engineering
+
+AI
+
+Enterprise
+
+Security
+
+Quality Assurance
+
+==============================================================================
+
+PART 19
+
+PRODUCT DEFINITION OF DONE
+
+A product enhancement is complete only when
+
+Existing capability reused
+
+Behaviour engine integrated
+
+Concern engine integrated
+
+Persona integrated
+
+Journey created
+
+Subscription considered
+
+SuperAdmin considered
+
+Enterprise considered
+
+Reports updated
+
+AI updated
+
+Analytics updated
+
+Documentation updated
+
+No duplicate functionality introduced
+
+==============================================================================
+
+PART 20
+
+DELIVERABLES
+
+Generate
+
+1. Product Constitution
+
+2. Product Vision
+
+3. Product Principles
+
+4. Behaviour Constitution
+
+5. Persona Constitution
+
+6. Concern Constitution
+
+7. Assessment Philosophy
+
+8. Journey Constitution
+
+9. AI Product Constitution
+
+10. Report Constitution
+
+11. Subscription Constitution
+
+12. Enterprise Product Constitution
+
+13. Product Governance Model
+
+14. Product Success Metrics
+
+15. Product Definition of Done
+
+==============================================================================
+
+STOP
+
+Do not redesign product workflows.
+
+Do not implement UI changes.
+
+Do not activate dormant capabilities.
+
+Do not change business logic.
+
+This phase defines the permanent Product Constitution that all future CAPADEX enhancement phases must follow.

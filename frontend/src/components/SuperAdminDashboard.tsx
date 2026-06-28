@@ -161,6 +161,7 @@ const RoleCrosswalkPanel = lazy(() => import('./superadmin/RoleCrosswalkPanel'))
 const OnetCrosswalkGovernancePanel = lazy(() => import('./superadmin/OnetCrosswalkGovernancePanel'));
 const CompetencyCoverageMatricesPanel = lazy(() => import('./superadmin/CompetencyCoverageMatricesPanel'));
 const QuestionFactoryPanel = lazy(() => import('./superadmin/QuestionFactoryPanel'));
+const PlatformLifecyclePanel = lazy(() => import('./superadmin/PlatformLifecyclePanel'));
 const GlobalRegionContentPanel = lazy(() => import('./superadmin/GlobalRegionContentPanel'));
 const GlobalIntelligencePanel = lazy(() => import('./superadmin/GlobalIntelligencePanel'));
 const EnterpriseWorkforceConsolePanel = lazy(() => import('./superadmin/EnterpriseWorkforceConsolePanel'));
@@ -338,6 +339,17 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
     queryKey: ['/api/admin/question-factory/feature-flag', 'enabled'],
     queryFn: async () => {
       const res = await fetch('/api/admin/question-factory/feature-flag', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // ── Platform Lifecycle Foundation flag probe (file-registry flag platformLifecycleFoundation).
+  //    Flag OFF → /feature-flag returns 503 → the tab is omitted (byte-identical UI). ──
+  const { data: platformLifecycleEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/admin/platform-lifecycle/feature-flag', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/platform-lifecycle/feature-flag', { credentials: 'include' });
       return res.ok;
     },
     enabled: isAuthenticated,
@@ -1042,6 +1054,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       ...(onetCrosswalkGovEnabled ? [{ id: 'onet-crosswalk-governance', label: 'O*NET Crosswalk Governance', icon: GitBranch, node: <OnetCrosswalkGovernancePanel /> }] : []),
                       ...(competencyCoverageMatricesEnabled ? [{ id: 'competency-coverage-matrices', label: 'Competency Coverage Matrices', icon: Grid3x3, node: <CompetencyCoverageMatricesPanel /> }] : []),
                       ...(questionFactoryEnabled ? [{ id: 'question-factory', label: 'Question Factory', icon: Boxes, node: <QuestionFactoryPanel /> }] : []),
+                      ...(platformLifecycleEnabled ? [{ id: 'platform-lifecycle', label: 'Platform Lifecycle', icon: Boxes, node: <PlatformLifecyclePanel /> }] : []),
                       ...(globalCompetencyEnabled ? [{ id: 'global-region-content', label: 'Global Region Content', icon: Globe, node: <GlobalRegionContentPanel /> }] : []),
                       ...(globalIntelEnabled ? [{ id: 'global-intelligence', label: 'Global Intelligence', icon: Globe, node: <GlobalIntelligencePanel /> }] : []),
                       ...(enterpriseWorkforceEnabled ? [{ id: 'enterprise-workforce-console', label: 'Enterprise Workforce Console', icon: Building2, node: <EnterpriseWorkforceConsolePanel /> }] : []),
@@ -1407,6 +1420,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               {activeTab === 'onet-crosswalk-governance' && <div className="h-full overflow-auto"><OnetCrosswalkGovernancePanel /></div>}
               {activeTab === 'competency-coverage-matrices' && <div className="h-full overflow-auto"><CompetencyCoverageMatricesPanel /></div>}
               {activeTab === 'question-factory' && questionFactoryEnabled && <div className="h-full overflow-auto"><QuestionFactoryPanel /></div>}
+              {activeTab === 'platform-lifecycle' && platformLifecycleEnabled && <div className="h-full overflow-auto"><PlatformLifecyclePanel /></div>}
               {activeTab === 'global-region-content' && <div className="h-full overflow-auto"><GlobalRegionContentPanel /></div>}
               {activeTab === 'global-intelligence'  && <div className="h-full overflow-auto"><GlobalIntelligencePanel /></div>}
               {activeTab === 'enterprise-workforce-console' && enterpriseWorkforceEnabled && <div className="h-full overflow-auto"><EnterpriseWorkforceConsolePanel /></div>}

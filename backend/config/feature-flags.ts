@@ -1714,6 +1714,11 @@ export const FEATURE_FLAGS = {
    *  analytics aggregate by existing `batches` (no `departments` table — no
    *  fabricated splits). Env: `FF_INSTITUTIONAL_INTELLIGENCE`. */
   institutionalIntelligence: false,
+  /** MX-700 Phase 1.37 — Platform Lifecycle Foundation (capability catalog + lifecycle
+   *  registry + ownership + lifecycle state engine + relationships + repository discovery).
+   *  Read-only index over the repository SSOT. Default OFF; flag-OFF is byte-identical incl.
+   *  schema (the lazy ensure-schema never runs). Env: `FF_PLATFORM_LIFECYCLE_FOUNDATION`. */
+  platformLifecycleFoundation: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1900,6 +1905,10 @@ export function isCompetencyCoverageMatricesEnabled(): boolean {
 
 export function isQuestionFactoryEnabled(): boolean {
   return isFlagEnabled('questionFactory');
+}
+
+export function isPlatformLifecycleFoundationEnabled(): boolean {
+  return isFlagEnabled('platformLifecycleFoundation');
 }
 
 export function isMx203KnowledgePopulationEnabled(): boolean {

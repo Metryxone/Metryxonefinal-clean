@@ -1,0 +1,607 @@
+# ==============================================================================
+
+# CAPADEX 2.0
+
+# ENGINEERING EXECUTION SPECIFICATION
+
+#
+
+# PHASE 1.37
+
+#
+
+# PLATFORM LIFECYCLE FOUNDATION
+
+#
+
+# (CAPABILITY CATALOG +
+
+# LIFECYCLE REGISTRY +
+
+# LIFECYCLE METADATA +
+
+# CAPABILITY OWNERSHIP +
+
+# LIFECYCLE STATE ENGINE)
+
+#
+
+# EXECUTION MODE
+
+#
+
+# IMPLEMENTATION
+
+#
+
+# ENHANCEMENT ONLY
+
+#
+
+# DO NOT REBUILD
+
+# DO NOT CREATE A SECOND LIFECYCLE PLATFORM
+
+# DO NOT CREATE LIFECYCLE V2
+
+# DO NOT REPLACE EXISTING GOVERNANCE
+
+# DO NOT MODIFY BUSINESS LOGIC
+
+# DO NOT ACTIVATE DORMANT CAPABILITIES
+
+#
+
+# IMPLEMENT ONLY THE MISSING PLATFORM
+
+# LIFECYCLE FOUNDATIONS IDENTIFIED
+
+# IN PHASE 1.36
+
+#
+
+# ==============================================================================
+
+MISSION
+
+Implement the foundational Platform Lifecycle infrastructure
+identified as missing during Phase 1.36.
+
+This phase establishes the operational lifecycle foundation
+without changing existing platform behaviour.
+
+Repository remains the Single Source of Truth.
+
+Governance established in Phase 1.36 remains authoritative.
+
+Implementation only.
+
+==============================================================================
+
+HONESTY CONTRACT
+
+Measured = Existing Repository
+
+Existing Database
+
+Existing Migrations
+
+Existing Runtime
+
+Existing Documentation
+
+Existing Metadata
+
+Existing Feature Flags
+
+Derived = Engineering Interpretation
+
+Never fabricate.
+
+Never estimate.
+
+Reuse before build.
+
+Built ≠ Activated
+
+Flag Enabled ≠ Runtime Active
+
+Capability ≠ Feature
+
+Lifecycle ≠ Business Logic
+
+==============================================================================
+
+IMPLEMENTATION OBJECTIVES
+
+Implement
+
+Platform Lifecycle Registry
+
+Capability Registry
+
+Capability Ownership Registry
+
+Lifecycle Metadata
+
+Lifecycle State Engine
+
+Lifecycle Relationships
+
+Lifecycle Repository Integration
+
+==============================================================================
+
+MANDATORY RULES
+
+Search repository before implementation.
+
+Locate
+
+Existing capability metadata
+
+Existing feature registry
+
+Existing module registry
+
+Existing migrations
+
+Existing documentation
+
+Existing SuperAdmin
+
+Existing repositories
+
+Existing database tables
+
+Existing lifecycle metadata
+
+Enhance existing implementation.
+
+Never duplicate existing capability tracking.
+
+Never replace existing metadata.
+
+Never create parallel registries.
+
+==============================================================================
+
+PART 1
+
+IMPLEMENT PLATFORM LIFECYCLE REGISTRY
+
+Implement a canonical lifecycle registry.
+
+Registry maintains
+
+Lifecycle ID
+
+Entity Type
+
+Entity Identifier
+
+Lifecycle State
+
+Lifecycle Version
+
+Owner
+
+Dependencies
+
+Activation State
+
+Feature Flag
+
+Creation Date
+
+Last Modified
+
+Retirement Status
+
+Deprecation Status
+
+Compatibility Status
+
+Documentation Reference
+
+Migration Reference
+
+Repository Reference
+
+==============================================================================
+
+PART 2
+
+IMPLEMENT CAPABILITY CATALOG
+
+Implement a formal capability catalog.
+
+Discover capabilities automatically from existing repository.
+
+Never manually duplicate repository information.
+
+Every capability records
+
+Unique Identifier
+
+Canonical Name
+
+Description
+
+Business Domain
+
+Technical Domain
+
+Owner
+
+Dependencies
+
+Consumers
+
+Feature Flags
+
+Activation Status
+
+Compatibility
+
+Lifecycle Status
+
+==============================================================================
+
+PART 3
+
+IMPLEMENT CAPABILITY OWNERSHIP
+
+Every capability shall record
+
+Business Owner
+
+Engineering Owner
+
+Architect Owner
+
+Repository Location
+
+Documentation Location
+
+Migration References
+
+Feature Flag References
+
+==============================================================================
+
+PART 4
+
+IMPLEMENT LIFECYCLE METADATA
+
+Extend existing metadata.
+
+Every managed asset records
+
+Lifecycle State
+
+Lifecycle Stage
+
+Created
+
+Modified
+
+Introduced Phase
+
+Introduced Migration
+
+Current Version
+
+Compatibility Version
+
+Last Validation
+
+==============================================================================
+
+PART 5
+
+IMPLEMENT LIFECYCLE STATE ENGINE
+
+Support
+
+Proposed
+
+Approved
+
+Implemented
+
+Validated
+
+Released
+
+Active
+
+Dormant
+
+Deprecated
+
+Retired
+
+Archived
+
+State transitions must preserve history.
+
+Never delete lifecycle history.
+
+==============================================================================
+
+PART 6
+
+IMPLEMENT LIFECYCLE RELATIONSHIPS
+
+Track relationships between
+
+Features
+
+Capabilities
+
+Modules
+
+Services
+
+APIs
+
+Models
+
+Documentation
+
+Migrations
+
+Feature Flags
+
+==============================================================================
+
+PART 7
+
+IMPLEMENT REPOSITORY DISCOVERY
+
+Automatically discover
+
+Capabilities
+
+Modules
+
+Services
+
+Routes
+
+Models
+
+Flags
+
+Documentation
+
+Migrations
+
+Do not require manual registration.
+
+==============================================================================
+
+PART 8
+
+IMPLEMENT DATABASE EXTENSIONS
+
+Extend existing lifecycle storage.
+
+Do not replace existing tables.
+
+Reuse existing schema where available.
+
+Create new tables only when no reusable structure exists.
+
+==============================================================================
+
+PART 9
+
+IMPLEMENT API EXTENSIONS
+
+Extend existing lifecycle APIs.
+
+Support
+
+Capability Lookup
+
+Lifecycle Lookup
+
+Ownership Lookup
+
+Dependency Lookup
+
+Compatibility Lookup
+
+Repository Lookup
+
+Never break existing APIs.
+
+==============================================================================
+
+PART 10
+
+IMPLEMENT SUPERADMIN
+
+Extend existing SuperAdmin.
+
+Add
+
+Capability Catalog
+
+Lifecycle Registry
+
+Capability Details
+
+Lifecycle Details
+
+Ownership Details
+
+Dependency Viewer
+
+Do not replace existing screens.
+
+==============================================================================
+
+PART 11
+
+IMPLEMENT VALIDATION
+
+Automatically validate
+
+Duplicate Capability IDs
+
+Duplicate Ownership
+
+Missing Documentation
+
+Missing Owners
+
+Missing Dependencies
+
+Missing Lifecycle States
+
+==============================================================================
+
+PART 12
+
+IMPLEMENT MIGRATION SUPPORT
+
+Every lifecycle object stores
+
+Migration Origin
+
+Migration Version
+
+Migration Date
+
+Migration History
+
+==============================================================================
+
+PART 13
+
+IMPLEMENT DOCUMENTATION INTEGRATION
+
+Automatically connect
+
+Lifecycle Registry
+
+Phase History
+
+Documentation
+
+Architecture Documents
+
+Migration Documents
+
+==============================================================================
+
+PART 14
+
+IMPLEMENT REPOSITORY HEALTH
+
+Detect
+
+Duplicate Capabilities
+
+Duplicate Lifecycle Records
+
+Orphan Records
+
+Missing Ownership
+
+Broken References
+
+==============================================================================
+
+PART 15
+
+DELIVERABLES
+
+Implement
+
+Platform Lifecycle Registry
+
+Capability Catalog
+
+Capability Ownership Registry
+
+Lifecycle Metadata Engine
+
+Lifecycle State Engine
+
+Repository Discovery
+
+Repository Integration
+
+Lifecycle APIs
+
+SuperAdmin Extensions
+
+Database Extensions
+
+Validation Engine
+
+Migration Integration
+
+Documentation Integration
+
+==============================================================================
+
+DEFINITION OF DONE
+
+Implementation completes only if
+
+Repository searched
+
+Existing implementation reused
+
+No duplicate registries
+
+No duplicate capability catalogs
+
+No business logic changed
+
+No dormant capability activated
+
+No compatibility broken
+
+Lifecycle registry operational
+
+Capability catalog operational
+
+Ownership operational
+
+Lifecycle metadata operational
+
+Validation operational
+
+SuperAdmin operational
+
+Documentation updated
+
+==============================================================================
+
+STOP
+
+Do not rebuild Platform Lifecycle.
+
+Do not replace Phase 1.36 Constitution.
+
+Do not create Lifecycle V2.
+
+Do not duplicate capability catalogs.
+
+Do not activate dormant capabilities.
+
+Do not modify business logic.
+
+Do not bypass Product Constitution.
+
+Do not bypass Engineering Constitution.
+
+Repository remains the Single Source of Truth.
+
+Phase 1.37 completes only after Platform Lifecycle Foundation is fully integrated into the existing CAPADEX architecture.

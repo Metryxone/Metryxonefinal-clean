@@ -1,0 +1,1130 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.8
+#
+# API ARCHITECTURE CONSTITUTION
+#
+# EXECUTION MODE
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT CREATE NEW API FRAMEWORKS
+# DO NOT BREAK API CONTRACTS
+# DO NOT CHANGE BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT CAPABILITIES
+#
+# THIS PHASE ESTABLISHES THE PERMANENT API ARCHITECTURE CONSTITUTION
+# ==============================================================================
+
+MISSION
+
+Create the permanent API Architecture Constitution for CAPADEX.
+
+This constitution governs every API, endpoint, request, response,
+integration, authentication, authorization, event contract, feature flag,
+versioning strategy and external interface across the CAPADEX platform.
+
+The API layer is the official communication contract between
+
+Frontend
+
+Backend
+
+AI
+
+Enterprise
+
+SuperAdmin
+
+Third Party Systems
+
+Analytics
+
+Mobile
+
+Future Integrations
+
+Repository remains the single source of truth.
+
+This phase establishes governance only.
+
+No implementation.
+
+==============================================================================
+
+PRIMARY OBJECTIVES
+
+Standardize all APIs.
+
+Protect existing API contracts.
+
+Maximize reuse.
+
+Improve consistency.
+
+Improve observability.
+
+Improve security.
+
+Improve scalability.
+
+Improve maintainability.
+
+Prepare APIs for enterprise growth.
+
+==============================================================================
+
+MANDATORY RULES
+
+Before changing any API
+
+Search repository.
+
+Locate existing endpoint.
+
+Locate existing consumers.
+
+Locate frontend callers.
+
+Locate backend services.
+
+Locate database dependencies.
+
+Locate AI dependencies.
+
+Locate enterprise dependencies.
+
+Locate reports.
+
+Locate feature flags.
+
+Never assume an endpoint is unused.
+
+Never duplicate APIs.
+
+Never create parallel APIs.
+
+Never change API behaviour without compatibility.
+
+==============================================================================
+
+PART 1
+
+CURRENT API ARCHITECTURE AUDIT
+
+Audit
+
+REST APIs
+
+Internal APIs
+
+Admin APIs
+
+Enterprise APIs
+
+Assessment APIs
+
+Behaviour APIs
+
+Decision APIs
+
+Journey APIs
+
+Learning APIs
+
+Career APIs
+
+Report APIs
+
+Pragati APIs
+
+AI APIs
+
+Subscription APIs
+
+Authentication APIs
+
+Authorization APIs
+
+Analytics APIs
+
+Feature Flag APIs
+
+Configuration APIs
+
+Webhook APIs
+
+Health APIs
+
+Document
+
+Endpoint Counts
+
+Route Structure
+
+Naming
+
+Consistency
+
+Duplicate Endpoints
+
+Large APIs
+
+Technical Debt
+
+Consumer Mapping
+
+==============================================================================
+
+PART 2
+
+API PHILOSOPHY
+
+APIs exist to
+
+Expose
+
+Protect
+
+Validate
+
+Coordinate
+
+Explain
+
+Integrate
+
+Observe
+
+Every API must
+
+Have one purpose.
+
+Be predictable.
+
+Be secure.
+
+Be versionable.
+
+Be documented.
+
+Be observable.
+
+==============================================================================
+
+PART 3
+
+API DOMAIN ARCHITECTURE
+
+Every endpoint belongs to one domain.
+
+Assessment
+
+Behaviour
+
+Concern
+
+Competency
+
+Ontology
+
+Decision
+
+Journey
+
+Learning
+
+Career
+
+Life
+
+Conversation
+
+AI
+
+Reports
+
+Enterprise
+
+Administration
+
+Subscriptions
+
+Payments
+
+Analytics
+
+Configuration
+
+Security
+
+==============================================================================
+
+PART 4
+
+ENDPOINT CONSTITUTION
+
+Every endpoint documents
+
+Purpose
+
+Method
+
+Route
+
+Consumer
+
+Owner
+
+Dependencies
+
+Authentication
+
+Authorization
+
+Feature Flags
+
+Validation
+
+Error Codes
+
+Rate Limits
+
+Caching
+
+Version
+
+==============================================================================
+
+PART 5
+
+REQUEST CONSTITUTION
+
+Standardize
+
+Headers
+
+Body
+
+Query Parameters
+
+Route Parameters
+
+Validation
+
+Defaults
+
+Optional Fields
+
+Required Fields
+
+Idempotency
+
+Size Limits
+
+==============================================================================
+
+PART 6
+
+RESPONSE CONSTITUTION
+
+Every response should contain
+
+Status
+
+Data
+
+Metadata
+
+Timestamp
+
+Correlation ID
+
+Warnings
+
+Errors
+
+Evidence
+
+Confidence
+
+Version
+
+Never expose internal implementation.
+
+==============================================================================
+
+PART 7
+
+ERROR CONTRACT CONSTITUTION
+
+Standardize
+
+Validation Errors
+
+Authentication Errors
+
+Authorization Errors
+
+Business Errors
+
+Database Errors
+
+AI Errors
+
+Enterprise Errors
+
+Feature Flag Errors
+
+Rate Limit Errors
+
+Timeouts
+
+Recovery Guidance
+
+==============================================================================
+
+PART 8
+
+VERSIONING CONSTITUTION
+
+Protect backward compatibility.
+
+Never break existing clients.
+
+Support
+
+Versioned APIs
+
+Deprecation Policy
+
+Compatibility Window
+
+Migration Guides
+
+Sunset Policy
+
+==============================================================================
+
+PART 9
+
+AUTHENTICATION API CONSTITUTION
+
+Audit
+
+Sessions
+
+JWT
+
+OAuth
+
+OTP
+
+Refresh Tokens
+
+MFA
+
+Device Trust
+
+Enterprise Login
+
+==============================================================================
+
+PART 10
+
+AUTHORIZATION API CONSTITUTION
+
+Standardize
+
+RBAC
+
+Permissions
+
+Tenant Isolation
+
+Organization Scope
+
+Faculty Scope
+
+Parent Scope
+
+Enterprise Scope
+
+Role Validation
+
+==============================================================================
+
+PART 11
+
+ASSESSMENT API CONSTITUTION
+
+Protect
+
+Assessment Creation
+
+Adaptive Questions
+
+Responses
+
+Scoring
+
+Evidence
+
+Confidence
+
+Completion
+
+Journey Trigger
+
+==============================================================================
+
+PART 12
+
+BEHAVIOUR API CONSTITUTION
+
+Protect
+
+Signals
+
+Behaviour Graph
+
+Evidence
+
+Confidence
+
+Recommendations
+
+Strengths
+
+Concerns
+
+Competencies
+
+Never bypass Behaviour APIs.
+
+==============================================================================
+
+PART 13
+
+DECISION API CONSTITUTION
+
+Document
+
+Decision
+
+Evidence
+
+Alternatives
+
+Confidence
+
+Outcome Projection
+
+Decision History
+
+Decision Status
+
+Document dormant APIs.
+
+Do not activate.
+
+==============================================================================
+
+PART 14
+
+JOURNEY API CONSTITUTION
+
+Protect
+
+Journey
+
+Milestones
+
+Goals
+
+Learning
+
+Career
+
+Life
+
+Progress
+
+Recommendations
+
+Subscriptions
+
+==============================================================================
+
+PART 15
+
+PRAGATI API CONSTITUTION
+
+Protect
+
+Conversation
+
+Memory
+
+Context
+
+Reasoning
+
+Recommendations
+
+History
+
+Safety
+
+Evaluation
+
+Never introduce parallel AI endpoints.
+
+==============================================================================
+
+PART 16
+
+REPORT API CONSTITUTION
+
+Protect
+
+Reports
+
+Interactive Reports
+
+Benchmarks
+
+Visualizations
+
+Recommendations
+
+Evidence
+
+Confidence
+
+Exports
+
+History
+
+==============================================================================
+
+PART 17
+
+ENTERPRISE API CONSTITUTION
+
+Protect
+
+Organizations
+
+Departments
+
+Teams
+
+Institutions
+
+Universities
+
+Managers
+
+Employees
+
+Students
+
+Faculty
+
+Parents
+
+Permissions
+
+Governance
+
+==============================================================================
+
+PART 18
+
+SUPERADMIN API CONSTITUTION
+
+Protect
+
+Configuration
+
+Questions
+
+Concerns
+
+Ontology
+
+Subscriptions
+
+Reports
+
+Feature Flags
+
+Analytics
+
+AI
+
+Audit
+
+==============================================================================
+
+PART 19
+
+INTEGRATION API CONSTITUTION
+
+Document
+
+OpenAI
+
+Firebase
+
+Email
+
+SMS
+
+WhatsApp
+
+Razorpay
+
+Analytics
+
+Cloud Storage
+
+HR Systems
+
+University Systems
+
+Enterprise Systems
+
+Webhooks
+
+Failure Handling
+
+==============================================================================
+
+PART 20
+
+SEARCH, FILTER & PAGINATION
+
+Standardize
+
+Filtering
+
+Sorting
+
+Pagination
+
+Search
+
+Cursor Pagination
+
+Full Text Search
+
+Semantic Search
+
+==============================================================================
+
+PART 21
+
+FEATURE FLAG CONSTITUTION
+
+Every API enhancement must support
+
+Environment Flags
+
+Tenant Flags
+
+Role Flags
+
+Progressive Rollout
+
+Kill Switch
+
+Backward Compatibility
+
+==============================================================================
+
+PART 22
+
+OBSERVABILITY CONSTITUTION
+
+Every API should expose
+
+Health
+
+Latency
+
+Failures
+
+Success Rate
+
+Correlation IDs
+
+Tracing
+
+Metrics
+
+Audit
+
+==============================================================================
+
+PART 23
+
+PERFORMANCE CONSTITUTION
+
+Audit
+
+Latency
+
+Payload Size
+
+Compression
+
+Caching
+
+Streaming
+
+Concurrency
+
+Connection Reuse
+
+==============================================================================
+
+PART 24
+
+SECURITY CONSTITUTION
+
+Protect
+
+Authentication
+
+Authorization
+
+CSRF
+
+XSS
+
+Injection
+
+Replay Protection
+
+Rate Limiting
+
+Input Validation
+
+Secrets
+
+PII
+
+==============================================================================
+
+PART 25
+
+WEBHOOK CONSTITUTION
+
+Standardize
+
+Authentication
+
+Retry
+
+Idempotency
+
+Signing
+
+Ordering
+
+Dead Letter Handling
+
+Monitoring
+
+==============================================================================
+
+PART 26
+
+API TESTING CONSTITUTION
+
+Standardize
+
+Contract Tests
+
+Integration Tests
+
+Security Tests
+
+Performance Tests
+
+Regression Tests
+
+Load Tests
+
+Feature Flag Tests
+
+==============================================================================
+
+PART 27
+
+API DOCUMENTATION CONSTITUTION
+
+Maintain
+
+OpenAPI
+
+Endpoint Catalog
+
+Request Models
+
+Response Models
+
+Error Catalog
+
+Authentication Guide
+
+SDK Guidance
+
+Integration Guide
+
+Version History
+
+==============================================================================
+
+PART 28
+
+API QUALITY GATES
+
+Every enhancement must verify
+
+Existing APIs reused
+
+No duplicate endpoints
+
+No breaking contracts
+
+Backward compatibility maintained
+
+Security verified
+
+Performance maintained
+
+Documentation updated
+
+Tests passing
+
+Feature Flags respected
+
+==============================================================================
+
+PART 29
+
+API REVIEW BOARD
+
+Mandatory Approval
+
+Founder
+
+Solution Architect
+
+Backend Architect
+
+API Architect
+
+AI Architect
+
+Enterprise Architect
+
+Security
+
+DevOps
+
+QA
+
+==============================================================================
+
+PART 30
+
+API DEFINITION OF DONE
+
+API enhancement completes only if
+
+Existing endpoints enhanced
+
+Existing contracts preserved
+
+Existing consumers unaffected
+
+No duplicate APIs
+
+Authentication verified
+
+Authorization verified
+
+Evidence exposed
+
+Confidence exposed
+
+Correlation IDs implemented
+
+Observability updated
+
+Security verified
+
+Performance maintained
+
+Documentation updated
+
+Tests passing
+
+No regressions
+
+==============================================================================
+
+PART 31
+
+API MATURITY MODEL
+
+Assess every API domain
+
+Level 1
+
+Operational
+
+Level 2
+
+Reliable
+
+Level 3
+
+Consistent
+
+Level 4
+
+Observable
+
+Level 5
+
+Intelligent
+
+Measure
+
+Assessment APIs
+
+Behaviour APIs
+
+Decision APIs
+
+Journey APIs
+
+AI APIs
+
+Enterprise APIs
+
+Report APIs
+
+Administration APIs
+
+Analytics APIs
+
+Configuration APIs
+
+Document
+
+Current maturity.
+
+Target maturity.
+
+Enhancement roadmap.
+
+==============================================================================
+
+PART 32
+
+DELIVERABLES
+
+Generate
+
+01 API Architecture Constitution
+
+02 API Architecture Report
+
+03 API Domain Architecture
+
+04 Endpoint Constitution
+
+05 Request Constitution
+
+06 Response Constitution
+
+07 Error Contract Constitution
+
+08 Versioning Constitution
+
+09 Authentication API Constitution
+
+10 Authorization API Constitution
+
+11 Assessment API Constitution
+
+12 Behaviour API Constitution
+
+13 Decision API Constitution
+
+14 Journey API Constitution
+
+15 Pragati API Constitution
+
+16 Report API Constitution
+
+17 Enterprise API Constitution
+
+18 SuperAdmin API Constitution
+
+19 Integration API Constitution
+
+20 Search & Pagination Constitution
+
+21 Feature Flag Constitution
+
+22 Observability Constitution
+
+23 Performance Constitution
+
+24 Security Constitution
+
+25 Webhook Constitution
+
+26 API Testing Constitution
+
+27 API Documentation Constitution
+
+28 API Quality Gates
+
+29 API Review Board
+
+30 API Definition of Done
+
+31 API Maturity Assessment
+
+==============================================================================
+
+STOP
+
+Do not modify APIs.
+
+Do not create endpoints.
+
+Do not change contracts.
+
+Do not activate dormant APIs.
+
+Do not rebuild integrations.
+
+Do not change business logic.
+
+Freeze this API Architecture Constitution after approval.
+
+Every future API enhancement, AI integration, Enterprise integration,
+Frontend integration, Mobile integration and Third-party integration
+must comply with this constitution.

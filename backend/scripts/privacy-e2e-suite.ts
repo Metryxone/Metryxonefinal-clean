@@ -58,9 +58,16 @@
  * env the runner has, so a flag-gated surface (e.g. task279 if its careerLaunchpad flag
  * or task274 if its launchpadDashboard flag is OFF) could fail on flag-gating rather than
  * a true privacy regression. The live Backend API workflow enables these via .replit
- * [userenv.development] (FF_CAREER_LAUNCHPAD, FF_EMPLOYABILITY_STUDIO, FF_LAUNCHPAD_DASHBOARD);
- * each flag-gated harness probes its /enabled route and fails honestly (never a false pass)
- * if the flag is OFF. Run against the live workflow when in doubt.
+ * [userenv.development] (FF_CAREER_LAUNCHPAD, FF_EMPLOYABILITY_STUDIO, FF_LAUNCHPAD_DASHBOARD).
+ *
+ * Flag preflight (Task #287): regardless of which path is taken, the runner first probes
+ * each required flag's ungated /enabled endpoint on the LIVE target and ABORTS with a
+ * dedicated exit code (2) and a clear "flag X is OFF" message if any is not ON — BEFORE
+ * any harness runs. This stops a missing flag on the already-running workflow (case 1,
+ * which trusts that workflow's env) from making a flag-gated harness 503 on flag-gating
+ * and the run look "green" for the wrong reason (false pass), and it distinguishes a flag
+ * MISconfig from a real cross-user leak (the harnesses' own exit 1). Run against the live
+ * workflow when in doubt.
  *
  * Run:  cd backend && npx tsx scripts/privacy-e2e-suite.ts
  */
@@ -167,26 +174,67 @@ async function waitForReady(deadline: number): Promise<boolean> {
  *  logic instead of 503-ing on flag-gating. On the live-server path these come from
  *  the running workflow's env (.replit [userenv.development]); when we auto-boot a
  *  temporary instance ourselves (headless/CI), the spawned process only inherits the
- *  runner's env, which may not carry them — so we set them explicitly here. We do NOT
+ *  runner's env, which may not carry them — so we set them explicitly there. We do NOT
  *  override flags already present in the runner env (a deliberate FF_*=0 still wins).
+ *
+ *  Each entry also carries the harness's ungated `/enabled` probe endpoint (always
+ *  200 `{enabled:<bool>}` regardless of flag state — platform convention), which the
+ *  preflight below hits against the LIVE target BEFORE any harness runs. This catches
+ *  the case the auto-boot defaulting cannot: the live-server path (case 1) trusts the
+ *  already-running workflow's env, so if that workflow is missing one of these flags
+ *  the harness would still 503 on flag-gating and the run could look "green" for the
+ *  wrong reason. The preflight fails LOUDLY (and with a verdict distinct from a privacy
+ *  regression) so a missing flag can never masquerade as either a pass or a leak.
  *    - FF_CAREER_LAUNCHPAD     → Employability Studio harness (#279)
  *    - FF_EMPLOYABILITY_STUDIO → Employability Studio harness (#279)
  *    - FF_LAUNCHPAD_DASHBOARD  → Launchpad tracker harness (#274) */
 const REQUIRED_HARNESS_FLAGS = [
-  'FF_CAREER_LAUNCHPAD',
-  'FF_EMPLOYABILITY_STUDIO',
-  'FF_LAUNCHPAD_DASHBOARD',
+  { env: 'FF_CAREER_LAUNCHPAD', flag: 'careerLaunchpad', probe: '/api/career-launchpad/enabled', harness: 'studio (leadership/executive trackers) — Task #279' },
+  { env: 'FF_EMPLOYABILITY_STUDIO', flag: 'employabilityStudio', probe: '/api/employability-studio/enabled', harness: 'studio (leadership/executive trackers) — Task #279' },
+  { env: 'FF_LAUNCHPAD_DASHBOARD', flag: 'launchpadDashboard', probe: '/api/launchpad-dashboard/enabled', harness: 'launchpad-dashboard tracker (campus/fresher) — Task #274' },
 ] as const;
+
+// Distinct exit code so a flag-config problem is never confused with a privacy
+// regression (the harnesses themselves exit 1 on a real cross-user leak). A
+// missing required flag is an OPERATOR/config error, not a security finding.
+const FLAG_PREFLIGHT_EXIT_CODE = 2;
+
+/** Probe each required flag's ungated `/enabled` endpoint on the LIVE target and
+ *  return its observed state. Works identically for the live-server and auto-boot
+ *  paths because it runs only after the target is confirmed reachable. An endpoint
+ *  that is unreachable or doesn't return `{enabled:true}` is treated as NOT ON so a
+ *  flag we cannot positively verify never silently passes the gate. */
+async function preflightRequiredFlags(): Promise<
+  { env: string; flag: string; probe: string; harness: string; enabled: boolean | null; status: number | string }[]
+> {
+  const out: { env: string; flag: string; probe: string; harness: string; enabled: boolean | null; status: number | string }[] = [];
+  for (const f of REQUIRED_HARNESS_FLAGS) {
+    let enabled: boolean | null = null;
+    let status: number | string = 'unreachable';
+    try {
+      const res = await fetch(`${BASE}${f.probe}`, { method: 'GET' });
+      status = res.status;
+      if (res.status === 200) {
+        const body = (await res.json().catch(() => null)) as { enabled?: unknown } | null;
+        enabled = body?.enabled === true;
+      }
+    } catch {
+      status = 'unreachable';
+    }
+    out.push({ env: f.env, flag: f.flag, probe: f.probe, harness: f.harness, enabled, status });
+  }
+  return out;
+}
 
 function bootBackend(): ChildProcess {
   log('Backend API not reachable on :8080 — booting a temporary instance (npx tsx index.ts)…');
   const flagEnv: Record<string, string> = {};
-  for (const key of REQUIRED_HARNESS_FLAGS) {
+  for (const f of REQUIRED_HARNESS_FLAGS) {
     // Only set a default when the runner hasn't already provided the flag, so an
     // explicit FF_*=0 in the environment is still honoured (no verdict weakening).
-    if (process.env[key] == null) flagEnv[key] = '1';
+    if (process.env[f.env] == null) flagEnv[f.env] = '1';
   }
-  const enabled = REQUIRED_HARNESS_FLAGS.filter((k) => flagEnv[k] === '1');
+  const enabled = REQUIRED_HARNESS_FLAGS.filter((f) => flagEnv[f.env] === '1').map((f) => f.env);
   if (enabled.length) {
     log(`  enabling flag-gated harness flags for the temporary instance: ${enabled.join(', ')}`);
   }
@@ -267,6 +315,42 @@ async function main() {
     }
     log('Backend API is up and ready.');
   }
+
+  // ── Preflight: BEFORE running any harness, confirm the LIVE target actually has
+  // each required feature flag ON. This runs identically for the live-server and
+  // auto-boot paths (the target is reachable in both). Without it, the live-server
+  // path trusts the running workflow's env: a missing flag would make a flag-gated
+  // harness 503 on flag-gating, which can look "green" for the wrong reason. We fail
+  // LOUDLY here with a verdict distinct from a privacy regression so a config gap is
+  // never reported as a leak (nor silently passes). ──
+  log('Preflight: verifying each flag-gated harness has its required feature flag ON…');
+  const flagStates = await preflightRequiredFlags();
+  for (const r of flagStates) {
+    const mark = r.enabled === true ? '✅ ON ' : r.enabled === false ? '❌ OFF' : '❌ ???';
+    const detail =
+      r.enabled === true ? '' : r.enabled === false ? '' : ` (probe ${r.probe} → status ${r.status})`;
+    console.log(`  ${mark}  ${r.env} (${r.flag})${detail}`);
+  }
+  const notOn = flagStates.filter((r) => r.enabled !== true);
+  if (notOn.length) {
+    console.error('\n❌ PRIVACY SUITE PREFLIGHT FAILED — required feature flag(s) are not ON:');
+    for (const r of notOn) {
+      const why = r.enabled === false ? 'is OFF' : `could not be verified (probe ${r.probe} → status ${r.status})`;
+      console.error(`   • ${r.env} ${why} — needed by ${r.harness}.`);
+    }
+    console.error(
+      '\n   This is NOT a privacy regression. With the flag OFF the flag-gated harness 503s on',
+    );
+    console.error(
+      '   flag-gating rather than exercising the real per-student isolation, so the run would',
+    );
+    console.error('   be meaningless (false pass) or a confusing false fail. Enable the flag(s) — on the');
+    console.error('   live Backend API workflow via .replit [userenv.development]; on the auto-boot path the');
+    console.error('   suite sets them unless you explicitly pass FF_*=0 — then re-run.');
+    if (startedServer) await teardownBackend(startedServer);
+    process.exit(FLAG_PREFLIGHT_EXIT_CODE);
+  }
+  log('Preflight passed — all required feature flags are ON.\n');
 
   const batches = packBatches(HARNESSES, REGISTER_BATCH_CAP);
   const startedAt = Date.now();

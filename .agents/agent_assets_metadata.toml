@@ -1242,3 +1242,9 @@ id = "quUz9iJ-7OIA_zRiNONaj"
 uri = "file://backend/audit/mx-700/phase-1.17-assessment-intelligence-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.17: Assessment Intelligence Constitution"
+
+[[outputs]]
+id = "sEQzHILDtY4QPivxpTizQ"
+uri = "file://backend/audit/mx-700/phase-1.18-conversation-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.18: Conversation Intelligence Constitution (Pragati)"

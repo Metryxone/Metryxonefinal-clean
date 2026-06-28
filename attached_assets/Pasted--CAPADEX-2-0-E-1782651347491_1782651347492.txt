@@ -1,0 +1,1172 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.18
+#
+# CONVERSATION INTELLIGENCE CONSTITUTION (PRAGATI)
+#
+# EXECUTION MODE
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT CREATE A SECOND CONVERSATION ENGINE
+# DO NOT REPLACE PRAGATI
+# DO NOT MODIFY BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT CONVERSATION CAPABILITIES
+#
+# THIS PHASE ESTABLISHES THE PERMANENT
+# CONVERSATION INTELLIGENCE CONSTITUTION
+# ==============================================================================
+
+MISSION
+
+Create the permanent Conversation Intelligence Constitution for CAPADEX.
+
+Conversation Intelligence is the living interface between
+human behaviour and platform intelligence.
+
+Assessment Intelligence understands.
+
+Behaviour Intelligence interprets.
+
+Decision Intelligence recommends.
+
+Journey Intelligence guides.
+
+Learning Intelligence develops.
+
+Career Intelligence aligns.
+
+Life Intelligence supports.
+
+Enterprise Intelligence scales.
+
+Conversation Intelligence connects all of them.
+
+Every interaction inside CAPADEX shall become
+an intelligent,
+adaptive,
+context-aware,
+evidence-backed conversation.
+
+Repository remains the Single Source of Truth.
+
+Governance only.
+
+No implementation.
+
+==============================================================================
+HONESTY CONTRACT
+==============================================================================
+
+Measured = Live Repository + Live Database
+
+Derived = Architectural Interpretation
+
+Conversation ≠ Chat
+
+Conversation ≠ LLM
+
+Conversation ≠ Prompt
+
+Conversation ≠ Assessment
+
+Conversation ≠ Therapy
+
+Conversation ≠ Diagnosis
+
+Conversation ≠ Decision
+
+Conversation ≠ Coaching
+
+AI ≠ Human
+
+Context ≠ Memory
+
+Memory ≠ Knowledge
+
+Recommendation ≠ Command
+
+Conversation Complete ≠ User Transformation
+
+Coverage ≠ Confidence
+
+Flag Enabled ≠ Runtime Active
+
+Seeded FSM ≠ Active Runtime
+
+Null ≠ Zero
+
+Human remains in control.
+
+==============================================================================
+PRIMARY OBJECTIVES
+==============================================================================
+
+Protect Pragati
+
+Protect Conversation FSM
+
+Protect Conversation Memory
+
+Protect Persona Routing
+
+Protect Concern Routing
+
+Protect Behaviour Context
+
+Protect Adaptive Dialogue
+
+Protect AI Explainability
+
+Protect Conversation Analytics
+
+Protect Conversation Intelligence IP
+
+==============================================================================
+MANDATORY RULES
+==============================================================================
+
+Before modifying Conversation Intelligence
+
+Search repository
+
+Locate Pragati
+
+Locate FSM
+
+Locate Conversation Engine
+
+Locate Behaviour dependencies
+
+Locate Assessment dependencies
+
+Locate Decision dependencies
+
+Locate Journey dependencies
+
+Locate Learning dependencies
+
+Locate Career dependencies
+
+Locate Life dependencies
+
+Locate Enterprise dependencies
+
+Locate AI Services
+
+Locate Conversation APIs
+
+Locate Conversation Database
+
+Locate Analytics
+
+Never create another conversation engine.
+
+Never duplicate Pragati.
+
+Never bypass Behaviour Intelligence.
+
+Never bypass Assessment Intelligence.
+
+Never bypass Decision Intelligence.
+
+Enhance existing implementation only.
+
+==============================================================================
+PART 1
+CURRENT CONVERSATION INTELLIGENCE AUDIT
+==============================================================================
+
+Audit
+
+Pragati Runtime
+
+Conversation FSM
+
+Conversation Memory
+
+Conversation Sessions
+
+Conversation Context
+
+Conversation Analytics
+
+Conversation Safety
+
+Conversation Explainability
+
+Conversation Reports
+
+Conversation APIs
+
+Conversation AI
+
+Conversation Dashboard
+
+Conversation Security
+
+Conversation Technical Debt
+
+Conversation Duplication
+
+Dormant Conversation Components
+
+Activation Readiness
+
+==============================================================================
+PART 2
+CONVERSATION PHILOSOPHY
+==============================================================================
+
+Conversation exists to
+
+Understand
+
+Clarify
+
+Guide
+
+Educate
+
+Support
+
+Reflect
+
+Coach
+
+Enable
+
+Conversation Intelligence never replaces
+
+Psychologists
+
+Doctors
+
+Teachers
+
+Managers
+
+Parents
+
+Leaders
+
+Conversation complements human expertise.
+
+==============================================================================
+PART 3
+CONVERSATION DOMAIN ARCHITECTURE
+==============================================================================
+
+Conversation Core
+
+Pragati
+
+Conversation FSM
+
+Conversation Memory
+
+Conversation Context
+
+Conversation Intelligence
+
+Conversation Analytics
+
+Conversation Reports
+
+Conversation AI
+
+Conversation Governance
+
+Conversation Security
+
+==============================================================================
+PART 4
+PRAGATI CONSTITUTION
+==============================================================================
+
+Pragati remains
+
+The only conversational intelligence platform.
+
+Never replace Pragati.
+
+Never create Pragati V2.
+
+Never duplicate conversation orchestration.
+
+Enhance only.
+
+Protect
+
+Conversation Engine
+
+Conversation Flow
+
+Conversation State
+
+Conversation Memory
+
+Conversation Safety
+
+Conversation Explainability
+
+==============================================================================
+PART 5
+CONVERSATION STATE MACHINE CONSTITUTION
+==============================================================================
+
+Protect
+
+Conversation States
+
+Transitions
+
+Escalations
+
+Interruptions
+
+Recovery
+
+Timeouts
+
+Safe Exit
+
+Conversation Completion
+
+FSM remains deterministic.
+
+Never introduce hidden transitions.
+
+==============================================================================
+PART 6
+PERSONA CONVERSATION CONSTITUTION
+==============================================================================
+
+Conversation adapts using
+
+Student
+
+Professional
+
+Leader
+
+Founder
+
+Parent
+
+Faculty
+
+Employer
+
+Enterprise
+
+Healthcare
+
+Government
+
+NGO
+
+Conversation always begins from Persona.
+
+==============================================================================
+PART 7
+CONCERN CONVERSATION CONSTITUTION
+==============================================================================
+
+Conversation adapts using
+
+Primary Concern
+
+Secondary Concern
+
+Concern Relationships
+
+Concern Severity
+
+Concern History
+
+Concern Evolution
+
+Bridge Tags
+
+Never bypass Concern Intelligence.
+
+==============================================================================
+PART 8
+BEHAVIOUR CONVERSATION CONSTITUTION
+==============================================================================
+
+Conversation consumes
+
+Behaviour Signals
+
+Behaviour Patterns
+
+Behaviour Graph
+
+Behaviour History
+
+Behaviour Evolution
+
+Strengths
+
+Development Areas
+
+Never infer behaviour without evidence.
+
+==============================================================================
+PART 9
+ADAPTIVE DIALOGUE CONSTITUTION
+==============================================================================
+
+Dialogue adapts using
+
+Behaviour
+
+Assessment
+
+Persona
+
+Concern
+
+Journey
+
+History
+
+Confidence
+
+Clarifications
+
+Every adaptive response explains
+
+Why.
+
+==============================================================================
+PART 10
+CONVERSATION MEMORY CONSTITUTION
+==============================================================================
+
+Protect
+
+Session Memory
+
+Working Memory
+
+Longitudinal Memory
+
+User Context
+
+Conversation Timeline
+
+Memory Evolution
+
+Memory Provenance
+
+Never fabricate memory.
+
+Never overwrite history.
+
+==============================================================================
+PART 11
+CONTEXT INTELLIGENCE CONSTITUTION
+==============================================================================
+
+Context includes
+
+Persona
+
+Behaviour
+
+Assessment
+
+Journey
+
+Learning
+
+Career
+
+Life
+
+Enterprise
+
+Environment
+
+Conversation History
+
+Context is evidence-backed.
+
+==============================================================================
+PART 12
+CONVERSATION EVIDENCE CONSTITUTION
+==============================================================================
+
+Evidence originates from
+
+Assessment
+
+Behaviour
+
+Questions
+
+Responses
+
+Journey
+
+Learning
+
+Career
+
+Life
+
+Enterprise
+
+Conversation
+
+Evidence documents
+
+Source
+
+Timestamp
+
+Coverage
+
+Confidence
+
+Quality
+
+==============================================================================
+PART 13
+CONVERSATION CONFIDENCE CONSTITUTION
+==============================================================================
+
+Separate
+
+Coverage
+
+Evidence
+
+Confidence
+
+Understanding
+
+Conversation Completion
+
+Trust
+
+Never combine into one metric.
+
+==============================================================================
+PART 14
+CONVERSATION EXPLAINABILITY CONSTITUTION
+==============================================================================
+
+Every response explains
+
+Why
+
+Evidence
+
+Behaviour Drivers
+
+Context
+
+Confidence
+
+Alternatives
+
+Limitations
+
+Next Step
+
+==============================================================================
+PART 15
+CONVERSATION SAFETY CONSTITUTION
+==============================================================================
+
+Protect
+
+Crisis Detection
+
+Escalation
+
+Safe Responses
+
+Human Handover
+
+Boundary Management
+
+Abuse Protection
+
+Sensitive Topics
+
+Emergency Guidance
+
+Conversation Safety always overrides AI.
+
+==============================================================================
+PART 16
+VOICE & MULTIMODAL CONSTITUTION
+==============================================================================
+
+Support
+
+Voice
+
+Text
+
+Documents
+
+Images
+
+Future Modalities
+
+Maintain identical reasoning.
+
+Modality never changes evidence.
+
+==============================================================================
+PART 17
+CONVERSATION AI CONSTITUTION
+==============================================================================
+
+AI
+
+Explains
+
+Clarifies
+
+Guides
+
+Summarizes
+
+Reflects
+
+Never diagnoses.
+
+Never manipulates.
+
+Never fabricates evidence.
+
+Never bypasses governance.
+
+==============================================================================
+PART 18
+CONVERSATION ANALYTICS CONSTITUTION
+==============================================================================
+
+Protect
+
+Session Analytics
+
+Conversation Quality
+
+Completion
+
+Drop-offs
+
+Clarification Rate
+
+Safety Events
+
+Adaptive Success
+
+User Satisfaction
+
+==============================================================================
+PART 19
+CONVERSATION REPORT CONSTITUTION
+==============================================================================
+
+Every report contains
+
+Conversation Summary
+
+Topics
+
+Behaviour Context
+
+Evidence
+
+Confidence
+
+Recommendations
+
+Journey Link
+
+Next Actions
+
+==============================================================================
+PART 20
+LONGITUDINAL CONVERSATION CONSTITUTION
+==============================================================================
+
+Protect
+
+Conversation History
+
+Behaviour Evolution
+
+Journey Evolution
+
+Decision Evolution
+
+Learning Evolution
+
+Life Evolution
+
+Never overwrite conversations.
+
+==============================================================================
+PART 21
+ENTERPRISE CONVERSATION CONSTITUTION
+==============================================================================
+
+Support
+
+Organizations
+
+Employees
+
+Managers
+
+Leadership
+
+Learning
+
+Coaching
+
+Support
+
+Human approval required.
+
+==============================================================================
+PART 22
+SUPERADMIN CONVERSATION CONSTITUTION
+==============================================================================
+
+Support
+
+Conversation Templates
+
+FSM Configuration
+
+Prompt Registry
+
+Safety Rules
+
+Conversation Analytics
+
+Conversation Reports
+
+Monitoring
+
+==============================================================================
+PART 23
+CONVERSATION SECURITY CONSTITUTION
+==============================================================================
+
+Protect
+
+Conversation Data
+
+Memory
+
+Evidence
+
+Reports
+
+Permissions
+
+Consent
+
+PII
+
+Tenant Isolation
+
+==============================================================================
+PART 24
+CONVERSATION OBSERVABILITY
+==============================================================================
+
+Monitor
+
+Conversation Engine
+
+FSM
+
+Memory
+
+Latency
+
+Failures
+
+Safety Events
+
+Quality
+
+AI Availability
+
+==============================================================================
+PART 25
+CONVERSATION TESTING CONSTITUTION
+==============================================================================
+
+Standardize
+
+FSM Tests
+
+Dialogue Tests
+
+Memory Tests
+
+Safety Tests
+
+Regression Tests
+
+Prompt Tests
+
+Latency Tests
+
+==============================================================================
+PART 26
+PROMPT REGISTRY CONSTITUTION
+==============================================================================
+
+Every prompt must have
+
+Owner
+
+Version
+
+Purpose
+
+Dependencies
+
+Evaluation History
+
+Approval
+
+Rollback
+
+No inline production prompts.
+
+Registry is mandatory.
+
+==============================================================================
+PART 27
+CONVERSATION GOVERNANCE
+==============================================================================
+
+Every enhancement answers
+
+Why is Conversation changing?
+
+What existing capability is reused?
+
+Does this duplicate Pragati?
+
+Does this improve conversation quality?
+
+Does this preserve Behaviour Intelligence?
+
+==============================================================================
+PART 28
+CONVERSATION QUALITY GATES
+==============================================================================
+
+Verify
+
+Pragati reused
+
+FSM reused
+
+Memory reused
+
+Behaviour reused
+
+Assessment reused
+
+Journey reused
+
+Evidence exposed
+
+Confidence exposed
+
+Explainability complete
+
+Documentation updated
+
+==============================================================================
+PART 29
+CONVERSATION REVIEW BOARD
+==============================================================================
+
+Mandatory Approval
+
+Founder
+
+Conversation Architect
+
+Behaviour Scientist
+
+Psychologist
+
+AI Architect
+
+Prompt Engineer
+
+Security
+
+Research
+
+QA
+
+==============================================================================
+PART 30
+CONVERSATION DEFINITION OF DONE
+==============================================================================
+
+Conversation enhancement completes only if
+
+Existing Pragati reused
+
+FSM preserved
+
+Memory preserved
+
+Behaviour preserved
+
+Assessment preserved
+
+Journey preserved
+
+Evidence exposed
+
+Confidence exposed
+
+Explainability complete
+
+Safety validated
+
+Documentation updated
+
+No regressions
+
+==============================================================================
+PART 31
+CONVERSATION MATURITY MODEL
+==============================================================================
+
+Assess
+
+Pragati
+
+Conversation FSM
+
+Adaptive Dialogue
+
+Conversation Memory
+
+Safety
+
+Analytics
+
+Reports
+
+Enterprise Conversation
+
+Levels
+
+1 Operational
+
+2 Adaptive
+
+3 Intelligent
+
+4 Predictive
+
+5 Continuous Conversational Intelligence
+
+==============================================================================
+PART 32
+CONVERSATION SCIENTIFIC VALIDATION
+==============================================================================
+
+Document
+
+Conversation Theory
+
+Dialogue Systems
+
+Behaviour Science
+
+Motivational Interviewing
+
+Communication Theory
+
+Cognitive Psychology
+
+Evidence Quality
+
+Bias Review
+
+Ethics
+
+Population Applicability
+
+==============================================================================
+PART 33
+CONVERSATION EVOLUTION STRATEGY
+==============================================================================
+
+Future evolution supports
+
+New Dialogue Models
+
+New AI Models
+
+New Modalities
+
+New Personas
+
+New Concern Domains
+
+New Enterprise Conversations
+
+New Languages
+
+without breaking
+
+Assessment Intelligence
+
+Behaviour Intelligence
+
+Decision Intelligence
+
+Journey Intelligence
+
+Learning Intelligence
+
+Career Intelligence
+
+Life Intelligence
+
+Enterprise Intelligence
+
+Pragati
+
+==============================================================================
+PART 34
+DELIVERABLES
+==============================================================================
+
+Generate
+
+01 Conversation Intelligence Constitution
+
+02 Pragati Constitution
+
+03 Conversation Architecture Report
+
+04 FSM Constitution
+
+05 Persona Conversation Constitution
+
+06 Concern Conversation Constitution
+
+07 Behaviour Conversation Constitution
+
+08 Adaptive Dialogue Constitution
+
+09 Conversation Memory Constitution
+
+10 Context Intelligence Constitution
+
+11 Conversation Evidence Constitution
+
+12 Conversation Confidence Constitution
+
+13 Conversation Explainability Constitution
+
+14 Conversation Safety Constitution
+
+15 Voice & Multimodal Constitution
+
+16 Conversation AI Constitution
+
+17 Conversation Analytics Constitution
+
+18 Conversation Report Constitution
+
+19 Longitudinal Conversation Constitution
+
+20 Enterprise Conversation Constitution
+
+21 SuperAdmin Conversation Constitution
+
+22 Prompt Registry Constitution
+
+23 Conversation Governance
+
+24 Conversation Quality Gates
+
+25 Conversation Review Board
+
+26 Conversation Definition of Done
+
+27 Conversation Scientific Validation
+
+28 Conversation Evolution Strategy
+
+29 Conversation Maturity Assessment
+
+==============================================================================
+STOP
+==============================================================================
+
+Do not modify Pragati.
+
+Do not replace Conversation FSM.
+
+Do not create another Conversation Engine.
+
+Do not replace Conversation Memory.
+
+Do not activate dormant conversation capabilities.
+
+Do not modify business logic.
+
+Do not bypass Assessment Intelligence.
+
+Do not bypass Behaviour Intelligence.
+
+Do not bypass Decision Intelligence.
+
+Do not bypass Journey Intelligence.
+
+Freeze this Conversation Intelligence Constitution after approval.
+
+Every future Pragati enhancement,
+
+Conversation enhancement,
+
+Dialogue enhancement,
+
+FSM enhancement,
+
+Conversation Memory enhancement,
+
+Prompt enhancement,
+
+Voice enhancement,
+
+Conversation Analytics enhancement,
+
+Enterprise Conversation enhancement,
+
+and Conversation AI enhancement
+
+must comply with this Constitution.

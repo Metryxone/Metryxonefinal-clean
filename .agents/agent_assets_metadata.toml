@@ -1326,3 +1326,9 @@ id = "VRiroGq-WyYkz5TnlgFTE"
 uri = "file://backend/audit/mx-700/phase-1.31-data-intelligence-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.31: Data Intelligence Constitution (Master Data + Data Governance + Data Quality + Data Lineage + Data Lifecycle + Data Observability)"
+
+[[outputs]]
+id = "B9hAJN0tZqqiqGQhuEhhe"
+uri = "file://backend/audit/mx-700/phase-1.32-integration-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.32: Integration Intelligence Constitution (API Platform + Event Bus + Webhooks + Connectors + Orchestration + Synchronization + Interoperability)"

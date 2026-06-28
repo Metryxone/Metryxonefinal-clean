@@ -1,0 +1,1066 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.32
+#
+# INTEGRATION INTELLIGENCE CONSTITUTION
+# (API PLATFORM + EVENT BUS + WEBHOOKS + CONNECTORS +
+# ORCHESTRATION + SYNCHRONIZATION + INTEROPERABILITY)
+#
+# EXECUTION MODE
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT CREATE A SECOND INTEGRATION PLATFORM
+# DO NOT REPLACE API ARCHITECTURE
+# DO NOT CREATE API V2
+# DO NOT MODIFY BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT INTEGRATION CAPABILITIES
+#
+# THIS PHASE ESTABLISHES THE PERMANENT
+# INTEGRATION INTELLIGENCE CONSTITUTION
+#
+# ==============================================================================
+
+MISSION
+
+Create the permanent Integration Intelligence Constitution for CAPADEX.
+
+Integration Intelligence enables secure, reliable, governed,
+observable communication between every internal intelligence engine
+and every external platform.
+
+Assessment Intelligence communicates.
+
+Behaviour Intelligence exchanges.
+
+Concern Intelligence synchronizes.
+
+Competency Intelligence integrates.
+
+Decision Intelligence orchestrates.
+
+Learning Intelligence connects.
+
+Career Intelligence interoperates.
+
+Report Intelligence publishes.
+
+Analytics Intelligence aggregates.
+
+AI Intelligence consumes and provides services.
+
+Enterprise Intelligence coordinates.
+
+Security Intelligence protects every integration.
+
+Data Intelligence provides the canonical source.
+
+Integration Intelligence connects them all.
+
+Repository remains the Single Source of Truth.
+
+Governance only.
+
+No implementation.
+
+==============================================================================
+HONESTY CONTRACT
+==============================================================================
+
+Measured = Live Repository + Live Database using exact SELECT COUNT(*)
+
+Derived = Integration Architecture Interpretation
+
+API ≠ Integration
+
+Integration ≠ Synchronization
+
+Synchronization ≠ Replication
+
+Webhook ≠ Event
+
+Event ≠ Message
+
+Message ≠ Transaction
+
+Connector ≠ Adapter
+
+REST ≠ RPC
+
+GraphQL ≠ REST
+
+Request ≠ Workflow
+
+Workflow ≠ Orchestration
+
+Retry ≠ Success
+
+Delivery ≠ Processing
+
+Queue ≠ Persistence
+
+Acknowledgement ≠ Completion
+
+Availability ≠ Reliability
+
+Coverage ≠ Confidence
+
+Evidence ≠ Confidence
+
+Built ≠ Activated
+
+Flag Enabled ≠ Runtime Active
+
+Human remains accountable.
+
+Never fabricate.
+
+Never estimate.
+
+Never use n_live_tup.
+
+==============================================================================
+PRIMARY OBJECTIVES
+==============================================================================
+
+Protect Integration Intelligence
+
+Protect API Platform
+
+Protect Integration Gateway
+
+Protect Event Architecture
+
+Protect Webhooks
+
+Protect Connectors
+
+Protect Synchronization
+
+Protect Integration Observability
+
+Protect Integration Governance
+
+Protect Integration Intelligence IP
+
+==============================================================================
+MANDATORY RULES
+==============================================================================
+
+Before modifying Integration Intelligence
+
+Search repository
+
+Locate REST APIs
+
+Locate Webhooks
+
+Locate Event Publishers
+
+Locate Event Consumers
+
+Locate Integration Gateway
+
+Locate Connectors
+
+Locate External APIs
+
+Locate Queue Services
+
+Locate Background Workers
+
+Locate Scheduler
+
+Locate Authentication
+
+Locate Integration Security
+
+Locate Retry Logic
+
+Locate Circuit Breakers
+
+Locate Monitoring
+
+Locate Database
+
+Never create another Integration Platform.
+
+Never duplicate APIs.
+
+Never bypass API Gateway.
+
+Never bypass Security Intelligence.
+
+Enhance existing implementation only.
+
+==============================================================================
+PART 1
+
+CURRENT INTEGRATION INTELLIGENCE AUDIT
+
+Perform complete repository audit.
+
+Perform complete database audit.
+
+Measure
+
+REST APIs
+
+GraphQL APIs
+
+Webhook Providers
+
+Webhook Consumers
+
+Integration Gateway
+
+External Connectors
+
+Third-party APIs
+
+Authentication Middleware
+
+Authorization Middleware
+
+Queue Workers
+
+Schedulers
+
+Background Jobs
+
+Retry Mechanisms
+
+Circuit Breakers
+
+Dead Letter Queues
+
+Integration Logs
+
+Integration Analytics
+
+Integration Reports
+
+Integration Monitoring
+
+Integration Dashboards
+
+Integration Technical Debt
+
+Duplicate APIs
+
+Duplicate Connectors
+
+Dormant Integrations
+
+Activation Readiness
+
+Classify
+
+LIVE
+
+PARTIAL
+
+SEEDED
+
+DORMANT
+
+BROKEN
+
+EMPTY
+
+TECH DEBT
+
+MISSING
+
+Explicitly identify
+
+Repository implementation
+
+Runtime activation
+
+Duplicate endpoints
+
+Broken integrations
+
+Broken synchronization
+
+Broken retries
+
+Broken contracts
+
+==============================================================================
+PART 2
+
+INTEGRATION PHILOSOPHY
+
+Integration Intelligence exists to
+
+Connect
+
+Exchange
+
+Synchronize
+
+Coordinate
+
+Route
+
+Publish
+
+Consume
+
+Observe
+
+Integration never
+
+Creates business logic
+
+Duplicates data ownership
+
+Bypasses governance
+
+Breaks security
+
+==============================================================================
+PART 3
+
+INTEGRATION DOMAIN ARCHITECTURE
+
+API Platform
+
+Gateway
+
+REST
+
+GraphQL
+
+Events
+
+Webhooks
+
+Connectors
+
+Queues
+
+Schedulers
+
+Background Workers
+
+Synchronization
+
+Observability
+
+Governance
+
+==============================================================================
+PART 4
+
+API PLATFORM CONSTITUTION
+
+API Platform remains
+
+the only canonical integration surface.
+
+Protect
+
+REST APIs
+
+Contracts
+
+Endpoints
+
+Routing
+
+Versioning
+
+Documentation
+
+Never duplicate APIs.
+
+==============================================================================
+PART 5
+
+API CONTRACT CONSTITUTION
+
+Protect
+
+Schemas
+
+DTOs
+
+Versioning
+
+Compatibility
+
+Validation
+
+Error Models
+
+Backward Compatibility
+
+==============================================================================
+
+PART 6
+
+EVENT CONSTITUTION
+
+Protect
+
+Publishers
+
+Consumers
+
+Topics
+
+Routing
+
+Ordering
+
+Correlation IDs
+
+Idempotency
+
+==============================================================================
+
+PART 7
+
+WEBHOOK CONSTITUTION
+
+Protect
+
+Inbound Webhooks
+
+Outbound Webhooks
+
+Validation
+
+Signing
+
+Retries
+
+Replay Protection
+
+==============================================================================
+
+PART 8
+
+CONNECTOR CONSTITUTION
+
+Protect
+
+OpenAI
+
+Razorpay
+
+Firebase
+
+Google
+
+Whisper
+
+HeyGen
+
+Email
+
+SMS
+
+Future Connectors
+
+Never duplicate connectors.
+
+==============================================================================
+
+PART 9
+
+ORCHESTRATION CONSTITUTION
+
+Protect
+
+Workflow Coordination
+
+Service Composition
+
+Execution Order
+
+Dependencies
+
+Recovery
+
+Timeouts
+
+==============================================================================
+
+PART 10
+
+SYNCHRONIZATION CONSTITUTION
+
+Protect
+
+Data Synchronization
+
+Identity Synchronization
+
+Status Synchronization
+
+Retry
+
+Conflict Resolution
+
+==============================================================================
+
+PART 11
+
+INTEGRATION EVIDENCE CONSTITUTION
+
+Evidence originates from
+
+Requests
+
+Responses
+
+Events
+
+Logs
+
+Retries
+
+Failures
+
+Acknowledgements
+
+Evidence contains
+
+Source
+
+Coverage
+
+Confidence
+
+Quality
+
+==============================================================================
+
+PART 12
+
+INTEGRATION CONFIDENCE CONSTITUTION
+
+Separate
+
+Coverage
+
+Evidence
+
+Confidence
+
+Availability
+
+Reliability
+
+Trust
+
+==============================================================================
+
+PART 13
+
+INTEGRATION EXPLAINABILITY CONSTITUTION
+
+Every integration explains
+
+Source
+
+Destination
+
+Purpose
+
+Authentication
+
+Response
+
+Failure
+
+Retry
+
+==============================================================================
+
+PART 14
+
+INTEGRATION SECURITY CONSTITUTION
+
+Protect
+
+API Keys
+
+OAuth
+
+JWT
+
+Webhook Signatures
+
+Encryption
+
+Tenant Isolation
+
+Rate Limits
+
+==============================================================================
+
+PART 15
+
+INTEGRATION OBSERVABILITY CONSTITUTION
+
+Monitor
+
+API Latency
+
+Availability
+
+Retries
+
+Failures
+
+Timeouts
+
+Queue Depth
+
+Webhook Health
+
+Connector Health
+
+==============================================================================
+
+PART 16
+
+INTEGRATION ANALYTICS CONSTITUTION
+
+Measure
+
+API Usage
+
+Latency
+
+Availability
+
+Retry Rates
+
+Error Rates
+
+Success Rates
+
+Connector Usage
+
+==============================================================================
+
+PART 17
+
+INTEGRATION AI CONSTITUTION
+
+AI may
+
+Explain
+
+Route
+
+Recommend
+
+Summarize
+
+Never execute external integrations autonomously.
+
+Human approval remains mandatory where required.
+
+==============================================================================
+
+PART 18
+
+ENTERPRISE INTEGRATION CONSTITUTION
+
+Support
+
+SSO
+
+LDAP
+
+SCIM
+
+ERP
+
+HRMS
+
+LMS
+
+CRM
+
+Institution Systems
+
+Corporate Systems
+
+==============================================================================
+
+PART 19
+
+SUPERADMIN INTEGRATION CONSTITUTION
+
+Support
+
+Connector Configuration
+
+API Policies
+
+Webhook Configuration
+
+Monitoring
+
+Retry Policies
+
+==============================================================================
+
+PART 20
+
+INTEGRATION TESTING CONSTITUTION
+
+Standardize
+
+API Tests
+
+Webhook Tests
+
+Contract Tests
+
+Retry Tests
+
+Performance Tests
+
+Integration Tests
+
+==============================================================================
+
+PART 21
+
+INTEGRATION DOCUMENTATION
+
+Maintain
+
+API Catalog
+
+Connector Catalog
+
+Webhook Catalog
+
+Integration Guide
+
+Architecture Guide
+
+==============================================================================
+
+PART 22
+
+INTEGRATION GOVERNANCE
+
+Every enhancement answers
+
+Why is Integration changing?
+
+What existing capability is reused?
+
+Does this duplicate an API?
+
+Does this preserve interoperability?
+
+==============================================================================
+
+PART 23
+
+INTEGRATION QUALITY GATES
+
+Verify
+
+Existing APIs reused
+
+Contracts preserved
+
+Security preserved
+
+Observability preserved
+
+Documentation updated
+
+No duplicate integrations
+
+==============================================================================
+
+PART 24
+
+INTEGRATION REVIEW BOARD
+
+Founder
+
+Chief Integration Architect
+
+Platform Architect
+
+API Architect
+
+Security Architect
+
+Enterprise Architect
+
+Research
+
+QA
+
+==============================================================================
+
+PART 25
+
+INTEGRATION DEFINITION OF DONE
+
+Integration enhancement completes only if
+
+Existing APIs reused
+
+Contracts preserved
+
+Security preserved
+
+Observability preserved
+
+Documentation updated
+
+No regressions
+
+==============================================================================
+
+PART 26
+
+INTEGRATION MATURITY MODEL
+
+Assess
+
+API Platform
+
+Gateway
+
+Events
+
+Webhooks
+
+Connectors
+
+Synchronization
+
+Observability
+
+Enterprise Integration
+
+Levels
+
+1 Operational
+
+2 Guided
+
+3 Managed
+
+4 Intelligent
+
+5 Autonomous Integration Platform
+
+Human approval remains mandatory.
+
+==============================================================================
+
+PART 27
+
+INTEGRATION SCIENTIFIC VALIDATION
+
+Document
+
+Distributed Systems
+
+API Design
+
+REST
+
+Event-Driven Architecture
+
+Message Reliability
+
+Integration Patterns
+
+Service Mesh
+
+Systems Engineering
+
+==============================================================================
+
+PART 28
+
+INTEGRATION EVOLUTION STRATEGY
+
+Future evolution supports
+
+New APIs
+
+New Connectors
+
+New Events
+
+New Queues
+
+New Webhooks
+
+New Enterprise Integrations
+
+without breaking
+
+Assessment Intelligence
+
+Behaviour Intelligence
+
+Concern Intelligence
+
+Competency Intelligence
+
+Decision Intelligence
+
+Learning Intelligence
+
+Career Intelligence
+
+Intervention Intelligence
+
+Report Intelligence
+
+Analytics Intelligence
+
+AI Intelligence
+
+Enterprise Intelligence
+
+Security Intelligence
+
+Data Intelligence
+
+==============================================================================
+
+PART 29
+
+DELIVERABLES
+
+Generate
+
+01 Integration Intelligence Constitution
+
+02 Repository Integration Audit
+
+03 API Platform Constitution
+
+04 API Contract Constitution
+
+05 Event Constitution
+
+06 Webhook Constitution
+
+07 Connector Constitution
+
+08 Orchestration Constitution
+
+09 Synchronization Constitution
+
+10 Integration Evidence Constitution
+
+11 Integration Confidence Constitution
+
+12 Integration Explainability Constitution
+
+13 Integration Security Constitution
+
+14 Integration Observability Constitution
+
+15 Integration Analytics Constitution
+
+16 Enterprise Integration Constitution
+
+17 SuperAdmin Integration Constitution
+
+18 Integration Governance Constitution
+
+19 Integration Quality Gates
+
+20 Integration Review Board
+
+21 Integration Definition of Done
+
+22 Integration Scientific Validation
+
+23 Integration Evolution Strategy
+
+24 Integration Maturity Assessment
+
+==============================================================================
+
+STOP
+
+Do not modify Integration Architecture.
+
+Do not replace API Platform.
+
+Do not create another Integration Platform.
+
+Do not activate dormant Integration capabilities.
+
+Do not modify business logic.
+
+Do not bypass Data Intelligence.
+
+Do not bypass Security Intelligence.
+
+Do not bypass Enterprise Intelligence.
+
+Do not bypass Assessment Intelligence.
+
+Do not bypass Behaviour Intelligence.
+
+Do not bypass Concern Intelligence.
+
+Do not bypass Competency Intelligence.
+
+Do not bypass Decision Intelligence.
+
+Do not bypass Learning Intelligence.
+
+Do not bypass Career Intelligence.
+
+Do not bypass Intervention Intelligence.
+
+Do not bypass Report Intelligence.
+
+Do not bypass Analytics Intelligence.
+
+Do not bypass AI Intelligence.
+
+Freeze this Integration Intelligence Constitution after approval.
+
+Every future
+
+Integration enhancement,
+
+API enhancement,
+
+Webhook enhancement,
+
+Connector enhancement,
+
+Event enhancement,
+
+Synchronization enhancement,
+
+Integration Observability enhancement,
+
+Integration Governance enhancement,
+
+and Enterprise Integration enhancement
+
+must comply with this Constitution.

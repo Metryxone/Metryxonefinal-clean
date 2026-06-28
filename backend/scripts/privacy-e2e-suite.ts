@@ -77,14 +77,41 @@ import { spawn, type ChildProcess } from 'child_process';
 const BASE = process.env.E2E_BASE_URL ?? 'http://localhost:8080';
 const HEALTH_URL = `${BASE}/api/health`;
 
+// A flag-gated harness declares EVERY feature flag it needs ON to exercise its real
+// per-student isolation logic (instead of 503-ing on flag-gating). `env` is the
+// process-env var that enables it; `flag` is its in-app config name; `probe` is its
+// ungated `/enabled` endpoint (always 200 `{enabled:<bool>}` regardless of flag
+// state — platform convention) that the preflight hits on the LIVE target. This is
+// the SINGLE SOURCE OF TRUTH for the flag preflight: REQUIRED_HARNESS_FLAGS below is
+// DERIVED from these declarations, so adding a new flag-gated harness automatically
+// extends the preflight with no separate edit (Task #289 — closes the two-list drift
+// that could silently re-introduce the false-pass risk Task #287 fixed).
+type HarnessFlag = { env: string; flag: string; probe: string };
+
 // `registrations` is how many POST /api/register calls each harness makes during
 // setup (each registers two students A and B). The batch packer below uses it to
-// keep every batch at or under the register window limit.
-const HARNESSES = [
-  { name: 'profile (resume/profile/jobs/goals) — Task #277', script: 'scripts/task277-profile-privacy-e2e.ts', registrations: 2 },
-  { name: 'studio (leadership/executive trackers) — Task #279', script: 'scripts/task279-studio-privacy-e2e.ts', registrations: 2 },
-  { name: 'behavioural-memory (snapshots/graph) — Task #280', script: 'scripts/task280-behavioural-memory-privacy-e2e.ts', registrations: 2 },
-  { name: 'launchpad-dashboard tracker (campus/fresher) — Task #274', script: 'scripts/task274-tracker-privacy-e2e.ts', registrations: 2 },
+// keep every batch at or under the register window limit. `flags` is empty for a
+// harness whose store is NOT flag-gated (it needs nothing from the preflight).
+type Harness = { name: string; script: string; registrations: number; flags: HarnessFlag[] };
+
+const HARNESSES: Harness[] = [
+  { name: 'profile (resume/profile/jobs/goals) — Task #277', script: 'scripts/task277-profile-privacy-e2e.ts', registrations: 2, flags: [] },
+  {
+    name: 'studio (leadership/executive trackers) — Task #279',
+    script: 'scripts/task279-studio-privacy-e2e.ts',
+    registrations: 2,
+    flags: [
+      { env: 'FF_CAREER_LAUNCHPAD', flag: 'careerLaunchpad', probe: '/api/career-launchpad/enabled' },
+      { env: 'FF_EMPLOYABILITY_STUDIO', flag: 'employabilityStudio', probe: '/api/employability-studio/enabled' },
+    ],
+  },
+  { name: 'behavioural-memory (snapshots/graph) — Task #280', script: 'scripts/task280-behavioural-memory-privacy-e2e.ts', registrations: 2, flags: [] },
+  {
+    name: 'launchpad-dashboard tracker (campus/fresher) — Task #274',
+    script: 'scripts/task274-tracker-privacy-e2e.ts',
+    registrations: 2,
+    flags: [{ env: 'FF_LAUNCHPAD_DASHBOARD', flag: 'launchpadDashboard', probe: '/api/launchpad-dashboard/enabled' }],
+  },
 ];
 
 // The live POST /api/register limiter allows max 5 registrations per 60s per IP
@@ -95,8 +122,6 @@ const HARNESSES = [
 // counting and guarantees we never trip the limiter we are deliberately honouring.
 const REGISTER_WINDOW_LIMIT = 5;
 const REGISTER_BATCH_CAP = REGISTER_WINDOW_LIMIT - 1; // 4 → two 2-reg harnesses per batch
-
-type Harness = (typeof HARNESSES)[number];
 
 // Greedily pack harnesses (in declared order) into batches whose combined
 // registration count never exceeds REGISTER_BATCH_CAP. A single harness that on
@@ -177,22 +202,23 @@ async function waitForReady(deadline: number): Promise<boolean> {
  *  runner's env, which may not carry them — so we set them explicitly there. We do NOT
  *  override flags already present in the runner env (a deliberate FF_*=0 still wins).
  *
- *  Each entry also carries the harness's ungated `/enabled` probe endpoint (always
- *  200 `{enabled:<bool>}` regardless of flag state — platform convention), which the
+ *  Each entry carries the harness's ungated `/enabled` probe endpoint (always 200
+ *  `{enabled:<bool>}` regardless of flag state — platform convention), which the
  *  preflight below hits against the LIVE target BEFORE any harness runs. This catches
  *  the case the auto-boot defaulting cannot: the live-server path (case 1) trusts the
  *  already-running workflow's env, so if that workflow is missing one of these flags
  *  the harness would still 503 on flag-gating and the run could look "green" for the
  *  wrong reason. The preflight fails LOUDLY (and with a verdict distinct from a privacy
  *  regression) so a missing flag can never masquerade as either a pass or a leak.
- *    - FF_CAREER_LAUNCHPAD     → Employability Studio harness (#279)
- *    - FF_EMPLOYABILITY_STUDIO → Employability Studio harness (#279)
- *    - FF_LAUNCHPAD_DASHBOARD  → Launchpad tracker harness (#274) */
-const REQUIRED_HARNESS_FLAGS = [
-  { env: 'FF_CAREER_LAUNCHPAD', flag: 'careerLaunchpad', probe: '/api/career-launchpad/enabled', harness: 'studio (leadership/executive trackers) — Task #279' },
-  { env: 'FF_EMPLOYABILITY_STUDIO', flag: 'employabilityStudio', probe: '/api/employability-studio/enabled', harness: 'studio (leadership/executive trackers) — Task #279' },
-  { env: 'FF_LAUNCHPAD_DASHBOARD', flag: 'launchpadDashboard', probe: '/api/launchpad-dashboard/enabled', harness: 'launchpad-dashboard tracker (campus/fresher) — Task #274' },
-] as const;
+ *
+ *  DERIVED (Task #289): this list is built from each harness's own `flags` declaration
+ *  in HARNESSES — it is NOT a hand-maintained second list. Adding a new flag-gated
+ *  harness (with its `flags` populated) automatically extends the preflight here, so
+ *  the flag list can never silently drift out of sync with the harness list and
+ *  re-open the false-pass risk Task #287 closed. `harness` is carried through purely
+ *  for error attribution (which harness needs the missing flag). */
+const REQUIRED_HARNESS_FLAGS: { env: string; flag: string; probe: string; harness: string }[] =
+  HARNESSES.flatMap((h) => h.flags.map((f) => ({ ...f, harness: h.name })));
 
 // Distinct exit code so a flag-config problem is never confused with a privacy
 // regression (the harnesses themselves exit 1 on a real cross-user leak). A

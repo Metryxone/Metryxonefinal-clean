@@ -1194,3 +1194,9 @@ id = "6o12OKXLB6biaQ_85H7uU"
 uri = "file://backend/audit/mx-700/phase-1.9-ai-architecture-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.9: AI Architecture Constitution"
+
+[[outputs]]
+id = "FGhwbG2OLHURm9FH0nI5C"
+uri = "file://backend/audit/mx-700/phase-1.10-behaviour-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.10: Behaviour Intelligence Constitution"

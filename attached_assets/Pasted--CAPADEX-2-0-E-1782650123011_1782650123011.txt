@@ -1,0 +1,1163 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.15
+#
+# LIFE INTELLIGENCE CONSTITUTION
+#
+# EXECUTION MODE
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT CREATE A SECOND LIFE ENGINE
+# DO NOT REPLACE EXISTING LIFE INTELLIGENCE
+# DO NOT MODIFY BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT LIFE CAPABILITIES
+#
+# THIS PHASE ESTABLISHES THE PERMANENT
+# LIFE INTELLIGENCE CONSTITUTION
+# ==============================================================================
+
+MISSION
+
+Create the permanent Life Intelligence Constitution for CAPADEX.
+
+Life Intelligence integrates Behaviour Intelligence,
+Decision Intelligence,
+Journey Intelligence,
+Learning Intelligence,
+Career Intelligence
+into lifelong human flourishing.
+
+Behaviour Intelligence explains WHO the individual is.
+
+Decision Intelligence explains WHAT choices should be made.
+
+Journey Intelligence explains HOW growth occurs over time.
+
+Learning Intelligence develops capability.
+
+Career Intelligence creates professional opportunity.
+
+Life Intelligence creates meaningful, balanced, resilient and sustainable living.
+
+Repository remains the Single Source of Truth.
+
+Governance only.
+
+No implementation.
+
+==============================================================================
+
+HONESTY CONTRACT
+
+Measured = Live Repository + Live Database
+
+Derived = Scientific Interpretation
+
+Coverage ≠ Confidence ≠ Life Balance
+
+Potential ≠ Wellbeing
+
+Stress ≠ Mental Health Diagnosis
+
+Recommendation ≠ Clinical Advice
+
+Lifestyle ≠ Personality
+
+Correlation ≠ Causation
+
+AI Recommendation ≠ Medical Advice
+
+Null ≠ Zero
+
+Flag Enabled ≠ Runtime Active
+
+Seeded Framework ≠ Live Consumption
+
+Never fabricate
+
+Life Progress
+
+Mental Wellbeing
+
+Physical Health
+
+Financial Wellbeing
+
+Relationship Quality
+
+Purpose
+
+Life Satisfaction
+
+==============================================================================
+
+PRIMARY OBJECTIVES
+
+Protect Life Intelligence
+
+Protect Life Journey
+
+Protect Wellbeing Intelligence
+
+Protect Lifestyle Intelligence
+
+Protect Purpose Intelligence
+
+Protect Resilience Intelligence
+
+Protect Habit Intelligence
+
+Protect Financial Wellbeing Intelligence
+
+Protect Relationship Intelligence
+
+Protect Family Intelligence
+
+Protect Work-Life Intelligence
+
+Protect Life Analytics
+
+==============================================================================
+
+MANDATORY RULES
+
+Before modifying Life Intelligence
+
+Search repository
+
+Locate Life Intelligence
+
+Locate Behaviour dependencies
+
+Locate Decision dependencies
+
+Locate Journey dependencies
+
+Locate Learning dependencies
+
+Locate Career dependencies
+
+Locate AI dependencies
+
+Locate Enterprise dependencies
+
+Locate Reports
+
+Locate APIs
+
+Locate Database
+
+Locate Analytics
+
+Never create another Life Engine
+
+Never duplicate Life Intelligence
+
+Never bypass Behaviour Intelligence
+
+Never bypass Decision Intelligence
+
+Never bypass Journey Intelligence
+
+Never bypass Learning Intelligence
+
+Never bypass Career Intelligence
+
+Enhance existing implementation only
+
+==============================================================================
+
+PART 1
+
+CURRENT LIFE INTELLIGENCE AUDIT
+
+Audit
+
+Life Engine
+
+Life Domains
+
+Life Journey
+
+Life Goals
+
+Life Milestones
+
+Life Balance
+
+Purpose Engine
+
+Lifestyle Intelligence
+
+Habit Intelligence
+
+Relationship Intelligence
+
+Family Intelligence
+
+Financial Wellbeing
+
+Health Intelligence
+
+Wellbeing Intelligence
+
+Mental Wellbeing
+
+Resilience
+
+Life Recommendations
+
+Life Reports
+
+Life APIs
+
+Life AI
+
+Life Analytics
+
+Life Dashboard
+
+Life Technical Debt
+
+Dormant Life Components
+
+Activation Readiness
+
+==============================================================================
+
+PART 2
+
+LIFE PHILOSOPHY
+
+Behaviour creates identity.
+
+Decision creates direction.
+
+Journey creates transformation.
+
+Learning creates capability.
+
+Career creates opportunity.
+
+Life creates fulfillment.
+
+Life Intelligence exists to
+
+Balance
+
+Strengthen
+
+Support
+
+Guide
+
+Coach
+
+Protect
+
+Develop
+
+Sustain
+
+Life Intelligence supports lifelong flourishing.
+
+It never replaces healthcare professionals.
+
+It never diagnoses disease.
+
+==============================================================================
+
+PART 3
+
+LIFE DOMAIN ARCHITECTURE
+
+Document
+
+Life Core
+
+Life Intelligence
+
+Purpose Intelligence
+
+Lifestyle Intelligence
+
+Relationship Intelligence
+
+Family Intelligence
+
+Wellbeing Intelligence
+
+Financial Wellbeing
+
+Health Intelligence
+
+Habit Intelligence
+
+Resilience Intelligence
+
+Life Analytics
+
+Life Reports
+
+Life AI
+
+Life Governance
+
+==============================================================================
+
+PART 4
+
+PURPOSE INTELLIGENCE CONSTITUTION
+
+Protect
+
+Purpose
+
+Values
+
+Meaning
+
+Motivation
+
+Vision
+
+Mission
+
+Personal Goals
+
+Long-term Aspirations
+
+Purpose Evolution
+
+==============================================================================
+
+PART 5
+
+WELLBEING INTELLIGENCE CONSTITUTION
+
+Protect
+
+Mental Wellbeing
+
+Emotional Wellbeing
+
+Physical Wellbeing
+
+Social Wellbeing
+
+Occupational Wellbeing
+
+Financial Wellbeing
+
+Environmental Wellbeing
+
+Spiritual Wellbeing
+
+Wellbeing Intelligence informs.
+
+It never diagnoses.
+
+==============================================================================
+
+PART 6
+
+LIFESTYLE INTELLIGENCE CONSTITUTION
+
+Protect
+
+Daily Routine
+
+Sleep
+
+Nutrition
+
+Exercise
+
+Recovery
+
+Productivity
+
+Digital Wellness
+
+Screen Time
+
+Lifestyle Evolution
+
+==============================================================================
+
+PART 7
+
+HABIT INTELLIGENCE CONSTITUTION
+
+Protect
+
+Habit Formation
+
+Habit Tracking
+
+Positive Habits
+
+Risk Habits
+
+Behaviour Reinforcement
+
+Habit Evolution
+
+Habit Consistency
+
+==============================================================================
+
+PART 8
+
+RELATIONSHIP INTELLIGENCE CONSTITUTION
+
+Protect
+
+Relationships
+
+Communication
+
+Trust
+
+Support Systems
+
+Collaboration
+
+Conflict Resolution
+
+Relationship Growth
+
+Family Dynamics
+
+Never infer relationship quality without evidence.
+
+==============================================================================
+
+PART 9
+
+FINANCIAL WELLBEING CONSTITUTION
+
+Protect
+
+Financial Goals
+
+Savings Behaviour
+
+Financial Planning
+
+Financial Confidence
+
+Financial Habits
+
+Financial Learning
+
+Financial Resilience
+
+Never provide financial advice.
+
+Provide educational guidance only.
+
+==============================================================================
+
+PART 10
+
+RESILIENCE INTELLIGENCE CONSTITUTION
+
+Protect
+
+Adaptability
+
+Stress Management
+
+Recovery
+
+Persistence
+
+Optimism
+
+Coping
+
+Support Systems
+
+Growth Mindset
+
+==============================================================================
+
+PART 11
+
+HEALTH INTELLIGENCE CONSTITUTION
+
+Health Intelligence supports
+
+Healthy Behaviour
+
+Lifestyle
+
+Preventive Education
+
+Wellbeing Awareness
+
+Health Literacy
+
+Never diagnose.
+
+Never prescribe treatment.
+
+Never replace healthcare professionals.
+
+==============================================================================
+
+PART 12
+
+LIFE EVIDENCE CONSTITUTION
+
+Evidence originates from
+
+Behaviour
+
+Journey
+
+Learning
+
+Career
+
+Lifestyle
+
+Goals
+
+Habits
+
+Assessments
+
+Longitudinal Progress
+
+Evidence documents
+
+Source
+
+Coverage
+
+Quality
+
+Confidence
+
+==============================================================================
+
+PART 13
+
+LIFE CONFIDENCE CONSTITUTION
+
+Separate
+
+Coverage
+
+Evidence
+
+Confidence
+
+Life Balance
+
+Wellbeing
+
+Resilience
+
+Potential
+
+Never combine into one score.
+
+==============================================================================
+
+PART 14
+
+LIFE EXPLAINABILITY CONSTITUTION
+
+Every Life recommendation explains
+
+Why
+
+Evidence
+
+Behaviour Drivers
+
+Lifestyle Drivers
+
+Journey Context
+
+Confidence
+
+Alternatives
+
+Limitations
+
+Expected Benefits
+
+==============================================================================
+
+PART 15
+
+LIFE RECOMMENDATION CONSTITUTION
+
+Recommendations include
+
+Purpose
+
+Priority
+
+Expected Benefit
+
+Behaviour Impact
+
+Learning Impact
+
+Career Impact
+
+Lifestyle Impact
+
+Evidence
+
+Confidence
+
+Alternatives
+
+==============================================================================
+
+PART 16
+
+LIFE PROGRESSION CONSTITUTION
+
+Track
+
+Life Journey
+
+Purpose Evolution
+
+Lifestyle Improvement
+
+Habit Growth
+
+Wellbeing Progress
+
+Relationship Progress
+
+Financial Progress
+
+Life Timeline
+
+==============================================================================
+
+PART 17
+
+LIFE AI CONSTITUTION
+
+AI
+
+Explains
+
+Guides
+
+Encourages
+
+Motivates
+
+Summarizes
+
+Never diagnoses.
+
+Never replaces professionals.
+
+Never fabricates wellbeing.
+
+==============================================================================
+
+PART 18
+
+LIFE ANALYTICS CONSTITUTION
+
+Protect
+
+Life KPIs
+
+Life Balance
+
+Purpose Progress
+
+Wellbeing Trends
+
+Lifestyle Trends
+
+Habit Trends
+
+Relationship Trends
+
+Resilience Trends
+
+==============================================================================
+
+PART 19
+
+LIFE REPORT CONSTITUTION
+
+Every report contains
+
+Life Summary
+
+Purpose
+
+Wellbeing
+
+Lifestyle
+
+Habits
+
+Relationships
+
+Evidence
+
+Confidence
+
+Recommendations
+
+Next Steps
+
+==============================================================================
+
+PART 20
+
+ENTERPRISE LIFE CONSTITUTION
+
+Support
+
+Employee Wellbeing
+
+Leadership Wellbeing
+
+Burnout Prevention
+
+Work-Life Integration
+
+Engagement
+
+Resilience
+
+Learning
+
+Development
+
+Human approval required.
+
+==============================================================================
+
+PART 21
+
+SUPERADMIN LIFE CONSTITUTION
+
+Support
+
+Life Configuration
+
+Life Frameworks
+
+Life Analytics
+
+Life Reports
+
+Approvals
+
+Monitoring
+
+==============================================================================
+
+PART 22
+
+LIFE SECURITY CONSTITUTION
+
+Protect
+
+Life Data
+
+Wellbeing Data
+
+Lifestyle Data
+
+Evidence
+
+Recommendations
+
+Permissions
+
+Consent
+
+PII
+
+==============================================================================
+
+PART 23
+
+LIFE OBSERVABILITY
+
+Monitor
+
+Life Engine
+
+Recommendations
+
+Wellbeing
+
+Habits
+
+Lifestyle
+
+Failures
+
+Latency
+
+Quality
+
+==============================================================================
+
+PART 24
+
+LIFE TESTING CONSTITUTION
+
+Standardize
+
+Recommendation Tests
+
+Lifestyle Tests
+
+Habit Tests
+
+Progress Tests
+
+Regression Tests
+
+==============================================================================
+
+PART 25
+
+LIFE DOCUMENTATION
+
+Maintain
+
+Life Catalog
+
+Purpose Catalog
+
+Lifestyle Catalog
+
+Habit Catalog
+
+Wellbeing Catalog
+
+Analytics Guide
+
+API Guide
+
+==============================================================================
+
+PART 26
+
+LIFE GOVERNANCE
+
+Every Life enhancement answers
+
+Why is Life Intelligence changing?
+
+What existing capability is reused?
+
+Does this duplicate Life Intelligence?
+
+Does this improve wellbeing?
+
+Does this improve long-term outcomes?
+
+==============================================================================
+
+PART 27
+
+LIFE QUALITY GATES
+
+Verify
+
+Life Engine reused
+
+Behaviour reused
+
+Decision reused
+
+Journey reused
+
+Learning reused
+
+Career reused
+
+Evidence exposed
+
+Confidence exposed
+
+Explainability complete
+
+Documentation updated
+
+==============================================================================
+
+PART 28
+
+LIFE REVIEW BOARD
+
+Mandatory Approval
+
+Founder
+
+Life Architect
+
+Behaviour Scientist
+
+Psychologist
+
+Journey Architect
+
+Learning Architect
+
+Career Architect
+
+AI Architect
+
+Enterprise
+
+Research
+
+QA
+
+==============================================================================
+
+PART 29
+
+LIFE DEFINITION OF DONE
+
+Life enhancement completes only if
+
+Existing Life Engine reused
+
+Behaviour preserved
+
+Journey preserved
+
+Learning preserved
+
+Career preserved
+
+Evidence exposed
+
+Confidence exposed
+
+Explainability complete
+
+Documentation updated
+
+No regressions
+
+==============================================================================
+
+PART 30
+
+LIFE MATURITY MODEL
+
+Assess
+
+Life Engine
+
+Purpose Intelligence
+
+Wellbeing
+
+Lifestyle
+
+Habits
+
+Relationships
+
+Financial Wellbeing
+
+Resilience
+
+Analytics
+
+Reports
+
+Levels
+
+1 Operational
+
+2 Guided
+
+3 Personalized
+
+4 Predictive
+
+5 Life Intelligence Excellence
+
+==============================================================================
+
+PART 31
+
+LIFE SCIENTIFIC VALIDATION
+
+Document
+
+Positive Psychology
+
+Behaviour Science
+
+Wellbeing Theory
+
+Lifestyle Science
+
+Habit Formation Theory
+
+Motivation Theory
+
+Evidence Quality
+
+Bias Review
+
+Ethics
+
+Population Applicability
+
+==============================================================================
+
+PART 32
+
+LIFE EVOLUTION STRATEGY
+
+Future evolution supports
+
+New Wellbeing Models
+
+New Lifestyle Models
+
+New Habit Models
+
+New Purpose Models
+
+New AI Coaches
+
+New Enterprise Wellbeing Models
+
+without breaking
+
+Behaviour Intelligence
+
+Decision Intelligence
+
+Journey Intelligence
+
+Learning Intelligence
+
+Career Intelligence
+
+Reports
+
+AI
+
+==============================================================================
+
+PART 33
+
+DELIVERABLES
+
+Generate
+
+01 Life Intelligence Constitution
+
+02 Life Architecture Report
+
+03 Purpose Intelligence Constitution
+
+04 Wellbeing Intelligence Constitution
+
+05 Lifestyle Intelligence Constitution
+
+06 Habit Intelligence Constitution
+
+07 Relationship Intelligence Constitution
+
+08 Financial Wellbeing Constitution
+
+09 Resilience Intelligence Constitution
+
+10 Health Intelligence Constitution
+
+11 Life Evidence Constitution
+
+12 Life Confidence Constitution
+
+13 Life Explainability Constitution
+
+14 Life Recommendation Constitution
+
+15 Life Progression Constitution
+
+16 Life AI Constitution
+
+17 Life Analytics Constitution
+
+18 Life Report Constitution
+
+19 Enterprise Life Constitution
+
+20 SuperAdmin Life Constitution
+
+21 Life Governance Constitution
+
+22 Life Quality Gates
+
+23 Life Review Board
+
+24 Life Definition of Done
+
+25 Life Scientific Validation
+
+26 Life Evolution Strategy
+
+27 Life Maturity Assessment
+
+==============================================================================
+
+STOP
+
+Do not modify Life Intelligence.
+
+Do not create another Life Engine.
+
+Do not activate dormant Life capabilities.
+
+Do not modify business logic.
+
+Do not bypass Behaviour Intelligence.
+
+Do not bypass Decision Intelligence.
+
+Do not bypass Journey Intelligence.
+
+Do not bypass Learning Intelligence.
+
+Do not bypass Career Intelligence.
+
+Freeze this Life Intelligence Constitution after approval.
+
+Every future Life Intelligence enhancement,
+Wellbeing enhancement,
+Lifestyle enhancement,
+Habit enhancement,
+Purpose enhancement,
+Relationship enhancement,
+Resilience enhancement,
+Enterprise Wellbeing enhancement,
+and Life Analytics enhancement
+must comply with this constitution.

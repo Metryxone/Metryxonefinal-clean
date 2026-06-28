@@ -1224,3 +1224,9 @@ id = "YYngb7ax0_oZA6MHW-3WQ"
 uri = "file://backend/audit/mx-700/phase-1.14-career-intelligence-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.14: Career Intelligence Constitution"
+
+[[outputs]]
+id = "Fi0MicwHbWvCAM9CY96zy"
+uri = "file://backend/audit/mx-700/phase-1.15-life-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.15: Life Intelligence Constitution"

@@ -33,10 +33,16 @@ const __dirname_ = path.dirname(fileURLToPath(import.meta.url)); // backend/serv
 const BACKEND_ROOT = path.resolve(__dirname_, '..');             // backend
 const REPO_ROOT = path.resolve(BACKEND_ROOT, '..');              // workspace
 
-/** Canonical lifecycle states (Part 5). Ordered roughly birth -> end-of-life. */
+/** Canonical lifecycle states (Part 4/5). Ordered roughly birth -> end-of-life.
+ *  Covers the full Phase 1.37 PART 4 vocabulary. Per "Map existing values, do not
+ *  replace existing repository semantics", spec "Live" maps to the existing `active`
+ *  (not renamed); `validated`/`released` are retained existing stages; the four spec
+ *  states absent from the first cut — `partial`, `experimental`, `blocked`, `removed`
+ *  — are added so every PART 4 state is representable as a transition target. */
 export const LIFECYCLE_STATES = [
-  'proposed', 'approved', 'implemented', 'validated', 'released',
-  'active', 'dormant', 'deprecated', 'retired', 'archived',
+  'proposed', 'approved', 'implemented', 'partial', 'validated', 'released',
+  'active', 'dormant', 'experimental', 'deprecated', 'retired', 'archived',
+  'blocked', 'removed',
 ] as const;
 export type LifecycleState = (typeof LIFECYCLE_STATES)[number];
 export const isLifecycleState = (s: string): s is LifecycleState =>
@@ -389,7 +395,7 @@ export async function transitionState(
      VALUES ($1,$2,$3,$4,$5,$6)`,
     [uid, from, to, opts.reason ?? null, opts.evidence ?? null, opts.actor ?? null],
   );
-  const retirement = to === 'retired' || to === 'archived' ? 'retired' : (to === 'dormant' ? 'candidate' : 'none');
+  const retirement = (to === 'retired' || to === 'archived' || to === 'removed') ? 'retired' : (to === 'dormant' ? 'candidate' : 'none');
   const deprecation = to === 'deprecated' ? 'deprecated' : 'none';
   await pool.query(
     `UPDATE platform_lifecycle_registry

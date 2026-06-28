@@ -33,3 +33,25 @@ Generated 2026-06-28 · Initiative MX-700 · Phase 1.37. Implements the formal *
 
 ## Deliverable
 This `.md`. The capability catalog / registry itself is the live `platform_*` substrate, populated on demand by `POST /discover` when the flag is ON.
+
+---
+
+## Re-verification & spec-conformance pass (2026-06-28)
+Re-measured the merged implementation against the Phase 1.37 Engineering Execution Spec (PART 1–8). Method: read each artefact + exact-COUNT/`information_schema` probe of the live shared DB. Honesty contract unchanged (built ≠ activated; Null ≠ Zero; table-existence ≠ population).
+
+**Already-existing & spec-conformant (no change):**
+- **PART 1 Lifecycle Registry** → `platform_lifecycle_registry` (lifecycle uid/type/state/version/owner/dependencies/activation/compatibility/deprecation/retirement/migration & doc refs). ✓
+- **PART 2 Capability Catalog** → `platform_capability_catalog` (canonical key/name/domain/source/repo-ref/flags/activation). ✓
+- **PART 3 Lifecycle Metadata** → folded into registry + `platform_capability_ownership` (owners honest-NULL). ✓
+- **PART 5 Repository Discovery** → `runDiscovery` reuses `FEATURE_FLAGS` + fs scan (routes/services/migrations/docs); idempotent upsert; measured `gated_by` edges. ✓
+- **PART 6 Repository Integration** → composes the canonical registries, no parallel storage. ✓
+- **PART 7 Compatibility** → flag-OFF byte-identical incl. schema; ensure-schema only on write paths. ✓
+- **PART 8 Validation/Health** → `getValidation`/`getRepositoryHealth` surface honest gaps (missing owners/docs/deps), 0 fabricated. ✓
+- **Managed ⟂ Derived state trap** → re-discovery upsert refreshes `activation_state` only; `lifecycle_state` preserved (verified in `upsertRegistry` SET clause). ✓
+
+**Gap found & closed (additive, minimal):**
+- **PART 4 lifecycle-state vocabulary was incomplete.** The first cut's `LIFECYCLE_STATES` enum (10 values) was missing four canonical spec states: **`partial`, `experimental`, `blocked`, `removed`**. Closed by extending the enum to the full PART 4 vocabulary (14 values). Per *"map existing values, do not replace existing repository semantics"*, spec **"Live" remains mapped to the existing `active`** (not renamed) and the retained existing stages `validated`/`released` are kept. `removed` joins `retired`/`archived` as a terminal state that sets `retirement_status='retired'`. No table DDL change (column is free-text `TEXT`, no CHECK constraint); no business logic altered; transitions to the new states are now representable.
+
+**Live DB state (flag OFF):** none of the five Phase 1.37 tables exist — `platform_capability_catalog`, `platform_capability_ownership`, `platform_lifecycle_registry`, `platform_lifecycle_state_history`, `platform_lifecycle_relationships` all absent. (The unrelated pre-existing `platform_approval_requests` / `platform_audit_log` / `platform_settings` / `platform_transactions` tables belong to other subsystems and are NOT part of this foundation.) Byte-identical-OFF confirmed.
+
+**Conclusion:** Phase 1.37 is satisfied by the existing merged implementation; the only genuine divergence from the spec (incomplete PART 4 state set) is now closed. No dashboards/analytics/debt-engines/SuperAdmin pages added (STOP clause respected — the pre-existing `PlatformLifecyclePanel.tsx` predates this conformance pass and is left untouched).

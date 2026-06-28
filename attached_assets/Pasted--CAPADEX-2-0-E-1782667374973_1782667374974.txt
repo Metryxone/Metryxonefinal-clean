@@ -1,0 +1,510 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.37
+#
+# PLATFORM LIFECYCLE INTELLIGENCE FOUNDATION
+#
+# (LIFECYCLE REGISTRY + CAPABILITY CATALOG +
+# LIFECYCLE METADATA + REPOSITORY LIFECYCLE
+# FOUNDATION)
+#
+# EXECUTION MODE
+#
+# IMPLEMENTATION
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT CREATE LIFECYCLE V2
+# DO NOT CREATE PARALLEL REGISTRIES
+# DO NOT CREATE DUPLICATE ARCHITECTURE
+# DO NOT MODIFY BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT CAPABILITIES
+#
+# THIS PHASE IMPLEMENTS THE FOUNDATIONAL
+# PLATFORM LIFECYCLE INFRASTRUCTURE
+#
+# ==============================================================================
+
+MISSION
+
+Phase 1.36 established the Platform Lifecycle Intelligence Constitution.
+
+Implement ONLY the missing repository capabilities identified during
+Phase 1.36.
+
+This phase implements the foundational lifecycle infrastructure.
+
+Repository remains the Single Source of Truth.
+
+Reuse existing implementation.
+
+Never create parallel lifecycle systems.
+
+Never reinterpret the approved constitution.
+
+==============================================================================
+
+EXECUTION CONTRACT
+
+The Engineering Execution Specification IS the implementation contract.
+
+Do NOT generate plans.
+
+Do NOT generate recommendations.
+
+Do NOT derive a new backlog.
+
+Do NOT redesign architecture.
+
+Implement the current phase only.
+
+Search.
+
+Measure.
+
+Implement.
+
+Validate.
+
+Report.
+
+Stop.
+
+==============================================================================
+
+HONESTY CONTRACT
+
+Measured = Live Repository + Runtime + Database + Git + Documentation
+
+Repository Evidence overrides assumptions.
+
+Built ≠ Activated
+
+Registered ≠ Used
+
+Lifecycle Exists ≠ Runtime Active
+
+Coverage ≠ Confidence
+
+Evidence ≠ Confidence
+
+Table Exists ≠ Populated
+
+Feature Exists ≠ Capability Complete
+
+Capability Exists ≠ Operational
+
+Never fabricate.
+
+Never estimate.
+
+Never infer repository implementation.
+
+==============================================================================
+
+PRE-IMPLEMENTATION AUDIT
+
+Search repository.
+
+Locate
+
+Feature Registry
+
+Capability Registry
+
+Lifecycle Metadata
+
+Feature Flags
+
+Module Metadata
+
+API Metadata
+
+Repository Metadata
+
+Migration Metadata
+
+Documentation Metadata
+
+Version Metadata
+
+Ownership Metadata
+
+Reuse existing implementation.
+
+Never duplicate.
+
+==============================================================================
+
+PART 1
+
+IMPLEMENT PLATFORM LIFECYCLE REGISTRY
+
+Implement ONE canonical lifecycle registry.
+
+Support
+
+Lifecycle ID
+
+Lifecycle Type
+
+Lifecycle State
+
+Owner
+
+Created
+
+Modified
+
+Version
+
+Dependencies
+
+Compatibility
+
+Activation Status
+
+Documentation Reference
+
+Evidence Reference
+
+Technical Debt Reference
+
+Migration Reference
+
+Deprecation Status
+
+Retirement Status
+
+Never create duplicate lifecycle registries.
+
+==============================================================================
+
+PART 2
+
+IMPLEMENT CAPABILITY CATALOG
+
+Implement ONE canonical capability catalog.
+
+Every capability contains
+
+Capability ID
+
+Capability Name
+
+Description
+
+Owner
+
+Lifecycle State
+
+Dependencies
+
+Consumers
+
+Version
+
+Feature Flags
+
+Compatibility
+
+Activation Status
+
+Repository References
+
+Documentation References
+
+Reuse Score
+
+Retirement Readiness
+
+Technical Debt References
+
+Never duplicate capability catalogs.
+
+==============================================================================
+
+PART 3
+
+IMPLEMENT LIFECYCLE METADATA
+
+Extend existing repository entities.
+
+Support lifecycle metadata for
+
+Features
+
+Capabilities
+
+Modules
+
+Services
+
+APIs
+
+Models
+
+Reports
+
+Documentation
+
+Feature Flags
+
+Migrations
+
+Metadata only.
+
+Do not modify business logic.
+
+==============================================================================
+
+PART 4
+
+IMPLEMENT STANDARD LIFECYCLE STATES
+
+Support
+
+Proposed
+
+Approved
+
+Implemented
+
+Partial
+
+Live
+
+Dormant
+
+Experimental
+
+Deprecated
+
+Retired
+
+Archived
+
+Blocked
+
+Removed
+
+Map existing values.
+
+Do not replace existing repository semantics.
+
+==============================================================================
+
+PART 5
+
+IMPLEMENT REPOSITORY LIFECYCLE FOUNDATION
+
+Extend repository metadata.
+
+Track
+
+Creation
+
+Modification
+
+Ownership
+
+Dependencies
+
+Compatibility
+
+Lifecycle
+
+Evidence
+
+Documentation
+
+Migration
+
+Technical Debt
+
+Repository References
+
+==============================================================================
+
+PART 6
+
+IMPLEMENT REPOSITORY INTEGRATION
+
+Integrate lifecycle metadata into
+
+Repository
+
+Database
+
+Migrations
+
+Feature Flags
+
+Documentation
+
+Existing Services
+
+Existing APIs
+
+Existing Models
+
+Existing SuperAdmin metadata
+
+Never create parallel storage.
+
+==============================================================================
+
+PART 7
+
+COMPATIBILITY
+
+Preserve
+
+Backward Compatibility
+
+Forward Compatibility
+
+Repository Compatibility
+
+Migration Compatibility
+
+API Compatibility
+
+Module Compatibility
+
+Database Compatibility
+
+Feature Flag Compatibility
+
+==============================================================================
+
+PART 8
+
+VALIDATION
+
+Verify
+
+No duplicate lifecycle registries
+
+No duplicate capability catalogs
+
+No duplicate metadata
+
+No duplicate services
+
+No duplicate APIs
+
+No duplicate repository components
+
+No business logic changes
+
+No dormant capability activation
+
+No regressions
+
+==============================================================================
+
+IMPLEMENTATION OUTPUT
+
+Produce
+
+Repository Changes
+
+Files Modified
+
+Database Changes
+
+Services Extended
+
+APIs Extended
+
+Metadata Added
+
+Lifecycle Registry
+
+Capability Catalog
+
+Compatibility Verification
+
+Documentation Updates
+
+Repository Verification Report
+
+Honest Implementation Report
+
+Distinguish
+
+Already Existing
+
+Extended
+
+Implemented
+
+Partially Implemented
+
+Deferred
+
+Dormant
+
+Missing
+
+==============================================================================
+
+DEFINITION OF DONE
+
+Phase 1.37 completes only when
+
+Repository searched.
+
+Repository measured.
+
+Existing implementation reused.
+
+Platform Lifecycle Registry implemented.
+
+Capability Catalog implemented.
+
+Lifecycle Metadata implemented.
+
+Repository metadata extended.
+
+Compatibility preserved.
+
+No duplicate implementation exists.
+
+No business logic modified.
+
+No dormant capability activated.
+
+Documentation updated.
+
+Measured implementation report generated.
+
+==============================================================================
+
+STOP
+
+Do not implement dashboards.
+
+Do not implement lifecycle analytics.
+
+Do not implement technical debt engines.
+
+Do not implement evidence engines.
+
+Do not implement SuperAdmin lifecycle pages.
+
+Do not implement lifecycle automation.
+
+Do not implement future phases.
+
+Complete Phase 1.37 only.
+
+Generate the measured implementation report.
+
+Freeze Phase 1.37.
+
+Continue automatically to Phase 1.38 only after Phase 1.37 is fully implemented and verified.

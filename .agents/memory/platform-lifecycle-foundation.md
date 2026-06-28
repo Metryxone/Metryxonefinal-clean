@@ -21,6 +21,15 @@ A discovery engine that re-scans on every `POST /discover` has TWO state axes th
 reverted a human transition (e.g. `released`) back to the derived `dormant` — fabricating a state regression.
 A `CASE WHEN ... IN ('deprecated','retired','archived')` half-guard is NOT enough; protect ALL managed states.
 
+## Canonical lifecycle-state enum is the only gate
+`platform_lifecycle_registry.lifecycle_state` is free-text `TEXT` with NO CHECK constraint, so the
+ONLY validation gate on a transition is the `LIFECYCLE_STATES` enum (via `isLifecycleState`). It must
+cover the full constitution PART 4 vocabulary — `proposed/approved/implemented/partial/validated/
+released/active/dormant/experimental/deprecated/retired/archived/blocked/removed`. Spec "Live" maps to
+the existing `active` (don't rename — "map existing values, don't replace semantics"); `removed` is
+terminal alongside `retired`/`archived` (sets `retirement_status='retired'`). Missing a state from the
+enum silently rejects an otherwise-valid transition with `invalid_state`.
+
 ## Honesty discipline applied here
 - Ownership is honest-NULL (no business/technical owner fabricated); surfaced as `missing_owners`.
 - Activation `unknown` for modules/services/migrations/docs (presence ≠ runtime-active) — do not coerce to active.

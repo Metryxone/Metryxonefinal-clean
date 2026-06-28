@@ -1,0 +1,1132 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.7
+#
+# DATABASE ARCHITECTURE CONSTITUTION
+#
+# EXECUTION MODE
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT DROP TABLES
+# DO NOT DELETE DATA
+# DO NOT BREAK RELATIONSHIPS
+# DO NOT CHANGE BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT FEATURES
+#
+# THIS PHASE ESTABLISHES THE PERMANENT DATABASE CONSTITUTION
+# ==============================================================================
+
+MISSION
+
+Create the permanent Database Architecture Constitution for CAPADEX.
+
+This constitution governs every database enhancement, schema evolution,
+migration, relationship, ontology, master data, transactional data,
+analytics data, longitudinal data, AI data and enterprise data.
+
+Repository remains the single source of truth.
+
+This phase defines governance only.
+
+No implementation.
+
+==============================================================================
+
+PRIMARY OBJECTIVES
+
+Protect all existing data.
+
+Preserve existing schema.
+
+Maximize reuse.
+
+Improve scalability.
+
+Improve integrity.
+
+Improve consistency.
+
+Improve observability.
+
+Improve performance.
+
+Improve governance.
+
+Prepare database architecture for enterprise growth.
+
+==============================================================================
+
+MANDATORY RULES
+
+Before modifying any database object
+
+Search repository.
+
+Locate schema.
+
+Locate migrations.
+
+Locate ensure-schema functions.
+
+Locate consumers.
+
+Locate APIs.
+
+Locate services.
+
+Locate reports.
+
+Locate analytics.
+
+Understand relationships.
+
+Never assume a table is unused.
+
+Never duplicate master data.
+
+Never duplicate transactional tables.
+
+Never create parallel schema.
+
+Never rename existing tables without compatibility.
+
+==============================================================================
+
+PART 1
+
+CURRENT DATABASE ARCHITECTURE AUDIT
+
+Audit
+
+Database Platforms
+
+Schemas
+
+Tables
+
+Views
+
+Indexes
+
+Constraints
+
+Sequences
+
+Functions
+
+Triggers
+
+Migrations
+
+Ensure Schema Functions
+
+Relationships
+
+Primary Keys
+
+Foreign Keys
+
+Composite Keys
+
+Audit Tables
+
+History Tables
+
+Analytics Tables
+
+Longitudinal Tables
+
+AI Tables
+
+Enterprise Tables
+
+Configuration Tables
+
+Feature Flag Tables
+
+Temporary Tables
+
+Materialized Views
+
+Technical Debt
+
+Unused Tables
+
+Duplicate Tables
+
+Large Tables
+
+Orphan Tables
+
+Circular Relationships
+
+==============================================================================
+
+PART 2
+
+DATABASE PHILOSOPHY
+
+Database exists to
+
+Persist
+
+Protect
+
+Relate
+
+Version
+
+Audit
+
+Explain
+
+Support Intelligence
+
+Support Enterprise
+
+Support AI
+
+Support Behaviour
+
+Database is the permanent memory of CAPADEX.
+
+Every enhancement preserves data integrity.
+
+==============================================================================
+
+PART 3
+
+DATA DOMAIN ARCHITECTURE
+
+Document every domain
+
+Assessment
+
+Behaviour
+
+Concern
+
+Question
+
+Competency
+
+Ontology
+
+Journey
+
+Learning
+
+Career
+
+Life
+
+Decision
+
+AI
+
+Reports
+
+Subscriptions
+
+Payments
+
+Enterprise
+
+Administration
+
+Analytics
+
+Audit
+
+Configuration
+
+Security
+
+Every table belongs to exactly one primary domain.
+
+==============================================================================
+
+PART 4
+
+MASTER DATA CONSTITUTION
+
+Protect
+
+Concern Master
+
+Question Master
+
+Competency Master
+
+Ontology
+
+Persona Master
+
+Industry Master
+
+Role Master
+
+Skill Master
+
+Assessment Master
+
+Subscription Master
+
+Configuration Master
+
+Never duplicate master data.
+
+Master data evolves additively.
+
+==============================================================================
+
+PART 5
+
+TRANSACTION DATA CONSTITUTION
+
+Protect
+
+Assessments
+
+Responses
+
+Signals
+
+Behaviour Results
+
+Competency Results
+
+Recommendations
+
+Reports
+
+Subscriptions
+
+Payments
+
+AI Sessions
+
+Journey Progress
+
+Learning Progress
+
+Career Progress
+
+Enterprise Activity
+
+Transactions are immutable history.
+
+Never overwrite historical truth.
+
+==============================================================================
+
+PART 6
+
+LONGITUDINAL DATA CONSTITUTION
+
+Protect
+
+Behaviour Growth
+
+Learning Growth
+
+Career Growth
+
+Life Growth
+
+Journey Progress
+
+Historical Assessments
+
+Historical Recommendations
+
+Historical Reports
+
+Historical Decisions
+
+Historical AI Sessions
+
+Every longitudinal record preserves time.
+
+Never replace historical measurements.
+
+==============================================================================
+
+PART 7
+
+BEHAVIOUR DATA CONSTITUTION
+
+Protect
+
+Signals
+
+Composite Signals
+
+Behaviour Graph
+
+Evidence
+
+Confidence
+
+Strength Factors
+
+Concern Factors
+
+Competency Mapping
+
+Behaviour Recommendations
+
+Never bypass behaviour persistence.
+
+Never fabricate behavioural evidence.
+
+==============================================================================
+
+PART 8
+
+CONCERN & ONTOLOGY CONSTITUTION
+
+Protect
+
+Concern Master
+
+Concern Hierarchy
+
+Bridge Tags
+
+Relationships
+
+Ontology
+
+Competencies
+
+Signals
+
+Mappings
+
+Dependencies
+
+Never regenerate ontology.
+
+Extend existing ontology.
+
+Never break bridge relationships.
+
+==============================================================================
+
+PART 9
+
+ASSESSMENT DATA CONSTITUTION
+
+Protect
+
+Assessment Sessions
+
+Adaptive Questions
+
+Answers
+
+Scoring
+
+Evidence
+
+Confidence
+
+Completion
+
+Journey Trigger
+
+Versioning
+
+Assessment history is immutable.
+
+==============================================================================
+
+PART 10
+
+DECISION DATA CONSTITUTION
+
+Protect
+
+Decision Inputs
+
+Evidence
+
+Confidence
+
+Alternatives
+
+Outcome Projection
+
+Decision History
+
+Decision Audit
+
+Decision Versioning
+
+Document dormant structures.
+
+Do not activate.
+
+==============================================================================
+
+PART 11
+
+JOURNEY DATA CONSTITUTION
+
+Protect
+
+Journey
+
+Milestones
+
+Goals
+
+Learning
+
+Career
+
+Life
+
+Decision
+
+Progress
+
+Completion
+
+Interventions
+
+Every journey must remain historically traceable.
+
+==============================================================================
+
+PART 12
+
+AI DATA CONSTITUTION
+
+Protect
+
+Conversation History
+
+Memory
+
+Prompt History
+
+Evidence
+
+Confidence
+
+Recommendations
+
+Feedback
+
+Evaluation
+
+Safety Events
+
+Never fabricate AI history.
+
+==============================================================================
+
+PART 13
+
+REPORT DATA CONSTITUTION
+
+Protect
+
+Generated Reports
+
+Snapshots
+
+Benchmarks
+
+Comparisons
+
+Visualizations
+
+Recommendations
+
+Evidence
+
+Confidence
+
+Interactive Reports
+
+History
+
+==============================================================================
+
+PART 14
+
+ENTERPRISE DATA CONSTITUTION
+
+Protect
+
+Organizations
+
+Departments
+
+Teams
+
+Institutions
+
+Universities
+
+Managers
+
+Employees
+
+Students
+
+Faculty
+
+Parents
+
+Permissions
+
+Tenant Isolation
+
+==============================================================================
+
+PART 15
+
+AUDIT DATA CONSTITUTION
+
+Protect
+
+User Activity
+
+System Activity
+
+Security Events
+
+AI Events
+
+Assessment Events
+
+Configuration Changes
+
+Feature Flag Changes
+
+Approvals
+
+Audit data is append-only.
+
+==============================================================================
+
+PART 16
+
+ANALYTICS DATA CONSTITUTION
+
+Protect
+
+Aggregates
+
+KPIs
+
+Benchmarks
+
+Usage
+
+Engagement
+
+Behaviour Trends
+
+Learning Trends
+
+Career Trends
+
+Enterprise Trends
+
+Never mix measured and derived metrics.
+
+==============================================================================
+
+PART 17
+
+RELATIONSHIP CONSTITUTION
+
+Every relationship must document
+
+Parent
+
+Child
+
+Cardinality
+
+Ownership
+
+Cascade Rules
+
+Delete Rules
+
+Update Rules
+
+Business Meaning
+
+No orphan relationships.
+
+==============================================================================
+
+PART 18
+
+INDEX STRATEGY
+
+Audit
+
+Indexes
+
+Unique Constraints
+
+Composite Indexes
+
+Search Indexes
+
+Performance
+
+Fragmentation
+
+Duplicate Indexes
+
+Missing Indexes
+
+Recommend improvements only.
+
+==============================================================================
+
+PART 19
+
+MIGRATION CONSTITUTION
+
+Every migration must
+
+Be reversible.
+
+Be idempotent.
+
+Preserve data.
+
+Support rollback.
+
+Support feature flags.
+
+Support zero-downtime deployment.
+
+Never modify production data directly.
+
+==============================================================================
+
+PART 20
+
+DATA QUALITY CONSTITUTION
+
+Validate
+
+Integrity
+
+Completeness
+
+Consistency
+
+Accuracy
+
+Timeliness
+
+Uniqueness
+
+Referential Integrity
+
+Orphan Detection
+
+Duplicate Detection
+
+==============================================================================
+
+PART 21
+
+DATABASE SECURITY
+
+Protect
+
+PII
+
+Encryption
+
+Secrets
+
+Access
+
+Roles
+
+Permissions
+
+Backups
+
+Recovery
+
+Audit
+
+Tenant Isolation
+
+==============================================================================
+
+PART 22
+
+PERFORMANCE CONSTITUTION
+
+Audit
+
+Large Tables
+
+Query Plans
+
+Indexes
+
+Joins
+
+Caching
+
+Materialized Views
+
+Connection Pool
+
+Locking
+
+Concurrency
+
+==============================================================================
+
+PART 23
+
+MULTI-TENANCY CONSTITUTION
+
+Every tenant must have
+
+Isolation
+
+Security
+
+Ownership
+
+Permissions
+
+Audit
+
+Configuration
+
+Analytics
+
+Subscriptions
+
+No tenant data leakage.
+
+==============================================================================
+
+PART 24
+
+DATABASE OBSERVABILITY
+
+Document
+
+Schema Health
+
+Migration Health
+
+Replication
+
+Backups
+
+Integrity
+
+Performance
+
+Slow Queries
+
+Storage
+
+Growth
+
+==============================================================================
+
+PART 25
+
+DATABASE TESTING
+
+Standardize
+
+Migration Tests
+
+Integrity Tests
+
+Relationship Tests
+
+Performance Tests
+
+Security Tests
+
+Backup Tests
+
+Recovery Tests
+
+Regression Tests
+
+==============================================================================
+
+PART 26
+
+DATABASE DOCUMENTATION
+
+Maintain
+
+ER Diagrams
+
+Schema Dictionary
+
+Relationship Dictionary
+
+Migration Catalog
+
+Master Data Catalog
+
+Ontology Catalog
+
+Audit Catalog
+
+Configuration Catalog
+
+==============================================================================
+
+PART 27
+
+DATABASE QUALITY GATES
+
+Every enhancement must verify
+
+Existing tables reused
+
+Existing schema reused
+
+No duplicate tables
+
+No duplicate master data
+
+Relationships preserved
+
+Indexes reviewed
+
+Performance maintained
+
+Integrity maintained
+
+Documentation updated
+
+==============================================================================
+
+PART 28
+
+DATABASE REVIEW BOARD
+
+Mandatory Approval
+
+Founder
+
+Database Architect
+
+Solution Architect
+
+Backend Architect
+
+AI Architect
+
+Enterprise Architect
+
+Security
+
+DevOps
+
+QA
+
+==============================================================================
+
+PART 29
+
+DATABASE DEFINITION OF DONE
+
+Database enhancement completes only if
+
+Existing schema enhanced
+
+No tables duplicated
+
+No master data duplicated
+
+No history lost
+
+No relationships broken
+
+Migration reversible
+
+Rollback verified
+
+Performance maintained
+
+Security verified
+
+Documentation updated
+
+Tests passing
+
+==============================================================================
+
+PART 30
+
+DATABASE MATURITY MODEL
+
+Assess every database domain
+
+Level 1
+
+Operational
+
+Level 2
+
+Reliable
+
+Level 3
+
+Integrated
+
+Level 4
+
+Observable
+
+Level 5
+
+Intelligent
+
+Measure maturity for
+
+Assessment
+
+Behaviour
+
+Ontology
+
+Concern
+
+Journey
+
+Career
+
+Learning
+
+Decision
+
+AI
+
+Reports
+
+Enterprise
+
+Analytics
+
+Security
+
+Configuration
+
+Define current maturity.
+
+Define target maturity.
+
+Define enhancement roadmap.
+
+==============================================================================
+
+PART 31
+
+DELIVERABLES
+
+Generate
+
+01 Database Architecture Constitution
+
+02 Database Architecture Report
+
+03 Data Domain Architecture
+
+04 Master Data Constitution
+
+05 Transaction Data Constitution
+
+06 Longitudinal Data Constitution
+
+07 Behaviour Data Constitution
+
+08 Concern & Ontology Constitution
+
+09 Assessment Data Constitution
+
+10 Decision Data Constitution
+
+11 Journey Data Constitution
+
+12 AI Data Constitution
+
+13 Report Data Constitution
+
+14 Enterprise Data Constitution
+
+15 Audit Data Constitution
+
+16 Analytics Data Constitution
+
+17 Relationship Constitution
+
+18 Index Strategy
+
+19 Migration Constitution
+
+20 Data Quality Constitution
+
+21 Database Security Constitution
+
+22 Multi-Tenancy Constitution
+
+23 Database Observability Constitution
+
+24 Database Testing Constitution
+
+25 Database Documentation Standards
+
+26 Database Quality Gates
+
+27 Database Review Board
+
+28 Database Definition of Done
+
+29 Database Maturity Assessment
+
+==============================================================================
+
+STOP
+
+Do not modify database schema.
+
+Do not create migrations.
+
+Do not delete data.
+
+Do not rebuild database architecture.
+
+Do not activate dormant database capabilities.
+
+Freeze this Database Architecture Constitution after approval.
+
+Every future database enhancement, migration, ontology evolution,
+Concern Master enhancement, Behaviour persistence enhancement,
+Journey persistence enhancement, AI persistence enhancement and
+Enterprise data enhancement must comply with this constitution.

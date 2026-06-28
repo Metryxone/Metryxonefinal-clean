@@ -1176,3 +1176,9 @@ id = "Kowyn6n1qF-jGizUULXa-"
 uri = "file://backend/audit/mx-700/phase-1.6-backend-architecture-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.6: Backend Architecture Constitution"
+
+[[outputs]]
+id = "Zg7UiSiTA8_ETkdK87HVJ"
+uri = "file://backend/audit/mx-700/phase-1.7-database-architecture-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.7: Database Architecture Constitution"

@@ -1350,3 +1350,9 @@ id = "wTjRTuBj8ndJ_My_1fIxK"
 uri = "file://backend/audit/mx-700/phase-1.35-platform-operations-intelligence-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.35: Platform Operations Intelligence Constitution (Production Operations + Incident Management + Service Management + SRE + SLA/SLO + Capacity + Availability + Operational Governance)"
+
+[[outputs]]
+id = "IPaGNNfaDpp87eZzZV6-m"
+uri = "file://backend/audit/mx-700/phase-1.36-platform-lifecycle-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.36: Platform Lifecycle Intelligence Constitution (Feature + Capability + Module + API + Model + Version Lifecycle + Deprecation + Sunset + Technical Debt + Evolution Governance)"

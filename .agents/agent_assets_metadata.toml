@@ -1278,3 +1278,9 @@ id = "Q8EUqp4Tl-GhPv7JKl5kF"
 uri = "file://backend/audit/mx-700/phase-1.23-competency-intelligence-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.23: Competency Intelligence Constitution (onto_* Genome + Competency Graph + Competency Intelligence Engine)"
+
+[[outputs]]
+id = "C-XxKZJGMwm69DYp4NnF6"
+uri = "file://backend/audit/mx-700/phase-1.24-behaviour-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.24: Behaviour Intelligence Constitution (Behaviour Genome + Behaviour Graph + Behaviour Intelligence Engine)"

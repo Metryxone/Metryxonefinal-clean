@@ -1,0 +1,1121 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.25
+#
+# CONCERN INTELLIGENCE CONSTITUTION
+# (CONCERN MASTER + BRIDGE TAGS + CLARITY ENGINE + CONCERN GRAPH)
+#
+# EXECUTION MODE
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT CREATE A SECOND CONCERN ENGINE
+# DO NOT REPLACE CONCERN MASTER
+# DO NOT CREATE CONCERN V2
+# DO NOT MODIFY BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT CONCERN CAPABILITIES
+#
+# THIS PHASE ESTABLISHES THE PERMANENT
+# CONCERN INTELLIGENCE CONSTITUTION
+# ==============================================================================
+
+MISSION
+
+Create the permanent Concern Intelligence Constitution for CAPADEX.
+
+Concern Intelligence is the semantic interpretation layer that transforms
+user concerns,
+clarity statements,
+bridge tags,
+behavioural evidence,
+context,
+and longitudinal understanding
+into explainable human concerns.
+
+Assessment Intelligence measures.
+
+Behaviour Intelligence interprets signals.
+
+Concern Intelligence understands meaning.
+
+Competency Intelligence maps capability.
+
+Decision Intelligence prioritizes.
+
+Learning Intelligence develops.
+
+Career Intelligence applies.
+
+Intervention Intelligence supports.
+
+Repository remains the Single Source of Truth.
+
+Governance only.
+
+No implementation.
+
+==============================================================================
+HONESTY CONTRACT
+==============================================================================
+
+Measured = Live Repository + Live Database using exact SELECT COUNT(*)
+
+Derived = Concern Science Interpretation
+
+Concern ≠ Behaviour
+
+Concern ≠ Diagnosis
+
+Concern ≠ Disorder
+
+Concern ≠ Risk
+
+Concern ≠ Identity
+
+Concern ≠ Personality
+
+Concern ≠ Emotion
+
+Concern Severity ≠ Behaviour Strength
+
+Bridge Tag ≠ Concern ID
+
+Concern Master ≠ Runtime Concern
+
+Clarity Question ≠ Concern
+
+Concern Resolution ≠ Treatment
+
+Evidence ≠ Confidence
+
+Confidence ≠ Accuracy
+
+Coverage ≠ Confidence
+
+AI ≠ Mental Health Professional
+
+Human remains responsible.
+
+Built ≠ Activated
+
+Flag Enabled ≠ Runtime Active
+
+Null ≠ Zero
+
+==============================================================================
+
+PRIMARY OBJECTIVES
+
+Protect Concern Master
+
+Protect Bridge Tags
+
+Protect Clarity Engine
+
+Protect Concern Intelligence
+
+Protect Concern Graph
+
+Protect Concern Relationships
+
+Protect Concern Evolution
+
+Protect Concern Analytics
+
+Protect Concern Explainability
+
+Protect Concern Intelligence IP
+
+==============================================================================
+
+MANDATORY RULES
+
+Before modifying Concern Intelligence
+
+Search repository
+
+Locate Concern Master
+
+Locate Bridge Tags
+
+Locate Clarity Engine
+
+Locate Concern Graph
+
+Locate Concern Relationships
+
+Locate Concern Mapping
+
+Locate Behaviour Engine
+
+Locate Assessment Engine
+
+Locate Decision Engine
+
+Locate Learning Engine
+
+Locate Career Engine
+
+Locate Reports
+
+Locate APIs
+
+Locate Database
+
+Never create another Concern Engine.
+
+Never duplicate Concern Intelligence.
+
+Never bypass Bridge Tags.
+
+Never bypass Behaviour Intelligence.
+
+Never bypass Assessment Intelligence.
+
+Enhance existing implementation only.
+
+==============================================================================
+
+PART 1
+
+CURRENT CONCERN INTELLIGENCE AUDIT
+
+Perform a complete repository and database audit using exact COUNT(*).
+
+Measure and classify
+
+Concern Master
+
+Concern Categories
+
+Concern Families
+
+Concern Domains
+
+Concern Relationships
+
+Bridge Tags
+
+Master Bridge Tags
+
+Clarity Questions
+
+Concern Mapping
+
+Concern Graph
+
+Concern Analytics
+
+Concern Reports
+
+Concern APIs
+
+Concern AI
+
+Concern Dashboards
+
+Concern Technical Debt
+
+Duplicate Concern Implementations
+
+Dormant Concern Runtime
+
+Activation Readiness
+
+Classify each component as
+
+LIVE
+
+PARTIAL
+
+SEEDED
+
+DORMANT
+
+BROKEN
+
+EMPTY
+
+TECH DEBT
+
+MISSING
+
+Never estimate.
+
+Never use n_live_tup.
+
+Explicitly identify
+
+• Repository implementation
+• Database population
+• Runtime activation
+• Missing ontology imports
+• Duplicate concern structures
+• Broken mappings
+
+==============================================================================
+
+PART 2
+
+CONCERN PHILOSOPHY
+
+Concern Intelligence exists to
+
+Understand
+
+Clarify
+
+Categorize
+
+Contextualize
+
+Relate
+
+Prioritize
+
+Explain
+
+Guide
+
+Concern Intelligence never
+
+Diagnoses
+
+Labels people
+
+Creates disorders
+
+Assigns identity
+
+Guarantees outcomes
+
+Concern Intelligence explains concerns.
+
+It never defines people.
+
+==============================================================================
+
+PART 3
+
+CONCERN DOMAIN ARCHITECTURE
+
+Concern Core
+
+Concern Master
+
+Bridge Tags
+
+Master Bridge Tags
+
+Concern Graph
+
+Concern Relationships
+
+Concern Ontology
+
+Clarity Engine
+
+Concern Analytics
+
+Concern Reports
+
+Concern AI
+
+Concern Governance
+
+==============================================================================
+
+PART 4
+
+CONCERN MASTER CONSTITUTION
+
+Concern Master remains
+
+the only canonical concern ontology.
+
+Never replace Concern Master.
+
+Never create Concern Master V2.
+
+Never fork concern ontology.
+
+Enhance only.
+
+Protect
+
+Concern Categories
+
+Concern Families
+
+Concern Domains
+
+Concern Hierarchy
+
+Concern Relationships
+
+Concern Evolution
+
+==============================================================================
+
+PART 5
+
+BRIDGE TAG CONSTITUTION
+
+Bridge Tags remain
+
+the only canonical integration mechanism.
+
+Never replace Bridge Tags.
+
+Never join directly using concern_id.
+
+Never duplicate bridge structures.
+
+Protect
+
+Master Bridge Tags
+
+Bridge Relationships
+
+Bridge Mapping
+
+Bridge Provenance
+
+Bridge Evolution
+
+==============================================================================
+
+PART 6
+
+CLARITY ENGINE CONSTITUTION
+
+Protect
+
+Clarity Questions
+
+Clarification Flow
+
+Clarification Logic
+
+Clarity Categories
+
+Clarity Relationships
+
+Clarity Provenance
+
+Binding Rules
+
+Questions clarify.
+
+Questions never diagnose.
+
+==============================================================================
+
+PART 7
+
+CONCERN GRAPH CONSTITUTION
+
+Protect
+
+Concern Nodes
+
+Concern Relationships
+
+Concern Dependencies
+
+Concern Evolution
+
+Concern Timeline
+
+Concern Provenance
+
+Graph remains canonical.
+
+==============================================================================
+
+PART 8
+
+CONCERN RELATIONSHIP CONSTITUTION
+
+Protect
+
+Concern Dependencies
+
+Concern Hierarchies
+
+Concern Families
+
+Cross-Domain Relationships
+
+Bridge Relationships
+
+Behaviour Relationships
+
+Competency Relationships
+
+==============================================================================
+
+PART 9
+
+CONCERN EVOLUTION CONSTITUTION
+
+Track
+
+Concern History
+
+Concern Changes
+
+Concern Progression
+
+Concern Resolution
+
+Concern Stability
+
+Concern Timeline
+
+History remains append-only.
+
+==============================================================================
+
+PART 10
+
+CONCERN EVIDENCE CONSTITUTION
+
+Evidence originates from
+
+Assessments
+
+Behaviour
+
+Signals
+
+Patterns
+
+Bridge Tags
+
+Clarity
+
+Learning
+
+Career
+
+Longitudinal History
+
+Evidence contains
+
+Source
+
+Coverage
+
+Confidence
+
+Quality
+
+==============================================================================
+
+PART 11
+
+CONCERN CONFIDENCE CONSTITUTION
+
+Separate
+
+Coverage
+
+Evidence
+
+Confidence
+
+Concern Stability
+
+Concern Severity
+
+Trust
+
+Never combine into one metric.
+
+==============================================================================
+
+PART 12
+
+CONCERN EXPLAINABILITY CONSTITUTION
+
+Every concern explanation includes
+
+Why
+
+Evidence
+
+Signals
+
+Bridge Tags
+
+Relationships
+
+Confidence
+
+Alternatives
+
+Limitations
+
+==============================================================================
+
+PART 13
+
+CONCERN AI CONSTITUTION
+
+AI
+
+Explains
+
+Clarifies
+
+Summarizes
+
+Supports
+
+Personalizes
+
+Never diagnoses.
+
+Never labels people.
+
+Never invents concerns.
+
+Never bypasses governance.
+
+==============================================================================
+
+PART 14
+
+CONCERN ANALYTICS CONSTITUTION
+
+Protect
+
+Concern KPIs
+
+Concern Trends
+
+Concern Distribution
+
+Concern Evolution
+
+Concern Resolution
+
+Population Analytics
+
+==============================================================================
+
+PART 15
+
+CONCERN REPORT CONSTITUTION
+
+Every report contains
+
+Concern Summary
+
+Concern Graph
+
+Concern Relationships
+
+Bridge Tags
+
+Evidence
+
+Confidence
+
+Recommendations
+
+Next Development
+
+==============================================================================
+
+PART 16
+
+LONGITUDINAL CONCERN CONSTITUTION
+
+Protect
+
+Concern History
+
+Concern Evolution
+
+Concern Stability
+
+Concern Timeline
+
+Concern Resolution
+
+Never overwrite concern history.
+
+==============================================================================
+
+PART 17
+
+BEHAVIOUR INTEGRATION CONSTITUTION
+
+Behaviour and Concern remain separate systems.
+
+Binding Rules
+
+Concern derives from
+
+Signals
+
+↓
+
+Patterns
+
+↓
+
+Bridge Tags
+
+↓
+
+Constructs
+
+↓
+
+Concern
+
+Never derive Behaviour from Concern.
+
+Never derive Strength from Concern Severity.
+
+Concern Intelligence consumes Behaviour Intelligence.
+
+==============================================================================
+
+PART 18
+
+ENTERPRISE CONCERN CONSTITUTION
+
+Support
+
+Organization Concerns
+
+Team Concerns
+
+Learning Concerns
+
+Career Concerns
+
+Population Analytics
+
+Benchmarking
+
+Human approval required.
+
+==============================================================================
+
+PART 19
+
+SUPERADMIN CONCERN CONSTITUTION
+
+Support
+
+Concern Master
+
+Bridge Tags
+
+Ontology Rules
+
+Concern Policies
+
+Analytics
+
+Reports
+
+Monitoring
+
+==============================================================================
+
+PART 20
+
+CONCERN SECURITY CONSTITUTION
+
+Protect
+
+Concern Data
+
+Bridge Tags
+
+Evidence
+
+Reports
+
+Permissions
+
+Consent
+
+PII
+
+Tenant Isolation
+
+==============================================================================
+
+PART 21
+
+CONCERN OBSERVABILITY
+
+Monitor
+
+Concern Engine
+
+Bridge Engine
+
+Clarity Engine
+
+Concern Graph
+
+Latency
+
+Failures
+
+Coverage
+
+Quality
+
+==============================================================================
+
+PART 22
+
+CONCERN TESTING CONSTITUTION
+
+Standardize
+
+Bridge Tag Tests
+
+Concern Tests
+
+Graph Tests
+
+Ontology Tests
+
+Regression Tests
+
+Performance Tests
+
+==============================================================================
+
+PART 23
+
+CONCERN DOCUMENTATION
+
+Maintain
+
+Concern Catalog
+
+Bridge Tag Catalog
+
+Clarity Catalog
+
+Concern API Guide
+
+Concern Analytics Guide
+
+==============================================================================
+
+PART 24
+
+CONCERN GOVERNANCE
+
+Every enhancement answers
+
+Why is Concern changing?
+
+What existing capability is reused?
+
+Does this duplicate Concern Intelligence?
+
+Does this preserve Behaviour Intelligence?
+
+Does this preserve Bridge Tag integrity?
+
+==============================================================================
+
+PART 25
+
+CONCERN QUALITY GATES
+
+Verify
+
+Concern Master reused
+
+Bridge Tags reused
+
+Behaviour reused
+
+Assessment reused
+
+Signals reused
+
+Evidence exposed
+
+Confidence exposed
+
+Explainability complete
+
+Documentation updated
+
+==============================================================================
+
+PART 26
+
+CONCERN REVIEW BOARD
+
+Founder
+
+Concern Architect
+
+Behaviour Scientist
+
+Assessment Architect
+
+Ontology Architect
+
+AI Architect
+
+Research
+
+Security
+
+QA
+
+==============================================================================
+
+PART 27
+
+CONCERN DEFINITION OF DONE
+
+Concern enhancement completes only if
+
+Existing Concern Master reused
+
+Bridge Tags preserved
+
+Clarity Engine preserved
+
+Concern Graph preserved
+
+Evidence exposed
+
+Confidence exposed
+
+Explainability complete
+
+History preserved
+
+Documentation updated
+
+No regressions
+
+==============================================================================
+
+PART 28
+
+CONCERN MATURITY MODEL
+
+Assess
+
+Concern Master
+
+Bridge Tags
+
+Clarity Engine
+
+Concern Graph
+
+Relationships
+
+Analytics
+
+Reports
+
+Enterprise Concerns
+
+Levels
+
+1 Operational
+
+2 Guided
+
+3 Adaptive
+
+4 Intelligent
+
+5 Continuous Concern Intelligence
+
+==============================================================================
+
+PART 29
+
+CONCERN SCIENTIFIC VALIDATION
+
+Document
+
+Cognitive Psychology
+
+Behaviour Science
+
+Concern Taxonomy
+
+Ontology Engineering
+
+Knowledge Representation
+
+Semantic Networks
+
+Evidence Quality
+
+Bias Review
+
+Ethics
+
+Population Applicability
+
+==============================================================================
+
+PART 30
+
+CONCERN EVOLUTION STRATEGY
+
+Future evolution supports
+
+New Concern Models
+
+New Bridge Tag Models
+
+New Clarity Models
+
+New Concern Graphs
+
+New AI Assistants
+
+New Enterprise Concern Programs
+
+without breaking
+
+Assessment Intelligence
+
+Behaviour Intelligence
+
+Competency Intelligence
+
+Decision Intelligence
+
+Learning Intelligence
+
+Career Intelligence
+
+Intervention Intelligence
+
+Enterprise Intelligence
+
+==============================================================================
+
+PART 31
+
+DELIVERABLES
+
+Generate
+
+01 Concern Intelligence Constitution
+
+02 Repository Concern Audit
+
+03 Concern Master Constitution
+
+04 Bridge Tag Constitution
+
+05 Clarity Engine Constitution
+
+06 Concern Graph Constitution
+
+07 Concern Relationship Constitution
+
+08 Concern Evolution Constitution
+
+09 Concern Evidence Constitution
+
+10 Concern Confidence Constitution
+
+11 Concern Explainability Constitution
+
+12 Concern AI Constitution
+
+13 Concern Analytics Constitution
+
+14 Concern Report Constitution
+
+15 Longitudinal Concern Constitution
+
+16 Behaviour Integration Constitution
+
+17 Enterprise Concern Constitution
+
+18 SuperAdmin Concern Constitution
+
+19 Concern Governance Constitution
+
+20 Concern Quality Gates
+
+21 Concern Review Board
+
+22 Concern Definition of Done
+
+23 Concern Scientific Validation
+
+24 Concern Evolution Strategy
+
+25 Concern Maturity Assessment
+
+==============================================================================
+
+STOP
+
+Do not modify Concern Master.
+
+Do not replace Concern Intelligence.
+
+Do not create another Concern Engine.
+
+Do not activate dormant Concern capabilities.
+
+Do not modify business logic.
+
+Do not bypass Behaviour Intelligence.
+
+Do not bypass Assessment Intelligence.
+
+Do not bypass Bridge Tags.
+
+Do not bypass Decision Intelligence.
+
+Do not bypass Learning Intelligence.
+
+Freeze this Concern Intelligence Constitution after approval.
+
+Every future
+
+Concern Intelligence enhancement,
+
+Concern Master enhancement,
+
+Bridge Tag enhancement,
+
+Clarity Engine enhancement,
+
+Concern Graph enhancement,
+
+Concern Analytics enhancement,
+
+Concern AI enhancement,
+
+Concern Report enhancement,
+
+and Enterprise Concern enhancement
+
+must comply with this Constitution.

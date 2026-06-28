@@ -1,0 +1,1118 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.14
+#
+# CAREER INTELLIGENCE CONSTITUTION
+#
+# EXECUTION MODE
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT CREATE A SECOND CAREER ENGINE
+# DO NOT REPLACE CAREER OS
+# DO NOT REPLACE CGI
+# DO NOT MODIFY BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT CAREER CAPABILITIES
+#
+# THIS PHASE ESTABLISHES THE PERMANENT
+# CAREER INTELLIGENCE CONSTITUTION
+# ==============================================================================
+
+MISSION
+
+Create the permanent Career Intelligence Constitution for CAPADEX.
+
+Career Intelligence converts learning, behaviour, competencies,
+experience and aspirations into measurable employability,
+career growth and lifelong professional success.
+
+Behaviour Intelligence defines WHO the individual is.
+
+Decision Intelligence determines WHAT should happen.
+
+Journey Intelligence defines WHEN transformation occurs.
+
+Learning Intelligence develops HOW capability is built.
+
+Career Intelligence determines WHERE that capability creates value.
+
+Repository remains the single source of truth.
+
+Governance only.
+
+No implementation.
+
+==============================================================================
+
+HONESTY CONTRACT
+
+Measured = Live Repository + Live Database
+
+Derived = Architectural Interpretation
+
+Seeded Catalog ≠ Live Runtime
+
+Feature Enabled ≠ Data Flowing
+
+Coverage ≠ Confidence ≠ Employability
+
+Potential ≠ Readiness
+
+Recommendation ≠ Employment Guarantee
+
+Market Trend ≠ Individual Fit
+
+AI Recommendation ≠ Hiring Decision
+
+==============================================================================
+
+PRIMARY OBJECTIVES
+
+Protect Career OS
+
+Protect Career Graph
+
+Protect Employability Intelligence
+
+Protect Competency Matching
+
+Protect Occupation Intelligence
+
+Protect Industry Intelligence
+
+Protect Salary Intelligence
+
+Protect Career DNA
+
+Protect Future Skills Intelligence
+
+Protect Career Analytics
+
+Protect Enterprise Talent Intelligence
+
+==============================================================================
+
+MANDATORY RULES
+
+Before modifying Career Intelligence
+
+Search repository.
+
+Locate Career OS.
+
+Locate CGI.
+
+Locate Competency Framework.
+
+Locate Behaviour dependencies.
+
+Locate Decision dependencies.
+
+Locate Journey dependencies.
+
+Locate Learning dependencies.
+
+Locate Enterprise dependencies.
+
+Locate AI dependencies.
+
+Locate Report Factory.
+
+Locate APIs.
+
+Locate Database.
+
+Locate Analytics.
+
+Never create another Career Engine.
+
+Never bypass Behaviour Intelligence.
+
+Never bypass Decision Intelligence.
+
+Never bypass Journey Intelligence.
+
+Never bypass Learning Intelligence.
+
+Enhance existing implementation only.
+
+==============================================================================
+
+PART 1
+
+CURRENT CAREER INTELLIGENCE AUDIT
+
+Audit
+
+Career OS
+
+Career Graph
+
+Career DNA
+
+Career Readiness
+
+Career Matching
+
+Occupation Framework
+
+Role Framework
+
+Industry Framework
+
+Future Skills
+
+Salary Intelligence
+
+Competency Matching
+
+Behaviour Matching
+
+Learning Mapping
+
+Career Recommendations
+
+Career Reports
+
+Career APIs
+
+Career Dashboard
+
+Enterprise Talent
+
+CGI
+
+Career Technical Debt
+
+Career Duplication
+
+Dormant Career Components
+
+Activation Readiness
+
+==============================================================================
+
+PART 2
+
+CAREER PHILOSOPHY
+
+Behaviour creates identity.
+
+Decision creates direction.
+
+Journey creates transformation.
+
+Learning creates capability.
+
+Career creates opportunity.
+
+Career Intelligence exists to
+
+Guide
+
+Align
+
+Develop
+
+Validate
+
+Recommend
+
+Forecast
+
+Coach
+
+Transform
+
+Career Intelligence never guarantees employment.
+
+Career Intelligence improves employability.
+
+==============================================================================
+
+PART 3
+
+CAREER DOMAIN ARCHITECTURE
+
+Career Core
+
+Career Intelligence
+
+Career DNA
+
+Career Graph
+
+Career Readiness
+
+Role Intelligence
+
+Occupation Intelligence
+
+Industry Intelligence
+
+Future Skills
+
+Career Analytics
+
+Career Reports
+
+Career AI
+
+Enterprise Talent
+
+Career Governance
+
+==============================================================================
+
+PART 4
+
+CAREER DNA CONSTITUTION
+
+Career DNA combines
+
+Behaviour
+
+Competencies
+
+Skills
+
+Interests
+
+Learning History
+
+Career Aspirations
+
+Work Preferences
+
+Growth Patterns
+
+Career DNA evolves continuously.
+
+Never overwrite history.
+
+==============================================================================
+
+PART 5
+
+CAREER GRAPH CONSTITUTION
+
+Protect
+
+Career Nodes
+
+Role Relationships
+
+Industry Relationships
+
+Occupation Relationships
+
+Skill Relationships
+
+Competency Relationships
+
+Career Evolution
+
+Career Timeline
+
+Career Explainability
+
+==============================================================================
+
+PART 6
+
+ROLE INTELLIGENCE CONSTITUTION
+
+Protect
+
+Role Framework
+
+Role Families
+
+Role Hierarchies
+
+Role Competencies
+
+Role Skills
+
+Role Expectations
+
+Role Evolution
+
+Future Role Mapping
+
+==============================================================================
+
+PART 7
+
+OCCUPATION INTELLIGENCE CONSTITUTION
+
+Protect
+
+Occupation Framework
+
+Occupation DNA
+
+Occupation Clusters
+
+Occupation Evolution
+
+Occupation Relationships
+
+Occupation Demand
+
+Occupation Skills
+
+Occupation Benchmarks
+
+==============================================================================
+
+PART 8
+
+INDUSTRY INTELLIGENCE CONSTITUTION
+
+Protect
+
+Industry Framework
+
+Industry Trends
+
+Industry Competencies
+
+Industry Skills
+
+Industry Readiness
+
+Industry Evolution
+
+Industry Benchmarks
+
+==============================================================================
+
+PART 9
+
+EMPLOYABILITY INTELLIGENCE CONSTITUTION
+
+Employability derives from
+
+Behaviour
+
+Competencies
+
+Skills
+
+Learning
+
+Experience
+
+Projects
+
+Journey
+
+Career Readiness
+
+Market Alignment
+
+Never calculate employability from skills alone.
+
+==============================================================================
+
+PART 10
+
+CAREER READINESS CONSTITUTION
+
+Readiness evaluates
+
+Behaviour Readiness
+
+Competency Readiness
+
+Skill Readiness
+
+Learning Readiness
+
+Experience Readiness
+
+Project Readiness
+
+Interview Readiness
+
+Market Readiness
+
+Evidence
+
+Confidence
+
+==============================================================================
+
+PART 11
+
+CAREER MATCHING CONSTITUTION
+
+Every recommendation evaluates
+
+Behaviour Match
+
+Competency Match
+
+Skill Match
+
+Learning Match
+
+Culture Match
+
+Industry Match
+
+Role Match
+
+Growth Match
+
+Never recommend using a single score.
+
+==============================================================================
+
+PART 12
+
+FUTURE SKILLS CONSTITUTION
+
+Protect
+
+Emerging Skills
+
+AI Skills
+
+Digital Skills
+
+Leadership Skills
+
+Green Skills
+
+Human Skills
+
+Industry Skills
+
+Transferable Skills
+
+Skill Evolution
+
+==============================================================================
+
+PART 13
+
+CAREER EVIDENCE CONSTITUTION
+
+Evidence originates from
+
+Behaviour
+
+Competencies
+
+Learning
+
+Journey
+
+Projects
+
+Assessments
+
+Enterprise
+
+Career History
+
+Evidence documents
+
+Source
+
+Coverage
+
+Quality
+
+Confidence
+
+==============================================================================
+
+PART 14
+
+CAREER CONFIDENCE CONSTITUTION
+
+Separate
+
+Coverage
+
+Evidence
+
+Confidence
+
+Market Confidence
+
+Readiness
+
+Potential
+
+Never combine these into one score.
+
+==============================================================================
+
+PART 15
+
+CAREER EXPLAINABILITY CONSTITUTION
+
+Every recommendation explains
+
+Why
+
+Competencies
+
+Skills
+
+Behaviour Drivers
+
+Career Drivers
+
+Market Drivers
+
+Evidence
+
+Confidence
+
+Alternatives
+
+Expected Growth
+
+==============================================================================
+
+PART 16
+
+CAREER RECOMMENDATION CONSTITUTION
+
+Recommendations include
+
+Career Options
+
+Alternative Roles
+
+Learning Requirements
+
+Competency Gaps
+
+Skill Gaps
+
+Salary Expectations
+
+Market Demand
+
+Timeline
+
+Priority
+
+==============================================================================
+
+PART 17
+
+SALARY INTELLIGENCE CONSTITUTION
+
+Protect
+
+Salary Bands
+
+Market Salaries
+
+Regional Variations
+
+Industry Variations
+
+Experience Adjustments
+
+Confidence
+
+Evidence
+
+Salary intelligence informs.
+
+It never guarantees compensation.
+
+==============================================================================
+
+PART 18
+
+CAREER AI CONSTITUTION
+
+AI
+
+Explains careers
+
+Compares opportunities
+
+Summarizes gaps
+
+Recommends pathways
+
+Never guarantees employment.
+
+Never fabricates market demand.
+
+==============================================================================
+
+PART 19
+
+ENTERPRISE TALENT CONSTITUTION
+
+Support
+
+Talent Mapping
+
+Succession Planning
+
+Leadership Development
+
+Internal Mobility
+
+Skill Gap Analysis
+
+Capability Planning
+
+Workforce Analytics
+
+Human approval remains mandatory.
+
+==============================================================================
+
+PART 20
+
+CAREER REPORT CONSTITUTION
+
+Every report contains
+
+Career Summary
+
+Career DNA
+
+Career Readiness
+
+Competencies
+
+Skills
+
+Evidence
+
+Confidence
+
+Recommendations
+
+Salary Intelligence
+
+Market Alignment
+
+Next Steps
+
+==============================================================================
+
+PART 21
+
+CAREER ANALYTICS CONSTITUTION
+
+Protect
+
+Career KPIs
+
+Employability Trends
+
+Career Growth
+
+Readiness Trends
+
+Industry Demand
+
+Skill Trends
+
+Enterprise Talent
+
+==============================================================================
+
+PART 22
+
+CAREER SECURITY CONSTITUTION
+
+Protect
+
+Career Data
+
+Evidence
+
+Recommendations
+
+Salary Data
+
+Enterprise Talent
+
+Permissions
+
+PII
+
+Consent
+
+==============================================================================
+
+PART 23
+
+CAREER OBSERVABILITY
+
+Monitor
+
+Career Engine
+
+Matching
+
+Readiness
+
+Recommendations
+
+Salary Models
+
+Latency
+
+Failures
+
+Quality
+
+==============================================================================
+
+PART 24
+
+CAREER TESTING CONSTITUTION
+
+Standardize
+
+Matching Tests
+
+Readiness Tests
+
+Recommendation Tests
+
+Career Graph Tests
+
+Regression Tests
+
+Performance Tests
+
+==============================================================================
+
+PART 25
+
+CAREER DOCUMENTATION
+
+Maintain
+
+Career Catalog
+
+Occupation Catalog
+
+Role Catalog
+
+Industry Catalog
+
+Future Skills Catalog
+
+Career Analytics Guide
+
+Career API Guide
+
+==============================================================================
+
+PART 26
+
+CAREER GOVERNANCE
+
+Every Career enhancement answers
+
+Why is Career changing?
+
+What existing capability is reused?
+
+Does this duplicate Career logic?
+
+Does this improve employability?
+
+Does this improve career outcomes?
+
+==============================================================================
+
+PART 27
+
+CAREER QUALITY GATES
+
+Verify
+
+Career OS reused
+
+CGI reused
+
+Behaviour reused
+
+Decision reused
+
+Journey reused
+
+Learning reused
+
+Evidence exposed
+
+Confidence exposed
+
+Explainability complete
+
+Documentation updated
+
+==============================================================================
+
+PART 28
+
+CAREER REVIEW BOARD
+
+Mandatory Approval
+
+Founder
+
+Career Architect
+
+Behaviour Scientist
+
+Learning Architect
+
+Decision Architect
+
+Journey Architect
+
+Enterprise
+
+Research
+
+QA
+
+==============================================================================
+
+PART 29
+
+CAREER DEFINITION OF DONE
+
+Career enhancement completes only if
+
+Existing Career Engine reused
+
+Career History preserved
+
+Behaviour preserved
+
+Learning preserved
+
+Journey preserved
+
+Evidence exposed
+
+Confidence exposed
+
+Explainability complete
+
+Documentation updated
+
+No regressions
+
+==============================================================================
+
+PART 30
+
+CAREER MATURITY MODEL
+
+Assess
+
+Career Engine
+
+Career Graph
+
+Career DNA
+
+Readiness
+
+Matching
+
+Future Skills
+
+Salary Intelligence
+
+Enterprise Talent
+
+Levels
+
+1 Operational
+
+2 Guided
+
+3 Personalized
+
+4 Predictive
+
+5 Career Intelligence Excellence
+
+==============================================================================
+
+PART 31
+
+CAREER SCIENTIFIC VALIDATION
+
+Document
+
+Career Development Theory
+
+Vocational Psychology
+
+Career Construction Theory
+
+Competency Theory
+
+Human Capital Theory
+
+Evidence Quality
+
+Bias Review
+
+Ethics
+
+Population Applicability
+
+==============================================================================
+
+PART 32
+
+CAREER EVOLUTION STRATEGY
+
+Future evolution supports
+
+New Industries
+
+New Occupations
+
+New Roles
+
+New Skills
+
+New Labour Markets
+
+New Salary Models
+
+New AI Capabilities
+
+New Enterprise Models
+
+without breaking
+
+Existing Career OS
+
+Behaviour Intelligence
+
+Decision Intelligence
+
+Journey Intelligence
+
+Learning Intelligence
+
+Reports
+
+AI
+
+==============================================================================
+
+PART 33
+
+DELIVERABLES
+
+Generate
+
+01 Career Intelligence Constitution
+
+02 Career Architecture Report
+
+03 Career DNA Constitution
+
+04 Career Graph Constitution
+
+05 Role Intelligence Constitution
+
+06 Occupation Intelligence Constitution
+
+07 Industry Intelligence Constitution
+
+08 Employability Constitution
+
+09 Career Readiness Constitution
+
+10 Career Matching Constitution
+
+11 Future Skills Constitution
+
+12 Career Evidence Constitution
+
+13 Career Confidence Constitution
+
+14 Career Explainability Constitution
+
+15 Career Recommendation Constitution
+
+16 Salary Intelligence Constitution
+
+17 Career AI Constitution
+
+18 Enterprise Talent Constitution
+
+19 Career Report Constitution
+
+20 Career Analytics Constitution
+
+21 Career Governance Constitution
+
+22 Career Quality Gates
+
+23 Career Review Board
+
+24 Career Definition of Done
+
+25 Career Scientific Validation
+
+26 Career Evolution Strategy
+
+27 Career Maturity Assessment
+
+==============================================================================
+
+STOP
+
+Do not modify Career OS.
+
+Do not replace CGI.
+
+Do not create another Career Engine.
+
+Do not activate dormant Career capabilities.
+
+Do not modify business logic.
+
+Do not bypass Behaviour Intelligence.
+
+Do not bypass Decision Intelligence.
+
+Do not bypass Journey Intelligence.
+
+Do not bypass Learning Intelligence.
+
+Freeze this Career Intelligence Constitution after approval.
+
+Every future Career Intelligence enhancement,
+Career OS enhancement,
+Employability enhancement,
+Career Matching enhancement,
+Future Skills enhancement,
+Enterprise Talent enhancement,
+Salary Intelligence enhancement,
+and Career Analytics enhancement
+must comply with this constitution.

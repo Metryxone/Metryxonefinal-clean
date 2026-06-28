@@ -1218,3 +1218,9 @@ id = "n8VxVD48wy4sxve_qHyT6"
 uri = "file://backend/audit/mx-700/phase-1.13-learning-intelligence-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.13: Learning Intelligence Constitution"
+
+[[outputs]]
+id = "YYngb7ax0_oZA6MHW-3WQ"
+uri = "file://backend/audit/mx-700/phase-1.14-career-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.14: Career Intelligence Constitution"

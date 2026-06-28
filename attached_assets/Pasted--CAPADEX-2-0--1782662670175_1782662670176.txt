@@ -1,0 +1,713 @@
+# ==============================================================================
+
+# CAPADEX 2.0
+
+# ENGINEERING EXECUTION SPECIFICATION
+
+#
+
+# IMPLEMENTATION OF PHASES 1.1 – 1.35
+
+#
+
+# MX-700 EXECUTION PROGRAM
+
+#
+
+# REPOSITORY IMPLEMENTATION
+
+#
+
+# ENHANCEMENT ONLY
+
+#
+
+# ==============================================================================
+
+#
+
+# MISSION
+
+#
+
+# Implement the approved Engineering Execution Specifications
+
+# from Phase 1.1 through Phase 1.35 into the existing CAPADEX
+
+# repository before commencing Phase 1.37.
+
+#
+
+# Phase 1.36 has established the Platform Lifecycle Intelligence
+
+# Constitution and measured the repository state.
+
+#
+
+# Phase 1.36 becomes the governing implementation standard.
+
+#
+
+# Every implementation from Phase 1.1–1.35 must comply with
+
+# the Platform Lifecycle Intelligence Constitution.
+
+#
+
+# ==============================================================================
+
+#
+
+# EXECUTION MODE
+
+#
+
+# IMPLEMENTATION
+
+#
+
+# Repository First
+
+#
+
+# Enhancement Only
+
+#
+
+# No Rebuild
+
+#
+
+# No Parallel Frameworks
+
+#
+
+# No Duplicate Architecture
+
+#
+
+# No Lifecycle V2
+
+#
+
+# No Business Logic Changes unless explicitly required
+
+# by the original approved phase specification.
+
+#
+
+# Never activate dormant capabilities unless explicitly
+
+# instructed by the approved phase.
+
+#
+
+# ==============================================================================
+
+#
+
+# SINGLE SOURCE OF TRUTH
+
+#
+
+# Repository
+
+#
+
+# Existing Architecture
+
+#
+
+# Existing Modules
+
+#
+
+# Existing Services
+
+#
+
+# Existing APIs
+
+#
+
+# Existing Database
+
+#
+
+# Existing Documentation
+
+#
+
+# Existing Feature Flags
+
+#
+
+# Existing Engineering Constitutions
+
+#
+
+# Existing Product Constitution
+
+#
+
+# Existing Platform Lifecycle Constitution (Phase 1.36)
+
+#
+
+# ==============================================================================
+
+#
+
+# PRE-IMPLEMENTATION AUDIT
+
+#
+
+# Before implementing every phase:
+
+#
+
+# Search the repository.
+
+#
+
+# Verify whether the phase has already been
+
+#
+
+# fully implemented
+
+#
+
+# partially implemented
+
+#
+
+# scaffolded
+
+#
+
+# seeded
+
+#
+
+# dormant
+
+#
+
+# deprecated
+
+#
+
+# archived
+
+#
+
+# experimental
+
+#
+
+# If implementation already exists
+
+#
+
+# DO NOT duplicate it.
+
+#
+
+# Extend it.
+
+#
+
+# Complete it.
+
+#
+
+# Reconcile it.
+
+#
+
+# ==============================================================================
+
+#
+
+# IMPLEMENTATION ORDER
+
+#
+
+# Execute phases sequentially.
+
+#
+
+# 1.1
+
+#
+
+# 1.2
+
+#
+
+# 1.3
+
+#
+
+# …
+
+#
+
+# 1.35
+
+#
+
+# Never skip phases.
+
+#
+
+# Never merge unrelated phases.
+
+#
+
+# Never implement future phases early.
+
+#
+
+# ==============================================================================
+
+#
+
+# FOR EVERY PHASE
+
+#
+
+# Search
+
+#
+
+# Repository
+
+#
+
+# Services
+
+#
+
+# Modules
+
+#
+
+# APIs
+
+#
+
+# Models
+
+#
+
+# Feature Flags
+
+#
+
+# Documentation
+
+#
+
+# Database
+
+#
+
+# Migrations
+
+#
+
+# Tests
+
+#
+
+# Phase History
+
+#
+
+# Reuse existing implementation.
+
+#
+
+# Extend existing implementation.
+
+#
+
+# Preserve compatibility.
+
+#
+
+# Preserve feature flags.
+
+#
+
+# Preserve existing architecture.
+
+#
+
+# ==============================================================================
+
+#
+
+# IMPLEMENTATION PRINCIPLES
+
+#
+
+# Reuse Before Build
+
+#
+
+# Enhance Before Replace
+
+#
+
+# Compose Before Duplicate
+
+#
+
+# Extend Before Rewrite
+
+#
+
+# Preserve Before Remove
+
+#
+
+# Measure Before Modify
+
+#
+
+# Validate Before Merge
+
+#
+
+# ==============================================================================
+
+#
+
+# FORBIDDEN
+
+#
+
+# Never rebuild working systems.
+
+#
+
+# Never replace existing modules.
+
+#
+
+# Never introduce parallel implementations.
+
+#
+
+# Never create V2 implementations.
+
+#
+
+# Never create duplicate APIs.
+
+#
+
+# Never duplicate services.
+
+#
+
+# Never duplicate intelligence engines.
+
+#
+
+# Never duplicate ontology.
+
+#
+
+# Never duplicate capability registries.
+
+#
+
+# Never duplicate lifecycle systems.
+
+#
+
+# Never bypass Engineering Constitution.
+
+#
+
+# Never bypass Product Constitution.
+
+#
+
+# Never bypass Platform Lifecycle Constitution.
+
+#
+
+# ==============================================================================
+
+#
+
+# IMPLEMENTATION VALIDATION
+
+#
+
+# After every phase
+
+#
+
+# verify
+
+#
+
+# repository integrity
+
+#
+
+# architecture integrity
+
+#
+
+# backward compatibility
+
+#
+
+# forward compatibility
+
+#
+
+# feature flag integrity
+
+#
+
+# migration integrity
+
+#
+
+# database integrity
+
+#
+
+# API integrity
+
+#
+
+# service integrity
+
+#
+
+# module integrity
+
+#
+
+# documentation integrity
+
+#
+
+# ==============================================================================
+
+#
+
+# OUTPUT FOR EACH PHASE
+
+#
+
+# Produce:
+
+#
+
+# Repository changes
+
+#
+
+# Files modified
+
+#
+
+# Database changes
+
+#
+
+# APIs extended
+
+#
+
+# Services extended
+
+#
+
+# Feature Flags affected
+
+#
+
+# Compatibility verification
+
+#
+
+# Technical Debt introduced or removed
+
+#
+
+# Regression verification
+
+#
+
+# Remaining work
+
+#
+
+# Honest implementation summary
+
+#
+
+# Never fabricate completion.
+
+#
+
+# Distinguish:
+
+#
+
+# Implemented
+
+#
+
+# Extended
+
+#
+
+# Partially Implemented
+
+#
+
+# Deferred
+
+#
+
+# Dormant
+
+#
+
+# Already Existing
+
+#
+
+# Missing
+
+#
+
+# ==============================================================================
+
+#
+
+# HONESTY CONTRACT
+
+#
+
+# Built ≠ Activated
+
+#
+
+# Flag Enabled ≠ Runtime Active
+
+#
+
+# Table Exists ≠ Populated
+
+#
+
+# Documentation Exists ≠ Implemented
+
+#
+
+# Phase Exists ≠ Repository Complete
+
+#
+
+# Coverage ≠ Confidence
+
+#
+
+# Evidence ≠ Confidence
+
+#
+
+# Never estimate.
+
+#
+
+# Never fabricate.
+
+#
+
+# Repository evidence always overrides assumptions.
+
+#
+
+# ==============================================================================
+
+#
+
+# DEFINITION OF COMPLETE
+
+#
+
+# Phase 1.1–1.35 implementation is complete only when:
+
+#
+
+# Every approved phase has been repository verified.
+
+#
+
+# Every implementation has been reconciled with existing code.
+
+#
+
+# No duplicate architecture exists.
+
+#
+
+# No business logic has been unintentionally modified.
+
+#
+
+# No regressions introduced.
+
+#
+
+# Compatibility preserved.
+
+#
+
+# Feature flags preserved.
+
+#
+
+# Documentation updated where required.
+
+#
+
+# Repository remains the Single Source of Truth.
+
+#
+
+# ==============================================================================
+
+#
+
+# POST-CONDITION
+
+#
+
+# Only after successful completion and validation of
+
+# Phase 1.1–1.35 implementation may Phase 1.37 begin.
+
+#
+
+# Phase 1.36 remains frozen and becomes the governing
+
+# constitutional baseline for all future engineering work.
+
+#
+
+# ==============================================================================

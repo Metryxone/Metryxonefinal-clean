@@ -1140,3 +1140,9 @@ id = "BFWKTDFTgKCnpY1w8dZMI"
 uri = "file://backend/audit/mx-700/phase-1.2-engineering-standards-manual.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.2: Engineering Standards & Code Architecture"
+
+[[outputs]]
+id = "Spc9SigQqoHfMrcAaC6Vd"
+uri = "file://backend/audit/mx-700/phase-1.2-parts-21-25-protection-reuse-governance.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.2 Parts 21–25: Protection, Reuse & Governance"

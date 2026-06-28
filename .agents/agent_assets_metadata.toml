@@ -1314,3 +1314,9 @@ id = "lreQGsIfTbOAPynmMk1s2"
 uri = "file://backend/audit/mx-700/phase-1.29-enterprise-intelligence-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.29: Enterprise Intelligence Constitution (Multi-Tenant + RBAC + Governance + Organizational Intelligence + Enterprise Orchestration)"
+
+[[outputs]]
+id = "b6zzAShuD-Nov41R7_Oed"
+uri = "file://backend/audit/mx-700/phase-1.30-security-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.30: Security Intelligence Constitution (Zero Trust + Identity + Authentication + Authorization + Threat + Audit Intelligence)"

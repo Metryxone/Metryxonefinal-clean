@@ -1,0 +1,1174 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.30
+#
+# SECURITY INTELLIGENCE CONSTITUTION
+# (ZERO TRUST + IDENTITY + AUTHENTICATION + AUTHORIZATION +
+# SECURITY GOVERNANCE + THREAT INTELLIGENCE + AUDIT INTELLIGENCE)
+#
+# EXECUTION MODE
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT CREATE A SECOND SECURITY ENGINE
+# DO NOT REPLACE SECURITY ARCHITECTURE
+# DO NOT CREATE SECURITY V2
+# DO NOT MODIFY BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT SECURITY CAPABILITIES
+#
+# THIS PHASE ESTABLISHES THE PERMANENT
+# SECURITY INTELLIGENCE CONSTITUTION
+#
+# ==============================================================================
+
+MISSION
+
+Create the permanent Security Intelligence Constitution for CAPADEX.
+
+Security Intelligence protects every layer of CAPADEX.
+
+Assessment Intelligence measures.
+
+Behaviour Intelligence understands.
+
+Concern Intelligence interprets.
+
+Competency Intelligence models.
+
+Decision Intelligence reasons.
+
+Learning Intelligence develops.
+
+Career Intelligence guides.
+
+Report Intelligence communicates.
+
+Analytics Intelligence measures.
+
+AI Intelligence assists.
+
+Enterprise Intelligence governs.
+
+Security Intelligence protects them all.
+
+Security is never a feature.
+
+Security is a platform capability.
+
+Repository remains the Single Source of Truth.
+
+Governance only.
+
+No implementation.
+
+==============================================================================
+HONESTY CONTRACT
+==============================================================================
+
+Measured = Live Repository + Live Database using exact SELECT COUNT(*)
+
+Derived = Security Architecture Interpretation
+
+Authentication ≠ Authorization
+
+Authorization ≠ Permission
+
+Permission ≠ Role
+
+Identity ≠ User
+
+Session ≠ Identity
+
+Token ≠ Authentication
+
+Encryption ≠ Security
+
+Compliance ≠ Security
+
+Audit ≠ Security
+
+Logging ≠ Monitoring
+
+Monitoring ≠ Detection
+
+Detection ≠ Prevention
+
+Threat ≠ Vulnerability
+
+Risk ≠ Incident
+
+Incident ≠ Breach
+
+Evidence ≠ Confidence
+
+Coverage ≠ Confidence
+
+Human remains accountable.
+
+Built ≠ Activated
+
+Flag Enabled ≠ Runtime Active
+
+Null ≠ Zero
+
+Never fabricate.
+
+Never estimate.
+
+Never use n_live_tup.
+
+==============================================================================
+PRIMARY OBJECTIVES
+==============================================================================
+
+Protect Security Intelligence
+
+Protect Identity
+
+Protect Authentication
+
+Protect Authorization
+
+Protect Sessions
+
+Protect Secrets
+
+Protect Encryption
+
+Protect Zero Trust
+
+Protect Threat Intelligence
+
+Protect Security Governance
+
+==============================================================================
+
+MANDATORY RULES
+==============================================================================
+
+Before modifying Security Intelligence
+
+Search repository
+
+Locate Authentication
+
+Locate Authorization
+
+Locate RBAC
+
+Locate Identity
+
+Locate Sessions
+
+Locate JWT
+
+Locate CSRF
+
+Locate CSP
+
+Locate Rate Limiting
+
+Locate Secrets
+
+Locate Encryption
+
+Locate Audit Logs
+
+Locate Security Monitoring
+
+Locate Threat Detection
+
+Locate API Security
+
+Locate Database
+
+Never create another Security Engine.
+
+Never duplicate security middleware.
+
+Never bypass authentication.
+
+Never bypass authorization.
+
+Never bypass RBAC.
+
+Never bypass tenant isolation.
+
+Enhance existing implementation only.
+
+==============================================================================
+PART 1
+
+CURRENT SECURITY INTELLIGENCE AUDIT
+
+Perform complete repository audit.
+
+Perform complete database audit.
+
+Measure
+
+Identity Engine
+
+Authentication
+
+Authorization
+
+RBAC
+
+Sessions
+
+JWT
+
+CSRF
+
+CSP
+
+Rate Limiting
+
+API Security
+
+Secrets Management
+
+Encryption
+
+Hashing
+
+Password Security
+
+MFA / 2FA
+
+Audit Logs
+
+Security Events
+
+Threat Detection
+
+Security Monitoring
+
+Security Analytics
+
+Security Reports
+
+Security APIs
+
+Security Dashboards
+
+Security Technical Debt
+
+Duplicate Security Middleware
+
+Dormant Security Runtime
+
+Activation Readiness
+
+Classify every component
+
+LIVE
+
+PARTIAL
+
+SEEDED
+
+DORMANT
+
+BROKEN
+
+EMPTY
+
+TECH DEBT
+
+MISSING
+
+Explicitly identify
+
+Repository implementation
+
+Database population
+
+Runtime activation
+
+Duplicate middleware
+
+Broken authentication
+
+Broken authorization
+
+Broken session validation
+
+Broken API protection
+
+==============================================================================
+PART 2
+
+SECURITY PHILOSOPHY
+
+Security Intelligence exists to
+
+Protect
+
+Authenticate
+
+Authorize
+
+Monitor
+
+Detect
+
+Prevent
+
+Respond
+
+Recover
+
+Security never
+
+Blocks intelligence
+
+Duplicates governance
+
+Weakens usability
+
+Bypasses privacy
+
+==============================================================================
+
+PART 3
+
+SECURITY DOMAIN ARCHITECTURE
+
+Identity
+
+Authentication
+
+Authorization
+
+RBAC
+
+Sessions
+
+Secrets
+
+Encryption
+
+Zero Trust
+
+Threat Intelligence
+
+Audit Intelligence
+
+Security Analytics
+
+Security Monitoring
+
+Security Governance
+
+==============================================================================
+
+PART 4
+
+IDENTITY CONSTITUTION
+
+Identity remains
+
+the canonical user identity layer.
+
+Protect
+
+Identity
+
+Profiles
+
+Federation
+
+Provider Mapping
+
+Identity Lifecycle
+
+Never duplicate identity systems.
+
+==============================================================================
+
+PART 5
+
+AUTHENTICATION CONSTITUTION
+
+Protect
+
+Password Authentication
+
+OAuth
+
+Google Login
+
+Microsoft Login
+
+SSO
+
+2FA
+
+MFA
+
+Session Creation
+
+Token Issuance
+
+Never bypass authentication.
+
+==============================================================================
+
+PART 6
+
+AUTHORIZATION CONSTITUTION
+
+Authorization remains
+
+server authoritative.
+
+Protect
+
+RBAC
+
+Permissions
+
+Scopes
+
+Tenant Context
+
+Session Context
+
+Resource Ownership
+
+Never authorize in frontend only.
+
+==============================================================================
+
+PART 7
+
+SESSION CONSTITUTION
+
+Protect
+
+Sessions
+
+Refresh Tokens
+
+Access Tokens
+
+Expiration
+
+Revocation
+
+Replay Protection
+
+Session Rotation
+
+==============================================================================
+
+PART 8
+
+ZERO TRUST CONSTITUTION
+
+Every request must validate
+
+Identity
+
+Authentication
+
+Authorization
+
+Tenant
+
+Permission
+
+Context
+
+Resource
+
+Never trust client state.
+
+==============================================================================
+
+PART 9
+
+API SECURITY CONSTITUTION
+
+Protect
+
+REST APIs
+
+Internal APIs
+
+External APIs
+
+Rate Limits
+
+CSRF
+
+CORS
+
+Headers
+
+Validation
+
+Input Sanitization
+
+==============================================================================
+
+PART 10
+
+SECRETS CONSTITUTION
+
+Protect
+
+API Keys
+
+JWT Secrets
+
+Encryption Keys
+
+OAuth Secrets
+
+Database Credentials
+
+Third-party Credentials
+
+Secrets never exist in source code.
+
+==============================================================================
+
+PART 11
+
+ENCRYPTION CONSTITUTION
+
+Protect
+
+Passwords
+
+Tokens
+
+Secrets
+
+Sensitive Data
+
+PII
+
+Backups
+
+Encryption at Rest
+
+Encryption in Transit
+
+==============================================================================
+
+PART 12
+
+SECURITY EVIDENCE CONSTITUTION
+
+Evidence originates from
+
+Authentication
+
+Authorization
+
+Audit Logs
+
+Threat Detection
+
+Security Monitoring
+
+Security Events
+
+Security Analytics
+
+Evidence contains
+
+Source
+
+Coverage
+
+Confidence
+
+Quality
+
+==============================================================================
+
+PART 13
+
+SECURITY CONFIDENCE CONSTITUTION
+
+Separate
+
+Coverage
+
+Evidence
+
+Confidence
+
+Threat Confidence
+
+Risk Confidence
+
+Trust
+
+==============================================================================
+
+PART 14
+
+SECURITY EXPLAINABILITY CONSTITUTION
+
+Every security event explains
+
+What happened
+
+Why
+
+Evidence
+
+Risk
+
+Impact
+
+Resolution
+
+==============================================================================
+
+PART 15
+
+THREAT INTELLIGENCE CONSTITUTION
+
+Protect
+
+Threat Detection
+
+Threat Classification
+
+Threat Severity
+
+Threat Timeline
+
+Threat Correlation
+
+Incident Mapping
+
+==============================================================================
+
+PART 16
+
+AUDIT INTELLIGENCE CONSTITUTION
+
+Protect
+
+Audit Logs
+
+Admin Audit
+
+Platform Audit
+
+RBAC Audit
+
+Enterprise Audit
+
+Immutable History
+
+Audit history remains append-only.
+
+==============================================================================
+
+PART 17
+
+SECURITY ANALYTICS CONSTITUTION
+
+Measure
+
+Authentication
+
+Authorization
+
+Threats
+
+Incidents
+
+Failures
+
+Success Rate
+
+Attack Patterns
+
+==============================================================================
+
+PART 18
+
+SECURITY OBSERVABILITY CONSTITUTION
+
+Monitor
+
+Authentication
+
+Authorization
+
+Latency
+
+Security Events
+
+Failures
+
+Threats
+
+Rate Limits
+
+Secrets
+
+==============================================================================
+
+PART 19
+
+SECURITY AI CONSTITUTION
+
+AI
+
+Explains
+
+Classifies
+
+Summarizes
+
+Prioritizes
+
+Never approves security actions.
+
+Never changes security policy.
+
+Human approval mandatory.
+
+==============================================================================
+
+PART 20
+
+ENTERPRISE SECURITY CONSTITUTION
+
+Support
+
+Compliance
+
+ISO
+
+SOC
+
+GDPR
+
+DPDP
+
+Audit
+
+Governance
+
+==============================================================================
+
+PART 21
+
+SUPERADMIN SECURITY CONSTITUTION
+
+Support
+
+Security Policies
+
+Identity
+
+RBAC
+
+Secrets
+
+Monitoring
+
+Incident Review
+
+==============================================================================
+
+PART 22
+
+SECURITY TESTING CONSTITUTION
+
+Standardize
+
+Authentication Tests
+
+Authorization Tests
+
+RBAC Tests
+
+CSRF Tests
+
+CSP Tests
+
+Session Tests
+
+Penetration Tests
+
+Regression Tests
+
+==============================================================================
+
+PART 23
+
+SECURITY DOCUMENTATION
+
+Maintain
+
+Security Catalog
+
+Threat Catalog
+
+Identity Guide
+
+RBAC Guide
+
+Security API Guide
+
+Incident Guide
+
+==============================================================================
+
+PART 24
+
+SECURITY GOVERNANCE
+
+Every enhancement answers
+
+Why is Security changing?
+
+What existing capability is reused?
+
+Does this duplicate Security Intelligence?
+
+Does this preserve Zero Trust?
+
+Does this preserve RBAC?
+
+==============================================================================
+
+PART 25
+
+SECURITY QUALITY GATES
+
+Verify
+
+Authentication reused
+
+Authorization reused
+
+RBAC reused
+
+Tenant Isolation preserved
+
+Secrets protected
+
+Evidence exposed
+
+Confidence exposed
+
+Documentation updated
+
+==============================================================================
+
+PART 26
+
+SECURITY REVIEW BOARD
+
+Founder
+
+Chief Security Architect
+
+Platform Architect
+
+Enterprise Architect
+
+RBAC Architect
+
+Compliance Lead
+
+Security Operations
+
+Research
+
+QA
+
+==============================================================================
+
+PART 27
+
+SECURITY DEFINITION OF DONE
+
+Security enhancement completes only if
+
+Authentication preserved
+
+Authorization preserved
+
+RBAC preserved
+
+Sessions protected
+
+Secrets protected
+
+Evidence exposed
+
+Confidence exposed
+
+Documentation updated
+
+No regressions
+
+==============================================================================
+
+PART 28
+
+SECURITY MATURITY MODEL
+
+Assess
+
+Identity
+
+Authentication
+
+Authorization
+
+RBAC
+
+Secrets
+
+Encryption
+
+Threat Detection
+
+Security Analytics
+
+Observability
+
+Levels
+
+1 Operational
+
+2 Guided
+
+3 Adaptive
+
+4 Intelligent
+
+5 Continuous Zero Trust Security
+
+Human approval always mandatory.
+
+==============================================================================
+
+PART 29
+
+SECURITY SCIENTIFIC VALIDATION
+
+Document
+
+Zero Trust
+
+Identity Architecture
+
+Access Control
+
+Cryptography
+
+Threat Modeling
+
+Security Engineering
+
+Risk Management
+
+Privacy Engineering
+
+Compliance
+
+==============================================================================
+
+PART 30
+
+SECURITY EVOLUTION STRATEGY
+
+Future evolution supports
+
+New Identity Providers
+
+New Authentication Models
+
+New Security Policies
+
+New Threat Engines
+
+New Security Analytics
+
+New Compliance Standards
+
+without breaking
+
+Assessment Intelligence
+
+Behaviour Intelligence
+
+Concern Intelligence
+
+Competency Intelligence
+
+Decision Intelligence
+
+Learning Intelligence
+
+Career Intelligence
+
+Intervention Intelligence
+
+Report Intelligence
+
+Analytics Intelligence
+
+AI Intelligence
+
+Enterprise Intelligence
+
+==============================================================================
+
+PART 31
+
+DELIVERABLES
+
+Generate
+
+01 Security Intelligence Constitution
+
+02 Repository Security Audit
+
+03 Identity Constitution
+
+04 Authentication Constitution
+
+05 Authorization Constitution
+
+06 Session Constitution
+
+07 Zero Trust Constitution
+
+08 API Security Constitution
+
+09 Secrets Constitution
+
+10 Encryption Constitution
+
+11 Security Evidence Constitution
+
+12 Security Confidence Constitution
+
+13 Security Explainability Constitution
+
+14 Threat Intelligence Constitution
+
+15 Audit Intelligence Constitution
+
+16 Security Analytics Constitution
+
+17 Security Observability Constitution
+
+18 Security AI Constitution
+
+19 Enterprise Security Constitution
+
+20 SuperAdmin Security Constitution
+
+21 Security Governance Constitution
+
+22 Security Quality Gates
+
+23 Security Review Board
+
+24 Security Definition of Done
+
+25 Security Scientific Validation
+
+26 Security Evolution Strategy
+
+27 Security Maturity Assessment
+
+==============================================================================
+
+STOP
+
+Do not modify Security Architecture.
+
+Do not replace Authentication.
+
+Do not replace Authorization.
+
+Do not replace RBAC.
+
+Do not create another Security Engine.
+
+Do not activate dormant Security capabilities.
+
+Do not modify business logic.
+
+Do not bypass Identity.
+
+Do not bypass Authentication.
+
+Do not bypass Authorization.
+
+Do not bypass Tenant Isolation.
+
+Do not bypass Assessment Intelligence.
+
+Do not bypass Behaviour Intelligence.
+
+Do not bypass Concern Intelligence.
+
+Do not bypass Competency Intelligence.
+
+Do not bypass Decision Intelligence.
+
+Do not bypass Learning Intelligence.
+
+Do not bypass Career Intelligence.
+
+Do not bypass Intervention Intelligence.
+
+Do not bypass Report Intelligence.
+
+Do not bypass Analytics Intelligence.
+
+Do not bypass AI Intelligence.
+
+Do not bypass Enterprise Intelligence.
+
+Freeze this Security Intelligence Constitution after approval.
+
+Every future
+
+Security enhancement,
+
+Identity enhancement,
+
+Authentication enhancement,
+
+Authorization enhancement,
+
+RBAC enhancement,
+
+Zero Trust enhancement,
+
+Threat Intelligence enhancement,
+
+Security Analytics enhancement,
+
+Security Observability enhancement,
+
+Security Governance enhancement,
+
+and Security AI enhancement
+
+must comply with this Constitution.

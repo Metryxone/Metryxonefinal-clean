@@ -1200,3 +1200,9 @@ id = "FGhwbG2OLHURm9FH0nI5C"
 uri = "file://backend/audit/mx-700/phase-1.10-behaviour-intelligence-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.10: Behaviour Intelligence Constitution"
+
+[[outputs]]
+id = "K52PoyOk49cudKeiD3qty"
+uri = "file://backend/audit/mx-700/phase-1.11-decision-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.11: Decision Intelligence Constitution"

@@ -1,0 +1,1147 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.11
+#
+# DECISION INTELLIGENCE CONSTITUTION
+#
+# EXECUTION MODE
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT CREATE A SECOND DECISION ENGINE
+# DO NOT REPLACE WC-3
+# DO NOT MODIFY BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT DECISION CAPABILITIES
+#
+# THIS PHASE ESTABLISHES THE PERMANENT
+# DECISION INTELLIGENCE CONSTITUTION
+# ==============================================================================
+
+MISSION
+
+Create the permanent Decision Intelligence Constitution for CAPADEX.
+
+Decision Intelligence is the layer that transforms Behaviour Intelligence
+into actionable human decisions.
+
+Every recommendation...
+
+Every intervention...
+
+Every career pathway...
+
+Every learning pathway...
+
+Every subscription recommendation...
+
+Every enterprise recommendation...
+
+Every AI recommendation...
+
+Every behavioural intervention...
+
+Every life recommendation...
+
+must pass through the Decision Intelligence architecture.
+
+Decision Intelligence does not replace Behaviour Intelligence.
+
+Decision Intelligence consumes Behaviour Intelligence.
+
+Repository remains the single source of truth.
+
+This phase establishes governance only.
+
+No implementation.
+
+==============================================================================
+
+PRIMARY OBJECTIVES
+
+Protect existing Decision Engine.
+
+Protect WC-3 Architecture.
+
+Protect Decision Orchestrator.
+
+Protect Outcome Projection.
+
+Protect Evidence Engine.
+
+Protect Confidence Engine.
+
+Protect Explainability.
+
+Protect Human Approval.
+
+Protect Decision Learning.
+
+Protect Enterprise Decisions.
+
+Protect Decision Intelligence IP.
+
+==============================================================================
+
+MANDATORY RULES
+
+Before modifying Decision Intelligence
+
+Search repository.
+
+Locate WC-3.
+
+Locate Decision Engine.
+
+Locate Outcome Projection.
+
+Locate Behaviour dependencies.
+
+Locate Journey dependencies.
+
+Locate Recommendation Engine.
+
+Locate AI consumers.
+
+Locate Enterprise consumers.
+
+Locate Reports.
+
+Locate APIs.
+
+Locate Database.
+
+Locate Analytics.
+
+Locate Feature Flags.
+
+Understand complete Decision lifecycle.
+
+Never duplicate Decision Engines.
+
+Never bypass Behaviour Intelligence.
+
+Never bypass Evidence.
+
+Never regenerate Decision Graph.
+
+Never create another recommendation engine.
+
+Enhance existing implementation only.
+
+==============================================================================
+
+PART 1
+
+CURRENT DECISION INTELLIGENCE AUDIT
+
+Audit
+
+Decision Engine
+
+WC-3
+
+Decision Orchestrator
+
+Decision Graph
+
+Decision Rules
+
+Decision Memory
+
+Decision Evidence
+
+Decision Confidence
+
+Outcome Projection
+
+Alternative Generator
+
+Trade-off Engine
+
+Decision AI
+
+Decision Reports
+
+Decision APIs
+
+Decision Analytics
+
+Decision Dashboard
+
+Decision Security
+
+Decision Governance
+
+Decision Quality
+
+Decision Technical Debt
+
+Dormant Decision Components
+
+Activation Readiness
+
+==============================================================================
+
+PART 2
+
+DECISION PHILOSOPHY
+
+Behaviour creates understanding.
+
+Decision creates action.
+
+Decision Intelligence exists to
+
+Interpret
+
+Compare
+
+Evaluate
+
+Prioritize
+
+Predict
+
+Recommend
+
+Guide
+
+Explain
+
+Never decide for humans.
+
+Never replace Behaviour Intelligence.
+
+Never fabricate decisions.
+
+Never fabricate evidence.
+
+==============================================================================
+
+PART 3
+
+DECISION DOMAIN ARCHITECTURE
+
+Document
+
+Decision Core
+
+Decision Graph
+
+Decision Evidence
+
+Decision Confidence
+
+Decision Recommendation
+
+Decision Simulation
+
+Decision Analytics
+
+Decision Explainability
+
+Decision Governance
+
+Decision Memory
+
+Decision Learning
+
+Decision Prediction
+
+Decision Security
+
+Every Decision capability belongs to one domain.
+
+==============================================================================
+
+PART 4
+
+WC-3 CONSTITUTION
+
+WC-3 remains the canonical Decision Engine.
+
+Never replace WC-3.
+
+Never create WC-4.
+
+Never duplicate WC logic.
+
+Enhance only.
+
+Protect
+
+Decision Flow
+
+Decision Graph
+
+Decision Models
+
+Outcome Projection
+
+Alternatives
+
+Confidence
+
+Explainability
+
+==============================================================================
+
+PART 5
+
+DECISION ORCHESTRATOR CONSTITUTION
+
+Protect
+
+Decision Workflow
+
+Decision Routing
+
+Decision Dependencies
+
+Decision Priorities
+
+Decision Sequencing
+
+Decision Escalation
+
+Decision Outcomes
+
+Decision Completion
+
+Decision Orchestration remains centralized.
+
+==============================================================================
+
+PART 6
+
+DECISION GRAPH CONSTITUTION
+
+Protect
+
+Nodes
+
+Relationships
+
+Decision Dependencies
+
+Alternative Paths
+
+Decision Chains
+
+Decision Context
+
+Decision Evolution
+
+Decision History
+
+Every decision path must remain explainable.
+
+==============================================================================
+
+PART 7
+
+OUTCOME PROJECTION CONSTITUTION
+
+Protect
+
+Behaviour Outcomes
+
+Learning Outcomes
+
+Career Outcomes
+
+Life Outcomes
+
+Enterprise Outcomes
+
+Subscription Outcomes
+
+Decision Outcomes
+
+Projection Confidence
+
+Projection Limitations
+
+Never fabricate projections.
+
+==============================================================================
+
+PART 8
+
+DECISION EVIDENCE CONSTITUTION
+
+Evidence originates from
+
+Behaviour Intelligence
+
+Assessments
+
+Journey
+
+Learning
+
+Career
+
+Enterprise
+
+Historical Decisions
+
+Longitudinal Data
+
+AI
+
+Evidence must document
+
+Source
+
+Timestamp
+
+Coverage
+
+Quality
+
+Confidence
+
+==============================================================================
+
+PART 9
+
+DECISION CONFIDENCE CONSTITUTION
+
+Separate
+
+Coverage
+
+Evidence
+
+Confidence
+
+Trust
+
+Probability
+
+Confidence is deterministic.
+
+Confidence must explain itself.
+
+Confidence is never guessed.
+
+==============================================================================
+
+PART 10
+
+DECISION EXPLAINABILITY CONSTITUTION
+
+Every decision explains
+
+Why
+
+Evidence
+
+Behaviour Drivers
+
+Competencies
+
+Concerns
+
+Alternatives
+
+Trade-offs
+
+Confidence
+
+Limitations
+
+Expected Outcomes
+
+==============================================================================
+
+PART 11
+
+ALTERNATIVE ENGINE CONSTITUTION
+
+Every recommendation generates
+
+Primary Option
+
+Secondary Option
+
+Alternative Option
+
+Fallback Option
+
+Deferred Option
+
+Each option explains
+
+Benefits
+
+Risks
+
+Evidence
+
+Trade-offs
+
+Confidence
+
+==============================================================================
+
+PART 12
+
+TRADE-OFF CONSTITUTION
+
+Every important decision evaluates
+
+Risk
+
+Benefit
+
+Cost
+
+Time
+
+Learning Impact
+
+Career Impact
+
+Behaviour Impact
+
+Enterprise Impact
+
+Life Impact
+
+Trade-offs remain transparent.
+
+==============================================================================
+
+PART 13
+
+DECISION SIMULATION CONSTITUTION
+
+Support simulation of
+
+Career Decisions
+
+Learning Decisions
+
+Behaviour Interventions
+
+Subscription Decisions
+
+Enterprise Decisions
+
+Life Decisions
+
+Every simulation documents
+
+Inputs
+
+Assumptions
+
+Evidence
+
+Confidence
+
+Expected Outcomes
+
+==============================================================================
+
+PART 14
+
+DECISION MEMORY CONSTITUTION
+
+Protect
+
+Historical Decisions
+
+Decision Outcomes
+
+Decision Learning
+
+Decision Success
+
+Decision Failure
+
+Decision Evolution
+
+Decision Timeline
+
+Never overwrite historical decisions.
+
+==============================================================================
+
+PART 15
+
+DECISION LEARNING CONSTITUTION
+
+Decision Intelligence continuously improves through
+
+Outcome Tracking
+
+Behaviour Evolution
+
+Journey Progress
+
+Learning Results
+
+Career Results
+
+Enterprise Results
+
+Never modify historical evidence.
+
+==============================================================================
+
+PART 16
+
+DECISION RECOMMENDATION CONSTITUTION
+
+Every recommendation includes
+
+Why
+
+Evidence
+
+Confidence
+
+Priority
+
+Alternatives
+
+Trade-offs
+
+Journey Impact
+
+Learning Impact
+
+Career Impact
+
+Life Impact
+
+Subscription Impact
+
+==============================================================================
+
+PART 17
+
+DECISION AI CONSTITUTION
+
+AI explains decisions.
+
+AI recommends.
+
+AI compares.
+
+AI summarizes.
+
+AI never becomes the decision maker.
+
+AI cannot modify evidence.
+
+AI cannot fabricate confidence.
+
+==============================================================================
+
+PART 18
+
+ENTERPRISE DECISION CONSTITUTION
+
+Protect
+
+Hiring Recommendations
+
+Learning Recommendations
+
+Promotion Guidance
+
+Leadership Development
+
+Team Decisions
+
+Department Insights
+
+Succession Planning
+
+Governance
+
+Compliance
+
+Human approval remains mandatory.
+
+==============================================================================
+
+PART 19
+
+DECISION SECURITY CONSTITUTION
+
+Protect
+
+Decision Data
+
+Evidence
+
+Confidence
+
+Recommendations
+
+Trade-offs
+
+Enterprise Decisions
+
+Permissions
+
+PII
+
+Consent
+
+==============================================================================
+
+PART 20
+
+DECISION OBSERVABILITY
+
+Monitor
+
+Decision Engine
+
+Outcome Projection
+
+Alternative Engine
+
+Trade-off Engine
+
+Latency
+
+Failures
+
+Decision Quality
+
+Recommendation Quality
+
+Confidence Quality
+
+==============================================================================
+
+PART 21
+
+DECISION ANALYTICS
+
+Protect
+
+Decision KPIs
+
+Decision Trends
+
+Decision Success
+
+Decision Adoption
+
+Recommendation Adoption
+
+Decision Accuracy
+
+Outcome Achievement
+
+Behaviour Improvement
+
+==============================================================================
+
+PART 22
+
+DECISION REPORT CONSTITUTION
+
+Every Decision report contains
+
+Decision Summary
+
+Evidence
+
+Confidence
+
+Alternatives
+
+Trade-offs
+
+Expected Outcomes
+
+Journey Impact
+
+Learning Impact
+
+Career Impact
+
+Next Actions
+
+==============================================================================
+
+PART 23
+
+DECISION API CONSTITUTION
+
+Protect
+
+Decision APIs
+
+Outcome APIs
+
+Recommendation APIs
+
+Alternative APIs
+
+Simulation APIs
+
+Enterprise Decision APIs
+
+Never duplicate API contracts.
+
+==============================================================================
+
+PART 24
+
+DECISION TESTING CONSTITUTION
+
+Standardize
+
+Decision Logic Tests
+
+Outcome Tests
+
+Recommendation Tests
+
+Confidence Tests
+
+Evidence Tests
+
+Simulation Tests
+
+Regression Tests
+
+==============================================================================
+
+PART 25
+
+DECISION DOCUMENTATION
+
+Maintain
+
+Decision Catalog
+
+Outcome Catalog
+
+Evidence Guide
+
+Confidence Guide
+
+Simulation Guide
+
+Trade-off Guide
+
+Alternative Guide
+
+==============================================================================
+
+PART 26
+
+DECISION GOVERNANCE
+
+Every Decision enhancement answers
+
+Why is Decision changing?
+
+What existing Decision capability is reused?
+
+Does this duplicate WC-3?
+
+Does this improve user outcomes?
+
+Does this preserve explainability?
+
+Does this preserve evidence?
+
+==============================================================================
+
+PART 27
+
+DECISION QUALITY GATES
+
+Verify
+
+Existing WC-3 reused
+
+Decision Orchestrator reused
+
+Evidence exposed
+
+Confidence exposed
+
+Alternatives generated
+
+Trade-offs documented
+
+Explainability complete
+
+Documentation updated
+
+==============================================================================
+
+PART 28
+
+DECISION REVIEW BOARD
+
+Mandatory Approval
+
+Founder
+
+Decision Architect
+
+Behaviour Scientist
+
+AI Architect
+
+Chief Psychologist
+
+Enterprise
+
+Research
+
+Security
+
+QA
+
+==============================================================================
+
+PART 29
+
+DECISION DEFINITION OF DONE
+
+Decision enhancement completes only if
+
+Existing Decision Engine reused
+
+WC-3 preserved
+
+Decision Graph preserved
+
+Evidence exposed
+
+Confidence exposed
+
+Alternatives generated
+
+Trade-offs documented
+
+Explainability complete
+
+Human approval preserved
+
+Documentation updated
+
+No regressions
+
+==============================================================================
+
+PART 30
+
+DECISION MATURITY MODEL
+
+Assess
+
+Decision Engine
+
+Outcome Projection
+
+Decision Graph
+
+Alternative Engine
+
+Trade-off Engine
+
+Decision Learning
+
+Decision Analytics
+
+Decision Reports
+
+Enterprise Decisions
+
+Levels
+
+1 Operational
+
+2 Assisted
+
+3 Explainable
+
+4 Predictive
+
+5 Autonomous Guidance (Human Approved)
+
+Document
+
+Current maturity
+
+Target maturity
+
+Enhancement roadmap
+
+==============================================================================
+
+PART 31
+
+DECISION SCIENTIFIC VALIDATION
+
+Every Decision enhancement documents
+
+Behaviour Basis
+
+Decision Theory
+
+Psychological Basis
+
+Evidence Quality
+
+Confidence Model
+
+Bias Review
+
+Ethical Review
+
+Cultural Validation
+
+Population Applicability
+
+Decision Limitations
+
+==============================================================================
+
+PART 32
+
+DECISION EVOLUTION STRATEGY
+
+Future evolution supports
+
+New Decision Models
+
+New Simulation Models
+
+New Recommendation Models
+
+New Enterprise Decisions
+
+New Industry Frameworks
+
+New AI Models
+
+New Behaviour Inputs
+
+New Outcome Models
+
+without breaking
+
+Existing WC-3
+
+Decision Engine
+
+Behaviour Intelligence
+
+Journey Engine
+
+Reports
+
+AI
+
+==============================================================================
+
+PART 33
+
+DELIVERABLES
+
+Generate
+
+01 Decision Intelligence Constitution
+
+02 Decision Architecture Report
+
+03 WC-3 Constitution
+
+04 Decision Orchestrator Constitution
+
+05 Decision Graph Constitution
+
+06 Outcome Projection Constitution
+
+07 Decision Evidence Constitution
+
+08 Decision Confidence Constitution
+
+09 Decision Explainability Constitution
+
+10 Alternative Engine Constitution
+
+11 Trade-off Constitution
+
+12 Decision Simulation Constitution
+
+13 Decision Memory Constitution
+
+14 Decision Learning Constitution
+
+15 Decision Recommendation Constitution
+
+16 Decision AI Constitution
+
+17 Enterprise Decision Constitution
+
+18 Decision Security Constitution
+
+19 Decision Analytics Constitution
+
+20 Decision Report Constitution
+
+21 Decision API Constitution
+
+22 Decision Governance Constitution
+
+23 Decision Quality Gates
+
+24 Decision Review Board
+
+25 Decision Definition of Done
+
+26 Decision Scientific Validation
+
+27 Decision Evolution Strategy
+
+28 Decision Maturity Assessment
+
+==============================================================================
+
+STOP
+
+Do not modify WC-3.
+
+Do not activate dormant Decision Engine components.
+
+Do not replace Outcome Projection.
+
+Do not create another Decision Engine.
+
+Do not regenerate Decision Graph.
+
+Do not modify business logic.
+
+Do not replace Behaviour Intelligence.
+
+Freeze this Decision Intelligence Constitution after approval.
+
+Every future Decision Intelligence enhancement,
+Outcome Projection enhancement,
+Recommendation enhancement,
+Enterprise Decision enhancement,
+Simulation enhancement,
+Behaviour-to-Decision enhancement,
+and AI Decision enhancement
+must comply with this constitution.

@@ -1302,3 +1302,9 @@ id = "jaYLBPvU4XonOoSfY7vEg"
 uri = "file://backend/audit/mx-700/phase-1.27-analytics-intelligence-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.27: Analytics Intelligence Constitution (Platform Analytics + Predictive Analytics + Longitudinal Analytics + KPI Engine)"
+
+[[outputs]]
+id = "kLpDxKkYc1hYuhKPJGqGD"
+uri = "file://backend/audit/mx-700/phase-1.28-ai-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.28: AI Intelligence Constitution (AI Gateway + Model Registry + Prompt Registry + AI Orchestration)"

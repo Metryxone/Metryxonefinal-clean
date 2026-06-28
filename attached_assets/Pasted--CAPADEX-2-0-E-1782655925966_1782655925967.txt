@@ -1,0 +1,1088 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.28
+#
+# AI INTELLIGENCE CONSTITUTION
+# (AI GATEWAY + MODEL REGISTRY + PROMPT REGISTRY + AI ORCHESTRATION)
+#
+# EXECUTION MODE
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT CREATE A SECOND AI ENGINE
+# DO NOT REPLACE PRAGATI
+# DO NOT CREATE AI V2
+# DO NOT MODIFY BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT AI CAPABILITIES
+#
+# THIS PHASE ESTABLISHES THE PERMANENT
+# AI INTELLIGENCE CONSTITUTION
+# ==============================================================================
+
+MISSION
+
+Create the permanent AI Intelligence Constitution for CAPADEX.
+
+AI Intelligence is the cognitive assistance layer that enhances every intelligence
+system within CAPADEX.
+
+AI never replaces intelligence.
+
+AI augments intelligence.
+
+Assessment Intelligence measures.
+
+Behaviour Intelligence understands.
+
+Concern Intelligence interprets.
+
+Competency Intelligence evaluates.
+
+Decision Intelligence prioritizes.
+
+Learning Intelligence develops.
+
+Career Intelligence guides.
+
+Report Intelligence explains.
+
+Analytics Intelligence measures.
+
+AI Intelligence assists every layer while remaining governed by evidence.
+
+Repository remains the Single Source of Truth.
+
+Governance only.
+
+No implementation.
+
+==============================================================================
+HONESTY CONTRACT
+==============================================================================
+
+Measured = Live Repository + Live Database using exact SELECT COUNT(*)
+
+Derived = AI Architecture Interpretation
+
+AI ≠ Intelligence
+
+AI ≠ Human
+
+AI ≠ Decision Maker
+
+AI ≠ Psychologist
+
+AI ≠ Career Counselor
+
+AI ≠ Doctor
+
+AI ≠ Recruiter
+
+Prompt ≠ Knowledge
+
+Response ≠ Truth
+
+Prediction ≠ Fact
+
+Inference ≠ Evidence
+
+Confidence ≠ Accuracy
+
+Coverage ≠ Confidence
+
+Reasoning ≠ Understanding
+
+Model Output ≠ Verified Information
+
+LLM ≠ Source of Truth
+
+Human remains accountable.
+
+Built ≠ Activated
+
+Flag Enabled ≠ Runtime Active
+
+Null ≠ Zero
+
+Never fabricate.
+
+Never hallucinate.
+
+Never estimate unknown facts.
+
+==============================================================================
+
+PRIMARY OBJECTIVES
+
+Protect AI Gateway
+
+Protect Pragati
+
+Protect Prompt Registry
+
+Protect Model Registry
+
+Protect AI Orchestrator
+
+Protect AI Memory
+
+Protect AI Safety
+
+Protect AI Evaluation
+
+Protect AI Observability
+
+Protect AI Intelligence IP
+
+==============================================================================
+
+MANDATORY RULES
+
+Before modifying AI Intelligence
+
+Search repository
+
+Locate Pragati
+
+Locate AI Gateway
+
+Locate AI Services
+
+Locate OpenAI Integration
+
+Locate Whisper Integration
+
+Locate HeyGen Integration
+
+Locate AI Orchestrator
+
+Locate Prompt Registry
+
+Locate Model Registry
+
+Locate AI Memory
+
+Locate AI Evaluation
+
+Locate AI Monitoring
+
+Locate AI Analytics
+
+Locate AI APIs
+
+Locate Database
+
+Never create another AI Engine.
+
+Never duplicate AI orchestration.
+
+Never bypass AI Gateway.
+
+Enhance existing implementation only.
+
+==============================================================================
+
+PART 1
+
+CURRENT AI INTELLIGENCE AUDIT
+
+Perform a complete repository and database audit using exact COUNT(*).
+
+Measure
+
+Pragati
+
+AI Gateway
+
+OpenAI Integration
+
+Whisper Integration
+
+HeyGen Integration
+
+Model Registry
+
+Prompt Registry
+
+Prompt Library
+
+Prompt Templates
+
+AI Memory
+
+Conversation Memory
+
+AI Evaluation
+
+AI Monitoring
+
+AI Analytics
+
+AI Reports
+
+AI APIs
+
+AI Security
+
+AI Governance
+
+AI Technical Debt
+
+Duplicate AI Services
+
+Dormant AI Runtime
+
+Activation Readiness
+
+Classify
+
+LIVE
+
+PARTIAL
+
+SEEDED
+
+DORMANT
+
+BROKEN
+
+EMPTY
+
+TECH DEBT
+
+MISSING
+
+Explicitly identify
+
+Repository implementation
+
+Database population
+
+Runtime activation
+
+Duplicate AI gateways
+
+Duplicate prompt systems
+
+Model duplication
+
+Broken AI routing
+
+Unused prompts
+
+==============================================================================
+
+PART 2
+
+AI PHILOSOPHY
+
+AI exists to
+
+Assist
+
+Explain
+
+Summarize
+
+Guide
+
+Recommend
+
+Educate
+
+Forecast
+
+Support
+
+AI never
+
+Makes autonomous decisions
+
+Overrides evidence
+
+Creates facts
+
+Invents behaviour
+
+Invents competencies
+
+Invents concerns
+
+Invents reports
+
+==============================================================================
+
+PART 3
+
+AI DOMAIN ARCHITECTURE
+
+AI Gateway
+
+Pragati
+
+AI Orchestrator
+
+Model Registry
+
+Prompt Registry
+
+Conversation Memory
+
+AI Evaluation
+
+AI Analytics
+
+AI Monitoring
+
+AI Reports
+
+AI Governance
+
+==============================================================================
+
+PART 4
+
+AI GATEWAY CONSTITUTION
+
+AI Gateway remains
+
+the only canonical AI gateway.
+
+Never replace AI Gateway.
+
+Never create AI Gateway V2.
+
+Never duplicate AI routing.
+
+Enhance only.
+
+Protect
+
+Routing
+
+Providers
+
+Models
+
+Fallback
+
+Retries
+
+Observability
+
+==============================================================================
+
+PART 5
+
+PRAGATI CONSTITUTION
+
+Pragati remains
+
+the only canonical conversational intelligence engine.
+
+Never replace Pragati.
+
+Never create Pragati V2.
+
+Protect
+
+Conversation
+
+Reasoning
+
+Memory
+
+Safety
+
+Context
+
+State
+
+==============================================================================
+
+PART 6
+
+MODEL REGISTRY CONSTITUTION
+
+Protect
+
+Model Catalog
+
+Provider Registry
+
+Capabilities
+
+Limits
+
+Versions
+
+Availability
+
+Fallback Priority
+
+Never hardcode models.
+
+==============================================================================
+
+PART 7
+
+PROMPT REGISTRY CONSTITUTION
+
+Protect
+
+Prompt Library
+
+Prompt Templates
+
+Prompt Versioning
+
+Prompt Ownership
+
+Prompt Metadata
+
+Prompt Evaluation
+
+Prompt Lifecycle
+
+Never hardcode prompts.
+
+==============================================================================
+
+PART 8
+
+AI MEMORY CONSTITUTION
+
+Protect
+
+Conversation Memory
+
+Longitudinal Memory
+
+Session Memory
+
+Context Memory
+
+Memory Provenance
+
+Memory Retention
+
+Memory Expiry
+
+AI memory never becomes source of truth.
+
+==============================================================================
+
+PART 9
+
+AI REASONING CONSTITUTION
+
+AI reasoning uses
+
+Assessment
+
+Behaviour
+
+Concern
+
+Competency
+
+Decision
+
+Learning
+
+Career
+
+Reports
+
+Analytics
+
+Evidence
+
+AI never reasons without evidence.
+
+==============================================================================
+
+PART 10
+
+AI EVIDENCE CONSTITUTION
+
+Every AI response exposes
+
+Evidence
+
+Source
+
+Coverage
+
+Confidence
+
+Quality
+
+Limitations
+
+==============================================================================
+
+PART 11
+
+AI CONFIDENCE CONSTITUTION
+
+Separate
+
+Coverage
+
+Evidence
+
+Confidence
+
+Model Confidence
+
+Response Confidence
+
+Trust
+
+==============================================================================
+
+PART 12
+
+AI EXPLAINABILITY CONSTITUTION
+
+Every AI output explains
+
+Why
+
+Evidence
+
+Reasoning
+
+Alternatives
+
+Confidence
+
+Limitations
+
+==============================================================================
+
+PART 13
+
+AI SAFETY CONSTITUTION
+
+Protect
+
+Prompt Safety
+
+Output Safety
+
+PII Protection
+
+Consent
+
+Data Isolation
+
+Hallucination Prevention
+
+Human Review
+
+==============================================================================
+
+PART 14
+
+AI EVALUATION CONSTITUTION
+
+Evaluate
+
+Accuracy
+
+Groundedness
+
+Completeness
+
+Latency
+
+Cost
+
+Hallucination Rate
+
+Prompt Quality
+
+==============================================================================
+
+PART 15
+
+AI OBSERVABILITY CONSTITUTION
+
+Monitor
+
+Latency
+
+Errors
+
+Failures
+
+Retries
+
+Fallback
+
+Model Usage
+
+Prompt Usage
+
+Token Usage
+
+Cost
+
+==============================================================================
+
+PART 16
+
+AI ANALYTICS CONSTITUTION
+
+Protect
+
+Usage Analytics
+
+Model Analytics
+
+Prompt Analytics
+
+Conversation Analytics
+
+Performance Analytics
+
+Cost Analytics
+
+==============================================================================
+
+PART 17
+
+AI REPORT CONSTITUTION
+
+Protect
+
+AI Usage Reports
+
+Model Reports
+
+Prompt Reports
+
+Performance Reports
+
+Safety Reports
+
+Evaluation Reports
+
+==============================================================================
+
+PART 18
+
+ENTERPRISE AI CONSTITUTION
+
+Support
+
+Enterprise AI Policies
+
+Model Approval
+
+Prompt Approval
+
+Compliance
+
+Governance
+
+Human approval required.
+
+==============================================================================
+
+PART 19
+
+SUPERADMIN AI CONSTITUTION
+
+Support
+
+Model Registry
+
+Prompt Registry
+
+AI Policies
+
+AI Monitoring
+
+AI Configuration
+
+Safety Rules
+
+==============================================================================
+
+PART 20
+
+AI SECURITY CONSTITUTION
+
+Protect
+
+API Keys
+
+Tokens
+
+Models
+
+Prompt Data
+
+Conversation Data
+
+PII
+
+Tenant Isolation
+
+Secrets
+
+==============================================================================
+
+PART 21
+
+AI TESTING CONSTITUTION
+
+Standardize
+
+Prompt Tests
+
+Model Tests
+
+Routing Tests
+
+Safety Tests
+
+Regression Tests
+
+Performance Tests
+
+==============================================================================
+
+PART 22
+
+AI DOCUMENTATION
+
+Maintain
+
+Model Catalog
+
+Prompt Catalog
+
+AI API Guide
+
+Safety Guide
+
+Evaluation Guide
+
+==============================================================================
+
+PART 23
+
+AI GOVERNANCE
+
+Every enhancement answers
+
+Why is AI changing?
+
+What existing capability is reused?
+
+Does this duplicate Pragati?
+
+Does this preserve AI Safety?
+
+Does this preserve Evidence Integrity?
+
+==============================================================================
+
+PART 24
+
+AI QUALITY GATES
+
+Verify
+
+AI Gateway reused
+
+Pragati reused
+
+Model Registry reused
+
+Prompt Registry reused
+
+Evidence exposed
+
+Confidence exposed
+
+Explainability complete
+
+Documentation updated
+
+==============================================================================
+
+PART 25
+
+AI REVIEW BOARD
+
+Founder
+
+AI Architect
+
+LLM Architect
+
+Behaviour Scientist
+
+Security Architect
+
+Enterprise Architect
+
+Research
+
+QA
+
+==============================================================================
+
+PART 26
+
+AI DEFINITION OF DONE
+
+AI enhancement completes only if
+
+Existing AI Gateway reused
+
+Pragati preserved
+
+Prompt Registry preserved
+
+Model Registry preserved
+
+Evidence exposed
+
+Confidence exposed
+
+Explainability complete
+
+Safety validated
+
+Documentation updated
+
+No regressions
+
+==============================================================================
+
+PART 27
+
+AI MATURITY MODEL
+
+Assess
+
+AI Gateway
+
+Pragati
+
+Prompt Registry
+
+Model Registry
+
+AI Memory
+
+AI Safety
+
+AI Evaluation
+
+AI Monitoring
+
+Levels
+
+1 Operational
+
+2 Guided
+
+3 Adaptive
+
+4 Intelligent
+
+5 Continuous AI Intelligence
+
+==============================================================================
+
+PART 28
+
+AI SCIENTIFIC VALIDATION
+
+Document
+
+Large Language Models
+
+Retrieval Augmented Generation
+
+Prompt Engineering
+
+Human AI Interaction
+
+Responsible AI
+
+AI Evaluation
+
+Bias Review
+
+Ethics
+
+Safety
+
+==============================================================================
+
+PART 29
+
+AI EVOLUTION STRATEGY
+
+Future evolution supports
+
+New Models
+
+New Providers
+
+New Prompt Frameworks
+
+New Memory Systems
+
+New Safety Models
+
+New AI Assistants
+
+without breaking
+
+Assessment Intelligence
+
+Behaviour Intelligence
+
+Concern Intelligence
+
+Competency Intelligence
+
+Decision Intelligence
+
+Learning Intelligence
+
+Career Intelligence
+
+Report Intelligence
+
+Analytics Intelligence
+
+Enterprise Intelligence
+
+==============================================================================
+
+PART 30
+
+DELIVERABLES
+
+Generate
+
+01 AI Intelligence Constitution
+
+02 Repository AI Audit
+
+03 AI Gateway Constitution
+
+04 Pragati Constitution
+
+05 Model Registry Constitution
+
+06 Prompt Registry Constitution
+
+07 AI Memory Constitution
+
+08 AI Reasoning Constitution
+
+09 AI Evidence Constitution
+
+10 AI Confidence Constitution
+
+11 AI Explainability Constitution
+
+12 AI Safety Constitution
+
+13 AI Evaluation Constitution
+
+14 AI Observability Constitution
+
+15 AI Analytics Constitution
+
+16 AI Report Constitution
+
+17 Enterprise AI Constitution
+
+18 SuperAdmin AI Constitution
+
+19 AI Governance Constitution
+
+20 AI Quality Gates
+
+21 AI Review Board
+
+22 AI Definition of Done
+
+23 AI Scientific Validation
+
+24 AI Evolution Strategy
+
+25 AI Maturity Assessment
+
+==============================================================================
+
+STOP
+
+Do not modify AI Gateway.
+
+Do not replace Pragati.
+
+Do not create another AI Engine.
+
+Do not activate dormant AI capabilities.
+
+Do not modify business logic.
+
+Do not bypass Assessment Intelligence.
+
+Do not bypass Behaviour Intelligence.
+
+Do not bypass Concern Intelligence.
+
+Do not bypass Competency Intelligence.
+
+Do not bypass Decision Intelligence.
+
+Do not bypass Learning Intelligence.
+
+Do not bypass Career Intelligence.
+
+Do not bypass Report Intelligence.
+
+Do not bypass Analytics Intelligence.
+
+Freeze this AI Intelligence Constitution after approval.
+
+Every future
+
+AI enhancement,
+
+Pragati enhancement,
+
+AI Gateway enhancement,
+
+Prompt Registry enhancement,
+
+Model Registry enhancement,
+
+AI Memory enhancement,
+
+AI Safety enhancement,
+
+AI Evaluation enhancement,
+
+AI Observability enhancement,
+
+and AI Governance enhancement
+
+must comply with this Constitution.

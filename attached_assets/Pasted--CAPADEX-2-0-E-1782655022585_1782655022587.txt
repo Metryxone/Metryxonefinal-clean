@@ -1,0 +1,1052 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.26
+#
+# REPORT INTELLIGENCE CONSTITUTION
+# (REPORT FACTORY + LIVING REPORTS + INSIGHT ENGINE + REPORT ORCHESTRATION)
+#
+# EXECUTION MODE
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT CREATE A SECOND REPORT ENGINE
+# DO NOT REPLACE REPORT FACTORY
+# DO NOT CREATE REPORT V2
+# DO NOT MODIFY BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT REPORT CAPABILITIES
+#
+# THIS PHASE ESTABLISHES THE PERMANENT
+# REPORT INTELLIGENCE CONSTITUTION
+# ==============================================================================
+
+MISSION
+
+Create the permanent Report Intelligence Constitution for CAPADEX.
+
+Report Intelligence is the presentation and explanation layer that converts
+Behaviour Intelligence,
+Concern Intelligence,
+Competency Intelligence,
+Decision Intelligence,
+Learning Intelligence,
+Career Intelligence,
+Intervention Intelligence,
+Enterprise Intelligence
+into explainable, interactive and continuously evolving human insights.
+
+Reports never create intelligence.
+
+Reports communicate intelligence.
+
+Repository remains the Single Source of Truth.
+
+Governance only.
+
+No implementation.
+
+==============================================================================
+HONESTY CONTRACT
+==============================================================================
+
+Measured = Live Repository + Live Database using exact SELECT COUNT(*)
+
+Derived = Report Intelligence Interpretation
+
+Report ≠ Intelligence
+
+Report ≠ Decision
+
+Report ≠ Recommendation
+
+Report ≠ Evidence
+
+Visualization ≠ Insight
+
+Dashboard ≠ Analytics
+
+PDF ≠ Living Report
+
+Summary ≠ Explanation
+
+Explanation ≠ Evidence
+
+Evidence ≠ Confidence
+
+Confidence ≠ Accuracy
+
+Coverage ≠ Confidence
+
+AI ≠ Report Author
+
+Human remains responsible.
+
+Built ≠ Activated
+
+Flag Enabled ≠ Runtime Active
+
+Null ≠ Zero
+
+==============================================================================
+
+PRIMARY OBJECTIVES
+
+Protect Report Factory
+
+Protect Report Intelligence
+
+Protect Living Reports
+
+Protect Report Builder
+
+Protect Insight Engine
+
+Protect Report Templates
+
+Protect Benchmark Engine
+
+Protect Visualization Engine
+
+Protect Report Explainability
+
+Protect Report Intelligence IP
+
+==============================================================================
+
+MANDATORY RULES
+
+Before modifying Report Intelligence
+
+Search repository
+
+Locate Report Factory
+
+Locate Report Builder
+
+Locate Report Templates
+
+Locate Report Composer
+
+Locate PDF Engine
+
+Locate Living Reports
+
+Locate Benchmark Engine
+
+Locate Visualization Engine
+
+Locate Behaviour Reports
+
+Locate Concern Reports
+
+Locate Competency Reports
+
+Locate Decision Reports
+
+Locate Learning Reports
+
+Locate Career Reports
+
+Locate Enterprise Reports
+
+Locate APIs
+
+Locate Database
+
+Never create another Report Engine.
+
+Never duplicate reporting systems.
+
+Never bypass Report Factory.
+
+Enhance existing implementation only.
+
+==============================================================================
+
+PART 1
+
+CURRENT REPORT INTELLIGENCE AUDIT
+
+Perform a complete repository and database audit using exact COUNT(*).
+
+Measure and classify
+
+Report Factory
+
+Report Builder
+
+Report Templates
+
+PDF Generator
+
+Living Reports
+
+Interactive Reports
+
+Visualization Engine
+
+Insight Engine
+
+Benchmark Engine
+
+Comparison Engine
+
+Longitudinal Reports
+
+Executive Reports
+
+Enterprise Reports
+
+Report APIs
+
+Report AI
+
+Report Analytics
+
+Report Dashboards
+
+Technical Debt
+
+Duplicate Report Systems
+
+Dormant Report Runtime
+
+Activation Readiness
+
+Classify
+
+LIVE
+
+PARTIAL
+
+SEEDED
+
+DORMANT
+
+BROKEN
+
+EMPTY
+
+TECH DEBT
+
+MISSING
+
+Never estimate.
+
+Never use n_live_tup.
+
+Explicitly identify
+
+• Repository implementation
+
+• Database population
+
+• Runtime activation
+
+• Duplicate report systems
+
+• Broken report generation
+
+• Missing report templates
+
+==============================================================================
+
+PART 2
+
+REPORT PHILOSOPHY
+
+Report Intelligence exists to
+
+Explain
+
+Visualize
+
+Summarize
+
+Compare
+
+Track
+
+Guide
+
+Educate
+
+Support
+
+Reports never
+
+Diagnose
+
+Decide
+
+Guarantee outcomes
+
+Create evidence
+
+Reports communicate existing intelligence.
+
+==============================================================================
+
+PART 3
+
+REPORT DOMAIN ARCHITECTURE
+
+Report Core
+
+Report Factory
+
+Report Builder
+
+Insight Engine
+
+Visualization Engine
+
+Benchmark Engine
+
+Comparison Engine
+
+Report Templates
+
+PDF Engine
+
+Living Reports
+
+Enterprise Reports
+
+Analytics
+
+Governance
+
+==============================================================================
+
+PART 4
+
+REPORT FACTORY CONSTITUTION
+
+Report Factory remains
+
+the only canonical reporting engine.
+
+Never replace Report Factory.
+
+Never create Report Factory V2.
+
+Never duplicate reporting.
+
+Enhance only.
+
+Protect
+
+Report Pipeline
+
+Templates
+
+Builders
+
+Sections
+
+Composers
+
+Output Contracts
+
+==============================================================================
+
+PART 5
+
+REPORT TEMPLATE CONSTITUTION
+
+Protect
+
+Assessment Templates
+
+Behaviour Templates
+
+Concern Templates
+
+Competency Templates
+
+Learning Templates
+
+Career Templates
+
+Enterprise Templates
+
+Executive Templates
+
+Templates remain reusable.
+
+==============================================================================
+
+PART 6
+
+LIVING REPORT CONSTITUTION
+
+Living Reports remain
+
+the strategic direction.
+
+Protect
+
+Dynamic Reports
+
+Continuous Updates
+
+Longitudinal Views
+
+Interactive Insights
+
+Progress Tracking
+
+History
+
+Static PDFs remain supported.
+
+Living Reports extend them.
+
+==============================================================================
+
+PART 7
+
+INSIGHT ENGINE CONSTITUTION
+
+Protect
+
+Insight Generation
+
+Insight Ranking
+
+Insight Prioritization
+
+Insight Relationships
+
+Insight Timeline
+
+Insight Provenance
+
+Insights originate from intelligence layers.
+
+Never fabricate insights.
+
+==============================================================================
+
+PART 8
+
+VISUALIZATION CONSTITUTION
+
+Protect
+
+Charts
+
+Heatmaps
+
+Radar
+
+Spider
+
+Timeline
+
+Distribution
+
+Benchmarks
+
+Comparisons
+
+Visualizations explain data.
+
+Never replace evidence.
+
+==============================================================================
+
+PART 9
+
+BENCHMARK CONSTITUTION
+
+Protect
+
+Peer Benchmarks
+
+Industry Benchmarks
+
+Historical Benchmarks
+
+Enterprise Benchmarks
+
+Population Benchmarks
+
+Binding
+
+Abstain below k_min = 30.
+
+==============================================================================
+
+PART 10
+
+REPORT EVIDENCE CONSTITUTION
+
+Evidence originates from
+
+Assessment
+
+Behaviour
+
+Concern
+
+Competency
+
+Decision
+
+Learning
+
+Career
+
+Intervention
+
+Enterprise
+
+Longitudinal History
+
+Evidence contains
+
+Source
+
+Coverage
+
+Confidence
+
+Quality
+
+==============================================================================
+
+PART 11
+
+REPORT CONFIDENCE CONSTITUTION
+
+Separate
+
+Coverage
+
+Evidence
+
+Confidence
+
+Visualization Confidence
+
+Benchmark Confidence
+
+Report Confidence
+
+Trust
+
+==============================================================================
+
+PART 12
+
+REPORT EXPLAINABILITY CONSTITUTION
+
+Every report explains
+
+Why
+
+Evidence
+
+Source
+
+Relationships
+
+Confidence
+
+Limitations
+
+Alternatives
+
+Next Actions
+
+==============================================================================
+
+PART 13
+
+REPORT AI CONSTITUTION
+
+AI
+
+Summarizes
+
+Explains
+
+Personalizes
+
+Formats
+
+Translates
+
+Supports
+
+Never fabricates reports.
+
+Never invents evidence.
+
+Never bypasses governance.
+
+==============================================================================
+
+PART 14
+
+REPORT ANALYTICS CONSTITUTION
+
+Protect
+
+Report Usage
+
+Completion
+
+Downloads
+
+Reading Time
+
+Interaction
+
+Feedback
+
+Quality
+
+==============================================================================
+
+PART 15
+
+LONGITUDINAL REPORT CONSTITUTION
+
+Protect
+
+Historical Reports
+
+Progress Reports
+
+Trend Reports
+
+Evolution Reports
+
+Journey Reports
+
+History remains immutable.
+
+==============================================================================
+
+PART 16
+
+ENTERPRISE REPORT CONSTITUTION
+
+Support
+
+Executive Reports
+
+Leadership Reports
+
+Department Reports
+
+Institution Reports
+
+University Reports
+
+Corporate Reports
+
+Human approval required.
+
+==============================================================================
+
+PART 17
+
+SUPERADMIN REPORT CONSTITUTION
+
+Support
+
+Report Templates
+
+Sections
+
+Builders
+
+Policies
+
+Analytics
+
+Monitoring
+
+==============================================================================
+
+PART 18
+
+REPORT SECURITY CONSTITUTION
+
+Protect
+
+Report Data
+
+Evidence
+
+PII
+
+Permissions
+
+Consent
+
+Tenant Isolation
+
+Downloads
+
+Sharing
+
+==============================================================================
+
+PART 19
+
+REPORT OBSERVABILITY
+
+Monitor
+
+Report Factory
+
+Builders
+
+Generation Time
+
+Rendering
+
+Failures
+
+Latency
+
+Quality
+
+==============================================================================
+
+PART 20
+
+REPORT TESTING CONSTITUTION
+
+Standardize
+
+Template Tests
+
+Builder Tests
+
+Rendering Tests
+
+Regression Tests
+
+Performance Tests
+
+==============================================================================
+
+PART 21
+
+REPORT DOCUMENTATION
+
+Maintain
+
+Report Catalog
+
+Template Catalog
+
+Builder Catalog
+
+API Guide
+
+Analytics Guide
+
+==============================================================================
+
+PART 22
+
+REPORT GOVERNANCE
+
+Every enhancement answers
+
+Why is Report changing?
+
+What existing capability is reused?
+
+Does this duplicate Report Factory?
+
+Does this improve explainability?
+
+Does this preserve intelligence integrity?
+
+==============================================================================
+
+PART 23
+
+REPORT QUALITY GATES
+
+Verify
+
+Report Factory reused
+
+Templates reused
+
+Insights reused
+
+Evidence exposed
+
+Confidence exposed
+
+Benchmarks validated
+
+Explainability complete
+
+Documentation updated
+
+==============================================================================
+
+PART 24
+
+REPORT REVIEW BOARD
+
+Founder
+
+Report Architect
+
+Behaviour Scientist
+
+UX Architect
+
+Data Visualization Architect
+
+AI Architect
+
+Research
+
+Security
+
+QA
+
+==============================================================================
+
+PART 25
+
+REPORT DEFINITION OF DONE
+
+Report enhancement completes only if
+
+Existing Report Factory reused
+
+Templates preserved
+
+Builders preserved
+
+Evidence exposed
+
+Confidence exposed
+
+Explainability complete
+
+History preserved
+
+Documentation updated
+
+No regressions
+
+==============================================================================
+
+PART 26
+
+REPORT MATURITY MODEL
+
+Assess
+
+Report Factory
+
+Living Reports
+
+Templates
+
+Insights
+
+Visualization
+
+Benchmarks
+
+Enterprise Reports
+
+Analytics
+
+Levels
+
+1 Operational
+
+2 Guided
+
+3 Adaptive
+
+4 Intelligent
+
+5 Continuous Report Intelligence
+
+==============================================================================
+
+PART 27
+
+REPORT SCIENTIFIC VALIDATION
+
+Document
+
+Information Visualization
+
+Cognitive Psychology
+
+Decision Support
+
+Human Computer Interaction
+
+Dashboard Design
+
+Evidence Communication
+
+Bias Review
+
+Ethics
+
+==============================================================================
+
+PART 28
+
+REPORT EVOLUTION STRATEGY
+
+Future evolution supports
+
+New Report Types
+
+New Templates
+
+New Visualizations
+
+New Benchmarks
+
+New AI Report Writers
+
+New Executive Dashboards
+
+without breaking
+
+Assessment Intelligence
+
+Behaviour Intelligence
+
+Concern Intelligence
+
+Competency Intelligence
+
+Decision Intelligence
+
+Learning Intelligence
+
+Career Intelligence
+
+Intervention Intelligence
+
+Enterprise Intelligence
+
+==============================================================================
+
+PART 29
+
+DELIVERABLES
+
+Generate
+
+01 Report Intelligence Constitution
+
+02 Repository Report Audit
+
+03 Report Factory Constitution
+
+04 Report Template Constitution
+
+05 Living Report Constitution
+
+06 Insight Engine Constitution
+
+07 Visualization Constitution
+
+08 Benchmark Constitution
+
+09 Report Evidence Constitution
+
+10 Report Confidence Constitution
+
+11 Report Explainability Constitution
+
+12 Report AI Constitution
+
+13 Report Analytics Constitution
+
+14 Longitudinal Report Constitution
+
+15 Enterprise Report Constitution
+
+16 SuperAdmin Report Constitution
+
+17 Report Governance Constitution
+
+18 Report Quality Gates
+
+19 Report Review Board
+
+20 Report Definition of Done
+
+21 Report Scientific Validation
+
+22 Report Evolution Strategy
+
+23 Report Maturity Assessment
+
+==============================================================================
+
+STOP
+
+Do not modify Report Factory.
+
+Do not replace Report Intelligence.
+
+Do not create another Report Engine.
+
+Do not activate dormant Report capabilities.
+
+Do not modify business logic.
+
+Do not bypass Assessment Intelligence.
+
+Do not bypass Behaviour Intelligence.
+
+Do not bypass Concern Intelligence.
+
+Do not bypass Competency Intelligence.
+
+Do not bypass Decision Intelligence.
+
+Do not bypass Learning Intelligence.
+
+Do not bypass Career Intelligence.
+
+Freeze this Report Intelligence Constitution after approval.
+
+Every future
+
+Report Intelligence enhancement,
+
+Report Factory enhancement,
+
+Living Report enhancement,
+
+Insight Engine enhancement,
+
+Visualization enhancement,
+
+Benchmark enhancement,
+
+Enterprise Reporting enhancement,
+
+and Report AI enhancement
+
+must comply with this Constitution.

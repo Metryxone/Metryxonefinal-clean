@@ -1290,3 +1290,9 @@ id = "C46_n-QwnonubN3Y_fZw7"
 uri = "file://backend/audit/mx-700/phase-1.25-concern-intelligence-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.25: Concern Intelligence Constitution (Concern Master + Bridge Tags + Clarity Engine + Concern Graph)"
+
+[[outputs]]
+id = "JiP-WkPbnyO3Acc-CWjzX"
+uri = "file://backend/audit/mx-700/phase-1.26-report-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.26: Report Intelligence Constitution (Report Factory + Living Reports + Insight Engine + Report Orchestration)"

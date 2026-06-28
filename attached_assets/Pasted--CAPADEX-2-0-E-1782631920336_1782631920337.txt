@@ -1,0 +1,1093 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.6
+#
+# BACKEND ARCHITECTURE CONSTITUTION
+#
+# EXECUTION MODE
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT REWRITE
+# DO NOT CREATE PARALLEL SERVICES
+# DO NOT CHANGE BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT CAPABILITIES
+#
+# THIS PHASE CREATES THE PERMANENT BACKEND ARCHITECTURE CONSTITUTION
+# ==============================================================================
+
+MISSION
+
+Create the permanent Backend Architecture Constitution for CAPADEX.
+
+This constitution governs every backend enhancement, service, API,
+workflow, AI orchestration, decision flow, repository, middleware,
+background process, configuration and enterprise operation.
+
+Repository remains the single source of truth.
+
+This phase establishes engineering governance only.
+
+No implementation.
+
+==============================================================================
+
+PRIMARY OBJECTIVES
+
+Standardize backend architecture.
+
+Protect existing backend investment.
+
+Maximize reuse.
+
+Reduce technical debt.
+
+Improve scalability.
+
+Improve maintainability.
+
+Improve observability.
+
+Improve security.
+
+Prepare backend for enterprise scale.
+
+==============================================================================
+
+MANDATORY RULES
+
+Before changing backend code
+
+Search repository.
+
+Locate implementation.
+
+Understand current behavior.
+
+Document dependencies.
+
+Enhance existing implementation.
+
+Never duplicate
+
+Services
+
+Controllers
+
+Repositories
+
+Middleware
+
+Authentication
+
+Decision Engines
+
+Behaviour Engines
+
+AI Services
+
+Queues
+
+Workers
+
+Schedulers
+
+Configuration
+
+==============================================================================
+
+PART 1
+
+CURRENT BACKEND ARCHITECTURE AUDIT
+
+Audit
+
+Framework
+
+Runtime
+
+Modules
+
+Controllers
+
+Routes
+
+Services
+
+Repositories
+
+Business Logic
+
+Middleware
+
+Authentication
+
+Authorization
+
+Decision Engine
+
+Behaviour Engine
+
+Assessment Engine
+
+Question Engine
+
+Concern Engine
+
+Journey Engine
+
+Learning Engine
+
+Career Engine
+
+Subscription Engine
+
+Report Factory
+
+Pragati
+
+AI Services
+
+Configuration
+
+Feature Flags
+
+Caching
+
+Logging
+
+Workers
+
+Schedulers
+
+Jobs
+
+Events
+
+Observability
+
+Technical Debt
+
+Duplicate Services
+
+Large Services
+
+Circular Dependencies
+
+Unused Modules
+
+==============================================================================
+
+PART 2
+
+BACKEND PHILOSOPHY
+
+Backend exists to
+
+Process
+
+Validate
+
+Secure
+
+Orchestrate
+
+Decide
+
+Calculate
+
+Persist
+
+Explain
+
+Observe
+
+Never duplicate business logic.
+
+Never place business logic inside controllers.
+
+Never place business logic inside frontend.
+
+Backend remains the authoritative business layer.
+
+==============================================================================
+
+PART 3
+
+DOMAIN ARCHITECTURE
+
+Document current domains.
+
+Standardize
+
+Assessment
+
+Behaviour
+
+Decision
+
+Journey
+
+Learning
+
+Career
+
+Life
+
+Conversation
+
+Reports
+
+Enterprise
+
+Administration
+
+Subscriptions
+
+Payments
+
+Analytics
+
+Configuration
+
+Every enhancement belongs to an existing domain.
+
+New domains require Founder approval.
+
+==============================================================================
+
+PART 4
+
+SERVICE ARCHITECTURE
+
+Every service must be
+
+Single Responsibility
+
+Composable
+
+Reusable
+
+Testable
+
+Observable
+
+Feature Flag Aware
+
+Configurable
+
+Document
+
+Purpose
+
+Consumers
+
+Dependencies
+
+Performance
+
+Side Effects
+
+Reusability
+
+Lifecycle
+
+Ownership
+
+Never create duplicate services.
+
+==============================================================================
+
+PART 5
+
+CONTROLLER ARCHITECTURE
+
+Controllers only
+
+Receive Requests
+
+Validate
+
+Authorize
+
+Delegate
+
+Return Responses
+
+Controllers never
+
+Calculate
+
+Score
+
+Recommend
+
+Persist business decisions
+
+Call database directly
+
+==============================================================================
+
+PART 6
+
+REPOSITORY ARCHITECTURE
+
+Repositories only manage persistence.
+
+No business logic.
+
+Document
+
+Repository Ownership
+
+Tables
+
+Consumers
+
+Dependencies
+
+Transactions
+
+Caching
+
+==============================================================================
+
+PART 7
+
+BUSINESS LOGIC CONSTITUTION
+
+Business logic belongs exclusively inside services.
+
+Protect
+
+Decision Rules
+
+Behaviour Rules
+
+Assessment Rules
+
+Subscription Rules
+
+Report Rules
+
+Enterprise Rules
+
+AI Rules
+
+Journey Rules
+
+Never duplicate rules.
+
+==============================================================================
+
+PART 8
+
+DECISION ENGINE ARCHITECTURE
+
+Audit
+
+Decision Engine
+
+WC3
+
+Outcome Projection
+
+Evidence
+
+Confidence
+
+Alternatives
+
+Decision Graph
+
+Dependencies
+
+Consumers
+
+Document
+
+Current Architecture
+
+Dormant Components
+
+Activation Readiness
+
+Future Evolution
+
+No activation.
+
+Documentation only.
+
+==============================================================================
+
+PART 9
+
+BEHAVIOUR ENGINE ARCHITECTURE
+
+Audit
+
+Signal Processing
+
+Behaviour Ontology
+
+Competencies
+
+Evidence
+
+Confidence
+
+Recommendations
+
+Mappings
+
+Consumers
+
+Reports
+
+Journey Integration
+
+Never bypass Behaviour Engine.
+
+==============================================================================
+
+PART 10
+
+ASSESSMENT ENGINE ARCHITECTURE
+
+Document
+
+Assessment Flow
+
+Adaptive Questions
+
+Scoring
+
+Branching
+
+Evidence Collection
+
+Progress
+
+Completion
+
+Recommendations
+
+Journey Trigger
+
+==============================================================================
+
+PART 11
+
+AI SERVICE ARCHITECTURE
+
+Audit
+
+Pragati
+
+OpenAI
+
+Memory
+
+Reasoning
+
+Prompt Registry
+
+Context
+
+Conversation
+
+Summarization
+
+Safety
+
+Fallback
+
+Evaluation
+
+Confidence
+
+Observability
+
+Never create another AI layer.
+
+==============================================================================
+
+PART 12
+
+REPORT FACTORY ARCHITECTURE
+
+Audit
+
+Templates
+
+Builders
+
+Charts
+
+Narratives
+
+Recommendations
+
+Benchmarks
+
+Exports
+
+Interactive Reports
+
+Consumers
+
+==============================================================================
+
+PART 13
+
+AUTHENTICATION ARCHITECTURE
+
+Document
+
+Sessions
+
+JWT
+
+OAuth
+
+OTP
+
+Refresh
+
+Device Trust
+
+MFA
+
+Enterprise Login
+
+==============================================================================
+
+PART 14
+
+AUTHORIZATION ARCHITECTURE
+
+Document
+
+Roles
+
+Permissions
+
+RBAC
+
+Tenant Isolation
+
+Feature Flags
+
+Organization Scope
+
+Parent Scope
+
+Faculty Scope
+
+Enterprise Scope
+
+==============================================================================
+
+PART 15
+
+CONFIGURATION ARCHITECTURE
+
+Audit
+
+Environment Variables
+
+Runtime Configuration
+
+Feature Flags
+
+AI Configuration
+
+Assessment Configuration
+
+Subscription Configuration
+
+Security Configuration
+
+==============================================================================
+
+PART 16
+
+EVENT ARCHITECTURE
+
+Document
+
+Domain Events
+
+Assessment Events
+
+Journey Events
+
+Behaviour Events
+
+AI Events
+
+Subscription Events
+
+Enterprise Events
+
+Audit Events
+
+Notification Events
+
+==============================================================================
+
+PART 17
+
+QUEUE & WORKER ARCHITECTURE
+
+Audit
+
+Background Jobs
+
+Queues
+
+Workers
+
+Retries
+
+Dead Letter Queues
+
+Cron
+
+Schedulers
+
+Failure Recovery
+
+==============================================================================
+
+PART 18
+
+ERROR HANDLING CONSTITUTION
+
+Standardize
+
+Validation Errors
+
+Authentication Errors
+
+Authorization Errors
+
+Business Errors
+
+AI Errors
+
+Database Errors
+
+Integration Errors
+
+Retry
+
+Recovery
+
+Correlation IDs
+
+==============================================================================
+
+PART 19
+
+LOGGING & OBSERVABILITY
+
+Document
+
+Application Logs
+
+Audit Logs
+
+Security Logs
+
+AI Logs
+
+Decision Logs
+
+Behaviour Logs
+
+Performance Logs
+
+Tracing
+
+Metrics
+
+Health Checks
+
+Dashboards
+
+==============================================================================
+
+PART 20
+
+PERFORMANCE CONSTITUTION
+
+Audit
+
+Service Latency
+
+Database Calls
+
+Memory
+
+CPU
+
+Concurrency
+
+Caching
+
+Async Operations
+
+Streaming
+
+Response Time
+
+Scalability
+
+==============================================================================
+
+PART 21
+
+SECURITY CONSTITUTION
+
+Protect
+
+Authentication
+
+Authorization
+
+Secrets
+
+Encryption
+
+PII
+
+API Keys
+
+Sessions
+
+CSRF
+
+XSS
+
+Injection
+
+Rate Limiting
+
+Replay Protection
+
+==============================================================================
+
+PART 22
+
+INTEGRATION ARCHITECTURE
+
+Document
+
+OpenAI
+
+Firebase
+
+Email
+
+SMS
+
+WhatsApp
+
+Payment Gateway
+
+Analytics
+
+Cloud Storage
+
+Third Party APIs
+
+HR Systems
+
+University Systems
+
+Enterprise Systems
+
+Failure Handling
+
+==============================================================================
+
+PART 23
+
+FEATURE FLAG CONSTITUTION
+
+Every backend enhancement must support
+
+Environment Flags
+
+Tenant Flags
+
+Role Flags
+
+Kill Switch
+
+Progressive Rollout
+
+Backward Compatibility
+
+==============================================================================
+
+PART 24
+
+BACKEND TESTING CONSTITUTION
+
+Standardize
+
+Unit Tests
+
+Integration Tests
+
+API Tests
+
+Service Tests
+
+Repository Tests
+
+AI Tests
+
+Security Tests
+
+Performance Tests
+
+Regression Tests
+
+==============================================================================
+
+PART 25
+
+BACKEND DOCUMENTATION
+
+Maintain
+
+Architecture
+
+Service Catalog
+
+Domain Catalog
+
+Repository Catalog
+
+API References
+
+Configuration
+
+Deployment
+
+Feature Flags
+
+Operational Guides
+
+==============================================================================
+
+PART 26
+
+BACKEND QUALITY GATES
+
+Every enhancement must verify
+
+Existing services reused
+
+Existing repositories reused
+
+Existing controllers reused
+
+No duplicate business logic
+
+No duplicate services
+
+Performance maintained
+
+Security maintained
+
+Observability maintained
+
+Feature Flags respected
+
+Documentation updated
+
+==============================================================================
+
+PART 27
+
+BACKEND REVIEW BOARD
+
+Mandatory Approval
+
+Founder
+
+Backend Architect
+
+Solution Architect
+
+Product
+
+AI Architect
+
+Behaviour Scientist
+
+Security
+
+Enterprise Architect
+
+DevOps
+
+QA
+
+==============================================================================
+
+PART 28
+
+BACKEND DEFINITION OF DONE
+
+A backend enhancement completes only if
+
+Existing services enhanced
+
+Existing repositories reused
+
+Existing controllers reused
+
+Existing middleware reused
+
+Existing AI reused
+
+Existing Decision Engine reused
+
+Existing Behaviour Engine reused
+
+Feature Flags respected
+
+Observability updated
+
+Logging updated
+
+Performance maintained
+
+Security verified
+
+Tests passing
+
+Documentation updated
+
+No regressions
+
+==============================================================================
+
+PART 29
+
+BACKEND MATURITY MODEL
+
+Assess every backend domain
+
+Level 1
+
+Operational
+
+Level 2
+
+Reusable
+
+Level 3
+
+Composable
+
+Level 4
+
+Observable
+
+Level 5
+
+Predictive
+
+Document current maturity.
+
+Document target maturity.
+
+Document enhancement roadmap.
+
+==============================================================================
+
+PART 30
+
+DELIVERABLES
+
+Generate
+
+01 Backend Architecture Constitution
+
+02 Backend Architecture Report
+
+03 Domain Architecture
+
+04 Service Architecture
+
+05 Controller Constitution
+
+06 Repository Constitution
+
+07 Business Logic Constitution
+
+08 Decision Engine Architecture
+
+09 Behaviour Engine Architecture
+
+10 Assessment Engine Architecture
+
+11 AI Service Architecture
+
+12 Report Factory Architecture
+
+13 Authentication Constitution
+
+14 Authorization Constitution
+
+15 Event Architecture
+
+16 Queue & Worker Architecture
+
+17 Configuration Constitution
+
+18 Security Constitution
+
+19 Observability Constitution
+
+20 Performance Constitution
+
+21 Backend Testing Constitution
+
+22 Backend Quality Gates
+
+23 Backend Review Board
+
+24 Backend Definition of Done
+
+25 Backend Maturity Assessment
+
+==============================================================================
+STOP
+
+Do not implement backend changes.
+
+Do not refactor services.
+
+Do not activate dormant engines.
+
+Do not redesign workflows.
+
+Do not modify business logic.
+
+Do not create new services.
+
+Do not replace repositories.
+
+Freeze this Backend Architecture Constitution after approval.
+
+Every future backend enhancement phase must comply with this constitution.

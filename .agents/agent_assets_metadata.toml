@@ -1170,3 +1170,9 @@ id = "DgB5N_PN6qsmbGdGOXHLi"
 uri = "file://backend/audit/mx-700/phase-1.5-frontend-architecture-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.5: Frontend Architecture Constitution"
+
+[[outputs]]
+id = "Kowyn6n1qF-jGizUULXa-"
+uri = "file://backend/audit/mx-700/phase-1.6-backend-architecture-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.6: Backend Architecture Constitution"

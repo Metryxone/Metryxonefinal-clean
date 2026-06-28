@@ -1,0 +1,1084 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.21
+#
+# LEARNING INTELLIGENCE CONSTITUTION
+#
+# EXECUTION MODE
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT CREATE A SECOND LEARNING ENGINE
+# DO NOT REPLACE LEARNING INTELLIGENCE
+# DO NOT REPLACE LEARNING PATH ENGINE
+# DO NOT MODIFY BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT LEARNING CAPABILITIES
+#
+# THIS PHASE ESTABLISHES THE PERMANENT
+# LEARNING INTELLIGENCE CONSTITUTION
+# ==============================================================================
+
+MISSION
+
+Create the permanent Learning Intelligence Constitution for CAPADEX.
+
+Learning Intelligence transforms behavioural insights into measurable capability growth.
+
+Assessment Intelligence discovers.
+
+Behaviour Intelligence understands.
+
+Conversation Intelligence explains.
+
+Decision Intelligence prioritizes.
+
+Journey Intelligence plans.
+
+Intervention Intelligence executes.
+
+Learning Intelligence develops capability.
+
+Career Intelligence converts capability into opportunity.
+
+Life Intelligence sustains continuous growth.
+
+Enterprise Intelligence scales organizational capability.
+
+Learning Intelligence exists to create lifelong adaptive learning.
+
+Repository remains the Single Source of Truth.
+
+Governance only.
+
+No implementation.
+
+==============================================================================
+HONESTY CONTRACT
+==============================================================================
+
+Measured = Live Repository + Live Database
+
+Derived = Educational Interpretation
+
+Learning ≠ Course
+
+Course ≠ Competency
+
+Competency ≠ Skill
+
+Skill ≠ Capability
+
+Capability ≠ Performance
+
+Completion ≠ Learning
+
+Learning ≠ Behaviour Change
+
+Learning ≠ Certification
+
+Certification ≠ Competence
+
+Evidence ≠ Confidence
+
+Confidence ≠ Mastery
+
+Mastery ≠ Expertise
+
+AI ≠ Teacher
+
+Human remains responsible.
+
+Built ≠ Activated
+
+Flag Enabled ≠ Runtime Active
+
+Seeded Catalog ≠ Learning Ecosystem
+
+Null ≠ Zero
+
+==============================================================================
+
+PRIMARY OBJECTIVES
+==============================================================================
+
+Protect Learning Intelligence
+
+Protect Learning Engine
+
+Protect Learning Paths
+
+Protect Learning Graph
+
+Protect Skill Intelligence
+
+Protect Competency Development
+
+Protect Adaptive Learning
+
+Protect Learning Analytics
+
+Protect Learning Recommendations
+
+Protect Learning Intelligence IP
+
+==============================================================================
+
+MANDATORY RULES
+==============================================================================
+
+Before modifying Learning Intelligence
+
+Search repository
+
+Locate Learning Engine
+
+Locate Learning Intelligence
+
+Locate Learning Paths
+
+Locate Learning Journey
+
+Locate Learning Recommendations
+
+Locate Learning Analytics
+
+Locate Competency Framework
+
+Locate Behaviour Engine
+
+Locate Assessment Engine
+
+Locate Decision Engine
+
+Locate Journey Engine
+
+Locate Career Engine
+
+Locate Enterprise Engine
+
+Locate Reports
+
+Locate APIs
+
+Locate Database
+
+Never create another Learning Engine.
+
+Never duplicate Learning Intelligence.
+
+Never bypass Behaviour Intelligence.
+
+Never bypass Journey Intelligence.
+
+Never bypass Competency Intelligence.
+
+Enhance existing implementation only.
+
+==============================================================================
+
+PART 1
+
+CURRENT LEARNING INTELLIGENCE AUDIT
+
+Audit
+
+Learning Runtime
+
+Learning Engine
+
+Learning Intelligence
+
+Learning Catalog
+
+Learning Paths
+
+Learning Roadmaps
+
+Skill Intelligence
+
+Competency Learning
+
+Adaptive Learning
+
+Learning Recommendations
+
+Learning Analytics
+
+Learning Reports
+
+Learning APIs
+
+Learning AI
+
+Learning Dashboard
+
+Learning Technical Debt
+
+Learning Duplication
+
+Dormant Learning Components
+
+Activation Readiness
+
+==============================================================================
+
+PART 2
+
+LEARNING PHILOSOPHY
+
+Learning exists to
+
+Develop
+
+Improve
+
+Adapt
+
+Practice
+
+Apply
+
+Retain
+
+Transfer
+
+Master
+
+Learning Intelligence never exists to merely deliver content.
+
+Learning Intelligence develops measurable capability.
+
+Learning never ends.
+
+==============================================================================
+
+PART 3
+
+LEARNING DOMAIN ARCHITECTURE
+
+Learning Core
+
+Learning Engine
+
+Learning Paths
+
+Learning Journey
+
+Learning Graph
+
+Adaptive Learning
+
+Skill Intelligence
+
+Competency Learning
+
+Learning Analytics
+
+Learning Reports
+
+Learning AI
+
+Learning Governance
+
+==============================================================================
+
+PART 4
+
+LEARNING ENGINE CONSTITUTION
+
+Learning Engine remains
+
+The only Learning Intelligence Engine.
+
+Never replace Learning Engine.
+
+Never create Learning Engine V2.
+
+Never duplicate learning orchestration.
+
+Enhance only.
+
+Protect
+
+Learning Logic
+
+Learning Pipeline
+
+Learning Memory
+
+Learning Sequencing
+
+Learning Explainability
+
+==============================================================================
+
+PART 5
+
+LEARNING PATH CONSTITUTION
+
+Protect
+
+Learning Paths
+
+Learning Roadmaps
+
+Milestones
+
+Modules
+
+Dependencies
+
+Prerequisites
+
+Learning Flow
+
+Completion Logic
+
+Learning Paths originate from Decision Intelligence.
+
+==============================================================================
+
+PART 6
+
+ADAPTIVE LEARNING CONSTITUTION
+
+Adaptive Learning uses
+
+Behaviour
+
+Assessment
+
+Competency
+
+Persona
+
+Journey
+
+Learning History
+
+Career Goals
+
+Confidence
+
+Every adaptive learning recommendation explains
+
+Why.
+
+==============================================================================
+
+PART 7
+
+SKILL INTELLIGENCE CONSTITUTION
+
+Protect
+
+Skills
+
+Skill Mapping
+
+Skill Relationships
+
+Skill Evolution
+
+Skill Progression
+
+Skill Analytics
+
+Skill Evidence
+
+==============================================================================
+
+PART 8
+
+COMPETENCY LEARNING CONSTITUTION
+
+Protect
+
+Competencies
+
+Competency Development
+
+Competency Reinforcement
+
+Competency Practice
+
+Competency Evolution
+
+Competency Validation
+
+Never duplicate Competency Intelligence.
+
+==============================================================================
+
+PART 9
+
+LEARNING CONTENT CONSTITUTION
+
+Support
+
+Courses
+
+Micro Learning
+
+Projects
+
+Practice Sessions
+
+Case Studies
+
+Exercises
+
+Assessments
+
+Content remains modular.
+
+==============================================================================
+
+PART 10
+
+LEARNING RECOMMENDATION CONSTITUTION
+
+Every recommendation evaluates
+
+Behaviour
+
+Assessment
+
+Competency
+
+Journey
+
+Career Goals
+
+Learning History
+
+Evidence
+
+Confidence
+
+Never recommend learning without evidence.
+
+==============================================================================
+
+PART 11
+
+LEARNING EVIDENCE CONSTITUTION
+
+Evidence originates from
+
+Assessments
+
+Behaviour
+
+Learning Activities
+
+Projects
+
+Practice
+
+Competencies
+
+Historical Learning
+
+Journey Progress
+
+Evidence contains
+
+Source
+
+Coverage
+
+Confidence
+
+Quality
+
+==============================================================================
+
+PART 12
+
+LEARNING CONFIDENCE CONSTITUTION
+
+Separate
+
+Coverage
+
+Evidence
+
+Confidence
+
+Mastery
+
+Capability
+
+Learning Progress
+
+Trust
+
+Never combine into one metric.
+
+==============================================================================
+
+PART 13
+
+LEARNING EXPLAINABILITY CONSTITUTION
+
+Every learning recommendation explains
+
+Why
+
+Evidence
+
+Competency Drivers
+
+Behaviour Drivers
+
+Confidence
+
+Alternatives
+
+Dependencies
+
+Expected Outcome
+
+==============================================================================
+
+PART 14
+
+LEARNING AI CONSTITUTION
+
+AI
+
+Explains
+
+Guides
+
+Summarizes
+
+Personalizes
+
+Supports
+
+Never certifies competency.
+
+Never fabricates learning.
+
+Never bypasses governance.
+
+==============================================================================
+
+PART 15
+
+LEARNING ANALYTICS CONSTITUTION
+
+Protect
+
+Learning KPIs
+
+Completion
+
+Retention
+
+Engagement
+
+Mastery
+
+Competency Growth
+
+Skill Growth
+
+Learning Trends
+
+==============================================================================
+
+PART 16
+
+LEARNING REPORT CONSTITUTION
+
+Every report contains
+
+Learning Summary
+
+Completed Learning
+
+Pending Learning
+
+Competencies
+
+Skills
+
+Evidence
+
+Confidence
+
+Recommendations
+
+Next Steps
+
+==============================================================================
+
+PART 17
+
+LONGITUDINAL LEARNING CONSTITUTION
+
+Protect
+
+Learning History
+
+Skill Evolution
+
+Competency Evolution
+
+Learning Progress
+
+Mastery Timeline
+
+Learning Trends
+
+Never overwrite learning history.
+
+==============================================================================
+
+PART 18
+
+ENTERPRISE LEARNING CONSTITUTION
+
+Support
+
+Corporate Learning
+
+Leadership Development
+
+Compliance Learning
+
+Capability Building
+
+Learning Campaigns
+
+Learning Academies
+
+Human approval required.
+
+==============================================================================
+
+PART 19
+
+SUPERADMIN LEARNING CONSTITUTION
+
+Support
+
+Learning Catalog
+
+Learning Paths
+
+Competency Mapping
+
+Adaptive Rules
+
+Learning Policies
+
+Analytics
+
+Reports
+
+Monitoring
+
+==============================================================================
+
+PART 20
+
+LEARNING SECURITY CONSTITUTION
+
+Protect
+
+Learning Data
+
+Competencies
+
+Skills
+
+Evidence
+
+Reports
+
+Permissions
+
+Consent
+
+PII
+
+Tenant Isolation
+
+==============================================================================
+
+PART 21
+
+LEARNING OBSERVABILITY
+
+Monitor
+
+Learning Engine
+
+Adaptive Learning
+
+Recommendations
+
+Learning Analytics
+
+Completion
+
+Failures
+
+Latency
+
+Quality
+
+==============================================================================
+
+PART 22
+
+LEARNING TESTING CONSTITUTION
+
+Standardize
+
+Learning Tests
+
+Recommendation Tests
+
+Adaptive Tests
+
+Competency Tests
+
+Regression Tests
+
+Performance Tests
+
+==============================================================================
+
+PART 23
+
+LEARNING DOCUMENTATION
+
+Maintain
+
+Learning Catalog
+
+Competency Catalog
+
+Skill Catalog
+
+Learning API Guide
+
+Learning Analytics Guide
+
+==============================================================================
+
+PART 24
+
+LEARNING GOVERNANCE
+
+Every Learning enhancement answers
+
+Why is Learning changing?
+
+What existing capability is reused?
+
+Does this duplicate Learning Intelligence?
+
+Does this improve capability development?
+
+Does this preserve Behaviour Intelligence?
+
+==============================================================================
+
+PART 25
+
+LEARNING QUALITY GATES
+
+Verify
+
+Learning Engine reused
+
+Behaviour reused
+
+Assessment reused
+
+Decision reused
+
+Journey reused
+
+Competency reused
+
+Evidence exposed
+
+Confidence exposed
+
+Explainability complete
+
+Documentation updated
+
+==============================================================================
+
+PART 26
+
+LEARNING REVIEW BOARD
+
+Mandatory Approval
+
+Founder
+
+Learning Architect
+
+Behaviour Scientist
+
+Education Specialist
+
+Competency Architect
+
+AI Architect
+
+Research
+
+Security
+
+QA
+
+==============================================================================
+
+PART 27
+
+LEARNING DEFINITION OF DONE
+
+Learning enhancement completes only if
+
+Existing Learning Engine reused
+
+Learning Paths preserved
+
+Competency Intelligence preserved
+
+Journey preserved
+
+Evidence exposed
+
+Confidence exposed
+
+Explainability complete
+
+Learning history preserved
+
+Documentation updated
+
+No regressions
+
+==============================================================================
+
+PART 28
+
+LEARNING MATURITY MODEL
+
+Assess
+
+Learning Engine
+
+Learning Paths
+
+Adaptive Learning
+
+Competency Learning
+
+Skill Intelligence
+
+Learning Analytics
+
+Learning Reports
+
+Enterprise Learning
+
+Levels
+
+1 Operational
+
+2 Guided
+
+3 Adaptive
+
+4 Intelligent
+
+5 Continuous Learning Intelligence
+
+==============================================================================
+
+PART 29
+
+LEARNING SCIENTIFIC VALIDATION
+
+Document
+
+Learning Science
+
+Instructional Design
+
+Adult Learning Theory
+
+Cognitive Science
+
+Competency-Based Education
+
+Knowledge Transfer
+
+Evidence Quality
+
+Bias Review
+
+Ethics
+
+Population Applicability
+
+==============================================================================
+
+PART 30
+
+LEARNING EVOLUTION STRATEGY
+
+Future evolution supports
+
+New Learning Models
+
+New Adaptive Models
+
+New Competency Frameworks
+
+New Skill Models
+
+New AI Tutors
+
+New Enterprise Learning Programs
+
+without breaking
+
+Assessment Intelligence
+
+Behaviour Intelligence
+
+Conversation Intelligence
+
+Decision Intelligence
+
+Journey Intelligence
+
+Intervention Intelligence
+
+Career Intelligence
+
+Life Intelligence
+
+Enterprise Intelligence
+
+==============================================================================
+
+PART 31
+
+DELIVERABLES
+
+Generate
+
+01 Learning Intelligence Constitution
+
+02 Learning Architecture Report
+
+03 Learning Engine Constitution
+
+04 Learning Path Constitution
+
+05 Adaptive Learning Constitution
+
+06 Skill Intelligence Constitution
+
+07 Competency Learning Constitution
+
+08 Learning Content Constitution
+
+09 Learning Recommendation Constitution
+
+10 Learning Evidence Constitution
+
+11 Learning Confidence Constitution
+
+12 Learning Explainability Constitution
+
+13 Learning AI Constitution
+
+14 Learning Analytics Constitution
+
+15 Learning Report Constitution
+
+16 Longitudinal Learning Constitution
+
+17 Enterprise Learning Constitution
+
+18 SuperAdmin Learning Constitution
+
+19 Learning Governance Constitution
+
+20 Learning Quality Gates
+
+21 Learning Review Board
+
+22 Learning Definition of Done
+
+23 Learning Scientific Validation
+
+24 Learning Evolution Strategy
+
+25 Learning Maturity Assessment
+
+==============================================================================
+
+STOP
+
+Do not modify Learning Engine.
+
+Do not replace Learning Intelligence.
+
+Do not create another Learning Engine.
+
+Do not activate dormant Learning capabilities.
+
+Do not modify business logic.
+
+Do not bypass Assessment Intelligence.
+
+Do not bypass Behaviour Intelligence.
+
+Do not bypass Decision Intelligence.
+
+Do not bypass Journey Intelligence.
+
+Do not bypass Intervention Intelligence.
+
+Freeze this Learning Intelligence Constitution after approval.
+
+Every future
+
+Learning Intelligence enhancement,
+
+Adaptive Learning enhancement,
+
+Learning Path enhancement,
+
+Competency Learning enhancement,
+
+Skill Intelligence enhancement,
+
+Learning Recommendation enhancement,
+
+Learning Analytics enhancement,
+
+Enterprise Learning enhancement,
+
+and Learning AI enhancement
+
+must comply with this Constitution.

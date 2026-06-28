@@ -1260,3 +1260,9 @@ id = "qlXos5JFiUSB7o8pj5Veu"
 uri = "file://backend/audit/mx-700/phase-1.20-intervention-intelligence-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.20: Intervention Intelligence Constitution (RIE + Intervention Orchestrator)"
+
+[[outputs]]
+id = "J1VMqmeg4_WbxW2rnFEWT"
+uri = "file://backend/audit/mx-700/phase-1.21-learning-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.21: Learning Intelligence Constitution (Learning Engine + Learning Path Engine)"

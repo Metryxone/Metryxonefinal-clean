@@ -1,0 +1,725 @@
+# ==============================================================================
+# CAPADEX 2.0 ENGINEERING EXECUTION SPECIFICATION
+# Phase 0 — Repository Protection & Baseline
+#
+# EXECUTION MODE:
+# Enhancement Only
+#
+# DO NOT BUILD NEW FUNCTIONALITY
+# DO NOT REFACTOR YET
+# DO NOT DELETE ANYTHING
+#
+# FIRST UNDERSTAND THE ENTIRE REPOSITORY
+# ==============================================================================
+
+MISSION
+
+You are the Principal Software Architect responsible for transforming CAPADEX
+into the world's leading Behaviour Intelligence Platform.
+
+CAPADEX is NOT a new application.
+
+It is an EXISTING enterprise platform containing years of intellectual property.
+
+Your responsibility is NOT to redesign it.
+
+Your responsibility is to discover, understand, document, preserve and prepare
+it for enhancement.
+
+The repository is the PRIMARY SOURCE OF TRUTH.
+
+The architecture document is the SECONDARY SOURCE OF TRUTH.
+
+If they differ
+
+DO NOT assume either is correct.
+
+Document the differences.
+
+Never rewrite without evidence.
+
+==============================================================================
+
+NON NEGOTIABLE RULES
+
+NEVER
+
+• Rewrite existing architecture
+
+• Delete existing functionality
+
+• Create duplicate components
+
+• Create duplicate services
+
+• Create duplicate APIs
+
+• Create duplicate database tables
+
+• Create duplicate AI
+
+• Create duplicate admin panels
+
+• Create duplicate business logic
+
+• Create duplicate React pages
+
+• Replace WC3
+
+• Replace Pragati
+
+• Replace Decision Engine
+
+• Replace Concern Engine
+
+• Replace Question Engine
+
+• Replace Behaviour Ontology
+
+• Replace Reports
+
+• Replace SuperAdmin
+
+• Drop database tables
+
+• Delete historical data
+
+==============================================================================
+
+TRANSFORMATION PRINCIPLE
+
+Every capability must follow
+
+DISCOVER
+
+↓
+
+UNDERSTAND
+
+↓
+
+PRESERVE
+
+↓
+
+ACTIVATE
+
+↓
+
+CONSOLIDATE
+
+↓
+
+ENHANCE
+
+↓
+
+EXTEND
+
+↓
+
+ONLY THEN
+
+NEW CAPABILITY
+
+==============================================================================
+
+PHASE OBJECTIVES
+
+1.
+
+Search the COMPLETE repository.
+
+Do not skip folders.
+
+Do not assume.
+
+Do not guess.
+
+2.
+
+Build complete repository inventory.
+
+3.
+
+Understand existing architecture.
+
+4.
+
+Identify every subsystem.
+
+5.
+
+Identify duplicate implementations.
+
+6.
+
+Identify dormant implementations.
+
+7.
+
+Identify technical debt.
+
+8.
+
+Identify reusable intellectual property.
+
+9.
+
+Generate baseline metrics.
+
+10.
+
+DO NOT CHANGE CODE.
+
+==============================================================================
+
+REPOSITORY DISCOVERY
+
+Search every directory.
+
+Include
+
+/src
+
+/components
+
+/pages
+
+/hooks
+
+/context
+
+/store
+
+/services
+
+/api
+
+/server
+
+/routes
+
+/controllers
+
+/models
+
+/database
+
+/migrations
+
+/scripts
+
+/utils
+
+/config
+
+/assets
+
+/public
+
+/admin
+
+/tests
+
+/docs
+
+Any additional folders.
+
+==============================================================================
+
+IDENTIFY
+
+Frontend Framework
+
+Backend Framework
+
+Database
+
+Authentication
+
+Authorization
+
+ORM
+
+Hosting
+
+Deployment
+
+Environment Variables
+
+Feature Flags
+
+AI Services
+
+Build Tools
+
+Testing Framework
+
+Package Manager
+
+==============================================================================
+
+FRONTEND INVENTORY
+
+Identify
+
+All Pages
+
+All Components
+
+Layouts
+
+Shared Components
+
+Design System
+
+Themes
+
+Contexts
+
+Hooks
+
+Stores
+
+Utilities
+
+Forms
+
+Tables
+
+Charts
+
+Navigation
+
+Modals
+
+Drawers
+
+Dialogs
+
+Dashboards
+
+==============================================================================
+
+BACKEND INVENTORY
+
+Identify
+
+Routes
+
+Controllers
+
+Services
+
+Repositories
+
+Jobs
+
+Workers
+
+Schedulers
+
+Queues
+
+Authentication
+
+Authorization
+
+Middleware
+
+Validation
+
+Logging
+
+Caching
+
+==============================================================================
+
+DATABASE INVENTORY
+
+Identify
+
+Tables
+
+Views
+
+Indexes
+
+Relationships
+
+Constraints
+
+Triggers
+
+History Tables
+
+Audit Tables
+
+Migration History
+
+==============================================================================
+
+AI INVENTORY
+
+Identify
+
+Pragati
+
+Prompt Templates
+
+Prompt Files
+
+Decision Engine
+
+Behaviour Engine
+
+Recommendation Engine
+
+Memory
+
+Context
+
+Inference
+
+AI APIs
+
+AI Services
+
+==============================================================================
+
+SUPERADMIN INVENTORY
+
+Identify
+
+Dashboards
+
+Question Management
+
+Concern Management
+
+Ontology Management
+
+Reports
+
+Users
+
+Roles
+
+Permissions
+
+Feature Flags
+
+Analytics
+
+Enterprise
+
+Subscriptions
+
+Settings
+
+==============================================================================
+
+ASSESSMENT INVENTORY
+
+Identify
+
+Assessment Engine
+
+Questions
+
+Adaptive Logic
+
+Scoring
+
+Branching
+
+Reports
+
+Recommendations
+
+==============================================================================
+
+BEHAVIOUR INVENTORY
+
+Identify
+
+Signals
+
+Domains
+
+Families
+
+Ontology
+
+Behaviour Models
+
+Competencies
+
+Patterns
+
+Mappings
+
+==============================================================================
+
+CONCERN INVENTORY
+
+Identify
+
+Concern Taxonomy
+
+Relationships
+
+Categories
+
+Subcategories
+
+Tags
+
+Mappings
+
+==============================================================================
+
+REPORT INVENTORY
+
+Identify
+
+Report Templates
+
+PDF
+
+Interactive Reports
+
+Charts
+
+Narratives
+
+Recommendations
+
+==============================================================================
+
+API INVENTORY
+
+Generate
+
+Complete endpoint catalogue.
+
+==============================================================================
+
+DEPENDENCY GRAPH
+
+Map
+
+Frontend
+
+↓
+
+Backend
+
+↓
+
+Database
+
+↓
+
+AI
+
+↓
+
+Reports
+
+↓
+
+Admin
+
+==============================================================================
+
+IDENTIFY DUPLICATES
+
+Components
+
+Services
+
+Hooks
+
+Utilities
+
+Routes
+
+Business Logic
+
+Tables
+
+Models
+
+==============================================================================
+
+IDENTIFY UNUSED CODE
+
+Components
+
+Pages
+
+Routes
+
+Services
+
+Tables
+
+Feature Flags
+
+==============================================================================
+
+BASELINE METRICS
+
+Measure
+
+Repository Size
+
+Lines of Code
+
+Components
+
+Services
+
+Tables
+
+Routes
+
+Pages
+
+API Count
+
+Test Coverage
+
+Bundle Size
+
+Performance
+
+Complexity
+
+Duplicate Code
+
+==============================================================================
+
+GENERATE REPORTS
+
+Repository Architecture Report
+
+Existing Capability Report
+
+Repository Health Report
+
+Duplicate Report
+
+Technical Debt Report
+
+Dependency Report
+
+API Report
+
+Database Report
+
+Frontend Report
+
+Backend Report
+
+SuperAdmin Report
+
+AI Report
+
+Behaviour Intelligence Report
+
+Assessment Report
+
+==============================================================================
+
+DO NOT IMPLEMENT ANYTHING.
+
+DO NOT MODIFY ANY FILES.
+
+DO NOT CREATE NEW FILES.
+
+DO NOT REFACTOR.
+
+ONLY UNDERSTAND THE SYSTEM.
+
+==============================================================================
+
+DELIVERABLES
+
+At the end provide
+
+1.
+
+Repository Architecture Map
+
+2.
+
+Capability Inventory
+
+3.
+
+Repository Health Score
+
+4.
+
+Technical Debt Score
+
+5.
+
+Duplicate Capability Report
+
+6.
+
+Unused Code Report
+
+7.
+
+Existing IP Inventory
+
+8.
+
+Enhancement Opportunities
+
+9.
+
+Risk Register
+
+10.
+
+Recommended Enhancement Order
+
+11.
+
+Repository Baseline
+
+12.
+
+Readiness Score
+
+==============================================================================
+
+SUCCESS CRITERIA
+
+Phase passes ONLY IF
+
+✓ Entire repository searched
+
+✓ Every capability documented
+
+✓ No code changed
+
+✓ No duplicate functionality created
+
+✓ Existing intellectual property catalogued
+
+✓ Technical debt identified
+
+✓ Repository baseline established
+
+✓ Enhancement roadmap prepared
+
+STOP.
+
+Do NOT proceed to Phase 1 until this report is complete.

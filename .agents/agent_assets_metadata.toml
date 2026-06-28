@@ -1116,3 +1116,9 @@ id = "G-fNGvQC2ejgvXEsU0Q8R"
 uri = "file://backend/audit/mx-700/capadex-end-to-end.md"
 type = "text"
 title = "CAPADEX — End-to-End Document"
+
+[[outputs]]
+id = "-BcvkSCwTG1YnXsp5d2Yf"
+uri = "file://backend/audit/mx-700/phase-0-repository-baseline.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 0: Repository Baseline"

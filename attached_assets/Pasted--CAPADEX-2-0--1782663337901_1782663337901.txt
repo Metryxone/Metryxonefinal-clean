@@ -1,0 +1,711 @@
+# ==============================================================================
+
+# CAPADEX 2.0
+
+#
+
+# MX-700 REPOSITORY EXECUTION PROTOCOL
+
+#
+
+# PERMANENT ENGINEERING IMPLEMENTATION DIRECTIVE
+
+#
+
+# VERSION 1.0
+
+#
+
+# THIS IS NOT A PHASE.
+
+#
+
+# THIS IS NOT A CONSTITUTION.
+
+#
+
+# THIS IS NOT A FEATURE.
+
+#
+
+# THIS IS THE MANDATORY EXECUTION PROTOCOL
+
+# GOVERNING EVERY ENGINEERING EXECUTION SPECIFICATION.
+
+#
+
+# ==============================================================================
+
+#
+
+# PURPOSE
+
+#
+
+# Every CAPADEX Engineering Execution Specification is an
+
+# IMPLEMENTATION CONTRACT.
+
+#
+
+# It is NOT a planning document.
+
+#
+
+# It is NOT a recommendation.
+
+#
+
+# It is NOT an architectural discussion.
+
+#
+
+# It is NOT a research exercise.
+
+#
+
+# It is NOT a backlog generation exercise.
+
+#
+
+# The responsibility of the engineering agent is
+
+# repository implementation only.
+
+#
+
+# ==============================================================================
+
+#
+
+# EXECUTION PRINCIPLES
+
+#
+
+# Repository First
+
+#
+
+# Enhancement Only
+
+#
+
+# Reuse Before Build
+
+#
+
+# Extend Before Replace
+
+#
+
+# Compose Before Duplicate
+
+#
+
+# Preserve Before Remove
+
+#
+
+# Measure Before Modify
+
+#
+
+# Validate Before Complete
+
+#
+
+# ==============================================================================
+
+#
+
+# SINGLE SOURCE OF TRUTH
+
+#
+
+# The repository is the only implementation truth.
+
+#
+
+# Engineering specifications define required implementation.
+
+#
+
+# Existing repository determines current implementation.
+
+#
+
+# Repository evidence always overrides assumptions.
+
+#
+
+# Never fabricate implementation status.
+
+#
+
+# ==============================================================================
+
+#
+
+# PHASE EXECUTION CONTRACT
+
+#
+
+# Every Engineering Execution Specification
+
+# represents ONE implementation phase.
+
+#
+
+# The current phase is the ONLY scope.
+
+#
+
+# Future phases do not exist.
+
+#
+
+# Previous phases are historical references only.
+
+#
+
+# Never merge multiple phases.
+
+#
+
+# Never skip phases.
+
+#
+
+# Never infer future work.
+
+#
+
+# Never generate a new implementation backlog.
+
+#
+
+# Never reinterpret the approved specification.
+
+#
+
+# The Engineering Execution Specification IS the implementation backlog.
+
+#
+
+# ==============================================================================
+
+#
+
+# REQUIRED EXECUTION CYCLE
+
+#
+
+# STEP 1
+
+#
+
+# Read the current Engineering Execution Specification completely.
+
+#
+
+# STEP 2
+
+#
+
+# Search the repository.
+
+#
+
+# Locate
+
+#
+
+# modules
+
+#
+
+# services
+
+#
+
+# APIs
+
+#
+
+# feature flags
+
+#
+
+# database
+
+#
+
+# migrations
+
+#
+
+# models
+
+#
+
+# documentation
+
+#
+
+# tests
+
+#
+
+# existing implementation
+
+#
+
+# STEP 3
+
+#
+
+# Measure repository state.
+
+#
+
+# Determine
+
+#
+
+# Already Implemented
+
+#
+
+# Partially Implemented
+
+#
+
+# Scaffolded
+
+#
+
+# Seeded
+
+#
+
+# Dormant
+
+#
+
+# Deprecated
+
+#
+
+# Archived
+
+#
+
+# Missing
+
+#
+
+# Never assume.
+
+#
+
+# Measure.
+
+#
+
+# STEP 4
+
+#
+
+# Reuse existing implementation.
+
+#
+
+# Extend existing implementation.
+
+#
+
+# Complete partial implementation.
+
+#
+
+# Reconcile duplicated logic if explicitly required
+
+# by the current phase.
+
+#
+
+# Never create parallel implementations.
+
+#
+
+# ==============================================================================
+
+#
+
+# IMPLEMENTATION RULES
+
+#
+
+# Never redesign architecture.
+
+#
+
+# Never redesign business logic.
+
+#
+
+# Never create V2 implementations.
+
+#
+
+# Never create duplicate services.
+
+#
+
+# Never create duplicate APIs.
+
+#
+
+# Never create duplicate modules.
+
+#
+
+# Never create duplicate registries.
+
+#
+
+# Never create duplicate intelligence engines.
+
+#
+
+# Never create duplicate lifecycle systems.
+
+#
+
+# Never activate dormant capabilities unless
+
+# explicitly required by the current phase.
+
+#
+
+# Never replace existing implementation when
+
+# enhancement is sufficient.
+
+#
+
+# ==============================================================================
+
+#
+
+# ENGINEERING DECISION RULE
+
+#
+
+# Whenever multiple implementation choices exist:
+
+#
+
+# Reuse
+
+#
+
+# >
+
+#
+
+# Extend
+
+#
+
+# >
+
+#
+
+# Compose
+
+#
+
+# >
+
+#
+
+# Refactor
+
+#
+
+# >
+
+#
+
+# Build New
+
+#
+
+# New implementation is the final option.
+
+#
+
+# ==============================================================================
+
+#
+
+# IMPLEMENTATION BOUNDARY
+
+#
+
+# Implement ONLY the capabilities defined
+
+# in the current Engineering Execution Specification.
+
+#
+
+# Do not implement recommendations.
+
+#
+
+# Do not implement future ideas.
+
+#
+
+# Do not implement future phases.
+
+#
+
+# Do not derive additional backlog.
+
+#
+
+# Do not expand scope.
+
+#
+
+# ==============================================================================
+
+#
+
+# VALIDATION
+
+#
+
+# Validate
+
+#
+
+# Repository Integrity
+
+#
+
+# Architecture Integrity
+
+#
+
+# Feature Flag Integrity
+
+#
+
+# API Compatibility
+
+#
+
+# Module Compatibility
+
+#
+
+# Database Integrity
+
+#
+
+# Migration Integrity
+
+#
+
+# Documentation Integrity
+
+#
+
+# Regression Status
+
+#
+
+# ==============================================================================
+
+#
+
+# HONESTY CONTRACT
+
+#
+
+# Built ≠ Activated
+
+#
+
+# Enabled ≠ Used
+
+#
+
+# Flag ON ≠ Runtime Active
+
+#
+
+# Table Exists ≠ Populated
+
+#
+
+# Documentation Exists ≠ Implemented
+
+#
+
+# Repository Exists ≠ Feature Complete
+
+#
+
+# Coverage ≠ Confidence
+
+#
+
+# Evidence ≠ Confidence
+
+#
+
+# Never fabricate.
+
+#
+
+# Never estimate.
+
+#
+
+# Never infer repository state.
+
+#
+
+# ==============================================================================
+
+#
+
+# IMPLEMENTATION OUTPUT
+
+#
+
+# At completion produce:
+
+#
+
+# Repository Changes
+
+#
+
+# Files Modified
+
+#
+
+# Database Changes
+
+#
+
+# APIs Modified
+
+#
+
+# Services Modified
+
+#
+
+# Feature Flags Modified
+
+#
+
+# Documentation Updated
+
+#
+
+# Compatibility Verification
+
+#
+
+# Honest Completion Report
+
+#
+
+# Remaining Work (Current Phase Only)
+
+#
+
+# ==============================================================================
+
+#
+
+# STOP CONDITION
+
+#
+
+# Immediately stop after completing
+
+# the current Engineering Execution Specification.
+
+#
+
+# Do not continue into the next phase.
+
+#
+
+# Await explicit approval before
+
+# beginning another phase.
+
+#
+
+# ==============================================================================
+
+#
+
+# FINAL DIRECTIVE
+
+#
+
+# Engineering Execution Specifications
+
+# are executable implementation contracts.
+
+#
+
+# They are NOT planning documents.
+
+#
+
+# They are NOT architecture discussions.
+
+#
+
+# They are NOT backlog generators.
+
+#
+
+# The repository is the implementation target.
+
+#
+
+# The Engineering Execution Specification
+
+# defines the implementation boundary.
+
+#
+
+# Execute.
+
+#
+
+# Validate.
+
+#
+
+# Report.
+
+#
+
+# Stop.
+
+#
+
+# ==============================================================================

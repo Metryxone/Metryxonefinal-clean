@@ -1254,3 +1254,9 @@ id = "gd5JEogGm-C9AeMrAkd6c"
 uri = "file://backend/audit/mx-700/phase-1.19-decision-intelligence-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.19: Decision Intelligence Constitution (WC-3 + Decision Orchestrator)"
+
+[[outputs]]
+id = "qlXos5JFiUSB7o8pj5Veu"
+uri = "file://backend/audit/mx-700/phase-1.20-intervention-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.20: Intervention Intelligence Constitution (RIE + Intervention Orchestrator)"

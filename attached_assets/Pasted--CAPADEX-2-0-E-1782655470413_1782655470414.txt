@@ -1,0 +1,1078 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.27
+#
+# ANALYTICS INTELLIGENCE CONSTITUTION
+# (PLATFORM ANALYTICS + PREDICTIVE ANALYTICS + LONGITUDINAL ANALYTICS + KPI ENGINE)
+#
+# EXECUTION MODE
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT CREATE A SECOND ANALYTICS ENGINE
+# DO NOT REPLACE PLATFORM ANALYTICS
+# DO NOT CREATE ANALYTICS V2
+# DO NOT MODIFY BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT ANALYTICS CAPABILITIES
+#
+# THIS PHASE ESTABLISHES THE PERMANENT
+# ANALYTICS INTELLIGENCE CONSTITUTION
+# ==============================================================================
+
+MISSION
+
+Create the permanent Analytics Intelligence Constitution for CAPADEX.
+
+Analytics Intelligence transforms validated operational data into measurable
+platform intelligence.
+
+Analytics never creates intelligence.
+
+Analytics measures intelligence.
+
+Assessment Intelligence generates evidence.
+
+Behaviour Intelligence generates behavioural signals.
+
+Concern Intelligence generates semantic understanding.
+
+Competency Intelligence generates capability evidence.
+
+Decision Intelligence generates decisions.
+
+Learning Intelligence generates development.
+
+Career Intelligence generates employability.
+
+Intervention Intelligence generates execution.
+
+Report Intelligence communicates intelligence.
+
+Analytics Intelligence measures the effectiveness of the entire platform.
+
+Repository remains the Single Source of Truth.
+
+Governance only.
+
+No implementation.
+
+==============================================================================
+HONESTY CONTRACT
+==============================================================================
+
+Measured = Live Repository + Live Database using exact SELECT COUNT(*)
+
+Derived = Analytics Interpretation
+
+Analytics ≠ Intelligence
+
+Analytics ≠ Reporting
+
+Analytics ≠ Dashboard
+
+Analytics ≠ KPI
+
+Dashboard ≠ Insight
+
+Visualization ≠ Evidence
+
+Metric ≠ Truth
+
+Correlation ≠ Causation
+
+Prediction ≠ Outcome
+
+Trend ≠ Future
+
+Coverage ≠ Confidence
+
+Evidence ≠ Confidence
+
+Confidence ≠ Accuracy
+
+Average ≠ Population
+
+Population ≠ Benchmark
+
+Benchmark ≠ Recommendation
+
+AI ≠ Data Scientist
+
+Human remains responsible.
+
+Built ≠ Activated
+
+Flag Enabled ≠ Runtime Active
+
+Null ≠ Zero
+
+Never estimate.
+
+Never fabricate.
+
+==============================================================================
+
+PRIMARY OBJECTIVES
+
+Protect Analytics Intelligence
+
+Protect Analytics Engine
+
+Protect KPI Engine
+
+Protect Metrics Engine
+
+Protect Longitudinal Analytics
+
+Protect Predictive Analytics
+
+Protect Enterprise Analytics
+
+Protect Executive Analytics
+
+Protect Analytics Governance
+
+Protect Analytics Intelligence IP
+
+==============================================================================
+
+MANDATORY RULES
+
+Before modifying Analytics Intelligence
+
+Search repository
+
+Locate Platform Analytics
+
+Locate KPI Engine
+
+Locate Metrics Engine
+
+Locate Dashboard Engine
+
+Locate Behaviour Analytics
+
+Locate Concern Analytics
+
+Locate Competency Analytics
+
+Locate Learning Analytics
+
+Locate Career Analytics
+
+Locate Decision Analytics
+
+Locate Report Analytics
+
+Locate Enterprise Analytics
+
+Locate Executive Analytics
+
+Locate Longitudinal Analytics
+
+Locate APIs
+
+Locate Database
+
+Never create another Analytics Engine.
+
+Never duplicate Analytics Intelligence.
+
+Never bypass intelligence engines.
+
+Enhance existing implementation only.
+
+==============================================================================
+
+PART 1
+
+CURRENT ANALYTICS INTELLIGENCE AUDIT
+
+Perform a complete repository and database audit using exact COUNT(*).
+
+Measure
+
+Platform Analytics
+
+Mission Control
+
+Platform Intelligence
+
+Executive Dashboard
+
+Behaviour Analytics
+
+Concern Analytics
+
+Competency Analytics
+
+Decision Analytics
+
+Learning Analytics
+
+Career Analytics
+
+Intervention Analytics
+
+Enterprise Analytics
+
+KPI Engine
+
+Metrics Engine
+
+Scorecards
+
+Longitudinal Analytics
+
+Trend Analytics
+
+Predictive Analytics
+
+Benchmark Analytics
+
+Report Analytics
+
+Analytics APIs
+
+Analytics Dashboards
+
+Analytics AI
+
+Analytics Technical Debt
+
+Duplicate Analytics Systems
+
+Dormant Analytics Runtime
+
+Activation Readiness
+
+Classify every component
+
+LIVE
+
+PARTIAL
+
+SEEDED
+
+DORMANT
+
+BROKEN
+
+EMPTY
+
+TECH DEBT
+
+MISSING
+
+Explicitly identify
+
+Repository implementation
+
+Runtime activation
+
+Population
+
+Duplicate dashboards
+
+Duplicate KPIs
+
+Broken aggregations
+
+Missing analytics
+
+==============================================================================
+
+PART 2
+
+ANALYTICS PHILOSOPHY
+
+Analytics exists to
+
+Measure
+
+Monitor
+
+Compare
+
+Track
+
+Evaluate
+
+Benchmark
+
+Forecast
+
+Improve
+
+Analytics never
+
+Creates intelligence
+
+Creates evidence
+
+Guarantees outcomes
+
+Manipulates data
+
+==============================================================================
+
+PART 3
+
+ANALYTICS DOMAIN ARCHITECTURE
+
+Platform Analytics
+
+Operational Analytics
+
+Behaviour Analytics
+
+Concern Analytics
+
+Competency Analytics
+
+Decision Analytics
+
+Learning Analytics
+
+Career Analytics
+
+Intervention Analytics
+
+Enterprise Analytics
+
+Executive Analytics
+
+Predictive Analytics
+
+Longitudinal Analytics
+
+KPI Engine
+
+Metrics Engine
+
+Analytics Governance
+
+==============================================================================
+
+PART 4
+
+PLATFORM ANALYTICS CONSTITUTION
+
+Platform Analytics remains
+
+the only canonical analytics engine.
+
+Never replace Platform Analytics.
+
+Never create Analytics V2.
+
+Never duplicate dashboards.
+
+Enhance only.
+
+Protect
+
+Metrics
+
+Aggregations
+
+Dimensions
+
+Measures
+
+Filters
+
+Time Series
+
+==============================================================================
+
+PART 5
+
+KPI CONSTITUTION
+
+Protect
+
+Strategic KPIs
+
+Operational KPIs
+
+Executive KPIs
+
+Behaviour KPIs
+
+Learning KPIs
+
+Career KPIs
+
+Enterprise KPIs
+
+Every KPI must have
+
+Definition
+
+Formula
+
+Owner
+
+Frequency
+
+Evidence
+
+Confidence
+
+==============================================================================
+
+PART 6
+
+METRICS CONSTITUTION
+
+Protect
+
+Dimensions
+
+Measures
+
+Facts
+
+Events
+
+Time
+
+Granularity
+
+Aggregation
+
+Metrics remain reproducible.
+
+==============================================================================
+
+PART 7
+
+LONGITUDINAL ANALYTICS CONSTITUTION
+
+Protect
+
+Historical Trends
+
+Growth
+
+Retention
+
+Behaviour Evolution
+
+Learning Evolution
+
+Career Evolution
+
+Intervention Outcomes
+
+History remains immutable.
+
+==============================================================================
+
+PART 8
+
+PREDICTIVE ANALYTICS CONSTITUTION
+
+Predictive Analytics supports
+
+Forecasting
+
+Risk Projection
+
+Growth Projection
+
+Outcome Projection
+
+Capacity Planning
+
+Prediction never guarantees reality.
+
+==============================================================================
+
+PART 9
+
+BENCHMARK CONSTITUTION
+
+Protect
+
+Population Benchmarks
+
+Peer Benchmarks
+
+Enterprise Benchmarks
+
+Historical Benchmarks
+
+Industry Benchmarks
+
+Binding
+
+Abstain below k_min=30.
+
+==============================================================================
+
+PART 10
+
+ANALYTICS EVIDENCE CONSTITUTION
+
+Evidence originates from
+
+Assessment
+
+Behaviour
+
+Concern
+
+Competency
+
+Decision
+
+Learning
+
+Career
+
+Intervention
+
+Reports
+
+Enterprise
+
+Evidence contains
+
+Source
+
+Coverage
+
+Confidence
+
+Quality
+
+==============================================================================
+
+PART 11
+
+ANALYTICS CONFIDENCE CONSTITUTION
+
+Separate
+
+Coverage
+
+Evidence
+
+Confidence
+
+Statistical Confidence
+
+Forecast Confidence
+
+Trust
+
+==============================================================================
+
+PART 12
+
+ANALYTICS EXPLAINABILITY CONSTITUTION
+
+Every metric explains
+
+Definition
+
+Formula
+
+Evidence
+
+Source
+
+Confidence
+
+Limitations
+
+Population
+
+==============================================================================
+
+PART 13
+
+ANALYTICS AI CONSTITUTION
+
+AI
+
+Summarizes
+
+Forecasts
+
+Explains
+
+Compares
+
+Supports
+
+Never fabricates analytics.
+
+Never invents KPIs.
+
+Never bypasses governance.
+
+==============================================================================
+
+PART 14
+
+EXECUTIVE ANALYTICS CONSTITUTION
+
+Support
+
+Founder Dashboard
+
+Mission Control
+
+Platform Intelligence
+
+Executive KPIs
+
+Strategic Monitoring
+
+Decision Support
+
+==============================================================================
+
+PART 15
+
+ENTERPRISE ANALYTICS CONSTITUTION
+
+Support
+
+Corporate Analytics
+
+Institution Analytics
+
+Department Analytics
+
+Manager Analytics
+
+Leadership Analytics
+
+Population Analytics
+
+==============================================================================
+
+PART 16
+
+REPORT ANALYTICS CONSTITUTION
+
+Protect
+
+Report Usage
+
+Generation
+
+Downloads
+
+Interaction
+
+Completion
+
+Sharing
+
+==============================================================================
+
+PART 17
+
+SUPERADMIN ANALYTICS CONSTITUTION
+
+Support
+
+Analytics Configuration
+
+Metric Definitions
+
+KPI Libraries
+
+Policies
+
+Monitoring
+
+==============================================================================
+
+PART 18
+
+ANALYTICS SECURITY CONSTITUTION
+
+Protect
+
+Metrics
+
+Evidence
+
+Permissions
+
+PII
+
+Consent
+
+Tenant Isolation
+
+Exports
+
+==============================================================================
+
+PART 19
+
+ANALYTICS OBSERVABILITY
+
+Monitor
+
+Analytics Engine
+
+Aggregation
+
+Latency
+
+Failures
+
+Dashboards
+
+Queries
+
+Quality
+
+==============================================================================
+
+PART 20
+
+ANALYTICS TESTING CONSTITUTION
+
+Standardize
+
+Aggregation Tests
+
+Metric Tests
+
+KPI Tests
+
+Regression Tests
+
+Performance Tests
+
+==============================================================================
+
+PART 21
+
+ANALYTICS DOCUMENTATION
+
+Maintain
+
+Metric Catalog
+
+KPI Catalog
+
+Dashboard Catalog
+
+API Guide
+
+Analytics Guide
+
+==============================================================================
+
+PART 22
+
+ANALYTICS GOVERNANCE
+
+Every enhancement answers
+
+Why is Analytics changing?
+
+What existing capability is reused?
+
+Does this duplicate Platform Analytics?
+
+Does this preserve measurement integrity?
+
+==============================================================================
+
+PART 23
+
+ANALYTICS QUALITY GATES
+
+Verify
+
+Platform Analytics reused
+
+Metrics reused
+
+KPIs reused
+
+Evidence exposed
+
+Confidence exposed
+
+Benchmarks validated
+
+Documentation updated
+
+==============================================================================
+
+PART 24
+
+ANALYTICS REVIEW BOARD
+
+Founder
+
+Analytics Architect
+
+Data Scientist
+
+Behaviour Scientist
+
+Enterprise Architect
+
+AI Architect
+
+Research
+
+Security
+
+QA
+
+==============================================================================
+
+PART 25
+
+ANALYTICS DEFINITION OF DONE
+
+Analytics enhancement completes only if
+
+Existing Analytics Engine reused
+
+Metrics preserved
+
+KPIs preserved
+
+Evidence exposed
+
+Confidence exposed
+
+Definitions documented
+
+History preserved
+
+No regressions
+
+==============================================================================
+
+PART 26
+
+ANALYTICS MATURITY MODEL
+
+Assess
+
+Platform Analytics
+
+KPI Engine
+
+Metrics Engine
+
+Dashboards
+
+Executive Analytics
+
+Enterprise Analytics
+
+Predictive Analytics
+
+Longitudinal Analytics
+
+Levels
+
+1 Operational
+
+2 Guided
+
+3 Adaptive
+
+4 Intelligent
+
+5 Continuous Analytics Intelligence
+
+==============================================================================
+
+PART 27
+
+ANALYTICS SCIENTIFIC VALIDATION
+
+Document
+
+Statistics
+
+Measurement Science
+
+Business Intelligence
+
+Forecasting
+
+Data Visualization
+
+Decision Science
+
+Evidence Quality
+
+Bias Review
+
+Ethics
+
+==============================================================================
+
+PART 28
+
+ANALYTICS EVOLUTION STRATEGY
+
+Future evolution supports
+
+New KPIs
+
+New Metrics
+
+New Dashboards
+
+New Forecasting Models
+
+New Enterprise Analytics
+
+New Executive Dashboards
+
+without breaking
+
+Assessment Intelligence
+
+Behaviour Intelligence
+
+Concern Intelligence
+
+Competency Intelligence
+
+Decision Intelligence
+
+Learning Intelligence
+
+Career Intelligence
+
+Intervention Intelligence
+
+Report Intelligence
+
+Enterprise Intelligence
+
+==============================================================================
+
+PART 29
+
+DELIVERABLES
+
+Generate
+
+01 Analytics Intelligence Constitution
+
+02 Repository Analytics Audit
+
+03 Platform Analytics Constitution
+
+04 KPI Constitution
+
+05 Metrics Constitution
+
+06 Longitudinal Analytics Constitution
+
+07 Predictive Analytics Constitution
+
+08 Benchmark Constitution
+
+09 Analytics Evidence Constitution
+
+10 Analytics Confidence Constitution
+
+11 Analytics Explainability Constitution
+
+12 Analytics AI Constitution
+
+13 Executive Analytics Constitution
+
+14 Enterprise Analytics Constitution
+
+15 Report Analytics Constitution
+
+16 SuperAdmin Analytics Constitution
+
+17 Analytics Governance Constitution
+
+18 Analytics Quality Gates
+
+19 Analytics Review Board
+
+20 Analytics Definition of Done
+
+21 Analytics Scientific Validation
+
+22 Analytics Evolution Strategy
+
+23 Analytics Maturity Assessment
+
+==============================================================================
+
+STOP
+
+Do not modify Platform Analytics.
+
+Do not replace Analytics Intelligence.
+
+Do not create another Analytics Engine.
+
+Do not activate dormant Analytics capabilities.
+
+Do not modify business logic.
+
+Do not bypass Assessment Intelligence.
+
+Do not bypass Behaviour Intelligence.
+
+Do not bypass Concern Intelligence.
+
+Do not bypass Competency Intelligence.
+
+Do not bypass Decision Intelligence.
+
+Do not bypass Learning Intelligence.
+
+Do not bypass Career Intelligence.
+
+Do not bypass Intervention Intelligence.
+
+Do not bypass Report Intelligence.
+
+Freeze this Analytics Intelligence Constitution after approval.
+
+Every future
+
+Analytics enhancement,
+
+Platform Analytics enhancement,
+
+Executive Dashboard enhancement,
+
+Mission Control enhancement,
+
+KPI enhancement,
+
+Metrics enhancement,
+
+Predictive Analytics enhancement,
+
+Enterprise Analytics enhancement,
+
+Longitudinal Analytics enhancement,
+
+and Analytics AI enhancement
+
+must comply with this Constitution.

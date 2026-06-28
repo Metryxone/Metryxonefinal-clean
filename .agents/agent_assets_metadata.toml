@@ -1296,3 +1296,9 @@ id = "JiP-WkPbnyO3Acc-CWjzX"
 uri = "file://backend/audit/mx-700/phase-1.26-report-intelligence-constitution.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 1.26: Report Intelligence Constitution (Report Factory + Living Reports + Insight Engine + Report Orchestration)"
+
+[[outputs]]
+id = "jaYLBPvU4XonOoSfY7vEg"
+uri = "file://backend/audit/mx-700/phase-1.27-analytics-intelligence-constitution.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 1.27: Analytics Intelligence Constitution (Platform Analytics + Predictive Analytics + Longitudinal Analytics + KPI Engine)"

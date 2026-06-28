@@ -1,0 +1,926 @@
+==============================================================================
+PART 25
+
+ARCHITECTURE DECISION REGISTER (ADR)
+
+OBJECTIVE
+
+Create a permanent Architecture Decision Register for the entire CAPADEX
+platform.
+
+Every future engineering phase MUST reference one or more ADRs before making
+changes.
+
+The purpose is to ensure engineering decisions are traceable, reversible and
+consistent.
+
+DO NOT create new architecture.
+
+Document existing architecture decisions first.
+
+For every major subsystem produce
+
+ADR ID
+
+Title
+
+Problem
+
+Current Implementation
+
+Reason Current Design Exists
+
+Alternative Options
+
+Tradeoffs
+
+Decision
+
+Consequences
+
+Dependencies
+
+Risk
+
+Future Evolution
+
+Replacement Conditions
+
+Affected Modules
+
+Affected APIs
+
+Affected Database
+
+Affected SuperAdmin
+
+Affected Behaviour Intelligence
+
+Affected AI
+
+Affected Reports
+
+Affected Enterprise
+
+Status
+
+Approved By
+
+Priority
+
+Generate ADRs for
+
+Assessment Engine
+
+Behaviour Engine
+
+Decision Engine
+
+Pragati
+
+WC3
+
+Concern Engine
+
+Question Engine
+
+Behaviour Ontology
+
+Signal Ontology
+
+Competency Framework
+
+Report Factory
+
+Subscription Engine
+
+Journey Engine
+
+Feature Flag System
+
+Authentication
+
+Authorization
+
+Database Architecture
+
+API Architecture
+
+SuperAdmin
+
+Analytics
+
+Enterprise Platform
+
+Knowledge Graph
+
+AI Architecture
+
+Learning Platform
+
+Career Platform
+
+Life Platform
+
+Conversation Platform
+
+Stage Architecture
+
+Produce a complete ADR catalogue.
+
+==============================================================================
+PART 26
+
+MODULE OWNERSHIP REGISTRY
+
+Generate complete ownership information.
+
+For every module document
+
+Module Name
+
+Purpose
+
+Repository Path
+
+Frontend Owner
+
+Backend Owner
+
+Database Owner
+
+API Owner
+
+AI Owner
+
+SuperAdmin Owner
+
+Business Owner
+
+Dependencies
+
+Consumers
+
+Criticality
+
+Reusability
+
+Maintainability
+
+Lifecycle Status
+
+Risk Level
+
+Enhancement Readiness
+
+Protected Intellectual Property
+
+Future Evolution
+
+==============================================================================
+
+PART 27
+
+DATA LINEAGE INTELLIGENCE
+
+Generate complete end-to-end data lineage.
+
+Document
+
+Input
+
+Transformation
+
+Validation
+
+Storage
+
+Business Logic
+
+Behaviour Logic
+
+AI Logic
+
+Decision Logic
+
+Journey Logic
+
+Subscription Logic
+
+Report Logic
+
+Analytics
+
+Dashboard
+
+Export
+
+Audit
+
+For every major data object generate lineage.
+
+Examples
+
+Question
+
+↓
+
+Answer
+
+↓
+
+Signal
+
+↓
+
+Behaviour
+
+↓
+
+Evidence
+
+↓
+
+Confidence
+
+↓
+
+Decision
+
+↓
+
+Recommendation
+
+↓
+
+Journey
+
+↓
+
+Learning
+
+↓
+
+Career
+
+↓
+
+Subscription
+
+↓
+
+Report
+
+↓
+
+Analytics
+
+↓
+
+SuperAdmin
+
+↓
+
+Audit
+
+Identify every transformation.
+
+Identify every database table.
+
+Identify every service.
+
+Identify every API.
+
+Identify every frontend consumer.
+
+==============================================================================
+
+PART 28
+
+COMPLETE SCREEN INVENTORY
+
+Generate a complete inventory.
+
+Include
+
+Pages
+
+Layouts
+
+Dashboards
+
+Cards
+
+Dialogs
+
+Drawers
+
+Popups
+
+Modals
+
+Wizards
+
+Tabs
+
+Tables
+
+Charts
+
+Widgets
+
+Reports
+
+Forms
+
+Menus
+
+Navigation
+
+Landing Pages
+
+Assessment Screens
+
+Pragati Screens
+
+Career Screens
+
+Learning Screens
+
+Enterprise Screens
+
+SuperAdmin Screens
+
+For every screen document
+
+Purpose
+
+Route
+
+Components
+
+Hooks
+
+Contexts
+
+Stores
+
+Services
+
+APIs
+
+Feature Flags
+
+Permissions
+
+Dependencies
+
+Responsive Behaviour
+
+Accessibility
+
+==============================================================================
+
+PART 29
+
+UI COMPONENT DEPENDENCY GRAPH
+
+Generate dependency graphs.
+
+Map
+
+Base Components
+
+↓
+
+Shared Components
+
+↓
+
+Business Components
+
+↓
+
+Feature Components
+
+↓
+
+Pages
+
+↓
+
+Dashboards
+
+↓
+
+Reports
+
+Document
+
+Reusable Components
+
+Duplicate Components
+
+Highly Coupled Components
+
+Large Components
+
+Refactor Candidates
+
+Protected Components
+
+==============================================================================
+
+PART 30
+
+DESIGN SYSTEM AUDIT
+
+Audit the existing design system.
+
+Document
+
+Typography
+
+Spacing
+
+Colors
+
+Tokens
+
+Variables
+
+Icons
+
+Illustrations
+
+Charts
+
+Buttons
+
+Inputs
+
+Cards
+
+Tables
+
+Badges
+
+Tags
+
+Alerts
+
+Notifications
+
+Loading States
+
+Error States
+
+Empty States
+
+Dark Mode
+
+Light Mode
+
+Responsive Rules
+
+Animation Library
+
+Accessibility Compliance
+
+Generate Design System maturity assessment.
+
+==============================================================================
+
+PART 31
+
+ASSET REGISTRY
+
+Document every reusable asset.
+
+Images
+
+Icons
+
+Fonts
+
+Videos
+
+Illustrations
+
+Logos
+
+Templates
+
+PDF Templates
+
+Email Templates
+
+Notification Templates
+
+Report Templates
+
+Presentation Templates
+
+Identify duplicates.
+
+Identify obsolete assets.
+
+==============================================================================
+
+PART 32
+
+AI PROMPT REGISTRY
+
+Inventory every AI prompt.
+
+Document
+
+Prompt ID
+
+Prompt Name
+
+Purpose
+
+Consumer
+
+Owner
+
+Model
+
+Context
+
+Memory
+
+Fallback
+
+Confidence
+
+Evaluation
+
+Version
+
+Status
+
+Dependencies
+
+Associated APIs
+
+Associated Behaviour Models
+
+Associated Reports
+
+==============================================================================
+
+PART 33
+
+INTEGRATION REGISTRY
+
+Document every external integration.
+
+Authentication
+
+Firebase
+
+OpenAI
+
+Google
+
+Microsoft
+
+Email
+
+SMS
+
+WhatsApp
+
+Payment Gateway
+
+Storage
+
+Analytics
+
+Monitoring
+
+Logging
+
+Maps
+
+Voice
+
+Video
+
+Calendar
+
+Learning Platforms
+
+HR Platforms
+
+ERP
+
+CRM
+
+For every integration document
+
+Purpose
+
+Authentication
+
+Environment Variables
+
+Dependencies
+
+Consumers
+
+Failure Behaviour
+
+Fallback
+
+Monitoring
+
+==============================================================================
+
+PART 34
+
+DEPLOYMENT ARCHITECTURE
+
+Document
+
+Development
+
+Testing
+
+UAT
+
+Production
+
+Cloud Run
+
+Firebase
+
+Build Pipeline
+
+Deployment Pipeline
+
+Rollback Strategy
+
+Secrets
+
+Environment Variables
+
+CI/CD
+
+Monitoring
+
+Logging
+
+Recovery
+
+==============================================================================
+
+PART 35
+
+BACKGROUND PROCESS REGISTRY
+
+Document
+
+Scheduled Jobs
+
+Workers
+
+Queues
+
+Cron Jobs
+
+Batch Jobs
+
+Async Processes
+
+Retry Policies
+
+Dead Letter Queues
+
+Failure Handling
+
+Recovery
+
+Dependencies
+
+==============================================================================
+
+PART 36
+
+NOTIFICATION ARCHITECTURE
+
+Document
+
+Email
+
+SMS
+
+Push
+
+In-App
+
+WhatsApp
+
+Voice
+
+Events
+
+Templates
+
+Triggers
+
+Scheduling
+
+Delivery
+
+Retries
+
+Analytics
+
+==============================================================================
+
+PART 37
+
+SEARCH ARCHITECTURE
+
+Document
+
+Current Search
+
+Indexes
+
+Filters
+
+Ranking
+
+Caching
+
+Autocomplete
+
+Semantic Search
+
+Dependencies
+
+Consumers
+
+==============================================================================
+
+PART 38
+
+AUDIT TRAIL ARCHITECTURE
+
+Document
+
+Audit Events
+
+History
+
+Versioning
+
+Approvals
+
+Rollback
+
+Data Changes
+
+User Activity
+
+SuperAdmin Activity
+
+AI Activity
+
+Report Activity
+
+==============================================================================
+
+PART 39
+
+COMPLIANCE MATRIX
+
+Document
+
+Privacy
+
+Consent
+
+Data Retention
+
+Right to Delete
+
+Right to Export
+
+Audit
+
+Accessibility
+
+Security
+
+Compliance Standards
+
+==============================================================================
+
+PART 40
+
+REPOSITORY KNOWLEDGE GRAPH
+
+Generate a complete knowledge graph connecting
+
+Components
+
+Services
+
+APIs
+
+Database Tables
+
+Feature Flags
+
+Behaviour Models
+
+Signals
+
+Ontology
+
+Reports
+
+Journeys
+
+Subscriptions
+
+Pragati
+
+SuperAdmin
+
+AI
+
+Analytics
+
+Events
+
+Configuration
+
+Business Rules
+
+Every node must identify
+
+Dependencies
+
+Consumers
+
+Owners
+
+Relationships
+
+Criticality
+
+Risk
+
+Reuse Potential
+
+==============================================================================
+
+PART 41
+
+CONSTITUTION COMPLIANCE BASELINE
+
+For every subsystem calculate
+
+Existing Frontend Reuse Potential
+
+Existing Backend Reuse Potential
+
+Existing Database Reuse Potential
+
+Existing API Reuse Potential
+
+Existing AI Reuse Potential
+
+Existing SuperAdmin Reuse Potential
+
+Existing Report Reuse Potential
+
+Existing Behaviour Engine Reuse Potential
+
+Existing Ontology Reuse Potential
+
+Existing Feature Flag Reuse Potential
+
+Generate an Enhancement Readiness Score.
+
+Generate a Rebuild Risk Score.
+
+Generate an Overall Repository Constitution Compliance Score.
+
+==============================================================================
+
+STOP.
+
+This completes the Repository Intelligence Platform.
+
+Do not implement code.
+
+Do not modify application files.
+
+Proceed to Phase 1 only after every deliverable has been reviewed and approved.

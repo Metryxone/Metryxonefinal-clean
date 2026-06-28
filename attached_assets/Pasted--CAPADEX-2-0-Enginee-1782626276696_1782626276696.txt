@@ -1,0 +1,955 @@
+==============================================================================
+CAPADEX 2.0
+Engineering Execution Specification
+
+PHASE 0.1
+
+Repository Intelligence Baseline Enhancement
+
+EXECUTION MODE
+
+DISCOVER
+UNDERSTAND
+DOCUMENT
+
+ABSOLUTELY NO IMPLEMENTATION
+
+DO NOT MODIFY CODE
+
+DO NOT REFACTOR
+
+DO NOT CREATE APPLICATION FILES
+
+THIS PHASE EXISTS ONLY TO COMPLETE THE REPOSITORY INTELLIGENCE MODEL
+
+==============================================================================
+
+MISSION
+
+Phase 0 completed the repository inventory.
+
+Phase 0.1 extends that inventory into a complete Repository Intelligence Model.
+
+This phase will become the PRIMARY ENGINEERING REFERENCE for every future
+CAPADEX enhancement.
+
+Every future engineering decision must be traceable back to this baseline.
+
+==============================================================================
+
+PRIMARY OBJECTIVE
+
+Build the most comprehensive understanding possible of the existing CAPADEX
+platform WITHOUT changing a single line of application code.
+
+The objective is COMPLETE VISIBILITY.
+
+NOT IMPLEMENTATION.
+
+==============================================================================
+
+MANDATORY RULES
+
+Search before concluding.
+
+Never assume.
+
+Never infer when the repository can prove the answer.
+
+If conflicting implementations exist
+
+DO NOT decide.
+
+Document both.
+
+If documentation differs from implementation
+
+Document the difference.
+
+Repository is primary source.
+
+Architecture documents are secondary.
+
+==============================================================================
+
+PART 1
+
+EXECUTIVE REPOSITORY DNA
+
+Produce an executive summary containing
+
+Current Vision
+
+Current Product Scope
+
+Current Platform Scope
+
+Current Strengths
+
+Current Weaknesses
+
+Current Technical Debt
+
+Current Engineering Maturity
+
+Current Behaviour Intelligence Maturity
+
+Current UX Maturity
+
+Current AI Maturity
+
+Current SuperAdmin Maturity
+
+Current Enterprise Maturity
+
+Current Scalability
+
+Current Maintainability
+
+Current Reuse Potential
+
+Current Future Readiness
+
+Overall Repository Health
+
+==============================================================================
+
+PART 2
+
+COMPLETE USER JOURNEY MAP
+
+Document every user journey exactly as implemented today.
+
+Include
+
+Landing
+
+Authentication
+
+Registration
+
+Persona Selection
+
+Concern Selection
+
+Assessment
+
+Question Engine
+
+Behaviour Engine
+
+Decision Engine
+
+Report
+
+Subscription
+
+Dashboard
+
+Learning
+
+Career
+
+Pragati
+
+Logout
+
+Every screen
+
+Every transition
+
+Every API
+
+Every database interaction
+
+Every feature flag
+
+Every decision point
+
+Generate visual flow diagrams.
+
+==============================================================================
+
+PART 3
+
+SUPERADMIN JOURNEY
+
+Document every administrator workflow.
+
+Include
+
+Login
+
+Dashboard
+
+Users
+
+Roles
+
+Permissions
+
+Persona Management
+
+Concern Management
+
+Question Management
+
+Ontology
+
+Reports
+
+AI
+
+Feature Flags
+
+Subscriptions
+
+Pricing
+
+Analytics
+
+Enterprises
+
+Universities
+
+Audit
+
+Settings
+
+Configuration
+
+Every CRUD workflow
+
+Every approval workflow
+
+Every dependency
+
+==============================================================================
+
+PART 4
+
+COMPLETE DATABASE INTELLIGENCE
+
+Generate a complete Entity Relationship Model.
+
+Include
+
+Tables
+
+Relationships
+
+Indexes
+
+Constraints
+
+Views
+
+Triggers
+
+History Tables
+
+Audit Tables
+
+Migration History
+
+Primary Keys
+
+Foreign Keys
+
+Lookup Tables
+
+Master Tables
+
+Transactional Tables
+
+Graph Tables
+
+Behaviour Tables
+
+Subscription Tables
+
+AI Tables
+
+SuperAdmin Tables
+
+Generate ER diagrams.
+
+==============================================================================
+
+PART 5
+
+API INTELLIGENCE
+
+Document every API.
+
+Include
+
+Endpoint
+
+Method
+
+Authentication
+
+Authorization
+
+Request
+
+Response
+
+Dependencies
+
+Calling Components
+
+Calling Pages
+
+Calling Services
+
+Database Tables
+
+Feature Flags
+
+Error Handling
+
+Consumers
+
+Generate API dependency graph.
+
+==============================================================================
+
+PART 6
+
+COMPLETE FRONTEND INTELLIGENCE
+
+Generate
+
+Component Tree
+
+Route Tree
+
+Layout Tree
+
+Context Tree
+
+Store Tree
+
+Hook Dependency Tree
+
+Shared Component Library
+
+Design System
+
+Typography
+
+Spacing
+
+Buttons
+
+Forms
+
+Tables
+
+Cards
+
+Charts
+
+Navigation
+
+Dialogs
+
+Modals
+
+Responsive Behaviour
+
+Accessibility
+
+Animations
+
+Loading States
+
+Error States
+
+==============================================================================
+
+PART 7
+
+BACKEND INTELLIGENCE
+
+Generate
+
+Service Dependency Graph
+
+Route Dependency Graph
+
+Controller Graph
+
+Repository Graph
+
+Middleware Graph
+
+Job Graph
+
+Worker Graph
+
+Scheduler Graph
+
+Caching
+
+Logging
+
+Configuration
+
+==============================================================================
+
+PART 8
+
+BEHAVIOUR INTELLIGENCE MAP
+
+Document
+
+Behaviour Flow
+
+Question
+
+↓
+
+Signal
+
+↓
+
+Behaviour
+
+↓
+
+Competency
+
+↓
+
+Evidence
+
+↓
+
+Confidence
+
+↓
+
+Decision
+
+↓
+
+Recommendation
+
+↓
+
+Journey
+
+↓
+
+Subscription
+
+↓
+
+Report
+
+Identify every participating service.
+
+==============================================================================
+
+PART 9
+
+DECISION ENGINE MAP
+
+Document
+
+Current decision logic.
+
+Every rule.
+
+Every dependency.
+
+Every confidence calculation.
+
+Every recommendation path.
+
+==============================================================================
+
+PART 10
+
+REPORT FACTORY MAP
+
+Document
+
+Current report generation.
+
+Data Sources
+
+AI
+
+Charts
+
+Narratives
+
+Recommendations
+
+Templates
+
+PDF
+
+Interactive Reports
+
+==============================================================================
+
+PART 11
+
+AI INTELLIGENCE
+
+Document
+
+Pragati
+
+Prompt Library
+
+Prompt Flow
+
+Memory
+
+Context
+
+Reasoning
+
+Decision
+
+Conversation
+
+Safety
+
+Fallback
+
+Confidence
+
+AI Dependencies
+
+AI APIs
+
+==============================================================================
+
+PART 12
+
+FEATURE FLAG INTELLIGENCE
+
+Document
+
+Every Feature Flag
+
+Current Status
+
+Dependencies
+
+Owner
+
+Frontend Usage
+
+Backend Usage
+
+Database Usage
+
+Admin Usage
+
+Risk
+
+==============================================================================
+
+PART 13
+
+SECURITY INTELLIGENCE
+
+Generate
+
+Authentication Flow
+
+Authorization Flow
+
+Permission Model
+
+Session Flow
+
+Enterprise Security
+
+API Security
+
+Database Security
+
+Secrets
+
+Encryption
+
+Audit
+
+==============================================================================
+
+PART 14
+
+ANALYTICS INTELLIGENCE
+
+Document
+
+Current Analytics
+
+Metrics
+
+Dashboards
+
+Tracking
+
+Events
+
+Reports
+
+==============================================================================
+
+PART 15
+
+EVENT ARCHITECTURE
+
+Generate
+
+Complete Event Flow
+
+Frontend Events
+
+Backend Events
+
+Database Events
+
+AI Events
+
+Notifications
+
+Audit Events
+
+==============================================================================
+
+PART 16
+
+BUSINESS RULE REGISTRY
+
+Document every business rule.
+
+Include
+
+Assessment
+
+Reports
+
+Behaviour
+
+Subscription
+
+Career
+
+Learning
+
+Journey
+
+Enterprise
+
+AI
+
+SuperAdmin
+
+Payments
+
+Authentication
+
+Authorization
+
+==============================================================================
+
+PART 17
+
+CONFIGURATION REGISTRY
+
+Document every configurable item.
+
+Environment Variables
+
+Feature Flags
+
+Settings
+
+Thresholds
+
+Weights
+
+AI Parameters
+
+Report Parameters
+
+Journey Parameters
+
+Behaviour Parameters
+
+==============================================================================
+
+PART 18
+
+OWNERSHIP MATRIX
+
+Generate
+
+Capability
+
+↓
+
+Frontend Owner
+
+↓
+
+Backend Owner
+
+↓
+
+Database Owner
+
+↓
+
+API Owner
+
+↓
+
+AI Owner
+
+↓
+
+SuperAdmin Owner
+
+↓
+
+Configuration Owner
+
+↓
+
+Dependencies
+
+==============================================================================
+
+PART 19
+
+ENHANCEMENT OPPORTUNITY MATRIX
+
+For every capability
+
+Current Maturity
+
+World-Class Target
+
+Gap
+
+Priority
+
+Complexity
+
+Risk
+
+Dependencies
+
+Recommendation
+
+==============================================================================
+
+PART 20
+
+REPOSITORY HEATMAP
+
+Generate heatmaps for
+
+Largest Components
+
+Largest Pages
+
+Largest Services
+
+Largest Routes
+
+Largest Tables
+
+Highest Complexity
+
+Highest Technical Debt
+
+Highest Coupling
+
+Lowest Test Coverage
+
+Highest Risk
+
+==============================================================================
+
+PART 21
+
+REBUILD RISK MATRIX
+
+Every subsystem must be classified.
+
+Safe to Enhance
+
+Needs Refactoring
+
+Needs Consolidation
+
+Do Not Touch
+
+Legacy
+
+Deprecated
+
+Critical
+
+High Risk
+
+==============================================================================
+
+PART 22
+
+TECHNICAL DEBT MAP
+
+Document
+
+Debt
+
+Cause
+
+Impact
+
+Risk
+
+Priority
+
+Recommendation
+
+==============================================================================
+
+PART 23
+
+FUTURE EVOLUTION READINESS
+
+Assess every subsystem for
+
+Scalability
+
+Performance
+
+AI Readiness
+
+Graph Readiness
+
+Enterprise Readiness
+
+Global Readiness
+
+Accessibility
+
+Extensibility
+
+==============================================================================
+
+PART 24
+
+PHASE 0 CERTIFICATION
+
+Produce the final certification.
+
+Confirm
+
+✓ Repository completely understood
+
+✓ Existing IP catalogued
+
+✓ Existing frontend documented
+
+✓ Existing backend documented
+
+✓ Existing APIs documented
+
+✓ Existing database documented
+
+✓ Existing AI documented
+
+✓ Existing SuperAdmin documented
+
+✓ Existing reports documented
+
+✓ Existing journeys documented
+
+✓ Existing business rules documented
+
+✓ Existing feature flags documented
+
+✓ Existing configuration documented
+
+✓ Existing dependencies documented
+
+✓ Existing ownership documented
+
+✓ Existing risks documented
+
+✓ Existing technical debt documented
+
+✓ Existing enhancement opportunities documented
+
+==============================================================================
+
+FINAL DELIVERABLES
+
+Generate the following documents.
+
+01 Repository DNA
+
+02 Repository Dependency Graph
+
+03 User Journey Map
+
+04 SuperAdmin Journey Map
+
+05 API Dependency Map
+
+06 Entity Relationship Diagram
+
+07 Behaviour Intelligence Map
+
+08 Decision Engine Map
+
+09 Report Factory Map
+
+10 AI Architecture Map
+
+11 Security Architecture
+
+12 Analytics Architecture
+
+13 Event Architecture
+
+14 Business Rule Registry
+
+15 Configuration Registry
+
+16 Capability Ownership Matrix
+
+17 Enhancement Opportunity Matrix
+
+18 Repository Heatmaps
+
+19 Technical Debt Heatmap
+
+20 Rebuild Risk Matrix
+
+21 Repository Readiness Assessment
+
+22 Executive Summary
+
+STOP.
+
+Do not implement any code.
+
+Do not modify application files.
+
+Do not proceed to Phase 1 until all 22 deliverables are complete.

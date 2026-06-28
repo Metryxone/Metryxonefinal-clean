@@ -1122,3 +1122,9 @@ id = "-BcvkSCwTG1YnXsp5d2Yf"
 uri = "file://backend/audit/mx-700/phase-0-repository-baseline.md"
 type = "text"
 title = "CAPADEX 2.0 — Phase 0: Repository Baseline"
+
+[[outputs]]
+id = "FCViYHbmR4PZvVpLKY-NR"
+uri = "file://backend/audit/mx-700/phase-0.1-repository-intelligence-model.md"
+type = "text"
+title = "CAPADEX 2.0 — Phase 0.1: Repository Intelligence Model"

@@ -42,6 +42,7 @@ import { registerContinuousLearningIntelligenceEngineRoutes } from "./routes/con
 import { registerEnterpriseIntelligencePlatformRoutes } from "./routes/enterprise-intelligence-platform";
 import { registerPlatformIntelligenceOperationsRoutes } from "./routes/platform-intelligence-operations";
 import { registerIntelligenceAutomationGovernanceRoutes } from "./routes/intelligence-automation-governance";
+import { registerEnterpriseIntelligenceIntegrationRoutes } from "./routes/enterprise-intelligence-integration";
 import { registerAssessmentReadinessRoutes } from "./routes/assessment-readiness";
 import { registerMx203KnowledgeRoutes } from "./routes/mx203-knowledge";
 import { registerCapadexEnterpriseRoutes } from "./routes/capadex-enterprise";
@@ -13943,6 +13944,7 @@ Rules:
   registerEnterpriseIntelligencePlatformRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerPlatformIntelligenceOperationsRoutes(app, requireAuth, requireSuperAdmin);
   registerIntelligenceAutomationGovernanceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerEnterpriseIntelligenceIntegrationRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerAssessmentReadinessRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerMx203KnowledgeRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCapadexRecommendationsRoute(app, concernsPool);

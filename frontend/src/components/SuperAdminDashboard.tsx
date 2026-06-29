@@ -164,6 +164,7 @@ const QuestionFactoryPanel = lazy(() => import('./superadmin/QuestionFactoryPane
 const PlatformLifecyclePanel = lazy(() => import('./superadmin/PlatformLifecyclePanel'));
 const PlatformLifecycleOperationsPanel = lazy(() => import('./superadmin/PlatformLifecycleOperationsPanel'));
 const PlatformIntelligenceOperationsPanel = lazy(() => import('./superadmin/PlatformIntelligenceOperationsPanel'));
+const EnterpriseIntegrationPanel = lazy(() => import('./superadmin/EnterpriseIntegrationPanel'));
 const GlobalRegionContentPanel = lazy(() => import('./superadmin/GlobalRegionContentPanel'));
 const GlobalIntelligencePanel = lazy(() => import('./superadmin/GlobalIntelligencePanel'));
 const EnterpriseWorkforceConsolePanel = lazy(() => import('./superadmin/EnterpriseWorkforceConsolePanel'));
@@ -370,6 +371,16 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
     queryKey: ['/api/admin/platform-intelligence-operations/feature-flag', 'enabled'],
     queryFn: async () => {
       const res = await fetch('/api/admin/platform-intelligence-operations/feature-flag', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+  // ── MX-800 Phase 2.13 Enterprise Intelligence Integration Platform (flag enterpriseIntelligenceIntegration).
+  //    Probe /feature-flag (res.ok) → flag OFF hides the tab entirely (byte-identical UI). ──
+  const { data: enterpriseIntelligenceIntegrationEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/admin/enterprise-intelligence-integration/feature-flag', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/enterprise-intelligence-integration/feature-flag', { credentials: 'include' });
       return res.ok;
     },
     enabled: isAuthenticated,
@@ -1077,6 +1088,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       ...(platformLifecycleEnabled ? [{ id: 'platform-lifecycle', label: 'Platform Lifecycle', icon: Boxes, node: <PlatformLifecyclePanel /> }] : []),
                       ...(platformLifecycleOperationsEnabled ? [{ id: 'platform-lifecycle-operations', label: 'Platform Lifecycle Operations', icon: Boxes, node: <PlatformLifecycleOperationsPanel /> }] : []),
                       ...(platformIntelligenceOperationsEnabled ? [{ id: 'platform-intelligence-operations', label: 'Platform Intelligence Operations', icon: Boxes, node: <PlatformIntelligenceOperationsPanel /> }] : []),
+                      ...(enterpriseIntelligenceIntegrationEnabled ? [{ id: 'enterprise-intelligence-integration', label: 'Enterprise Intelligence Integration', icon: Boxes, node: <EnterpriseIntegrationPanel /> }] : []),
                       ...(globalCompetencyEnabled ? [{ id: 'global-region-content', label: 'Global Region Content', icon: Globe, node: <GlobalRegionContentPanel /> }] : []),
                       ...(globalIntelEnabled ? [{ id: 'global-intelligence', label: 'Global Intelligence', icon: Globe, node: <GlobalIntelligencePanel /> }] : []),
                       ...(enterpriseWorkforceEnabled ? [{ id: 'enterprise-workforce-console', label: 'Enterprise Workforce Console', icon: Building2, node: <EnterpriseWorkforceConsolePanel /> }] : []),
@@ -1445,6 +1457,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               {activeTab === 'platform-lifecycle' && platformLifecycleEnabled && <div className="h-full overflow-auto"><PlatformLifecyclePanel /></div>}
               {activeTab === 'platform-lifecycle-operations' && platformLifecycleOperationsEnabled && <div className="h-full overflow-auto"><PlatformLifecycleOperationsPanel /></div>}
               {activeTab === 'platform-intelligence-operations' && platformIntelligenceOperationsEnabled && <div className="h-full overflow-auto"><PlatformIntelligenceOperationsPanel /></div>}
+              {activeTab === 'enterprise-intelligence-integration' && enterpriseIntelligenceIntegrationEnabled && <div className="h-full overflow-auto"><EnterpriseIntegrationPanel /></div>}
               {activeTab === 'global-region-content' && <div className="h-full overflow-auto"><GlobalRegionContentPanel /></div>}
               {activeTab === 'global-intelligence'  && <div className="h-full overflow-auto"><GlobalIntelligencePanel /></div>}
               {activeTab === 'enterprise-workforce-console' && enterpriseWorkforceEnabled && <div className="h-full overflow-auto"><EnterpriseWorkforceConsolePanel /></div>}

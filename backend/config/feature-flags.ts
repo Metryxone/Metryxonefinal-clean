@@ -493,6 +493,19 @@ export const FEATURE_FLAGS = {
    *  flag OFF → every route 503 before any auth/DB touch → byte-identical legacy behaviour incl. schema (0
    *  new tables). Super-admin gated. Env: `FF_INTELLIGENCE_AUTOMATION_GOVERNANCE`. */
   intelligenceAutomationGovernance: false,
+  /** MX-800 Phase 2.13 — Enterprise Intelligence Integration Platform. When ON, exposes a READ-ONLY
+   *  enterprise integration tier that REGISTERS the EXISTING MX-800 2.1–2.12 intelligence/enterprise tiers
+   *  + MX-700 1.41/1.37 platform tiers + workflow/report services into ONE canonical integration registry
+   *  and COMPOSES their read-only summaries into cross-intelligence integration / enterprise service
+   *  composition / platform interoperability (descriptive contracts) / enterprise coordination (metadata
+   *  routing) / explainability / validation / metrics. It introduces NO parallel platform, DUPLICATES no
+   *  engine, INVOKES/ACTIVATES no dormant engine (composes existence + each tier's read-only summary only),
+   *  and changes NO business logic (Integrated ≠ Unified; Unified ≠ Operational; Connected ≠ Orchestrated;
+   *  Composition ≠ Duplication; Dashboard ≠ Platform; Built ≠ Activated; human approval mandatory). Owns
+   *  ONLY 2 tables; lazy ensure-schema runs only on flag-ON write paths (discover / register / audit-capture)
+   *  so flag OFF → every route 503 before any auth/DB touch → byte-identical legacy behaviour incl. schema (0
+   *  new tables). Super-admin gated. Env: `FF_ENTERPRISE_INTELLIGENCE_INTEGRATION`. */
+  enterpriseIntelligenceIntegration: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -2717,6 +2730,9 @@ export function isPlatformIntelligenceOperationsEnabled(): boolean {
 }
 export function isIntelligenceAutomationGovernanceEnabled(): boolean {
   return isFlagEnabled('intelligenceAutomationGovernance');
+}
+export function isEnterpriseIntelligenceIntegrationEnabled(): boolean {
+  return isFlagEnabled('enterpriseIntelligenceIntegration');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

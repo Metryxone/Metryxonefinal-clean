@@ -30,6 +30,7 @@ import { registerPlatformLifecycleIntelligenceRoutes } from "./routes/platform-l
 import { registerPlatformEvolutionIntelligenceRoutes } from "./routes/platform-evolution-intelligence";
 import { registerPlatformLifecycleAutomationRoutes } from "./routes/platform-lifecycle-automation";
 import { registerPlatformLifecycleOperationsRoutes } from "./routes/platform-lifecycle-operations";
+import { registerPlatformLifecycleCertificationRoutes } from "./routes/platform-lifecycle-certification";
 import { registerAssessmentReadinessRoutes } from "./routes/assessment-readiness";
 import { registerMx203KnowledgeRoutes } from "./routes/mx203-knowledge";
 import { registerCapadexEnterpriseRoutes } from "./routes/capadex-enterprise";
@@ -13919,6 +13920,7 @@ Rules:
   registerPlatformEvolutionIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerPlatformLifecycleAutomationRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerPlatformLifecycleOperationsRoutes(app, requireAuth, requireSuperAdmin);
+  registerPlatformLifecycleCertificationRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerAssessmentReadinessRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerMx203KnowledgeRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCapadexRecommendationsRoute(app, concernsPool);

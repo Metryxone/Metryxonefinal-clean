@@ -1761,6 +1761,14 @@ export const FEATURE_FLAGS = {
    *  Flag-OFF → the new nav tab is hidden and the probe `/feature-flag` 503s → byte-identical legacy.
    *  Env: `FF_PLATFORM_LIFECYCLE_OPERATIONS`. */
   platformLifecycleOperations: false,
+
+  /** MX-700 Phase 1.43 — Platform Lifecycle Intelligence Production Certification & Enterprise Integration.
+   *  FINAL phase. Gates ONE read-only certification composer that integrates/validates/certifies the
+   *  existing 1.37–1.42 lifecycle tiers and emits MEASURED certification reports (no new engine, no
+   *  migration, no new persistence, no business-logic change, no dormant activation).
+   *  Flag-OFF → the certification route 503s before auth → byte-identical legacy.
+   *  Env: `FF_PLATFORM_LIFECYCLE_CERTIFICATION`. */
+  platformLifecycleCertification: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1971,6 +1979,10 @@ export function isPlatformLifecycleAutomationEnabled(): boolean {
 
 export function isPlatformLifecycleOperationsEnabled(): boolean {
   return isFlagEnabled('platformLifecycleOperations');
+}
+
+export function isPlatformLifecycleCertificationEnabled(): boolean {
+  return isFlagEnabled('platformLifecycleCertification');
 }
 
 export function isMx203KnowledgePopulationEnabled(): boolean {

@@ -308,6 +308,28 @@ export const FEATURE_FLAGS = {
    *  byte-identical legacy behaviour incl. schema (no new tables). Super-admin gated (requireAuth →
    *  requireSuperAdmin); `/enabled` is a persona-agnostic flag probe. Env: `FF_COMPETENCY_MATCH_INTELLIGENCE`. */
   competencyMatchIntelligence: false,
+  /** MX-800 Phase 2.1 — Platform Intelligence Operating System (PIOS): Constitution & Foundation.
+   *  When ON, the canonical Platform Intelligence REGISTRY + GOVERNANCE foundation activates at
+   *  `/api/admin/platform-intelligence-registry/*` (super-admin). This is an ENHANCEMENT-ONLY
+   *  metadata/coordination FOUNDATION over the EXISTING intelligence engines — it implements:
+   *  (Part 3) one canonical intelligence registry (id/type/owner/lifecycle/inputs/outputs/
+   *  dependencies/evidence/confidence/explainability/repo-refs/doc-refs/compatibility), (Part 4)
+   *  intelligence metadata composed from a file-verified curated catalog (NOT by modifying engine
+   *  source — no business-logic change), (Part 5) an orchestration FOUNDATION (discovery /
+   *  registration / coordination / composition / routing / explainability at the METADATA level —
+   *  it never executes the engines, never reasons/predicts/recommends/automates), (Part 6) a
+   *  governance baseline (6-facet completeness, honest gaps), and (Part 7) validation (one
+   *  registry, no duplicate registries/orchestration, reuse verified, compatibility preserved).
+   *  It SOFT-REFERENCES (never duplicates) the MX-700 platform_lifecycle registry via lifecycle_uid.
+   *  NO dormant capability is activated; lifecycle_state is MANAGED (human), activation_state is
+   *  DERIVED from the live flag (Built ≠ Activated). Coverage ⟂ Confidence ⟂ Evidence kept SEPARATE;
+   *  absent → null, never a fabricated 0. Reads are GET-never-writes (to_regclass-probed, degrade to
+   *  ready:false; compose the in-code catalog when the table is empty). The lazy ensure-schema runs
+   *  ONLY on flag-ON write paths (discover / register / audit-capture) so flag OFF → every route 503
+   *  before any auth/DB touch → byte-identical legacy behaviour incl. schema (0 new tables). Super-
+   *  admin gated (requireAuth → requireSuperAdmin); `/enabled` is a persona-agnostic flag probe.
+   *  Env: `FF_PLATFORM_INTELLIGENCE_REGISTRY`. */
+  platformIntelligenceRegistry: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -2495,6 +2517,10 @@ export function isEmployabilityStudioEnabled(): boolean {
 
 export function isLearningPassportLoopEnabled(): boolean {
   return isFlagEnabled('learningPassportLoop');
+}
+
+export function isPlatformIntelligenceRegistryEnabled(): boolean {
+  return isFlagEnabled('platformIntelligenceRegistry');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

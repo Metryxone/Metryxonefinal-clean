@@ -27,6 +27,7 @@ import { registerQuestionFactoryRoutes } from "./routes/question-factory";
 import { registerPlatformLifecycleRoutes } from "./routes/platform-lifecycle";
 import { registerPlatformLifecycleManagementRoutes } from "./routes/platform-lifecycle-management";
 import { registerPlatformLifecycleIntelligenceRoutes } from "./routes/platform-lifecycle-intelligence";
+import { registerPlatformEvolutionIntelligenceRoutes } from "./routes/platform-evolution-intelligence";
 import { registerAssessmentReadinessRoutes } from "./routes/assessment-readiness";
 import { registerMx203KnowledgeRoutes } from "./routes/mx203-knowledge";
 import { registerCapadexEnterpriseRoutes } from "./routes/capadex-enterprise";
@@ -13913,6 +13914,7 @@ Rules:
   registerPlatformLifecycleRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerPlatformLifecycleManagementRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerPlatformLifecycleIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerPlatformEvolutionIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerAssessmentReadinessRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerMx203KnowledgeRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCapadexRecommendationsRoute(app, concernsPool);

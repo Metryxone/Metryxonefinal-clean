@@ -1,0 +1,478 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.40
+#
+# PLATFORM EVOLUTION & TECHNICAL DEBT INTELLIGENCE ENGINE
+#
+# (TECHNICAL DEBT + VERSION INTELLIGENCE +
+# DEPRECATION INTELLIGENCE +
+# RETIREMENT INTELLIGENCE +
+# EVOLUTION GOVERNANCE +
+# KNOWLEDGE PRESERVATION)
+#
+# EXECUTION MODE
+#
+# IMPLEMENTATION
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT CREATE TECHNICAL DEBT V2
+# DO NOT CREATE DUPLICATE VERSION REGISTRIES
+# DO NOT CREATE PARALLEL EVOLUTION ENGINES
+# DO NOT MODIFY BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT CAPABILITIES
+#
+# ==============================================================================
+
+MISSION
+
+Phase 1.36 established the Platform Lifecycle Constitution.
+
+Phase 1.37 implemented the Lifecycle Foundation.
+
+Phase 1.38 implemented the Lifecycle Management Engine.
+
+Phase 1.39 implemented the Lifecycle Intelligence Engine.
+
+Implement the Platform Evolution & Technical Debt Intelligence Engine.
+
+This phase establishes continuous repository evolution,
+technical debt governance,
+version governance,
+deprecation governance,
+retirement governance,
+and knowledge preservation.
+
+Repository remains the Single Source of Truth.
+
+Reuse existing implementation.
+
+Never duplicate architecture.
+
+==============================================================================
+
+EXECUTION CONTRACT
+
+Implement ONLY this phase.
+
+Do not redesign architecture.
+
+Do not regenerate constitutions.
+
+Do not derive future work.
+
+Do not generate planning.
+
+Implement repository functionality only.
+
+==============================================================================
+
+HONESTY CONTRACT
+
+Measured = Repository + Runtime + Database +
+Documentation + Git + Feature Flags
+
+Repository evidence overrides assumptions.
+
+Technical Debt ≠ Bug
+
+Deprecated ≠ Removed
+
+Retired ≠ Deleted
+
+Archived ≠ Forgotten
+
+Version ≠ Release
+
+Release ≠ Adoption
+
+Knowledge Exists ≠ Runtime Active
+
+Coverage ≠ Confidence
+
+Evidence ≠ Confidence
+
+Never fabricate.
+
+Never estimate.
+
+==============================================================================
+
+PRE-IMPLEMENTATION AUDIT
+
+Search repository.
+
+Locate
+
+Lifecycle Registry
+
+Capability Catalog
+
+Version Metadata
+
+Migration History
+
+Git History
+
+Technical Debt Markers
+
+TODO
+
+FIXME
+
+HACK
+
+Deprecated Components
+
+Archived Components
+
+Retired Components
+
+Knowledge Stores
+
+Documentation
+
+Reuse existing implementation.
+
+Never duplicate.
+
+==============================================================================
+
+PART 1
+
+IMPLEMENT TECHNICAL DEBT REGISTRY
+
+Support
+
+Debt ID
+
+Debt Category
+
+Debt Type
+
+Debt Owner
+
+Priority
+
+Severity
+
+Impact
+
+Dependencies
+
+Status
+
+Resolution History
+
+Evidence
+
+Documentation
+
+Repository Reference
+
+==============================================================================
+
+PART 2
+
+IMPLEMENT VERSION INTELLIGENCE
+
+Track
+
+Current Version
+
+Previous Version
+
+Migration Version
+
+Rollback Version
+
+Compatibility Version
+
+Release Status
+
+Repository Version History
+
+==============================================================================
+
+PART 3
+
+IMPLEMENT DEPRECATION ENGINE
+
+Support
+
+Deprecation Status
+
+Reason
+
+Migration Target
+
+Compatibility
+
+Replacement
+
+Timeline
+
+Approval
+
+Documentation
+
+==============================================================================
+
+PART 4
+
+IMPLEMENT RETIREMENT ENGINE
+
+Support
+
+Retirement Approval
+
+Archive Status
+
+Dependency Validation
+
+Knowledge Preservation
+
+Historical References
+
+Repository References
+
+==============================================================================
+
+PART 5
+
+IMPLEMENT KNOWLEDGE PRESERVATION ENGINE
+
+Protect
+
+Engineering Decisions
+
+Architecture Decisions
+
+Historical Decisions
+
+Migration Decisions
+
+Lessons Learned
+
+Documentation Links
+
+==============================================================================
+
+PART 6
+
+IMPLEMENT EVOLUTION ENGINE
+
+Track
+
+Repository Evolution
+
+Capability Evolution
+
+Module Evolution
+
+API Evolution
+
+Model Evolution
+
+Lifecycle Evolution
+
+Version Evolution
+
+==============================================================================
+
+PART 7
+
+IMPLEMENT EVOLUTION VALIDATION
+
+Validate
+
+Repository Integrity
+
+Knowledge Preservation
+
+Migration Safety
+
+Compatibility
+
+Version Integrity
+
+Dependency Stability
+
+==============================================================================
+
+PART 8
+
+IMPLEMENT EVOLUTION METRICS
+
+Measure
+
+Technical Debt Health
+
+Version Health
+
+Repository Evolution
+
+Knowledge Health
+
+Migration Health
+
+Architecture Stability
+
+==============================================================================
+
+PART 9
+
+IMPLEMENT CONTINUOUS EVOLUTION AUDIT
+
+Generate
+
+Evolution Reports
+
+Debt Reports
+
+Version Reports
+
+Deprecation Reports
+
+Retirement Reports
+
+Knowledge Preservation Reports
+
+==============================================================================
+
+PART 10
+
+VALIDATION
+
+Verify
+
+No duplicate debt registries
+
+No duplicate version registries
+
+No duplicate evolution engines
+
+No duplicate repository services
+
+No duplicate APIs
+
+No business logic changes
+
+No dormant capability activation
+
+Compatibility preserved
+
+==============================================================================
+
+IMPLEMENTATION OUTPUT
+
+Produce
+
+Repository Changes
+
+Files Modified
+
+Database Changes
+
+Technical Debt Registry
+
+Version Intelligence
+
+Deprecation Engine
+
+Retirement Engine
+
+Knowledge Preservation Engine
+
+Evolution Engine
+
+Evolution Metrics
+
+Evolution Audit
+
+Compatibility Verification
+
+Documentation Updates
+
+Repository Verification Report
+
+Honest Implementation Report
+
+Distinguish
+
+Already Existing
+
+Extended
+
+Implemented
+
+Partially Implemented
+
+Deferred
+
+Dormant
+
+Missing
+
+==============================================================================
+
+DEFINITION OF DONE
+
+Phase 1.40 completes only when
+
+Lifecycle Foundation reused.
+
+Lifecycle Management Engine reused.
+
+Lifecycle Intelligence Engine reused.
+
+Technical Debt Registry implemented.
+
+Version Intelligence implemented.
+
+Deprecation Engine implemented.
+
+Retirement Engine implemented.
+
+Knowledge Preservation Engine implemented.
+
+Evolution Engine implemented.
+
+Compatibility preserved.
+
+No duplicate implementation.
+
+No business logic modified.
+
+No dormant capability activated.
+
+Repository verified.
+
+Documentation updated.
+
+==============================================================================
+
+STOP
+
+Do not implement dashboards.
+
+Do not implement SuperAdmin UI.
+
+Do not implement notifications.
+
+Do not implement workflow automation.
+
+Do not implement AI governance.
+
+Do not implement future phases.
+
+Complete Phase 1.40 only.
+
+Generate the measured implementation report.
+
+Freeze Phase 1.40.
+
+Continue automatically to Phase 1.41 only after successful repository validation.

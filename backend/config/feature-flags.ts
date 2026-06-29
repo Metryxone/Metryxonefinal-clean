@@ -1732,6 +1732,16 @@ export const FEATURE_FLAGS = {
    *  no business-logic change). Default OFF; flag-OFF is byte-identical incl. schema (the lazy
    *  ensure-schema runs ONLY on the flag-ON audit-snapshot write path). Env: `FF_PLATFORM_LIFECYCLE_INTELLIGENCE`. */
   platformLifecycleIntelligence: false,
+
+  /** MX-700 Phase 1.40 — Platform Evolution & Technical Debt Intelligence Engine (technical debt
+   *  registry + repo marker scan, version/deprecation/retirement/evolution intelligence, knowledge
+   *  preservation, evolution validation, 6 SEPARATE evolution metrics, continuous evolution audit/drift).
+   *  ENHANCEMENT-ONLY: COMPOSES the 1.37 Foundation + 1.38 Management + 1.39 Intelligence (reuses their
+   *  registry/ledger/getters — NO duplicate debt/version/evolution registries, NO parallel engines, no
+   *  business-logic change, no dormant-capability activation). Adds three GENUINELY-NEW tables
+   *  (technical_debt + knowledge + evolution audit snapshots). Default OFF; flag-OFF is byte-identical
+   *  incl. schema (every lazy ensure-schema runs ONLY on a flag-ON write path). Env: `FF_PLATFORM_EVOLUTION_INTELLIGENCE`. */
+  platformEvolutionIntelligence: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1930,6 +1940,10 @@ export function isPlatformLifecycleManagementEnabled(): boolean {
 
 export function isPlatformLifecycleIntelligenceEnabled(): boolean {
   return isFlagEnabled('platformLifecycleIntelligence');
+}
+
+export function isPlatformEvolutionIntelligenceEnabled(): boolean {
+  return isFlagEnabled('platformEvolutionIntelligence');
 }
 
 export function isMx203KnowledgePopulationEnabled(): boolean {

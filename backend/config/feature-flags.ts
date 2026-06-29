@@ -463,6 +463,20 @@ export const FEATURE_FLAGS = {
    *  every route 503 before any auth/DB touch → byte-identical legacy behaviour incl. schema (0 new
    *  tables). Super-admin gated. Env: `FF_ENTERPRISE_INTELLIGENCE_PLATFORM`. */
   enterpriseIntelligencePlatform: false,
+  /** MX-800 Phase 2.11 — Platform Intelligence Operations Center. FRONTEND-EXPOSURE phase: when ON it
+   *  exposes ONE read-only SuperAdmin console that COMPOSES the already-shipped read APIs of the nine
+   *  prior MX-800 intelligence tiers (2.1 platform-intelligence-registry / 2.3 engineering / 2.4 runtime /
+   *  2.5 knowledge / 2.6 decision / 2.7 predictive / 2.8 recommendation / 2.9 continuous-learning / 2.10
+   *  enterprise) CLIENT-SIDE into unified operations / real-time monitoring / observability / governance
+   *  operations / operational intelligence / alert intelligence / executive operations / superadmin
+   *  operations / operations validation. It ADDS no new data endpoint, NO service, NO migration, NO new
+   *  persistence, NO business-logic change, and activates NO dormant engine. The ONLY backend surface is
+   *  the standard flag gate (`/enabled` + `/feature-flag`). This flag only says the OPERATIONS CONSOLE is
+   *  exposed — each console section independently probes its own engine flag (Visible ≠ Healthy; Dashboard
+   *  ≠ Intelligence; Monitoring ≠ Governance; Alert ≠ Incident; Built ≠ Activated; human approval
+   *  mandatory). Flag OFF → tab hidden, probe 503, byte-identical legacy behaviour incl. schema (0 new
+   *  tables). Env: `FF_PLATFORM_INTELLIGENCE_OPERATIONS`. */
+  platformIntelligenceOperations: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -2681,6 +2695,9 @@ export function isContinuousLearningIntelligenceEngineEnabled(): boolean {
 }
 export function isEnterpriseIntelligencePlatformEnabled(): boolean {
   return isFlagEnabled('enterpriseIntelligencePlatform');
+}
+export function isPlatformIntelligenceOperationsEnabled(): boolean {
+  return isFlagEnabled('platformIntelligenceOperations');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

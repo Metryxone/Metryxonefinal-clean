@@ -1,0 +1,424 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# PHASE 1.38
+#
+# PLATFORM LIFECYCLE MANAGEMENT ENGINE
+#
+# (FEATURE LIFECYCLE + CAPABILITY LIFECYCLE +
+# MODULE LIFECYCLE + API LIFECYCLE +
+# MODEL LIFECYCLE + VERSION LIFECYCLE +
+# DEPRECATION + RETIREMENT + EVOLUTION ENGINE)
+#
+# EXECUTION MODE
+#
+# IMPLEMENTATION
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT CREATE LIFECYCLE V2
+# DO NOT CREATE DUPLICATE REGISTRIES
+# DO NOT CREATE PARALLEL LIFECYCLE ENGINES
+# DO NOT MODIFY BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT CAPABILITIES
+#
+# ==============================================================================
+
+MISSION
+
+Phase 1.37 established the Platform Lifecycle Foundation.
+
+Implement the Lifecycle Management Engine that manages every lifecycle
+entity using the existing repository.
+
+Reuse the foundation implemented in Phase 1.37.
+
+Do not recreate lifecycle registries.
+
+Do not redesign architecture.
+
+Repository remains the Single Source of Truth.
+
+==============================================================================
+
+EXECUTION CONTRACT
+
+Implement repository functionality only.
+
+Do not generate plans.
+
+Do not regenerate constitutions.
+
+Do not redesign lifecycle governance.
+
+Implement only this phase.
+
+==============================================================================
+
+HONESTY CONTRACT
+
+Repository evidence overrides assumptions.
+
+Built ≠ Activated
+
+Registered ≠ Managed
+
+Lifecycle Exists ≠ Runtime Active
+
+Coverage ≠ Confidence
+
+Evidence ≠ Confidence
+
+Never fabricate.
+
+Never estimate.
+
+==============================================================================
+
+PRE-IMPLEMENTATION AUDIT
+
+Search repository.
+
+Locate
+
+Lifecycle Registry
+
+Capability Catalog
+
+Lifecycle Metadata
+
+Version Registry
+
+Migration Registry
+
+Feature Flags
+
+Repository Metadata
+
+Documentation Metadata
+
+Reuse existing implementation.
+
+Never duplicate.
+
+==============================================================================
+
+PART 1
+
+IMPLEMENT FEATURE LIFECYCLE ENGINE
+
+Support
+
+Feature Creation
+
+Feature Approval
+
+Feature Activation
+
+Feature Enhancement
+
+Feature Deprecation
+
+Feature Retirement
+
+Feature Archiving
+
+==============================================================================
+
+PART 2
+
+IMPLEMENT CAPABILITY LIFECYCLE ENGINE
+
+Support
+
+Capability Registration
+
+Capability Ownership
+
+Capability Dependencies
+
+Capability Consumers
+
+Capability Compatibility
+
+Capability Reuse
+
+Capability Retirement
+
+==============================================================================
+
+PART 3
+
+IMPLEMENT MODULE LIFECYCLE ENGINE
+
+Support
+
+Module Registration
+
+Module Dependencies
+
+Module Compatibility
+
+Module Activation
+
+Module Retirement
+
+Module History
+
+==============================================================================
+
+PART 4
+
+IMPLEMENT API LIFECYCLE ENGINE
+
+Support
+
+API Registration
+
+API Version
+
+API Compatibility
+
+API Deprecation
+
+API Migration
+
+API Retirement
+
+==============================================================================
+
+PART 5
+
+IMPLEMENT MODEL LIFECYCLE ENGINE
+
+Support
+
+Behaviour Models
+
+Competency Models
+
+Decision Models
+
+Analytics Models
+
+Ontology Models
+
+AI Models
+
+Track
+
+Lifecycle
+
+Compatibility
+
+Version
+
+Validation
+
+==============================================================================
+
+PART 6
+
+IMPLEMENT VERSION MANAGEMENT
+
+Support
+
+Current Version
+
+Previous Version
+
+Migration Version
+
+Rollback Version
+
+Release Status
+
+Compatibility
+
+==============================================================================
+
+PART 7
+
+IMPLEMENT DEPRECATION ENGINE
+
+Support
+
+Deprecation Policy
+
+Deprecation Reason
+
+Replacement Reference
+
+Migration Target
+
+Compatibility Status
+
+Deprecation Timeline
+
+==============================================================================
+
+PART 8
+
+IMPLEMENT RETIREMENT ENGINE
+
+Support
+
+Retirement Approval
+
+Archive Reference
+
+Knowledge Preservation
+
+Dependency Validation
+
+Historical Preservation
+
+==============================================================================
+
+PART 9
+
+IMPLEMENT EVOLUTION ENGINE
+
+Track
+
+Enhancements
+
+Repository Evolution
+
+Module Evolution
+
+API Evolution
+
+Capability Evolution
+
+Version Evolution
+
+==============================================================================
+
+PART 10
+
+VALIDATION
+
+Verify
+
+No duplicate lifecycle engines
+
+No duplicate capability engines
+
+No duplicate services
+
+No duplicate APIs
+
+No business logic changes
+
+No dormant capability activation
+
+Compatibility preserved
+
+==============================================================================
+
+IMPLEMENTATION OUTPUT
+
+Produce
+
+Repository Changes
+
+Files Modified
+
+Database Changes
+
+Lifecycle Engine
+
+Feature Lifecycle Engine
+
+Capability Lifecycle Engine
+
+Module Lifecycle Engine
+
+API Lifecycle Engine
+
+Model Lifecycle Engine
+
+Version Engine
+
+Deprecation Engine
+
+Retirement Engine
+
+Evolution Engine
+
+Compatibility Verification
+
+Documentation Updates
+
+Repository Verification Report
+
+Honest Implementation Report
+
+==============================================================================
+
+DEFINITION OF DONE
+
+Phase 1.38 completes only when
+
+Lifecycle Foundation reused.
+
+Lifecycle Management Engine implemented.
+
+Feature lifecycle operational.
+
+Capability lifecycle operational.
+
+Module lifecycle operational.
+
+API lifecycle operational.
+
+Model lifecycle operational.
+
+Version lifecycle operational.
+
+Deprecation engine operational.
+
+Retirement engine operational.
+
+Evolution engine operational.
+
+Compatibility preserved.
+
+No duplicate implementation.
+
+No business logic modified.
+
+No dormant capability activated.
+
+Documentation updated.
+
+Repository verified.
+
+==============================================================================
+
+STOP
+
+Do not implement dashboards.
+
+Do not implement analytics.
+
+Do not implement reporting.
+
+Do not implement SuperAdmin lifecycle pages.
+
+Do not implement AI lifecycle.
+
+Do not implement technical debt engine.
+
+Do not implement future phases.
+
+Complete Phase 1.38 only.
+
+Generate the measured implementation report.
+
+Freeze Phase 1.38.
+
+Continue to Phase 1.39 only after successful implementation and verification.

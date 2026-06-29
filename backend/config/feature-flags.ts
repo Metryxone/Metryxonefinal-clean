@@ -1719,6 +1719,12 @@ export const FEATURE_FLAGS = {
    *  Read-only index over the repository SSOT. Default OFF; flag-OFF is byte-identical incl.
    *  schema (the lazy ensure-schema never runs). Env: `FF_PLATFORM_LIFECYCLE_FOUNDATION`. */
   platformLifecycleFoundation: false,
+  /** MX-700 Phase 1.38 — Platform Lifecycle Management Engine (feature/capability/module/api/model
+   *  lifecycle ops + version management + deprecation + retirement + evolution). ADDITIVE layer that
+   *  COMPOSES the 1.37 Foundation (reuses transitionState/registry/catalog — no parallel registry/engine).
+   *  Default OFF; flag-OFF is byte-identical incl. schema (lazy ensure-schema only on flag-ON write
+   *  paths). Env: `FF_PLATFORM_LIFECYCLE_MANAGEMENT`. */
+  platformLifecycleManagement: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1909,6 +1915,10 @@ export function isQuestionFactoryEnabled(): boolean {
 
 export function isPlatformLifecycleFoundationEnabled(): boolean {
   return isFlagEnabled('platformLifecycleFoundation');
+}
+
+export function isPlatformLifecycleManagementEnabled(): boolean {
+  return isFlagEnabled('platformLifecycleManagement');
 }
 
 export function isMx203KnowledgePopulationEnabled(): boolean {

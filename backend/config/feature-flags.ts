@@ -330,6 +330,22 @@ export const FEATURE_FLAGS = {
    *  admin gated (requireAuth → requireSuperAdmin); `/enabled` is a persona-agnostic flag probe.
    *  Env: `FF_PLATFORM_INTELLIGENCE_REGISTRY`. */
   platformIntelligenceRegistry: false,
+  /** MX-800 Phase 2.3 — Engineering Intelligence Engine. When ON, exposes a read-only admin
+   *  surface (`/api/admin/engineering-intelligence`) that COMPOSES the EXISTING repository/lifecycle
+   *  intelligence engines (MX-700 1.39 + 1.40) plus a MEASURED engineering-knowledge registry to
+   *  understand / measure / validate / explain / surface engineering quality. ENHANCEMENT-ONLY: NO
+   *  parallel engineering engine, NO duplicate analysis/quality/validation service, NO business-logic
+   *  change, NO dormant activation. Only AST-free statically MEASURABLE signals are reported as
+   *  numbers (code size, debt markers, large files, circular deps, orphan modules, doc coverage,
+   *  library manifest, import edges, test-file presence); complexity/cohesion/duplication/line-coverage
+   *  are honest NULL (DEFERRED — AST/instrumentation not present). Coverage ⟂ Confidence ⟂ Evidence
+   *  kept SEPARATE; metrics NEVER composited; absent → null (null ≠ 0). owner MANAGED (honest-NULL),
+   *  present DERIVED. Reads are GET-never-writes (to_regclass-probed); the lazy ensure-schema runs
+   *  ONLY on flag-ON write paths (discover / register / audit-capture) so flag OFF → every route 503
+   *  before any auth/DB touch → byte-identical legacy behaviour incl. schema (0 new tables). Super-
+   *  admin gated (requireAuth → requireSuperAdmin); `/enabled` is a persona-agnostic flag probe.
+   *  Env: `FF_ENGINEERING_INTELLIGENCE`. */
+  engineeringIntelligence: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -2521,6 +2537,10 @@ export function isLearningPassportLoopEnabled(): boolean {
 
 export function isPlatformIntelligenceRegistryEnabled(): boolean {
   return isFlagEnabled('platformIntelligenceRegistry');
+}
+
+export function isEngineeringIntelligenceEnabled(): boolean {
+  return isFlagEnabled('engineeringIntelligence');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

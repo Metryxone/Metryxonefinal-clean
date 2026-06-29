@@ -450,6 +450,19 @@ export const FEATURE_FLAGS = {
    *  byte-identical legacy behaviour incl. schema (0 new tables). Super-admin gated. Env:
    *  `FF_CONTINUOUS_LEARNING_INTELLIGENCE_ENGINE`. */
   continuousLearningIntelligenceEngine: false,
+  /** MX-800 Phase 2.10 — Enterprise Intelligence Platform. When ON, exposes a READ-ONLY enterprise
+   *  intelligence tier that REGISTERS the platform's EXISTING intelligence domains/services into one
+   *  enterprise registry and COMPOSES the eight prior MX-800 intelligence tiers (2.1 platform / 2.3
+   *  engineering / 2.4 runtime / 2.5 knowledge / 2.6 decision / 2.7 predictive / 2.8 recommendation /
+   *  2.9 continuous-learning) into enterprise orchestration / cross-intelligence correlation / enterprise
+   *  insights / organizational + executive intelligence / explainability / validation / metrics. It
+   *  DUPLICATES no engine, INVOKES no dormant engine (reads existence + read-only summaries only), and
+   *  NEVER decides / executes / modifies business logic / acts autonomously (Integration ≠ Duplication;
+   *  Insight ≠ Decision; Connected ≠ Orchestrated; Correlation ≠ Causation). Owns ONLY 2 tables; lazy
+   *  ensure-schema runs only on flag-ON write paths (discover / register / audit-capture) so flag OFF →
+   *  every route 503 before any auth/DB touch → byte-identical legacy behaviour incl. schema (0 new
+   *  tables). Super-admin gated. Env: `FF_ENTERPRISE_INTELLIGENCE_PLATFORM`. */
+  enterpriseIntelligencePlatform: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -2665,6 +2678,9 @@ export function isRecommendationIntelligenceEngineEnabled(): boolean {
 }
 export function isContinuousLearningIntelligenceEngineEnabled(): boolean {
   return isFlagEnabled('continuousLearningIntelligenceEngine');
+}
+export function isEnterpriseIntelligencePlatformEnabled(): boolean {
+  return isFlagEnabled('enterpriseIntelligencePlatform');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

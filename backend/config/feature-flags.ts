@@ -401,6 +401,20 @@ export const FEATURE_FLAGS = {
    *  flag OFF → every route 503 before any auth/DB touch → byte-identical legacy behaviour incl.
    *  schema (0 new tables). Super-admin gated. Env: `FF_DECISION_INTELLIGENCE_ENGINE`. */
   decisionIntelligenceEngine: false,
+  /** MX-800 Phase 2.7 — Predictive Intelligence Engine. ENHANCEMENT-ONLY read-only tier that CATALOGS
+   *  the platform's EXISTING prediction / forecast / trend / risk / simulation / scenario capabilities
+   *  and COMPOSES the prior intelligence tiers (2.1 platform / 2.3 engineering / 2.4 runtime / 2.5
+   *  knowledge / 2.6 decision) into explainable predictive intelligence. It NEVER duplicates a
+   *  prediction / forecast / analytics engine and NEVER invokes or activates a dormant prediction engine
+   *  (it READS each one's existence + persisted output only). Simulation is SIMULATION ONLY — it never
+   *  modifies production. Honesty: Prediction ≠ Decision; Forecast ≠ Fact; Probability ≠ Certainty;
+   *  Simulation ≠ Reality; Trend ≠ Future; Confidence ≠ Accuracy; Evidence ≠ Confidence; null ≠ 0.
+   *  forecast_confidence is STRUCTURAL only; accuracy-class metrics are unmeasurable (no labelled
+   *  outcomes) → honest-null. Reads are GET-never-writes (to_regclass-probed); the lazy ensure-schema
+   *  runs ONLY on flag-ON write paths (discover / register / audit-capture) so flag OFF → every route
+   *  503 before any auth/DB touch → byte-identical legacy behaviour incl. schema (0 new tables).
+   *  Super-admin gated. Env: `FF_PREDICTIVE_INTELLIGENCE_ENGINE`. */
+  predictiveIntelligenceEngine: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -2607,6 +2621,9 @@ export function isKnowledgeIntelligenceEngineEnabled(): boolean {
 }
 export function isDecisionIntelligenceEngineEnabled(): boolean {
   return isFlagEnabled('decisionIntelligenceEngine');
+}
+export function isPredictiveIntelligenceEngineEnabled(): boolean {
+  return isFlagEnabled('predictiveIntelligenceEngine');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

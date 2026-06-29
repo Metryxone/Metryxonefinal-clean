@@ -1725,6 +1725,13 @@ export const FEATURE_FLAGS = {
    *  Default OFF; flag-OFF is byte-identical incl. schema (lazy ensure-schema only on flag-ON write
    *  paths). Env: `FF_PLATFORM_LIFECYCLE_MANAGEMENT`. */
   platformLifecycleManagement: false,
+  /** MX-700 Phase 1.39 — Platform Lifecycle Intelligence Engine (lifecycle evidence + confidence +
+   *  explainability + lifecycle health + repository health + compatibility intelligence + validation +
+   *  audit/drift + metrics). READ-ONLY intelligence layer that COMPOSES the 1.37 Foundation + 1.38
+   *  Management (reuses their registry/catalog/relationships/getters — no parallel registry/engine,
+   *  no business-logic change). Default OFF; flag-OFF is byte-identical incl. schema (the lazy
+   *  ensure-schema runs ONLY on the flag-ON audit-snapshot write path). Env: `FF_PLATFORM_LIFECYCLE_INTELLIGENCE`. */
+  platformLifecycleIntelligence: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1919,6 +1926,10 @@ export function isPlatformLifecycleFoundationEnabled(): boolean {
 
 export function isPlatformLifecycleManagementEnabled(): boolean {
   return isFlagEnabled('platformLifecycleManagement');
+}
+
+export function isPlatformLifecycleIntelligenceEnabled(): boolean {
+  return isFlagEnabled('platformLifecycleIntelligence');
 }
 
 export function isMx203KnowledgePopulationEnabled(): boolean {

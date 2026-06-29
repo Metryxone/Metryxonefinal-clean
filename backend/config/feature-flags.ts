@@ -477,6 +477,22 @@ export const FEATURE_FLAGS = {
    *  mandatory). Flag OFF → tab hidden, probe 503, byte-identical legacy behaviour incl. schema (0 new
    *  tables). Env: `FF_PLATFORM_INTELLIGENCE_OPERATIONS`. */
   platformIntelligenceOperations: false,
+  /** MX-800 Phase 2.12 — Intelligence Automation & Governance Orchestration Platform. ENHANCEMENT-ONLY
+   *  read-only tier that REGISTERS the EXISTING automation / governance / workflow / policy / event /
+   *  approval capabilities into ONE canonical automation registry and COMPOSES the MX-700 1.41
+   *  platform-lifecycle-automation getters (governance / policies / quality-gates / compliance /
+   *  orchestration / validation / metrics, all GET-never-writes) + the workflow-engine overview + the
+   *  prior MX-800 intelligence-tier summaries into governance orchestration / workflow orchestration /
+   *  policy orchestration / validation automation / event orchestration / approval workflows /
+   *  observability / validation / metrics. It DUPLICATES no engine, INVOKES / ACTIVATES no dormant
+   *  engine (reads engine-file EXISTENCE + persisted-trail COUNT + read-only summaries only — it never
+   *  emits an event, never starts the scheduler, never executes a workflow, never decides), and changes
+   *  NO business logic (Automation ≠ Autonomy; Orchestration ≠ Decision; Approval ≠ Execution; Workflow ≠
+   *  Business-Logic; Recommendation ≠ Approval; Built ≠ Activated; human approval mandatory). Owns ONLY 2
+   *  tables; lazy ensure-schema runs only on flag-ON write paths (discover / register / audit-capture) so
+   *  flag OFF → every route 503 before any auth/DB touch → byte-identical legacy behaviour incl. schema (0
+   *  new tables). Super-admin gated. Env: `FF_INTELLIGENCE_AUTOMATION_GOVERNANCE`. */
+  intelligenceAutomationGovernance: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -2698,6 +2714,9 @@ export function isEnterpriseIntelligencePlatformEnabled(): boolean {
 }
 export function isPlatformIntelligenceOperationsEnabled(): boolean {
   return isFlagEnabled('platformIntelligenceOperations');
+}
+export function isIntelligenceAutomationGovernanceEnabled(): boolean {
+  return isFlagEnabled('intelligenceAutomationGovernance');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

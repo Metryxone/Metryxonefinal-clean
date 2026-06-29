@@ -1,0 +1,466 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# MX-800
+#
+# PHASE 2.4
+#
+# RUNTIME INTELLIGENCE ENGINE
+#
+# (APPLICATION INTELLIGENCE +
+# RUNTIME HEALTH +
+# SERVICE INTELLIGENCE +
+# PERFORMANCE INTELLIGENCE +
+# RESOURCE INTELLIGENCE +
+# OBSERVABILITY INTELLIGENCE)
+#
+# EXECUTION MODE
+#
+# IMPLEMENTATION
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT CREATE RUNTIME V2
+# DO NOT CREATE PARALLEL MONITORING SYSTEMS
+# DO NOT DUPLICATE EXISTING SERVICES
+# DO NOT MODIFY BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT CAPABILITIES
+#
+# ==============================================================================
+#
+# MISSION
+#
+# Phase 2.1 established Platform Intelligence.
+#
+# Phase 2.2 established Repository Intelligence.
+#
+# Phase 2.3 established Engineering Intelligence.
+#
+# Implement the Runtime Intelligence Engine.
+#
+# Runtime Intelligence continuously observes,
+# measures,
+# validates,
+# explains,
+# and optimizes runtime behavior.
+#
+# Repository remains the Single Source of Truth.
+#
+# Reuse existing monitoring,
+# telemetry,
+# logging,
+# health,
+# metrics,
+# and infrastructure components.
+#
+# Never duplicate architecture.
+#
+# ==============================================================================
+#
+# EXECUTION CONTRACT
+#
+# Search.
+#
+# Measure.
+#
+# Reuse.
+#
+# Implement.
+#
+# Validate.
+#
+# Report.
+#
+# Stop.
+#
+# Implement ONLY this phase.
+#
+# ==============================================================================
+#
+# HONESTY CONTRACT
+#
+# Running ≠ Healthy
+#
+# Healthy ≠ Stable
+#
+# Stable ≠ Scalable
+#
+# Response Time ≠ Performance
+#
+# Error-Free ≠ Reliable
+#
+# Coverage ≠ Confidence
+#
+# Evidence ≠ Confidence
+#
+# Never fabricate.
+#
+# Never estimate.
+#
+# Runtime evidence overrides assumptions.
+#
+# ==============================================================================
+#
+# PRE-IMPLEMENTATION AUDIT
+#
+# Search repository.
+#
+# Locate
+#
+# Health checks
+#
+# Logging
+#
+# Metrics
+#
+# Monitoring
+#
+# Telemetry
+#
+# Performance APIs
+#
+# Cloud Run integrations
+#
+# Feature Flags
+#
+# Infrastructure services
+#
+# Existing observability
+#
+# Existing dashboards
+#
+# Existing alerting
+#
+# Existing runtime metadata
+#
+# Reuse existing implementation.
+#
+# Never duplicate.
+#
+# ==============================================================================
+#
+# PART 1
+#
+# IMPLEMENT RUNTIME REGISTRY
+#
+# Register
+#
+# Running Services
+#
+# Background Workers
+#
+# Scheduled Jobs
+#
+# API Processes
+#
+# Runtime Dependencies
+#
+# Runtime Metadata
+#
+# ==============================================================================
+#
+# PART 2
+#
+# IMPLEMENT APPLICATION HEALTH INTELLIGENCE
+#
+# Measure
+#
+# Service Health
+#
+# API Availability
+#
+# Endpoint Health
+#
+# Background Job Health
+#
+# Database Connectivity
+#
+# External Integration Health
+#
+# ==============================================================================
+#
+# PART 3
+#
+# IMPLEMENT PERFORMANCE INTELLIGENCE
+#
+# Measure
+#
+# API Response Time
+#
+# Request Throughput
+#
+# Latency
+#
+# CPU Usage
+#
+# Memory Usage
+#
+# Resource Consumption
+#
+# Cache Efficiency
+#
+# ==============================================================================
+#
+# PART 4
+#
+# IMPLEMENT SERVICE INTELLIGENCE
+#
+# Track
+#
+# Service Dependencies
+#
+# Runtime Dependencies
+#
+# Failed Services
+#
+# Slow Services
+#
+# Critical Services
+#
+# Recovery Status
+#
+# ==============================================================================
+#
+# PART 5
+#
+# IMPLEMENT OBSERVABILITY INTELLIGENCE
+#
+# Correlate
+#
+# Logs
+#
+# Metrics
+#
+# Events
+#
+# Traces
+#
+# Health Signals
+#
+# Runtime Alerts
+#
+# Repository Metadata
+#
+# ==============================================================================
+#
+# PART 6
+#
+# IMPLEMENT RESOURCE INTELLIGENCE
+#
+# Monitor
+#
+# CPU
+#
+# Memory
+#
+# Storage
+#
+# Network
+#
+# Connection Pools
+#
+# Runtime Limits
+#
+# Resource Trends
+#
+# ==============================================================================
+#
+# PART 7
+#
+# IMPLEMENT RUNTIME REASONING
+#
+# Explain
+#
+# Why performance changed
+#
+# Why services degraded
+#
+# Why failures occurred
+#
+# Why resource usage increased
+#
+# Why recommendations are generated
+#
+# Always provide repository and runtime evidence.
+#
+# ==============================================================================
+#
+# PART 8
+#
+# IMPLEMENT RUNTIME VALIDATION
+#
+# Validate
+#
+# Runtime Stability
+#
+# Performance Stability
+#
+# Service Integrity
+#
+# Resource Integrity
+#
+# Infrastructure Compatibility
+#
+# ==============================================================================
+#
+# PART 9
+#
+# IMPLEMENT RUNTIME METRICS
+#
+# Track
+#
+# Runtime Health Score
+#
+# Performance Score
+#
+# Availability Score
+#
+# Reliability Score
+#
+# Resource Health
+#
+# Infrastructure Stability
+#
+# ==============================================================================
+#
+# PART 10
+#
+# VALIDATION
+#
+# Verify
+#
+# Existing runtime services reused
+#
+# No duplicate monitoring
+#
+# No duplicate observability
+#
+# No duplicate logging
+#
+# No duplicate telemetry
+#
+# No business logic changes
+#
+# No dormant capability activation
+#
+# Compatibility preserved
+#
+# ==============================================================================
+#
+# IMPLEMENTATION OUTPUT
+#
+# Produce
+#
+# Repository Changes
+#
+# Files Modified
+#
+# Database Changes
+#
+# Runtime Registry
+#
+# Runtime Health Intelligence
+#
+# Performance Intelligence
+#
+# Service Intelligence
+#
+# Observability Intelligence
+#
+# Resource Intelligence
+#
+# Runtime Reasoning
+#
+# Runtime Validation
+#
+# Runtime Metrics
+#
+# Compatibility Verification
+#
+# Documentation Updates
+#
+# Repository Verification Report
+#
+# Honest Implementation Report
+#
+# Distinguish
+#
+# Already Existing
+#
+# Extended
+#
+# Implemented
+#
+# Partially Implemented
+#
+# Deferred
+#
+# Dormant
+#
+# Missing
+#
+# ==============================================================================
+#
+# DEFINITION OF DONE
+#
+# Phase 2.4 completes only when
+#
+# Repository searched.
+#
+# Existing runtime services reused.
+#
+# Runtime Registry implemented.
+#
+# Runtime Health Intelligence implemented.
+#
+# Performance Intelligence implemented.
+#
+# Service Intelligence implemented.
+#
+# Observability Intelligence implemented.
+#
+# Resource Intelligence implemented.
+#
+# Runtime Reasoning implemented.
+#
+# Runtime Validation implemented.
+#
+# Runtime Metrics implemented.
+#
+# Compatibility preserved.
+#
+# No duplicate implementation.
+#
+# No business logic modified.
+#
+# No dormant capability activated.
+#
+# Repository verified.
+#
+# Documentation updated.
+#
+# ==============================================================================
+#
+# STOP
+#
+# Do not implement Knowledge Intelligence.
+#
+# Do not implement Decision Intelligence.
+#
+# Do not implement AI orchestration.
+#
+# Do not implement Enterprise Intelligence.
+#
+# Do not implement future phases.
+#
+# Complete Phase 2.4 only.
+#
+# Generate the measured implementation report.
+#
+# Freeze Phase 2.4.
+#
+# Phase 2.5 will implement the Knowledge Intelligence Engine.
+#
+# ==============================================================================

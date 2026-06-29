@@ -346,6 +346,25 @@ export const FEATURE_FLAGS = {
    *  admin gated (requireAuth → requireSuperAdmin); `/enabled` is a persona-agnostic flag probe.
    *  Env: `FF_ENGINEERING_INTELLIGENCE`. */
   engineeringIntelligence: false,
+  /** MX-800 Phase 2.4 — Runtime Intelligence Engine. When ON, a read-only engine that COMPOSES the
+   *  EXISTING health-aggregator runtime checks (routes/health-aggregator) + live in-process
+   *  process/OS/pg measurements to understand / measure / validate / explain / surface RUNTIME
+   *  application health, performance, service availability, observability and resource usage, plus a
+   *  MEASURED runtime-component registry. ENHANCEMENT-ONLY: NO parallel monitoring/health engine, NO
+   *  duplicate telemetry, NO business-logic change, NO dormant activation. Only in-process statically
+   *  MEASURABLE signals are reported as numbers (composed health scores, DB round-trip latency,
+   *  event-loop lag, process/OS memory + CPU, pg pool, DB size); HTTP throughput / p95-p99 response
+   *  time / APM / distributed tracing / container (cgroup) limits / disk I/O are honest NULL
+   *  (DEFERRED — no load tooling / request-log / APM in this environment). Running ≠ Healthy ≠ Stable
+   *  ≠ Scalable; ResponseTime ≠ Performance; Error-Free ≠ Reliable. Coverage ⟂ Confidence ⟂ Evidence
+   *  kept SEPARATE; metrics NEVER composited; absent → null (null ≠ 0). owner MANAGED (honest-NULL),
+   *  present DERIVED. Reads are GET-never-writes (to_regclass-probed); the lazy ensure-schema runs
+   *  ONLY on flag-ON write paths (discover / register / audit-capture) so flag OFF → every route 503
+   *  before any auth/DB touch → byte-identical legacy behaviour incl. schema (0 new tables). Super-
+   *  admin gated (requireAuth → requireSuperAdmin); `/enabled` is a persona-agnostic flag probe.
+   *  Distinct from the unrelated assessment runtime family (runtimeIntelligenceActivation/Pipeline/
+   *  Consumption). Env: `FF_RUNTIME_INTELLIGENCE_ENGINE`. */
+  runtimeIntelligenceEngine: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -2541,6 +2560,10 @@ export function isPlatformIntelligenceRegistryEnabled(): boolean {
 
 export function isEngineeringIntelligenceEnabled(): boolean {
   return isFlagEnabled('engineeringIntelligence');
+}
+
+export function isRuntimeIntelligenceEngineEnabled(): boolean {
+  return isFlagEnabled('runtimeIntelligenceEngine');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

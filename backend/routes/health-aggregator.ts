@@ -318,6 +318,23 @@ function buildTrend(history: { score: number | null }[]) {
   return { available: true, direction: delta > 0 ? 'up' : delta < 0 ? 'down' : 'flat', current, previous, delta };
 }
 
+/**
+ * Composed runtime-health export (MX-800 Phase 2.4 reuse seam). Computes ALL health domains LIVE
+ * (no cache, no write) and rolls them up exactly like the GET /api/admin/health handler. This is
+ * ADDITIVE — the existing route handlers are untouched, so flag-OFF behaviour stays byte-identical.
+ * Runtime Intelligence COMPOSES this instead of duplicating process/db/pool health checks.
+ */
+export async function computeAllHealthDomains(pool: Pool) {
+  const domains = [];
+  for (const d of DOMAINS) domains.push(await buildDomain(pool, d));
+  const scored = domains.map((x) => x.score).filter((s): s is number => s != null);
+  const overall = scored.length ? Math.round(scored.reduce((a, b) => a + b, 0) / scored.length) : null;
+  const anyDown = domains.some((x) => x.status === 'down');
+  const anyDegraded = domains.some((x) => x.status === 'degraded');
+  const overall_status: DomainStatus = anyDown ? 'down' : anyDegraded ? 'degraded' : scored.length ? 'healthy' : 'unknown';
+  return { overall_score: overall, overall_status, domains };
+}
+
 export function registerHealthAggregatorRoutes(
   app: Express,
   pool: Pool,

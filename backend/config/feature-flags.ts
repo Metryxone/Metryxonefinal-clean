@@ -365,6 +365,21 @@ export const FEATURE_FLAGS = {
    *  Distinct from the unrelated assessment runtime family (runtimeIntelligenceActivation/Pipeline/
    *  Consumption). Env: `FF_RUNTIME_INTELLIGENCE_ENGINE`. */
   runtimeIntelligenceEngine: false,
+  /** MX-800 Phase 2.5 — Knowledge Intelligence Engine. When ON, exposes a read-only
+   *  /api/admin/knowledge-intelligence that CONNECTS the EXISTING ontology / knowledge
+   *  assets (ont_*, onto_* competency genome, map_* edges, kg_edges, sci_*, cg_*, gov_*)
+   *  and the prior-phase registries (platform / engineering / runtime intelligence) into an
+   *  Enterprise Knowledge Graph COMPUTED ON READ — it NEVER materializes a parallel knowledge
+   *  graph, NEVER duplicates an ontology, and NEVER writes to any existing knowledge table.
+   *  Data ≠ Information ≠ Knowledge ≠ Understanding ≠ Reasoning ≠ Decision; Ontology ≠ Knowledge
+   *  Graph; Relationship ≠ Dependency; Coverage ⟂ Confidence ⟂ Evidence (SEPARATE axes). Population
+   *  is MEASURED with exact COUNT(*) (never n_live_tup); metrics are 6 SEPARATE scores NEVER
+   *  composited; knowledge_confidence is STRUCTURAL only; absent → null (null ≠ 0). Reads are
+   *  GET-never-writes (to_regclass-probed); the lazy ensure-schema runs ONLY on flag-ON write
+   *  paths (discover / register / audit-capture) so flag OFF → every route 503 before any auth/DB
+   *  touch → byte-identical legacy behaviour incl. schema (0 new tables). Super-admin gated.
+   *  Env: `FF_KNOWLEDGE_INTELLIGENCE_ENGINE`. */
+  knowledgeIntelligenceEngine: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -2564,6 +2579,10 @@ export function isEngineeringIntelligenceEnabled(): boolean {
 
 export function isRuntimeIntelligenceEngineEnabled(): boolean {
   return isFlagEnabled('runtimeIntelligenceEngine');
+}
+
+export function isKnowledgeIntelligenceEngineEnabled(): boolean {
+  return isFlagEnabled('knowledgeIntelligenceEngine');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

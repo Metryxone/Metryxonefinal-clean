@@ -1742,6 +1742,18 @@ export const FEATURE_FLAGS = {
    *  (technical_debt + knowledge + evolution audit snapshots). Default OFF; flag-OFF is byte-identical
    *  incl. schema (every lazy ensure-schema runs ONLY on a flag-ON write path). Env: `FF_PLATFORM_EVOLUTION_INTELLIGENCE`. */
   platformEvolutionIntelligence: false,
+
+  /** MX-700 Phase 1.41 — Platform Lifecycle Automation & Continuous Governance Engine (lifecycle
+   *  automation + continuous governance + policy engine + compliance engine + orchestration +
+   *  continuous validation + automated quality gates + continuous audit + 6 SEPARATE automation metrics).
+   *  ENHANCEMENT-ONLY: COMPOSES the 1.37 Foundation + 1.38 Management + 1.39 Intelligence + 1.40 Evolution
+   *  (reuses their registry/ledgers/validation/metrics getters — NO duplicate automation/governance/policy/
+   *  compliance/validation engines, no business-logic change, no dormant-capability activation). Adds two
+   *  GENUINELY-NEW tables (governance policy registry + governance audit snapshots); compliance is MEASURED
+   *  on-demand by evaluating policies vs the live registry (compliance ≠ runtime usage). Default OFF; flag-OFF
+   *  is byte-identical incl. schema (every lazy ensure-schema runs ONLY on a flag-ON write path).
+   *  Env: `FF_PLATFORM_LIFECYCLE_AUTOMATION`. */
+  platformLifecycleAutomation: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1944,6 +1956,10 @@ export function isPlatformLifecycleIntelligenceEnabled(): boolean {
 
 export function isPlatformEvolutionIntelligenceEnabled(): boolean {
   return isFlagEnabled('platformEvolutionIntelligence');
+}
+
+export function isPlatformLifecycleAutomationEnabled(): boolean {
+  return isFlagEnabled('platformLifecycleAutomation');
 }
 
 export function isMx203KnowledgePopulationEnabled(): boolean {

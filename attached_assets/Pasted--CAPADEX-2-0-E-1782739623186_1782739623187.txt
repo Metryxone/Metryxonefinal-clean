@@ -1,0 +1,451 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# MX-800
+#
+# PHASE 2.6
+#
+# DECISION INTELLIGENCE ENGINE
+#
+# (DECISION KNOWLEDGE +
+# DECISION REASONING +
+# DECISION EXPLAINABILITY +
+# DECISION EVIDENCE +
+# DECISION OPTIMIZATION +
+# DECISION GOVERNANCE)
+#
+# EXECUTION MODE
+#
+# IMPLEMENTATION
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT CREATE DECISION INTELLIGENCE V2
+# DO NOT CREATE PARALLEL DECISION ENGINES
+# DO NOT DUPLICATE EXISTING BUSINESS RULES
+# DO NOT MODIFY BUSINESS LOGIC
+# DO NOT ACTIVATE DORMANT CAPABILITIES
+#
+# ==============================================================================
+#
+# MISSION
+#
+# Phase 2.1 established Platform Intelligence.
+#
+# Phase 2.2 established Repository Intelligence.
+#
+# Phase 2.3 established Engineering Intelligence.
+#
+# Phase 2.4 established Runtime Intelligence.
+#
+# Phase 2.5 established Knowledge Intelligence.
+#
+# Implement the Decision Intelligence Engine.
+#
+# Decision Intelligence transforms repository,
+# engineering,
+# runtime,
+# and knowledge intelligence into
+# explainable decision support.
+#
+# Repository remains the Single Source of Truth.
+#
+# Human approval remains mandatory.
+#
+# ==============================================================================
+#
+# EXECUTION CONTRACT
+#
+# Search.
+#
+# Measure.
+#
+# Reuse.
+#
+# Implement.
+#
+# Validate.
+#
+# Report.
+#
+# Stop.
+#
+# Implement ONLY this phase.
+#
+# ==============================================================================
+#
+# HONESTY CONTRACT
+#
+# Recommendation ≠ Decision
+#
+# Decision ≠ Automation
+#
+# Automation ≠ Approval
+#
+# Evidence ≠ Confidence
+#
+# Confidence ≠ Accuracy
+#
+# Prediction ≠ Outcome
+#
+# Coverage ≠ Confidence
+#
+# Human approval remains mandatory.
+#
+# Never fabricate.
+#
+# Never estimate.
+#
+# Repository evidence overrides assumptions.
+#
+# ==============================================================================
+#
+# PRE-IMPLEMENTATION AUDIT
+#
+# Search repository.
+#
+# Locate
+#
+# Repository Intelligence
+#
+# Engineering Intelligence
+#
+# Runtime Intelligence
+#
+# Knowledge Intelligence
+#
+# Existing Rule Engines
+#
+# Decision Models
+#
+# AI Services
+#
+# Recommendation Services
+#
+# Business Rules
+#
+# Policy Engines
+#
+# Documentation
+#
+# Existing APIs
+#
+# Existing metadata
+#
+# Reuse existing implementation.
+#
+# Never duplicate.
+#
+# ==============================================================================
+#
+# PART 1
+#
+# IMPLEMENT DECISION REGISTRY
+#
+# Register
+#
+# Decision Types
+#
+# Decision Context
+#
+# Decision Owner
+#
+# Decision Evidence
+#
+# Decision Inputs
+#
+# Decision Outputs
+#
+# Decision Dependencies
+#
+# Decision Confidence
+#
+# Repository References
+#
+# ==============================================================================
+#
+# PART 2
+#
+# IMPLEMENT DECISION REASONING
+#
+# Explain
+#
+# Why a decision is suggested
+#
+# Which evidence supports it
+#
+# Which repository components contributed
+#
+# Which dependencies were evaluated
+#
+# Which constraints were applied
+#
+# ==============================================================================
+#
+# PART 3
+#
+# IMPLEMENT DECISION EVIDENCE ENGINE
+#
+# Collect evidence from
+#
+# Repository Intelligence
+#
+# Engineering Intelligence
+#
+# Runtime Intelligence
+#
+# Knowledge Intelligence
+#
+# AI Intelligence
+#
+# Feature Flags
+#
+# Repository Metadata
+#
+# ==============================================================================
+#
+# PART 4
+#
+# IMPLEMENT DECISION CONFIDENCE ENGINE
+#
+# Measure
+#
+# Evidence Quality
+#
+# Repository Confidence
+#
+# Runtime Confidence
+#
+# Engineering Confidence
+#
+# Knowledge Confidence
+#
+# Decision Confidence
+#
+# Always separate
+#
+# Evidence
+#
+# Coverage
+#
+# Confidence
+#
+# ==============================================================================
+#
+# PART 5
+#
+# IMPLEMENT DECISION GOVERNANCE
+#
+# Support
+#
+# Human Approval
+#
+# Decision Ownership
+#
+# Decision History
+#
+# Decision Traceability
+#
+# Decision Audit
+#
+# Policy Validation
+#
+# ==============================================================================
+#
+# PART 6
+#
+# IMPLEMENT DECISION EXPLAINABILITY
+#
+# Every recommendation shall explain
+#
+# Why
+#
+# Evidence
+#
+# Confidence
+#
+# Alternatives
+#
+# Dependencies
+#
+# Repository References
+#
+# Knowledge References
+#
+# Runtime References
+#
+# ==============================================================================
+#
+# PART 7
+#
+# IMPLEMENT DECISION VALIDATION
+#
+# Validate
+#
+# Repository Integrity
+#
+# Rule Integrity
+#
+# Evidence Integrity
+#
+# Decision Integrity
+#
+# Knowledge Integrity
+#
+# ==============================================================================
+#
+# PART 8
+#
+# IMPLEMENT DECISION METRICS
+#
+# Measure
+#
+# Decision Quality
+#
+# Decision Confidence
+#
+# Decision Coverage
+#
+# Recommendation Quality
+#
+# Governance Compliance
+#
+# Explainability Score
+#
+# ==============================================================================
+#
+# PART 9
+#
+# VALIDATION
+#
+# Verify
+#
+# Existing intelligence reused
+#
+# No duplicate decision engines
+#
+# No duplicate rule engines
+#
+# No duplicate recommendation engines
+#
+# No business logic changes
+#
+# No dormant capability activation
+#
+# Compatibility preserved
+#
+# ==============================================================================
+#
+# IMPLEMENTATION OUTPUT
+#
+# Produce
+#
+# Repository Changes
+#
+# Files Modified
+#
+# Database Changes
+#
+# Decision Registry
+#
+# Decision Reasoning
+#
+# Decision Evidence Engine
+#
+# Decision Confidence Engine
+#
+# Decision Governance
+#
+# Decision Explainability
+#
+# Decision Validation
+#
+# Decision Metrics
+#
+# Documentation Updates
+#
+# Repository Verification Report
+#
+# Honest Implementation Report
+#
+# Distinguish
+#
+# Already Existing
+#
+# Extended
+#
+# Implemented
+#
+# Partially Implemented
+#
+# Deferred
+#
+# Dormant
+#
+# Missing
+#
+# ==============================================================================
+#
+# DEFINITION OF DONE
+#
+# Phase 2.6 completes only when
+#
+# Repository searched.
+#
+# Existing intelligence reused.
+#
+# Decision Registry implemented.
+#
+# Decision Reasoning implemented.
+#
+# Decision Evidence Engine implemented.
+#
+# Decision Confidence Engine implemented.
+#
+# Decision Governance implemented.
+#
+# Decision Explainability implemented.
+#
+# Decision Validation implemented.
+#
+# Decision Metrics implemented.
+#
+# Compatibility preserved.
+#
+# No duplicate implementation.
+#
+# No business logic modified.
+#
+# No dormant capability activated.
+#
+# Repository verified.
+#
+# Documentation updated.
+#
+# ==============================================================================
+#
+# STOP
+#
+# Do not implement Predictive Intelligence.
+#
+# Do not implement Recommendation Intelligence.
+#
+# Do not implement Autonomous AI.
+#
+# Do not implement workflow automation.
+#
+# Do not implement future phases.
+#
+# Human approval remains mandatory.
+#
+# Complete Phase 2.6 only.
+#
+# Generate the measured implementation report.
+#
+# Freeze Phase 2.6.
+#
+# Phase 2.7 will implement the Predictive Intelligence Engine.
+#
+# ==============================================================================

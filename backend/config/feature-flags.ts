@@ -380,6 +380,27 @@ export const FEATURE_FLAGS = {
    *  touch → byte-identical legacy behaviour incl. schema (0 new tables). Super-admin gated.
    *  Env: `FF_KNOWLEDGE_INTELLIGENCE_ENGINE`. */
   knowledgeIntelligenceEngine: false,
+  /** MX-800 Phase 2.6 — Decision Intelligence Engine. When ON, an ENHANCEMENT-ONLY read-only
+   *  intelligence tier ABOUT the platform's decisions becomes available under
+   *  `/api/admin/decision-intelligence`. It CATALOGS the EXISTING decision capabilities (wc7b
+   *  decision orchestrator/persistence/mentor-bridge + the live decision tables: ai_decision_audits,
+   *  executive_decision_models, interview_decisions, role_resolution_decisions,
+   *  wc3_personalization_decisions, archetype_governance_decisions, m4/m5 decision logs …) and
+   *  COMPOSES the prior intelligence tiers (2.1 platform / 2.3 engineering / 2.4 runtime / 2.5
+   *  knowledge) into EXPLAINABLE DECISION SUPPORT (registry / reasoning / evidence / confidence /
+   *  governance / explainability / validation / metrics). It introduces NO parallel decision, rule
+   *  or recommendation engine, INVOKES/activates NO dormant decision engine (it READS their existence
+   *  + persisted output only — composing ≠ invoking), and changes NO business logic. Repository +
+   *  the existing tables remain the single source of truth; human approval remains mandatory.
+   *  Honesty contract: Recommendation ≠ Decision ≠ Automation ≠ Approval; Evidence ≠ Confidence ≠
+   *  Accuracy; Prediction ≠ Outcome; Coverage ⟂ Confidence ⟂ Evidence (SEPARATE axes). Population is
+   *  MEASURED with exact COUNT(*) (never n_live_tup); metrics are 6 SEPARATE scores NEVER composited;
+   *  decision_confidence is STRUCTURAL only; accuracy-class metrics are unmeasurable (no labelled
+   *  outcomes) → honest-null; absent → null (null ≠ 0). Reads are GET-never-writes (to_regclass-probed);
+   *  the lazy ensure-schema runs ONLY on flag-ON write paths (discover / register / audit-capture) so
+   *  flag OFF → every route 503 before any auth/DB touch → byte-identical legacy behaviour incl.
+   *  schema (0 new tables). Super-admin gated. Env: `FF_DECISION_INTELLIGENCE_ENGINE`. */
+  decisionIntelligenceEngine: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -2583,6 +2604,9 @@ export function isRuntimeIntelligenceEngineEnabled(): boolean {
 
 export function isKnowledgeIntelligenceEngineEnabled(): boolean {
   return isFlagEnabled('knowledgeIntelligenceEngine');
+}
+export function isDecisionIntelligenceEngineEnabled(): boolean {
+  return isFlagEnabled('decisionIntelligenceEngine');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

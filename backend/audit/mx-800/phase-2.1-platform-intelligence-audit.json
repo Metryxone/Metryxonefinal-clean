@@ -1,0 +1,540 @@
+{
+  "phase": "MX-800 Phase 2.1 — Platform Intelligence Operating System Constitution",
+  "mode": "ENHANCEMENT-ONLY / AUDIT + CONSTITUTION (no engine, no business-logic change, no persistence)",
+  "measured_at": "2026-06-29T04:54:55.282Z",
+  "honesty_contract": [
+    "Intelligence Exists != Connected != Orchestrated",
+    "Data != Knowledge != Intelligence != Reasoning != Decision != Automation",
+    "Coverage != Confidence; Evidence != Confidence",
+    "Every number below is MEASURED from the repository. Nothing fabricated or estimated."
+  ],
+  "inventory": {
+    "services_top_level": 422,
+    "services_governance_subdir": 13,
+    "services_automation_subdir": 6,
+    "routes_modules": 310,
+    "migrations": 223,
+    "memory_topic_docs": 268,
+    "product_docs": 26
+  },
+  "feature_flags": {
+    "total": 177,
+    "default_on": 32,
+    "default_off": 145
+  },
+  "constitutional_domains": [
+    {
+      "domain": "Repository Intelligence",
+      "anchors_declared": 4,
+      "anchors_present": 4,
+      "anchors_missing": []
+    },
+    {
+      "domain": "Platform Intelligence",
+      "anchors_declared": 4,
+      "anchors_present": 4,
+      "anchors_missing": []
+    },
+    {
+      "domain": "Engineering Intelligence",
+      "anchors_declared": 8,
+      "anchors_present": 8,
+      "anchors_missing": []
+    },
+    {
+      "domain": "Runtime Intelligence",
+      "anchors_declared": 5,
+      "anchors_present": 5,
+      "anchors_missing": []
+    },
+    {
+      "domain": "Knowledge Intelligence",
+      "anchors_declared": 6,
+      "anchors_present": 6,
+      "anchors_missing": []
+    },
+    {
+      "domain": "Decision Intelligence",
+      "anchors_declared": 5,
+      "anchors_present": 5,
+      "anchors_missing": []
+    },
+    {
+      "domain": "AI Intelligence",
+      "anchors_declared": 6,
+      "anchors_present": 6,
+      "anchors_missing": []
+    },
+    {
+      "domain": "Analytics Intelligence",
+      "anchors_declared": 6,
+      "anchors_present": 6,
+      "anchors_missing": []
+    },
+    {
+      "domain": "Enterprise Intelligence",
+      "anchors_declared": 7,
+      "anchors_present": 7,
+      "anchors_missing": []
+    }
+  ],
+  "governance_substrate": {
+    "governance_services": 11,
+    "governance_services_subdir": 13,
+    "governance_routes": 18,
+    "governance_service_files": [
+      "ai-governance-llm.ts",
+      "ai-governance-scheduler.ts",
+      "ai-governance-schema.ts",
+      "ai-governance-v2.ts",
+      "explainability-governance-engine.ts",
+      "fairness-governance-engine.ts",
+      "governance-engine.ts",
+      "hypothesis-question-governance.ts",
+      "m4-ai-governance.ts",
+      "onet-crosswalk-governance-engine.ts",
+      "role-dna-governance-engine.ts"
+    ]
+  },
+  "duplication_candidates": {
+    "count": 11,
+    "note": "CANDIDATES for human review only — presence of a -v2 variant is NOT an assertion of redundancy.",
+    "items": [
+      {
+        "variant": "ai-governance-v2.ts",
+        "base_candidate": "ai-governance.ts",
+        "base_present": false
+      },
+      {
+        "variant": "competency-graph-engine-v2.ts",
+        "base_candidate": "competency-graph-engine.ts",
+        "base_present": true
+      },
+      {
+        "variant": "dispute-override-engine-v2.ts",
+        "base_candidate": "dispute-override-engine.ts",
+        "base_present": true
+      },
+      {
+        "variant": "fairness-monitoring-engine-v2.ts",
+        "base_candidate": "fairness-monitoring-engine.ts",
+        "base_present": true
+      },
+      {
+        "variant": "learning-roi-engine-v2.ts",
+        "base_candidate": "learning-roi-engine.ts",
+        "base_present": true
+      },
+      {
+        "variant": "m3-confidence-v2.ts",
+        "base_candidate": "m3-confidence.ts",
+        "base_present": false
+      },
+      {
+        "variant": "market-intelligence-engine-v2.ts",
+        "base_candidate": "market-intelligence-engine.ts",
+        "base_present": true
+      },
+      {
+        "variant": "predictive-workforce-engine-v2.ts",
+        "base_candidate": "predictive-workforce-engine.ts",
+        "base_present": true
+      },
+      {
+        "variant": "rbac-tenant-engine-v2.ts",
+        "base_candidate": "rbac-tenant-engine.ts",
+        "base_present": true
+      },
+      {
+        "variant": "role-readiness-v2.ts",
+        "base_candidate": "role-readiness.ts",
+        "base_present": false
+      },
+      {
+        "variant": "workforce-simulation-v2.ts",
+        "base_candidate": "workforce-simulation.ts",
+        "base_present": false
+      }
+    ]
+  },
+  "observed_engine_families": [
+    {
+      "family": "career-*",
+      "service_files": 28,
+      "route_files": 34
+    },
+    {
+      "family": "competency-*",
+      "service_files": 29,
+      "route_files": 14
+    },
+    {
+      "family": "capadex*",
+      "service_files": 6,
+      "route_files": 15
+    },
+    {
+      "family": "talent-*",
+      "service_files": 6,
+      "route_files": 18
+    },
+    {
+      "family": "hiring/employer-*",
+      "service_files": 10,
+      "route_files": 13
+    },
+    {
+      "family": "learning/lip/lde-*",
+      "service_files": 20,
+      "route_files": 10
+    },
+    {
+      "family": "ei-*",
+      "service_files": 11,
+      "route_files": 5
+    },
+    {
+      "family": "workforce-*",
+      "service_files": 4,
+      "route_files": 4
+    },
+    {
+      "family": "enterprise-*",
+      "service_files": 5,
+      "route_files": 7
+    },
+    {
+      "family": "platform-*",
+      "service_files": 8,
+      "route_files": 11
+    },
+    {
+      "family": "ontology/onet/role-dna",
+      "service_files": 11,
+      "route_files": 6
+    },
+    {
+      "family": "report/omega/rf",
+      "service_files": 6,
+      "route_files": 4
+    },
+    {
+      "family": "*-governance",
+      "service_files": 11,
+      "route_files": 18
+    },
+    {
+      "family": "*intelligence*",
+      "service_files": 41,
+      "route_files": 43
+    }
+  ],
+  "anchor_detail": [
+    {
+      "domain": "Repository Intelligence",
+      "kind": "service",
+      "file": "platform-lifecycle.ts",
+      "present": true
+    },
+    {
+      "domain": "Repository Intelligence",
+      "kind": "service",
+      "file": "platform-lifecycle-management.ts",
+      "present": true
+    },
+    {
+      "domain": "Repository Intelligence",
+      "kind": "route",
+      "file": "platform-lifecycle.ts",
+      "present": true
+    },
+    {
+      "domain": "Repository Intelligence",
+      "kind": "route",
+      "file": "platform-lifecycle-management.ts",
+      "present": true
+    },
+    {
+      "domain": "Platform Intelligence",
+      "kind": "service",
+      "file": "platform-lifecycle-intelligence.ts",
+      "present": true
+    },
+    {
+      "domain": "Platform Intelligence",
+      "kind": "route",
+      "file": "platform-lifecycle-intelligence.ts",
+      "present": true
+    },
+    {
+      "domain": "Platform Intelligence",
+      "kind": "route",
+      "file": "platform-intelligence.ts",
+      "present": true
+    },
+    {
+      "domain": "Platform Intelligence",
+      "kind": "route",
+      "file": "platform-lifecycle-operations.ts",
+      "present": true
+    },
+    {
+      "domain": "Engineering Intelligence",
+      "kind": "service",
+      "file": "platform-evolution-intelligence.ts",
+      "present": true
+    },
+    {
+      "domain": "Engineering Intelligence",
+      "kind": "service",
+      "file": "platform-lifecycle-automation.ts",
+      "present": true
+    },
+    {
+      "domain": "Engineering Intelligence",
+      "kind": "service",
+      "file": "platform-lifecycle-certification.ts",
+      "present": true
+    },
+    {
+      "domain": "Engineering Intelligence",
+      "kind": "service",
+      "file": "platform-completion-certification.ts",
+      "present": true
+    },
+    {
+      "domain": "Engineering Intelligence",
+      "kind": "service",
+      "file": "go-live-certification.ts",
+      "present": true
+    },
+    {
+      "domain": "Engineering Intelligence",
+      "kind": "route",
+      "file": "platform-evolution-intelligence.ts",
+      "present": true
+    },
+    {
+      "domain": "Engineering Intelligence",
+      "kind": "route",
+      "file": "platform-lifecycle-automation.ts",
+      "present": true
+    },
+    {
+      "domain": "Engineering Intelligence",
+      "kind": "route",
+      "file": "platform-lifecycle-certification.ts",
+      "present": true
+    },
+    {
+      "domain": "Runtime Intelligence",
+      "kind": "service",
+      "file": "intelligence-pipeline.ts",
+      "present": true
+    },
+    {
+      "domain": "Runtime Intelligence",
+      "kind": "service",
+      "file": "intelligence-observability-engine.ts",
+      "present": true
+    },
+    {
+      "domain": "Runtime Intelligence",
+      "kind": "route",
+      "file": "signal-capture.ts",
+      "present": true
+    },
+    {
+      "domain": "Runtime Intelligence",
+      "kind": "route",
+      "file": "behavioural-signals.ts",
+      "present": true
+    },
+    {
+      "domain": "Runtime Intelligence",
+      "kind": "route",
+      "file": "intelligence-diagnostics.ts",
+      "present": true
+    },
+    {
+      "domain": "Knowledge Intelligence",
+      "kind": "service",
+      "file": "knowledge-graph.ts",
+      "present": true
+    },
+    {
+      "domain": "Knowledge Intelligence",
+      "kind": "service",
+      "file": "mx203-knowledge.ts",
+      "present": true
+    },
+    {
+      "domain": "Knowledge Intelligence",
+      "kind": "service",
+      "file": "behavioural-memory.ts",
+      "present": true
+    },
+    {
+      "domain": "Knowledge Intelligence",
+      "kind": "service",
+      "file": "longitudinal-memory.ts",
+      "present": true
+    },
+    {
+      "domain": "Knowledge Intelligence",
+      "kind": "service",
+      "file": "competency-memory-engine.ts",
+      "present": true
+    },
+    {
+      "domain": "Knowledge Intelligence",
+      "kind": "route",
+      "file": "mx203-knowledge.ts",
+      "present": true
+    },
+    {
+      "domain": "Decision Intelligence",
+      "kind": "service",
+      "file": "wc7b/decision-orchestrator.ts",
+      "present": true
+    },
+    {
+      "domain": "Decision Intelligence",
+      "kind": "service",
+      "file": "wc7b/decision-persistence.ts",
+      "present": true
+    },
+    {
+      "domain": "Decision Intelligence",
+      "kind": "service",
+      "file": "wc7b/mentor-bridge.ts",
+      "present": true
+    },
+    {
+      "domain": "Decision Intelligence",
+      "kind": "service",
+      "file": "wc7b/growth-plan-bridge.ts",
+      "present": true
+    },
+    {
+      "domain": "Decision Intelligence",
+      "kind": "route",
+      "file": "wc7b-activation.ts",
+      "present": true
+    },
+    {
+      "domain": "AI Intelligence",
+      "kind": "service",
+      "file": "ai-governance-v2.ts",
+      "present": true
+    },
+    {
+      "domain": "AI Intelligence",
+      "kind": "service",
+      "file": "m4-ai-governance.ts",
+      "present": true
+    },
+    {
+      "domain": "AI Intelligence",
+      "kind": "service",
+      "file": "intelligence-narrative-engine.ts",
+      "present": true
+    },
+    {
+      "domain": "AI Intelligence",
+      "kind": "service",
+      "file": "explainability-governance-engine.ts",
+      "present": true
+    },
+    {
+      "domain": "AI Intelligence",
+      "kind": "service",
+      "file": "fairness-governance-engine.ts",
+      "present": true
+    },
+    {
+      "domain": "AI Intelligence",
+      "kind": "route",
+      "file": "ai-governance.ts",
+      "present": true
+    },
+    {
+      "domain": "Analytics Intelligence",
+      "kind": "service",
+      "file": "workforce-analytics.ts",
+      "present": true
+    },
+    {
+      "domain": "Analytics Intelligence",
+      "kind": "service",
+      "file": "comparative-intelligence.ts",
+      "present": true
+    },
+    {
+      "domain": "Analytics Intelligence",
+      "kind": "service",
+      "file": "market-intelligence-engine.ts",
+      "present": true
+    },
+    {
+      "domain": "Analytics Intelligence",
+      "kind": "route",
+      "file": "enterprise-analytics.ts",
+      "present": true
+    },
+    {
+      "domain": "Analytics Intelligence",
+      "kind": "route",
+      "file": "caf-analytics.ts",
+      "present": true
+    },
+    {
+      "domain": "Analytics Intelligence",
+      "kind": "route",
+      "file": "talent-analytics-warehouse.ts",
+      "present": true
+    },
+    {
+      "domain": "Enterprise Intelligence",
+      "kind": "service",
+      "file": "enterprise-intelligence.ts",
+      "present": true
+    },
+    {
+      "domain": "Enterprise Intelligence",
+      "kind": "service",
+      "file": "enterprise-certification.ts",
+      "present": true
+    },
+    {
+      "domain": "Enterprise Intelligence",
+      "kind": "service",
+      "file": "executive-workforce-intelligence.ts",
+      "present": true
+    },
+    {
+      "domain": "Enterprise Intelligence",
+      "kind": "service",
+      "file": "global-intelligence.ts",
+      "present": true
+    },
+    {
+      "domain": "Enterprise Intelligence",
+      "kind": "service",
+      "file": "institutional-intelligence-engine.ts",
+      "present": true
+    },
+    {
+      "domain": "Enterprise Intelligence",
+      "kind": "route",
+      "file": "enterprise-intelligence.ts",
+      "present": true
+    },
+    {
+      "domain": "Enterprise Intelligence",
+      "kind": "route",
+      "file": "enterprise-governance.ts",
+      "present": true
+    }
+  ]
+}

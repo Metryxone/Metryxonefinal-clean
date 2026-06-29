@@ -1,0 +1,267 @@
+# ==============================================================================
+# CAPADEX 2.0
+# ENGINEERING EXECUTION SPECIFICATION
+#
+# MX-800
+#
+# PHASE 2.1
+#
+# PLATFORM INTELLIGENCE OPERATING SYSTEM CONSTITUTION
+#
+# (REPOSITORY INTELLIGENCE +
+# PLATFORM INTELLIGENCE +
+# ENGINEERING INTELLIGENCE +
+# KNOWLEDGE INTELLIGENCE +
+# RUNTIME INTELLIGENCE +
+# DECISION INTELLIGENCE)
+#
+# EXECUTION MODE
+#
+# ENHANCEMENT ONLY
+#
+# DO NOT REBUILD
+# DO NOT CREATE PLATFORM V2
+# DO NOT DUPLICATE EXISTING INTELLIGENCE ENGINES
+# DO NOT MODIFY BUSINESS LOGIC
+#
+# ==============================================================================
+#
+# MISSION
+#
+# Establish the Platform Intelligence Operating System
+# that unifies every intelligence engine inside CAPADEX.
+#
+# This program does NOT replace
+#
+# Assessment Intelligence
+# Behaviour Intelligence
+# Concern Intelligence
+# Competency Intelligence
+# Learning Intelligence
+# Career Intelligence
+# Decision Intelligence
+# Report Intelligence
+# Analytics Intelligence
+# AI Intelligence
+# Enterprise Intelligence
+#
+# It coordinates them.
+#
+# Repository remains the Single Source of Truth.
+#
+# ==============================================================================
+#
+# EXECUTION CONTRACT
+#
+# Repository First.
+#
+# Search before modifying.
+#
+# Reuse before building.
+#
+# Compose before duplicating.
+#
+# Extend before replacing.
+#
+# Never redesign existing architecture.
+#
+# ==============================================================================
+#
+# HONESTY CONTRACT
+#
+# Intelligence Exists ≠ Connected
+#
+# Connected ≠ Orchestrated
+#
+# Data Exists ≠ Knowledge
+#
+# Knowledge ≠ Intelligence
+#
+# Intelligence ≠ Reasoning
+#
+# Reasoning ≠ Decision
+#
+# Decision ≠ Automation
+#
+# Coverage ≠ Confidence
+#
+# Evidence ≠ Confidence
+#
+# Never fabricate.
+#
+# Never estimate.
+#
+# ==============================================================================
+#
+# PRIMARY OBJECTIVES
+#
+# Create one Platform Intelligence Operating System.
+#
+# Coordinate all intelligence engines.
+#
+# Preserve existing architecture.
+#
+# Eliminate intelligence duplication.
+#
+# Create unified intelligence governance.
+#
+# Protect enterprise scalability.
+#
+# ==============================================================================
+#
+# PART 1
+#
+# CURRENT PLATFORM INTELLIGENCE AUDIT
+#
+# Measure
+#
+# Repository Intelligence
+#
+# Engineering Intelligence
+#
+# Runtime Intelligence
+#
+# Platform Intelligence
+#
+# Knowledge Intelligence
+#
+# Decision Intelligence
+#
+# AI Intelligence
+#
+# Analytics Intelligence
+#
+# Enterprise Intelligence
+#
+# Measure maturity.
+#
+# Identify duplication.
+#
+# Identify gaps.
+#
+# ==============================================================================
+#
+# PART 2
+#
+# PLATFORM INTELLIGENCE PHILOSOPHY
+#
+# Intelligence observes.
+#
+# Intelligence understands.
+#
+# Intelligence reasons.
+#
+# Intelligence predicts.
+#
+# Intelligence recommends.
+#
+# Intelligence continuously learns.
+#
+# Human approval remains authoritative.
+#
+# ==============================================================================
+#
+# PART 3
+#
+# PLATFORM INTELLIGENCE ARCHITECTURE
+#
+# Repository Intelligence
+#
+# Engineering Intelligence
+#
+# Runtime Intelligence
+#
+# Knowledge Intelligence
+#
+# Decision Intelligence
+#
+# Analytics Intelligence
+#
+# AI Intelligence
+#
+# Enterprise Intelligence
+#
+# ==============================================================================
+#
+# PART 4
+#
+# PLATFORM INTELLIGENCE GOVERNANCE
+#
+# Every intelligence engine
+#
+# shall
+#
+# expose metadata
+#
+# expose evidence
+#
+# expose confidence
+#
+# expose explainability
+#
+# expose ownership
+#
+# expose compatibility
+#
+# ==============================================================================
+#
+# PART 5
+#
+# PLATFORM INTELLIGENCE MATURITY
+#
+# Operational
+#
+# Guided
+#
+# Managed
+#
+# Intelligent
+#
+# Self-Optimizing
+#
+# Human approval mandatory.
+#
+# ==============================================================================
+#
+# DELIVERABLES
+#
+# Generate
+#
+# Platform Intelligence Constitution
+#
+# Platform Intelligence Audit
+#
+# Intelligence Architecture
+#
+# Intelligence Governance
+#
+# Intelligence Maturity Assessment
+#
+# Repository Intelligence Report
+#
+# Engineering Intelligence Report
+#
+# Runtime Intelligence Report
+#
+# Knowledge Intelligence Report
+#
+# Decision Intelligence Report
+#
+# Enterprise Intelligence Report
+#
+# ==============================================================================
+#
+# STOP
+#
+# Do not implement intelligence engines.
+#
+# Do not modify business logic.
+#
+# Do not create duplicate intelligence.
+#
+# Freeze Platform Intelligence Constitution
+# after approval.
+#
+# Future implementation begins in Phase 2.2.
+#
+# ==============================================================================

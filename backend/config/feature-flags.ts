@@ -415,6 +415,23 @@ export const FEATURE_FLAGS = {
    *  503 before any auth/DB touch → byte-identical legacy behaviour incl. schema (0 new tables).
    *  Super-admin gated. Env: `FF_PREDICTIVE_INTELLIGENCE_ENGINE`. */
   predictiveIntelligenceEngine: false,
+  /** MX-800 Phase 2.8 — Recommendation Intelligence Engine. When ON, exposes a READ-ONLY admin
+   *  intelligence tier ABOUT the platform's recommendation capabilities. It CATALOGS the EXISTING
+   *  recommendation / opportunity / intervention / optimization capabilities and COMPOSES the prior
+   *  intelligence tiers (2.1 platform / 2.3 engineering / 2.4 runtime / 2.5 knowledge / 2.6 decision /
+   *  2.7 predictive) into explainable recommendation intelligence (registry / action / opportunity /
+   *  prioritization / prescriptive / explainability / validation / metrics). It NEVER duplicates a
+   *  recommendation engine and NEVER invokes or activates a dormant recommendation engine (it READS each
+   *  one's existence + persisted output only). It is RECOMMEND-ONLY — it never GENERATES a new
+   *  recommendation, never DECIDES, never EXECUTES and never AUTOMATES. Honesty: Recommendation ≠
+   *  Decision; Recommendation ≠ Automation; Recommendation ≠ Execution; Priority ≠ Approval; Opportunity
+   *  ≠ Requirement; Evidence ≠ Confidence; Confidence ≠ Accuracy; null ≠ 0. recommendation_confidence is
+   *  STRUCTURAL only; acceptance/effectiveness are unmeasurable (no adoption / labelled outcomes) →
+   *  honest-null. Reads are GET-never-writes (to_regclass-probed); the lazy ensure-schema runs ONLY on
+   *  flag-ON write paths (discover / register / audit-capture) so flag OFF → every route 503 before any
+   *  auth/DB touch → byte-identical legacy behaviour incl. schema (0 new tables). Super-admin gated.
+   *  Env: `FF_RECOMMENDATION_INTELLIGENCE_ENGINE`. */
+  recommendationIntelligenceEngine: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -2624,6 +2641,9 @@ export function isDecisionIntelligenceEngineEnabled(): boolean {
 }
 export function isPredictiveIntelligenceEngineEnabled(): boolean {
   return isFlagEnabled('predictiveIntelligenceEngine');
+}
+export function isRecommendationIntelligenceEngineEnabled(): boolean {
+  return isFlagEnabled('recommendationIntelligenceEngine');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

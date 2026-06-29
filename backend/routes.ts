@@ -38,6 +38,7 @@ import { registerKnowledgeIntelligenceRoutes } from "./routes/knowledge-intellig
 import { registerDecisionIntelligenceRoutes } from "./routes/decision-intelligence";
 import { registerPredictiveIntelligenceEngineRoutes } from "./routes/predictive-intelligence-engine";
 import { registerRecommendationIntelligenceEngineRoutes } from "./routes/recommendation-intelligence-engine";
+import { registerContinuousLearningIntelligenceEngineRoutes } from "./routes/continuous-learning-intelligence-engine";
 import { registerAssessmentReadinessRoutes } from "./routes/assessment-readiness";
 import { registerMx203KnowledgeRoutes } from "./routes/mx203-knowledge";
 import { registerCapadexEnterpriseRoutes } from "./routes/capadex-enterprise";
@@ -13935,6 +13936,7 @@ Rules:
   registerDecisionIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerPredictiveIntelligenceEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerRecommendationIntelligenceEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerContinuousLearningIntelligenceEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerAssessmentReadinessRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerMx203KnowledgeRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCapadexRecommendationsRoute(app, concernsPool);

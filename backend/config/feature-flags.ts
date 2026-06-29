@@ -432,6 +432,24 @@ export const FEATURE_FLAGS = {
    *  auth/DB touch → byte-identical legacy behaviour incl. schema (0 new tables). Super-admin gated.
    *  Env: `FF_RECOMMENDATION_INTELLIGENCE_ENGINE`. */
   recommendationIntelligenceEngine: false,
+  /** MX-800 Phase 2.9 — Continuous Learning Intelligence Engine. When ON, exposes a READ-ONLY admin
+   *  intelligence tier ABOUT the platform's learning capabilities. It CATALOGS the EXISTING learning /
+   *  feedback / experience / adaptive / improvement / organizational-learning capabilities and COMPOSES
+   *  the prior intelligence tiers (2.1 platform / 2.3 engineering / 2.4 runtime / 2.5 knowledge / 2.6
+   *  decision / 2.7 predictive / 2.8 recommendation) into explainable learning intelligence (registry /
+   *  feedback / experience / adaptive / continuous-improvement / explainability / validation / metrics /
+   *  organizational-learning). It NEVER duplicates a learning/adaptive engine and NEVER invokes or
+   *  activates a dormant learning engine (it READS each one's existence + persisted output only). It is
+   *  LEARN-ONLY — it never modifies business logic, never adapts autonomously, never DECIDES and never
+   *  EXECUTES. Honesty: Learning ≠ Automation; Experience ≠ Knowledge; Feedback ≠ Truth; Improvement ≠
+   *  Optimization; Adaptation ≠ Autonomous Change; Recommendation Acceptance ≠ Correctness; Evidence ≠
+   *  Confidence; Confidence ≠ Accuracy; null ≠ 0. learning_confidence is STRUCTURAL only; improvement_rate
+   *  + effectiveness are unmeasurable (no longitudinal labelled outcomes / adoption deltas) → honest-null.
+   *  Reads are GET-never-writes (to_regclass-probed); the lazy ensure-schema runs ONLY on flag-ON write
+   *  paths (discover / register / audit-capture) so flag OFF → every route 503 before any auth/DB touch →
+   *  byte-identical legacy behaviour incl. schema (0 new tables). Super-admin gated. Env:
+   *  `FF_CONTINUOUS_LEARNING_INTELLIGENCE_ENGINE`. */
+  continuousLearningIntelligenceEngine: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -2644,6 +2662,9 @@ export function isPredictiveIntelligenceEngineEnabled(): boolean {
 }
 export function isRecommendationIntelligenceEngineEnabled(): boolean {
   return isFlagEnabled('recommendationIntelligenceEngine');
+}
+export function isContinuousLearningIntelligenceEngineEnabled(): boolean {
+  return isFlagEnabled('continuousLearningIntelligenceEngine');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

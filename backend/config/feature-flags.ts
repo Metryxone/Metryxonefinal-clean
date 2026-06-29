@@ -1754,6 +1754,13 @@ export const FEATURE_FLAGS = {
    *  is byte-identical incl. schema (every lazy ensure-schema runs ONLY on a flag-ON write path).
    *  Env: `FF_PLATFORM_LIFECYCLE_AUTOMATION`. */
   platformLifecycleAutomation: false,
+
+  /** MX-700 Phase 1.42 — Platform Lifecycle Operations & SuperAdmin Governance Platform.
+   *  Frontend EXPOSURE phase: gates ONE new read-only SuperAdmin console that COMPOSES the existing
+   *  1.37–1.41 lifecycle read APIs (no new data service, no migration, no business-logic change).
+   *  Flag-OFF → the new nav tab is hidden and the probe `/feature-flag` 503s → byte-identical legacy.
+   *  Env: `FF_PLATFORM_LIFECYCLE_OPERATIONS`. */
+  platformLifecycleOperations: false,
 } as const;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -1960,6 +1967,10 @@ export function isPlatformEvolutionIntelligenceEnabled(): boolean {
 
 export function isPlatformLifecycleAutomationEnabled(): boolean {
   return isFlagEnabled('platformLifecycleAutomation');
+}
+
+export function isPlatformLifecycleOperationsEnabled(): boolean {
+  return isFlagEnabled('platformLifecycleOperations');
 }
 
 export function isMx203KnowledgePopulationEnabled(): boolean {

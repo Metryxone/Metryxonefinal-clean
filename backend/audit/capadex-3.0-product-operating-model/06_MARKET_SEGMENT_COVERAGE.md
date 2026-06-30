@@ -1,4 +1,4 @@
-# 03 · Market Segment Matrix
+# 06 · Market Segment Coverage
 
 Per-segment support classified **IMPLEMENTED / PARTIAL / DORMANT / MISSING**, with repo evidence.
 "Implemented" = a dedicated/specialized experience exists; "Partial" = served only by a generic capability or
@@ -53,8 +53,10 @@ a thin surface; "Missing" = no meaningful path.
 | Multi-region / currency | `global-intelligence.ts`, `region-native-market-seed.ts`, `global-competency-engine.ts`, multi-currency | **PARTIAL** (infra exists; AFRICA/LATAM honest-empty per memory) |
 
 ## Summary
-- **Strong (IMPLEMENTED): 9 segments** — K-12, exam aspirants, college, freshers, job aspirants, transition,
-  professionals, employees, HR, parents, mentors, institutes.
+- **Strong (IMPLEMENTED): 12 segments** — K-12, exam aspirants, college, freshers, job aspirants, transition,
+  professionals, employees, HR, parents, mentors, institutes. *(Segment "implemented" = a dedicated experience
+  exists; this is a different axis from the **persona-journey** completeness in 07, where Parent/Mentor are
+  PARTIAL because their journey tail (completion/continuous) is missing.)*
 - **PARTIAL: managers, L&D, leadership, Olympiad-specialized, teachers, counsellors, coaches, NGO, multilingual, multi-region.**
 - **MISSING (dedicated): government, healthcare.**
 - **Recommendation:** treat segment *depth* (not breadth) as the product-maturity lever; do **not** build new

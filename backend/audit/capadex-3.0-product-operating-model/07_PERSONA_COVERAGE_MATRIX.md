@@ -1,9 +1,10 @@
-# 04 · Persona Coverage Matrix
+# 07 · Persona Coverage Matrix
 
 For each persona, the product-completeness checklist from the brief: Registration · Auth · Onboarding ·
 Profile · Dashboard · Assessments · Learning · Career · AI · Reports · Notifications · Interventions ·
-Progress · Completion · Continuous-improvement. Scored as the **weakest-link** completeness of the persona's
-journey (a persona with no completion/continuous-improvement is PARTIAL even if everything upstream is rich).
+Progress · Completion · Continuous-improvement. Scored by **weakest-link**: a persona with **✗ (missing)** on
+completion *or* continuous-improvement is **PARTIAL**; a persona whose tail is only **◐ (partial)** can still
+be **IMPLEMENTED** (a coherent end-to-end path exists, soft tail). MISSING-as-dedicated for ✗ on core entry.
 
 Legend: ✅ implemented · ◐ partial · ✗ missing/not-dedicated.
 
@@ -16,8 +17,8 @@ Legend: ✅ implemented · ◐ partial · ✗ missing/not-dedicated.
 | Employee (enterprise) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ◐ | ✅ | ✅ | ✅ | ◐ | ◐ | ◐ | ◐ | ◐ | **IMPLEMENTED** |
 | HR / recruiter | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | – | ✅ | ✅ | ✅ | ◐ | ◐ | ◐ | ◐ | ◐ | **IMPLEMENTED** |
 | Employer (org) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | – | ✅ | ✅ | ✅ | ◐ | ◐ | ◐ | ◐ | ◐ | **IMPLEMENTED** |
-| Parent | ✅ | ✅ | ✅ | ✅ | ✅ | ◐ | ◐ | ◐ | ◐ | ✅ | ◐ | ◐ | ◐ | ✗ | ✗ | **IMPLEMENTED** |
-| Mentor | ✅ | ✅ | ✅ | ✅ | ✅ | – | – | ✅ | ◐ | ◐ | ◐ | ✅ | ◐ | ✗ | ✗ | **IMPLEMENTED** |
+| Parent | ✅ | ✅ | ✅ | ✅ | ✅ | ◐ | ◐ | ◐ | ◐ | ✅ | ◐ | ◐ | ◐ | ✗ | ✗ | **PARTIAL** (✗ completion/continuous) |
+| Mentor | ✅ | ✅ | ✅ | ✅ | ✅ | – | – | ✅ | ◐ | ◐ | ◐ | ✅ | ◐ | ✗ | ✗ | **PARTIAL** (✗ completion/continuous) |
 | Institute / University admin | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | – | ✅ | ◐ | ✅ | ◐ | – | ◐ | ◐ | ◐ | **IMPLEMENTED** |
 | Manager / leadership | ✅ | ✅ | ◐ | ◐ | ◐ | ✅ | – | ✅ | ◐ | ✅ | ✗ | ✗ | ◐ | ✗ | ✗ | **PARTIAL** |
 | L&D | ✅ | ✅ | ◐ | ◐ | ◐ | ✅ | – | ◐ | ◐ | ◐ | ✗ | ✗ | ✗ | ✗ | ✗ | **PARTIAL** |
@@ -31,11 +32,13 @@ Legend: ✅ implemented · ◐ partial · ✗ missing/not-dedicated.
 - **The recurring weak links are the same five for almost every persona:** Notifications (◐), Completion (◐/✗),
   Continuous-improvement (◐/✗), and (for support personas) Interventions. This is the **lifecycle exit-gap**
   showing up per-persona — confirming GAP-P1 is systemic, not persona-local.
-- **11–12 personas are genuinely first-class; 5 are partial; 2 are missing-as-dedicated.** Breadth is strong.
+- **9 personas are first-class (IMPLEMENTED); 7 are PARTIAL; 2 are MISSING-as-dedicated.** Breadth is strong,
+  but Parent and Mentor drop to PARTIAL under the weakest-link rule (✗ on completion *and* continuous-
+  improvement) — their *segment* experience still exists (06), but their *journey* is incomplete.
 - **Faculty** is the highest-value partial (real substrate already exists nested in Institute) → promote to
   first-class (see Gap Register GAP-M1).
 
 ## Honesty note
-"Persona exists" ≠ "persona journey is complete." Several IMPLEMENTED personas still carry ◐ on
-completion/continuous-improvement; they are marked IMPLEMENTED because a coherent end-to-end path exists, but
-the **product-completeness ceiling for every persona is gated by the lifecycle exit/progression gap.**
+"Persona exists" ≠ "persona journey is complete." IMPLEMENTED personas carry only ◐ (soft) tails; personas
+with hard ✗ on completion *and* continuous-improvement (Parent, Mentor, plus the support personas) are honestly
+PARTIAL. The **product-completeness ceiling for every persona is gated by the lifecycle exit/progression gap.**

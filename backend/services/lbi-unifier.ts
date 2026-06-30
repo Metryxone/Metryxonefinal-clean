@@ -11,6 +11,7 @@
  */
 
 import pg from 'pg';
+import { logger } from '../lib/logger';
 
 export interface LbiDimension {
   key: string;
@@ -139,7 +140,8 @@ export async function getUnifiedLbiProfile(
           confidence: row[key] != null ? 'high' : 'absent',
         }));
       }
-    } catch {
+    } catch (e) {
+      logger.debug('lbi-unifier: system_b (lbi_scores) read failed; source treated as absent', { err: e instanceof Error ? e.message : String(e) });
     }
 
     // ── System A — CAPADEX wcl0 / behavioural signals (email-keyed) ──────
@@ -185,7 +187,8 @@ export async function getUnifiedLbiProfile(
           }
         }
       }
-    } catch {
+    } catch (e) {
+      logger.debug('lbi-unifier: system_a (wcl0/behavioural) read failed; source treated as absent', { err: e instanceof Error ? e.message : String(e) });
     }
 
     // ── System C — lbi_domain_scores (session-keyed, look up by email) ───
@@ -213,7 +216,8 @@ export async function getUnifiedLbiProfile(
           source: 'system_c' as const,
         }));
       }
-    } catch {
+    } catch (e) {
+      logger.debug('lbi-unifier: system_c (domain scores) read failed; source treated as absent', { err: e instanceof Error ? e.message : String(e) });
     }
   } finally {
     client.release();

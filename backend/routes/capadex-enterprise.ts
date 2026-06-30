@@ -9,6 +9,7 @@ import type { Pool } from 'pg';
 import { buildCapadexReportHtml, sendCapadexReport } from '../email';
 import { buildOmegaEmailExtras } from '../services/omega-report-builder';
 import { writeAuditEvent, AUDIT_EVENT } from '../lib/audit';
+import { logger } from '../lib/logger';
 import { isEnabled } from '../services/feature-flags';
 import { STAGE_CODE_TO_LABEL, LIFECYCLE_STAGE_CODES } from '../lib/lifecycle';
 import { broadcastToSession } from '../services/ws-broadcast';
@@ -1332,7 +1333,9 @@ export function registerCapadexEnterpriseRoutes(app: Express, pool: Pool) {
           [recipientEmail, ALL_SAFE, stageMeta.domains]
         );
         recommendations = recs;
-      } catch (_err: unknown) {}
+      } catch (_err: unknown) {
+        logger.debug('capadex-enterprise: recommendation enrichment read failed; report continues without recs', { err: _err instanceof Error ? _err.message : String(_err) });
+      }
 
       const appBase = process.env.APP_URL ||
         (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : 'https://metryx.one');

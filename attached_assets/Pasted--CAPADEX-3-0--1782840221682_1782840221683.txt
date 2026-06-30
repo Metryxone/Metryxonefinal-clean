@@ -1,0 +1,320 @@
+# ==============================================================================
+#
+# CAPADEX 3.0
+#
+# 99% ENTERPRISE LAUNCH PROGRAM
+#
+# PROGRAM 2
+#
+# PHASE 2.2
+#
+# TECHNICAL DEBT RESOLUTION
+#
+# ==============================================================================
+#
+# EXECUTION MODE
+#
+# IMPLEMENTATION
+#
+# Repository First
+#
+# Enhancement Only
+#
+# Search Before Modify
+#
+# Reuse Before Build
+#
+# Preserve Existing Architecture
+#
+# No New Business Features
+#
+# No New Architecture
+#
+# No V2
+#
+# No Duplicate Logic
+#
+# No Breaking Changes
+#
+# Human Approval Required
+#
+# ==============================================================================
+#
+# PRECONDITION
+#
+# Program 2
+#
+# Phase 2.1
+#
+# Repository Architecture Alignment
+#
+# MUST be COMPLETE.
+#
+# If not,
+#
+# STOP.
+#
+# Report missing prerequisites.
+#
+# ==============================================================================
+#
+# MISSION
+#
+# Resolve measurable technical debt identified
+# in all previous repository audits.
+#
+# This phase improves maintainability,
+# reliability,
+# readability,
+# modularity,
+# and long-term sustainability.
+#
+# DO NOT add business functionality.
+#
+# DO NOT redesign CAPADEX.
+#
+# Enhance existing implementation only.
+#
+# ==============================================================================
+#
+# MANDATORY ENHANCEMENT CONTRACT
+#
+# Before modifying anything:
+#
+# 1. Search the complete repository.
+#
+# 2. Locate the existing implementation.
+#
+# 3. Measure technical debt.
+#
+# 4. Enhance existing implementation.
+#
+# 5. Never replace when enhancement is possible.
+#
+# 6. Never create duplicate modules.
+#
+# 7. Preserve API compatibility.
+#
+# 8. Preserve database compatibility.
+#
+# 9. Preserve frontend compatibility.
+#
+# 10. Produce repository evidence.
+#
+# ==============================================================================
+#
+# SEARCH ENTIRE REPOSITORY
+#
+# Review
+#
+# Backend
+#
+# Services
+#
+# APIs
+#
+# Routes
+#
+# Database
+#
+# ORM
+#
+# Scripts
+#
+# Utilities
+#
+# Shared Libraries
+#
+# Background Jobs
+#
+# Feature Flags
+#
+# Tests
+#
+# Documentation
+#
+# ==============================================================================
+#
+# IDENTIFY TECHNICAL DEBT
+#
+# Measure
+#
+# Large Files
+#
+# Long Methods
+#
+# Duplicate Code
+#
+# Dead Code
+#
+# Unused Services
+#
+# Unused APIs
+#
+# Legacy Implementations
+#
+# Deprecated Modules
+#
+# Circular Dependencies
+#
+# Tight Coupling
+#
+# High Complexity
+#
+# Missing Validation
+#
+# Missing Error Handling
+#
+# Missing Logging
+#
+# Missing Tests
+#
+# ==============================================================================
+#
+# PRIORITIZE
+#
+# Launch Critical
+#
+# High
+#
+# Medium
+#
+# Low
+#
+# Future
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# Resolve only
+#
+# repository-backed
+#
+# technical debt.
+#
+# Improve
+#
+# Code Organization
+#
+# Shared Utility Reuse
+#
+# Error Handling
+#
+# Logging
+#
+# Validation
+#
+# Dependency Structure
+#
+# Maintainability
+#
+# Documentation
+#
+# ONLY where justified by repository evidence.
+#
+# ==============================================================================
+#
+# DO NOT
+#
+# Rewrite modules.
+#
+# Introduce new architecture.
+#
+# Split files unless clearly justified.
+#
+# Create V2 services.
+#
+# Create duplicate APIs.
+#
+# Modify business logic.
+#
+# Change product behaviour.
+#
+# ==============================================================================
+#
+# VERIFY
+#
+# Existing functionality remains unchanged.
+#
+# APIs remain compatible.
+#
+# Database schema remains compatible.
+#
+# Frontend compatibility preserved.
+#
+# No regressions introduced.
+#
+# ==============================================================================
+#
+# PRODUCE
+#
+# 01 Technical Debt Inventory
+#
+# 02 Technical Debt Resolution Report
+#
+# 03 Duplicate Code Report
+#
+# 04 Dependency Analysis
+#
+# 05 Maintainability Improvements
+#
+# 06 Repository Change Summary
+#
+# 07 Remaining Technical Debt Register
+#
+# 08 Technical Debt Metrics
+#
+# ==============================================================================
+#
+# ACCEPTANCE CRITERIA
+#
+# Launch-critical technical debt resolved.
+#
+# High-priority technical debt reduced.
+#
+# No duplicate implementations.
+#
+# No unnecessary complexity introduced.
+#
+# Maintainability improved.
+#
+# Existing behaviour preserved.
+#
+# No regressions.
+#
+# Repository evidence provided.
+#
+# ==============================================================================
+#
+# FINAL VALIDATION
+#
+# Confirm:
+#
+# Technical debt has been reduced.
+#
+# Code quality has improved.
+#
+# Maintainability has improved.
+#
+# No business functionality changed.
+#
+# Repository evidence supports every modification.
+#
+# Report remaining debt by priority:
+#
+# Launch Critical
+#
+# High
+#
+# Medium
+#
+# Low
+#
+# Future
+#
+# STOP.
+#
+# Human Approval Required.
+#
+# ==============================================================================

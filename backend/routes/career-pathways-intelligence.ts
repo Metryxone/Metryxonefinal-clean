@@ -13,6 +13,7 @@ import type { Pool } from 'pg';
 import { attachCareerIntelligence } from './career-intelligence-enrich.js';
 import { resolveEffectiveUserId } from './behavioural-memory.js';
 import { emitLearningActivityCompleted } from '../services/learning-passport-loop';
+import { logger } from '../lib/logger';
 
 const FLAG = 'FF_CAREER_GRAPH';
 const flagOn = () => process.env[FLAG] === '1';
@@ -111,11 +112,11 @@ export function registerCareerPathwaysIntelligenceRoutes(
 ): void {
   // Ensure schema on first request
   app.use('/api/career/pi', flagGate, async (_req, _res, next) => {
-    try { await ensureSchema(pool); } catch {}
+    try { await ensureSchema(pool); } catch (e) { logger.warn('career/pi ensureSchema failed (best-effort; request continues)', { scope: 'career-pi', err: e instanceof Error ? e.message : String(e) }); }
     next();
   });
   app.use('/api/admin/career/pi', flagGate, async (_req, _res, next) => {
-    try { await ensureSchema(pool); } catch {}
+    try { await ensureSchema(pool); } catch (e) { logger.warn('admin/career/pi ensureSchema failed (best-effort; request continues)', { scope: 'career-pi', err: e instanceof Error ? e.message : String(e) }); }
     next();
   });
 

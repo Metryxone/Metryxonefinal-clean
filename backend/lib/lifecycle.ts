@@ -203,3 +203,42 @@ export function canonicalStoredLabel(value: string | null | undefined): string |
   if (r.code) return STORED_STAGE_ORDER[r.order + 1];     // order 0..3 → Curiosity..Mastery
   return null;
 }
+
+/**
+ * The set of EXACT proper-cased strings that the platform is allowed to PERSIST into a
+ * `canonical_stage` (or outcome `current_stage`/`desired_stage`) column: the five members of
+ * `STORED_STAGE_ORDER` — 'Awareness' | 'Curiosity' | 'Clarity' | 'Growth' | 'Mastery'. Built
+ * from the canon so it can never drift.
+ */
+const CANONICAL_STORED_STAGE_SET: ReadonlySet<string> = new Set(STORED_STAGE_ORDER);
+
+/**
+ * True iff `value` is EXACTLY one of the canonical stored stage labels — proper-cased and with
+ * NO surrounding whitespace. This is the invariant every stage WRITER must satisfy before it
+ * persists a stage string: the read-layer normalization (`normalizeStoredStage`) is proven
+ * byte-identical to the legacy ad-hoc maps ONLY while stored values are clean proper-cased
+ * labels. Case-/whitespace-variants (e.g. ' clarity ', 'CLARITY', 'CAP_INS') return false —
+ * they read correctly but violate the persisted invariant.
+ */
+export function isCanonicalStoredStage(value: string | null | undefined): boolean {
+  return typeof value === 'string' && CANONICAL_STORED_STAGE_SET.has(value);
+}
+
+/**
+ * Coerce ANY stage representation to the EXACT canonical stored label the DB must persist
+ * (proper-cased, trimmed): the canonical label, a CAP_* code, the display alias 'Clarity', or
+ * the uncoded pre-stage 'Awareness' — in any casing/whitespace — map to their proper stored
+ * label ('Awareness'|'Curiosity'|'Clarity'|'Growth'|'Mastery'). CAP_INS resolves to its stored
+ * DISPLAY ALIAS 'Clarity' (not the canonical label 'Insight'), matching `STORED_STAGE_ORDER`.
+ * null / empty / UNRECOGNIZED → null (never persist a junk string). Pure; never throws.
+ *
+ * Stage writers route caller-supplied stage strings through this so a future caller can never
+ * silently persist a non-canonical casing/whitespace value and break the read-layer parity.
+ * (`toCanonicalStoredStage` is an alias of `canonicalStoredLabel` retained for its callers.)
+ */
+export function toCanonicalStoredStage(value: string | null | undefined): string | null {
+  const r = normalizeStoredStage(value);
+  if (r.isUncodedPreStage) return UNCODED_PRE_STAGE;
+  if (r.code) return STORED_STAGE_ORDER[r.order + 1];
+  return null;
+}

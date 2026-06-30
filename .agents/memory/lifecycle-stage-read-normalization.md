@@ -36,6 +36,23 @@ can just route its lookup through this one normalizer and stay byte-identical.
   handling is verified as additive robustness, not legacy parity.
 - **No feature flag**: behaviour is provably byte-identical on real inputs, so no runtime shift.
 
+## Write-side guarantee (the read-parity rests on it)
+The read-parity holds ONLY while stored `canonical_stage` is a clean proper-cased label. To stop a
+future writer from silently breaking that, `backend/lib/lifecycle.ts` adds two PURE guards:
+`isCanonicalStoredStage(v)` (exact membership in `STORED_STAGE_ORDER`, no trim/case-fold) and
+`toCanonicalStoredStage(v)` (coerce any code/alias/casing/whitespace → proper stored label;
+CAP_INS → 'Clarity'; junk/null → null).
+- The caller-controlled write site `wc3/longitudinal-foundation.ts captureLongitudinalSnapshot`
+  routes `canonicalStage` through `toCanonicalStoredStage` before persist + `console.error`s loudly
+  on coercion. **Gotcha that motivated this:** `wc3/user-intelligence-foundation.ts` was passing the
+  RAW `stage_code` (e.g. 'CAP_INS') as `canonicalStage` — fixed to `canonicalStageFor(stage_code)`.
+- `canonicalStageFor` (→ wc3_stage_state/progression) and the outcome insert (current/desired_stage,
+  sourced from persisted L1 + `STORED_STAGE_ORDER`) are canon BY CONSTRUCTION; outcome also routes
+  current_stage through the guard for defense-in-depth.
+- Guarantee is enforced by `scripts/verify-canonical-stage-writers.ts` (fails loudly / exit 1) —
+  run it ALONGSIDE `verify-lifecycle-stage-normalization.ts`. **Why:** Task #306 proved reads;
+  this proves writes can never reintroduce a non-canonical value.
+
 ## What was deliberately left alone
 `services/wc5/*` memory just passthrough-stores `canonical_stage` (no label→number map) so there
 was nothing to normalize there. Don't invent a map where none exists.

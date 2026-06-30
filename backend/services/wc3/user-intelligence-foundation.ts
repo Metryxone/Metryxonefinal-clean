@@ -29,6 +29,7 @@
 import type { Pool } from 'pg';
 import { getBehaviorGraph, type BehaviorGraph } from '../behavior-graph-service';
 import { captureLongitudinalSnapshot } from './longitudinal-foundation';
+import { canonicalStageFor } from './stage-intelligence';
 import { isBehaviourNamespaceAlignmentEnabled } from '../../config/feature-flags';
 
 let schemaReady = false;
@@ -365,7 +366,7 @@ export async function persistUserIntelligence(pool: Pool, sessionId: string): Pr
         userEmail: email,
         concernName: s.concern_name ?? null,
         stageCode: s.stage_code ?? null,
-        canonicalStage: s.stage_code ?? null,
+        canonicalStage: canonicalStageFor(s.stage_code ?? null),
         score,
         scoreLevel: null,
       });

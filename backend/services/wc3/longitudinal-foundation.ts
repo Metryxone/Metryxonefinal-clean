@@ -11,6 +11,7 @@
  */
 import type { Pool } from 'pg';
 import { ensureWc3LongitudinalSchema } from './wc3-schema';
+import { isCanonicalStoredStage, toCanonicalStoredStage } from '../../lib/lifecycle';
 
 interface SnapshotInput {
   sessionId: string;
@@ -32,10 +33,22 @@ interface SnapshotInput {
 export async function captureLongitudinalSnapshot(pool: Pool, input: SnapshotInput): Promise<boolean> {
   try {
     await ensureWc3LongitudinalSchema(pool);
+    // WRITE-SITE GUARD: `canonical_stage` MUST persist as an EXACT proper-cased canonical stored
+    // label (or null) — the read-layer normalization parity (Task #306) holds only while stored
+    // values are clean. Coerce any recognized representation (CAP_* code / alias / casing /
+    // whitespace) to its canonical stored label; null out the unrecognized; and log LOUDLY when a
+    // non-canonical value had to be coerced so a future caller passing junk is never silent.
+    const rawCanonical = input.canonicalStage ?? null;
+    const canonicalStage = toCanonicalStoredStage(rawCanonical);
+    if (rawCanonical != null && String(rawCanonical).trim() !== '' && !isCanonicalStoredStage(rawCanonical)) {
+      console.error(
+        `[wc3-longitudinal] non-canonical canonical_stage coerced before persist: ${JSON.stringify(rawCanonical)} -> ${JSON.stringify(canonicalStage)} (session ${input.sessionId})`,
+      );
+    }
     const snapshot = {
       concern_name: input.concernName ?? null,
       stage_code: input.stageCode ?? null,
-      canonical_stage: input.canonicalStage ?? null,
+      canonical_stage: canonicalStage,
       score: input.score ?? null,
       score_level: input.scoreLevel ?? null,
       csi_score: input.csiScore ?? null,
@@ -48,7 +61,7 @@ export async function captureLongitudinalSnapshot(pool: Pool, input: SnapshotInp
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
       [
         input.sessionId, input.userEmail ?? null, input.userId ?? null, input.concernName ?? null,
-        input.stageCode ?? null, input.canonicalStage ?? null, input.score ?? null, input.scoreLevel ?? null,
+        input.stageCode ?? null, canonicalStage, input.score ?? null, input.scoreLevel ?? null,
         input.csiScore ?? null, input.csiStage ?? null, JSON.stringify(snapshot),
       ],
     );

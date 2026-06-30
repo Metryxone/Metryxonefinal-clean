@@ -24,6 +24,7 @@
 import type { Pool } from 'pg';
 import { ensureWc3OutcomeSchema } from './wc3-schema';
 import { getSessionStage, WC3_PROGRESSION_ORDER, type StageState } from './stage-intelligence';
+import { toCanonicalStoredStage } from '../../lib/lifecycle';
 import { resolveConstructForBridgeTag } from '../../data/bridge-tag-construct-crosswalk';
 import { isWc3OutcomeCrosswalkEnabled } from '../../config/feature-flags';
 
@@ -245,7 +246,17 @@ async function buildOutcomes(
   const persona = await loadPersona(pool, sessionId);
 
   const currentOrder = stage.stage_order_index;
-  const currentStage = stage.canonical_stage;
+  // `current_stage` is read from the persisted L1 stage (always canon) but route it through the
+  // canonical guard so this outcome-model insert can never persist a non-canonical casing/whitespace
+  // value; `desired_stage` is sourced directly from STORED_STAGE_ORDER (canon by construction).
+  // STRICT: if the persisted L1 value is unrecognizable (corrupt upstream), persist NULL rather than
+  // leaking junk into current_stage, and log loudly — null≠a fabricated stage.
+  const currentStage = toCanonicalStoredStage(stage.canonical_stage);
+  if (stage.canonical_stage != null && String(stage.canonical_stage).trim() !== '' && currentStage === null) {
+    console.error(
+      `[wc3-outcome] unrecognizable L1 canonical_stage, persisting NULL current_stage: ${JSON.stringify(stage.canonical_stage)} (session ${sessionId})`,
+    );
+  }
   const lastOrder = WC3_PROGRESSION_ORDER.length - 1; // Mastery
   const desiredOrder = Math.min(currentOrder + 1, lastOrder);
   const desiredStage = WC3_PROGRESSION_ORDER[desiredOrder];

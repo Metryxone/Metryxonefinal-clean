@@ -1,6 +1,6 @@
 # CAPADEX 3.0 · Phase 1.3 — Assessment Inventory
 
-> Deliverable 02 · Generated 2026-06-30T11:23:41.795Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:9f33dfe717b5, written 2026-06-30T11:23:41.791Z).
+> Deliverable 02 · Generated 2026-06-30T11:44:25.490Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:9b3be5dcc291, written 2026-06-30T11:44:25.495Z).
 > Honesty: Coverage⟂Confidence⟂Outcome (never composited); null ≠ 0; never fabricated.
 
 Every canonical assessment type → the EXISTING implementations it REUSES (verified vs live FS+DB).
@@ -66,32 +66,32 @@ _STRONG on the employer surface, thin on the learner back-half. Readiness/Career
 - **Frontend**: components/career/HiringReadinessTab.tsx, components/career/FutureReadinessTab.tsx
 - **Verified**: svc 2/2 · rt 2/2 · fe 2/2 · tbl 3/3
 
-## Progress Assessment (`progress`) — PARTIAL
-_Data + deltas EXIST but assessments are NOT systematically re-administered → "Progress (systematic)" is the depth gap._
+## Progress Assessment (`progress`) — IMPLEMENTED
+_Systematic re-measurement IMPLEMENTED via REUSE (no new engine): captureProgressionOutcome() appends a longitudinal snapshot per stage progression (ensure-at-least-one datapoint) and deltas are computed on READ from employability_scoring_runs + longitudinal_patterns. Coverage⟂Adoption — the capture hook is gated by the longitudinalOutcomeCapture flag; cohort movement stays k-gated; adoption (re-administered subjects) accrues as subjects re-run and is reported SEPARATELY (lifecycle-closure composer), never composited with Coverage._
 
-- **Services**: services/longitudinal-memory.ts, services/bayesian-inference-engine.ts
-- **Routes**: routes/longitudinal.ts, routes/memory-architecture.ts
-- **Tables**: employability_scoring_runs, longitudinal_patterns, wc3_stage_progression
+- **Services**: services/capadex/progression-outcome-capture.ts, services/longitudinal-memory.ts, services/bayesian-inference-engine.ts
+- **Routes**: routes/capadex.ts, routes/longitudinal.ts, routes/memory-architecture.ts
+- **Tables**: employability_scoring_runs, longitudinal_patterns, wc3_longitudinal_snapshots, wc3_stage_progression
 - **Frontend**: components/career/CareerMemoryTab.tsx
-- **Verified**: svc 2/2 · rt 2/2 · fe 1/1 · tbl 3/3
+- **Verified**: svc 3/3 · rt 3/3 · fe 1/1 · tbl 4/4
 
-## Exit Assessment (`exit`) — MISSING
-_No exit-gate assessment event is instrumented. Forward work: re-administer existing assessments at exit — NOT a net-new engine (blueprint GAP-A4)._
+## Exit Assessment (`exit`) — IMPLEMENTED
+_Close-the-loop exit hook IMPLEMENTED via REUSE (no new engine): getReassessmentSignal() surfaces exit eligibility on reaching canonical Mastery and captureProgressionOutcome() records a DISTINCT reached_mastery milestone in validation_loop_outcomes (ref_id capadex_mastery:*). The pass/fail readiness gate is supplied by evidence-gated progression. Coverage⟂Adoption — gated by the longitudinalOutcomeCapture flag; adoption is reported SEPARATELY (lifecycle-closure composer) and stays 0 until real non-demo Mastery progressions accrue; no dedicated frontend surface yet (signal exposed via the capadex routes)._
 
-- **Services**: — (none / forward-work)
-- **Routes**: —
-- **Tables**: —
+- **Services**: services/capadex/progression-outcome-capture.ts, services/wc3/longitudinal-foundation.ts
+- **Routes**: routes/capadex.ts, routes/capadex-enterprise.ts
+- **Tables**: validation_loop_outcomes, wc3_longitudinal_snapshots, wc3_stage_state
 - **Frontend**: —
-- **Verified**: svc 0/0 · rt 0/0 · fe 0/0 · tbl 0/0
+- **Verified**: svc 2/2 · rt 2/2 · fe 0/0 · tbl 3/3
 
-## Continuous Assessment (`continuous`) — MISSING
-_Longitudinal/Bayesian SUBSTRATE exists, but there is NO scheduled re-administration of assessments. Gap = the scheduler/trigger, NOT the infra._
+## Continuous Assessment (`continuous`) — IMPLEMENTED
+_Interval re-administration IMPLEMENTED via REUSE (no new engine, no background cron — Replit has no scheduler): getReassessmentSignal() derives due-ness ON READ from the freshness window (REASSESSMENT_FRESHNESS_DAYS=180) over accrued longitudinal snapshots, and each returning re-run appends a new datapoint via captureProgressionOutcome(). The trigger is a derived freshness signal evaluated when the subject returns, NOT a server cron. Coverage⟂Adoption — gated by the longitudinalOutcomeCapture flag; adoption (returning re-runs) reported SEPARATELY (lifecycle-closure composer) and stays 0 until subjects re-engage._
 
-- **Services**: services/longitudinal-memory.ts, services/bayesian-inference-engine.ts
-- **Routes**: routes/longitudinal.ts
-- **Tables**: longitudinal_patterns
+- **Services**: services/capadex/progression-outcome-capture.ts, services/wc3/longitudinal-foundation.ts, services/longitudinal-memory.ts
+- **Routes**: routes/capadex.ts, routes/capadex-enterprise.ts
+- **Tables**: wc3_longitudinal_snapshots, longitudinal_patterns, employability_scoring_runs
 - **Frontend**: —
-- **Verified**: svc 2/2 · rt 1/1 · fe 0/0 · tbl 1/1
+- **Verified**: svc 3/3 · rt 2/2 · fe 0/0 · tbl 3/3
 
 ## Known overlaps (decisions, not silent merges)
 - **Concern-diagnostic ⟂ Behaviour-signal** → `KEEP_SEPARATE` — Distinct subjects (overlap in input only); boundary documented in blueprint 04 dictionary.

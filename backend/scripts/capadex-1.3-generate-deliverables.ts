@@ -131,9 +131,25 @@ files['08-report-assessment-matrix.md'] = HEAD('08', 'Reports & Dashboards ↔ A
   `| Canonical Type | Status | Reports | Dashboards | Benchmarking |\n|---|---|---|---|---|\n` +
   ASSESSMENT_FRAMEWORK.map((t) => `| ${t.label} (\`${t.key}\`) | ${t.status} | ${t.reports} | ${t.dashboards} | ${t.benchmarking} |`).join('\n') + '\n';
 // ── 09 Outcome & KPI Mapping ─────────────────────────────────────────────
+const LC = scan.lifecycle_closure || {};
+const PL = scan.persona_linkage || {};
+const dash = (v: any) => (v === null || v === undefined ? '—' : String(v)); // null≠0 → render null as —
 files['09-outcome-kpi-mapping.md'] = HEAD('09', 'Outcome & KPI Mapping') +
   `| Canonical Type | Status | Purpose | Business value | Outcomes | KPIs |\n|---|---|---|---|---|---|\n` +
-  ASSESSMENT_FRAMEWORK.map((t) => `| ${t.label} (\`${t.key}\`) | ${t.status} | ${t.purpose} | ${t.businessValue} | ${t.outcomes} | ${t.kpis} |`).join('\n') + '\n';
+  ASSESSMENT_FRAMEWORK.map((t) => `| ${t.label} (\`${t.key}\`) | ${t.status} | ${t.purpose} | ${t.businessValue} | ${t.outcomes} | ${t.kpis} |`).join('\n') + '\n\n' +
+  `## Close-the-loop ADOPTION (Adoption⟂Coverage — never composited)\n` +
+  `The Progress / Exit / Continuous mechanisms are now instrumented via REUSE of the existing progression-outcome-capture hook (no new engine/table). This measures how much that loop is **exercised** — a SEPARATE axis from whether the mechanism exists. \`—\` = unreadable (null≠0); a numeric \`0\` is a measured-empty.\n\n` +
+  `| Adoption signal | Subjects |\n|---|---|\n` +
+  `| Progress (stage_completion captured, non-demo) | ${dash(LC.progression_subjects)} |\n` +
+  `| Exit (reached_mastery captured, non-demo) | ${dash(LC.exit_subjects)} |\n` +
+  `| Continuous (re-administered, >1 longitudinal datapoint) | ${dash(LC.reassessed_subjects)} |\n\n` +
+  `_Freshness window: ${dash(LC.freshness_window_days)} days. Capture is gated by the \`longitudinalOutcomeCapture\` flag, so adoption accrues only as real subjects re-administer — current values are honest, not fabricated._\n\n` +
+  `## Persona ⟂ Outcome linkage (read-time join, k-anon suppressed)\n` +
+  `Realized outcomes are attributed per assessment persona via a READ-TIME join (zero DDL, no persona column added). \`linkage_present:${dash(PL.linkage_present)}\` (false = join unreadable, NOT zero outcomes). Per-persona counts below k_min=${dash(PL.k_min)} are suppressed for anonymity.\n\n` +
+  ((PL.personas && PL.personas.length)
+    ? `| Persona | Outcomes (suppressed <k_min) |\n|---|---|\n` +
+      PL.personas.map((p: any) => `| ${p.persona} | ${p.suppressed ? 'suppressed (<k_min)' : dash(p.outcomes)} |`).join('\n') + '\n'
+    : `_No persona-linked outcomes measured yet (honest empty — the persona substrate and realized-outcome volume have not yet intersected). Coverage⟂Outcome⟂Confidence never composited._\n`);
 
 // ── 10 Repository Changes Summary ────────────────────────────────────────
 files['10-repository-changes-summary.md'] = HEAD('10', 'Repository Changes Summary') +
@@ -163,6 +179,8 @@ files['11-technical-debt-resolved.md'] = HEAD('11', 'Technical Debt Resolved & R
 - **No single source of truth for "what assessments exist"** → RESOLVED: \`config/assessment-framework.ts\` is now the ONE canonical, machine-readable registry mapping every assessment to 8 axes + evidence.
 - **Taxonomy drift risk (spec 19 vs blueprint 10)** → RESOLVED: \`SPEC_19_CROSSWALK\` pins the honest mapping in code.
 - **Inaccurate table references** → RESOLVED: registry evidence corrected to the REAL live table names (verified by the scan; ${S.evidence_rollup.tables.present}/${S.evidence_rollup.tables.total} present).
+- **Open growth loop (Progress PARTIAL, Exit + Continuous MISSING)** → RESOLVED via REUSE, **not** a new engine: the existing \`services/capadex/progression-outcome-capture.ts\` hook (\`captureProgressionOutcome\` / \`getReassessmentSignal\`, freshness window ${dash(LC.freshness_window_days)}d) instruments stage_completion (Progress), reached_mastery (Exit) and a read-derived interval signal (Continuous). The FROZEN taxonomy STRUCTURE is unchanged — only per-type status moved (now 0 MISSING). What remains is **ADOPTION**, reported separately in deliverable 09 (Adoption⟂Coverage, never composited).
+- **Outcomes carried no persona dimension** → RESOLVED via a READ-TIME join (zero DDL): \`composePersonaOutcomeLinkage\` attributes realized outcomes per persona with k-anon suppression — no persona column added, no schema change.
 
 ## Recommended (NOT actioned — breaking-risk / needs approval)
 ` +
@@ -188,7 +206,7 @@ files['completion-certification.md'] = HEAD('CERT', 'Completion Certification & 
 | ONE canonical framework | ✅ \`config/assessment-framework.ts\` (${scan.canonical_type_count} types, ${scan.spec_name_count}-name crosswalk) |
 | Every assessment mapped to 8 axes (persona/lifecycle/journey/AI/reports/dashboards/outcomes/KPIs) | ✅ all ${scan.canonical_type_count} types map all ${ASSESSMENT_AXES.length} axes |
 | No duplicate logic introduced | ✅ read-only composer; overlaps documented as decisions, not merged |
-| No orphans | ✅ every type → verified evidence (or honest MISSING for exit/continuous) |
+| No orphans | ✅ every type → verified evidence (close-the-loop Progress/Exit/Continuous now instrumented via reuse; 0 MISSING) |
 | No broken workflows / regressions | ✅ flag default OFF → byte-identical incl. schema; OFF smoke 503/401 |
 | Enterprise-ready answered with evidence | ✅ verdict below |
 | All remaining gaps classified | ✅ deliverable 12 (${ASSESSMENT_GAPS.length} gaps) |
@@ -202,7 +220,7 @@ files['completion-certification.md'] = HEAD('CERT', 'Completion Certification & 
 
 ${S.enterprise_ready.note}
 
-**Plainly:** YES on structure and front-half depth — one canonical, non-duplicative framework with every assessment mapped to all eight axes and verified against the live repository. NOT YET on the closed growth loop: systematic **Progress**, **Exit**, and **Continuous** re-measurement are forward work, to be delivered by RE-ADMINISTERING the existing assessments (no net-new engines), per the frozen blueprint. **No Launch-Critical assessment gap exists.** Coverage⟂Confidence⟂Outcome are reported separately and never composited.
+**Plainly:** YES on structure and on the now-closed growth loop — one canonical, non-duplicative framework with every assessment mapped to all eight axes and verified against the live repository, and systematic **Progress**, **Exit**, and **Continuous** re-measurement now instrumented by RE-ADMINISTERING the existing assessments through the existing progression-capture hook (no net-new engines, zero DDL — the frozen taxonomy STRUCTURE is unchanged; only per-type status moved, so 0 MISSING). What remains is **ADOPTION**, not engineering: the capture path is gated by \`longitudinalOutcomeCapture\` and real re-administration volume is reported separately in deliverable 09 (currently honest-low/0; null≠0). A Medium **content-breadth** residual stands for Learning + learner-side Performance (human-authored items, never fabricated). **No Launch-Critical assessment gap exists.** Coverage⟂Confidence⟂Outcome⟂Adoption are reported separately and never composited.
 `;
 
 for (const [name, body] of Object.entries(files)) {

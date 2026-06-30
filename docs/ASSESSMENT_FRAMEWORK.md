@@ -36,24 +36,39 @@ Wellness, etc.) are **surfaces/sub-types** that map honestly INTO these 10 core 
 | 3 | Diagnostic | IMPLEMENTED |
 | 4 | Behaviour | IMPLEMENTED |
 | 5 | Competency | IMPLEMENTED |
-| 6 | Learning | PARTIAL |
+| 6 | Learning | PARTIAL (curated no-sandbox MCQ; content breadth uneven) |
 | 7 | Performance | PARTIAL (strong employer-side, thin learner-side) |
-| 8 | Progress | PARTIAL (deltas exist; cadence does not) |
-| 9 | Exit | MISSING (instrument by RE-ADMINISTERING existing assessments — not a new engine) |
-| 10 | Continuous | MISSING (substrate exists; no scheduler) |
+| 8 | Progress | IMPLEMENTED (systematic re-measurement via the progression-capture hook — reuse) |
+| 9 | Exit | IMPLEMENTED (reached-Mastery eligibility + reached_mastery milestone capture — reuse) |
+| 10 | Continuous | IMPLEMENTED (interval re-administration via a read-derived freshness signal; no cron) |
+
+## Closing the loop via REUSE (zero DDL — no new engine)
+Progress / Exit / Continuous are instrumented by RE-ADMINISTERING the EXISTING assessments through
+`backend/services/capadex/progression-outcome-capture.ts` (`captureProgressionOutcome` writes
+`stage_completion`/`reached_mastery` milestones into `validation_loop_outcomes`; `getReassessmentSignal`
+derives exit/interval eligibility from `REASSESSMENT_FRESHNESS_DAYS=180`). The FROZEN taxonomy STRUCTURE is
+unchanged — only per-type **status** moved. What remains is **ADOPTION**, not engineering: the capture path
+is gated by the `longitudinalOutcomeCapture` flag, so non-zero adoption accrues only as real subjects
+re-administer. Adoption is reported on a SEPARATE axis (never composited with Coverage):
+- `GET /api/admin/assessment-framework/lifecycle-closure` — `composeLifecycleClosure` (Progress/Exit/Continuous subject counts, demo excluded; null≠0).
+- `GET /api/admin/assessment-framework/outcomes/persona` — `composePersonaOutcomeLinkage` (read-time join, k-anon k_min=30 suppression; `linkage_present:false`≠zero).
 
 ## Measured coverage (from scan.json — re-run the scan for live numbers)
-- Status: **5 IMPLEMENTED · 3 PARTIAL · 2 MISSING** of 10.
-- Evidence verified present: services 19/19 · routes 17/17 · frontend 15/15 · tables 24/24.
-- Gaps: **0 Launch-Critical · 2 High · 3 Medium · 3 Low · 1 Future**.
+- Status: **8 IMPLEMENTED · 2 PARTIAL · 0 MISSING** of 10.
+- Evidence verified present: services 23/23 · routes 21/21 · frontend 15/15 · tables 30/30.
+- Gaps: **0 Launch-Critical · 0 High · 1 Medium · 3 Low · 1 Future**.
+- Adoption (SEPARATE axis): Progress 0 · Exit 0 · Continuous 0 subjects (honest measured-empty; capture flag-gated). Persona⟂outcome linkage readable, 0 linked outcomes yet.
 
 ## Enterprise-ready verdict
-**STRUCTURAL_COMPLETE_BACKHALF_PENDING.** YES on structure and front-half depth — one canonical,
-non-duplicative framework with every assessment mapped to all eight axes and verified against the live
-repository. NOT YET on the closed growth loop: systematic **Progress / Exit / Continuous** re-measurement
-is forward work, to be delivered by **re-administering the existing assessments** (no net-new engines),
-per the frozen blueprint. **No Launch-Critical assessment gap exists.**
-Coverage ⟂ Confidence ⟂ Outcome are reported separately and never composited.
+**STRUCTURAL_COMPLETE_ADOPTION_PENDING.** YES on structure and on the now-closed growth loop — one
+canonical, non-duplicative framework with every assessment mapped to all eight axes and verified against the
+live repository, with systematic **Progress / Exit / Continuous** re-measurement instrumented by
+**re-administering the existing assessments** (no net-new engines, zero DDL — the frozen taxonomy STRUCTURE
+is unchanged; only per-type status moved, so 0 MISSING). What remains is **ADOPTION**, not engineering: the
+capture path is gated by `longitudinalOutcomeCapture` and real re-administration volume is reported
+separately (currently honest 0; `null≠0`). A **Medium content-breadth** residual stands for Learning +
+learner-side Performance (human-authored items, never fabricated). **No Launch-Critical assessment gap
+exists.** Coverage ⟂ Confidence ⟂ Outcome ⟂ Adoption are reported separately and never composited.
 
 ## Honesty & boundaries
 - **LBI (`lbi_*`) ⟂ Competency (`onto_*`)** are two products by design — NOT a duplicate to merge.

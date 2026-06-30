@@ -15,13 +15,15 @@ import { Pool } from 'pg';
 import { mkdirSync, writeFileSync } from 'fs';
 import path from 'path';
 import { ASSESSMENT_FRAMEWORK, SPEC_19_CROSSWALK, ASSESSMENT_AXES, KNOWN_OVERLAPS } from '../config/assessment-framework';
-import { composeCoverage, composeSummary, ASSESSMENT_GAPS } from '../services/assessment-framework-engine';
+import { composeCoverage, composeSummary, composeLifecycleClosure, composePersonaOutcomeLinkage, ASSESSMENT_GAPS } from '../services/assessment-framework-engine';
 
 async function main() {
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
   try {
     const coverage = await composeCoverage(pool);
     const summary = await composeSummary(pool);
+    const lifecycle_closure = await composeLifecycleClosure(pool);
+    const persona_linkage = await composePersonaOutcomeLinkage(pool);
 
     const out = {
       generated_at: new Date().toISOString(),
@@ -38,6 +40,9 @@ async function main() {
       coverage,
       gaps: ASSESSMENT_GAPS,
       summary,
+      // Close-the-loop ADOPTION + persona⟂outcome linkage (read-only, Adoption⟂Coverage⟂Outcome never composited).
+      lifecycle_closure,
+      persona_linkage,
     };
 
     const dir = path.join(process.cwd(), 'audit', 'capadex-3.0-assessment-framework');

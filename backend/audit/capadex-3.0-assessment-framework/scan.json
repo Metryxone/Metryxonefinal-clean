@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-30T11:23:41.795Z",
+  "generated_at": "2026-06-30T11:44:25.490Z",
   "read_only": true,
   "taxonomy_frozen": true,
   "axes": [
@@ -472,20 +472,23 @@
       "dependencies": [
         "baseline"
       ],
-      "status": "PARTIAL",
-      "statusNote": "Data + deltas EXIST but assessments are NOT systematically re-administered → \"Progress (systematic)\" is the depth gap.",
+      "status": "IMPLEMENTED",
+      "statusNote": "Systematic re-measurement IMPLEMENTED via REUSE (no new engine): captureProgressionOutcome() appends a longitudinal snapshot per stage progression (ensure-at-least-one datapoint) and deltas are computed on READ from employability_scoring_runs + longitudinal_patterns. Coverage⟂Adoption — the capture hook is gated by the longitudinalOutcomeCapture flag; cohort movement stays k-gated; adoption (re-administered subjects) accrues as subjects re-run and is reported SEPARATELY (lifecycle-closure composer), never composited with Coverage.",
       "evidence": {
         "services": [
+          "services/capadex/progression-outcome-capture.ts",
           "services/longitudinal-memory.ts",
           "services/bayesian-inference-engine.ts"
         ],
         "routes": [
+          "routes/capadex.ts",
           "routes/longitudinal.ts",
           "routes/memory-architecture.ts"
         ],
         "tables": [
           "employability_scoring_runs",
           "longitudinal_patterns",
+          "wc3_longitudinal_snapshots",
           "wc3_stage_progression"
         ],
         "frontend": [
@@ -531,12 +534,22 @@
         "evidence-gated progression",
         "close-the-loop"
       ],
-      "status": "MISSING",
-      "statusNote": "No exit-gate assessment event is instrumented. Forward work: re-administer existing assessments at exit — NOT a net-new engine (blueprint GAP-A4).",
+      "status": "IMPLEMENTED",
+      "statusNote": "Close-the-loop exit hook IMPLEMENTED via REUSE (no new engine): getReassessmentSignal() surfaces exit eligibility on reaching canonical Mastery and captureProgressionOutcome() records a DISTINCT reached_mastery milestone in validation_loop_outcomes (ref_id capadex_mastery:*). The pass/fail readiness gate is supplied by evidence-gated progression. Coverage⟂Adoption — gated by the longitudinalOutcomeCapture flag; adoption is reported SEPARATELY (lifecycle-closure composer) and stays 0 until real non-demo Mastery progressions accrue; no dedicated frontend surface yet (signal exposed via the capadex routes).",
       "evidence": {
-        "services": [],
-        "routes": [],
-        "tables": [],
+        "services": [
+          "services/capadex/progression-outcome-capture.ts",
+          "services/wc3/longitudinal-foundation.ts"
+        ],
+        "routes": [
+          "routes/capadex.ts",
+          "routes/capadex-enterprise.ts"
+        ],
+        "tables": [
+          "validation_loop_outcomes",
+          "wc3_longitudinal_snapshots",
+          "wc3_stage_state"
+        ],
         "frontend": []
       }
     },
@@ -578,18 +591,22 @@
         "progress",
         "longitudinal_patterns"
       ],
-      "status": "MISSING",
-      "statusNote": "Longitudinal/Bayesian SUBSTRATE exists, but there is NO scheduled re-administration of assessments. Gap = the scheduler/trigger, NOT the infra.",
+      "status": "IMPLEMENTED",
+      "statusNote": "Interval re-administration IMPLEMENTED via REUSE (no new engine, no background cron — Replit has no scheduler): getReassessmentSignal() derives due-ness ON READ from the freshness window (REASSESSMENT_FRESHNESS_DAYS=180) over accrued longitudinal snapshots, and each returning re-run appends a new datapoint via captureProgressionOutcome(). The trigger is a derived freshness signal evaluated when the subject returns, NOT a server cron. Coverage⟂Adoption — gated by the longitudinalOutcomeCapture flag; adoption (returning re-runs) reported SEPARATELY (lifecycle-closure composer) and stays 0 until subjects re-engage.",
       "evidence": {
         "services": [
-          "services/longitudinal-memory.ts",
-          "services/bayesian-inference-engine.ts"
+          "services/capadex/progression-outcome-capture.ts",
+          "services/wc3/longitudinal-foundation.ts",
+          "services/longitudinal-memory.ts"
         ],
         "routes": [
-          "routes/longitudinal.ts"
+          "routes/capadex.ts",
+          "routes/capadex-enterprise.ts"
         ],
         "tables": [
-          "longitudinal_patterns"
+          "wc3_longitudinal_snapshots",
+          "longitudinal_patterns",
+          "employability_scoring_runs"
         ],
         "frontend": []
       }
@@ -654,7 +671,7 @@
     {
       "specName": "Progress",
       "canonicalKey": "progress",
-      "note": "Direct (PARTIAL — not systematically re-run)."
+      "note": "Direct — systematic re-measurement now instrumented via the progression-capture hook (reuse)."
     },
     {
       "specName": "Performance",
@@ -684,12 +701,12 @@
     {
       "specName": "Exit",
       "canonicalKey": "exit",
-      "note": "MISSING — re-administer existing assessments at exit."
+      "note": "Close-the-loop exit hook implemented via reuse (reached-Mastery eligibility + reached_mastery milestone capture); adoption-gated."
     },
     {
       "specName": "Continuous",
       "canonicalKey": "continuous",
-      "note": "MISSING scheduler; longitudinal substrate exists."
+      "note": "Interval re-administration via a derived freshness signal (reuse); no server cron; adoption-gated."
     }
   ],
   "known_overlaps": [
@@ -950,8 +967,40 @@
     {
       "key": "progress",
       "label": "Progress Assessment",
-      "status": "PARTIAL",
-      "statusNote": "Data + deltas EXIST but assessments are NOT systematically re-administered → \"Progress (systematic)\" is the depth gap.",
+      "status": "IMPLEMENTED",
+      "statusNote": "Systematic re-measurement IMPLEMENTED via REUSE (no new engine): captureProgressionOutcome() appends a longitudinal snapshot per stage progression (ensure-at-least-one datapoint) and deltas are computed on READ from employability_scoring_runs + longitudinal_patterns. Coverage⟂Adoption — the capture hook is gated by the longitudinalOutcomeCapture flag; cohort movement stays k-gated; adoption (re-administered subjects) accrues as subjects re-run and is reported SEPARATELY (lifecycle-closure composer), never composited with Coverage.",
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 3,
+          "total": 3,
+          "missing": []
+        },
+        "routes": {
+          "present": 3,
+          "total": 3,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 4,
+          "absent": 0,
+          "unknown": 0,
+          "total": 4,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "exit",
+      "label": "Exit Assessment",
+      "status": "IMPLEMENTED",
+      "statusNote": "Close-the-loop exit hook IMPLEMENTED via REUSE (no new engine): getReassessmentSignal() surfaces exit eligibility on reaching canonical Mastery and captureProgressionOutcome() records a DISTINCT reached_mastery milestone in validation_loop_outcomes (ref_id capadex_mastery:*). The pass/fail readiness gate is supplied by evidence-gated progression. Coverage⟂Adoption — gated by the longitudinalOutcomeCapture flag; adoption is reported SEPARATELY (lifecycle-closure composer) and stays 0 until real non-demo Mastery progressions accrue; no dedicated frontend surface yet (signal exposed via the capadex routes).",
       "axesMapped": 8,
       "axesTotal": 8,
       "evidence": {
@@ -966,8 +1015,8 @@
           "missing": []
         },
         "frontend": {
-          "present": 1,
-          "total": 1,
+          "present": 0,
+          "total": 0,
           "missing": []
         },
         "tables": {
@@ -980,65 +1029,33 @@
       }
     },
     {
-      "key": "exit",
-      "label": "Exit Assessment",
-      "status": "MISSING",
-      "statusNote": "No exit-gate assessment event is instrumented. Forward work: re-administer existing assessments at exit — NOT a net-new engine (blueprint GAP-A4).",
+      "key": "continuous",
+      "label": "Continuous Assessment",
+      "status": "IMPLEMENTED",
+      "statusNote": "Interval re-administration IMPLEMENTED via REUSE (no new engine, no background cron — Replit has no scheduler): getReassessmentSignal() derives due-ness ON READ from the freshness window (REASSESSMENT_FRESHNESS_DAYS=180) over accrued longitudinal snapshots, and each returning re-run appends a new datapoint via captureProgressionOutcome(). The trigger is a derived freshness signal evaluated when the subject returns, NOT a server cron. Coverage⟂Adoption — gated by the longitudinalOutcomeCapture flag; adoption (returning re-runs) reported SEPARATELY (lifecycle-closure composer) and stays 0 until subjects re-engage.",
       "axesMapped": 8,
       "axesTotal": 8,
       "evidence": {
         "services": {
-          "present": 0,
-          "total": 0,
+          "present": 3,
+          "total": 3,
           "missing": []
         },
         "routes": {
-          "present": 0,
-          "total": 0,
-          "missing": []
-        },
-        "frontend": {
-          "present": 0,
-          "total": 0,
-          "missing": []
-        },
-        "tables": {
-          "present": 0,
-          "absent": 0,
-          "unknown": 0,
-          "total": 0,
-          "absentList": []
-        }
-      }
-    },
-    {
-      "key": "continuous",
-      "label": "Continuous Assessment",
-      "status": "MISSING",
-      "statusNote": "Longitudinal/Bayesian SUBSTRATE exists, but there is NO scheduled re-administration of assessments. Gap = the scheduler/trigger, NOT the infra.",
-      "axesMapped": 8,
-      "axesTotal": 8,
-      "evidence": {
-        "services": {
           "present": 2,
           "total": 2,
           "missing": []
         },
-        "routes": {
-          "present": 1,
-          "total": 1,
-          "missing": []
-        },
         "frontend": {
           "present": 0,
           "total": 0,
           "missing": []
         },
         "tables": {
-          "present": 1,
+          "present": 3,
           "absent": 0,
           "unknown": 0,
-          "total": 1,
+          "total": 3,
           "absentList": []
         }
       }
@@ -1046,32 +1063,11 @@
   ],
   "gaps": [
     {
-      "id": "GAP-A-EXIT",
-      "title": "Exit Assessment not instrumented (no stage/lifecycle exit gate event)",
-      "severity": "High",
-      "evidence": "config/assessment-framework.ts exit.status=MISSING; no exit-gate re-administration surface in repo.",
-      "remediation": "Re-administer existing baseline/competency assessments at the evidence-gated stage boundary — NO new engine."
-    },
-    {
-      "id": "GAP-A-CONTINUOUS",
-      "title": "Continuous Assessment has no scheduler/trigger (interval re-administration absent)",
-      "severity": "High",
-      "evidence": "Longitudinal/Bayesian substrate exists (longitudinal_patterns) but no scheduled re-run of assessments.",
-      "remediation": "Add an interval trigger that re-administers existing assessments; reuse longitudinal substrate."
-    },
-    {
-      "id": "GAP-A-PROGRESS",
-      "title": "Progress is not systematically re-administered (deltas exist, cadence does not)",
-      "severity": "Medium",
-      "evidence": "employability_scoring_runs deltas present; no systematic re-run policy → Progress = PARTIAL.",
-      "remediation": "Define a re-measurement cadence per stage; reuse employability_scoring_runs + longitudinal_patterns."
-    },
-    {
       "id": "GAP-A-LEARNER-BACKHALF",
-      "title": "Learning & Performance are thin on the learner back-half (strong employer-side)",
+      "title": "Learning & learner-side Performance content breadth is uneven (employer-side strong)",
       "severity": "Medium",
-      "evidence": "08_ASSESSMENT_BLUEPRINT: Learning PARTIAL (uneven), Performance PARTIAL (strong employer, thin learner).",
-      "remediation": "Extend curated MCQ/practice + learner-side performance surfaces; reuse exam-ready + role-DNA."
+      "evidence": "Learning=PARTIAL (no-sandbox curated MCQ only, uneven across stages/personas); Performance=PARTIAL (strong employer surface, thin learner-facing surface). The CLOSE-THE-LOOP re-measurement (Progress/Exit/Continuous) is now instrumented via reuse — this residual is curated CONTENT breadth (human-authored), not missing engine wiring.",
+      "remediation": "Extend curated MCQ/practice + learner-side performance surfaces; reuse exam-ready + role-DNA. Content task — never fabricate items."
     },
     {
       "id": "GAP-A-RUNTIME-DUP",
@@ -1095,13 +1091,6 @@
       "remediation": "Archive (retire) on approval; never delete blindly."
     },
     {
-      "id": "GAP-A-OUTCOME-PERSONA",
-      "title": "Realized outcomes carry no persona dimension",
-      "severity": "Medium",
-      "evidence": "validation_loop_outcomes has no persona column → outcome cannot be attributed per persona (G-F5 honest-null).",
-      "remediation": "Add a persona dimension to outcome capture (future); currently abstains honestly."
-    },
-    {
       "id": "GAP-A-CLINICAL-VERTICALS",
       "title": "Government / Healthcare / Clinical-Psychology assessment verticals deferred",
       "severity": "Future",
@@ -1115,34 +1104,34 @@
     "canonical_type_count": 10,
     "spec_name_count": 19,
     "status_counts": {
-      "IMPLEMENTED": 5,
-      "PARTIAL": 3,
-      "MISSING": 2
+      "IMPLEMENTED": 8,
+      "PARTIAL": 2,
+      "MISSING": 0
     },
     "evidence_rollup": {
       "services": {
-        "present": 19,
-        "total": 19
+        "present": 23,
+        "total": 23
       },
       "routes": {
-        "present": 17,
-        "total": 17
+        "present": 21,
+        "total": 21
       },
       "frontend": {
         "present": 15,
         "total": 15
       },
       "tables": {
-        "present": 24,
+        "present": 30,
         "absent": 0,
         "unknown": 0,
-        "total": 24
+        "total": 30
       }
     },
     "gap_counts": {
       "Launch-Critical": 0,
-      "High": 2,
-      "Medium": 3,
+      "High": 0,
+      "Medium": 1,
       "Low": 3,
       "Future": 1
     },
@@ -1179,8 +1168,23 @@
       }
     ],
     "enterprise_ready": {
-      "verdict": "STRUCTURAL_COMPLETE_BACKHALF_PENDING",
-      "note": "ONE canonical framework; front-half (Entry/Baseline/Diagnostic/Behaviour/Competency + employer Performance) is IMPLEMENTED and non-duplicative. NOT yet fully enterprise-ready: the closed growth loop (systematic Progress, Exit, Continuous) is forward work — to be instrumented by RE-ADMINISTERING existing assessments, not net-new engines. No Launch-Critical assessment gap. Coverage⟂Confidence⟂Outcome never composited."
+      "verdict": "STRUCTURAL_COMPLETE_ADOPTION_PENDING",
+      "note": "ONE canonical framework; the FROZEN 10-type taxonomy STRUCTURE is unchanged — only per-type status moved as close-the-loop mechanisms were instrumented via REUSE (no new engine/table/DDL). The growth loop (Progress / Exit / Continuous) is now CODE-COMPLETE by RE-ADMINISTERING existing assessments through the progression-outcome-capture hook + read-derived freshness signal. What remains is ADOPTION, not engineering: the capture path is gated by the longitudinalOutcomeCapture flag and real re-administration/outcome volume is currently 0 (reported SEPARATELY by composeLifecycleClosure; null≠0). Learning + learner-side Performance retain a Medium CONTENT-breadth residual (human-authored, never fabricated). No Launch-Critical assessment gap. Coverage⟂Confidence⟂Outcome⟂Adoption never composited."
     }
+  },
+  "lifecycle_closure": {
+    "flag": "assessmentFrameworkCompletion",
+    "freshness_window_days": 180,
+    "progression_subjects": 0,
+    "exit_subjects": 0,
+    "reassessed_subjects": 0,
+    "note": "ADOPTION axis only — exercise of the (reuse-instrumented) close-the-loop mechanisms. SEPARATE from Coverage; never composited. null = unreadable, 0 = measured-empty. Demo subjects excluded. The capture hook is gated by the longitudinalOutcomeCapture flag, so non-zero adoption accrues only as real subjects re-administer."
+  },
+  "persona_linkage": {
+    "flag": "assessmentFrameworkCompletion",
+    "linkage_present": true,
+    "k_min": 30,
+    "personas": [],
+    "note": "Persona⟂Outcome linkage validated by a READ-TIME join (no persona column added, zero DDL). Per-persona counts below k_min are suppressed (masked) for anonymity. linkage_present:false means the join was unreadable, NOT that outcomes are zero (null≠0). Coverage⟂Outcome⟂Confidence never composited."
   }
 }

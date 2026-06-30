@@ -1,6 +1,6 @@
 # CAPADEX 3.0 · Phase 1.3 — Reports & Dashboards ↔ Assessment Matrix
 
-> Deliverable 08 · Generated 2026-06-30T11:23:41.795Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:9f33dfe717b5, written 2026-06-30T11:23:41.791Z).
+> Deliverable 08 · Generated 2026-06-30T11:44:25.490Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:9b3be5dcc291, written 2026-06-30T11:44:25.495Z).
 > Honesty: Coverage⟂Confidence⟂Outcome (never composited); null ≠ 0; never fabricated.
 
 | Canonical Type | Status | Reports | Dashboards | Benchmarking |
@@ -12,6 +12,6 @@
 | Competency Assessment (`competency`) | IMPLEMENTED | Competency report; report-factory blueprints. | MEI/Hiring-readiness/Skill bars; competency admin panels. | Role-DNA expected level; cohort percentile (k-gated). |
 | Learning Assessment (`learning`) | PARTIAL | Exam-ready report view (domain-wise). | Exam-ready report screens. | Per-domain breakdown; no platform-wide norm yet. |
 | Performance Assessment (`performance`) | PARTIAL | Hiring/readiness reports; employer candidate drawer. | Hiring-readiness/Future-readiness tabs; employer dashboards. | Role-DNA expected level; readiness bands. |
-| Progress Assessment (`progress`) | PARTIAL | Progression / longitudinal report. | CareerMemoryTab; progression views. | Self vs baseline; cohort movement (k-gated). |
-| Exit Assessment (`exit`) | MISSING | Exit summary (reuse progression report). | Stage-exit indicators. | Exit vs entry delta. |
-| Continuous Assessment (`continuous`) | MISSING | Trend report (reuse longitudinal). | Trend dashboards. | Rolling trend. |
+| Progress Assessment (`progress`) | IMPLEMENTED | Progression / longitudinal report. | CareerMemoryTab; progression views. | Self vs baseline; cohort movement (k-gated). |
+| Exit Assessment (`exit`) | IMPLEMENTED | Exit summary (reuse progression report). | Stage-exit indicators. | Exit vs entry delta. |
+| Continuous Assessment (`continuous`) | IMPLEMENTED | Trend report (reuse longitudinal). | Trend dashboards. | Rolling trend. |

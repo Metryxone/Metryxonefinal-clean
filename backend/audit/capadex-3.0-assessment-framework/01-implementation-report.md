@@ -1,6 +1,6 @@
 # CAPADEX 3.0 · Phase 1.3 — Implementation Report
 
-> Deliverable 01 · Generated 2026-06-30T11:23:41.795Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:9f33dfe717b5, written 2026-06-30T11:23:41.791Z).
+> Deliverable 01 · Generated 2026-06-30T11:44:25.490Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:9b3be5dcc291, written 2026-06-30T11:44:25.495Z).
 > Honesty: Coverage⟂Confidence⟂Outcome (never composited); null ≠ 0; never fabricated.
 
 ## What shipped (enhancement-only, flag-gated, byte-identical-OFF)
@@ -12,12 +12,12 @@
 - **Scan** `scripts/capadex-1.3-assessment-framework-scan.ts` (SSoT) + this generator.
 
 ## Measured result (from scan.json)
-- Status: **5 IMPLEMENTED · 3 PARTIAL · 2 MISSING** of 10.
-- Evidence verified present: services **19/19**, routes **17/17**, frontend **15/15**, tables **24/24** (absent 0, unknown 0).
-- Gaps: **0 Launch-Critical · 2 High · 3 Medium · 3 Low · 1 Future**.
+- Status: **8 IMPLEMENTED · 2 PARTIAL · 0 MISSING** of 10.
+- Evidence verified present: services **23/23**, routes **21/21**, frontend **15/15**, tables **30/30** (absent 0, unknown 0).
+- Gaps: **0 Launch-Critical · 0 High · 1 Medium · 3 Low · 1 Future**.
 
 ## Enterprise-ready verdict
-**STRUCTURAL_COMPLETE_BACKHALF_PENDING.** ONE canonical framework; front-half (Entry/Baseline/Diagnostic/Behaviour/Competency + employer Performance) is IMPLEMENTED and non-duplicative. NOT yet fully enterprise-ready: the closed growth loop (systematic Progress, Exit, Continuous) is forward work — to be instrumented by RE-ADMINISTERING existing assessments, not net-new engines. No Launch-Critical assessment gap. Coverage⟂Confidence⟂Outcome never composited.
+**STRUCTURAL_COMPLETE_ADOPTION_PENDING.** ONE canonical framework; the FROZEN 10-type taxonomy STRUCTURE is unchanged — only per-type status moved as close-the-loop mechanisms were instrumented via REUSE (no new engine/table/DDL). The growth loop (Progress / Exit / Continuous) is now CODE-COMPLETE by RE-ADMINISTERING existing assessments through the progression-outcome-capture hook + read-derived freshness signal. What remains is ADOPTION, not engineering: the capture path is gated by the longitudinalOutcomeCapture flag and real re-administration/outcome volume is currently 0 (reported SEPARATELY by composeLifecycleClosure; null≠0). Learning + learner-side Performance retain a Medium CONTENT-breadth residual (human-authored, never fabricated). No Launch-Critical assessment gap. Coverage⟂Confidence⟂Outcome⟂Adoption never composited.
 
 ## Guarantees
 - OFF → data routes 503, public-config `assessment_framework_completion:false`, assessment flow + schema **byte-identical** to legacy (zero DDL).

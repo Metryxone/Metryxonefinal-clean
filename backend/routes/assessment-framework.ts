@@ -7,6 +7,8 @@
  *   - GET /api/admin/assessment-framework/coverage    per-type status + evidence VERIFIED vs live FS+DB
  *   - GET /api/admin/assessment-framework/gaps        classified remaining gaps
  *   - GET /api/admin/assessment-framework/summary     rollup + enterprise-ready verdict
+ *   - GET /api/admin/assessment-framework/lifecycle-closure  ADOPTION of the reuse-instrumented Progress/Exit/Continuous loop (Adoption⟂Coverage)
+ *   - GET /api/admin/assessment-framework/outcomes/persona   persona⟂outcome read-time-join linkage (k-anon suppressed)
  *
  * Strictly additive + reversible + flag-gated (`assessmentFrameworkCompletion`,
  * FF_ASSESSMENT_FRAMEWORK_COMPLETION, default OFF):
@@ -28,6 +30,8 @@ import {
 import {
   composeCoverage,
   composeSummary,
+  composeLifecycleClosure,
+  composePersonaOutcomeLinkage,
   ASSESSMENT_GAPS,
 } from '../services/assessment-framework-engine';
 
@@ -94,6 +98,26 @@ export function registerAssessmentFrameworkRoutes(
       res.json({ ok: true, summary: await composeSummary(pool) });
     } catch (err) {
       console.error('[assessment-framework] summary error:', err);
+      res.status(200).json({ ok: true, degraded: true, reason: 'unexpected_error', read_only: true });
+    }
+  });
+
+  // Lifecycle-closure ADOPTION — how much the reuse-instrumented Progress/Exit/Continuous loop is exercised.
+  app.get('/api/admin/assessment-framework/lifecycle-closure', flagGate, requireAuth, requireSuperAdmin, async (_req: Request, res: Response) => {
+    try {
+      res.json({ ok: true, lifecycle_closure: await composeLifecycleClosure(pool) });
+    } catch (err) {
+      console.error('[assessment-framework] lifecycle-closure error:', err);
+      res.status(200).json({ ok: true, degraded: true, reason: 'unexpected_error', read_only: true });
+    }
+  });
+
+  // Persona⟂Outcome linkage — read-time join validation (k-anon suppressed), Coverage⟂Outcome kept separate.
+  app.get('/api/admin/assessment-framework/outcomes/persona', flagGate, requireAuth, requireSuperAdmin, async (_req: Request, res: Response) => {
+    try {
+      res.json({ ok: true, persona_linkage: await composePersonaOutcomeLinkage(pool) });
+    } catch (err) {
+      console.error('[assessment-framework] persona-linkage error:', err);
       res.status(200).json({ ok: true, degraded: true, reason: 'unexpected_error', read_only: true });
     }
   });

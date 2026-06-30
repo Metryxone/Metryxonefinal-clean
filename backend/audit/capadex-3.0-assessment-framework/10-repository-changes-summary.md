@@ -1,6 +1,6 @@
 # CAPADEX 3.0 · Phase 1.3 — Repository Changes Summary
 
-> Deliverable 10 · Generated 2026-06-30T11:23:41.795Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:9f33dfe717b5, written 2026-06-30T11:23:41.791Z).
+> Deliverable 10 · Generated 2026-06-30T11:44:25.490Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:9b3be5dcc291, written 2026-06-30T11:44:25.495Z).
 > Honesty: Coverage⟂Confidence⟂Outcome (never composited); null ≠ 0; never fabricated.
 
 All changes are ADDITIVE + flag-gated. No existing assessment file was modified beyond the additive registration/probe lines.

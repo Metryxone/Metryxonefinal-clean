@@ -215,6 +215,7 @@ import { registerGovernanceRoutes } from "./routes/governance";
 import { seedRbac } from "./services/governance/rbac-seed";
 import { recordGovernanceAudit, recordFailedLogin } from "./services/governance/audit-engine";
 import { assertPasswordAcceptable } from "./lib/password-policy";
+import { logger } from "./lib/logger";
 import { isGovernanceRbacEnabled, isCareerLaunchpadEnabled } from "./config/feature-flags";
 import { logAudit as logPlatformAudit } from "./services/platform-audit";
 import {
@@ -981,22 +982,25 @@ export async function registerRoutes(
     } catch (err) { next(err); }
   });
 
-  app.post("/api/logout", (req, res) => {
-    const u = req.user as any;
-    req.logout((err) => {
-      if (err) {
-        return res.status(500).json({ message: "Logout failed" });
-      }
-      if (isGovernanceRbacEnabled() && u) {
-        const ip = (req.headers["x-forwarded-for"]?.toString().split(",")[0].trim()) || req.ip || null;
-        void recordGovernanceAudit(concernsPool, {
-          category: "logout", adminUserId: u.id ?? null,
-          targetType: "auth", targetId: String(u.id ?? "user"),
-          notes: `logout: ${u.username || u.email || ""}`, ip,
-        });
-      }
-      res.json({ message: "Logged out successfully" });
-    });
+  app.post("/api/logout", (req, res, next) => {
+    try {
+      const u = req.user as any;
+      req.logout((err) => {
+        if (err) {
+          logger.scope("auth").error("logout failed", err);
+          return res.status(500).json({ message: "Logout failed" });
+        }
+        if (isGovernanceRbacEnabled() && u) {
+          const ip = (req.headers["x-forwarded-for"]?.toString().split(",")[0].trim()) || req.ip || null;
+          void recordGovernanceAudit(concernsPool, {
+            category: "logout", adminUserId: u.id ?? null,
+            targetType: "auth", targetId: String(u.id ?? "user"),
+            notes: `logout: ${u.username || u.email || ""}`, ip,
+          });
+        }
+        res.json({ message: "Logged out successfully" });
+      });
+    } catch (err) { next(err); }
   });
 
   app.post("/api/forgot-password", async (req, res) => {
@@ -1006,8 +1010,8 @@ export async function registerRoutes(
         return res.status(400).json({ message: "Email is required" });
       }
       // In a real implementation, this would send an email with a reset link
-      // For now, we simulate the behavior
-      console.log(`Password reset requested for: ${email}`);
+      // For now, we simulate the behavior (do not log the raw email — PII)
+      logger.scope("auth").info("password reset requested");
       res.json({ message: "If an account exists with this email, a password reset link has been sent" });
     } catch (error) {
       res.status(500).json({ message: "Failed to process password reset request" });
@@ -1136,14 +1140,18 @@ export async function registerRoutes(
     } catch (err) { next(err); }
   });
 
-  app.get("/api/user", (req: any, res) => {
-    if (!req.user) return res.status(401).json({ message: "Unauthorized" });
-    res.json(req.user);
+  app.get("/api/user", (req: any, res, next) => {
+    try {
+      if (!req.user) return res.status(401).json({ message: "Unauthorized" });
+      res.json(req.user);
+    } catch (err) { next(err); }
   });
 
-  app.get("/api/user/theme", (req: any, res) => {
-    if (!req.user) return res.json({ theme: "light" });
-    res.json({ theme: "light" });
+  app.get("/api/user/theme", (req: any, res, next) => {
+    try {
+      if (!req.user) return res.json({ theme: "light" });
+      res.json({ theme: "light" });
+    } catch (err) { next(err); }
   });
 
   // Switch active role
@@ -9964,16 +9972,8 @@ Requirements:
     }
   });
 
-  // Job Applications
-  app.get("/api/hr/applications/:id", requireAuth, async (req, res, next) => {
-    try {
-      const application = await storage.getJobApplication(req.params.id);
-      if (!application) return res.status(404).json({ error: "Application not found" });
-      res.json(application);
-    } catch (error) {
-      next(error);
-    }
-  });
+  // Program 2 2.1 (D11): removed dead duplicate GET /api/hr/applications/:id —
+  // the served copy is registered earlier in this file (first-wins).
 
   app.post("/api/careers/apply", async (req, res, next) => {
     try {
@@ -10033,16 +10033,8 @@ Requirements:
     }
   });
 
-  // Mentors
-  app.get("/api/hr/mentors/:id", requireAuth, async (req, res, next) => {
-    try {
-      const mentor = await storage.getMentor(req.params.id);
-      if (!mentor) return res.status(404).json({ error: "Mentor not found" });
-      res.json(mentor);
-    } catch (error) {
-      next(error);
-    }
-  });
+  // Program 2 2.1 (D11): removed dead duplicate GET /api/hr/mentors/:id —
+  // the served copy is registered earlier in this file (first-wins).
 
   app.post("/api/hr/mentors", requireAuth, async (req, res, next) => {
     try {
@@ -11632,47 +11624,8 @@ Requirements:
     }
   });
 
-  // Save LBI session responses and complete session
-  app.post("/api/lbi/sessions/:sessionId/complete", requireAuth, async (req, res, next) => {
-    try {
-      const { sessionId } = req.params;
-      const responseSchema = z.object({
-        responses: z.array(z.object({
-          questionId: z.string(),
-          rawScore: z.number().min(1).max(5),
-          responseTimeMs: z.number().optional(),
-          questionOrder: z.number().optional(),
-        })),
-      });
-      const validation = responseSchema.safeParse(req.body);
-      if (!validation.success) {
-        return res.status(400).json({ message: "Invalid request", errors: validation.error.issues });
-      }
-
-      const { responses } = validation.data;
-
-      for (const resp of responses) {
-        const respId = `lsr_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        await db.execute(sql`
-          INSERT INTO lbi_session_responses (id, session_id, question_id, response_value, raw_score, response_time_ms, question_order)
-          VALUES (${respId}, ${sessionId}, ${resp.questionId}, ${resp.rawScore}, ${resp.rawScore}, ${resp.responseTimeMs || 0}, ${resp.questionOrder || 0})
-          ON CONFLICT DO NOTHING
-        `);
-      }
-
-      await db.execute(sql`
-        UPDATE lbi_assessment_sessions 
-        SET status = 'completed', 
-            questions_answered = ${responses.length},
-            completed_at = NOW()
-        WHERE id = ${sessionId}
-      `);
-
-      res.json({ message: "Session completed", sessionId });
-    } catch (error) {
-      next(error);
-    }
-  });
+  // Program 2 2.1 (D11): removed dead duplicate POST /api/lbi/sessions/:sessionId/complete —
+  // the served copy (which calculates scores) is registered earlier in this file (first-wins).
 
   // Resolve REAL (non-demo) LBI scores from the auditable engine history for a single
   // AUTHORIZED subject email. The caller MUST pre-verify that the principal is allowed

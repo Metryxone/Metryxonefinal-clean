@@ -1,0 +1,707 @@
+{
+  "generated_at": "2026-06-30T15:51:32.875Z",
+  "read_only": true,
+  "capstone": true,
+  "flags_enabled_in_process": [
+    "FF_PRODUCT_TRACEABILITY_CERTIFICATION",
+    "FF_PERSONA_MODEL_ALIGNMENT",
+    "FF_ASSESSMENT_FRAMEWORK_COMPLETION",
+    "FF_CUSTOMER_JOURNEY_COMPLETION",
+    "FF_PROGRESSION_ENGINE_COMPLETION",
+    "FF_OUTCOME_FRAMEWORK_KPI_ENGINE",
+    "FF_AI_RECOMMENDATION_REPORT_ORCHESTRATION"
+  ],
+  "certification": {
+    "meta": {
+      "phase": "CAPADEX 3.0 Phase 1.8",
+      "title": "Product Traceability / Repository Alignment / Enterprise Product Certification",
+      "program": "CAPADEX 3.0 — Program 1 (Lifecycle · Personas · Assessment · Journeys · Progression · Outcome/KPI · AI Orchestration)",
+      "capstone": true,
+      "flag": "productTraceabilityCertification",
+      "publicConfigKey": "product_traceability_certification",
+      "single_source_of_truth": "repository + frozen Product Blueprint (capadex-3.0-product-blueprint-final)",
+      "audit_dir": "audit/capadex-3.0-program1-certification",
+      "freeze": [
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6",
+        "1.7",
+        "1.8"
+      ],
+      "generated_at": "2026-06-30T15:51:32.873Z"
+    },
+    "honesty_contract": [
+      "Structural Completeness ⟂ Functional Integration ⟂ Product Maturity ⟂ Enterprise Launch Readiness (never composited)",
+      "Coverage ⟂ Confidence ⟂ Outcome ⟂ Adoption (never blended)",
+      "Built ≠ Integrated ≠ Activated ≠ Production-Ready",
+      "Available ≠ Operational · Mature ≠ Complete · Dashboard ≠ Intelligence",
+      "null ≠ 0 (null = unmeasurable, not zero)",
+      "Engines read by existence / persisted-output, NEVER invoked",
+      "Never fabricate, never estimate; repository + blueprint override assumptions",
+      "Production-Ready / Enterprise Launch Readiness WITHHELD by design; human approval mandatory"
+    ],
+    "phases": [
+      {
+        "phase": "1.1",
+        "name": "Canonical Lifecycle (4 coded stages CUR→INS→GRW→MAS)",
+        "flag": null,
+        "publicConfigKey": null,
+        "files": {
+          "config": true,
+          "service": true,
+          "routeFile": null
+        },
+        "structural_present": true,
+        "route_registered": null,
+        "public_config_wired": null,
+        "getter_callable": null,
+        "getter_error": null,
+        "maturity_level": 1,
+        "maturity_label": "Built",
+        "audit_deliverable_count": 10
+      },
+      {
+        "phase": "1.2",
+        "name": "Persona Model + Persona Expansion",
+        "flag": "personaModelAlignment",
+        "publicConfigKey": "persona_model_alignment",
+        "files": {
+          "config": null,
+          "service": true,
+          "routeFile": true
+        },
+        "structural_present": true,
+        "route_registered": true,
+        "public_config_wired": true,
+        "getter_callable": true,
+        "getter_error": null,
+        "maturity_level": 3,
+        "maturity_label": "Managed (composable)",
+        "audit_deliverable_count": 10
+      },
+      {
+        "phase": "1.3",
+        "name": "Assessment Framework Completion",
+        "flag": "assessmentFrameworkCompletion",
+        "publicConfigKey": "assessment_framework_completion",
+        "files": {
+          "config": true,
+          "service": true,
+          "routeFile": true
+        },
+        "structural_present": true,
+        "route_registered": true,
+        "public_config_wired": true,
+        "getter_callable": true,
+        "getter_error": null,
+        "maturity_level": 3,
+        "maturity_label": "Managed (composable)",
+        "audit_deliverable_count": 13
+      },
+      {
+        "phase": "1.4",
+        "name": "Customer Journey Completion",
+        "flag": "customerJourneyCompletion",
+        "publicConfigKey": "customer_journey_completion",
+        "files": {
+          "config": true,
+          "service": true,
+          "routeFile": true
+        },
+        "structural_present": true,
+        "route_registered": true,
+        "public_config_wired": true,
+        "getter_callable": true,
+        "getter_error": null,
+        "maturity_level": 3,
+        "maturity_label": "Managed (composable)",
+        "audit_deliverable_count": 13
+      },
+      {
+        "phase": "1.5",
+        "name": "Progression Engine / Continuous Growth",
+        "flag": "progressionEngineCompletion",
+        "publicConfigKey": "progression_engine_completion",
+        "files": {
+          "config": true,
+          "service": true,
+          "routeFile": true
+        },
+        "structural_present": true,
+        "route_registered": true,
+        "public_config_wired": true,
+        "getter_callable": true,
+        "getter_error": null,
+        "maturity_level": 3,
+        "maturity_label": "Managed (composable)",
+        "audit_deliverable_count": 14
+      },
+      {
+        "phase": "1.6",
+        "name": "Outcome Framework / KPI Engine",
+        "flag": "outcomeFrameworkKpiEngine",
+        "publicConfigKey": "outcome_framework_kpi_engine",
+        "files": {
+          "config": true,
+          "service": true,
+          "routeFile": true
+        },
+        "structural_present": true,
+        "route_registered": true,
+        "public_config_wired": true,
+        "getter_callable": true,
+        "getter_error": null,
+        "maturity_level": 3,
+        "maturity_label": "Managed (composable)",
+        "audit_deliverable_count": 15
+      },
+      {
+        "phase": "1.7",
+        "name": "AI Recommendation Report Orchestration",
+        "flag": "aiRecommendationReportOrchestration",
+        "publicConfigKey": "ai_recommendation_report_orchestration",
+        "files": {
+          "config": true,
+          "service": true,
+          "routeFile": true
+        },
+        "structural_present": true,
+        "route_registered": true,
+        "public_config_wired": true,
+        "getter_callable": true,
+        "getter_error": null,
+        "maturity_level": 3,
+        "maturity_label": "Managed (composable)",
+        "audit_deliverable_count": 14
+      }
+    ],
+    "duplicate_scan": {
+      "clean": true,
+      "notes": [
+        "No duplicate/parallel service basenames across Program-1 phases (Enhancement-Only intact)."
+      ],
+      "duplicate_service_basenames": []
+    },
+    "traceability": {
+      "rows": [
+        {
+          "node": "Business Domain",
+          "providing_phases": [
+            "1.1"
+          ],
+          "domains": [
+            "D1",
+            "D2"
+          ],
+          "status": "INTACT",
+          "note": "Provided by 1.1."
+        },
+        {
+          "node": "Market Segment",
+          "providing_phases": [
+            "1.2"
+          ],
+          "domains": [
+            "D2"
+          ],
+          "status": "INTACT",
+          "note": "Provided by 1.2."
+        },
+        {
+          "node": "Persona",
+          "providing_phases": [
+            "1.2"
+          ],
+          "domains": [
+            "D2"
+          ],
+          "status": "INTACT",
+          "note": "Provided by 1.2."
+        },
+        {
+          "node": "Lifecycle Stage",
+          "providing_phases": [
+            "1.1"
+          ],
+          "domains": [
+            "D2"
+          ],
+          "status": "INTACT",
+          "note": "Provided by 1.1."
+        },
+        {
+          "node": "Customer Journey",
+          "providing_phases": [
+            "1.4"
+          ],
+          "domains": [
+            "D2",
+            "D10"
+          ],
+          "status": "INTACT",
+          "note": "Provided by 1.4."
+        },
+        {
+          "node": "Assessment",
+          "providing_phases": [
+            "1.3"
+          ],
+          "domains": [
+            "D6"
+          ],
+          "status": "INTACT",
+          "note": "Provided by 1.3."
+        },
+        {
+          "node": "Evidence",
+          "providing_phases": [
+            "1.3",
+            "1.7"
+          ],
+          "domains": [
+            "D6",
+            "D7"
+          ],
+          "status": "INTACT",
+          "note": "Provided by 1.3, 1.7."
+        },
+        {
+          "node": "AI Function",
+          "providing_phases": [
+            "1.7"
+          ],
+          "domains": [
+            "D7"
+          ],
+          "status": "INTACT",
+          "note": "Provided by 1.7."
+        },
+        {
+          "node": "Recommendation",
+          "providing_phases": [
+            "1.7"
+          ],
+          "domains": [
+            "D7"
+          ],
+          "status": "INTACT",
+          "note": "Provided by 1.7."
+        },
+        {
+          "node": "Intervention",
+          "providing_phases": [
+            "1.5",
+            "1.7"
+          ],
+          "domains": [
+            "D3",
+            "D7"
+          ],
+          "status": "INTACT",
+          "note": "Provided by 1.5, 1.7."
+        },
+        {
+          "node": "Learning",
+          "providing_phases": [
+            "1.5"
+          ],
+          "domains": [
+            "D3"
+          ],
+          "status": "INTACT",
+          "note": "Provided by 1.5."
+        },
+        {
+          "node": "Practice",
+          "providing_phases": [
+            "1.5"
+          ],
+          "domains": [
+            "D3"
+          ],
+          "status": "INTACT",
+          "note": "Provided by 1.5."
+        },
+        {
+          "node": "Progression",
+          "providing_phases": [
+            "1.5"
+          ],
+          "domains": [
+            "D3",
+            "D4"
+          ],
+          "status": "INTACT",
+          "note": "Provided by 1.5."
+        },
+        {
+          "node": "Outcome",
+          "providing_phases": [
+            "1.6"
+          ],
+          "domains": [
+            "D13"
+          ],
+          "status": "INTACT",
+          "note": "Provided by 1.6. Structural only — realized-outcome volume ADOPTION-gated (GAP-O1), reported separately, never as a gap."
+        },
+        {
+          "node": "KPI",
+          "providing_phases": [
+            "1.6"
+          ],
+          "domains": [
+            "D13"
+          ],
+          "status": "INTACT",
+          "note": "Provided by 1.6. Structural only — realized-outcome volume ADOPTION-gated (GAP-O1), reported separately, never as a gap."
+        },
+        {
+          "node": "Dashboard",
+          "providing_phases": [
+            "1.6",
+            "1.7"
+          ],
+          "domains": [
+            "D8"
+          ],
+          "status": "INTACT",
+          "note": "Provided by 1.6, 1.7."
+        },
+        {
+          "node": "Report",
+          "providing_phases": [
+            "1.7"
+          ],
+          "domains": [
+            "D8"
+          ],
+          "status": "INTACT",
+          "note": "Provided by 1.7."
+        },
+        {
+          "node": "Workflow",
+          "providing_phases": [
+            "1.4",
+            "1.5"
+          ],
+          "domains": [
+            "D2"
+          ],
+          "status": "INTACT",
+          "note": "Provided by 1.4, 1.5."
+        },
+        {
+          "node": "API",
+          "providing_phases": [
+            "1.2",
+            "1.3",
+            "1.4",
+            "1.5",
+            "1.6",
+            "1.7"
+          ],
+          "domains": [
+            "D1"
+          ],
+          "status": "INTACT",
+          "note": "Provided by 1.2, 1.3, 1.4, 1.5, 1.6, 1.7."
+        },
+        {
+          "node": "Database",
+          "providing_phases": [
+            "1.3",
+            "1.4",
+            "1.5",
+            "1.6",
+            "1.7"
+          ],
+          "domains": [
+            "D1"
+          ],
+          "status": "INTACT",
+          "note": "Provided by 1.3, 1.4, 1.5, 1.6, 1.7."
+        },
+        {
+          "node": "Governance",
+          "providing_phases": [
+            "1.1"
+          ],
+          "domains": [
+            "D12"
+          ],
+          "status": "INTACT",
+          "note": "Provided by 1.1."
+        }
+      ],
+      "intact": 21,
+      "partial": 0,
+      "breaks": 0
+    },
+    "domains": [
+      {
+        "id": "D1",
+        "name": "Identity & Access"
+      },
+      {
+        "id": "D2",
+        "name": "Behavioural Intelligence (CAPADEX)"
+      },
+      {
+        "id": "D3",
+        "name": "Competency & Learning"
+      },
+      {
+        "id": "D4",
+        "name": "Career Intelligence"
+      },
+      {
+        "id": "D5",
+        "name": "Future Readiness"
+      },
+      {
+        "id": "D6",
+        "name": "Assessment & Question Factory"
+      },
+      {
+        "id": "D7",
+        "name": "AI Orchestration & Recommendation"
+      },
+      {
+        "id": "D8",
+        "name": "Reports & Analytics"
+      },
+      {
+        "id": "D9",
+        "name": "Employer & Hiring"
+      },
+      {
+        "id": "D10",
+        "name": "Institutional & Stakeholder Intelligence"
+      },
+      {
+        "id": "D11",
+        "name": "Commercial & Entitlement"
+      },
+      {
+        "id": "D12",
+        "name": "Governance, Privacy & Compliance"
+      },
+      {
+        "id": "D13",
+        "name": "Outcome & KPI",
+        "keystone": true
+      }
+    ],
+    "personas": [
+      "student",
+      "fresher",
+      "job_seeker",
+      "professional",
+      "people_manager",
+      "employer_hr",
+      "institution_admin",
+      "faculty",
+      "mentor",
+      "parent"
+    ],
+    "lifecycle_stages": [
+      {
+        "code": "CUR",
+        "name": "Curiosity"
+      },
+      {
+        "code": "INS",
+        "name": "Insight",
+        "alias": "Clarity"
+      },
+      {
+        "code": "GRW",
+        "name": "Growth"
+      },
+      {
+        "code": "MAS",
+        "name": "Mastery"
+      }
+    ],
+    "dimensions": [
+      {
+        "key": "structural_completeness",
+        "name": "Structural Completeness",
+        "definition": "Each Program-1 phase implementation is present on disk (config + service + routes), with no duplicate/parallel architecture. Repository-measured."
+      },
+      {
+        "key": "functional_integration",
+        "name": "Functional Integration",
+        "definition": "Each phase route is registered in routes.ts and its read-only composer is callable (composes without throwing). Integrated ≠ Activated."
+      },
+      {
+        "key": "product_maturity",
+        "name": "Product Maturity",
+        "definition": "Per-phase maturity level derived from built/integrated/composable/substrate signals. Ceiling = Managed (L3); Levels 4–5 WITHHELD (no realized-outcome / autonomous-optimization evidence)."
+      },
+      {
+        "key": "enterprise_launch_readiness",
+        "name": "Enterprise Launch Readiness",
+        "definition": "WITHHELD by design — requires runtime adoption + realized-outcome evidence that does not exist pre-launch. Reported as null, never 0, never composited with the other three axes."
+      }
+    ],
+    "axes": {
+      "structural_completeness": {
+        "phases_present": 7,
+        "phases_total": 7,
+        "pct": 100,
+        "complete": true
+      },
+      "functional_integration": {
+        "phases_registered": 6,
+        "phases_with_getter_ok": 6,
+        "routes_total": 6,
+        "getters_total": 6,
+        "integrated": true
+      },
+      "product_maturity": {
+        "ceiling": "Managed (L3) — Levels 4–5 WITHHELD (no realized-outcome / autonomous-optimization evidence)",
+        "per_phase": [
+          {
+            "phase": "1.1",
+            "level": 1,
+            "label": "Built"
+          },
+          {
+            "phase": "1.2",
+            "level": 3,
+            "label": "Managed (composable)"
+          },
+          {
+            "phase": "1.3",
+            "level": 3,
+            "label": "Managed (composable)"
+          },
+          {
+            "phase": "1.4",
+            "level": 3,
+            "label": "Managed (composable)"
+          },
+          {
+            "phase": "1.5",
+            "level": 3,
+            "label": "Managed (composable)"
+          },
+          {
+            "phase": "1.6",
+            "level": 3,
+            "label": "Managed (composable)"
+          },
+          {
+            "phase": "1.7",
+            "level": 3,
+            "label": "Managed (composable)"
+          }
+        ],
+        "managed_or_above": 6
+      },
+      "enterprise_launch_readiness": {
+        "value": null,
+        "status": "WITHHELD",
+        "reason": "Requires runtime adoption + realized-outcome evidence that does not exist pre-launch. null ≠ 0; never composited with the other three axes."
+      }
+    },
+    "gaps": [
+      {
+        "id": "GAP-O1",
+        "title": "Realized-outcome + recommendation-effectiveness capture (close-the-loop keystone)",
+        "severity": "High",
+        "domain": "D13",
+        "blueprintRef": "13/12/15",
+        "disposition": "Mechanism wired (1.6/1.7) via validation-loop calibration; effectiveness stays null until ≥k_min real non-demo pairs. ADOPTION-gated, not an engineering gap."
+      },
+      {
+        "id": "GAP-K",
+        "title": "Per-capability + business/outcome KPIs bound back to each module",
+        "severity": "Medium",
+        "domain": "D13",
+        "blueprintRef": "14/15",
+        "disposition": "Depends on GAP-O1 realized-outcome volume. Target-not-realized."
+      },
+      {
+        "id": "GAP-P1",
+        "title": "Systematic Progress / Exit / Continuous re-administration at volume",
+        "severity": "Medium",
+        "domain": "D6",
+        "blueprintRef": "06/08",
+        "disposition": "Capture code-complete (1.3/1.5) behind longitudinalOutcomeCapture; real re-administration volume honest 0. ADOPTION-gated."
+      },
+      {
+        "id": "GAP-AI1",
+        "title": "AI accuracy/quality harness for the LLM layer + per-feature attribution depth",
+        "severity": "Medium",
+        "domain": "D7",
+        "blueprintRef": "11",
+        "disposition": "Explainability rendered; calibration cold_start until ≥k_min pairs; per-feature attribution needs DDL = out of zero-DDL scope (future approved phase)."
+      },
+      {
+        "id": "GAP-J",
+        "title": "Persona journey tails: thin/partial back-half for mentor/parent/institution-aggregate",
+        "severity": "Low",
+        "domain": "D10",
+        "blueprintRef": "07/09",
+        "disposition": "Journey tail wired (1.4) via captureJourneyTailMilestone; PARTIAL persona paths reflect measured substrate reach, not missing engineering."
+      },
+      {
+        "id": "GAP-S1",
+        "title": "Missing dedicated verticals (gov / health / clinical)",
+        "severity": "Future",
+        "domain": "D2",
+        "blueprintRef": "07",
+        "disposition": "NON-CLINICAL scaffold registry only (validated:false / clinical_use:false). Do-not-claim until built."
+      }
+    ],
+    "gap_rollup": {
+      "Launch Critical": 0,
+      "High": 1,
+      "Medium": 3,
+      "Low": 1,
+      "Future": 1
+    },
+    "verdict": {
+      "structural_certified": true,
+      "functional_integration_certified": true,
+      "product_maturity_ceiling": "Managed (L3) — Levels 4–5 WITHHELD (no realized-outcome / autonomous-optimization evidence)",
+      "production_ready": false,
+      "enterprise_launch_readiness": null,
+      "label": "STRUCTURAL_CERTIFIED",
+      "statement": "Program-1 (Phases 1.1–1.7) is certified on the STRUCTURAL and FUNCTIONAL-INTEGRATION axes against the frozen Product Blueprint. Product Maturity ceiling is Managed (L3). Enterprise Launch Readiness / Production-Ready is WITHHELD by design (null) pending runtime adoption + realized-outcome evidence. Axes are reported INDEPENDENTLY and never composited; null ≠ 0; human approval mandatory before enable/merge/deploy."
+    }
+  },
+  "summary": {
+    "phase": "CAPADEX 3.0 Phase 1.8",
+    "title": "Product Traceability / Repository Alignment / Enterprise Product Certification",
+    "verdict_label": "STRUCTURAL_CERTIFIED",
+    "structural_pct": 100,
+    "phases_present": "7/7",
+    "routes_registered": "6/6",
+    "getters_ok": "6/6",
+    "traceability": {
+      "intact": 21,
+      "partial": 0,
+      "breaks": 0,
+      "total": 21
+    },
+    "maturity_managed_or_above": 6,
+    "duplicate_clean": true,
+    "gap_rollup": {
+      "Launch Critical": 0,
+      "High": 1,
+      "Medium": 3,
+      "Low": 1,
+      "Future": 1
+    },
+    "enterprise_launch_readiness": null,
+    "production_ready": false,
+    "generated_at": "2026-06-30T15:51:32.873Z"
+  }
+}

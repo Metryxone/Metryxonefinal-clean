@@ -627,6 +627,21 @@ export const FEATURE_FLAGS = {
    *  human approval mandatory). Flag OFF → every route 503 before any auth/DB touch → byte-identical legacy
    *  (zero new tables — it owns none). Super-admin gated. Env: `FF_ENTERPRISE_INTELLIGENCE_CERTIFICATION`. */
   enterpriseIntelligenceCertification: false,
+  /** CAPADEX 3.0 Phase 1.8 — Product Traceability / Repository Alignment / Enterprise Product
+   *  Certification (Program 1 capstone). When ON, exposes a READ-ONLY certification composer that
+   *  audits + certifies everything built in Phases 1.1–1.7 against the frozen Product Blueprint:
+   *  a Product Traceability Matrix, capability/persona/lifecycle/assessment/AI/outcome-KPI
+   *  completeness matrices, frontend/backend alignment + repository-consistency reports, a gap
+   *  register, and a four-axis certification (Structural Completeness ⟂ Functional Integration ⟂
+   *  Product Maturity ⟂ Enterprise Launch Readiness — NEVER composited). It INTRODUCES NO new
+   *  architecture/feature/engine, NO parallel/duplicate service, NO migration/persistence, NO
+   *  business-logic change, and activates NO dormant capability. It composes the prior phases'
+   *  read-only getters (each invoked EXACTLY ONCE) plus repository filesystem scans — engines are
+   *  read by existence/persisted-output, NEVER invoked. Production-Ready is WITHHELD by design
+   *  (Coverage⟂Confidence⟂Outcome⟂Adoption; null≠0; never fabricate). Flag OFF → every route 503
+   *  before any auth/DB touch → byte-identical legacy (zero new tables — it owns none). Super-admin
+   *  gated. Human approval mandatory. Env: `FF_PRODUCT_TRACEABILITY_CERTIFICATION`. */
+  productTraceabilityCertification: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -2899,6 +2914,9 @@ export function isEnterpriseIntelligenceIntegrationEnabled(): boolean {
 }
 export function isEnterpriseIntelligenceCertificationEnabled(): boolean {
   return isFlagEnabled('enterpriseIntelligenceCertification');
+}
+export function isProductTraceabilityCertificationEnabled(): boolean {
+  return isFlagEnabled('productTraceabilityCertification');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

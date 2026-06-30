@@ -1,0 +1,1360 @@
+{
+  "generated_at": "2026-06-30T13:37:32.258Z",
+  "read_only": true,
+  "spine_frozen": true,
+  "axes": [
+    "persona",
+    "lifecycle",
+    "assessment",
+    "ai",
+    "recommendation",
+    "intervention",
+    "outcome",
+    "promotion"
+  ],
+  "spine_step_count": 15,
+  "invariant_count": 4,
+  "promotion_rule_count": 4,
+  "path_count": 9,
+  "spine": [
+    {
+      "key": "assessment",
+      "order": 1,
+      "label": "Assessment",
+      "definition": "A scored behavioural / competency assessment establishes the working signal.",
+      "reuses": "capadex_sessions + scoring (routes/capadex.ts)"
+    },
+    {
+      "key": "evidence_collection",
+      "order": 2,
+      "label": "Evidence Collection",
+      "definition": "Evidence accrues into the longitudinal record (one datapoint per progression).",
+      "reuses": "services/wc3/longitudinal-foundation.ts → wc3_longitudinal_snapshots"
+    },
+    {
+      "key": "ai_interpretation",
+      "order": 3,
+      "label": "AI Interpretation",
+      "definition": "AI interprets signals/competencies into an explainable diagnosis.",
+      "reuses": "services/pil/runtime-guidance-engine.ts + behavioural-signal"
+    },
+    {
+      "key": "recommendation",
+      "order": 4,
+      "label": "Recommendation Generation",
+      "definition": "Next-best-action / growth recommendations are generated.",
+      "reuses": "services/recommendation-intelligence-engine.ts + career/lbi/mei recommendation engines"
+    },
+    {
+      "key": "learning_plan",
+      "order": 5,
+      "label": "Learning Plan",
+      "definition": "A personalised learning / development plan is composed.",
+      "reuses": "services/learning-path-engine.ts"
+    },
+    {
+      "key": "practice_activity",
+      "order": 6,
+      "label": "Practice Activity",
+      "definition": "Practice / activities are surfaced for the learner to act on.",
+      "reuses": "recommendation + intervention catalogs (services/pil/recommendation-catalog.ts)"
+    },
+    {
+      "key": "behaviour_reinforcement",
+      "order": 7,
+      "label": "Behaviour Reinforcement",
+      "definition": "Behavioural reinforcement nudges the learner toward the target pattern.",
+      "reuses": "services/intervention-intelligence.ts (reinforcement-class interventions)"
+    },
+    {
+      "key": "competency_development",
+      "order": 8,
+      "label": "Competency Development",
+      "definition": "Competency / EI development is tracked against the genome.",
+      "reuses": "services/mei-scoring-engine.ts + development_recommendations"
+    },
+    {
+      "key": "personalized_intervention",
+      "order": 9,
+      "label": "Personalized Intervention",
+      "definition": "A targeted intervention is delivered for the diagnosed gap.",
+      "reuses": "services/intervention-intelligence.ts → capadex_interventions / lbi_intervention_library"
+    },
+    {
+      "key": "progress_measurement",
+      "order": 10,
+      "label": "Progress Measurement",
+      "definition": "Progress is measured as a longitudinal trend vs the baseline.",
+      "reuses": "services/longitudinal-memory.ts + longitudinal_patterns"
+    },
+    {
+      "key": "reassessment",
+      "order": 11,
+      "label": "Reassessment",
+      "definition": "Interval / exit re-administration of the existing assessment (close-the-loop).",
+      "reuses": "services/capadex/progression-outcome-capture.ts (getReassessmentSignal) + wc7b/longitudinal-automation.ts"
+    },
+    {
+      "key": "improvement_validation",
+      "order": 12,
+      "label": "Improvement Validation",
+      "definition": "Improvement is validated against the prior datapoint(s).",
+      "reuses": "services/longitudinal-memory.ts (trend) + career_readiness_history"
+    },
+    {
+      "key": "outcome_achievement",
+      "order": 13,
+      "label": "Outcome Achievement",
+      "definition": "A realized outcome is captured into the canonical ledger.",
+      "reuses": "services/outcome-intelligence-engine.ts → validation_loop_outcomes"
+    },
+    {
+      "key": "promotion",
+      "order": 14,
+      "label": "Promotion",
+      "definition": "The subject is promoted along the lifecycle (Curiosity→Insight→Growth→Mastery).",
+      "reuses": "lib/lifecycle.ts + services/capadex/evidence-gate.ts → wc3_stage_progression"
+    },
+    {
+      "key": "continuous_development",
+      "order": 15,
+      "label": "Continuous Development",
+      "definition": "The loop re-enters: the next growth cycle begins from the new baseline.",
+      "reuses": "services/wc7b/longitudinal-automation.ts (reassessment cadence) — adoption-gated"
+    }
+  ],
+  "invariants": [
+    {
+      "id": "INV1-RECOMMEND-TO-ACTION",
+      "title": "Recommendation → Learning / Practice / Intervention (the growth action is generated)",
+      "from": "recommendation",
+      "to": "personalized_intervention",
+      "mechanism": "Recommendation engines feed the learning-path + intervention catalogs, so every diagnosis yields a concrete next action. COMPOSED by reference, never invoked.",
+      "services": [
+        "services/recommendation-intelligence-engine.ts",
+        "services/learning-path-engine.ts",
+        "services/intervention-intelligence.ts"
+      ],
+      "tables": [
+        "development_recommendations",
+        "capadex_interventions",
+        "lbi_intervention_library"
+      ],
+      "residual": "ADOPTION: real recommendation→action engagement volume is usage-driven (Coverage⟂Adoption, null≠0)."
+    },
+    {
+      "id": "INV2-INTERVENTION-TO-REASSESS",
+      "title": "Intervention → Reassessment (the action is followed by a re-measurement)",
+      "from": "personalized_intervention",
+      "to": "reassessment",
+      "mechanism": "After an intervention, the reassessment signal (getReassessmentSignal) surfaces interval/exit re-administration eligibility from the accrued longitudinal record. MECHANISM present (Phase 1.3 reuse); gated by longitudinalOutcomeCapture.",
+      "services": [
+        "services/capadex/progression-outcome-capture.ts",
+        "services/wc7b/longitudinal-automation.ts"
+      ],
+      "tables": [
+        "wc3_longitudinal_snapshots",
+        "validation_loop_outcomes"
+      ],
+      "residual": "ADOPTION: real re-administration volume is usage-driven (honest-low/0; reported separately — Adoption⟂Coverage, null≠0)."
+    },
+    {
+      "id": "INV3-REASSESS-TO-IMPROVEMENT",
+      "title": "Reassessment → Improvement validation (the re-measurement is compared to the baseline)",
+      "from": "reassessment",
+      "to": "improvement_validation",
+      "mechanism": "A second datapoint lets the longitudinal trend validate improvement vs the prior baseline. MECHANISM present; effectiveness/accuracy stays abstained (no decision-time prediction recorded) until real volume accrues — honest-null, never fabricated.",
+      "services": [
+        "services/longitudinal-memory.ts",
+        "services/wc3/longitudinal-foundation.ts"
+      ],
+      "tables": [
+        "longitudinal_patterns",
+        "career_readiness_history"
+      ],
+      "residual": "ADOPTION + CONFIDENCE: improvement is measurable once >1 non-demo datapoint exists; calibrated accuracy is abstained by design (Coverage⟂Confidence⟂Adoption, null≠0)."
+    },
+    {
+      "id": "INV4-IMPROVEMENT-TO-PROMOTION",
+      "title": "Improvement → Promotion / Outcome (validated growth advances the lifecycle stage)",
+      "from": "improvement_validation",
+      "to": "promotion",
+      "mechanism": "Validated readiness drives stage promotion (evidence-gate readiness band) and a realized-outcome capture into the canonical ledger. MECHANISM present (evidence-gate + progression-outcome-capture); promotion is readiness-DERIVED, not a uniformly enforced per-persona gate (see GAP-P1).",
+      "services": [
+        "services/capadex/evidence-gate.ts",
+        "services/capadex/progression-outcome-capture.ts",
+        "services/outcome-intelligence-engine.ts"
+      ],
+      "tables": [
+        "wc3_stage_progression",
+        "wc3_stage_state",
+        "validation_loop_outcomes"
+      ],
+      "residual": "ENGINEERING (GAP-P1, Medium): promotion criteria are readiness-derived, not a single enforced gate across all personas. ADOPTION: realized-outcome volume is usage-driven (null≠0)."
+    }
+  ],
+  "promotion_rules": [
+    {
+      "code": "CAP_CUR",
+      "label": "Curiosity",
+      "order": 0,
+      "entryCriteria": "First-touch / entry assessment started (or anonymous first signal).",
+      "exitCriteria": "A scored baseline exists and the first AI diagnosis has been surfaced.",
+      "requiredAssessments": [
+        "entry",
+        "baseline"
+      ],
+      "requiredEvidence": "At least one scored session captured into the longitudinal record.",
+      "requiredOutcomes": "Diagnosis delivered (no realized growth-outcome required yet).",
+      "promotionRule": "Curiosity→Insight when a baseline + diagnosis exist (readiness band derived by evidence-gate; promotion recorded in wc3_stage_progression).",
+      "status": "SUPPORTED",
+      "statusNote": "Entry → baseline → diagnosis is the most mature segment of the loop.",
+      "evidence": {
+        "services": [
+          "services/capadex/evidence-gate.ts",
+          "services/wc3/longitudinal-foundation.ts"
+        ],
+        "routes": [
+          "routes/capadex.ts"
+        ],
+        "tables": [
+          "capadex_sessions",
+          "wc3_stage_state",
+          "wc3_longitudinal_snapshots"
+        ],
+        "frontend": [
+          "components/FreeAssessmentModal.tsx"
+        ]
+      }
+    },
+    {
+      "code": "CAP_INS",
+      "label": "Insight",
+      "order": 1,
+      "entryCriteria": "Baseline + diagnosis exist (display alias \"Clarity\").",
+      "exitCriteria": "Recommendations + a learning/intervention plan have been generated and acted on.",
+      "requiredAssessments": [
+        "baseline",
+        "behaviour",
+        "competency"
+      ],
+      "requiredEvidence": "Recommendation + intervention/learning-plan generated for the diagnosed gap.",
+      "requiredOutcomes": "Growth action started (recommendation engagement); realized-outcome adoption-gated.",
+      "promotionRule": "Insight→Growth when a growth plan is generated and the subject begins acting (recommendation→action link, INV1).",
+      "status": "SUPPORTED",
+      "statusNote": "Recommendation + learning + intervention generation is well-supported (reused engines).",
+      "evidence": {
+        "services": [
+          "services/recommendation-intelligence-engine.ts",
+          "services/learning-path-engine.ts",
+          "services/intervention-intelligence.ts"
+        ],
+        "routes": [
+          "routes/capadex.ts",
+          "routes/career-readiness.ts"
+        ],
+        "tables": [
+          "development_recommendations",
+          "capadex_interventions",
+          "lbi_intervention_library"
+        ],
+        "frontend": [
+          "pages/CareerBuilderPage.tsx"
+        ]
+      }
+    },
+    {
+      "code": "CAP_GRW",
+      "label": "Growth",
+      "order": 2,
+      "entryCriteria": "A growth plan is active and the subject is acting on recommendations.",
+      "exitCriteria": "A reassessment shows validated improvement vs the baseline (INV2 + INV3).",
+      "requiredAssessments": [
+        "progress",
+        "competency",
+        "performance"
+      ],
+      "requiredEvidence": ">1 longitudinal datapoint (re-administration) showing positive movement.",
+      "requiredOutcomes": "Validated improvement captured; realized-outcome ledger entry (adoption-gated).",
+      "promotionRule": "Growth→Mastery when reassessment validates sustained improvement (readiness band high) — readiness-DERIVED (GAP-P1: not a uniformly enforced per-persona gate).",
+      "status": "PARTIAL",
+      "statusNote": "Reassessment + improvement MECHANISM present (Phase 1.3 reuse + longitudinal trend); the exit→promotion link is readiness-derived and the validation is ADOPTION-pending (>1 non-demo datapoint required). Coverage⟂Adoption⟂Confidence never composited.",
+      "evidence": {
+        "services": [
+          "services/capadex/progression-outcome-capture.ts",
+          "services/longitudinal-memory.ts",
+          "services/wc7b/longitudinal-automation.ts"
+        ],
+        "routes": [
+          "routes/career-progression.ts",
+          "routes/career-readiness.ts"
+        ],
+        "tables": [
+          "wc3_longitudinal_snapshots",
+          "longitudinal_patterns",
+          "career_readiness_history"
+        ],
+        "frontend": [
+          "pages/CareerBuilderPage.tsx"
+        ]
+      }
+    },
+    {
+      "code": "CAP_MAS",
+      "label": "Mastery",
+      "order": 3,
+      "entryCriteria": "Sustained validated improvement; readiness at the top band.",
+      "exitCriteria": "Exit / continuous assessment confirms mastery; outcome realized + loop re-enters.",
+      "requiredAssessments": [
+        "exit",
+        "continuous",
+        "performance"
+      ],
+      "requiredEvidence": "Reached-Mastery milestone + exit-eligibility signal.",
+      "requiredOutcomes": "Realized mastery outcome captured (reached_mastery milestone); continuous-development re-entry.",
+      "promotionRule": "Mastery is terminal in the coded ladder; the loop re-enters via continuous-development (reassessment cadence) — adoption-gated.",
+      "status": "PARTIAL",
+      "statusNote": "Reached-Mastery + exit-eligibility MECHANISM present (progression-outcome-capture reached_mastery + getReassessmentSignal). Continuous re-entry cadence is adoption-gated; realized mastery-outcome volume is honest-low/0 (Adoption⟂Coverage, null≠0).",
+      "evidence": {
+        "services": [
+          "services/capadex/progression-outcome-capture.ts",
+          "services/outcome-intelligence-engine.ts",
+          "services/wc7b/longitudinal-automation.ts"
+        ],
+        "routes": [
+          "routes/capadex.ts"
+        ],
+        "tables": [
+          "validation_loop_outcomes",
+          "wc3_stage_progression"
+        ],
+        "frontend": [
+          "pages/CareerBuilderPage.tsx"
+        ]
+      }
+    }
+  ],
+  "paths": [
+    {
+      "key": "student_growth",
+      "label": "Student → Career Growth",
+      "persona": "Student (school/college)",
+      "personas": [
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "spineReached": [
+        "assessment",
+        "evidence_collection",
+        "ai_interpretation",
+        "recommendation",
+        "learning_plan",
+        "practice_activity",
+        "personalized_intervention",
+        "progress_measurement"
+      ],
+      "lifecycleStages": [
+        "CAP_CUR",
+        "CAP_INS",
+        "CAP_GRW"
+      ],
+      "assessments": [
+        "entry",
+        "baseline",
+        "behaviour",
+        "competency"
+      ],
+      "aiInterpretation": "Behavioural signal → concern routing + competency diagnosis (PIL runtime guidance).",
+      "recommendationRule": "Career-builder growth recommendations + growth-plan bridge (decision orchestrator).",
+      "interventionPath": "Concern-targeted interventions (intervention-intelligence → capadex_interventions).",
+      "learningPath": "Guided learning plan (learning-path-engine) surfaced in Career Builder.",
+      "reassessmentRule": "Interval reassessment signal (getReassessmentSignal) once a baseline accrues; adoption-gated.",
+      "outcomes": "Career direction chosen / measurable growth progressed; realized-outcome tail adoption-gated.",
+      "promotionRule": "Curiosity→Insight→Growth via baseline+diagnosis then growth-plan action (INV1).",
+      "successCriteria": "Assessment completion; recommendation engagement; positive re-measure movement.",
+      "status": "PARTIAL",
+      "statusNote": "Strong front-half (assessment→diagnose→recommend→learn→intervene). Progress measurement MECHANISM present; per-journey reassessment/improvement is ADOPTION-pending (Coverage⟂Adoption, null≠0).",
+      "evidence": {
+        "services": [
+          "services/pil/runtime-guidance-engine.ts",
+          "services/recommendation-intelligence-engine.ts",
+          "services/learning-path-engine.ts",
+          "services/intervention-intelligence.ts"
+        ],
+        "routes": [
+          "routes/capadex.ts",
+          "routes/student-career-builder.ts"
+        ],
+        "tables": [
+          "capadex_user_profiles",
+          "wc3_stage_state",
+          "capadex_interventions",
+          "wc3_longitudinal_snapshots"
+        ],
+        "frontend": [
+          "components/FreeAssessmentModal.tsx",
+          "components/StudentDashboard.tsx",
+          "pages/CareerBuilderPage.tsx"
+        ]
+      }
+    },
+    {
+      "key": "fresher_readiness",
+      "label": "Fresher → Placement Readiness",
+      "persona": "Fresher / final-year (job-seeker)",
+      "personas": [
+        "P4",
+        "P3"
+      ],
+      "spineReached": [
+        "assessment",
+        "evidence_collection",
+        "ai_interpretation",
+        "recommendation",
+        "learning_plan",
+        "competency_development",
+        "progress_measurement",
+        "outcome_achievement"
+      ],
+      "lifecycleStages": [
+        "CAP_CUR",
+        "CAP_INS",
+        "CAP_GRW"
+      ],
+      "assessments": [
+        "entry",
+        "baseline",
+        "competency",
+        "performance"
+      ],
+      "aiInterpretation": "Competency + readiness diagnosis; role-DNA crosswalk for fit.",
+      "recommendationRule": "Launchpad next-steps + campus placement matching (career-recommendation-engine).",
+      "interventionPath": "Readiness-gap interventions + curated practice (recommendation catalog).",
+      "learningPath": "Launchpad learning plan toward role readiness (learning-path-engine).",
+      "reassessmentRule": "Readiness re-measure as launchpad checklist advances; adoption-gated.",
+      "outcomes": "Application submitted / placed (placement outcome → validation_loop_outcomes).",
+      "promotionRule": "Curiosity→Insight→Growth as readiness band rises (evidence-gate); placement = realized outcome.",
+      "successCriteria": "Launchpad completion; readiness uplift; application + placement rate.",
+      "status": "SUPPORTED",
+      "statusNote": "Launchpad + campus placement readiness loop is live; realized placement-outcome capture is the universal adoption-gated tail (Adoption⟂Coverage).",
+      "evidence": {
+        "services": [
+          "services/career-recommendation-engine.ts",
+          "services/career-recommendation-aggregator.ts",
+          "services/learning-path-engine.ts"
+        ],
+        "routes": [
+          "routes/career-launchpad.ts",
+          "routes/career-readiness.ts",
+          "routes/talent-matching-engine.ts"
+        ],
+        "tables": [
+          "career_seeker_profiles",
+          "career_readiness_history",
+          "job_postings"
+        ],
+        "frontend": [
+          "pages/career/CareerLaunchpadDashboard.tsx",
+          "pages/CareerBuilderPage.tsx"
+        ]
+      }
+    },
+    {
+      "key": "professional_progression",
+      "label": "Professional → Role Progression",
+      "persona": "Working professional",
+      "personas": [
+        "P5"
+      ],
+      "spineReached": [
+        "assessment",
+        "evidence_collection",
+        "ai_interpretation",
+        "recommendation",
+        "learning_plan",
+        "competency_development",
+        "progress_measurement",
+        "reassessment",
+        "improvement_validation",
+        "promotion"
+      ],
+      "lifecycleStages": [
+        "CAP_INS",
+        "CAP_GRW",
+        "CAP_MAS"
+      ],
+      "assessments": [
+        "baseline",
+        "competency",
+        "performance",
+        "progress"
+      ],
+      "aiInterpretation": "Competency + progression diagnosis; trend intelligence.",
+      "recommendationRule": "Progression-aware growth plan (recommendation-intelligence-engine).",
+      "interventionPath": "Competency-gap interventions + reinforcement nudges.",
+      "learningPath": "Progression learning plan toward the next role band.",
+      "reassessmentRule": "Interval reassessment (longitudinal-automation cadence) → improvement validation vs baseline.",
+      "outcomes": "Role progression / promotion; adoption-gated realized-outcome tail.",
+      "promotionRule": "Growth→Mastery on validated sustained improvement (readiness-DERIVED — GAP-P1).",
+      "successCriteria": "Re-run rate; positive-movement rate; progression cadence.",
+      "status": "PARTIAL",
+      "statusNote": "Reaches the FULL loop incl. reassessment→improvement→promotion as a MECHANISM, but promotion is DERIVED (not a uniformly enforced per-persona gate, GAP-P1) and validation is ADOPTION-pending (Coverage⟂Adoption⟂Confidence).",
+      "evidence": {
+        "services": [
+          "services/recommendation-intelligence-engine.ts",
+          "services/capadex/evidence-gate.ts",
+          "services/longitudinal-memory.ts",
+          "services/wc7b/longitudinal-automation.ts"
+        ],
+        "routes": [
+          "routes/capadex.ts",
+          "routes/career-progression.ts",
+          "routes/career-readiness.ts"
+        ],
+        "tables": [
+          "wc3_stage_progression",
+          "wc3_longitudinal_snapshots",
+          "longitudinal_patterns",
+          "career_readiness_history"
+        ],
+        "frontend": [
+          "pages/CareerBuilderPage.tsx"
+        ]
+      }
+    },
+    {
+      "key": "employee_competency",
+      "label": "Employee → Competency / EI Development",
+      "persona": "Enterprise employee",
+      "personas": [
+        "P5",
+        "P6"
+      ],
+      "spineReached": [
+        "assessment",
+        "evidence_collection",
+        "ai_interpretation",
+        "recommendation",
+        "competency_development",
+        "personalized_intervention",
+        "progress_measurement"
+      ],
+      "lifecycleStages": [
+        "CAP_CUR",
+        "CAP_INS",
+        "CAP_GRW"
+      ],
+      "assessments": [
+        "entry",
+        "baseline",
+        "competency",
+        "behaviour"
+      ],
+      "aiInterpretation": "Competency genome + EI dimension diagnosis (mei-scoring-engine).",
+      "recommendationRule": "Competency-gap → development recommendation (mei-recommendation-engine).",
+      "interventionPath": "EI / competency interventions (intervention-intelligence).",
+      "learningPath": "Competency development plan against the genome.",
+      "reassessmentRule": "EI re-measure (ei_profile_snapshots) as development progresses; adoption-gated.",
+      "outcomes": "Competency uplift; EI development; adoption-gated outcome tail.",
+      "promotionRule": "Insight→Growth as competency/EI band rises (evidence-gate readiness).",
+      "successCriteria": "Baseline coverage; competency movement; EI delta.",
+      "status": "SUPPORTED",
+      "statusNote": "Competency + EI development diagnosis is well-supported (mei + intervention engines); realized development-outcome capture is the universal adoption-gated tail (Adoption⟂Coverage).",
+      "evidence": {
+        "services": [
+          "services/mei-scoring-engine.ts",
+          "services/mei-recommendation-engine.ts",
+          "services/intervention-intelligence.ts"
+        ],
+        "routes": [
+          "routes/capadex.ts",
+          "routes/career-competency-activation.ts"
+        ],
+        "tables": [
+          "ei_profile_snapshots",
+          "development_recommendations",
+          "wc3_longitudinal_snapshots"
+        ],
+        "frontend": [
+          "pages/CareerBuilderPage.tsx"
+        ]
+      }
+    },
+    {
+      "key": "recruiter_pipeline",
+      "label": "HR / Recruiter → Hiring Progression",
+      "persona": "HR / recruiter",
+      "personas": [
+        "P7"
+      ],
+      "spineReached": [
+        "assessment",
+        "ai_interpretation",
+        "recommendation",
+        "progress_measurement",
+        "outcome_achievement"
+      ],
+      "lifecycleStages": [
+        "CAP_INS",
+        "CAP_GRW",
+        "CAP_MAS"
+      ],
+      "assessments": [
+        "competency",
+        "performance",
+        "behaviour"
+      ],
+      "aiInterpretation": "Candidate-match + interview intelligence (calibration k-gated).",
+      "recommendationRule": "Talent-match ranking → interview → hire decision support.",
+      "interventionPath": "Funnel-stage prompts (assessment → interview → decision) — recruiter-facing.",
+      "learningPath": "N/A for recruiter (the candidate is the learner) — reuse only.",
+      "reassessmentRule": "Candidate re-assessment across funnel stages; calibration accrues at k_min=30.",
+      "outcomes": "Hire decision / hired (hiring outcome → validation_loop_outcomes).",
+      "promotionRule": "Funnel-stage advancement; realized hiring-outcome capture (employer-ecosystem).",
+      "successCriteria": "Funnel conversion; time-to-decision; match quality; calibration (k≥30).",
+      "status": "SUPPORTED",
+      "statusNote": "The 9-stage hiring funnel is the most complete progression family. Realized hiring-outcome capture exists; adoption + calibration reported separately (Adoption⟂Coverage; Brier/ECE abstain <k_min=30).",
+      "evidence": {
+        "services": [
+          "services/wc7b/decision-orchestrator.ts",
+          "services/validation-loop-intake.ts"
+        ],
+        "routes": [
+          "routes/employer-portal.ts",
+          "routes/employer-ecosystem.ts",
+          "routes/employer-hiring-intelligence.ts"
+        ],
+        "tables": [
+          "employer_jobs",
+          "job_postings",
+          "validation_loop_outcomes"
+        ],
+        "frontend": [
+          "pages/EmployerPortalPage.tsx"
+        ]
+      }
+    },
+    {
+      "key": "institute_cohort",
+      "label": "Institute Admin → Cohort Progression",
+      "persona": "Institution administrator",
+      "personas": [
+        "P9",
+        "aggregate"
+      ],
+      "spineReached": [
+        "ai_interpretation",
+        "recommendation",
+        "progress_measurement"
+      ],
+      "lifecycleStages": [
+        "CAP_INS",
+        "CAP_GRW"
+      ],
+      "assessments": [
+        "competency",
+        "behaviour",
+        "progress"
+      ],
+      "aiInterpretation": "k-anon cohort aggregation (MX-302H institutional intelligence).",
+      "recommendationRule": "Cohort-level act recommendations (k-gated).",
+      "interventionPath": "Cohort-level intervention prompts (k≥k_min).",
+      "learningPath": "Cohort learning-gap roll-up (aggregate, not per-individual).",
+      "reassessmentRule": "Cohort re-measure across terms (longitudinal aggregate); adoption-gated.",
+      "outcomes": "Cohort-level intervention / placement outcome (aggregate).",
+      "promotionRule": "Cohort movement across bands (aggregate trend); no individual promotion gate.",
+      "successCriteria": "Cohort coverage; cohort movement; placement rate.",
+      "status": "SUPPORTED",
+      "statusNote": "Real k-anon aggregation (MX-302H) — scores masked below k_min, roster always shown. Realized cohort-outcome tail adoption-gated.",
+      "evidence": {
+        "services": [
+          "services/longitudinal-memory.ts"
+        ],
+        "routes": [
+          "routes/employer-dashboards.ts",
+          "routes/career-benchmark.ts"
+        ],
+        "tables": [
+          "wc3_longitudinal_snapshots",
+          "longitudinal_patterns"
+        ],
+        "frontend": [
+          "components/UnifiedInstituteDashboard.tsx"
+        ]
+      }
+    },
+    {
+      "key": "parent_support",
+      "label": "Parent → Support Child Growth",
+      "persona": "Parent / guardian",
+      "personas": [
+        "P1",
+        "P2"
+      ],
+      "spineReached": [
+        "progress_measurement",
+        "behaviour_reinforcement"
+      ],
+      "lifecycleStages": [
+        "CAP_INS",
+        "CAP_GRW"
+      ],
+      "assessments": [
+        "behaviour",
+        "competency"
+      ],
+      "aiInterpretation": "Child progress framing via consent-scoped view.",
+      "recommendationRule": "Support-action recommendations (journey-tail engine).",
+      "interventionPath": "Parent support actions reinforcing the child growth loop (jt_parent_support_actions).",
+      "learningPath": "N/A for parent (the child is the learner) — reuse only.",
+      "reassessmentRule": "Child re-measure surfaced to the parent; support action fires a journey-tail milestone.",
+      "outcomes": "Support actions logged → child growth loop continuation (captureJourneyTailMilestone).",
+      "promotionRule": "No parent promotion; reinforces the child progression (INV1 reinforcement link).",
+      "successCriteria": "Consent rate; support-action adoption; child positive movement.",
+      "status": "PARTIAL",
+      "statusNote": "Support-action substrate EXISTS (journeyTailCompletion: jt_parent_support_actions, fail-closed on child ownership) and a completed action fires a journey-tail milestone into the universal outcome tail (longitudinalOutcomeCapture-gated). Residual is ADOPTION (real support-action volume — Coverage⟂Adoption, null≠0).",
+      "evidence": {
+        "services": [
+          "services/journey-tail-engine.ts",
+          "services/capadex/progression-outcome-capture.ts"
+        ],
+        "routes": [
+          "routes/journey-tail.ts"
+        ],
+        "tables": [
+          "jt_parent_support_actions",
+          "validation_loop_outcomes"
+        ],
+        "frontend": [
+          "components/UnifiedParentDashboard.tsx"
+        ]
+      }
+    },
+    {
+      "key": "mentor_mentee",
+      "label": "Mentor / Coach → Mentee Progression",
+      "persona": "Mentor / coach",
+      "personas": [
+        "P6"
+      ],
+      "spineReached": [
+        "recommendation",
+        "personalized_intervention",
+        "progress_measurement",
+        "behaviour_reinforcement"
+      ],
+      "lifecycleStages": [
+        "CAP_GRW",
+        "CAP_MAS"
+      ],
+      "assessments": [
+        "competency",
+        "progress"
+      ],
+      "aiInterpretation": "Mentee progress framing; decision-mentor bridge.",
+      "recommendationRule": "Engagement / guidance recommendations (journey-tail engine).",
+      "interventionPath": "Mentor engagement milestones reinforcing the mentee loop (jt_mentor_engagements).",
+      "learningPath": "Mentee guidance plan (mentor-facing).",
+      "reassessmentRule": "Mentee re-measure across engagements; milestone fires into the outcome tail.",
+      "outcomes": "Mentee engagement logged → guidance loop continuation (captureJourneyTailMilestone).",
+      "promotionRule": "No mentor promotion; advances the mentee progression (INV1/INV2 links).",
+      "successCriteria": "Match rate; engagement cadence; mentee movement.",
+      "status": "PARTIAL",
+      "statusNote": "Engagement substrate EXISTS (journeyTailCompletion: jt_mentor_engagements, gated BOTH directions via mentor_bookings to avoid IDOR) and a milestone fires into the universal outcome tail (longitudinalOutcomeCapture-gated). Residual is ADOPTION (real engagement volume — Coverage⟂Adoption, null≠0).",
+      "evidence": {
+        "services": [
+          "services/journey-tail-engine.ts",
+          "services/capadex/progression-outcome-capture.ts",
+          "services/wc7b/decision-orchestrator.ts"
+        ],
+        "routes": [
+          "routes/journey-tail.ts"
+        ],
+        "tables": [
+          "jt_mentor_engagements",
+          "mentor_profiles",
+          "validation_loop_outcomes"
+        ],
+        "frontend": [
+          "pages/MentorDashboardPage.tsx"
+        ]
+      }
+    },
+    {
+      "key": "faculty_batch",
+      "label": "Faculty → Batch Progression",
+      "persona": "Faculty member",
+      "personas": [
+        "aggregate"
+      ],
+      "spineReached": [
+        "progress_measurement"
+      ],
+      "lifecycleStages": [
+        "CAP_INS"
+      ],
+      "assessments": [
+        "competency",
+        "behaviour"
+      ],
+      "aiInterpretation": "Batch-confined cohort aggregation (nested in institute).",
+      "recommendationRule": "Faculty-scoped act recommendations (k-gated).",
+      "interventionPath": "Batch-level intervention prompts (k≥k_min, batch-confined).",
+      "learningPath": "Batch learning-gap roll-up (aggregate).",
+      "reassessmentRule": "Batch re-measure across terms (aggregate); adoption-gated.",
+      "outcomes": "Batch-level intervention (aggregate).",
+      "promotionRule": "Batch movement across bands (aggregate); no individual promotion gate.",
+      "successCriteria": "Batch coverage; batch movement.",
+      "status": "PARTIAL",
+      "statusNote": "Faculty batch-confined progress view EXISTS (institutional-intelligence, role-scoped batch-confined access; MX-302H). Aggregate-only — no per-individual progression. Adoption-gated cohort volume (Coverage⟂Adoption).",
+      "evidence": {
+        "services": [
+          "services/longitudinal-memory.ts"
+        ],
+        "routes": [
+          "routes/employer-dashboards.ts"
+        ],
+        "tables": [
+          "wc3_longitudinal_snapshots"
+        ],
+        "frontend": [
+          "components/UnifiedInstituteDashboard.tsx"
+        ]
+      }
+    }
+  ],
+  "decisions": [
+    {
+      "topic": "Single progression engine (no V2)",
+      "decision": "COMPOSE_EXISTING",
+      "rationale": "The continuous-growth loop is realised by EXISTING engines (progression-outcome-capture, evidence-gate, recommendation/learning/intervention/longitudinal). This phase adds ONE read-only composer/registry, never a parallel progression engine."
+    },
+    {
+      "topic": "Promotion gate",
+      "decision": "READINESS_DERIVED",
+      "rationale": "Promotion is derived from evidence-gate readiness bands recorded in wc3_stage_progression, NOT a new hard gate. A uniformly enforced per-persona promotion gate is GAP-P1 (Medium) — additive/optional, never fabricated as done."
+    },
+    {
+      "topic": "Reassessment cadence",
+      "decision": "ON_READ_SIGNAL",
+      "rationale": "getReassessmentSignal derives eligibility on read (no scheduler). Automated cadence (wc7b/longitudinal-automation) is adoption-gated. Continuous growth is a MECHANISM (Coverage) whose ADOPTION is usage-driven (null≠0)."
+    }
+  ],
+  "coverage": [
+    {
+      "key": "student_growth",
+      "label": "Student → Career Growth",
+      "persona": "Student (school/college)",
+      "status": "PARTIAL",
+      "statusNote": "Strong front-half (assessment→diagnose→recommend→learn→intervene). Progress measurement MECHANISM present; per-journey reassessment/improvement is ADOPTION-pending (Coverage⟂Adoption, null≠0).",
+      "spineReached": 8,
+      "spineTotal": 15,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 4,
+          "total": 4,
+          "missing": []
+        },
+        "routes": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "frontend": {
+          "present": 3,
+          "total": 3,
+          "missing": []
+        },
+        "tables": {
+          "present": 4,
+          "absent": 0,
+          "unknown": 0,
+          "total": 4,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "fresher_readiness",
+      "label": "Fresher → Placement Readiness",
+      "persona": "Fresher / final-year (job-seeker)",
+      "status": "SUPPORTED",
+      "statusNote": "Launchpad + campus placement readiness loop is live; realized placement-outcome capture is the universal adoption-gated tail (Adoption⟂Coverage).",
+      "spineReached": 8,
+      "spineTotal": 15,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 3,
+          "total": 3,
+          "missing": []
+        },
+        "routes": {
+          "present": 3,
+          "total": 3,
+          "missing": []
+        },
+        "frontend": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "tables": {
+          "present": 3,
+          "absent": 0,
+          "unknown": 0,
+          "total": 3,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "professional_progression",
+      "label": "Professional → Role Progression",
+      "persona": "Working professional",
+      "status": "PARTIAL",
+      "statusNote": "Reaches the FULL loop incl. reassessment→improvement→promotion as a MECHANISM, but promotion is DERIVED (not a uniformly enforced per-persona gate, GAP-P1) and validation is ADOPTION-pending (Coverage⟂Adoption⟂Confidence).",
+      "spineReached": 10,
+      "spineTotal": 15,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 4,
+          "total": 4,
+          "missing": []
+        },
+        "routes": {
+          "present": 3,
+          "total": 3,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 4,
+          "absent": 0,
+          "unknown": 0,
+          "total": 4,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "employee_competency",
+      "label": "Employee → Competency / EI Development",
+      "persona": "Enterprise employee",
+      "status": "SUPPORTED",
+      "statusNote": "Competency + EI development diagnosis is well-supported (mei + intervention engines); realized development-outcome capture is the universal adoption-gated tail (Adoption⟂Coverage).",
+      "spineReached": 7,
+      "spineTotal": 15,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 3,
+          "total": 3,
+          "missing": []
+        },
+        "routes": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 3,
+          "absent": 0,
+          "unknown": 0,
+          "total": 3,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "recruiter_pipeline",
+      "label": "HR / Recruiter → Hiring Progression",
+      "persona": "HR / recruiter",
+      "status": "SUPPORTED",
+      "statusNote": "The 9-stage hiring funnel is the most complete progression family. Realized hiring-outcome capture exists; adoption + calibration reported separately (Adoption⟂Coverage; Brier/ECE abstain <k_min=30).",
+      "spineReached": 5,
+      "spineTotal": 15,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "routes": {
+          "present": 3,
+          "total": 3,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 3,
+          "absent": 0,
+          "unknown": 0,
+          "total": 3,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "institute_cohort",
+      "label": "Institute Admin → Cohort Progression",
+      "persona": "Institution administrator",
+      "status": "SUPPORTED",
+      "statusNote": "Real k-anon aggregation (MX-302H) — scores masked below k_min, roster always shown. Realized cohort-outcome tail adoption-gated.",
+      "spineReached": 3,
+      "spineTotal": 15,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 2,
+          "absent": 0,
+          "unknown": 0,
+          "total": 2,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "parent_support",
+      "label": "Parent → Support Child Growth",
+      "persona": "Parent / guardian",
+      "status": "PARTIAL",
+      "statusNote": "Support-action substrate EXISTS (journeyTailCompletion: jt_parent_support_actions, fail-closed on child ownership) and a completed action fires a journey-tail milestone into the universal outcome tail (longitudinalOutcomeCapture-gated). Residual is ADOPTION (real support-action volume — Coverage⟂Adoption, null≠0).",
+      "spineReached": 2,
+      "spineTotal": 15,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "routes": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 2,
+          "absent": 0,
+          "unknown": 0,
+          "total": 2,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "mentor_mentee",
+      "label": "Mentor / Coach → Mentee Progression",
+      "persona": "Mentor / coach",
+      "status": "PARTIAL",
+      "statusNote": "Engagement substrate EXISTS (journeyTailCompletion: jt_mentor_engagements, gated BOTH directions via mentor_bookings to avoid IDOR) and a milestone fires into the universal outcome tail (longitudinalOutcomeCapture-gated). Residual is ADOPTION (real engagement volume — Coverage⟂Adoption, null≠0).",
+      "spineReached": 4,
+      "spineTotal": 15,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 3,
+          "total": 3,
+          "missing": []
+        },
+        "routes": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 3,
+          "absent": 0,
+          "unknown": 0,
+          "total": 3,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "faculty_batch",
+      "label": "Faculty → Batch Progression",
+      "persona": "Faculty member",
+      "status": "PARTIAL",
+      "statusNote": "Faculty batch-confined progress view EXISTS (institutional-intelligence, role-scoped batch-confined access; MX-302H). Aggregate-only — no per-individual progression. Adoption-gated cohort volume (Coverage⟂Adoption).",
+      "spineReached": 1,
+      "spineTotal": 15,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "id": "GAP-P1-PROMOTION-NOT-UNIFORMLY-GATED",
+      "title": "Promotion is readiness-DERIVED, not a uniformly enforced per-persona gate",
+      "severity": "Medium",
+      "evidence": "evidence-gate supplies a readiness band (scoreToLevelBand) recorded in wc3_stage_progression, and promotion is derived from it; but there is no single enforced \"promotion gate\" applied identically across all persona paths (INV4 link is derived, not gated).",
+      "remediation": "OPTIONAL/ADDITIVE: behind a flag, wire the existing evidence-gate readiness as a hard precondition to a stage transition per persona. Reuse-only (no new engine); never block byte-identical-OFF. Not Launch-Critical."
+    },
+    {
+      "id": "GAP-P2-PRACTICE-REINFORCEMENT-INFERRED",
+      "title": "Practice-activity & behaviour-reinforcement steps are recommendation/intervention-driven (no explicit logged practice-completion substrate)",
+      "severity": "Low",
+      "evidence": "practice_activity + behaviour_reinforcement spine steps are surfaced via the recommendation/intervention catalogs; reinforcement is inferred from re-measurement rather than an explicit \"practice completed\" event log.",
+      "remediation": "OPTIONAL/ADDITIVE: if explicit practice-completion telemetry is later required, REUSE the existing intervention substrate (capadex_interventions) with a completion flag rather than a new table. Low priority."
+    },
+    {
+      "id": "GAP-P3-IMPROVEMENT-EFFECTIVENESS-DEFERRED",
+      "title": "Calibrated improvement→promotion effectiveness/accuracy is deliberately abstained",
+      "severity": "Future",
+      "evidence": "learning/progression milestones carry NO decision-time prediction (predicted_prob_at_decision is NULL by design), so empirical accuracy of the improvement→promotion link is honestly abstained (Confidence axis), distinct from Coverage. This is a deliberate honesty choice, not a bug.",
+      "remediation": "FUTURE: once real non-demo re-administration volume + a prediction substrate exist, compute effectiveness/calibration over the EXISTING ledger (validation_loop_outcomes). Never fabricate accuracy before the data exists."
+    }
+  ],
+  "resolved_gaps": [
+    {
+      "id": "MECH-UNIVERSAL-OUTCOME-CAPTURE",
+      "title": "Universal close-the-loop realized-outcome capture",
+      "closure": "PRESENT via REUSE (Phase 1.3): captureProgressionOutcome + captureJourneyTailMilestone write realized growth/mastery/engagement milestones into the canonical ledger (validation_loop_outcomes). Gated by longitudinalOutcomeCapture → byte-identical OFF. No new engine/table/DDL.",
+      "residual": "ADOPTION: real realized-outcome volume is usage-driven (honest-low/0; reported by composeProgressionAdoption — Adoption⟂Coverage, null≠0)."
+    },
+    {
+      "id": "MECH-EVIDENCE-GATED-READINESS",
+      "title": "Evidence-gated readiness / promotion derivation",
+      "closure": "PRESENT via REUSE: evidence-gate composes the readiness band (scoreToLevelBand + k-anonymity data-sufficiency) recorded in wc3_stage_progression; the composer READS it, never re-derives. Gated by evidenceGatedProgression → byte-identical OFF.",
+      "residual": "ENGINEERING (GAP-P1, Medium): promotion is derived from readiness, not uniformly gated per persona."
+    },
+    {
+      "id": "MECH-REASSESSMENT-SIGNAL",
+      "title": "Interval / exit reassessment eligibility signal",
+      "closure": "PRESENT via REUSE: getReassessmentSignal derives interval/exit re-administration eligibility ON READ from the accrued longitudinal record (no scheduler, no write). Gated by longitudinalOutcomeCapture → byte-identical OFF.",
+      "residual": "ADOPTION: real re-administration cadence is usage-driven (null≠0)."
+    }
+  ],
+  "summary": {
+    "flag": "progressionEngineCompletion",
+    "spine_frozen": true,
+    "spine_step_count": 15,
+    "lifecycle_stage_count": 4,
+    "invariant_count": 4,
+    "path_count": 9,
+    "persona_count": 9,
+    "status_counts": {
+      "SUPPORTED": 4,
+      "PARTIAL": 5,
+      "DEAD_END": 0,
+      "MISSING": 0
+    },
+    "evidence_rollup": {
+      "services": {
+        "present": 23,
+        "total": 23
+      },
+      "routes": {
+        "present": 18,
+        "total": 18
+      },
+      "frontend": {
+        "present": 12,
+        "total": 12
+      },
+      "tables": {
+        "present": 25,
+        "absent": 0,
+        "unknown": 0,
+        "total": 25
+      }
+    },
+    "spine_rollup": {
+      "reached": 48,
+      "total": 135
+    },
+    "loop_closure": {
+      "closed": 4,
+      "total": 4
+    },
+    "gap_counts": {
+      "Launch-Critical": 0,
+      "High": 0,
+      "Medium": 1,
+      "Low": 1,
+      "Future": 1
+    },
+    "resolved_gap_count": 3,
+    "decisions": [
+      {
+        "topic": "Single progression engine (no V2)",
+        "decision": "COMPOSE_EXISTING",
+        "rationale": "The continuous-growth loop is realised by EXISTING engines (progression-outcome-capture, evidence-gate, recommendation/learning/intervention/longitudinal). This phase adds ONE read-only composer/registry, never a parallel progression engine."
+      },
+      {
+        "topic": "Promotion gate",
+        "decision": "READINESS_DERIVED",
+        "rationale": "Promotion is derived from evidence-gate readiness bands recorded in wc3_stage_progression, NOT a new hard gate. A uniformly enforced per-persona promotion gate is GAP-P1 (Medium) — additive/optional, never fabricated as done."
+      },
+      {
+        "topic": "Reassessment cadence",
+        "decision": "ON_READ_SIGNAL",
+        "rationale": "getReassessmentSignal derives eligibility on read (no scheduler). Automated cadence (wc7b/longitudinal-automation) is adoption-gated. Continuous growth is a MECHANISM (Coverage) whose ADOPTION is usage-driven (null≠0)."
+      }
+    ],
+    "enterprise_ready": {
+      "verdict": "STRUCTURAL_COMPLETE_ADOPTION_PENDING",
+      "note": "ONE canonical Progression Model answers \"Is CAPADEX capable of measurable, continuous customer growth?\": a FROZEN 15-step growth spine (Assessment→Evidence→AI→Recommend→Learn→Practice→Reinforce→Competency→Intervene→Measure→Reassess→Validate→Outcome→Promote→Continue), four lifecycle promotion rules (Curiosity→Insight→Growth→Mastery), four loop-closure invariants, and a per-persona path register — every field mapped to the eight progression axes and verified against the live repo. The growth LOOP is mechanism-complete via REUSE-before-build: Phase 1.3 closed the universal realized-outcome capture (progression-outcome-capture) and the evidence-gated readiness (evidence-gate); recommendation/learning/intervention/longitudinal engines supply the middle of the loop. This phase adds ONE read-only composer/registry + ZERO new growth logic + ZERO schema. OPEN engineering gaps are NONE Launch-Critical (GAP-P1 Medium: promotion is readiness-derived not uniformly gated; GAP-P2 Low: practice/reinforcement are recommendation-driven; GAP-P3 Future: calibrated effectiveness deliberately abstained). The dominant remaining axis is ADOPTION (real re-administration/outcome volume, currently honest-low/0, reported SEPARATELY by composeProgressionAdoption) — a usage axis, NOT a gap. The verdict stays STRUCTURAL (engineering complete via reuse; adoption is usage-driven and never fabricated). Coverage⟂Confidence⟂Outcome⟂Adoption are reported separately and never composited; null≠0."
+    }
+  },
+  "loop_closure": {
+    "invariants": [
+      {
+        "id": "INV1-RECOMMEND-TO-ACTION",
+        "title": "Recommendation → Learning / Practice / Intervention (the growth action is generated)",
+        "from": "recommendation",
+        "to": "personalized_intervention",
+        "mechanism": "Recommendation engines feed the learning-path + intervention catalogs, so every diagnosis yields a concrete next action. COMPOSED by reference, never invoked.",
+        "servicesPresent": 3,
+        "servicesTotal": 3,
+        "tablesPresent": 3,
+        "tablesAbsent": 0,
+        "tablesUnknown": 0,
+        "tablesTotal": 3,
+        "coverage": "PRESENT",
+        "residual": "ADOPTION: real recommendation→action engagement volume is usage-driven (Coverage⟂Adoption, null≠0)."
+      },
+      {
+        "id": "INV2-INTERVENTION-TO-REASSESS",
+        "title": "Intervention → Reassessment (the action is followed by a re-measurement)",
+        "from": "personalized_intervention",
+        "to": "reassessment",
+        "mechanism": "After an intervention, the reassessment signal (getReassessmentSignal) surfaces interval/exit re-administration eligibility from the accrued longitudinal record. MECHANISM present (Phase 1.3 reuse); gated by longitudinalOutcomeCapture.",
+        "servicesPresent": 2,
+        "servicesTotal": 2,
+        "tablesPresent": 2,
+        "tablesAbsent": 0,
+        "tablesUnknown": 0,
+        "tablesTotal": 2,
+        "coverage": "PRESENT",
+        "residual": "ADOPTION: real re-administration volume is usage-driven (honest-low/0; reported separately — Adoption⟂Coverage, null≠0)."
+      },
+      {
+        "id": "INV3-REASSESS-TO-IMPROVEMENT",
+        "title": "Reassessment → Improvement validation (the re-measurement is compared to the baseline)",
+        "from": "reassessment",
+        "to": "improvement_validation",
+        "mechanism": "A second datapoint lets the longitudinal trend validate improvement vs the prior baseline. MECHANISM present; effectiveness/accuracy stays abstained (no decision-time prediction recorded) until real volume accrues — honest-null, never fabricated.",
+        "servicesPresent": 2,
+        "servicesTotal": 2,
+        "tablesPresent": 2,
+        "tablesAbsent": 0,
+        "tablesUnknown": 0,
+        "tablesTotal": 2,
+        "coverage": "PRESENT",
+        "residual": "ADOPTION + CONFIDENCE: improvement is measurable once >1 non-demo datapoint exists; calibrated accuracy is abstained by design (Coverage⟂Confidence⟂Adoption, null≠0)."
+      },
+      {
+        "id": "INV4-IMPROVEMENT-TO-PROMOTION",
+        "title": "Improvement → Promotion / Outcome (validated growth advances the lifecycle stage)",
+        "from": "improvement_validation",
+        "to": "promotion",
+        "mechanism": "Validated readiness drives stage promotion (evidence-gate readiness band) and a realized-outcome capture into the canonical ledger. MECHANISM present (evidence-gate + progression-outcome-capture); promotion is readiness-DERIVED, not a uniformly enforced per-persona gate (see GAP-P1).",
+        "servicesPresent": 3,
+        "servicesTotal": 3,
+        "tablesPresent": 3,
+        "tablesAbsent": 0,
+        "tablesUnknown": 0,
+        "tablesTotal": 3,
+        "coverage": "PRESENT",
+        "residual": "ENGINEERING (GAP-P1, Medium): promotion criteria are readiness-derived, not a single enforced gate across all personas. ADOPTION: realized-outcome volume is usage-driven (null≠0)."
+      }
+    ],
+    "closed_count": 4,
+    "total": 4,
+    "note": "Each invariant is a COVERAGE statement: the existing mechanism that LINKS two spine steps is present (services + ≥1 backing table verified). Coverage of the loop links is SEPARATE from ADOPTION (is the loop exercised by real non-demo volume — see composeProgressionAdoption) and from CONFIDENCE (calibrated effectiveness — abstained by design). null≠0; nothing fabricated; no link is invoked, only verified by reference."
+  },
+  "adoption": {
+    "flag": "progressionEngineCompletion",
+    "freshness_window_days": 180,
+    "progressed_subjects": 0,
+    "mastery_subjects": 0,
+    "reassessed_subjects": 0,
+    "trend_subjects": null,
+    "realized_outcomes": 0,
+    "note": "ADOPTION axis only — exercise of the (Phase-1.3 reuse-instrumented) continuous-growth loop. SEPARATE from Coverage; never composited. null = unreadable, 0 = measured-empty. Demo subjects excluded. The capture hook is gated by the longitudinalOutcomeCapture flag, so non-zero adoption accrues only as real subjects progress / re-administer existing assessments. This phase builds NO new growth machinery."
+  },
+  "persona_linkage": {
+    "flag": "progressionEngineCompletion",
+    "linkage_present": true,
+    "k_min": 30,
+    "personas": [],
+    "note": "Persona⟂Progression linkage validated by a READ-TIME join (no persona column added, zero DDL). Per-persona counts below k_min are suppressed (masked) for anonymity. linkage_present:false means the join was unreadable, NOT that outcomes are zero (null≠0). Coverage⟂Outcome⟂Confidence never composited."
+  }
+}

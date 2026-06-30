@@ -240,6 +240,7 @@ export const FEATURE_FLAGS = {
    *  flow, NO schema change. Flag OFF → data routes 503, public-config `customer_journey_completion:false`, and
    *  the journey flows + schema are byte-identical to legacy. Env: `FF_CUSTOMER_JOURNEY_COMPLETION`. */
   customerJourneyCompletion: false,
+  progressionEngineCompletion: false,
   /** MX-103X — Live Employer Ecosystem Activation (read-only audit + certification console over the EXISTING
    *  employer hiring funnel). When ON, a PURE read-only composer at `/api/admin/employer-ecosystem/*`
    *  (super-admin) inventories the nine funnel stages — onboarding · create-job · role-DNA · competencies ·
@@ -2192,7 +2193,11 @@ export function isAssessmentFrameworkCompletionEnabled(): boolean {
   return isFlagEnabled('assessmentFrameworkCompletion');
 }
 
-/** CAPADEX 3.0 — Program 1 · Phase 1.4 Customer Journey Completion master switch. */
+/** CAPADEX 3.0 — Program 1 · Phase 1.5 Progression Engine Completion master switch. */
+export function isProgressionEngineCompletionEnabled(): boolean {
+  return isFlagEnabled('progressionEngineCompletion');
+}
+
 export function isCustomerJourneyCompletionEnabled(): boolean {
   return isFlagEnabled('customerJourneyCompletion');
 }

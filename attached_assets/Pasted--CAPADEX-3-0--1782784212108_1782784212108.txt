@@ -1,0 +1,531 @@
+# ==============================================================================
+# CAPADEX 3.0
+#
+# REPOSITORY ENHANCEMENT &
+# PRODUCT MATURITY ASSESSMENT
+#
+# PRE-LAUNCH ENHANCEMENT PROGRAM
+#
+# ==============================================================================
+#
+# EXECUTION MODE
+#
+# ENHANCEMENT ASSESSMENT
+#
+# REPOSITORY FIRST
+#
+# SEARCH BEFORE BUILD
+#
+# MEASURE BEFORE MODIFY
+#
+# REUSE BEFORE BUILD
+#
+# ENHANCEMENT ONLY
+#
+# NO REBUILD
+#
+# NO V2
+#
+# NO NEW ARCHITECTURE
+#
+# NO DUPLICATE CAPABILITIES
+#
+# ==============================================================================
+#
+# MISSION
+#
+# CAPADEX has completed
+#
+# Engineering Constitution
+#
+# Platform Lifecycle Intelligence
+#
+# Enterprise Intelligence
+#
+# Enterprise Launch Readiness Assessment
+#
+# Before implementing anything else,
+#
+# perform a COMPLETE
+#
+# Enhancement Assessment
+#
+# using the repository as the Single Source of Truth.
+#
+# The objective is NOT
+#
+# to redesign,
+#
+# rebuild,
+#
+# replace,
+#
+# or expand CAPADEX.
+#
+# The objective is
+#
+# to identify
+#
+# every enhancement
+#
+# required to make CAPADEX
+#
+# a world-class enterprise platform.
+#
+# ==============================================================================
+#
+# EXECUTION CONTRACT
+#
+# Search
+#
+# Measure
+#
+# Validate
+#
+# Cross Reference
+#
+# Compare
+#
+# Prioritize
+#
+# Recommend
+#
+# STOP
+#
+# ==============================================================================
+#
+# HONESTY CONTRACT
+#
+# Existing capability
+#
+# ≠
+#
+# Mature capability
+#
+# Existing workflow
+#
+# ≠
+#
+# Enterprise-ready workflow
+#
+# Existing AI
+#
+# ≠
+#
+# Validated AI
+#
+# Existing UI
+#
+# ≠
+#
+# Excellent UX
+#
+# Existing reports
+#
+# ≠
+#
+# Customer-ready reports
+#
+# Repository overrides documentation.
+#
+# Runtime overrides assumptions.
+#
+# Database overrides memory.
+#
+# Never fabricate.
+#
+# Never estimate.
+#
+# ==============================================================================
+#
+# SEARCH ENTIRE REPOSITORY
+#
+# Review every
+#
+# Module
+#
+# Capability
+#
+# Workflow
+#
+# Assessment
+#
+# Persona
+#
+# Dashboard
+#
+# Report
+#
+# AI Service
+#
+# Recommendation Engine
+#
+# Learning Module
+#
+# Career Module
+#
+# Competency Module
+#
+# Behaviour Module
+#
+# Concern Module
+#
+# Intervention Module
+#
+# Analytics Module
+#
+# Feature Flag
+#
+# API
+#
+# Service
+#
+# Background Job
+#
+# Database Object
+#
+# Documentation
+#
+# Test
+#
+# ==============================================================================
+#
+# FOR EVERY CAPABILITY DETERMINE
+#
+# Current Maturity
+#
+# Customer Value
+#
+# Business Value
+#
+# Enterprise Value
+#
+# AI Quality
+#
+# UX Quality
+#
+# Performance
+#
+# Security
+#
+# Documentation
+#
+# Test Coverage
+#
+# Technical Debt
+#
+# Enhancement Opportunities
+#
+# ==============================================================================
+#
+# FOR EVERY PERSONA DETERMINE
+#
+# Supported
+#
+# Partially Supported
+#
+# Missing
+#
+# Recommended
+#
+# Example
+#
+# School Student
+#
+# JEE Aspirant
+#
+# NEET Aspirant
+#
+# CUET Aspirant
+#
+# Competitive Exam Aspirant
+#
+# College Student
+#
+# Job Aspirant
+#
+# Working Professional
+#
+# HR
+#
+# Manager
+#
+# Executive
+#
+# Teacher
+#
+# Parent
+#
+# Psychologist
+#
+# NGO
+#
+# ==============================================================================
+#
+# FOR EVERY PERSONA VERIFY
+#
+# Registration
+#
+# Assessments
+#
+# AI
+#
+# Learning
+#
+# Career
+#
+# Reports
+#
+# Dashboards
+#
+# Recommendations
+#
+# Journey
+#
+# ==============================================================================
+#
+# VERIFY EVERY CUSTOMER JOURNEY
+#
+# Registration
+#
+# Assessment
+#
+# AI Analysis
+#
+# Recommendations
+#
+# Learning
+#
+# Intervention
+#
+# Reports
+#
+# Progress
+#
+# Completion
+#
+# ==============================================================================
+#
+# REVIEW EVERY ASSESSMENT
+#
+# Determine
+#
+# Entry Assessment
+#
+# Progress Assessment
+#
+# Exit Assessment
+#
+# Missing Assessments
+#
+# Duplicate Assessments
+#
+# Enhancement Opportunities
+#
+# ==============================================================================
+#
+# REVIEW AI
+#
+# Explainability
+#
+# Confidence
+#
+# Evidence
+#
+# Recommendations
+#
+# Predictions
+#
+# Personalization
+#
+# ==============================================================================
+#
+# REVIEW UX
+#
+# Dashboards
+#
+# Reports
+#
+# Navigation
+#
+# Accessibility
+#
+# Mobile
+#
+# Enterprise Experience
+#
+# ==============================================================================
+#
+# IDENTIFY
+#
+# Every Enhancement
+#
+# which
+#
+# improves
+#
+# customer experience
+#
+# usability
+#
+# performance
+#
+# intelligence
+#
+# automation
+#
+# maintainability
+#
+# without changing business logic.
+#
+# ==============================================================================
+#
+# CLASSIFY
+#
+# Launch Critical
+#
+# High
+#
+# Medium
+#
+# Low
+#
+# Future
+#
+# ==============================================================================
+#
+# PRODUCE
+#
+# 1.
+#
+# Enhancement Inventory
+#
+# 2.
+#
+# Capability Enhancement Matrix
+#
+# 3.
+#
+# Persona Coverage Matrix
+#
+# 4.
+#
+# Assessment Coverage Matrix
+#
+# 5.
+#
+# Customer Journey Enhancement Matrix
+#
+# 6.
+#
+# AI Enhancement Matrix
+#
+# 7.
+#
+# UX Enhancement Matrix
+#
+# 8.
+#
+# Performance Enhancement Matrix
+#
+# 9.
+#
+# Security Enhancement Matrix
+#
+# 10.
+#
+# Technical Debt Enhancement Matrix
+#
+# 11.
+#
+# Product Maturity Matrix
+#
+# 12.
+#
+# Prioritized Enhancement Backlog
+#
+# ==============================================================================
+#
+# FOR EVERY ENHANCEMENT
+#
+# Provide
+#
+# Repository Evidence
+#
+# Business Justification
+#
+# Customer Impact
+#
+# Technical Impact
+#
+# Dependencies
+#
+# Risk
+#
+# Effort
+#
+# Priority
+#
+# Launch Impact
+#
+# ==============================================================================
+#
+# IMPORTANT
+#
+# DO NOT
+#
+# redesign CAPADEX.
+#
+# DO NOT
+#
+# introduce new architecture.
+#
+# DO NOT
+#
+# create duplicate capabilities.
+#
+# DO NOT
+#
+# create V2.
+#
+# DO NOT
+#
+# modify business logic.
+#
+# ONLY
+#
+# identify
+#
+# measurable
+#
+# repository-backed
+#
+# enhancements.
+#
+# ==============================================================================
+#
+# FINAL QUESTION
+#
+# Based on the repository,
+#
+# what enhancements
+#
+# will deliver the greatest
+#
+# customer value,
+#
+# enterprise value,
+#
+# launch readiness,
+#
+# and product maturity
+#
+# before CAPADEX goes live?
+#
+# Repository evidence only.
+#
+# Human approval mandatory.
+#
+# STOP.
+#
+# ==============================================================================

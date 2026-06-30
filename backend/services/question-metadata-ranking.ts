@@ -16,8 +16,11 @@
  * sort after metadata-bearing peers — they are never dropped (honest fallback).
  */
 
-// AQ-2 canonical development stages (Phase 4 — progression order).
-export const STAGE_ORDER = ['Awareness', 'Curiosity', 'Clarity', 'Growth', 'Mastery'] as const;
+// AQ-2 development stages (progression order) — sourced verbatim from the single
+// lifecycle source of truth (`backend/lib/lifecycle.ts` STORED_STAGE_ORDER) so this
+// ranking and WC-3 telemetry order a user's stage identically (no drifting copy).
+import { STORED_STAGE_ORDER } from '../lib/lifecycle';
+export const STAGE_ORDER = STORED_STAGE_ORDER;
 export type Stage = typeof STAGE_ORDER[number];
 
 /** Ascending progression rank; unknown/absent stage sinks to the end. */

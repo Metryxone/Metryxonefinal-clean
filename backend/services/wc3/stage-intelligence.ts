@@ -21,7 +21,13 @@
  */
 import type { Pool } from 'pg';
 import { ensureWc3StageSchema } from './wc3-schema';
-import { STAGE_CODE_TO_LABEL, INSIGHT_DISPLAY_ALIAS, UNCODED_PRE_STAGE } from '../../lib/lifecycle';
+import {
+  STAGE_CODE_TO_LABEL,
+  INSIGHT_DISPLAY_ALIAS,
+  UNCODED_PRE_STAGE,
+  STORED_STAGE_ORDER,
+  STORED_STAGE_WEIGHT,
+} from '../../lib/lifecycle';
 
 /**
  * CAPADEX stage_code → the stage label this WC-3 telemetry persists. Labels are sourced
@@ -36,21 +42,16 @@ export const STAGE_ENTITY_MAP: Record<string, string> = {
 };
 
 /**
- * WC-3 telemetry PROGRESSION ORDER (index 0..4) — a projection of the four canonical
- * coded stages, NOT a competing canon. Index 0 is the UNCODED pre-stage "Awareness"
- * (used for sessions with no coded stage_code); CAP_INS appears under its display alias
- * "Clarity". Kept as an explicit literal so the persisted index math and the
- * `CanonicalStage` union type (derived by question-stage-intelligence) are byte-identical.
+ * WC-3 telemetry PROGRESSION ORDER (index 0..4) — the canonical stored-string projection
+ * sourced verbatim from `backend/lib/lifecycle.ts` (`STORED_STAGE_ORDER`), NOT a competing
+ * canon. Index 0 is the UNCODED pre-stage "Awareness" (sessions with no coded stage_code);
+ * CAP_INS appears under its display alias "Clarity". Re-exported under the WC-3 name so the
+ * persisted index math and the `CanonicalStage` union type (derived by
+ * question-stage-intelligence) stay byte-identical while having ONE source of truth.
  */
-export const WC3_PROGRESSION_ORDER = [UNCODED_PRE_STAGE, 'Curiosity', INSIGHT_DISPLAY_ALIAS, 'Growth', 'Mastery'] as const;
+export const WC3_PROGRESSION_ORDER = STORED_STAGE_ORDER;
 
-export const WC3_PROGRESSION_WEIGHT: Record<string, number> = {
-  Awareness: 0.25,
-  Curiosity: 0.50,
-  Clarity: 0.75,
-  Growth: 1.00,
-  Mastery: 1.25,
-};
+export const WC3_PROGRESSION_WEIGHT: Record<string, number> = STORED_STAGE_WEIGHT;
 
 export function canonicalStageFor(stageCode: string | null | undefined): string {
   if (!stageCode) return UNCODED_PRE_STAGE;

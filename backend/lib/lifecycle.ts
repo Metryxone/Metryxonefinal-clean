@@ -66,6 +66,36 @@ export const INSIGHT_DISPLAY_ALIAS = 'Clarity';
  */
 export const UNCODED_PRE_STAGE = 'Awareness';
 
+/**
+ * STORED-STRING PROGRESSION PROJECTION — the SINGLE source of truth for the 5-element
+ * order that the DB persists and that string-keyed readers work in.
+ *
+ * The platform stores human-readable stage STRINGS (not CAP_* codes) in WC-3 telemetry
+ * (`wc3_stage_state.canonical_stage`, `wc3_stage_definitions`) and ranks questions by
+ * the same labels. That stored representation is a PROJECTION of the four coded stages:
+ * it prefixes them with the UNCODED pre-stage "Awareness" (index 0, for sessions with no
+ * coded stage) and renders CAP_INS under its sanctioned DISPLAY ALIAS "Clarity". It is
+ * NEVER a competing five-stage canon.
+ *
+ * Every reader that works in stored strings imports THIS constant (and `STORED_STAGE_WEIGHT`)
+ * so a user's lifecycle stage orders/weights identically everywhere — no per-module copy
+ * can drift. Values are byte-identical to the prior per-module literals; this is a
+ * read-layer single-sourcing, NOT a data migration (existing rows are untouched).
+ */
+export const STORED_STAGE_ORDER = [UNCODED_PRE_STAGE, 'Curiosity', INSIGHT_DISPLAY_ALIAS, 'Growth', 'Mastery'] as const;
+
+/** A value of the stored-string progression projection ('Awareness' | … | 'Mastery'). */
+export type StoredStage = typeof STORED_STAGE_ORDER[number];
+
+/** Stored-stage → progression weight (the canonical projection weights). */
+export const STORED_STAGE_WEIGHT: Record<string, number> = {
+  [UNCODED_PRE_STAGE]: 0.25,
+  Curiosity: 0.50,
+  [INSIGHT_DISPLAY_ALIAS]: 0.75,
+  Growth: 1.00,
+  Mastery: 1.25,
+};
+
 /** Canonical label for a stage code, or null when the code is not a lifecycle stage. */
 export function stageLabel(code: string | null | undefined): string | null {
   if (!code) return null;

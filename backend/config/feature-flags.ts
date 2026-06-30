@@ -506,6 +506,18 @@ export const FEATURE_FLAGS = {
    *  so flag OFF → every route 503 before any auth/DB touch → byte-identical legacy behaviour incl. schema (0
    *  new tables). Super-admin gated. Env: `FF_ENTERPRISE_INTELLIGENCE_INTEGRATION`. */
   enterpriseIntelligenceIntegration: false,
+  /** MX-800 Phase 2.14 — Enterprise Intelligence Platform Production Certification, Maturity Assessment &
+   *  Release Baseline (FINAL MX-800 phase). When ON, exposes a READ-ONLY certification composer that
+   *  INTEGRATES + VALIDATES + CERTIFIES the already-shipped MX-800 tiers (2.1 Registry, 2.3 Engineering,
+   *  2.4 Runtime, 2.5 Knowledge, 2.6 Decision, 2.7 Predictive, 2.8 Recommendation, 2.9 Continuous-Learning,
+   *  2.10 Enterprise, 2.11 Operations, 2.12 Automation/Governance, 2.13 Integration) and emits MEASURED
+   *  certification reports (10 spec parts incl. maturity assessment + release baseline freeze). It composes
+   *  each tier's read-only getters EXACTLY ONCE and performs NO writes/DDL — introduces NO new engine, NO
+   *  parallel/duplicate service, NO migration/persistence, NO business-logic change, and activates NO dormant
+   *  capability (Integrated ≠ Certified ≠ Production-Ready; Validated ≠ Production-Ready; Mature ≠ Complete;
+   *  human approval mandatory). Flag OFF → every route 503 before any auth/DB touch → byte-identical legacy
+   *  (zero new tables — it owns none). Super-admin gated. Env: `FF_ENTERPRISE_INTELLIGENCE_CERTIFICATION`. */
+  enterpriseIntelligenceCertification: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -2733,6 +2745,9 @@ export function isIntelligenceAutomationGovernanceEnabled(): boolean {
 }
 export function isEnterpriseIntelligenceIntegrationEnabled(): boolean {
   return isFlagEnabled('enterpriseIntelligenceIntegration');
+}
+export function isEnterpriseIntelligenceCertificationEnabled(): boolean {
+  return isFlagEnabled('enterpriseIntelligenceCertification');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

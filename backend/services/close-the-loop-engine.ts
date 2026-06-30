@@ -268,7 +268,12 @@ export interface RecordAttributedOutcomeArgs {
   validationRefId?: string | null;
   detail?: Record<string, unknown>;
 }
-export interface RecordResult { recorded: boolean; reason?: string; is_demo?: boolean; bridged?: boolean; }
+export type BridgeStatus =
+  | 'bridged'                  // written into validation_loop_outcomes under the canonical id
+  | 'not_bridge_type'          // outcome type/kind is not one of the binary calibration bridge types
+  | 'skipped_no_canonical_ref' // bridge type, but caller gave no canonical validationRefId (no synthetic key)
+  | 'failed';                  // bridge attempted but validation-loop intake declined (e.g. validationLoop OFF)
+export interface RecordResult { recorded: boolean; reason?: string; is_demo?: boolean; bridged?: boolean; bridge_status?: BridgeStatus; }
 
 const VALID_CAPABILITY_KEYS = new Set(CAPABILITY_KPIS.map(k => k.capability_key));
 
@@ -338,8 +343,14 @@ export async function recordAttributedOutcome(
     // canonical id we DON'T bridge — a synthetic key could never align with native and would risk
     // counting one decision twice in calibration.
     let bridged = false;
+    let bridgeStatus: BridgeStatus;
     const canonicalRef = args.validationRefId != null ? String(args.validationRefId).trim() : '';
-    if (canonicalRef && kind === 'binary' && VALIDATION_BRIDGE_TYPES.includes(type as ValidationOutcomeType)) {
+    const isBridgeType = kind === 'binary' && VALIDATION_BRIDGE_TYPES.includes(type as ValidationOutcomeType);
+    if (!isBridgeType) {
+      bridgeStatus = 'not_bridge_type';
+    } else if (!canonicalRef) {
+      bridgeStatus = 'skipped_no_canonical_ref';
+    } else {
       try {
         const r = await recordValidationOutcome(pool, {
           outcomeType: type as ValidationOutcomeType,
@@ -353,9 +364,12 @@ export async function recordAttributedOutcome(
           detail: { capability_key: capability, lifecycle_stage: stage, ctl_ref_id: refId },
         });
         bridged = r.recorded;
-      } catch { bridged = false; }
+        // r.recorded === false here means native intake DECLINED (e.g. validationLoop flag OFF) — surface
+        // it honestly rather than silently claiming the loop is connected.
+        bridgeStatus = r.recorded ? 'bridged' : 'failed';
+      } catch { bridged = false; bridgeStatus = 'failed'; }
     }
-    return { recorded: true, is_demo: isDemo, bridged };
+    return { recorded: true, is_demo: isDemo, bridged, bridge_status: bridgeStatus };
   } catch (err) {
     console.error('[close-the-loop] recordAttributedOutcome failed:', (err as any)?.message ?? err);
     return { recorded: false, reason: 'write_failed' };
@@ -405,6 +419,14 @@ export async function recordRemeasurement(
   if (delta == null && baseline != null && remeasured != null) delta = remeasured - baseline;
   const stageFrom = args.lifecycleStageFrom ? String(args.lifecycleStageFrom).trim().toUpperCase() : null;
   const stageTo = args.lifecycleStageTo ? String(args.lifecycleStageTo).trim().toUpperCase() : null;
+  // Validate stages against the canonical taxonomy (parity with recordAttributedOutcome) — reject
+  // unknown stages rather than persisting unconstrained free text.
+  if (stageFrom != null && !CTL_LIFECYCLE_STAGES.includes(stageFrom as CtlLifecycleStage)) {
+    return { recorded: false, reason: 'invalid_lifecycle_stage' };
+  }
+  if (stageTo != null && !CTL_LIFECYCLE_STAGES.includes(stageTo as CtlLifecycleStage)) {
+    return { recorded: false, reason: 'invalid_lifecycle_stage' };
+  }
   const isDemo = email.endsWith('@example.com');
 
   try {

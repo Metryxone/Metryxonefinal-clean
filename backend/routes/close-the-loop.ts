@@ -144,7 +144,7 @@ export function registerCloseTheLoopRoutes(
         const code = r.reason === 'flag_off' ? 503 : 400;
         return res.status(code).json({ ok: false, error: r.reason });
       }
-      return res.json({ ok: true, recorded: true, is_demo: r.is_demo, bridged: r.bridged });
+      return res.json({ ok: true, recorded: true, is_demo: r.is_demo, bridged: r.bridged, bridge_status: r.bridge_status });
     });
 
   app.post('/api/admin/close-the-loop/remeasurement', flagGate, requireAuth, requireSuperAdmin,

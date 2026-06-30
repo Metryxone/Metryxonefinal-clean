@@ -73,7 +73,7 @@ async function main() {
     outcomeKind: 'binary', outcomeValue: 1, subjectEmail: REAL_EMAIL, predictedProb: 0.8,
     refId: `${TEST_REF_PREFIX}:real1`, validationRefId: CANON_REAL1,
   });
-  check('non-demo hiring outcome recorded + bridged to validation_loop', realRec.recorded === true && realRec.is_demo === false && realRec.bridged === true, realRec);
+  check('non-demo hiring outcome recorded + bridged to validation_loop', realRec.recorded === true && realRec.is_demo === false && realRec.bridged === true && realRec.bridge_status === 'bridged', realRec);
   const bridgeRow = await pool.query(
     `SELECT 1 FROM validation_loop_outcomes WHERE ref_id = $1 AND outcome_type='hiring'`, [CANON_REAL1],
   );
@@ -84,7 +84,7 @@ async function main() {
     capabilityKey: 'talent_match_hiring', lifecycleStage: 'CAP_MAS', outcomeType: 'hiring',
     outcomeKind: 'binary', outcomeValue: 1, subjectEmail: REAL_EMAIL, refId: `${TEST_REF_PREFIX}:nobridge`,
   });
-  check('no canonical ref → recorded but NOT bridged (no synthetic key)', noBridge.recorded === true && noBridge.bridged === false, noBridge);
+  check('no canonical ref → recorded but NOT bridged (no synthetic key)', noBridge.recorded === true && noBridge.bridged === false && noBridge.bridge_status === 'skipped_no_canonical_ref', noBridge);
 
   // Cross-path dedupe: SAME decision via native intake AND via CTL bridge under ONE canonical id → 1 row
   const CANON_XP = `${TEST_REF_PREFIX}:vref:xpath1`;

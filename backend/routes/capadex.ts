@@ -57,7 +57,7 @@ import { runEvidenceRuntime }   from '../services/signal-activation-runtime';
 import { resolveSeedConcernPk } from '../services/concern-signal-seeding';
 import type { EvidenceInput }   from '../services/evidence-engine';
 import { isRuntimeIntelligenceActivationEnabled, isRuntimeIntelligencePipelineEnabled, isSignalGroundingRuntimeEnabled } from '../config/feature-flags';
-import { isEvidenceGatedProgressionEnabled, isPersonaModelAlignmentEnabled, isPersonaModelExpansionEnabled } from '../config/feature-flags';
+import { isEvidenceGatedProgressionEnabled, isPersonaModelAlignmentEnabled, isPersonaModelExpansionEnabled, isAssessmentFrameworkCompletionEnabled } from '../config/feature-flags';
 import { resolveBridgeTagForConcernPk, loadGroundedLineage, groundingCoreToken } from '../services/signal-grounding-runtime';
 import { buildGuidanceForSession } from '../services/pil/runtime-guidance-engine';
 import { buildPipelineForSession } from '../services/pil/pipeline-resolver';
@@ -4225,6 +4225,9 @@ export function registerCapadexRoutes(app: Express, pool: Pool) {
         // CAPADEX 3.0 Persona Model EXPANSION (G-F1/G-F2) — enterprise + faculty
         // sub-personas in IntroPhase. OFF → assessment flow byte-identical.
         persona_model_expansion:    isPersonaModelExpansionEnabled(),
+        // CAPADEX 3.0 Phase 1.3 — canonical Assessment Framework gate (read-only admin
+        // composer). OFF → assessment flow + schema byte-identical; data routes 503.
+        assessment_framework_completion: isAssessmentFrameworkCompletionEnabled(),
       });
     } catch (err) { next(err); }
   });

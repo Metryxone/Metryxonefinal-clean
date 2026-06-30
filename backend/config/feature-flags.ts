@@ -220,6 +220,17 @@ export const FEATURE_FLAGS = {
    *  byte-identical to legacy (incl. schema; no DDL) and the persona-expansion data routes 503. Env:
    *  `FF_PERSONA_MODEL_EXPANSION`. */
   personaModelExpansion: false,
+  /** CAPADEX 3.0 — Program 1 · Phase 1.3 Assessment Framework Completion. Strictly read-only ENHANCEMENT that
+   *  exposes the ONE canonical Assessment Framework — the FROZEN 10-type taxonomy (Entry/Baseline/Diagnostic/
+   *  Behaviour/Competency/Learning/Performance/Progress/Exit/Continuous) from the Program-0 blueprint — plus a
+   *  19→10 spec crosswalk, per-type canonical definitions, and the 8-axis mapping (persona · lifecycle · journey ·
+   *  AI · reports · dashboards · outcomes · KPIs). It COMPOSES the EXISTING assessment engines/tables/UIs by
+   *  reference only — NO new assessment engine, NO V2, NO duplicate logic, NO schema change. When ON, a PURE
+   *  read-only composer at `/api/admin/assessment-framework/*` (super-admin) serves the framework, measured
+   *  coverage (registry evidence verified against the live filesystem + DB), and classified gaps. Flag OFF →
+   *  data routes 503, public-config `assessment_framework_completion:false`, and the assessment flow + schema are
+   *  byte-identical to legacy. Env: `FF_ASSESSMENT_FRAMEWORK_COMPLETION`. */
+  assessmentFrameworkCompletion: false,
   /** MX-103X — Live Employer Ecosystem Activation (read-only audit + certification console over the EXISTING
    *  employer hiring funnel). When ON, a PURE read-only composer at `/api/admin/employer-ecosystem/*`
    *  (super-admin) inventories the nine funnel stages — onboarding · create-job · role-DNA · competencies ·
@@ -2165,6 +2176,11 @@ export function isPersonaModelAlignmentEnabled(): boolean {
 
 export function isPersonaModelExpansionEnabled(): boolean {
   return isFlagEnabled('personaModelExpansion');
+}
+
+/** CAPADEX 3.0 — Program 1 · Phase 1.3 Assessment Framework Completion master switch. */
+export function isAssessmentFrameworkCompletionEnabled(): boolean {
+  return isFlagEnabled('assessmentFrameworkCompletion');
 }
 
 /** CAPADEX 3.0 — Program 2 (Task #305): longitudinal outcome capture on progression master switch. */

@@ -24,3 +24,10 @@ Mentor self-notes with NO `seeker_id` are allowed. `seekerHasBooking` fails **cl
 
 ## Validator notes
 `scripts/task293-journey-tail-validate.ts` is phased OFF→ON in one process (toggle `process.env.FF_JOURNEY_TAIL_COMPLETION`). Route-layer guards are unit-tested by exporting `isStaff` + `seekerHasBooking` from the route module and asserting them directly (the service layer has no role/booking concept — authz lives at the route). The booking test must `CREATE TABLE IF NOT EXISTS mentor_bookings` first (lazily created by ecosystem-community in prod, may be absent in a fresh dev DB) and clean up its demo row.
+
+## E2E-testing a default-OFF flag route
+The flag defaults OFF and is deliberately absent from the Backend API workflow command (dev stays
+byte-identical-OFF). To drive the route's live HTTP authz, do NOT flip the shared :8080 workflow.
+Spawn an isolated backend instance with the flag ON on its own port, poll the flag-gated `/enabled`
+(200 only when up AND flag-ON = combined readiness+flag probe), run the session+CSRF flow, then
+SIGKILL it. Keeps dev's OFF default intact and makes the regression self-contained.

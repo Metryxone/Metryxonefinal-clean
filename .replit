@@ -51,6 +51,10 @@ args = "voice-screening-degradation"
 task = "workflow.run"
 args = "privacy"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "journey-tail-mentor-authz"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -153,6 +157,17 @@ isValidation = true
 task = "shell.exec"
 args = "cd backend && npx tsx scripts/privacy-e2e-suite.ts"
 
+[[workflows.workflow]]
+name = "journey-tail-mentor-authz"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx scripts/task295-journey-tail-mentor-authz-e2e.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
 [[ports]]
 localPort = 5000
 externalPort = 80
@@ -168,6 +183,10 @@ externalPort = 8080
 [[ports]]
 localPort = 8091
 externalPort = 3001
+
+[[ports]]
+localPort = 8395
+externalPort = 3000
 
 [[ports]]
 localPort = 23636

@@ -247,6 +247,7 @@ import { registerCloseTheLoopRoutes } from "./routes/close-the-loop";
 import { registerJourneyTailRoutes } from "./routes/journey-tail";
 import { registerPersonaExpansionRoutes } from "./routes/persona-expansion";
 import { registerAssessmentFrameworkRoutes } from "./routes/assessment-framework";
+import { registerCustomerJourneyRoutes } from "./routes/customer-journey";
 import { registerEcosystemCommunityRoutes } from "./routes/ecosystem-community";
 import { registerEmployerEcosystemRoutes } from "./routes/employer-ecosystem";
 import { registerGlobalCompetencyRoutes } from "./routes/global-competency";
@@ -14243,6 +14244,7 @@ Rules:
   // ── Persona Model EXPANSION (G-F5/G-F6): flag-gated read-only per-persona outcomes + non-clinical vertical scaffold ──
   registerPersonaExpansionRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerAssessmentFrameworkRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerCustomerJourneyRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Employer, Community & Ecosystem (MX-302I): flag-gated additive ecosystem surface ──
   registerEcosystemCommunityRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Live Employer Ecosystem (MX-103X): read-only audit + certification over the employer hiring funnel ──

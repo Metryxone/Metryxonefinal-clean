@@ -231,6 +231,15 @@ export const FEATURE_FLAGS = {
    *  data routes 503, public-config `assessment_framework_completion:false`, and the assessment flow + schema are
    *  byte-identical to legacy. Env: `FF_ASSESSMENT_FRAMEWORK_COMPLETION`. */
   assessmentFrameworkCompletion: false,
+  /** CAPADEX 3.0 — Program 1 · Phase 1.4 Customer Journey Completion & Experience Orchestration.
+   *  When ON, a PURE read-only composer at `/api/admin/customer-journey/*` (super-admin) serves the ONE
+   *  canonical Customer Journey Model — a FROZEN 8-step spine + 5 reusable templates + the per-persona journey
+   *  register — each mapped to the eight platform axes (persona · lifecycle · assessment · AI · reports ·
+   *  dashboards · outcomes · KPIs) and verified against the live filesystem + DB. It COMPOSES the EXISTING
+   *  journey/orchestration engines/tables/UIs by reference only — NO new journey engine, NO V2, NO duplicate
+   *  flow, NO schema change. Flag OFF → data routes 503, public-config `customer_journey_completion:false`, and
+   *  the journey flows + schema are byte-identical to legacy. Env: `FF_CUSTOMER_JOURNEY_COMPLETION`. */
+  customerJourneyCompletion: false,
   /** MX-103X — Live Employer Ecosystem Activation (read-only audit + certification console over the EXISTING
    *  employer hiring funnel). When ON, a PURE read-only composer at `/api/admin/employer-ecosystem/*`
    *  (super-admin) inventories the nine funnel stages — onboarding · create-job · role-DNA · competencies ·
@@ -2181,6 +2190,11 @@ export function isPersonaModelExpansionEnabled(): boolean {
 /** CAPADEX 3.0 — Program 1 · Phase 1.3 Assessment Framework Completion master switch. */
 export function isAssessmentFrameworkCompletionEnabled(): boolean {
   return isFlagEnabled('assessmentFrameworkCompletion');
+}
+
+/** CAPADEX 3.0 — Program 1 · Phase 1.4 Customer Journey Completion master switch. */
+export function isCustomerJourneyCompletionEnabled(): boolean {
+  return isFlagEnabled('customerJourneyCompletion');
 }
 
 /** CAPADEX 3.0 — Program 2 (Task #305): longitudinal outcome capture on progression master switch. */

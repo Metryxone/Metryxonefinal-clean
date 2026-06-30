@@ -40,10 +40,11 @@ explainability / orchestration capability into a single, non-duplicative model?
   loop-level calibration; rate ABSTAINED null), `composeAdoption`, `composePersonaAiLinkage`
   (read-time join, k_min=30), `composeSummary`. GET-only, never-throws, `readScalar` returns null on
   ERROR / 0 on no-rows (null≠0).
-- `backend/routes/ai-orchestration.ts` — `GET /api/ai-orchestration/enabled` (flag probe) +
-  super-admin `/model`, `/coverage`, `/capabilities`, `/recommendations`, `/explainability`,
-  `/reports`, `/dashboards`, `/matrices`, `/effectiveness`, `/adoption`, `/gaps`, `/summary`,
-  `/personas/linkage`. Flag-gate 503 → `requireAuth` → `requireSuperAdmin`, never-throws.
+- `backend/routes/ai-orchestration.ts` — `GET /api/ai-orchestration/enabled` (UNGATED flag probe —
+  always 200 `{enabled:bool}` so the frontend can detect flag state) + super-admin `/model`,
+  `/coverage`, `/capabilities`, `/recommendations`, `/explainability`, `/reports`, `/dashboards`,
+  `/matrices`, `/effectiveness`, `/adoption`, `/gaps`, `/summary`, `/personas/linkage`. Data/admin
+  routes: flag-gate 503 → `requireAuth` → `requireSuperAdmin`, never-throws.
 - `backend/scripts/capadex-1.7-ai-orchestration-scan.ts` — SSoT scan →
   `backend/audit/capadex-3.0-ai-orchestration/scan.json`.
 - `backend/scripts/capadex-1.7-generate-deliverables.ts` — reads ONLY scan.json → 13 deliverables +

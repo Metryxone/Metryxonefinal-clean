@@ -4,7 +4,7 @@
  * Serves the ONE canonical AI-orchestration model + measured coverage + classified gaps, answering:
  * "assessment → AI analysis → confidence → explainability → recommendation → intervention →
  * outcome-validation → report → KPI."
- *   - GET /api/ai-orchestration/enabled               flag probe (flag state isn't sensitive; 503 when OFF)
+ *   - GET /api/ai-orchestration/enabled               flag probe — UNGATED, always 200 {enabled:bool} (only DATA/admin routes 503 when OFF)
  *   - GET /api/admin/ai-orchestration/model           canonical 12-step spine + capability inventory + criteria + sections + surfaces + personas + axes
  *   - GET /api/admin/ai-orchestration/coverage        per-path status + evidence VERIFIED vs live FS+DB
  *   - GET /api/admin/ai-orchestration/capabilities    AI capability inventory coverage (evidence VERIFIED)
@@ -76,9 +76,10 @@ export function registerAiOrchestrationRoutes(
   requireAuth: Mw,
   requireSuperAdmin: Mw,
 ): void {
-  // Flag probe (flag STATE is not sensitive). flagGate first → 503 when OFF; res.ok=true only when ON.
-  app.get('/api/ai-orchestration/enabled', flagGate, async (_req: Request, res: Response) => {
-    res.json({ ok: true, enabled: true });
+  // Flag probe (flag STATE is not sensitive) — UNGATED so the frontend can detect flag state.
+  // Always 200; `enabled` reflects the live flag. Only DATA/admin routes 503 when OFF.
+  app.get('/api/ai-orchestration/enabled', async (_req: Request, res: Response) => {
+    res.json({ ok: true, enabled: isFlagEnabled('aiRecommendationReportOrchestration') });
   });
 
   // Canonical AI-orchestration model (static registry — no DB read).

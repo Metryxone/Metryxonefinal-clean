@@ -248,6 +248,17 @@ export const FEATURE_FLAGS = {
    *  Flag OFF → data routes 503, public-config `outcome_framework_kpi_engine:false`, byte-identical legacy
    *  behaviour incl. schema. Env: `FF_OUTCOME_FRAMEWORK_KPI_ENGINE`. */
   outcomeFrameworkKpiEngine: false,
+  /** CAPADEX 3.0 — Program 1 · Phase 1.7 AI Recommendation Report Orchestration (read-only composer auditing
+   *  every EXISTING AI / recommendation / report / analytics / explainability / orchestration capability into
+   *  ONE coherent layer — "assessment → AI analysis → confidence → explainability → recommendation →
+   *  intervention → outcome-validation → report → KPI"). When ON, a PURE read-only composer at
+   *  `/api/admin/ai-orchestration/*` (super-admin) serves the canonical AI-orchestration model + measured
+   *  coverage + recommendation-completeness + explainability + report/dashboard validation + classified gaps
+   *  over EXISTING substrate; enhancement-only, reuse-before-build, NO new engines, ZERO DDL, no migration.
+   *  Engines are read by existence / persisted output — NEVER invoked. Flag OFF → data routes 503, public-config
+   *  `ai_recommendation_report_orchestration:false`, byte-identical legacy behaviour incl. schema.
+   *  Env: `FF_AI_RECOMMENDATION_REPORT_ORCHESTRATION`. */
+  aiRecommendationReportOrchestration: false,
   /** MX-103X — Live Employer Ecosystem Activation (read-only audit + certification console over the EXISTING
    *  employer hiring funnel). When ON, a PURE read-only composer at `/api/admin/employer-ecosystem/*`
    *  (super-admin) inventories the nine funnel stages — onboarding · create-job · role-DNA · competencies ·
@@ -2208,6 +2219,11 @@ export function isProgressionEngineCompletionEnabled(): boolean {
 /** CAPADEX 3.0 — Program 1 · Phase 1.6 Outcome Framework / KPI Engine master switch. */
 export function isOutcomeFrameworkKpiEngineEnabled(): boolean {
   return isFlagEnabled('outcomeFrameworkKpiEngine');
+}
+
+/** CAPADEX 3.0 — Program 1 · Phase 1.7 AI Recommendation Report Orchestration master switch. */
+export function isAiRecommendationReportOrchestrationEnabled(): boolean {
+  return isFlagEnabled('aiRecommendationReportOrchestration');
 }
 
 export function isCustomerJourneyCompletionEnabled(): boolean {

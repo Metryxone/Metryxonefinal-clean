@@ -250,6 +250,7 @@ import { registerAssessmentFrameworkRoutes } from "./routes/assessment-framework
 import { registerCustomerJourneyRoutes } from "./routes/customer-journey";
 import { registerProgressionRoutes } from "./routes/progression";
 import { registerOutcomeKpiRoutes } from "./routes/outcome-kpi";
+import { registerAiOrchestrationRoutes } from "./routes/ai-orchestration";
 import { registerEcosystemCommunityRoutes } from "./routes/ecosystem-community";
 import { registerEmployerEcosystemRoutes } from "./routes/employer-ecosystem";
 import { registerGlobalCompetencyRoutes } from "./routes/global-competency";
@@ -14249,6 +14250,7 @@ Rules:
   registerCustomerJourneyRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerProgressionRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerOutcomeKpiRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerAiOrchestrationRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Employer, Community & Ecosystem (MX-302I): flag-gated additive ecosystem surface ──
   registerEcosystemCommunityRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Live Employer Ecosystem (MX-103X): read-only audit + certification over the employer hiring funnel ──

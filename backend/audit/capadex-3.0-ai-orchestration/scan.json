@@ -1,0 +1,3180 @@
+{
+  "generated_at": "2026-06-30T15:05:09.697Z",
+  "read_only": true,
+  "spine_frozen": true,
+  "axes": [
+    "persona",
+    "lifecycle",
+    "assessment",
+    "ai_analysis",
+    "explainability",
+    "recommendation",
+    "report",
+    "kpi"
+  ],
+  "spine_step_count": 12,
+  "capability_count": 12,
+  "recommendation_criteria_count": 6,
+  "explainability_criteria_count": 6,
+  "report_section_count": 8,
+  "dashboard_surface_count": 8,
+  "path_count": 9,
+  "spine": [
+    {
+      "step": "assessment",
+      "label": "Assessment intake",
+      "description": "A persona completes a CAPADEX / competency / behaviour assessment — the AI orchestration entry point.",
+      "reuses": {
+        "services": [
+          "services/outcome-intelligence-engine.ts"
+        ],
+        "tables": [
+          "capadex_sessions"
+        ]
+      }
+    },
+    {
+      "step": "evidence_collection",
+      "label": "Evidence collection",
+      "description": "Per-question signals + scores are persisted as the evidence substrate AI analysis reasons over.",
+      "reuses": {
+        "services": [
+          "services/validation-loop-engine.ts"
+        ],
+        "tables": [
+          "capadex_session_signals"
+        ]
+      }
+    },
+    {
+      "step": "ai_analysis",
+      "label": "AI analysis / reasoning",
+      "description": "The AI layer interprets the evidence (reasoning chains, narrative synthesis) over the collected signals.",
+      "reuses": {
+        "services": [
+          "services/aiClient.ts",
+          "services/ai-reasoning-engine.ts"
+        ],
+        "tables": [
+          "ai_reasoning_chains"
+        ]
+      }
+    },
+    {
+      "step": "confidence_scoring",
+      "label": "Confidence scoring",
+      "description": "Decision-time predictions are scored + calibrated (Brier/ECE) via the validation-loop mechanism — the Confidence axis.",
+      "reuses": {
+        "services": [
+          "services/validation-loop-engine.ts",
+          "services/wc7b/decision-orchestrator.ts"
+        ],
+        "tables": [
+          "wc7b_decision_state"
+        ]
+      }
+    },
+    {
+      "step": "explainability",
+      "label": "Explainability",
+      "description": "Each AI recommendation / decision is rendered into an explainable, human-readable rationale.",
+      "reuses": {
+        "services": [
+          "services/capadex-explainability-engine.ts",
+          "services/runtime-explainability-engine.ts"
+        ],
+        "tables": []
+      }
+    },
+    {
+      "step": "recommendation_generation",
+      "label": "Recommendation generation",
+      "description": "Development / career / competency recommendations are generated and persisted per subject.",
+      "reuses": {
+        "services": [
+          "services/recommendation-intelligence-engine.ts",
+          "services/career-recommendation-engine.ts",
+          "services/mei-recommendation-engine.ts"
+        ],
+        "tables": [
+          "development_recommendations",
+          "career_recommendations"
+        ]
+      }
+    },
+    {
+      "step": "intervention_selection",
+      "label": "Intervention selection",
+      "description": "Recommendations are converted into actionable interventions matched to the subject.",
+      "reuses": {
+        "services": [
+          "services/intervention-intelligence.ts"
+        ],
+        "tables": [
+          "capadex_interventions"
+        ]
+      }
+    },
+    {
+      "step": "learning_plan",
+      "label": "Learning plan",
+      "description": "Interventions compose into a personalised learning plan / pathway.",
+      "reuses": {
+        "services": [
+          "services/learning-path-engine.ts"
+        ],
+        "tables": [
+          "career_readiness_history"
+        ]
+      }
+    },
+    {
+      "step": "progress_tracking",
+      "label": "Progress tracking",
+      "description": "Longitudinal snapshots track movement against baseline — the measured-progress input.",
+      "reuses": {
+        "services": [
+          "services/longitudinal-memory.ts",
+          "services/wc3/longitudinal-foundation.ts"
+        ],
+        "tables": [
+          "wc3_longitudinal_snapshots"
+        ]
+      }
+    },
+    {
+      "step": "outcome_validation",
+      "label": "Outcome validation",
+      "description": "Realized outcomes are captured into the canonical ledger and validated vs the decision-time prediction.",
+      "reuses": {
+        "services": [
+          "services/outcome-intelligence-engine.ts",
+          "services/capadex/progression-outcome-capture.ts"
+        ],
+        "tables": [
+          "validation_loop_outcomes"
+        ]
+      }
+    },
+    {
+      "step": "report_generation",
+      "label": "Report generation",
+      "description": "A human-readable AI report is composed from the analysis, recommendations, explainability + outcomes.",
+      "reuses": {
+        "services": [
+          "services/pil/report-builder.ts",
+          "services/omega-report-builder.ts"
+        ],
+        "tables": [
+          "capadex_reports"
+        ]
+      }
+    },
+    {
+      "step": "kpi_update",
+      "label": "KPI update",
+      "description": "Realized outcomes + report engagement roll up into the enterprise-analytics KPI substrate.",
+      "reuses": {
+        "services": [
+          "services/enterprise-analytics-schema.ts",
+          "services/benchmark-engine.ts"
+        ],
+        "tables": [
+          "anl_kpi_daily"
+        ]
+      }
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "ai_narrative_analysis",
+      "label": "AI narrative analysis (LLM-backed)",
+      "category": "analysis",
+      "status": "SUPPORTED",
+      "statusNote": "LLM client wraps assessment evidence into narrative analysis; degrades honestly without OPENAI_API_KEY (null≠0).",
+      "evidence": {
+        "services": [
+          "services/aiClient.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "capadex_sessions"
+        ],
+        "frontend": []
+      }
+    },
+    {
+      "id": "ai_reasoning_chains",
+      "label": "AI reasoning chains",
+      "category": "reasoning",
+      "status": "SUPPORTED",
+      "statusNote": "Multi-step reasoning chains are generated + persisted; substrate present.",
+      "evidence": {
+        "services": [
+          "services/ai-reasoning-engine.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "ai_reasoning_chains"
+        ],
+        "frontend": []
+      }
+    },
+    {
+      "id": "development_recommendations",
+      "label": "Development recommendations",
+      "category": "recommendation",
+      "status": "SUPPORTED",
+      "statusNote": "Competency-gap → development recommendation; persisted per subject.",
+      "evidence": {
+        "services": [
+          "services/recommendation-intelligence-engine.ts",
+          "services/mei-recommendation-engine.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "development_recommendations"
+        ],
+        "frontend": []
+      }
+    },
+    {
+      "id": "career_recommendations",
+      "label": "Career recommendations",
+      "category": "recommendation",
+      "status": "SUPPORTED",
+      "statusNote": "Role / pathway recommendations generated + persisted.",
+      "evidence": {
+        "services": [
+          "services/career-recommendation-engine.ts",
+          "services/recommendation-engine.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "career_recommendations"
+        ],
+        "frontend": []
+      }
+    },
+    {
+      "id": "intervention_selection",
+      "label": "Intervention selection",
+      "category": "intervention",
+      "status": "SUPPORTED",
+      "statusNote": "Recommendations → actionable interventions; persisted per subject.",
+      "evidence": {
+        "services": [
+          "services/intervention-intelligence.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "capadex_interventions"
+        ],
+        "frontend": []
+      }
+    },
+    {
+      "id": "capadex_explainability",
+      "label": "CAPADEX explainability",
+      "category": "explainability",
+      "status": "SUPPORTED",
+      "statusNote": "Recommendation / decision rationale rendered human-readable.",
+      "evidence": {
+        "services": [
+          "services/capadex-explainability-engine.ts"
+        ],
+        "routes": [],
+        "tables": [],
+        "frontend": []
+      }
+    },
+    {
+      "id": "runtime_explainability",
+      "label": "Runtime explainability",
+      "category": "explainability",
+      "status": "SUPPORTED",
+      "statusNote": "Runtime guidance + per-decision explainability over the live evidence.",
+      "evidence": {
+        "services": [
+          "services/runtime-explainability-engine.ts",
+          "services/explainability-engine.ts"
+        ],
+        "routes": [],
+        "tables": [],
+        "frontend": []
+      }
+    },
+    {
+      "id": "confidence_calibration",
+      "label": "Confidence / calibration scoring",
+      "category": "analysis",
+      "status": "PARTIAL",
+      "statusNote": "Decision-time predictions are calibrated (Brier/ECE) via the validation-loop mechanism; calibrated CONFIDENCE abstains until ≥ k_min real pairs accrue (Confidence axis, null≠0).",
+      "evidence": {
+        "services": [
+          "services/validation-loop-engine.ts",
+          "services/wc7b/decision-orchestrator.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "wc7b_decision_state",
+          "validation_loop_outcomes"
+        ],
+        "frontend": []
+      }
+    },
+    {
+      "id": "report_generation",
+      "label": "AI report generation",
+      "category": "report",
+      "status": "SUPPORTED",
+      "statusNote": "PIL + omega report builders compose human-readable AI reports; persisted in capadex_reports.",
+      "evidence": {
+        "services": [
+          "services/pil/report-builder.ts",
+          "services/omega-report-builder.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "capadex_reports"
+        ],
+        "frontend": [
+          "components/AIPoweredReports.tsx",
+          "components/reports/GeneratedReportBody.tsx"
+        ]
+      }
+    },
+    {
+      "id": "kpi_analytics",
+      "label": "KPI / enterprise analytics roll-up",
+      "category": "analytics",
+      "status": "PARTIAL",
+      "statusNote": "Enterprise-analytics + benchmark engines compute KPI families; population is usage-driven (Adoption axis, null≠0).",
+      "evidence": {
+        "services": [
+          "services/enterprise-analytics-schema.ts",
+          "services/benchmark-engine.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "anl_kpi_daily"
+        ],
+        "frontend": []
+      }
+    },
+    {
+      "id": "decision_orchestration",
+      "label": "Decision orchestration",
+      "category": "orchestration",
+      "status": "SUPPORTED",
+      "statusNote": "wc7b decision-orchestrator sequences the AI decision flow over the existing engines (orchestrates, never re-derives).",
+      "evidence": {
+        "services": [
+          "services/wc7b/decision-orchestrator.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "wc7b_decision_state"
+        ],
+        "frontend": []
+      }
+    },
+    {
+      "id": "runtime_guidance",
+      "label": "Runtime AI guidance",
+      "category": "orchestration",
+      "status": "SUPPORTED",
+      "statusNote": "Per-persona runtime guidance lens composes the AI outputs into actionable next-steps.",
+      "evidence": {
+        "services": [
+          "services/pil/runtime-guidance-engine.ts"
+        ],
+        "routes": [],
+        "tables": [],
+        "frontend": []
+      }
+    }
+  ],
+  "recommendation_criteria": [
+    {
+      "key": "grounded_in_evidence",
+      "label": "Recommendations grounded in assessment evidence",
+      "status": "SUPPORTED",
+      "statusNote": "Recommendations derive from the persisted signals/scores, not free-text — grounded chain.",
+      "evidence": {
+        "services": [
+          "services/recommendation-intelligence-engine.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "capadex_session_signals",
+          "development_recommendations"
+        ],
+        "frontend": []
+      }
+    },
+    {
+      "key": "persisted_per_subject",
+      "label": "Recommendations persisted per subject",
+      "status": "SUPPORTED",
+      "statusNote": "development_recommendations + career_recommendations persist per-user.",
+      "evidence": {
+        "services": [
+          "services/career-recommendation-engine.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "development_recommendations",
+          "career_recommendations"
+        ],
+        "frontend": []
+      }
+    },
+    {
+      "key": "actionable_intervention",
+      "label": "Recommendation → actionable intervention",
+      "status": "SUPPORTED",
+      "statusNote": "Each recommendation maps to a selectable intervention.",
+      "evidence": {
+        "services": [
+          "services/intervention-intelligence.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "capadex_interventions"
+        ],
+        "frontend": []
+      }
+    },
+    {
+      "key": "explainable",
+      "label": "Recommendation is explainable",
+      "status": "SUPPORTED",
+      "statusNote": "Rationale rendered for each recommendation.",
+      "evidence": {
+        "services": [
+          "services/capadex-explainability-engine.ts"
+        ],
+        "routes": [],
+        "tables": [],
+        "frontend": []
+      }
+    },
+    {
+      "key": "outcome_validated",
+      "label": "Recommendation → validated realized outcome",
+      "status": "PARTIAL",
+      "statusNote": "Realized outcomes capture into validation_loop_outcomes; effectiveness calibration abstains until ≥ k_min real pairs (Confidence/Adoption axes, null≠0).",
+      "evidence": {
+        "services": [
+          "services/outcome-intelligence-engine.ts",
+          "services/validation-loop-engine.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "validation_loop_outcomes"
+        ],
+        "frontend": []
+      }
+    },
+    {
+      "key": "persona_aware",
+      "label": "Recommendations are persona-aware",
+      "status": "SUPPORTED",
+      "statusNote": "Per-persona runtime guidance lenses tailor the recommendation framing.",
+      "evidence": {
+        "services": [
+          "services/pil/runtime-guidance-engine.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "capadex_user_profiles"
+        ],
+        "frontend": []
+      }
+    }
+  ],
+  "explainability_criteria": [
+    {
+      "key": "rationale_rendered",
+      "label": "Per-recommendation rationale rendered",
+      "status": "SUPPORTED",
+      "statusNote": "CAPADEX explainability engine renders a rationale per recommendation/decision.",
+      "evidence": {
+        "services": [
+          "services/capadex-explainability-engine.ts"
+        ],
+        "routes": [],
+        "tables": [],
+        "frontend": []
+      }
+    },
+    {
+      "key": "runtime_explainability",
+      "label": "Runtime per-decision explainability",
+      "status": "SUPPORTED",
+      "statusNote": "Runtime explainability over the live evidence at decision time.",
+      "evidence": {
+        "services": [
+          "services/runtime-explainability-engine.ts",
+          "services/explainability-engine.ts"
+        ],
+        "routes": [],
+        "tables": [],
+        "frontend": []
+      }
+    },
+    {
+      "key": "evidence_traceability",
+      "label": "Evidence traceability (signal → recommendation)",
+      "status": "PARTIAL",
+      "statusNote": "Recommendations trace to persisted signals; full per-token attribution is a Confidence axis (not fabricated).",
+      "evidence": {
+        "services": [
+          "services/recommendation-intelligence-engine.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "capadex_session_signals",
+          "ai_reasoning_chains"
+        ],
+        "frontend": []
+      }
+    },
+    {
+      "key": "confidence_disclosure",
+      "label": "Confidence disclosure (calibration surfaced honestly)",
+      "status": "PARTIAL",
+      "statusNote": "Calibration (Brier/ECE) surfaced via the validation-loop mechanism; abstains until ≥ k_min (null≠0).",
+      "evidence": {
+        "services": [
+          "services/validation-loop-engine.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "validation_loop_outcomes"
+        ],
+        "frontend": []
+      }
+    },
+    {
+      "key": "reasoning_chain_persisted",
+      "label": "Reasoning chain persisted + inspectable",
+      "status": "SUPPORTED",
+      "statusNote": "Reasoning chains persist to ai_reasoning_chains.",
+      "evidence": {
+        "services": [
+          "services/ai-reasoning-engine.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "ai_reasoning_chains"
+        ],
+        "frontend": []
+      }
+    },
+    {
+      "key": "human_readable_report",
+      "label": "Explainability surfaced in human-readable report",
+      "status": "SUPPORTED",
+      "statusNote": "Rationale flows into the generated report body.",
+      "evidence": {
+        "services": [
+          "services/pil/report-builder.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "capadex_reports"
+        ],
+        "frontend": [
+          "components/reports/GeneratedReportBody.tsx"
+        ]
+      }
+    }
+  ],
+  "report_sections": [
+    {
+      "key": "summary",
+      "label": "Executive summary",
+      "status": "SUPPORTED",
+      "statusNote": "AI-composed summary section.",
+      "evidence": {
+        "services": [
+          "services/pil/report-builder.ts",
+          "services/omega-report-builder.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "capadex_reports"
+        ],
+        "frontend": [
+          "components/AIPoweredReports.tsx"
+        ]
+      }
+    },
+    {
+      "key": "analysis",
+      "label": "AI analysis / interpretation",
+      "status": "SUPPORTED",
+      "statusNote": "Narrative analysis section grounded in reasoning chains.",
+      "evidence": {
+        "services": [
+          "services/aiClient.ts",
+          "services/ai-reasoning-engine.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "ai_reasoning_chains"
+        ],
+        "frontend": []
+      }
+    },
+    {
+      "key": "recommendations",
+      "label": "Recommendations section",
+      "status": "SUPPORTED",
+      "statusNote": "Persisted recommendations rendered into the report.",
+      "evidence": {
+        "services": [
+          "services/recommendation-intelligence-engine.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "development_recommendations",
+          "career_recommendations"
+        ],
+        "frontend": []
+      }
+    },
+    {
+      "key": "interventions",
+      "label": "Intervention / action plan section",
+      "status": "SUPPORTED",
+      "statusNote": "Actionable interventions rendered.",
+      "evidence": {
+        "services": [
+          "services/intervention-intelligence.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "capadex_interventions"
+        ],
+        "frontend": []
+      }
+    },
+    {
+      "key": "explainability",
+      "label": "Explainability / rationale section",
+      "status": "SUPPORTED",
+      "statusNote": "Per-recommendation rationale surfaced in the report.",
+      "evidence": {
+        "services": [
+          "services/capadex-explainability-engine.ts"
+        ],
+        "routes": [],
+        "tables": [],
+        "frontend": [
+          "components/reports/GeneratedReportBody.tsx"
+        ]
+      }
+    },
+    {
+      "key": "progress",
+      "label": "Progress / longitudinal section",
+      "status": "PARTIAL",
+      "statusNote": "Longitudinal trend rendered when >1 datapoint exists (Adoption axis, null≠0).",
+      "evidence": {
+        "services": [
+          "services/longitudinal-memory.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "wc3_longitudinal_snapshots"
+        ],
+        "frontend": []
+      }
+    },
+    {
+      "key": "outcomes",
+      "label": "Realized-outcomes section",
+      "status": "PARTIAL",
+      "statusNote": "Realized outcomes surfaced from the canonical ledger; volume usage-driven (Adoption axis).",
+      "evidence": {
+        "services": [
+          "services/outcome-intelligence-engine.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "validation_loop_outcomes"
+        ],
+        "frontend": []
+      }
+    },
+    {
+      "key": "kpis",
+      "label": "KPI / benchmark section",
+      "status": "PARTIAL",
+      "statusNote": "KPI roll-up + benchmark surfaced; population usage-driven (Adoption axis).",
+      "evidence": {
+        "services": [
+          "services/enterprise-analytics-schema.ts",
+          "services/benchmark-engine.ts"
+        ],
+        "routes": [],
+        "tables": [
+          "anl_kpi_daily"
+        ],
+        "frontend": []
+      }
+    }
+  ],
+  "dashboard_surfaces": [
+    {
+      "key": "ai_powered_reports",
+      "label": "AI-powered reports (user)",
+      "audience": "user",
+      "status": "SUPPORTED",
+      "statusNote": "User-facing AI report surface.",
+      "evidence": {
+        "services": [],
+        "routes": [],
+        "tables": [
+          "capadex_reports"
+        ],
+        "frontend": [
+          "components/AIPoweredReports.tsx",
+          "pages/AIPoweredReportsPage.tsx"
+        ]
+      }
+    },
+    {
+      "key": "report_factory_admin",
+      "label": "Report Factory (super-admin)",
+      "audience": "super_admin",
+      "status": "SUPPORTED",
+      "statusNote": "Admin report orchestration surface.",
+      "evidence": {
+        "services": [],
+        "routes": [
+          "routes/report-factory.ts"
+        ],
+        "tables": [
+          "capadex_reports"
+        ],
+        "frontend": [
+          "components/superadmin/ReportFactoryPanel.tsx",
+          "components/superadmin/UnifiedReportsPanel.tsx"
+        ]
+      }
+    },
+    {
+      "key": "capadex_reports_admin",
+      "label": "CAPADEX reports (super-admin)",
+      "audience": "super_admin",
+      "status": "SUPPORTED",
+      "statusNote": "Admin CAPADEX report inventory.",
+      "evidence": {
+        "services": [],
+        "routes": [],
+        "tables": [
+          "capadex_reports"
+        ],
+        "frontend": [
+          "components/superadmin/CapadexReportsPanel.tsx"
+        ]
+      }
+    },
+    {
+      "key": "recommendation_analytics_admin",
+      "label": "Recommendation analytics (super-admin)",
+      "audience": "super_admin",
+      "status": "SUPPORTED",
+      "statusNote": "Admin recommendation analytics + RIE recommendations.",
+      "evidence": {
+        "services": [],
+        "routes": [],
+        "tables": [
+          "development_recommendations",
+          "career_recommendations"
+        ],
+        "frontend": [
+          "components/superadmin/RecommendationAnalyticsPanel.tsx",
+          "components/superadmin/RIERecommendationsPanel.tsx"
+        ]
+      }
+    },
+    {
+      "key": "outcome_intelligence_admin",
+      "label": "Outcome intelligence (super-admin)",
+      "audience": "super_admin",
+      "status": "SUPPORTED",
+      "statusNote": "Admin realized-outcome intelligence.",
+      "evidence": {
+        "services": [],
+        "routes": [
+          "routes/outcome-intelligence.ts"
+        ],
+        "tables": [
+          "validation_loop_outcomes"
+        ],
+        "frontend": [
+          "components/superadmin/OutcomeIntelligencePanel.tsx"
+        ]
+      }
+    },
+    {
+      "key": "enterprise_analytics_admin",
+      "label": "Enterprise analytics / KPI (super-admin)",
+      "audience": "super_admin",
+      "status": "PARTIAL",
+      "statusNote": "KPI dashboard; population usage-driven (Adoption axis, null≠0).",
+      "evidence": {
+        "services": [],
+        "routes": [
+          "routes/enterprise-analytics.ts"
+        ],
+        "tables": [
+          "anl_kpi_daily"
+        ],
+        "frontend": [
+          "components/superadmin/EnterpriseAnalyticsPanel.tsx"
+        ]
+      }
+    },
+    {
+      "key": "ai_governance_admin",
+      "label": "AI governance (super-admin)",
+      "audience": "super_admin",
+      "status": "SUPPORTED",
+      "statusNote": "AI governance + rules surface.",
+      "evidence": {
+        "services": [],
+        "routes": [],
+        "tables": [],
+        "frontend": [
+          "components/superadmin/AiGovernancePanel.tsx",
+          "pages/AIGovernancePage.tsx"
+        ]
+      }
+    },
+    {
+      "key": "user_ai_insights",
+      "label": "User AI insights (Career Builder)",
+      "audience": "user",
+      "status": "SUPPORTED",
+      "statusNote": "User-facing AI competency insights in the Career Builder.",
+      "evidence": {
+        "services": [],
+        "routes": [],
+        "tables": [],
+        "frontend": [
+          "modules/career-builder/intelligence/views/AICompetencyInsights.tsx",
+          "pages/CareerBuilderPage.tsx"
+        ]
+      }
+    }
+  ],
+  "paths": [
+    {
+      "key": "student_growth",
+      "label": "Student → Growth AI loop",
+      "persona": "School / college student",
+      "personas": [
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "spineReached": [
+        "assessment",
+        "evidence_collection",
+        "ai_analysis",
+        "confidence_scoring",
+        "explainability",
+        "recommendation_generation",
+        "intervention_selection",
+        "learning_plan",
+        "progress_tracking",
+        "report_generation"
+      ],
+      "lifecycleStages": [
+        "CAP_CUR",
+        "CAP_INS",
+        "CAP_GRW"
+      ],
+      "assessments": [
+        "entry",
+        "baseline",
+        "diagnostic",
+        "behaviour"
+      ],
+      "aiAnalysis": "Behaviour + competency narrative analysis (reasoning chains) over assessment evidence.",
+      "explainability": "Per-recommendation rationale rendered into the student report.",
+      "recommendation": "Development recommendations + interventions + learning plan.",
+      "report": "AI-powered student report (PIL/omega builders → capadex_reports).",
+      "kpiFamilies": [
+        "individual",
+        "learning",
+        "journey"
+      ],
+      "status": "SUPPORTED",
+      "statusNote": "Full front-half AI loop is live; realized-outcome validation + KPI population are the universal adoption-gated tail (Adoption⟂Coverage).",
+      "evidence": {
+        "services": [
+          "services/aiClient.ts",
+          "services/recommendation-intelligence-engine.ts",
+          "services/intervention-intelligence.ts",
+          "services/pil/report-builder.ts"
+        ],
+        "routes": [
+          "routes/capadex.ts"
+        ],
+        "tables": [
+          "capadex_sessions",
+          "ai_reasoning_chains",
+          "development_recommendations",
+          "capadex_reports"
+        ],
+        "frontend": [
+          "components/FreeAssessmentModal.tsx",
+          "components/StudentDashboard.tsx",
+          "components/AIPoweredReports.tsx"
+        ]
+      }
+    },
+    {
+      "key": "fresher_readiness",
+      "label": "Fresher → Placement-Readiness AI loop",
+      "persona": "Fresher / final-year (job-seeker)",
+      "personas": [
+        "P3",
+        "P4"
+      ],
+      "spineReached": [
+        "assessment",
+        "evidence_collection",
+        "ai_analysis",
+        "explainability",
+        "recommendation_generation",
+        "intervention_selection",
+        "learning_plan",
+        "progress_tracking",
+        "outcome_validation",
+        "report_generation",
+        "kpi_update"
+      ],
+      "lifecycleStages": [
+        "CAP_CUR",
+        "CAP_INS",
+        "CAP_GRW"
+      ],
+      "assessments": [
+        "entry",
+        "baseline",
+        "competency",
+        "performance"
+      ],
+      "aiAnalysis": "Competency + readiness diagnosis; role-DNA crosswalk for fit.",
+      "explainability": "Readiness-gap rationale surfaced in the launchpad report.",
+      "recommendation": "Launchpad next-steps + placement-matching recommendations.",
+      "report": "Readiness report with recommendations + outcomes.",
+      "kpiFamilies": [
+        "individual",
+        "assessment",
+        "business",
+        "journey"
+      ],
+      "status": "SUPPORTED",
+      "statusNote": "Reaches the full AI→report→KPI loop; realized placement-outcome capture is the universal adoption-gated tail.",
+      "evidence": {
+        "services": [
+          "services/career-recommendation-engine.ts",
+          "services/employability-scoring-engine.ts",
+          "services/outcome-intelligence-engine.ts"
+        ],
+        "routes": [
+          "routes/career-readiness.ts",
+          "routes/career-recommendation.ts"
+        ],
+        "tables": [
+          "career_recommendations",
+          "career_readiness_history",
+          "validation_loop_outcomes"
+        ],
+        "frontend": [
+          "pages/career/CareerLaunchpadDashboard.tsx",
+          "pages/CareerBuilderPage.tsx"
+        ]
+      }
+    },
+    {
+      "key": "professional_progression",
+      "label": "Professional → Role-Progression AI loop",
+      "persona": "Working professional",
+      "personas": [
+        "P5"
+      ],
+      "spineReached": [
+        "assessment",
+        "evidence_collection",
+        "ai_analysis",
+        "confidence_scoring",
+        "explainability",
+        "recommendation_generation",
+        "learning_plan",
+        "progress_tracking",
+        "outcome_validation",
+        "report_generation",
+        "kpi_update"
+      ],
+      "lifecycleStages": [
+        "CAP_INS",
+        "CAP_GRW",
+        "CAP_MAS"
+      ],
+      "assessments": [
+        "baseline",
+        "competency",
+        "performance",
+        "progress"
+      ],
+      "aiAnalysis": "Competency + progression diagnosis; trend intelligence.",
+      "explainability": "Progression rationale vs baseline surfaced honestly (abstained calibration).",
+      "recommendation": "Progression-aware growth-plan recommendations.",
+      "report": "Progression report with trend + outcomes.",
+      "kpiFamilies": [
+        "individual",
+        "lifecycle",
+        "business"
+      ],
+      "status": "PARTIAL",
+      "statusNote": "Reaches the full AI loop incl. report+KPI as a MECHANISM; validation is ADOPTION-pending (Coverage⟂Adoption⟂Confidence).",
+      "evidence": {
+        "services": [
+          "services/recommendation-intelligence-engine.ts",
+          "services/longitudinal-memory.ts",
+          "services/outcome-intelligence-engine.ts"
+        ],
+        "routes": [
+          "routes/capadex.ts",
+          "routes/career-readiness.ts"
+        ],
+        "tables": [
+          "wc3_longitudinal_snapshots",
+          "career_readiness_history",
+          "validation_loop_outcomes"
+        ],
+        "frontend": [
+          "pages/CareerBuilderPage.tsx"
+        ]
+      }
+    },
+    {
+      "key": "employee_competency",
+      "label": "Employee → Competency / EI AI loop",
+      "persona": "Enterprise employee",
+      "personas": [
+        "P5",
+        "P6"
+      ],
+      "spineReached": [
+        "assessment",
+        "evidence_collection",
+        "ai_analysis",
+        "explainability",
+        "recommendation_generation",
+        "intervention_selection",
+        "learning_plan",
+        "progress_tracking",
+        "report_generation"
+      ],
+      "lifecycleStages": [
+        "CAP_CUR",
+        "CAP_INS",
+        "CAP_GRW"
+      ],
+      "assessments": [
+        "entry",
+        "baseline",
+        "competency",
+        "behaviour"
+      ],
+      "aiAnalysis": "Competency genome + EI dimension diagnosis (mei-scoring).",
+      "explainability": "Competency/EI-delta rationale rendered.",
+      "recommendation": "Competency-gap → development recommendation + EI interventions.",
+      "report": "Competency / EI development report.",
+      "kpiFamilies": [
+        "individual",
+        "learning",
+        "ai",
+        "organizational"
+      ],
+      "status": "SUPPORTED",
+      "statusNote": "Competency + EI development AI loop is well-supported; realized development-outcome capture is the universal adoption-gated tail.",
+      "evidence": {
+        "services": [
+          "services/mei-scoring-engine.ts",
+          "services/mei-recommendation-engine.ts",
+          "services/intervention-intelligence.ts"
+        ],
+        "routes": [
+          "routes/capadex.ts"
+        ],
+        "tables": [
+          "ei_profile_snapshots",
+          "development_recommendations",
+          "wc3_longitudinal_snapshots"
+        ],
+        "frontend": [
+          "pages/CareerBuilderPage.tsx"
+        ]
+      }
+    },
+    {
+      "key": "recruiter_pipeline",
+      "label": "HR / Recruiter → Hiring AI loop",
+      "persona": "HR / recruiter",
+      "personas": [
+        "P7"
+      ],
+      "spineReached": [
+        "assessment",
+        "ai_analysis",
+        "confidence_scoring",
+        "recommendation_generation",
+        "outcome_validation",
+        "report_generation",
+        "kpi_update"
+      ],
+      "lifecycleStages": [
+        "CAP_INS",
+        "CAP_GRW",
+        "CAP_MAS"
+      ],
+      "assessments": [
+        "competency",
+        "performance",
+        "behaviour"
+      ],
+      "aiAnalysis": "Candidate-match + interview intelligence (calibration k-gated).",
+      "explainability": "Match-rationale surfaced; calibration disclosed honestly (Brier/ECE abstain <k_min).",
+      "recommendation": "Talent-match ranking → interview → hire decision support.",
+      "report": "Hiring decision report; calibration reported separately.",
+      "kpiFamilies": [
+        "business",
+        "journey",
+        "ai"
+      ],
+      "status": "SUPPORTED",
+      "statusNote": "The 9-stage hiring funnel is the most complete realized-outcome family; calibration abstains <k_min=30 (Confidence⟂Coverage).",
+      "evidence": {
+        "services": [
+          "services/wc7b/decision-orchestrator.ts",
+          "services/outcome-intelligence-engine.ts"
+        ],
+        "routes": [
+          "routes/capadex.ts"
+        ],
+        "tables": [
+          "wc7b_decision_state",
+          "validation_loop_outcomes"
+        ],
+        "frontend": [
+          "pages/EmployerPortalPage.tsx"
+        ]
+      }
+    },
+    {
+      "key": "institute_cohort",
+      "label": "Institute Admin → Cohort AI loop",
+      "persona": "Institution administrator",
+      "personas": [
+        "P9",
+        "aggregate"
+      ],
+      "spineReached": [
+        "ai_analysis",
+        "recommendation_generation",
+        "outcome_validation",
+        "report_generation",
+        "kpi_update"
+      ],
+      "lifecycleStages": [
+        "CAP_INS",
+        "CAP_GRW"
+      ],
+      "assessments": [
+        "competency",
+        "behaviour",
+        "progress"
+      ],
+      "aiAnalysis": "k-anon cohort aggregation (institutional intelligence).",
+      "explainability": "Cohort-level rationale (k≥k_min, scores masked below).",
+      "recommendation": "Cohort-level act recommendations (k-gated).",
+      "report": "Cohort report (aggregate; scores masked below k_min).",
+      "kpiFamilies": [
+        "organizational",
+        "lifecycle",
+        "business"
+      ],
+      "status": "SUPPORTED",
+      "statusNote": "Real k-anon aggregation — scores masked below k_min, roster always shown. Realized cohort-outcome tail adoption-gated.",
+      "evidence": {
+        "services": [
+          "services/longitudinal-memory.ts",
+          "services/benchmark-engine.ts"
+        ],
+        "routes": [
+          "routes/enterprise-analytics.ts"
+        ],
+        "tables": [
+          "wc3_longitudinal_snapshots",
+          "anl_kpi_daily"
+        ],
+        "frontend": [
+          "components/UnifiedInstituteDashboard.tsx"
+        ]
+      }
+    },
+    {
+      "key": "mentor_mentee",
+      "label": "Mentor / Coach → Mentee AI loop",
+      "persona": "Mentor / coach",
+      "personas": [
+        "P6"
+      ],
+      "spineReached": [
+        "ai_analysis",
+        "recommendation_generation",
+        "intervention_selection",
+        "report_generation"
+      ],
+      "lifecycleStages": [
+        "CAP_GRW",
+        "CAP_MAS"
+      ],
+      "assessments": [
+        "competency",
+        "progress"
+      ],
+      "aiAnalysis": "Mentee progress framing; decision-mentor bridge.",
+      "explainability": "Guidance rationale surfaced to the mentor.",
+      "recommendation": "Engagement / guidance recommendations.",
+      "report": "Mentee progress report.",
+      "kpiFamilies": [
+        "journey",
+        "individual"
+      ],
+      "status": "PARTIAL",
+      "statusNote": "Mentor AI framing reuses the decision-orchestrator + runtime guidance; engagement volume is ADOPTION-driven (Coverage⟂Adoption, null≠0).",
+      "evidence": {
+        "services": [
+          "services/wc7b/decision-orchestrator.ts",
+          "services/pil/runtime-guidance-engine.ts"
+        ],
+        "routes": [
+          "routes/capadex.ts"
+        ],
+        "tables": [
+          "validation_loop_outcomes"
+        ],
+        "frontend": [
+          "pages/MentorDashboardPage.tsx"
+        ]
+      }
+    },
+    {
+      "key": "parent_support",
+      "label": "Parent → Support-Child AI loop",
+      "persona": "Parent / guardian",
+      "personas": [
+        "P1",
+        "P2"
+      ],
+      "spineReached": [
+        "ai_analysis",
+        "recommendation_generation",
+        "report_generation"
+      ],
+      "lifecycleStages": [
+        "CAP_INS",
+        "CAP_GRW"
+      ],
+      "assessments": [
+        "behaviour",
+        "competency"
+      ],
+      "aiAnalysis": "Child progress framing via consent-scoped view.",
+      "explainability": "Support-action rationale surfaced to the parent.",
+      "recommendation": "Support-action recommendations (consent-scoped).",
+      "report": "Consent-scoped child progress report.",
+      "kpiFamilies": [
+        "journey",
+        "individual"
+      ],
+      "status": "PARTIAL",
+      "statusNote": "Consent-scoped AI framing reuses runtime guidance; support-action volume is ADOPTION-driven (Coverage⟂Adoption, null≠0).",
+      "evidence": {
+        "services": [
+          "services/pil/runtime-guidance-engine.ts"
+        ],
+        "routes": [
+          "routes/capadex.ts"
+        ],
+        "tables": [
+          "capadex_user_profiles"
+        ],
+        "frontend": [
+          "components/UnifiedParentDashboard.tsx"
+        ]
+      }
+    },
+    {
+      "key": "institution_aggregate",
+      "label": "Institution → Aggregate Intelligence report",
+      "persona": "Institution (aggregate)",
+      "personas": [
+        "aggregate"
+      ],
+      "spineReached": [
+        "ai_analysis",
+        "report_generation",
+        "kpi_update"
+      ],
+      "lifecycleStages": [
+        "CAP_INS"
+      ],
+      "assessments": [
+        "competency",
+        "behaviour"
+      ],
+      "aiAnalysis": "Batch-confined cohort aggregation (nested in institute).",
+      "explainability": "Aggregate rationale (no per-individual attribution).",
+      "recommendation": "Aggregate-only act recommendations (k-gated).",
+      "report": "Aggregate intelligence report.",
+      "kpiFamilies": [
+        "organizational",
+        "lifecycle"
+      ],
+      "status": "PARTIAL",
+      "statusNote": "Aggregate-only AI report reuses benchmark + analytics; cohort volume is ADOPTION-driven (Coverage⟂Adoption).",
+      "evidence": {
+        "services": [
+          "services/benchmark-engine.ts",
+          "services/enterprise-analytics-schema.ts"
+        ],
+        "routes": [
+          "routes/enterprise-analytics.ts"
+        ],
+        "tables": [
+          "anl_kpi_daily",
+          "wc3_longitudinal_snapshots"
+        ],
+        "frontend": [
+          "components/UnifiedInstituteDashboard.tsx"
+        ]
+      }
+    }
+  ],
+  "decisions": [
+    {
+      "topic": "Single AI-orchestration layer (no V2)",
+      "decision": "COMPOSE_EXISTING",
+      "rationale": "AI analysis, reasoning, recommendation, intervention, explainability, report and KPI computation are ALL performed by EXISTING engines. This phase adds ONE read-only composer/registry that audits and orchestrates the READING of those capabilities — never a parallel AI / recommendation / report / KPI engine."
+    },
+    {
+      "topic": "Engines read, never invoked",
+      "decision": "READ_BY_EXISTENCE_AND_PERSISTED_OUTPUT",
+      "rationale": "The composer verifies each capability by filesystem existence + persisted-output COUNT (to_regclass + COUNT(*)). It NEVER invokes an AI/reasoning/recommendation/report engine — proving zero behaviour change (byte-identical OFF, and no side effects ON)."
+    },
+    {
+      "topic": "Recommendation / explainability effectiveness",
+      "decision": "WIRE_REUSE_CALIBRATION_ABSTAIN_UNTIL_KMIN",
+      "rationale": "Where a recommendation→outcome effectiveness rate is implied, it is WIRED via REUSE of the EXISTING validation-loop calibration mechanism (predicted_prob_at_decision; calibrationFromRows/toCalibrationPairs with a k_min gate) — zero new engine/table/DDL. The rate is honestly ABSTAINED (null) until ≥ k_min real non-demo pairs accrue (Confidence axis). Never fabricated."
+    },
+    {
+      "topic": "Report / KPI population",
+      "decision": "REUSE_REPORT_AND_ANALYTICS_ENGINES",
+      "rationale": "Reports are composed by the existing PIL/omega builders (capadex_reports); KPI families roll up over the existing enterprise-analytics + benchmark substrate (anl_kpi_daily). Population is usage-driven (Adoption axis, null≠0) — no new report or KPI engine."
+    },
+    {
+      "topic": "Honesty axes",
+      "decision": "KEEP_AXES_SEPARATE",
+      "rationale": "Coverage (a capability exists) ⟂ Confidence (calibrated/trustworthy) ⟂ Outcome (realized) ⟂ Adoption (real volume) are reported on their OWN axes and NEVER composited. null (unreadable) ≠ 0 (measured-empty). Revenue stays in capadex_payments and is never composited into AI/outcome KPIs."
+    }
+  ],
+  "coverage": [
+    {
+      "key": "student_growth",
+      "label": "Student → Growth AI loop",
+      "persona": "School / college student",
+      "status": "SUPPORTED",
+      "statusNote": "Full front-half AI loop is live; realized-outcome validation + KPI population are the universal adoption-gated tail (Adoption⟂Coverage).",
+      "spineReached": 10,
+      "spineTotal": 12,
+      "kpiFamilies": 3,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 4,
+          "total": 4,
+          "missing": []
+        },
+        "routes": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "frontend": {
+          "present": 3,
+          "total": 3,
+          "missing": []
+        },
+        "tables": {
+          "present": 4,
+          "absent": 0,
+          "unknown": 0,
+          "total": 4,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "fresher_readiness",
+      "label": "Fresher → Placement-Readiness AI loop",
+      "persona": "Fresher / final-year (job-seeker)",
+      "status": "SUPPORTED",
+      "statusNote": "Reaches the full AI→report→KPI loop; realized placement-outcome capture is the universal adoption-gated tail.",
+      "spineReached": 11,
+      "spineTotal": 12,
+      "kpiFamilies": 4,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 3,
+          "total": 3,
+          "missing": []
+        },
+        "routes": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "frontend": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "tables": {
+          "present": 3,
+          "absent": 0,
+          "unknown": 0,
+          "total": 3,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "professional_progression",
+      "label": "Professional → Role-Progression AI loop",
+      "persona": "Working professional",
+      "status": "PARTIAL",
+      "statusNote": "Reaches the full AI loop incl. report+KPI as a MECHANISM; validation is ADOPTION-pending (Coverage⟂Adoption⟂Confidence).",
+      "spineReached": 11,
+      "spineTotal": 12,
+      "kpiFamilies": 3,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 3,
+          "total": 3,
+          "missing": []
+        },
+        "routes": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 3,
+          "absent": 0,
+          "unknown": 0,
+          "total": 3,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "employee_competency",
+      "label": "Employee → Competency / EI AI loop",
+      "persona": "Enterprise employee",
+      "status": "SUPPORTED",
+      "statusNote": "Competency + EI development AI loop is well-supported; realized development-outcome capture is the universal adoption-gated tail.",
+      "spineReached": 9,
+      "spineTotal": 12,
+      "kpiFamilies": 4,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 3,
+          "total": 3,
+          "missing": []
+        },
+        "routes": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 3,
+          "absent": 0,
+          "unknown": 0,
+          "total": 3,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "recruiter_pipeline",
+      "label": "HR / Recruiter → Hiring AI loop",
+      "persona": "HR / recruiter",
+      "status": "SUPPORTED",
+      "statusNote": "The 9-stage hiring funnel is the most complete realized-outcome family; calibration abstains <k_min=30 (Confidence⟂Coverage).",
+      "spineReached": 7,
+      "spineTotal": 12,
+      "kpiFamilies": 3,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "routes": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 2,
+          "absent": 0,
+          "unknown": 0,
+          "total": 2,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "institute_cohort",
+      "label": "Institute Admin → Cohort AI loop",
+      "persona": "Institution administrator",
+      "status": "SUPPORTED",
+      "statusNote": "Real k-anon aggregation — scores masked below k_min, roster always shown. Realized cohort-outcome tail adoption-gated.",
+      "spineReached": 5,
+      "spineTotal": 12,
+      "kpiFamilies": 3,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "routes": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 2,
+          "absent": 0,
+          "unknown": 0,
+          "total": 2,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "mentor_mentee",
+      "label": "Mentor / Coach → Mentee AI loop",
+      "persona": "Mentor / coach",
+      "status": "PARTIAL",
+      "statusNote": "Mentor AI framing reuses the decision-orchestrator + runtime guidance; engagement volume is ADOPTION-driven (Coverage⟂Adoption, null≠0).",
+      "spineReached": 4,
+      "spineTotal": 12,
+      "kpiFamilies": 2,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "routes": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "parent_support",
+      "label": "Parent → Support-Child AI loop",
+      "persona": "Parent / guardian",
+      "status": "PARTIAL",
+      "statusNote": "Consent-scoped AI framing reuses runtime guidance; support-action volume is ADOPTION-driven (Coverage⟂Adoption, null≠0).",
+      "spineReached": 3,
+      "spineTotal": 12,
+      "kpiFamilies": 2,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "institution_aggregate",
+      "label": "Institution → Aggregate Intelligence report",
+      "persona": "Institution (aggregate)",
+      "status": "PARTIAL",
+      "statusNote": "Aggregate-only AI report reuses benchmark + analytics; cohort volume is ADOPTION-driven (Coverage⟂Adoption).",
+      "spineReached": 3,
+      "spineTotal": 12,
+      "kpiFamilies": 2,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "routes": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 2,
+          "absent": 0,
+          "unknown": 0,
+          "total": 2,
+          "absentList": []
+        }
+      }
+    }
+  ],
+  "capability_coverage": [
+    {
+      "key": "ai_narrative_analysis",
+      "label": "AI narrative analysis (LLM-backed)",
+      "status": "SUPPORTED",
+      "statusNote": "LLM client wraps assessment evidence into narrative analysis; degrades honestly without OPENAI_API_KEY (null≠0).",
+      "category": "analysis",
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "ai_reasoning_chains",
+      "label": "AI reasoning chains",
+      "status": "SUPPORTED",
+      "statusNote": "Multi-step reasoning chains are generated + persisted; substrate present.",
+      "category": "reasoning",
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "development_recommendations",
+      "label": "Development recommendations",
+      "status": "SUPPORTED",
+      "statusNote": "Competency-gap → development recommendation; persisted per subject.",
+      "category": "recommendation",
+      "evidence": {
+        "services": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "career_recommendations",
+      "label": "Career recommendations",
+      "status": "SUPPORTED",
+      "statusNote": "Role / pathway recommendations generated + persisted.",
+      "category": "recommendation",
+      "evidence": {
+        "services": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "intervention_selection",
+      "label": "Intervention selection",
+      "status": "SUPPORTED",
+      "statusNote": "Recommendations → actionable interventions; persisted per subject.",
+      "category": "intervention",
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "capadex_explainability",
+      "label": "CAPADEX explainability",
+      "status": "SUPPORTED",
+      "statusNote": "Recommendation / decision rationale rendered human-readable.",
+      "category": "explainability",
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 0,
+          "absent": 0,
+          "unknown": 0,
+          "total": 0,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "runtime_explainability",
+      "label": "Runtime explainability",
+      "status": "SUPPORTED",
+      "statusNote": "Runtime guidance + per-decision explainability over the live evidence.",
+      "category": "explainability",
+      "evidence": {
+        "services": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 0,
+          "absent": 0,
+          "unknown": 0,
+          "total": 0,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "confidence_calibration",
+      "label": "Confidence / calibration scoring",
+      "status": "PARTIAL",
+      "statusNote": "Decision-time predictions are calibrated (Brier/ECE) via the validation-loop mechanism; calibrated CONFIDENCE abstains until ≥ k_min real pairs accrue (Confidence axis, null≠0).",
+      "category": "analysis",
+      "evidence": {
+        "services": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 2,
+          "absent": 0,
+          "unknown": 0,
+          "total": 2,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "report_generation",
+      "label": "AI report generation",
+      "status": "SUPPORTED",
+      "statusNote": "PIL + omega report builders compose human-readable AI reports; persisted in capadex_reports.",
+      "category": "report",
+      "evidence": {
+        "services": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "kpi_analytics",
+      "label": "KPI / enterprise analytics roll-up",
+      "status": "PARTIAL",
+      "statusNote": "Enterprise-analytics + benchmark engines compute KPI families; population is usage-driven (Adoption axis, null≠0).",
+      "category": "analytics",
+      "evidence": {
+        "services": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "decision_orchestration",
+      "label": "Decision orchestration",
+      "status": "SUPPORTED",
+      "statusNote": "wc7b decision-orchestrator sequences the AI decision flow over the existing engines (orchestrates, never re-derives).",
+      "category": "orchestration",
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "runtime_guidance",
+      "label": "Runtime AI guidance",
+      "status": "SUPPORTED",
+      "statusNote": "Per-persona runtime guidance lens composes the AI outputs into actionable next-steps.",
+      "category": "orchestration",
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 0,
+          "absent": 0,
+          "unknown": 0,
+          "total": 0,
+          "absentList": []
+        }
+      }
+    }
+  ],
+  "recommendation_coverage": [
+    {
+      "key": "grounded_in_evidence",
+      "label": "Recommendations grounded in assessment evidence",
+      "status": "SUPPORTED",
+      "statusNote": "Recommendations derive from the persisted signals/scores, not free-text — grounded chain.",
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 2,
+          "absent": 0,
+          "unknown": 0,
+          "total": 2,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "persisted_per_subject",
+      "label": "Recommendations persisted per subject",
+      "status": "SUPPORTED",
+      "statusNote": "development_recommendations + career_recommendations persist per-user.",
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 2,
+          "absent": 0,
+          "unknown": 0,
+          "total": 2,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "actionable_intervention",
+      "label": "Recommendation → actionable intervention",
+      "status": "SUPPORTED",
+      "statusNote": "Each recommendation maps to a selectable intervention.",
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "explainable",
+      "label": "Recommendation is explainable",
+      "status": "SUPPORTED",
+      "statusNote": "Rationale rendered for each recommendation.",
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 0,
+          "absent": 0,
+          "unknown": 0,
+          "total": 0,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "outcome_validated",
+      "label": "Recommendation → validated realized outcome",
+      "status": "PARTIAL",
+      "statusNote": "Realized outcomes capture into validation_loop_outcomes; effectiveness calibration abstains until ≥ k_min real pairs (Confidence/Adoption axes, null≠0).",
+      "evidence": {
+        "services": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "persona_aware",
+      "label": "Recommendations are persona-aware",
+      "status": "SUPPORTED",
+      "statusNote": "Per-persona runtime guidance lenses tailor the recommendation framing.",
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    }
+  ],
+  "explainability_coverage": [
+    {
+      "key": "rationale_rendered",
+      "label": "Per-recommendation rationale rendered",
+      "status": "SUPPORTED",
+      "statusNote": "CAPADEX explainability engine renders a rationale per recommendation/decision.",
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 0,
+          "absent": 0,
+          "unknown": 0,
+          "total": 0,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "runtime_explainability",
+      "label": "Runtime per-decision explainability",
+      "status": "SUPPORTED",
+      "statusNote": "Runtime explainability over the live evidence at decision time.",
+      "evidence": {
+        "services": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 0,
+          "absent": 0,
+          "unknown": 0,
+          "total": 0,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "evidence_traceability",
+      "label": "Evidence traceability (signal → recommendation)",
+      "status": "PARTIAL",
+      "statusNote": "Recommendations trace to persisted signals; full per-token attribution is a Confidence axis (not fabricated).",
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 2,
+          "absent": 0,
+          "unknown": 0,
+          "total": 2,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "confidence_disclosure",
+      "label": "Confidence disclosure (calibration surfaced honestly)",
+      "status": "PARTIAL",
+      "statusNote": "Calibration (Brier/ECE) surfaced via the validation-loop mechanism; abstains until ≥ k_min (null≠0).",
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "reasoning_chain_persisted",
+      "label": "Reasoning chain persisted + inspectable",
+      "status": "SUPPORTED",
+      "statusNote": "Reasoning chains persist to ai_reasoning_chains.",
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "human_readable_report",
+      "label": "Explainability surfaced in human-readable report",
+      "status": "SUPPORTED",
+      "statusNote": "Rationale flows into the generated report body.",
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    }
+  ],
+  "report_coverage": [
+    {
+      "key": "summary",
+      "label": "Executive summary",
+      "status": "SUPPORTED",
+      "statusNote": "AI-composed summary section.",
+      "evidence": {
+        "services": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "analysis",
+      "label": "AI analysis / interpretation",
+      "status": "SUPPORTED",
+      "statusNote": "Narrative analysis section grounded in reasoning chains.",
+      "evidence": {
+        "services": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "recommendations",
+      "label": "Recommendations section",
+      "status": "SUPPORTED",
+      "statusNote": "Persisted recommendations rendered into the report.",
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 2,
+          "absent": 0,
+          "unknown": 0,
+          "total": 2,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "interventions",
+      "label": "Intervention / action plan section",
+      "status": "SUPPORTED",
+      "statusNote": "Actionable interventions rendered.",
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "explainability",
+      "label": "Explainability / rationale section",
+      "status": "SUPPORTED",
+      "statusNote": "Per-recommendation rationale surfaced in the report.",
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 0,
+          "absent": 0,
+          "unknown": 0,
+          "total": 0,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "progress",
+      "label": "Progress / longitudinal section",
+      "status": "PARTIAL",
+      "statusNote": "Longitudinal trend rendered when >1 datapoint exists (Adoption axis, null≠0).",
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "outcomes",
+      "label": "Realized-outcomes section",
+      "status": "PARTIAL",
+      "statusNote": "Realized outcomes surfaced from the canonical ledger; volume usage-driven (Adoption axis).",
+      "evidence": {
+        "services": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "kpis",
+      "label": "KPI / benchmark section",
+      "status": "PARTIAL",
+      "statusNote": "KPI roll-up + benchmark surfaced; population usage-driven (Adoption axis).",
+      "evidence": {
+        "services": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    }
+  ],
+  "dashboard_coverage": [
+    {
+      "key": "ai_powered_reports",
+      "label": "AI-powered reports (user)",
+      "status": "SUPPORTED",
+      "statusNote": "User-facing AI report surface.",
+      "audience": "user",
+      "evidence": {
+        "services": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "report_factory_admin",
+      "label": "Report Factory (super-admin)",
+      "status": "SUPPORTED",
+      "statusNote": "Admin report orchestration surface.",
+      "audience": "super_admin",
+      "evidence": {
+        "services": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "routes": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "frontend": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "capadex_reports_admin",
+      "label": "CAPADEX reports (super-admin)",
+      "status": "SUPPORTED",
+      "statusNote": "Admin CAPADEX report inventory.",
+      "audience": "super_admin",
+      "evidence": {
+        "services": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "recommendation_analytics_admin",
+      "label": "Recommendation analytics (super-admin)",
+      "status": "SUPPORTED",
+      "statusNote": "Admin recommendation analytics + RIE recommendations.",
+      "audience": "super_admin",
+      "evidence": {
+        "services": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "tables": {
+          "present": 2,
+          "absent": 0,
+          "unknown": 0,
+          "total": 2,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "outcome_intelligence_admin",
+      "label": "Outcome intelligence (super-admin)",
+      "status": "SUPPORTED",
+      "statusNote": "Admin realized-outcome intelligence.",
+      "audience": "super_admin",
+      "evidence": {
+        "services": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "routes": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "enterprise_analytics_admin",
+      "label": "Enterprise analytics / KPI (super-admin)",
+      "status": "PARTIAL",
+      "statusNote": "KPI dashboard; population usage-driven (Adoption axis, null≠0).",
+      "audience": "super_admin",
+      "evidence": {
+        "services": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "routes": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "total": 1,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "ai_governance_admin",
+      "label": "AI governance (super-admin)",
+      "status": "SUPPORTED",
+      "statusNote": "AI governance + rules surface.",
+      "audience": "super_admin",
+      "evidence": {
+        "services": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "tables": {
+          "present": 0,
+          "absent": 0,
+          "unknown": 0,
+          "total": 0,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "user_ai_insights",
+      "label": "User AI insights (Career Builder)",
+      "status": "SUPPORTED",
+      "statusNote": "User-facing AI competency insights in the Career Builder.",
+      "audience": "user",
+      "evidence": {
+        "services": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "routes": {
+          "present": 0,
+          "total": 0,
+          "missing": []
+        },
+        "frontend": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "tables": {
+          "present": 0,
+          "absent": 0,
+          "unknown": 0,
+          "total": 0,
+          "absentList": []
+        }
+      }
+    }
+  ],
+  "effectiveness": {
+    "flag": "aiRecommendationReportOrchestration",
+    "recommendation": {
+      "substrate_rows": 0,
+      "substrate_subjects": null,
+      "effectiveness_rate": null,
+      "calibrated": false,
+      "note": "Substrate counts are MEASURED (Coverage); per-channel effectiveness_rate stays null because the decision-time prediction is recorded loop-level (validation_loop_outcomes), not per recommendation/intervention row — see the loop-level `calibration` block. Confidence⟂Coverage, null≠0."
+    },
+    "intervention": {
+      "substrate_rows": 0,
+      "substrate_subjects": 0,
+      "effectiveness_rate": null,
+      "calibrated": false,
+      "note": "Substrate counts are MEASURED (Coverage); per-channel effectiveness_rate stays null because the decision-time prediction is recorded loop-level (validation_loop_outcomes), not per recommendation/intervention row — see the loop-level `calibration` block. Confidence⟂Coverage, null≠0."
+    },
+    "realized_outcomes": 0,
+    "calibration": {
+      "pairs_used": 0,
+      "status": "cold_start",
+      "k_min": 30,
+      "remaining_to_calibrated": 30,
+      "brier": null,
+      "ece": null,
+      "effectiveness_rate": null,
+      "note": "Loop-level effectiveness READ through the EXISTING validation-loop calibration mechanism (recordValidationOutcome captures predicted_prob_at_decision; calibrationFromRows calibrates with a k_min gate). status cold_start/provisional → effectiveness_rate null (Confidence axis, abstained, NEVER fabricated); flips to calibrated only when ≥ k_min non-demo pairs accrue. No engine invoked; zero DDL."
+    },
+    "note": "Recommendation→outcome EFFECTIVENESS. Substrate (recommendations, interventions, realized outcomes) is MEASURED (Coverage); loop-level calibrated effectiveness is WIRED via REUSE of the validation-loop calibration mechanism (`calibration` block) and abstains honestly (cold_start, rate null) until ≥ k_min real prediction+outcome pairs accrue — Confidence axis, null≠0, never fabricated. Demo subjects excluded. No engine is invoked; zero DDL."
+  },
+  "gaps": [
+    {
+      "id": "GAP-AI-1",
+      "title": "Per-token / per-feature recommendation attribution (explainability depth)",
+      "severity": "Medium",
+      "evidence": "Recommendations trace to persisted signals (capadex_session_signals → development_recommendations) and a reasoning chain (ai_reasoning_chains), but full per-feature attribution weights are not persisted. This is an explainability-DEPTH residual, not a broken chain — the rationale IS rendered.",
+      "remediation": "OPTIONAL future enhancement: persist per-feature attribution from the existing reasoning engine output. Not Launch-Critical; explainability is already human-readable. No DDL in this phase."
+    },
+    {
+      "id": "GAP-AI-2",
+      "title": "Report engagement instrumentation (report adoption signal)",
+      "severity": "Low",
+      "evidence": "Reports are generated + persisted (capadex_reports) but report-open / share engagement is not instrumented as a first-class KPI. Report VOLUME is measurable; report ENGAGEMENT is an Adoption axis currently honest-low.",
+      "remediation": "OPTIONAL: reuse the existing analytics substrate to roll up report engagement as usage accrues. Adoption-driven, never fabricated. No new engine."
+    }
+  ],
+  "resolved_gaps": [
+    {
+      "id": "MECH-AI-ANALYSIS",
+      "title": "AI analysis + reasoning chain over assessment evidence",
+      "closure": "PRESENT via REUSE: aiClient + ai-reasoning-engine generate narrative analysis + reasoning chains (ai_reasoning_chains) over the persisted assessment signals. The composer READS their existence/output; it never invokes them. Degrades honestly without OPENAI_API_KEY (null≠0).",
+      "residual": "CONFIDENCE/ADOPTION: AI output volume is usage-driven; LLM-backed depth depends on the configured key (reported separately, null≠0)."
+    },
+    {
+      "id": "MECH-RECOMMENDATION-CHAIN",
+      "title": "Recommendation → intervention → learning-plan chain",
+      "closure": "PRESENT via REUSE: recommendation-intelligence + career-recommendation + mei-recommendation engines persist recommendations (development_recommendations/career_recommendations); intervention-intelligence selects interventions (capadex_interventions); learning-path-engine composes the plan. No new engine/table/DDL.",
+      "residual": "ADOPTION: real recommendation/intervention volume is usage-driven (Coverage⟂Adoption, null≠0)."
+    },
+    {
+      "id": "MECH-EXPLAINABILITY",
+      "title": "Explainability / rationale rendering",
+      "closure": "PRESENT via REUSE: capadex-explainability-engine + runtime-explainability-engine render a human-readable rationale per recommendation/decision, surfaced in the generated report.",
+      "residual": "CONFIDENCE: per-feature attribution depth is an optional future enhancement (GAP-AI-1) — the rationale IS rendered today."
+    },
+    {
+      "id": "MECH-REPORT-GENERATION",
+      "title": "AI report generation",
+      "closure": "PRESENT via REUSE: PIL + omega report builders compose human-readable AI reports persisted in capadex_reports and surfaced in the AI-powered report dashboards. No new report engine.",
+      "residual": "ADOPTION: report volume + engagement are usage-driven (Coverage⟂Adoption; GAP-AI-2 for engagement instrumentation)."
+    },
+    {
+      "id": "MECH-EFFECTIVENESS-CALIBRATION-WIRED",
+      "title": "Recommendation → outcome effectiveness wired to the calibration mechanism",
+      "closure": "CLOSED via REUSE (no new engine/table/DDL): composeEffectiveness READS the EXISTING validation-loop calibration mechanism — recordValidationOutcome captures predicted_prob_at_decision; calibrationFromRows/toCalibrationPairs turn non-demo prediction+outcome rows into a calibrated effectiveness block with a k_min gate. When ≥ k_min real pairs accrue the status flips to calibrated and the rate lights up automatically. Demo excluded; nothing fabricated.",
+      "residual": "CONFIDENCE: until ≥ k_min real non-demo prediction+outcome pairs accrue the status is cold_start/provisional and effectiveness_rate stays null (abstained, NEVER fabricated). Reported via the `calibration` block, never a gap."
+    },
+    {
+      "id": "MECH-KPI-SUBSTRATE",
+      "title": "KPI computation substrate (enterprise analytics + benchmark)",
+      "closure": "PRESENT via REUSE: the existing enterprise-analytics (anl_kpi_daily) + benchmark engines compute the KPI families. The composer READS coverage of this substrate; it never re-computes a KPI or builds a second KPI engine.",
+      "residual": "ADOPTION: KPI population is usage-driven (Coverage⟂Adoption, null≠0)."
+    }
+  ],
+  "summary": {
+    "flag": "aiRecommendationReportOrchestration",
+    "spine_frozen": true,
+    "spine_step_count": 12,
+    "capability_count": 12,
+    "recommendation_criteria_count": 6,
+    "explainability_criteria_count": 6,
+    "report_section_count": 8,
+    "dashboard_surface_count": 8,
+    "path_count": 9,
+    "persona_count": 9,
+    "status_counts": {
+      "SUPPORTED": 5,
+      "PARTIAL": 4,
+      "DEAD_END": 0,
+      "MISSING": 0
+    },
+    "evidence_rollup": {
+      "services": {
+        "present": 22,
+        "total": 22
+      },
+      "routes": {
+        "present": 11,
+        "total": 11
+      },
+      "frontend": {
+        "present": 12,
+        "total": 12
+      },
+      "tables": {
+        "present": 21,
+        "absent": 0,
+        "unknown": 0,
+        "total": 21
+      }
+    },
+    "spine_rollup": {
+      "reached": 63,
+      "total": 108
+    },
+    "capability_rollup": {
+      "supported": 10,
+      "partial": 2,
+      "dead_end": 0,
+      "missing": 0,
+      "total": 12
+    },
+    "recommendation_rollup": {
+      "supported": 5,
+      "partial": 1,
+      "dead_end": 0,
+      "missing": 0,
+      "total": 6
+    },
+    "explainability_rollup": {
+      "supported": 4,
+      "partial": 2,
+      "dead_end": 0,
+      "missing": 0,
+      "total": 6
+    },
+    "report_rollup": {
+      "supported": 5,
+      "partial": 3,
+      "dead_end": 0,
+      "missing": 0,
+      "total": 8
+    },
+    "dashboard_rollup": {
+      "supported": 7,
+      "partial": 1,
+      "dead_end": 0,
+      "missing": 0,
+      "total": 8
+    },
+    "gap_counts": {
+      "Launch-Critical": 0,
+      "High": 0,
+      "Medium": 1,
+      "Low": 1,
+      "Future": 0
+    },
+    "resolved_gap_count": 6,
+    "decisions": [
+      {
+        "topic": "Single AI-orchestration layer (no V2)",
+        "decision": "COMPOSE_EXISTING",
+        "rationale": "AI analysis, reasoning, recommendation, intervention, explainability, report and KPI computation are ALL performed by EXISTING engines. This phase adds ONE read-only composer/registry that audits and orchestrates the READING of those capabilities — never a parallel AI / recommendation / report / KPI engine."
+      },
+      {
+        "topic": "Engines read, never invoked",
+        "decision": "READ_BY_EXISTENCE_AND_PERSISTED_OUTPUT",
+        "rationale": "The composer verifies each capability by filesystem existence + persisted-output COUNT (to_regclass + COUNT(*)). It NEVER invokes an AI/reasoning/recommendation/report engine — proving zero behaviour change (byte-identical OFF, and no side effects ON)."
+      },
+      {
+        "topic": "Recommendation / explainability effectiveness",
+        "decision": "WIRE_REUSE_CALIBRATION_ABSTAIN_UNTIL_KMIN",
+        "rationale": "Where a recommendation→outcome effectiveness rate is implied, it is WIRED via REUSE of the EXISTING validation-loop calibration mechanism (predicted_prob_at_decision; calibrationFromRows/toCalibrationPairs with a k_min gate) — zero new engine/table/DDL. The rate is honestly ABSTAINED (null) until ≥ k_min real non-demo pairs accrue (Confidence axis). Never fabricated."
+      },
+      {
+        "topic": "Report / KPI population",
+        "decision": "REUSE_REPORT_AND_ANALYTICS_ENGINES",
+        "rationale": "Reports are composed by the existing PIL/omega builders (capadex_reports); KPI families roll up over the existing enterprise-analytics + benchmark substrate (anl_kpi_daily). Population is usage-driven (Adoption axis, null≠0) — no new report or KPI engine."
+      },
+      {
+        "topic": "Honesty axes",
+        "decision": "KEEP_AXES_SEPARATE",
+        "rationale": "Coverage (a capability exists) ⟂ Confidence (calibrated/trustworthy) ⟂ Outcome (realized) ⟂ Adoption (real volume) are reported on their OWN axes and NEVER composited. null (unreadable) ≠ 0 (measured-empty). Revenue stays in capadex_payments and is never composited into AI/outcome KPIs."
+      }
+    ],
+    "enterprise_ready": {
+      "verdict": "STRUCTURAL_COMPLETE_ADOPTION_PENDING",
+      "note": "ONE canonical AI-orchestration model audits every EXISTING AI / recommendation / report / analytics / explainability / orchestration capability into one coherent layer answering \"assessment → AI analysis → confidence → explainability → recommendation → intervention → outcome-validation → report → KPI\": a FROZEN 12-step AI spine, a capability inventory, recommendation-completeness + explainability criteria, report sections + dashboard surfaces, and a per-persona path register — every field mapped to the eight AI axes and verified against the live repo. The chain is mechanism-complete via REUSE-before-build: aiClient + ai-reasoning generate analysis; recommendation/intervention/learning engines + PIL/omega report builders + enterprise-analytics/benchmark KPI engines do the work; the recommendation→outcome effectiveness link is WIRED via REUSE of the existing validation-loop calibration mechanism. This phase adds ONE read-only composer/registry + ZERO new AI/report/KPI logic + ZERO schema; engines are read by existence/persisted-output, NEVER invoked. The dominant remaining axes are CONFIDENCE (calibration abstained until ≥ k_min real prediction+outcome pairs accrue) and ADOPTION (real AI/report/outcome/KPI volume, currently honest-low/0, reported SEPARATELY) — usage/data axes, NOT gaps. The verdict stays STRUCTURAL (engineering complete via reuse; adoption/confidence are data-driven and never fabricated). Coverage⟂Confidence⟂Outcome⟂Adoption are reported separately and never composited; null≠0."
+    }
+  },
+  "adoption": {
+    "flag": "aiRecommendationReportOrchestration",
+    "freshness_window_days": 180,
+    "reasoning_chains": 0,
+    "recommendations": 0,
+    "interventions": 0,
+    "reports": 0,
+    "realized_outcomes": 0,
+    "outcome_subjects": 0,
+    "reassessed_subjects": 0,
+    "kpi_rows": 10,
+    "note": "ADOPTION axis only — exercise of the (reuse-instrumented) assessment→AI→recommendation→report→KPI loop. SEPARATE from Coverage; never composited. null = unreadable, 0 = measured-empty. Demo subjects excluded. AI/report/KPI machinery is REUSED — this phase builds NO new logic."
+  },
+  "persona_linkage": {
+    "flag": "aiRecommendationReportOrchestration",
+    "linkage_present": true,
+    "k_min": 30,
+    "personas": [],
+    "note": "Persona⟂AI-outcome linkage validated by a READ-TIME join (no persona column added, zero DDL). Per-persona counts below k_min are suppressed (masked) for anonymity. linkage_present:false means the join was unreadable, NOT that outcomes are zero (null≠0). Coverage⟂Outcome⟂Confidence never composited."
+  }
+}

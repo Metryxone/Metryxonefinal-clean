@@ -813,6 +813,7 @@ export function CapadexResultPhase(props: PhaseProps) {
             handleUnlockRequest={handleUnlockRequest}
             handleLoadPreviousReport={handleLoadPreviousReport}
             evidenceGate={r.progress || null}
+            reassessment={r.reassessment || null}
             className=""
           />
         </div>

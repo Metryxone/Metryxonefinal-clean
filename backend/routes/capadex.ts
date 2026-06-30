@@ -2201,6 +2201,15 @@ export function registerCapadexRoutes(app: Express, pool: Pool) {
 
       const progress = await buildProgress(pool, session.guest_email, session.concern_name);
 
+      // Task #305 (GAP-A4): read-only exit / re-assessment eligibility signal, derived on
+      // read from accrued longitudinal snapshots. Null when longitudinalOutcomeCapture is
+      // OFF (no DDL, nothing surfaced) → byte-identical legacy response.
+      let reassessment = null;
+      try {
+        const { getReassessmentSignal } = await import('../services/capadex/progression-outcome-capture');
+        reassessment = await getReassessmentSignal(pool, String(id));
+      } catch { reassessment = null; }
+
       // Contradiction detection (gated by contradiction_detection flag, per-tenant)
       let contradictionDetected = false;
       if (isEnabled('contradiction_detection', completeTenantId) && subs.length > 1) {
@@ -2234,6 +2243,7 @@ export function registerCapadexRoutes(app: Express, pool: Pool) {
           : null,
         concern_name:           session.concern_name,
         progress,
+        reassessment,
         contradiction_detected: contradictionDetected,
         confidence_intervals:   confidenceIntervals,
         omega_x_payload:        omegaXPayload,

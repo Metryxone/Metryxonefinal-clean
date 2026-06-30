@@ -43,6 +43,7 @@ import {
   type OutcomeRow,
 } from './validation-loop-engine';
 import { buildCalibrationModel } from '../routes/employer-tig';
+import { isLongitudinalOutcomeCaptureEnabled } from '../config/feature-flags';
 
 export const OUTCOME_INTELLIGENCE_VERSION = '102.0.0';
 /** Platform k_min — inherits the validation-loop / TIG precedent (30). Below this, empirical
@@ -249,17 +250,39 @@ async function buildTypeBlock(pool: Pool, type: OutcomeIntelType): Promise<TypeB
     pairs = [];
   } else {
     // learning: completion substrate; no decision-time prediction → calibration not wired.
-    tablePresentFlag = await tablePresent(pool, 'public.student_subscriptions');
-    if (tablePresentFlag) {
-      realizedCount = await safeCount(
+    const studentPresent = await tablePresent(pool, 'public.student_subscriptions');
+    let studentCompletions: number | null = null;
+    if (studentPresent) {
+      studentCompletions = await safeCount(
         pool, `SELECT COUNT(*)::int AS count FROM student_subscriptions WHERE assessment_completed_at IS NOT NULL`);
-      detail.assessments_completed = realizedCount;
+      detail.assessments_completed = studentCompletions;
       detail.reports_generated = await safeCount(
         pool, `SELECT COUNT(*)::int AS count FROM student_subscriptions WHERE report_generated_at IS NOT NULL`);
       detail.subscriptions_total = await safeCount(
         pool, `SELECT COUNT(*)::int AS count FROM student_subscriptions`);
     }
-    demoCount = null; // student_subscriptions carries no demo flag
+    // Task #305: when longitudinalOutcomeCapture is ON, fold in CAPADEX progression
+    // learning-milestones from the canonical outcome ledger (validation_loop_outcomes,
+    // outcome_type='learning'), demo-excluded in lockstep. Calibration STAYS not-wired
+    // (no decision-time prediction) → the surface keeps abstaining. Gated on the capture
+    // flag so the engine output is byte-identical when OFF (no read, demoCount stays null).
+    let progressionRealized: number | null = null;
+    let progressionDemo: number | null = null;
+    const captureOn = isLongitudinalOutcomeCaptureEnabled();
+    if (captureOn && await tablePresent(pool, 'public.validation_loop_outcomes')) {
+      progressionRealized = await safeCount(
+        pool, `SELECT COUNT(*)::int AS count FROM validation_loop_outcomes WHERE outcome_type = 'learning' AND is_demo = false`);
+      progressionDemo = await safeCount(
+        pool, `SELECT COUNT(*)::int AS count FROM validation_loop_outcomes WHERE outcome_type = 'learning' AND is_demo = true`);
+      detail.progression_milestones_realized = progressionRealized;
+      detail.progression_milestones_demo = progressionDemo;
+    }
+    // Combine coverage: null only when EVERY substrate is unreadable (null≠0).
+    const addNullable = (a: number | null, b: number | null) =>
+      a == null && b == null ? null : (a ?? 0) + (b ?? 0);
+    tablePresentFlag = studentPresent || (captureOn && progressionRealized != null) || (captureOn && progressionDemo != null);
+    realizedCount = captureOn ? addNullable(studentCompletions, progressionRealized) : studentCompletions;
+    demoCount = captureOn ? progressionDemo : null; // student_subscriptions carries no demo flag
     methodApplies = false;
     pairs = [];
   }
@@ -354,14 +377,25 @@ export async function composeLedger(pool: Pool, type?: OutcomeIntelType, limit =
 
   if (wantVl && await tablePresent(pool, 'public.validation_loop_outcomes')) {
     try {
-      const r = await pool.query(
-        `SELECT outcome_type, outcome_kind, outcome_value, predicted_prob_at_decision,
-                is_demo, source, subject_email, observed_at
-           FROM validation_loop_outcomes
-          ${type && wantVl ? 'WHERE outcome_type = $1' : ''}
-          ORDER BY observed_at DESC NULLS LAST LIMIT ${type && wantVl ? '$2' : '$1'}`,
-        type && wantVl ? [type, lim] : [lim],
-      );
+      // Scope to the four VL outcome types ONLY. When no type filter is requested we must
+      // still exclude 'learning' here — those rows are surfaced exclusively (and flag-gated)
+      // by the dedicated learning block below; without this scope they would duplicate AND
+      // leak into the ledger even when longitudinalOutcomeCapture is OFF (Task #305).
+      const r = type
+        ? await pool.query(
+            `SELECT outcome_type, outcome_kind, outcome_value, predicted_prob_at_decision,
+                    is_demo, source, subject_email, observed_at
+               FROM validation_loop_outcomes
+              WHERE outcome_type = $1
+              ORDER BY observed_at DESC NULLS LAST LIMIT $2`,
+            [type, lim])
+        : await pool.query(
+            `SELECT outcome_type, outcome_kind, outcome_value, predicted_prob_at_decision,
+                    is_demo, source, subject_email, observed_at
+               FROM validation_loop_outcomes
+              WHERE outcome_type IN ('hiring','performance','promotion','retention')
+              ORDER BY observed_at DESC NULLS LAST LIMIT $1`,
+            [lim]);
       for (const x of r.rows) {
         rows.push({
           type: x.outcome_type, substrate: 'validation_loop_outcomes',
@@ -408,6 +442,29 @@ export async function composeLedger(pool: Pool, type?: OutcomeIntelType, limit =
           prior_score_value: x.prior_score_value, prior_score_type: x.prior_score_type,
           is_demo: x.is_demo, source: x.source,
           subject: pseudonym(x.user_id), observed_at: x.observed_at,
+        });
+      }
+    } catch { /* honest gap */ }
+  }
+
+  // Task #305: CAPADEX progression learning-milestones live in validation_loop_outcomes
+  // (outcome_type='learning'). Surfaced ONLY when the capture flag is ON → byte-identical
+  // ledger when OFF. The wantVl block above intentionally excludes 'learning'.
+  if (wantLearning && isLongitudinalOutcomeCaptureEnabled()
+      && await tablePresent(pool, 'public.validation_loop_outcomes')) {
+    try {
+      const r = await pool.query(
+        `SELECT outcome_kind, outcome_value, is_demo, source, subject_email, observed_at, detail
+           FROM validation_loop_outcomes
+          WHERE outcome_type = 'learning'
+          ORDER BY observed_at DESC NULLS LAST LIMIT $1`, [lim]);
+      for (const x of r.rows) {
+        rows.push({
+          type: 'learning', substrate: 'validation_loop_outcomes',
+          outcome_kind: x.outcome_kind, outcome_value: x.outcome_value,
+          milestone: (x.detail && x.detail.milestone) || null,
+          is_demo: x.is_demo, source: x.source,
+          subject: pseudonym(x.subject_email), observed_at: x.observed_at,
         });
       }
     } catch { /* honest gap */ }

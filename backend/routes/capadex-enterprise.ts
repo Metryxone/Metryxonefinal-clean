@@ -671,6 +671,27 @@ export async function postCompletionHooks(
       });
     }
 
+    // 24. CAPADEX 3.0 Program 2 (Task #305) — Longitudinal outcome capture on progression.
+    // On stage completion, wire the lifecycle event into the EXISTING capture machinery:
+    // (a) append a longitudinal snapshot (reusing captureLongitudinalSnapshot), and
+    // (b) record a learning-type "platform milestone" in the canonical outcome ledger
+    // (validation_loop_outcomes), with a DISTINCT reached-Mastery milestone at CAP_MAS.
+    // Capture only — accuracy stays abstained until real non-demo data crosses k-min;
+    // demo/@example.com is stamped is_demo and excluded in lockstep. Gated SOLELY by
+    // FF_LONGITUDINAL_OUTCOME_CAPTURE (the capture fn re-asserts the flag at its write
+    // layer). Flag OFF → no snapshot, no rows, no DDL → byte-identical. Never-throws.
+    try {
+      const { isLongitudinalOutcomeCaptureEnabled } = await import('../config/feature-flags');
+      if (isLongitudinalOutcomeCaptureEnabled()) {
+        const { captureProgressionOutcome } = await import('../services/capadex/progression-outcome-capture');
+        await captureProgressionOutcome(pool, {
+          sessionId, userId, email, concernName, stageCode, score, scoreLevel,
+        });
+      }
+    } catch (e) {
+      console.error('[capadex-3.0] longitudinal-outcome-capture post-completion hook error (non-blocking):', e);
+    }
+
   } catch (err) {
     // Non-blocking — log but don't fail the main request
     console.error('[capadex-enterprise] postCompletionHooks error:', err);

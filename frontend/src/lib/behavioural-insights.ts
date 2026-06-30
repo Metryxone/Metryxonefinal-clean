@@ -109,6 +109,17 @@ export interface CapadexStageResult {
   next_stage: { code: string; label: string; index: number; color: string; desc: string } | null;
   concern_name: string;
   progress: CapadexProgress[];
+  /** Task #305 — read-only exit / re-assessment eligibility signal. Present ONLY when the
+   *  longitudinalOutcomeCapture flag is ON; null/absent otherwise (byte-identical legacy). */
+  reassessment?: {
+    snapshot_count: number;
+    latest_snapshot_at: string | null;
+    age_days: number | null;
+    eligible_for_reassessment: boolean;
+    reached_mastery: boolean;
+    eligible_for_exit: boolean;
+    reason: string;
+  } | null;
 }
 
 

@@ -190,6 +190,14 @@ export const FEATURE_FLAGS = {
    *  (no `gate` field) → byte-identical legacy behaviour incl. schema. Env:
    *  `FF_EVIDENCE_GATED_PROGRESSION`. */
   evidenceGatedProgression: false,
+  /** CAPADEX 3.0 — Program 2 (Task #305): Longitudinal outcome capture on progression. When ON, lifecycle
+   *  stage completions/transitions wire into the EXISTING capture machinery — an append-only longitudinal
+   *  snapshot (`captureLongitudinalSnapshot`) plus a learning-type "platform milestone" outcome in the
+   *  canonical outcome ledger (`validation_loop_outcomes`, outcome_type='learning'), demo/@example.com
+   *  excluded in lockstep. Capture only — accuracy/effectiveness stays abstained until real non-demo data
+   *  crosses k-min. Flag OFF → no auto-snapshots, no new outcome rows, NO schema → byte-identical legacy.
+   *  Env: `FF_LONGITUDINAL_OUTCOME_CAPTURE`. */
+  longitudinalOutcomeCapture: false,
   /** MX-103X — Live Employer Ecosystem Activation (read-only audit + certification console over the EXISTING
    *  employer hiring funnel). When ON, a PURE read-only composer at `/api/admin/employer-ecosystem/*`
    *  (super-admin) inventories the nine funnel stages — onboarding · create-job · role-DNA · competencies ·
@@ -2126,6 +2134,11 @@ export function isCareerDiscoveryEnabled(): boolean {
 
 export function isEvidenceGatedProgressionEnabled(): boolean {
   return isFlagEnabled('evidenceGatedProgression');
+}
+
+/** CAPADEX 3.0 — Program 2 (Task #305): longitudinal outcome capture on progression master switch. */
+export function isLongitudinalOutcomeCaptureEnabled(): boolean {
+  return isFlagEnabled('longitudinalOutcomeCapture');
 }
 
 export function isUcipEnabled(): boolean {

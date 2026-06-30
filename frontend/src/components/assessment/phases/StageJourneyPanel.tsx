@@ -1,6 +1,7 @@
 import React from 'react';
 import {
-  ArrowRight, CheckCircle, ChevronDown, ChevronUp, Lock, MessageCircle, Phone, Target,
+  ArrowRight, Award, CheckCircle, ChevronDown, ChevronUp, Lock, MessageCircle, Phone,
+  RefreshCw, Target,
 } from 'lucide-react';
 import { CAPADEX_STAGES } from '@/lib/behavioural-insights';
 import type { CapadexProgress } from '@/lib/behavioural-insights';
@@ -37,6 +38,22 @@ export interface StageJourneyPanelProps {
    *  `gate` is present ONLY when the `evidenceGatedProgression` flag is ON; when
    *  absent (flag OFF) NO evidence badges render → byte-identical legacy UI. */
   evidenceGate?: CapadexProgress[] | null;
+  /** Task #305 — read-only exit / re-assessment eligibility signal (flag-gated).
+   *  Present ONLY when the `longitudinalOutcomeCapture` flag is ON; null/absent
+   *  (flag OFF) → NO banner renders → byte-identical legacy UI. */
+  reassessment?: ReassessmentSignal | null;
+}
+
+/** Task #305 — read-only re-assessment / exit eligibility signal (mirrors the
+ *  backend ReassessmentSignal shape). Derived on read, never gates. */
+export interface ReassessmentSignal {
+  snapshot_count: number;
+  latest_snapshot_at: string | null;
+  age_days: number | null;
+  eligible_for_reassessment: boolean;
+  reached_mastery: boolean;
+  eligible_for_exit: boolean;
+  reason: string;
 }
 
 export function StageJourneyPanel({
@@ -47,6 +64,7 @@ export function StageJourneyPanel({
   handleLoadPreviousReport,
   className,
   evidenceGate,
+  reassessment,
 }: StageJourneyPanelProps) {
   const [expandedStage, setExpandedStage] = React.useState<string | null>(null);
 
@@ -96,6 +114,34 @@ export function StageJourneyPanel({
           </div>
         );
       })()}
+
+      {/* Task #305 — read-only exit / re-assessment eligibility banner. Renders ONLY when
+          the longitudinalOutcomeCapture flag is ON (reassessment present) AND there is a
+          surfaced signal worth showing. Never gates progression; purely informational. */}
+      {reassessment && (reassessment.eligible_for_exit || reassessment.eligible_for_reassessment) && (
+        <div
+          className="mb-3 rounded-lg px-3 py-2.5 flex items-start gap-2"
+          style={
+            reassessment.eligible_for_exit
+              ? { backgroundColor: '#ECFDF5', border: '1px solid #A7F3D0' }
+              : { backgroundColor: '#FFF7ED', border: '1px solid #FED7AA' }
+          }
+        >
+          <div className="mt-0.5">
+            {reassessment.eligible_for_exit
+              ? <Award size={14} style={{ color: '#047857' }} />
+              : <RefreshCw size={14} style={{ color: '#C2410C' }} />}
+          </div>
+          <div>
+            <p className="text-[12px] font-bold" style={{ color: reassessment.eligible_for_exit ? '#047857' : '#C2410C' }}>
+              {reassessment.eligible_for_exit ? 'Eligible for exit assessment' : 'Re-assessment recommended'}
+            </p>
+            <p className="text-[11px] mt-0.5 leading-snug" style={{ color: '#334155' }}>
+              {reassessment.reason}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Stage accordion cards */}
       <div className="flex flex-col gap-2">

@@ -31,3 +31,9 @@ byte-identical-OFF). To drive the route's live HTTP authz, do NOT flip the share
 Spawn an isolated backend instance with the flag ON on its own port, poll the flag-gated `/enabled`
 (200 only when up AND flag-ON = combined readiness+flag probe), run the session+CSRF flow, then
 SIGKILL it. Keeps dev's OFF default intact and makes the regression self-contained.
+
+## HTTP e2e harness for the mentor IDOR guard
+`scripts/task295-mentor-engagement-authz-e2e.ts` drives the LIVE route (session+CSRF, mirrors the employer harness) to prove the mentor→seeker `not_a_participant` 403 end-to-end. A registered `role:'mentor'` user is NOT a real mentor until a `mentor_profiles` row exists with `user_id`=that user (registration creates none — provision it directly); `actorMentorProfileId` resolves identity from it. Requires the flag ON in the live server — enable via dev env var (`FF_JOURNEY_TAIL_COMPLETION=1` + restart) then revert.
+
+## is_demo never fires through the live routes (honesty gap)
+`is_demo` is derived from the acting user's @example.com email, but **`deserializeUser` (routes.ts) omits `email` from the session** → `actorEmail(req)` is null → EVERY journey-tail HTTP write records `is_demo=false`. The demo-exclusion only works when the service fns are called directly (the task293 validator passes emails in). So a demo account using the real UI pollutes `composeJourneyTailOverview` counts. (Follow-up filed.)

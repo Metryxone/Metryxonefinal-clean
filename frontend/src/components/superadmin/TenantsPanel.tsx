@@ -12,7 +12,8 @@ import {
   Fingerprint, ShieldCheck, Database, Server, BarChart3,
   PieChart, ArrowUpRight, ArrowDownRight, Building, Heart,
   FileCheck, UserCog, ClipboardList, Landmark, Scale,
-  Plus, Trash2, Edit, Check, X, Bell, Menu, Home, RotateCcw, ArrowRight,
+  Plus, Trash2, Edit, Edit2, Check, X, Bell, Menu, Home, RotateCcw, ArrowRight,
+  ToggleRight,
   Brain, Target, LineChart, Award, HelpCircle, Sparkles,
   Mail, Smartphone, Zap, Save, ToggleLeft, Loader2, Info, Send,
   Star, Calendar, MailCheck, History, Layers, Play,
@@ -63,6 +64,24 @@ function getStatusBadge(status?: string) {
   const map: Record<string, string> = { active: 'bg-green-100 text-green-800', inactive: 'bg-gray-100 text-gray-800', pending: 'bg-yellow-100 text-yellow-800', approved: 'bg-green-100 text-green-800', rejected: 'bg-red-100 text-red-800', suspended: 'bg-red-100 text-red-800', verified: 'bg-blue-100 text-blue-800' };
   return map[s] || 'bg-gray-100 text-gray-700';
 }
+
+const TYPE_CONFIG: Record<string, { label: string; color: string; emoji: string; kpiKey: string }> = {
+  school:     { label: 'Schools',      color: '#2563EB', emoji: '🏫', kpiKey: 'schools' },
+  university: { label: 'Universities', color: '#7C3AED', emoji: '🎓', kpiKey: 'universities' },
+  enterprise: { label: 'Enterprises',  color: '#0EA5E9', emoji: '🏢', kpiKey: 'enterprises' },
+  government: { label: 'Government',    color: '#059669', emoji: '🏛️', kpiKey: 'governments' },
+  ngo:        { label: 'NGOs',         color: '#DB2777', emoji: '🤝', kpiKey: 'ngos' },
+};
+const TIER_CONFIG: Record<string, { color: string }> = {
+  basic:        { color: '#9CA3AF' },
+  standard:     { color: '#3B82F6' },
+  professional: { color: '#8B5CF6' },
+  pro:          { color: '#8B5CF6' },
+  enterprise:   { color: '#F59E0B' },
+};
+const TENANT_TYPES = Object.keys(TYPE_CONFIG);
+const TIERS = ['basic', 'standard', 'professional', 'enterprise'];
+const EMPTY = { tenant_code: '', tenant_name: '', tenant_type: 'school', contact_email: '', subscription_tier: 'basic', max_users: 100 };
 
 export default function TenantsPanel() {
   const qc = useQueryClient();
@@ -173,7 +192,7 @@ export default function TenantsPanel() {
       {/* Tenant Type Summary */}
       <div className="flex gap-2 flex-wrap">
         {Object.entries(TYPE_CONFIG).map(([key, cfg]) => {
-          const count = kpi[`${key}s`] || kpi[key] || 0;
+          const count = Number(kpi[cfg.kpiKey] ?? kpi[`${key}s`] ?? kpi[key] ?? 0);
           return (
             <button key={key} onClick={() => { setTypeFilter(typeFilter===key ? '' : key); setPage(1); }}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs border transition-all ${typeFilter===key ? 'text-white border-transparent' : 'bg-white text-gray-600 hover:border-gray-300'}`}

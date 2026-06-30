@@ -83,7 +83,10 @@ export function registerLDEEvolutionRoutes(app: Express, pool: Pool) {
         { type: 'stage', key: 'emerging', label: 'Emerging Stage', depth: 0, props: { score_range: '30-49', color: '#f97316', cap_code: 'CAP_INS', weight: 0.75 } },
         { type: 'stage', key: 'developing', label: 'Developing Stage', depth: 0, props: { score_range: '50-64', color: '#eab308', cap_code: 'CAP_GRW', weight: 1.0 } },
         { type: 'stage', key: 'proficient', label: 'Proficient Stage', depth: 0, props: { score_range: '65-79', color: '#3b82f6', cap_code: 'CAP_MAS', weight: 1.25 } },
-        { type: 'stage', key: 'advanced', label: 'Advanced Stage', depth: 0, props: { score_range: '80-100', color: '#10b981', cap_code: 'CAP_ADV', weight: 1.5 } }
+        // The developmental-depth ladder cross-walks to the FOUR canonical lifecycle codes
+        // (backend/lib/lifecycle.ts) — there is NO coded stage above Mastery, so the top
+        // "Advanced" depth band (80-100) shares CAP_MAS rather than a non-canon 5th code.
+        { type: 'stage', key: 'advanced', label: 'Advanced Stage', depth: 0, props: { score_range: '80-100', color: '#10b981', cap_code: 'CAP_MAS', weight: 1.5 } }
       ];
 
       // ── Core construct nodes ──────────────────────────────────────────

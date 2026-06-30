@@ -27,6 +27,7 @@ import {
   UNCODED_PRE_STAGE,
   STORED_STAGE_ORDER,
   STORED_STAGE_WEIGHT,
+  canonicalStoredLabel,
 } from '../../lib/lifecycle';
 
 /**
@@ -55,7 +56,13 @@ export const WC3_PROGRESSION_WEIGHT: Record<string, number> = STORED_STAGE_WEIGH
 
 export function canonicalStageFor(stageCode: string | null | undefined): string {
   if (!stageCode) return UNCODED_PRE_STAGE;
-  return STAGE_ENTITY_MAP[stageCode] || UNCODED_PRE_STAGE;
+  // Established mapping: a canonical CAP_* code → its stored label (alias form for CAP_INS).
+  const mapped = STAGE_ENTITY_MAP[stageCode];
+  if (mapped) return mapped;
+  // #310 casing guarantee: any other RECOGNIZED representation (stored label / alias /
+  // pre-stage in odd casing) resolves to its proper-cased stored label via the canon;
+  // genuinely unrecognized input degrades to the uncoded pre-stage exactly as before.
+  return canonicalStoredLabel(stageCode) ?? UNCODED_PRE_STAGE;
 }
 
 export function stageOrderIndex(canonicalStage: string): number {

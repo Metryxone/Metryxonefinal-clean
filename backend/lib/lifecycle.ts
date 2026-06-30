@@ -183,3 +183,23 @@ export function normalizeStoredStage(value: string | null | undefined): Resolved
     recognized: true,
   };
 }
+
+/**
+ * WRITE-LAYER CASING GUARANTEE — resolve any recognized stage representation to its
+ * proper-cased STORED label (the form the DB persists): the uncoded pre-stage as
+ * "Awareness", and the four coded stages as "Curiosity" / "Clarity" (CAP_INS display
+ * alias) / "Growth" / "Mastery". Accepts a CAP_* code, canonical label, display alias, or
+ * pre-stage in ANY casing, trimmed. Returns null for unrecognized input (callers fall back
+ * to their existing default — this never fabricates a stage). Pure; never throws.
+ *
+ * Use this at every persistence point that writes `canonical_stage` so stored stage labels
+ * can never drift into odd casing (e.g. "clarity" → "Clarity"). It returns the STORED
+ * (alias) form, NOT the canonical label, so it preserves the load-bearing "Clarity" stored
+ * representation rather than rewriting it to "Insight".
+ */
+export function canonicalStoredLabel(value: string | null | undefined): string | null {
+  const r = normalizeStoredStage(value);
+  if (r.isUncodedPreStage) return STORED_STAGE_ORDER[0]; // 'Awareness'
+  if (r.code) return STORED_STAGE_ORDER[r.order + 1];     // order 0..3 → Curiosity..Mastery
+  return null;
+}

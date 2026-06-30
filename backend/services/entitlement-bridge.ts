@@ -9,11 +9,23 @@
  */
 
 import pg from 'pg';
-import { STAGE_CODE_TO_LABEL } from '../lib/lifecycle';
+import {
+  STAGE_CODE_TO_LABEL,
+  LIFECYCLE_STAGE_CODES,
+  isLifecycleStageCode,
+  type LifecycleStageCode,
+} from '../lib/lifecycle';
 
-export type StageCode = 'CAP_CUR' | 'CAP_INS' | 'CAP_GRW' | 'CAP_MAS';
+/** The canonical lifecycle code set — re-exported under the local name for callers. */
+export type StageCode = LifecycleStageCode;
 
-const STAGE_ORDER: StageCode[] = ['CAP_CUR', 'CAP_INS', 'CAP_GRW', 'CAP_MAS'];
+/**
+ * Stage hierarchy order, sourced from the ONE canonical rulebook
+ * (`backend/lib/lifecycle.ts` `LIFECYCLE_STAGE_CODES`) so this commerce/entitlement code
+ * can never drift from the lifecycle canon. Values/order are byte-identical to the prior
+ * hand-maintained local copy that this replaces.
+ */
+const STAGE_ORDER: readonly StageCode[] = LIFECYCLE_STAGE_CODES;
 
 const STAGE_FEATURES: Record<StageCode, string[]> = {
   CAP_CUR: [
@@ -107,7 +119,7 @@ export async function getEntitlementProfile(
     if (result.rows.length === 0) return BLANK(email);
 
     const validRows = result.rows.filter(r =>
-      STAGE_ORDER.includes(r.stage_code as StageCode)
+      isLifecycleStageCode(r.stage_code)
     );
     if (validRows.length === 0) return BLANK(email);
 

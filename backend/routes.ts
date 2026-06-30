@@ -503,6 +503,7 @@ export async function registerRoutes(
         id: user.id,
         username: user.username,
         fullName: user.fullName,
+        email: user.email ?? null,
         role: user.role,
         roles: user.roles || [user.role],
         account_type: (user as any).accountType ?? 'job_seeker',

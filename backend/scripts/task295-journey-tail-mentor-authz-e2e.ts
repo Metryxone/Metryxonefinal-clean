@@ -223,10 +223,17 @@ async function main() {
   assert(pos.status === 200, `accepted with 200 (got ${pos.status})`);
   assert(pos.json?.ok === true && !!pos.json?.id, `returned an engagement id (got ${JSON.stringify(pos.json)})`);
   const wrote = await pool.query(
-    `SELECT 1 FROM jt_mentor_engagements WHERE id=$1 AND mentor_profile_id=$2 AND seeker_id=$3`,
+    `SELECT is_demo FROM jt_mentor_engagements WHERE id=$1 AND mentor_profile_id=$2 AND seeker_id=$3`,
     [pos.json?.id, mentorProfileId, BOOKED_SEEKER_ID],
   );
   assert((wrote.rowCount ?? 0) === 1, 'the engagement row was actually persisted for the booked seeker');
+  // Task #298 — demo-exclusion over the LIVE HTTP path. The acting mentor is an @example.com (demo)
+  // account, so the engagement MUST be flagged is_demo=true and stay out of composeJourneyTailOverview's
+  // honest counts. is_demo is derived in the service from the actor's email, which the route reads from
+  // req.user.email — only populated once deserializeUser loads `email` into the session. Before that fix
+  // the session had no email → actorEmail() returned null → every HTTP write recorded is_demo=false,
+  // letting demo activity pollute the overview. This proves the demo flag now fires end-to-end.
+  assert(wrote.rows[0]?.is_demo === true, `engagement flagged is_demo=true for the @example.com mentor over HTTP (got ${wrote.rows[0]?.is_demo})`);
 
   step('ALLOWED — mentor self-note with no seeker_id (guard only fires on a named mentee)');
   const selfNote = await post(mentor.session, {

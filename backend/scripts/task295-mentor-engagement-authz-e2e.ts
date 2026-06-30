@@ -186,13 +186,18 @@ async function main() {
     assert(r.status === 200 && r.json?.ok === true && !!r.json?.id, `POST accepted with 200 + id (status ${r.status}, id ${r.json?.id})`);
     if (r.json?.id) createdEngIds.push(String(r.json.id));
     const row = await pool.query(
-      `SELECT author_role, author_id FROM jt_mentor_engagements WHERE mentor_profile_id=$1 AND seeker_id=$2`,
+      `SELECT author_role, author_id, is_demo FROM jt_mentor_engagements WHERE mentor_profile_id=$1 AND seeker_id=$2`,
       [mentorProfileId, BOOKED_SEEKER],
     );
     assert(row.rowCount === 1, `exactly one engagement persisted for the booked seeker (n=${row.rowCount})`);
     if (row.rowCount === 1) {
       assert(row.rows[0].author_role === 'mentor', `author_role recorded as mentor (got ${row.rows[0].author_role})`);
       assert(String(row.rows[0].author_id) === userId, `author_id is the acting mentor's user id (no impersonation)`);
+      // Task #298: the acting mentor's email is @example.com (a demo account). The live HTTP route must
+      // resolve that email from the session (deserializeUser now loads it) so the engagement is flagged
+      // is_demo=true and stays OUT of composeJourneyTailOverview's honest counts. Before the fix the
+      // session had no email → actorEmail()=null → is_demo=false → demo activity polluted the overview.
+      assert(row.rows[0].is_demo === true, `is_demo recorded true for an @example.com author over the HTTP path (got ${row.rows[0].is_demo})`);
     }
   }
 

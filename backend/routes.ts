@@ -9771,38 +9771,24 @@ Requirements:
   });
 
   // ==================== HR & RECRUITMENT ROUTES ====================
-
-  // Job Postings
-  app.get("/api/hr/jobs", requireAuth, async (req, res, next) => {
-    try {
-      const { status, roleCategory } = req.query;
-      const jobs = await storage.getJobPostings({
-        status: status as string | undefined,
-        roleCategory: roleCategory as string | undefined
-      });
-      res.json(jobs);
-    } catch (error) {
-      next(error);
-    }
-  });
-
-  // Program 2 2.1: removed a dead duplicate GET /api/hr/jobs/:id registration
-  // here — it was shadowed by the equivalent (now auth-gated) one registered
-  // earlier in this file. Only this single pair was byte-equivalent; the other
-  // /api/hr/* and /api/institute/* and /api/lbi/* duplicates are DIVERGENT
-  // implementations and are left for per-pair human adjudication.
-  app.post("/api/hr/jobs", requireAuth, async (req, res, next) => {
-    try {
-      const job = await storage.createJobPosting({
-        ...req.body,
-        createdBy: req.user!.id,
-        status: 'draft'
-      });
-      res.status(201).json(job);
-    } catch (error) {
-      next(error);
-    }
-  });
+  //
+  // Program 2 2.1 — DEAD DUPLICATE CLEANUP: this was the SECOND (shadowed)
+  // cluster of HR / institute / LBI route registrations. Express serves the
+  // FIRST registration of a given method+path, so every duplicate registered
+  // here never executed. The 9 pairs from the original audit finding have been
+  // removed here — GET/POST /api/hr/jobs, GET /api/hr/jobs/:id,
+  // GET /api/hr/applications, GET /api/hr/mentors, POST/GET
+  // /api/institute/students, POST/GET /api/lbi/sessions — leaving their served
+  // implementations earlier in this file (these carry the safer/richer logic:
+  // institute scoping, the 6-month LBI lockout, HR audit-log writes,
+  // application stats).
+  //
+  // NOTE (newly discovered, NOT in the original 9-pair finding, left in place
+  // pending separate approval): three MORE shadowed dead duplicates still live
+  // below in this cluster — GET /api/hr/applications/:id, GET /api/hr/mentors/:id,
+  // and POST /api/lbi/sessions/:sessionId/complete. Their served (first) copies
+  // are registered earlier in the file, so these later copies are also dead; they
+  // are documented in audit report 06 (D11) for a future approval-gated pass.
 
   app.patch("/api/hr/jobs/:id", requireAuth, async (req, res, next) => {
     try {
@@ -9979,19 +9965,6 @@ Requirements:
   });
 
   // Job Applications
-  app.get("/api/hr/applications", requireAuth, async (req, res, next) => {
-    try {
-      const { jobId, status } = req.query;
-      const applications = await storage.getJobApplications({
-        jobId: jobId as string | undefined,
-        status: status as string | undefined
-      });
-      res.json(applications);
-    } catch (error) {
-      next(error);
-    }
-  });
-
   app.get("/api/hr/applications/:id", requireAuth, async (req, res, next) => {
     try {
       const application = await storage.getJobApplication(req.params.id);
@@ -10061,16 +10034,6 @@ Requirements:
   });
 
   // Mentors
-  app.get("/api/hr/mentors", requireAuth, async (req, res, next) => {
-    try {
-      const { status } = req.query;
-      const mentorsList = await storage.getMentors({ status: status as string | undefined });
-      res.json(mentorsList);
-    } catch (error) {
-      next(error);
-    }
-  });
-
   app.get("/api/hr/mentors/:id", requireAuth, async (req, res, next) => {
     try {
       const mentor = await storage.getMentor(req.params.id);
@@ -10472,33 +10435,6 @@ Requirements:
     try {
       const result = await storage.approveStudentBulkImport(req.params.id, req.user?.id || '');
       res.json(result);
-    } catch (error) {
-      next(error);
-    }
-  });
-
-  // Add individual student at institute
-  app.post("/api/institute/students", requireAuth, async (req, res, next) => {
-    try {
-      const student = await storage.createStudentAtInstitute(req.body);
-      res.json(student);
-    } catch (error) {
-      next(error);
-    }
-  });
-
-  // Get students for institute
-  app.get("/api/institute/students", requireAuth, async (req, res, next) => {
-    try {
-      const { instituteId, status, search, page, limit } = req.query;
-      const students = await storage.getInstituteStudents({
-        instituteId: instituteId as string,
-        status: status as string,
-        search: search as string,
-        page: parseInt(page as string) || 1,
-        limit: parseInt(limit as string) || 50
-      });
-      res.json(students);
     } catch (error) {
       next(error);
     }
@@ -11696,42 +11632,6 @@ Requirements:
     }
   });
 
-  // Create LBI assessment session
-  app.post("/api/lbi/sessions", requireAuth, async (req, res, next) => {
-    try {
-      const sessionSchema = z.object({
-        ageBandId: z.string(),
-        domainId: z.string().optional(),
-        assessmentType: z.string().default('full'),
-      });
-      const validation = sessionSchema.safeParse(req.body);
-      if (!validation.success) {
-        return res.status(400).json({ message: "Invalid request", errors: validation.error.issues });
-      }
-      const { ageBandId, domainId, assessmentType } = validation.data;
-      const user = req.user as any;
-
-      const questionCount = await db.execute(sql`
-        SELECT COUNT(*) as total FROM lbi_questions 
-        WHERE age_band_id = ${ageBandId} 
-        AND LOWER(status) = 'active'
-        ${domainId ? sql`AND domain_id = ${domainId}` : sql``}
-      `);
-
-      const total = Number(questionCount.rows[0]?.total) || 0;
-
-      const sessionId = `lbi_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      await db.execute(sql`
-        INSERT INTO lbi_assessment_sessions (id, child_id, student_id, age_band_id, assessment_type, total_questions, status)
-        VALUES (${sessionId}, ${user.id}, ${user.id}, ${ageBandId}, ${assessmentType}, ${total}, 'in_progress')
-      `);
-
-      res.json({ sessionId, totalQuestions: total });
-    } catch (error) {
-      next(error);
-    }
-  });
-
   // Save LBI session responses and complete session
   app.post("/api/lbi/sessions/:sessionId/complete", requireAuth, async (req, res, next) => {
     try {
@@ -11769,24 +11669,6 @@ Requirements:
       `);
 
       res.json({ message: "Session completed", sessionId });
-    } catch (error) {
-      next(error);
-    }
-  });
-
-  // Get LBI session history for current user
-  app.get("/api/lbi/sessions", requireAuth, async (req, res, next) => {
-    try {
-      const user = req.user as any;
-      const sessions = await db.execute(sql`
-        SELECT s.*, ab.band_code, ab.band_name 
-        FROM lbi_assessment_sessions s
-        LEFT JOIN lbi_age_bands ab ON ab.id = s.age_band_id
-        WHERE s.child_id = ${user.id} OR s.student_id = ${user.id}
-        ORDER BY s.created_at DESC
-        LIMIT 20
-      `);
-      res.json(sessions.rows);
     } catch (error) {
       next(error);
     }

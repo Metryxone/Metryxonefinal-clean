@@ -1,0 +1,21 @@
+Part 1 — Single-sourcing (Medium gap) → 4 byte-identical edits
+The canon exposes everything needed: STAGE_CODE_TO_LABEL (coded labels: CAP_INS→"Insight"), stageLabel(), stageOrder(), STORED_STAGE_ORDER/STORED_STAGE_WEIGHT + toCanonicalStoredStage() (stored labels: CAP_INS→"Clarity").
+
+email.ts:267-272 — replace the STAGE_HEADER literal with values derived from STAGE_CODE_TO_LABEL[code] + stageOrder(code)+1. (Coded-label space → byte-identical.)
+capadex-payments.ts:516-517 — stageLabel() delegates to canon stageLabel(code) ?? code. Byte-identical for the codes actually passed (STAGE_PRICES only pays CAP_INS/GRW/MAS), and additionally correct if CAP_CUR is ever passed.
+progression-outcome-capture.ts:35-36 — drop the MASTERY_* literals; derive code from LIFECYCLE_STAGE_CODES/label from canon. Byte-identical.
+wc3-schema.ts:74-86 seed — generate the wc3_stage_definitions rows (key/order/weight) and wc3_stage_entity_map rows from STORED_STAGE_ORDER/STORED_STAGE_WEIGHT + toCanonicalStoredStage(). Keep the wc3-specific descriptions local (they aren't lifecycle canon). Idempotent seed → byte-identical values.
+Then extend verify-canonical-stage-writers.ts to assert no inline CAP_*→label map literals remain outside the canon, so this can't silently regress.
+
+All four are value-identical on real inputs — pure single-sourcing, no behaviour/data/flag change.
+
+Part 2 — Documentation (High gap) → needs your call
+The runtime, both canon modules, the frozen Blueprint 06, and two prior audit docs are all 4-coded; docs/CAPADEX.md is the lone file still on the 5-stage CAP_CLA model. The fix direction is a product decision, not something I should silently pick:
+
+A (recommended): the 4-coded canon is correct → rewrite the 6 CAP_CLA references in docs/CAPADEX.md (stage table, free-entry prose, payments-exclusion, gamification XP, cognitive-state bootstrap, the SQL schema comment) and fix the CSI weight labels to match canon. Documentation-only.
+B: a free CAP_CLA Clarity stage distinct from Insight is genuinely intended → that's a real lifecycle change requiring re-opening the frozen Blueprint 06 + the runtime. Much larger, and a separate program — not a Phase 1.1 cleanup.
+After whichever path, I re-run the verify scripts and regenerate the certification to 100%.
+
+
+Concluding by asking for a choice
+I've laid out the full path above. Just let me know which way to go on the docs (A — align docs to the 4-coded canon, recommended; B — keep the CAP_CLA 5-stage model and re-open the frozen blueprint; or Part 1 only — do the code single-sourcing now and decide docs later) and I'll execute. The Part 1 code single-sourcing is byte-identical and safe whenever you want it.

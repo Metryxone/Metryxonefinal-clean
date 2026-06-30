@@ -30,10 +30,16 @@
 
 import type { Pool } from 'pg';
 import { isLongitudinalOutcomeCaptureEnabled } from '../../config/feature-flags.js';
+import { LIFECYCLE_STAGE_CODES, STAGE_CODE_TO_LABEL } from '../../lib/lifecycle.js';
 
-/** Canonical CAPADEX lifecycle Mastery stage (mirrors STAGES in routes/capadex.ts). */
-const MASTERY_STAGE_CODE = 'CAP_MAS';
-const MASTERY_CANONICAL = 'Mastery';
+/**
+ * Canonical CAPADEX lifecycle Mastery stage — single-sourced from the lifecycle canon
+ * (lib/lifecycle.ts). The final coded stage is Mastery; its label ('Mastery') is the same in
+ * both the coded and stored-projection label spaces, so this is byte-identical to the prior
+ * inline literals ('CAP_MAS' / 'Mastery').
+ */
+const MASTERY_STAGE_CODE: string = LIFECYCLE_STAGE_CODES[LIFECYCLE_STAGE_CODES.length - 1];
+const MASTERY_CANONICAL: string = STAGE_CODE_TO_LABEL[MASTERY_STAGE_CODE];
 
 /**
  * Re-assessment freshness window (days). A user whose newest accrued longitudinal

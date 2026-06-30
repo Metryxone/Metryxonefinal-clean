@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { STAGE_CODE_TO_LABEL, stageOrder, LIFECYCLE_STAGE_CODES } from './lib/lifecycle';
 
 function getTransporter() {
   const user = process.env.ZOHO_EMAIL || 'notifications@metryxone.com';
@@ -264,12 +265,12 @@ const STAGE_COPY: Record<string, {
   },
 };
 
-const STAGE_HEADER: Record<string, { label: string; stageNum: number }> = {
-  CAP_CUR: { label: 'Curiosity',  stageNum: 1 },
-  CAP_INS: { label: 'Insight',    stageNum: 2 },
-  CAP_GRW: { label: 'Growth',     stageNum: 3 },
-  CAP_MAS: { label: 'Mastery',    stageNum: 4 },
-};
+// Single-sourced from the lifecycle canon (lib/lifecycle.ts): coded label + 1-based stage
+// number. Values are byte-identical to the prior inline literal (Curiosity 1 / Insight 2 /
+// Growth 3 / Mastery 4) — this is read-layer single-sourcing, not a behaviour change.
+const STAGE_HEADER: Record<string, { label: string; stageNum: number }> = Object.fromEntries(
+  LIFECYCLE_STAGE_CODES.map((code) => [code, { label: STAGE_CODE_TO_LABEL[code], stageNum: stageOrder(code) + 1 }]),
+);
 
 export interface DynamicReportSummary {
   behavioural_summary: string;

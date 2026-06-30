@@ -13,6 +13,7 @@ import type { Pool } from 'pg';
 import { createHmac } from 'crypto';
 import { z } from 'zod';
 import { validate } from '../lib/validate';
+import { stageLabel as canonStageLabel } from '../lib/lifecycle';
 import { sendPaymentConfirmationUser, sendPaymentConfirmationAdmin } from '../email';
 import { sendWhatsAppNotification } from '../services/whatsapp';
 
@@ -513,6 +514,9 @@ export function registerCapadexPaymentRoutes(app: Express, pool: Pool) {
   });
 }
 
+// Single-sourced from the lifecycle canon (lib/lifecycle.ts). Byte-identical for the codes
+// actually passed here (paid stages CAP_INS/CAP_GRW/CAP_MAS) and additionally correct for
+// CAP_CUR ('Curiosity') and any future code; unrecognized codes still fall back to the raw code.
 function stageLabel(code: string): string {
-  return code === 'CAP_INS' ? 'Insight' : code === 'CAP_GRW' ? 'Growth' : code === 'CAP_MAS' ? 'Mastery' : code;
+  return canonStageLabel(code) ?? code;
 }

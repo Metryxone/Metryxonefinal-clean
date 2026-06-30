@@ -10,6 +10,25 @@
  * All DDL is idempotent (`CREATE TABLE IF NOT EXISTS` / `ON CONFLICT DO NOTHING`).
  */
 import type { Pool } from 'pg';
+import {
+  STORED_STAGE_ORDER,
+  STORED_STAGE_WEIGHT,
+  LIFECYCLE_STAGE_CODES,
+  toCanonicalStoredStage,
+} from '../../lib/lifecycle';
+
+/**
+ * WC-3-specific stage descriptions, keyed by the canonical stored label
+ * (lib/lifecycle.ts STORED_STAGE_ORDER). Local copy — descriptions are WC-3 reference
+ * copy, NOT part of the lifecycle canon (keys/order/weights ARE single-sourced from canon).
+ */
+const STAGE_DESCRIPTIONS: Record<string, string> = {
+  Awareness: 'Becoming aware of the concern area',
+  Curiosity: 'Actively exploring the concern',
+  Clarity: 'Gaining clarity / insight',
+  Growth: 'Developing and growing',
+  Mastery: 'Demonstrating mastery',
+};
 
 let stageReady = false;
 let personalizationReady = false;
@@ -68,23 +87,34 @@ export async function ensureWc3StageSchema(pool: Pool): Promise<void> {
     CREATE INDEX IF NOT EXISTS idx_wc3_stage_prog_session ON wc3_stage_progression(session_id);
     CREATE INDEX IF NOT EXISTS idx_wc3_stage_prog_created ON wc3_stage_progression(created_at DESC);
   `);
-  // Seed authored reference data (idempotent). 5-stage canonical progression:
-  // Awareness(0.25) → Curiosity(0.50) → Clarity(0.75) → Growth(1.00) → Mastery(1.25).
-  await pool.query(`
-    INSERT INTO wc3_stage_definitions (stage_key, order_index, weight, description) VALUES
-      ('Awareness', 0, 0.25, 'Becoming aware of the concern area'),
-      ('Curiosity', 1, 0.50, 'Actively exploring the concern'),
-      ('Clarity',   2, 0.75, 'Gaining clarity / insight'),
-      ('Growth',    3, 1.00, 'Developing and growing'),
-      ('Mastery',   4, 1.25, 'Demonstrating mastery')
-    ON CONFLICT (stage_key) DO NOTHING;
-    INSERT INTO wc3_stage_entity_map (source_stage_code, canonical_stage) VALUES
-      ('CAP_CUR', 'Curiosity'),
-      ('CAP_INS', 'Clarity'),
-      ('CAP_GRW', 'Growth'),
-      ('CAP_MAS', 'Mastery')
-    ON CONFLICT (source_stage_code) DO NOTHING;
-  `);
+  // Seed authored reference data (idempotent). Stage keys / order_index / weights are
+  // single-sourced from the lifecycle canon (lib/lifecycle.ts: STORED_STAGE_ORDER +
+  // STORED_STAGE_WEIGHT — the 5-element STORED PROJECTION Awareness→Curiosity→Clarity→
+  // Growth→Mastery, where 'Clarity' is CAP_INS's display alias; never a competing canon).
+  // Only the WC-3-specific descriptions are local copy. The CAP_* → stored-label entity map
+  // is derived via toCanonicalStoredStage so it can never drift from the canon. Parameterized
+  // values are byte-identical to the prior inline literal seed.
+  const stageDefs = STORED_STAGE_ORDER.map((label, i) => ({
+    key: label,
+    order: i,
+    weight: STORED_STAGE_WEIGHT[label],
+    description: STAGE_DESCRIPTIONS[label] ?? null,
+  }));
+  await pool.query(
+    `INSERT INTO wc3_stage_definitions (stage_key, order_index, weight, description) VALUES
+       ${stageDefs.map((_, i) => `($${i * 4 + 1}, $${i * 4 + 2}, $${i * 4 + 3}, $${i * 4 + 4})`).join(',\n       ')}
+     ON CONFLICT (stage_key) DO NOTHING;`,
+    stageDefs.flatMap((d) => [d.key, d.order, d.weight, d.description]),
+  );
+  const entityRows = LIFECYCLE_STAGE_CODES
+    .map((code) => ({ code: code as string, canonical: toCanonicalStoredStage(code) }))
+    .filter((r): r is { code: string; canonical: string } => r.canonical !== null);
+  await pool.query(
+    `INSERT INTO wc3_stage_entity_map (source_stage_code, canonical_stage) VALUES
+       ${entityRows.map((_, i) => `($${i * 2 + 1}, $${i * 2 + 2})`).join(',\n       ')}
+     ON CONFLICT (source_stage_code) DO NOTHING;`,
+    entityRows.flatMap((r) => [r.code, r.canonical]),
+  );
   stageReady = true;
 }
 

@@ -65,7 +65,7 @@ CAPADEX maps a user's concern — academic, occupational, emotional, social, or 
 ### Core value proposition
 
 - No login required to start — anonymous entry, OTP verification only at report stage
-- Free first stage (Clarity) lowers the barrier to entry with zero commitment
+- Free first stage (Curiosity) lowers the barrier to entry with zero commitment
 - Each stage deepens the intelligence; users return with measurable progress
 - Longitudinal memory — the system remembers and compares across sessions
 - Enterprise analytics layer for HR, counselors, and administrators
@@ -74,17 +74,18 @@ CAPADEX maps a user's concern — academic, occupational, emotional, social, or 
 
 ## 2. Stage Architecture
 
-CAPADEX is structured as five sequential stages. Each stage builds on the previous one — users must complete a stage before the next becomes available.
+CAPADEX is structured as four sequential coded stages. Each stage builds on the previous one — users must complete a stage before the next becomes available.
 
 | # | Code | Label | Theme | Pricing | Questions |
 |---|---|---|---|---|---|
-| 0 | `CAP_CLA` | Clarity | First-signal orientation & concern mapping | **Free** | ~8 |
-| 1 | `CAP_CUR` | Curiosity | Surface awareness & behavioural first signals | ₹199 | 10 |
-| 2 | `CAP_INS` | Insight | Root-cause decode & competency gap analysis | ₹499 | ~15 |
-| 3 | `CAP_GRW` | Growth | 30-day strategy & habit formation plan | ₹999 | ~15 |
-| 4 | `CAP_MAS` | Mastery | Full 19-domain profile & expert debrief | ₹1,999 | ~20 |
+| 0 | `CAP_CUR` | Curiosity | Surface awareness & behavioural first signals | **Free** | 10 |
+| 1 | `CAP_INS` | Insight | Root-cause decode & competency gap analysis | ₹499 | ~15 |
+| 2 | `CAP_GRW` | Growth | 30-day strategy & habit formation plan | ₹999 | ~15 |
+| 3 | `CAP_MAS` | Mastery | Full 19-domain profile & expert debrief | ₹1,999 | ~20 |
 
-> **Clarity (CAP_CLA) is the free entry stage.** It orients the user to their concern, runs the concern-resolution engine, and produces a first-signal snapshot — enough to show value and motivate progression to Curiosity.
+> **Curiosity (CAP_CUR) is the free entry stage.** It orients the user to their concern, runs the concern-resolution engine, and produces a first-signal snapshot — enough to show value and motivate progression to the paid Insight stage.
+>
+> **"Clarity" is the sanctioned user-facing display alias of Insight (CAP_INS) — the same stage, never a separate or fifth stage.** A separate uncoded pre-stage, "Awareness", exists only inside the stored-string progression projection used for CSI weighting (§6); it is never a coded assessment stage.
 
 ### Stage status lifecycle
 
@@ -92,14 +93,14 @@ CAPADEX is structured as five sequential stages. Each stage builds on the previo
 available → in_progress → completed → [payment required] → available (next stage)
 ```
 
-A stage transitions from `available` to `in_progress` when the user starts answering questions. On completing all questions and submitting, it moves to `completed`. The next stage starts as `locked` until payment is confirmed (except Clarity which is always free).
+A stage transitions from `available` to `in_progress` when the user starts answering questions. On completing all questions and submitting, it moves to `completed`. The next stage starts as `locked` until payment is confirmed (except Curiosity which is always free).
 
 ### Bundle options
 
 | Bundle | Includes | Price |
 |---|---|---|
 | **Growth Bundle** | Insight + Growth (CAP_INS + CAP_GRW) | Bundled pricing |
-| **Mastery Bundle** | All five stages (complete journey) | ₹1,999 |
+| **Mastery Bundle** | All four stages (complete journey) | ₹1,999 |
 
 When a user purchases Mastery Bundle, all stages are covered. When a user purchases Growth Bundle, CAP_INS and CAP_GRW are covered.
 
@@ -107,7 +108,6 @@ When a user purchases Mastery Bundle, all stages are covered. When a user purcha
 
 | Stage | Accent | Background | Border |
 |---|---|---|---|
-| Clarity | `#0E7490` | `#ECFEFF` | `#A5F3FC` |
 | Curiosity | `#344E86` | `#EEF2FF` | `#C7D2FE` |
 | Insight | `#7C3AED` | `#F5F3FF` | `#DDD6FE` |
 | Growth | `#0F766E` | `#F0FDFA` | `#6EE7B7` |
@@ -145,7 +145,7 @@ interface CapadexPricingEntry {
 
 When a user taps "Unlock [Stage]", `handleUnlockRequest()` is called with the stage code, name, price, color palette, benefits, price note, and WhatsApp number. This sets `paymentStageData` in state and navigates to the `capadex_payment` phase. After payment confirmation, `startNextStageAfterPayment()` creates a new session for the unlocked stage.
 
-Clarity (`CAP_CLA`) is always free — it is excluded from the `STAGE_PRICES` map in the payments backend and the UI never shows an unlock button for it.
+Curiosity (`CAP_CUR`) is always free — it is excluded from the `STAGE_PRICES` map in the payments backend and the UI never shows an unlock button for it.
 
 ---
 
@@ -160,15 +160,15 @@ intro
   └─ capadex_analyze              (concern parsing + AI mapping)
        └─ capadex_clarify         (disambiguate edge cases)
             └─ capadex_preview    (show what's coming)
-                 └─ capadex_cla_profile  (Clarity stage intro — FREE)
-                      └─ capadex_questions   (answer ~8 Likert questions)
+                 └─ capadex_cur_profile  (Curiosity stage intro — FREE)
+                      └─ capadex_questions   (answer 10 Likert questions)
                            └─ capadex_result   (score + level card)
                                 └─ capadex_register  (capture email)
                                      └─ capadex_otp  (verify email)
                                           └─ capadex_report  (full intelligence report)
                                                └─ intro (return, Stage Journey shown)
                                                     └─ capadex_payment (for paid stages)
-                                                         └─ capadex_[cur|ins|grw|mas]_profile
+                                                         └─ capadex_[ins|grw|mas]_profile
                                                               └─ capadex_questions → result → report
 ```
 
@@ -180,8 +180,8 @@ intro
 | `capadex_analyze` | `CapadexAnalyzePhase.tsx` | Animated concern analysis |
 | `capadex_clarify` | `CapadexClarifyPhase.tsx` | Concern disambiguation |
 | `capadex_preview` | `CapadexPreviewPhase.tsx` | Stage preview + domain list |
-| `capadex_cla_profile` | `CapadexClaProfilePhase.tsx` | **Clarity stage intro (free)** |
-| `capadex_cur_profile` | `CapadexCurProfilePhase.tsx` | Curiosity stage intro |
+| `capadex_cla_profile` | `CapadexClaProfilePhase.tsx` | Legacy component — not wired into the current 4-coded flow (no stage-code maps to it); superseded by `capadex_cur_profile`. "Clarity" is the display alias of Insight, not a separate stage. |
+| `capadex_cur_profile` | `CapadexCurProfilePhase.tsx` | **Curiosity stage intro (free entry)** |
 | `capadex_ins_profile` | `CapadexInsProfilePhase.tsx` | Insight stage intro |
 | `capadex_grw_profile` | `CapadexGrwProfilePhase.tsx` | Growth stage intro |
 | `capadex_mas_profile` | `CapadexMasProfilePhase.tsx` | Mastery stage intro |
@@ -276,9 +276,9 @@ CSI = Σ(stage_score × weight) / Σ(weights)
 
 | Stage | Weight |
 |---|---|
-| Clarity | 0.25 |
+| Awareness (uncoded pre-stage) | 0.25 |
 | Curiosity | 0.50 |
-| Insight | 0.75 |
+| Insight (display alias *Clarity*) | 0.75 |
 | Growth | 1.00 |
 | Mastery | 1.25 |
 
@@ -334,7 +334,6 @@ Flags are stored in `capadex_risk_flags` and surface in the enterprise SignalInt
 
 | Stage completed | XP awarded | Badge unlocked |
 |---|---|---|
-| CAP_CLA | 50 XP | — |
 | CAP_CUR | 100 XP | — |
 | CAP_INS | 150 XP | `deep_diver` (if score ≥ 70) |
 | CAP_GRW | 200 XP | — |
@@ -342,7 +341,7 @@ Flags are stored in `capadex_risk_flags` and surface in the enterprise SignalInt
 
 ### Cognitive state seeding
 
-After CAP_CLA completion, `seedInitialState()` bootstraps the cognitive state model for the user. After each subsequent stage, `updateStateOnStageComplete()` advances the model.
+After CAP_CUR (Curiosity) completion, `seedInitialState()` bootstraps the cognitive state model for the user. After each subsequent stage, `updateStateOnStageComplete()` advances the model.
 
 ---
 
@@ -573,7 +572,7 @@ capadex_sessions
   user_id INTEGER REFERENCES capadex_users(id)
   guest_email TEXT
   concern_name TEXT
-  stage_code TEXT  -- CAP_CLA | CAP_CUR | CAP_INS | CAP_GRW | CAP_MAS
+  stage_code TEXT  -- CAP_CUR | CAP_INS | CAP_GRW | CAP_MAS
   stage_index INTEGER
   status TEXT  -- available | in_progress | completed | locked
   score NUMERIC
@@ -835,7 +834,7 @@ All state and handlers are passed to phase components via `PhaseProps`.
 
 ### IntroPhase Stage Journey
 
-When a returning user verifies their email (OTP), the Stage Journey accordion is shown. It renders all 5 stages with smart state detection:
+When a returning user verifies their email (OTP), the Stage Journey accordion is shown. It renders all 4 stages with smart state detection:
 
 | State | Visual |
 |---|---|

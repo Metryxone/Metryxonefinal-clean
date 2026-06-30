@@ -22,6 +22,9 @@ import {
   toCanonicalStoredStage,
 } from '../lib/lifecycle';
 import { canonicalStageFor, STAGE_ENTITY_MAP, WC3_PROGRESSION_ORDER } from '../services/wc3/stage-intelligence';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import path from 'path';
 
 let failures = 0;
 let checks = 0;
@@ -106,6 +109,38 @@ const callerInputs: Array<string | null | undefined> = [
 for (const input of callerInputs) {
   const persisted = toCanonicalStoredStage(input ?? null); // exactly what the guard persists
   assert(`guard persists null|canonical for ${JSON.stringify(input)}`, persisted === null || isCanonicalStoredStage(persisted), `got ${JSON.stringify(persisted)}`);
+}
+
+console.log('— PART F: single-sourcing — no inline CAP_*→label maps remain outside the canon —');
+// Static source scan of the four sites that previously held their own CAP_*→label literals.
+// Each must (a) import the lifecycle canon and (b) no longer contain its prior inline literal.
+// Forbidden patterns match EXACTLY the removed literals, so they can't false-positive on the
+// canon-derived code or on legitimate local copy (e.g. wc3 STAGE_DESCRIPTIONS keys).
+const BACKEND_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const SINGLE_SOURCED: Array<{ file: string; importsCanon: RegExp; forbidden: RegExp; what: string }> = [
+  { file: 'email.ts',
+    importsCanon: /from '\.\/lib\/lifecycle'/,
+    forbidden: /CAP_CUR:\s*\{\s*label:/,
+    what: 'inline STAGE_HEADER literal map' },
+  { file: 'routes/capadex-payments.ts',
+    importsCanon: /from '\.\.\/lib\/lifecycle'/,
+    forbidden: /'CAP_INS'\s*\?\s*'Insight'/,
+    what: 'inline stageLabel ternary' },
+  { file: 'services/capadex/progression-outcome-capture.ts',
+    importsCanon: /from '\.\.\/\.\.\/lib\/lifecycle(\.js)?'/,
+    forbidden: /MASTERY_CANONICAL\s*(:\s*string\s*)?=\s*'Mastery'/,
+    what: 'hardcoded MASTERY_CANONICAL literal' },
+  { file: 'services/wc3/wc3-schema.ts',
+    importsCanon: /from '\.\.\/\.\.\/lib\/lifecycle(\.js)?'/,
+    forbidden: /\(\s*'CAP_INS'\s*,\s*'Clarity'\s*\)/,
+    what: 'inline CAP_*→stored-label seed literal' },
+];
+for (const s of SINGLE_SOURCED) {
+  let src = '';
+  try { src = readFileSync(path.join(BACKEND_ROOT, s.file), 'utf8'); }
+  catch (e) { assert(`${s.file} is readable`, false, String(e)); continue; }
+  assert(`${s.file} imports the lifecycle canon`, s.importsCanon.test(src), 'no canon import found');
+  assert(`${s.file} no longer contains its ${s.what}`, !s.forbidden.test(src), 'forbidden inline literal still present');
 }
 
 console.log(`\n${failures === 0 ? '✓ PASS' : '✗ FAIL'} — ${checks - failures}/${checks} checks passed`);

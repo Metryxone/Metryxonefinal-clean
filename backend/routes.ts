@@ -1814,9 +1814,15 @@ export async function registerRoutes(
     }
   });
 
-  // Seed assessment templates on startup
-  app.post("/api/assessment-templates/seed", async (req, res, next) => {
+  // Seed assessment templates — super_admin only (Program 2 2.1: route was unauthenticated)
+  app.post("/api/assessment-templates/seed", requireAuth, async (req, res, next) => {
     try {
+      // Inline super_admin guard (requireSuperAdmin defined later in this function)
+      const callerRoles: string[] = (req.user as any)?.roles || [];
+      const callerRole: string = (req.user as any)?.role || '';
+      if (!callerRoles.includes('super_admin') && callerRole !== 'super_admin') {
+        return res.status(403).json({ message: 'Super admin access required' });
+      }
       await storage.seedAssessmentTemplates();
       res.json({ message: "Assessment templates seeded" });
     } catch (error) {
@@ -4578,7 +4584,9 @@ ${context?.userName ? `- User name: ${context.userName}` : ""}
     }
   });
 
-  app.get("/api/hr/jobs/:id", async (req, res, next) => {
+  // Program 2 2.1: was public; this public registration shadowed the auth-gated
+  // twin at /api/hr/jobs/:id below. Gated with requireAuth to close the exposure.
+  app.get("/api/hr/jobs/:id", requireAuth, async (req, res, next) => {
     try {
       const job = await storage.getJobPosting(req.params.id);
       if (!job) {

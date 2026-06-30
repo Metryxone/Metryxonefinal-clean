@@ -1,5 +1,6 @@
 import { BRAND } from '@/design-system/tokens';
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { MentorEngagementStep } from '../components/journey-tail/MentorEngagementStep';
 import { FresherHubTab } from './career/FresherHubTab';
 import { PlacementHubTab } from './career/PlacementHubTab';
 import { EmployabilityStudioTab } from './career/EmployabilityStudioTab';
@@ -5523,10 +5524,14 @@ function RealMentorsTab() {
               {selected === m.id && (
                 <div className="mt-3 pt-3 border-t border-gray-100" onClick={e => e.stopPropagation()}>
                   {booked[m.id] ? (
-                    <div className="flex items-center justify-center gap-2 py-2 rounded-xl" style={{ backgroundColor: `${BRAND.green}10`, border: `1px solid ${BRAND.green}30` }}>
-                      <CheckCircle size={13} style={{ color: BRAND.green }} />
-                      <span className="text-xs font-medium" style={{ color: BRAND.green }}>Request sent &mdash; the mentor will respond to confirm</span>
-                    </div>
+                    <>
+                      <div className="flex items-center justify-center gap-2 py-2 rounded-xl" style={{ backgroundColor: `${BRAND.green}10`, border: `1px solid ${BRAND.green}30` }}>
+                        <CheckCircle size={13} style={{ color: BRAND.green }} />
+                        <span className="text-xs font-medium" style={{ color: BRAND.green }}>Request sent &mdash; the mentor will respond to confirm</span>
+                      </div>
+                      {/* Task #293 — post-match engagement step (renders only when journeyTailCompletion is ON). */}
+                      <MentorEngagementStep mentorProfileId={m.id} mentorName={m.name} />
+                    </>
                   ) : (
                     <>
                       <input value={topic} onChange={e => setTopic(e.target.value)} placeholder="Topic (optional)"

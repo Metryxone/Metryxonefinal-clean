@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CheckCircle, ChevronDown, Send, X, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -89,6 +89,20 @@ export function TeacherCounsellorSurvey({
   const [overallRating, setOverallRating] = useState(3);
   const [observerTypeState] = useState(observerType);
 
+  // Task #293 — Journey Tail Completion. When `journeyTailCompletion` is ON, the submit
+  // routes the observation into the live downstream store (`/api/journey-tail/observations`),
+  // which surfaces it to the parent and a counsellor follow-up queue. When OFF (or probe
+  // fails) the legacy `/api/survey/stakeholder` path is used unchanged → byte-identical.
+  const [journeyTailEnabled, setJourneyTailEnabled] = useState(false);
+  useEffect(() => {
+    let alive = true;
+    fetch('/api/journey-tail/enabled', { credentials: 'include' })
+      .then(r => (r.ok ? r.json() : null))
+      .then(j => { if (alive) setJourneyTailEnabled(!!j?.enabled); })
+      .catch(() => { if (alive) setJourneyTailEnabled(false); });
+    return () => { alive = false; };
+  }, []);
+
   const overallAvg = Math.round(
     (Object.values(academic).reduce((a, b) => a + b, 0) / ACADEMIC_ITEMS.length +
      Object.values(emotional).reduce((a, b) => a + b, 0) / EMOTIONAL_ITEMS.length +
@@ -99,29 +113,45 @@ export function TeacherCounsellorSurvey({
     setSubmitting(true);
     try {
       const token = localStorage.getItem('metryx_token');
-      const res = await fetch('/api/survey/stakeholder', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          childId,
-          observerType: observerTypeState,
-          observerName,
-          observerOrg,
-          academicBehavior: academic,
-          emotionalBehavior: emotional,
-          socialBehavior: social,
-          concerns,
-          strengths,
-          recommendations,
-          overallRating,
-          followUpRequired,
-          sharedWithParent: true,
-        }),
-      });
+      const headers = {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      };
+      // Flag ON → live downstream store (surfaced to parent + counsellor follow-up queue).
+      // Flag OFF → legacy dead-end route, byte-identical to prior behaviour.
+      const res = journeyTailEnabled
+        ? await fetch('/api/journey-tail/observations', {
+            method: 'POST', headers, credentials: 'include',
+            body: JSON.stringify({
+              child_id: childId,
+              observer_type: observerTypeState,
+              observer_name: observerName,
+              organization: observerOrg,
+              academic, emotional, social,
+              concerns, strengths, recommendations,
+              overall_rating: overallRating,
+              follow_up_required: followUpRequired,
+              share_with_parent: true,
+            }),
+          })
+        : await fetch('/api/survey/stakeholder', {
+            method: 'POST', headers, credentials: 'include',
+            body: JSON.stringify({
+              childId,
+              observerType: observerTypeState,
+              observerName,
+              observerOrg,
+              academicBehavior: academic,
+              emotionalBehavior: emotional,
+              socialBehavior: social,
+              concerns,
+              strengths,
+              recommendations,
+              overallRating,
+              followUpRequired,
+              sharedWithParent: true,
+            }),
+          });
 
       if (!res.ok) throw new Error('Submission failed');
       setSubmitted(true);

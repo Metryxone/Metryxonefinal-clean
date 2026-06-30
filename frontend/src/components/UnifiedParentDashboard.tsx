@@ -50,6 +50,7 @@ import { UnifiedGrowthScorecard } from './UnifiedGrowthScorecard';
 import { CredentialCard } from './CredentialCard';
 import { SmartParentBanner, type SmartAlert } from './SmartParentBanner';
 import { QuickCheckIn } from './QuickCheckIn';
+import { ParentSupportActions } from './journey-tail/ParentSupportActions';
 
 async function authFetch(url: string, options: RequestInit = {}): Promise<Response> {
   const token = localStorage.getItem('metryx_token');
@@ -1668,6 +1669,8 @@ export function UnifiedParentDashboard({ onNavigate, selectedChildId: externalCh
 
         {!['ai-powered-reports', 'lbi-product', 'exam-ready', 'metryxai-assistant'].includes(activeTab) && selectedChild && (
           <>
+            {/* Task #293 — support-action loop after viewing child status (renders only when journeyTailCompletion is ON). */}
+            <ParentSupportActions childId={String(selectedChild.id)} childName={selectedChild.name} />
             {/* Compact Quick Actions Strip */}
             <div className="mb-4 px-4 py-2.5 bg-white rounded-xl border shadow-sm flex items-center justify-between gap-3 flex-wrap" data-testid="quick-actions-strip">
               <div className="flex items-center gap-2">

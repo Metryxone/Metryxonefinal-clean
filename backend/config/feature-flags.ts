@@ -163,6 +163,21 @@ export const FEATURE_FLAGS = {
    *  created → byte-identical legacy behaviour incl. schema. Write fns re-assert the flag before
    *  ensure-schema; GET handlers probe via to_regclass and never write. Env: `FF_CLOSE_THE_LOOP`. */
   closeTheLoop: false,
+  /** Task #293 — Journey Tail Completion. Gives three front-half-only persona journeys a real downstream
+   *  step using EXISTING substrate, all behind THIS one flag (default OFF):
+   *   - Parent: a support-action loop after viewing child status (record an action against an owned child,
+   *     effect surfaced back in a status list).
+   *   - Mentor/Coach (ONE substrate, two labels): a post-match engagement/check-in step so the relationship
+   *     continues beyond "matched".
+   *   - Teacher/Counsellor: routes the (today dead-ending) stakeholder survey into a downstream view/action
+   *     (parent "School Observations" + counsellor follow-up queue with status transitions).
+   *  Strictly additive + reversible: flag OFF → every `/api/journey-tail/*` route 503 BEFORE auth/DDL, the
+   *  lazy ensure-schema is never reached so no `jt_*` table is created → byte-identical legacy incl. schema.
+   *  Write fns re-assert the flag before ensure-schema; GET handlers probe via to_regclass and never write.
+   *  Honest empties (null ≠ 0), demo (@example.com) excluded from counts, no fabrication. Engagement only —
+   *  it does NOT rebuild the Close-the-Loop (#292) outcome/KPI/re-measurement machinery. Env:
+   *  `FF_JOURNEY_TAIL_COMPLETION`. */
+  journeyTailCompletion: false,
   /** MX-103X — Live Employer Ecosystem Activation (read-only audit + certification console over the EXISTING
    *  employer hiring funnel). When ON, a PURE read-only composer at `/api/admin/employer-ecosystem/*`
    *  (super-admin) inventories the nine funnel stages — onboarding · create-job · role-DNA · competencies ·

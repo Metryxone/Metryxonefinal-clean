@@ -243,6 +243,7 @@ import { registerTalentOutcomePredictionRoutes } from "./routes/talent-outcome-p
 import { registerValidationLoopRoutes } from "./routes/validation-loop";
 import { registerOutcomeIntelligenceRoutes } from "./routes/outcome-intelligence";
 import { registerCloseTheLoopRoutes } from "./routes/close-the-loop";
+import { registerJourneyTailRoutes } from "./routes/journey-tail";
 import { registerEcosystemCommunityRoutes } from "./routes/ecosystem-community";
 import { registerEmployerEcosystemRoutes } from "./routes/employer-ecosystem";
 import { registerGlobalCompetencyRoutes } from "./routes/global-competency";
@@ -14235,6 +14236,8 @@ Rules:
   registerValidationLoopRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerOutcomeIntelligenceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerCloseTheLoopRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  // ── Journey Tail Completion (#293): flag-gated downstream step for parent/mentor/teacher journeys ──
+  registerJourneyTailRoutes(app, concernsPool, requireAuth);
   // ── Employer, Community & Ecosystem (MX-302I): flag-gated additive ecosystem surface ──
   registerEcosystemCommunityRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Live Employer Ecosystem (MX-103X): read-only audit + certification over the employer hiring funnel ──

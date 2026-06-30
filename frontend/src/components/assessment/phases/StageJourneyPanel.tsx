@@ -227,6 +227,11 @@ export function StageJourneyPanel({
                           Re-measure to verify
                         </span>
                       )}
+                      {gate?.verdict === 'below_bar' && (
+                        <span className="text-[9.5px] font-bold px-1.5 py-0.5 rounded-md" style={{ backgroundColor: '#FEF3C7', color: '#B45309' }}>
+                          Building readiness{gate.readiness?.label ? ` · ${gate.readiness.label}` : ''}
+                        </span>
+                      )}
                       {gate?.due_for_remeasurement && gate?.verdict === 'verified' && (
                         <span className="text-[9.5px] font-bold px-1.5 py-0.5 rounded-md" style={{ backgroundColor: '#FEF3C7', color: '#B45309' }}>
                           Due for re-check{gate.confidence.age_days != null ? ` · ${gate.confidence.age_days}d` : ''}
@@ -619,6 +624,12 @@ export function StageJourneyPanel({
               </button>
               {isExpanded && (
                 <div className="px-3.5 pb-3.5 border-t" style={{ borderColor: '#E5E7EB' }}>
+                  {gate?.verdict === 'blocked' && gate.reason && (
+                    <div className="flex items-start gap-2 mt-3 mb-1 px-3 py-2.5 rounded-lg" style={{ backgroundColor: '#FEF3C7', border: '1px solid #FCD34D' }}>
+                      <Lock size={11} className="shrink-0 mt-0.5" style={{ color: '#B45309' }} />
+                      <p className="text-[11px] leading-relaxed" style={{ color: '#92400E' }}>{gate.reason}</p>
+                    </div>
+                  )}
                   <p className="text-[11.5px] mt-3 mb-2.5 leading-relaxed" style={{ color: '#9CA3AF' }}>{desc}</p>
                   <div className="flex flex-col gap-1.5 mb-3">
                     {benefits.map((b, i) => (

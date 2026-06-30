@@ -4258,10 +4258,11 @@ async function buildProgress(pool: Pool, email: string | null, concern: string) 
     return base;
   }
 
-  // updated_at is selected for the evidence-gate freshness signal (Task #304);
-  // it is NOT added to the returned shape, so flag-OFF output stays byte-identical.
-  const { rows } = await pool.query<{ stage_code: string; status: string; score: string; updated_at: Date }>(
-    `SELECT DISTINCT ON (stage_code) stage_code, status, score, updated_at
+  // updated_at / persona / age_band are selected for the evidence-gate
+  // freshness + cohort-data-sufficiency signals (Task #304); they are NOT added
+  // to the returned shape, so flag-OFF output stays byte-identical.
+  const { rows } = await pool.query<{ stage_code: string; status: string; score: string; updated_at: Date; persona: string | null; age_band: string | null }>(
+    `SELECT DISTINCT ON (stage_code) stage_code, status, score, updated_at, persona, age_band
      FROM capadex_sessions
      WHERE guest_email = $1 AND LOWER(concern_name) = LOWER($2) AND status IN ('completed', 'in_progress')
      ORDER BY stage_code, updated_at DESC`,
@@ -4304,7 +4305,17 @@ async function buildProgress(pool: Pool, email: string | null, concern: string) 
   // Flag OFF → return the legacy completion-only array untouched (byte-identical).
   if (isEvidenceGatedProgressionEnabled()) {
     const { enrichProgressWithEvidence } = await import('../services/capadex/evidence-gate');
-    return enrichProgressWithEvidence(legacy, map);
+    // Compose cohort-gating for the (non-gating) data-sufficiency axis: resolve
+    // this user's cohort from the latest session's persona/age_band and count
+    // peers. Read-only; degrades to 0 (masked) on any error.
+    const { resolveCohort, countCohort } = await import('../services/cohort-gating');
+    const latest = rows[0];
+    let cohortN = 0;
+    try {
+      const cohort = resolveCohort({ persona: latest?.persona ?? null, age_band: latest?.age_band ?? null });
+      cohortN = await countCohort(pool, cohort);
+    } catch { cohortN = 0; }
+    return enrichProgressWithEvidence(legacy, map, { cohortN });
   }
   return legacy;
 }

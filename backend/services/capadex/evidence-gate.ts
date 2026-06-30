@@ -2,40 +2,46 @@
  * CAPADEX 3.0 — Program 2: Evidence-gated stage progression (Task #304)
  *
  * Closes blueprint-06 GAP-P2 (evidence-gated advancement) + GAP-P1 (systematic
- * re-measurement). This is a STRICTLY ADDITIVE, READ-ONLY, flag-gated layer on
- * top of the existing completion-only progression in `routes/capadex.ts`
- * (`buildProgress`). It NEVER writes, runs NO DDL, and is reached only when the
- * `evidenceGatedProgression` flag is ON — so flag-OFF behaviour (and schema) is
- * byte-identical to legacy.
+ * re-measurement). STRICTLY ADDITIVE, READ-ONLY, flag-gated layer on top of the
+ * existing completion-only progression in `routes/capadex.ts` (`buildProgress`).
+ * NEVER writes, runs NO DDL, reached only when `evidenceGatedProgression` is ON —
+ * so flag-OFF behaviour (and schema) is byte-identical to legacy.
  *
- * ── What "evidence" means here ────────────────────────────────────────────────
- * The legacy gate advances a learner to the next stage purely because the prior
- * stage's session row carries `status='completed'`. GAP-P2 asks for an EVIDENCE
- * gate: advancement should require that the prior stage actually produced a
- * measured result — a completed session WITH a computed score (Coverage) that is
- * trustworthy/fresh (Confidence). These two axes are kept SEPARATE and never
- * composited (replit.md honesty rule).
+ * ── Reuse-before-build: this layer COMPOSES two existing engines ───────────────
+ *   1. competency-scoring `scoreToLevelBand()` — the canonical proficiency-band
+ *      ladder (>=80/60/40/20 → 1..5). We use it for the READINESS dimension
+ *      ("score vs stage threshold") instead of re-deriving thresholds locally.
+ *      The CAPADEX stage score is a POSITIVE proficiency measure (mirrors
+ *      getScoreLevel: Advanced/Proficient/Developing/Emerging — higher is better),
+ *      NOT raw concern-signal magnitude, so a readiness threshold gate is honest
+ *      and is exactly what GAP-P2 ("evidence-gated advancement") asks for.
+ *   2. cohort-gating `applyKAnonymity()` — the canonical k-anonymity gate
+ *      (masked/provisional/verified). We use it for the DATA-SUFFICIENCY
+ *      sub-dimension of Confidence (is there enough peer data to trust a
+ *      benchmark-referenced read?). It NEVER blocks advancement — gating a
+ *      learner because too few peers share their cohort would be wrong.
  *
- *   Coverage   → does measured data exist?  (has_session, has_score)
- *   Confidence → is it trustworthy / fresh?  (level, age_days, fresh)
+ * ── Three SEPARATE axes (never composited — replit.md honesty rule) ────────────
+ *   Coverage   → does a measured result exist?            (has_session, has_score)
+ *   Readiness  → does the measured result meet the bar?   (band vs min_band)
+ *   Confidence → is it trustworthy/fresh + peer-backed?   (freshness + cohort)
  *
- * ── Deliberate scope decision (honest deviation worth recording) ──────────────
- * The Task #304 plan listed a `below_bar` verdict (score vs a stage threshold)
- * as a possible BLOCKING outcome. We deliberately DO NOT let the CAPADEX score
- * block advancement. The CAPADEX score is concern-DIAGNOSTIC (a behavioural /
- * wellbeing signal), NOT a competency-mastery score — barring a learner from a
- * supportive next stage because their concern score is "low" would be harmful
- * and violates the platform strengths-canon (signals are concern-diagnostic,
- * never a merit gate). So `below_reference_band` is surfaced ONLY as a
- * non-gating informational annotation. The gate's real levers are evidence
- * INTEGRITY (Coverage) and FRESHNESS (Confidence / re-measurement), never the
- * concern magnitude.
+ * ── What gates advancement vs what is informational ───────────────────────────
+ *   Advancement (next stage unlock) depends on the prior stage being `verified`,
+ *   i.e. completed + a real measured result (Coverage) + readiness band >=
+ *   STAGE_READINESS_MIN_BAND. A completed-but-low result is `below_bar` and holds
+ *   the next stage `locked` with an honest, supportive reason. A completed-but-
+ *   unscored row is `insufficient_evidence` (re-measure to advance). DATA-
+ *   SUFFICIENCY (cohort k-anonymity) is reported alongside but NEVER gates.
  *
  * ── GAP-P1 (systematic re-measurement) ───────────────────────────────────────
- * A derived `due_for_remeasurement` marker flags a completed stage whose newest
- * evidence is older than `EVIDENCE_FRESHNESS_DAYS`. It is a READ-ONLY display
- * signal — there is no scheduler, no job, and it never changes lock/unlock.
+ *   A derived `due_for_remeasurement` marker flags a completed stage whose newest
+ *   evidence is older than `EVIDENCE_FRESHNESS_DAYS`. READ-ONLY display signal —
+ *   no scheduler, no job, never changes lock/unlock.
  */
+
+import { scoreToLevelBand } from '../competency-scoring.js';
+import { applyKAnonymity, K_MIN } from '../cohort-gating.js';
 
 /** Per-stage evidence snapshot extracted from the existing capadex_sessions row. */
 export interface StageEvidenceEntry {
@@ -48,7 +54,8 @@ export interface StageEvidenceEntry {
 }
 
 export type EvidenceVerdict =
-  | 'verified'              // completed + a real computed score exists
+  | 'verified'              // completed + measured score + readiness >= threshold
+  | 'below_bar'            // completed + measured score but readiness below threshold
   | 'insufficient_evidence' // completed flag set but NO usable measured result
   | 'in_progress'           // session open, not yet completed
   | 'not_started'           // no session yet, but unlocked (available)
@@ -60,57 +67,100 @@ export interface EvidenceCoverage {
   score: number | null;
 }
 
+/** Readiness — composed via competency-scoring scoreToLevelBand (score vs threshold). */
+export interface EvidenceReadiness {
+  /** 1..5 proficiency band from scoreToLevelBand, or null when no measured score. */
+  band: number | null;
+  /** Mirror of getScoreLevel labels for the band, or null. */
+  label: string | null;
+  /** Minimum band a stage must reach to count as ready for advancement. */
+  min_band: number;
+  /** band >= min_band, or null when unmeasurable. */
+  meets_threshold: boolean | null;
+}
+
+/** Data sufficiency — composed via cohort-gating applyKAnonymity (NEVER gates). */
+export interface EvidenceDataSufficiency {
+  status: 'masked' | 'provisional' | 'verified';
+  n: number;
+  k_min: number;
+}
+
 export interface EvidenceConfidence {
-  /** verified = trustworthy measured result; provisional = stale measured result; none = no usable result. */
+  /** Freshness-based: verified = fresh measured result; provisional = stale; none = no usable result. */
   level: 'verified' | 'provisional' | 'none';
   age_days: number | null;
   fresh: boolean | null;
+  /** Peer-data sufficiency for benchmark-referenced confidence (composed; non-gating). */
+  data_sufficiency: EvidenceDataSufficiency;
 }
 
 export interface EvidenceGate {
   verdict: EvidenceVerdict;
   reason: string;
   coverage: EvidenceCoverage;
+  readiness: EvidenceReadiness;
   confidence: EvidenceConfidence;
   /** GAP-P1: completed stage whose evidence is older than the freshness window. */
   due_for_remeasurement: boolean;
-  /** Non-gating informational axis (NEVER blocks — see file header). */
-  informational: {
-    below_reference_band: boolean;
-    reference_band: string | null;
-  };
+}
+
+export interface EvidenceGateOptions {
+  /** Freshness window (days) for the GAP-P1 re-measurement signal. */
+  freshnessDays?: number;
+  /** Minimum readiness band required to advance (score vs stage threshold). */
+  minBand?: number;
+  /** Cohort member count (from cohort-gating countCohort) for data-sufficiency. */
+  cohortN?: number;
+  /** Injectable clock for deterministic tests. */
+  now?: Date;
 }
 
 /**
- * Freshness window for the re-measurement signal (GAP-P1). 180 days (~6 months)
- * is a conservative default: behavioural concern signals drift over months, so a
- * half-year-old measurement is flagged as "due for a re-check". This is a
- * read-only DISPLAY heuristic — it never gates advancement and there is no
- * scheduler. Overridable via the second arg to the pure evaluators for testing.
+ * Freshness window for the re-measurement signal (GAP-P1). 180 days (~6 months):
+ * behavioural concern signals drift over months, so a half-year-old measurement
+ * is flagged "due for a re-check". READ-ONLY display heuristic — never gates.
  */
 export const EVIDENCE_FRESHNESS_DAYS = 180;
 
 /**
- * Reference band for the informational `below_reference_band` annotation. The
- * CAPADEX score levels (see getScoreLevel in routes/capadex.ts) treat <40 as the
- * lowest ("Emerging") band. We mirror that single boundary purely to annotate,
- * NEVER to block.
+ * Minimum readiness band (from scoreToLevelBand) required to advance. Band 3 maps
+ * to score >= 40 — the first non-"Emerging" band in getScoreLevel — so advancement
+ * requires at least a "Developing" measured result. A completed result below this
+ * is `below_bar` (held with a supportive reason), NOT silently advanced. The whole
+ * gate is flag-gated OFF by default, so prod behaviour is unchanged until enabled.
  */
-const REFERENCE_BAND_FLOOR = 40;
+export const STAGE_READINESS_MIN_BAND = 3;
+
+/** Band → label, mirroring getScoreLevel in routes/capadex.ts. */
+const BAND_LABEL: Record<number, string> = {
+  5: 'Advanced', 4: 'Proficient', 3: 'Developing', 2: 'Emerging', 1: 'Emerging',
+};
 
 function daysBetween(a: Date, b: Date): number {
   return Math.floor((a.getTime() - b.getTime()) / 86_400_000);
 }
 
+/** Compose cohort-gating into a non-gating data-sufficiency descriptor. */
+function deriveDataSufficiency(cohortN: number): EvidenceDataSufficiency {
+  const n = Number.isFinite(cohortN) && cohortN > 0 ? Math.floor(cohortN) : 0;
+  const gated = applyKAnonymity(n, null);
+  return { status: gated.cohort_status, n: gated.n, k_min: gated.k_min ?? K_MIN };
+}
+
 /**
- * Pure evaluator for ONE stage's OWN evidence (completed / in_progress / absent).
- * Never throws. `now` and `freshnessDays` are injectable for deterministic tests.
+ * Pure evaluator for ONE stage's OWN evidence. Never throws. All knobs (clock,
+ * freshness window, min band, cohort N) are injectable for deterministic tests.
  */
 export function evaluateStageEvidence(
   entry: StageEvidenceEntry | undefined,
-  freshnessDays: number = EVIDENCE_FRESHNESS_DAYS,
-  now: Date = new Date(),
+  opts: EvidenceGateOptions = {},
 ): EvidenceGate {
+  const freshnessDays = opts.freshnessDays ?? EVIDENCE_FRESHNESS_DAYS;
+  const minBand = opts.minBand ?? STAGE_READINESS_MIN_BAND;
+  const now = opts.now ?? new Date();
+  const cohortN = opts.cohortN ?? 0;
+
   const status = entry?.status;
   const score = entry?.score ?? null;
   const hasSession = status === 'completed' || status === 'in_progress';
@@ -121,40 +171,55 @@ export function evaluateStageEvidence(
       ? Math.max(0, daysBetween(now, entry.updatedAt))
       : null;
 
-  const coverage: EvidenceCoverage = {
-    has_session: hasSession,
-    has_score: hasScore,
-    score,
+  const coverage: EvidenceCoverage = { has_session: hasSession, has_score: hasScore, score };
+
+  // Readiness — composed via competency-scoring scoreToLevelBand.
+  const band = hasScore ? scoreToLevelBand(score as number) : null;
+  const readiness: EvidenceReadiness = {
+    band,
+    label: band != null ? (BAND_LABEL[band] ?? null) : null,
+    min_band: minBand,
+    meets_threshold: band != null ? band >= minBand : null,
   };
 
-  const informational = {
-    below_reference_band: hasScore ? (score as number) < REFERENCE_BAND_FLOOR : false,
-    reference_band: hasScore ? `floor:${REFERENCE_BAND_FLOOR}` : null,
-  };
+  const data_sufficiency = deriveDataSufficiency(cohortN);
 
   if (status === 'completed') {
-    if (hasScore) {
-      const fresh = ageDays == null ? null : ageDays <= freshnessDays;
-      const due = ageDays != null && ageDays > freshnessDays;
+    if (!hasScore) {
+      // Completed flag set but no usable measured result (degenerate / legacy row).
       return {
-        verdict: 'verified',
-        reason: due
-          ? 'Completed with a measured result; evidence is older than the freshness window and is due for re-measurement.'
-          : 'Completed with a measured result.',
+        verdict: 'insufficient_evidence',
+        reason: 'Marked completed but no measured result is available; re-measurement needed before this counts as evidence.',
         coverage,
-        confidence: { level: due ? 'provisional' : 'verified', age_days: ageDays, fresh },
-        due_for_remeasurement: due,
-        informational,
+        readiness,
+        confidence: { level: 'none', age_days: ageDays, fresh: ageDays == null ? null : false, data_sufficiency },
+        due_for_remeasurement: true,
       };
     }
-    // Completed flag set but no usable measured result (degenerate / legacy row).
+    const fresh = ageDays == null ? null : ageDays <= freshnessDays;
+    const due = ageDays != null && ageDays > freshnessDays;
+    const confidence: EvidenceConfidence = {
+      level: due ? 'provisional' : 'verified', age_days: ageDays, fresh, data_sufficiency,
+    };
+    if (readiness.meets_threshold === false) {
+      return {
+        verdict: 'below_bar',
+        reason: `Completed, but readiness is "${readiness.label}" (band ${band}; band ${minBand}+ needed to advance). Build a little more here before the next stage.`,
+        coverage,
+        readiness,
+        confidence,
+        due_for_remeasurement: due,
+      };
+    }
     return {
-      verdict: 'insufficient_evidence',
-      reason: 'Marked completed but no measured result is available; re-measurement needed before this counts as evidence.',
+      verdict: 'verified',
+      reason: due
+        ? 'Completed with a measured result that meets the bar; evidence is older than the freshness window and is due for re-measurement.'
+        : 'Completed with a measured result that meets the bar.',
       coverage,
-      confidence: { level: 'none', age_days: ageDays, fresh: ageDays == null ? null : false },
-      due_for_remeasurement: true,
-      informational,
+      readiness,
+      confidence,
+      due_for_remeasurement: due,
     };
   }
 
@@ -163,9 +228,9 @@ export function evaluateStageEvidence(
       verdict: 'in_progress',
       reason: 'Assessment in progress — no completed evidence yet.',
       coverage,
-      confidence: { level: 'none', age_days: ageDays, fresh: null },
+      readiness,
+      confidence: { level: 'none', age_days: ageDays, fresh: null, data_sufficiency },
       due_for_remeasurement: false,
-      informational,
     };
   }
 
@@ -175,9 +240,9 @@ export function evaluateStageEvidence(
     verdict: 'not_started',
     reason: 'No assessment recorded yet for this stage.',
     coverage,
-    confidence: { level: 'none', age_days: null, fresh: null },
+    readiness,
+    confidence: { level: 'none', age_days: null, fresh: null, data_sufficiency },
     due_for_remeasurement: false,
-    informational,
   };
 }
 
@@ -197,29 +262,24 @@ export interface EvidenceGatedProgressStage extends LegacyProgressStage {
 
 /**
  * Pure enrichment over the legacy progress array. Returns a NEW array where each
- * stage carries an additive `gate` envelope and, when the prior stage's evidence
- * is not `verified`, an absent next stage is `blocked` instead of legacy
- * `available` (this is the GAP-P2 evidence gate). Existing `status` vocabulary is
- * preserved ('available' | 'locked' | 'completed' | 'in_progress') so legacy
- * consumers keep working; the nuance lives in `gate.verdict`.
- *
- * In practice every real completed session carries a computed score, so the
- * lock/unlock delta vs legacy is ~0 for real users — the gate's value is
- * integrity enforcement (no advancing on an evidence-less "completed" row) plus
- * the re-measurement signal, NOT gatekeeping learners out.
+ * stage carries an additive `gate` envelope, and an absent next stage is `locked`
+ * (gate verdict `blocked`) UNLESS the prior stage's evidence is `verified`
+ * (completed + measured + readiness meets the bar) — this is the GAP-P2 evidence
+ * gate. Existing `status` vocabulary is preserved ('available' | 'locked' |
+ * 'completed' | 'in_progress') so legacy consumers keep working; the nuance lives
+ * in `gate.verdict`.
  *
  * Never throws; on any inconsistency it falls back to the legacy stage object.
  */
 export function enrichProgressWithEvidence(
   legacy: LegacyProgressStage[],
   entriesByStage: Record<string, StageEvidenceEntry>,
-  freshnessDays: number = EVIDENCE_FRESHNESS_DAYS,
-  now: Date = new Date(),
+  opts: EvidenceGateOptions = {},
 ): EvidenceGatedProgressStage[] {
   try {
     const stages = legacy.map((s) => ({ ...s }));
     const gates: EvidenceGate[] = stages.map((s) =>
-      evaluateStageEvidence(entriesByStage[s.stage_code], freshnessDays, now),
+      evaluateStageEvidence(entriesByStage[s.stage_code], opts),
     );
 
     return stages.map((s, i) => {
@@ -238,9 +298,11 @@ export function enrichProgressWithEvidence(
           resolvedGate = { ...gate, verdict: 'not_started' };
         } else {
           status = 'locked';
-          const priorGate = i > 0 ? gates[i - 1] : undefined;
+          const prior = i > 0 ? gates[i - 1] : undefined;
           const reason =
-            priorGate?.verdict === 'insufficient_evidence'
+            prior?.verdict === 'below_bar'
+              ? 'Locked: the previous stage is complete but its readiness is below the bar to advance; build a little more there to unlock this stage.'
+              : prior?.verdict === 'insufficient_evidence'
               ? 'Locked: the previous stage is marked complete but lacks a measured result; re-measure it to unlock this stage.'
               : 'Locked: complete the previous stage with a measured result to unlock this stage.';
           resolvedGate = { ...gate, verdict: 'blocked', reason };
@@ -251,15 +313,16 @@ export function enrichProgressWithEvidence(
     });
   } catch {
     // Honest degradation: never break progression on an enrichment fault.
+    const data_sufficiency = deriveDataSufficiency(0);
     return legacy.map((s) => ({
       ...s,
       gate: {
         verdict: 'not_started',
         reason: 'Evidence gate unavailable; showing completion-only status.',
         coverage: { has_session: false, has_score: false, score: null },
-        confidence: { level: 'none', age_days: null, fresh: null },
+        readiness: { band: null, label: null, min_band: opts.minBand ?? STAGE_READINESS_MIN_BAND, meets_threshold: null },
+        confidence: { level: 'none', age_days: null, fresh: null, data_sufficiency },
         due_for_remeasurement: false,
-        informational: { below_reference_band: false, reference_band: null },
       },
     }));
   }

@@ -71,12 +71,20 @@ export interface CapadexQuestion {
 /** Task #304 — additive read-only evidence gate (present only when the
  *  `evidenceGatedProgression` flag is ON; absent → legacy completion-only). */
 export interface CapadexEvidenceGate {
-  verdict: 'verified' | 'insufficient_evidence' | 'in_progress' | 'not_started' | 'blocked';
+  verdict: 'verified' | 'below_bar' | 'insufficient_evidence' | 'in_progress' | 'not_started' | 'blocked';
   reason: string;
+  /** Coverage — does a measured result exist? */
   coverage: { has_session: boolean; has_score: boolean; score: number | null };
-  confidence: { level: 'verified' | 'provisional' | 'none'; age_days: number | null; fresh: boolean | null };
+  /** Readiness — composed via competency-scoring scoreToLevelBand (score vs threshold). */
+  readiness: { band: number | null; label: string | null; min_band: number; meets_threshold: boolean | null };
+  /** Confidence — freshness + (non-gating) cohort data-sufficiency from cohort-gating. */
+  confidence: {
+    level: 'verified' | 'provisional' | 'none';
+    age_days: number | null;
+    fresh: boolean | null;
+    data_sufficiency: { status: 'masked' | 'provisional' | 'verified'; n: number; k_min: number };
+  };
   due_for_remeasurement: boolean;
-  informational: { below_reference_band: boolean; reference_band: string | null };
 }
 export interface CapadexProgress {
   stage_code: string;

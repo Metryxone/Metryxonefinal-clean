@@ -54,9 +54,13 @@ evidence (services/routes/tables/frontend) verified against the live repo. See d
 ## Enterprise-ready verdict
 **STRUCTURAL_COMPLETE_ADOPTION_PENDING.** ONE canonical model; every persona journey mapped to all 8 axes and
 verified against the live repo; the front-half broadly SUPPORTED and the universal outcome-tail mechanism
-CODE-COMPLETE via reuse (zero DDL). What remains is ADOPTION (real re-administration/outcome volume) plus
-classified residual gaps: ONE true dead-end (teacher/counsellor, GAP-J1), thin support/engagement tails
-(GAP-J2/J3), and minor frontend CTA/redirect/orphan items (GAP-J4/J5/J6). No Launch-Critical journey gap.
+CODE-COMPLETE via reuse (zero DDL). Phase 1.4 ENGINEERING-CLOSED all six classified journey gaps (J1–J6) via
+REUSE-before-build, each gated by `customerJourneyCompletion` (byte-identical OFF): J1 teacher/counsellor
+DEAD_END → PARTIAL follow-up continuation + milestone, J2 faculty first-class batch scope + parent/mentor tail
+wiring, J3 per-journey outcome-tail wiring, J4 results next-step CTAs, J5 consent→dashboard redirect, J6
+gamification connected into the student journey nav. **OPEN engineering gaps = 0** (gap_counts all 0;
+`resolved_gap_count = 6`). The ONLY remaining axis is ADOPTION (real re-administration/outcome/usage volume,
+honest-low/0, reported SEPARATELY) — a usage axis, NOT a journey gap. No Launch-Critical journey gap.
 
 ## Regenerate
 From `backend/`: `npx tsx scripts/capadex-1.4-customer-journey-scan.ts` (re-measure) then

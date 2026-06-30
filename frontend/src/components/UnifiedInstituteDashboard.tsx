@@ -11,6 +11,7 @@ import type { User as UserType } from "@shared/schema";
 import { InstituteFooter } from './institute/InstituteFooter';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { TeacherCounsellorSurvey } from './TeacherCounsellorSurvey';
+import { ObservationFollowUpQueue } from './journey-tail/ObservationFollowUpQueue';
 import { Label } from "@/components/ui/label";
 import {
   DropdownMenu,
@@ -1142,6 +1143,10 @@ export function UnifiedInstituteDashboard({ onNavigate, onLogout }: Props) {
                   </div>
                 </CardContent>
               </Card>
+
+              {/* CAPADEX 3.0 Phase 1.4 GAP-J1 — teacher/counsellor continuation.
+                  Renders nothing unless customer_journey_completion (+ journey-tail) is ON → byte-identical absent OFF. */}
+              <ObservationFollowUpQueue />
 
               {/* Quick Start Guide (shown until all steps completed) */}
               {showQuickStart && !quickStartItems.every(i => i.completed) && (

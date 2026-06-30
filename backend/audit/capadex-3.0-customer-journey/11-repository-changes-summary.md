@@ -1,6 +1,6 @@
 # CAPADEX 3.0 · Phase 1.4 — Repository Changes Summary
 
-> Deliverable 11 · Generated 2026-06-30T12:16:14.559Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:c5c4c1e82876, written 2026-06-30T12:16:14.555Z).
+> Deliverable 11 · Generated 2026-06-30T12:58:30.532Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:b399cc022876, written 2026-06-30T12:58:30.531Z).
 > Honesty: Coverage⟂Confidence⟂Outcome⟂Adoption (never composited); null ≠ 0; never fabricated.
 
 All changes are ADDITIVE + flag-gated. No existing journey file was modified beyond the additive registration/probe lines.

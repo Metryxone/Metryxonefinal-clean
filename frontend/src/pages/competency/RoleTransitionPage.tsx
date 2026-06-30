@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Screen } from '../../App';
 import { Navbar } from '../../components/layout/Navbar';
 import { Footer } from '../../components/layout/Footer';
+import { useCustomerJourneyCompletion } from '../../hooks/useCustomerJourneyCompletion';
 
 
 
@@ -62,6 +63,7 @@ function GapSeverityBadge({ severity }: { severity: string }) {
 }
 
 export default function RoleTransitionPage({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
+  const journeyCompletion = useCustomerJourneyCompletion(); // CAPADEX 3.0 Phase 1.4 GAP-J4
   const [userId, setUserId] = useState('');
   const [demoTab, setDemoTab] = useState<'gaps' | 'timeline' | 'readiness'>('gaps');
 
@@ -650,6 +652,18 @@ export default function RoleTransitionPage({ onNavigate }: { onNavigate: (screen
                             <ChevronRight className="h-3 w-3 text-gray-300" />
                           </button>
                         ))}
+                        {/* CAPADEX 3.0 Phase 1.4 GAP-J4 — next-step journey continuation.
+                            Rendered only when customer_journey_completion is ON → byte-identical absent OFF. */}
+                        {journeyCompletion && (
+                          <Button
+                            onClick={() => onNavigate('career-builder')}
+                            style={{ backgroundColor: BRAND.primary }}
+                            className="w-full text-white text-xs font-semibold mt-1"
+                            data-testid="button-continue-career-builder"
+                          >
+                            Plan This Transition <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
+                          </Button>
+                        )}
                       </CardContent>
                     </Card>
 

@@ -5,7 +5,7 @@
  *   - GET /api/customer-journey/enabled    flag probe (flag state isn't sensitive; 503 when OFF)
  *   - GET /api/admin/customer-journey/model        canonical spine + templates + per-persona journeys + axes
  *   - GET /api/admin/customer-journey/coverage     per-journey status + evidence VERIFIED vs live FS+DB
- *   - GET /api/admin/customer-journey/gaps         classified remaining journey gaps
+ *   - GET /api/admin/customer-journey/gaps         OPEN engineering gaps (now 0) + resolved_gaps (J1–J6 closed)
  *   - GET /api/admin/customer-journey/summary      rollup + enterprise-ready verdict
  *   - GET /api/admin/customer-journey/outcome-tail ADOPTION of the reuse-instrumented outcome tail (Adoption⟂Coverage)
  *   - GET /api/admin/customer-journey/outcomes/persona  persona⟂outcome read-time-join linkage (k-anon suppressed)
@@ -34,6 +34,7 @@ import {
   composeOutcomeTailAdoption,
   composePersonaOutcomeLinkage,
   JOURNEY_GAPS,
+  RESOLVED_JOURNEY_GAPS,
 } from '../services/customer-journey-engine';
 
 type Mw = (req: Request, res: Response, next: NextFunction) => void;
@@ -84,10 +85,18 @@ export function registerCustomerJourneyRoutes(
     }
   });
 
-  // Classified remaining gaps.
+  // Classified gaps. `gaps` = OPEN engineering gaps (now 0 — all J1–J6 engineering-closed this phase);
+  // `resolved_gaps` = the six ENGINEERING-CLOSED gaps with closure+residual traceability. Residual is ADOPTION
+  // (usage-driven, reported separately via /outcome-tail), NEVER reclassified as an engineering gap.
   app.get('/api/admin/customer-journey/gaps', flagGate, requireAuth, requireSuperAdmin, async (_req: Request, res: Response) => {
     try {
-      res.json({ ok: true, gaps: JOURNEY_GAPS });
+      res.json({
+        ok: true,
+        gaps: JOURNEY_GAPS,
+        open_gap_count: JOURNEY_GAPS.length,
+        resolved_gaps: RESOLVED_JOURNEY_GAPS,
+        resolved_gap_count: RESOLVED_JOURNEY_GAPS.length,
+      });
     } catch (err) {
       console.error('[customer-journey] gaps error:', err);
       res.status(200).json({ ok: true, degraded: true, reason: 'unexpected_error', read_only: true });

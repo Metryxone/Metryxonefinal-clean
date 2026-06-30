@@ -23,7 +23,7 @@ const SCAN_HASH = createHash('sha256').update(scanRaw).digest('hex').slice(0, 12
 const SCAN_MTIME = statSync(SCAN_PATH).mtime.toISOString();
 
 // Fail fast if any required section is missing — never emit a partial/misleading doc.
-for (const k of ['axes', 'spine', 'templates', 'journeys', 'duplicate_entrances', 'coverage', 'gaps', 'summary', 'outcome_tail', 'persona_linkage', 'generated_at']) {
+for (const k of ['axes', 'spine', 'templates', 'journeys', 'duplicate_entrances', 'coverage', 'gaps', 'resolved_gaps', 'summary', 'outcome_tail', 'persona_linkage', 'generated_at']) {
   if (scan[k] == null) throw new Error(`scan.json missing required section "${k}" — re-run the scan script before generating deliverables.`);
 }
 
@@ -33,6 +33,7 @@ const TEMPLATES: any[] = scan.templates;
 const AXES: any[] = scan.axes;
 const DUPES: any[] = scan.duplicate_entrances;
 const GAPS: any[] = scan.gaps;
+const RESOLVED: any[] = scan.resolved_gaps;
 
 const covByKey: Record<string, any> = {};
 for (const c of scan.coverage) covByKey[c.key] = c;
@@ -206,13 +207,17 @@ files['11-repository-changes-summary.md'] = HEAD('11', 'Repository Changes Summa
 
 // ── 12 Journey Gap Register ──────────────────────────────────────────────
 files['12-journey-gap-register.md'] = HEAD('12', 'Journey Gap Register (classified)') +
-`Counts: **${S.gap_counts['Launch-Critical']} Launch-Critical · ${S.gap_counts.High} High · ${S.gap_counts.Medium} Medium · ${S.gap_counts.Low} Low · ${S.gap_counts.Future} Future**.\n\n` +
-(['Launch-Critical', 'High', 'Medium', 'Low', 'Future'] as const).map((sev) => {
+`**OPEN engineering gaps: ${GAPS.length}** (Launch-Critical ${S.gap_counts['Launch-Critical']} · High ${S.gap_counts.High} · Medium ${S.gap_counts.Medium} · Low ${S.gap_counts.Low} · Future ${S.gap_counts.Future}).\n\n` +
+`Phase 1.4 ENGINEERING-CLOSED all six classified journey gaps (J1–J6) via REUSE-before-build, each gated by \`customerJourneyCompletion\` (byte-identical OFF). The ONLY remaining axis is **ADOPTION** (real usage/outcome volume) — reported SEPARATELY (deliverable 08), NOT a journey gap. Coverage⟂Confidence⟂Outcome⟂Adoption are never composited; null≠0; nothing fabricated.\n\n` +
+`## Open engineering gaps\n${GAPS.length === 0 ? '_None — all classified journey gaps are engineering-closed._\n' : (['Launch-Critical', 'High', 'Medium', 'Low', 'Future'] as const).map((sev) => {
   const gs = GAPS.filter((g) => g.severity === sev);
-  if (!gs.length) return `## ${sev}\n_None._\n`;
-  return `## ${sev}\n` + gs.map((g) =>
-    `### ${g.id} — ${g.title}\n- **Evidence**: ${g.evidence}\n- **Remediation**: ${g.remediation}\n`).join('\n');
-}).join('\n');
+  if (!gs.length) return `### ${sev}\n_None._\n`;
+  return `### ${sev}\n` + gs.map((g) =>
+    `#### ${g.id} — ${g.title}\n- **Evidence**: ${g.evidence}\n- **Remediation**: ${g.remediation}\n`).join('\n');
+}).join('\n')}\n` +
+`## Resolved gaps (J1–J6) — engineering-closed this phase\n` +
+RESOLVED.map((r) =>
+  `### ${r.id} — ${r.title}\n- **Closure**: ${r.closure}\n- **Residual (ADOPTION, usage-driven — not a gap)**: ${r.residual}\n`).join('\n');
 
 // ── Completion certification ─────────────────────────────────────────────
 files['completion-certification.md'] = HEAD('CERT', 'Completion Certification & Enterprise-Ready Verdict') +
@@ -222,10 +227,10 @@ files['completion-certification.md'] = HEAD('CERT', 'Completion Certification & 
 | ONE canonical Customer Journey Model | ✅ \`config/customer-journey.ts\` (${scan.spine_step_count}-step spine, ${scan.template_count} templates, ${scan.journey_count} journeys) |
 | Every persona has a complete journey mapped to all ${AXES.length} axes | ✅ all ${scan.journey_count} journeys map all ${AXES.length} axes (persona/lifecycle/assessment/AI/reports/dashboards/outcomes/KPIs) |
 | No duplicate journeys | ✅ read-only composer; multiple entrances → ONE flow documented as KEEP_ALL decisions, not merged/forked |
-| No orphans / dead-ends unaddressed | ✅ every journey → verified evidence; the ONE true dead-end (teacher/counsellor) is classified honestly (GAP-J1), not hidden |
+| No orphans / dead-ends unaddressed | ✅ the former dead-end (teacher/counsellor) is engineering-closed into a follow-up continuation (GAP-J1 resolved); every journey → verified evidence |
 | No broken workflows / regressions | ✅ flag default OFF → byte-identical incl. schema; OFF smoke 503/401 |
 | Enterprise-ready answered with evidence | ✅ verdict below |
-| All remaining gaps classified | ✅ deliverable 12 (${GAPS.length} gaps) |
+| All classified journey gaps closed | ✅ ${GAPS.length} OPEN engineering gaps · ${RESOLVED.length} ENGINEERING-CLOSED (J1–J6), deliverable 12 |
 
 ## Measured coverage (scan.json)
 - Status: ${S.status_counts.SUPPORTED} SUPPORTED · ${S.status_counts.PARTIAL} PARTIAL · ${S.status_counts.DEAD_END} DEAD_END · ${S.status_counts.MISSING} MISSING.
@@ -237,7 +242,7 @@ files['completion-certification.md'] = HEAD('CERT', 'Completion Certification & 
 
 ${S.enterprise_ready.note}
 
-**Plainly:** YES on structure — ONE canonical, non-duplicative Customer Journey Model with a FROZEN ${scan.spine_step_count}-step spine, ${scan.template_count} reusable templates, and every persona journey mapped to all ${AXES.length} axes and verified against the live repository. The front-half (entry → diagnose → recommend → grow) is broadly SUPPORTED; the universal close-the-loop OUTCOME tail mechanism is CODE-COMPLETE via REUSE of the Phase-1.3 progression-capture hook (no net-new engine, zero DDL). What remains is **ADOPTION** (real re-administration/outcome volume, reported separately in deliverable 08 — currently honest-low/0; null≠0) plus classified residual gaps: ONE true dead-end (teacher/counsellor, GAP-J1), thin support/engagement tails (GAP-J2/J3), and minor frontend CTA/redirect/orphan items (GAP-J4/J5/J6). **No Launch-Critical journey gap exists.** Coverage⟂Confidence⟂Outcome⟂Adoption are reported separately and never composited.
+**Plainly:** YES on structure — ONE canonical, non-duplicative Customer Journey Model with a FROZEN ${scan.spine_step_count}-step spine, ${scan.template_count} reusable templates, and every persona journey mapped to all ${AXES.length} axes and verified against the live repository. The front-half (entry → diagnose → recommend → grow) is broadly SUPPORTED; the universal close-the-loop OUTCOME tail mechanism is CODE-COMPLETE via REUSE of the Phase-1.3 progression-capture hook (no net-new engine, zero DDL). Phase 1.4 ENGINEERING-CLOSED all six classified journey gaps (J1–J6) via REUSE-before-build, each gated by \`customerJourneyCompletion\` (byte-identical OFF): teacher/counsellor follow-up continuation (J1), faculty first-class batch scope + parent/mentor tail wiring (J2), per-journey outcome-tail wiring (J3), results next-step CTAs (J4), consent→dashboard redirect (J5), gamification connected into the student journey nav (J6). So OPEN engineering gaps = **${GAPS.length}**. The ONLY remaining axis is **ADOPTION** (real re-administration/outcome/usage volume, reported separately in deliverable 08 — currently honest-low/0; null≠0) — a usage axis, NOT a journey gap; the verdict stays STRUCTURAL (engineering complete; adoption is usage-driven, never fabricated). **No Launch-Critical journey gap exists.** Coverage⟂Confidence⟂Outcome⟂Adoption are reported separately and never composited.
 `;
 
 for (const [name, body] of Object.entries(files)) {

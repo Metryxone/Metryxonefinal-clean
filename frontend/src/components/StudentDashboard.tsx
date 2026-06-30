@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { useCustomerJourneyCompletion } from "../hooks/useCustomerJourneyCompletion";
 import AIStudyRecommendations from "./AIStudyRecommendations";
 import StudentStudyPlanner from "./StudentStudyPlanner";
 import StudentAssignments from "./StudentAssignments";
@@ -206,6 +207,7 @@ export function StudentDashboard({ onNavigate, onLogout, onSelectExam }: Props) 
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
   const { toast } = useToast();
+  const journeyCompletion = useCustomerJourneyCompletion(); // CAPADEX 3.0 Phase 1.4 GAP-J6
 
   const loadGamification = () => {
     try {
@@ -1709,6 +1711,9 @@ export function StudentDashboard({ onNavigate, onLogout, onSelectExam }: Props) 
                 { label: 'Collab Hub',     sub: 'Connect & study together',                                value: 'Hub',                                             icon: Users,                              color: BRAND.accent,  testId: 'stat-collab',     action: () => setActiveView('collab') },
                 { label: 'Study Planner', sub: 'Track daily study tasks',                                  value: 'Plan',                                            icon: Calendar,                           color: '#0B3C5D',     testId: 'stat-planner',    action: () => setActiveView('study-planner') },
                 { label: 'Assignments',   sub: 'Tests, tasks & sessions',                                  value: 'View',                                            icon: BookOpen,                           color: '#D97706',     testId: 'stat-assignments', action: () => setActiveView('assignments') },
+                // CAPADEX 3.0 Phase 1.4 GAP-J6 — connect the orphan Gamification Hub into the student
+                // journey nav. Only present when customer_journey_completion is ON → byte-identical absent OFF.
+                ...(journeyCompletion ? [{ label: 'Gamification Hub', sub: 'Badges, streaks & leaderboards', value: 'Open', icon: Trophy, color: '#D97706', testId: 'stat-gamification-hub', action: () => onNavigate('gamification') }] : []),
               ] as { label: string; sub: string; value: string | number; icon: React.ElementType; color: string; testId: string; action: () => void; disabled?: boolean }[]).map((card) => (
                 <button
                   key={card.label}

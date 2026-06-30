@@ -1,6 +1,6 @@
 # CAPADEX 3.0 · Phase 1.4 — Journey ↔ KPI Matrix & Close-the-loop Adoption
 
-> Deliverable 08 · Generated 2026-06-30T12:16:14.559Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:c5c4c1e82876, written 2026-06-30T12:16:14.555Z).
+> Deliverable 08 · Generated 2026-06-30T12:58:30.532Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:b399cc022876, written 2026-06-30T12:58:30.531Z).
 > Honesty: Coverage⟂Confidence⟂Outcome⟂Adoption (never composited); null ≠ 0; never fabricated.
 
 | Journey | Status | KPIs | Entry criteria | Completion criteria |
@@ -15,7 +15,7 @@
 | Parent → Support Child (`parent_support`) | PARTIAL | Consent rate; support-action adoption. | Parent consents + views child progress. | Support-action loop available (jt_parent_support_actions). |
 | Mentor / Coach → Mentee (`mentor_mentee`) | PARTIAL | Match rate; engagement cadence; mentee movement. | Mentor matched to mentee (mentor_profiles / mentor_bookings). | Engagement loop available (jt_mentor_engagements). |
 | Faculty → Students (`faculty_students`) | PARTIAL | Batch coverage; batch movement. | Faculty (institute_staff) opens batch view. | Batch-confined aggregation surfaced. |
-| Teacher / Counsellor (`teacher_counsellor`) | DEAD_END | Survey capture only. | Teacher/counsellor completes a survey. | Survey stored — no downstream step exists. |
+| Teacher / Counsellor (`teacher_counsellor`) | PARTIAL | Survey capture + follow-up resolution volume (usage-driven). | Teacher/counsellor completes a survey / submits an observation. | Observation resolved via follow-up continuation; milestone captured (flag-ON, adoption-gated). |
 | Any Persona → Realized Outcome (tail) (`outcome_tail`) | PARTIAL | Outcome-capture rate; re-administration rate. | A subject reaches a re-measure / exit boundary. | A realized-outcome row is captured (validation_loop_outcomes). |
 
 ## Close-the-loop ADOPTION (Adoption⟂Coverage — never composited)

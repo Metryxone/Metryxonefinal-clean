@@ -28,6 +28,7 @@ import {
   composeOutcomeTailAdoption,
   composePersonaOutcomeLinkage,
   JOURNEY_GAPS,
+  RESOLVED_JOURNEY_GAPS,
 } from '../services/customer-journey-engine';
 
 async function main() {
@@ -54,6 +55,8 @@ async function main() {
       duplicate_entrances: DUPLICATE_ENTRANCES,
       coverage,
       gaps: JOURNEY_GAPS,
+      // Phase 1.4 ENGINEERING-CLOSED gaps (J1–J6) — traceability; residual is ADOPTION, never a gap.
+      resolved_gaps: RESOLVED_JOURNEY_GAPS,
       summary,
       // Close-the-loop ADOPTION + persona⟂outcome linkage (read-only, Adoption⟂Coverage⟂Outcome never composited).
       outcome_tail,

@@ -1,6 +1,6 @@
 # CAPADEX 3.0 · Phase 1.4 — Journey ↔ AI Matrix
 
-> Deliverable 06 · Generated 2026-06-30T12:16:14.559Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:c5c4c1e82876, written 2026-06-30T12:16:14.555Z).
+> Deliverable 06 · Generated 2026-06-30T12:58:30.532Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:b399cc022876, written 2026-06-30T12:58:30.531Z).
 > Honesty: Coverage⟂Confidence⟂Outcome⟂Adoption (never composited); null ≠ 0; never fabricated.
 
 How AI interprets each journey and what recommendation rules it surfaces.
@@ -17,5 +17,5 @@ How AI interprets each journey and what recommendation rules it surfaces.
 | Parent → Support Child (`parent_support`) | PARTIAL | Child progress framing via consent-scoped view. | Support-action recommendations (journey-tail engine). |
 | Mentor / Coach → Mentee (`mentor_mentee`) | PARTIAL | Mentee progress framing; decision-mentor bridge. | Engagement / guidance recommendations (journey-tail engine). |
 | Faculty → Students (`faculty_students`) | PARTIAL | Batch-confined cohort aggregation (nested in institute). | Faculty-scoped act recommendations (k-gated). |
-| Teacher / Counsellor (`teacher_counsellor`) | DEAD_END | None downstream — survey input captured, no diagnosis surfaced. | None — no continuation. |
+| Teacher / Counsellor (`teacher_counsellor`) | PARTIAL | Observation summary surfaced to the counsellor in the follow-up queue. | Follow-up continuation — resolve / act on the submitted observation. |
 | Any Persona → Realized Outcome (tail) (`outcome_tail`) | PARTIAL | Reuses existing longitudinal / progression interpretation. | Re-measure → advance / remediate (reused readiness gate). |

@@ -35,6 +35,7 @@ import {
   listFollowUpQueue,
   composeJourneyTailOverview,
 } from '../services/journey-tail-engine';
+import { captureJourneyTailMilestone, type JourneyTailKind } from '../services/capadex/progression-outcome-capture';
 
 type Mw = (req: Request, res: Response, next: NextFunction) => void;
 
@@ -87,6 +88,48 @@ async function actorMentorProfileId(pool: Pool, userId: string): Promise<string 
     return null;
   }
 }
+/** Resolve a users.id → email (lower-cased). Best-effort, never throws (returns null on any miss). */
+async function resolveUserEmail(pool: Pool, userId: string | null): Promise<string | null> {
+  if (!userId) return null;
+  try {
+    const r = await pool.query(`SELECT email FROM users WHERE id = $1 LIMIT 1`, [userId]);
+    const e = r.rowCount ? String(r.rows[0].email ?? '').trim().toLowerCase() : '';
+    return e || null;
+  } catch { return null; }
+}
+/** Best-effort: resolve a child row → its linked learner (users.id + email), else nulls (honest skip). */
+async function resolveChildLearner(pool: Pool, childId: string | null): Promise<{ userId: string | null; email: string | null }> {
+  if (!childId) return { userId: null, email: null };
+  try {
+    const r = await pool.query(`SELECT user_id FROM children WHERE id = $1 LIMIT 1`, [childId]);
+    const uid = r.rowCount ? (r.rows[0].user_id != null ? String(r.rows[0].user_id) : null) : null;
+    return { userId: uid, email: await resolveUserEmail(pool, uid) };
+  } catch { return { userId: null, email: null }; }
+}
+/**
+ * GAP-J3 close-the-loop hook (fire-and-forget, non-blocking): record a realized learner-milestone
+ * for a resolved tail via the REUSED close-the-loop writer. Gated by `longitudinalOutcomeCapture`
+ * at the service write layer; honestly skips when no learner-subject email resolves (never fabricated).
+ */
+function fireJourneyTailMilestone(
+  pool: Pool,
+  journey: JourneyTailKind,
+  refKey: string,
+  subject: { userId: string | null; email: string | null },
+  milestone: string,
+  detail: Record<string, unknown> = {},
+): void {
+  void (async () => {
+    try {
+      await captureJourneyTailMilestone(pool, {
+        journey, refKey, subjectUserId: subject.userId, subjectEmail: subject.email, milestone, detail,
+      });
+    } catch (err) {
+      console.warn('[journey-tail] milestone capture failed (non-blocking):', err instanceof Error ? err.message : String(err));
+    }
+  })();
+}
+
 /** A seeker may engage a mentor ONLY after a real post-match relationship exists (mentor_bookings). */
 export async function seekerHasBooking(pool: Pool, seekerId: string, mentorProfileId: string): Promise<boolean> {
   try {
@@ -149,10 +192,18 @@ export function registerJourneyTailRoutes(app: Express, pool: Pool, requireAuth:
   });
 
   app.patch('/api/journey-tail/parent/support-actions/:id', flagGate, requireAuth, async (req: Request, res: Response) => {
-    const r = await updateParentSupportActionStatus(pool, {
-      parentId: actorId(req), actionId: s(req.params.id, 64), status: s((req.body ?? {}).status),
-    });
+    const actionId = s(req.params.id, 64);
+    const status = s((req.body ?? {}).status);
+    const r = await updateParentSupportActionStatus(pool, { parentId: actorId(req), actionId, status });
     if (!r.ok) return res.status(r.reason === 'flag_off' ? 503 : 400).json({ ok: false, error: r.reason });
+    // GAP-J3: a completed parent support-action is a realized tail milestone for the child-learner.
+    if (r.updated && status === 'done') {
+      try {
+        const row = await pool.query(`SELECT child_id FROM jt_parent_support_actions WHERE id = $1 LIMIT 1`, [actionId]);
+        const childId = row.rowCount ? String(row.rows[0].child_id ?? '') || null : null;
+        fireJourneyTailMilestone(pool, 'parent_support', actionId, await resolveChildLearner(pool, childId), 'parent_action_done');
+      } catch { /* non-blocking */ }
+    }
     res.json({ ok: true, updated: r.updated });
   });
 
@@ -228,6 +279,15 @@ export function registerJourneyTailRoutes(app: Express, pool: Pool, requireAuth:
       visibleToSeeker: b.visible_to_seeker !== false,
     });
     if (!r.ok) return res.status(r.reason === 'flag_off' ? 503 : 400).json({ ok: false, error: r.reason });
+    // GAP-J3: a mentor-recorded 'milestone' against a named seeker is a realized learner outcome.
+    if (s(b.kind) === 'milestone' && seekerId) {
+      fireJourneyTailMilestone(
+        pool, 'mentor_mentee', String(r.id),
+        { userId: seekerId, email: await resolveUserEmail(pool, seekerId) },
+        'mentor_milestone',
+        { mentor_profile_id: mentorProfileId },
+      );
+    }
     res.json({ ok: true, id: r.id });
   });
 
@@ -266,9 +326,19 @@ export function registerJourneyTailRoutes(app: Express, pool: Pool, requireAuth:
   // Counsellor/staff transitions a follow-up (open → acknowledged → actioned → resolved).
   app.patch('/api/journey-tail/observations/:id/follow-up', flagGate, requireAuth, async (req: Request, res: Response) => {
     if (!isStaff(req)) return res.status(403).json({ ok: false, error: 'staff_role_required' });
-    const r = await updateObservationFollowupStatus(pool, { observationId: s(req.params.id, 64), status: s((req.body ?? {}).status) });
+    const observationId = s(req.params.id, 64);
+    const status = s((req.body ?? {}).status);
+    const r = await updateObservationFollowupStatus(pool, { observationId, status });
     if (!r.ok) return res.status(r.reason === 'flag_off' ? 503 : 400).json({ ok: false, error: r.reason });
     if (!r.updated) return res.status(404).json({ ok: false, error: 'observation_not_found' });
+    // GAP-J3: a resolved follow-up closes the teacher/counsellor tail for the child-learner.
+    if (status === 'resolved') {
+      try {
+        const row = await pool.query(`SELECT child_id FROM jt_stakeholder_observations WHERE id = $1 LIMIT 1`, [observationId]);
+        const childId = row.rowCount ? String(row.rows[0].child_id ?? '') || null : null;
+        fireJourneyTailMilestone(pool, 'teacher_counsellor', observationId, await resolveChildLearner(pool, childId), 'observation_resolved');
+      } catch { /* non-blocking */ }
+    }
     res.json({ ok: true, updated: true });
   });
 }

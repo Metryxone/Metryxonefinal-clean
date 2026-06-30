@@ -94,8 +94,12 @@ async function writeLearningMilestone(
     assessmentRef: string;
     refId: string;
     isDemo: boolean;
-    milestone: 'stage_completion' | 'reached_mastery';
+    milestone: string;
     detail: Record<string, unknown>;
+    /** Outcome provenance — defaults to the progression hook (byte-identical for existing callers). */
+    source?: string;
+    /** Audit-trail tag for detail.capturedBy — defaults to the progression hook. */
+    capturedBy?: string;
   },
 ): Promise<boolean> {
   if (!isLongitudinalOutcomeCaptureEnabled()) return false; // flag-gate at the SERVICE write layer
@@ -107,7 +111,7 @@ async function writeLearningMilestone(
          (subject_email, subject_user_id, assessment_ref, outcome_type, outcome_kind,
           outcome_value, predicted_prob_at_decision, predicted_basis, decision_at,
           observed_at, source, is_demo, ref_id, detail)
-       VALUES ($1,$2,$3,'learning','milestone',1,NULL,NULL,NULL,now(),'capadex_progression',$4,$5,$6)
+       VALUES ($1,$2,$3,'learning','milestone',1,NULL,NULL,NULL,now(),$7,$4,$5,$6)
        ON CONFLICT (outcome_type, ref_id) WHERE ref_id IS NOT NULL DO UPDATE SET
          observed_at = EXCLUDED.observed_at,
          detail      = EXCLUDED.detail`,
@@ -117,7 +121,8 @@ async function writeLearningMilestone(
         args.assessmentRef,
         args.isDemo,
         args.refId,
-        JSON.stringify({ ...args.detail, milestone: args.milestone, capturedBy: 'capadex_progression_hook' }),
+        JSON.stringify({ ...args.detail, milestone: args.milestone, capturedBy: args.capturedBy ?? 'capadex_progression_hook' }),
+        args.source ?? 'capadex_progression',
       ],
     );
     return true;
@@ -220,6 +225,77 @@ export async function captureProgressionOutcome(
   }
 
   return { ...base, is_demo: isDemo };
+}
+
+// ── Journey-tail realized-milestone capture (CAPADEX 3.0 Phase 1.4, GAP-J3) ────────────
+// Per-journey wiring of the SAME close-the-loop mechanism: the parent / mentor /
+// teacher-counsellor journey tails (journey-tail-engine) now CALL this reuse hook at their
+// resolution points so a realized learner-outcome row is captured into the SAME canonical
+// ledger (validation_loop_outcomes) — NO second outcome store, NO new engine. This is the
+// engineering closure of GAP-J3; real ADOPTION volume stays usage-driven (never fabricated):
+//   * Gated by the SAME `longitudinalOutcomeCapture` flag (write-layer assertion in
+//     writeLearningMilestone) — flag OFF → no row, no DDL, byte-identical.
+//   * Requires a REAL learner-subject email (validation_loop_outcomes.subject_email is
+//     NOT NULL). When the tail has no resolvable learner-subject email, we HONESTLY skip
+//     (no_subject_email) — never synthesise a subject. So a tail that resolves no learner
+//     identity writes nothing (adoption ⟂ coverage; null ≠ 0).
+//   * Distinct ref_id namespace (`journey_tail:<journey>:<refKey>`) + source ('journey_tail')
+//     so these rows are NEVER conflated with the CAPADEX progression/exit subjects (those key
+//     off `capadex_progression:` / `capadex_mastery:` and are counted separately by
+//     composeOutcomeTailAdoption). Idempotent on (outcome_type, ref_id).
+
+export type JourneyTailKind = 'teacher_counsellor' | 'mentor_mentee' | 'parent_support';
+
+export interface JourneyTailMilestoneInput {
+  /** Which tail journey resolved (registry key in config/customer-journey.ts). */
+  journey: JourneyTailKind;
+  /** A stable per-resolution key (the resolved row id) for idempotency. */
+  refKey: string;
+  /** Lower-cased learner-subject email; null/absent → honest skip (never fabricated). */
+  subjectEmail?: string | null;
+  /** Learner users.id when resolved, else null. */
+  subjectUserId?: string | null;
+  /** Human label for the resolved milestone (observation_resolved / mentor_milestone / …). */
+  milestone?: string;
+  detail?: Record<string, unknown>;
+}
+
+export interface JourneyTailMilestoneResult {
+  enabled: boolean;
+  written: boolean;
+  is_demo: boolean;
+  skipped_reason?: string;
+}
+
+/**
+ * Record ONE realized learner-milestone for a resolved journey tail, REUSING the canonical
+ * close-the-loop writer. Fire-and-forget friendly (never throws). Returns a skip result —
+ * with no row written — when the flag is OFF or no learner-subject email resolves.
+ */
+export async function captureJourneyTailMilestone(
+  pool: Pool,
+  input: JourneyTailMilestoneInput,
+): Promise<JourneyTailMilestoneResult> {
+  if (!isLongitudinalOutcomeCaptureEnabled()) {
+    return { enabled: false, written: false, is_demo: false, skipped_reason: 'flag_off' };
+  }
+  const email = input.subjectEmail ? input.subjectEmail.trim().toLowerCase() : null;
+  if (!email) {
+    return { enabled: true, written: false, is_demo: false, skipped_reason: 'no_subject_email' };
+  }
+  const isDemo = isDemoEmail(email);
+  const written = await writeLearningMilestone(pool, {
+    email,
+    userId: input.subjectUserId ?? null,
+    assessmentRef: `journey_tail:${input.journey}`,
+    refId: `journey_tail:${input.journey}:${input.refKey}`,
+    isDemo,
+    milestone: input.milestone ?? `${input.journey}_resolved`,
+    source: 'journey_tail',
+    capturedBy: 'journey_tail_hook',
+    detail: { ...(input.detail ?? {}), journey: input.journey },
+  });
+  return { enabled: true, written, is_demo: isDemo };
 }
 
 export interface ReassessmentSignal {

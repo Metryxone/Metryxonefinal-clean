@@ -105,6 +105,14 @@ export function registerInstitutionalIntelligenceRoutes(
   // University analytics surfaces — institute admin + placement officer.
   const UNIVERSITY_ROLES: InstituteRole[] = ['institute_admin', 'placement_officer'];
 
+  // GAP-J2 (CAPADEX 3.0 Phase 1.4): when `customerJourneyCompletion` is ON, faculty get
+  // FIRST-CLASS batch-scoped access to the competency heatmap/gaps surfaces — the engine
+  // confines every aggregate to scope.allowed_batch_ids (never the whole institute). When the
+  // flag is OFF the allowed-role list is byte-identical (faculty → 403), so this is fully
+  // reversible + flag-gated and changes nothing for admin/placement-officer callers.
+  const heatmapGapsRoles = (): InstituteRole[] =>
+    isFlagEnabled('customerJourneyCompletion') ? [...UNIVERSITY_ROLES, 'faculty'] : UNIVERSITY_ROLES;
+
   app.get('/api/institutional-intelligence/overview', flagGate, requireAuth, async (req: Request, res: Response) => {
     try {
       const scope = await withInstitute(req, res, UNIVERSITY_ROLES); if (!scope) return;
@@ -114,14 +122,14 @@ export function registerInstitutionalIntelligenceRoutes(
 
   app.get('/api/institutional-intelligence/heatmap', flagGate, requireAuth, async (req: Request, res: Response) => {
     try {
-      const scope = await withInstitute(req, res, UNIVERSITY_ROLES); if (!scope) return;
+      const scope = await withInstitute(req, res, heatmapGapsRoles()); if (!scope) return;
       res.json(await composeHeatmap(pool, scope));
     } catch (err) { console.error('[institutional-intelligence] heatmap error:', err); degraded(res); }
   });
 
   app.get('/api/institutional-intelligence/gaps', flagGate, requireAuth, async (req: Request, res: Response) => {
     try {
-      const scope = await withInstitute(req, res, UNIVERSITY_ROLES); if (!scope) return;
+      const scope = await withInstitute(req, res, heatmapGapsRoles()); if (!scope) return;
       res.json(await composeGaps(pool, scope));
     } catch (err) { console.error('[institutional-intelligence] gaps error:', err); degraded(res); }
   });

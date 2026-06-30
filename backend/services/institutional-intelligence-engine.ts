@@ -190,14 +190,17 @@ export async function resolveInstituteForUser(pool: Pool, userId: string): Promi
 
 // ── Readiness aggregate (latest snapshot per subject, institute-scoped) ───────
 
-async function readinessAggregate(pool: Pool, instituteId: string, batchId?: string | null): Promise<ReadinessAgg> {
+async function readinessAggregate(pool: Pool, instituteId: string, batchIds?: string[] | null): Promise<ReadinessAgg> {
   // Latest readiness snapshot per subject (career_readiness_history is append-only).
-  // subject_id ≡ students.user_id. Optionally restricted to a batch via approved
-  // enrollment_requests. Pure SELECT.
-  const batchJoin = batchId
-    ? `JOIN enrollment_requests er ON er.student_id = s.id AND er.batch_id = $2 AND er.status IN ('Approved','Active','Enrolled')`
+  // subject_id ≡ students.user_id. Optionally restricted to a SET of batches via approved
+  // enrollment_requests (faculty batch-confinement — an empty array honestly yields no rows).
+  // When batchIds is null/undefined the query is institute-wide (byte-identical for admin callers).
+  // Pure SELECT.
+  const useBatch = Array.isArray(batchIds);
+  const batchJoin = useBatch
+    ? `JOIN enrollment_requests er ON er.student_id = s.id AND er.batch_id = ANY($2) AND er.status IN ('Approved','Active','Enrolled')`
     : '';
-  const params: any[] = batchId ? [instituteId, batchId] : [instituteId];
+  const params: any[] = useBatch ? [instituteId, batchIds] : [instituteId];
   const sql = `
     WITH latest AS (
       SELECT DISTINCT ON (subject_id)
@@ -312,9 +315,27 @@ export async function composeOverview(pool: Pool, scope: InstituteScope) {
 
 // ── University Portal — competency heatmap (domain × cohort) ──────────────────
 
+// Faculty are batch-confined (scope.allowed_batch_ids). When the caller is a faculty role we
+// derive a batch filter so the institute-wide competency aggregates are restricted to the
+// students enrolled in their assigned batches — never the whole institute (security boundary).
+// For institute_admin / placement_officer (role !== 'faculty') the filter is empty → the queries
+// are byte-identical to the institute-wide behaviour. param is the $2 bind (allowed batch ids;
+// an empty array honestly yields no rows).
+function facultyBatchScope(scope: InstituteScope): { join: string; param: string[] | null } {
+  if (scope.role === 'faculty') {
+    return {
+      join: `JOIN enrollment_requests er ON er.student_id = s.id AND er.batch_id = ANY($2) AND er.status IN ('Approved','Active','Enrolled')`,
+      param: scope.allowed_batch_ids ?? [],
+    };
+  }
+  return { join: '', param: null };
+}
+
 export async function composeHeatmap(pool: Pool, scope: InstituteScope) {
   const instituteId = scope.institute_id;
   const notes: string[] = [];
+  const bs = facultyBatchScope(scope);
+  const bp: any[] = bs.param ? [instituteId, bs.param] : [instituteId];
 
   // REAL per-domain aggregation from the canonical competency substrate
   // (`onto_competency_scores`: subject_id, onto_domain, scaled_score). Each
@@ -331,8 +352,8 @@ export async function composeHeatmap(pool: Pool, scope: InstituteScope) {
 
   const assessed = int((await pool.query(
     `SELECT COUNT(DISTINCT s.id) AS n
-       FROM students s JOIN onto_competency_scores c ON c.subject_id = s.user_id
-      WHERE s.institute_id = $1`, [instituteId])).rows[0]?.n);
+       FROM students s ${bs.join} JOIN onto_competency_scores c ON c.subject_id = s.user_id
+      WHERE s.institute_id = $1`, bp)).rows[0]?.n);
   const gate = gateFromN(assessed);
 
   const rows = (await pool.query(`
@@ -340,11 +361,11 @@ export async function composeHeatmap(pool: Pool, scope: InstituteScope) {
            MAX(c.domain_label)        AS domain_label,
            COUNT(DISTINCT s.id)       AS n,
            AVG(c.scaled_score)        AS avg_score
-      FROM students s
+      FROM students s ${bs.join}
       JOIN onto_competency_scores c ON c.subject_id = s.user_id
      WHERE s.institute_id = $1
      GROUP BY c.onto_domain
-     ORDER BY c.onto_domain`, [instituteId])).rows;
+     ORDER BY c.onto_domain`, bp)).rows;
 
   const domains = rows.map((r) => {
     const dn = int(r.n);
@@ -400,6 +421,10 @@ function extractReadinessResult(snapshot: unknown): ReadinessResult | null {
 export async function composeGaps(pool: Pool, scope: InstituteScope) {
   const instituteId = scope.institute_id;
   const notes: string[] = [];
+  const bs = facultyBatchScope(scope);
+  const bp: any[] = bs.param ? [instituteId, bs.param] : [instituteId];
+  // Faculty readiness secondary axis is batch-confined to the SAME assigned batches (never institute-wide).
+  const rdBatch: string[] | null = scope.role === 'faculty' ? (scope.allowed_batch_ids ?? []) : null;
 
   // PRIMARY — competency-domain gaps (real per-domain aggregation, per-domain gate).
   const hasScores = await tableExists(pool, 'onto_competency_scores');
@@ -408,14 +433,14 @@ export async function composeGaps(pool: Pool, scope: InstituteScope) {
   if (hasScores) {
     compAssessed = int((await pool.query(
       `SELECT COUNT(DISTINCT s.id) AS n
-         FROM students s JOIN onto_competency_scores c ON c.subject_id = s.user_id
-        WHERE s.institute_id = $1`, [instituteId])).rows[0]?.n);
+         FROM students s ${bs.join} JOIN onto_competency_scores c ON c.subject_id = s.user_id
+        WHERE s.institute_id = $1`, bp)).rows[0]?.n);
     const rows = (await pool.query(`
       SELECT c.onto_domain, MAX(c.domain_label) AS domain_label,
              COUNT(DISTINCT s.id) AS n, AVG(c.scaled_score) AS avg_score
-        FROM students s JOIN onto_competency_scores c ON c.subject_id = s.user_id
+        FROM students s ${bs.join} JOIN onto_competency_scores c ON c.subject_id = s.user_id
        WHERE s.institute_id = $1
-       GROUP BY c.onto_domain`, [instituteId])).rows;
+       GROUP BY c.onto_domain`, bp)).rows;
     competency_gaps = rows.map((r) => {
       const dn = int(r.n); const dgate = gateFromN(dn);
       return {
@@ -435,10 +460,10 @@ export async function composeGaps(pool: Pool, scope: InstituteScope) {
   // SECONDARY — coarse readiness-block gaps (separate readiness cohort + gate).
   const rdAssessed = int((await pool.query(
     `SELECT COUNT(DISTINCT s.id) AS n
-       FROM students s JOIN career_readiness_history h ON h.subject_id = s.user_id
-      WHERE s.institute_id = $1`, [instituteId])).rows[0]?.n);
+       FROM students s ${bs.join} JOIN career_readiness_history h ON h.subject_id = s.user_id
+      WHERE s.institute_id = $1`, bp)).rows[0]?.n);
   const readiness_cohort = gateFromN(rdAssessed);
-  const agg = await readinessAggregate(pool, instituteId);
+  const agg = await readinessAggregate(pool, instituteId, rdBatch);
   let readiness_gaps: Array<{ area: string; avg_score: number | null }> = [];
   if (readiness_cohort.status !== 'masked') {
     readiness_gaps = [

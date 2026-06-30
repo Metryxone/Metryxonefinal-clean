@@ -1,6 +1,7 @@
 import { BRAND } from '@/design-system/tokens';
 import { useEffect, useState } from 'react';
-import { Shield, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { Shield, CheckCircle, XCircle, Loader2, ArrowRight } from 'lucide-react';
+import { useCustomerJourneyCompletion } from '../hooks/useCustomerJourneyCompletion';
 
 
 
@@ -9,6 +10,17 @@ type Status = 'loading' | 'approved' | 'already_approved' | 'invalid' | 'error';
 export function ParentConsentApprovePage() {
   const [status, setStatus] = useState<Status>('loading');
   const [approvedAt, setApprovedAt] = useState<string | null>(null);
+  const journeyCompletion = useCustomerJourneyCompletion(); // CAPADEX 3.0 Phase 1.4 GAP-J5
+
+  // GAP-J5 — after a successful consent the parent journey continues into the
+  // Parent Portal instead of dead-ending. Gated by customer_journey_completion →
+  // byte-identical (no redirect, no CTA) when OFF. We seed the last-dashboard hint
+  // and route through '/' so the app's auth boot lands on the parent dashboard
+  // (or login first, then the dashboard) — no fabricated auto-login.
+  const goToParentPortal = () => {
+    try { localStorage.setItem('metryx_dashboard', 'unified-parent-dashboard'); } catch { /* ignore */ }
+    window.location.assign('/');
+  };
 
   useEffect(() => {
     const token = window.location.pathname.split('/parent-consent/')[1];
@@ -63,6 +75,16 @@ export function ParentConsentApprovePage() {
                 </p>
               )}
             </div>
+            {journeyCompletion && (
+              <button
+                onClick={goToParentPortal}
+                className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-semibold text-white"
+                style={{ backgroundColor: BRAND.primary }}
+                data-testid="button-go-parent-portal"
+              >
+                Go to Parent Portal <ArrowRight size={16} />
+              </button>
+            )}
             <div className="w-full bg-teal-50 border border-teal-100 rounded-xl p-4 text-left mt-2">
               <p className="text-xs font-semibold text-teal-800 mb-1">What happens next?</p>
               <ul className="text-xs text-teal-700 space-y-1 list-disc list-inside">
@@ -83,6 +105,16 @@ export function ParentConsentApprovePage() {
                 This consent was already given. Your child&rsquo;s account is active.
               </p>
             </div>
+            {journeyCompletion && (
+              <button
+                onClick={goToParentPortal}
+                className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-semibold text-white"
+                style={{ backgroundColor: BRAND.primary }}
+                data-testid="button-go-parent-portal"
+              >
+                Go to Parent Portal <ArrowRight size={16} />
+              </button>
+            )}
           </div>
         )}
 

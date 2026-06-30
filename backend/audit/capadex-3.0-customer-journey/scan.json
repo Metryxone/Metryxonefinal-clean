@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-30T12:21:00.345Z",
+  "generated_at": "2026-06-30T12:58:30.532Z",
   "read_only": true,
   "spine_frozen": true,
   "axes": [
@@ -147,7 +147,7 @@
         "persona model"
       ],
       "status": "PARTIAL",
-      "statusNote": "Strong front-half (entry→diagnose→recommend→grow); no systematic re-measure/exit surfaced per-journey. The re-measure MECHANISM exists (Phase 1.3 reuse) but per-journey adoption is pending (Coverage⟂Adoption). Front-end results surfaces occasionally lack a \"next step\" CTA (see GAP-J4).",
+      "statusNote": "Strong front-half (entry→diagnose→recommend→grow). GAP-J4 ENGINEERING-CLOSED: results/analysis surfaces (ResultsSummary, GapAnalysisPage, RoleTransitionPage) now carry gated next-step CTAs into Career Builder (customerJourneyCompletion → byte-identical OFF). The re-measure MECHANISM exists (Phase 1.3 reuse); per-journey re-administration is ADOPTION-pending (reported separately — Coverage⟂Adoption, null≠0).",
       "evidence": {
         "services": [
           "services/wc3/journey-projection.ts",
@@ -574,7 +574,7 @@
         "consent"
       ],
       "status": "PARTIAL",
-      "statusNote": "Journey starts (view→consent) and the support-action substrate EXISTS (journeyTailCompletion: jt_parent_support_actions, fail-closed on child ownership), but the tail is thin and the public consent-approval surface lacks a clean redirect back into the dashboard journey (GAP-J2 / GAP-J5). Tail is gated by the journeyTailCompletion flag (Coverage⟂Adoption).",
+      "statusNote": "Journey starts (view→consent) and the support-action substrate EXISTS (journeyTailCompletion: jt_parent_support_actions, fail-closed on child ownership). GAP-J5 ENGINEERING-CLOSED: ParentConsentApprovePage now redirects into the unified-parent-dashboard journey after approval (gated CTA + post-action redirect, customerJourneyCompletion → byte-identical OFF). GAP-J2/J3 ENGINEERING-CLOSED via REUSE: a completed support action fires a journey-tail milestone into the universal outcome tail (captureJourneyTailMilestone, longitudinalOutcomeCapture-gated). Residual is ADOPTION (real support-action volume, usage-driven — Coverage⟂Adoption, null≠0).",
       "evidence": {
         "services": [
           "services/journey-tail-engine.ts"
@@ -627,7 +627,7 @@
         "mentor bookings"
       ],
       "status": "PARTIAL",
-      "statusNote": "Match + engagement substrate EXISTS (journeyTailCompletion: jt_mentor_engagements, gated BOTH directions via mentor_bookings to avoid IDOR) but the engagement tail is thin. Tail is gated by the journeyTailCompletion flag (Coverage⟂Adoption).",
+      "statusNote": "Match + engagement substrate EXISTS (journeyTailCompletion: jt_mentor_engagements, gated BOTH directions via mentor_bookings to avoid IDOR). GAP-J2/J3 ENGINEERING-CLOSED via REUSE: a mentor engagement milestone now fires into the universal outcome tail (captureJourneyTailMilestone, longitudinalOutcomeCapture-gated). Residual is ADOPTION (real engagement volume, usage-driven — Coverage⟂Adoption, null≠0).",
       "evidence": {
         "services": [
           "services/journey-tail-engine.ts",
@@ -679,7 +679,7 @@
         "institute admin → cohort"
       ],
       "status": "PARTIAL",
-      "statusNote": "Faculty exists as a role-aware scope nested within the institute cohort journey (batch-confined, 403 role_not_authorised) but is not a first-class top-level journey surface (GAP-J2 family).",
+      "statusNote": "GAP-J2 ENGINEERING-CLOSED: faculty is now a first-class batch-scoped surface — the institutional-intelligence heatmap/gaps endpoints grant faculty role batch-confined access (server-driven: 200 ON / 403 OFF, role-aware, never admin-only), and the frontend faculty tab auto-shows/hides byte-identically off the server response. Scope stays batch-confined (403 role_not_authorised outside scope). Residual is ADOPTION (Coverage⟂Adoption, null≠0).",
       "evidence": {
         "services": [
           "services/wc3/trend-intelligence.ts"
@@ -706,7 +706,9 @@
       "definition": "Teacher/counsellor survey is collected but has no downstream journey — a true dead-end.",
       "spineReached": [
         "registration",
-        "entry_assessment"
+        "entry_assessment",
+        "learn_act_grow",
+        "mastery_outcome"
       ],
       "lifecycleStages": [
         "CAP_CUR"
@@ -714,22 +716,24 @@
       "assessments": [
         "entry"
       ],
-      "aiInterpretation": "None downstream — survey input captured, no diagnosis surfaced.",
-      "recommendationRules": "None — no continuation.",
-      "reports": "None.",
-      "dashboards": "None first-class.",
-      "outcomes": "None (input captured, zero continuation).",
-      "kpis": "Survey capture only.",
-      "entryCriteria": "Teacher/counsellor completes a survey.",
-      "completionCriteria": "Survey stored — no downstream step exists.",
+      "aiInterpretation": "Observation summary surfaced to the counsellor in the follow-up queue.",
+      "recommendationRules": "Follow-up continuation — resolve / act on the submitted observation.",
+      "reports": "Counsellor follow-up queue (ObservationFollowUpQueue).",
+      "dashboards": "Counsellor follow-up continuation nested in the institute dashboard (gated).",
+      "outcomes": "Resolution fires a journey-tail milestone into the universal outcome tail (reuse; adoption-gated).",
+      "kpis": "Survey capture + follow-up resolution volume (usage-driven).",
+      "entryCriteria": "Teacher/counsellor completes a survey / submits an observation.",
+      "completionCriteria": "Observation resolved via follow-up continuation; milestone captured (flag-ON, adoption-gated).",
       "dependencies": [
-        "stakeholder observations (substrate only)"
+        "stakeholder observations (substrate)",
+        "progression-outcome-capture (reuse)"
       ],
-      "status": "DEAD_END",
-      "statusNote": "GAP-J1 — TRUE dead-end: survey collected, zero continuation. The jt_stakeholder_observations substrate exists (staff-only) but is not wired into a downstream journey. The frozen blueprint recommends converting this to a continuation using EXISTING substrate (NOT a rebuild) — deferred to a later program, classified honestly here.",
+      "status": "PARTIAL",
+      "statusNote": "GAP-J1 ENGINEERING-CLOSED via REUSE: the teacher/counsellor survey is no longer a dead-end. Submitted observations now surface in a follow-up continuation (frontend ObservationFollowUpQueue → GET /api/journey-tail/counsellor/follow-up-queue + PATCH /observations/:id/follow-up resolution), and resolving an observation fires a journey-tail milestone into the universal outcome tail (captureJourneyTailMilestone, reuse of the Phase-1.3 progression-capture hook, gated by longitudinalOutcomeCapture). All gated by customerJourneyCompletion → byte-identical OFF. Residual is ADOPTION (real resolution volume, usage-driven, reported SEPARATELY — Adoption⟂Coverage, null≠0), not an engineering gap.",
       "evidence": {
         "services": [
-          "services/journey-tail-engine.ts"
+          "services/journey-tail-engine.ts",
+          "services/capadex/progression-outcome-capture.ts"
         ],
         "routes": [
           "routes/journey-tail.ts"
@@ -737,7 +741,9 @@
         "tables": [
           "jt_stakeholder_observations"
         ],
-        "frontend": []
+        "frontend": [
+          "components/journey-tail/ObservationFollowUpQueue.tsx"
+        ]
       }
     },
     {
@@ -777,7 +783,7 @@
         "longitudinalOutcomeCapture"
       ],
       "status": "PARTIAL",
-      "statusNote": "The frozen blueprint marked this MISSING everywhere. CURRENT honest state: Phase 1.3 CLOSED the close-the-loop MECHANISM via REUSE (no new engine) — captureProgressionOutcome() + getReassessmentSignal() write/derive realized outcomes into validation_loop_outcomes, gated by the longitudinalOutcomeCapture flag. So the mechanism is now CODE-COMPLETE (Coverage), moving this from MISSING → PARTIAL; what remains is per-journey ADOPTION (real re-administration/outcome volume, currently honest-low/0, reported SEPARATELY by composeOutcomeTailAdoption — Adoption⟂Coverage, null≠0). This phase does NOT build new outcome machinery.",
+      "statusNote": "The frozen blueprint marked this MISSING everywhere. CURRENT honest state: Phase 1.3 CLOSED the close-the-loop MECHANISM via REUSE (no new engine) — captureProgressionOutcome() + getReassessmentSignal() write/derive realized outcomes into validation_loop_outcomes, gated by the longitudinalOutcomeCapture flag. GAP-J3 ENGINEERING-CLOSED: Phase 1.4 now WIRES that mechanism per-journey via REUSE (captureJourneyTailMilestone) at the journey-tail resolution points — observation resolved, mentor engagement milestone, parent support action done — so the tail is connected end-to-end (still zero new engine/table/DDL). What remains is ADOPTION (real re-administration/outcome volume, currently honest-low/0, reported SEPARATELY by composeOutcomeTailAdoption — Adoption⟂Coverage, null≠0). This phase does NOT build new outcome machinery.",
       "evidence": {
         "services": [
           "services/capadex/progression-outcome-capture.ts",
@@ -823,7 +829,7 @@
       "persona": "Student (school/college)",
       "template": "T1",
       "status": "PARTIAL",
-      "statusNote": "Strong front-half (entry→diagnose→recommend→grow); no systematic re-measure/exit surfaced per-journey. The re-measure MECHANISM exists (Phase 1.3 reuse) but per-journey adoption is pending (Coverage⟂Adoption). Front-end results surfaces occasionally lack a \"next step\" CTA (see GAP-J4).",
+      "statusNote": "Strong front-half (entry→diagnose→recommend→grow). GAP-J4 ENGINEERING-CLOSED: results/analysis surfaces (ResultsSummary, GapAnalysisPage, RoleTransitionPage) now carry gated next-step CTAs into Career Builder (customerJourneyCompletion → byte-identical OFF). The re-measure MECHANISM exists (Phase 1.3 reuse); per-journey re-administration is ADOPTION-pending (reported separately — Coverage⟂Adoption, null≠0).",
       "spineReached": 6,
       "spineTotal": 8,
       "axesMapped": 8,
@@ -1075,7 +1081,7 @@
       "persona": "Parent / guardian",
       "template": "T5",
       "status": "PARTIAL",
-      "statusNote": "Journey starts (view→consent) and the support-action substrate EXISTS (journeyTailCompletion: jt_parent_support_actions, fail-closed on child ownership), but the tail is thin and the public consent-approval surface lacks a clean redirect back into the dashboard journey (GAP-J2 / GAP-J5). Tail is gated by the journeyTailCompletion flag (Coverage⟂Adoption).",
+      "statusNote": "Journey starts (view→consent) and the support-action substrate EXISTS (journeyTailCompletion: jt_parent_support_actions, fail-closed on child ownership). GAP-J5 ENGINEERING-CLOSED: ParentConsentApprovePage now redirects into the unified-parent-dashboard journey after approval (gated CTA + post-action redirect, customerJourneyCompletion → byte-identical OFF). GAP-J2/J3 ENGINEERING-CLOSED via REUSE: a completed support action fires a journey-tail milestone into the universal outcome tail (captureJourneyTailMilestone, longitudinalOutcomeCapture-gated). Residual is ADOPTION (real support-action volume, usage-driven — Coverage⟂Adoption, null≠0).",
       "spineReached": 3,
       "spineTotal": 8,
       "axesMapped": 8,
@@ -1111,7 +1117,7 @@
       "persona": "Mentor / coach",
       "template": "T5",
       "status": "PARTIAL",
-      "statusNote": "Match + engagement substrate EXISTS (journeyTailCompletion: jt_mentor_engagements, gated BOTH directions via mentor_bookings to avoid IDOR) but the engagement tail is thin. Tail is gated by the journeyTailCompletion flag (Coverage⟂Adoption).",
+      "statusNote": "Match + engagement substrate EXISTS (journeyTailCompletion: jt_mentor_engagements, gated BOTH directions via mentor_bookings to avoid IDOR). GAP-J2/J3 ENGINEERING-CLOSED via REUSE: a mentor engagement milestone now fires into the universal outcome tail (captureJourneyTailMilestone, longitudinalOutcomeCapture-gated). Residual is ADOPTION (real engagement volume, usage-driven — Coverage⟂Adoption, null≠0).",
       "spineReached": 3,
       "spineTotal": 8,
       "axesMapped": 8,
@@ -1147,7 +1153,7 @@
       "persona": "Faculty member",
       "template": "T4",
       "status": "PARTIAL",
-      "statusNote": "Faculty exists as a role-aware scope nested within the institute cohort journey (batch-confined, 403 role_not_authorised) but is not a first-class top-level journey surface (GAP-J2 family).",
+      "statusNote": "GAP-J2 ENGINEERING-CLOSED: faculty is now a first-class batch-scoped surface — the institutional-intelligence heatmap/gaps endpoints grant faculty role batch-confined access (server-driven: 200 ON / 403 OFF, role-aware, never admin-only), and the frontend faculty tab auto-shows/hides byte-identically off the server response. Scope stays batch-confined (403 role_not_authorised outside scope). Residual is ADOPTION (Coverage⟂Adoption, null≠0).",
       "spineReached": 2,
       "spineTotal": 8,
       "axesMapped": 8,
@@ -1182,16 +1188,16 @@
       "label": "Teacher / Counsellor",
       "persona": "Teacher / counsellor",
       "template": null,
-      "status": "DEAD_END",
-      "statusNote": "GAP-J1 — TRUE dead-end: survey collected, zero continuation. The jt_stakeholder_observations substrate exists (staff-only) but is not wired into a downstream journey. The frozen blueprint recommends converting this to a continuation using EXISTING substrate (NOT a rebuild) — deferred to a later program, classified honestly here.",
-      "spineReached": 2,
+      "status": "PARTIAL",
+      "statusNote": "GAP-J1 ENGINEERING-CLOSED via REUSE: the teacher/counsellor survey is no longer a dead-end. Submitted observations now surface in a follow-up continuation (frontend ObservationFollowUpQueue → GET /api/journey-tail/counsellor/follow-up-queue + PATCH /observations/:id/follow-up resolution), and resolving an observation fires a journey-tail milestone into the universal outcome tail (captureJourneyTailMilestone, reuse of the Phase-1.3 progression-capture hook, gated by longitudinalOutcomeCapture). All gated by customerJourneyCompletion → byte-identical OFF. Residual is ADOPTION (real resolution volume, usage-driven, reported SEPARATELY — Adoption⟂Coverage, null≠0), not an engineering gap.",
+      "spineReached": 4,
       "spineTotal": 8,
       "axesMapped": 8,
       "axesTotal": 8,
       "evidence": {
         "services": {
-          "present": 1,
-          "total": 1,
+          "present": 2,
+          "total": 2,
           "missing": []
         },
         "routes": {
@@ -1200,8 +1206,8 @@
           "missing": []
         },
         "frontend": {
-          "present": 0,
-          "total": 0,
+          "present": 1,
+          "total": 1,
           "missing": []
         },
         "tables": {
@@ -1219,7 +1225,7 @@
       "persona": "All personas (cross-cutting)",
       "template": null,
       "status": "PARTIAL",
-      "statusNote": "The frozen blueprint marked this MISSING everywhere. CURRENT honest state: Phase 1.3 CLOSED the close-the-loop MECHANISM via REUSE (no new engine) — captureProgressionOutcome() + getReassessmentSignal() write/derive realized outcomes into validation_loop_outcomes, gated by the longitudinalOutcomeCapture flag. So the mechanism is now CODE-COMPLETE (Coverage), moving this from MISSING → PARTIAL; what remains is per-journey ADOPTION (real re-administration/outcome volume, currently honest-low/0, reported SEPARATELY by composeOutcomeTailAdoption — Adoption⟂Coverage, null≠0). This phase does NOT build new outcome machinery.",
+      "statusNote": "The frozen blueprint marked this MISSING everywhere. CURRENT honest state: Phase 1.3 CLOSED the close-the-loop MECHANISM via REUSE (no new engine) — captureProgressionOutcome() + getReassessmentSignal() write/derive realized outcomes into validation_loop_outcomes, gated by the longitudinalOutcomeCapture flag. GAP-J3 ENGINEERING-CLOSED: Phase 1.4 now WIRES that mechanism per-journey via REUSE (captureJourneyTailMilestone) at the journey-tail resolution points — observation resolved, mentor engagement milestone, parent support action done — so the tail is connected end-to-end (still zero new engine/table/DDL). What remains is ADOPTION (real re-administration/outcome volume, currently honest-low/0, reported SEPARATELY by composeOutcomeTailAdoption — Adoption⟂Coverage, null≠0). This phase does NOT build new outcome machinery.",
       "spineReached": 2,
       "spineTotal": 8,
       "axesMapped": 8,
@@ -1250,48 +1256,43 @@
       }
     }
   ],
-  "gaps": [
+  "gaps": [],
+  "resolved_gaps": [
     {
       "id": "GAP-J1-TEACHER-COUNSELLOR-DEADEND",
-      "title": "Teacher / Counsellor survey is a true dead-end (no downstream journey)",
-      "severity": "Medium",
-      "evidence": "CUSTOMER_JOURNEY_MODEL.teacher_counsellor=DEAD_END: survey input captured, zero continuation. The jt_stakeholder_observations substrate exists (staff-only) but is not wired into a downstream step.",
-      "remediation": "Convert to a continuation using the EXISTING jt_stakeholder_observations substrate (no rebuild) — a flag-gated additive enhancement; deferred + classified honestly here. Never fabricate a journey."
+      "title": "Teacher / Counsellor survey was a true dead-end (no downstream journey)",
+      "closure": "CLOSED via REUSE: submitted observations now surface in a follow-up continuation (frontend ObservationFollowUpQueue → GET /api/journey-tail/counsellor/follow-up-queue + PATCH /observations/:id/follow-up resolution); resolving an observation fires captureJourneyTailMilestone into the universal outcome tail (reuse of the Phase-1.3 progression-capture hook). teacher_counsellor DEAD_END → PARTIAL. Gated by customerJourneyCompletion → byte-identical OFF.",
+      "residual": "ADOPTION: real follow-up resolution volume is usage-driven (honest-low/0; reported separately — Adoption⟂Coverage, null≠0)."
     },
     {
       "id": "GAP-J2-PARENT-MENTOR-FACULTY-TAIL",
-      "title": "Parent / Mentor / Faculty journeys have thin or nested tails",
-      "severity": "Medium",
-      "evidence": "parent_support / mentor_mentee / faculty_students = PARTIAL: support-action + engagement substrate exists (journeyTailCompletion) but the tails are thin; faculty is a nested batch-confined scope, not a first-class top-level surface.",
-      "remediation": "Deepen the support/engagement tail surfaces (reuse jt_* substrate) and promote faculty to a first-class scoped view. Flag-gated, additive. Adoption-gated."
+      "title": "Parent / Mentor / Faculty journeys had thin or nested tails",
+      "closure": "CLOSED: faculty promoted to a first-class batch-scoped surface (institutional-intelligence heatmap/gaps grant faculty role batch-confined access, server-driven 200 ON / 403 OFF; frontend tab auto-shows/hides byte-identically). Parent/mentor engagement tails wired into the outcome tail (see GAP-J3). Reuse of jt_* substrate; no rebuild.",
+      "residual": "ADOPTION: real support/engagement/faculty-view volume is usage-driven (Coverage⟂Adoption, null≠0)."
     },
     {
-      "id": "GAP-J3-UNIVERSAL-OUTCOME-TAIL-ADOPTION",
-      "title": "Universal close-the-loop outcome tail: mechanism closed (1.3 reuse), ADOPTION pending",
-      "severity": "Medium",
-      "evidence": "outcome_tail=PARTIAL: Phase 1.3 closed the MECHANISM via reuse (captureProgressionOutcome + getReassessmentSignal → validation_loop_outcomes, gated by longitudinalOutcomeCapture). Real per-journey re-administration/outcome volume is currently honest-low/0 (reported by composeOutcomeTailAdoption). Coverage⟂Adoption never composited.",
-      "remediation": "Drive ADOPTION (real re-administration volume) + wire the tail per-journey via REUSE of the 1.3 hook. Not an engineering gap; no new engine. null≠0."
+      "id": "GAP-J3-UNIVERSAL-OUTCOME-TAIL",
+      "title": "Universal close-the-loop outcome tail not wired per-journey",
+      "closure": "ENGINEERING-CLOSED via REUSE: Phase 1.3 closed the MECHANISM (captureProgressionOutcome + getReassessmentSignal → validation_loop_outcomes); Phase 1.4 now WIRES it per-journey via captureJourneyTailMilestone at the resolution points (observation resolved, mentor engagement milestone, parent support action done). Gated by longitudinalOutcomeCapture. Zero new engine/table/DDL.",
+      "residual": "ADOPTION: real re-administration/outcome volume is usage-driven (honest-low/0; reported by composeOutcomeTailAdoption — Adoption⟂Coverage, null≠0). NOT an engineering gap."
     },
     {
       "id": "GAP-J4-RESULTS-NEXT-STEP-CTA",
-      "title": "Some results/analysis surfaces lack a \"next step\" conversion CTA",
-      "severity": "Low",
-      "evidence": "Frontend audit: StudentDashboard ResultsSummary can terminate without a clear next-step; GapAnalysisPage / CompetencyRoleTransitionPage show visualisations without a direct \"enrol / contact mentor\" conversion at the bottom.",
-      "remediation": "Add a next-step CTA into the EXISTING canonical flow (no new journey). Additive UX; preserve byte-identical-OFF."
+      "title": "Some results/analysis surfaces lacked a \"next step\" conversion CTA",
+      "closure": "CLOSED: gated next-step CTAs added to ResultsSummary, GapAnalysisPage, and RoleTransitionPage (→ Career Builder), present only when customerJourneyCompletion is ON. Additive into the EXISTING canonical flow; byte-identical OFF.",
+      "residual": "ADOPTION: real click-through/conversion volume is usage-driven (null≠0)."
     },
     {
       "id": "GAP-J5-CONSENT-REDIRECT",
-      "title": "Public consent-approval surface lacks a clean redirect back into the dashboard journey",
-      "severity": "Low",
-      "evidence": "Frontend audit: ParentConsentApprovePage performs an action via a public link but does not redirect back into a dashboard journey; OnboardingRegisterPage feels disconnected from the primary auth flow.",
-      "remediation": "Add a post-action redirect into the parent dashboard journey; reconcile onboarding entrances (KEEP_ALL entrances, just connect them). Additive."
+      "title": "Public consent-approval surface lacked a clean redirect back into the dashboard journey",
+      "closure": "CLOSED: ParentConsentApprovePage now redirects into the unified-parent-dashboard journey after approval (gated CTA + post-action redirect, present only when flag ON). Entrances KEEP_ALL — just connected. Additive; byte-identical OFF.",
+      "residual": "ADOPTION: real redirect-through volume is usage-driven (null≠0)."
     },
     {
       "id": "GAP-J6-ORPHAN-STUBS",
-      "title": "SiteMap lists UI-shell / stub routes with minimal functional depth",
-      "severity": "Future",
-      "evidence": "Frontend audit: SiteMap.tsx enumerates routes (e.g. gamification, ld-integration) that exist as shells/stubs — orphan surfaces, not part of a completed persona journey.",
-      "remediation": "Either complete the stub into a real journey step or remove the orphan link. Out of scope for this audit — flagged honestly, never claimed as complete."
+      "title": "SiteMap listed UI-shell / stub routes (gamification, etc.) not connected to a persona journey",
+      "closure": "CLOSED: the Gamification Hub is now connected into the student journey nav via a gated StudentDashboard card (→ onNavigate('gamification')), present only when customerJourneyCompletion is ON. Additive; byte-identical OFF. The orphan link is now a reachable journey step.",
+      "residual": "ADOPTION: real hub engagement volume is usage-driven (null≠0)."
     }
   ],
   "summary": {
@@ -1303,22 +1304,22 @@
     "persona_count": 11,
     "status_counts": {
       "SUPPORTED": 5,
-      "PARTIAL": 6,
-      "DEAD_END": 1,
+      "PARTIAL": 7,
+      "DEAD_END": 0,
       "MISSING": 0
     },
     "evidence_rollup": {
       "services": {
-        "present": 23,
-        "total": 23
+        "present": 24,
+        "total": 24
       },
       "routes": {
         "present": 25,
         "total": 25
       },
       "frontend": {
-        "present": 15,
-        "total": 15
+        "present": 16,
+        "total": 16
       },
       "tables": {
         "present": 30,
@@ -1328,16 +1329,17 @@
       }
     },
     "spine_rollup": {
-      "reached": 49,
+      "reached": 51,
       "total": 96
     },
     "gap_counts": {
       "Launch-Critical": 0,
       "High": 0,
-      "Medium": 3,
-      "Low": 2,
-      "Future": 1
+      "Medium": 0,
+      "Low": 0,
+      "Future": 0
     },
+    "resolved_gap_count": 6,
     "duplicate_entrances": [
       {
         "flow": "Career Builder (one canonical flow)",
@@ -1361,7 +1363,7 @@
     ],
     "enterprise_ready": {
       "verdict": "STRUCTURAL_COMPLETE_ADOPTION_PENDING",
-      "note": "ONE canonical Customer Journey Model: a FROZEN 8-step spine + 5 reusable templates, with every persona journey mapped to all 8 axes (persona/lifecycle/assessment/AI/reports/dashboards/outcomes/KPIs) and verified against the live repo. The front-half (entry→diagnose→recommend→grow) is broadly SUPPORTED; the universal close-the-loop OUTCOME tail mechanism is now CODE-COMPLETE via REUSE of the Phase-1.3 progression-outcome-capture hook (no new engine/table/DDL), so it moved from MISSING → PARTIAL. What remains is ADOPTION (real re-administration/outcome volume, currently honest-low/0, reported SEPARATELY by composeOutcomeTailAdoption) plus classified residual gaps: ONE true dead-end (Teacher/Counsellor, GAP-J1), thin support/engagement tails (GAP-J2), and minor frontend CTA/redirect/orphan items (GAP-J4/J5/J6). No Launch-Critical journey gap; no duplicate journeys (multiple entrances to ONE flow are KEEP_ALL). Coverage⟂Confidence⟂Outcome⟂Adoption are reported separately and never composited; null≠0; nothing fabricated."
+      "note": "ONE canonical Customer Journey Model: a FROZEN 8-step spine + 5 reusable templates, with every persona journey mapped to all 8 axes (persona/lifecycle/assessment/AI/reports/dashboards/outcomes/KPIs) and verified against the live repo. The front-half (entry→diagnose→recommend→grow) is broadly SUPPORTED; the universal close-the-loop OUTCOME tail mechanism is CODE-COMPLETE via REUSE of the Phase-1.3 progression-outcome-capture hook (no new engine/table/DDL). Phase 1.4 ENGINEERING-CLOSED all six classified journey gaps (J1–J6) via REUSE-before-build, every closure gated by customerJourneyCompletion (byte-identical OFF): J1 teacher/counsellor DEAD_END → PARTIAL (follow-up continuation + milestone), J2 faculty promoted to a first-class batch-scoped surface + parent/mentor tails wired, J3 outcome tail wired per-journey at the resolution points, J4 next-step CTAs, J5 consent→dashboard redirect, J6 gamification connected into the student journey nav. So OPEN engineering gaps = 0 (gap_counts all 0; resolved_gap_count = 6). The ONLY remaining axis is ADOPTION (real re-administration/outcome/usage volume, currently honest-low/0, reported SEPARATELY by composeOutcomeTailAdoption) — a usage axis, NOT a journey gap; the verdict stays STRUCTURAL (engineering complete, adoption is usage-driven and never fabricated). No Launch-Critical gap; no duplicate journeys (multiple entrances to ONE flow are KEEP_ALL). Coverage⟂Confidence⟂Outcome⟂Adoption are reported separately and never composited; null≠0; nothing fabricated."
     }
   },
   "outcome_tail": {

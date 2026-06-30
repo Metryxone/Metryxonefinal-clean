@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Screen } from '../../App';
 import { Navbar } from '../../components/layout/Navbar';
 import { Footer } from '../../components/layout/Footer';
+import { useCustomerJourneyCompletion } from '../../hooks/useCustomerJourneyCompletion';
 
 
 
@@ -81,6 +82,7 @@ function ReadinessRing({ score }: { score: number }) {
 export default function GapAnalysisPage({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
   const [userId, setUserId] = useState('');
   const [activeTab, setActiveTab] = useState<'gaps' | 'strengths' | 'recommendations'>('gaps');
+  const journeyCompletion = useCustomerJourneyCompletion(); // CAPADEX 3.0 Phase 1.4 GAP-J4
 
   useEffect(() => {
     apiFetch('/api/user').then((d: any) => { const u = d?.user ?? d; if (u?.id) setUserId(u.id); }).catch(() => {});
@@ -793,6 +795,24 @@ export default function GapAnalysisPage({ onNavigate }: { onNavigate: (screen: S
                         ))}
                       </CardContent>
                     </Card>
+
+                    {/* CAPADEX 3.0 Phase 1.4 GAP-J4 — next-step journey continuation.
+                        Rendered only when customer_journey_completion is ON → byte-identical absent OFF. */}
+                    {journeyCompletion && (
+                      <Card className="border shadow-none" style={{ borderColor: BRAND.primary }}>
+                        <CardContent className="p-4 space-y-2.5">
+                          <p className="text-xs font-semibold" style={{ color: BRAND.primary }}>Turn these gaps into a plan</p>
+                          <Button
+                            onClick={() => onNavigate('career-builder')}
+                            style={{ backgroundColor: BRAND.primary }}
+                            className="w-full text-white text-xs font-semibold"
+                            data-testid="button-continue-career-builder"
+                          >
+                            Build My Growth Plan <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    )}
                   </div>
                 </div>
               </div>

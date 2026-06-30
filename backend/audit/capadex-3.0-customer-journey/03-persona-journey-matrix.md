@@ -1,6 +1,6 @@
 # CAPADEX 3.0 · Phase 1.4 — Persona ↔ Journey Matrix
 
-> Deliverable 03 · Generated 2026-06-30T12:16:14.559Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:c5c4c1e82876, written 2026-06-30T12:16:14.555Z).
+> Deliverable 03 · Generated 2026-06-30T12:58:30.532Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:b399cc022876, written 2026-06-30T12:58:30.531Z).
 > Honesty: Coverage⟂Confidence⟂Outcome⟂Adoption (never composited); null ≠ 0; never fabricated.
 
 Every persona has ONE complete canonical journey. Spine = how far the journey reaches across the 8-step canonical spine (Coverage axis).
@@ -17,5 +17,5 @@ Every persona has ONE complete canonical journey. Spine = how far the journey re
 | Parent → Support Child (`parent_support`) | Parent / guardian | P1, P2 | T5 | PARTIAL | 3/8 | 8/8 |
 | Mentor / Coach → Mentee (`mentor_mentee`) | Mentor / coach | P6 | T5 | PARTIAL | 3/8 | 8/8 |
 | Faculty → Students (`faculty_students`) | Faculty member | aggregate | T4 | PARTIAL | 2/8 | 8/8 |
-| Teacher / Counsellor (`teacher_counsellor`) | Teacher / counsellor | P6 | — | DEAD_END | 2/8 | 8/8 |
+| Teacher / Counsellor (`teacher_counsellor`) | Teacher / counsellor | P6 | — | PARTIAL | 4/8 | 8/8 |
 | Any Persona → Realized Outcome (tail) (`outcome_tail`) | All personas (cross-cutting) | all | — | PARTIAL | 2/8 | 8/8 |

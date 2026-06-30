@@ -17,6 +17,7 @@ import {
   Home
 } from 'lucide-react';
 import { SideMenu } from "./SideMenu";
+import { useCustomerJourneyCompletion } from '../hooks/useCustomerJourneyCompletion';
 
 interface Props {
   onNavigate: (screen: Screen) => void;
@@ -48,6 +49,7 @@ export function ResultsSummary({ onNavigate, examId }: Props) {
   const [result, setResult] = useState<ResultData | null>(null);
   const [loading, setLoading] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(false); // Start with light mode
+  const journeyCompletion = useCustomerJourneyCompletion(); // CAPADEX 3.0 Phase 1.4 GAP-J4
 
   // Theme colors based on mode
   const theme = {
@@ -307,8 +309,23 @@ export function ResultsSummary({ onNavigate, examId }: Props) {
         </Card>
 
         <div className="space-y-3 pb-6">
+          {/* CAPADEX 3.0 Phase 1.4 GAP-J4 — next-step journey continuation CTA.
+              Rendered only when customer_journey_completion is ON → byte-identical absent OFF. */}
+          {journeyCompletion && (
+            <Button
+              className="w-full bg-[#4ECDC4] hover:bg-[#4ECDC4]/90"
+              onClick={() => onNavigate('career-builder')}
+              data-testid="button-continue-career-builder"
+            >
+              <TrendingUp size={16} className="mr-2" />
+              Continue to Career Builder
+            </Button>
+          )}
           <Button 
-            className="w-full bg-[#4ECDC4] hover:bg-[#4ECDC4]/90"
+            className={journeyCompletion
+              ? `w-full ${isDarkMode ? 'border-gray-600 text-gray-300 hover:bg-gray-800' : 'border-gray-300 text-gray-700 hover:bg-gray-100'}`
+              : "w-full bg-[#4ECDC4] hover:bg-[#4ECDC4]/90"}
+            variant={journeyCompletion ? 'outline' : 'default'}
             onClick={() => onNavigate('student-exam-list')}
             data-testid="button-back-to-exams"
           >

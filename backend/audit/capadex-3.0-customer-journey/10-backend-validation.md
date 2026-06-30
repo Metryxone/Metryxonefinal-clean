@@ -1,6 +1,6 @@
 # CAPADEX 3.0 · Phase 1.4 — Backend Validation
 
-> Deliverable 10 · Generated 2026-06-30T12:16:14.559Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:c5c4c1e82876, written 2026-06-30T12:16:14.555Z).
+> Deliverable 10 · Generated 2026-06-30T12:58:30.532Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:b399cc022876, written 2026-06-30T12:58:30.531Z).
 > Honesty: Coverage⟂Confidence⟂Outcome⟂Adoption (never composited); null ≠ 0; never fabricated.
 
 Per-journey backend evidence (services + routes + tables) VERIFIED against the live filesystem + DB.
@@ -17,7 +17,7 @@ Per-journey backend evidence (services + routes + tables) VERIFIED against the l
 | Parent → Support Child (`parent_support`) | PARTIAL | 1/1 | 1/1 | 2/2 | — |
 | Mentor / Coach → Mentee (`mentor_mentee`) | PARTIAL | 2/2 | 1/1 | 3/3 | — |
 | Faculty → Students (`faculty_students`) | PARTIAL | 1/1 | 1/1 | 1/1 | — |
-| Teacher / Counsellor (`teacher_counsellor`) | DEAD_END | 1/1 | 1/1 | 1/1 | — |
+| Teacher / Counsellor (`teacher_counsellor`) | PARTIAL | 2/2 | 1/1 | 1/1 | — |
 | Any Persona → Realized Outcome (tail) (`outcome_tail`) | PARTIAL | 2/2 | 2/2 | 2/2 | — |
 
-**Rollup:** services **23/23**, routes **25/25**, tables **30/30** (absent 0, unknown 0). null (unknown) ≠ 0 (absent).
+**Rollup:** services **24/24**, routes **25/25**, tables **30/30** (absent 0, unknown 0). null (unknown) ≠ 0 (absent).

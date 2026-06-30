@@ -1,6 +1,6 @@
 # CAPADEX 3.0 · Phase 1.4 — Journey ↔ Assessment Matrix
 
-> Deliverable 05 · Generated 2026-06-30T12:16:14.559Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:c5c4c1e82876, written 2026-06-30T12:16:14.555Z).
+> Deliverable 05 · Generated 2026-06-30T12:58:30.532Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:b399cc022876, written 2026-06-30T12:58:30.531Z).
 > Honesty: Coverage⟂Confidence⟂Outcome⟂Adoption (never composited); null ≠ 0; never fabricated.
 
 Which canonical assessment-framework types (Phase 1.3) each journey consumes.
@@ -17,5 +17,5 @@ Which canonical assessment-framework types (Phase 1.3) each journey consumes.
 | Parent → Support Child (`parent_support`) | PARTIAL | behaviour, competency |
 | Mentor / Coach → Mentee (`mentor_mentee`) | PARTIAL | competency, progress |
 | Faculty → Students (`faculty_students`) | PARTIAL | competency, behaviour |
-| Teacher / Counsellor (`teacher_counsellor`) | DEAD_END | entry |
+| Teacher / Counsellor (`teacher_counsellor`) | PARTIAL | entry |
 | Any Persona → Realized Outcome (tail) (`outcome_tail`) | PARTIAL | progress, exit, continuous |

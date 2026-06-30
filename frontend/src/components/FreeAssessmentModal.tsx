@@ -1841,6 +1841,10 @@ export function FreeAssessmentModal({ open, onOpenChange, onNavigate, initialPer
             status: i < stageIdx ? 'completed' : i === stageIdx ? 'completed' : i === stageIdx + 1 ? 'available' : 'locked',
             score: i === stageIdx ? sc : null,
           })) as CapadexProgress[],
+          // Task #307 — carry the read-only re-assessment eligibility signal through the
+          // revisit reconstruction so the reminder banner appears when reopening a previous
+          // report. Null/absent when longitudinalOutcomeCapture is OFF (no banner).
+          reassessment: data.reassessment || null,
         };
         if (data.concernName || data.concern_name) {
           setSelectedConcern(data.concernName || data.concern_name);

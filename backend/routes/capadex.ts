@@ -3604,6 +3604,16 @@ export function registerCapadexRoutes(app: Express, pool: Pool) {
         console.warn('[capadex/report] behavioural synthesis skipped:', sigErr?.message || sigErr);
       }
 
+      // Task #307 (mirrors GAP-A4 on the complete handler): surface the same read-only
+      // exit / re-assessment eligibility signal when a returning user reopens a previous
+      // report, so the reminder appears on revisit — not only right after completion.
+      // Null when longitudinalOutcomeCapture is OFF → byte-identical legacy response.
+      let reassessment = null;
+      try {
+        const { getReassessmentSignal } = await import('../services/capadex/progression-outcome-capture');
+        reassessment = await getReassessmentSignal(pool, String(session_id));
+      } catch { reassessment = null; }
+
       res.json({
         reportId,
         concernName: session.concern_name,
@@ -3632,6 +3642,8 @@ export function registerCapadexRoutes(app: Express, pool: Pool) {
         behavioral_signals,
         linguistic_context,
         behavioral_archetype,
+        // Task #307 — read-only re-assessment / exit eligibility signal (null when flag OFF)
+        reassessment,
       });
     } catch (err) { next(err); }
   });

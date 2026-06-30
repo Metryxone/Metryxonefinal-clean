@@ -150,6 +150,19 @@ export const FEATURE_FLAGS = {
    *  Strictly additive + reversible: flag OFF → every route 503, no schema is touched (composer reads via
    *  to_regclass probes only) → byte-identical legacy behaviour. GET-only. Env: `FF_OUTCOME_INTELLIGENCE_ACTIVATION`. */
   outcomeIntelligenceActivation: false,
+  /** Task #292 — Close-the-Loop Outcome Core (additive MECHANISM that closes CAPADEX's back half). When
+   *  ON, a super-admin surface at `/api/admin/close-the-loop/*` delivers three structural pieces the
+   *  Phase 0.1 blueprint flagged missing: (1) a KPI BINDING framework — every major capability bound to
+   *  an authored KPI with a measurement probe against a REAL substrate (GAP-K1); (2) realized-outcome
+   *  capture ATTRIBUTED to a capability + CAPADEX lifecycle stage (GAP-O1) — binary types BRIDGE into
+   *  `validation_loop_outcomes` so the existing calibration surfaces stay CONNECTED (no parallel math);
+   *  (3) Exit/Continuous/Progress re-measurement of EXISTING assessments as deltas (GAP-A4/GAP-P1). It
+   *  keeps Coverage ⟂ Confidence ⟂ Evidence SEPARATE, EXCLUDES demo, ABSTAINS success rates below
+   *  k_min=30, and never fabricates an outcome or KPI value (null ≠ 0). Strictly additive + reversible:
+   *  flag OFF → every route 503 BEFORE auth/DDL, the lazy ensure-schema is never reached so no table is
+   *  created → byte-identical legacy behaviour incl. schema. Write fns re-assert the flag before
+   *  ensure-schema; GET handlers probe via to_regclass and never write. Env: `FF_CLOSE_THE_LOOP`. */
+  closeTheLoop: false,
   /** MX-103X — Live Employer Ecosystem Activation (read-only audit + certification console over the EXISTING
    *  employer hiring funnel). When ON, a PURE read-only composer at `/api/admin/employer-ecosystem/*`
    *  (super-admin) inventories the nine funnel stages — onboarding · create-job · role-DNA · competencies ·

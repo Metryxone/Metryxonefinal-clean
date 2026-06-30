@@ -147,6 +147,14 @@ export interface PhaseProps {
   // and the bank resolver selects tailored sub-persona banks. Defaults to false
   // (absent) → byte-identical legacy persona behaviour.
   personaModelAlignment?: boolean;
+  // CAPADEX 3.0 Persona Model EXPANSION (G-F1/G-F2) — when true
+  // (personaModelExpansion flag, learned via /api/capadex/public-config)
+  // IntroPhase additionally exposes first-class enterprise sub-personas
+  // (People Manager / Senior Leadership / Learning & Development) and a
+  // higher-ed Faculty proxy sub-persona, each with tailored banks. Defaults
+  // to false (absent) → byte-identical legacy persona behaviour. Independent
+  // of personaModelAlignment.
+  personaModelExpansion?: boolean;
   isProxy: boolean;
   setIsProxy: React.Dispatch<React.SetStateAction<boolean>>;
   ageBand: string;

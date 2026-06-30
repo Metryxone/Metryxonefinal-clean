@@ -66,7 +66,8 @@ export function classifyReaderLens(input: {
 
   const p = String(input.actorPersona ?? '').toLowerCase();
   if (p.includes('parent')) return 'parent';
-  if (p.includes('teacher') || p.includes('educator') || p.includes('counsel')) {
+  // 'faculty' (higher-ed faculty, G-F2) is a teacher-base lens; 'educator'/'teacher' already covered.
+  if (p.includes('teacher') || p.includes('educator') || p.includes('faculty') || p.includes('counsel')) {
     return p.includes('counsel') ? 'counselor' : 'teacher';
   }
   if (p.includes('aspirant') || /\b(jee|neet|cuet|upsc)\b/.test(p)) return 'aspirant';
@@ -75,7 +76,9 @@ export function classifyReaderLens(input: {
   if (p.includes('school')) return 'school';
   if (
     p.includes('professional') || p.includes('career') ||
-    p.includes('manager') || p.includes('corporate') || p.includes('employee')
+    p.includes('manager') || p.includes('corporate') || p.includes('employee') ||
+    // enterprise expansion (G-F1): senior leadership · learning & development → professional base lens.
+    p.includes('leadership') || p.includes('learning')
   ) return 'professional';
   if (p.includes('student') || p.includes('learner')) return 'student';
   return 'student';
@@ -123,11 +126,14 @@ export function mapStakeholder(input: {
 
   const p = String(input.actorPersona ?? '').toLowerCase();
   if (p.includes('parent')) return 'parent';
-  if (p.includes('teacher') || p.includes('educator')) return 'teacher';
+  // 'faculty' (higher-ed faculty, G-F2) maps to the teacher base lens.
+  if (p.includes('teacher') || p.includes('educator') || p.includes('faculty')) return 'teacher';
   if (p.includes('counsel')) return 'counselor';
   if (
     p.includes('professional') || p.includes('career') || p.includes('jobseeker') ||
-    p.includes('manager') || p.includes('corporate') || p.includes('employee')
+    p.includes('manager') || p.includes('corporate') || p.includes('employee') ||
+    // enterprise expansion (G-F1): senior leadership · learning & development → professional base lens.
+    p.includes('leadership') || p.includes('learning')
   ) return 'professional';
   if (
     p.includes('student') || p.includes('learner') || p.includes('campus') ||

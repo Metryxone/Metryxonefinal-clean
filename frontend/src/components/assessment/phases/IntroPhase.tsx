@@ -143,6 +143,26 @@ export function IntroPhase(props: PhaseProps) {
     : [
         { id: 'competitive_aspirant', label: 'JEE / NEET / UPSC aspirant', legacyKey: 'student', ageBands: ['14-17','17-24'] },
       ];
+  // CAPADEX 3.0 Persona Model EXPANSION (G-F1) — first-class enterprise
+  // sub-personas added to the "Working professionals" track when the
+  // personaModelExpansion flag is ON (each still legacyKey 'professional',
+  // unlocking the tailored leadership/manager/L&D banks). Flag OFF → empty,
+  // so the professional track is byte-identical to legacy.
+  const enterprisePersonas: SubPersona[] = props.personaModelExpansion
+    ? [
+        { id: 'people_manager',      label: 'People manager (leads a team)', legacyKey: 'professional', ageBands: ['24-45','45+'] },
+        { id: 'senior_leadership',   label: 'Senior leadership / executive', legacyKey: 'professional', ageBands: ['24-45','45+'] },
+        { id: 'learning_development',label: 'Learning & development (L&D)',   legacyKey: 'professional', ageBands: ['24-45','45+'] },
+      ]
+    : [];
+  // CAPADEX 3.0 Persona Model EXPANSION (G-F2) — higher-education faculty as a
+  // first-class proxy sub-persona distinct from school teacher (legacyKey
+  // 'teacher'). Flag OFF → empty, so the proxy track is byte-identical.
+  const facultyPersonas: SubPersona[] = props.personaModelExpansion
+    ? [
+        { id: 'higher_ed_faculty', label: 'Higher-education faculty', legacyKey: 'teacher', ageBands: ['17-24','24-45'] },
+      ]
+    : [];
   const TRACK_GROUPS: MacroTrack[] = [
     {
       id: 'school', title: 'School children', subtitle: 'A school student taking this themselves',
@@ -169,6 +189,7 @@ export function IntroPhase(props: PhaseProps) {
       subPersonas: [
         { id: 'early_career_professional',     label: 'Early career (0–3 yrs)',         legacyKey: 'professional', ageBands: ['17-24','24-45'] },
         { id: 'mid_career_professional',       label: 'Mid career (3–10 yrs)',          legacyKey: 'professional', ageBands: ['24-45'] },
+        ...enterprisePersonas,
         { id: 'career_transition_professional',label: 'Changing roles or industry',     legacyKey: 'jobseeker',    ageBands: ['24-45','45+'] },
       ],
     },
@@ -178,6 +199,7 @@ export function IntroPhase(props: PhaseProps) {
       subPersonas: [
         { id: 'parent',              label: 'Parent',                   legacyKey: 'parent',  ageBands: ['6-14','14-17'] },
         { id: 'teacher_educator',    label: 'Teacher or educator',      legacyKey: 'teacher', ageBands: ['6-14','14-17','17-24'] },
+        ...facultyPersonas,
         { id: 'academic_counsellor', label: 'Academic counsellor',      legacyKey: 'teacher', ageBands: ['14-17','17-24'] },
         { id: 'placement_career_cell',label: 'Placement / TPO cell',    legacyKey: 'teacher', ageBands: ['17-24'] },
       ],

@@ -64,6 +64,44 @@ explicitly **excluded** — not implemented, not claimed.
   are L6 auth-role products (Employer Portal, competency/EI dashboards, Institute
   dashboards), not assessment-persona keys — correct under `Persona ≠ Role`.
 
+## Persona Model EXPANSION (deliverable-10 gaps G-F1..G-F6)
+
+Second, **independent** flag `personaModelExpansion` (`FF_PERSONA_MODEL_EXPANSION`,
+default **OFF**, byte-identical OFF **incl. schema** — zero DDL anywhere). Distinct
+from `personaModelAlignment`; the two compose additively and neither depends on the
+other. Exposed via `/api/capadex/public-config` → `persona_model_expansion`.
+
+### What it adds (ON)
+
+| Gap | Change | Flag-OFF behaviour |
+|---|---|---|
+| **G-F1** (enterprise) | `SUB_PERSONA_QUESTION_BANKS` adds `people_manager` / `senior_leadership` / `learning_development` (legacyKey `professional`, first-person "I…"); IntroPhase surfaces them in the `professional` track | banks/personas absent — `resolveQuestionBank` returns the legacy `professional` bank |
+| **G-F2** (faculty) | `SUB_PERSONA_QUESTION_BANKS` adds `higher_ed_faculty` (legacyKey `teacher`, proxy "My students…"); IntroPhase surfaces it in the `proxy` track | absent — legacy `teacher` bank |
+| **G-F1/G-F2** (cohort) | `cohort-gating.ts` folds `EXPANSION_SUB_PERSONA_TO_TRACK` into `personasForTrack()` when ON | base + alignment maps only — cohort counts unchanged |
+| **G-F1/G-F2** (PIL) | `runtime-guidance-engine.ts` `mapStakeholder` + `classifyReaderLens` add **new tokens only** (faculty→teacher, leadership/learning→professional) | unknown tokens fall through to legacy mapping |
+| **G-F3 / G-F4** | **ALREADY EXIST** via `journeyTailCompletion` (teacher/counsellor + parent/mentor journey tails). Verified, **NOT rebuilt**. | n/a (separate flag) |
+| **G-F5** (outcomes) | `routes/persona-expansion.ts` `GET /api/persona-expansion/outcomes` + `services/persona-expansion-engine.ts` `composePersonaOutcomes` — per-persona **assessment-coverage** (REAL, from `capadex_user_profiles.persona`) ⟂ **realized-outcome** breakdown that composes MX-102X `composeOverview`; super-admin | route 503; no schema touched |
+| **G-F6** (verticals) | `GET /api/persona-expansion/verticals` + `composeVerticalScaffolds` — NON-CLINICAL scaffold registry (government / healthcare / clinical_psychology) with explicit "not validated / not for clinical or diagnostic use" disclaimers; super-admin | route 503 |
+| probe | `GET /api/persona-expansion/enabled` (flag-gated → 503 OFF, `{enabled:true}` ON) | 503 |
+
+### Honesty notes
+- **G-F5 is an empty-until-real-data pipeline, never fabricated.** The realized-outcome
+  substrate (`validation_loop_outcomes` / employer candidates) carries **no persona
+  dimension**, so per-persona outcome counts are honest-**null** (`linkage_present:false`)
+  with `confidence.abstained:true` until a real persona linkage AND `realized_outcomes ≥
+  k_min` (30, inherited from MX-102X `OI_K_MIN`). Assessment-coverage **is** real and is
+  reported on a SEPARATE axis (`null` when the source table is unreadable — null ≠ 0).
+  Coverage ⟂ Outcomes ⟂ Confidence, never composited.
+- **G-F6 is a boundary marker, not a product.** Each vertical is `validated:false`,
+  `clinical_use:false`, `assessment_persona:false`, `question_bank:false` — a structural
+  scaffold + disclaimers ONLY. No clinical content, persona, or question bank exists or is
+  implied; `clinical_psychology` is deliberately **DEFERRED** so the platform never drifts
+  into clinical/diagnostic claims.
+- **Read-only + reversible.** Every persona-expansion query is a SELECT / `to_regclass`
+  probe; no DDL anywhere. Routes 503 before the engine is reached when OFF. `FF_PERSONA_MODEL_EXPANSION=0`
+  restores byte-identical legacy behaviour incl. schema.
+
 ## Source deliverables
 `backend/audit/capadex-3.0-persona-implementation/01..10_*.md` (audit + gap classification);
-implementation reports under `backend/audit/capadex-3.0-persona-implementation/impl/`.
+implementation reports under `backend/audit/capadex-3.0-persona-implementation/impl/`
+(expansion: `impl/persona-model-expansion-implementation.md`).

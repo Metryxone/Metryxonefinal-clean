@@ -1,0 +1,17 @@
+This is a meaningful scope expansion beyond the approved Phase 1.2 (which deliberately excluded G-F1–G-F6), and two of these items have hard constraints I need to flag before building rather than charge through:
+
+G-F5 (realized-outcome capture) can be wired additively, but it will sit empty / honest-null until real outcomes exist at k≥30 — I can't fabricate placement/hire/exam outcomes. So it's a pipeline, not populated data.
+G-F6 (Government · Healthcare · Psychologist/Clinical) is marked "DO NOT CLAIM until built" for good reason: these are regulated/sensitive domains. I won't author clinical or psychological-diagnostic content or imply clinical validity the platform doesn't have. At most I'd build a non-clinical structural scaffold with explicit "not validated / not for clinical or diagnostic use" disclaimers — or leave it excluded.
+The rest (G-F1, G-F2, G-F3, G-F4) are legitimately buildable now as additive, flag-gated surfaces (reusing the existing journey-tail / mentor-booking infra where it already exists), with borrowed content carrying provenance labels — same discipline as this phase.
+
+Because this is 5–6 substantial, independent features, I want to confirm scope and direction before writing code so I build the right thing in the right order.
+
+
+Deciding on next steps
+I'll pose this as a plain question instead (the interactive picker isn't available this turn).
+
+To proceed, just tell me:
+
+Which to build now (pick any/all): G-F1 Enterprise personas (Manager/Leadership/L&D) · G-F2 Faculty first-class · G-F3 Teacher/Counsellor journey tail · G-F4 Parent & Mentor journey tail · G-F5 per-persona outcome-capture wiring (pipeline only — stays empty until real k≥30 outcomes). You can just say "all of G-F1–G-F5."
+
+G-F6 (Government · Healthcare · Psychologist/Clinical) — either (a) leave excluded (my recommendation), or (b) build only a non-clinical structural scaffold with explicit "not for clinical/diagnostic use" disclaimers. Either way I will not fabricate clinical or psychological-diagnostic content or imply clinical validity.

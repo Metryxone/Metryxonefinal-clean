@@ -18,7 +18,7 @@
  */
 
 import type { Pool } from 'pg';
-import { isPersonaModelAlignmentEnabled } from '../config/feature-flags';
+import { isPersonaModelAlignmentEnabled, isPersonaModelExpansionEnabled } from '../config/feature-flags';
 
 // ─── Canonical age bands (source of truth: replit.md IntroPhase) ─────────────
 export const AGE_BANDS = ['6-14', '14-17', '17-24', '24-45', '45+'] as const;
@@ -65,6 +65,16 @@ const ALIGNMENT_SUB_PERSONA_TO_TRACK: Record<string, PersonaTrack> = {
   teacher_educator: 'proxy', academic_counsellor: 'proxy', placement_career_cell: 'proxy',
 };
 
+// ─── CAPADEX 3.0 — Persona Model EXPANSION sub-persona → track (G-F1/G-F2) ────
+// Enterprise (legacyKey 'professional' → professional) + higher-ed faculty
+// (legacyKey 'teacher' → proxy). Folded into the k-anon COUNT ANY-list ONLY when
+// `personaModelExpansion` is ON → flag-OFF counts stay byte-identical to legacy.
+const EXPANSION_SUB_PERSONA_TO_TRACK: Record<string, PersonaTrack> = {
+  people_manager: 'professional', senior_leadership: 'professional',
+  learning_development: 'professional',
+  higher_ed_faculty: 'proxy',
+};
+
 /**
  * The list of stored `persona` tokens belonging to a track, for the k-anon
  * COUNT ANY-list. Base map always; alignment extensions only when the
@@ -74,6 +84,9 @@ function personasForTrack(track: PersonaTrack): string[] {
   const entries = Object.entries(SUB_PERSONA_TO_TRACK);
   if (isPersonaModelAlignmentEnabled()) {
     entries.push(...Object.entries(ALIGNMENT_SUB_PERSONA_TO_TRACK));
+  }
+  if (isPersonaModelExpansionEnabled()) {
+    entries.push(...Object.entries(EXPANSION_SUB_PERSONA_TO_TRACK));
   }
   return entries.filter(([, t]) => t === track).map(([k]) => k);
 }

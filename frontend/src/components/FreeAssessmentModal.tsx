@@ -341,14 +341,16 @@ export function FreeAssessmentModal({ open, onOpenChange, onNavigate, initialPer
   // CAPADEX 3.0 Phase 1.2 — persona-model alignment gate (exam sub-personas +
   // tailored sub-persona banks). Defaults false → byte-identical legacy flow.
   const [personaAlignmentEnabled, setPersonaAlignmentEnabled] = useState(false);
+  const [personaExpansionEnabled, setPersonaExpansionEnabled] = useState(false);
   useEffect(() => {
     fetch('/api/capadex/public-config')
       .then(r => r.json())
-      .then((cfg: { counsellor_whatsapp_number?: string; websocket_runtime?: boolean; cognitive_load_engine?: boolean; persona_model_alignment?: boolean }) => {
+      .then((cfg: { counsellor_whatsapp_number?: string; websocket_runtime?: boolean; cognitive_load_engine?: boolean; persona_model_alignment?: boolean; persona_model_expansion?: boolean }) => {
         if (cfg.counsellor_whatsapp_number) setCounsellorNumber(cfg.counsellor_whatsapp_number);
         if (cfg.websocket_runtime)    setWsRuntimeEnabled(true);
         if (cfg.cognitive_load_engine) setCogLoadEnabled(true);
         if (cfg.persona_model_alignment) setPersonaAlignmentEnabled(true);
+        if (cfg.persona_model_expansion) setPersonaExpansionEnabled(true);
       })
       .catch(() => {});
   }, []);
@@ -1509,7 +1511,11 @@ export function FreeAssessmentModal({ open, onOpenChange, onNavigate, initialPer
     }
     // CAPADEX 3.0 Phase 1.2 — tailored sub-persona bank when alignment flag ON
     // and a dedicated bank exists; otherwise byte-identical legacy selection.
-    return resolveQuestionBank(primaryPersona, selectedPersona, personaAlignmentEnabled);
+    // Either persona-depth flag unlocks tailored sub-persona banks. The
+    // sub-persona id namespaces are disjoint per flag (IntroPhase only renders a
+    // flag's sub-personas when that flag is ON), so OR-ing is safe and stays
+    // byte-identical when both are OFF.
+    return resolveQuestionBank(primaryPersona, selectedPersona, personaAlignmentEnabled || personaExpansionEnabled);
   })();
   const persona = selectedPersona ? PERSONAS.find(p => p.key === selectedPersona)! : PERSONAS[0];
 
@@ -2964,6 +2970,7 @@ export function FreeAssessmentModal({ open, onOpenChange, onNavigate, initialPer
     phase, setPhase, selectedPersona, setSelectedPersona,
     primaryPersona, setPrimaryPersona, isProxy, setIsProxy, ageBand, setAgeBand,
     personaModelAlignment: personaAlignmentEnabled,
+    personaModelExpansion: personaExpansionEnabled,
     participantGender, setParticipantGender, participantCity, setParticipantCity,
     participantGoal, setParticipantGoal, goalTimeline, setGoalTimeline,
     concernMetaMap, setConcernMetaMap,

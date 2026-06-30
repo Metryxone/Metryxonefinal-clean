@@ -206,6 +206,20 @@ export const FEATURE_FLAGS = {
    *  selection, cohort cohorting and PIL lenses are byte-identical to legacy (incl. schema; no DDL). Env:
    *  `FF_PERSONA_MODEL_ALIGNMENT`. */
   personaModelAlignment: false,
+  /** CAPADEX 3.0 — Persona Model EXPANSION (G-F1/G-F2 + G-F5/G-F6 pipeline). Strictly ADDITIVE depth on top of the
+   *  EXISTING persona model, INDEPENDENT of `personaModelAlignment`. When ON: (G-F1) first-class enterprise
+   *  sub-personas — People Manager / Senior Leadership / Learning & Development — surface in the IntroPhase
+   *  "Working professionals" track with tailored behavioural banks (legacyKey 'professional'); (G-F2) Higher-education
+   *  Faculty becomes a first-class proxy sub-persona distinct from school teacher (legacyKey 'teacher'); their
+   *  cohort-track counts + PIL stakeholder lenses route honestly to the existing professional/teacher bases (no
+   *  fabricated lens content); (G-F5) a read-only per-persona realized-outcome breakdown composes the EXISTING MX-102X
+   *  outcome engine — empty/honest-null until real non-demo outcomes cross k_min=30; (G-F6) a NON-CLINICAL structural
+   *  scaffold REGISTRY for the deferred Government / Healthcare / Clinical-Psychology verticals carrying explicit
+   *  "not validated / not for clinical or diagnostic use" disclaimers — NO clinical content, NO assessment persona,
+   *  NO claim of clinical validity. Flag OFF → IntroPhase tracks, bank selection, cohort counts, PIL lenses are
+   *  byte-identical to legacy (incl. schema; no DDL) and the persona-expansion data routes 503. Env:
+   *  `FF_PERSONA_MODEL_EXPANSION`. */
+  personaModelExpansion: false,
   /** MX-103X — Live Employer Ecosystem Activation (read-only audit + certification console over the EXISTING
    *  employer hiring funnel). When ON, a PURE read-only composer at `/api/admin/employer-ecosystem/*`
    *  (super-admin) inventories the nine funnel stages — onboarding · create-job · role-DNA · competencies ·
@@ -2147,6 +2161,10 @@ export function isEvidenceGatedProgressionEnabled(): boolean {
 /** CAPADEX 3.0 — Phase 1.2 Persona Model alignment master switch. */
 export function isPersonaModelAlignmentEnabled(): boolean {
   return isFlagEnabled('personaModelAlignment');
+}
+
+export function isPersonaModelExpansionEnabled(): boolean {
+  return isFlagEnabled('personaModelExpansion');
 }
 
 /** CAPADEX 3.0 — Program 2 (Task #305): longitudinal outcome capture on progression master switch. */

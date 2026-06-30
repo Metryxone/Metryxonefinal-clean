@@ -1,0 +1,2181 @@
+{
+  "generated_at": "2026-06-30T14:10:24.976Z",
+  "read_only": true,
+  "spine_frozen": true,
+  "axes": [
+    "persona",
+    "lifecycle",
+    "assessment",
+    "ai",
+    "recommendation",
+    "intervention",
+    "outcome",
+    "kpi"
+  ],
+  "spine_step_count": 12,
+  "outcome_type_count": 11,
+  "kpi_family_count": 10,
+  "lifecycle_rule_count": 4,
+  "path_count": 9,
+  "spine": [
+    {
+      "key": "assessment",
+      "order": 1,
+      "label": "Assessment",
+      "definition": "A scored behavioural / competency assessment establishes the working signal.",
+      "reuses": "capadex_sessions + scoring (routes/capadex.ts)"
+    },
+    {
+      "key": "evidence_collection",
+      "order": 2,
+      "label": "Evidence Collection",
+      "definition": "Evidence accrues into the longitudinal record (one datapoint per cycle).",
+      "reuses": "services/wc3/longitudinal-foundation.ts → wc3_longitudinal_snapshots"
+    },
+    {
+      "key": "ai_interpretation",
+      "order": 3,
+      "label": "AI Interpretation",
+      "definition": "AI interprets signals/competencies into an explainable diagnosis.",
+      "reuses": "services/pil/runtime-guidance-engine.ts + behavioural-signal"
+    },
+    {
+      "key": "recommendation",
+      "order": 4,
+      "label": "Recommendation",
+      "definition": "Next-best-action / growth recommendations are generated.",
+      "reuses": "services/recommendation-intelligence-engine.ts + development_recommendations"
+    },
+    {
+      "key": "intervention",
+      "order": 5,
+      "label": "Intervention",
+      "definition": "A targeted intervention is delivered for the diagnosed gap.",
+      "reuses": "services/intervention-intelligence.ts → capadex_interventions"
+    },
+    {
+      "key": "learning",
+      "order": 6,
+      "label": "Learning",
+      "definition": "A personalised learning / development plan is composed and surfaced.",
+      "reuses": "services/learning-path-engine.ts"
+    },
+    {
+      "key": "practice",
+      "order": 7,
+      "label": "Practice",
+      "definition": "Practice / activities are surfaced for the learner to act on.",
+      "reuses": "recommendation + intervention catalogs (services/pil/recommendation-catalog.ts)"
+    },
+    {
+      "key": "reassessment",
+      "order": 8,
+      "label": "Reassessment",
+      "definition": "Interval / exit re-administration of the existing assessment (close-the-loop).",
+      "reuses": "services/capadex/progression-outcome-capture.ts (getReassessmentSignal)"
+    },
+    {
+      "key": "improvement",
+      "order": 9,
+      "label": "Improvement",
+      "definition": "Improvement is validated against the prior datapoint(s) as a longitudinal trend.",
+      "reuses": "services/longitudinal-memory.ts + career_readiness_history"
+    },
+    {
+      "key": "measured_outcome",
+      "order": 10,
+      "label": "Measured Outcome",
+      "definition": "A realized, MEASURABLE outcome is captured into the canonical outcome ledger.",
+      "reuses": "services/outcome-intelligence-engine.ts → validation_loop_outcomes"
+    },
+    {
+      "key": "kpi_update",
+      "order": 11,
+      "label": "KPI Update",
+      "definition": "The measured outcome rolls up into the individual / persona / lifecycle / business KPIs.",
+      "reuses": "services/enterprise-analytics-schema.ts (anl_kpi_daily/anl_cohort_analysis) + services/benchmark-engine.ts"
+    },
+    {
+      "key": "continuous_optimization",
+      "order": 12,
+      "label": "Continuous Optimization",
+      "definition": "The loop re-enters: KPIs inform the next cycle from the new baseline.",
+      "reuses": "services/wc7b/longitudinal-automation.ts (reassessment cadence) — adoption-gated"
+    }
+  ],
+  "outcome_types": [
+    {
+      "id": "assessment_completion",
+      "label": "Assessment Completion",
+      "category": "engagement",
+      "definition": "A subject completes a scored assessment (the entry datapoint of every outcome chain).",
+      "status": "SUPPORTED",
+      "evidence": {
+        "services": [
+          "routes/capadex.ts"
+        ],
+        "tables": [
+          "capadex_sessions"
+        ]
+      }
+    },
+    {
+      "id": "diagnosis_delivered",
+      "label": "Diagnosis Delivered",
+      "category": "engagement",
+      "definition": "An explainable AI diagnosis is surfaced from the scored signal/competency profile.",
+      "status": "SUPPORTED",
+      "evidence": {
+        "services": [
+          "services/pil/runtime-guidance-engine.ts"
+        ],
+        "tables": [
+          "capadex_user_profiles"
+        ]
+      }
+    },
+    {
+      "id": "recommendation_engagement",
+      "label": "Recommendation Engagement",
+      "category": "engagement",
+      "definition": "A growth recommendation is generated and surfaced for the diagnosed gap.",
+      "status": "SUPPORTED",
+      "evidence": {
+        "services": [
+          "services/recommendation-intelligence-engine.ts"
+        ],
+        "tables": [
+          "development_recommendations"
+        ]
+      }
+    },
+    {
+      "id": "intervention_uptake",
+      "label": "Intervention Uptake",
+      "category": "engagement",
+      "definition": "A targeted intervention is delivered (uptake inferred from intervention substrate).",
+      "status": "PARTIAL",
+      "statusNote": "Intervention delivery substrate exists; explicit per-subject uptake telemetry is recommendation/intervention-inferred (no separate completion log) — Coverage⟂Adoption.",
+      "evidence": {
+        "services": [
+          "services/intervention-intelligence.ts"
+        ],
+        "tables": [
+          "capadex_interventions",
+          "lbi_intervention_library"
+        ]
+      }
+    },
+    {
+      "id": "learning_progress",
+      "label": "Learning Progress",
+      "category": "progress",
+      "definition": "Movement on the longitudinal record after a learning/practice cycle.",
+      "status": "SUPPORTED",
+      "evidence": {
+        "services": [
+          "services/wc3/longitudinal-foundation.ts"
+        ],
+        "tables": [
+          "wc3_longitudinal_snapshots"
+        ]
+      }
+    },
+    {
+      "id": "competency_improvement",
+      "label": "Competency / EI Improvement",
+      "category": "improvement",
+      "definition": "A measured uplift in a competency / EI dimension vs the baseline.",
+      "status": "SUPPORTED",
+      "evidence": {
+        "services": [
+          "services/mei-scoring-engine.ts"
+        ],
+        "tables": [
+          "ei_profile_snapshots",
+          "scoring_runs"
+        ]
+      }
+    },
+    {
+      "id": "readiness_uplift",
+      "label": "Readiness Uplift",
+      "category": "improvement",
+      "definition": "A measured rise in the readiness band over the readiness history.",
+      "status": "SUPPORTED",
+      "evidence": {
+        "services": [
+          "services/employability-scoring-engine.ts"
+        ],
+        "tables": [
+          "career_readiness_history"
+        ]
+      }
+    },
+    {
+      "id": "reassessment_completed",
+      "label": "Reassessment Completed",
+      "category": "continuity",
+      "definition": "A subject re-administers the assessment (>1 longitudinal datapoint — close-the-loop).",
+      "status": "PARTIAL",
+      "statusNote": "Reassessment signal MECHANISM present (getReassessmentSignal); real re-administration volume is ADOPTION-pending (Coverage⟂Adoption, null≠0).",
+      "evidence": {
+        "services": [
+          "services/capadex/progression-outcome-capture.ts"
+        ],
+        "tables": [
+          "wc3_longitudinal_snapshots"
+        ]
+      }
+    },
+    {
+      "id": "stage_promotion",
+      "label": "Stage Promotion",
+      "category": "lifecycle",
+      "definition": "The subject advances a lifecycle stage (Curiosity→Insight→Growth→Mastery).",
+      "status": "PARTIAL",
+      "statusNote": "Promotion is readiness-DERIVED (evidence-gate band) recorded in wc3_stage_progression, not a uniformly enforced gate — Coverage present, ADOPTION usage-driven.",
+      "evidence": {
+        "services": [
+          "services/capadex/evidence-gate.ts"
+        ],
+        "tables": [
+          "wc3_stage_progression",
+          "wc3_stage_state"
+        ]
+      }
+    },
+    {
+      "id": "realized_outcome",
+      "label": "Realized Outcome",
+      "category": "realized",
+      "definition": "A realized career/hiring/development outcome (placement, role progression, hire, direction chosen).",
+      "status": "SUPPORTED",
+      "statusNote": "Canonical ledger present (validation_loop_outcomes via MX-102X + Phase 1.3 capture); realized-outcome volume is the universal adoption-gated tail.",
+      "evidence": {
+        "services": [
+          "services/outcome-intelligence-engine.ts",
+          "services/capadex/progression-outcome-capture.ts"
+        ],
+        "tables": [
+          "validation_loop_outcomes"
+        ]
+      }
+    },
+    {
+      "id": "mastery_achievement",
+      "label": "Mastery Achievement",
+      "category": "realized",
+      "definition": "A reached-mastery milestone is captured (terminal coded-ladder outcome + loop re-entry).",
+      "status": "PARTIAL",
+      "statusNote": "reached_mastery capture MECHANISM present (progression-outcome-capture); realized mastery volume is honest-low/0 (Adoption⟂Coverage, null≠0).",
+      "evidence": {
+        "services": [
+          "services/capadex/progression-outcome-capture.ts"
+        ],
+        "tables": [
+          "validation_loop_outcomes"
+        ]
+      }
+    }
+  ],
+  "kpi_families": [
+    {
+      "key": "individual",
+      "label": "Individual KPIs",
+      "definition": "Per-subject growth measures (readiness score, improvement delta, completion).",
+      "exampleKpis": [
+        "Assessment completion",
+        "Readiness band",
+        "Improvement delta vs baseline"
+      ],
+      "status": "SUPPORTED",
+      "evidence": {
+        "services": [
+          "services/employability-scoring-engine.ts",
+          "services/longitudinal-memory.ts"
+        ],
+        "tables": [
+          "career_readiness_history",
+          "scoring_runs"
+        ]
+      }
+    },
+    {
+      "key": "persona",
+      "label": "Persona KPIs",
+      "definition": "Per-persona success metrics rolled up across subjects of a persona.",
+      "exampleKpis": [
+        "Per-persona completion rate",
+        "Per-persona realized-outcome rate"
+      ],
+      "status": "PARTIAL",
+      "statusNote": "Persona roll-up via READ-TIME join (capadex_user_profiles.persona ⟂ validation_loop_outcomes); k-anon suppressed; no persona dimension added to the ledger — Coverage present, volume adoption-gated.",
+      "evidence": {
+        "services": [
+          "services/outcome-intelligence-engine.ts"
+        ],
+        "tables": [
+          "capadex_user_profiles",
+          "validation_loop_outcomes"
+        ]
+      }
+    },
+    {
+      "key": "lifecycle",
+      "label": "Lifecycle KPIs",
+      "definition": "Stage distribution + promotion / progression rates across the coded ladder.",
+      "exampleKpis": [
+        "Stage distribution",
+        "Promotion rate",
+        "Time-in-stage"
+      ],
+      "status": "SUPPORTED",
+      "evidence": {
+        "services": [
+          "services/capadex/evidence-gate.ts"
+        ],
+        "tables": [
+          "wc3_stage_state",
+          "wc3_stage_progression"
+        ]
+      }
+    },
+    {
+      "key": "assessment",
+      "label": "Assessment KPIs",
+      "definition": "Assessment throughput, coverage and reassessment rate.",
+      "exampleKpis": [
+        "Completion rate",
+        "Assessment coverage",
+        "Reassessment rate"
+      ],
+      "status": "SUPPORTED",
+      "evidence": {
+        "services": [
+          "routes/capadex.ts"
+        ],
+        "tables": [
+          "capadex_sessions"
+        ]
+      }
+    },
+    {
+      "key": "journey",
+      "label": "Journey KPIs",
+      "definition": "Funnel conversion / drop-off / outcome-tail completion across the journey.",
+      "exampleKpis": [
+        "Funnel conversion",
+        "Journey drop-off",
+        "Outcome-tail completion"
+      ],
+      "status": "PARTIAL",
+      "statusNote": "Journey substrate present (validation_loop_outcomes + journey-tail); conversion KPIs are adoption-gated (real volume) — Coverage⟂Adoption.",
+      "evidence": {
+        "services": [
+          "services/outcome-intelligence-engine.ts"
+        ],
+        "tables": [
+          "validation_loop_outcomes"
+        ]
+      }
+    },
+    {
+      "key": "ai",
+      "label": "AI KPIs",
+      "definition": "Diagnosis coverage + recommendation acceptance / effectiveness.",
+      "exampleKpis": [
+        "Diagnosis coverage",
+        "Recommendation acceptance (honest-null)",
+        "AI effectiveness (abstained)"
+      ],
+      "status": "PARTIAL",
+      "statusNote": "Diagnosis/recommendation substrate present; acceptance/effectiveness is ABSTAINED — no decision-time prediction recorded (Confidence axis, honest-null), never fabricated.",
+      "evidence": {
+        "services": [
+          "services/recommendation-intelligence-engine.ts"
+        ],
+        "tables": [
+          "development_recommendations"
+        ]
+      }
+    },
+    {
+      "key": "learning",
+      "label": "Learning KPIs",
+      "definition": "Learning progress + intervention uptake measures.",
+      "exampleKpis": [
+        "Learning progress",
+        "Intervention uptake",
+        "Practice engagement"
+      ],
+      "status": "SUPPORTED",
+      "evidence": {
+        "services": [
+          "services/learning-path-engine.ts",
+          "services/intervention-intelligence.ts"
+        ],
+        "tables": [
+          "wc3_longitudinal_snapshots",
+          "capadex_interventions"
+        ]
+      }
+    },
+    {
+      "key": "business",
+      "label": "Business KPIs",
+      "definition": "Placement / hiring conversion + commercial outcomes (revenue reported separately).",
+      "exampleKpis": [
+        "Placement rate",
+        "Hiring conversion",
+        "Revenue (separate ledger, honest-null here)"
+      ],
+      "status": "PARTIAL",
+      "statusNote": "Placement/hiring realized via validation_loop_outcomes; revenue lives in the SEPARATE commerce ledger (capadex_payments) and is NOT composited into outcome KPIs — Coverage present, accuracy/volume adoption-gated.",
+      "evidence": {
+        "services": [
+          "services/outcome-intelligence-engine.ts"
+        ],
+        "tables": [
+          "validation_loop_outcomes",
+          "capadex_payments"
+        ]
+      }
+    },
+    {
+      "key": "organizational",
+      "label": "Organizational KPIs",
+      "definition": "Cohort movement + institute / batch coverage (k-anon aggregate).",
+      "exampleKpis": [
+        "Cohort movement",
+        "Institute coverage",
+        "Batch progression (aggregate)"
+      ],
+      "status": "SUPPORTED",
+      "statusNote": "Real k-anon aggregation (MX-302H); scores masked below k_min, roster always shown.",
+      "evidence": {
+        "services": [
+          "services/longitudinal-memory.ts",
+          "services/benchmark-engine.ts"
+        ],
+        "tables": [
+          "longitudinal_patterns",
+          "wc3_longitudinal_snapshots"
+        ]
+      }
+    },
+    {
+      "key": "platform",
+      "label": "Platform KPIs",
+      "definition": "Active users / retention / engagement rolled up by the analytics engine.",
+      "exampleKpis": [
+        "Active users",
+        "Retention",
+        "Engagement (daily KPI roll-up)"
+      ],
+      "status": "PARTIAL",
+      "statusNote": "Analytics KPI substrate present (anl_kpi_daily/anl_cohort_analysis); population is adoption-driven (real volume) — Coverage⟂Adoption, null≠0.",
+      "evidence": {
+        "services": [
+          "services/enterprise-analytics-schema.ts",
+          "services/report-factory/benchmark-engine.ts"
+        ],
+        "tables": [
+          "anl_kpi_daily",
+          "anl_cohort_analysis",
+          "anl_benchmark_snapshot"
+        ]
+      }
+    }
+  ],
+  "lifecycle_rules": [
+    {
+      "code": "CAP_CUR",
+      "label": "Curiosity",
+      "order": 0,
+      "outcomesAtStage": [
+        "assessment_completion",
+        "diagnosis_delivered"
+      ],
+      "kpisUpdated": [
+        "individual",
+        "assessment",
+        "ai"
+      ],
+      "measurableOutcome": "A scored baseline + first AI diagnosis exist (the entry outcome of every chain).",
+      "status": "SUPPORTED",
+      "statusNote": "Entry → baseline → diagnosis is the most mature outcome segment.",
+      "evidence": {
+        "services": [
+          "services/pil/runtime-guidance-engine.ts",
+          "services/wc3/longitudinal-foundation.ts"
+        ],
+        "routes": [
+          "routes/capadex.ts"
+        ],
+        "tables": [
+          "capadex_sessions",
+          "capadex_user_profiles",
+          "wc3_longitudinal_snapshots"
+        ],
+        "frontend": [
+          "components/FreeAssessmentModal.tsx"
+        ]
+      }
+    },
+    {
+      "code": "CAP_INS",
+      "label": "Insight",
+      "order": 1,
+      "outcomesAtStage": [
+        "recommendation_engagement",
+        "intervention_uptake",
+        "learning_progress"
+      ],
+      "kpisUpdated": [
+        "individual",
+        "learning",
+        "ai",
+        "journey"
+      ],
+      "measurableOutcome": "A recommendation + learning/intervention plan is generated and acted on.",
+      "status": "SUPPORTED",
+      "statusNote": "Recommendation + learning + intervention generation is well-supported (reused engines).",
+      "evidence": {
+        "services": [
+          "services/recommendation-intelligence-engine.ts",
+          "services/learning-path-engine.ts",
+          "services/intervention-intelligence.ts"
+        ],
+        "routes": [
+          "routes/capadex.ts",
+          "routes/career-readiness.ts"
+        ],
+        "tables": [
+          "development_recommendations",
+          "capadex_interventions",
+          "wc3_longitudinal_snapshots"
+        ],
+        "frontend": [
+          "pages/CareerBuilderPage.tsx"
+        ]
+      }
+    },
+    {
+      "code": "CAP_GRW",
+      "label": "Growth",
+      "order": 2,
+      "outcomesAtStage": [
+        "reassessment_completed",
+        "competency_improvement",
+        "readiness_uplift",
+        "realized_outcome"
+      ],
+      "kpisUpdated": [
+        "individual",
+        "lifecycle",
+        "business",
+        "organizational"
+      ],
+      "measurableOutcome": "A reassessment validates improvement vs the baseline; a realized outcome is captured.",
+      "status": "PARTIAL",
+      "statusNote": "Reassessment + improvement MECHANISM present (Phase 1.3 reuse + longitudinal trend); validation is ADOPTION-pending (>1 non-demo datapoint). Coverage⟂Adoption⟂Confidence never composited.",
+      "evidence": {
+        "services": [
+          "services/capadex/progression-outcome-capture.ts",
+          "services/longitudinal-memory.ts",
+          "services/outcome-intelligence-engine.ts"
+        ],
+        "routes": [
+          "routes/career-progression.ts",
+          "routes/career-readiness.ts"
+        ],
+        "tables": [
+          "wc3_longitudinal_snapshots",
+          "career_readiness_history",
+          "validation_loop_outcomes"
+        ],
+        "frontend": [
+          "pages/CareerBuilderPage.tsx"
+        ]
+      }
+    },
+    {
+      "code": "CAP_MAS",
+      "label": "Mastery",
+      "order": 3,
+      "outcomesAtStage": [
+        "stage_promotion",
+        "mastery_achievement",
+        "realized_outcome"
+      ],
+      "kpisUpdated": [
+        "lifecycle",
+        "business",
+        "platform"
+      ],
+      "measurableOutcome": "A reached-mastery + realized outcome is captured; the optimization loop re-enters.",
+      "status": "PARTIAL",
+      "statusNote": "reached_mastery + exit-eligibility MECHANISM present (progression-outcome-capture + getReassessmentSignal). Continuous re-entry cadence is adoption-gated; realized mastery volume honest-low/0 (Adoption⟂Coverage, null≠0).",
+      "evidence": {
+        "services": [
+          "services/capadex/progression-outcome-capture.ts",
+          "services/outcome-intelligence-engine.ts",
+          "services/wc7b/longitudinal-automation.ts"
+        ],
+        "routes": [
+          "routes/capadex.ts"
+        ],
+        "tables": [
+          "validation_loop_outcomes",
+          "wc3_stage_progression"
+        ],
+        "frontend": [
+          "pages/CareerBuilderPage.tsx"
+        ]
+      }
+    }
+  ],
+  "paths": [
+    {
+      "key": "student_growth",
+      "label": "Student → Career Growth",
+      "persona": "Student (school/college)",
+      "personas": [
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "spineReached": [
+        "assessment",
+        "evidence_collection",
+        "ai_interpretation",
+        "recommendation",
+        "intervention",
+        "learning",
+        "practice"
+      ],
+      "lifecycleStages": [
+        "CAP_CUR",
+        "CAP_INS",
+        "CAP_GRW"
+      ],
+      "assessments": [
+        "entry",
+        "baseline",
+        "behaviour",
+        "competency"
+      ],
+      "aiInterpretation": "Behavioural signal → concern routing + competency diagnosis (PIL runtime guidance).",
+      "recommendationEffectiveness": "Recommendation substrate present (development_recommendations); calibrated effectiveness abstained until volume (Confidence axis, honest-null).",
+      "interventionEffectiveness": "Concern-targeted interventions (capadex_interventions); uptake inferred, effectiveness abstained.",
+      "outcomeTypes": [
+        "assessment_completion",
+        "diagnosis_delivered",
+        "recommendation_engagement",
+        "intervention_uptake",
+        "learning_progress"
+      ],
+      "kpiFamilies": [
+        "individual",
+        "assessment",
+        "learning",
+        "ai",
+        "persona"
+      ],
+      "realizedOutcome": "Career direction chosen / measurable growth progressed; realized-outcome tail adoption-gated.",
+      "successMetrics": "Assessment completion; recommendation engagement; positive re-measure movement.",
+      "status": "PARTIAL",
+      "statusNote": "Strong front-half (assessment→diagnose→recommend→learn→intervene). Measured-outcome + KPI roll-up MECHANISM present; per-journey realized-outcome volume is ADOPTION-pending (Coverage⟂Adoption, null≠0).",
+      "evidence": {
+        "services": [
+          "services/pil/runtime-guidance-engine.ts",
+          "services/recommendation-intelligence-engine.ts",
+          "services/learning-path-engine.ts",
+          "services/intervention-intelligence.ts"
+        ],
+        "routes": [
+          "routes/capadex.ts",
+          "routes/student-career-builder.ts"
+        ],
+        "tables": [
+          "capadex_user_profiles",
+          "development_recommendations",
+          "capadex_interventions",
+          "wc3_longitudinal_snapshots"
+        ],
+        "frontend": [
+          "components/FreeAssessmentModal.tsx",
+          "components/StudentDashboard.tsx",
+          "pages/CareerBuilderPage.tsx"
+        ]
+      }
+    },
+    {
+      "key": "fresher_readiness",
+      "label": "Fresher → Placement Readiness",
+      "persona": "Fresher / final-year (job-seeker)",
+      "personas": [
+        "P4",
+        "P3"
+      ],
+      "spineReached": [
+        "assessment",
+        "evidence_collection",
+        "ai_interpretation",
+        "recommendation",
+        "intervention",
+        "learning",
+        "improvement",
+        "measured_outcome",
+        "kpi_update"
+      ],
+      "lifecycleStages": [
+        "CAP_CUR",
+        "CAP_INS",
+        "CAP_GRW"
+      ],
+      "assessments": [
+        "entry",
+        "baseline",
+        "competency",
+        "performance"
+      ],
+      "aiInterpretation": "Competency + readiness diagnosis; role-DNA crosswalk for fit.",
+      "recommendationEffectiveness": "Launchpad next-steps + placement matching; effectiveness measured as readiness uplift + application rate (volume-gated).",
+      "interventionEffectiveness": "Readiness-gap interventions + curated practice; effectiveness via readiness-band movement.",
+      "outcomeTypes": [
+        "assessment_completion",
+        "recommendation_engagement",
+        "readiness_uplift",
+        "realized_outcome"
+      ],
+      "kpiFamilies": [
+        "individual",
+        "assessment",
+        "business",
+        "journey",
+        "persona"
+      ],
+      "realizedOutcome": "Application submitted / placed (placement outcome → validation_loop_outcomes).",
+      "successMetrics": "Launchpad completion; readiness uplift; application + placement rate.",
+      "status": "SUPPORTED",
+      "statusNote": "Launchpad + placement readiness loop is live; realized placement-outcome capture is the universal adoption-gated tail (Adoption⟂Coverage).",
+      "evidence": {
+        "services": [
+          "services/career-recommendation-engine.ts",
+          "services/employability-scoring-engine.ts",
+          "services/outcome-intelligence-engine.ts"
+        ],
+        "routes": [
+          "routes/career-launchpad.ts",
+          "routes/career-readiness.ts",
+          "routes/talent-matching-engine.ts"
+        ],
+        "tables": [
+          "career_seeker_profiles",
+          "career_readiness_history",
+          "validation_loop_outcomes"
+        ],
+        "frontend": [
+          "pages/career/CareerLaunchpadDashboard.tsx",
+          "pages/CareerBuilderPage.tsx"
+        ]
+      }
+    },
+    {
+      "key": "professional_progression",
+      "label": "Professional → Role Progression",
+      "persona": "Working professional",
+      "personas": [
+        "P5"
+      ],
+      "spineReached": [
+        "assessment",
+        "evidence_collection",
+        "ai_interpretation",
+        "recommendation",
+        "learning",
+        "reassessment",
+        "improvement",
+        "measured_outcome",
+        "kpi_update",
+        "continuous_optimization"
+      ],
+      "lifecycleStages": [
+        "CAP_INS",
+        "CAP_GRW",
+        "CAP_MAS"
+      ],
+      "assessments": [
+        "baseline",
+        "competency",
+        "performance",
+        "progress"
+      ],
+      "aiInterpretation": "Competency + progression diagnosis; trend intelligence.",
+      "recommendationEffectiveness": "Progression-aware growth plan; effectiveness via validated improvement vs baseline (abstained calibration until volume).",
+      "interventionEffectiveness": "Competency-gap interventions + reinforcement; effectiveness via competency-band movement.",
+      "outcomeTypes": [
+        "competency_improvement",
+        "readiness_uplift",
+        "reassessment_completed",
+        "stage_promotion",
+        "realized_outcome"
+      ],
+      "kpiFamilies": [
+        "individual",
+        "lifecycle",
+        "business",
+        "platform"
+      ],
+      "realizedOutcome": "Role progression / promotion; adoption-gated realized-outcome tail.",
+      "successMetrics": "Re-run rate; positive-movement rate; progression cadence.",
+      "status": "PARTIAL",
+      "statusNote": "Reaches the FULL loop incl. reassessment→improvement→measured-outcome→KPI as a MECHANISM, but promotion is DERIVED (GAP-O1 promotion not uniformly gated) and validation is ADOPTION-pending (Coverage⟂Adoption⟂Confidence).",
+      "evidence": {
+        "services": [
+          "services/recommendation-intelligence-engine.ts",
+          "services/longitudinal-memory.ts",
+          "services/outcome-intelligence-engine.ts",
+          "services/wc7b/longitudinal-automation.ts"
+        ],
+        "routes": [
+          "routes/capadex.ts",
+          "routes/career-progression.ts",
+          "routes/career-readiness.ts"
+        ],
+        "tables": [
+          "wc3_stage_progression",
+          "wc3_longitudinal_snapshots",
+          "career_readiness_history",
+          "validation_loop_outcomes"
+        ],
+        "frontend": [
+          "pages/CareerBuilderPage.tsx"
+        ]
+      }
+    },
+    {
+      "key": "employee_competency",
+      "label": "Employee → Competency / EI Development",
+      "persona": "Enterprise employee",
+      "personas": [
+        "P5",
+        "P6"
+      ],
+      "spineReached": [
+        "assessment",
+        "evidence_collection",
+        "ai_interpretation",
+        "recommendation",
+        "intervention",
+        "learning",
+        "improvement"
+      ],
+      "lifecycleStages": [
+        "CAP_CUR",
+        "CAP_INS",
+        "CAP_GRW"
+      ],
+      "assessments": [
+        "entry",
+        "baseline",
+        "competency",
+        "behaviour"
+      ],
+      "aiInterpretation": "Competency genome + EI dimension diagnosis (mei-scoring-engine).",
+      "recommendationEffectiveness": "Competency-gap → development recommendation; effectiveness via EI/competency delta (abstained calibration).",
+      "interventionEffectiveness": "EI / competency interventions; effectiveness via ei_profile_snapshots delta.",
+      "outcomeTypes": [
+        "assessment_completion",
+        "diagnosis_delivered",
+        "recommendation_engagement",
+        "competency_improvement",
+        "learning_progress"
+      ],
+      "kpiFamilies": [
+        "individual",
+        "learning",
+        "ai",
+        "organizational"
+      ],
+      "realizedOutcome": "Competency uplift; EI development; adoption-gated outcome tail.",
+      "successMetrics": "Baseline coverage; competency movement; EI delta.",
+      "status": "SUPPORTED",
+      "statusNote": "Competency + EI development diagnosis is well-supported (mei + intervention engines); realized development-outcome capture is the universal adoption-gated tail (Adoption⟂Coverage).",
+      "evidence": {
+        "services": [
+          "services/mei-scoring-engine.ts",
+          "services/mei-recommendation-engine.ts",
+          "services/intervention-intelligence.ts"
+        ],
+        "routes": [
+          "routes/capadex.ts",
+          "routes/career-competency-activation.ts"
+        ],
+        "tables": [
+          "ei_profile_snapshots",
+          "development_recommendations",
+          "wc3_longitudinal_snapshots"
+        ],
+        "frontend": [
+          "pages/CareerBuilderPage.tsx"
+        ]
+      }
+    },
+    {
+      "key": "recruiter_pipeline",
+      "label": "HR / Recruiter → Hiring Outcome",
+      "persona": "HR / recruiter",
+      "personas": [
+        "P7"
+      ],
+      "spineReached": [
+        "assessment",
+        "ai_interpretation",
+        "recommendation",
+        "measured_outcome",
+        "kpi_update"
+      ],
+      "lifecycleStages": [
+        "CAP_INS",
+        "CAP_GRW",
+        "CAP_MAS"
+      ],
+      "assessments": [
+        "competency",
+        "performance",
+        "behaviour"
+      ],
+      "aiInterpretation": "Candidate-match + interview intelligence (calibration k-gated).",
+      "recommendationEffectiveness": "Talent-match ranking → interview → hire decision support; calibration accrues at k_min=30 (Brier/ECE abstain below).",
+      "interventionEffectiveness": "Funnel-stage prompts (recruiter-facing); effectiveness via funnel conversion + time-to-decision.",
+      "outcomeTypes": [
+        "assessment_completion",
+        "recommendation_engagement",
+        "realized_outcome"
+      ],
+      "kpiFamilies": [
+        "business",
+        "journey",
+        "ai",
+        "platform"
+      ],
+      "realizedOutcome": "Hire decision / hired (hiring outcome → validation_loop_outcomes).",
+      "successMetrics": "Funnel conversion; time-to-decision; match quality; calibration (k≥30).",
+      "status": "SUPPORTED",
+      "statusNote": "The 9-stage hiring funnel is the most complete realized-outcome family. Realized hiring-outcome capture exists; adoption + calibration reported separately (Adoption⟂Coverage; Brier/ECE abstain <k_min=30).",
+      "evidence": {
+        "services": [
+          "services/wc7b/decision-orchestrator.ts",
+          "services/validation-loop-intake.ts",
+          "services/outcome-intelligence-engine.ts"
+        ],
+        "routes": [
+          "routes/employer-portal.ts",
+          "routes/employer-ecosystem.ts",
+          "routes/employer-hiring-intelligence.ts"
+        ],
+        "tables": [
+          "employer_jobs",
+          "job_postings",
+          "validation_loop_outcomes"
+        ],
+        "frontend": [
+          "pages/EmployerPortalPage.tsx"
+        ]
+      }
+    },
+    {
+      "key": "institute_cohort",
+      "label": "Institute Admin → Cohort Outcome",
+      "persona": "Institution administrator",
+      "personas": [
+        "P9",
+        "aggregate"
+      ],
+      "spineReached": [
+        "ai_interpretation",
+        "recommendation",
+        "measured_outcome",
+        "kpi_update"
+      ],
+      "lifecycleStages": [
+        "CAP_INS",
+        "CAP_GRW"
+      ],
+      "assessments": [
+        "competency",
+        "behaviour",
+        "progress"
+      ],
+      "aiInterpretation": "k-anon cohort aggregation (MX-302H institutional intelligence).",
+      "recommendationEffectiveness": "Cohort-level act recommendations (k-gated); effectiveness via cohort movement.",
+      "interventionEffectiveness": "Cohort-level intervention prompts (k≥k_min); effectiveness aggregate-only.",
+      "outcomeTypes": [
+        "recommendation_engagement",
+        "realized_outcome"
+      ],
+      "kpiFamilies": [
+        "organizational",
+        "lifecycle",
+        "business",
+        "platform"
+      ],
+      "realizedOutcome": "Cohort-level intervention / placement outcome (aggregate).",
+      "successMetrics": "Cohort coverage; cohort movement; placement rate.",
+      "status": "SUPPORTED",
+      "statusNote": "Real k-anon aggregation (MX-302H) — scores masked below k_min, roster always shown. Realized cohort-outcome tail adoption-gated.",
+      "evidence": {
+        "services": [
+          "services/longitudinal-memory.ts",
+          "services/benchmark-engine.ts"
+        ],
+        "routes": [
+          "routes/employer-dashboards.ts",
+          "routes/career-benchmark.ts"
+        ],
+        "tables": [
+          "wc3_longitudinal_snapshots",
+          "longitudinal_patterns",
+          "anl_cohort_analysis"
+        ],
+        "frontend": [
+          "components/UnifiedInstituteDashboard.tsx"
+        ]
+      }
+    },
+    {
+      "key": "parent_support",
+      "label": "Parent → Support Child Outcome",
+      "persona": "Parent / guardian",
+      "personas": [
+        "P1",
+        "P2"
+      ],
+      "spineReached": [
+        "intervention",
+        "practice",
+        "measured_outcome"
+      ],
+      "lifecycleStages": [
+        "CAP_INS",
+        "CAP_GRW"
+      ],
+      "assessments": [
+        "behaviour",
+        "competency"
+      ],
+      "aiInterpretation": "Child progress framing via consent-scoped view.",
+      "recommendationEffectiveness": "Support-action recommendations (journey-tail engine); effectiveness via child positive movement.",
+      "interventionEffectiveness": "Parent support actions reinforcing the child loop (jt_parent_support_actions); milestone fires into the outcome tail.",
+      "outcomeTypes": [
+        "intervention_uptake",
+        "realized_outcome"
+      ],
+      "kpiFamilies": [
+        "journey",
+        "individual"
+      ],
+      "realizedOutcome": "Support actions logged → child growth-loop continuation (captureJourneyTailMilestone).",
+      "successMetrics": "Consent rate; support-action adoption; child positive movement.",
+      "status": "PARTIAL",
+      "statusNote": "Support-action substrate EXISTS (journeyTailCompletion: jt_parent_support_actions, fail-closed on child ownership) and a completed action fires a journey-tail milestone into the universal outcome tail (longitudinalOutcomeCapture-gated). Residual is ADOPTION (real support-action volume — Coverage⟂Adoption, null≠0).",
+      "evidence": {
+        "services": [
+          "services/journey-tail-engine.ts",
+          "services/capadex/progression-outcome-capture.ts"
+        ],
+        "routes": [
+          "routes/journey-tail.ts"
+        ],
+        "tables": [
+          "jt_parent_support_actions",
+          "validation_loop_outcomes"
+        ],
+        "frontend": [
+          "components/UnifiedParentDashboard.tsx"
+        ]
+      }
+    },
+    {
+      "key": "mentor_mentee",
+      "label": "Mentor / Coach → Mentee Outcome",
+      "persona": "Mentor / coach",
+      "personas": [
+        "P6"
+      ],
+      "spineReached": [
+        "recommendation",
+        "intervention",
+        "practice",
+        "measured_outcome"
+      ],
+      "lifecycleStages": [
+        "CAP_GRW",
+        "CAP_MAS"
+      ],
+      "assessments": [
+        "competency",
+        "progress"
+      ],
+      "aiInterpretation": "Mentee progress framing; decision-mentor bridge.",
+      "recommendationEffectiveness": "Engagement / guidance recommendations (journey-tail engine); effectiveness via mentee movement.",
+      "interventionEffectiveness": "Mentor engagement milestones reinforcing the mentee loop (jt_mentor_engagements); milestone fires into the outcome tail.",
+      "outcomeTypes": [
+        "recommendation_engagement",
+        "intervention_uptake",
+        "realized_outcome"
+      ],
+      "kpiFamilies": [
+        "journey",
+        "individual"
+      ],
+      "realizedOutcome": "Mentee engagement logged → guidance-loop continuation (captureJourneyTailMilestone).",
+      "successMetrics": "Match rate; engagement cadence; mentee movement.",
+      "status": "PARTIAL",
+      "statusNote": "Engagement substrate EXISTS (journeyTailCompletion: jt_mentor_engagements, gated BOTH directions via mentor_bookings to avoid IDOR) and a milestone fires into the universal outcome tail (longitudinalOutcomeCapture-gated). Residual is ADOPTION (real engagement volume — Coverage⟂Adoption, null≠0).",
+      "evidence": {
+        "services": [
+          "services/journey-tail-engine.ts",
+          "services/capadex/progression-outcome-capture.ts",
+          "services/wc7b/decision-orchestrator.ts"
+        ],
+        "routes": [
+          "routes/journey-tail.ts"
+        ],
+        "tables": [
+          "jt_mentor_engagements",
+          "mentor_profiles",
+          "validation_loop_outcomes"
+        ],
+        "frontend": [
+          "pages/MentorDashboardPage.tsx"
+        ]
+      }
+    },
+    {
+      "key": "faculty_batch",
+      "label": "Faculty → Batch Outcome",
+      "persona": "Faculty member",
+      "personas": [
+        "aggregate"
+      ],
+      "spineReached": [
+        "measured_outcome",
+        "kpi_update"
+      ],
+      "lifecycleStages": [
+        "CAP_INS"
+      ],
+      "assessments": [
+        "competency",
+        "behaviour"
+      ],
+      "aiInterpretation": "Batch-confined cohort aggregation (nested in institute).",
+      "recommendationEffectiveness": "Faculty-scoped act recommendations (k-gated); effectiveness via batch movement.",
+      "interventionEffectiveness": "Batch-level intervention prompts (k≥k_min, batch-confined); effectiveness aggregate-only.",
+      "outcomeTypes": [
+        "realized_outcome"
+      ],
+      "kpiFamilies": [
+        "organizational",
+        "lifecycle"
+      ],
+      "realizedOutcome": "Batch-level intervention / progression outcome (aggregate).",
+      "successMetrics": "Batch coverage; batch movement.",
+      "status": "PARTIAL",
+      "statusNote": "Faculty batch-confined outcome view EXISTS (institutional-intelligence, role-scoped batch-confined access; MX-302H). Aggregate-only — no per-individual outcome. Adoption-gated cohort volume (Coverage⟂Adoption).",
+      "evidence": {
+        "services": [
+          "services/longitudinal-memory.ts",
+          "services/benchmark-engine.ts"
+        ],
+        "routes": [
+          "routes/employer-dashboards.ts"
+        ],
+        "tables": [
+          "wc3_longitudinal_snapshots",
+          "anl_cohort_analysis"
+        ],
+        "frontend": [
+          "components/UnifiedInstituteDashboard.tsx"
+        ]
+      }
+    }
+  ],
+  "decisions": [
+    {
+      "topic": "Single outcome + KPI engine (no V2)",
+      "decision": "COMPOSE_EXISTING",
+      "rationale": "Realized outcomes are captured by EXISTING engines (outcome-intelligence-engine → validation_loop_outcomes, Phase-1.3 progression-outcome-capture); KPIs are computed by the EXISTING enterprise-analytics + benchmark + mei/employability engines. This phase adds ONE read-only composer/registry, never a parallel outcome or KPI engine."
+    },
+    {
+      "topic": "KPI computation",
+      "decision": "REUSE_ENTERPRISE_ANALYTICS",
+      "rationale": "KPI families roll up over the existing anl_kpi_daily/anl_cohort_analysis/anl_benchmark_snapshot substrate + benchmark/mei/employability engines. No second KPI engine, no new KPI table. Population is adoption-driven (Coverage⟂Adoption, null≠0)."
+    },
+    {
+      "topic": "Recommendation / intervention effectiveness",
+      "decision": "ABSTAIN_UNTIL_VOLUME",
+      "rationale": "No decision-time prediction is recorded (predicted_prob_at_decision is NULL by design), so calibrated effectiveness/accuracy of the recommendation→outcome and intervention→outcome links is honestly ABSTAINED (Confidence axis), distinct from Coverage. Never fabricate effectiveness before the data exists."
+    },
+    {
+      "topic": "Outcome capture",
+      "decision": "REUSE_VALIDATION_LOOP",
+      "rationale": "Realized outcomes write to the EXISTING canonical ledger (validation_loop_outcomes) via reuse of MX-102X + Phase-1.3 capture, gated by longitudinalOutcomeCapture → byte-identical OFF. No new outcome table, no new DDL."
+    },
+    {
+      "topic": "Revenue / commercial KPIs",
+      "decision": "KEEP_SEPARATE",
+      "rationale": "Revenue lives in the SEPARATE commerce ledger (capadex_payments) and is reported on its own axis — never composited into outcome/growth KPIs. Business KPIs here mean placement/hiring realized outcomes, not money."
+    }
+  ],
+  "coverage": [
+    {
+      "key": "student_growth",
+      "label": "Student → Career Growth",
+      "persona": "Student (school/college)",
+      "status": "PARTIAL",
+      "statusNote": "Strong front-half (assessment→diagnose→recommend→learn→intervene). Measured-outcome + KPI roll-up MECHANISM present; per-journey realized-outcome volume is ADOPTION-pending (Coverage⟂Adoption, null≠0).",
+      "spineReached": 7,
+      "spineTotal": 12,
+      "outcomeTypes": 5,
+      "kpiFamilies": 5,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 4,
+          "total": 4,
+          "missing": []
+        },
+        "routes": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "frontend": {
+          "present": 3,
+          "total": 3,
+          "missing": []
+        },
+        "tables": {
+          "present": 4,
+          "absent": 0,
+          "unknown": 0,
+          "total": 4,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "fresher_readiness",
+      "label": "Fresher → Placement Readiness",
+      "persona": "Fresher / final-year (job-seeker)",
+      "status": "SUPPORTED",
+      "statusNote": "Launchpad + placement readiness loop is live; realized placement-outcome capture is the universal adoption-gated tail (Adoption⟂Coverage).",
+      "spineReached": 9,
+      "spineTotal": 12,
+      "outcomeTypes": 4,
+      "kpiFamilies": 5,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 3,
+          "total": 3,
+          "missing": []
+        },
+        "routes": {
+          "present": 3,
+          "total": 3,
+          "missing": []
+        },
+        "frontend": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "tables": {
+          "present": 3,
+          "absent": 0,
+          "unknown": 0,
+          "total": 3,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "professional_progression",
+      "label": "Professional → Role Progression",
+      "persona": "Working professional",
+      "status": "PARTIAL",
+      "statusNote": "Reaches the FULL loop incl. reassessment→improvement→measured-outcome→KPI as a MECHANISM, but promotion is DERIVED (GAP-O1 promotion not uniformly gated) and validation is ADOPTION-pending (Coverage⟂Adoption⟂Confidence).",
+      "spineReached": 10,
+      "spineTotal": 12,
+      "outcomeTypes": 5,
+      "kpiFamilies": 4,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 4,
+          "total": 4,
+          "missing": []
+        },
+        "routes": {
+          "present": 3,
+          "total": 3,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 4,
+          "absent": 0,
+          "unknown": 0,
+          "total": 4,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "employee_competency",
+      "label": "Employee → Competency / EI Development",
+      "persona": "Enterprise employee",
+      "status": "SUPPORTED",
+      "statusNote": "Competency + EI development diagnosis is well-supported (mei + intervention engines); realized development-outcome capture is the universal adoption-gated tail (Adoption⟂Coverage).",
+      "spineReached": 7,
+      "spineTotal": 12,
+      "outcomeTypes": 5,
+      "kpiFamilies": 4,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 3,
+          "total": 3,
+          "missing": []
+        },
+        "routes": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 3,
+          "absent": 0,
+          "unknown": 0,
+          "total": 3,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "recruiter_pipeline",
+      "label": "HR / Recruiter → Hiring Outcome",
+      "persona": "HR / recruiter",
+      "status": "SUPPORTED",
+      "statusNote": "The 9-stage hiring funnel is the most complete realized-outcome family. Realized hiring-outcome capture exists; adoption + calibration reported separately (Adoption⟂Coverage; Brier/ECE abstain <k_min=30).",
+      "spineReached": 5,
+      "spineTotal": 12,
+      "outcomeTypes": 3,
+      "kpiFamilies": 4,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 3,
+          "total": 3,
+          "missing": []
+        },
+        "routes": {
+          "present": 3,
+          "total": 3,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 3,
+          "absent": 0,
+          "unknown": 0,
+          "total": 3,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "institute_cohort",
+      "label": "Institute Admin → Cohort Outcome",
+      "persona": "Institution administrator",
+      "status": "SUPPORTED",
+      "statusNote": "Real k-anon aggregation (MX-302H) — scores masked below k_min, roster always shown. Realized cohort-outcome tail adoption-gated.",
+      "spineReached": 4,
+      "spineTotal": 12,
+      "outcomeTypes": 2,
+      "kpiFamilies": 4,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "routes": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 3,
+          "absent": 0,
+          "unknown": 0,
+          "total": 3,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "parent_support",
+      "label": "Parent → Support Child Outcome",
+      "persona": "Parent / guardian",
+      "status": "PARTIAL",
+      "statusNote": "Support-action substrate EXISTS (journeyTailCompletion: jt_parent_support_actions, fail-closed on child ownership) and a completed action fires a journey-tail milestone into the universal outcome tail (longitudinalOutcomeCapture-gated). Residual is ADOPTION (real support-action volume — Coverage⟂Adoption, null≠0).",
+      "spineReached": 3,
+      "spineTotal": 12,
+      "outcomeTypes": 2,
+      "kpiFamilies": 2,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "routes": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 2,
+          "absent": 0,
+          "unknown": 0,
+          "total": 2,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "mentor_mentee",
+      "label": "Mentor / Coach → Mentee Outcome",
+      "persona": "Mentor / coach",
+      "status": "PARTIAL",
+      "statusNote": "Engagement substrate EXISTS (journeyTailCompletion: jt_mentor_engagements, gated BOTH directions via mentor_bookings to avoid IDOR) and a milestone fires into the universal outcome tail (longitudinalOutcomeCapture-gated). Residual is ADOPTION (real engagement volume — Coverage⟂Adoption, null≠0).",
+      "spineReached": 4,
+      "spineTotal": 12,
+      "outcomeTypes": 3,
+      "kpiFamilies": 2,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 3,
+          "total": 3,
+          "missing": []
+        },
+        "routes": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 3,
+          "absent": 0,
+          "unknown": 0,
+          "total": 3,
+          "absentList": []
+        }
+      }
+    },
+    {
+      "key": "faculty_batch",
+      "label": "Faculty → Batch Outcome",
+      "persona": "Faculty member",
+      "status": "PARTIAL",
+      "statusNote": "Faculty batch-confined outcome view EXISTS (institutional-intelligence, role-scoped batch-confined access; MX-302H). Aggregate-only — no per-individual outcome. Adoption-gated cohort volume (Coverage⟂Adoption).",
+      "spineReached": 2,
+      "spineTotal": 12,
+      "outcomeTypes": 1,
+      "kpiFamilies": 2,
+      "axesMapped": 8,
+      "axesTotal": 8,
+      "evidence": {
+        "services": {
+          "present": 2,
+          "total": 2,
+          "missing": []
+        },
+        "routes": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "frontend": {
+          "present": 1,
+          "total": 1,
+          "missing": []
+        },
+        "tables": {
+          "present": 2,
+          "absent": 0,
+          "unknown": 0,
+          "total": 2,
+          "absentList": []
+        }
+      }
+    }
+  ],
+  "outcome_type_coverage": [
+    {
+      "id": "assessment_completion",
+      "label": "Assessment Completion",
+      "category": "engagement",
+      "status": "SUPPORTED",
+      "services": {
+        "present": 1,
+        "total": 1,
+        "missing": []
+      },
+      "tables": {
+        "present": 1,
+        "absent": 0,
+        "unknown": 0,
+        "total": 1,
+        "absentList": []
+      }
+    },
+    {
+      "id": "diagnosis_delivered",
+      "label": "Diagnosis Delivered",
+      "category": "engagement",
+      "status": "SUPPORTED",
+      "services": {
+        "present": 1,
+        "total": 1,
+        "missing": []
+      },
+      "tables": {
+        "present": 1,
+        "absent": 0,
+        "unknown": 0,
+        "total": 1,
+        "absentList": []
+      }
+    },
+    {
+      "id": "recommendation_engagement",
+      "label": "Recommendation Engagement",
+      "category": "engagement",
+      "status": "SUPPORTED",
+      "services": {
+        "present": 1,
+        "total": 1,
+        "missing": []
+      },
+      "tables": {
+        "present": 1,
+        "absent": 0,
+        "unknown": 0,
+        "total": 1,
+        "absentList": []
+      }
+    },
+    {
+      "id": "intervention_uptake",
+      "label": "Intervention Uptake",
+      "category": "engagement",
+      "status": "PARTIAL",
+      "statusNote": "Intervention delivery substrate exists; explicit per-subject uptake telemetry is recommendation/intervention-inferred (no separate completion log) — Coverage⟂Adoption.",
+      "services": {
+        "present": 1,
+        "total": 1,
+        "missing": []
+      },
+      "tables": {
+        "present": 2,
+        "absent": 0,
+        "unknown": 0,
+        "total": 2,
+        "absentList": []
+      }
+    },
+    {
+      "id": "learning_progress",
+      "label": "Learning Progress",
+      "category": "progress",
+      "status": "SUPPORTED",
+      "services": {
+        "present": 1,
+        "total": 1,
+        "missing": []
+      },
+      "tables": {
+        "present": 1,
+        "absent": 0,
+        "unknown": 0,
+        "total": 1,
+        "absentList": []
+      }
+    },
+    {
+      "id": "competency_improvement",
+      "label": "Competency / EI Improvement",
+      "category": "improvement",
+      "status": "SUPPORTED",
+      "services": {
+        "present": 1,
+        "total": 1,
+        "missing": []
+      },
+      "tables": {
+        "present": 1,
+        "absent": 1,
+        "unknown": 0,
+        "total": 2,
+        "absentList": [
+          "scoring_runs"
+        ]
+      }
+    },
+    {
+      "id": "readiness_uplift",
+      "label": "Readiness Uplift",
+      "category": "improvement",
+      "status": "SUPPORTED",
+      "services": {
+        "present": 1,
+        "total": 1,
+        "missing": []
+      },
+      "tables": {
+        "present": 1,
+        "absent": 0,
+        "unknown": 0,
+        "total": 1,
+        "absentList": []
+      }
+    },
+    {
+      "id": "reassessment_completed",
+      "label": "Reassessment Completed",
+      "category": "continuity",
+      "status": "PARTIAL",
+      "statusNote": "Reassessment signal MECHANISM present (getReassessmentSignal); real re-administration volume is ADOPTION-pending (Coverage⟂Adoption, null≠0).",
+      "services": {
+        "present": 1,
+        "total": 1,
+        "missing": []
+      },
+      "tables": {
+        "present": 1,
+        "absent": 0,
+        "unknown": 0,
+        "total": 1,
+        "absentList": []
+      }
+    },
+    {
+      "id": "stage_promotion",
+      "label": "Stage Promotion",
+      "category": "lifecycle",
+      "status": "PARTIAL",
+      "statusNote": "Promotion is readiness-DERIVED (evidence-gate band) recorded in wc3_stage_progression, not a uniformly enforced gate — Coverage present, ADOPTION usage-driven.",
+      "services": {
+        "present": 1,
+        "total": 1,
+        "missing": []
+      },
+      "tables": {
+        "present": 2,
+        "absent": 0,
+        "unknown": 0,
+        "total": 2,
+        "absentList": []
+      }
+    },
+    {
+      "id": "realized_outcome",
+      "label": "Realized Outcome",
+      "category": "realized",
+      "status": "SUPPORTED",
+      "statusNote": "Canonical ledger present (validation_loop_outcomes via MX-102X + Phase 1.3 capture); realized-outcome volume is the universal adoption-gated tail.",
+      "services": {
+        "present": 2,
+        "total": 2,
+        "missing": []
+      },
+      "tables": {
+        "present": 1,
+        "absent": 0,
+        "unknown": 0,
+        "total": 1,
+        "absentList": []
+      }
+    },
+    {
+      "id": "mastery_achievement",
+      "label": "Mastery Achievement",
+      "category": "realized",
+      "status": "PARTIAL",
+      "statusNote": "reached_mastery capture MECHANISM present (progression-outcome-capture); realized mastery volume is honest-low/0 (Adoption⟂Coverage, null≠0).",
+      "services": {
+        "present": 1,
+        "total": 1,
+        "missing": []
+      },
+      "tables": {
+        "present": 1,
+        "absent": 0,
+        "unknown": 0,
+        "total": 1,
+        "absentList": []
+      }
+    }
+  ],
+  "kpi_coverage": [
+    {
+      "key": "individual",
+      "label": "Individual KPIs",
+      "status": "SUPPORTED",
+      "exampleKpis": [
+        "Assessment completion",
+        "Readiness band",
+        "Improvement delta vs baseline"
+      ],
+      "services": {
+        "present": 2,
+        "total": 2,
+        "missing": []
+      },
+      "tables": {
+        "present": 1,
+        "absent": 1,
+        "unknown": 0,
+        "total": 2,
+        "absentList": [
+          "scoring_runs"
+        ]
+      }
+    },
+    {
+      "key": "persona",
+      "label": "Persona KPIs",
+      "status": "PARTIAL",
+      "statusNote": "Persona roll-up via READ-TIME join (capadex_user_profiles.persona ⟂ validation_loop_outcomes); k-anon suppressed; no persona dimension added to the ledger — Coverage present, volume adoption-gated.",
+      "exampleKpis": [
+        "Per-persona completion rate",
+        "Per-persona realized-outcome rate"
+      ],
+      "services": {
+        "present": 1,
+        "total": 1,
+        "missing": []
+      },
+      "tables": {
+        "present": 2,
+        "absent": 0,
+        "unknown": 0,
+        "total": 2,
+        "absentList": []
+      }
+    },
+    {
+      "key": "lifecycle",
+      "label": "Lifecycle KPIs",
+      "status": "SUPPORTED",
+      "exampleKpis": [
+        "Stage distribution",
+        "Promotion rate",
+        "Time-in-stage"
+      ],
+      "services": {
+        "present": 1,
+        "total": 1,
+        "missing": []
+      },
+      "tables": {
+        "present": 2,
+        "absent": 0,
+        "unknown": 0,
+        "total": 2,
+        "absentList": []
+      }
+    },
+    {
+      "key": "assessment",
+      "label": "Assessment KPIs",
+      "status": "SUPPORTED",
+      "exampleKpis": [
+        "Completion rate",
+        "Assessment coverage",
+        "Reassessment rate"
+      ],
+      "services": {
+        "present": 1,
+        "total": 1,
+        "missing": []
+      },
+      "tables": {
+        "present": 1,
+        "absent": 0,
+        "unknown": 0,
+        "total": 1,
+        "absentList": []
+      }
+    },
+    {
+      "key": "journey",
+      "label": "Journey KPIs",
+      "status": "PARTIAL",
+      "statusNote": "Journey substrate present (validation_loop_outcomes + journey-tail); conversion KPIs are adoption-gated (real volume) — Coverage⟂Adoption.",
+      "exampleKpis": [
+        "Funnel conversion",
+        "Journey drop-off",
+        "Outcome-tail completion"
+      ],
+      "services": {
+        "present": 1,
+        "total": 1,
+        "missing": []
+      },
+      "tables": {
+        "present": 1,
+        "absent": 0,
+        "unknown": 0,
+        "total": 1,
+        "absentList": []
+      }
+    },
+    {
+      "key": "ai",
+      "label": "AI KPIs",
+      "status": "PARTIAL",
+      "statusNote": "Diagnosis/recommendation substrate present; acceptance/effectiveness is ABSTAINED — no decision-time prediction recorded (Confidence axis, honest-null), never fabricated.",
+      "exampleKpis": [
+        "Diagnosis coverage",
+        "Recommendation acceptance (honest-null)",
+        "AI effectiveness (abstained)"
+      ],
+      "services": {
+        "present": 1,
+        "total": 1,
+        "missing": []
+      },
+      "tables": {
+        "present": 1,
+        "absent": 0,
+        "unknown": 0,
+        "total": 1,
+        "absentList": []
+      }
+    },
+    {
+      "key": "learning",
+      "label": "Learning KPIs",
+      "status": "SUPPORTED",
+      "exampleKpis": [
+        "Learning progress",
+        "Intervention uptake",
+        "Practice engagement"
+      ],
+      "services": {
+        "present": 2,
+        "total": 2,
+        "missing": []
+      },
+      "tables": {
+        "present": 2,
+        "absent": 0,
+        "unknown": 0,
+        "total": 2,
+        "absentList": []
+      }
+    },
+    {
+      "key": "business",
+      "label": "Business KPIs",
+      "status": "PARTIAL",
+      "statusNote": "Placement/hiring realized via validation_loop_outcomes; revenue lives in the SEPARATE commerce ledger (capadex_payments) and is NOT composited into outcome KPIs — Coverage present, accuracy/volume adoption-gated.",
+      "exampleKpis": [
+        "Placement rate",
+        "Hiring conversion",
+        "Revenue (separate ledger, honest-null here)"
+      ],
+      "services": {
+        "present": 1,
+        "total": 1,
+        "missing": []
+      },
+      "tables": {
+        "present": 2,
+        "absent": 0,
+        "unknown": 0,
+        "total": 2,
+        "absentList": []
+      }
+    },
+    {
+      "key": "organizational",
+      "label": "Organizational KPIs",
+      "status": "SUPPORTED",
+      "statusNote": "Real k-anon aggregation (MX-302H); scores masked below k_min, roster always shown.",
+      "exampleKpis": [
+        "Cohort movement",
+        "Institute coverage",
+        "Batch progression (aggregate)"
+      ],
+      "services": {
+        "present": 2,
+        "total": 2,
+        "missing": []
+      },
+      "tables": {
+        "present": 2,
+        "absent": 0,
+        "unknown": 0,
+        "total": 2,
+        "absentList": []
+      }
+    },
+    {
+      "key": "platform",
+      "label": "Platform KPIs",
+      "status": "PARTIAL",
+      "statusNote": "Analytics KPI substrate present (anl_kpi_daily/anl_cohort_analysis); population is adoption-driven (real volume) — Coverage⟂Adoption, null≠0.",
+      "exampleKpis": [
+        "Active users",
+        "Retention",
+        "Engagement (daily KPI roll-up)"
+      ],
+      "services": {
+        "present": 1,
+        "total": 2,
+        "missing": [
+          "services/report-factory/benchmark-engine.ts"
+        ]
+      },
+      "tables": {
+        "present": 3,
+        "absent": 0,
+        "unknown": 0,
+        "total": 3,
+        "absentList": []
+      }
+    }
+  ],
+  "effectiveness": {
+    "flag": "outcomeFrameworkKpiEngine",
+    "recommendation": {
+      "substrate_rows": 0,
+      "substrate_subjects": null,
+      "effectiveness_rate": null,
+      "calibrated": false,
+      "note": "Substrate counts are MEASURED (Coverage); effectiveness_rate is ABSTAINED (null) because no decision-time prediction is recorded — a rate here would be fabricated. Confidence⟂Coverage, null≠0."
+    },
+    "intervention": {
+      "substrate_rows": 0,
+      "substrate_subjects": 0,
+      "effectiveness_rate": null,
+      "calibrated": false,
+      "note": "Substrate counts are MEASURED (Coverage); effectiveness_rate is ABSTAINED (null) because no decision-time prediction is recorded — a rate here would be fabricated. Confidence⟂Coverage, null≠0."
+    },
+    "realized_outcomes": 0,
+    "note": "Recommendation→outcome and intervention→outcome EFFECTIVENESS. The substrate (recommendations, interventions, realized outcomes) is MEASURED; calibrated effectiveness is deliberately ABSTAINED (no decision-time prediction substrate — Confidence axis). null = unreadable / abstained, 0 = measured-empty. Demo subjects excluded. No engine is invoked; nothing fabricated."
+  },
+  "gaps": [
+    {
+      "id": "GAP-O1-EFFECTIVENESS-ABSTAINED",
+      "title": "Calibrated recommendation/intervention → outcome effectiveness is deliberately abstained",
+      "severity": "Medium",
+      "evidence": "recommendation/intervention rows carry NO decision-time prediction (predicted_prob_at_decision is NULL by design), so empirical effectiveness/accuracy of the recommendation→outcome and intervention→outcome links cannot be calibrated yet. This is a CONFIDENCE-axis abstention, honestly reported as null — NOT a fabricated rate.",
+      "remediation": "FUTURE/ADDITIVE: once real non-demo outcome volume + a decision-time prediction substrate exist, compute effectiveness/calibration over the EXISTING ledger (validation_loop_outcomes). Never fabricate effectiveness before the data exists. Not Launch-Critical."
+    },
+    {
+      "id": "GAP-O2-PERSONA-KPI-NO-LEDGER-DIM",
+      "title": "Per-persona KPI roll-up is a read-time join, not a persisted persona dimension",
+      "severity": "Low",
+      "evidence": "persona KPIs are computed by JOINING validation_loop_outcomes to capadex_user_profiles.persona at READ time; the outcome ledger has no persona column, so per-persona counts depend on the join being readable + k≥k_min. Coverage present; this is a deliberate zero-DDL choice.",
+      "remediation": "OPTIONAL/ADDITIVE: if a persisted persona dimension is later required, REUSE the existing profile substrate via a materialized read-model (no change to the canonical ledger). Low priority."
+    },
+    {
+      "id": "GAP-O3-PLATFORM-KPI-ADOPTION-DRIVEN",
+      "title": "Platform / organizational KPI population depends on analytics adoption",
+      "severity": "Future",
+      "evidence": "platform/organizational KPI families roll up over anl_kpi_daily/anl_cohort_analysis, whose population is adoption-driven (real volume). The substrate + computing engine exist (Coverage); current values are honest-low/0 (Adoption⟂Coverage, null≠0).",
+      "remediation": "FUTURE: as real usage accrues, the existing enterprise-analytics engine populates the KPI substrate — no new engine required. Reported on the Adoption axis, never as an engineering gap."
+    }
+  ],
+  "resolved_gaps": [
+    {
+      "id": "MECH-UNIVERSAL-OUTCOME-CAPTURE",
+      "title": "Universal realized-outcome capture into the canonical ledger",
+      "closure": "PRESENT via REUSE (MX-102X + Phase 1.3): outcome-intelligence-engine + captureProgressionOutcome/captureJourneyTailMilestone write realized outcomes (placement/hire/progression/mastery/engagement) into validation_loop_outcomes. Gated by longitudinalOutcomeCapture → byte-identical OFF. No new engine/table/DDL.",
+      "residual": "ADOPTION: real realized-outcome volume is usage-driven (honest-low/0; reported by composeOutcomeAdoption — Adoption⟂Coverage, null≠0)."
+    },
+    {
+      "id": "MECH-KPI-SUBSTRATE",
+      "title": "KPI computation substrate (enterprise analytics + benchmark + scoring)",
+      "closure": "PRESENT via REUSE: the existing enterprise-analytics (anl_kpi_daily/anl_cohort_analysis/anl_benchmark_snapshot) + benchmark/mei/employability scoring engines compute the 10 KPI families. The composer READS coverage of this substrate; it never re-computes a KPI or builds a second KPI engine.",
+      "residual": "ADOPTION: KPI population is usage-driven (Coverage⟂Adoption, null≠0)."
+    },
+    {
+      "id": "MECH-LONGITUDINAL-IMPROVEMENT",
+      "title": "Longitudinal improvement-validation substrate",
+      "closure": "PRESENT via REUSE: longitudinal-memory + wc3 longitudinal-foundation record the trend that validates improvement vs baseline (the measured-outcome input). The composer READS it, never re-derives.",
+      "residual": "CONFIDENCE + ADOPTION: improvement is measurable once >1 non-demo datapoint exists; calibrated accuracy is abstained by design (Coverage⟂Confidence⟂Adoption, null≠0)."
+    }
+  ],
+  "summary": {
+    "flag": "outcomeFrameworkKpiEngine",
+    "spine_frozen": true,
+    "spine_step_count": 12,
+    "outcome_type_count": 11,
+    "kpi_family_count": 10,
+    "lifecycle_rule_count": 4,
+    "path_count": 9,
+    "persona_count": 9,
+    "status_counts": {
+      "SUPPORTED": 4,
+      "PARTIAL": 5,
+      "DEAD_END": 0,
+      "MISSING": 0
+    },
+    "evidence_rollup": {
+      "services": {
+        "present": 26,
+        "total": 26
+      },
+      "routes": {
+        "present": 18,
+        "total": 18
+      },
+      "frontend": {
+        "present": 12,
+        "total": 12
+      },
+      "tables": {
+        "present": 27,
+        "absent": 0,
+        "unknown": 0,
+        "total": 27
+      }
+    },
+    "spine_rollup": {
+      "reached": 51,
+      "total": 108
+    },
+    "outcome_type_rollup": {
+      "supported": 7,
+      "partial": 4,
+      "dead_end": 0,
+      "missing": 0,
+      "total": 11
+    },
+    "kpi_family_rollup": {
+      "supported": 5,
+      "partial": 5,
+      "dead_end": 0,
+      "missing": 0,
+      "total": 10
+    },
+    "gap_counts": {
+      "Launch-Critical": 0,
+      "High": 0,
+      "Medium": 1,
+      "Low": 1,
+      "Future": 1
+    },
+    "resolved_gap_count": 3,
+    "decisions": [
+      {
+        "topic": "Single outcome + KPI engine (no V2)",
+        "decision": "COMPOSE_EXISTING",
+        "rationale": "Realized outcomes are captured by EXISTING engines (outcome-intelligence-engine → validation_loop_outcomes, Phase-1.3 progression-outcome-capture); KPIs are computed by the EXISTING enterprise-analytics + benchmark + mei/employability engines. This phase adds ONE read-only composer/registry, never a parallel outcome or KPI engine."
+      },
+      {
+        "topic": "KPI computation",
+        "decision": "REUSE_ENTERPRISE_ANALYTICS",
+        "rationale": "KPI families roll up over the existing anl_kpi_daily/anl_cohort_analysis/anl_benchmark_snapshot substrate + benchmark/mei/employability engines. No second KPI engine, no new KPI table. Population is adoption-driven (Coverage⟂Adoption, null≠0)."
+      },
+      {
+        "topic": "Recommendation / intervention effectiveness",
+        "decision": "ABSTAIN_UNTIL_VOLUME",
+        "rationale": "No decision-time prediction is recorded (predicted_prob_at_decision is NULL by design), so calibrated effectiveness/accuracy of the recommendation→outcome and intervention→outcome links is honestly ABSTAINED (Confidence axis), distinct from Coverage. Never fabricate effectiveness before the data exists."
+      },
+      {
+        "topic": "Outcome capture",
+        "decision": "REUSE_VALIDATION_LOOP",
+        "rationale": "Realized outcomes write to the EXISTING canonical ledger (validation_loop_outcomes) via reuse of MX-102X + Phase-1.3 capture, gated by longitudinalOutcomeCapture → byte-identical OFF. No new outcome table, no new DDL."
+      },
+      {
+        "topic": "Revenue / commercial KPIs",
+        "decision": "KEEP_SEPARATE",
+        "rationale": "Revenue lives in the SEPARATE commerce ledger (capadex_payments) and is reported on its own axis — never composited into outcome/growth KPIs. Business KPIs here mean placement/hiring realized outcomes, not money."
+      }
+    ],
+    "enterprise_ready": {
+      "verdict": "STRUCTURAL_COMPLETE_ADOPTION_PENDING",
+      "note": "ONE canonical Outcome & KPI Model answers \"assessment → intervention → MEASURABLE OUTCOME → KPI\": a FROZEN 12-step outcome spine (Assessment→Evidence→AI→Recommend→Intervene→Learn→Practice→Reassess→Improve→Measured-Outcome→KPI-Update→Continuous-Optimization), 11 outcome-tracking types, 10 KPI families, four per-lifecycle-stage outcome rules and a per-persona path register — every field mapped to the eight outcome/KPI axes and verified against the live repo. The chain is mechanism-complete via REUSE-before-build: MX-102X outcome-intelligence + Phase-1.3 progression-outcome-capture write realized outcomes into validation_loop_outcomes; the existing enterprise-analytics + benchmark + mei/employability engines compute the KPI families. This phase adds ONE read-only composer/registry + ZERO new outcome/KPI logic + ZERO schema. OPEN engineering gaps are NONE Launch-Critical (GAP-O1 Medium: calibrated effectiveness deliberately abstained; GAP-O2 Low: persona KPI is a read-time join not a ledger dimension; GAP-O3 Future: platform KPI population is adoption-driven). The dominant remaining axes are CONFIDENCE (calibrated effectiveness, abstained until volume + prediction substrate) and ADOPTION (real outcome/KPI volume, currently honest-low/0, reported SEPARATELY) — usage/data axes, NOT gaps. The verdict stays STRUCTURAL (engineering complete via reuse; adoption/confidence are data-driven and never fabricated). Coverage⟂Confidence⟂Outcome⟂Adoption are reported separately and never composited; null≠0."
+    }
+  },
+  "adoption": {
+    "flag": "outcomeFrameworkKpiEngine",
+    "freshness_window_days": 180,
+    "realized_outcomes": 0,
+    "outcome_subjects": 0,
+    "progressed_subjects": 0,
+    "mastery_subjects": 0,
+    "reassessed_subjects": 0,
+    "kpi_rows": 10,
+    "note": "ADOPTION axis only — exercise of the (reuse-instrumented) assessment→outcome→KPI loop. SEPARATE from Coverage; never composited. null = unreadable, 0 = measured-empty. Demo subjects excluded. Capture is gated by longitudinalOutcomeCapture; KPI population by the enterprise-analytics engine — this phase builds NO new outcome/KPI machinery."
+  },
+  "persona_linkage": {
+    "flag": "outcomeFrameworkKpiEngine",
+    "linkage_present": true,
+    "k_min": 30,
+    "personas": [],
+    "note": "Persona⟂Outcome linkage validated by a READ-TIME join (no persona column added, zero DDL). Per-persona counts below k_min are suppressed (masked) for anonymity. linkage_present:false means the join was unreadable, NOT that outcomes are zero (null≠0). Coverage⟂Outcome⟂Confidence never composited."
+  }
+}

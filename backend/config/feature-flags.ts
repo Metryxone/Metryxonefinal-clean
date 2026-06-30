@@ -241,6 +241,13 @@ export const FEATURE_FLAGS = {
    *  the journey flows + schema are byte-identical to legacy. Env: `FF_CUSTOMER_JOURNEY_COMPLETION`. */
   customerJourneyCompletion: false,
   progressionEngineCompletion: false,
+  /** CAPADEX 3.0 — Program 1 · Phase 1.6 Outcome Framework / KPI Engine (read-only composer answering
+   *  "assessment → intervention → MEASURABLE OUTCOME → KPI"). When ON, a PURE read-only composer at
+   *  `/api/admin/outcome-kpi/*` (super-admin) serves the canonical outcome/KPI model + measured coverage +
+   *  classified gaps over EXISTING substrate; enhancement-only, reuse-before-build, ZERO DDL, no migration.
+   *  Flag OFF → data routes 503, public-config `outcome_framework_kpi_engine:false`, byte-identical legacy
+   *  behaviour incl. schema. Env: `FF_OUTCOME_FRAMEWORK_KPI_ENGINE`. */
+  outcomeFrameworkKpiEngine: false,
   /** MX-103X — Live Employer Ecosystem Activation (read-only audit + certification console over the EXISTING
    *  employer hiring funnel). When ON, a PURE read-only composer at `/api/admin/employer-ecosystem/*`
    *  (super-admin) inventories the nine funnel stages — onboarding · create-job · role-DNA · competencies ·
@@ -2196,6 +2203,11 @@ export function isAssessmentFrameworkCompletionEnabled(): boolean {
 /** CAPADEX 3.0 — Program 1 · Phase 1.5 Progression Engine Completion master switch. */
 export function isProgressionEngineCompletionEnabled(): boolean {
   return isFlagEnabled('progressionEngineCompletion');
+}
+
+/** CAPADEX 3.0 — Program 1 · Phase 1.6 Outcome Framework / KPI Engine master switch. */
+export function isOutcomeFrameworkKpiEngineEnabled(): boolean {
+  return isFlagEnabled('outcomeFrameworkKpiEngine');
 }
 
 export function isCustomerJourneyCompletionEnabled(): boolean {

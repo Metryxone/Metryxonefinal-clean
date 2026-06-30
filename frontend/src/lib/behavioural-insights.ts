@@ -68,6 +68,16 @@ export interface CapadexQuestion {
   question_type?: string;
   options: { id: string; option_text: string; score_value: number; display_order: number }[];
 }
+/** Task #304 — additive read-only evidence gate (present only when the
+ *  `evidenceGatedProgression` flag is ON; absent → legacy completion-only). */
+export interface CapadexEvidenceGate {
+  verdict: 'verified' | 'insufficient_evidence' | 'in_progress' | 'not_started' | 'blocked';
+  reason: string;
+  coverage: { has_session: boolean; has_score: boolean; score: number | null };
+  confidence: { level: 'verified' | 'provisional' | 'none'; age_days: number | null; fresh: boolean | null };
+  due_for_remeasurement: boolean;
+  informational: { below_reference_band: boolean; reference_band: string | null };
+}
 export interface CapadexProgress {
   stage_code: string;
   stage_label: string;
@@ -75,6 +85,8 @@ export interface CapadexProgress {
   stage_color: string;
   status: 'available' | 'locked' | 'completed' | 'in_progress';
   score: number | null;
+  /** Present only when the evidence-gated progression flag is ON. */
+  gate?: CapadexEvidenceGate;
 }
 export interface CapadexStageResult {
   session_id: string;

@@ -178,6 +178,18 @@ export const FEATURE_FLAGS = {
    *  it does NOT rebuild the Close-the-Loop (#292) outcome/KPI/re-measurement machinery. Env:
    *  `FF_JOURNEY_TAIL_COMPLETION`. */
   journeyTailCompletion: false,
+  /** Task #304 — CAPADEX 3.0 Program 2: Evidence-gated stage progression. When ON, the existing
+   *  completion-only stage progression (`buildProgress` in routes/capadex.ts) is enriched with a
+   *  STRICTLY ADDITIVE, READ-ONLY evidence gate (`services/capadex/evidence-gate.ts`): each stage
+   *  carries a `gate` envelope keeping Coverage (measured data exists) ⟂ Confidence (trustworthy /
+   *  fresh) as SEPARATE axes, advancement requires the prior stage to be evidence-`verified` (a
+   *  completed session WITH a computed score — never the concern score magnitude, which is
+   *  diagnostic, not a merit gate), and a derived `due_for_remeasurement` marker flags stale
+   *  evidence (GAP-P1, read-only, no scheduler). Composes existing data only — NO new tables, NO
+   *  DDL, NO writes. Flag OFF → `buildProgress` returns the exact legacy completion-only array
+   *  (no `gate` field) → byte-identical legacy behaviour incl. schema. Env:
+   *  `FF_EVIDENCE_GATED_PROGRESSION`. */
+  evidenceGatedProgression: false,
   /** MX-103X — Live Employer Ecosystem Activation (read-only audit + certification console over the EXISTING
    *  employer hiring funnel). When ON, a PURE read-only composer at `/api/admin/employer-ecosystem/*`
    *  (super-admin) inventories the nine funnel stages — onboarding · create-job · role-DNA · competencies ·
@@ -2110,6 +2122,10 @@ export function isCompetencyMatchIntelligenceEnabled(): boolean {
 /** MX-302B — Career Discovery & AI Guidance master switch. */
 export function isCareerDiscoveryEnabled(): boolean {
   return isFlagEnabled('careerDiscovery');
+}
+
+export function isEvidenceGatedProgressionEnabled(): boolean {
+  return isFlagEnabled('evidenceGatedProgression');
 }
 
 export function isUcipEnabled(): boolean {

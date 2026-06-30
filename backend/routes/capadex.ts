@@ -57,6 +57,7 @@ import { runEvidenceRuntime }   from '../services/signal-activation-runtime';
 import { resolveSeedConcernPk } from '../services/concern-signal-seeding';
 import type { EvidenceInput }   from '../services/evidence-engine';
 import { isRuntimeIntelligenceActivationEnabled, isRuntimeIntelligencePipelineEnabled, isSignalGroundingRuntimeEnabled } from '../config/feature-flags';
+import { isEvidenceGatedProgressionEnabled } from '../config/feature-flags';
 import { resolveBridgeTagForConcernPk, loadGroundedLineage, groundingCoreToken } from '../services/signal-grounding-runtime';
 import { buildGuidanceForSession } from '../services/pil/runtime-guidance-engine';
 import { buildPipelineForSession } from '../services/pil/pipeline-resolver';
@@ -4241,30 +4242,42 @@ export function registerCapadexRoutes(app: Express, pool: Pool) {
 // ── Shared helper: build the 4-stage progress map for a user ──────────
 async function buildProgress(pool: Pool, email: string | null, concern: string) {
   if (!email) {
-    return STAGES.map((s, i) => ({
+    const base = STAGES.map((s, i) => ({
       stage_code:  s.code,
       stage_label: s.label,
       stage_index: i,
       stage_color: s.color,
       status:      i === 0 ? 'available' : 'locked',
-      score:       null,
+      score:       null as number | null,
     }));
+    // Task #304 — evidence gate (flag-gated; OFF → byte-identical legacy array).
+    if (isEvidenceGatedProgressionEnabled()) {
+      const { enrichProgressWithEvidence } = await import('../services/capadex/evidence-gate');
+      return enrichProgressWithEvidence(base, {});
+    }
+    return base;
   }
 
-  const { rows } = await pool.query<{ stage_code: string; status: string; score: string }>(
-    `SELECT DISTINCT ON (stage_code) stage_code, status, score
+  // updated_at is selected for the evidence-gate freshness signal (Task #304);
+  // it is NOT added to the returned shape, so flag-OFF output stays byte-identical.
+  const { rows } = await pool.query<{ stage_code: string; status: string; score: string; updated_at: Date }>(
+    `SELECT DISTINCT ON (stage_code) stage_code, status, score, updated_at
      FROM capadex_sessions
      WHERE guest_email = $1 AND LOWER(concern_name) = LOWER($2) AND status IN ('completed', 'in_progress')
      ORDER BY stage_code, updated_at DESC`,
     [email, concern]
   );
 
-  const map: Record<string, { status: string; score: number | null }> = {};
+  const map: Record<string, { status: string; score: number | null; updatedAt: Date | null }> = {};
   for (const r of rows) {
-    map[r.stage_code] = { status: r.status, score: r.score != null ? parseFloat(r.score) : null };
+    map[r.stage_code] = {
+      status:    r.status,
+      score:     r.score != null ? parseFloat(r.score) : null,
+      updatedAt: r.updated_at instanceof Date ? r.updated_at : (r.updated_at ? new Date(r.updated_at) : null),
+    };
   }
 
-  return STAGES.map((s, i) => {
+  const legacy = STAGES.map((s, i) => {
     const entry = map[s.code];
     let status: string;
     if (entry) {
@@ -4285,6 +4298,15 @@ async function buildProgress(pool: Pool, email: string | null, concern: string) 
       score:       entry?.score ?? null,
     };
   });
+
+  // Task #304 — when the flag is ON, enrich the legacy array with the read-only
+  // evidence gate (GAP-P2 advancement gate + GAP-P1 re-measurement signal).
+  // Flag OFF → return the legacy completion-only array untouched (byte-identical).
+  if (isEvidenceGatedProgressionEnabled()) {
+    const { enrichProgressWithEvidence } = await import('../services/capadex/evidence-gate');
+    return enrichProgressWithEvidence(legacy, map);
+  }
+  return legacy;
 }
 
 /**

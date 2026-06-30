@@ -3,6 +3,7 @@ import {
   ArrowRight, CheckCircle, ChevronDown, ChevronUp, Lock, MessageCircle, Phone, Target,
 } from 'lucide-react';
 import { CAPADEX_STAGES } from '@/lib/behavioural-insights';
+import type { CapadexProgress } from '@/lib/behavioural-insights';
 
 type Session = {
   session_id: string;
@@ -32,6 +33,10 @@ export interface StageJourneyPanelProps {
   ) => void;
   handleLoadPreviousReport: (sessionId: string) => void;
   className?: string;
+  /** Task #304 — read-only evidence gate per stage (flag-gated). Each item's
+   *  `gate` is present ONLY when the `evidenceGatedProgression` flag is ON; when
+   *  absent (flag OFF) NO evidence badges render → byte-identical legacy UI. */
+  evidenceGate?: CapadexProgress[] | null;
 }
 
 export function StageJourneyPanel({
@@ -41,6 +46,7 @@ export function StageJourneyPanel({
   handleUnlockRequest,
   handleLoadPreviousReport,
   className,
+  evidenceGate,
 }: StageJourneyPanelProps) {
   const [expandedStage, setExpandedStage] = React.useState<string | null>(null);
 
@@ -98,6 +104,9 @@ export function StageJourneyPanel({
           const masterySession = recentSessions.find(s => s.stage_code === 'CAP_MAS');
           const growthSession  = recentSessions.find(s => s.stage_code === 'CAP_GRW');
           const isCompleted    = !!session;
+
+          // Task #304 — evidence gate for this stage (present only when flag ON).
+          const gate = evidenceGate?.find(p => p.stage_code === stage.code)?.gate;
 
           const covered = (code: string): boolean =>
             !!recentSessions.find(s => s.stage_code === code) ||
@@ -207,6 +216,21 @@ export function StageJourneyPanel({
                       <p className="text-[13px] font-bold" style={{ color: '#065F46' }}>{stage.label}</p>
                       {scoreLabel && (
                         <span className="text-[10.5px] font-semibold px-1.5 py-0.5 rounded-md" style={{ backgroundColor: '#D1FAE5', color: '#059669' }}>{scoreLabel}</span>
+                      )}
+                      {gate?.verdict === 'verified' && (
+                        <span className="text-[9.5px] font-bold px-1.5 py-0.5 rounded-md inline-flex items-center gap-1" style={{ backgroundColor: '#D1FAE5', color: '#047857' }}>
+                          <CheckCircle size={9} /> Evidence verified
+                        </span>
+                      )}
+                      {gate?.verdict === 'insufficient_evidence' && (
+                        <span className="text-[9.5px] font-bold px-1.5 py-0.5 rounded-md" style={{ backgroundColor: '#FEF3C7', color: '#B45309' }}>
+                          Re-measure to verify
+                        </span>
+                      )}
+                      {gate?.due_for_remeasurement && gate?.verdict === 'verified' && (
+                        <span className="text-[9.5px] font-bold px-1.5 py-0.5 rounded-md" style={{ backgroundColor: '#FEF3C7', color: '#B45309' }}>
+                          Due for re-check{gate.confidence.age_days != null ? ` · ${gate.confidence.age_days}d` : ''}
+                        </span>
                       )}
                     </div>
                     <p className="text-[11px] mt-0.5" style={{ color: '#6B7280' }}>

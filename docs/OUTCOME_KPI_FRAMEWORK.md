@@ -51,15 +51,24 @@ MEASURABLE outcome — and roll that outcome up into KPIs?
 
 ## Honesty contract
 - **Coverage ⟂ Confidence ⟂ Outcome ⟂ Adoption — never composited.** null ≠ 0; never fabricate.
-- **Effectiveness is ABSTAINED** (recommendation→outcome / intervention→outcome): substrate is
-  MEASURED, but the calibrated rate is null BY DESIGN because no decision-time prediction
-  (`predicted_prob_at_decision`) is recorded — a rate would be fabricated (CONFIDENCE axis).
+- **Effectiveness is WIRED via REUSE, then ABSTAINED until k_min.** `composeEffectiveness` now READS
+  the EXISTING validation-loop calibration mechanism (`recordValidationOutcome` captures
+  `predicted_prob_at_decision`; `calibrationFromRows`/`toCalibrationPairs` calibrate non-demo
+  prediction+outcome rows with a `k_min` gate) and surfaces a loop-level `calibration` block. The
+  link is end-to-end (no new engine/table/DDL): status is `cold_start`/`provisional` → rate `null`
+  until ≥ `k_min` real pairs accrue, then it flips to `calibrated` and the rate lights up
+  automatically. Per-channel rec/intervention rates stay null (predictions are recorded loop-level,
+  not per row). This is the CONFIDENCE axis, distinct from Coverage; never fabricated.
 - **KPIs reuse the existing analytics substrate** (`anl_kpi_daily` / `anl_cohort_analysis` /
   `anl_benchmark_snapshot`); population is ADOPTION-driven.
 - **Revenue stays separate** (commerce ledger `capadex_payments`) — never composited into outcome KPIs.
+- **OPEN engineering gaps = 0.** Former GAP-O1 (effectiveness) is mechanism-CLOSED via the wired
+  calibration reuse; former GAP-O2 (per-persona read-time join) is an ARCHITECTURE axis (zero-DDL by
+  contract) and GAP-O3 (platform KPI population) is an ADOPTION axis — both reported on their own
+  axes, NEVER as gaps. `OUTCOME_KPI_GAPS = []`; `RESOLVED_OUTCOME_KPI_GAPS` has 6 entries.
 - **Verdict is STRUCTURAL-only:** `STRUCTURAL_COMPLETE_ADOPTION_PENDING`. The chain is
-  engineering-complete via REUSE; remaining axes are CONFIDENCE (abstained) + ADOPTION
-  (real outcome/KPI volume, honest-low/0), reported SEPARATELY, NEVER as gaps.
+  engineering-complete via REUSE; remaining axes are CONFIDENCE (calibration abstained until k_min)
+  + ADOPTION (real outcome/KPI volume, honest-low/0), reported SEPARATELY, NEVER as gaps.
 
 ## Regenerate
 From `backend/`: run the scan, THEN the generator:

@@ -1,6 +1,6 @@
 ---
 name: Outcome Framework / KPI Engine (CAPADEX 3.0 Phase 1.6)
-description: Flag outcomeFrameworkKpiEngine — read-only outcome/KPI composer over existing engines; effectiveness ABSTAINED; mirrors 1.3/1.4/1.5 scaffold.
+description: Flag outcomeFrameworkKpiEngine — read-only outcome/KPI composer over existing engines; effectiveness WIRED via reuse of validation-loop calibration but abstained until k_min; mirrors 1.3/1.4/1.5 scaffold.
 ---
 
 # Outcome Framework / KPI Engine (CAPADEX 3.0 Phase 1.6)
@@ -21,10 +21,22 @@ applies it to outcomes/KPIs. Building a parallel outcome ledger or a second KPI 
 duplicate already-shipped substrate and violate byte-identical-OFF.
 
 ## Non-obvious traps
-- **Effectiveness is ABSTAINED, not 0.** `composeEffectiveness` reports recommendation/intervention
-  SUBSTRATE counts (MEASURED), but `effectiveness_rate` is `null` BY DESIGN — there is no
-  decision-time prediction (`predicted_prob_at_decision`) recorded, so a calibrated rate would be
-  fabricated. This is the CONFIDENCE axis, distinct from Coverage. Never compute a rate here.
+- **Effectiveness is WIRED via REUSE, then ABSTAINED until k_min (not 0).** The effectiveness gap was
+  closed NOT by computing a rate but by WIRING `composeEffectiveness` to the EXISTING
+  validation-loop calibration mechanism (`calibrationFromRows`/`toCalibrationPairs`/`OutcomeRow` from
+  `validation-loop-engine.ts`, fed by `recordValidationOutcome`'s `predicted_prob_at_decision`). It
+  reads non-demo `validation_loop_outcomes` via a never-throws `readRows` and surfaces a loop-level
+  `calibration` block; the rate stays `null` while status is `cold_start`/`provisional` and lights up
+  ONLY at `calibrated` (≥ k_min=30 real pairs). Per-channel rec/intervention rates stay null
+  (predictions are loop-level, not per row). Zero-DDL: column absent → readRows null → honest null.
+  **Why:** the link must be end-to-end real (no fabricated rate, no new table) — abstention is a
+  CONFIDENCE/Adoption axis, never a gap.
+- **OPEN engineering gaps = 0; never re-open as a gap.** `OUTCOME_KPI_GAPS = []`;
+  `RESOLVED_OUTCOME_KPI_GAPS` has 6 entries: MECH-EFFECTIVENESS-CALIBRATION-WIRED (former GAP-O1,
+  mechanism-closed), AXIS-PERSONA-KPI-ARCHITECTURE (former GAP-O2 — per-persona is a zero-DDL
+  read-time join, an ARCHITECTURE axis; "closing" it would need DDL = contract violation), and
+  AXIS-PLATFORM-KPI-ADOPTION (former GAP-O3 — platform KPI population is usage-driven = ADOPTION
+  axis). Both AXIS-* are reported on their own axes, NEVER as engineering gaps.
 - **`readScalar` returns null on ERROR, 0 on no-rows.** This is the null≠0 guarantee. Observed in the
   wild: `development_recommendations` COUNT(*) = 0 (table exists, empty) but DISTINCT-subject query
   renders `—` (the subject column is unreadable → caught → null). That divergence is CORRECT honesty,

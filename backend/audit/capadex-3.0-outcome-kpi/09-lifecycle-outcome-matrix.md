@@ -1,6 +1,6 @@
 # CAPADEX 3.0 · Phase 1.6 — Lifecycle ↔ Outcome / KPI Matrix
 
-> Deliverable 09 · Generated 2026-06-30T14:10:24.976Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:93309b17121a, written 2026-06-30T14:10:24.975Z).
+> Deliverable 09 · Generated 2026-06-30T14:35:35.480Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:8d7228dfcd7b, written 2026-06-30T14:35:35.479Z).
 > Honesty: Coverage⟂Confidence⟂Outcome⟂Adoption (never composited); null ≠ 0; never fabricated.
 
 For each coded lifecycle stage (Curiosity→Insight→Growth→Mastery): the outcome types that realize there + the KPI families they update + the measurable outcome definition. REFERENCES the EXISTING readiness + outcome machinery — no new gate, no new KPI engine.

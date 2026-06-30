@@ -1,6 +1,6 @@
 # CAPADEX 3.0 · Phase 1.6 — KPI Inventory
 
-> Deliverable 04 · Generated 2026-06-30T14:10:24.976Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:93309b17121a, written 2026-06-30T14:10:24.975Z).
+> Deliverable 04 · Generated 2026-06-30T14:35:35.480Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:8d7228dfcd7b, written 2026-06-30T14:35:35.479Z).
 > Honesty: Coverage⟂Confidence⟂Outcome⟂Adoption (never composited); null ≠ 0; never fabricated.
 
 The 10 canonical KPI families. KPIs are COMPUTED by the EXISTING enterprise-analytics + benchmark + mei/employability engines — this phase builds NO new KPI engine. `status` is Coverage (does the KPI substrate + a computing engine exist); population is ADOPTION-driven (deliverable 08).
@@ -24,7 +24,7 @@ The 10 canonical KPI families. KPIs are COMPUTED by the EXISTING enterprise-anal
 - **Lifecycle KPIs** (`lifecycle`, SUPPORTED) — Stage distribution + promotion / progression rates across the coded ladder.
 - **Assessment KPIs** (`assessment`, SUPPORTED) — Assessment throughput, coverage and reassessment rate.
 - **Journey KPIs** (`journey`, PARTIAL) — Funnel conversion / drop-off / outcome-tail completion across the journey.  _Journey substrate present (validation_loop_outcomes + journey-tail); conversion KPIs are adoption-gated (real volume) — Coverage⟂Adoption._
-- **AI KPIs** (`ai`, PARTIAL) — Diagnosis coverage + recommendation acceptance / effectiveness.  _Diagnosis/recommendation substrate present; acceptance/effectiveness is ABSTAINED — no decision-time prediction recorded (Confidence axis, honest-null), never fabricated._
+- **AI KPIs** (`ai`, PARTIAL) — Diagnosis coverage + recommendation acceptance / effectiveness.  _Diagnosis/recommendation substrate present; acceptance stays honest-null (no per-recommendation acceptance signal) and effectiveness is WIRED via REUSE of the validation-loop calibration mechanism but ABSTAINED (null) until ≥ k_min real prediction+outcome pairs accrue (Confidence axis, never fabricated)._
 - **Learning KPIs** (`learning`, SUPPORTED) — Learning progress + intervention uptake measures.
 - **Business KPIs** (`business`, PARTIAL) — Placement / hiring conversion + commercial outcomes (revenue reported separately).  _Placement/hiring realized via validation_loop_outcomes; revenue lives in the SEPARATE commerce ledger (capadex_payments) and is NOT composited into outcome KPIs — Coverage present, accuracy/volume adoption-gated._
 - **Organizational KPIs** (`organizational`, SUPPORTED) — Cohort movement + institute / batch coverage (k-anon aggregate).  _Real k-anon aggregation (MX-302H); scores masked below k_min, roster always shown._

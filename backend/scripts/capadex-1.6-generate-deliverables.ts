@@ -142,19 +142,32 @@ PATHS.map((t) => `| ${t.label} (\`${t.key}\`) | ${t.persona} | ${t.status} | ${(
 // ── 06 Recommendation Effectiveness ──────────────────────────────────────
 const recE = EF.recommendation || {};
 files['06-recommendation-effectiveness.md'] = HEAD('06', 'Recommendation → Outcome Effectiveness') +
-`The recommendation→outcome link. The SUBSTRATE is MEASURED; calibrated **effectiveness_rate is ABSTAINED (null)** because no decision-time prediction is recorded — a rate here would be fabricated (Confidence axis ⟂ Coverage). \`—\` = unreadable/abstained, a numeric \`0\` = measured-empty.\n\n` +
+`The recommendation→outcome link. The SUBSTRATE is MEASURED; effectiveness is WIRED via REUSE of the validation-loop calibration mechanism, but the calibrated **effectiveness_rate is ABSTAINED (null)** until ≥ k_min real prediction+outcome pairs accrue — a rate before then would be fabricated (Confidence axis ⟂ Coverage). \`—\` = unreadable/abstained, a numeric \`0\` = measured-empty.\n\n` +
 `| Signal | Value |\n|---|---|\n` +
 `| Recommendation substrate rows (non-null subject) | ${dash(recE.substrate_rows)} |\n` +
 `| Distinct recommendation subjects | ${dash(recE.substrate_subjects)} |\n` +
 `| Realized outcomes (canonical ledger, non-demo) | ${dash(EF.realized_outcomes)} |\n` +
-`| Calibrated effectiveness rate | ${dash(recE.effectiveness_rate)} (abstained) |\n` +
+`| Calibrated effectiveness rate (per-channel) | ${dash(recE.effectiveness_rate)} (abstained) |\n` +
 `| Calibrated? | ${dash(recE.calibrated)} |\n\n` +
-`_${recE.note || EF.note || ''}_\n`;
+`_${recE.note || EF.note || ''}_\n\n` +
+((): string => {
+  const c = EF.calibration || {};
+  return `### Loop-level effectiveness — WIRED via REUSE (formerly GAP-O1)\n\n` +
+    `The recommendation/intervention → outcome effectiveness link is now WIRED end-to-end by REUSING the EXISTING validation-loop calibration mechanism (no new engine/table/DDL). It abstains honestly (status \`cold_start\`/\`provisional\` → rate \`—\`) until ≥ k_min real non-demo prediction+outcome pairs accrue, then flips to \`calibrated\` and the rate lights up automatically. null ≠ 0; nothing fabricated.\n\n` +
+    `| Signal | Value |\n|---|---|\n` +
+    `| Calibration status | ${dash(c.status)} |\n` +
+    `| Prediction+outcome pairs used | ${dash(c.pairs_used)} |\n` +
+    `| k_min (calibrated threshold) | ${dash(c.k_min)} |\n` +
+    `| Remaining to calibrated | ${dash(c.remaining_to_calibrated)} |\n` +
+    `| Brier / ECE | ${dash(c.brier)} / ${dash(c.ece)} |\n` +
+    `| Loop-level effectiveness rate | ${dash(c.effectiveness_rate)} |\n\n` +
+    `_${c.note || ''}_\n`;
+})();
 
 // ── 07 Intervention Effectiveness ────────────────────────────────────────
 const intE = EF.intervention || {};
 files['07-intervention-effectiveness.md'] = HEAD('07', 'Intervention → Outcome Effectiveness') +
-`The intervention→outcome link. The SUBSTRATE is MEASURED; calibrated **effectiveness_rate is ABSTAINED (null)** (no decision-time prediction recorded — Confidence axis ⟂ Coverage). \`—\` = unreadable/abstained, a numeric \`0\` = measured-empty.\n\n` +
+`The intervention→outcome link. The SUBSTRATE is MEASURED; effectiveness is WIRED via REUSE of the validation-loop calibration mechanism, but the calibrated **effectiveness_rate is ABSTAINED (null)** until ≥ k_min real prediction+outcome pairs accrue (Confidence axis ⟂ Coverage). \`—\` = unreadable/abstained, a numeric \`0\` = measured-empty.\n\n` +
 `| Signal | Value |\n|---|---|\n` +
 `| Intervention substrate rows (non-null subject) | ${dash(intE.substrate_rows)} |\n` +
 `| Distinct intervention subjects | ${dash(intE.substrate_subjects)} |\n` +

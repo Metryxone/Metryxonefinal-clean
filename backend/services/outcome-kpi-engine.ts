@@ -39,6 +39,12 @@ import {
 // REUSE the single-source freshness constant from the existing progression-capture mechanism
 // (no re-declaration). This module only READS it — it never invokes the capture/signal engine.
 import { REASSESSMENT_FRESHNESS_DAYS } from './capadex/progression-outcome-capture';
+// REUSE the EXISTING validation-loop calibration mechanism (PURE functions only) to WIRE the
+// recommendation/intervention → outcome effectiveness link to real decision-time predictions
+// (predicted_prob_at_decision, captured by recordValidationOutcome) WITHOUT a new engine/table/DDL.
+// calibrationFromRows abstains honestly (cold_start / provisional, NEVER 'calibrated') until ≥ k_min
+// real prediction+outcome pairs accrue — so the effectiveness_rate stays null until the data exists.
+import { calibrationFromRows, toCalibrationPairs, type OutcomeRow } from './validation-loop-engine';
 
 // Workflow + tsx scripts run with cwd = backend/ ; frontend lives one level up.
 const BACKEND_ROOT = process.cwd();
@@ -226,27 +232,12 @@ export interface ClassifiedGap {
  * composited; null≠0; nothing fabricated).
  */
 export const OUTCOME_KPI_GAPS: ClassifiedGap[] = [
-  {
-    id: 'GAP-O1-EFFECTIVENESS-ABSTAINED',
-    title: 'Calibrated recommendation/intervention → outcome effectiveness is deliberately abstained',
-    severity: 'Medium',
-    evidence: 'recommendation/intervention rows carry NO decision-time prediction (predicted_prob_at_decision is NULL by design), so empirical effectiveness/accuracy of the recommendation→outcome and intervention→outcome links cannot be calibrated yet. This is a CONFIDENCE-axis abstention, honestly reported as null — NOT a fabricated rate.',
-    remediation: 'FUTURE/ADDITIVE: once real non-demo outcome volume + a decision-time prediction substrate exist, compute effectiveness/calibration over the EXISTING ledger (validation_loop_outcomes). Never fabricate effectiveness before the data exists. Not Launch-Critical.',
-  },
-  {
-    id: 'GAP-O2-PERSONA-KPI-NO-LEDGER-DIM',
-    title: 'Per-persona KPI roll-up is a read-time join, not a persisted persona dimension',
-    severity: 'Low',
-    evidence: 'persona KPIs are computed by JOINING validation_loop_outcomes to capadex_user_profiles.persona at READ time; the outcome ledger has no persona column, so per-persona counts depend on the join being readable + k≥k_min. Coverage present; this is a deliberate zero-DDL choice.',
-    remediation: 'OPTIONAL/ADDITIVE: if a persisted persona dimension is later required, REUSE the existing profile substrate via a materialized read-model (no change to the canonical ledger). Low priority.',
-  },
-  {
-    id: 'GAP-O3-PLATFORM-KPI-ADOPTION-DRIVEN',
-    title: 'Platform / organizational KPI population depends on analytics adoption',
-    severity: 'Future',
-    evidence: 'platform/organizational KPI families roll up over anl_kpi_daily/anl_cohort_analysis, whose population is adoption-driven (real volume). The substrate + computing engine exist (Coverage); current values are honest-low/0 (Adoption⟂Coverage, null≠0).',
-    remediation: 'FUTURE: as real usage accrues, the existing enterprise-analytics engine populates the KPI substrate — no new engine required. Reported on the Adoption axis, never as an engineering gap.',
-  },
+  // OPEN ENGINEERING GAPS: none. The former GAP-O1 (effectiveness) is now mechanism-CLOSED via REUSE
+  // of the validation-loop calibration substrate (see composeEffectiveness `calibration` block +
+  // MECH-EFFECTIVENESS-CALIBRATION-WIRED below). The former GAP-O2 and GAP-O3 were never engineering
+  // defects — they are an ARCHITECTURE choice (zero-DDL persona read-time join) and an ADOPTION axis
+  // (usage-driven KPI population) respectively; both are reported on their own axes, NEVER as a gap
+  // (see AXIS-* entries below). Coverage⟂Confidence⟂Outcome⟂Adoption never composited; null≠0.
 ];
 
 export interface ResolvedGap {
@@ -281,6 +272,24 @@ export const RESOLVED_OUTCOME_KPI_GAPS: ResolvedGap[] = [
     closure: 'PRESENT via REUSE: longitudinal-memory + wc3 longitudinal-foundation record the trend that validates improvement vs baseline (the measured-outcome input). The composer READS it, never re-derives.',
     residual: 'CONFIDENCE + ADOPTION: improvement is measurable once >1 non-demo datapoint exists; calibrated accuracy is abstained by design (Coverage⟂Confidence⟂Adoption, null≠0).',
   },
+  {
+    id: 'MECH-EFFECTIVENESS-CALIBRATION-WIRED',
+    title: 'Recommendation/intervention → outcome effectiveness is WIRED to the calibration mechanism (formerly GAP-O1)',
+    closure: 'CLOSED via REUSE (no new engine/table/DDL): composeEffectiveness now READS the EXISTING validation-loop calibration mechanism — recordValidationOutcome captures the decision-time prediction (predicted_prob_at_decision); calibrationFromRows/toCalibrationPairs turn non-demo prediction+outcome rows into a calibrated effectiveness block with a k_min gate. The link is end-to-end: when ≥ k_min real pairs accrue, status flips to calibrated and effectiveness_rate lights up automatically. Demo excluded; nothing fabricated.',
+    residual: 'CONFIDENCE: until ≥ k_min real non-demo prediction+outcome pairs accrue the status is cold_start/provisional and effectiveness_rate stays null (abstained, NEVER fabricated). This is a Confidence/Adoption axis — reported via the `calibration` block, never a gap. Coverage⟂Confidence⟂Adoption, null≠0.',
+  },
+  {
+    id: 'AXIS-PERSONA-KPI-ARCHITECTURE',
+    title: 'Per-persona KPI roll-up is a deliberate zero-DDL read-time join — an ARCHITECTURE axis, not a gap (formerly GAP-O2)',
+    closure: 'RECLASSIFIED (not an engineering defect): persona KPIs are computed by JOINING validation_loop_outcomes to capadex_user_profiles.persona at READ time. This is a deliberate zero-DDL / byte-identical-OFF choice — Coverage IS present; "closing" it would mean adding a persisted persona column (DDL), which would VIOLATE this phase\'s contract. It is therefore an architecture axis, reported with k≥k_min masking, never an open gap.',
+    residual: 'ARCHITECTURE (optional/future): if a persisted persona dimension is ever required, REUSE the existing profile substrate via a materialized read-model — no change to the canonical ledger, no DDL in this phase.',
+  },
+  {
+    id: 'AXIS-PLATFORM-KPI-ADOPTION',
+    title: 'Platform / organizational KPI population is an ADOPTION axis, not a gap (formerly GAP-O3)',
+    closure: 'RECLASSIFIED (not an engineering defect): platform/organizational KPI families roll up over anl_kpi_daily/anl_cohort_analysis. The substrate + computing engine ALREADY exist (Coverage present); values are honest-low/0 ONLY because real usage volume is low. Forcing them non-zero would mean seeding fabricated data. It is therefore an Adoption axis, reported via composeOutcomeAdoption, never an open gap.',
+    residual: 'ADOPTION: as real usage accrues, the EXISTING enterprise-analytics engine populates the KPI substrate — no new engine required (Coverage⟂Adoption, null≠0; never fabricated).',
+  },
 ];
 
 async function readScalar(pool: Pool, sql: string): Promise<number | null> {
@@ -291,6 +300,16 @@ async function readScalar(pool: Pool, sql: string): Promise<number | null> {
     return Number.isFinite(v) ? v : null;
   } catch {
     return null; // unreadable ≠ 0
+  }
+}
+
+/** Never-throws row reader — returns rows on success, null on error (unreadable ≠ empty). */
+async function readRows(pool: Pool, sql: string): Promise<any[] | null> {
+  try {
+    const r = await pool.query(sql);
+    return r.rows;
+  } catch {
+    return null; // unreadable ≠ empty
   }
 }
 
@@ -313,12 +332,34 @@ export interface ChannelEffectiveness {
   note: string;
 }
 
+/**
+ * Loop-level calibrated effectiveness, READ through the EXISTING validation-loop calibration
+ * mechanism (no new engine/table/DDL). It abstains honestly (status cold_start/provisional, rate
+ * null) until ≥ k_min real non-demo prediction+outcome pairs accrue — never fabricated.
+ */
+export interface EffectivenessCalibration {
+  /** Realized {prediction, outcome} pairs available for calibration (non-demo, binary, finite prob in [0,1]). null if unreadable. */
+  pairs_used: number | null;
+  /** cold_start | provisional | calibrated — NEVER 'calibrated' below k_min. null if unreadable. */
+  status: string | null;
+  k_min: number | null;
+  remaining_to_calibrated: number | null;
+  /** Brier score / ECE — null until ≥1 realized outcome pair (never 0 as a default). */
+  brier: number | null;
+  ece: number | null;
+  /** Loop-level observed effectiveness (success rate across evidence pairs) — non-null ONLY when status==='calibrated'. */
+  effectiveness_rate: number | null;
+  note: string;
+}
+
 export interface OutcomeEffectiveness {
   flag: 'outcomeFrameworkKpiEngine';
   recommendation: ChannelEffectiveness;
   intervention: ChannelEffectiveness;
   /** Total non-demo realized outcomes in the canonical ledger (the outcome side of both links). */
   realized_outcomes: number | null;
+  /** Loop-level calibrated effectiveness via REUSE of the validation-loop calibration mechanism. */
+  calibration: EffectivenessCalibration;
   note: string;
 }
 
@@ -344,8 +385,60 @@ export async function composeEffectiveness(pool: Pool): Promise<OutcomeEffective
     `SELECT COUNT(*)::int AS n FROM validation_loop_outcomes WHERE COALESCE(is_demo, false) = false`,
   );
   const channelNote =
-    'Substrate counts are MEASURED (Coverage); effectiveness_rate is ABSTAINED (null) because no ' +
-    'decision-time prediction is recorded — a rate here would be fabricated. Confidence⟂Coverage, null≠0.';
+    'Substrate counts are MEASURED (Coverage); per-channel effectiveness_rate stays null because the ' +
+    'decision-time prediction is recorded loop-level (validation_loop_outcomes), not per recommendation/' +
+    'intervention row — see the loop-level `calibration` block. Confidence⟂Coverage, null≠0.';
+
+  // REUSE the EXISTING validation-loop calibration mechanism (PURE) over non-demo outcome rows that
+  // carry a decision-time prediction. This WIRES the effectiveness link end-to-end WITHOUT a new
+  // engine/table/DDL: when ≥ k_min real prediction+outcome pairs accrue, status flips to 'calibrated'
+  // and the rate lights up automatically; until then it abstains honestly (cold_start). null≠0.
+  const predRows = await readRows(
+    pool,
+    `SELECT outcome_kind, outcome_value, predicted_prob_at_decision
+       FROM validation_loop_outcomes
+      WHERE COALESCE(is_demo, false) = false`,
+  );
+  let calibration: EffectivenessCalibration;
+  if (predRows === null) {
+    calibration = {
+      pairs_used: null,
+      status: null,
+      k_min: null,
+      remaining_to_calibrated: null,
+      brier: null,
+      ece: null,
+      effectiveness_rate: null,
+      note:
+        'Calibration substrate UNREADABLE (validation_loop_outcomes / predicted_prob_at_decision not ' +
+        'readable). null = unknown, NOT 0. Nothing fabricated.',
+    };
+  } else {
+    const cal = calibrationFromRows(predRows as OutcomeRow[]);
+    const pairs = toCalibrationPairs(predRows as OutcomeRow[]);
+    // Loop-level observed effectiveness = realized success rate across evidence pairs — surfaced ONLY
+    // once the mechanism reports 'calibrated' (≥ k_min). Below k_min it stays null (never fabricated).
+    const observed =
+      cal.status === 'calibrated' && pairs.length > 0
+        ? pairs.reduce((s, p) => s + p.outcome, 0) / pairs.length
+        : null;
+    calibration = {
+      pairs_used: cal.pairs_used,
+      status: cal.status,
+      k_min: cal.k_min,
+      remaining_to_calibrated: cal.remaining_to_calibrated,
+      brier: cal.brier,
+      ece: cal.ece,
+      effectiveness_rate: observed,
+      note:
+        'Loop-level effectiveness READ through the EXISTING validation-loop calibration mechanism ' +
+        '(recordValidationOutcome captures predicted_prob_at_decision; calibrationFromRows calibrates ' +
+        'with a k_min gate). status cold_start/provisional → effectiveness_rate null (Confidence axis, ' +
+        'abstained, NEVER fabricated); flips to calibrated + a real rate only when ≥ k_min non-demo ' +
+        'prediction+outcome pairs accrue. No engine invoked; zero DDL.',
+    };
+  }
+
   return {
     flag: 'outcomeFrameworkKpiEngine',
     recommendation: {
@@ -363,11 +456,13 @@ export async function composeEffectiveness(pool: Pool): Promise<OutcomeEffective
       note: channelNote,
     },
     realized_outcomes,
+    calibration,
     note:
       'Recommendation→outcome and intervention→outcome EFFECTIVENESS. The substrate (recommendations, ' +
-      'interventions, realized outcomes) is MEASURED; calibrated effectiveness is deliberately ABSTAINED ' +
-      '(no decision-time prediction substrate — Confidence axis). null = unreadable / abstained, 0 = ' +
-      'measured-empty. Demo subjects excluded. No engine is invoked; nothing fabricated.',
+      'interventions, realized outcomes) is MEASURED (Coverage); loop-level calibrated effectiveness is ' +
+      'WIRED via REUSE of the validation-loop calibration mechanism (`calibration` block) and abstains ' +
+      'honestly (cold_start, rate null) until ≥ k_min real prediction+outcome pairs accrue — Confidence ' +
+      'axis, null≠0, never fabricated. Demo subjects excluded. No engine is invoked; zero DDL.',
   };
 }
 
@@ -598,13 +693,16 @@ export async function composeSummary(pool: Pool): Promise<OutcomeKpiSummary> {
         'progression-outcome-capture write realized outcomes into validation_loop_outcomes; the existing ' +
         'enterprise-analytics + benchmark + mei/employability engines compute the KPI families. This phase ' +
         'adds ONE read-only composer/registry + ZERO new outcome/KPI logic + ZERO schema. OPEN engineering ' +
-        'gaps are NONE Launch-Critical (GAP-O1 Medium: calibrated effectiveness deliberately abstained; ' +
-        'GAP-O2 Low: persona KPI is a read-time join not a ledger dimension; GAP-O3 Future: platform KPI ' +
-        'population is adoption-driven). The dominant remaining axes are CONFIDENCE (calibrated ' +
-        'effectiveness, abstained until volume + prediction substrate) and ADOPTION (real outcome/KPI ' +
-        'volume, currently honest-low/0, reported SEPARATELY) — usage/data axes, NOT gaps. The verdict ' +
-        'stays STRUCTURAL (engineering complete via reuse; adoption/confidence are data-driven and never ' +
-        'fabricated). Coverage⟂Confidence⟂Outcome⟂Adoption are reported separately and never composited; null≠0.',
+        'gaps = 0: the recommendation/intervention→outcome effectiveness link is WIRED via REUSE of the ' +
+        'existing validation-loop calibration mechanism (formerly GAP-O1 — now mechanism-closed); the ' +
+        'per-persona KPI roll-up is a deliberate zero-DDL read-time join (an ARCHITECTURE axis, formerly ' +
+        'GAP-O2) and platform/organizational KPI population is usage-driven (an ADOPTION axis, formerly ' +
+        'GAP-O3) — both reported on their own axes, NEVER as gaps. The dominant remaining axes are ' +
+        'CONFIDENCE (calibration abstained until ≥ k_min real prediction+outcome pairs accrue) and ' +
+        'ADOPTION (real outcome/KPI volume, currently honest-low/0, reported SEPARATELY) — usage/data ' +
+        'axes, NOT gaps. The verdict stays STRUCTURAL (engineering complete via reuse; adoption/confidence ' +
+        'are data-driven and never fabricated). Coverage⟂Confidence⟂Outcome⟂Adoption are reported ' +
+        'separately and never composited; null≠0.',
     },
   };
 }

@@ -1,6 +1,6 @@
 # CAPADEX 3.0 · Phase 1.6 — KPI ↔ Persona Matrix
 
-> Deliverable 05 · Generated 2026-06-30T14:10:24.976Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:93309b17121a, written 2026-06-30T14:10:24.975Z).
+> Deliverable 05 · Generated 2026-06-30T14:35:35.480Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:8d7228dfcd7b, written 2026-06-30T14:35:35.479Z).
 > Honesty: Coverage⟂Confidence⟂Outcome⟂Adoption (never composited); null ≠ 0; never fabricated.
 
 Which KPI families each persona path updates from its realized outcomes.

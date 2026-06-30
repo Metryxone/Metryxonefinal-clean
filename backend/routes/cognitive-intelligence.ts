@@ -1,5 +1,6 @@
 import type { Express } from "express";
 import pg from "pg";
+import { normalizeStoredStage, stageOrder } from "../lib/lifecycle";
 
 type CogProfile = {
   working_memory_score: number;
@@ -60,8 +61,9 @@ async function computeCognitiveProfile(email: string, client: pg.PoolClient): Pr
   const stages = new Set(sessions.map(s => s.stage_code)).size;
   const cognitive_flexibility = Math.min(100, Math.round(20 + concerns * 8 + stages * 10));
 
-  // Processing depth: avg score in advanced stages (CAP_GRW, CAP_MAS)
-  const deepSessions = completed.filter(s => ['CAP_GRW', 'CAP_MAS'].includes(s.stage_code));
+  // Processing depth: avg score in advanced stages (at or beyond Growth, CAP_GRW)
+  const DEEP_MIN_ORDER = stageOrder('CAP_GRW');
+  const deepSessions = completed.filter(s => normalizeStoredStage(s.stage_code).order >= DEEP_MIN_ORDER);
   let processing_depth = 45;
   if (deepSessions.length > 0) {
     processing_depth = Math.round(deepSessions.reduce((a, s) => a + (Number(s.score) || 50), 0) / deepSessions.length);
@@ -226,15 +228,16 @@ async function computeMetaLearning(email: string, client: pg.PoolClient) {
     ? Math.round(highSessions.reduce((a, s) => a + Number(s.time_taken_s), 0) / highSessions.length / 60 * 10) / 10
     : 15;
 
-  // Optimal difficulty
-  const stageScores: Record<string, number[]> = {};
+  // Optimal difficulty — "advanced" stages are those at or beyond Growth (CAP_GRW),
+  // resolved through the shared lifecycle rulebook so the threshold can never drift.
+  const ADVANCED_MIN_ORDER = stageOrder('CAP_GRW');
+  const advancedScores: number[] = [];
   for (const s of completed) {
-    if (!stageScores[s.stage_code]) stageScores[s.stage_code] = [];
-    stageScores[s.stage_code].push(Number(s.score) || 0);
+    const { order } = normalizeStoredStage(s.stage_code);
+    if (order >= ADVANCED_MIN_ORDER) advancedScores.push(Number(s.score) || 0);
   }
-  const hasAdvanced = (stageScores['CAP_GRW']?.length || 0) + (stageScores['CAP_MAS']?.length || 0) > 0;
-  const advAvg = hasAdvanced ? [...(stageScores['CAP_GRW'] || []), ...(stageScores['CAP_MAS'] || [])].reduce((a, b) => a + b, 0) /
-    ((stageScores['CAP_GRW']?.length || 0) + (stageScores['CAP_MAS']?.length || 0)) : 0;
+  const hasAdvanced = advancedScores.length > 0;
+  const advAvg = hasAdvanced ? advancedScores.reduce((a, b) => a + b, 0) / advancedScores.length : 0;
   let optimal_difficulty = 'moderate';
   if (advAvg >= 70) optimal_difficulty = 'challenging';
   else if (hasAdvanced) optimal_difficulty = 'moderate';

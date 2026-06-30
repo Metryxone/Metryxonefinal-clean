@@ -25,6 +25,25 @@ can just route its lookup through this one normalizer and stay byte-identical.
 - `services/wc3/trend-intelligence.ts` `stageToScale` → ordinal (pre-stage 0, coded order+1,
   else null) → (ordinal/4)*100.
 - `services/wc7b/growth-plan-bridge.ts` `stageScore` → (ordinal+1)*20, unknown/absent→50.
+- `lib/scoring-utils.ts` `stageWeight` (CSI) → resolve INPUT via canon then `WEIGHT_BY_CODE`
+  {CAP_CUR:0.50, CAP_INS:0.75, CAP_GRW:1.00, CAP_MAS:1.25}, unknown/uncoded→0.5 (legacy default).
+- `routes/csi.ts` `STAGE_ORDER` (highest-stage) + `routes/lbi-engine.ts` `stageOrder`
+  (adaptability ordered-avgs) → both replaced the literal `['CAP_CUR','CAP_INS','CAP_GRW','CAP_MAS']`
+  list with `LIFECYCLE_STAGE_CODES`. (Dead duplicate `STAGE_WEIGHTS` in csi.ts removed.)
+- `routes/cognitive-intelligence.ts` has TWO separate stored-stage reads in ONE file
+  (meta-learning "advanced" detection AND computeCognitiveProfile "processing depth" deep-session
+  filter) — both are now order≥Growth via the canon. **Lesson: grep the WHOLE file, not the first
+  hit — a "route every stage read" task fails review if a second literal read in the same file is
+  left behind.**
+
+## What is NOT a stored-stage read (deliberately left alone)
+- `STAGE_PRICES` (`wc7c/upsell-engine.ts`, `wc7c/subscription-engine.ts`) keys the PRODUCT/target
+  code being priced, not a user's current stage → no normalization needed.
+- `services/wc3/question-stage-intelligence.ts` maps are question-type→stage probability
+  distributions (seed/metadata), not a read of a persisted stage.
+- `services/experience-routing.ts` `STAGE_TO_EXPERIENCE` keys `CareerStage` (a DIFFERENT taxonomy),
+  not the CAPADEX lifecycle stage.
+- `services/adaptive-assessment.ts` `STAGE_CODE_TO_NAME` already aliases canon `STAGE_CODE_TO_LABEL`.
 
 ## Byte-identity gotchas (proven by `scripts/verify-lifecycle-stage-normalization.ts`)
 - **The three legacy maps disagreed on edge handling**: trend trimmed + lower-cased; subscription

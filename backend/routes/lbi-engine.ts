@@ -1,5 +1,6 @@
 import type { Express } from "express";
 import pg from "pg";
+import { LIFECYCLE_STAGE_CODES } from "../lib/lifecycle";
 
 type GuardMW = (req: any, res: any, next: any) => void;
 
@@ -131,7 +132,8 @@ async function calculateLBI(email: string, client: pg.PoolClient) {
     else attention_score = 35;
   }
 
-  const stageOrder = ['CAP_CUR', 'CAP_INS', 'CAP_GRW', 'CAP_MAS'];
+  // Stage progression order, single-sourced from the shared lifecycle rulebook.
+  const stageOrder = LIFECYCLE_STAGE_CODES;
   const stageScores: Record<string, number[]> = {};
   for (const s of completed) {
     if (s.score != null) {

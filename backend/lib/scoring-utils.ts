@@ -4,7 +4,7 @@
  * Provides deterministic score normalisation, stage-weighted aggregation,
  * and a structured score_trace JSONB that powers explainability UI.
  */
-import { STAGE_CODE_TO_LABEL } from './lifecycle';
+import { STAGE_CODE_TO_LABEL, normalizeStoredStage, type LifecycleStageCode } from './lifecycle';
 
 /**
  * Normalise a single Likert-scale item response (1–5) to 0–100,
@@ -67,12 +67,25 @@ export interface ScoreTrace {
   };
 }
 
-const STAGE_WEIGHT_MAP: Record<string, number> = {
+// CSI stage-progression weights, keyed by canonical code. The INPUT stage value is
+// resolved through the shared lifecycle rulebook (`normalizeStoredStage`) so a label,
+// display alias, or CAP_* code all weight identically — no per-module literal can drift.
+const WEIGHT_BY_CODE: Record<LifecycleStageCode, number> = {
   CAP_CUR: 0.50,
   CAP_INS: 0.75,
   CAP_GRW: 1.00,
   CAP_MAS: 1.25,
 };
+
+/**
+ * Stage-progression weight for a stored stage value, via the canonical resolver.
+ * Unrecognized / uncoded pre-stage inputs fall back to 0.5 (the legacy default),
+ * preserving byte-identical behaviour on the CAP_* codes that actually occur.
+ */
+function stageWeight(stage: string | null | undefined): number {
+  const { code } = normalizeStoredStage(stage);
+  return code ? WEIGHT_BY_CODE[code] : 0.5;
+}
 
 // Canonical stage labels — sourced from the single lifecycle source of truth.
 const STAGE_LABEL_MAP: Record<string, string> = STAGE_CODE_TO_LABEL;
@@ -101,7 +114,7 @@ export function computeCSIScore(
 
   for (const s of sessions) {
     const rawScore = parseFloat(String(s.score || '0'));
-    const weight   = STAGE_WEIGHT_MAP[s.stage_code] ?? 0.5;
+    const weight   = stageWeight(s.stage_code);
     const contribution = rawScore * weight;
     weightedSum += contribution;
     weightTotal += weight;

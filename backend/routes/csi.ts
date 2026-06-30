@@ -9,15 +9,12 @@
 import type { Express, Request, Response, NextFunction } from 'express';
 import type { Pool } from 'pg';
 import { writeAuditEvent, AUDIT_EVENT } from '../lib/audit';
+import { LIFECYCLE_STAGE_CODES } from '../lib/lifecycle';
 
-const STAGE_WEIGHTS: Record<string, number> = {
-  CAP_CUR: 0.5,
-  CAP_INS: 0.75,
-  CAP_GRW: 1.0,
-  CAP_MAS: 1.25,
-};
-
-const STAGE_ORDER = ['CAP_CUR', 'CAP_INS', 'CAP_GRW', 'CAP_MAS'];
+// Canonical progression order, single-sourced from the shared lifecycle rulebook
+// (['CAP_CUR','CAP_INS','CAP_GRW','CAP_MAS']) so the highest-stage derivation can never
+// drift from the canon. The stage-weighted CSI itself is computed in lib/scoring-utils.
+const STAGE_ORDER = LIFECYCLE_STAGE_CODES;
 
 export function csiStageInfo(score: number): { stage: string; color: string } {
   if (score >= 80) return { stage: 'Advanced',    color: '#7C3AED' };

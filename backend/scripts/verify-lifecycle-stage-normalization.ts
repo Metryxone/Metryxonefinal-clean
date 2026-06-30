@@ -4,10 +4,15 @@
  *
  *   1. subscription-engine `stageFloorIndex`  — legacy lowercased-label switch vs new canon route.
  *   2. wc3 trend `stageToScale`               — legacy STAGE_ORDINAL map vs new canon route.
+ *   3. wc7b growth-plan `stageScore`          — legacy case-sensitive label map vs new canon route.
+ *   4. scoring-utils `stageWeight` (CSI)      — legacy code→weight map vs new canon route.
+ *   5. csi route `STAGE_ORDER` (highest)      — legacy literal code list vs LIFECYCLE_STAGE_CODES.
+ *   6. lbi-engine `stageOrder` (adaptability) — legacy literal code list vs LIFECYCLE_STAGE_CODES.
+ *   7. cognitive-intelligence advanced detect — legacy CAP_GRW/CAP_MAS literals vs canon order≥Growth.
  *
  * Pure, no DB, no I/O. Run: `npx tsx scripts/verify-lifecycle-stage-normalization.ts` from backend/.
  */
-import { normalizeStoredStage } from '../lib/lifecycle';
+import { normalizeStoredStage, LIFECYCLE_STAGE_CODES, stageOrder } from '../lib/lifecycle';
 
 // ── Legacy reference implementations (copied verbatim from the pre-refactor code) ──────────────
 function legacyStageFloorIndex(canonical: string | null | undefined): number {
@@ -159,6 +164,118 @@ assertEq('Awareness uncoded', awareness.code, null);
 assertEq('Awareness isUncodedPreStage', awareness.isUncodedPreStage, true);
 assertEq('Awareness recognized', awareness.recognized, true);
 assertEq('Bogus not recognized', normalizeStoredStage('Bogus').recognized, false);
+
+// ── PART 3: byte-identical parity for the NEWLY-routed consumers (Task #309) ───────────────────
+// Each consumer's stored-stage read now routes its INPUT through the shared resolver while keeping
+// its OWN value semantics. capadex_sessions.stage_code is ALWAYS a proper-cased CAP_* code, so
+// strict parity is asserted on those actually-occurring codes; lowercase/label/alias inputs are
+// additive robustness (not produced today) and verified separately.
+console.log('— PART 3: newly-routed consumers (Task #309) —');
+
+// 4. scoring-utils computeCSIScore stage weight (legacy code→weight map, default 0.5)
+const LEGACY_STAGE_WEIGHT_MAP: Record<string, number> = { CAP_CUR: 0.50, CAP_INS: 0.75, CAP_GRW: 1.00, CAP_MAS: 1.25 };
+function legacyStageWeight(code: string | null | undefined): number {
+  return LEGACY_STAGE_WEIGHT_MAP[code ?? ''] ?? 0.5;
+}
+const NEW_WEIGHT_BY_CODE: Record<string, number> = { CAP_CUR: 0.50, CAP_INS: 0.75, CAP_GRW: 1.00, CAP_MAS: 1.25 };
+function newStageWeight(code: string | null | undefined): number {
+  const { code: c } = normalizeStoredStage(code);
+  return c ? NEW_WEIGHT_BY_CODE[c] : 0.5;
+}
+console.log('  · stageWeight (scoring-utils CSI)');
+// proper-cased CAP_* codes + uncoded + edge cases — the ONLY values stage_code is persisted as
+for (const v of ['CAP_CUR', 'CAP_INS', 'CAP_GRW', 'CAP_MAS', 'CAP_AWR', null, undefined, '', 'BOGUS']) {
+  assertEq(`weight(${JSON.stringify(v)})`, legacyStageWeight(v), newStageWeight(v));
+}
+// additive robustness: a stored label / alias would now resolve to its code's weight (not 0.5)
+assertEq('weight("Clarity") = weight("CAP_INS")', newStageWeight('CAP_INS'), newStageWeight('Clarity'));
+assertEq('weight("Growth") = weight("CAP_GRW")', newStageWeight('CAP_GRW'), newStageWeight('Growth'));
+
+// 5 + 6. csi `STAGE_ORDER` and lbi-engine `stageOrder` were both this literal list; now both are
+// LIFECYCLE_STAGE_CODES. Identity of the list IS the parity (every downstream read uses it verbatim).
+const LEGACY_STAGE_CODE_LIST = ['CAP_CUR', 'CAP_INS', 'CAP_GRW', 'CAP_MAS'];
+console.log('  · STAGE_ORDER / stageOrder code list (csi + lbi-engine)');
+assertEq('LIFECYCLE_STAGE_CODES === legacy literal list', JSON.stringify([...LIFECYCLE_STAGE_CODES]), JSON.stringify(LEGACY_STAGE_CODE_LIST));
+
+// csi highest-stage derivation parity (iterate list high→low, first present code wins)
+function highestStage(order: readonly string[], completedCodes: string[]): string {
+  let h = '';
+  for (let i = order.length - 1; i >= 0; i--) {
+    if (completedCodes.includes(order[i])) { h = order[i]; break; }
+  }
+  return h;
+}
+console.log('  · csi highestStage');
+const highestCases: string[][] = [
+  [], ['CAP_CUR'], ['CAP_CUR', 'CAP_GRW'], ['CAP_MAS', 'CAP_INS'], ['CAP_INS', 'CAP_GRW', 'CAP_MAS'], ['BOGUS'],
+];
+for (const codes of highestCases) {
+  assertEq(`highest(${JSON.stringify(codes)})`, highestStage(LEGACY_STAGE_CODE_LIST, codes), highestStage([...LIFECYCLE_STAGE_CODES], codes));
+}
+
+// lbi-engine orderedAvgs parity (avg per stage, walked in canonical order, nulls dropped)
+function orderedAvgs(order: readonly string[], scores: Record<string, number[]>): number[] {
+  return order
+    .map((st) => (scores[st] ? scores[st].reduce((a, b) => a + b, 0) / scores[st].length : null))
+    .filter((v) => v !== null) as number[];
+}
+console.log('  · lbi-engine orderedAvgs');
+const lbiScores: Record<string, number[]> = { CAP_CUR: [40, 60], CAP_GRW: [80], CAP_MAS: [90, 100] };
+assertEq('orderedAvgs', JSON.stringify(orderedAvgs(LEGACY_STAGE_CODE_LIST, lbiScores)), JSON.stringify(orderedAvgs([...LIFECYCLE_STAGE_CODES], lbiScores)));
+
+// 7. cognitive-intelligence "advanced" detection (legacy CAP_GRW/CAP_MAS literals vs canon order≥Growth)
+type Sess = { stage_code: string; score: number };
+function legacyAdvanced(completed: Sess[]): { hasAdvanced: boolean; advAvg: number } {
+  const stageScores: Record<string, number[]> = {};
+  for (const s of completed) {
+    if (!stageScores[s.stage_code]) stageScores[s.stage_code] = [];
+    stageScores[s.stage_code].push(Number(s.score) || 0);
+  }
+  const hasAdvanced = (stageScores['CAP_GRW']?.length || 0) + (stageScores['CAP_MAS']?.length || 0) > 0;
+  const advAvg = hasAdvanced
+    ? [...(stageScores['CAP_GRW'] || []), ...(stageScores['CAP_MAS'] || [])].reduce((a, b) => a + b, 0) /
+      ((stageScores['CAP_GRW']?.length || 0) + (stageScores['CAP_MAS']?.length || 0))
+    : 0;
+  return { hasAdvanced, advAvg };
+}
+function newAdvanced(completed: Sess[]): { hasAdvanced: boolean; advAvg: number } {
+  const minOrder = stageOrder('CAP_GRW');
+  const advancedScores: number[] = [];
+  for (const s of completed) {
+    const { order } = normalizeStoredStage(s.stage_code);
+    if (order >= minOrder) advancedScores.push(Number(s.score) || 0);
+  }
+  const hasAdvanced = advancedScores.length > 0;
+  const advAvg = hasAdvanced ? advancedScores.reduce((a, b) => a + b, 0) / advancedScores.length : 0;
+  return { hasAdvanced, advAvg };
+}
+console.log('  · cognitive-intelligence advanced detection');
+const advCases: Sess[][] = [
+  [],
+  [{ stage_code: 'CAP_CUR', score: 50 }, { stage_code: 'CAP_INS', score: 70 }],
+  [{ stage_code: 'CAP_GRW', score: 80 }],
+  [{ stage_code: 'CAP_MAS', score: 90 }, { stage_code: 'CAP_GRW', score: 60 }],
+  [{ stage_code: 'CAP_CUR', score: 40 }, { stage_code: 'CAP_GRW', score: 80 }, { stage_code: 'CAP_MAS', score: 100 }],
+];
+for (const c of advCases) {
+  assertEq(`advanced.has(${JSON.stringify(c.map((x) => x.stage_code))})`, legacyAdvanced(c).hasAdvanced, newAdvanced(c).hasAdvanced);
+  assertEq(`advanced.avg(${JSON.stringify(c.map((x) => x.stage_code))})`, legacyAdvanced(c).advAvg, newAdvanced(c).advAvg);
+}
+
+// 7b. cognitive-intelligence computeCognitiveProfile "processing depth" deep-session detection
+// (legacy CAP_GRW/CAP_MAS literal includes() vs canon order≥Growth) — same predicate as 7,
+// independently asserted because it is a SEPARATE stored-stage read in the same file.
+function legacyDeep(completed: Sess[]): string[] {
+  return completed.filter((s) => ['CAP_GRW', 'CAP_MAS'].includes(s.stage_code)).map((s) => s.stage_code);
+}
+function newDeep(completed: Sess[]): string[] {
+  const minOrder = stageOrder('CAP_GRW');
+  return completed.filter((s) => normalizeStoredStage(s.stage_code).order >= minOrder).map((s) => s.stage_code);
+}
+console.log('  · cognitive-intelligence processing-depth deep sessions');
+for (const c of advCases) {
+  assertEq(`deep(${JSON.stringify(c.map((x) => x.stage_code))})`, JSON.stringify(legacyDeep(c)), JSON.stringify(newDeep(c)));
+}
 
 console.log(`\n${failures === 0 ? '✓ PASS' : '✗ FAIL'} — ${checks - failures}/${checks} checks passed`);
 process.exit(failures === 0 ? 0 : 1);

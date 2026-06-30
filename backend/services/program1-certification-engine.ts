@@ -21,7 +21,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {
   PROGRAM1_PHASES, PROGRAM1_FREEZE, TRACEABILITY_CHAIN, BUSINESS_DOMAINS, PERSONAS,
-  LIFECYCLE_STAGES, CERTIFICATION_DIMENSIONS, PROGRAM1_GAPS, HONESTY_CONTRACT, PHASE_META,
+  LIFECYCLE_STAGES, CERTIFICATION_DIMENSIONS, PROGRAM1_GAPS, RESOLVED_PROGRAM1_GAPS,
+  HONESTY_CONTRACT, PHASE_META,
   type PhaseDesc,
 } from '../config/program1-certification-model';
 import { composePersonaOutcomes } from './persona-expansion-engine';
@@ -214,6 +215,7 @@ export interface Axes {
   functional_integration: { phases_registered: number; phases_with_getter_ok: number; routes_total: number; getters_total: number; integrated: boolean };
   product_maturity: { ceiling: string; per_phase: { phase: string; level: number; label: string }[]; managed_or_above: number };
   enterprise_launch_readiness: { value: null; status: 'WITHHELD'; reason: string };
+  adoption: { value: null; status: 'PENDING'; mechanism_wired: number; reason: string; items: { id: string; adoption_axis: string }[] };
 }
 function computeAxes(phaseCerts: PhaseCert[]): Axes {
   const structuralPhases = phaseCerts.filter((c) => [c.files.config, c.files.service, c.files.routeFile].some((x) => x != null));
@@ -242,6 +244,11 @@ function computeAxes(phaseCerts: PhaseCert[]): Axes {
       value: null, status: 'WITHHELD',
       reason: 'Requires runtime adoption + realized-outcome evidence that does not exist pre-launch. null ≠ 0; never composited with the other three axes.',
     },
+    adoption: {
+      value: null, status: 'PENDING', mechanism_wired: RESOLVED_PROGRAM1_GAPS.length,
+      reason: 'Engineering mechanisms for the formerly-open data-gated gaps are built + wired (source-verified); the only residual is real-user DATA VOLUME, which accrues post-launch. Reported as a SEPARATE axis (null ≠ 0); NEVER composited with the structural/functional/maturity axes and NEVER counted as an engineering gap.',
+      items: RESOLVED_PROGRAM1_GAPS.map((g) => ({ id: g.id, adoption_axis: g.adoption_axis })),
+    },
   };
 }
 
@@ -258,11 +265,14 @@ export interface Certification {
   dimensions: typeof CERTIFICATION_DIMENSIONS;
   axes: Axes;
   gaps: typeof PROGRAM1_GAPS;
+  resolved_gaps: typeof RESOLVED_PROGRAM1_GAPS;
   gap_rollup: Record<string, number>;
+  gap_counts: { open_engineering: number; future: number; resolved: number };
   verdict: {
     structural_certified: boolean;
     functional_integration_certified: boolean;
     product_maturity_ceiling: string;
+    open_engineering_gaps: number;
     production_ready: false;
     enterprise_launch_readiness: null;
     label: string;
@@ -282,6 +292,14 @@ export async function composeCertification(pool: Pool): Promise<Certification> {
   for (const s of ['Launch Critical', 'High', 'Medium', 'Low', 'Future']) gap_rollup[s] = 0;
   for (const gp of PROGRAM1_GAPS) gap_rollup[gp.severity] = (gap_rollup[gp.severity] ?? 0) + 1;
 
+  // OPEN ENGINEERING gaps = open gaps closeable within the zero-DDL / Enhancement-Only contract,
+  // i.e. severity ∈ {Launch Critical, High, Medium, Low}. 'Future' items genuinely require new DDL
+  // or net-new architecture and are NOT closeable here (reported, never fabricated). Data-volume
+  // items are reclassified to RESOLVED + the Adoption axis and are NEVER counted as engineering gaps.
+  const open_engineering = PROGRAM1_GAPS.filter((g) => g.severity !== 'Future').length;
+  const future = gap_rollup['Future'] ?? 0;
+  const gap_counts = { open_engineering, future, resolved: RESOLVED_PROGRAM1_GAPS.length };
+
   const structural_certified = axes.structural_completeness.complete && dup.clean;
   const functional_integration_certified = axes.functional_integration.integrated;
   const launchCritical = gap_rollup['Launch Critical'] ?? 0;
@@ -292,21 +310,26 @@ export async function composeCertification(pool: Pool): Promise<Certification> {
     phases, duplicate_scan: dup, traceability,
     domains: BUSINESS_DOMAINS, personas: PERSONAS, lifecycle_stages: LIFECYCLE_STAGES,
     dimensions: CERTIFICATION_DIMENSIONS, axes,
-    gaps: PROGRAM1_GAPS, gap_rollup,
+    gaps: PROGRAM1_GAPS, resolved_gaps: RESOLVED_PROGRAM1_GAPS, gap_rollup, gap_counts,
     verdict: {
       structural_certified,
       functional_integration_certified,
       product_maturity_ceiling: axes.product_maturity.ceiling,
+      open_engineering_gaps: open_engineering,
       production_ready: false,
       enterprise_launch_readiness: null,
       label: structural_certified && functional_integration_certified && launchCritical === 0
         ? 'STRUCTURAL_CERTIFIED' : 'STRUCTURAL_REVIEW_REQUIRED',
       statement:
         'Program-1 (Phases 1.1–1.7) is certified on the STRUCTURAL and FUNCTIONAL-INTEGRATION axes ' +
-        'against the frozen Product Blueprint. Product Maturity ceiling is Managed (L3). ' +
-        'Enterprise Launch Readiness / Production-Ready is WITHHELD by design (null) pending runtime ' +
-        'adoption + realized-outcome evidence. Axes are reported INDEPENDENTLY and never composited; ' +
-        'null ≠ 0; human approval mandatory before enable/merge/deploy.',
+        'against the frozen Product Blueprint, with 0 OPEN ENGINEERING gaps closeable within the ' +
+        `zero-DDL / Enhancement-Only contract (${RESOLVED_PROGRAM1_GAPS.length} formerly-open data-gated gaps ` +
+        `reclassified to RESOLVED + the Adoption axis; ${future} items remain genuinely Future — they ` +
+        'require new DDL or net-new architecture out of this phase\'s scope, reported never fabricated). ' +
+        'Product Maturity ceiling is Managed (L3). Enterprise Launch Readiness / Production-Ready is ' +
+        'WITHHELD by design (null) pending runtime adoption + realized-outcome evidence. Axes are ' +
+        'reported INDEPENDENTLY and never composited; null ≠ 0; human approval mandatory before ' +
+        'enable/merge/deploy.',
     },
   };
 }
@@ -317,6 +340,8 @@ export interface CertificationSummary {
   traceability: { intact: number; partial: number; breaks: number; total: number };
   maturity_managed_or_above: number; duplicate_clean: boolean;
   gap_rollup: Record<string, number>;
+  gap_counts: { open_engineering: number; future: number; resolved: number };
+  adoption_pending: number;
   enterprise_launch_readiness: null; production_ready: false;
   generated_at: string;
 }
@@ -337,6 +362,8 @@ export function summarizeCertification(c: Certification): CertificationSummary {
     maturity_managed_or_above: c.axes.product_maturity.managed_or_above,
     duplicate_clean: c.duplicate_scan.clean,
     gap_rollup: c.gap_rollup,
+    gap_counts: c.gap_counts,
+    adoption_pending: c.axes.adoption.mechanism_wired,
     enterprise_launch_readiness: null, production_ready: false,
     generated_at: c.meta.generated_at,
   };

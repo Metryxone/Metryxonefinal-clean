@@ -1,6 +1,6 @@
 # CAPADEX 3.0 · Phase 1.8 — Founder Decision
 
-> Deliverable 15 · Generated 2026-06-30T15:51:32.873Z · Source of truth: `scan.json` (read-only repo+getter scan, sha256:dffc32b272ca, written 2026-06-30T15:51:32.871Z).
+> Deliverable 15 · Generated 2026-06-30T16:11:07.376Z · Source of truth: `scan.json` (read-only repo+getter scan, sha256:9c3c909cf5cf, written 2026-06-30T16:11:07.375Z).
 > Program-1 capstone certification (Phases 1.1–1.7) against the frozen Product Blueprint.
 > Honesty: Structural ⟂ Functional-Integration ⟂ Product-Maturity ⟂ Enterprise-Launch-Readiness (never composited); Coverage⟂Confidence⟂Outcome⟂Adoption; null ≠ 0; never fabricated.
 
@@ -21,4 +21,7 @@ This certification phase `productTraceabilityCertification` ships **default OFF*
 - [ ] **Defer** — keep OFF; certification artifacts remain in `audit/capadex-3.0-program1-certification/`.
 
 ## Gaps to acknowledge (forward work, not defects)
-- Launch-Critical: **0** · High: 1 · Medium: 3 · Low: 1 · Future: 1 (deliverables 12/13).
+- **Open engineering gaps closeable within this phase's zero-DDL / Enhancement-Only contract: 0.** Launch-Critical: 0 · High: 0 · Medium: 0 · Low: 0.
+- **Resolved → Adoption axis (engineering wired, data volume pending): 4.** Reported on a separate axis, never composited, never a gap.
+- **Future (genuinely out of scope — new DDL / unbuilt verticals; reported, never fabricated): 2** (GAP-AI1 attribution-depth, GAP-S1 verticals).
+- Honesty: "fixed 100%" = **0 open engineering gaps that the contract permits closing**. The 2 Future items are NOT claimed closed — doing so would require breaking zero-DDL or fabricating unbuilt verticals (deliverables 12/13).

@@ -62,6 +62,8 @@ async function main() {
     console.log(`traceability: intact ${summary.traceability.intact}  partial ${summary.traceability.partial}  breaks ${summary.traceability.breaks}  / ${summary.traceability.total}`);
     console.log(`maturity managed_or_above: ${summary.maturity_managed_or_above}  duplicate_clean: ${summary.duplicate_clean}`);
     console.log('gap rollup:', JSON.stringify(summary.gap_rollup));
+    console.log(`gap counts: open_engineering ${summary.gap_counts.open_engineering}  future ${summary.gap_counts.future}  resolved ${summary.gap_counts.resolved}`);
+    console.log(`adoption axis (separate, never composited): status ${certification.axes.adoption.status}  mechanism_wired ${certification.axes.adoption.mechanism_wired}  value ${certification.axes.adoption.value}`);
     console.log(`enterprise_launch_readiness: ${summary.enterprise_launch_readiness}  production_ready: ${summary.production_ready}`);
     for (const p of certification.phases) {
       console.log(

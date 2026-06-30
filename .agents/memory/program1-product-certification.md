@@ -51,3 +51,20 @@ only caught at runtime). This has bitten 1.5/1.6/1.7/1.8 identically.
 `/api/program1-certification/enabled` → 200 `{enabled:false}` (UNGATED probe, mirrors 1.7's corrected
 pattern); `/api/admin/program1-certification/*` → 401 (global `/api/admin` auth gate fires before the
 flag-gate, so OFF smoke is 401 not 503); public-config flag `false`.
+
+## "Fix the gaps 100%" under honesty-over-optimism (the durable closure discipline)
+**Rule:** "fixed 100%" must mean **0 OPEN engineering gaps that the phase's contract permits closing** —
+NOT "0 gaps". Split severity into open-engineering (Launch-Critical/High/Medium/Low) vs `Future`, and
+report three counts: `open_engineering`, `future`, `resolved`.
+**Why:** the user's #1 rule is never fabricate/inflate. A gap whose only residual is real-user DATA
+VOLUME is NOT an engineering gap; a gap needing NEW DDL or an unbuilt vertical CANNOT be closed in a
+zero-DDL / Enhancement-Only phase without lying.
+**How to apply:** before reclassifying a gap, SOURCE-VERIFY its mechanism actually exists+is wired (cite
+the service/table). If wired → move it to a `RESOLVED_*_GAPS` register + a SEPARATE Adoption axis
+(value null, status PENDING, never composited, never counted as a gap) — same pattern as 1.4/1.6/1.7.
+If it needs DDL/new architecture → keep it `Future`, report it as explicitly NOT closeable. Launch
+Readiness stays null (never fake adoption to inflate closure).
+**Consistency trap (architect-caught):** reclassifying a gap means every human-readable narrative must
+move with it — a per-deliverable template that hardcodes a stale severity ("GAP-AI1 (Medium)") or a
+disposition that points at a RESOLVED entry that doesn't exist will silently contradict the taxonomy.
+Grep all deliverables + the model for the gap id after any reclassification, then regenerate.

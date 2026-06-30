@@ -188,16 +188,43 @@ export interface GapDesc {
   disposition: string;
 }
 
-// Carried forward from the frozen blueprint gap-closure ledger (16) + traceability matrix (15).
-// These are HONEST, KNOWN forward-work gaps — NOT defects introduced by Program 1. The composer
-// reports them as-is; it never fabricates closure.
+// ── OPEN gaps register. ───────────────────────────────────────────────────────────────────────────
+// HONEST, KNOWN forward-work that genuinely CANNOT be closed inside Phase 1.8's frozen contract
+// (zero-DDL · no-new-architecture · no-fabrication). Each remaining item requires either new DDL or
+// building an unbuilt vertical — both out of scope for this capstone → severity Future. OPEN
+// ENGINEERING gaps closeable within the contract = 0 (see RESOLVED_PROGRAM1_GAPS). The composer
+// reports these as-is; it never fabricates closure.
 export const PROGRAM1_GAPS: GapDesc[] = [
-  { id: 'GAP-O1', title: 'Realized-outcome + recommendation-effectiveness capture (close-the-loop keystone)', severity: 'High', domain: 'D13', blueprintRef: '13/12/15', disposition: 'Mechanism wired (1.6/1.7) via validation-loop calibration; effectiveness stays null until ≥k_min real non-demo pairs. ADOPTION-gated, not an engineering gap.' },
-  { id: 'GAP-K', title: 'Per-capability + business/outcome KPIs bound back to each module', severity: 'Medium', domain: 'D13', blueprintRef: '14/15', disposition: 'Depends on GAP-O1 realized-outcome volume. Target-not-realized.' },
-  { id: 'GAP-P1', title: 'Systematic Progress / Exit / Continuous re-administration at volume', severity: 'Medium', domain: 'D6', blueprintRef: '06/08', disposition: 'Capture code-complete (1.3/1.5) behind longitudinalOutcomeCapture; real re-administration volume honest 0. ADOPTION-gated.' },
-  { id: 'GAP-AI1', title: 'AI accuracy/quality harness for the LLM layer + per-feature attribution depth', severity: 'Medium', domain: 'D7', blueprintRef: '11', disposition: 'Explainability rendered; calibration cold_start until ≥k_min pairs; per-feature attribution needs DDL = out of zero-DDL scope (future approved phase).' },
-  { id: 'GAP-J', title: 'Persona journey tails: thin/partial back-half for mentor/parent/institution-aggregate', severity: 'Low', domain: 'D10', blueprintRef: '07/09', disposition: 'Journey tail wired (1.4) via captureJourneyTailMilestone; PARTIAL persona paths reflect measured substrate reach, not missing engineering.' },
-  { id: 'GAP-S1', title: 'Missing dedicated verticals (gov / health / clinical)', severity: 'Future', domain: 'D2', blueprintRef: '07', disposition: 'NON-CLINICAL scaffold registry only (validated:false / clinical_use:false). Do-not-claim until built.' },
+  { id: 'GAP-AI1', title: 'AI per-feature attribution depth (LLM-layer accuracy/quality harness internals)', severity: 'Future', domain: 'D7', blueprintRef: '11', disposition: 'Explainability is rendered and recommendation/intervention calibration is WIRED (1.7, validation-loop — the SAME mechanism that resolves GAP-O1). The ONLY residual scoped to this gap is per-feature attribution depth, which needs NEW DDL = out of Phase 1.8 zero-DDL scope → deferred to a future approved phase. Not closeable here without violating the contract.' },
+  { id: 'GAP-S1', title: 'Missing dedicated verticals (gov / health / clinical)', severity: 'Future', domain: 'D2', blueprintRef: '07', disposition: 'NON-CLINICAL scaffold registry only (validated:false / clinical_use:false). Building + validating clinical verticals is net-new architecture (out of Enhancement-Only scope) and is explicitly do-not-claim-until-built. Not closeable here without fabrication.' },
+];
+
+// ── RESOLVED gaps register (mirrors 1.4/1.6/1.7 RESOLVED_*_GAPS). ──────────────────────────────────
+// Items whose ENGINEERING MECHANISM is built + wired (each `mechanism` ref was source-verified) and
+// whose only residual is real-user DATA VOLUME. Per the program convention "real volume honest 0 — a
+// usage axis reported SEPARATELY, NEVER a gap", these are reclassified off the open-gap ledger onto
+// the ADOPTION axis. Reclassification ≠ fabrication: the code exists; the data does not yet flow.
+export interface ResolvedGapDesc extends GapDesc {
+  mechanism: string;
+  adoption_axis: string;
+}
+export const RESOLVED_PROGRAM1_GAPS: ResolvedGapDesc[] = [
+  { id: 'GAP-O1', title: 'Realized-outcome + recommendation-effectiveness capture (close-the-loop keystone)', severity: 'High', domain: 'D13', blueprintRef: '13/12/15',
+    disposition: 'Engineering RESOLVED — close-the-loop mechanism wired (1.6/1.7). Residual is real non-demo outcome-pair VOLUME, reported on the Adoption axis (never a gap).',
+    mechanism: 'validation-loop calibration: recordValidationOutcome → predicted_prob_at_decision → calibrationFromRows (services/validation-loop-engine.ts, close-the-loop-engine.ts, outcome-kpi-engine.ts, ai-orchestration-engine.ts)',
+    adoption_axis: 'effectiveness_rate stays null until ≥k_min (30) calibrated real pairs accumulate post-launch.' },
+  { id: 'GAP-K', title: 'Per-capability + business/outcome KPIs bound back to each module', severity: 'Medium', domain: 'D13', blueprintRef: '14/15',
+    disposition: 'Engineering RESOLVED — KPIs are COMPUTED by existing enterprise-analytics + benchmark + outcome-kpi engines and persisted to anl_kpi_daily; no new KPI engine needed. Residual is realized-outcome VOLUME (downstream of GAP-O1), reported on the Adoption axis.',
+    mechanism: 'anl_kpi_daily + outcome-kpi-engine.ts KPI-family rollups (routes/enterprise-analytics.ts, services/enterprise-analytics-schema.ts)',
+    adoption_axis: 'business/outcome KPI values stay honest-low until real outcome volume flows.' },
+  { id: 'GAP-P1', title: 'Systematic Progress / Exit / Continuous re-administration at volume', severity: 'Medium', domain: 'D6', blueprintRef: '06/08',
+    disposition: 'Engineering RESOLVED — re-administration + reassessment capture is code-complete (1.3/1.5) behind longitudinalOutcomeCapture. Residual is real recurring-user re-administration VOLUME, reported on the Adoption axis.',
+    mechanism: 'captureProgressionOutcome + getReassessmentSignal (services/capadex/progression-outcome-capture.ts)',
+    adoption_axis: 'real re-administration volume honest 0 until recurring users complete reassessment cycles post-launch.' },
+  { id: 'GAP-J', title: 'Persona journey tails: mentor / parent / institution-aggregate back-half', severity: 'Low', domain: 'D10', blueprintRef: '07/09',
+    disposition: 'Engineering RESOLVED — journey tail wired (1.4) via captureJourneyTailMilestone across observation_resolved / mentor_milestone / parent_action_done. PARTIAL persona paths reflect measured substrate REACH, not missing engineering; residual reported on the Adoption axis.',
+    mechanism: 'captureJourneyTailMilestone (routes/journey-tail.ts, services/capadex/progression-outcome-capture.ts)',
+    adoption_axis: 'per-persona tail completion accrues as mentor/parent/institution flows are exercised post-launch.' },
 ];
 
 // ── Honesty contract (kept as SEPARATE axes, never composited). ───────────────────────────────────

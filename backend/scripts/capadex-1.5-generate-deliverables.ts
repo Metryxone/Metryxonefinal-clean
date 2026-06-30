@@ -29,6 +29,12 @@ for (const k of ['axes', 'spine', 'invariants', 'promotion_rules', 'paths', 'dec
 
 const PATHS: any[] = scan.paths;
 const SPINE: any[] = scan.spine;
+// Sanity-check spine row shape so a renamed registry field can never silently corrupt the inventory.
+for (const s of SPINE) {
+  for (const f of ['key', 'label', 'definition']) {
+    if (s[f] == null) throw new Error(`spine step "${s.key ?? '?'}" missing required field "${f}" — fix the registry/scan before generating.`);
+  }
+}
 const INVARIANTS: any[] = scan.invariants;
 const PROMO: any[] = scan.promotion_rules;
 const AXES: any[] = scan.axes;
@@ -88,7 +94,7 @@ files['01-implementation-report.md'] = HEAD('01', 'Implementation Report') +
 files['02-inventory.md'] = HEAD('02', 'Progression Inventory') +
 `Every canonical persona growth path → the EXISTING implementations it REUSES (verified vs live FS+DB).\n\n` +
 `## Canonical growth spine (FROZEN, ${SPINE.length} steps)\n` +
-SPINE.map((s, i) => `${i + 1}. **${s.label}** (\`${s.key}\`) — ${s.description}${s.reuses ? `  _(reuses: ${Array.isArray(s.reuses) ? s.reuses.join(', ') : s.reuses})_` : ''}`).join('\n') + '\n\n' +
+SPINE.map((s, i) => `${i + 1}. **${s.label}** (\`${s.key}\`) — ${s.definition}${s.reuses ? `  _(reuses: ${Array.isArray(s.reuses) ? s.reuses.join(', ') : s.reuses})_` : ''}`).join('\n') + '\n\n' +
 `## Loop-closure invariants (${INVARIANTS.length})\n` +
 INVARIANTS.map((i) => `- **${i.id}** — ${i.title}: \`${i.from}\` → \`${i.to}\` via ${i.mechanism}`).join('\n') + '\n\n' +
 `## Lifecycle promotion rules (${PROMO.length})\n` +

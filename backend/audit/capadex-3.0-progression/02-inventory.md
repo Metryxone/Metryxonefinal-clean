@@ -6,21 +6,21 @@
 Every canonical persona growth path → the EXISTING implementations it REUSES (verified vs live FS+DB).
 
 ## Canonical growth spine (FROZEN, 15 steps)
-1. **Assessment** (`assessment`) — undefined  _(reuses: capadex_sessions + scoring (routes/capadex.ts))_
-2. **Evidence Collection** (`evidence_collection`) — undefined  _(reuses: services/wc3/longitudinal-foundation.ts → wc3_longitudinal_snapshots)_
-3. **AI Interpretation** (`ai_interpretation`) — undefined  _(reuses: services/pil/runtime-guidance-engine.ts + behavioural-signal)_
-4. **Recommendation Generation** (`recommendation`) — undefined  _(reuses: services/recommendation-intelligence-engine.ts + career/lbi/mei recommendation engines)_
-5. **Learning Plan** (`learning_plan`) — undefined  _(reuses: services/learning-path-engine.ts)_
-6. **Practice Activity** (`practice_activity`) — undefined  _(reuses: recommendation + intervention catalogs (services/pil/recommendation-catalog.ts))_
-7. **Behaviour Reinforcement** (`behaviour_reinforcement`) — undefined  _(reuses: services/intervention-intelligence.ts (reinforcement-class interventions))_
-8. **Competency Development** (`competency_development`) — undefined  _(reuses: services/mei-scoring-engine.ts + development_recommendations)_
-9. **Personalized Intervention** (`personalized_intervention`) — undefined  _(reuses: services/intervention-intelligence.ts → capadex_interventions / lbi_intervention_library)_
-10. **Progress Measurement** (`progress_measurement`) — undefined  _(reuses: services/longitudinal-memory.ts + longitudinal_patterns)_
-11. **Reassessment** (`reassessment`) — undefined  _(reuses: services/capadex/progression-outcome-capture.ts (getReassessmentSignal) + wc7b/longitudinal-automation.ts)_
-12. **Improvement Validation** (`improvement_validation`) — undefined  _(reuses: services/longitudinal-memory.ts (trend) + career_readiness_history)_
-13. **Outcome Achievement** (`outcome_achievement`) — undefined  _(reuses: services/outcome-intelligence-engine.ts → validation_loop_outcomes)_
-14. **Promotion** (`promotion`) — undefined  _(reuses: lib/lifecycle.ts + services/capadex/evidence-gate.ts → wc3_stage_progression)_
-15. **Continuous Development** (`continuous_development`) — undefined  _(reuses: services/wc7b/longitudinal-automation.ts (reassessment cadence) — adoption-gated)_
+1. **Assessment** (`assessment`) — A scored behavioural / competency assessment establishes the working signal.  _(reuses: capadex_sessions + scoring (routes/capadex.ts))_
+2. **Evidence Collection** (`evidence_collection`) — Evidence accrues into the longitudinal record (one datapoint per progression).  _(reuses: services/wc3/longitudinal-foundation.ts → wc3_longitudinal_snapshots)_
+3. **AI Interpretation** (`ai_interpretation`) — AI interprets signals/competencies into an explainable diagnosis.  _(reuses: services/pil/runtime-guidance-engine.ts + behavioural-signal)_
+4. **Recommendation Generation** (`recommendation`) — Next-best-action / growth recommendations are generated.  _(reuses: services/recommendation-intelligence-engine.ts + career/lbi/mei recommendation engines)_
+5. **Learning Plan** (`learning_plan`) — A personalised learning / development plan is composed.  _(reuses: services/learning-path-engine.ts)_
+6. **Practice Activity** (`practice_activity`) — Practice / activities are surfaced for the learner to act on.  _(reuses: recommendation + intervention catalogs (services/pil/recommendation-catalog.ts))_
+7. **Behaviour Reinforcement** (`behaviour_reinforcement`) — Behavioural reinforcement nudges the learner toward the target pattern.  _(reuses: services/intervention-intelligence.ts (reinforcement-class interventions))_
+8. **Competency Development** (`competency_development`) — Competency / EI development is tracked against the genome.  _(reuses: services/mei-scoring-engine.ts + development_recommendations)_
+9. **Personalized Intervention** (`personalized_intervention`) — A targeted intervention is delivered for the diagnosed gap.  _(reuses: services/intervention-intelligence.ts → capadex_interventions / lbi_intervention_library)_
+10. **Progress Measurement** (`progress_measurement`) — Progress is measured as a longitudinal trend vs the baseline.  _(reuses: services/longitudinal-memory.ts + longitudinal_patterns)_
+11. **Reassessment** (`reassessment`) — Interval / exit re-administration of the existing assessment (close-the-loop).  _(reuses: services/capadex/progression-outcome-capture.ts (getReassessmentSignal) + wc7b/longitudinal-automation.ts)_
+12. **Improvement Validation** (`improvement_validation`) — Improvement is validated against the prior datapoint(s).  _(reuses: services/longitudinal-memory.ts (trend) + career_readiness_history)_
+13. **Outcome Achievement** (`outcome_achievement`) — A realized outcome is captured into the canonical ledger.  _(reuses: services/outcome-intelligence-engine.ts → validation_loop_outcomes)_
+14. **Promotion** (`promotion`) — The subject is promoted along the lifecycle (Curiosity→Insight→Growth→Mastery).  _(reuses: lib/lifecycle.ts + services/capadex/evidence-gate.ts → wc3_stage_progression)_
+15. **Continuous Development** (`continuous_development`) — The loop re-enters: the next growth cycle begins from the new baseline.  _(reuses: services/wc7b/longitudinal-automation.ts (reassessment cadence) — adoption-gated)_
 
 ## Loop-closure invariants (4)
 - **INV1-RECOMMEND-TO-ACTION** — Recommendation → Learning / Practice / Intervention (the growth action is generated): `recommendation` → `personalized_intervention` via Recommendation engines feed the learning-path + intervention catalogs, so every diagnosis yields a concrete next action. COMPOSED by reference, never invoked.

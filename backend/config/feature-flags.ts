@@ -198,6 +198,14 @@ export const FEATURE_FLAGS = {
    *  crosses k-min. Flag OFF → no auto-snapshots, no new outcome rows, NO schema → byte-identical legacy.
    *  Env: `FF_LONGITUDINAL_OUTCOME_CAPTURE`. */
   longitudinalOutcomeCapture: false,
+  /** CAPADEX 3.0 — Phase 1.2 Persona Model alignment. When ON, additive persona-depth layers activate over the
+   *  EXISTING 6-key PersonaKey runtime: exam-aspirant sub-personas (JEE/NEET/CUET/UPSC) with tailored behavioural
+   *  banks, a career-transition / fresher bank split, a dedicated counsellor bank, campus/jobseeker PIL lenses, and
+   *  the `career_transition_professional` cohort-track mapping. Every layer is REUSE-before-build and falls back to
+   *  the legacy PersonaKey bank/lens/track when a sub-persona is unmapped. Flag OFF → IntroPhase tracks, question-bank
+   *  selection, cohort cohorting and PIL lenses are byte-identical to legacy (incl. schema; no DDL). Env:
+   *  `FF_PERSONA_MODEL_ALIGNMENT`. */
+  personaModelAlignment: false,
   /** MX-103X — Live Employer Ecosystem Activation (read-only audit + certification console over the EXISTING
    *  employer hiring funnel). When ON, a PURE read-only composer at `/api/admin/employer-ecosystem/*`
    *  (super-admin) inventories the nine funnel stages — onboarding · create-job · role-DNA · competencies ·
@@ -2134,6 +2142,11 @@ export function isCareerDiscoveryEnabled(): boolean {
 
 export function isEvidenceGatedProgressionEnabled(): boolean {
   return isFlagEnabled('evidenceGatedProgression');
+}
+
+/** CAPADEX 3.0 — Phase 1.2 Persona Model alignment master switch. */
+export function isPersonaModelAlignmentEnabled(): boolean {
+  return isFlagEnabled('personaModelAlignment');
 }
 
 /** CAPADEX 3.0 — Program 2 (Task #305): longitudinal outcome capture on progression master switch. */

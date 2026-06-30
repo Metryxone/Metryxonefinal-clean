@@ -18,6 +18,7 @@
  */
 
 import type { Pool } from 'pg';
+import { isPersonaModelAlignmentEnabled } from '../config/feature-flags';
 
 // ─── Canonical age bands (source of truth: replit.md IntroPhase) ─────────────
 export const AGE_BANDS = ['6-14', '14-17', '17-24', '24-45', '45+'] as const;
@@ -44,6 +45,38 @@ const SUB_PERSONA_TO_TRACK: Record<string, PersonaTrack> = {
   professional_employee: 'professional', jobseeker: 'professional',
   parent: 'proxy', teacher: 'proxy', mentor: 'proxy', proxy: 'proxy',
 };
+
+// ─── CAPADEX 3.0 Phase 1.2 — additive sub-persona → track mappings (G-M2) ────
+// These IntroPhase sub-persona ids exist in the runtime but were absent from the
+// base map above, so cohort COUNTS silently under-counted them (the k-anon
+// ANY-list omitted them). Folded in ONLY when `personaModelAlignment` is ON →
+// flag-OFF cohort counts stay byte-identical to legacy. resolveCohort() is
+// unaffected either way (unknown sub-personas already default to their correct
+// track via normalisePersonaTrack), so the only change is the count's ANY-list.
+const ALIGNMENT_SUB_PERSONA_TO_TRACK: Record<string, PersonaTrack> = {
+  // exam-aspirant split (legacyKey 'student' → learner)
+  jee_aspirant: 'learner', neet_aspirant: 'learner',
+  cuet_aspirant: 'learner', upsc_aspirant: 'learner',
+  // school sub-personas (legacyKey 'student' → learner)
+  school_primary: 'learner', school_middle: 'learner', school_high: 'learner',
+  // career-transition (legacyKey 'jobseeker' → professional) — the headline G-M2 drift
+  career_transition_professional: 'professional',
+  // proxy sub-personas (legacyKey 'teacher' → proxy)
+  teacher_educator: 'proxy', academic_counsellor: 'proxy', placement_career_cell: 'proxy',
+};
+
+/**
+ * The list of stored `persona` tokens belonging to a track, for the k-anon
+ * COUNT ANY-list. Base map always; alignment extensions only when the
+ * personaModelAlignment flag is ON (→ flag-OFF list byte-identical to legacy).
+ */
+function personasForTrack(track: PersonaTrack): string[] {
+  const entries = Object.entries(SUB_PERSONA_TO_TRACK);
+  if (isPersonaModelAlignmentEnabled()) {
+    entries.push(...Object.entries(ALIGNMENT_SUB_PERSONA_TO_TRACK));
+  }
+  return entries.filter(([, t]) => t === track).map(([k]) => k);
+}
 
 // ─── k-anonymity thresholds (locked) ─────────────────────────────────────────
 export const K_MIN = 30;        // Rule A threshold
@@ -126,8 +159,7 @@ export async function countCohort(
     // Cohort match: persona maps through SUB_PERSONA_TO_TRACK on the SQL side
     // via a row-side ANY against the list of sub-personas belonging to this
     // track. Age band is matched verbatim (canonical).
-    const personas = Object.entries(SUB_PERSONA_TO_TRACK)
-      .filter(([, t]) => t === cohort.persona_track).map(([k]) => k);
+    const personas = personasForTrack(cohort.persona_track);
     const rs = await pool.query<{ n: string }>(
       `SELECT COUNT(DISTINCT user_id)::text AS n
          FROM capadex_user_profiles
@@ -158,8 +190,7 @@ export async function countCohortHistory(
 ): Promise<number> {
   if (!pool || !competencyId) return 0;
   try {
-    const personas = Object.entries(SUB_PERSONA_TO_TRACK)
-      .filter(([, t]) => t === cohort.persona_track).map(([k]) => k);
+    const personas = personasForTrack(cohort.persona_track);
     const rs = await pool.query<{ n: string }>(
       `SELECT COUNT(DISTINCT h.user_id)::text AS n
          FROM p4_competency_history h

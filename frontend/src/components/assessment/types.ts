@@ -142,6 +142,11 @@ export interface PhaseProps {
   // can carry the spec-canonical fields.
   primaryPersona: string | null;
   setPrimaryPersona: React.Dispatch<React.SetStateAction<string | null>>;
+  // CAPADEX 3.0 Phase 1.2 — when true (personaModelAlignment flag, learned via
+  // /api/capadex/public-config) IntroPhase exposes exam-aspirant sub-personas
+  // and the bank resolver selects tailored sub-persona banks. Defaults to false
+  // (absent) → byte-identical legacy persona behaviour.
+  personaModelAlignment?: boolean;
   isProxy: boolean;
   setIsProxy: React.Dispatch<React.SetStateAction<boolean>>;
   ageBand: string;

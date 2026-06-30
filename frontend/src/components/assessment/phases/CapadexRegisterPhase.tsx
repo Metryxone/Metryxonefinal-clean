@@ -33,6 +33,7 @@ export function CapadexRegisterPhase(props: PhaseProps) {
     handleCapadexOtpVerify, handleCapadexOtpResend, questions, persona, computeResults,
     retrieveReportMode, setRetrieveReportMode,
     recentSessions, recentSessionsLoading, handleLoadPreviousReport,
+    personaModelAlignment,
   } = props;
 
   // Local state for proactive email-blur check
@@ -113,6 +114,11 @@ export function CapadexRegisterPhase(props: PhaseProps) {
             {/* ── PERSONA MISMATCH WARNING ── */}
             {capadexStageCheck?.persona_mismatch && capadexStageCheck.existing_persona && (
               (() => {
+                // Legacy label map (G-L1). OFF → exactly the historical keys so
+                // mismatch-warning text is byte-identical. When the
+                // personaModelAlignment flag is ON, merge the canonical
+                // sub-persona labels so richer persona ids render a friendly
+                // name instead of the raw key. Display-only; no logic change.
                 const PERSONA_LABELS: Record<string, string> = {
                   professional: 'Working Professional',
                   campus:       'Campus / College Student',
@@ -122,6 +128,24 @@ export function CapadexRegisterPhase(props: PhaseProps) {
                   job_seeker:   'Job Seeker',
                   jobseeker:    'Job Seeker',
                   individual:   'Individual',
+                  ...(personaModelAlignment ? {
+                    campus_student:                'Campus / College Student',
+                    competitive_aspirant:          'Competitive Exam Aspirant',
+                    jee_aspirant:                  'JEE Aspirant',
+                    neet_aspirant:                 'NEET Aspirant',
+                    cuet_aspirant:                 'CUET Aspirant',
+                    upsc_aspirant:                 'UPSC Aspirant',
+                    career_explorer:               'Career Explorer / Fresher',
+                    skill_development_learner:     'Skill-Development Learner',
+                    early_career_learner:          'Early-Career Learner',
+                    early_career_professional:     'Early-Career Professional',
+                    mid_career_professional:       'Mid-Career Professional',
+                    senior_professional:           'Senior Professional',
+                    career_transition_professional:'Career-Transition Professional',
+                    academic_counsellor:           'Academic Counsellor',
+                    placement_career_cell:         'Placement / Career Cell',
+                    teacher_educator:              'Teacher / Educator',
+                  } : {}),
                 };
                 const existingLabel = PERSONA_LABELS[capadexStageCheck.existing_persona!] || capadexStageCheck.existing_persona!;
                 const currentLabel  = PERSONA_LABELS[selectedPersona || ''] || selectedPersona || 'current profile';

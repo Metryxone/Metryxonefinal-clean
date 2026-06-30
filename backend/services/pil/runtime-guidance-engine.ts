@@ -22,9 +22,83 @@
  * The flag gate + HTTP surface live in the route; this module is the engine.
  */
 import type { Pool } from 'pg';
+import { isPersonaModelAlignmentEnabled } from '../../config/feature-flags';
 
 // ── Stakeholder vocabulary (matches the PIL library columns) ─────────────────
 export type Stakeholder = 'student' | 'parent' | 'teacher' | 'counselor' | 'professional';
+
+/**
+ * CAPADEX 3.0 Phase 1.2 (G-M4) — finer-grained reader lenses that the runtime
+ * distinguishes (campus / jobseeker / aspirant / school) but the PIL content
+ * library does NOT have dedicated columns for. We never fabricate lens-specific
+ * content; instead, when `personaModelAlignment` is ON we surface honest
+ * PROVENANCE telling the reader which base PIL lens was borrowed and why.
+ */
+export type ReaderLens =
+  | 'campus' | 'jobseeker' | 'aspirant' | 'school'
+  | 'student' | 'parent' | 'teacher' | 'counselor' | 'professional';
+
+export interface StakeholderProvenance {
+  /** The finer-grained lens implied by the actor persona, if any. */
+  requested_lens: ReaderLens;
+  /** The base PIL lens whose authored content was actually served. */
+  effective_lens: Stakeholder;
+  /** True when no dedicated PIL content exists for `requested_lens`. */
+  borrowed: boolean;
+  /** Human-readable disclosure surfaced verbatim in the report. */
+  note: string;
+}
+
+/**
+ * Classify the finer reader lens from the actor persona (PURE). Returns one of
+ * the 5 base lenses when there is no finer distinction. Used only for honest
+ * provenance — the served content always keys off the base Stakeholder.
+ */
+export function classifyReaderLens(input: {
+  actorPersona?: string | null;
+  relationshipType?: string | null;
+  age?: number | null;
+}): ReaderLens {
+  const rel = String(input.relationshipType ?? '').toLowerCase();
+  if (rel === 'parent_child') return 'parent';
+  if (rel === 'teacher_student') return 'teacher';
+  if (rel === 'counsellor_client' || rel === 'counselor_client') return 'counselor';
+
+  const p = String(input.actorPersona ?? '').toLowerCase();
+  if (p.includes('parent')) return 'parent';
+  if (p.includes('teacher') || p.includes('educator') || p.includes('counsel')) {
+    return p.includes('counsel') ? 'counselor' : 'teacher';
+  }
+  if (p.includes('aspirant') || /\b(jee|neet|cuet|upsc)\b/.test(p)) return 'aspirant';
+  if (p.includes('jobseeker') || p.includes('career_transition') || p.includes('transition')) return 'jobseeker';
+  if (p.includes('campus') || p.includes('college')) return 'campus';
+  if (p.includes('school')) return 'school';
+  if (
+    p.includes('professional') || p.includes('career') ||
+    p.includes('manager') || p.includes('corporate') || p.includes('employee')
+  ) return 'professional';
+  if (p.includes('student') || p.includes('learner')) return 'student';
+  return 'student';
+}
+
+/**
+ * Build honest provenance for a session's reader lens. Returns null unless the
+ * `personaModelAlignment` flag is ON (→ flag-OFF bundles are byte-identical).
+ */
+export function resolveStakeholderProvenance(input: {
+  actorPersona?: string | null;
+  relationshipType?: string | null;
+  age?: number | null;
+}): StakeholderProvenance | null {
+  if (!isPersonaModelAlignmentEnabled()) return null;
+  const requested = classifyReaderLens(input);
+  const effective = mapStakeholder(input);
+  const borrowed = (requested as string) !== (effective as string);
+  const note = borrowed
+    ? `No dedicated "${requested}" guidance library exists yet — showing the closest authored "${effective}" lens. Content is not fabricated for "${requested}".`
+    : `Showing the authored "${effective}" guidance lens.`;
+  return { requested_lens: requested, effective_lens: effective, borrowed, note };
+}
 
 /**
  * Map a runtime-context persona (+ relationship + age) onto the five PIL
@@ -340,6 +414,12 @@ export interface GuidanceBundle {
   interventions: { type: string; text: string }[]; // one best per type
   action_plan: ActionPlan | null;
   growth_pathway: GrowthPathway | null;
+  /**
+   * CAPADEX 3.0 Phase 1.2 (G-M4) — honest lens provenance. Present ONLY when the
+   * `personaModelAlignment` flag is ON; absent otherwise so flag-OFF bundles are
+   * byte-identical to legacy.
+   */
+  stakeholder_provenance?: StakeholderProvenance;
 }
 
 const INTERVENTION_TYPE_ORDER = [
@@ -359,6 +439,8 @@ export function assembleBundle(args: {
   interventions: Intervention[];
   actionPlan: ActionPlan | null;
   growthPathway: GrowthPathway | null;
+  /** Optional G-M4 provenance — included verbatim only when supplied (flag ON). */
+  provenance?: StakeholderProvenance | null;
 }): GuidanceBundle {
   const { stakeholder, resolution } = args;
   const archetypeKey = resolution.archetype_key;
@@ -412,6 +494,9 @@ export function assembleBundle(args: {
     interventions,
     action_plan: args.actionPlan,
     growth_pathway: args.growthPathway,
+    // Conditionally include provenance so flag-OFF (provenance null/undefined)
+    // yields a byte-identical legacy bundle (key absent).
+    ...(args.provenance ? { stakeholder_provenance: args.provenance } : {}),
   };
 }
 
@@ -462,15 +547,18 @@ async function buildGuidanceForSessionInner(pool: Pool, sessionId: string): Prom
   );
   const session = srows[0] as SessionRow | undefined;
 
-  const stakeholder = mapStakeholder({
+  const stakeholderInput = {
     actorPersona: session?.actor_persona ?? session?.persona ?? null,
     relationshipType: session?.relationship_type ?? null,
     age: session?.user_age ?? null,
-  });
+  };
+  const stakeholder = mapStakeholder(stakeholderInput);
+  // G-M4: honest lens provenance — null (omitted) unless personaModelAlignment ON.
+  const provenance = resolveStakeholderProvenance(stakeholderInput);
 
   if (!session) {
     return assembleBundle({
-      stakeholder,
+      stakeholder, provenance,
       resolution: { concern_id: null, archetype_key: null, archetype_name: null, method: 'none', confidence: 0 },
       humanProblems: [], behaviours: [], searchIntents: [], interventions: [], actionPlan: null, growthPathway: null,
     });
@@ -491,7 +579,7 @@ async function buildGuidanceForSessionInner(pool: Pool, sessionId: string): Prom
       ? await loadBehaviours(pool, resolution.concern_id)
       : [];
     return assembleBundle({
-      stakeholder, resolution,
+      stakeholder, provenance, resolution,
       humanProblems: [], behaviours: partialBehaviours, searchIntents: [], interventions: [], actionPlan: null, growthPathway: null,
     });
   }
@@ -508,7 +596,7 @@ async function buildGuidanceForSessionInner(pool: Pool, sessionId: string): Prom
   ]);
 
   return assembleBundle({
-    stakeholder, resolution,
+    stakeholder, provenance, resolution,
     humanProblems, behaviours, searchIntents, interventions, actionPlan, growthPathway,
   });
 }

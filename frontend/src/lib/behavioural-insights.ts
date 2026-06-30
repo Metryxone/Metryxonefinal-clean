@@ -318,6 +318,150 @@ export const QUESTION_BANKS: Record<PersonaKey, Question[]> = {
   ],
 };
 
+/* ── CAPADEX 3.0 Phase 1.2 — additive sub-persona behavioural banks ──────────
+ * Keyed by the IntroPhase sub-persona `id` (not the 6-key PersonaKey). These add
+ * exam-tailored / career-transition / counsellor depth ON TOP of the existing
+ * PersonaKey banks. They are selected ONLY via `resolveQuestionBank(...)` when the
+ * `personaModelAlignment` flag is ON; otherwise the legacy `QUESTION_BANKS[key]`
+ * is returned verbatim → byte-identical OFF. Domain keys reuse the existing
+ * DOMAIN_ICONS registry so iconography resolves with no further changes.
+ * Statements complete the persona's `respondentPrefix` (exam/transition → "I…",
+ * counsellor/placement proxies → "My students…"). */
+export const SUB_PERSONA_QUESTION_BANKS: Record<string, Question[]> = {
+  // ── Exam aspirants (legacyKey 'student' → prefix "I") — G-H1 / G-H2 ────────
+  jee_aspirant: [
+    { id: 1, text: "can solve problems quickly under timed conditions without panicking when the clock runs down.", domain: "stress", domainLabel: "Timed-Test Composure", tip: "JEE rewards accuracy under speed — composure is as trainable as concepts." },
+    { id: 2, text: "stay focused through long problem-solving sessions in Physics, Chemistry and Maths.", domain: "attention", domainLabel: "Deep-Focus Stamina", tip: "Sustained focus across a 3-hour paper is a distinct skill from knowing the syllabus." },
+    { id: 3, text: "analyse my mistakes in mock tests to find the exact concept or step that broke down.", domain: "reflection", domainLabel: "Mock-Test Analysis", tip: "Top rankers spend more time analysing mocks than attempting them." },
+    { id: 4, text: "keep a steady study routine across all three subjects rather than over-investing in one.", domain: "self_management", domainLabel: "Subject Balance", tip: "JEE penalises lopsided preparation — balance protects your overall rank." },
+    { id: 5, text: "stay motivated through a long preparation cycle even when progress feels slow.", domain: "motivation", domainLabel: "Long-Haul Drive", tip: "Multi-year prep is won by consistency, not bursts of intensity." },
+    { id: 6, text: "adapt my strategy when a mock-test pattern or my accuracy changes unexpectedly.", domain: "adaptability", domainLabel: "Strategy Adaptability", tip: "Flexible test strategy separates rank improvement from plateau." },
+    { id: 7, text: "manage attempt-selection — knowing which questions to skip rather than forcing every one.", domain: "ambiguity_tolerance", domainLabel: "Attempt Strategy", tip: "Smart skipping protects negative marks and overall score." },
+    { id: 8, text: "recover quickly after a disappointing mock score and re-engage the next day.", domain: "resilience", domainLabel: "Setback Recovery", tip: "Mock scores fluctuate — recovery speed predicts the final outcome." },
+    { id: 9, text: "set clear weekly targets for chapters and revision rather than studying reactively.", domain: "goal_setting", domainLabel: "Revision Planning", tip: "Structured revision beats fresh learning in the final stretch." },
+    { id: 10, text: "take full ownership of my preparation instead of depending on coaching alone.", domain: "responsibility", domainLabel: "Self-Directed Prep", tip: "Self-driven aspirants outperform peers who rely solely on classes." },
+  ],
+  neet_aspirant: [
+    { id: 1, text: "retain large volumes of Biology content over weeks without heavy re-learning.", domain: "comprehension", domainLabel: "Retention Depth", tip: "NEET Biology rewards durable memory, not last-minute cramming." },
+    { id: 2, text: "stay calm and accurate in the exam hall even when a section feels harder than expected.", domain: "stress", domainLabel: "Exam-Hall Composure", tip: "Test anxiety can cost more marks than gaps in knowledge." },
+    { id: 3, text: "review every mock test to convert wrong answers into permanently learned facts.", domain: "reflection", domainLabel: "Error-to-Mastery Loop", tip: "Reviewing errors lifts NEET retention markedly over time." },
+    { id: 4, text: "follow a disciplined daily routine across the long NEET preparation cycle.", domain: "self_management", domainLabel: "Routine Discipline", tip: "NEET is a marathon of consistency more than intensity." },
+    { id: 5, text: "stay motivated despite the pressure and high stakes families place on medical entry.", domain: "motivation", domainLabel: "Pressure-Resilient Drive", tip: "Internal motivation outlasts external pressure across a long cycle." },
+    { id: 6, text: "balance heavy memorisation in Biology with conceptual work in Physics and Chemistry.", domain: "adaptability", domainLabel: "Mixed-Demand Balance", tip: "NEET needs both recall and reasoning — neither can be neglected." },
+    { id: 7, text: "set and track weekly revision goals across the vast syllabus.", domain: "goal_setting", domainLabel: "Syllabus Tracking", tip: "Tracked revision prevents whole topics from silently slipping." },
+    { id: 8, text: "bounce back from a low mock score without it derailing the next week.", domain: "resilience", domainLabel: "Setback Recovery", tip: "Recovery rhythm is the strongest predictor of final NEET performance." },
+    { id: 9, text: "stay curious about how concepts connect rather than rote-learning in isolation.", domain: "curiosity", domainLabel: "Conceptual Curiosity", tip: "Connected understanding beats isolated facts under NEET's tricky framing." },
+    { id: 10, text: "own my preparation fully rather than depending only on coaching schedules.", domain: "responsibility", domainLabel: "Self-Directed Prep", tip: "Self-accountability is the quiet differentiator among NEET toppers." },
+  ],
+  cuet_aspirant: [
+    { id: 1, text: "manage my time well across multiple subject sections in a single sitting.", domain: "self_management", domainLabel: "Multi-Section Time Use", tip: "CUET tests breadth across sections — pacing matters as much as knowledge." },
+    { id: 2, text: "switch focus cleanly between very different subjects without losing accuracy.", domain: "adaptability", domainLabel: "Subject-Switch Agility", tip: "Rapid context-switching is a defining CUET demand." },
+    { id: 3, text: "stay composed about university admission uncertainty during preparation.", domain: "stress", domainLabel: "Admission-Pressure Composure", tip: "Clarity under admission uncertainty protects steady preparation." },
+    { id: 4, text: "review section-wise mock results to rebalance where I invest study time.", domain: "reflection", domainLabel: "Section-Wise Review", tip: "Section-level analysis reveals exactly where CUET marks are leaking." },
+    { id: 5, text: "set weekly goals across the breadth of subjects rather than focusing on favourites.", domain: "goal_setting", domainLabel: "Breadth Planning", tip: "CUET rewards balanced breadth over deep specialisation." },
+    { id: 6, text: "stay motivated across the domain, language and general-test components.", domain: "motivation", domainLabel: "Sustained Drive", tip: "Even motivation across components prevents weak sections at the end." },
+    { id: 7, text: "sustain attention across the full length of a multi-section paper.", domain: "attention", domainLabel: "Sustained Attention", tip: "Attention fatigue late in the paper quietly costs marks." },
+    { id: 8, text: "recover quickly when one section goes worse than I hoped.", domain: "resilience", domainLabel: "Section Recovery", tip: "A weak section needn't sink the paper if recovery is quick." },
+    { id: 9, text: "comprehend and apply unfamiliar passages and material under time pressure.", domain: "comprehension", domainLabel: "Applied Comprehension", tip: "CUET leans on applied understanding more than memorisation." },
+    { id: 10, text: "take responsibility for covering every required subject rather than avoiding hard ones.", domain: "responsibility", domainLabel: "Full-Coverage Ownership", tip: "Avoided subjects are where CUET aspirants most often lose rank." },
+  ],
+  upsc_aspirant: [
+    { id: 1, text: "sustain motivation across a very long, uncertain preparation journey.", domain: "motivation", domainLabel: "Long-Haul Motivation", tip: "UPSC is won over years — durable motivation is the core asset." },
+    { id: 2, text: "stay current with affairs and integrate them into my answers consistently.", domain: "curiosity", domainLabel: "Current-Affairs Integration", tip: "Linking static and current material is the heart of UPSC scoring." },
+    { id: 3, text: "manage a vast, open-ended syllabus without feeling perpetually behind.", domain: "self_management", domainLabel: "Vast-Syllabus Management", tip: "Boundary-setting on an infinite syllabus is a survival skill." },
+    { id: 4, text: "write structured, balanced answers under strict time limits in the mains.", domain: "communication", domainLabel: "Answer Writing", tip: "Answer-writing practice, not just reading, drives mains marks." },
+    { id: 5, text: "stay composed through the multi-stage prelims-mains-interview pressure.", domain: "stress", domainLabel: "Multi-Stage Composure", tip: "Each UPSC stage rewards a calm, deliberate temperament." },
+    { id: 6, text: "review my answer scripts and test performance to improve substance and structure.", domain: "reflection", domainLabel: "Script Review", tip: "Feedback-driven revision compounds across the long cycle." },
+    { id: 7, text: "set realistic weekly targets across optional, GS and answer practice.", domain: "goal_setting", domainLabel: "Balanced Targets", tip: "Balanced targets prevent neglecting answer practice for reading." },
+    { id: 8, text: "recover from a failed attempt and re-engage with a clearer strategy.", domain: "resilience", domainLabel: "Attempt Resilience", tip: "Most successful candidates clear after iterating on a setback." },
+    { id: 9, text: "adapt my strategy as the exam pattern and my own performance evolve.", domain: "adaptability", domainLabel: "Strategy Adaptability", tip: "Rigid strategies rarely survive multiple UPSC cycles." },
+    { id: 10, text: "take full ownership of my preparation rather than drifting with coaching material.", domain: "responsibility", domainLabel: "Self-Directed Prep", tip: "Self-curated preparation outperforms passive coaching consumption." },
+  ],
+  // ── Career transition / exploration (legacyKey 'jobseeker' → "I") — G-H3 ───
+  career_transition_professional: [
+    { id: 1, text: "can clearly articulate how my existing experience transfers to a different role or industry.", domain: "role_clarity", domainLabel: "Transferable-Skill Clarity", tip: "Naming transferable skills is the #1 lever in a successful pivot." },
+    { id: 2, text: "stay confident in my professional identity even while moving away from familiar work.", domain: "ownership", domainLabel: "Identity Continuity", tip: "Transitions test identity as much as skills — continuity sustains momentum." },
+    { id: 3, text: "manage the financial and emotional uncertainty of changing direction.", domain: "stress", domainLabel: "Transition Uncertainty", tip: "Tolerating runway uncertainty keeps decisions strategic, not fearful." },
+    { id: 4, text: "actively learn the new domain's tools, language and norms before I feel ready.", domain: "learning_agility", domainLabel: "Re-Skilling Agility", tip: "Early, deliberate re-skilling shortens the credibility gap in a new field." },
+    { id: 5, text: "build new professional relationships and networks outside my previous field.", domain: "social", domainLabel: "Network Rebuilding", tip: "New-field relationships open most of the doors a pivot needs." },
+    { id: 6, text: "handle the ambiguity of an undefined path without freezing on the decision.", domain: "ambiguity_tolerance", domainLabel: "Ambiguity Tolerance", tip: "Action under ambiguity generates clarity faster than waiting does." },
+    { id: 7, text: "take initiative to test the new direction through projects, courses or conversations.", domain: "initiative", domainLabel: "Exploratory Initiative", tip: "Small real experiments de-risk a transition better than research alone." },
+    { id: 8, text: "adapt quickly to a new work culture and unfamiliar expectations.", domain: "adaptability", domainLabel: "Cultural Adaptability", tip: "Adaptability shortens time-to-credibility after a switch." },
+    { id: 9, text: "stay resilient when a transition attempt stalls or a door closes.", domain: "resilience", domainLabel: "Pivot Resilience", tip: "Resilience converts a stalled pivot into a redirected one." },
+    { id: 10, text: "make a deliberate decision about my next direction rather than defaulting to the familiar.", domain: "role_clarity", domainLabel: "Directional Decisiveness", tip: "A deliberate choice, even imperfect, beats drifting back by default." },
+  ],
+  career_explorer: [
+    { id: 1, text: "have a reasonably clear sense of what kind of work would suit me.", domain: "role_clarity", domainLabel: "Direction Clarity", tip: "Even a rough direction sharply improves the quality of next steps." },
+    { id: 2, text: "actively explore different fields rather than waiting for clarity to arrive.", domain: "initiative", domainLabel: "Exploratory Initiative", tip: "Exploration through action surfaces fit far faster than reflection alone." },
+    { id: 3, text: "stay open to options I hadn't previously considered for myself.", domain: "adaptability", domainLabel: "Openness to Options", tip: "Premature narrowing is the most common early-career mistake." },
+    { id: 4, text: "manage the anxiety of not yet knowing my path without it paralysing me.", domain: "stress", domainLabel: "Uncertainty Comfort", tip: "Comfort with not-yet-knowing keeps exploration productive." },
+    { id: 5, text: "learn new skills quickly when a field starts to interest me.", domain: "learning_agility", domainLabel: "Learning Agility", tip: "Fast, low-stakes learning is how exploration becomes commitment." },
+    { id: 6, text: "reach out to people to understand what different roles are really like.", domain: "social", domainLabel: "Informational Networking", tip: "Conversations reveal day-to-day reality that job descriptions hide." },
+    { id: 7, text: "reflect honestly on what energises me versus what drains me.", domain: "reflection", domainLabel: "Self-Insight", tip: "Energy patterns are a reliable compass for direction." },
+    { id: 8, text: "set small, concrete steps to test a possible direction.", domain: "goal_setting", domainLabel: "Testable Steps", tip: "Small experiments turn vague interest into evidence." },
+    { id: 9, text: "stay motivated to keep exploring even without immediate results.", domain: "motivation", domainLabel: "Exploration Persistence", tip: "Direction usually emerges from sustained, patient exploration." },
+    { id: 10, text: "take ownership of finding my direction rather than waiting to be told.", domain: "responsibility", domainLabel: "Self-Directed Search", tip: "Owning the search is what turns drift into deliberate progress." },
+  ],
+  // ── Counsellor / placement proxies (legacyKey 'teacher' → "My students") — D / G-M1 ─
+  academic_counsellor: [
+    { id: 1, text: "can articulate their own goals and concerns clearly when they come to me.", domain: "communication", domainLabel: "Goal Articulation", tip: "Students who can name their concern are far easier to guide effectively." },
+    { id: 2, text: "seek help early rather than waiting until a problem becomes serious.", domain: "initiative", domainLabel: "Help-Seeking", tip: "Early help-seeking is one of the strongest protective signals." },
+    { id: 3, text: "are open about emotional or motivational struggles rather than masking them.", domain: "social", domainLabel: "Emotional Openness", tip: "Openness lets counselling reach the real issue, not the surface one." },
+    { id: 4, text: "act on the guidance and steps we agree on between sessions.", domain: "responsibility", domainLabel: "Follow-Through", tip: "Follow-through between sessions is where counselling actually works." },
+    { id: 5, text: "manage academic and personal stress without it overwhelming their decisions.", domain: "stress", domainLabel: "Stress Management", tip: "Stress management determines whether students can act on good advice." },
+    { id: 6, text: "make decisions about their path with reasonable clarity rather than chronic indecision.", domain: "role_clarity", domainLabel: "Decision Clarity", tip: "Decision clarity is the core outcome most counselling aims to build." },
+    { id: 7, text: "reflect honestly on their strengths and gaps when we discuss them.", domain: "reflection", domainLabel: "Reflective Honesty", tip: "Honest self-reflection accelerates every counselling outcome." },
+    { id: 8, text: "stay resilient and re-engage after a setback or disappointing result.", domain: "resilience", domainLabel: "Resilience", tip: "Resilience signals readiness to act on guidance after a setback." },
+    { id: 9, text: "stay motivated toward their goals between our conversations.", domain: "motivation", domainLabel: "Sustained Motivation", tip: "Motivation between sessions predicts real-world progress." },
+    { id: 10, text: "adapt their plans constructively when circumstances change.", domain: "adaptability", domainLabel: "Plan Adaptability", tip: "Adaptable students convert counselling into durable change." },
+  ],
+  placement_career_cell: [
+    { id: 1, text: "can clearly present their strengths and goals in a placement interview.", domain: "communication", domainLabel: "Interview Communication", tip: "Clear self-presentation is the top differentiator in placements." },
+    { id: 2, text: "understand current industry expectations well enough to target roles realistically.", domain: "industry_awareness", domainLabel: "Industry Awareness", tip: "Realistic role-targeting raises placement conversion sharply." },
+    { id: 3, text: "take initiative in their own placement preparation rather than waiting on the cell.", domain: "initiative", domainLabel: "Prep Initiative", tip: "Self-driven candidates convert far better than passive ones." },
+    { id: 4, text: "receive and act on interview or mock feedback without becoming defensive.", domain: "feedback", domainLabel: "Feedback Receptivity", tip: "Feedback uptake is the fastest route to readiness gains." },
+    { id: 5, text: "manage the stress of the placement season without it affecting performance.", domain: "stress", domainLabel: "Placement-Season Composure", tip: "Composure across rounds protects otherwise-strong candidates." },
+    { id: 6, text: "adapt quickly across very different company processes and role types.", domain: "adaptability", domainLabel: "Process Adaptability", tip: "Adaptability across formats widens the offers a student can win." },
+    { id: 7, text: "follow through reliably on the steps and deadlines we set for them.", domain: "responsibility", domainLabel: "Follow-Through", tip: "Reliable follow-through keeps candidates in the pipeline." },
+    { id: 8, text: "build rapport quickly with recruiters and panel members.", domain: "social", domainLabel: "Recruiter Rapport", tip: "Rapport often tips close interview decisions." },
+    { id: 9, text: "set clear, realistic targets for the roles and companies they pursue.", domain: "goal_setting", domainLabel: "Target Setting", tip: "Focused targeting beats scattershot applications in placements." },
+    { id: 10, text: "recover quickly from a rejection and stay engaged in the process.", domain: "resilience", domainLabel: "Rejection Recovery", tip: "Recovery speed keeps morale and pipeline momentum intact." },
+  ],
+};
+
+/**
+ * CAPADEX 3.0 Phase 1.2 — resolve the behavioural question bank for a respondent.
+ * When `alignmentOn` (personaModelAlignment flag) AND a dedicated sub-persona bank
+ * exists, return it; otherwise fall back to the legacy `QUESTION_BANKS[legacyKey]`
+ * (and therefore byte-identical to legacy when the flag is OFF or the sub-persona
+ * has no tailored bank). Never throws — always returns a non-empty bank.
+ */
+export function resolveQuestionBank(
+  subPersonaId: string | null | undefined,
+  legacyKey: PersonaKey,
+  alignmentOn: boolean,
+): Question[] {
+  if (alignmentOn && subPersonaId && SUB_PERSONA_QUESTION_BANKS[subPersonaId]) {
+    return SUB_PERSONA_QUESTION_BANKS[subPersonaId];
+  }
+  return QUESTION_BANKS[legacyKey];
+}
+
+/**
+ * Honest provenance of the bank a sub-persona would receive under `alignmentOn`:
+ * 'dedicated' = a tailored sub-persona bank exists; 'inherited' = it reuses the
+ * legacy PersonaKey bank. Surfaced for transparency (e.g. counsellor lens↔bank
+ * symmetry); does not affect selection.
+ */
+export function getQuestionBankProvenance(
+  subPersonaId: string | null | undefined,
+  alignmentOn: boolean,
+): 'dedicated' | 'inherited' {
+  return alignmentOn && subPersonaId && SUB_PERSONA_QUESTION_BANKS[subPersonaId]
+    ? 'dedicated'
+    : 'inherited';
+}
+
 export const RATING_OPTIONS = [
   { value: 1, label: "Never",      color: "#94a3b8" },
   { value: 2, label: "Rarely",     color: "#64748b" },

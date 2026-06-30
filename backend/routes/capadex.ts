@@ -57,7 +57,7 @@ import { runEvidenceRuntime }   from '../services/signal-activation-runtime';
 import { resolveSeedConcernPk } from '../services/concern-signal-seeding';
 import type { EvidenceInput }   from '../services/evidence-engine';
 import { isRuntimeIntelligenceActivationEnabled, isRuntimeIntelligencePipelineEnabled, isSignalGroundingRuntimeEnabled } from '../config/feature-flags';
-import { isEvidenceGatedProgressionEnabled } from '../config/feature-flags';
+import { isEvidenceGatedProgressionEnabled, isPersonaModelAlignmentEnabled } from '../config/feature-flags';
 import { resolveBridgeTagForConcernPk, loadGroundedLineage, groundingCoreToken } from '../services/signal-grounding-runtime';
 import { buildGuidanceForSession } from '../services/pil/runtime-guidance-engine';
 import { buildPipelineForSession } from '../services/pil/pipeline-resolver';
@@ -4219,6 +4219,9 @@ export function registerCapadexRoutes(app: Express, pool: Pool) {
         counsellor_whatsapp_number: rows[0]?.setting_value || '919999999999',
         websocket_runtime:          isEnabled('websocket_runtime'),
         cognitive_load_engine:      isEnabled('cognitive_load_engine'),
+        // CAPADEX 3.0 Phase 1.2 — additive persona-depth gate (exam sub-personas,
+        // tailored banks, counsellor bank). OFF → assessment flow byte-identical.
+        persona_model_alignment:    isPersonaModelAlignmentEnabled(),
       });
     } catch (err) { next(err); }
   });

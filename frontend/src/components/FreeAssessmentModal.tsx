@@ -31,7 +31,7 @@ import { CapadexGrwProfilePhase } from "./assessment/phases/CapadexGrwProfilePha
 import { CapadexMasProfilePhase } from "./assessment/phases/CapadexMasProfilePhase";
 import { CapadexPackageSelectionPhase } from "./assessment/phases/CapadexPackageSelectionPhase";
 import {
-  BRAND, CAPADEX_STAGES, PERSONAS, QUESTION_BANKS, RATING_OPTIONS,
+  BRAND, CAPADEX_STAGES, PERSONAS, QUESTION_BANKS, RATING_OPTIONS, resolveQuestionBank,
   DOMAIN_ICONS, LOCKED_DOMAINS_BY_PERSONA, FAM_TERMS, UPGRADE_TIERS,
   getLevel, buildInsightNarrative, getAgeRange, getSubdomainInsight, generatePatternDetection,
   type CapadexQuestion, type CapadexProgress, type CapadexStageResult,
@@ -338,13 +338,17 @@ export function FreeAssessmentModal({ open, onOpenChange, onNavigate, initialPer
   const [counsellorNumber, setCounsellorNumber] = useState('919999999999');
   const [wsRuntimeEnabled, setWsRuntimeEnabled] = useState(false);
   const [cogLoadEnabled, setCogLoadEnabled]     = useState(false);
+  // CAPADEX 3.0 Phase 1.2 — persona-model alignment gate (exam sub-personas +
+  // tailored sub-persona banks). Defaults false → byte-identical legacy flow.
+  const [personaAlignmentEnabled, setPersonaAlignmentEnabled] = useState(false);
   useEffect(() => {
     fetch('/api/capadex/public-config')
       .then(r => r.json())
-      .then((cfg: { counsellor_whatsapp_number?: string; websocket_runtime?: boolean; cognitive_load_engine?: boolean }) => {
+      .then((cfg: { counsellor_whatsapp_number?: string; websocket_runtime?: boolean; cognitive_load_engine?: boolean; persona_model_alignment?: boolean }) => {
         if (cfg.counsellor_whatsapp_number) setCounsellorNumber(cfg.counsellor_whatsapp_number);
         if (cfg.websocket_runtime)    setWsRuntimeEnabled(true);
         if (cfg.cognitive_load_engine) setCogLoadEnabled(true);
+        if (cfg.persona_model_alignment) setPersonaAlignmentEnabled(true);
       })
       .catch(() => {});
   }, []);
@@ -1503,7 +1507,9 @@ export function FreeAssessmentModal({ open, onOpenChange, onNavigate, initialPer
     if (selectedConcern && CONCERN_QUESTIONS[selectedPersona]?.[selectedConcern]) {
       return CONCERN_QUESTIONS[selectedPersona][selectedConcern];
     }
-    return QUESTION_BANKS[selectedPersona];
+    // CAPADEX 3.0 Phase 1.2 — tailored sub-persona bank when alignment flag ON
+    // and a dedicated bank exists; otherwise byte-identical legacy selection.
+    return resolveQuestionBank(primaryPersona, selectedPersona, personaAlignmentEnabled);
   })();
   const persona = selectedPersona ? PERSONAS.find(p => p.key === selectedPersona)! : PERSONAS[0];
 
@@ -2957,6 +2963,7 @@ export function FreeAssessmentModal({ open, onOpenChange, onNavigate, initialPer
   const allPhaseProps = {
     phase, setPhase, selectedPersona, setSelectedPersona,
     primaryPersona, setPrimaryPersona, isProxy, setIsProxy, ageBand, setAgeBand,
+    personaModelAlignment: personaAlignmentEnabled,
     participantGender, setParticipantGender, participantCity, setParticipantCity,
     participantGoal, setParticipantGoal, goalTimeline, setGoalTimeline,
     concernMetaMap, setConcernMetaMap,

@@ -129,6 +129,20 @@ export function IntroPhase(props: PhaseProps) {
     icon: React.ComponentType<{ size?: number; className?: string }>;
     subPersonas: SubPersona[];
   };
+  // CAPADEX 3.0 Phase 1.2 — exam-aspirant split. When the personaModelAlignment
+  // flag is ON the single "JEE / NEET / UPSC aspirant" chip expands into four
+  // exam-specific sub-personas (each still legacyKey 'student'), unlocking the
+  // tailored behavioural banks. Flag OFF → the original single chip, byte-identical.
+  const competitiveAspirants: SubPersona[] = props.personaModelAlignment
+    ? [
+        { id: 'jee_aspirant',  label: 'JEE aspirant (Engineering)',     legacyKey: 'student', ageBands: ['14-17','17-24'] },
+        { id: 'neet_aspirant', label: 'NEET aspirant (Medical)',        legacyKey: 'student', ageBands: ['14-17','17-24'] },
+        { id: 'cuet_aspirant', label: 'CUET aspirant (University)',     legacyKey: 'student', ageBands: ['14-17','17-24'] },
+        { id: 'upsc_aspirant', label: 'UPSC / civil-services aspirant', legacyKey: 'student', ageBands: ['17-24','24-45'] },
+      ]
+    : [
+        { id: 'competitive_aspirant', label: 'JEE / NEET / UPSC aspirant', legacyKey: 'student', ageBands: ['14-17','17-24'] },
+      ];
   const TRACK_GROUPS: MacroTrack[] = [
     {
       id: 'school', title: 'School children', subtitle: 'A school student taking this themselves',
@@ -144,7 +158,7 @@ export function IntroPhase(props: PhaseProps) {
       isProxy: false, icon: GraduationCap,
       subPersonas: [
         { id: 'campus_student',            label: 'College or university student',  legacyKey: 'campus',    ageBands: ['17-24'] },
-        { id: 'competitive_aspirant',      label: 'JEE / NEET / UPSC aspirant',     legacyKey: 'student',   ageBands: ['14-17','17-24'] },
+        ...competitiveAspirants,
         { id: 'career_explorer',           label: 'Exploring my next move',         legacyKey: 'jobseeker', ageBands: ['17-24','24-45'] },
         { id: 'skill_development_learner', label: 'Building new skills',            legacyKey: 'student',   ageBands: ['14-17','17-24','24-45'] },
       ],

@@ -23,6 +23,7 @@ import {
   composeType,
   composeLedger,
   composeCertification,
+  composeProgressionOutcomes,
   isOutcomeIntelType,
   OUTCOME_INTEL_TYPES,
 } from '../services/outcome-intelligence-engine';
@@ -75,6 +76,16 @@ export function registerOutcomeIntelligenceRoutes(
       res.json(await composeCertification(pool));
     } catch (err) {
       console.error('[outcome-intelligence] certification error:', err);
+      res.status(200).json({ ok: true, degraded: true, reason: 'unexpected_error', read_only: true });
+    }
+  });
+
+  // Task #308 — validated progression-outcome view (k-min-gated, demo-excluded, abstains honestly).
+  app.get('/api/outcome-intelligence/progression', flagGate, requireAuth, requireSuperAdmin, async (_req: Request, res: Response) => {
+    try {
+      res.json(await composeProgressionOutcomes(pool));
+    } catch (err) {
+      console.error('[outcome-intelligence] progression error:', err);
       res.status(200).json({ ok: true, degraded: true, reason: 'unexpected_error', read_only: true });
     }
   });

@@ -18,7 +18,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   Target, RefreshCw, AlertTriangle, Info, CheckCircle2, Clock,
-  Database, Gauge, Layers, ListChecks,
+  Database, Gauge, Layers, ListChecks, TrendingUp,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Badge } from '../ui/badge';
@@ -54,6 +54,30 @@ interface LedgerRow {
   predicted_prob_at_decision?: number | null; is_demo?: boolean; source?: string; subject?: string; observed_at?: string;
 }
 interface Ledger { ok: boolean; count?: number; rows?: LedgerRow[]; degraded?: boolean; }
+interface Progression {
+  ok: boolean; k_min?: number; capture_enabled?: boolean; verdict?: string; note?: string; degraded?: boolean;
+  coverage?: {
+    completion_cohort: number | null; reached_mastery: number | null;
+    longitudinal_subjects: number | null; demo_subjects_excluded: number | null;
+  };
+  progression_rate?: {
+    measured: boolean; value: number | null; reached_mastery: number | null;
+    completion_cohort: number | null; abstained: boolean; reason: string;
+  };
+  time_to_mastery?: {
+    measured: boolean; sample_size: number | null; longitudinal_subjects: number | null;
+    median_days: number | null; mean_days: number | null; abstained: boolean; reason: string;
+  };
+}
+
+function pct(n?: number | null) {
+  if (n == null) return '—';
+  return `${(n * 100).toFixed(1)}%`;
+}
+function days(n?: number | null) {
+  if (n == null) return '—';
+  return `${n.toFixed(1)} d`;
+}
 
 const METHOD_LABEL: Record<string, string> = {
   binary_calibration: 'Binary calibration',
@@ -98,14 +122,23 @@ export default function OutcomeIntelligencePanel() {
       return res.json();
     },
   });
+  const progressionQ = useQuery<Progression>({
+    queryKey: ['/api/outcome-intelligence/progression'],
+    queryFn: async () => {
+      const res = await fetch('/api/outcome-intelligence/progression', { credentials: 'include' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    },
+  });
 
   const data = overviewQ.data;
   const cert = certQ.data;
   const ledger = ledgerQ.data;
-  const isFetching = overviewQ.isFetching || certQ.isFetching || ledgerQ.isFetching;
+  const progression = progressionQ.data;
+  const isFetching = overviewQ.isFetching || certQ.isFetching || ledgerQ.isFetching || progressionQ.isFetching;
   const evidenceBacked = data?.platform?.abstained === false;
 
-  const refetchAll = () => { overviewQ.refetch(); certQ.refetch(); ledgerQ.refetch(); };
+  const refetchAll = () => { overviewQ.refetch(); certQ.refetch(); ledgerQ.refetch(); progressionQ.refetch(); };
 
   return (
     <div className="space-y-6 p-6">
@@ -184,6 +217,87 @@ export default function OutcomeIntelligencePanel() {
                 </Badge>
               </CardContent></Card>
             </div>
+          )}
+
+          {/* Validated progression outcomes (Task #308) — k-min-gated, demo-excluded, abstains honestly */}
+          {progression && (
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <TrendingUp className="h-4 w-4" /> Validated progression outcomes
+                  <Badge
+                    className="ml-1 border-0"
+                    style={{
+                      backgroundColor: progression.verdict?.startsWith('MEASURED') ? '#DCFCE7' : '#FEF3C7',
+                      color: progression.verdict?.startsWith('MEASURED') ? '#166534' : '#92400E',
+                    }}
+                  >
+                    {progression.verdict?.startsWith('MEASURED') ? 'Measured' : 'Partial'}
+                  </Badge>
+                </CardTitle>
+                <CardDescription>
+                  Measured CAPADEX progression from realized non-demo milestones. Each metric is reported
+                  ONLY once its own cohort reaches k_min ({num(progression.k_min)}); below it the metric
+                  abstains. "—" = not yet measurable (never a fabricated 0).
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0 space-y-4">
+                {progression.capture_enabled === false && (
+                  <div className="flex items-center gap-2 rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-600">
+                    <Info className="h-4 w-4" /> Progression capture is currently disabled — no new milestones are being recorded.
+                  </div>
+                )}
+
+                <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                  <Card><CardContent className="p-4">
+                    <p className="text-xs text-gray-500">Completed a stage <span className="text-gray-400">(cohort)</span></p>
+                    <p className="text-xl font-bold" style={{ color: BRAND.primary }}>{num(progression.coverage?.completion_cohort)}</p>
+                  </CardContent></Card>
+                  <Card><CardContent className="p-4">
+                    <p className="text-xs text-gray-500">Reached Mastery</p>
+                    <p className="text-xl font-bold" style={{ color: BRAND.primary }}>{num(progression.coverage?.reached_mastery)}</p>
+                  </CardContent></Card>
+                  <Card><CardContent className="p-4">
+                    <p className="text-xs text-gray-500">Longitudinal subjects</p>
+                    <p className="text-xl font-bold" style={{ color: BRAND.primary }}>{num(progression.coverage?.longitudinal_subjects)}</p>
+                  </CardContent></Card>
+                  <Card><CardContent className="p-4">
+                    <p className="text-xs text-gray-500">Demo excluded</p>
+                    <p className="text-xl font-bold text-gray-400">{num(progression.coverage?.demo_subjects_excluded)}</p>
+                  </CardContent></Card>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                  <Card style={{ borderColor: progression.progression_rate?.measured ? '#86EFAC' : '#FCD34D' }}>
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-semibold" style={{ color: BRAND.primary }}>Completion → Mastery rate</p>
+                        <span className="text-2xl font-bold" style={{ color: BRAND.primary }}>
+                          {progression.progression_rate?.measured ? pct(progression.progression_rate?.value) : '—'}
+                        </span>
+                      </div>
+                      <p className="mt-2 text-xs text-gray-500">{progression.progression_rate?.reason}</p>
+                    </CardContent>
+                  </Card>
+                  <Card style={{ borderColor: progression.time_to_mastery?.measured ? '#86EFAC' : '#FCD34D' }}>
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-semibold" style={{ color: BRAND.primary }}>Time to Mastery <span className="font-normal text-gray-400">(median)</span></p>
+                        <span className="text-2xl font-bold" style={{ color: BRAND.primary }}>
+                          {progression.time_to_mastery?.measured ? days(progression.time_to_mastery?.median_days) : '—'}
+                        </span>
+                      </div>
+                      <p className="mt-1 text-xs text-gray-500">
+                        Mean {progression.time_to_mastery?.measured ? days(progression.time_to_mastery?.mean_days) : '—'}
+                        {' · '}sample {num(progression.time_to_mastery?.sample_size)}
+                      </p>
+                      <p className="mt-1 text-xs text-gray-500">{progression.time_to_mastery?.reason}</p>
+                    </CardContent>
+                  </Card>
+                </div>
+                <p className="text-xs text-gray-400">{progression.note}</p>
+              </CardContent>
+            </Card>
           )}
 
           {/* Per-type matrix */}

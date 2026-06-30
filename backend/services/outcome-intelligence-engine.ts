@@ -131,6 +131,16 @@ async function safeCount(pool: Pool, sql: string, params: any[] = []): Promise<n
   }
 }
 
+/** Read rows safely — null (not []) on any error so unreadable ≠ empty (null≠0). */
+async function safeRows(pool: Pool, sql: string, params: any[] = []): Promise<any[] | null> {
+  try {
+    const r = await pool.query(sql, params);
+    return r.rows;
+  } catch {
+    return null;
+  }
+}
+
 /** Irreversible pseudonym for any subject identifier surfaced in a ledger (no raw PII). */
 export function pseudonym(raw: unknown): string {
   const s = String(raw ?? '').trim().toLowerCase();
@@ -499,6 +509,166 @@ export async function composeLedger(pool: Pool, type?: OutcomeIntelType, limit =
     ok: true, version: OUTCOME_INTELLIGENCE_VERSION,
     type: type ?? 'all', count: rows.length, rows: rows.slice(0, lim),
     note: 'Subjects are irreversibly pseudonymised; demo rows are labelled, never counted as evidence.',
+    read_only: true,
+  };
+}
+
+/** Median of a numeric array (already-sorted-agnostic). null for an empty array. */
+function median(xs: number[]): number | null {
+  if (!xs.length) return null;
+  const s = [...xs].sort((a, b) => a - b);
+  const mid = Math.floor(s.length / 2);
+  return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+}
+
+const MASTERY_CANONICAL_STAGE = 'Mastery';
+const MASTERY_STAGE_CODE = 'CAP_MAS';
+
+/**
+ * Task #308 — VALIDATED PROGRESSION OUTCOMES (read-only, k-min-gated, demo-excluded).
+ *
+ * Surfaces a HONEST measured-progression view from the learning-milestone substrate captured by
+ * Task #305 (`validation_loop_outcomes`, outcome_type='learning') joined with the longitudinal
+ * snapshot history (`wc3_longitudinal_snapshots`). Two MEASURED metrics, each gated INDEPENDENTLY:
+ *
+ *   1. Completion → Mastery progression rate — of the distinct non-demo subjects who logged a
+ *      stage-completion milestone, the share who reached the canonical Mastery stage.
+ *   2. Time-to-Mastery (stage dwell) — per non-demo subject, days from their first longitudinal
+ *      snapshot to their first Mastery snapshot; reported as median + mean over measurable subjects.
+ *
+ * Honesty contract (mirrors MX-102X):
+ *   - Coverage (subjects observed) ⟂ Confidence (whether the measure is trustworthy) — NEVER blended.
+ *     A rate/median is `measured:true` ONLY when its own cohort/sample reaches k_min; below it the
+ *     metric ABSTAINS (`measured:false`, value null) — never a fabricated number.
+ *   - Demo (@example.com) subjects are excluded from EVERY measured figure (counted separately).
+ *   - Unreadable substrate → null (never 0); null≠0 throughout.
+ *   - Read-only: to_regclass probes + SELECTs only, never writes, no DDL.
+ *   - Gated on `longitudinalOutcomeCapture`: when OFF the progression-capture feature is inert, so
+ *     the view reports `capture_enabled:false` and abstains (no learning-milestone reads) — keeping
+ *     the same posture as the engine's learning block (byte-identical when the capture flag is OFF).
+ */
+export async function composeProgressionOutcomes(pool: Pool) {
+  const captureEnabled = isLongitudinalOutcomeCaptureEnabled();
+
+  // ── Coverage + progression rate from learning milestones (demo-excluded) ──────────────────────
+  let completionCohort: number | null = null;   // distinct non-demo subjects with a stage-completion milestone
+  let masterySubjects: number | null = null;    // distinct non-demo subjects with a reached-mastery milestone
+  let demoSubjects: number | null = null;       // distinct demo subjects (excluded from every measure)
+
+  const vloPresent = await tablePresent(pool, 'public.validation_loop_outcomes');
+  if (captureEnabled && vloPresent) {
+    const r = await safeRows(
+      pool,
+      `SELECT
+         COUNT(DISTINCT subject_email) FILTER (WHERE detail->>'milestone' = 'stage_completion')  AS completion_subjects,
+         COUNT(DISTINCT subject_email) FILTER (WHERE detail->>'milestone' = 'reached_mastery')   AS mastery_subjects
+       FROM validation_loop_outcomes
+       WHERE outcome_type = 'learning' AND is_demo = false`,
+    );
+    if (r) {
+      completionCohort = Number(r[0]?.completion_subjects ?? 0);
+      masterySubjects = Number(r[0]?.mastery_subjects ?? 0);
+    }
+    demoSubjects = await safeCount(
+      pool,
+      `SELECT COUNT(DISTINCT subject_email)::int AS count
+         FROM validation_loop_outcomes WHERE outcome_type = 'learning' AND is_demo = true`,
+    );
+  }
+
+  const rateCohort = completionCohort;
+  const rateMeasured =
+    captureEnabled && rateCohort != null && rateCohort >= OI_K_MIN && masterySubjects != null;
+  const progression_rate = {
+    measured: rateMeasured,
+    value: rateMeasured ? (masterySubjects as number) / (rateCohort as number) : null,
+    reached_mastery: masterySubjects,
+    completion_cohort: rateCohort,
+    abstained: !rateMeasured,
+    reason: !captureEnabled
+      ? 'Progression capture is disabled — no learning milestones are being recorded.'
+      : rateCohort == null
+        ? 'Learning-milestone substrate is unreadable.'
+        : rateCohort < OI_K_MIN
+          ? `Insufficient data — ${rateCohort}/${OI_K_MIN} non-demo subjects with a completed stage. Rate ABSTAINED until the cohort reaches k_min.`
+          : `Measured over ${rateCohort} non-demo subjects who completed a stage.`,
+  };
+
+  // ── Time-to-Mastery (stage dwell) from longitudinal snapshots (demo-excluded) ─────────────────
+  let ttmDays: number[] | null = null;          // per-subject days first-snapshot → first-Mastery-snapshot
+  let longitudinalSubjects: number | null = null;
+  const snapPresent = await tablePresent(pool, 'public.wc3_longitudinal_snapshots');
+  if (captureEnabled && snapPresent) {
+    longitudinalSubjects = await safeCount(
+      pool,
+      `SELECT COUNT(DISTINCT LOWER(user_email))::int AS count
+         FROM wc3_longitudinal_snapshots
+        WHERE user_email IS NOT NULL AND LOWER(user_email) NOT LIKE '%@example.com'`,
+    );
+    const rows = await safeRows(
+      pool,
+      `SELECT EXTRACT(EPOCH FROM (mastery_at - first_at)) / 86400.0 AS days
+         FROM (
+           SELECT LOWER(user_email) AS subj,
+                  MIN(captured_at) AS first_at,
+                  MIN(captured_at) FILTER (WHERE canonical_stage = $1 OR stage_code = $2) AS mastery_at
+             FROM wc3_longitudinal_snapshots
+            WHERE user_email IS NOT NULL AND LOWER(user_email) NOT LIKE '%@example.com'
+            GROUP BY LOWER(user_email)
+         ) s
+        WHERE s.mastery_at IS NOT NULL AND s.mastery_at >= s.first_at`,
+      [MASTERY_CANONICAL_STAGE, MASTERY_STAGE_CODE],
+    );
+    if (rows) {
+      ttmDays = rows
+        .map((x: any) => Number(x.days))
+        .filter((d: number) => Number.isFinite(d) && d >= 0);
+    }
+  }
+
+  const ttmSample = ttmDays == null ? null : ttmDays.length;
+  const ttmMeasured = captureEnabled && ttmSample != null && ttmSample >= OI_K_MIN;
+  const time_to_mastery = {
+    measured: ttmMeasured,
+    sample_size: ttmSample,
+    longitudinal_subjects: longitudinalSubjects,
+    median_days: ttmMeasured ? median(ttmDays as number[]) : null,
+    mean_days: ttmMeasured
+      ? (ttmDays as number[]).reduce((a, b) => a + b, 0) / (ttmDays as number[]).length
+      : null,
+    abstained: !ttmMeasured,
+    reason: !captureEnabled
+      ? 'Progression capture is disabled — no longitudinal Mastery transitions are being recorded.'
+      : ttmSample == null
+        ? 'Longitudinal snapshot substrate is unreadable.'
+        : ttmSample < OI_K_MIN
+          ? `Insufficient data — ${ttmSample}/${OI_K_MIN} non-demo subjects reached Mastery with a measurable interval. Dwell time ABSTAINED until the sample reaches k_min.`
+          : `Measured over ${ttmSample} non-demo subjects who reached Mastery.`,
+  };
+
+  const anyMeasured = progression_rate.measured || time_to_mastery.measured;
+
+  return {
+    ok: true,
+    version: OUTCOME_INTELLIGENCE_VERSION,
+    k_min: OI_K_MIN,
+    capture_enabled: captureEnabled,
+    coverage: {
+      completion_cohort: completionCohort,    // distinct non-demo subjects who completed a stage (data axis)
+      reached_mastery: masterySubjects,
+      longitudinal_subjects: longitudinalSubjects,
+      demo_subjects_excluded: demoSubjects,
+    },
+    progression_rate,
+    time_to_mastery,
+    axes: {
+      coverage: 'How many real (non-demo) subjects have accrued progression milestones (data axis). Null = substrate unreadable, never assumed 0.',
+      confidence: 'Each measured metric is trustworthy ONLY once its own cohort/sample reaches k_min; below it the metric ABSTAINS — never inferred from coverage.',
+    },
+    verdict: anyMeasured
+      ? 'MEASURED — at least one progression metric has crossed k_min over real non-demo data; reported with its cohort.'
+      : 'PARTIAL — progression outcomes are wired and read live substrates; measured rates ABSTAIN until real non-demo data crosses k_min. Honest insufficient-data over fabrication.',
+    note: 'Validated progression is reported ONLY from realized non-demo milestones; demo rows are counted separately and never measured. No accuracy/effectiveness is fabricated.',
     read_only: true,
   };
 }

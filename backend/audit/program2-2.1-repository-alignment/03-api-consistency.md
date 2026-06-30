@@ -38,7 +38,7 @@ In Express the **first** matching registration wins and terminates the response;
 | GET `/api/lbi/sessions` | 2594 (requireAuth) | 11775 (requireAuth) | likely redundant |
 | POST `/api/lbi/sessions` | 2642 (requireAuth) | 11697 (requireAuth) | likely redundant |
 
-**Why not auto-removed:** for the same-auth pairs, removing the dead second registration is *behavior-preserving in theory*, but (a) it cannot be fully validated without running the live route behavior (no compile gate here), and (b) the `/api/hr/jobs/:id` pair embeds a latent **security decision** (public vs auth) that must be made by a human. All 9 are queued as an approval-gated, per-pair change set in report 06.
+**CORRECTION (post per-pair comparison):** the "likely redundant" label above was **too optimistic**. On comparing handler bodies, **only `GET /api/hr/jobs/:id` is functionally equivalent** — its dead twin was safely removed. The **other 8 pairs are DIVERGENT** (the dead second copy adds/omits real logic — audit-log writes, pagination/filters, Zod validation, raw SQL, institute scoping). Removing those would lock in the currently-served implementation and discard a possibly-intended one — a behavior decision, not cleanup. They remain **NOT changed**; see the corrected per-pair table in report 06 (D3).
 
 ## 7. Verdict
 API surface is **functionally sound** but **stylistically inconsistent**, with **two genuine correctness/security items** (the unguarded seed endpoint and the public-shadowing `/api/hr/jobs/:id`). No API behavior was changed in this phase.

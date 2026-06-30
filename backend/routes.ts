@@ -9786,16 +9786,11 @@ Requirements:
     }
   });
 
-  app.get("/api/hr/jobs/:id", requireAuth, async (req, res, next) => {
-    try {
-      const job = await storage.getJobPosting(req.params.id);
-      if (!job) return res.status(404).json({ error: "Job posting not found" });
-      res.json(job);
-    } catch (error) {
-      next(error);
-    }
-  });
-
+  // Program 2 2.1: removed a dead duplicate GET /api/hr/jobs/:id registration
+  // here — it was shadowed by the equivalent (now auth-gated) one registered
+  // earlier in this file. Only this single pair was byte-equivalent; the other
+  // /api/hr/* and /api/institute/* and /api/lbi/* duplicates are DIVERGENT
+  // implementations and are left for per-pair human adjudication.
   app.post("/api/hr/jobs", requireAuth, async (req, res, next) => {
     try {
       const job = await storage.createJobPosting({

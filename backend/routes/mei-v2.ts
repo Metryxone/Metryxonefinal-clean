@@ -121,32 +121,42 @@ export function registerMEIV2Routes(
       });
       const output = await computeMEIScore(pool, input);
 
-      // Persist
-      await pool.query(
-        `INSERT INTO mei_scores
-           (user_id, composite_score, band, confidence, industry_code, role_level_code,
-            breakdown, calibration_trace, data_sources, computed_at, version)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,NOW(),'2.0')
-         ON CONFLICT (user_id) DO UPDATE SET
-           composite_score=$2, band=$3, confidence=$4, industry_code=$5,
-           role_level_code=$6, breakdown=$7, calibration_trace=$8,
-           data_sources=$9, computed_at=NOW()`,
-        [userId, output.composite_score, output.band, output.confidence,
-         output.industry_code, output.role_level_code,
-         JSON.stringify({ dimensions: output.dimensions }),
-         JSON.stringify(output.calibration_trace),
-         output.data_sources]
-      );
-
-      // Snapshot
-      await pool.query(
-        `INSERT INTO mei_score_history
-           (user_id,composite_score,band,confidence,industry_code,role_level_code,breakdown,snapshot_trigger,version)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,'api_compute','2.0')`,
-        [userId, output.composite_score, output.band, output.confidence,
-         output.industry_code, output.role_level_code,
-         JSON.stringify({ dimensions: output.dimensions })]
-      );
+      // Persist score + history atomically (Program 2 2.1: was two separate
+      // pool.query calls → a failure between them could leave a partial write
+      // of mei_scores without the matching mei_score_history snapshot).
+      const client = await pool.connect();
+      try {
+        await client.query('BEGIN');
+        await client.query(
+          `INSERT INTO mei_scores
+             (user_id, composite_score, band, confidence, industry_code, role_level_code,
+              breakdown, calibration_trace, data_sources, computed_at, version)
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,NOW(),'2.0')
+           ON CONFLICT (user_id) DO UPDATE SET
+             composite_score=$2, band=$3, confidence=$4, industry_code=$5,
+             role_level_code=$6, breakdown=$7, calibration_trace=$8,
+             data_sources=$9, computed_at=NOW()`,
+          [userId, output.composite_score, output.band, output.confidence,
+           output.industry_code, output.role_level_code,
+           JSON.stringify({ dimensions: output.dimensions }),
+           JSON.stringify(output.calibration_trace),
+           output.data_sources]
+        );
+        await client.query(
+          `INSERT INTO mei_score_history
+             (user_id,composite_score,band,confidence,industry_code,role_level_code,breakdown,snapshot_trigger,version)
+           VALUES ($1,$2,$3,$4,$5,$6,$7,'api_compute','2.0')`,
+          [userId, output.composite_score, output.band, output.confidence,
+           output.industry_code, output.role_level_code,
+           JSON.stringify({ dimensions: output.dimensions })]
+        );
+        await client.query('COMMIT');
+      } catch (e) {
+        await client.query('ROLLBACK').catch(() => {});
+        throw e;
+      } finally {
+        client.release();
+      }
 
       res.json({ ok: true, cached: false, score: output });
     } catch (err) {

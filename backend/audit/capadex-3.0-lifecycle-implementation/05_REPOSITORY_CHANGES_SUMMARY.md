@@ -66,3 +66,26 @@ Exact, file-by-file change set for Phase 1.1, plus the verification evidence.
 
 Backend runs on `tsx` in dev and prod (no separate typecheck gate); the production build gate is the frontend
 Vite build, which passed.
+
+---
+
+## 6. Re-verification on the current tree (post Task #304)
+
+Phase 1.1 landed before the Program 2 evidence-gated-progression work (Task #304), which subsequently edited
+several of the **same** files (`frontend/src/lib/behavioural-insights.ts`,
+`frontend/src/components/assessment/phases/StageJourneyPanel.tsx`, `backend/routes/capadex.ts`). The canon was
+re-checked against the current tree to confirm no drift was introduced:
+
+| Check (current tree) | Result |
+|---|---|
+| `backend/lib/lifecycle.ts` present + imported by all consolidated call-sites | ✅ intact |
+| Frontend canon `CAPADEX_STAGES` / `STAGE_CODE_TO_LABEL` / `stageLabel()` present | ✅ intact (canon doc-comment preserved) |
+| Inline `CAP_*→'label'` maps outside the two canons (grep) | ✅ **0 found** |
+| `CANONICAL_STAGE_ORDER` / `CANONICAL_STAGE_WEIGHT` (old competing name) | ✅ **0 residual** |
+| `WC3_PROGRESSION_ORDER` / `WC3_PROGRESSION_WEIGHT` (the projection) present in the 4 WC3 services | ✅ intact |
+| `StageJourneyPanel.tsx` sources stage labels from the canon (`CAPADEX_STAGES`, `stage.label`/`stage.code`) | ✅ — its literal stage strings (benefits/ladder copy) are package content, not a label-map (report 07 §1.4) |
+| Launch gates on the current tree (Phase 1.1 + #304) | ✅ `npx vite build` PASS; isolation, privacy-e2e, voice + live-avatar degradation, journey-tail all PASS; Backend API boots clean |
+
+**No functional code change was required in this re-verification pass** — the prior Phase 1.1 implementation is
+present, correct, and undisturbed by #304. The only edits in this pass are these evidence stamps (report 01 +
+this §6). **STOP for human approval — no deploy.**

@@ -80,3 +80,11 @@ frontend were replaced with references to the canon (`STAGE_CODE_TO_LABEL` / `LI
   live-avatar degradation — all PASS post-change.
 
 **Status: implemented. STOP for human approval — no deploy.**
+
+> **Re-verification (post Task #304, current tree):** the canon was re-checked after
+> the later Program 2 evidence-gated-progression work (#304) landed in the same files
+> (`behavioural-insights.ts`, `StageJourneyPanel.tsx`, `routes/capadex.ts`). The
+> frontend canon (`CAPADEX_STAGES` / `STAGE_CODE_TO_LABEL` / `stageLabel()`) is intact;
+> a repo-wide grep finds **zero** inline `CAP_*→label` maps or stage-code allowlists
+> outside the two canons; `CANONICAL_STAGE_*` (the old competing name) has **zero**
+> residual references. No drift introduced. See report 05 §6.

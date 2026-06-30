@@ -19,11 +19,13 @@
  * STAGE_PRICES / LADDER MIRROR `routes/capadex-payments.ts` — keep them in lockstep.
  */
 import type { Pool } from 'pg';
+import { STAGE_CODE_TO_LABEL } from '../../lib/lifecycle';
 
 // Mirror of STAGE_PRICES in routes/capadex-payments.ts — keep in lockstep.
 const STAGE_PRICES: Record<string, number> = { CAP_INS: 499, CAP_GRW: 999, CAP_MAS: 1999 };
 const LADDER = ['CAP_INS', 'CAP_GRW', 'CAP_MAS'] as const;
-const STAGE_LABEL: Record<string, string> = { CAP_INS: 'Insight', CAP_GRW: 'Growth', CAP_MAS: 'Mastery' };
+// Canonical stage labels — sourced from the single lifecycle source of truth.
+const STAGE_LABEL: Record<string, string> = STAGE_CODE_TO_LABEL;
 const HIGH_CONFIDENCE = 0.7;
 
 export interface SubscriptionTarget {

@@ -10,6 +10,7 @@ import { buildCapadexReportHtml, sendCapadexReport } from '../email';
 import { buildOmegaEmailExtras } from '../services/omega-report-builder';
 import { writeAuditEvent, AUDIT_EVENT } from '../lib/audit';
 import { isEnabled } from '../services/feature-flags';
+import { STAGE_CODE_TO_LABEL, LIFECYCLE_STAGE_CODES } from '../lib/lifecycle';
 import { broadcastToSession } from '../services/ws-broadcast';
 import type { GeneratedIntervention } from '../services/intervention-engine';
 import { maybeActivateCareerBuilderOnCompletion } from '../services/career-builder-activation';
@@ -1386,11 +1387,9 @@ export function registerCapadexEnterpriseRoutes(app: Express, pool: Pool) {
 
       const row = r.rows[0];
       const effectiveStage = stageCode || row.stage_code || 'CAP_CUR';
-      const stageLabelMap: Record<string, string> = {
-        CAP_CUR: 'Curiosity', CAP_INS: 'Insight', CAP_GRW: 'Growth', CAP_MAS: 'Mastery',
-      };
+      const stageLabelMap: Record<string, string> = STAGE_CODE_TO_LABEL;
 
-      const validStages = ['CAP_CUR', 'CAP_INS', 'CAP_GRW', 'CAP_MAS'];
+      const validStages = LIFECYCLE_STAGE_CODES as readonly string[];
       if (stageCode && !validStages.includes(stageCode)) {
         return res.status(400).json({ error: 'Invalid stageCode' });
       }

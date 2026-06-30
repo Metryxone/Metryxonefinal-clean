@@ -23,10 +23,10 @@
  * byte-identical whether or not `wc3QuestionIntel` is ON. Reversible via DROP TABLE.
  */
 import type { Pool } from 'pg';
-import { CANONICAL_STAGE_ORDER } from './stage-intelligence';
+import { WC3_PROGRESSION_ORDER } from './stage-intelligence';
 import { ensureWc3QuestionIntelSchema } from './wc3-schema';
 
-export type CanonicalStage = (typeof CANONICAL_STAGE_ORDER)[number];
+export type CanonicalStage = (typeof WC3_PROGRESSION_ORDER)[number];
 type StageVec = Partial<Record<CanonicalStage, number>>;
 
 /** Relative contribution of each signal field to the combined stage vote (sum = 1.0). */
@@ -231,7 +231,7 @@ export function deriveQuestionStage(input: QuestionStageInput): QuestionStageRes
     const w = FIELD_WEIGHTS[fieldName];
     recognizedWeight += w;
     recognized.push(fieldName);
-    for (const stage of CANONICAL_STAGE_ORDER) {
+    for (const stage of WC3_PROGRESSION_ORDER) {
       acc[stage] += w * (dist[stage] ?? 0);
     }
   }
@@ -258,11 +258,11 @@ export function deriveQuestionStage(input: QuestionStageInput): QuestionStageRes
 
   // Normalise to a proper distribution over the recognised votes.
   const distribution: Record<string, number> = {};
-  for (const stage of CANONICAL_STAGE_ORDER) {
+  for (const stage of WC3_PROGRESSION_ORDER) {
     distribution[stage] = round(acc[stage] / recognizedWeight, 4);
   }
 
-  const ranked = [...CANONICAL_STAGE_ORDER].sort((a, b) => distribution[b] - distribution[a]);
+  const ranked = [...WC3_PROGRESSION_ORDER].sort((a, b) => distribution[b] - distribution[a]);
   const primary = ranked[0];
   const secondary = ranked[1];
   const primaryProb = distribution[primary];

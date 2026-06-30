@@ -9,6 +9,7 @@
  */
 
 import pg from 'pg';
+import { STAGE_CODE_TO_LABEL } from '../lib/lifecycle';
 
 export type StageCode = 'CAP_CUR' | 'CAP_INS' | 'CAP_GRW' | 'CAP_MAS';
 
@@ -43,12 +44,8 @@ const STAGE_FEATURES: Record<StageCode, string[]> = {
   ],
 };
 
-const STAGE_LABELS: Record<StageCode, string> = {
-  CAP_CUR: 'Curiosity',
-  CAP_INS: 'Insight',
-  CAP_GRW: 'Growth',
-  CAP_MAS: 'Mastery',
-};
+// Canonical stage labels — sourced from the single lifecycle source of truth.
+const STAGE_LABELS: Record<string, string> = STAGE_CODE_TO_LABEL;
 
 function resolveInheritedFeatures(stages: StageCode[]): string[] {
   if (stages.length === 0) return [];

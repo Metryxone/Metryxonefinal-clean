@@ -23,7 +23,7 @@
  */
 import type { Pool } from 'pg';
 import { ensureWc3OutcomeSchema } from './wc3-schema';
-import { getSessionStage, CANONICAL_STAGE_ORDER, type StageState } from './stage-intelligence';
+import { getSessionStage, WC3_PROGRESSION_ORDER, type StageState } from './stage-intelligence';
 import { resolveConstructForBridgeTag } from '../../data/bridge-tag-construct-crosswalk';
 import { isWc3OutcomeCrosswalkEnabled } from '../../config/feature-flags';
 
@@ -246,9 +246,9 @@ async function buildOutcomes(
 
   const currentOrder = stage.stage_order_index;
   const currentStage = stage.canonical_stage;
-  const lastOrder = CANONICAL_STAGE_ORDER.length - 1; // Mastery
+  const lastOrder = WC3_PROGRESSION_ORDER.length - 1; // Mastery
   const desiredOrder = Math.min(currentOrder + 1, lastOrder);
-  const desiredStage = CANONICAL_STAGE_ORDER[desiredOrder];
+  const desiredStage = WC3_PROGRESSION_ORDER[desiredOrder];
   const gap = desiredOrder - currentOrder;
   const gapNorm = r2(gap / lastOrder);
 

@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import metryxLogo from '@/assets/metryx-logo-transparent.png';
 import { AlertCircle, ArrowLeft, ArrowRight, BarChart3, Clock, Download, FileText, Info, LogIn, Mail, Sparkles, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { stageLabel as canonicalStageLabel } from '@/lib/behavioural-insights';
 
 import { PhaseProps } from '../types';
 export function CapadexRegisterPhase(props: PhaseProps) {
@@ -158,7 +159,7 @@ export function CapadexRegisterPhase(props: PhaseProps) {
                   <div className="py-6 text-center text-[15px] text-gray-400">Loading your reports…</div>
                 ) : (
                   recentSessions.map(s => {
-                    const stageLabel = s.stage_code === 'CAP_CUR' ? 'Curiosity' : s.stage_code === 'CAP_INS' ? 'Insight' : s.stage_code === 'CAP_GRW' ? 'Growth' : 'Mastery';
+                    const stageLabel = canonicalStageLabel(s.stage_code);
                     const stageColor = s.stage_code === 'CAP_CUR' ? '#344E86' : s.stage_code === 'CAP_INS' ? '#6366F1' : s.stage_code === 'CAP_GRW' ? '#10B981' : '#F59E0B';
                     const when = new Date(s.created_at);
                     const timeAgo = (() => {

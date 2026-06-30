@@ -4,6 +4,7 @@
  * Provides deterministic score normalisation, stage-weighted aggregation,
  * and a structured score_trace JSONB that powers explainability UI.
  */
+import { STAGE_CODE_TO_LABEL } from './lifecycle';
 
 /**
  * Normalise a single Likert-scale item response (1–5) to 0–100,
@@ -73,12 +74,8 @@ const STAGE_WEIGHT_MAP: Record<string, number> = {
   CAP_MAS: 1.25,
 };
 
-const STAGE_LABEL_MAP: Record<string, string> = {
-  CAP_CUR: 'Curiosity',
-  CAP_INS: 'Insight',
-  CAP_GRW: 'Growth',
-  CAP_MAS: 'Mastery',
-};
+// Canonical stage labels — sourced from the single lifecycle source of truth.
+const STAGE_LABEL_MAP: Record<string, string> = STAGE_CODE_TO_LABEL;
 
 /**
  * Normalise a sum of weighted scores to 0-100.

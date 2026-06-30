@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { ArrowLeft, Layers, GitBranch, Target, Sliders, BarChart3, History, Sparkles, BookOpen, Users, FileSpreadsheet, Download, Upload, X, Filter, ChevronDown } from 'lucide-react';
 import { NormsTab, WeightsTab, ClustersTab, LearningMappingsTab, VersionsTab } from '@/components/admin/parity-tabs';
+import { STAGE_CODE_TO_LABEL } from '@/lib/behavioural-insights';
 
 async function jget<T>(url: string): Promise<T> {
   const r = await fetch(url, { credentials: 'include' });
@@ -142,9 +143,8 @@ const STAGE_COLORS: Record<string, { bg: string; text: string; border: string }>
   CAP_GRW: { bg: '#FFF7ED', text: '#EA580C', border: '#FED7AA' },
   CAP_MAS: { bg: '#F5F3FF', text: '#7C3AED', border: '#DDD6FE' },
 };
-const STAGE_LABELS: Record<string, string> = {
-  CAP_CUR: 'Curiosity', CAP_INS: 'Insight', CAP_GRW: 'Growth', CAP_MAS: 'Mastery',
-};
+// Canonical stage labels — sourced from the single frontend lifecycle source of truth.
+const STAGE_LABELS = STAGE_CODE_TO_LABEL;
 
 /* ── CSV helpers ─────────────────────────────────────────────────────── */
 function parseCsv(text: string): Record<string, string>[] {

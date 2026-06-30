@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
-  BRAND, METRYX_NAVY, CAPADEX_STAGES, UPGRADE_TIERS, getSubdomainInsight,
+  BRAND, METRYX_NAVY, CAPADEX_STAGES, STAGE_CODE_TO_LABEL, UPGRADE_TIERS, getSubdomainInsight,
   generatePatternDetection, type DomainResult,
 } from '@/lib/behavioural-insights';
 import { StudentIntelligencePanel } from '@/components/assessment/runtime/StudentIntelligencePanel';
@@ -3142,7 +3142,7 @@ export function CapadexReportPhase({
                     const isCurrent = s.session_id === capadexSessionId;
                     const lvl = s.score_level === 'Mastery' ? 'Advanced' : (s.score_level || '');
                     const lvlCol: Record<string,string> = { Advanced:'#344E86', Proficient:'#2563EB', Developing:'#D97706', Emerging:'#DC2626' };
-                    const stageLabel: Record<string,string> = { CAP_CUR:'Curiosity', CAP_INS:'Insight', CAP_GRW:'Growth', CAP_MAS:'Mastery' };
+                    const stageLabel: Record<string,string> = STAGE_CODE_TO_LABEL;
                     const col = lvlCol[lvl] ?? '#6B7280';
                     return (
                       <button

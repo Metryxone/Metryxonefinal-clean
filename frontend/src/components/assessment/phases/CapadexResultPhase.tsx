@@ -5,7 +5,7 @@ import {
   TrendingUp, AlertTriangle, Zap, Target, Brain, Shield,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { CAPADEX_STAGES, getSubdomainInsight } from '@/lib/behavioural-insights';
+import { CAPADEX_STAGES, getSubdomainInsight, stageLabel as canonicalStageLabel } from '@/lib/behavioural-insights';
 import type { CapadexProgress } from '@/lib/behavioural-insights';
 import { PhaseProps } from '../types';
 import { StageJourneyPanel } from './StageJourneyPanel';
@@ -665,8 +665,7 @@ export function CapadexResultPhase(props: PhaseProps) {
           const checkNext   = sc.next_stage_code;
           const hasAdvanced = (sc.completed.length > 1 || (checkNext && checkNext !== sessionNext)) && checkNext !== capadexStage;
           if (!hasAdvanced) return null;
-          const stageLabel = (c: string) =>
-            c === 'CAP_CUR' ? 'Curiosity' : c === 'CAP_INS' ? 'Insight' : c === 'CAP_GRW' ? 'Growth' : 'Mastery';
+          const stageLabel = (c: string) => canonicalStageLabel(c);
           return (
             <div className="mx-4 mt-3 rounded-2xl p-4" style={{ background: NAVY_BG, border: `1.5px solid ${NAVY}25` }}>
               <div className="flex items-center gap-2 mb-2">

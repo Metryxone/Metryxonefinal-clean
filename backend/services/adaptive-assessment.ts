@@ -34,6 +34,7 @@
  */
 
 import type { Pool } from 'pg';
+import { STAGE_CODE_TO_LABEL } from '../lib/lifecycle';
 import { isEnabled }   from './feature-flags';
 import { updateState } from './cognitive-state';
 import { confidenceBand } from './confidence-engine';
@@ -83,13 +84,8 @@ const COGNITIVE_LOAD_CEILING = 0.65;
  */
 const LOAD_PER_PRIORITY = 0.02;
 
-/** Stage code → stage name mapping (CAPADEX convention). */
-const STAGE_CODE_TO_NAME: Record<string, string> = {
-  CAP_CUR: 'Curiosity',
-  CAP_INS: 'Insight',
-  CAP_GRW: 'Growth',
-  CAP_MAS: 'Mastery',
-};
+/** Stage code → stage name — sourced from the single lifecycle source of truth. */
+const STAGE_CODE_TO_NAME: Record<string, string> = STAGE_CODE_TO_LABEL;
 
 // Scoring weights (must sum to 1 considering penalty is subtracted)
 const W_HYPOTHESIS_RELEVANCE = 0.35;

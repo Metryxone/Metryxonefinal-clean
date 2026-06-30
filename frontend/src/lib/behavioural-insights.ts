@@ -11,12 +11,38 @@ import { BRAND } from '@/design-system/tokens';
 export { BRAND };
 
 export const METRYX_NAVY = '#344E86';
+
+/**
+ * CAPADEX Canonical Lifecycle — SINGLE SOURCE OF TRUTH for the frontend.
+ *
+ * Mirrors the backend canon (`backend/lib/lifecycle.ts`) / Blueprint 06, because the
+ * Vite app cannot import backend modules. FOUR coded stages, in order:
+ *   CAP_CUR Curiosity → CAP_INS Insight → CAP_GRW Growth → CAP_MAS Mastery.
+ * "Clarity" is the DISPLAY ALIAS of Insight (the SAME stage, never a fifth); "Awareness"
+ * is the UNCODED pre-stage (never a CAP_* code). Every frontend stage label MUST resolve
+ * through CAPADEX_STAGES / `stageLabel()` — do not re-declare a local stage map.
+ */
 export const CAPADEX_STAGES = [
   { code: 'CAP_CUR', label: 'Curiosity', color: METRYX_NAVY, desc: 'Surface awareness & first signals' },
   { code: 'CAP_INS', label: 'Insight',   color: METRYX_NAVY, desc: 'Patterns & self-understanding'    },
   { code: 'CAP_GRW', label: 'Growth',    color: METRYX_NAVY, desc: 'Strategy & habit formation'       },
   { code: 'CAP_MAS', label: 'Mastery',   color: METRYX_NAVY, desc: 'Control & peak performance'       },
 ];
+
+/** Canonical stage code → label map (the four coded stages only; a missing key is `undefined`). */
+export const STAGE_CODE_TO_LABEL: Record<string, string> = Object.fromEntries(
+  CAPADEX_STAGES.map((s) => [s.code, s.label]),
+);
+
+/**
+ * Canonical label for a stage code. Null/undefined → 'Curiosity' (the first stage, by
+ * convention for "no stage yet"). An unknown non-null code is returned verbatim so a bad
+ * value surfaces honestly instead of being silently mislabelled.
+ */
+export function stageLabel(code: string | null | undefined): string {
+  if (!code) return 'Curiosity';
+  return STAGE_CODE_TO_LABEL[code] ?? code;
+}
 
 export interface CapadexQuestion {
   id: string;

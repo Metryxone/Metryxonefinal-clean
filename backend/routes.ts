@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { CONCERN_TO_CONSTRUCT, CONSTRUCT_MAP, normalizeConcernKey } from './data/behavioural-constructs';
+import { STAGE_CODE_TO_LABEL, LIFECYCLE_STAGE_CODES } from './lib/lifecycle';
 import { storage } from "./storage";
 import { buildCapadexReportHtml, sendLoginOtp, sendMfaCode } from "./email";
 import { buildOmegaEmailExtras } from "./services/omega-report-builder";
@@ -7857,11 +7858,9 @@ Requirements:
        .replace(/'/g, '&#x27;');
 
     try {
-      const VALID_STAGES = ['CAP_CUR', 'CAP_INS', 'CAP_GRW', 'CAP_MAS'] as const;
+      const VALID_STAGES = LIFECYCLE_STAGE_CODES;
       type StageCode = typeof VALID_STAGES[number];
-      const stageLabelMap: Record<StageCode, string> = {
-        CAP_CUR: 'Curiosity', CAP_INS: 'Insight', CAP_GRW: 'Growth', CAP_MAS: 'Mastery',
-      };
+      const stageLabelMap: Record<string, string> = STAGE_CODE_TO_LABEL;
 
       // Stage — strict allowlist, never taken verbatim from user input
       const rawStage = (req.query.stage as string | undefined) || 'CAP_CUR';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { AlertCircle, AlertTriangle, CheckCircle, Eye, GitMerge, Mail, TrendingUp, X } from 'lucide-react';
-import { METRYX_NAVY, getAgeRange } from '@/lib/behavioural-insights';
+import { METRYX_NAVY, getAgeRange, stageLabel as canonicalStageLabel } from '@/lib/behavioural-insights';
 import { PhaseProps } from '../types';
 
 export function CapadexPreviewPhase(props: PhaseProps) {
@@ -372,8 +372,7 @@ export function CapadexPreviewPhase(props: PhaseProps) {
             {capadexStageCheck?.has_prior_completion && (() => {
               const sc = capadexStageCheck!;
               const isAllDone = sc.completed.length === 4;
-              const stageLabel = (c: string) =>
-                c === 'CAP_CUR' ? 'Curiosity' : c === 'CAP_INS' ? 'Insight' : c === 'CAP_GRW' ? 'Growth' : 'Mastery';
+              const stageLabel = (c: string) => canonicalStageLabel(c);
               return (
                 <div className="rounded-xl p-3" style={{ backgroundColor: '#EEF2FA', border: '1.5px solid #344E8630' }}>
                   <div className="flex items-center gap-1.5 mb-1.5">

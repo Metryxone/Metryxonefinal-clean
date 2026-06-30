@@ -18,6 +18,7 @@
  */
 
 import type { Pool } from 'pg';
+import { STAGE_CODE_TO_LABEL } from '../lib/lifecycle';
 import { OntologyEngine } from './ontology-engine';
 import { PsychometricCalibrationEngine } from './psychometric-calibration';
 import { validateReport } from './safety-layer';
@@ -80,7 +81,7 @@ export async function buildOmegaReport(
   const scoreLevel = base.score_level ?? scoreLevelFromScore(scoreNum);
   const concernName = base.concern_name ?? 'Behavioural Pattern';
   const stageCode = base.stage_code ?? 'CAP_CUR';
-  const STAGE_LABELS: Record<string, string> = { CAP_CUR: 'Curiosity', CAP_INS: 'Insight', CAP_GRW: 'Growth', CAP_MAS: 'Mastery' };
+  const STAGE_LABELS: Record<string, string> = STAGE_CODE_TO_LABEL;
   const stageLabel = STAGE_LABELS[stageCode] ?? stageCode;
   const participantName = base.participant_name ?? 'Participant';
 

@@ -1,29 +1,50 @@
 /**
  * CAPADEX WC-3 L1 — Stage Intelligence (Phase A).
  *
- * Compose-only: derives a per-session behavioural STAGE on the canonical 5-stage
- * progression (Awareness → Curiosity → Clarity → Growth → Mastery) from data that
- * already exists — the session's `stage_code` and the user's CSI profile. It NEVER
- * recomputes any score, NEVER edits ontology / signals / concerns. It persists the
- * current stage state (upsert by session) and an append-only progression log.
+ * Compose-only: derives a per-session behavioural STAGE for the canonical lifecycle
+ * (see `backend/lib/lifecycle.ts` / Blueprint 06) from data that already exists — the
+ * session's `stage_code` and the user's CSI profile. It NEVER recomputes any score,
+ * NEVER edits ontology / signals / concerns. It persists the current stage state
+ * (upsert by session) and an append-only progression log.
+ *
+ * LIFECYCLE FRAMING (NOT a competing canon): the canon has FOUR coded stages
+ * (CAP_CUR Curiosity → CAP_INS Insight → CAP_GRW Growth → CAP_MAS Mastery). This
+ * telemetry persists each session on a 0..4 PROGRESSION SCALE that is a projection of
+ * those four onto a scale prefixed by the UNCODED pre-stage "Awareness" (index 0, for
+ * sessions with no coded stage) and renders CAP_INS under its sanctioned DISPLAY ALIAS
+ * "Clarity". The persisted `canonical_stage` strings ('Awareness'/'Curiosity'/
+ * 'Clarity'/'Growth'/'Mastery') are LOAD-BEARING — existing rows and downstream
+ * consumers (subscription floor, decision text, memory, trend) key on them — so they
+ * are preserved verbatim and sourced from the canon.
  *
  * Strictly additive + never-throws: the caller is gated on `isWc3StageEnabled()`.
  */
 import type { Pool } from 'pg';
 import { ensureWc3StageSchema } from './wc3-schema';
+import { STAGE_CODE_TO_LABEL, INSIGHT_DISPLAY_ALIAS, UNCODED_PRE_STAGE } from '../../lib/lifecycle';
 
-/** CAPADEX stage_code → canonical stage. `Insight` is aliased to `Clarity`. */
+/**
+ * CAPADEX stage_code → the stage label this WC-3 telemetry persists. Labels are sourced
+ * from the canonical lifecycle; CAP_INS is persisted under its sanctioned DISPLAY ALIAS
+ * "Clarity" (the SAME stage as Insight — see `backend/lib/lifecycle.ts`).
+ */
 export const STAGE_ENTITY_MAP: Record<string, string> = {
-  CAP_CUR: 'Curiosity',
-  CAP_INS: 'Clarity',
-  CAP_GRW: 'Growth',
-  CAP_MAS: 'Mastery',
+  CAP_CUR: STAGE_CODE_TO_LABEL.CAP_CUR, // Curiosity
+  CAP_INS: INSIGHT_DISPLAY_ALIAS,        // Clarity (display alias of Insight / CAP_INS)
+  CAP_GRW: STAGE_CODE_TO_LABEL.CAP_GRW, // Growth
+  CAP_MAS: STAGE_CODE_TO_LABEL.CAP_MAS, // Mastery
 };
 
-/** Canonical 5-stage progression order (index 0..4). */
-export const CANONICAL_STAGE_ORDER = ['Awareness', 'Curiosity', 'Clarity', 'Growth', 'Mastery'] as const;
+/**
+ * WC-3 telemetry PROGRESSION ORDER (index 0..4) — a projection of the four canonical
+ * coded stages, NOT a competing canon. Index 0 is the UNCODED pre-stage "Awareness"
+ * (used for sessions with no coded stage_code); CAP_INS appears under its display alias
+ * "Clarity". Kept as an explicit literal so the persisted index math and the
+ * `CanonicalStage` union type (derived by question-stage-intelligence) are byte-identical.
+ */
+export const WC3_PROGRESSION_ORDER = [UNCODED_PRE_STAGE, 'Curiosity', INSIGHT_DISPLAY_ALIAS, 'Growth', 'Mastery'] as const;
 
-export const CANONICAL_STAGE_WEIGHT: Record<string, number> = {
+export const WC3_PROGRESSION_WEIGHT: Record<string, number> = {
   Awareness: 0.25,
   Curiosity: 0.50,
   Clarity: 0.75,
@@ -32,12 +53,12 @@ export const CANONICAL_STAGE_WEIGHT: Record<string, number> = {
 };
 
 export function canonicalStageFor(stageCode: string | null | undefined): string {
-  if (!stageCode) return 'Awareness';
-  return STAGE_ENTITY_MAP[stageCode] || 'Awareness';
+  if (!stageCode) return UNCODED_PRE_STAGE;
+  return STAGE_ENTITY_MAP[stageCode] || UNCODED_PRE_STAGE;
 }
 
 export function stageOrderIndex(canonicalStage: string): number {
-  const i = (CANONICAL_STAGE_ORDER as readonly string[]).indexOf(canonicalStage);
+  const i = (WC3_PROGRESSION_ORDER as readonly string[]).indexOf(canonicalStage);
   return i < 0 ? 0 : i;
 }
 
@@ -90,7 +111,7 @@ export async function resolveSessionStage(pool: Pool, input: ResolveInput): Prom
     await ensureWc3StageSchema(pool);
     const canonical = canonicalStageFor(input.stageCode);
     const orderIndex = stageOrderIndex(canonical);
-    const weight = CANONICAL_STAGE_WEIGHT[canonical] ?? null;
+    const weight = WC3_PROGRESSION_WEIGHT[canonical] ?? null;
     const { csi_score, csi_stage } = await readCsi(pool, input.userEmail);
     // Confidence: a recognised stage_code is the primary signal (0.6); a present
     // CSI profile adds corroboration (0.4). An unmapped/absent stage_code with no
@@ -196,7 +217,7 @@ export async function getSessionStage(pool: Pool, sessionId: string): Promise<(S
     session_id: sessionId,
     canonical_stage: canonical,
     stage_order_index: stageOrderIndex(canonical),
-    stage_weight: CANONICAL_STAGE_WEIGHT[canonical] ?? null,
+    stage_weight: WC3_PROGRESSION_WEIGHT[canonical] ?? null,
     source_stage_code: s.stage_code ?? null,
     score: s.score != null ? Number(s.score) : null,
     score_level: null,

@@ -31,7 +31,7 @@
  */
 import type { Pool } from 'pg';
 import { ensureWc3JourneySchema } from './wc3-schema';
-import { getSessionStage, CANONICAL_STAGE_ORDER, type StageState } from './stage-intelligence';
+import { getSessionStage, WC3_PROGRESSION_ORDER, type StageState } from './stage-intelligence';
 import { getSessionOutcomes, type OutcomeSummary } from './outcome-intelligence';
 
 const r2 = (n: number) => Math.round(n * 100) / 100;
@@ -200,10 +200,10 @@ function topContributor(contributing: ContribModel[]): ContribModel | null {
 function stageAdvancement(stage: StageState | null): { current: string | null; desired: string | null; advancement: string } {
   const current = stage?.canonical_stage ?? null;
   if (!current) return { current: null, desired: null, advancement: 'unavailable' };
-  const idx = (CANONICAL_STAGE_ORDER as readonly string[]).indexOf(current);
-  const last = CANONICAL_STAGE_ORDER.length - 1;
+  const idx = (WC3_PROGRESSION_ORDER as readonly string[]).indexOf(current);
+  const last = WC3_PROGRESSION_ORDER.length - 1;
   const desiredIdx = idx < 0 ? 0 : Math.min(idx + 1, last);
-  const desired = CANONICAL_STAGE_ORDER[desiredIdx];
+  const desired = WC3_PROGRESSION_ORDER[desiredIdx];
   return { current, desired, advancement: `${current} → ${desired}` };
 }
 

@@ -16,6 +16,7 @@
 
 import type { Express, Request, Response } from 'express';
 import type { Pool } from 'pg';
+import { STAGE_CODE_TO_LABEL } from '../lib/lifecycle';
 import { isEnabled }          from '../services/feature-flags';
 import { selectNextQuestion, rankCandidateQuestions } from '../services/adaptive-assessment';
 
@@ -59,10 +60,7 @@ async function staticNextQuestion(
   }
   if (!session) return null; // session not found (valid UUID, no row)
 
-  const stageMap: Record<string, string> = {
-    CAP_CUR: 'Curiosity', CAP_INS: 'Insight', CAP_GRW: 'Growth', CAP_MAS: 'Mastery',
-  };
-  const stageName = stageMap[session.stage_code] ?? 'Curiosity';
+  const stageName = STAGE_CODE_TO_LABEL[session.stage_code] ?? 'Curiosity';
 
   // Already-answered IDs (raw item_id strings: digits for SAQ, UUIDs for SDI)
   const answeredIds = new Set<string>();

@@ -112,3 +112,74 @@ export function stageOrder(code: string | null | undefined): number {
 export function isLifecycleStageCode(code: string | null | undefined): code is LifecycleStageCode {
   return !!code && (LIFECYCLE_STAGE_CODES as readonly string[]).includes(code);
 }
+
+/**
+ * The resolution of a STORED stage value against the canon.
+ *  - `code`             canonical code (CAP_*), or null for the uncoded pre-stage / unrecognized.
+ *  - `label`            canonical label (Curiosity/Insight/Growth/Mastery), or null otherwise.
+ *  - `order`            0-based order among the four coded stages, or -1 otherwise.
+ *  - `isUncodedPreStage` true only for the sanctioned uncoded pre-stage ("Awareness").
+ *  - `recognized`       true when the input mapped to a coded stage OR the pre-stage.
+ */
+export interface ResolvedStoredStage {
+  code: LifecycleStageCode | null;
+  label: string | null;
+  order: number;
+  isUncodedPreStage: boolean;
+  recognized: boolean;
+}
+
+/**
+ * Lookup of every STORED representation → canonical code, built from the canon so it can
+ * never drift: each stage's code (e.g. `cap_ins`), its canonical label (`insight`), and
+ * its sanctioned display alias (`clarity` → CAP_INS) all resolve to the same code.
+ * Keys are lower-cased.
+ */
+const STORED_STAGE_TO_CODE: Readonly<Record<string, LifecycleStageCode>> = (() => {
+  const m: Record<string, LifecycleStageCode> = {};
+  for (const s of LIFECYCLE_STAGES) {
+    m[s.code.toLowerCase()] = s.code;       // CAP_INS
+    m[s.label.toLowerCase()] = s.code;      // insight
+    if (s.displayAlias) m[s.displayAlias.toLowerCase()] = s.code; // clarity → CAP_INS
+  }
+  return m;
+})();
+
+/**
+ * The stored representations of the UNCODED pre-stage ("Awareness"). It is NOT a coded
+ * stage — it carries no CAP_* code — but it IS a sanctioned value that downstream reads
+ * (subscription floor, WC3 trend) recognize. `cap_awr` is the legacy pseudo-code some
+ * older WC3 rows / maps used for it.
+ */
+const UNCODED_PRE_STAGE_KEYS: ReadonlySet<string> = new Set([
+  UNCODED_PRE_STAGE.toLowerCase(),
+  'cap_awr',
+]);
+
+/**
+ * BACKWARD-COMPATIBLE READ-LAYER NORMALIZER — the single source of truth for resolving any
+ * persisted stage string to the canon. Accepts the canonical code (`CAP_INS`), the canonical
+ * label (`Insight`), the sanctioned display alias (`Clarity`), or the uncoded pre-stage
+ * (`Awareness` / `CAP_AWR`) — case-insensitively, trimmed. Pure; never throws.
+ *
+ * This formalizes the sanctioned aliases AT THE READ LAYER (Clarity = CAP_INS, Awareness =
+ * uncoded pre-stage), so stored data and the canon agree without rewriting any rows. Stored
+ * `canonical_stage` strings stay verbatim; every consumer resolves them through this helper.
+ */
+export function normalizeStoredStage(value: string | null | undefined): ResolvedStoredStage {
+  const key = (value ?? '').toString().trim().toLowerCase();
+  if (key !== '' && UNCODED_PRE_STAGE_KEYS.has(key)) {
+    return { code: null, label: null, order: -1, isUncodedPreStage: true, recognized: true };
+  }
+  const code = key === '' ? undefined : STORED_STAGE_TO_CODE[key];
+  if (!code) {
+    return { code: null, label: null, order: -1, isUncodedPreStage: false, recognized: false };
+  }
+  return {
+    code,
+    label: STAGE_CODE_TO_LABEL[code],
+    order: stageOrder(code),
+    isUncodedPreStage: false,
+    recognized: true,
+  };
+}

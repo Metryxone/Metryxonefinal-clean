@@ -18,20 +18,20 @@
 import type { Pool } from 'pg';
 import { createAICoach } from '../m5-ai-coaching';
 import { createAssessmentWriter } from '../assessment-writer';
+import { normalizeStoredStage } from '../../lib/lifecycle';
 import type { DecisionContext } from './decision-orchestrator';
 
-/** Canonical 5-stage ladder → a 0..100 score (Awareness..Mastery). */
-const STAGE_SCORE: Record<string, number> = {
-  Awareness: 20,
-  Curiosity: 40,
-  Clarity: 60,
-  Growth: 80,
-  Mastery: 100,
-};
-
+/**
+ * Map a stored stage to a 0..100 score on the WC3 5-point progression ladder
+ * (Awareness 20 · Curiosity 40 · Clarity/Insight 60 · Growth 80 · Mastery 100). Resolution
+ * goes through the canonical read-layer normalizer so a label, the display alias "Clarity",
+ * or a `CAP_*` code all score identically. Unknown / absent stage → 50 (neutral midpoint),
+ * preserving the legacy default. Score = (progression ordinal + 1) × 20.
+ */
 function stageScore(stage: string | null | undefined): number {
-  if (!stage) return 50;
-  return STAGE_SCORE[stage] ?? 50;
+  const r = normalizeStoredStage(stage);
+  const ordinal = r.isUncodedPreStage ? 0 : (r.code ? r.order + 1 : null);
+  return ordinal === null ? 50 : (ordinal + 1) * 20;
 }
 
 export interface GrowthPlanActivation {

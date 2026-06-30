@@ -19,7 +19,7 @@
  * STAGE_PRICES / LADDER MIRROR `routes/capadex-payments.ts` — keep them in lockstep.
  */
 import type { Pool } from 'pg';
-import { STAGE_CODE_TO_LABEL } from '../../lib/lifecycle';
+import { STAGE_CODE_TO_LABEL, normalizeStoredStage, type LifecycleStageCode } from '../../lib/lifecycle';
 
 // Mirror of STAGE_PRICES in routes/capadex-payments.ts — keep in lockstep.
 const STAGE_PRICES: Record<string, number> = { CAP_INS: 499, CAP_GRW: 999, CAP_MAS: 1999 };
@@ -56,18 +56,26 @@ export interface CommercialDecisionInput {
   };
 }
 
+/**
+ * Floor (minimum) index into the purchasable LADDER (`[CAP_INS, CAP_GRW, CAP_MAS]`) for a
+ * user who has REACHED a given stage — the next rung we may recommend:
+ *   • Curiosity (and the uncoded pre-stage / unknown) → 0 → first rung CAP_INS.
+ *   • Insight (alias "Clarity")                       → 1 → Insight reached, recommend CAP_GRW.
+ *   • Growth                                          → 1 → CAP_GRW (own-check removes if owned).
+ *   • Mastery                                         → 2 → CAP_MAS.
+ * Encoded as a code→index table (preserving the legacy label mapping exactly) so the value
+ * is identical whether the stored stage arrives as a label, the display alias, or a CAP_* code.
+ */
+const FLOOR_BY_CODE: Record<LifecycleStageCode, number> = {
+  CAP_CUR: 0,
+  CAP_INS: 1,
+  CAP_GRW: 1,
+  CAP_MAS: 2,
+};
+
 function stageFloorIndex(canonical: string | null | undefined): number {
-  switch ((canonical || '').toLowerCase()) {
-    case 'clarity':
-    case 'growth':
-      return 1;
-    case 'mastery':
-      return 2;
-    case 'awareness':
-    case 'curiosity':
-    default:
-      return 0;
-  }
+  const { code } = normalizeStoredStage(canonical);
+  return code ? FLOOR_BY_CODE[code] : 0;
 }
 
 // Reads owned (paid) stages from the live ledger. Deliberately does NOT swallow query

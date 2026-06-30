@@ -29,17 +29,12 @@
 import type { Pool } from 'pg';
 import { ensureWc3LongitudinalSchema } from './wc3-schema';
 import { leastSquaresSlope, directionOf, type TrendDirection } from './longitudinal-consumption';
+import { normalizeStoredStage } from '../../lib/lifecycle';
 
 export type TrendLever = 'stage' | 'outcome' | 'journey' | 'decision';
 
 /** Number of comparable sessions at which trend confidence reaches 1.0 (2 = minimum point count). */
 const TREND_TARGET_POINTS = 4;
-
-/** Canonical 5-stage progression → ordinal (mirrors wc3_stage_definitions / wc3_stage_entity_map). */
-const STAGE_ORDINAL: Record<string, number> = {
-  awareness: 0, curiosity: 1, clarity: 2, growth: 3, mastery: 4,
-  cap_awr: 0, cap_cur: 1, cap_ins: 2, cap_grw: 3, cap_mas: 4,
-};
 
 function clamp01to100(n: number): number {
   return Math.max(0, Math.min(100, n));
@@ -48,13 +43,20 @@ function clamp01to100(n: number): number {
 /**
  * Normalise a stage label/code to the shared 0..100 progression scale (each canonical stage = 25
  * points). Returns null for an unknown/empty stage so it is treated as MISSING, never as 0.
+ *
+ * Resolution goes through the canonical read-layer normalizer (`normalizeStoredStage`) so a label
+ * (`Clarity`), the display alias, or a `CAP_*` code all resolve identically. The WC3 telemetry uses
+ * a 5-point PROGRESSION scale prefixed by the uncoded pre-stage "Awareness" (ordinal 0); the four
+ * coded stages follow at ordinals 1..4 (canonical order + 1). Mirrors wc3_stage_definitions.
  */
 function stageToScale(canonical: string | null, code: string | null): number | null {
-  const key = (canonical ?? code ?? '').toString().trim().toLowerCase();
-  if (key === '') return null;
-  const ord = STAGE_ORDINAL[key];
-  if (ord === undefined) return null;
-  return (ord / 4) * 100;
+  const resolved = normalizeStoredStage(canonical ?? code ?? '');
+  let ordinal: number | null;
+  if (resolved.isUncodedPreStage) ordinal = 0;
+  else if (resolved.code) ordinal = resolved.order + 1;
+  else ordinal = null;
+  if (ordinal === null) return null;
+  return (ordinal / 4) * 100;
 }
 
 /** Confidence in the TREND itself: scales with #comparable points. 2 pts = low; ≥TARGET = full. */

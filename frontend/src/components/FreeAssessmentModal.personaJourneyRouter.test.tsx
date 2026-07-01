@@ -55,6 +55,31 @@ function mockPublicConfig(personaJourneyRouter: boolean) {
   });
 }
 
+// Serve a *broken* public-config response for the modal's on-open fetch so we can
+// prove the failure path stays byte-identical. `mode` picks the failure shape:
+//   • 'reject'   → fetch() itself rejects (network error / offline).
+//   • 'json'     → response resolves but .json() rejects (malformed body).
+//   • 'malformed'→ response .json() resolves to a non-object (null) payload.
+function mockPublicConfigFailure(mode: 'reject' | 'json' | 'malformed') {
+  (globalThis as any).fetch = vi.fn((input: RequestInfo | URL) => {
+    const url = typeof input === 'string' ? input : String((input as any)?.url ?? input);
+    if (url.includes('/api/capadex/public-config')) {
+      if (mode === 'reject') {
+        return Promise.reject(new Error('network down'));
+      }
+      if (mode === 'json') {
+        return Promise.resolve({
+          ok: false,
+          json: () => Promise.reject(new SyntaxError('Unexpected token < in JSON')),
+        } as any);
+      }
+      // 'malformed' → payload is not the expected object shape.
+      return Promise.resolve({ ok: true, json: () => Promise.resolve(null) } as any);
+    }
+    return Promise.resolve({ ok: false, json: () => Promise.resolve({}) } as any);
+  });
+}
+
 beforeEach(() => {
   introPersonaResolvedCalls.length = 0;
   localStorage.clear();
@@ -125,5 +150,41 @@ describe('FreeAssessmentModal — personaResolvedUpstream hand-off value', () =>
     // Every IntroPhase render after the hand-off carries the resolved flag.
     expect(introPersonaResolvedCalls.length).toBeGreaterThan(0);
     expect(introPersonaResolvedCalls.every((v) => v === true)).toBe(true);
+  });
+});
+
+describe('FreeAssessmentModal — public-config fetch failure stays byte-identical', () => {
+  // The on-open flag fetch has a `.catch(() => {})`. If it rejects, returns a
+  // non-ok body whose .json() throws, or resolves a malformed payload, the modal
+  // must keep the byte-identical legacy default: classic IntroPhase, no wizard,
+  // personaResolvedUpstream=false. These are the risky edges Task #354 skipped.
+  it('renders the classic IntroPhase (no wizard, personaResolvedUpstream=false) when fetch rejects', async () => {
+    mockPublicConfigFailure('reject');
+    renderModal();
+
+    const intro = await screen.findByTestId('intro-phase');
+    expect(screen.queryByTestId('persona-journey-wizard')).not.toBeInTheDocument();
+    expect(intro).toHaveAttribute('data-persona-resolved', 'false');
+    expect(introPersonaResolvedCalls.every((v) => v === false)).toBe(true);
+  });
+
+  it('renders the classic IntroPhase (no wizard, personaResolvedUpstream=false) when .json() throws', async () => {
+    mockPublicConfigFailure('json');
+    renderModal();
+
+    const intro = await screen.findByTestId('intro-phase');
+    expect(screen.queryByTestId('persona-journey-wizard')).not.toBeInTheDocument();
+    expect(intro).toHaveAttribute('data-persona-resolved', 'false');
+    expect(introPersonaResolvedCalls.every((v) => v === false)).toBe(true);
+  });
+
+  it('renders the classic IntroPhase (no wizard, personaResolvedUpstream=false) when the payload is malformed', async () => {
+    mockPublicConfigFailure('malformed');
+    renderModal();
+
+    const intro = await screen.findByTestId('intro-phase');
+    expect(screen.queryByTestId('persona-journey-wizard')).not.toBeInTheDocument();
+    expect(intro).toHaveAttribute('data-persona-resolved', 'false');
+    expect(introPersonaResolvedCalls.every((v) => v === false)).toBe(true);
   });
 });

@@ -38,6 +38,17 @@
  *                   compatibility score and role matches, so each is asserted to
  *                   scope every composed DB read to the SESSION uid and to keep
  *                   an attacker's id out of every query param.
+ *   (e) flag ON   → the higher-impact WRITE routes carry the SAME guarantee.
+ *                   `POST /values` persists the Work Values inventory,
+ *                   `POST /complete` marks discovery complete + snapshots the
+ *                   composed profile, and `POST /explorer/simulate` runs a
+ *                   self-scoped what-if. Each resolves its subject from the
+ *                   SESSION principal only, so a future refactor that added an id
+ *                   parameter would let student A OVERWRITE student B's stored
+ *                   values / completion status / snapshot. Each is asserted to
+ *                   503 before auth/DB when OFF, and — when ON — to persist the
+ *                   `career_discovery_results` UPSERT keyed on the SESSION uid
+ *                   while an attacker's id NEVER reaches any query param.
  *
  * It mounts the REAL `registerLaunchpadDashboardRoutes` +
  * `registerCareerDiscoveryRoutes` onto a throwaway Express server (listen(0))
@@ -685,6 +696,112 @@ async function main() {
         `a client-supplied id reached the DB layer in ${leaked.length} quer${leaked.length === 1 ? 'y' : 'ies'}: ` +
           leaked.map((q) => q.sql.replace(/\s+/g, ' ').trim().slice(0, 80)).join(' | '),
       );
+    });
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // Career Discovery (MX-302B) — WRITE routes. Same self-only guarantee, higher
+  // impact: these PERSIST. `/values` stores the Work Values inventory,
+  // `/complete` marks discovery complete + snapshots the composed profile, and
+  // `/explorer/simulate` runs a self-scoped what-if. Each resolves its subject
+  // from `selfId(req)` (the SESSION principal) — a future refactor that added an
+  // id parameter to any of them would let student A overwrite / act on student
+  // B's discovery row. Each route is hit with an attacker's id planted in EVERY
+  // client-controllable channel (?id / ?user_id / ?subject in the query string
+  // AND the JSON body). The guarantee is proven at the DB layer: the write is
+  // keyed by the SESSION uid and the attacker's id NEVER reaches a query param.
+  // ══════════════════════════════════════════════════════════════════════════
+  console.log('\nCareer Discovery WRITE privacy / flag-gate / self-only');
+
+  // Each body carries a legitimate payload alongside the attacker ids the
+  // handler must ignore for subject resolution. The Values payload lives under
+  // `responses` (a distinct key) so the stored inventory blob can never itself
+  // carry an attacker id — the ONLY leak vector under test is subject resolution.
+  const writeRoutes: Array<{ name: string; path: string; body: any }> = [
+    {
+      name: 'POST /values',
+      path: `/api/career-discovery/values?${ATTACK_QS}`,
+      body: {
+        responses: { work_life_balance: 5, compensation: 3 },
+        id: ATTACKER_UID,
+        user_id: ATTACKER_UID,
+        subject: ATTACKER_UID,
+      },
+    },
+    {
+      name: 'POST /complete',
+      path: `/api/career-discovery/complete?${ATTACK_QS}`,
+      body: { id: ATTACKER_UID, user_id: ATTACKER_UID, subject: ATTACKER_UID },
+    },
+    {
+      name: 'POST /explorer/simulate',
+      path: `/api/career-discovery/explorer/simulate?${ATTACK_QS}`,
+      body: {
+        changes: [{ target: 'dom_communication', to_level: 4 }],
+        id: ATTACKER_UID,
+        user_id: ATTACKER_UID,
+        subject: ATTACKER_UID,
+      },
+    },
+  ];
+
+  // (a) Flag OFF: every write 503s BEFORE any auth/DB touch (byte-identical).
+  process.env[FF_CD] = 'false';
+  for (const route of writeRoutes) {
+    probe.reset();
+    const r = await call(base, 'POST', route.path, { auth: true, body: route.body });
+    test(`CD write flag OFF → ${route.name} returns 503`, () => {
+      assert.equal(r.status, 503);
+      assert.equal(r.json?.enabled, false);
+    });
+    test(`CD write flag OFF → ${route.name} 503 fires BEFORE auth (requireAuth not reached)`, () => {
+      assert.equal(probe.authCalls, 0, 'requireAuth ran before the flag gate');
+    });
+    test(`CD write flag OFF → ${route.name} 503 fires BEFORE any DB touch (pool not queried)`, () => {
+      assert.equal(probe.dbQueries.length, 0, 'the DB was queried while the flag was OFF');
+    });
+  }
+
+  // (b) Flag ON: each write scopes to the SESSION uid; attacker id never leaks.
+  process.env[FF_CD] = 'true';
+  for (const route of writeRoutes) {
+    probe.reset();
+    const r = await call(base, 'POST', route.path, { auth: true, body: route.body });
+    test(`CD write flag ON → ${route.name} 200 for an authenticated seeker`, () => {
+      assert.equal(r.status, 200, `expected 200, got ${r.status}`);
+      assert.equal(r.json?.ok, true);
+    });
+    test(`CD write flag ON → ${route.name} persisted/composed query was keyed by the SESSION uid`, () => {
+      assert.ok(probe.dbQueries.length > 0, 'expected the write to query the DB');
+      assert.ok(
+        probe.dbQueries.some((q) => (q.params ?? []).some((p) => String(p) === SESSION_UID)),
+        'no DB query was keyed by the SESSION uid',
+      );
+    });
+    test(`CD write flag ON → ${route.name} attacker id NEVER reaches any DB query param (no write IDOR A→B)`, () => {
+      const leaked = probe.dbQueries.filter((q) => (q.params ?? []).some((p) => String(p).includes(ATTACKER_UID)));
+      assert.equal(
+        leaked.length,
+        0,
+        `a client-supplied id reached the DB layer in ${leaked.length} quer${leaked.length === 1 ? 'y' : 'ies'}: ` +
+          leaked.map((q) => q.sql.replace(/\s+/g, ' ').trim().slice(0, 80)).join(' | '),
+      );
+    });
+  }
+
+  // (c) The PERSISTING writes (`/values`, `/complete`) key their UPSERT into
+  //     `career_discovery_results` on the SESSION uid: the first bind is the PK /
+  //     conflict target `user_id`, so the row written / updated can ONLY ever be
+  //     the caller's OWN discovery row — student A can never overwrite student B.
+  process.env[FF_CD] = 'true';
+  for (const route of [writeRoutes[0], writeRoutes[1]]) {
+    probe.reset();
+    await call(base, 'POST', route.path, { auth: true, body: route.body });
+    test(`CD write flag ON → ${route.name} UPSERT into career_discovery_results keys user_id on the SESSION uid`, () => {
+      const write = probe.dbQueries.find((q) => /INSERT\s+INTO\s+career_discovery_results/i.test(q.sql));
+      assert.ok(write, 'expected an INSERT/UPSERT into career_discovery_results');
+      assert.equal(write!.params[0], SESSION_UID, `write keyed user_id on a client-supplied id: ${write!.params[0]}`);
+      assert.notEqual(write!.params[0], ATTACKER_UID);
     });
   }
 

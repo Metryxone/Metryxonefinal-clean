@@ -34,6 +34,7 @@
  */
 
 import { Pool } from 'pg';
+import { ensureEntitlementGrantsSchema } from '../services/commercial/entitlement-grants-schema';
 
 const BASE = process.env.E2E_BASE_URL ?? 'http://localhost:8080';
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -107,6 +108,12 @@ const PW = `E2eHire!${RUN}aA9`; // satisfies complexity policy (upper/lower/digi
 const REAL_EMAIL = `e2e253.real.${RUN}@e2e-metryxone.test`;   // NON-demo (not @example.com)
 const BULK_EMAIL = `e2e253.bulk.${RUN}@e2e-metryxone.test`;   // NON-demo
 const DEMO_EMAIL = `e2e253.demo.${RUN}@example.com`;          // demo (RFC-2606 reserved)
+// Billing identity for the throwaway EMPLOYER (the registrant). The module-access gate
+// (FF_MODULE_ACCESS_CONTROL) keys employer_portal ownership on the principal's email, so a
+// real employer posts jobs only when entitled. We register with an email AND provision an
+// active per-email `employer_portal` grant (the super-admin manual-grant mechanism) so the
+// harness exercises a legitimately-entitled employer; both are cleaned up on exit.
+const EMPLOYER_EMAIL = `e2e253.employer.${RUN}@e2e-metryxone.test`; // NON-demo billing identity
 
 let userId = '';
 let jobId = '';
@@ -119,6 +126,8 @@ async function cleanup() {
     }
     await pool.query(`DELETE FROM validation_loop_outcomes WHERE subject_email = ANY($1)`,
       [[REAL_EMAIL.toLowerCase(), BULK_EMAIL.toLowerCase(), DEMO_EMAIL.toLowerCase()]]).catch(() => {});
+    await pool.query(`DELETE FROM comm_entitlement_grants WHERE lower(email)=lower($1)`,
+      [EMPLOYER_EMAIL]).catch(() => {});
     if (userId) {
       await pool.query(`DELETE FROM employer_candidates WHERE employer_id=$1`, [userId]).catch(() => {});
       await pool.query(`DELETE FROM employer_jobs WHERE employer_id=$1`, [userId]).catch(() => {});
@@ -157,6 +166,7 @@ async function main() {
   {
     const r = await api('POST', '/api/register', {
       username: USER, password: PW, fullName: 'E2E 253 Tester', role: 'job_seeker',
+      email: EMPLOYER_EMAIL,
     });
     userId = String(r.json?.id ?? '');
     assert(r.status === 200 && !!userId, `POST /api/register created user + session (status ${r.status})`);
@@ -168,6 +178,26 @@ async function main() {
   {
     const r = await api('POST', '/api/employer/register', { companyName: 'E2E 253 Co (TEST)' });
     assert(r.status === 200 && r.json?.account_type === 'employer', `POST /api/employer/register → employer (status ${r.status})`);
+  }
+
+  // 2b — entitle the employer to the employer_portal module (FF_MODULE_ACCESS_CONTROL gates
+  //      /api/employer/* on employer_portal ownership; a real employer posts jobs only when
+  //      entitled). We provision an active per-email grant — the same manual-grant mechanism a
+  //      super-admin uses — so the harness exercises a legitimately-entitled employer.
+  step('Entitle employer to employer_portal module');
+  {
+    await ensureEntitlementGrantsSchema(pool);
+    await pool.query(
+      `INSERT INTO comm_entitlement_grants (email, feature, status, reason, granted_by)
+       VALUES ($1, 'employer_portal', 'active', 'e2e253 hiring-outcome harness', 'e2e253')`,
+      [EMPLOYER_EMAIL],
+    );
+    const { rows } = await pool.query(
+      `SELECT 1 FROM comm_entitlement_grants
+        WHERE lower(email)=lower($1) AND feature='employer_portal' AND status='active'`,
+      [EMPLOYER_EMAIL],
+    );
+    assert(rows.length === 1, `employer_portal grant active for ${EMPLOYER_EMAIL}`);
   }
 
   // 3 — create a job with skills (drives the prediction's role-skill overlap)

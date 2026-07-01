@@ -30,6 +30,60 @@ import {
   buildCompetencyMatcher,
 } from '../services/onet-onto-weight-bridge';
 
+/**
+ * Build a fully self-contained onto_* fixture (role + current DNA profile +
+ * competency) with UNIQUE, multi-word names.
+ *
+ * The naming differences / ambiguous-resolution tests must resolve their curated
+ * onto role title to *their own* ont_* fixtures. Against a real seeded DB that is
+ * only possible with a unique title: a reused real role title (e.g. "Backend
+ * Engineer") legitimately resolves to a real linkable O*NET alias occupation
+ * (e.g. "Software Developers", 25 competencies) that correctly outranks a test
+ * fixture — so the bridge would (correctly) bridge the real role, not the
+ * fixture, and the assertion on the fixture pair would spuriously fail. A unique
+ * title guarantees the fixture is the ONLY resolution, making the test both
+ * deterministic and an honest exercise of the intended bridge behaviour.
+ *
+ * FK anchors (role family / layer / competency domain+family) are reused from the
+ * existing ontology so the helper stays valid if the seed's ids change.
+ */
+async function seedSyntheticOntoFixture(client: any) {
+  // Short suffix: ont_*.code is varchar(30), so keep the prefixed test codes
+  // (e.g. "TEST_AMBIG_PARTIAL_<uniq>") within that bound. Uniqueness only needs
+  // to hold inside this rolled-back transaction.
+  const uniq = 'zt' + Math.random().toString(36).slice(2, 8);
+  const roleTitle = `ZZ Bridge Test Role ${uniq}`; // multi-word + unique
+  const compName = `ZZ Bridge Test Competency ${uniq}`; // multi-word + unique
+  const roleId = `test_role_${uniq}`;
+  const profileId = `test_prof_${uniq}`;
+  const compId = `test_comp_${uniq}`;
+
+  const rf = await client.query(
+    `SELECT role_family_id, layer_id FROM onto_roles LIMIT 1`);
+  const cf = await client.query(
+    `SELECT domain_id, family_id FROM onto_competencies LIMIT 1`);
+  if (!rf.rows.length || !cf.rows.length) return null;
+  const { role_family_id, layer_id } = rf.rows[0];
+  const { domain_id, family_id } = cf.rows[0];
+
+  await client.query(
+    `INSERT INTO onto_roles (id, role_family_id, layer_id, title)
+     VALUES ($1, $2, $3, $4)`,
+    [roleId, role_family_id, layer_id, roleTitle]);
+  await client.query(
+    `INSERT INTO onto_dna_profiles (id, role_id, is_current) VALUES ($1, $2, TRUE)`,
+    [profileId, roleId]);
+  await client.query(
+    `INSERT INTO onto_competencies
+       (id, canonical_name, slug, domain_id, family_id, scientific_type,
+        definition, trainability, stability_level, complexity_level)
+     VALUES ($1, $2, $3, $4, $5, 'cognitive', 'Test bridge competency', 'high',
+             'state_like', 3)`,
+    [compId, compName, `slug-${uniq}`, domain_id, family_id]);
+
+  return { uniq, roleTitle, compName, roleId, profileId, compId };
+}
+
 // ── Layer A: pure proficiency → level mapping ───────────────────────────────
 
 test('profToLevel maps every O*NET band to its onto level', () => {
@@ -185,38 +239,30 @@ test('bridgeOnetDerivedWeights bridges across naming differences and reports gap
   try {
     await client.query('BEGIN');
 
-    const target = await client.query(`
-      SELECT oro.id AS role_id, oro.title, p.id AS profile_id, oc.id AS comp_id, oc.canonical_name
-        FROM onto_roles oro
-        JOIN onto_dna_profiles p ON p.role_id = oro.id AND p.is_current = TRUE
-        JOIN onto_competencies oc ON oc.deprecated = FALSE
-       WHERE oro.deprecated = FALSE
-         AND NOT EXISTS (SELECT 1 FROM onto_role_weights w
-                          WHERE w.dna_profile_id = p.id AND w.competency_id = oc.id)
-       LIMIT 1`);
-    if (!target.rows.length) {
-      t.skip('no eligible onto role/competency fixture in this DB');
+    const fx = await seedSyntheticOntoFixture(client);
+    if (!fx) {
+      t.skip('no ontology seed present in this DB');
       return;
     }
-    const { title, profile_id, comp_id, canonical_name } = target.rows[0];
 
     // Stand up the ont_* side with NAMING DIFFERENCES the old exact-match bridge
     // (lower(btrim(...)) only) would have silently dropped: the role title is
     // upper-cased with trailing punctuation, and the competency name is
-    // upper-cased with a hyphen swapped for a space. normalize() makes both
+    // upper-cased with spaces swapped for hyphens. normalize() makes both
     // resolve, proving the matching is now tolerant of minor naming differences.
-    const fuzzyTitle = `  ${String(title).toUpperCase()}. `;
-    const fuzzyComp = String(canonical_name).toUpperCase().replace(/ /g, '-');
-    assert.notEqual(fuzzyComp.toLowerCase().trim(), String(canonical_name).toLowerCase().trim(),
+    const fuzzyTitle = `  ${fx.roleTitle.toUpperCase()}. `;
+    const fuzzyComp = fx.compName.toUpperCase().replace(/ /g, '-');
+    assert.notEqual(fuzzyComp.toLowerCase().trim(), fx.compName.toLowerCase().trim(),
       'fixture must actually differ from the canonical name (else it is not testing fuzziness)');
 
     const ontRole = await client.query(
       `INSERT INTO ont_roles (code, title, status, is_active)
-       VALUES ('TEST_FUZZY_ROLE', $1, 'published', true) RETURNING id`, [fuzzyTitle]);
+       VALUES ($1, $2, 'published', true) RETURNING id`,
+      [`TEST_FUZZY_ROLE_${fx.uniq}`, fuzzyTitle]);
     const ontComp = await client.query(
       `INSERT INTO ont_competencies (code, name, category, competency_type, is_active, status)
-       VALUES ('TEST_FUZZY_COMP', $1, 'behavioral', 'behavioral', true, 'published') RETURNING id`,
-      [fuzzyComp]);
+       VALUES ($1, $2, 'behavioral', 'behavioral', true, 'published') RETURNING id`,
+      [`TEST_FUZZY_COMP_${fx.uniq}`, fuzzyComp]);
     await client.query(
       `INSERT INTO map_role_competency (role_id, competency_id, importance_tier, weight, target_proficiency, source, is_active)
        VALUES ($1, $2, 'core', 1.0, 'proficient', 'onet_derived', true)`,
@@ -228,7 +274,7 @@ test('bridgeOnetDerivedWeights bridges across naming differences and reports gap
     // The fuzzily-named derived link landed on the right curated pair.
     const got = await client.query(
       `SELECT source, expected_level FROM onto_role_weights
-        WHERE dna_profile_id = $1 AND competency_id = $2`, [profile_id, comp_id]);
+        WHERE dna_profile_id = $1 AND competency_id = $2`, [fx.profileId, fx.compId]);
     assert.equal(got.rows.length, 1, 'derived weight bridged despite naming differences');
     assert.equal(got.rows[0].source, 'onet_derived');
     assert.equal(got.rows[0].expected_level, 3, 'proficient band → level 3');
@@ -260,22 +306,9 @@ test('bridgeOnetDerivedWeights prefers the linkable role when an exact-title rol
   try {
     await client.query('BEGIN');
 
-    const target = await client.query(`
-      SELECT oro.title, p.id AS profile_id, oc.id AS comp_id, oc.canonical_name
-        FROM onto_roles oro
-        JOIN onto_dna_profiles p ON p.role_id = oro.id AND p.is_current = TRUE
-        JOIN onto_competencies oc ON oc.deprecated = FALSE
-       WHERE oro.deprecated = FALSE
-         AND NOT EXISTS (SELECT 1 FROM onto_role_weights w
-                          WHERE w.dna_profile_id = p.id AND w.competency_id = oc.id)
-       LIMIT 1`);
-    if (!target.rows.length) {
-      t.skip('no eligible onto role/competency fixture in this DB');
-      return;
-    }
-    const { title, profile_id, comp_id, canonical_name } = target.rows[0];
-    if (String(title).trim().length < 4) {
-      t.skip('fixture role title too short for a partial-title match');
+    const fx = await seedSyntheticOntoFixture(client);
+    if (!fx) {
+      t.skip('no ontology seed present in this DB');
       return;
     }
 
@@ -284,28 +317,32 @@ test('bridgeOnetDerivedWeights prefers the linkable role when an exact-title rol
     //       carries NO O*NET-derived estimates.
     //   B — a partial-title synonym ("<title> Specialist"), carrying the real
     //       onet_derived link we want bridged.
-    // The crosswalk's "best" pick favours A (exact_title + has links), so the
-    // naive approach would select A and bridge nothing. The fix must instead
-    // pick B because it is the linkable role.
+    // The crosswalk ranks A above B (exact_title beats partial_title), so a naive
+    // "best match" would select A and bridge nothing. The fix must instead pick B
+    // because it is the only *linkable* role (the one that actually has derived
+    // links). A unique fixture title guarantees these are the only two candidates,
+    // so this deterministically isolates the linkable-preference behaviour.
     const exactRole = await client.query(
       `INSERT INTO ont_roles (code, title, status, is_active)
-       VALUES ('TEST_AMBIG_EXACT', $1, 'published', true) RETURNING id`, [title]);
+       VALUES ($1, $2, 'published', true) RETURNING id`,
+      [`TEST_AMBIG_EXACT_${fx.uniq}`, fx.roleTitle]);
     const partialRole = await client.query(
       `INSERT INTO ont_roles (code, title, status, is_active)
-       VALUES ('TEST_AMBIG_PARTIAL', $1, 'published', true) RETURNING id`,
-      [`${title} Specialist`]);
+       VALUES ($1, $2, 'published', true) RETURNING id`,
+      [`TEST_AMBIG_PARTIAL_${fx.uniq}`, `${fx.roleTitle} Specialist`]);
 
     // Competency that the derived link (on role B) targets — matches the curated
     // competency by name so it can bridge.
     const derivedComp = await client.query(
       `INSERT INTO ont_competencies (code, name, category, competency_type, is_active, status)
-       VALUES ('TEST_AMBIG_COMP', $1, 'behavioral', 'behavioral', true, 'published') RETURNING id`,
-      [canonical_name]);
+       VALUES ($1, $2, 'behavioral', 'behavioral', true, 'published') RETURNING id`,
+      [`TEST_AMBIG_COMP_${fx.uniq}`, fx.compName]);
     // A throwaway competency for role A's NON-derived link (so A has links, just
     // none that are onet_derived).
     const manualComp = await client.query(
       `INSERT INTO ont_competencies (code, name, category, competency_type, is_active, status)
-       VALUES ('TEST_AMBIG_MANUAL', 'Test Ambig Manual Skill', 'behavioral', 'behavioral', true, 'published') RETURNING id`);
+       VALUES ($1, 'Test Ambig Manual Skill', 'behavioral', 'behavioral', true, 'published') RETURNING id`,
+      [`TEST_AMBIG_MANUAL_${fx.uniq}`]);
 
     await client.query(
       `INSERT INTO map_role_competency (role_id, competency_id, importance_tier, weight, target_proficiency, source, is_active)
@@ -323,7 +360,7 @@ test('bridgeOnetDerivedWeights prefers the linkable role when an exact-title rol
     // we chose the linkable role, not the exact-title role with no estimates.
     const got = await client.query(
       `SELECT source, expected_level FROM onto_role_weights
-        WHERE dna_profile_id = $1 AND competency_id = $2`, [profile_id, comp_id]);
+        WHERE dna_profile_id = $1 AND competency_id = $2`, [fx.profileId, fx.compId]);
     assert.equal(got.rows.length, 1, 'derived weight bridged from the linkable (partial-title) role');
     assert.equal(got.rows[0].source, 'onet_derived');
     assert.equal(got.rows[0].expected_level, 4, 'advanced band → level 4');

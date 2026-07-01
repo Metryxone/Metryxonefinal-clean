@@ -236,28 +236,48 @@ export async function bridgeOnetDerivedWeights(pool: Pool): Promise<BridgeResult
     const roleMatchTypes: Partial<Record<RoleMatchType, number>> = {};
     const unmatchedRoles: string[] = [];
     let rolesFromCrosswalk = 0;
+    const assign = (ontRoleId: number, profileId: string): void => {
+      const arr = ontRoleToProfiles.get(ontRoleId) ?? [];
+      arr.push(profileId);
+      ontRoleToProfiles.set(ontRoleId, arr);
+    };
     for (const r of ontoRoles.rows) {
-      // Persisted crosswalk wins when present — honour the admin's confirmed mapping.
+      // Persisted crosswalk wins when present AND the mapped library role actually
+      // carries O*NET-derived links. An admin-confirmed mapping that points at a
+      // role with NO derived estimates would silently bridge nothing, so it must
+      // not short-circuit the title matcher — otherwise a role the crosswalk maps
+      // to a zero-derived library role gets no inheritance even when a genuinely
+      // linkable role exists under the same title. This mirrors the same
+      // "prefer the linkable role" discipline already applied below.
       const mapped = crosswalk.get(r.role_id);
-      if (mapped != null) {
+      if (mapped != null && derivedRoleIds.has(mapped)) {
         rolesFromCrosswalk += 1;
-        const arr = ontRoleToProfiles.get(mapped) ?? [];
-        arr.push(r.profile_id);
-        ontRoleToProfiles.set(mapped, arr);
+        assign(mapped, r.profile_id);
         continue;
       }
       const candidates = await resolveOntRole(pool, r.title); // ranked best-first
+      // Prefer the best-ranked candidate that actually has derived links.
+      const linkable = candidates.find((c) => derivedRoleIds.has(c.id));
+      if (linkable) {
+        roleMatchTypes[linkable.matchType] = (roleMatchTypes[linkable.matchType] ?? 0) + 1;
+        assign(linkable.id, r.profile_id);
+        continue;
+      }
+      // No linkable title candidate. Honour the admin's crosswalk mapping as a
+      // fallback (even though it bridges nothing today) so the confirmed mapping
+      // is never discarded; otherwise fall back to the overall best title match.
+      if (mapped != null) {
+        rolesFromCrosswalk += 1;
+        assign(mapped, r.profile_id);
+        continue;
+      }
       if (candidates.length === 0) {
         unmatchedRoles.push(r.title);
         continue;
       }
-      // Prefer the best-ranked candidate that actually has derived links; only
-      // fall back to the overall best when none of the candidates is linkable.
-      const chosen = candidates.find((c) => derivedRoleIds.has(c.id)) ?? candidates[0];
+      const chosen = candidates[0];
       roleMatchTypes[chosen.matchType] = (roleMatchTypes[chosen.matchType] ?? 0) + 1;
-      const arr = ontRoleToProfiles.get(chosen.id) ?? [];
-      arr.push(r.profile_id);
-      ontRoleToProfiles.set(chosen.id, arr);
+      assign(chosen.id, r.profile_id);
     }
     const rolesMatched = ontoRoles.rows.length - unmatchedRoles.length;
 

@@ -32,6 +32,7 @@ developer/CI environment that has a live, seeded database.
 - `behavioural-integration.test.ts`
 - `career-discovery-complete-entry.test.ts`
 - `onet-derive-competency.test.ts`
+- `onet-onto-weight-bridge.test.ts`
 - `progression-outcomes-measured.test.ts`
 - `psychometrics.test.ts`
 - `role-title-crosswalk.test.ts`
@@ -41,17 +42,6 @@ developer/CI environment that has a live, seeded database.
 
 Most DB suites self-skip their DB-only subtests when `DATABASE_URL` is absent, so
 they stay green without a database — but they only add real coverage with one.
-
-## Quarantined (NOT in any gate)
-
-- `onet-onto-weight-bridge.test.ts` — its live-DB subtests assert that
-  `bridgeOnetDerivedWeights` inserts derived `onto_role_weights` rows. Against the
-  current shared dev ontology seed the bridge matches roles but inserts 0 derived
-  weights, so the suite fails. It self-skips without `DATABASE_URL` (green) but
-  fails against the real-but-partially-seeded DB. This is a real bridge
-  coverage/behavior gap to investigate on its own, not a test-harness problem, so
-  it is kept out of the green gates rather than hidden. Run it directly with:
-  `tsx --test tests/onet-onto-weight-bridge.test.ts`.
 
 ## Notes
 

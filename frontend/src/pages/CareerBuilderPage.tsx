@@ -5430,9 +5430,26 @@ function RealMentorsTab() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [booked, setBooked] = useState<Record<string, boolean>>({});
+  const [bookingStatus, setBookingStatus] = useState<Record<string, string>>({});
   const [topic, setTopic] = useState('');
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
+
+  // Latest booking status per mentor_profile_id, so the seeker sees the mentor's response
+  // (Confirmed / Declined) — closing the loop opened by "Request sent".
+  const loadBookings = () => {
+    fetch('/api/ecosystem/mentor-bookings', { headers: authHeader() as HeadersInit, credentials: 'include' })
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(j => {
+        const map: Record<string, string> = {};
+        (Array.isArray(j?.bookings) ? j.bookings : []).forEach((b: any) => {
+          // bookings are ordered created_at DESC, so the first seen per mentor is the latest.
+          if (b?.mentor_profile_id && !map[b.mentor_profile_id]) map[b.mentor_profile_id] = String(b.status || 'requested');
+        });
+        setBookingStatus(map);
+      })
+      .catch(() => {});
+  };
 
   const load = () => {
     setLoading(true); setError(false);
@@ -5441,6 +5458,7 @@ function RealMentorsTab() {
       .then(j => setMentors(Array.isArray(j?.mentors) ? j.mentors : []))
       .catch(() => setError(true))
       .finally(() => setLoading(false));
+    loadBookings();
   };
   useEffect(load, []);
 
@@ -5462,9 +5480,15 @@ function RealMentorsTab() {
       body: JSON.stringify({ topic: topic || null, message: message || null }),
     })
       .then(r => r.ok ? r.json() : Promise.reject())
-      .then(() => { setBooked(prev => ({ ...prev, [id]: true })); setTopic(''); setMessage(''); })
+      .then(() => { setBooked(prev => ({ ...prev, [id]: true })); setTopic(''); setMessage(''); loadBookings(); })
       .catch(() => {})
       .finally(() => setBusy(false));
+  };
+
+  const statusLabel = (status?: string): { text: string; color: string } => {
+    if (status === 'confirmed') return { text: 'Confirmed — the mentor accepted your request', color: BRAND.green };
+    if (status === 'declined') return { text: 'Declined — this mentor can\u2019t take the session', color: '#ef4444' };
+    return { text: 'Request sent \u2014 the mentor will respond to confirm', color: BRAND.green };
   };
 
   return (
@@ -5523,12 +5547,18 @@ function RealMentorsTab() {
 
               {selected === m.id && (
                 <div className="mt-3 pt-3 border-t border-gray-100" onClick={e => e.stopPropagation()}>
-                  {booked[m.id] ? (
+                  {(booked[m.id] || bookingStatus[m.id]) ? (
                     <>
-                      <div className="flex items-center justify-center gap-2 py-2 rounded-xl" style={{ backgroundColor: `${BRAND.green}10`, border: `1px solid ${BRAND.green}30` }}>
-                        <CheckCircle size={13} style={{ color: BRAND.green }} />
-                        <span className="text-xs font-medium" style={{ color: BRAND.green }}>Request sent &mdash; the mentor will respond to confirm</span>
-                      </div>
+                      {(() => {
+                        const st = statusLabel(bookingStatus[m.id]);
+                        const declined = bookingStatus[m.id] === 'declined';
+                        return (
+                          <div className="flex items-center justify-center gap-2 py-2 rounded-xl" style={{ backgroundColor: `${st.color}10`, border: `1px solid ${st.color}30` }}>
+                            {declined ? <X size={13} style={{ color: st.color }} /> : <CheckCircle size={13} style={{ color: st.color }} />}
+                            <span className="text-xs font-medium" style={{ color: st.color }}>{st.text}</span>
+                          </div>
+                        );
+                      })()}
                       {/* Task #293 — post-match engagement step (renders only when journeyTailCompletion is ON). */}
                       <MentorEngagementStep mentorProfileId={m.id} mentorName={m.name} />
                     </>

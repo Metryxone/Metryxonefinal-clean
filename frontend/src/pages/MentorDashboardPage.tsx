@@ -1,5 +1,6 @@
 import { BRAND } from '@/design-system/tokens';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { ensureCsrfToken } from '@/lib/csrf';
 import { AppTopBar } from '@/components/AppTopBar';
 import { GlobalSearch } from '@/components/GlobalSearch';
 import { QuickTour } from '@/components/QuickTour';
@@ -149,6 +150,138 @@ const NAV_ITEMS: { id: Section; label: string; icon: React.ElementType }[] = [
   { id: 'earnings', label: 'Earnings',    icon: DollarSign },
   { id: 'reviews',  label: 'Reviews',     icon: MessageSquare },
 ];
+
+// ── Task #342 — Real incoming session requests (mentor_bookings) ──────────────
+// Renders ONLY when the ecosystemCommunity flag is ON (probe returns enabled) and the logged-in
+// user is a real mentor with a mentor_profiles row. Additive & byte-identical when the flag is OFF:
+// the probe 503s → enabled stays false → nothing renders. Lets the mentor accept/decline the
+// pending requests a seeker created via "Request Session", closing the confirmation loop.
+interface IncomingBooking {
+  id: string;
+  seeker_name: string | null;
+  seeker_email: string | null;
+  topic: string | null;
+  preferred_slot: string | null;
+  message: string | null;
+  status: string;
+  created_at: string | null;
+}
+
+function IncomingRequestsPanel() {
+  const { toast } = useToast();
+  const [enabled, setEnabled] = useState<boolean | null>(null);
+  const [isMentor, setIsMentor] = useState(false);
+  const [bookings, setBookings] = useState<IncomingBooking[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [busyId, setBusyId] = useState<string | null>(null);
+
+  const load = () => {
+    setLoading(true);
+    fetch('/api/ecosystem/mentor/incoming-bookings', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(j => {
+        setEnabled(true);
+        setIsMentor(!!j?.is_mentor);
+        setBookings(Array.isArray(j?.bookings) ? j.bookings : []);
+      })
+      .catch(() => { setEnabled(false); })
+      .finally(() => setLoading(false));
+  };
+  useEffect(load, []);
+
+  const respond = async (id: string, decision: 'accept' | 'decline') => {
+    setBusyId(id);
+    try {
+      // Signed double-submit CSRF: attach x-csrf-token explicitly (the global window.fetch
+      // wrapper also adds it, but being explicit keeps this mutating call correct regardless).
+      const token = await ensureCsrfToken();
+      const res = await fetch(`/api/ecosystem/mentor-bookings/${id}/respond`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(token ? { 'x-csrf-token': token } : {}) },
+        credentials: 'include',
+        body: JSON.stringify({ decision }),
+      });
+      if (!res.ok) throw new Error('respond_failed');
+      const j = await res.json();
+      setBookings(prev => prev.map(b => b.id === id ? { ...b, status: j?.booking?.status ?? (decision === 'accept' ? 'confirmed' : 'declined') } : b));
+      toast({ title: decision === 'accept' ? 'Request accepted' : 'Request declined', description: 'The seeker will see the updated status.' });
+    } catch {
+      toast({ title: 'Couldn\u2019t update the request', description: 'Please try again.' });
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  // Flag OFF (probe 503) or not a mentor → render nothing (byte-identical legacy dashboard).
+  if (enabled !== true || !isMentor) return null;
+
+  const pending = bookings.filter(b => b.status === 'requested');
+  const initials = (n: string | null) => (n || 'S').split(' ').map(w => w[0]).filter(Boolean).slice(0, 2).join('').toUpperCase();
+  const statusBadge = (status: string) => {
+    if (status === 'confirmed') return { label: 'Confirmed', color: BRAND.accent };
+    if (status === 'declined') return { label: 'Declined', color: '#ef4444' };
+    return { label: 'Pending', color: '#f59e0b' };
+  };
+
+  return (
+    <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden" data-testid="incoming-requests-panel">
+      <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Bell size={16} style={{ color: BRAND.primary }} />
+          <h2 className="text-sm font-bold text-gray-800">Incoming Session Requests</h2>
+          {pending.length > 0 && (
+            <span className="text-[9px] font-bold text-white px-1.5 py-0.5 rounded-full" style={{ backgroundColor: '#ef4444' }}>{pending.length}</span>
+          )}
+        </div>
+        <button onClick={load} className="text-[11px] text-gray-400 hover:text-gray-600" data-testid="button-refresh-requests">Refresh</button>
+      </div>
+
+      {loading ? (
+        <div className="px-4 py-8 text-center text-xs text-gray-400">Loading requests&hellip;</div>
+      ) : bookings.length === 0 ? (
+        <div className="px-4 py-8 text-center">
+          <p className="text-sm font-medium text-gray-700">No session requests yet</p>
+          <p className="text-xs text-gray-400 mt-1">When a seeker requests a session with you, it&rsquo;ll appear here to accept or decline.</p>
+        </div>
+      ) : (
+        <div className="divide-y divide-gray-50">
+          {bookings.map(b => {
+            const badge = statusBadge(b.status);
+            const pendingRow = b.status === 'requested';
+            return (
+              <div key={b.id} className="px-4 py-3 flex items-start gap-3" data-testid={`request-row-${b.id}`}>
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-[11px] shrink-0" style={{ backgroundColor: BRAND.primary }}>
+                  {initials(b.seeker_name)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs font-semibold text-gray-800">{b.seeker_name || 'Seeker'}</span>
+                    <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full" style={{ color: badge.color, backgroundColor: `${badge.color}12` }}>{badge.label}</span>
+                  </div>
+                  {b.topic && <p className="text-[11px] text-gray-600 mt-0.5"><span className="text-gray-400">Topic:</span> {b.topic}</p>}
+                  {b.preferred_slot && <p className="text-[11px] text-gray-500 mt-0.5"><Clock size={9} className="inline mr-1" />{b.preferred_slot}</p>}
+                  {b.message && <p className="text-[11px] text-gray-500 mt-0.5 line-clamp-2">&ldquo;{b.message}&rdquo;</p>}
+                </div>
+                {pendingRow && (
+                  <div className="flex flex-col gap-1.5 shrink-0">
+                    <Button size="sm" className="h-7 text-[11px] gap-1 text-white" style={{ backgroundColor: BRAND.accent }}
+                      disabled={busyId === b.id} onClick={() => respond(b.id, 'accept')} data-testid={`button-accept-${b.id}`}>
+                      <CheckCircle size={11} /> Accept
+                    </Button>
+                    <Button size="sm" variant="outline" className="h-7 text-[11px] gap-1 text-red-500 border-red-200 hover:bg-red-50"
+                      disabled={busyId === b.id} onClick={() => respond(b.id, 'decline')} data-testid={`button-decline-${b.id}`}>
+                      <X size={11} /> Decline
+                    </Button>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function MentorDashboardPage({ onNavigate }: MentorDashboardPageProps) {
   const { toast } = useToast();
@@ -370,6 +503,9 @@ export function MentorDashboardPage({ onNavigate }: MentorDashboardPageProps) {
             {/* ═══════════════ OVERVIEW ═══════════════ */}
             {activeSection === 'overview' && (
               <div className="space-y-6" data-testid="section-overview">
+
+                {/* Task #342 — real incoming mentor_bookings (ecosystemCommunity flag); null when OFF/non-mentor */}
+                <IncomingRequestsPanel />
 
                 {/* Today's Focus Banner */}
                 <div className="border border-gray-100 rounded-2xl shadow-sm overflow-hidden bg-white" data-testid="today-focus-banner">

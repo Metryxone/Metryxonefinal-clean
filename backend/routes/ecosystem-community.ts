@@ -53,6 +53,21 @@ function actorEmail(req: Request): string | null {
   return e ? String(e) : null;
 }
 
+// Resolve the mentor_profiles.id(s) owned by the logged-in user (mentor_profiles.user_id →
+// users.id). A user could in principle hold more than one profile row, so we return all ids.
+// Fail-closed: any read error or no profile → [] (the mentor sees nothing rather than another
+// mentor's requests). Never throws.
+async function actorMentorProfileIds(pool: Pool, userId: string): Promise<string[]> {
+  if (!userId) return [];
+  try {
+    const r = await pool.query(`SELECT id FROM mentor_profiles WHERE user_id = $1`, [userId]);
+    return r.rows.map((row) => String(row.id));
+  } catch (e) {
+    console.error('[ecosystem-community] mentor profile resolve:', e);
+    return [];
+  }
+}
+
 const s = (v: unknown, max = 4000): string =>
   (v == null ? '' : String(v)).slice(0, max).trim();
 const sOrNull = (v: unknown, max = 4000): string | null => {
@@ -458,6 +473,53 @@ export function registerEcosystemCommunityRoutes(
       [actorId(req)],
     );
     res.json({ ok: true, bookings: r.rows });
+  }));
+
+  // --- Mentor-side: incoming session requests for the logged-in mentor ---
+  // Scoped to the mentor_profiles owned by req.user (mentor_profiles.user_id). A user with no
+  // mentor profile honestly sees an empty list — never another mentor's requests (IDOR-safe).
+  app.get('/api/ecosystem/mentor/incoming-bookings', flagGate, requireAuth, withSchema(async (req, res) => {
+    const profileIds = await actorMentorProfileIds(pool, actorId(req));
+    if (profileIds.length === 0) {
+      res.json({ ok: true, is_mentor: false, bookings: [], counts: { requested: 0, confirmed: 0, declined: 0 } });
+      return;
+    }
+    const r = await pool.query(
+      `SELECT id, mentor_profile_id, seeker_id, seeker_name, seeker_email, topic, preferred_slot,
+              message, status, created_at, updated_at
+         FROM mentor_bookings
+        WHERE mentor_profile_id = ANY($1::varchar[])
+        ORDER BY (status = 'requested') DESC, created_at DESC LIMIT 300`,
+      [profileIds],
+    );
+    const counts = { requested: 0, confirmed: 0, declined: 0 };
+    for (const b of r.rows) {
+      if (b.status === 'requested') counts.requested++;
+      else if (b.status === 'confirmed') counts.confirmed++;
+      else if (b.status === 'declined') counts.declined++;
+    }
+    res.json({ ok: true, is_mentor: true, bookings: r.rows, counts });
+  }));
+
+  // --- Mentor-side: accept / decline an incoming request ---
+  // The UPDATE is guarded by mentor_profile_id = ANY(owned profiles), so a mentor can only act
+  // on requests addressed to them (fail-closed 404 otherwise). Confirms the loop the seeker sees.
+  app.post('/api/ecosystem/mentor-bookings/:id/respond', flagGate, requireAuth, withSchemaWrite(async (req, res) => {
+    const bookingId = s(req.params.id, 64);
+    const decision = s(req.body?.decision, 20).toLowerCase();
+    const target = decision === 'accept' || decision === 'confirmed' ? 'confirmed'
+      : decision === 'decline' || decision === 'declined' ? 'declined' : null;
+    if (!bookingId) { res.status(400).json({ ok: false, error: 'booking_id_required' }); return; }
+    if (!target) { res.status(400).json({ ok: false, error: 'invalid_decision' }); return; }
+    const profileIds = await actorMentorProfileIds(pool, actorId(req));
+    if (profileIds.length === 0) { res.status(403).json({ ok: false, error: 'not_a_mentor' }); return; }
+    const r = await pool.query(
+      `UPDATE mentor_bookings SET status = $1, updated_at = now()
+        WHERE id = $2 AND mentor_profile_id = ANY($3::varchar[]) RETURNING *`,
+      [target, bookingId, profileIds],
+    );
+    if (r.rowCount === 0) { res.status(404).json({ ok: false, error: 'booking_not_found' }); return; }
+    res.json({ ok: true, booking: r.rows[0] });
   }));
 
   // --- Alumni directory (consented) + profile + connections ---

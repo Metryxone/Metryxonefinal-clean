@@ -3020,6 +3020,7 @@ export function FreeAssessmentModal({ open, onOpenChange, onNavigate, initialPer
   const allPhaseProps = {
     phase, setPhase, selectedPersona, setSelectedPersona,
     primaryPersona, setPrimaryPersona, isProxy, setIsProxy, ageBand, setAgeBand,
+    personaResolvedUpstream: personaJourneyRouterEnabled && journeyWizardDone,
     personaModelAlignment: personaAlignmentEnabled,
     personaModelExpansion: personaExpansionEnabled,
     participantGender, setParticipantGender, participantCity, setParticipantCity,

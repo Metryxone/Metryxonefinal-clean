@@ -159,6 +159,11 @@ export interface PhaseProps {
   setIsProxy: React.Dispatch<React.SetStateAction<boolean>>;
   ageBand: string;
   setAgeBand: React.Dispatch<React.SetStateAction<string>>;
+  // CAPADEX 3.0 Phase 3.2A — true only when the PersonaJourneyWizard has already
+  // resolved the persona/sub-persona/age band upstream. IntroPhase then renders
+  // the persona block COLLAPSED (confirmed summary, not a re-pick) so the wizard
+  // step isn't repeated. Absent/false → byte-identical legacy behaviour.
+  personaResolvedUpstream?: boolean;
   // 2026-05-29 — additive enrichment fields (all optional, none gate the CTA).
   // Shipped to /api/capadex/concern/analyze as additive demographic + goal
   // context. Lifted to FreeAssessmentModal so the payload + reset live in one

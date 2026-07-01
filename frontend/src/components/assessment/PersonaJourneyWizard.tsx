@@ -61,6 +61,16 @@ const GOAL_OPTIONS: { id: string; label: string }[] = [
   { id: 'support', label: 'Support someone in my care' },
 ];
 
+// Conditional goal filter — a goal only shows for the tracks it actually makes
+// sense for, so a school student is never asked about landing a job / growing in
+// a role, and a self-taker is never asked to "support someone in their care".
+const GOAL_TRACK_MAP: Record<MacroTrackData['id'], string[]> = {
+  school:       ['clarity', 'exam', 'career'],
+  learner:      ['clarity', 'exam', 'career', 'placement'],
+  professional: ['clarity', 'career', 'placement', 'growth'],
+  proxy:        ['support', 'clarity'],
+};
+
 const TIMELINE_OPTIONS: { id: string; label: string }[] = [
   { id: 'immediate', label: 'Right away (0–1 month)' },
   { id: 'short', label: 'Soon (1–3 months)' },
@@ -162,6 +172,17 @@ export function PersonaJourneyWizard(props: PersonaJourneyWizardProps) {
 
   // Move focus to the step heading on step change (a11y).
   React.useEffect(() => { headingRef.current?.focus(); }, [step]);
+
+  // Conditional goal filter: goals shown depend on the chosen track, and a goal
+  // that no longer applies (e.g. picked "growth" then switched to a school child)
+  // is cleared so a stale, irrelevant selection can't carry forward.
+  const visibleGoals = React.useMemo(
+    () => (trackId ? GOAL_OPTIONS.filter((g) => (GOAL_TRACK_MAP[trackId] || []).includes(g.id)) : GOAL_OPTIONS),
+    [trackId],
+  );
+  React.useEffect(() => {
+    if (trackId && goal && !(GOAL_TRACK_MAP[trackId] || []).includes(goal)) setGoal('');
+  }, [trackId, goal]);
 
   const activeTrack = tracks.find((t) => t.id === trackId) || null;
   const activeSub: SubPersona | null =
@@ -456,7 +477,7 @@ export function PersonaJourneyWizard(props: PersonaJourneyWizardProps) {
             <div>
               <div className="flex items-center gap-1.5 text-[12px] font-semibold text-slate-500 mb-2"><Target size={13} /> My main goal</div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {GOAL_OPTIONS.map((g) => {
+                {visibleGoals.map((g) => {
                   const selected = goal === g.id;
                   return (
                     <button

@@ -127,10 +127,19 @@ export function IntroPhase(props: PhaseProps) {
   //    track containing the current selection on mount / persona change.
   // Surface options upfront: open the first track by default when nothing is
   // selected yet (auto-jumps to the selection's track on persona change).
+  // When the PersonaJourneyWizard has already resolved the persona upstream, the
+  // selected track starts COLLAPSED (a confirmed summary the user can expand /
+  // change), so the wizard's persona step isn't repeated here. Otherwise legacy:
+  // open the selection's track (or 'learner' when nothing is chosen yet).
+  const personaResolvedUpstream = !!props.personaResolvedUpstream;
   const [expandedTrack, setExpandedTrack] = React.useState<MacroTrack['id'] | null>(
-    activeSub?.trackId ?? 'learner'
+    personaResolvedUpstream ? null : (activeSub?.trackId ?? 'learner')
   );
+  // Skip the very first auto-expand when the persona was resolved upstream so the
+  // confirmed summary stays collapsed; every later persona change re-expands.
+  const skipInitialAutoExpand = React.useRef(personaResolvedUpstream);
   React.useEffect(() => {
+    if (skipInitialAutoExpand.current) { skipInitialAutoExpand.current = false; return; }
     if (activeSub?.trackId) setExpandedTrack(activeSub.trackId);
   }, [activeSub?.trackId]);
 

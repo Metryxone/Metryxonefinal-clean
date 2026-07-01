@@ -64,6 +64,20 @@ interface PlanQuotaOverview {
   dimensions: string[];
   plans: PlanQuotaRow[];
 }
+interface UsageOverrideRow {
+  email: string;
+  usage_type: string;
+  limit_value: number;
+  note: string | null;
+  created_at: string;
+  updated_at: string;
+}
+interface UsageOverrideOverview {
+  generated_at: string;
+  degraded: boolean;
+  dimensions: string[];
+  overrides: UsageOverrideRow[];
+}
 interface TrendPoint {
   period: string;
   events: number;
@@ -105,6 +119,7 @@ const KIND_LABELS: Record<DimensionKind, string> = {
 const REASON_LABELS: Record<string, string> = {
   within_quota: 'Within quota',
   over_quota: 'Over quota',
+  override_enforced: 'Per-customer override',
   no_declared_quota: 'No declared quota (unmetered)',
   no_substrate: 'No data substrate yet',
   no_customer: 'No customer record',
@@ -352,6 +367,275 @@ function PlanQuotaEditor() {
                 </div>
               );
             })}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+// ── Per-customer override editor ───────────────────────────────────────────────────────────────────
+// A per-identity override sets a limit for ONE customer + dimension that takes precedence over their
+// plan quota (regardless of subscription). Setting one is the way to grant/restrict a single customer
+// without changing their plan; clearing it reverts them to the plan quota. Only whole non-negative
+// numbers; credits are excluded (a consumable balance, not a per-period quota).
+function OverridesEditor() {
+  const qc = useQueryClient();
+  const [email, setEmail] = useState('');
+  const [dimension, setDimension] = useState('');
+  const [limit, setLimit] = useState('');
+  const [note, setNote] = useState('');
+  const [formError, setFormError] = useState<string | null>(null);
+  const [saved, setSaved] = useState(false);
+
+  const {
+    data, isLoading, isError, refetch, isFetching,
+  } = useQuery<UsageOverrideOverview | null>({
+    queryKey: ['/api/admin/commercial/metering/overrides'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/commercial/metering/overrides', { credentials: 'include' });
+      if (!res.ok) throw new Error(`overrides ${res.status}`);
+      return res.json();
+    },
+  });
+
+  const dimensions = data?.dimensions ?? [];
+  // Default the dimension select to the first available once the list loads.
+  const effectiveDimension = dimension || dimensions[0] || '';
+
+  const invalidateAll = () => {
+    qc.invalidateQueries({ queryKey: ['/api/admin/commercial/metering/overrides'] });
+    qc.invalidateQueries({ queryKey: ['metering-consumption'] });
+    qc.invalidateQueries({ queryKey: ['/api/admin/commercial/metering/dimensions'] });
+  };
+
+  const upsertMutation = useMutation({
+    mutationFn: async (payload: { email: string; usage_type: string; limit: string; note: string }) => {
+      const res = await fetch('/api/admin/commercial/metering/overrides', {
+        method: 'PUT',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: payload.email,
+          usage_type: payload.usage_type,
+          limit: Number(payload.limit),
+          note: payload.note || undefined,
+        }),
+      });
+      if (!res.ok) {
+        let msg = `Save failed (${res.status})`;
+        try { const j = await res.json(); if (j?.error) msg = j.error; } catch { /* ignore */ }
+        throw new Error(msg);
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      setFormError(null);
+      setSaved(true);
+      setEmail(''); setLimit(''); setNote('');
+      invalidateAll();
+      window.setTimeout(() => setSaved(false), 2500);
+    },
+    onError: (err: any) => setFormError(err?.message || 'Save failed'),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (row: { email: string; usage_type: string }) => {
+      const qs = `email=${encodeURIComponent(row.email)}&usage_type=${encodeURIComponent(row.usage_type)}`;
+      const res = await fetch(`/api/admin/commercial/metering/overrides?${qs}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+      if (!res.ok) {
+        let msg = `Clear failed (${res.status})`;
+        try { const j = await res.json(); if (j?.error) msg = j.error; } catch { /* ignore */ }
+        throw new Error(msg);
+      }
+      return res.json();
+    },
+    onSuccess: () => { setFormError(null); invalidateAll(); },
+    onError: (err: any) => setFormError(err?.message || 'Clear failed'),
+  });
+
+  const limitTrim = limit.trim();
+  const limitNum = Number(limitTrim);
+  const limitInvalid = limitTrim !== '' && (!Number.isFinite(limitNum) || limitNum < 0 || !Number.isInteger(limitNum));
+  const canSubmit =
+    email.trim() !== '' && effectiveDimension !== '' && limitTrim !== '' && !limitInvalid && !upsertMutation.isPending;
+
+  const submit = () => {
+    if (!canSubmit) return;
+    upsertMutation.mutate({ email: email.trim(), usage_type: effectiveDimension, limit: limitTrim, note: note.trim() });
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <User className="h-5 w-5" style={{ color: BRAND.primary }} /> Per-customer overrides
+            </CardTitle>
+            <CardDescription>
+              Override a usage limit for a single customer. An override takes precedence over the customer&apos;s plan
+              quota (regardless of subscription) and applies immediately. Clear it to revert them to the plan quota.
+            </CardDescription>
+          </div>
+          <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
+            <RefreshCw className={`h-4 w-4 mr-1 ${isFetching ? 'animate-spin' : ''}`} /> Refresh
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {/* ── Set / update form ── */}
+        <div className="rounded-lg border border-slate-200 p-4 bg-slate-50 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="lg:col-span-2">
+              <label className="block text-[11px] uppercase tracking-wide text-slate-500 mb-1">Customer email</label>
+              <Input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') submit(); }}
+                placeholder="customer@example.com"
+              />
+            </div>
+            <div>
+              <label className="block text-[11px] uppercase tracking-wide text-slate-500 mb-1">Dimension</label>
+              <select
+                value={effectiveDimension}
+                onChange={(e) => setDimension(e.target.value)}
+                className="w-full h-10 rounded-md border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300"
+              >
+                {dimensions.length === 0 && <option value="">—</option>}
+                {dimensions.map((dim) => (
+                  <option key={dim} value={dim}>{DIMENSION_LABELS[dim] ?? dim}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-[11px] uppercase tracking-wide text-slate-500 mb-1">Limit</label>
+              <Input
+                type="number"
+                min={0}
+                step={1}
+                inputMode="numeric"
+                value={limit}
+                onChange={(e) => setLimit(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') submit(); }}
+                placeholder="e.g. 5000"
+              />
+            </div>
+            <div className="lg:col-span-3">
+              <label className="block text-[11px] uppercase tracking-wide text-slate-500 mb-1">Note (optional)</label>
+              <Input
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') submit(); }}
+                placeholder="Why this override was granted"
+              />
+            </div>
+            <div className="flex items-end">
+              <Button
+                onClick={submit}
+                disabled={!canSubmit}
+                style={{ backgroundColor: BRAND.primary }}
+                className="text-white w-full"
+              >
+                {upsertMutation.isPending
+                  ? <RefreshCw className="h-4 w-4 mr-1 animate-spin" />
+                  : <Save className="h-4 w-4 mr-1" />}
+                Set override
+              </Button>
+            </div>
+          </div>
+          {limitInvalid && (
+            <p className="mt-2 text-xs text-red-600">Limit must be a whole non-negative number.</p>
+          )}
+          {saved && (
+            <p className="mt-2 flex items-center gap-1 text-xs text-emerald-600"><Check className="h-4 w-4" /> Override saved</p>
+          )}
+          {formError && (
+            <div className="mt-2 flex items-center gap-2 px-3 py-2 rounded-md bg-red-50 text-red-700 text-xs">
+              <AlertTriangle className="h-4 w-4" /> {formError}
+            </div>
+          )}
+        </div>
+
+        {/* ── Existing overrides ── */}
+        {isLoading ? (
+          <div className="flex items-center justify-center h-24">
+            <RefreshCw className="h-6 w-6 animate-spin" style={{ color: BRAND.primary }} />
+          </div>
+        ) : isError ? (
+          <div className="flex flex-col items-center justify-center gap-3 py-6 text-center">
+            <AlertTriangle className="h-8 w-8 text-amber-500" />
+            <p className="text-sm text-slate-600">
+              Couldn&apos;t load overrides. The metering feature may be disabled or you may not be signed in as a
+              super-admin.
+            </p>
+            <Button variant="outline" size="sm" onClick={() => refetch()}>Retry</Button>
+          </div>
+        ) : !data || data.overrides.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-2 py-6 text-center text-sm text-slate-500">
+            <Info className="h-6 w-6 text-slate-400" />
+            No per-customer overrides. Every customer is on their plan quota.
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {data.degraded && (
+              <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-amber-50 text-amber-800 text-sm">
+                <AlertTriangle className="h-4 w-4" />
+                Some overrides failed to read — the list below is partial (honest degraded state).
+              </div>
+            )}
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-left text-xs uppercase tracking-wide text-slate-400 border-b">
+                    <th className="py-2 pr-4">Customer</th>
+                    <th className="py-2 pr-4">Dimension</th>
+                    <th className="py-2 pr-4">Limit</th>
+                    <th className="py-2 pr-4">Note</th>
+                    <th className="py-2 pr-4">Updated</th>
+                    <th className="py-2 pr-4"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.overrides.map((row) => {
+                    const clearing = deleteMutation.isPending
+                      && deleteMutation.variables?.email === row.email
+                      && deleteMutation.variables?.usage_type === row.usage_type;
+                    return (
+                      <tr key={`${row.email}::${row.usage_type}`} className="border-b last:border-0">
+                        <td className="py-2 pr-4 font-medium text-slate-700 break-all">{row.email}</td>
+                        <td className="py-2 pr-4">{DIMENSION_LABELS[row.usage_type] ?? row.usage_type}</td>
+                        <td className="py-2 pr-4">{fmt(row.limit_value)}</td>
+                        <td className="py-2 pr-4 text-slate-500 max-w-[220px] truncate" title={row.note ?? ''}>
+                          {row.note ?? '—'}
+                        </td>
+                        <td className="py-2 pr-4 text-slate-400 text-xs whitespace-nowrap">
+                          {new Date(row.updated_at).toLocaleString('en-IN')}
+                        </td>
+                        <td className="py-2 pr-4 text-right">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => deleteMutation.mutate({ email: row.email, usage_type: row.usage_type })}
+                            disabled={clearing}
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                          >
+                            {clearing
+                              ? <RefreshCw className="h-4 w-4 mr-1 animate-spin" />
+                              : <RotateCcw className="h-4 w-4 mr-1" />}
+                            Clear
+                          </Button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </CardContent>
@@ -625,6 +909,8 @@ export default function UsageMeteringPanel() {
       </Card>
 
       <PlanQuotaEditor />
+
+      <OverridesEditor />
         </TabsContent>
 
         {/* ── Usage trends over time ─────────────────────────────────────── */}

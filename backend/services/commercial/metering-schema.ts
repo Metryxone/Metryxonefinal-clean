@@ -52,6 +52,24 @@ async function createSchema(pool: Pool): Promise<void> {
                                 'candidates','jobs','employers','institutions','storage'));
       END IF;
     END $$;
+
+    -- Per-identity quota OVERRIDES: a limit that applies to ONE identity for a usage type regardless of
+    -- their plan, taking precedence over any plan-declared quota in resolveQuotaWindow. Keyed uniquely by
+    -- (lower(email), usage_type) so an upsert replaces the standing override. Absent row = no override
+    -- (the identity falls back to their plan quota). Created only when metering is ON → byte-identical OFF.
+    CREATE TABLE IF NOT EXISTS comm_usage_overrides (
+      id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      email       TEXT NOT NULL,
+      usage_type  TEXT NOT NULL
+        CHECK (usage_type IN ('views','searches','unlocks','assessments','downloads','exports','api',
+                              'candidates','jobs','employers','institutions','storage')),
+      limit_value INTEGER NOT NULL CHECK (limit_value >= 0),
+      note        TEXT,
+      created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+      updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_comm_usage_overrides_identity
+      ON comm_usage_overrides (lower(email), usage_type);
   `);
 }
 

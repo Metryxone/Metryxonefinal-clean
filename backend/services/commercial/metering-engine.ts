@@ -15,7 +15,7 @@
  *     refuses (429) and does NOT write the over-quota event.
  */
 import type { Pool } from 'pg';
-import { parsePlanFeatures, isUsageType, usageTypeKind, QUOTA_DIMENSIONS, type UsageType } from './plan-features';
+import { parsePlanFeatures, isUsageType, usageTypeKind, isQuotaDimension, QUOTA_DIMENSIONS, type UsageType } from './plan-features';
 import { getCreditBalance, applyCredit, type CreditMutationResult } from './credit-ledger-runtime';
 
 // A pool OR a transaction client — both expose .query. Reads accept either so they can run inside the
@@ -50,47 +50,89 @@ interface ActiveQuotaWindow {
 }
 
 /**
- * Resolve the binding quota window for an identity + usage type from its ACTIVE subscriptions.
- * Most-generous (MAX) declared limit wins; its plan's current period defines the counting window.
+ * Read a per-identity quota OVERRIDE (an admin-set limit for ONE identity + usage type, regardless of
+ * their plan) or null when none exists / the substrate is absent. GET-never-writes: probe the table with
+ * to_regclass first so a read on a DB without the overrides table degrades to "no override", never DDL.
+ */
+async function resolveIdentityOverride(db: Queryable, email: string, usageType: UsageType): Promise<number | null> {
+  const probe = await db.query(`SELECT to_regclass('comm_usage_overrides') AS oid`);
+  if (probe.rows[0]?.oid == null) return null;
+  const { rows } = await db.query(
+    `SELECT limit_value FROM comm_usage_overrides
+      WHERE lower(email) = lower($1) AND usage_type = $2
+      LIMIT 1`,
+    [email, usageType],
+  );
+  if (!rows.length) return null;
+  const n = Number(rows[0].limit_value);
+  return Number.isFinite(n) && n >= 0 ? Math.trunc(n) : null;
+}
+
+/**
+ * Resolve the binding quota window for an identity + usage type.
+ * PRECEDENCE: a per-identity admin OVERRIDE wins over any plan-declared quota (it applies regardless of
+ * the identity's subscription). Otherwise the most-generous (MAX) declared limit across ACTIVE
+ * subscriptions wins; its plan's current period defines the counting window. When an override applies but
+ * no plan quota does, we count within the identity's active subscription period if one exists (else the
+ * calendar-month default in countUsage).
  */
 async function resolveQuotaWindow(db: Queryable, email: string, usageType: UsageType): Promise<ActiveQuotaWindow> {
   // GET-never-writes: probe the catalog before reading; an absent substrate is an honest
   // "no active subscription" state, never a thrown error and never a lazy schema bootstrap.
+  let hasActiveSub = false;
+  let planBest: ActiveQuotaWindow | null = null;
+  let fallbackPeriodStart: Date | null = null;
+  let fallbackPeriodEnd: Date | null = null;
+
   const probe = await db.query(`SELECT to_regclass('comm_subscriptions') AS oid`);
-  if (probe.rows[0]?.oid == null) {
-    return { limit: null, period_start: null, period_end: null, reason: 'no_active_subscription' };
-  }
-  const { rows } = await db.query(
-    `SELECT p.metadata, s.current_period_start, s.current_period_end
-       FROM comm_subscriptions s
-       JOIN comm_customers c ON c.id = s.customer_id
-       JOIN comm_plans     p ON p.id = s.plan_id
-      WHERE lower(c.email) = lower($1)
-        AND s.status IN ('active','trial')
-        AND (s.current_period_end IS NULL OR s.current_period_end >= now())`,
-    [email],
-  );
+  if (probe.rows[0]?.oid != null) {
+    const { rows } = await db.query(
+      `SELECT p.metadata, s.current_period_start, s.current_period_end
+         FROM comm_subscriptions s
+         JOIN comm_customers c ON c.id = s.customer_id
+         JOIN comm_plans     p ON p.id = s.plan_id
+        WHERE lower(c.email) = lower($1)
+          AND s.status IN ('active','trial')
+          AND (s.current_period_end IS NULL OR s.current_period_end >= now())
+        ORDER BY s.current_period_start DESC NULLS LAST, s.id DESC`,
+      [email],
+    );
 
-  if (rows.length === 0) {
-    return { limit: null, period_start: null, period_end: null, reason: 'no_active_subscription' };
-  }
-
-  let best: ActiveQuotaWindow | null = null;
-  for (const r of rows) {
-    const q = parsePlanFeatures(r.metadata).quotas[usageType];
-    if (q == null) continue;
-    if (!best || q > (best.limit ?? -1)) {
-      best = {
-        limit: q,
-        period_start: r.current_period_start ? new Date(r.current_period_start) : null,
-        period_end: r.current_period_end ? new Date(r.current_period_end) : null,
-        reason: 'quota_enforced',
-      };
+    if (rows.length > 0) {
+      hasActiveSub = true;
+      for (const r of rows) {
+        // Remember the most recent active period as a counting-window fallback for an override
+        // (rows are ordered newest-first, so the first row we see is deterministic).
+        if (fallbackPeriodStart == null && r.current_period_start) fallbackPeriodStart = new Date(r.current_period_start);
+        if (fallbackPeriodEnd == null && r.current_period_end) fallbackPeriodEnd = new Date(r.current_period_end);
+        const q = parsePlanFeatures(r.metadata).quotas[usageType];
+        if (q == null) continue;
+        if (!planBest || q > (planBest.limit ?? -1)) {
+          planBest = {
+            limit: q,
+            period_start: r.current_period_start ? new Date(r.current_period_start) : null,
+            period_end: r.current_period_end ? new Date(r.current_period_end) : null,
+            reason: 'quota_enforced',
+          };
+        }
+      }
     }
   }
 
-  if (!best) return { limit: null, period_start: null, period_end: null, reason: 'no_declared_quota' };
-  return best;
+  // A per-identity override takes precedence over ANY plan-declared quota, regardless of subscription.
+  const override = await resolveIdentityOverride(db, email, usageType);
+  if (override != null) {
+    return {
+      limit: override,
+      period_start: planBest?.period_start ?? fallbackPeriodStart,
+      period_end: planBest?.period_end ?? fallbackPeriodEnd,
+      reason: 'override_enforced',
+    };
+  }
+
+  if (planBest) return planBest;
+  if (!hasActiveSub) return { limit: null, period_start: null, period_end: null, reason: 'no_active_subscription' };
+  return { limit: null, period_start: null, period_end: null, reason: 'no_declared_quota' };
 }
 
 /**
@@ -519,6 +561,130 @@ export async function upsertPlanQuotas(
 
   const overview = await listPlanQuotas(pool);
   return { ok: true, plan: overview.plans.find((p) => p.plan_id === planId) };
+}
+
+// ── Per-identity quota overrides (admin) ─────────────────────────────────────────────────────────
+// A quota override is an admin-set limit for ONE identity + usage type that takes PRECEDENCE over the
+// identity's plan quota in resolveQuotaWindow (regardless of subscription). Stored uniquely by
+// (lower(email), usage_type) in comm_usage_overrides; upsert replaces the standing override, delete
+// clears it (the identity falls back to their plan quota). Only the editable QUOTA_DIMENSIONS are
+// override-able (credits are a consumable balance, not a per-period quota).
+
+export interface UsageOverrideRow {
+  email: string;
+  usage_type: UsageType;
+  limit_value: number;
+  note: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UsageOverrideOverview {
+  generated_at: string;
+  degraded: boolean;
+  dimensions: UsageType[];      // override-able dimension order (for the UI select)
+  overrides: UsageOverrideRow[];
+}
+
+/**
+ * List every standing per-identity quota override. GET-never-writes: probe comm_usage_overrides with
+ * to_regclass and degrade to an honest empty list when absent, rather than bootstrapping schema. Never
+ * throws.
+ */
+export async function listUsageOverrides(pool: Pool): Promise<UsageOverrideOverview> {
+  const dimensions = [...QUOTA_DIMENSIONS];
+  const probe = await pool.query(`SELECT to_regclass('comm_usage_overrides') AS oid`).catch(() => null);
+  if (!probe || probe.rows[0]?.oid == null) {
+    return { generated_at: new Date().toISOString(), degraded: false, dimensions, overrides: [] };
+  }
+  let degraded = false;
+  const rows = await pool
+    .query(
+      `SELECT email, usage_type, limit_value, note, created_at, updated_at
+         FROM comm_usage_overrides
+        ORDER BY lower(email), usage_type`,
+    )
+    .then((r) => r.rows)
+    .catch((e) => { console.error('[usage overrides list]', e); degraded = true; return [] as any[]; });
+
+  const overrides: UsageOverrideRow[] = rows.map((r) => ({
+    email: String(r.email),
+    usage_type: r.usage_type as UsageType,
+    limit_value: Number(r.limit_value),
+    note: r.note != null ? String(r.note) : null,
+    created_at: new Date(r.created_at).toISOString(),
+    updated_at: new Date(r.updated_at).toISOString(),
+  }));
+  return { generated_at: new Date().toISOString(), degraded, dimensions, overrides };
+}
+
+export interface UpsertUsageOverrideResult {
+  ok: boolean;
+  reason?: 'invalid';
+  override?: UsageOverrideRow;
+}
+
+/**
+ * Set (or replace) a per-identity quota override. Validates the identity + dimension + non-negative
+ * integer limit, then upserts on (lower(email), usage_type). Reflects immediately in resolveQuotaWindow
+ * (and thus the consumption view) since that reads the override live.
+ */
+export async function upsertUsageOverride(
+  pool: Pool,
+  email: string,
+  usageType: string,
+  limit: unknown,
+  note?: unknown,
+): Promise<UpsertUsageOverrideResult> {
+  const trimmedEmail = typeof email === 'string' ? email.trim() : '';
+  if (!trimmedEmail) return { ok: false, reason: 'invalid' };
+  if (!isQuotaDimension(usageType)) return { ok: false, reason: 'invalid' };
+  const n = Number(limit);
+  if (limit == null || limit === '' || !Number.isFinite(n) || n < 0) return { ok: false, reason: 'invalid' };
+  const lim = Math.trunc(n);
+  const cleanNote = typeof note === 'string' && note.trim() ? note.trim().slice(0, 500) : null;
+
+  const { rows } = await pool.query(
+    `INSERT INTO comm_usage_overrides (email, usage_type, limit_value, note)
+     VALUES ($1, $2, $3, $4)
+     ON CONFLICT (lower(email), usage_type)
+     DO UPDATE SET limit_value = EXCLUDED.limit_value, note = EXCLUDED.note, updated_at = now()
+     RETURNING email, usage_type, limit_value, note, created_at, updated_at`,
+    [trimmedEmail, usageType, lim, cleanNote],
+  );
+  const r = rows[0];
+  return {
+    ok: true,
+    override: {
+      email: String(r.email),
+      usage_type: r.usage_type as UsageType,
+      limit_value: Number(r.limit_value),
+      note: r.note != null ? String(r.note) : null,
+      created_at: new Date(r.created_at).toISOString(),
+      updated_at: new Date(r.updated_at).toISOString(),
+    },
+  };
+}
+
+export interface DeleteUsageOverrideResult {
+  ok: boolean;
+  reason?: 'invalid';
+  deleted: boolean;
+}
+
+/** Clear a per-identity quota override (the identity falls back to their plan quota). */
+export async function deleteUsageOverride(
+  pool: Pool,
+  email: string,
+  usageType: string,
+): Promise<DeleteUsageOverrideResult> {
+  const trimmedEmail = typeof email === 'string' ? email.trim() : '';
+  if (!trimmedEmail || !isQuotaDimension(usageType)) return { ok: false, reason: 'invalid', deleted: false };
+  const res = await pool.query(
+    `DELETE FROM comm_usage_overrides WHERE lower(email) = lower($1) AND usage_type = $2`,
+    [trimmedEmail, usageType],
+  );
+  return { ok: true, deleted: (res.rowCount ?? 0) > 0 };
 }
 
 export { isUsageType };

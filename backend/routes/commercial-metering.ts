@@ -20,6 +20,7 @@ import { ensureCommercialSchema } from '../services/commercial/catalog-schema';
 import {
   recordUsage, checkQuota, buildUsageOverview, isUsageType,
   checkCreditDimension, spendCredits, listPlanQuotas, upsertPlanQuotas,
+  listUsageOverrides, upsertUsageOverride, deleteUsageOverride,
 } from '../services/commercial/metering-engine';
 import { buildIdentityConsumption, buildDimensionOverview, buildUsageTrend } from '../services/commercial/consumption-engine';
 import {
@@ -27,7 +28,7 @@ import {
   isCommercialEntitlementEnforcementEnabled,
   isCommercialEntitlementClassesEnabled,
 } from '../config/feature-flags';
-import { isFeatureClass, type FeatureClass, type UsageType } from '../services/commercial/plan-features';
+import { isFeatureClass, isQuotaDimension, type FeatureClass, type UsageType } from '../services/commercial/plan-features';
 import { evaluateFeatureClassEntitlement } from '../services/wc7c/require-entitlement';
 
 type GuardMW = (req: any, res: any, next: any) => void;
@@ -240,6 +241,56 @@ export function registerCommercialMeteringRoutes(
     } catch (err) {
       console.error('[metering quotas upsert]', err);
       res.status(500).json({ error: 'quotas upsert failed' });
+    }
+  });
+
+  // ── Per-identity quota overrides (super-admin) ─────────────────────────────────────────────────
+  // A per-identity override sets a limit for ONE customer + dimension that takes precedence over their
+  // plan quota in resolveQuotaWindow (regardless of subscription). Overrides live in the metering schema
+  // (comm_usage_overrides), so the write chain uses ensureSchema (ensureMeteringSchema) to bootstrap it.
+  const adminOverrideWriteChain = [requireAuth, requireSuperAdmin, requireMeteringFlag, ensureSchema];
+
+  // List every standing override (read-only; honest empty when the substrate is absent).
+  app.get('/api/admin/commercial/metering/overrides', ...adminReadChain, async (_req: any, res) => {
+    try {
+      const overview = await listUsageOverrides(pool);
+      res.json(overview);
+    } catch (err) {
+      console.error('[metering overrides list]', err);
+      res.status(500).json({ error: 'overrides list failed' });
+    }
+  });
+
+  // Set (or replace) a per-identity override. Body: { email, usage_type, limit, note? }. Reflects
+  // immediately in the identity's consumption view since resolveQuotaWindow reads the override live.
+  app.put('/api/admin/commercial/metering/overrides', ...adminOverrideWriteChain, async (req: any, res) => {
+    try {
+      const email = String(req.body?.email ?? '').trim();
+      const usageType = String(req.body?.usage_type ?? '').trim();
+      if (!email) return res.status(400).json({ error: 'email required' });
+      if (!isQuotaDimension(usageType)) return res.status(400).json({ error: 'invalid usage_type' });
+      const result = await upsertUsageOverride(pool, email, usageType, req.body?.limit, req.body?.note);
+      if (!result.ok) return res.status(400).json({ error: 'invalid limit (expected a non-negative integer)' });
+      res.json({ ok: true, override: result.override });
+    } catch (err) {
+      console.error('[metering overrides upsert]', err);
+      res.status(500).json({ error: 'overrides upsert failed' });
+    }
+  });
+
+  // Clear a per-identity override (the identity falls back to their plan quota). Reads email + usage_type
+  // from the body OR the query string (DELETE clients differ on body support).
+  app.delete('/api/admin/commercial/metering/overrides', ...adminOverrideWriteChain, async (req: any, res) => {
+    try {
+      const email = String(req.body?.email ?? req.query?.email ?? '').trim();
+      const usageType = String(req.body?.usage_type ?? req.query?.usage_type ?? '').trim();
+      if (!email) return res.status(400).json({ error: 'email required' });
+      if (!isQuotaDimension(usageType)) return res.status(400).json({ error: 'invalid usage_type' });
+      const result = await deleteUsageOverride(pool, email, usageType);
+      res.json({ ok: true, deleted: result.deleted });
+    } catch (err) {
+      console.error('[metering overrides delete]', err);
+      res.status(500).json({ error: 'overrides delete failed' });
     }
   });
 

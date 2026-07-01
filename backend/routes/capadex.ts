@@ -57,7 +57,7 @@ import { runEvidenceRuntime }   from '../services/signal-activation-runtime';
 import { resolveSeedConcernPk } from '../services/concern-signal-seeding';
 import type { EvidenceInput }   from '../services/evidence-engine';
 import { isRuntimeIntelligenceActivationEnabled, isRuntimeIntelligencePipelineEnabled, isSignalGroundingRuntimeEnabled } from '../config/feature-flags';
-import { isEvidenceGatedProgressionEnabled, isPersonaModelAlignmentEnabled, isPersonaModelExpansionEnabled, isAssessmentFrameworkCompletionEnabled, isCustomerJourneyCompletionEnabled, isProgressionEngineCompletionEnabled, isOutcomeFrameworkKpiEngineEnabled, isAiRecommendationReportOrchestrationEnabled, isProductTraceabilityCertificationEnabled } from '../config/feature-flags';
+import { isEvidenceGatedProgressionEnabled, isPersonaModelAlignmentEnabled, isPersonaModelExpansionEnabled, isAssessmentFrameworkCompletionEnabled, isCustomerJourneyCompletionEnabled, isProgressionEngineCompletionEnabled, isOutcomeFrameworkKpiEngineEnabled, isAiRecommendationReportOrchestrationEnabled, isProductTraceabilityCertificationEnabled, isOperationalReadinessEnabled } from '../config/feature-flags';
 import { resolveBridgeTagForConcernPk, loadGroundedLineage, groundingCoreToken } from '../services/signal-grounding-runtime';
 import { buildGuidanceForSession } from '../services/pil/runtime-guidance-engine';
 import { buildPipelineForSession } from '../services/pil/pipeline-resolver';
@@ -4235,6 +4235,7 @@ export function registerCapadexRoutes(app: Express, pool: Pool) {
         outcome_framework_kpi_engine: isOutcomeFrameworkKpiEngineEnabled(),
         ai_recommendation_report_orchestration: isAiRecommendationReportOrchestrationEnabled(),
         product_traceability_certification: isProductTraceabilityCertificationEnabled(),
+        operational_readiness: isOperationalReadinessEnabled(),
       });
     } catch (err) { next(err); }
   });

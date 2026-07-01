@@ -642,6 +642,21 @@ export const FEATURE_FLAGS = {
    *  before any auth/DB touch → byte-identical legacy (zero new tables — it owns none). Super-admin
    *  gated. Human approval mandatory. Env: `FF_PRODUCT_TRACEABILITY_CERTIFICATION`. */
   productTraceabilityCertification: false,
+  /** CAPADEX 3.0 — Program 2 · Phase 2.5 Observability, Monitoring & Operational Readiness.
+   *  Read-only composer + canonical operational-readiness registry over the EXISTING
+   *  observability substrate (health-aggregator, runtime-intelligence, intelligence-observability,
+   *  adaptive-event-bus, aiClient health, redaction, requestId, capadex-safety-breaker, report/email).
+   *  Certifies 10 SEPARATE operational axes (observability · monitoring · logging · metrics ·
+   *  alerting · ai_operations · assessment_operations · report_operations · disaster_recovery ·
+   *  operational_readiness) that are NEVER combined; verdict is a SEPARATE structural axis.
+   *  Enhancement-only / measure-before-enhance / reuse-before-build / NO new monitoring system /
+   *  no V2 / no duplicate logic. Composes evidence by file-existence + persisted-output/table —
+   *  engines are NEVER invoked. Coverage⟂Confidence⟂Adoption never composited; null≠0; never
+   *  fabricated. Flag OFF → every data route 503 before any auth/DB touch → byte-identical legacy
+   *  (zero new tables — it owns none except an append-only snapshot created only on explicit POST
+   *  capture when ON). Super-admin gated; `/api/operational-readiness/enabled` is an ungated probe.
+   *  Human approval mandatory. Env: `FF_OPERATIONAL_READINESS`. */
+  operationalReadiness: false,
   /** CMP-M2 — Data-retention ENFORCEMENT scheduler. Default OFF; byte-identical incl. schema
    *  (retention_execution_log created only when ON). Enforces SAFE categories only: expire stale
    *  consents (reversible status change), purge expired/used MFA codes (transient tokens), stamp
@@ -2935,6 +2950,9 @@ export function isEnterpriseIntelligenceCertificationEnabled(): boolean {
 }
 export function isProductTraceabilityCertificationEnabled(): boolean {
   return isFlagEnabled('productTraceabilityCertification');
+}
+export function isOperationalReadinessEnabled(): boolean {
+  return isFlagEnabled('operationalReadiness');
 }
 export function isRetentionEnforcementEnabled(): boolean {
   return isFlagEnabled('retentionEnforcement');

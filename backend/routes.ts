@@ -252,6 +252,7 @@ import { registerCustomerJourneyRoutes } from "./routes/customer-journey";
 import { registerProgressionRoutes } from "./routes/progression";
 import { registerOutcomeKpiRoutes } from "./routes/outcome-kpi";
 import { registerAiOrchestrationRoutes } from "./routes/ai-orchestration";
+import { registerOperationalReadinessRoutes } from "./routes/operational-readiness";
 import { registerProgram1CertificationRoutes } from "./routes/program1-certification";
 import { registerEcosystemCommunityRoutes } from "./routes/ecosystem-community";
 import { registerEmployerEcosystemRoutes } from "./routes/employer-ecosystem";
@@ -14135,6 +14136,7 @@ Rules:
   registerProgressionRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerOutcomeKpiRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerAiOrchestrationRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerOperationalReadinessRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerProgram1CertificationRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   // ── Employer, Community & Ecosystem (MX-302I): flag-gated additive ecosystem surface ──
   registerEcosystemCommunityRoutes(app, concernsPool, requireAuth, requireSuperAdmin);

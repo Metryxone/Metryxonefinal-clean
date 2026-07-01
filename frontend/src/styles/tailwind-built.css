@@ -1695,6 +1695,9 @@
   .max-h-\[40vh\] {
     max-height: 40vh;
   }
+  .max-h-\[45vh\] {
+    max-height: 45vh;
+  }
   .max-h-\[55vh\] {
     max-height: 55vh;
   }
@@ -7165,6 +7168,9 @@
   }
   .accent-blue-600 {
     accent-color: var(--color-blue-600);
+  }
+  .accent-current {
+    accent-color: currentcolor;
   }
   .accent-orange-600 {
     accent-color: var(--color-orange-600);

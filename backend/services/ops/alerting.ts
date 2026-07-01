@@ -10,7 +10,7 @@
  */
 import type { Pool } from 'pg';
 import { isOperationalReadinessEnabled } from '../../config/feature-flags';
-import { snapshotMetrics } from './metrics-registry';
+import { snapshotMetrics, snapshotLatencyPercentiles } from './metrics-registry';
 import { sendOperationalAlertEmail } from '../../email';
 
 const RULES = 'ops_alert_rules';
@@ -54,7 +54,9 @@ async function ensureSchema(pool: Pool): Promise<void> {
       `INSERT INTO ${RULES} (name, signal, comparator, threshold, severity, channel) VALUES
         ('HTTP error ratio high', 'http_error_ratio', 'gt', 0.05, 'critical', 'log'),
         ('Heap usage high (bytes)', 'process_heap_used_bytes', 'gt', 1500000000, 'warning', 'log'),
-        ('Database unreachable', 'db_reachable', 'lt', 1, 'critical', 'log')`,
+        ('Database unreachable', 'db_reachable', 'lt', 1, 'critical', 'log'),
+        ('Request latency p95 high (ms)', 'http_request_latency_p95_ms', 'gt', 1000, 'warning', 'log'),
+        ('Request latency p99 high (ms)', 'http_request_latency_p99_ms', 'gt', 2500, 'critical', 'log')`,
     );
   }
   schemaReady = true;
@@ -72,6 +74,10 @@ async function tableReady(pool: Pool, table: string): Promise<boolean> {
 /** Live measurable signals alert rules can reference (null ≠ 0 where unmeasured). */
 async function collectSignals(pool: Pool): Promise<Record<string, number | null>> {
   const m = snapshotMetrics();
+  // Latency percentiles from the EXISTING request-duration histogram (task #324 substrate).
+  // Each is null until enough samples exist (p50≥2, p95≥20, p99≥100) — the evaluator skips
+  // null signals, so a latency rule simply does not fire on insufficient data (null ≠ 0).
+  const lat = snapshotLatencyPercentiles().overall;
   let dbReachable = 0;
   try {
     await pool.query('SELECT 1');
@@ -87,6 +93,10 @@ async function collectSignals(pool: Pool): Promise<Record<string, number | null>
     process_rss_bytes: m.process_rss_bytes,
     uptime_seconds: m.uptime_seconds,
     db_reachable: dbReachable,
+    // Request-latency signals — a slow-request regression can page an operator, not just failures.
+    http_request_latency_p50_ms: lat.p50_ms, // null until ≥2 samples
+    http_request_latency_p95_ms: lat.p95_ms, // null until ≥20 samples
+    http_request_latency_p99_ms: lat.p99_ms, // null until ≥100 samples
   };
 }
 

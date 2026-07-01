@@ -143,6 +143,14 @@ export function IntroPhase(props: PhaseProps) {
     if (activeSub?.trackId) setExpandedTrack(activeSub.trackId);
   }, [activeSub?.trackId]);
 
+  // ── Progressive-disclosure for the OPTIONAL enrichment fields (exact age,
+  //    gender, city, institution, goal, timeline). Collapsed by default so the
+  //    required path — name + age band — stays short and the CTA sits closer to
+  //    the fold instead of below a long scroll. Purely presentational: every
+  //    field still lives in the DOM only when opened, and none of them gate the
+  //    CTA, so validity / submission behaviour is unchanged.
+  const [showMoreDetail, setShowMoreDetail] = React.useState(false);
+
   // ── Focus mode: once a persona is locked in, collapse the OTHER tracks out
   //    of sight so an irrelevant cohort (e.g. "Working professionals" for a
   //    school student) never crowds the core form. "Change" re-opens the full
@@ -1185,6 +1193,28 @@ export function IntroPhase(props: PhaseProps) {
                   </div>
                 </div>
 
+                {/* ── Optional enrichment, collapsed by default ─────────────────
+                     Keeps the required path (name + age band) short; opening it
+                     reveals the optional fields below. None of these gate the CTA. */}
+                <button
+                  type="button"
+                  onClick={() => setShowMoreDetail((v) => !v)}
+                  className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl border border-dashed transition-all active:scale-[0.997] hover:bg-slate-50"
+                  style={{ borderColor: showMoreDetail ? '#cbd5e1' : '#e2e8f0' }}
+                  data-testid="toggle-more-detail"
+                  aria-expanded={showMoreDetail}
+                >
+                  <span className="flex items-center gap-2 text-[13px] font-medium text-slate-600">
+                    <TrendingUp size={14} className="opacity-70" style={{ color: persona?.color || '#2EC4B6' }} />
+                    {showMoreDetail ? 'Hide extra detail' : 'Add more detail for a sharper report'}
+                    <span className="text-[11.5px] font-normal text-slate-400">(optional)</span>
+                  </span>
+                  {showMoreDetail
+                    ? <ChevronUp size={16} className="text-slate-400 shrink-0" />
+                    : <ChevronDown size={16} className="text-slate-400 shrink-0" />}
+                </button>
+
+                {showMoreDetail && (<>
                 {/* Row 2 — Exact age + Gender (both optional) */}
                 <div className="grid grid-cols-2 gap-2.5">
                   <div>
@@ -1337,6 +1367,7 @@ export function IntroPhase(props: PhaseProps) {
                     </select>
                   </div>
                 </div>
+                </>)}
               </div>
               );
             })()}
@@ -2072,7 +2103,11 @@ export function IntroPhase(props: PhaseProps) {
                 const n = parseInt(userAge, 10);
                 return isNaN(n) || n < r.min || n > r.max;
               })();
-              const missingAge     = missingBand || numericInvalid;
+              // Exact age lives in the collapsible "more detail" section; while
+              // that section is closed the field is hidden, so a stale out-of-range
+              // value must never block the CTA (the user can't see or fix it). It
+              // still validates normally whenever the section is open.
+              const missingAge     = missingBand || (showMoreDetail && numericInvalid);
               const missingConcern = selectedConcerns.length === 0 && !selectedConcern && concernSearch.trim().length < 3;
               const missingEmail   = !isEmailValid || emailInvalid || !introEmailVerified;
               const formInvalid    = missingPersona || missingName || missingConsent || missingAge || missingConcern || missingEmail || introEmailStatus === 'limited';

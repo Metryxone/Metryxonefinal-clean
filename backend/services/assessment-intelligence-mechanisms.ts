@@ -61,13 +61,13 @@ export async function ensureAintSchema(pool: Pool): Promise<void> {
       detail         JSONB NOT NULL DEFAULT '{}'::jsonb,
       created_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
       updated_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
-      UNIQUE (norm_key, norm_type)
+      UNIQUE (assessment_slug, norm_key, norm_type)
     );
     CREATE INDEX IF NOT EXISTS aint_norm_tables_assessment_idx ON aint_norm_tables(assessment_slug);
     CREATE TABLE IF NOT EXISTS aint_standard_scores (
       id             BIGSERIAL PRIMARY KEY,
       score_key      TEXT NOT NULL,
-      subject_ref    TEXT,
+      subject_ref    TEXT NOT NULL DEFAULT '',
       assessment_slug TEXT NOT NULL DEFAULT '',
       raw_value      DOUBLE PRECISION,
       z              DOUBLE PRECISION,
@@ -80,13 +80,13 @@ export async function ensureAintSchema(pool: Pool): Promise<void> {
       abstained      BOOLEAN NOT NULL DEFAULT false,
       detail         JSONB NOT NULL DEFAULT '{}'::jsonb,
       created_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
-      UNIQUE (score_key)
+      UNIQUE (assessment_slug, subject_ref, score_key)
     );
     CREATE INDEX IF NOT EXISTS aint_standard_scores_subject_idx ON aint_standard_scores(subject_ref);
     CREATE TABLE IF NOT EXISTS aint_benchmarks (
       id             BIGSERIAL PRIMARY KEY,
       benchmark_key  TEXT NOT NULL,
-      subject_ref    TEXT,
+      subject_ref    TEXT NOT NULL DEFAULT '',
       scope          TEXT NOT NULL DEFAULT 'peer_cohort',
       assessment_slug TEXT NOT NULL DEFAULT '',
       value          DOUBLE PRECISION,
@@ -96,13 +96,13 @@ export async function ensureAintSchema(pool: Pool): Promise<void> {
       abstained      BOOLEAN NOT NULL DEFAULT false,
       detail         JSONB NOT NULL DEFAULT '{}'::jsonb,
       created_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
-      UNIQUE (benchmark_key, scope)
+      UNIQUE (assessment_slug, subject_ref, benchmark_key, scope)
     );
     CREATE INDEX IF NOT EXISTS aint_benchmarks_subject_idx ON aint_benchmarks(subject_ref);
     CREATE TABLE IF NOT EXISTS aint_interpretations (
       id             BIGSERIAL PRIMARY KEY,
       interp_key     TEXT NOT NULL,
-      subject_ref    TEXT,
+      subject_ref    TEXT NOT NULL DEFAULT '',
       assessment_slug TEXT NOT NULL DEFAULT '',
       narrative      TEXT,
       strengths      JSONB NOT NULL DEFAULT '[]'::jsonb,
@@ -114,13 +114,13 @@ export async function ensureAintSchema(pool: Pool): Promise<void> {
       abstained      BOOLEAN NOT NULL DEFAULT false,
       detail         JSONB NOT NULL DEFAULT '{}'::jsonb,
       created_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
-      UNIQUE (interp_key)
+      UNIQUE (assessment_slug, subject_ref, interp_key)
     );
     CREATE INDEX IF NOT EXISTS aint_interpretations_subject_idx ON aint_interpretations(subject_ref);
     CREATE TABLE IF NOT EXISTS aint_reports (
       id             BIGSERIAL PRIMARY KEY,
       report_key     TEXT NOT NULL,
-      subject_ref    TEXT,
+      subject_ref    TEXT NOT NULL DEFAULT '',
       assessment_slug TEXT NOT NULL DEFAULT '',
       sections       JSONB NOT NULL DEFAULT '[]'::jsonb,
       section_count  INTEGER NOT NULL DEFAULT 0,
@@ -128,13 +128,13 @@ export async function ensureAintSchema(pool: Pool): Promise<void> {
       detail         JSONB NOT NULL DEFAULT '{}'::jsonb,
       created_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
       updated_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
-      UNIQUE (report_key)
+      UNIQUE (assessment_slug, subject_ref, report_key)
     );
     CREATE INDEX IF NOT EXISTS aint_reports_subject_idx ON aint_reports(subject_ref);
     CREATE TABLE IF NOT EXISTS aint_performance (
       id             BIGSERIAL PRIMARY KEY,
       perf_key       TEXT NOT NULL,
-      subject_ref    TEXT,
+      subject_ref    TEXT NOT NULL DEFAULT '',
       assessment_slug TEXT NOT NULL DEFAULT '',
       overall_standing TEXT,
       overall_score  DOUBLE PRECISION,
@@ -147,7 +147,7 @@ export async function ensureAintSchema(pool: Pool): Promise<void> {
       detail         JSONB NOT NULL DEFAULT '{}'::jsonb,
       created_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
       updated_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
-      UNIQUE (perf_key)
+      UNIQUE (assessment_slug, subject_ref, perf_key)
     );
     CREATE INDEX IF NOT EXISTS aint_performance_subject_idx ON aint_performance(subject_ref);
     CREATE TABLE IF NOT EXISTS aint_repository (
@@ -485,7 +485,7 @@ export async function saveNormTable(pool: Pool, input: NormTableInput): Promise<
   const { rows } = await pool.query(
     `INSERT INTO aint_norm_tables (norm_key, norm_type, label, assessment_slug, reference_mean, reference_sd, n_members, abstained, detail)
      VALUES ($1,COALESCE($2,'cohort_norm'),$3,COALESCE($4,''),$5,$6,COALESCE($7,0),COALESCE($8,false),COALESCE($9,'{}')::jsonb)
-     ON CONFLICT (norm_key, norm_type) DO UPDATE SET
+     ON CONFLICT (assessment_slug, norm_key, norm_type) DO UPDATE SET
        label=EXCLUDED.label, assessment_slug=EXCLUDED.assessment_slug, reference_mean=EXCLUDED.reference_mean,
        reference_sd=EXCLUDED.reference_sd, n_members=EXCLUDED.n_members, abstained=EXCLUDED.abstained,
        detail=EXCLUDED.detail, updated_at=now()
@@ -514,13 +514,13 @@ export async function saveStandardScore(pool: Pool, input: StandardScoreInput): 
   const { rows } = await pool.query(
     `INSERT INTO aint_standard_scores (score_key, subject_ref, assessment_slug, raw_value, z, percentile, t_score, stanine, sten, deviation_score, norm_key, abstained, detail)
      VALUES ($1,$2,COALESCE($3,''),$4,$5,$6,$7,$8,$9,$10,$11,COALESCE($12,false),COALESCE($13,'{}')::jsonb)
-     ON CONFLICT (score_key) DO UPDATE SET
+     ON CONFLICT (assessment_slug, subject_ref, score_key) DO UPDATE SET
        subject_ref=EXCLUDED.subject_ref, assessment_slug=EXCLUDED.assessment_slug, raw_value=EXCLUDED.raw_value,
        z=EXCLUDED.z, percentile=EXCLUDED.percentile, t_score=EXCLUDED.t_score, stanine=EXCLUDED.stanine,
        sten=EXCLUDED.sten, deviation_score=EXCLUDED.deviation_score, norm_key=EXCLUDED.norm_key,
        abstained=EXCLUDED.abstained, detail=EXCLUDED.detail
      RETURNING *`,
-    [input.score_key, input.subject_ref ?? null, input.assessment_slug ?? null, input.raw_value ?? null,
+    [input.score_key, input.subject_ref ?? '', input.assessment_slug ?? null, input.raw_value ?? null,
       input.z ?? null, input.percentile ?? null, input.t_score ?? null, input.stanine ?? null, input.sten ?? null,
       input.deviation_score ?? null, input.norm_key ?? null, input.abstained ?? null,
       input.detail ? JSON.stringify(input.detail) : null],
@@ -544,12 +544,12 @@ export async function saveBenchmark(pool: Pool, input: BenchmarkInput): Promise<
   const { rows } = await pool.query(
     `INSERT INTO aint_benchmarks (benchmark_key, subject_ref, scope, assessment_slug, value, percentile, relative, n_members, abstained, detail)
      VALUES ($1,$2,COALESCE($3,'peer_cohort'),COALESCE($4,''),$5,$6,$7,COALESCE($8,0),COALESCE($9,false),COALESCE($10,'{}')::jsonb)
-     ON CONFLICT (benchmark_key, scope) DO UPDATE SET
+     ON CONFLICT (assessment_slug, subject_ref, benchmark_key, scope) DO UPDATE SET
        subject_ref=EXCLUDED.subject_ref, assessment_slug=EXCLUDED.assessment_slug, value=EXCLUDED.value,
        percentile=EXCLUDED.percentile, relative=EXCLUDED.relative, n_members=EXCLUDED.n_members,
        abstained=EXCLUDED.abstained, detail=EXCLUDED.detail
      RETURNING *`,
-    [input.benchmark_key, input.subject_ref ?? null, input.scope ?? null, input.assessment_slug ?? null,
+    [input.benchmark_key, input.subject_ref ?? '', input.scope ?? null, input.assessment_slug ?? null,
       input.value ?? null, input.percentile ?? null, input.relative ?? null, input.n_members ?? null,
       input.abstained ?? null, input.detail ? JSON.stringify(input.detail) : null],
   );
@@ -573,13 +573,13 @@ export async function saveInterpretation(pool: Pool, input: InterpretationInput)
   const { rows } = await pool.query(
     `INSERT INTO aint_interpretations (interp_key, subject_ref, assessment_slug, narrative, strengths, development_areas, reasoning, recommendations, confidence, source, abstained, detail)
      VALUES ($1,$2,COALESCE($3,''),$4,COALESCE($5,'[]')::jsonb,COALESCE($6,'[]')::jsonb,COALESCE($7,'[]')::jsonb,COALESCE($8,'[]')::jsonb,$9,COALESCE($10,'deterministic'),COALESCE($11,false),COALESCE($12,'{}')::jsonb)
-     ON CONFLICT (interp_key) DO UPDATE SET
+     ON CONFLICT (assessment_slug, subject_ref, interp_key) DO UPDATE SET
        subject_ref=EXCLUDED.subject_ref, assessment_slug=EXCLUDED.assessment_slug, narrative=EXCLUDED.narrative,
        strengths=EXCLUDED.strengths, development_areas=EXCLUDED.development_areas, reasoning=EXCLUDED.reasoning,
        recommendations=EXCLUDED.recommendations, confidence=EXCLUDED.confidence, source=EXCLUDED.source,
        abstained=EXCLUDED.abstained, detail=EXCLUDED.detail
      RETURNING *`,
-    [input.interp_key, input.subject_ref ?? null, input.assessment_slug ?? null, input.narrative ?? null,
+    [input.interp_key, input.subject_ref ?? '', input.assessment_slug ?? null, input.narrative ?? null,
       input.strengths ? JSON.stringify(input.strengths) : null, input.development_areas ? JSON.stringify(input.development_areas) : null,
       input.reasoning ? JSON.stringify(input.reasoning) : null, input.recommendations ? JSON.stringify(input.recommendations) : null,
       input.confidence ?? null, input.source ?? null, input.abstained ?? null, input.detail ? JSON.stringify(input.detail) : null],
@@ -602,11 +602,11 @@ export async function saveReport(pool: Pool, input: ReportInput): Promise<unknow
   const { rows } = await pool.query(
     `INSERT INTO aint_reports (report_key, subject_ref, assessment_slug, sections, section_count, status, detail)
      VALUES ($1,$2,COALESCE($3,''),COALESCE($4,'[]')::jsonb,COALESCE($5,0),COALESCE($6,'draft'),COALESCE($7,'{}')::jsonb)
-     ON CONFLICT (report_key) DO UPDATE SET
+     ON CONFLICT (assessment_slug, subject_ref, report_key) DO UPDATE SET
        subject_ref=EXCLUDED.subject_ref, assessment_slug=EXCLUDED.assessment_slug, sections=EXCLUDED.sections,
        section_count=EXCLUDED.section_count, status=EXCLUDED.status, detail=EXCLUDED.detail, updated_at=now()
      RETURNING *`,
-    [input.report_key, input.subject_ref ?? null, input.assessment_slug ?? null,
+    [input.report_key, input.subject_ref ?? '', input.assessment_slug ?? null,
       input.sections ? JSON.stringify(input.sections) : null, input.section_count ?? null, input.status ?? null,
       input.detail ? JSON.stringify(input.detail) : null],
   );
@@ -630,13 +630,13 @@ export async function savePerformance(pool: Pool, input: PerformanceRecordInput)
   const { rows } = await pool.query(
     `INSERT INTO aint_performance (perf_key, subject_ref, assessment_slug, overall_standing, overall_score, percentile, readiness_band, peer_relative, growth_trajectory, dimension_profile, abstained, detail)
      VALUES ($1,$2,COALESCE($3,''),$4,$5,$6,$7,$8,$9,COALESCE($10,'[]')::jsonb,COALESCE($11,false),COALESCE($12,'{}')::jsonb)
-     ON CONFLICT (perf_key) DO UPDATE SET
+     ON CONFLICT (assessment_slug, subject_ref, perf_key) DO UPDATE SET
        subject_ref=EXCLUDED.subject_ref, assessment_slug=EXCLUDED.assessment_slug, overall_standing=EXCLUDED.overall_standing,
        overall_score=EXCLUDED.overall_score, percentile=EXCLUDED.percentile, readiness_band=EXCLUDED.readiness_band,
        peer_relative=EXCLUDED.peer_relative, growth_trajectory=EXCLUDED.growth_trajectory,
        dimension_profile=EXCLUDED.dimension_profile, abstained=EXCLUDED.abstained, detail=EXCLUDED.detail, updated_at=now()
      RETURNING *`,
-    [input.perf_key, input.subject_ref ?? null, input.assessment_slug ?? null, input.overall_standing ?? null,
+    [input.perf_key, input.subject_ref ?? '', input.assessment_slug ?? null, input.overall_standing ?? null,
       input.overall_score ?? null, input.percentile ?? null, input.readiness_band ?? null, input.peer_relative ?? null,
       input.growth_trajectory ?? null, input.dimension_profile ? JSON.stringify(input.dimension_profile) : null,
       input.abstained ?? null, input.detail ? JSON.stringify(input.detail) : null],

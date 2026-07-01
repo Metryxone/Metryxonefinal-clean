@@ -179,6 +179,7 @@ const AssessmentBuilderPanel = lazy(() => import('./superadmin/AssessmentBuilder
 const AssessmentDeliveryPanel = lazy(() => import('./superadmin/AssessmentDeliveryPanel'));
 const AssessmentScoringPanel = lazy(() => import('./superadmin/AssessmentScoringPanel'));
 const AssessmentSciencePanel = lazy(() => import('./superadmin/AssessmentSciencePanel'));
+const AssessmentIntelligencePanel = lazy(() => import('./superadmin/AssessmentIntelligencePanel'));
 const DepartmentsPanel = lazy(() => import('./superadmin/DepartmentsPanel'));
 const RolesPanel = lazy(() => import('./superadmin/RolesPanel'));
 const RoleFamiliesPanel = lazy(() => import('./superadmin/RoleFamiliesPanel'));
@@ -542,6 +543,17 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
     queryKey: ['/api/assessment-science/enabled', 'enabled'],
     queryFn: async () => {
       const res = await fetch('/api/assessment-science/enabled', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // ── Assessment Intelligence (CAPADEX 3.0 · 3.7) flag probe (file-registry flag assessmentIntelligence).
+  //    Probe /api/assessment-intelligence/enabled (503-before-auth when OFF) → tab omitted (byte-identical UI). ──
+  const { data: assessmentIntelligenceEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/assessment-intelligence/enabled', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/assessment-intelligence/enabled', { credentials: 'include' });
       return res.ok;
     },
     enabled: isAuthenticated,
@@ -1177,6 +1189,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       ...(assessmentDeliveryEnabled ? [{ id: 'assessment-delivery', label: 'Assessment Delivery', icon: Rocket, node: <AssessmentDeliveryPanel /> }] : []),
                       ...(assessmentScoringEnabled ? [{ id: 'assessment-scoring', label: 'Assessment Scoring', icon: Calculator, node: <AssessmentScoringPanel /> }] : []),
                       ...(assessmentScienceEnabled ? [{ id: 'assessment-science', label: 'Assessment Science', icon: Microscope, node: <AssessmentSciencePanel /> }] : []),
+                      ...(assessmentIntelligenceEnabled ? [{ id: 'assessment-intelligence', label: 'Assessment Intelligence', icon: Brain, node: <AssessmentIntelligencePanel /> }] : []),
                       ...(mx203KnowledgeEnabled ? [{ id: 'mx203-knowledge-center', label: 'Knowledge Center', icon: BookOpen, node: <Mx203KnowledgeCenterPanel /> }] : []),
                       { id: 'ont-career-tracks',        label: 'Career Tracks',            icon: Map,           node: <CareerTracksPanel /> },
                       { id: 'ont-competency-levels',    label: 'Competency Levels',        icon: BarChart2,     node: <CompetencyLevelsPanel /> },

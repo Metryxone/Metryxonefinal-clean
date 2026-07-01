@@ -57,7 +57,7 @@ import { runEvidenceRuntime }   from '../services/signal-activation-runtime';
 import { resolveSeedConcernPk } from '../services/concern-signal-seeding';
 import type { EvidenceInput }   from '../services/evidence-engine';
 import { isRuntimeIntelligenceActivationEnabled, isRuntimeIntelligencePipelineEnabled, isSignalGroundingRuntimeEnabled } from '../config/feature-flags';
-import { isEvidenceGatedProgressionEnabled, isPersonaModelAlignmentEnabled, isPersonaModelExpansionEnabled, isAssessmentFrameworkCompletionEnabled, isCustomerJourneyCompletionEnabled, isProgressionEngineCompletionEnabled, isOutcomeFrameworkKpiEngineEnabled, isAiRecommendationReportOrchestrationEnabled, isProductTraceabilityCertificationEnabled, isOperationalReadinessEnabled, isAssessmentArchitectureCompletionEnabled, isQuestionManagementPlatformEnabled, isAssessmentBuilderEnabled, isAssessmentDeliveryEnabled, isAssessmentScoringEnabled, isAssessmentScienceEnabled, isPersonaJourneyRouterEnabled } from '../config/feature-flags';
+import { isEvidenceGatedProgressionEnabled, isPersonaModelAlignmentEnabled, isPersonaModelExpansionEnabled, isAssessmentFrameworkCompletionEnabled, isCustomerJourneyCompletionEnabled, isProgressionEngineCompletionEnabled, isOutcomeFrameworkKpiEngineEnabled, isAiRecommendationReportOrchestrationEnabled, isProductTraceabilityCertificationEnabled, isOperationalReadinessEnabled, isAssessmentArchitectureCompletionEnabled, isQuestionManagementPlatformEnabled, isAssessmentBuilderEnabled, isAssessmentDeliveryEnabled, isAssessmentScoringEnabled, isAssessmentScienceEnabled, isAssessmentIntelligenceEnabled, isPersonaJourneyRouterEnabled } from '../config/feature-flags';
 import { resolveBridgeTagForConcernPk, loadGroundedLineage, groundingCoreToken } from '../services/signal-grounding-runtime';
 import { buildGuidanceForSession } from '../services/pil/runtime-guidance-engine';
 import { buildPipelineForSession } from '../services/pil/pipeline-resolver';
@@ -4244,6 +4244,7 @@ export function registerCapadexRoutes(app: Express, pool: Pool) {
         assessment_delivery: isAssessmentDeliveryEnabled(),
         assessment_scoring: isAssessmentScoringEnabled(),
         assessment_science: isAssessmentScienceEnabled(),
+        assessment_intelligence: isAssessmentIntelligenceEnabled(),
         persona_journey_router: isPersonaJourneyRouterEnabled(),
       });
     } catch (err) { next(err); }

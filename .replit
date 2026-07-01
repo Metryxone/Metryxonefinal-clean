@@ -83,6 +83,10 @@ args = "partner-export-filters"
 task = "workflow.run"
 args = "access-control"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "employer-competency-intel-e2e"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -269,6 +273,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npm run test:access-control"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "employer-competency-intel-e2e"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx scripts/task70-employer-competency-intelligence-e2e.ts"
 
 [workflows.workflow.metadata]
 isValidation = true

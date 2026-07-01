@@ -238,6 +238,30 @@ async function main() {
   const affirmative = JSON.stringify({ ...hr, disclaimer: undefined, ...ir }).toLowerCase();
   note(!/strong_hire|no_hire|hire\/no-hire|pass\/fail|suitability score/.test(affirmative), 'no verdict/suitability language in affirmative output');
   note(hr.disclaimer.length > 0 && /not a hiring/i.test(hr.disclaimer), 'hiring rec carries non-verdict disclaimer');
+
+  // Branch-exhaustive no-verdict guard: EVERY action branch's affirmative fields (all fields
+  // EXCEPT the disclaimer) must stay free of hire/no-hire / suitability verdict language.
+  const VERDICT_RE = /(hire\/no-hire|no[-_\s]?hire|strong[-_\s]?hire|pass\/fail|pass or fail|suitability|\bsuitable\b|\bunsuitable\b|guaranteed performance|validated hiring prediction)/i;
+  const branchMatches: Array<[string, CompetencyDrivenMatch]> = [
+    ['strong_fit+sufficient', match(true, 'strong_fit', k30)],
+    ['fit+sufficient', match(true, 'fit', k30)],
+    ['conditional+sufficient', match(true, 'conditional', k30)],
+    ['unlikely_fit+sufficient', match(true, 'unlikely_fit', k30)],
+    ['coverage-thin', match(false, 'strong_fit', k30)],
+  ];
+  for (const [label, m] of branchMatches) {
+    const rec = deriveHiringRecommendation(m);
+    const { disclaimer: _d, ...aff } = rec;
+    note(!VERDICT_RE.test(JSON.stringify(aff).toLowerCase()), `no verdict language in affirmative fields — ${label} (action ${rec.action})`);
+  }
+  // Insufficient-evidence branch (no competency profile) — build a null-match directly.
+  {
+    const noProfile: CompetencyDrivenMatch = { ...match(true, 'strong_fit', k30), competencyProfileAvailable: false, competencyMatch: null };
+    const rec = deriveHiringRecommendation(noProfile);
+    const { disclaimer: _d, ...aff } = rec;
+    note(rec.action === 'insufficient_competency_evidence' && !VERDICT_RE.test(JSON.stringify(aff).toLowerCase()),
+      `no verdict language in affirmative fields — no-profile (action ${rec.action})`);
+  }
   note(hr.action === 'advance_to_interview', `strong+sufficient → advance_to_interview (got ${hr.action})`);
   note(ir.focusAreas.length === 1 && ir.probeAreas.length === 1, 'interview rec surfaces measured gap + unassessed probe');
 

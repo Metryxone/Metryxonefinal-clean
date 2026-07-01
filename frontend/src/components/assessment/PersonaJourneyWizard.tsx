@@ -71,6 +71,30 @@ const GOAL_TRACK_MAP: Record<MacroTrackData['id'], string[]> = {
   proxy:        ['support', 'clarity'],
 };
 
+// Finer-grained override — some sub-personas within a track need a NARROWER goal
+// set than the track default. The clearest case: a competitive-exam aspirant
+// (JEE / NEET / CUET / UPSC) sits in the broad "learner" track, but their goal is
+// exam prep + clarity — never "switch a career" or "land a job / placement". When
+// a sub-persona is listed here, its goal set wins over GOAL_TRACK_MAP[track].
+const SUB_PERSONA_GOAL_MAP: Record<string, string[]> = {
+  competitive_aspirant: ['clarity', 'exam'],
+  jee_aspirant:         ['clarity', 'exam'],
+  neet_aspirant:        ['clarity', 'exam'],
+  cuet_aspirant:        ['clarity', 'exam'],
+  upsc_aspirant:        ['clarity', 'exam'],
+};
+
+// Resolve the allowed goal ids for the current (track, sub-persona) selection.
+// A sub-persona override wins; otherwise fall back to the track default; with
+// nothing chosen, every goal is allowed.
+function allowedGoalIds(
+  tId: MacroTrackData['id'] | null,
+  sId: string | null,
+): string[] {
+  if (sId && SUB_PERSONA_GOAL_MAP[sId]) return SUB_PERSONA_GOAL_MAP[sId];
+  return tId ? (GOAL_TRACK_MAP[tId] || []) : GOAL_OPTIONS.map((g) => g.id);
+}
+
 const TIMELINE_OPTIONS: { id: string; label: string }[] = [
   { id: 'immediate', label: 'Right away (0–1 month)' },
   { id: 'short', label: 'Soon (1–3 months)' },
@@ -177,12 +201,15 @@ export function PersonaJourneyWizard(props: PersonaJourneyWizardProps) {
   // that no longer applies (e.g. picked "growth" then switched to a school child)
   // is cleared so a stale, irrelevant selection can't carry forward.
   const visibleGoals = React.useMemo(
-    () => (trackId ? GOAL_OPTIONS.filter((g) => (GOAL_TRACK_MAP[trackId] || []).includes(g.id)) : GOAL_OPTIONS),
-    [trackId],
+    () => {
+      const allowed = allowedGoalIds(trackId, subId);
+      return GOAL_OPTIONS.filter((g) => allowed.includes(g.id));
+    },
+    [trackId, subId],
   );
   React.useEffect(() => {
-    if (trackId && goal && !(GOAL_TRACK_MAP[trackId] || []).includes(goal)) setGoal('');
-  }, [trackId, goal]);
+    if (goal && !allowedGoalIds(trackId, subId).includes(goal)) setGoal('');
+  }, [trackId, subId, goal]);
 
   const activeTrack = tracks.find((t) => t.id === trackId) || null;
   const activeSub: SubPersona | null =

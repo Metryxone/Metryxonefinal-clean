@@ -24,8 +24,10 @@ process.env.FF_LONGITUDINAL_OUTCOME_CAPTURE = '1'; // capture flag must be ON fo
 
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
+import { randomUUID } from 'node:crypto';
 import { Pool, type PoolClient } from 'pg';
 import { composeProgressionOutcomes, OI_K_MIN } from '../services/outcome-intelligence-engine';
+import { captureProgressionOutcome } from '../services/capadex/progression-outcome-capture';
 
 const HAS_DB = !!process.env.DATABASE_URL;
 let pool: Pool | null = null;
@@ -221,4 +223,126 @@ test('DEMO (@example.com) rows are excluded from measured figures but counted in
   assert.ok(Math.abs(r.progression_rate.value - MASTERY / COMPLETION) < 1e-9, 'measured rate uses non-demo subjects only');
   // Time-to-Mastery sample must also exclude demo Mastery snapshots (32 non-demo, not 44).
   assert.equal(r.time_to_mastery.sample_size, MASTERY);
+});
+
+// ─────────────────────────────────────────────────────────────────────────────────────────────
+// WRITER ↔ VIEW DRIFT GUARD (Task #336)
+//
+// The scenarios above seed the writer's *output shape* directly (temp shadows) so they can backdate
+// captured_at and prove the k_min flip + demo exclusion. That is deliberate — the real writer stamps
+// snapshots at now() and can't backdate. But it leaves ONE gap: if the REAL capture writer
+// (`captureProgressionOutcome`) ever changes its output columns, its `detail.milestone` keys, or its
+// `outcome_type`, the view (`composeProgressionOutcomes`) could silently stop counting real subjects
+// and no test above would catch it.
+//
+// These two tests close that gap by driving a NON-DEMO subject through the REAL writer end to end and
+// confirming the view counts it. Isolation: real permanent tables (confirmed present + empty of
+// learning milestones in dev) inside a single connection + transaction that is ROLLED BACK — so the
+// writer's own ensure-schema paths (`ensureValidationLoopSchema` incl. the ON CONFLICT partial unique
+// index, `ensureWc3LongitudinalSchema`) run against the real shape and nothing persists. We assert on
+// the DELTA vs a baseline compose so the guard is robust to any pre-existing dev rows.
+// ─────────────────────────────────────────────────────────────────────────────────────────────
+
+test('WRITER↔VIEW drift guard: a subject driven through the REAL captureProgressionOutcome is counted by the view', async (t) => {
+  if (!HAS_DB) return t.skip('DATABASE_URL not set');
+  process.env.FF_LONGITUDINAL_OUTCOME_CAPTURE = '1'; // capture must be ON for the writer to write + view to read
+
+  const client = await pool!.connect();
+  const txnPool: any = { query: (...a: any[]) => (client as any).query(...a) };
+  try {
+    await client.query('BEGIN');
+
+    // Baseline: compose against the real committed state BEFORE seeding, so the guard is a DELTA
+    // (robust to any pre-existing dev rows — the learning-milestone substrate is confirmed empty).
+    const before = await composeProgressionOutcomes(txnPool);
+    const beforeCompletion = before.coverage.completion_cohort ?? 0;
+    const beforeMastery = before.coverage.reached_mastery ?? 0;
+    const beforeLongitudinal = before.coverage.longitudinal_subjects ?? 0;
+
+    // Drive ONE non-demo subject through the REAL writer: Growth stage → then Mastery stage. This
+    // exercises stage_completion + reached_mastery milestones AND a Mastery longitudinal snapshot.
+    // The subject email is randomised so the delta assertion is collision-proof even against any
+    // pre-existing dev data (rollback also guarantees no self-pollution).
+    const sessionId = randomUUID();
+    const email = `writer-drift-guard+${randomUUID()}@fixture.test`;
+
+    const growth = await captureProgressionOutcome(txnPool, {
+      sessionId, email, stageCode: 'CAP_GRW', canonicalStage: 'Growth',
+    });
+    assert.equal(growth.enabled, true, 'writer active while flag ON');
+    assert.equal(growth.learning_outcome_written, true, 'stage_completion milestone written');
+    assert.equal(growth.snapshot_captured, true, 'Growth longitudinal snapshot written');
+    assert.equal(growth.mastery_outcome_written, false, 'Growth is not Mastery — no mastery milestone yet');
+
+    const mastery = await captureProgressionOutcome(txnPool, {
+      sessionId, email, stageCode: 'CAP_MAS', canonicalStage: 'Mastery',
+    });
+    assert.equal(mastery.enabled, true);
+    assert.equal(mastery.learning_outcome_written, true, 'stage_completion milestone (idempotent per session)');
+    assert.equal(mastery.mastery_outcome_written, true, 'reached_mastery milestone written by the REAL writer');
+    assert.equal(mastery.snapshot_captured, true, 'Mastery longitudinal snapshot written');
+    assert.equal(mastery.is_demo, false, 'non-demo subject');
+
+    // ── The drift guard itself: the view MUST count the real-writer subject. ────────────────────
+    // If the writer's detail.milestone keys / outcome_type / columns drift away from what
+    // composeProgressionOutcomes FILTERs on, these deltas go to 0 and the test fails loudly.
+    const after = await composeProgressionOutcomes(txnPool);
+    assert.equal(after.capture_enabled, true);
+    assert.equal(
+      (after.coverage.completion_cohort ?? 0) - beforeCompletion, 1,
+      'stage_completion milestone from the REAL writer is counted (detail.milestone/outcome_type contract holds)',
+    );
+    assert.equal(
+      (after.coverage.reached_mastery ?? 0) - beforeMastery, 1,
+      'reached_mastery milestone from the REAL writer is counted',
+    );
+    assert.equal(
+      (after.coverage.longitudinal_subjects ?? 0) - beforeLongitudinal, 1,
+      'the REAL longitudinal snapshot subject is counted',
+    );
+    // progression_rate mirrors read the SAME substrate — they must move in lockstep with coverage.
+    assert.equal((after.progression_rate.completion_cohort ?? 0) - beforeCompletion, 1);
+    assert.equal((after.progression_rate.reached_mastery ?? 0) - beforeMastery, 1);
+
+    // One subject is below k_min → Confidence axis still ABSTAINS honestly (Coverage counts it).
+    assert.equal(after.progression_rate.measured, false, 'below k_min → rate abstains (Coverage ⟂ Confidence)');
+    assert.equal(after.time_to_mastery.measured, false, 'below k_min → dwell abstains');
+  } finally {
+    await client.query('ROLLBACK'); // nothing persists — the fixture never touches committed dev data
+    client.release();
+  }
+});
+
+test('WRITER byte-identical OFF: the REAL writer writes nothing and the view stays inert while the flag is OFF', async (t) => {
+  if (!HAS_DB) return t.skip('DATABASE_URL not set');
+  const prev = process.env.FF_LONGITUDINAL_OUTCOME_CAPTURE;
+  process.env.FF_LONGITUDINAL_OUTCOME_CAPTURE = '0';
+
+  const client = await pool!.connect();
+  const txnPool: any = { query: (...a: any[]) => (client as any).query(...a) };
+  try {
+    await client.query('BEGIN');
+    const before = await composeProgressionOutcomes(txnPool);
+
+    // Even a full Mastery-stage input is a no-op while OFF: no snapshot, no ledger row, no DDL.
+    const res = await captureProgressionOutcome(txnPool, {
+      sessionId: randomUUID(), email: 'off-writer@fixture.test', stageCode: 'CAP_MAS', canonicalStage: 'Mastery',
+    });
+    assert.equal(res.enabled, false, 'writer inert while flag OFF');
+    assert.equal(res.snapshot_captured, false);
+    assert.equal(res.learning_outcome_written, false);
+    assert.equal(res.mastery_outcome_written, false);
+    assert.equal(res.skipped_reason, 'flag_off');
+
+    // View is inert too — capture_enabled=false and no substrate reads (byte-identical to empty).
+    const after = await composeProgressionOutcomes(txnPool);
+    assert.equal(after.capture_enabled, false);
+    assert.equal(after.coverage.completion_cohort, before.coverage.completion_cohort);
+    assert.equal(after.coverage.reached_mastery, before.coverage.reached_mastery);
+    assert.equal(after.progression_rate.measured, false);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    process.env.FF_LONGITUDINAL_OUTCOME_CAPTURE = prev;
+  }
 });

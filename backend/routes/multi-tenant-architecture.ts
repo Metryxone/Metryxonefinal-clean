@@ -38,6 +38,7 @@ import {
   createChannelReferral,
   transitionReferral,
   resolveReferralDealValue,
+  resolveAllLinkableReferralDealValues,
   setReferralReferredTenantEmail,
   PartnerActionError,
   PARTNER_TYPES,
@@ -349,6 +350,17 @@ export function registerMultiTenantArchitectureRoutes(
       res.json(await createChannelReferral(pool, req.body ?? {}));
     } catch (err) {
       handlePartnerError(err, res, 'create referral');
+    }
+  });
+
+  // Bulk-attach EVERY linkable converted referral's resolved deal value in one pass (the "Attach all
+  // linkable" action). Reuses the per-row resolve path with link_deal:true so values are never fabricated;
+  // blocked rows (no email / no realized revenue) are skipped untouched. Literal segment — no /:id conflict.
+  app.post('/api/admin/tenant-architecture/console/partner-ecosystem/referrals/resolve-all-linkable', ...partnerChain, async (_req: any, res) => {
+    try {
+      res.json(await resolveAllLinkableReferralDealValues(pool));
+    } catch (err) {
+      handlePartnerError(err, res, 'resolve all linkable referrals');
     }
   });
 

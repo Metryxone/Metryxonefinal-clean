@@ -1153,6 +1153,19 @@ function PartnerEcosystemView() {
                       </div>
                     )}
                     <div className="mt-0.5 text-xs text-green-700">across {unlinkable.data.aggregate.linkable_row_count} linkable referral(s) — currencies kept separate</div>
+                    {unlinkable.data.aggregate.linkable_row_count > 0 && (
+                      <Button size="sm" className="mt-2 h-7 px-2 text-xs" disabled={busy}
+                        onClick={async () => {
+                          const agg = unlinkable.data!.aggregate;
+                          const summary = Object.entries(agg.linkable_value_by_currency)
+                            .map(([cur, val]) => `${val.toLocaleString()} ${cur}`).join(', ');
+                          if (!window.confirm(
+                            `Attach all ${agg.linkable_row_count} linkable referral(s)${summary ? ` (${summary})` : ''}? ` +
+                            `Only rows with real resolved revenue are affected; blocked rows are left untouched. Values are never inferred.`
+                          )) return;
+                          await post('/referrals/resolve-all-linkable', {});
+                        }}>Attach all linkable</Button>
+                    )}
                   </div>
                   <div className="rounded-md border border-amber-200 bg-amber-50 p-3">
                     <div className="text-xs font-medium text-amber-800">Blocked rows (cannot auto-link)</div>

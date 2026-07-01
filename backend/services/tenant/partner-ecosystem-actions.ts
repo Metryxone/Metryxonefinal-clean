@@ -625,6 +625,70 @@ export async function resolveReferralDealValue(
   return upd.rows[0];
 }
 
+export interface ResolveAllLinkableResult {
+  ok: true;
+  /** Converted referrals with a referred tenant but no deal value / amount that were considered. */
+  attempted: number;
+  /** How many actually had real realized revenue and were attached. */
+  attached: number;
+  /** Blocked rows left untouched (no realized revenue / no referred tenant). */
+  skipped: number;
+  /** Sum of attached deal values, kept SEPARATE per currency — never summed across currencies. */
+  attached_value_by_currency: Record<string, number>;
+  /** Ids of the referrals whose deal value was attached. */
+  attached_ids: number[];
+}
+
+/**
+ * Bulk-resolve EVERY currently-linkable converted referral in one pass (the "Attach all linkable" action
+ * on the unlinkable-referrals view). Reuses the per-row resolveReferralDealValue with link_deal:true for
+ * each candidate, so values are NEVER fabricated: a row is attached only when resolveReferredTenantDealValue
+ * finds real realized revenue. Blocked rows (no realized revenue → 'not_linkable', or no referred tenant →
+ * 'invalid_input') are skipped and left exactly as they were. Any other error propagates.
+ */
+export async function resolveAllLinkableReferralDealValues(pool: pg.Pool): Promise<ResolveAllLinkableResult> {
+  await ensurePartnerEcosystemSchema(pool);
+  // Same candidate set as buildUnlinkableReferrals: converted, has a referred tenant, no amount, no deal value.
+  const cand = await pool.query(
+    `SELECT id FROM tenant_channel_referrals
+       WHERE status = 'converted'
+         AND referred_tenant_id IS NOT NULL
+         AND commission_amount IS NULL
+         AND deal_value IS NULL
+       ORDER BY id ASC`,
+  );
+  let attached = 0;
+  let skipped = 0;
+  const byCurrency: Record<string, number> = {};
+  const attachedIds: number[] = [];
+  for (const c of cand.rows) {
+    const id = Number(c.id);
+    try {
+      const updated = await resolveReferralDealValue(pool, id, { link_deal: true });
+      attached += 1;
+      attachedIds.push(id);
+      const cur = String(updated.currency ?? 'INR');
+      const val = updated.deal_value == null ? 0 : Number(updated.deal_value);
+      byCurrency[cur] = (byCurrency[cur] ?? 0) + val;
+    } catch (e) {
+      // Blocked rows are honest coverage gaps — skip them, never fabricate a value.
+      if (e instanceof PartnerActionError && (e.code === 'not_linkable' || e.code === 'invalid_input')) {
+        skipped += 1;
+        continue;
+      }
+      throw e;
+    }
+  }
+  return {
+    ok: true,
+    attempted: cand.rows.length,
+    attached,
+    skipped,
+    attached_value_by_currency: byCurrency,
+    attached_ids: attachedIds,
+  };
+}
+
 export interface SetReferredTenantEmailResult {
   ok: true;
   referred_tenant_id: number;

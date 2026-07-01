@@ -427,6 +427,39 @@ export function classifyBand(percentile: number | null, customBands?: BandDef[])
   return { percentile: round2(percentile), band: last ? String(last.key) : null, label: last?.label ? String(last.label) : (last ? String(last.key) : null), band_set: usingCustom ? 'custom' : 'default', abstained: false };
 }
 
+export interface HeatmapCell { band: string; label: string; count: number }
+export interface HeatmapRow { cohort: string; n: number; cells: HeatmapCell[] }
+export interface HeatmapResult { bands: { key: string; label: string }[]; rows: HeatmapRow[]; total: number }
+/**
+ * PURE per-cohort band heat map: for each cohort's list of percentiles, count how many fall into each band
+ * of the default (or an OPTIONAL custom) band set — reusing classifyBand. Non-finite percentiles are
+ * ignored (they contribute to neither n nor any band). Deterministic; persists nothing; never fabricated.
+ */
+export function computeHeatmap(cohorts: Record<string, Array<number | null>>, customBands?: BandDef[]): HeatmapResult {
+  const set = Array.isArray(customBands) && customBands.length
+    ? [...customBands].filter((b) => Number.isFinite(Number(b?.min_percentile))).sort((a, b) => Number(b.min_percentile) - Number(a.min_percentile))
+    : DEFAULT_BAND_SET;
+  const bands = set.map((b) => ({ key: String(b.key), label: b.label ? String(b.label) : String(b.key) }));
+  const rows: HeatmapRow[] = [];
+  let total = 0;
+  const entries = cohorts && typeof cohorts === 'object' ? Object.entries(cohorts) : [];
+  for (const [cohort, values] of entries) {
+    const counts = new Map<string, number>();
+    let n = 0;
+    const list = Array.isArray(values) ? values : [];
+    for (const v of list) {
+      const p = v == null || !Number.isFinite(Number(v)) ? null : Number(v);
+      if (p == null) continue;
+      const cls = classifyBand(p, customBands);
+      if (!cls.band) continue;
+      counts.set(cls.band, (counts.get(cls.band) ?? 0) + 1);
+      n += 1; total += 1;
+    }
+    rows.push({ cohort: String(cohort), n, cells: bands.map((b) => ({ band: b.key, label: b.label, count: counts.get(b.key) ?? 0 })) });
+  }
+  return { bands, rows, total };
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // INTERPRETATION RULE ENGINE — deterministic verdicts from a standardized score
 // ─────────────────────────────────────────────────────────────────────────────
@@ -548,6 +581,66 @@ export function validateStatistical(input: { mean?: number | null; sd?: number |
   if (!Number.isFinite(mean)) errors.push('mean_not_finite');
   if (!Number.isFinite(sd) || sd <= 0) errors.push('sd_not_positive');
   return { check_type: 'statistical', passed: errors.length === 0, errors, detail: { mean: Number.isFinite(mean) ? mean : null, sd: Number.isFinite(sd) ? sd : null } };
+}
+
+export interface RegressionInput {
+  mode?: 'formula' | 'band';
+  baseline?: unknown;
+  candidate?: unknown;
+  samples?: unknown[];
+  tolerance?: number;
+  knownVars?: string[];
+}
+/**
+ * Regression validation: prove a NEW artefact version does not silently diverge from a PRIOR baseline
+ * across a set of reference inputs. In `formula` mode both ASTs are validated then evaluated over each
+ * sample's vars and the absolute delta is compared against a tolerance; in `band` mode each sample
+ * percentile is classified by both band sets and the band keys must match. Divergences beyond tolerance,
+ * an invalid baseline/candidate, or an empty sample set are explicit errors — never fabricated as a pass.
+ * PURE (reuses validateFormula/evaluateFormula/classifyBand); persists nothing.
+ */
+export function validateRegression(input: RegressionInput = {}): ValidationResult {
+  const mode = input?.mode === 'band' ? 'band' : 'formula';
+  const tolerance = Number.isFinite(Number(input?.tolerance)) ? Math.abs(Number(input.tolerance)) : 1e-9;
+  const samples = Array.isArray(input?.samples) ? input!.samples! : [];
+  const errors: string[] = [];
+  const divergences: Array<Record<string, unknown>> = [];
+  let maxAbsDelta: number | null = null;
+  if (!samples.length) errors.push('no_samples');
+
+  if (mode === 'formula') {
+    const knownVars = Array.isArray(input?.knownVars) ? input!.knownVars!.map(String) : undefined;
+    const baseV = validateFormula(input?.baseline as FormulaNode, knownVars);
+    const candV = validateFormula(input?.candidate as FormulaNode, knownVars);
+    if (!baseV.valid) errors.push('baseline_formula_invalid');
+    if (!candV.valid) errors.push('candidate_formula_invalid');
+    if (baseV.valid && candV.valid) {
+      maxAbsDelta = 0;
+      samples.forEach((s, i) => {
+        const vars = (s && typeof s === 'object') ? (s as Record<string, number>) : {};
+        const b = evaluateFormula(input!.baseline as FormulaNode, vars);
+        const c = evaluateFormula(input!.candidate as FormulaNode, vars);
+        if (b == null || c == null) { divergences.push({ index: i, baseline: b, candidate: c, reason: 'null_value' }); return; }
+        const delta = Math.abs(Number(b) - Number(c));
+        if (maxAbsDelta == null || delta > maxAbsDelta) maxAbsDelta = delta;
+        if (delta > tolerance) divergences.push({ index: i, baseline: round2(Number(b)), candidate: round2(Number(c)), delta: round2(delta) });
+      });
+    }
+  } else {
+    samples.forEach((s, i) => {
+      const p = s == null || !Number.isFinite(Number(s)) ? null : Number(s);
+      const b = classifyBand(p, input?.baseline as BandDef[]);
+      const c = classifyBand(p, input?.candidate as BandDef[]);
+      if (b.band !== c.band) divergences.push({ index: i, percentile: p, baseline_band: b.band, candidate_band: c.band });
+    });
+  }
+  if (divergences.length) errors.push(`regression_divergence(${divergences.length})`);
+  return {
+    check_type: 'regression',
+    passed: errors.length === 0,
+    errors,
+    detail: { mode, tolerance, sample_count: samples.length, divergence_count: divergences.length, max_abs_delta: maxAbsDelta, divergences: divergences.slice(0, 50) },
+  };
 }
 
 // ═════════════════════════════════════════════════════════════════════════════

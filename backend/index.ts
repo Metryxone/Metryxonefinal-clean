@@ -14,6 +14,10 @@ import { storage, pool } from "./storage";
 import { initWebSocketServer } from "./services/ws-broadcast";
 import { runRoleLibraryExpansion } from "./services/role-library-expansion";
 import { runRoleBridgeActivation } from "./services/role-bridge-activation";
+import {
+  bridgeOnetDerivedWeights,
+  ensureOntoRoleWeightSourceColumn,
+} from "./services/onet-onto-weight-bridge";
 import { assertEnvPreflight } from "./lib/env-preflight";
 
 // ── Production env preflight ────────────────────────────────────────────────
@@ -322,6 +326,40 @@ app.get("/api/health/ready", async (_req, res) => {
     }
   } catch (e) {
     console.error("Failed to seed role bridge activation:", e);
+  }
+
+  // O*NET → Role-DNA estimated-weight bridge activation (Task #421) —
+  // self-running + idempotent so the user-facing "Estimated / inherited" weights
+  // (onto_role_weights.source = 'onet_derived') populate in EVERY environment,
+  // including production on publish. A merged data backfill only writes to the
+  // isolated env DB and a merge carries CODE + migration DDL, NOT rows (see
+  // .agents/memory/merged-task-data-not-in-live-db.md) — so the bridge must
+  // (re)run at boot to actually populate the live DB. The bridge itself is
+  // idempotent + additive (curated weights always win and are never touched) and
+  // never throws. Fast-path no-ops once derived rows exist; the O*NET import path
+  // (POST /api/ontology/overview/import-onet) and the admin trigger
+  // (POST /api/ontology/overview/bridge-onet-weights) re-bridge on demand when
+  // the library changes. Only genuine cross-namespace matches bridge — an empty
+  // O*NET library honestly bridges 0 rows (the badge stays off, never fabricated).
+  try {
+    await ensureOntoRoleWeightSourceColumn(pool);
+    const derived = await pool.query<{ n: string }>(
+      `SELECT count(*) AS n FROM onto_role_weights WHERE source = 'onet_derived'`,
+    );
+    if (Number(derived.rows[0]?.n ?? 0) > 0) {
+      log(
+        `O*NET weight bridge already present (${derived.rows[0].n} derived rows), nothing bridged`,
+        "seed",
+      );
+    } else {
+      const r = await bridgeOnetDerivedWeights(pool);
+      log(
+        `O*NET weight bridge activated (derived weights ${r.linksBridged}, roles matched ${r.rolesMatched ?? 0}, competencies matched ${r.competenciesMatched ?? 0})`,
+        "seed",
+      );
+    }
+  } catch (e) {
+    console.error("Failed to activate O*NET weight bridge:", e);
   }
 
   // ✅ 4) Error handler (keep after routes)

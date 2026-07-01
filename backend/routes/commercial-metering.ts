@@ -21,7 +21,7 @@ import {
   recordUsage, checkQuota, buildUsageOverview, isUsageType,
   checkCreditDimension, spendCredits, listPlanQuotas, upsertPlanQuotas,
 } from '../services/commercial/metering-engine';
-import { buildIdentityConsumption, buildDimensionOverview } from '../services/commercial/consumption-engine';
+import { buildIdentityConsumption, buildDimensionOverview, buildUsageTrend } from '../services/commercial/consumption-engine';
 import {
   isCommercialUsageMeteringEnabled,
   isCommercialEntitlementEnforcementEnabled,
@@ -240,6 +240,21 @@ export function registerCommercialMeteringRoutes(
     } catch (err) {
       console.error('[metering quotas upsert]', err);
       res.status(500).json({ error: 'quotas upsert failed' });
+    }
+  });
+
+  // System-wide consumption TREND over time by business dimension (super-admin, read-only).
+  // ?granularity=week|month (default week) & ?periods=N (1..52, default 8 weeks / 6 months).
+  app.get('/api/admin/commercial/metering/trends', ...adminReadChain, async (req: any, res) => {
+    try {
+      const trend = await buildUsageTrend(pool, {
+        granularity: typeof req.query?.granularity === 'string' ? req.query.granularity : undefined,
+        periods: req.query?.periods,
+      });
+      res.json(trend);
+    } catch (err) {
+      console.error('[metering trends]', err);
+      res.status(500).json({ error: 'trends failed' });
     }
   });
 }

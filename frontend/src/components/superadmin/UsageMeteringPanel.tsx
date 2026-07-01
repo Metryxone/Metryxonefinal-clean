@@ -2,14 +2,18 @@ import { BRAND } from '@/design-system/tokens';
 import React, { useMemo, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
-  RefreshCw, AlertTriangle, Gauge, Coins, Search, BarChart3, User, Info,
+  RefreshCw, AlertTriangle, Gauge, Coins, Search, BarChart3, User, Info, TrendingUp,
   SlidersHorizontal, Save, Check, RotateCcw,
 } from 'lucide-react';
+import {
+  ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid,
+} from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Badge } from '../ui/badge';
 import { Progress } from '../ui/progress';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs';
 
 
 
@@ -59,6 +63,24 @@ interface PlanQuotaOverview {
   degraded: boolean;
   dimensions: string[];
   plans: PlanQuotaRow[];
+}
+interface TrendPoint {
+  period: string;
+  events: number;
+  quantity: number;
+}
+interface DimensionTrend {
+  dimension: string;
+  kind: DimensionKind;
+  substrate: boolean;
+  series: TrendPoint[];
+}
+interface UsageTrend {
+  generated_at: string;
+  degraded: boolean;
+  granularity: 'week' | 'month';
+  periods: string[];
+  by_dimension: DimensionTrend[];
 }
 
 const DIMENSION_LABELS: Record<string, string> = {
@@ -375,6 +397,31 @@ export default function UsageMeteringPanel() {
     },
   });
 
+  const [activeTab, setActiveTab] = useState<'current' | 'trends'>('current');
+  const [granularity, setGranularity] = useState<'week' | 'month'>('week');
+  const periodCount = granularity === 'week' ? 8 : 6;
+
+  const {
+    data: trend,
+    isLoading: trendLoading,
+    isError: trendError,
+    isFetching: trendFetching,
+    refetch: refetchTrend,
+  } = useQuery<UsageTrend | null>({
+    // Only fetch trends once the Trends tab is opened — avoids unnecessary admin API traffic
+    // (and background error noise) for admins who only view Current.
+    enabled: activeTab === 'trends',
+    queryKey: ['metering-trends', granularity, periodCount],
+    queryFn: async () => {
+      const res = await fetch(
+        `/api/admin/commercial/metering/trends?granularity=${granularity}&periods=${periodCount}`,
+        { credentials: 'include' },
+      );
+      if (!res.ok) throw new Error(`trends ${res.status}`);
+      return res.json();
+    },
+  });
+
   const runLookup = () => {
     const trimmed = emailInput.trim();
     setLookupEmail(trimmed ? trimmed : null);
@@ -397,6 +444,17 @@ export default function UsageMeteringPanel() {
         </Button>
       </div>
 
+      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'current' | 'trends')} className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="current">
+            <BarChart3 className="h-4 w-4 mr-1.5" /> Current
+          </TabsTrigger>
+          <TabsTrigger value="trends">
+            <TrendingUp className="h-4 w-4 mr-1.5" /> Trends
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="current" className="space-y-6">
       {/* ── System-wide overview ─────────────────────────────────────────── */}
       <Card>
         <CardHeader>
@@ -567,6 +625,148 @@ export default function UsageMeteringPanel() {
       </Card>
 
       <PlanQuotaEditor />
+        </TabsContent>
+
+        {/* ── Usage trends over time ─────────────────────────────────────── */}
+        <TabsContent value="trends" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <TrendingUp className="h-5 w-5" style={{ color: BRAND.primary }} /> Consumption trend over time
+                  </CardTitle>
+                  <CardDescription>
+                    {trend?.generated_at
+                      ? `Last ${trend.periods.length} ${trend.granularity === 'week' ? 'weeks' : 'months'} · generated ${new Date(trend.generated_at).toLocaleString('en-IN')}`
+                      : 'Per-dimension consumption bucketed by period, derived live from the usage & credit ledgers.'}
+                  </CardDescription>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="inline-flex rounded-md border border-slate-200 overflow-hidden">
+                    {(['week', 'month'] as const).map((g) => (
+                      <button
+                        key={g}
+                        onClick={() => setGranularity(g)}
+                        className={`px-3 py-1 text-xs font-medium capitalize transition-colors ${
+                          granularity === g ? 'text-white' : 'text-slate-600 hover:bg-slate-50'
+                        }`}
+                        style={granularity === g ? { backgroundColor: BRAND.primary } : undefined}
+                      >
+                        {g === 'week' ? 'Weekly' : 'Monthly'}
+                      </button>
+                    ))}
+                  </div>
+                  <Button variant="outline" size="sm" onClick={() => refetchTrend()} disabled={trendFetching}>
+                    <RefreshCw className={`h-4 w-4 ${trendFetching ? 'animate-spin' : ''}`} />
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {trendLoading ? (
+                <div className="flex items-center justify-center h-32">
+                  <RefreshCw className="h-6 w-6 animate-spin" style={{ color: BRAND.primary }} />
+                </div>
+              ) : trendError ? (
+                <div className="flex flex-col items-center justify-center gap-3 py-8 text-center">
+                  <AlertTriangle className="h-8 w-8 text-amber-500" />
+                  <p className="text-sm text-slate-600">
+                    Couldn&apos;t load usage trends. The metering feature may be disabled or you may not be signed in as a super-admin.
+                  </p>
+                  <Button variant="outline" size="sm" onClick={() => refetchTrend()}>Retry</Button>
+                </div>
+              ) : !trend ? null : (
+                <>
+                  {trend.degraded && (
+                    <div className="flex items-center gap-2 mb-4 px-3 py-2 rounded-md bg-amber-50 text-amber-800 text-sm">
+                      <AlertTriangle className="h-4 w-4" />
+                      Some dimensions failed to read — the charts below are partial (honest degraded state, not fabricated zeros).
+                    </div>
+                  )}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {trend.by_dimension.map((dim) => (
+                      <DimensionTrendChart key={dim.dimension} dim={dim} granularity={trend.granularity} />
+                    ))}
+                  </div>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
+
+function periodTickLabel(iso: string, granularity: 'week' | 'month'): string {
+  const d = new Date(iso);
+  if (granularity === 'month') {
+    return d.toLocaleDateString('en-IN', { month: 'short', year: '2-digit' });
+  }
+  return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+}
+
+function DimensionTrendChart({ dim, granularity }: { dim: DimensionTrend; granularity: 'week' | 'month' }) {
+  const isCredits = dim.dimension === 'credits';
+  const label = DIMENSION_LABELS[dim.dimension] ?? dim.dimension;
+
+  // Credits quantity is paise SPENT (debits); render in rupees. Everything else is a raw count.
+  const chartData = dim.series.map((p) => ({
+    period: periodTickLabel(p.period, granularity),
+    value: isCredits ? Math.round(p.quantity / 100) : p.quantity,
+  }));
+  const hasActivity = dim.series.some((p) => p.quantity !== 0 || p.events !== 0);
+
+  const valueLabel = isCredits
+    ? 'Credits used (₹)'
+    : dim.kind === 'level'
+      ? 'Current total'
+      : 'Quantity';
+
+  return (
+    <div className="rounded-lg border border-slate-200 p-4 bg-white">
+      <div className="flex items-center justify-between mb-1">
+        <span className="text-sm font-semibold text-slate-700">{label}</span>
+        {isCredits
+          ? <Coins className="h-4 w-4" style={{ color: BRAND.warning }} />
+          : <Gauge className="h-4 w-4" style={{ color: BRAND.accent }} />}
+      </div>
+      <div className="text-[11px] uppercase tracking-wide text-slate-400 mb-2">{valueLabel}</div>
+
+      {!dim.substrate ? (
+        <div className="flex flex-col items-center justify-center h-[180px] text-center gap-2">
+          <Info className="h-5 w-5 text-amber-500" />
+          <span className="text-xs text-slate-500">No data substrate yet</span>
+        </div>
+      ) : !hasActivity ? (
+        <div className="flex flex-col items-center justify-center h-[180px] text-center gap-2">
+          <Info className="h-5 w-5 text-slate-400" />
+          <span className="text-xs text-slate-500">No activity in this window</span>
+        </div>
+      ) : (
+        <ResponsiveContainer width="100%" height={180}>
+          <LineChart data={chartData} margin={{ top: 5, right: 12, left: -12, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+            <XAxis dataKey="period" tick={{ fontSize: 10 }} stroke="#94a3b8" />
+            <YAxis tick={{ fontSize: 10 }} stroke="#94a3b8" allowDecimals={false} width={44} />
+            <Tooltip
+              formatter={(v: any) => [isCredits ? `₹${new Intl.NumberFormat('en-IN').format(Number(v))}` : fmt(Number(v)), valueLabel]}
+              labelStyle={{ fontSize: 11 }}
+              contentStyle={{ fontSize: 11 }}
+            />
+            <Line
+              type="monotone"
+              dataKey="value"
+              name={valueLabel}
+              stroke={isCredits ? BRAND.warning : BRAND.primary}
+              strokeWidth={2}
+              dot={{ r: 3 }}
+              activeDot={{ r: 5 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      )}
     </div>
   );
 }

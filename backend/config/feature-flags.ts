@@ -319,6 +319,12 @@ export const FEATURE_FLAGS = {
    *  submission; NOT scoring/psychometrics/norms/AI-interpretation/reports/analytics = 3.5+). Default OFF,
    *  byte-identical incl. schema (DDL only on flag-gated write paths). Env: `FF_ASSESSMENT_DELIVERY`. */
   assessmentDelivery: false,
+  /** CAPADEX 3.0 — Program 3 · Phase 3.5 Assessment Measurement & Scoring Engine (responses→measurable
+   *  scores/indicators: measurement-engine · scoring-engine · formula-engine · rule-engine · validation ·
+   *  scoring-configuration · APIs · frontend — owns MEASUREMENT & SCORING; NOT psychometrics/item-analysis/
+   *  reliability/validity/norms/standardization/benchmark/AI-interpretation/reports = 3.6+). Default OFF,
+   *  byte-identical incl. schema (DDL only on flag-gated write paths). Env: `FF_ASSESSMENT_SCORING`. */
+  assessmentScoring: false,
   /** MX-103X — Live Employer Ecosystem Activation (read-only audit + certification console over the EXISTING
    *  employer hiring funnel). When ON, a PURE read-only composer at `/api/admin/employer-ecosystem/*`
    *  (super-admin) inventories the nine funnel stages — onboarding · create-job · role-DNA · competencies ·
@@ -2342,6 +2348,11 @@ export function isAssessmentBuilderEnabled(): boolean {
 /** CAPADEX 3.0 — Program 3 · Phase 3.4 Enterprise Assessment Delivery Engine master switch. */
 export function isAssessmentDeliveryEnabled(): boolean {
   return isFlagEnabled('assessmentDelivery');
+}
+
+/** CAPADEX 3.0 — Program 3 · Phase 3.5 Assessment Measurement & Scoring Engine master switch. */
+export function isAssessmentScoringEnabled(): boolean {
+  return isFlagEnabled('assessmentScoring');
 }
 
 export function isCustomerJourneyCompletionEnabled(): boolean {

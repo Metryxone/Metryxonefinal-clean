@@ -57,7 +57,7 @@ import { runEvidenceRuntime }   from '../services/signal-activation-runtime';
 import { resolveSeedConcernPk } from '../services/concern-signal-seeding';
 import type { EvidenceInput }   from '../services/evidence-engine';
 import { isRuntimeIntelligenceActivationEnabled, isRuntimeIntelligencePipelineEnabled, isSignalGroundingRuntimeEnabled } from '../config/feature-flags';
-import { isEvidenceGatedProgressionEnabled, isPersonaModelAlignmentEnabled, isPersonaModelExpansionEnabled, isAssessmentFrameworkCompletionEnabled, isCustomerJourneyCompletionEnabled, isProgressionEngineCompletionEnabled, isOutcomeFrameworkKpiEngineEnabled, isAiRecommendationReportOrchestrationEnabled, isProductTraceabilityCertificationEnabled, isOperationalReadinessEnabled, isAssessmentArchitectureCompletionEnabled, isQuestionManagementPlatformEnabled, isAssessmentBuilderEnabled, isAssessmentDeliveryEnabled } from '../config/feature-flags';
+import { isEvidenceGatedProgressionEnabled, isPersonaModelAlignmentEnabled, isPersonaModelExpansionEnabled, isAssessmentFrameworkCompletionEnabled, isCustomerJourneyCompletionEnabled, isProgressionEngineCompletionEnabled, isOutcomeFrameworkKpiEngineEnabled, isAiRecommendationReportOrchestrationEnabled, isProductTraceabilityCertificationEnabled, isOperationalReadinessEnabled, isAssessmentArchitectureCompletionEnabled, isQuestionManagementPlatformEnabled, isAssessmentBuilderEnabled, isAssessmentDeliveryEnabled, isAssessmentScoringEnabled } from '../config/feature-flags';
 import { resolveBridgeTagForConcernPk, loadGroundedLineage, groundingCoreToken } from '../services/signal-grounding-runtime';
 import { buildGuidanceForSession } from '../services/pil/runtime-guidance-engine';
 import { buildPipelineForSession } from '../services/pil/pipeline-resolver';
@@ -4242,6 +4242,7 @@ export function registerCapadexRoutes(app: Express, pool: Pool) {
         question_management_platform: isQuestionManagementPlatformEnabled(),
         assessment_builder: isAssessmentBuilderEnabled(),
         assessment_delivery: isAssessmentDeliveryEnabled(),
+        assessment_scoring: isAssessmentScoringEnabled(),
       });
     } catch (err) { next(err); }
   });

@@ -37,7 +37,7 @@ type LegacyPersonaKey = 'student' | 'teacher' | 'campus' | 'jobseeker' | 'parent
  * Only assessment-taker personas are mapped here — B2B/admin personas are routed client-side to
  * their existing login/registration screens and never reach this resolver.
  */
-const SUB_PERSONA_TO_JOURNEY: Readonly<Record<string, string>> = {
+export const SUB_PERSONA_TO_JOURNEY: Readonly<Record<string, string>> = {
   // learner track
   campus_student: 'student_career',
   career_explorer: 'fresher_placement',
@@ -57,7 +57,7 @@ const SUB_PERSONA_TO_JOURNEY: Readonly<Record<string, string>> = {
   placement_career_cell: 'faculty_students',
 };
 
-const LEGACY_KEY_TO_JOURNEY: Readonly<Record<LegacyPersonaKey, string>> = {
+export const LEGACY_KEY_TO_JOURNEY: Readonly<Record<LegacyPersonaKey, string>> = {
   student: 'student_career',
   campus: 'student_career',
   jobseeker: 'fresher_placement',

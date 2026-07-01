@@ -95,6 +95,10 @@ args = "mentor-booking-e2e"
 task = "workflow.run"
 args = "test-engines"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "persona-journey-mapping"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -314,6 +318,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npm run test:engines:pure"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "persona-journey-mapping"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx --test tests/persona-journey-mapping-coverage.test.ts"
 
 [workflows.workflow.metadata]
 isValidation = true

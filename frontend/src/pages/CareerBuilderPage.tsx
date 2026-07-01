@@ -6331,6 +6331,139 @@ function NumberStepper({ value, onChange, min = 0, max = 80, step = 1, suffix, t
   );
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// DIFFICULTY PLAN PANEL — level-aware target difficulty + readiness bar
+// (MX-100X Phase 4, flag `adaptiveDifficultyActivation`). Flag-gated purely by
+// the endpoint: GET /api/competency/assessment/difficulty-plan returns 503 when
+// the flag is OFF → this panel renders nothing (byte-identical). No public-config
+// dependency; the 503 IS the gate.
+// ═══════════════════════════════════════════════════════════════════════════
+type DifficultyPlanEnvelope = {
+  ok: boolean;
+  seniority: {
+    stage_band: string;
+    proficiency_anchor: number;
+    proficiency_source: 'role_dna_expected_level' | 'seniority_anchor';
+    target_difficulty: { band: string; rank: number; label: string };
+  };
+  readiness_bands: { ready_min: number; near_ready_min: number; developing_min: number; emerging_min: number };
+  scoring_threshold: number;
+  per_domain: Array<{ domain: string; approved_total: number; target_band_available: boolean; coverage_gap: boolean; note: string }>;
+  bank: { table_present: boolean; approved_total: number; distinct_bands: string[]; served_difficulty_can_shift: boolean; note: string };
+  honest_notes: string[];
+};
+
+function DifficultyPlanPanel({ targetRole, careerStage }: { targetRole: string; careerStage: string }) {
+  const [plan, setPlan] = useState<DifficultyPlanEnvelope | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    // Read-only probe. Non-200 (503 flag-OFF, 401 unauth, any error) → no panel.
+    const params = new URLSearchParams();
+    if (targetRole) params.set('role', targetRole);
+    if (careerStage) params.set('stage', careerStage);
+    fetch(`/api/competency/assessment/difficulty-plan?${params.toString()}`, {
+      headers: { ...authHeader() },
+    })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data: DifficultyPlanEnvelope | null) => {
+        if (!alive) return;
+        setPlan(data && data.ok ? data : null);
+      })
+      .catch(() => { if (alive) setPlan(null); });
+    return () => { alive = false; };
+  }, [targetRole, careerStage]);
+
+  if (!plan) return null;
+
+  const stageBand = plan.seniority.stage_band;
+  const stageLabel = stageBand.charAt(0).toUpperCase() + stageBand.slice(1);
+  const targetLabel = plan.seniority.target_difficulty.label;
+  const targetTitle = targetLabel.charAt(0).toUpperCase() + targetLabel.slice(1);
+  const rb = plan.readiness_bands;
+  const proficiencyFromRoleDna = plan.seniority.proficiency_source === 'role_dna_expected_level';
+
+  // A coverage gap surfaces when the live bank can't serve the target difficulty
+  // band (either single-band bank, or specific domains missing the target rank).
+  const gappedDomains = plan.per_domain.filter((d) => d.coverage_gap);
+  const hasCoverageGap = !plan.bank.served_difficulty_can_shift || gappedDomains.length > 0;
+
+  const READINESS_ROWS: Array<{ label: string; min: number; color: string }> = [
+    { label: 'Ready',      min: rb.ready_min,       color: BRAND.green },
+    { label: 'Near-Ready', min: rb.near_ready_min,  color: BRAND.accent },
+    { label: 'Developing', min: rb.developing_min,  color: BRAND.orange },
+    { label: 'Emerging',   min: rb.emerging_min,    color: '#9ca3af' },
+  ];
+
+  return (
+    <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm" data-testid="difficulty-plan-panel">
+      <div className="flex items-start justify-between gap-3 mb-4">
+        <div className="flex items-start gap-2.5 min-w-0">
+          <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${BRAND.primary}15` }}>
+            <Gauge size={15} style={{ color: BRAND.primary }} />
+          </span>
+          <div className="min-w-0">
+            <div className="text-sm font-semibold text-gray-800">Your difficulty & readiness plan</div>
+            <div className="text-[11px] text-gray-500 leading-snug mt-0.5">
+              Calibrated for a <b className="text-gray-700">{stageLabel}</b> {targetRole ? <>move to <b className="text-gray-700">{targetRole}</b></> : 'role'}. The bar to be Ready rises with seniority.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Target difficulty */}
+        <div className="rounded-xl border border-gray-100 bg-gray-50/60 p-3.5">
+          <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-gray-400 mb-2">
+            <Layers size={11} /> Target difficulty
+          </div>
+          <div className="text-lg font-bold" style={{ color: BRAND.primary }} data-testid="difficulty-target-band">{targetTitle}</div>
+          <div className="text-[11px] text-gray-500 mt-1 leading-snug">
+            Questions target the <b>{targetLabel}</b> band. Required proficiency ~<b>{plan.seniority.proficiency_anchor}</b>/100.
+          </div>
+          <div className="text-[10px] text-gray-400 mt-1.5">
+            {proficiencyFromRoleDna ? 'Anchored to this role\u2019s runtime Role-DNA.' : 'Anchored to your career-stage benchmark.'}
+          </div>
+        </div>
+
+        {/* Readiness bar */}
+        <div className="rounded-xl border border-gray-100 bg-gray-50/60 p-3.5 md:col-span-2">
+          <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-gray-400 mb-2.5">
+            <Target size={11} /> Readiness bar for a {stageLabel} role
+          </div>
+          <div className="space-y-2">
+            {READINESS_ROWS.map((row) => (
+              <div key={row.label} className="flex items-center gap-2.5" data-testid={`readiness-band-${row.label.toLowerCase()}`}>
+                <span className="w-20 text-[11px] font-medium text-gray-700 shrink-0">{row.label}</span>
+                <div className="flex-1 h-2 rounded-full bg-gray-100 overflow-hidden">
+                  <div className="h-full rounded-full" style={{ width: `${row.min}%`, backgroundColor: row.color }} />
+                </div>
+                <span className="w-14 text-right text-[11px] font-bold tabular-nums" style={{ color: row.color }}>&ge; {row.min}</span>
+              </div>
+            ))}
+          </div>
+          <div className="text-[10px] text-gray-400 mt-2.5 leading-snug">
+            Score at least <b className="text-gray-600">{rb.ready_min}</b>/100 across your competencies to be classified <b className="text-gray-600">Ready</b> for this role.
+          </div>
+        </div>
+      </div>
+
+      {/* Honest coverage-gap note — the served bank can't always supply the target band */}
+      {hasCoverageGap && (
+        <div className="mt-4 flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2.5" data-testid="difficulty-coverage-gap">
+          <Info size={13} className="text-amber-600 shrink-0 mt-0.5" />
+          <div className="text-[11px] text-amber-800 leading-snug">
+            <b>Honest note:</b>{' '}
+            {!plan.bank.served_difficulty_can_shift
+              ? 'the current question bank holds a single difficulty level, so the questions you see won\u2019t get harder or easier by role. Your target difficulty and the readiness bar above still adjust — the bank content is the ceiling.'
+              : `${gappedDomains.length} competency ${gappedDomains.length === 1 ? 'area' : 'areas'} (${gappedDomains.map((d) => d.domain).join(', ')}) don\u2019t yet have questions at your target difficulty, so those will be served at the nearest available level.`}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function AssessmentTab({ userId, profile, onTabChange }: {
   userId: string; profile: any; onTabChange: (t: TabId) => void;
 }) {
@@ -7384,6 +7517,10 @@ function AssessmentTab({ userId, profile, onTabChange }: {
                   })()}
                 </div>
               </div>
+
+              {/* Level-aware difficulty & readiness plan (flag adaptiveDifficultyActivation).
+                  Endpoint returns 503 when the flag is OFF → panel renders nothing (byte-identical). */}
+              <DifficultyPlanPanel targetRole={targetRole} careerStage={careerStage} />
 
               {/* Action footer */}
               <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">

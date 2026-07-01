@@ -1,11 +1,11 @@
 # CAPADEX 3.0 · Program 3 · Phase 3.1 — Architecture Layer Inventory (Axis 1)
 
-> Deliverable 02 · Generated 2026-07-01T06:40:17.982Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:5aa01cf06010, written 2026-07-01T06:40:17.982Z).
+> Deliverable 02 · Generated 2026-07-01T07:15:13.791Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:6a98bbfa5f18, written 2026-07-01T07:15:13.862Z).
 > Honesty: the FIVE certification axes (architecture · lifecycle · governance · metadata · repository-alignment) are reported SEPARATELY and NEVER composited. Coverage⟂Confidence⟂Adoption; null ≠ 0; never fabricated.
 
 The FROZEN 13-layer canonical decomposition. Status is a **Coverage** axis (does an implementation exist?), kept SEPARATE from Confidence/Adoption. Evidence is VERIFIED vs the live FS+DB.
 
-**Status:** 11 SUPPORTED · 2 PARTIAL · 0 DEAD_END · 0 MISSING.
+**Status:** 13 SUPPORTED · 0 PARTIAL · 0 DEAD_END · 0 MISSING.
 
 ## Assessment families (2) — overlapping-by-design, ONE platform
 - **CAPADEX behavioural / signal family** (`behavioural_signal`) — The consumer flow producing behavioural signals scored by dimension/weighting engines and interpreted through the CAPADEX runtime (concern/clarity, adaptive-next).
@@ -22,13 +22,13 @@ What an assessment IS: type, category, template, metadata, version, lifecycle, g
 - **Verified**: svc 3/3 · rt 2/2 · fe 1/1 · tbl 3/3
 
 ### L2 · Question Platform (`question_platform`) — SUPPORTED
-Authoring, banking and governance of items across the behavioural + competency families.
+Authoring, banking and governance of items across the behavioural + competency families. Bloom cognitive-level coding of the behavioural clarity bank is derived deterministically into an OWN additive table (capadex_clarity_bloom), abstaining for affective self-report items.
 
-- **Services**: services/question-factory.ts, services/question-registry-service.ts
-- **Routes**: routes/capadex.ts
-- **Tables**: psychometric_question_bank, capadex_question_registry, onto_competency_question_map
+- **Services**: services/question-factory.ts, services/question-registry-service.ts, services/assessment-architecture-mechanisms.ts
+- **Routes**: routes/capadex.ts, routes/assessment-architecture.ts
+- **Tables**: psychometric_question_bank, capadex_question_registry, onto_competency_question_map, capadex_clarity_bloom
 - **Frontend**: —
-- **Verified**: svc 2/2 · rt 1/1 · fe 0/0 · tbl 3/3
+- **Verified**: svc 3/3 · rt 2/2 · fe 0/0 · tbl 4/4
 
 ### L3 · Assessment Authoring (`authoring`) — SUPPORTED
 The CAF builder — authored, rubric/IRT/CTT/SJT/BARS assessments with sections, scoring and randomization rules.
@@ -40,13 +40,15 @@ The CAF builder — authored, rubric/IRT/CTT/SJT/BARS assessments with sections,
 - **Verified**: svc 1/1 · rt 1/1 · fe 0/0 · tbl 4/4
 
 ### L4 · Assessment Delivery (`delivery`) — SUPPORTED
-Runtime delivery of both families — the flagship consumer flow and the flag-gated adaptive/CAF runtime.
+Runtime delivery of both families — the flagship consumer flow and the flag-gated adaptive/CAF runtime. PLUS an opt-in PWA offline-capture foundation (service worker + client replay queue) and a consolidated WCAG accessibility layer (skip-link/ARIA-live/focus), both INERT unless the completion flag is ON.
+
+_Honest note: Offline delivery (AP-2) and accessibility (AP-3) are engineering foundations that activate ONLY when the assessment_architecture_completion flag is ON — byte-identical when unregistered. Real offline-session count and screen-reader/axe audit coverage are ADOPTION axes reported separately, never composited._
 
 - **Services**: adaptive/adaptive-question-pipeline.ts
 - **Routes**: routes/caf-runtime.ts
 - **Tables**: caf_sessions, capadex_sessions
-- **Frontend**: components/FreeAssessmentModal.tsx, components/AdaptiveAssessmentRuntime.tsx
-- **Verified**: svc 0/1 · rt 1/1 · fe 1/2 · tbl 2/2
+- **Frontend**: components/FreeAssessmentModal.tsx, components/AdaptiveAssessmentRuntime.tsx, lib/offline.ts, lib/accessibility.ts
+- **Verified**: svc 0/1 · rt 1/1 · fe 3/4 · tbl 2/2
 
 ### L5 · Scoring Engine (`scoring`) — SUPPORTED
 Dimension/weighting scoring for the behavioural family + rubric/IRT/CTT scoring for the CAF family (two intentional sciences).
@@ -57,36 +59,36 @@ Dimension/weighting scoring for the behavioural family + rubric/IRT/CTT scoring 
 - **Frontend**: —
 - **Verified**: svc 4/4 · rt 0/0 · fe 0/0 · tbl 2/2
 
-### L6 · Norm Engine (`norms`) — PARTIAL
-Population norm-referencing. Age norms exist; gender/education/competitive-exam norms are data-coverage gaps computed by the same engine when a real, k-sufficient distribution exists.
+### L6 · Norm Engine (`norms`) — SUPPORTED
+Population norm-referencing. Age norms exist; gender/education-tier/competitive-exam/country norm groups are computed by the SAME percentile_cont+k_min methodology into an OWN additive table (assessment_group_norms).
 
-_Honest note: Only age norms are populated. Gender/education-tier/competitive-exam norm-referencing is a DATA-coverage gap (GAP-AA-4/5/6), not an architecture gap — the same engine computes them once a real k≥k_min distribution exists; never fabricated._
+_Honest note: Norm-group MECHANISM is engineering-closed (services/assessment-architecture-mechanisms.ts computeGroupNorms over the same methodology as lbi-norms-engine, own assessment_group_norms table). It computes real k≥k_min distributions and ABSTAINS honestly when a dimension is not yet captured (gender additionally ethics-gated OFF). Real norm-row VOLUME is an ADOPTION axis reported separately — never composited, never fabricated._
 
-- **Services**: services/lbi-norms-engine.ts, services/weighting-engine.ts, services/contextual-norm-engine.ts
-- **Routes**: —
-- **Tables**: lbi_subdomain_norms, lbi_age_bands
+- **Services**: services/lbi-norms-engine.ts, services/weighting-engine.ts, services/contextual-norm-engine.ts, services/assessment-architecture-mechanisms.ts
+- **Routes**: routes/assessment-architecture.ts
+- **Tables**: lbi_subdomain_norms, lbi_age_bands, assessment_group_norms
 - **Frontend**: —
-- **Verified**: svc 3/3 · rt 0/0 · fe 0/0 · tbl 2/2
+- **Verified**: svc 4/4 · rt 1/1 · fe 0/0 · tbl 3/3
 
-### L7 · Standardization (`standardization`) — PARTIAL
-Percentile / z / standardized-score transforms. Percentile + z + deviation exist; canonical T(SD=10)/stanine/sten breadth is a Low additive gap.
+### L7 · Standardization (`standardization`) — SUPPORTED
+Percentile / z / standardized-score transforms. Percentile + z + deviation exist PLUS canonical T(M=50,SD=10), stanine 1–9 and sten 1–10 via a pure standardization module; the legacy 50+z*15 transform is honestly labelled a deviation score.
 
-_Honest note: Percentile/z/deviation transforms exist. Canonical T(M=50,SD=10)/stanine/sten breadth is a Low additive transform gap (GAP-AA-7); deviation SD=15 must not be mislabelled "T". Coverage⟂Confidence._
+_Honest note: Standardization is engineering-closed: services/psychometric-standardization.ts provides canonical T(M=50,SD=10), stanine (1–9) and sten (1–10) pure transforms, and the legacy SD=15 transform is honestly relabelled deviation_score (never "T"). Coverage⟂Confidence._
 
-- **Services**: services/lbi-norms-engine.ts, services/reliability-engine.ts, services/dimension-scoring-engine.ts
-- **Routes**: —
+- **Services**: services/lbi-norms-engine.ts, services/reliability-engine.ts, services/dimension-scoring-engine.ts, services/psychometric-standardization.ts, services/assessment-architecture-mechanisms.ts
+- **Routes**: routes/assessment-architecture.ts
 - **Tables**: lbi_subdomain_norms
 - **Frontend**: —
-- **Verified**: svc 3/3 · rt 0/0 · fe 0/0 · tbl 1/1
+- **Verified**: svc 5/5 · rt 1/1 · fe 0/0 · tbl 1/1
 
 ### L8 · Benchmark Engine (`benchmarking`) — SUPPORTED
-Relative cohort/industry/role benchmarking with k-anonymity (k=30). Kept DISTINCT from Norms (standardized).
+Relative cohort/industry/role/country benchmarking with k-anonymity (k=30). Kept DISTINCT from Norms (standardized). Country cohorts reuse the EXISTING bench_cohorts + geography column (cohort_type widened to admit "country" on the flag-gated write path only).
 
-- **Services**: services/benchmark-engine.ts, services/m5-org-benchmark.ts, services/mei-benchmark-engine.ts, services/peer-benchmark.ts
-- **Routes**: —
-- **Tables**: ti_industry_benchmarks, ti_role_benchmarks, ti_layer_benchmarks, rf_benchmark_configs
+- **Services**: services/benchmark-engine.ts, services/m5-org-benchmark.ts, services/mei-benchmark-engine.ts, services/peer-benchmark.ts, services/assessment-architecture-mechanisms.ts
+- **Routes**: routes/assessment-architecture.ts
+- **Tables**: ti_industry_benchmarks, ti_role_benchmarks, ti_layer_benchmarks, rf_benchmark_configs, bench_cohorts
 - **Frontend**: —
-- **Verified**: svc 4/4 · rt 0/0 · fe 0/0 · tbl 4/4
+- **Verified**: svc 5/5 · rt 1/1 · fe 0/0 · tbl 5/5
 
 ### L9 · AI Interpretation (`ai_interpretation`) — SUPPORTED
 Reasoning, explainability, confidence and recommendation over scored assessments.
@@ -125,12 +127,12 @@ Enterprise analytics star-schema over assessment facts (scores, cohorts, predict
 - **Verified**: svc 1/1 · rt 1/1 · fe 0/0 · tbl 4/4
 
 ### L13 · Assessment Administration (`administration`) — SUPPORTED
-Admin surfaces — report/question factory admin, platform audit, white-label config. AI-prompt management is a net-new additive gap.
+Admin surfaces — report/question factory admin, platform audit, white-label config, and AI-prompt governance (code-embedded prompts registered into the EXISTING aig_prompts/aig_prompt_versions registry with a literal read-through fallback).
 
-_Honest note: Core admin surfaces exist. AI-prompt management (prompts code-embedded) is a Medium additive gap (GAP-AA-9), governable through existing aig_prompts/aig_prompt_versions — an enhancement over the frozen architecture, not an architecture gap._
+_Honest note: Core admin surfaces exist. AI-prompt management is engineering-closed: services/prompt-registry-activation.ts registers code-embedded prompts into aig_prompts/aig_prompt_versions and resolvePrompt reads through the registry with a code-literal fallback (byte-identical OFF). Real active-prompt VOLUME is an ADOPTION axis reported separately._
 
-- **Services**: —
-- **Routes**: routes/platform-audit-routes.ts, routes/enterprise-analytics.ts
-- **Tables**: rf_white_label_configs
+- **Services**: services/prompt-registry-activation.ts
+- **Routes**: routes/platform-audit-routes.ts, routes/enterprise-analytics.ts, routes/assessment-architecture.ts
+- **Tables**: rf_white_label_configs, aig_prompts, aig_prompt_versions
 - **Frontend**: components/admin/ReportFactoryPanel.tsx
-- **Verified**: svc 0/0 · rt 2/2 · fe 0/1 · tbl 1/1
+- **Verified**: svc 1/1 · rt 3/3 · fe 0/1 · tbl 3/3

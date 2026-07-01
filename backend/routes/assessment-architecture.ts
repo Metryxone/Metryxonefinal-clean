@@ -10,13 +10,25 @@
  *   - GET /api/admin/assessment-architecture/governance   axis 3 — control-plane model verified
  *   - GET /api/admin/assessment-architecture/metadata     axis 4 — 18-field standard + per-source coverage crosswalk
  *   - GET /api/admin/assessment-architecture/repository-alignment  axis 5 — evidence rollup vs live FS+DB
- *   - GET /api/admin/assessment-architecture/gaps         classified additive gaps (0 Launch-Critical/0 High)
+ *   - GET /api/admin/assessment-architecture/gaps         0 OPEN gaps + 9 RESOLVED (engineering-closed)
  *   - GET /api/admin/assessment-architecture/summary      5 axes reported SEPARATELY + certification verdict
+ *
+ * ENGINEERING-CLOSURE MECHANISMS (AP-1..AP-9, reuse-before-build; DDL runs ONLY on the POST paths):
+ *   - GET  /api/admin/assessment-architecture/standardization      AP-7 canonical T/stanine/sten transforms
+ *   - GET  /api/admin/assessment-architecture/norm-groups          AP-4/5/6 group-norm coverage
+ *   - POST /api/admin/assessment-architecture/norm-groups/compute  AP-4/5/6 compute { type } (k_min, abstains)
+ *   - GET  /api/admin/assessment-architecture/bloom                AP-1 Bloom coverage
+ *   - POST /api/admin/assessment-architecture/bloom/classify       AP-1 classify clarity bank
+ *   - GET  /api/admin/assessment-architecture/prompts              AP-9 prompt-registry coverage
+ *   - POST /api/admin/assessment-architecture/prompts/register     AP-9 register code-embedded prompts
+ *   - GET  /api/admin/assessment-architecture/country-cohorts      AP-8 registered country cohorts
+ *   - POST /api/admin/assessment-architecture/country-cohorts/register  AP-8 register { cohorts:[] }
  *
  * Strictly additive + reversible + flag-gated (`assessmentArchitectureCompletion`,
  * FF_ASSESSMENT_ARCHITECTURE_COMPLETION, default OFF):
- *   - OFF → every route 503 (503-before-auth) → byte-identical legacy behaviour (no schema touched).
- *   - GET-only; reads via to_regclass probes / fs existence checks and NEVER writes (no DDL anywhere).
+ *   - OFF → every route 503 (503-before-auth) → byte-identical legacy behaviour incl. schema (no table touched).
+ *   - GET certification routes are read-only (to_regclass probes / fs existence). The mechanism POSTs are the
+ *     ONLY DDL sites — they run behind the flag + super-admin, so OFF creates 0 tables.
  *   - Never throws: any unexpected error degrades to a 200 honest-degraded JSON.
  *   - Detail routes are super-admin (mounted under /api/admin → global auth gate also applies).
  *   - The FIVE axes are reported SEPARATELY and NEVER composited; Coverage⟂Confidence⟂Adoption; null≠0.
@@ -50,8 +62,17 @@ import {
   composeSummary,
   classifiedGaps,
 } from '../services/assessment-architecture-engine';
+import { standardScoresFromZ } from '../services/psychometric-standardization';
+import {
+  computeGroupNorms, classifyClarityBank, bloomCoverage,
+  registerCountryCohorts, listCountryCohorts,
+  type NormGroupType, type CountryCohortInput, ASSESSMENT_NORM_K_MIN,
+} from '../services/assessment-architecture-mechanisms';
+import { registerCodeEmbeddedPrompts, registryCoverage } from '../services/prompt-registry-activation';
 
 type Mw = (req: Request, res: Response, next: NextFunction) => void;
+
+const NORM_GROUP_TYPES: NormGroupType[] = ['gender', 'education_tier', 'competitive_exam', 'country'];
 
 function flagGate(_req: Request, res: Response, next: NextFunction) {
   if (!isFlagEnabled('assessmentArchitectureCompletion')) {
@@ -135,12 +156,84 @@ export function registerAssessmentArchitectureRoutes(
     } catch (err) { degraded(res, 'repository-alignment', err); }
   });
 
-  // Classified remaining ARCHITECTURE gaps (additive; 0 Launch-Critical / 0 High). Honest OPEN work.
+  // Classified gaps — 0 OPEN (all nine AP-1..AP-9 engineering-closed) + 9 RESOLVED via reuse.
   app.get('/api/admin/assessment-architecture/gaps', flagGate, requireAuth, requireSuperAdmin, async (_req: Request, res: Response) => {
     try {
-      const { gaps, gap_counts } = classifiedGaps();
-      res.json({ ok: true, gaps, gap_counts, gap_total: gaps.length });
+      const { gaps, gap_counts, resolved_gaps, resolved_gap_counts, resolved_gap_count } = classifiedGaps();
+      res.json({ ok: true, gaps, gap_counts, gap_total: gaps.length, resolved_gaps, resolved_gap_counts, resolved_gap_count });
     } catch (err) { degraded(res, 'gaps', err); }
+  });
+
+  // ── AP-7 standardization (pure canonical T/stanine/sten transforms — no DB, no write) ──
+  app.get('/api/admin/assessment-architecture/standardization', flagGate, requireAuth, requireSuperAdmin, (req: Request, res: Response) => {
+    try {
+      const z = req.query.z != null ? Number(req.query.z) : null;
+      res.json({
+        ok: true,
+        note: 'T-score SD=10 (canonical); deviation_score SD=15 (legacy 50+z*15, honestly labelled — never "T").',
+        example: standardScoresFromZ(Number.isFinite(z as number) ? (z as number) : 1),
+        requested: z != null ? standardScoresFromZ(Number.isFinite(z) ? z : null) : null,
+      });
+    } catch (err) { degraded(res, 'standardization', err); }
+  });
+
+  // ── AP-4/5/6 norm-group coverage (read) ──
+  app.get('/api/admin/assessment-architecture/norm-groups', flagGate, requireAuth, requireSuperAdmin, async (_req: Request, res: Response) => {
+    try {
+      const rows = await pool.query(
+        `SELECT norm_group_type, COUNT(*)::int AS rows,
+                COUNT(*) FILTER (WHERE is_provisional = false)::int AS established,
+                COUNT(*) FILTER (WHERE is_provisional = true)::int  AS provisional
+           FROM assessment_group_norms GROUP BY norm_group_type ORDER BY norm_group_type`,
+      ).catch(() => ({ rows: [] as Record<string, unknown>[] }));
+      res.json({ ok: true, k_min: ASSESSMENT_NORM_K_MIN, groups: rows.rows, note: 'null≠0: absent group = dimension not yet captured, not zero people.' });
+    } catch (err) { degraded(res, 'norm-groups', err); }
+  });
+
+  // ── AP-4/5/6 compute a group norm (DDL site — flag-gated + super-admin; abstains when insufficient) ──
+  app.post('/api/admin/assessment-architecture/norm-groups/compute', flagGate, requireAuth, requireSuperAdmin, async (req: Request, res: Response) => {
+    try {
+      const type = String(req.body?.type || '') as NormGroupType;
+      if (!NORM_GROUP_TYPES.includes(type)) return res.status(400).json({ ok: false, error: 'invalid_type', allowed: NORM_GROUP_TYPES });
+      res.json({ ok: true, result: await computeGroupNorms(pool, type) });
+    } catch (err) { degraded(res, 'norm-groups-compute', err); }
+  });
+
+  // ── AP-1 Bloom (read + classify) ──
+  app.get('/api/admin/assessment-architecture/bloom', flagGate, requireAuth, requireSuperAdmin, async (_req: Request, res: Response) => {
+    try { res.json({ ok: true, coverage: await bloomCoverage(pool) }); }
+    catch (err) { degraded(res, 'bloom', err); }
+  });
+
+  app.post('/api/admin/assessment-architecture/bloom/classify', flagGate, requireAuth, requireSuperAdmin, async (_req: Request, res: Response) => {
+    try { res.json({ ok: true, result: await classifyClarityBank(pool) }); }
+    catch (err) { degraded(res, 'bloom-classify', err); }
+  });
+
+  // ── AP-9 prompt registry (read + register) ──
+  app.get('/api/admin/assessment-architecture/prompts', flagGate, requireAuth, requireSuperAdmin, async (_req: Request, res: Response) => {
+    try { res.json({ ok: true, coverage: await registryCoverage(pool) }); }
+    catch (err) { degraded(res, 'prompts', err); }
+  });
+
+  app.post('/api/admin/assessment-architecture/prompts/register', flagGate, requireAuth, requireSuperAdmin, async (_req: Request, res: Response) => {
+    try { res.json({ ok: true, result: await registerCodeEmbeddedPrompts(pool) }); }
+    catch (err) { degraded(res, 'prompts-register', err); }
+  });
+
+  // ── AP-8 country cohorts (read + register) ──
+  app.get('/api/admin/assessment-architecture/country-cohorts', flagGate, requireAuth, requireSuperAdmin, async (_req: Request, res: Response) => {
+    try { res.json({ ok: true, cohorts: await listCountryCohorts(pool) }); }
+    catch (err) { degraded(res, 'country-cohorts', err); }
+  });
+
+  app.post('/api/admin/assessment-architecture/country-cohorts/register', flagGate, requireAuth, requireSuperAdmin, async (req: Request, res: Response) => {
+    try {
+      const cohorts = Array.isArray(req.body?.cohorts) ? (req.body.cohorts as CountryCohortInput[]) : [];
+      const valid = cohorts.filter((c) => c && typeof c.id === 'string' && typeof c.name === 'string' && typeof c.geography === 'string');
+      if (!valid.length) return res.status(400).json({ ok: false, error: 'no_valid_cohorts', shape: '{ cohorts:[{id,name,geography,filters?}] }' });
+      res.json({ ok: true, result: await registerCountryCohorts(pool, valid) });
+    } catch (err) { degraded(res, 'country-cohorts-register', err); }
   });
 
   // Summary — the FIVE axes reported SEPARATELY + certification verdict (never composited).

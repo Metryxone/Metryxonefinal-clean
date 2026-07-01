@@ -1,6 +1,6 @@
 # CAPADEX 3.0 · Program 3 · Phase 3.1 — Metadata Standard & Source Coverage (Axis 4)
 
-> Deliverable 07 · Generated 2026-07-01T06:40:17.982Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:5aa01cf06010, written 2026-07-01T06:40:17.982Z).
+> Deliverable 07 · Generated 2026-07-01T07:15:13.791Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:6a98bbfa5f18, written 2026-07-01T07:15:13.862Z).
 > Honesty: the FIVE certification axes (architecture · lifecycle · governance · metadata · repository-alignment) are reported SEPARATELY and NEVER composited. Coverage⟂Confidence⟂Adoption; null ≠ 0; never fabricated.
 
 The canonical **18-field** assessment-metadata standard (13 required) + a per-source coverage crosswalk. A field only counts as "covered" when at least one source is VERIFIED present (null/absent sources do not inflate coverage).

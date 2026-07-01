@@ -1,6 +1,6 @@
 # CAPADEX 3.0 · Program 3 · Phase 3.1 — Assessment Lifecycle Model (Axis 2)
 
-> Deliverable 05 · Generated 2026-07-01T06:40:17.982Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:5aa01cf06010, written 2026-07-01T06:40:17.982Z).
+> Deliverable 05 · Generated 2026-07-01T07:15:13.791Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:6a98bbfa5f18, written 2026-07-01T07:15:13.862Z).
 > Honesty: the FIVE certification axes (architecture · lifecycle · governance · metadata · repository-alignment) are reported SEPARATELY and NEVER composited. Coverage⟂Confidence⟂Adoption; null ≠ 0; never fabricated.
 
 ONE canonical **10-state** assessment lifecycle mapped onto the EXISTING per-artifact lifecycle states (zero DDL — no new lifecycle engine).

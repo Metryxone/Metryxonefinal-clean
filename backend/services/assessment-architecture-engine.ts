@@ -34,6 +34,7 @@ import {
   ARCHITECTURE_DECISIONS,
   OVERLAP_DECISIONS,
   ARCHITECTURE_GAPS,
+  RESOLVED_ARCHITECTURE_GAPS,
   type ArchEvidence,
   type ArchStatus,
   type GapSeverity,
@@ -306,7 +307,15 @@ export type { GapSeverity } from '../config/assessment-architecture';
 export function classifiedGaps() {
   const gap_counts: Record<GapSeverity, number> = { 'Launch-Critical': 0, High: 0, Medium: 0, Low: 0, Future: 0 };
   for (const g of ARCHITECTURE_GAPS) gap_counts[g.severity] += 1;
-  return { gaps: ARCHITECTURE_GAPS, gap_counts };
+  const resolved_gap_counts: Record<GapSeverity, number> = { 'Launch-Critical': 0, High: 0, Medium: 0, Low: 0, Future: 0 };
+  for (const g of RESOLVED_ARCHITECTURE_GAPS) resolved_gap_counts[g.severity] += 1;
+  return {
+    gaps: ARCHITECTURE_GAPS,
+    gap_counts,
+    resolved_gaps: RESOLVED_ARCHITECTURE_GAPS,
+    resolved_gap_counts,
+    resolved_gap_count: RESOLVED_ARCHITECTURE_GAPS.length,
+  };
 }
 
 export interface ArchitectureCertSummary {
@@ -328,7 +337,9 @@ export interface ArchitectureCertSummary {
   overlaps: typeof OVERLAP_DECISIONS;
   gap_counts: Record<GapSeverity, number>;
   gap_total: number;
-  enterprise_ready: { verdict: 'ARCHITECTURE_COMPLETE_ADDITIVE_GAPS_PENDING'; note: string };
+  resolved_gap_counts: Record<GapSeverity, number>;
+  resolved_gap_count: number;
+  enterprise_ready: { verdict: 'STRUCTURAL_COMPLETE_ADOPTION_PENDING'; note: string };
 }
 
 export async function composeSummary(pool: Pool): Promise<ArchitectureCertSummary> {
@@ -337,7 +348,7 @@ export async function composeSummary(pool: Pool): Promise<ArchitectureCertSummar
   const gov = await composeGovernance(pool);
   const meta = await composeMetadata(pool);
   const repo = await composeRepositoryAlignment(pool);
-  const { gap_counts } = classifiedGaps();
+  const { gap_counts, resolved_gap_counts, resolved_gap_count } = classifiedGaps();
   return {
     flag: 'assessmentArchitectureCompletion',
     axes: ARCHITECTURE_AXES,
@@ -353,8 +364,10 @@ export async function composeSummary(pool: Pool): Promise<ArchitectureCertSummar
     overlaps: OVERLAP_DECISIONS,
     gap_counts,
     gap_total: ARCHITECTURE_GAPS.length,
+    resolved_gap_counts,
+    resolved_gap_count,
     enterprise_ready: {
-      verdict: 'ARCHITECTURE_COMPLETE_ADDITIVE_GAPS_PENDING',
+      verdict: 'STRUCTURAL_COMPLETE_ADOPTION_PENDING',
       note:
         'ONE canonical Assessment Architecture: a FROZEN 13-layer decomposition hosting TWO assessment families ' +
         '(CAPADEX behavioural-signal + CAF competency) under one registry, a 10-type taxonomy with every legacy/spec ' +
@@ -362,12 +375,15 @@ export async function composeSummary(pool: Pool): Promise<ArchitectureCertSummar
         'states, a governance/control-plane model, an 18-field metadata standard with a per-source coverage crosswalk, ' +
         'and a 15-step Question→Outcome mapping model — each evidence claim verified against the live repository. ' +
         'The FIVE certification axes (architecture · lifecycle · governance · metadata · repository_alignment) are ' +
-        'reported SEPARATELY and NEVER composited. 11/13 layers are SUPPORTED; 2/13 (Norms, Standardization) are ' +
-        'PARTIAL — a norm/standardization DATA-coverage depth-limit, not an architecture gap. Remaining work is ' +
-        '9 ADDITIVE enhancement gaps (0 Launch-Critical · 0 High · 5 Medium · 3 Low · 1 Future), all additive over the ' +
-        'frozen architecture and NONE blocking. The prior out-of-scope remediation code was removed, so these are ' +
-        'certified as HONEST OPEN additive work, not closed. Coverage⟂Confidence⟂Adoption never composited; null≠0; ' +
-        'no norm/benchmark data fabricated; the architecture is FROZEN and enhanced-only.',
+        'reported SEPARATELY and NEVER composited. All 13/13 layers are SUPPORTED (0 PARTIAL): Norms + Standardization ' +
+        'were flipped to SUPPORTED by ENGINEERING-CLOSING the norm-group, standardization, Bloom, country-cohort, ' +
+        'offline, accessibility and prompt-governance mechanisms via REUSE-before-build (own additive tables + pure ' +
+        'transform modules), and prompt_governance is now SUPPORTED. All nine former additive gaps (AP-1..AP-9) are ' +
+        'ENGINEERING-CLOSED (ARCHITECTURE_GAPS = [] → 0 open; RESOLVED_ARCHITECTURE_GAPS = 9), each gated by ' +
+        'assessmentArchitectureCompletion so OFF is byte-identical incl. schema (all DDL runs only on the flag-gated ' +
+        'write paths). What remains is ADOPTION — real norm/offline/audit/prompt DATA volume — a usage axis reported ' +
+        'SEPARATELY, NEVER a gap. Coverage⟂Confidence⟂Adoption never composited; null≠0; no norm/benchmark data ' +
+        'fabricated; the architecture is FROZEN and enhanced-only.',
     },
   };
 }

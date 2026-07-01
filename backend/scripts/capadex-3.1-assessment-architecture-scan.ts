@@ -51,7 +51,7 @@ async function main() {
     const metadata = await composeMetadata(pool);
     const repository_alignment = await composeRepositoryAlignment(pool);
     const summary = await composeSummary(pool);
-    const { gaps, gap_counts } = classifiedGaps();
+    const { gaps, gap_counts, resolved_gaps, resolved_gap_counts, resolved_gap_count } = classifiedGaps();
 
     const out = {
       generated_at: new Date().toISOString(),
@@ -84,10 +84,13 @@ async function main() {
       axis_governance: governance,
       axis_metadata: metadata,
       axis_repository_alignment: repository_alignment,
-      // Classified remaining ADDITIVE gaps (honest OPEN work; 0 Launch-Critical / 0 High).
+      // Classified gaps: 0 OPEN (all nine AP-1..AP-9 engineering-closed) + 9 RESOLVED via reuse.
       gaps,
       gap_counts,
       gap_total: gaps.length,
+      resolved_gaps,
+      resolved_gap_counts,
+      resolved_gap_count,
       summary,
     };
 

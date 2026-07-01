@@ -1,6 +1,6 @@
 # CAPADEX 3.0 · Program 3 · Phase 3.1 — Mapping Model & Repository Alignment (Axis 5)
 
-> Deliverable 08 · Generated 2026-07-01T06:40:17.982Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:5aa01cf06010, written 2026-07-01T06:40:17.982Z).
+> Deliverable 08 · Generated 2026-07-01T07:15:13.791Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:6a98bbfa5f18, written 2026-07-01T07:15:13.862Z).
 > Honesty: the FIVE certification axes (architecture · lifecycle · governance · metadata · repository-alignment) are reported SEPARATELY and NEVER composited. Coverage⟂Confidence⟂Adoption; null ≠ 0; never fabricated.
 
 ## Question → Outcome mapping model (15 steps)
@@ -29,9 +29,9 @@ Every architecture evidence claim verified INDEPENDENTLY against the live filesy
 
 | Evidence kind | Present / Total |
 |---|---|
-| Services | 31/32 |
-| Routes | 9/9 |
-| Frontend | 3/6 |
-| Tables | 33/33 (absent 0, unknown 0) |
+| Services | 37/38 |
+| Routes | 14/14 |
+| Frontend | 5/8 |
+| Tables | 38/38 (absent 0, unknown 0) |
 
 _Every architecture evidence claim is verified INDEPENDENTLY against the live filesystem (services/routes/frontend) and DB (to_regclass). null (unknown) ≠ 0 (absent). This axis is Coverage-only — it certifies the architecture MAPS to real repository artifacts, kept SEPARATE from Confidence/Adoption._

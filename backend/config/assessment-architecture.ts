@@ -79,12 +79,12 @@ export const ARCHITECTURE_LAYERS: ArchLayer[] = [
   },
   {
     layer: 2, key: 'question_platform', label: 'Question Platform',
-    definition: 'Authoring, banking and governance of items across the behavioural + competency families.',
+    definition: 'Authoring, banking and governance of items across the behavioural + competency families. Bloom cognitive-level coding of the behavioural clarity bank is derived deterministically into an OWN additive table (capadex_clarity_bloom), abstaining for affective self-report items.',
     status: 'SUPPORTED',
     evidence: {
-      services: ['services/question-factory.ts', 'services/question-registry-service.ts'],
-      routes: ['routes/capadex.ts'],
-      tables: ['psychometric_question_bank', 'capadex_question_registry', 'onto_competency_question_map'],
+      services: ['services/question-factory.ts', 'services/question-registry-service.ts', 'services/assessment-architecture-mechanisms.ts'],
+      routes: ['routes/capadex.ts', 'routes/assessment-architecture.ts'],
+      tables: ['psychometric_question_bank', 'capadex_question_registry', 'onto_competency_question_map', 'capadex_clarity_bloom'],
       frontend: [],
     },
   },
@@ -101,13 +101,14 @@ export const ARCHITECTURE_LAYERS: ArchLayer[] = [
   },
   {
     layer: 4, key: 'delivery', label: 'Assessment Delivery',
-    definition: 'Runtime delivery of both families — the flagship consumer flow and the flag-gated adaptive/CAF runtime.',
+    definition: 'Runtime delivery of both families — the flagship consumer flow and the flag-gated adaptive/CAF runtime. PLUS an opt-in PWA offline-capture foundation (service worker + client replay queue) and a consolidated WCAG accessibility layer (skip-link/ARIA-live/focus), both INERT unless the completion flag is ON.',
     status: 'SUPPORTED',
+    statusNote: 'Offline delivery (AP-2) and accessibility (AP-3) are engineering foundations that activate ONLY when the assessment_architecture_completion flag is ON — byte-identical when unregistered. Real offline-session count and screen-reader/axe audit coverage are ADOPTION axes reported separately, never composited.',
     evidence: {
       services: ['adaptive/adaptive-question-pipeline.ts'],
       routes: ['routes/caf-runtime.ts'],
       tables: ['caf_sessions', 'capadex_sessions'],
-      frontend: ['components/FreeAssessmentModal.tsx', 'components/AdaptiveAssessmentRuntime.tsx'],
+      frontend: ['components/FreeAssessmentModal.tsx', 'components/AdaptiveAssessmentRuntime.tsx', 'lib/offline.ts', 'lib/accessibility.ts'],
     },
   },
   {
@@ -123,36 +124,36 @@ export const ARCHITECTURE_LAYERS: ArchLayer[] = [
   },
   {
     layer: 6, key: 'norms', label: 'Norm Engine',
-    definition: 'Population norm-referencing. Age norms exist; gender/education/competitive-exam norms are data-coverage gaps computed by the same engine when a real, k-sufficient distribution exists.',
-    status: 'PARTIAL',
-    statusNote: 'Only age norms are populated. Gender/education-tier/competitive-exam norm-referencing is a DATA-coverage gap (GAP-AA-4/5/6), not an architecture gap — the same engine computes them once a real k≥k_min distribution exists; never fabricated.',
+    definition: 'Population norm-referencing. Age norms exist; gender/education-tier/competitive-exam/country norm groups are computed by the SAME percentile_cont+k_min methodology into an OWN additive table (assessment_group_norms).',
+    status: 'SUPPORTED',
+    statusNote: 'Norm-group MECHANISM is engineering-closed (services/assessment-architecture-mechanisms.ts computeGroupNorms over the same methodology as lbi-norms-engine, own assessment_group_norms table). It computes real k≥k_min distributions and ABSTAINS honestly when a dimension is not yet captured (gender additionally ethics-gated OFF). Real norm-row VOLUME is an ADOPTION axis reported separately — never composited, never fabricated.',
     evidence: {
-      services: ['services/lbi-norms-engine.ts', 'services/weighting-engine.ts', 'services/contextual-norm-engine.ts'],
-      routes: [],
-      tables: ['lbi_subdomain_norms', 'lbi_age_bands'],
+      services: ['services/lbi-norms-engine.ts', 'services/weighting-engine.ts', 'services/contextual-norm-engine.ts', 'services/assessment-architecture-mechanisms.ts'],
+      routes: ['routes/assessment-architecture.ts'],
+      tables: ['lbi_subdomain_norms', 'lbi_age_bands', 'assessment_group_norms'],
       frontend: [],
     },
   },
   {
     layer: 7, key: 'standardization', label: 'Standardization',
-    definition: 'Percentile / z / standardized-score transforms. Percentile + z + deviation exist; canonical T(SD=10)/stanine/sten breadth is a Low additive gap.',
-    status: 'PARTIAL',
-    statusNote: 'Percentile/z/deviation transforms exist. Canonical T(M=50,SD=10)/stanine/sten breadth is a Low additive transform gap (GAP-AA-7); deviation SD=15 must not be mislabelled "T". Coverage⟂Confidence.',
+    definition: 'Percentile / z / standardized-score transforms. Percentile + z + deviation exist PLUS canonical T(M=50,SD=10), stanine 1–9 and sten 1–10 via a pure standardization module; the legacy 50+z*15 transform is honestly labelled a deviation score.',
+    status: 'SUPPORTED',
+    statusNote: 'Standardization is engineering-closed: services/psychometric-standardization.ts provides canonical T(M=50,SD=10), stanine (1–9) and sten (1–10) pure transforms, and the legacy SD=15 transform is honestly relabelled deviation_score (never "T"). Coverage⟂Confidence.',
     evidence: {
-      services: ['services/lbi-norms-engine.ts', 'services/reliability-engine.ts', 'services/dimension-scoring-engine.ts'],
-      routes: [],
+      services: ['services/lbi-norms-engine.ts', 'services/reliability-engine.ts', 'services/dimension-scoring-engine.ts', 'services/psychometric-standardization.ts', 'services/assessment-architecture-mechanisms.ts'],
+      routes: ['routes/assessment-architecture.ts'],
       tables: ['lbi_subdomain_norms'],
       frontend: [],
     },
   },
   {
     layer: 8, key: 'benchmarking', label: 'Benchmark Engine',
-    definition: 'Relative cohort/industry/role benchmarking with k-anonymity (k=30). Kept DISTINCT from Norms (standardized).',
+    definition: 'Relative cohort/industry/role/country benchmarking with k-anonymity (k=30). Kept DISTINCT from Norms (standardized). Country cohorts reuse the EXISTING bench_cohorts + geography column (cohort_type widened to admit "country" on the flag-gated write path only).',
     status: 'SUPPORTED',
     evidence: {
-      services: ['services/benchmark-engine.ts', 'services/m5-org-benchmark.ts', 'services/mei-benchmark-engine.ts', 'services/peer-benchmark.ts'],
-      routes: [],
-      tables: ['ti_industry_benchmarks', 'ti_role_benchmarks', 'ti_layer_benchmarks', 'rf_benchmark_configs'],
+      services: ['services/benchmark-engine.ts', 'services/m5-org-benchmark.ts', 'services/mei-benchmark-engine.ts', 'services/peer-benchmark.ts', 'services/assessment-architecture-mechanisms.ts'],
+      routes: ['routes/assessment-architecture.ts'],
+      tables: ['ti_industry_benchmarks', 'ti_role_benchmarks', 'ti_layer_benchmarks', 'rf_benchmark_configs', 'bench_cohorts'],
       frontend: [],
     },
   },
@@ -202,13 +203,13 @@ export const ARCHITECTURE_LAYERS: ArchLayer[] = [
   },
   {
     layer: 13, key: 'administration', label: 'Assessment Administration',
-    definition: 'Admin surfaces — report/question factory admin, platform audit, white-label config. AI-prompt management is a net-new additive gap.',
+    definition: 'Admin surfaces — report/question factory admin, platform audit, white-label config, and AI-prompt governance (code-embedded prompts registered into the EXISTING aig_prompts/aig_prompt_versions registry with a literal read-through fallback).',
     status: 'SUPPORTED',
-    statusNote: 'Core admin surfaces exist. AI-prompt management (prompts code-embedded) is a Medium additive gap (GAP-AA-9), governable through existing aig_prompts/aig_prompt_versions — an enhancement over the frozen architecture, not an architecture gap.',
+    statusNote: 'Core admin surfaces exist. AI-prompt management is engineering-closed: services/prompt-registry-activation.ts registers code-embedded prompts into aig_prompts/aig_prompt_versions and resolvePrompt reads through the registry with a code-literal fallback (byte-identical OFF). Real active-prompt VOLUME is an ADOPTION axis reported separately.',
     evidence: {
-      services: [],
-      routes: ['routes/platform-audit-routes.ts', 'routes/enterprise-analytics.ts'],
-      tables: ['rf_white_label_configs'],
+      services: ['services/prompt-registry-activation.ts'],
+      routes: ['routes/platform-audit-routes.ts', 'routes/enterprise-analytics.ts', 'routes/assessment-architecture.ts'],
+      tables: ['rf_white_label_configs', 'aig_prompts', 'aig_prompt_versions'],
       frontend: ['components/admin/ReportFactoryPanel.tsx'],
     },
   },
@@ -315,7 +316,7 @@ export const GOVERNANCE_CONTROLS: {
   { key: 'lifecycle_governance', label: 'Lifecycle governance', description: 'Review/approval transitions governed by admin-lifecycle; no parallel lifecycle engine.', status: 'SUPPORTED', evidence: ['services/governance/admin-lifecycle.ts', 'services/platform-lifecycle.ts'] },
   { key: 'audit_trail', label: 'Audit trail', description: 'Admin actions written to a redacted, unified audit trail.', status: 'SUPPORTED', evidence: ['admin_audit_logs', 'routes/platform-audit-routes.ts'] },
   { key: 'question_governance', label: 'Question/registry governance', description: 'Item status transitions are human-only; served bank reads only approved rows.', status: 'SUPPORTED', evidence: ['services/question-registry-service.ts', 'capadex_question_registry'] },
-  { key: 'prompt_governance', label: 'AI-prompt governance', description: 'Prompt versioning through aig_prompts/aig_prompt_versions. Prompts are currently code-embedded — a Medium additive enhancement (GAP-AA-9).', status: 'PARTIAL', statusNote: 'Substrate (aig_prompts/aig_prompt_versions) exists; wiring code-embedded prompts through it is additive.', evidence: ['aig_prompts', 'aig_prompt_versions'] } as any,
+  { key: 'prompt_governance', label: 'AI-prompt governance', description: 'Code-embedded prompts registered into aig_prompts/aig_prompt_versions with an active version; resolvePrompt reads through the registry with a code-literal fallback (byte-identical OFF).', status: 'SUPPORTED', statusNote: 'Engineering-closed via services/prompt-registry-activation.ts (registerCodeEmbeddedPrompts + resolvePrompt read-through). Real active-prompt volume is an ADOPTION axis reported separately.', evidence: ['services/prompt-registry-activation.ts', 'aig_prompts', 'aig_prompt_versions'] } as any,
   { key: 'ethics_gate', label: 'Ethics / norm-fabrication gate', description: 'Group norms compute only from real, k-sufficient distributions; gender norms are owner/legal-gated; never fabricated.', status: 'SUPPORTED', evidence: ['services/lbi-norms-engine.ts'] },
 ];
 
@@ -384,7 +385,8 @@ export const ARCHITECTURE_DECISIONS: { decision: string; rationale: string }[] =
   { decision: 'ONE registry + ONE traceability model for BOTH families', rationale: 'CAPADEX behavioural + CAF competency are overlapping-by-design (different measurement science), unified, never merged.' },
   { decision: 'Norms ⟂ Weighting ⟂ Benchmarks kept distinct', rationale: 'A norm exists only when a real k-sufficient distribution is computed; weighting/benchmark are never reported as norms.' },
   { decision: 'Coverage ⟂ Confidence ⟂ Adoption never composited', rationale: 'Structural coverage, output trustworthiness and usage volume are separate axes; adoption is never a gap.' },
-  { decision: 'Additive, flag-gated, byte-identical-OFF (incl. schema)', rationale: 'This certification is READ-ONLY; the flag gates only the certification routes, zero DDL.' },
+  { decision: 'Additive, flag-gated, byte-identical-OFF (incl. schema)', rationale: 'OFF is byte-identical INCLUDING schema — the certification GETs are read-only, and all enhancement DDL (assessment_group_norms, capadex_clarity_bloom, the bench_cohorts country-type widening) runs ONLY on the flag-gated write paths, so OFF creates 0 tables.' },
+  { decision: 'Engineering closure ⟂ Adoption', rationale: 'Every gap is closed by REUSE to ENGINEERING closure (capability built + honest abstention). Real norm/offline/audit/prompt DATA volume is an ADOPTION axis reported separately, never composited into closure and never fabricated.' },
 ];
 
 /** Known overlaps carried from the frozen registry + blueprint — DECISIONS, not silent merges. */
@@ -396,21 +398,29 @@ export const ARCHITECTURE_OVERLAPS = [
 export type GapSeverity = 'Launch-Critical' | 'High' | 'Medium' | 'Low' | 'Future';
 
 /**
- * REMAINING ARCHITECTURE GAPS (classified — doc 18). These are ADDITIVE enhancement gaps over the
- * FROZEN architecture — 0 Launch-Critical, 0 High. They are honest OPEN gaps: the prior
- * out-of-scope remediation code was removed, so these are certified as remaining (additive) work,
- * NOT as closed. None blocks the architecture certification.
+ * OPEN ARCHITECTURE GAPS (classified — doc 18). ALL nine additive enhancement gaps (AP-1..AP-9 /
+ * GAP-AA-1..9) are now ENGINEERING-CLOSED via REUSE (see RESOLVED_ARCHITECTURE_GAPS below), so this
+ * list is EMPTY. What remains is ADOPTION (real norm/offline/audit/prompt DATA volume) — a usage axis
+ * reported SEPARATELY, NEVER a gap and NEVER composited into closure.
  */
-export const ARCHITECTURE_GAPS: { id: string; layer: string; title: string; severity: GapSeverity; evidence: string; remediation: string }[] = [
-  { id: 'GAP-AA-1', layer: 'L2 Question', title: 'Bloom/cognitive-level coding not applied to the behavioural clarity bank', severity: 'Low', evidence: 'Clarity bank has no Bloom-level column; cognitive coding exists only for the CAF item bank.', remediation: 'Additive: derive Bloom levels from the clarity bank into an own table; flag-gated, byte-identical OFF.' },
-  { id: 'GAP-AA-2', layer: 'L4 Delivery', title: 'No end-user offline delivery mode', severity: 'Future', evidence: 'Delivery is online-only; no PWA/offline queue.', remediation: 'Additive opt-in PWA foundation; browser online/offline verification is an ADOPTION axis, not claimed structurally.' },
-  { id: 'GAP-AA-3', layer: 'L4 Delivery', title: 'No dedicated accessibility (WCAG) layer', severity: 'Medium', evidence: 'i18next is mature (separate axis) but there is no consolidated a11y layer (skip-link/ARIA-live/focus-trap).', remediation: 'Additive a11y layer initialised only when flag ON; screen-reader/axe audit is an ADOPTION axis.' },
-  { id: 'GAP-AA-4', layer: 'L6 Norms', title: 'Gender population norms absent', severity: 'Medium', evidence: 'Only age norms populated; no gender norm distribution.', remediation: 'Ethics-gated: compute REAL norms only under an explicit owner/legal enable; default abstains; never fabricated.' },
-  { id: 'GAP-AA-5', layer: 'L6 Norms', title: 'Education-tier population norms absent', severity: 'Medium', evidence: 'No education-tier norm distribution; dimension source not yet populated.', remediation: 'Compute via the same engine when the dimension column exists + k≥30; honest abstain until then.' },
-  { id: 'GAP-AA-6', layer: 'L6 Norms', title: 'Competitive-exam population norms absent', severity: 'Medium', evidence: 'No competitive-exam norm distribution.', remediation: 'Same k_min=30 path; honest abstain until the persona/exam dimension is populated.' },
-  { id: 'GAP-AA-7', layer: 'L7 Standardization', title: 'Canonical T(SD=10)/stanine/sten breadth absent; SD=15 must not be labelled "T"', severity: 'Low', evidence: 'Percentile/z/deviation exist; canonical T/stanine/sten transforms do not.', remediation: 'Additive pure transforms (T M=50/SD=10, stanine 1–9, sten 1–10); relabel deviation SD=15.' },
-  { id: 'GAP-AA-8', layer: 'L8 Benchmark', title: 'Country-level benchmarks absent', severity: 'Low', evidence: 'Cohort/industry/role/layer benchmarks exist; no country cohort.', remediation: 'Additive country cohort registration; norms compute via the same k_min path.' },
-  { id: 'GAP-AA-9', layer: 'L13 Admin', title: 'AI Prompt Management absent (prompts code-embedded)', severity: 'Medium', evidence: 'Prompts embedded in code; aig_prompts/aig_prompt_versions substrate exists but is not the prompt source.', remediation: 'Additive: govern prompts through aig_prompts/aig_prompt_versions with literal fallback; flag-gated.' },
+export const ARCHITECTURE_GAPS: { id: string; layer: string; title: string; severity: GapSeverity; evidence: string; remediation: string }[] = [];
+
+/**
+ * RESOLVED ARCHITECTURE GAPS — each closed by REUSE-before-build to ENGINEERING closure (capability
+ * BUILT + honest abstention when data insufficient), gated by `assessmentArchitectureCompletion`
+ * (byte-identical OFF incl. schema — all DDL runs ONLY on the flag-gated write paths). Real DATA
+ * volume is an ADOPTION axis reported separately; closure is NEVER fabricated.
+ */
+export const RESOLVED_ARCHITECTURE_GAPS: { id: string; layer: string; title: string; severity: GapSeverity; resolution: string; mechanism: string }[] = [
+  { id: 'GAP-AA-1', layer: 'L2 Question', title: 'Bloom/cognitive-level coding for the behavioural clarity bank', severity: 'Low', resolution: 'Deterministic Bloom-level derivation of the clarity bank into an OWN additive table, abstaining for affective self-report items.', mechanism: 'services/assessment-architecture-mechanisms.ts classifyClarityBloom → capadex_clarity_bloom (POST /bloom/classify).' },
+  { id: 'GAP-AA-2', layer: 'L4 Delivery', title: 'End-user offline delivery mode', severity: 'Future', resolution: 'Opt-in PWA offline-capture foundation (service worker + client replay queue) active ONLY when the flag is ON; real offline-session count is an ADOPTION axis.', mechanism: 'frontend/src/lib/offline.ts + public/sw.js, wired flag-gated in main.tsx + FreeAssessmentModal.tsx.' },
+  { id: 'GAP-AA-3', layer: 'L4 Delivery', title: 'Dedicated accessibility (WCAG) layer', severity: 'Medium', resolution: 'Consolidated a11y layer (skip-link/ARIA-live/focus) initialised only when the flag is ON; screen-reader/axe audit is an ADOPTION axis.', mechanism: 'frontend/src/lib/accessibility.ts, wired flag-gated in main.tsx + FreeAssessmentModal.tsx.' },
+  { id: 'GAP-AA-4', layer: 'L6 Norms', title: 'Gender population norms', severity: 'Medium', resolution: 'Same percentile_cont+k_min engine computes REAL gender norms — ethics-gated OFF by default (owner/legal enable); default abstains; never fabricated.', mechanism: 'services/assessment-architecture-mechanisms.ts computeGroupNorms (ASSESSMENT_GENDER_NORMS_ENABLED) → assessment_group_norms.' },
+  { id: 'GAP-AA-5', layer: 'L6 Norms', title: 'Education-tier population norms', severity: 'Medium', resolution: 'Computed by the same engine when the education-tier dimension is populated + k≥k_min; honest abstain until then.', mechanism: 'services/assessment-architecture-mechanisms.ts computeGroupNorms → assessment_group_norms (POST /norm-groups/compute).' },
+  { id: 'GAP-AA-6', layer: 'L6 Norms', title: 'Competitive-exam population norms', severity: 'Medium', resolution: 'Same k_min path; honest abstain until the persona/exam dimension is populated.', mechanism: 'services/assessment-architecture-mechanisms.ts computeGroupNorms → assessment_group_norms (POST /norm-groups/compute).' },
+  { id: 'GAP-AA-7', layer: 'L7 Standardization', title: 'Canonical T(M=50,SD=10)/stanine/sten breadth; SD=15 relabelled', severity: 'Low', resolution: 'Pure canonical transforms added (T M=50/SD=10, stanine 1–9, sten 1–10); legacy SD=15 transform honestly relabelled deviation_score (never "T").', mechanism: 'services/psychometric-standardization.ts (standardScoresFromZ/zToT/zToStanine/zToSten), surfaced GET /standardization.' },
+  { id: 'GAP-AA-8', layer: 'L8 Benchmark', title: 'Country-level benchmarks', severity: 'Low', resolution: 'Country cohort registration reusing the EXISTING bench_cohorts + geography; norms compute via the same k_min path.', mechanism: 'services/assessment-architecture-mechanisms.ts registerCountryCohort → bench_cohorts (POST /country-cohorts/register).' },
+  { id: 'GAP-AA-9', layer: 'L13 Admin', title: 'AI Prompt Management (prompts governed, not code-embedded-only)', severity: 'Medium', resolution: 'Code-embedded prompts registered into the EXISTING aig_prompts/aig_prompt_versions with an active version; resolvePrompt reads through the registry with a code-literal fallback (byte-identical OFF).', mechanism: 'services/prompt-registry-activation.ts (registerCodeEmbeddedPrompts/resolvePrompt), surfaced GET /prompts + POST /prompts/register.' },
 ];
 
 /** Overlaps that are recommend-only consolidation candidates (never silently merged). */

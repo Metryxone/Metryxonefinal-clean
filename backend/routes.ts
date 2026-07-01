@@ -253,6 +253,7 @@ import { registerProgressionRoutes } from "./routes/progression";
 import { registerOutcomeKpiRoutes } from "./routes/outcome-kpi";
 import { registerAssessmentArchitectureRoutes } from "./routes/assessment-architecture";
 import { registerQuestionManagementRoutes } from "./routes/question-management";
+import { registerAssessmentBuilderRoutes } from "./routes/assessment-builder";
 import { registerAiOrchestrationRoutes } from "./routes/ai-orchestration";
 import { registerOperationalReadinessRoutes } from "./routes/operational-readiness";
 import { registerProgram1CertificationRoutes } from "./routes/program1-certification";
@@ -14154,6 +14155,7 @@ Rules:
   registerProgressionRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerAssessmentArchitectureRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerQuestionManagementRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerAssessmentBuilderRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerOutcomeKpiRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerAiOrchestrationRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerOperationalReadinessRoutes(app, concernsPool, requireAuth, requireSuperAdmin);

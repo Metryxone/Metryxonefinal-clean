@@ -298,6 +298,21 @@ export const FEATURE_FLAGS = {
    *  authored-question VOLUME is ADOPTION — a usage axis reported SEPARATELY, NEVER a gap; never fabricated.
    *  Coverage⟂Confidence⟂Adoption never composited; null≠0. Env: `FF_QUESTION_MANAGEMENT_PLATFORM`. */
   questionManagementPlatform: false,
+  /** CAPADEX 3.0 — Program 3 · Phase 3.3 Enterprise Assessment Builder (Authoring Platform). When ON, a
+   *  read-only certification composer plus additive authoring mechanisms at `/api/admin/assessment-builder/*`
+   *  (super-admin) certify the ONE canonical Assessment Builder over the EXISTING blueprint/assembly substrate
+   *  across SEVEN INDEPENDENT dimensions reported SEPARATELY (never composited): builder · blueprint · validation ·
+   *  version_management · publishing · apis · frontend. This platform DESIGNS/COMPOSES/CONFIGURES/VALIDATES/
+   *  VERSIONS/APPROVES/PUBLISHES assessments — it does NOT deliver, score, or run psychometrics. True engineering
+   *  gaps are CLOSED via reuse-before-build additive overlay mechanisms (assessment authoring overlay, version
+   *  history + rollback, blueprint composition, reusable templates, read-time validation runs, review/approve/
+   *  publish workflow) — each gated by this flag so OFF is byte-identical incl. schema (all DDL runs ONLY on the
+   *  flag-gated write paths → OFF creates 0 tables). Flag OFF → every `/api/admin/assessment-builder/*` route 503
+   *  (503-before-auth), `/enabled` 503, public-config `assessment_builder:false`, and the assessment flow + schema
+   *  are byte-identical to legacy. Real authored-assessment VOLUME is ADOPTION — a usage axis reported SEPARATELY,
+   *  NEVER a gap; never fabricated. Coverage⟂Confidence⟂Adoption never composited; null≠0. Env:
+   *  `FF_ASSESSMENT_BUILDER`. */
+  assessmentBuilder: false,
   /** MX-103X — Live Employer Ecosystem Activation (read-only audit + certification console over the EXISTING
    *  employer hiring funnel). When ON, a PURE read-only composer at `/api/admin/employer-ecosystem/*`
    *  (super-admin) inventories the nine funnel stages — onboarding · create-job · role-DNA · competencies ·
@@ -2311,6 +2326,11 @@ export function isAssessmentArchitectureCompletionEnabled(): boolean {
 /** CAPADEX 3.0 — Program 3 · Phase 3.2 Enterprise Question Management Platform master switch. */
 export function isQuestionManagementPlatformEnabled(): boolean {
   return isFlagEnabled('questionManagementPlatform');
+}
+
+/** CAPADEX 3.0 — Program 3 · Phase 3.3 Enterprise Assessment Builder master switch. */
+export function isAssessmentBuilderEnabled(): boolean {
+  return isFlagEnabled('assessmentBuilder');
 }
 
 export function isCustomerJourneyCompletionEnabled(): boolean {

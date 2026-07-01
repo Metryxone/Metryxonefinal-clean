@@ -57,7 +57,7 @@ import { runEvidenceRuntime }   from '../services/signal-activation-runtime';
 import { resolveSeedConcernPk } from '../services/concern-signal-seeding';
 import type { EvidenceInput }   from '../services/evidence-engine';
 import { isRuntimeIntelligenceActivationEnabled, isRuntimeIntelligencePipelineEnabled, isSignalGroundingRuntimeEnabled } from '../config/feature-flags';
-import { isEvidenceGatedProgressionEnabled, isPersonaModelAlignmentEnabled, isPersonaModelExpansionEnabled, isAssessmentFrameworkCompletionEnabled, isCustomerJourneyCompletionEnabled, isProgressionEngineCompletionEnabled, isOutcomeFrameworkKpiEngineEnabled, isAiRecommendationReportOrchestrationEnabled, isProductTraceabilityCertificationEnabled, isOperationalReadinessEnabled, isAssessmentArchitectureCompletionEnabled, isQuestionManagementPlatformEnabled } from '../config/feature-flags';
+import { isEvidenceGatedProgressionEnabled, isPersonaModelAlignmentEnabled, isPersonaModelExpansionEnabled, isAssessmentFrameworkCompletionEnabled, isCustomerJourneyCompletionEnabled, isProgressionEngineCompletionEnabled, isOutcomeFrameworkKpiEngineEnabled, isAiRecommendationReportOrchestrationEnabled, isProductTraceabilityCertificationEnabled, isOperationalReadinessEnabled, isAssessmentArchitectureCompletionEnabled, isQuestionManagementPlatformEnabled, isAssessmentBuilderEnabled } from '../config/feature-flags';
 import { resolveBridgeTagForConcernPk, loadGroundedLineage, groundingCoreToken } from '../services/signal-grounding-runtime';
 import { buildGuidanceForSession } from '../services/pil/runtime-guidance-engine';
 import { buildPipelineForSession } from '../services/pil/pipeline-resolver';
@@ -4240,6 +4240,7 @@ export function registerCapadexRoutes(app: Express, pool: Pool) {
         // composer + additive psychometric closures). OFF → assessment flow + schema byte-identical.
         assessment_architecture_completion: isAssessmentArchitectureCompletionEnabled(),
         question_management_platform: isQuestionManagementPlatformEnabled(),
+        assessment_builder: isAssessmentBuilderEnabled(),
       });
     } catch (err) { next(err); }
   });

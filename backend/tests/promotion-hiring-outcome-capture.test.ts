@@ -11,12 +11,16 @@
  *   - HIRING is WIRED end-to-end. The employer-portal call site is `snapshotDecisionProb`
  *     (candidate pipeline stage → hiring outcome): stage 'Hired' → 1, 'Rejected' → 0, any
  *     non-terminal stage → skip (no row). Part C exercises that REAL call site end-to-end.
- *   - PROMOTION has NO wired call site anywhere in the codebase — only the `recordPromotionOutcome`
- *     recorder exists (defined in validation-loop-intake.ts, currently unused). There is therefore
- *     no candidate/offer→promotion MAPPING to test; Part A exercises the recorder directly so that
- *     when a call site is eventually wired, its {1,0,skip}/idempotency/demo/null-prediction contract
- *     is already pinned. (The task brief expected a promotion call site in employer-portal.ts; it
- *     does not exist — this is the honest finding.)
+ *   - PROMOTION is WIRED end-to-end through `recordRealizedPromotionOutcome`
+ *     (routes/talent-outcome-prediction.ts), exposed as the super-admin route
+ *     POST /api/admin/talent/predictions/:email/promotion-outcome. A genuine promotion DECISION
+ *     (promoted = 1 / passed-over = 0) snapshots the standing `promotion_probability`
+ *     (ti_outcome_predictions) as the decision-time prediction and writes a durable
+ *     validation_loop_outcomes row via `recordPromotionOutcome`. Part D exercises that REAL call
+ *     site end-to-end. (The original finding expected the mapping in employer-portal.ts; the actual
+ *     wired call site lives in the talent-outcome-prediction domain, where promotion_probability is
+ *     computed — this is the honest correction.) Part A still exercises the underlying recorder
+ *     directly for the input-guard / demo / null-prediction cases the mapping cannot itself produce.
  *
  * What is asserted for BOTH types:
  *   - status/verdict → {1, 0, skip} mapping (skip must write NOTHING, never a fabricated 0-outcome).
@@ -44,6 +48,7 @@ import assert from 'node:assert/strict';
 import { Pool, type PoolClient } from 'pg';
 import { recordHiringOutcome, recordPromotionOutcome } from '../services/validation-loop-intake';
 import { snapshotDecisionProb } from '../routes/employer-portal';
+import { recordRealizedPromotionOutcome } from '../routes/talent-outcome-prediction';
 
 const HAS_DB = !!process.env.DATABASE_URL;
 let pool: Pool | null = null;
@@ -83,6 +88,26 @@ async function createTempShadows(client: PoolClient): Promise<void> {
   ) ON COMMIT DROP`);
   await client.query(`CREATE UNIQUE INDEX uq_vlo_type_ref
     ON validation_loop_outcomes (outcome_type, ref_id) WHERE ref_id IS NOT NULL`);
+  // ti_outcome_predictions: the promotion PREDICTION substrate recordRealizedPromotionOutcome reads
+  // (it snapshots the standing promotion_probability as the decision-time prediction). Columns
+  // mirror the real table's shape for the fields the helper selects.
+  await client.query(`CREATE TEMP TABLE ti_outcome_predictions (
+    id bigserial PRIMARY KEY, user_email text NOT NULL, rf_id integer, rf_name text,
+    blueprint_key text, promotion_probability numeric, predicted_at timestamptz DEFAULT now(),
+    UNIQUE(user_email, rf_id)
+  ) ON COMMIT DROP`);
+}
+
+/** Seed a standing promotion prediction (the decision-time snapshot recordRealizedPromotionOutcome reads). */
+async function seedPrediction(
+  client: PoolClient,
+  opts: { email: string; rfId: number; rfName?: string; promotionProbability: number | null },
+): Promise<void> {
+  await client.query(
+    `INSERT INTO ti_outcome_predictions (user_email, rf_id, rf_name, promotion_probability)
+     VALUES ($1,$2,$3,$4)`,
+    [opts.email.toLowerCase(), opts.rfId, opts.rfName ?? `Role ${opts.rfId}`, opts.promotionProbability],
+  );
 }
 
 async function seedCandidate(
@@ -125,8 +150,8 @@ async function withScenario(fn: (client: PoolClient, shadowPool: any) => Promise
 }
 
 // ════════════════════════════════════════════════════════════════════════════════════════════════
-// PART A — PROMOTION recorder (recordPromotionOutcome). No wired call site exists yet, so the
-// recorder contract itself is what a future promotion mapping will depend on. outcomeValue is the
+// PART A — PROMOTION recorder (recordPromotionOutcome). This is the low-level recorder that the wired
+// call site (recordRealizedPromotionOutcome, exercised in Part D) depends on. outcomeValue is the
 // realized verdict: 1 = promoted, 0 = passed-over; anything else must be REJECTED (skip), never written.
 // ════════════════════════════════════════════════════════════════════════════════════════════════
 
@@ -399,5 +424,128 @@ test('snapshotDecisionProb: re-run does NOT record a second row (decision snapsh
     rows = await readRows(client, 'hiring', 'employer_candidate:cand-once');
     assert.equal(rows.length, 1, 'write-once: re-run records no second row');
     assert.equal(rows[0].id, firstId);
+  });
+});
+
+// ════════════════════════════════════════════════════════════════════════════════════════════════
+// PART D — PROMOTION call site (recordRealizedPromotionOutcome), the REAL wired talent-outcome-
+// prediction path that turns a genuine promotion DECISION (promoted=1 / passed-over=0) into a durable
+// promotion outcome, snapshotting the standing promotion_probability (ti_outcome_predictions) as the
+// decision-time prediction. This is the mapping a regression would silently stall — before this
+// wiring existed, the promotion calibration axis could only ever ABSTAIN. The refId is
+// `ti_promotion:<email>:<rf_id|na>:<decision_ref>`, keyed per promotion CYCLE so recurring cycles
+// stay distinct rows (never collapse into a silent under-count).
+// ════════════════════════════════════════════════════════════════════════════════════════════════
+
+// ── D1. promoted (1) WITH a standing prediction → ONE promotion row snapshotting that prediction ──
+test('recordRealizedPromotionOutcome: promoted → ONE promotion row, snapshots standing prediction', async (t) => {
+  if (!HAS_DB) return t.skip('DATABASE_URL not set');
+  await withScenario(async (client, shadowPool) => {
+    await seedPrediction(client, { email: 'sara@corp.test', rfId: 501, promotionProbability: 0.73 });
+    const res = await recordRealizedPromotionOutcome(shadowPool, {
+      email: 'sara@corp.test', rfId: 501, outcome: 1, decisionRef: 'cycle-2026-h1',
+    });
+    assert.equal(res.recorded, true);
+    assert.equal(res.rf_id, 501);
+    assert.equal(res.predicted_prob, 0.73, 'standing promotion_probability snapshotted as the decision-time prediction');
+    const refId = 'ti_promotion:sara@corp.test:501:cycle-2026-h1';
+    assert.equal(res.ref_id, refId, 'refId keyed per (email, rf_id, decision cycle)');
+    const rows = await readRows(client, 'promotion', refId);
+    assert.equal(rows.length, 1, 'exactly one promotion row recorded');
+    assert.equal(rows[0].outcome_type, 'promotion');
+    assert.equal(Number(rows[0].outcome_value), 1);
+    assert.equal(rows[0].subject_email, 'sara@corp.test');
+    assert.equal(Number(rows[0].predicted_prob_at_decision), 0.73, 'prediction persisted on the outcome row');
+    assert.equal(rows[0].is_demo, false);
+    assert.equal(rows[0].source, 'talent_promotion_decision');
+  });
+});
+
+// ── D2. passed-over (0) → value 0 (a realized negative decision is a real pair, not a skip) ───────
+test('recordRealizedPromotionOutcome: passed-over → promotion row value 0', async (t) => {
+  if (!HAS_DB) return t.skip('DATABASE_URL not set');
+  await withScenario(async (client, shadowPool) => {
+    await seedPrediction(client, { email: 'tom@corp.test', rfId: 502, promotionProbability: 0.41 });
+    const res = await recordRealizedPromotionOutcome(shadowPool, {
+      email: 'tom@corp.test', rfId: 502, outcome: 0, decisionRef: 'cycle-2026-h1',
+    });
+    assert.equal(res.recorded, true);
+    const rows = await readRows(client, 'promotion', 'ti_promotion:tom@corp.test:502:cycle-2026-h1');
+    assert.equal(rows.length, 1);
+    assert.equal(Number(rows[0].outcome_value), 0);
+    assert.equal(Number(rows[0].predicted_prob_at_decision), 0.41);
+  });
+});
+
+// ── D3. no standing prediction → Coverage-only row with NULL prediction (never fabricated) ────────
+test('recordRealizedPromotionOutcome: no prediction row → NULL prediction (Coverage-only, not coerced)', async (t) => {
+  if (!HAS_DB) return t.skip('DATABASE_URL not set');
+  await withScenario(async (client, shadowPool) => {
+    // No seedPrediction: the talent has no standing promotion_probability.
+    const res = await recordRealizedPromotionOutcome(shadowPool, {
+      email: 'una@corp.test', outcome: 1, decisionRef: 'cycle-x',
+    });
+    assert.equal(res.recorded, true, 'outcome still recorded (Coverage) even with no prediction');
+    assert.equal(res.predicted_prob, null);
+    assert.equal(res.rf_id, null);
+    const rows = await readRows(client, 'promotion', 'ti_promotion:una@corp.test:na:cycle-x');
+    assert.equal(rows.length, 1);
+    assert.equal(rows[0].predicted_prob_at_decision, null, 'NULL prediction, never coerced to a fake pair');
+    assert.equal(Number(rows[0].outcome_value), 1);
+  });
+});
+
+// ── D4. idempotency per cycle: same decision_ref UPDATES in place; a new cycle is a distinct row ──
+test('recordRealizedPromotionOutcome: same cycle UPDATES, new decision_ref is a separate row', async (t) => {
+  if (!HAS_DB) return t.skip('DATABASE_URL not set');
+  await withScenario(async (client, shadowPool) => {
+    await seedPrediction(client, { email: 'vic@corp.test', rfId: 504, promotionProbability: 0.6 });
+    await recordRealizedPromotionOutcome(shadowPool, { email: 'vic@corp.test', rfId: 504, outcome: 1, decisionRef: 'cycle-2026-h1' });
+    let rows = await readRows(client, 'promotion', 'ti_promotion:vic@corp.test:504:cycle-2026-h1');
+    assert.equal(rows.length, 1);
+    const firstId = rows[0].id;
+
+    // Re-recording the SAME cycle (e.g. a correction) UPDATES in place, never a duplicate.
+    await recordRealizedPromotionOutcome(shadowPool, { email: 'vic@corp.test', rfId: 504, outcome: 0, decisionRef: 'cycle-2026-h1' });
+    rows = await readRows(client, 'promotion', 'ti_promotion:vic@corp.test:504:cycle-2026-h1');
+    assert.equal(rows.length, 1, 'same cycle → UPDATE in place, no duplicate row');
+    assert.equal(rows[0].id, firstId);
+    assert.equal(Number(rows[0].outcome_value), 0, 'corrected verdict applied');
+
+    // A NEW promotion cycle (distinct decision_ref) is a genuinely separate realized outcome.
+    await recordRealizedPromotionOutcome(shadowPool, { email: 'vic@corp.test', rfId: 504, outcome: 1, decisionRef: 'cycle-2026-h2' });
+    const all = await client.query(
+      `SELECT count(*)::int AS n FROM validation_loop_outcomes WHERE outcome_type='promotion' AND subject_email='vic@corp.test'`,
+    );
+    assert.equal(all.rows[0].n, 2, 'two cycles → two distinct promotion rows (no silent under-count)');
+  });
+});
+
+// ── D5. input guards: bad outcome / missing decision_ref → skip, NO row (never a fabricated 0/1) ──
+test('recordRealizedPromotionOutcome: invalid outcome and missing decision_ref → skip, NO row', async (t) => {
+  if (!HAS_DB) return t.skip('DATABASE_URL not set');
+  await withScenario(async (client, shadowPool) => {
+    const badOutcome = await recordRealizedPromotionOutcome(shadowPool, { email: 'w@corp.test', outcome: 2 as any, decisionRef: 'cycle' });
+    const noRef = await recordRealizedPromotionOutcome(shadowPool, { email: 'w@corp.test', outcome: 1, decisionRef: '' });
+    const noEmail = await recordRealizedPromotionOutcome(shadowPool, { email: '', outcome: 1, decisionRef: 'cycle' });
+    assert.equal(badOutcome.recorded, false);
+    assert.equal(badOutcome.reason, 'outcome_must_be_0_or_1');
+    assert.equal(noRef.recorded, false);
+    assert.equal(noRef.reason, 'decision_ref_required', 'per-cycle marker required on every call path');
+    assert.equal(noEmail.recorded, false);
+    assert.equal(noEmail.reason, 'subject_email_required');
+    assert.equal(await countAll(client), 0, 'no fabricated rows from rejected inputs');
+  });
+});
+
+// ── D6. @example.com subject → is_demo = true (excluded from realized calibration) ────────────────
+test('recordRealizedPromotionOutcome: @example.com subject → is_demo = true', async (t) => {
+  if (!HAS_DB) return t.skip('DATABASE_URL not set');
+  await withScenario(async (client, shadowPool) => {
+    await seedPrediction(client, { email: 'demo@example.com', rfId: 506, promotionProbability: 0.9 });
+    await recordRealizedPromotionOutcome(shadowPool, { email: 'demo@example.com', rfId: 506, outcome: 1, decisionRef: 'cycle-demo' });
+    const rows = await readRows(client, 'promotion', 'ti_promotion:demo@example.com:506:cycle-demo');
+    assert.equal(rows.length, 1);
+    assert.equal(rows[0].is_demo, true, '@example.com → demo row (excluded from realized calibration)');
   });
 });

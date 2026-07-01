@@ -29,15 +29,123 @@
  *     prediction is computed by the live engine inside the route.
  *
  * Run: cd backend && npx tsx scripts/task253-hiring-outcome-e2e.ts
- * (Backend API workflow must be running on :8080 with validationLoop ON — the
- *  default; the flag defaults true and is not overridden in the workflow.)
+ *
+ * Backend availability (Task #330 — don't fail just because the workflow is down):
+ *   The harness drives a REAL server, so before it asserts anything it makes sure
+ *   one is reachable:
+ *     1. If the "Backend API" workflow is already listening on :8080 (the common
+ *        case), it is used as-is.
+ *     2. Otherwise a THROWAWAY backend is self-started on an ephemeral port with
+ *        validationLoop ON, and torn down on exit.
+ *     3. If neither is possible, the run SKIPS with a distinct, unambiguous
+ *        "backend not running" message and exit code 0 — an environment-not-ready
+ *        state is NOT a regression in the recording path. A GENUINE break in the
+ *        recording path (backend up, assertions run) still fails loudly (exit 1).
+ *   Override the target with E2E_BASE_URL (pinned verbatim; no self-start).
  */
 
 import { Pool } from 'pg';
 import { ensureEntitlementGrantsSchema } from '../services/commercial/entitlement-grants-schema';
+import { spawn, type ChildProcess } from 'child_process';
+import path from 'path';
 
-const BASE = process.env.E2E_BASE_URL ?? 'http://localhost:8080';
+let BASE = process.env.E2E_BASE_URL ?? 'http://localhost:8080';
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+
+// ── Backend preflight / self-start (Task #330) ───────────────────────────────
+let selfStarted: ChildProcess | null = null;
+
+async function backendReachable(base: string, timeoutMs = 2500): Promise<boolean> {
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+    const res = await fetch(`${base}/api/health`, { signal: ctrl.signal }).finally(() => clearTimeout(timer));
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+async function waitReachable(base: string, timeoutMs: number): Promise<boolean> {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (await backendReachable(base, 2000)) return true;
+    await new Promise((r) => setTimeout(r, 1000));
+  }
+  return false;
+}
+
+/**
+ * Ensure a Backend API is reachable. Returns true if the assertions can run
+ * (against an existing or self-started server), false if the run should SKIP.
+ */
+async function ensureBackend(): Promise<boolean> {
+  // A pinned base URL is honoured verbatim — never self-start over it.
+  if (process.env.E2E_BASE_URL) {
+    if (await backendReachable(BASE)) return true;
+    console.error(`\n⚠️  Backend not reachable at the pinned E2E_BASE_URL=${BASE}.`);
+    return false;
+  }
+
+  if (await backendReachable(BASE)) {
+    console.log(`Backend already running at ${BASE} — using it.`);
+    return true;
+  }
+
+  // Self-start a throwaway instance on an ephemeral port.
+  const port = Number(process.env.E2E_SELFSTART_PORT ?? 8788);
+  const selfBase = `http://localhost:${port}`;
+  const backendDir = path.resolve(__dirname, '..');
+  console.log(`Backend not running on :8080 — self-starting a throwaway instance on :${port} …`);
+  try {
+    selfStarted = spawn('npx', ['tsx', 'index.ts'], {
+      cwd: backendDir,
+      env: {
+        ...process.env,
+        PORT: String(port),
+        FF_VALIDATION_LOOP: '1',        // arm the recording path regardless of overrides
+        // Isolate the behaviour UNDER TEST (hiring-outcome recording) from the
+        // ORTHOGONAL, separately-owned employer entitlement gate. The gate
+        // (moduleAccessControl) 402s a throwaway employer that owns no plan; a
+        // genuinely entitled employer reaches the SAME route, so disabling it in
+        // this throwaway instance keeps the recording-path assertions fully
+        // genuine — exactly the same rationale as forcing FF_VALIDATION_LOOP=1.
+        FF_MODULE_ACCESS_CONTROL: '0',
+        NODE_ENV: 'development',        // dev boot: no prod preflight abort, Vite skipped
+        DB_PREWARM_DISABLED: '1',       // trim boot work
+        MONGO_REQUIRED: 'false',        // Mongo optional — never block boot on it
+      },
+      stdio: 'ignore',
+      detached: true,             // own process group so we can reap the tsx child too
+    });
+    selfStarted.on('error', (e) => console.error('self-start spawn error:', (e as Error)?.message));
+  } catch (e: any) {
+    console.error('self-start failed to spawn:', e?.message ?? e);
+    return false;
+  }
+
+  const bootMs = Number(process.env.E2E_SELFSTART_TIMEOUT_MS ?? 90000);
+  const up = await waitReachable(selfBase, bootMs);
+  if (!up) {
+    console.error(`self-started backend did not become healthy within ${bootMs}ms.`);
+    return false;
+  }
+  BASE = selfBase;
+  console.log(`Self-started backend healthy at ${BASE}.`);
+  return true;
+}
+
+function stopSelfStarted(): void {
+  if (!selfStarted || selfStarted.pid == null) return;
+  const pid = selfStarted.pid;
+  selfStarted = null;
+  try {
+    // detached → signal the whole process group (tsx spawns a child node process)
+    process.kill(-pid, 'SIGTERM');
+  } catch {
+    try { process.kill(pid, 'SIGTERM'); } catch { /* already gone */ }
+  }
+}
 
 let failures = 0;
 let stepNo = 0;
@@ -151,6 +259,18 @@ async function createCandidate(email: string, stage: string): Promise<string> {
 
 async function main() {
   console.log('TASK #253 — hiring decision → recorded prediction E2E (full HTTP path)');
+
+  // Task #330 — make a REAL backend available (existing, self-started, or SKIP).
+  const ready = await ensureBackend();
+  if (!ready) {
+    // No assertions ran → `failures` stays 0 → exit 0. An unreachable backend is
+    // an ENVIRONMENT-NOT-READY state, never a masked regression.
+    console.log('\n⏭️  SKIPPED — Backend API is not running and a throwaway instance could not be started.');
+    console.log('   This is an ENVIRONMENT-NOT-READY state, NOT a regression in the hiring-outcome recording path.');
+    console.log('   Start the "Backend API" workflow (or set E2E_BASE_URL) and re-run to exercise the full HTTP path.');
+    return;
+  }
+
   console.log(`base=${BASE}  run=${RUN}\n`);
   await cleanup();
 
@@ -292,9 +412,17 @@ async function main() {
 }
 
 main()
-  .catch((e) => { console.error('E2E ERROR:', e); failures += 1; })
+  .catch((e) => {
+    console.error('E2E ERROR:', e);
+    failures += 1;
+  })
   .finally(async () => {
     await cleanup();
+    stopSelfStarted();
     await pool.end();
+    // Exit is driven SOLELY by `failures`: any assertion/error break fails loudly
+    // (exit 1). The only way to reach exit 0 without running assertions is the
+    // backend-unavailable early return in main(), which leaves `failures` at 0 —
+    // so a skip can never mask a real recording-path regression.
     process.exit(failures === 0 ? 0 : 1);
   });

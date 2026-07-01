@@ -97,6 +97,25 @@ export function assertEnvPreflight(env: NodeJS.ProcessEnv = process.env): void {
       ok: !!env.OPENAI_API_KEY,
       note: "AI features are fail-soft. Missing => AI paths stay dormant (acceptable).",
     },
+    {
+      // SEC-H1 — Environment & data isolation attestation. Cannot be verified by
+      // code alone (owner/ops item); this converts it into an explicit, auditable
+      // boot signal. Owner sets PROD_DB_ISOLATION_ATTESTED to a non-placeholder
+      // value AFTER confirming prod DATABASE_URL ≠ dev/workspace DB (see
+      // docs/compliance/PROD_DB_ISOLATION_CHECKLIST.md). Warn (not fatal): a
+      // missing attestation must not take end-user traffic offline.
+      name: "PROD_DB_ISOLATION_ATTESTED (SEC-H1)",
+      severity: "warn",
+      ok: (() => {
+        const v = (env.PROD_DB_ISOLATION_ATTESTED ?? "").trim().toLowerCase();
+        const placeholders = new Set(["", "no", "false", "0", "todo", "pending", "changeme"]);
+        return v.length > 0 && !placeholders.has(v);
+      })(),
+      note:
+        "Owner attestation that the production DATABASE_URL is a dedicated Secret-Manager " +
+        "DB distinct from the dev/workspace DB, with no dev writes reaching prod (GDPR Art. 32). " +
+        "Set PROD_DB_ISOLATION_ATTESTED after completing docs/compliance/PROD_DB_ISOLATION_CHECKLIST.md.",
+    },
   ];
 
   const fatals = checks.filter((c) => c.severity === "fatal" && !c.ok);

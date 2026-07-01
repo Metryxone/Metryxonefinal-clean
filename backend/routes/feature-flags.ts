@@ -10,6 +10,7 @@ import type { Express, Request, Response } from 'express';
 import type { Pool } from 'pg';
 import { getAllFlags, getFlagOverrides, refreshFlagCache, isEnabled } from '../services/feature-flags';
 import { getActiveSessionCount } from '../services/ws-broadcast';
+import { recordFlagChange } from '../services/governance/flag-change-log';
 
 interface FlagRow {
   flag_key:    string;
@@ -91,9 +92,9 @@ export function registerFeatureFlagRoutes(
       }
 
       try {
-        // Verify flag exists
+        // Verify flag exists (capture prior values for the governance audit log)
         const { rows: existing } = await pool.query<FlagRow>(
-          'SELECT flag_key FROM feature_flags WHERE flag_key = $1',
+          'SELECT flag_key, enabled, rollout_pct FROM feature_flags WHERE flag_key = $1',
           [flagKey]
         );
         if (existing.length === 0) {
@@ -144,6 +145,43 @@ export function registerFeatureFlagRoutes(
 
         // Refresh in-memory cache immediately
         await refreshFlagCache();
+
+        // ── GOV-M1: record the change into the governance flag-change audit log ──
+        // recordFlagChange never throws; auditing must never block the operation.
+        try {
+          const actorId    = (req.user as any)?.id != null ? String((req.user as any).id) : null;
+          const actorEmail = (req.user as any)?.email ?? null;
+          if (tenant_id !== undefined && typeof tenant_id === 'string' && tenant_id.trim()) {
+            await recordFlagChange(pool, {
+              flagKey,
+              oldValue: null,
+              newValue: tenantEnabledBool === null ? 'override_removed' : tenantEnabledBool,
+              changedBy: actorId,
+              changedByEmail: actorEmail,
+              note: `tenant override (${tenant_id.trim()})`,
+            });
+          }
+          if (enabledBool !== null && enabledBool !== existing[0].enabled) {
+            await recordFlagChange(pool, {
+              flagKey,
+              oldValue: existing[0].enabled,
+              newValue: enabledBool,
+              changedBy: actorId,
+              changedByEmail: actorEmail,
+              note: 'global enabled toggle',
+            });
+          }
+          if (rollout_pct !== undefined) {
+            await recordFlagChange(pool, {
+              flagKey,
+              oldValue: `rollout_pct=${existing[0].rollout_pct}`,
+              newValue: `rollout_pct=${Math.max(0, Math.min(100, parseInt(String(rollout_pct), 10)))}`,
+              changedBy: actorId,
+              changedByEmail: actorEmail,
+              note: 'rollout percentage',
+            });
+          }
+        } catch { /* audit is best-effort — never block the flag change */ }
 
         // Return the freshly-updated flag
         const { rows: updated } = await pool.query<FlagRow>(

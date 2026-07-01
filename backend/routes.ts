@@ -312,6 +312,10 @@ import { registerShortAssessmentRoutes } from "./routes/short-assessments";
 import { registerCompetencyCohortRoutes } from "./routes/competency-cohorts";
 import { registerCompetencyIntelligenceRoutes } from "./routes/competency-intelligence-engine";
 import { registerFeatureFlagRoutes } from "./routes/feature-flags";
+import { registerDataRightsRoutes } from "./routes/data-rights";
+import { startRetentionScheduler } from "./services/retention-scheduler";
+import { registerAiTrustRoutes } from "./routes/ai-trust";
+import { startFairnessCadenceScheduler } from "./services/fairness-cadence-scheduler";
 import { initFeatureFlags } from "./services/feature-flags";
 import { registerHypothesisEngineRoutes } from "./routes/hypothesis-engine";
 import { registerConfidenceEngineRoutes } from "./routes/confidence-engine";
@@ -416,11 +420,28 @@ export async function registerRoutes(
       ? (() => { throw new Error('SESSION_SECRET is required in production'); })()
       : randomBytes(48).toString('hex'));
 
+  // Session-lifetime policy (SEC-M1) — env-configurable. Defaults preserve prior
+  // behaviour exactly (7-day absolute lifetime, non-rolling, no idle timeout), so
+  // an unconfigured deployment is byte-identical. Operators can tighten via:
+  //   SESSION_MAX_AGE_DAYS   absolute cookie lifetime in days (default 7)
+  //   SESSION_ROLLING=1      reset the cookie maxAge on each response (sliding window)
+  //   SESSION_IDLE_MINUTES   destroy the session after N minutes of inactivity (default off)
+  const SESSION_MAX_AGE_DAYS = (() => {
+    const n = parseInt(String(process.env.SESSION_MAX_AGE_DAYS ?? ''), 10);
+    return Number.isFinite(n) && n > 0 ? n : 7;
+  })();
+  const SESSION_ROLLING = process.env.SESSION_ROLLING === '1';
+  const SESSION_IDLE_MINUTES = (() => {
+    const n = parseInt(String(process.env.SESSION_IDLE_MINUTES ?? ''), 10);
+    return Number.isFinite(n) && n > 0 ? n : 0;
+  })();
+
   app.use(
     session({
       name: 'mx.sid',
       secret: SESSION_SECRET,
       resave: false,
+      rolling: SESSION_ROLLING,
       saveUninitialized: false,
       store: sessionStore,
       proxy: true,
@@ -428,13 +449,33 @@ export async function registerRoutes(
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production' ? true : 'auto',
         sameSite: 'lax',
-        maxAge: 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * SESSION_MAX_AGE_DAYS,
       },
     })
   );
 
   app.use(passport.initialize());
   app.use(passport.session());
+
+  // Idle-timeout enforcement (SEC-M1) — active ONLY when SESSION_IDLE_MINUTES > 0
+  // (default 0 = disabled = byte-identical). Destroys authenticated sessions that
+  // have been inactive longer than the configured window.
+  if (SESSION_IDLE_MINUTES > 0) {
+    const idleMs = SESSION_IDLE_MINUTES * 60 * 1000;
+    app.use((req: any, res, next) => {
+      if (!req.session) return next();
+      const now = Date.now();
+      const last = req.session._lastSeen as number | undefined;
+      if (typeof req.isAuthenticated === 'function' && req.isAuthenticated() && last && now - last > idleMs) {
+        return req.session.destroy(() => {
+          res.clearCookie('mx.sid');
+          return res.status(401).json({ error: 'session_idle_timeout' });
+        });
+      }
+      req.session._lastSeen = now;
+      return next();
+    });
+  }
 
   // ── Server-side timing for the auth/session-gated dimensions ──────────────
   // The performance benchmarks could not measure assessment-completion and
@@ -14034,6 +14075,10 @@ Rules:
   });
   registerCompetencyCohortRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerFeatureFlagRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerDataRightsRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  startRetentionScheduler(concernsPool);
+  registerAiTrustRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  startFairnessCadenceScheduler(concernsPool);
   registerHypothesisEngineRoutes(app, concernsPool);
   registerConfidenceEngineRoutes(app, concernsPool);
   registerContradictionEngineRoutes(app, concernsPool, requireAuth, requireSuperAdmin);

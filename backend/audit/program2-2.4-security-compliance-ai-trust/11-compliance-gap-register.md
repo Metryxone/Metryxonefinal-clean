@@ -2,6 +2,14 @@
 
 Severity axis independent from Security and AI. No composited scores.
 
+> ## Remediation status (post-certification implementation pass)
+> New features are flag-gated default-OFF, byte-identical incl. schema; enforcement is honest (no fabrication; Coverage⟂Adoption⟂Confidence never composited).
+> - **CMP-M2 — CLOSED (code), enforcement flag-gated.** `retentionEnforcement` flag + `backend/services/retention-scheduler.ts`: a 6-hourly job enforcing **safe categories only** — expire stale consents (reversible), purge expired/used MFA codes >24h (transient tokens), stamp `data_retention_policies.last_executed`, and **DRY-RUN** count `user_data` (NO deletion). It **never auto-deletes accounts**: the canonical `users` table has no last-activity signal, so an inactivity purge cannot be honest. Byte-identical OFF (0 tables). Account-level purge is deferred to the CMP-M3 admin-reviewed erasure flow.
+> - **CMP-M3 — CLOSED (code).** `dataSubjectRights` flag + `backend/routes/data-rights.ts`: authenticated self-service **export** (portability, password never selected) and **erasure request** intake (admin-reviewed, **non-destructive** — filing never deletes). Admin resolve endpoints included. Byte-identical OFF (0 tables).
+> - **CMP-F1 — DRAFTS CREATED (DPO review required).** `docs/compliance/RoPA.md`, `docs/compliance/DPIA.md`, `docs/compliance/cross-border-transfer-controls.md` — engineering-authored starting drafts, clearly marked for DPO/legal review and adoption.
+> - CMP-L1/L2/L3 and CMP-F2 unchanged (Low/Future; CMP-F2 DPA formalisation is owner/legal action).
+> - **Adoption axis (not a gap):** real export/erasure volume remains honest-low, reported separately.
+
 ## Launch-Critical — 0
 None.
 

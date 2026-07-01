@@ -642,6 +642,24 @@ export const FEATURE_FLAGS = {
    *  before any auth/DB touch → byte-identical legacy (zero new tables — it owns none). Super-admin
    *  gated. Human approval mandatory. Env: `FF_PRODUCT_TRACEABILITY_CERTIFICATION`. */
   productTraceabilityCertification: false,
+  /** CMP-M2 — Data-retention ENFORCEMENT scheduler. Default OFF; byte-identical incl. schema
+   *  (retention_execution_log created only when ON). Enforces SAFE categories only: expire stale
+   *  consents (reversible status change), purge expired/used MFA codes (transient tokens), stamp
+   *  policy last_executed, and DRY-RUN count user_data (NO deletion). NEVER auto-deletes user
+   *  accounts — the `users` table has no last-activity signal. Env FF_RETENTION_ENFORCEMENT. */
+  retentionEnforcement: false,
+  /** CMP-M3 — Data-subject rights (DSAR): authenticated self-service data export (portability) +
+   *  erasure REQUEST intake (admin-reviewed, non-destructive — filing never deletes data). Default
+   *  OFF; byte-identical incl. schema (erasure_requests created only when ON). Data routes 503
+   *  before any work/auth/DDL when OFF. Env FF_DATA_SUBJECT_RIGHTS. */
+  dataSubjectRights: false,
+  /** AI-M2 — Fairness-monitoring CADENCE. Default OFF; byte-identical incl. schema
+   *  (fairness_report_snapshots created only when ON). Periodically snapshots the EXISTING
+   *  read-only fairness summary (services/fairness-monitoring-engine.summary — a pure SELECT,
+   *  no scoring change) into an append-only log, surfaced read-only in the governance console.
+   *  Honest adoption axis: with no real cohort volume the snapshot is empty (null≠0), never
+   *  fabricated. Env FF_FAIRNESS_MONITORING_CADENCE. */
+  fairnessMonitoringCadence: false,
   /** WC-3 L1 — Stage Intelligence (Phase A). When ON, the post-completion runtime
    *  COMPOSES a per-session behavioural stage (canonical 5-stage progression:
    *  Awareness → Curiosity → Clarity → Growth → Mastery) from the already-computed
@@ -2917,6 +2935,15 @@ export function isEnterpriseIntelligenceCertificationEnabled(): boolean {
 }
 export function isProductTraceabilityCertificationEnabled(): boolean {
   return isFlagEnabled('productTraceabilityCertification');
+}
+export function isRetentionEnforcementEnabled(): boolean {
+  return isFlagEnabled('retentionEnforcement');
+}
+export function isDataSubjectRightsEnabled(): boolean {
+  return isFlagEnabled('dataSubjectRights');
+}
+export function isFairnessMonitoringCadenceEnabled(): boolean {
+  return isFlagEnabled('fairnessMonitoringCadence');
 }
 
 export function listFlags(): Record<FeatureFlagKey, boolean> {

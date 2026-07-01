@@ -19,6 +19,7 @@
  *     with a clear message instead of timing out.
  */
 import OpenAI from 'openai';
+import { guardUserInput } from './ai-input-guard';
 
 let cachedHealth: { ok: boolean; checkedAt: number; reason?: string } | null = null;
 const HEALTH_TTL_MS = 60_000;
@@ -97,11 +98,14 @@ export async function getOpenAIClient(): Promise<{ client: OpenAI; model: string
  */
 export async function chatJSON(opts: { system: string; user: string; model?: string; temperature?: number; max_tokens?: number; }): Promise<any> {
   const { client, model } = await getOpenAIClient();
+  // AI-M1: neutralize prompt-injection vectors in user-provided free text before
+  // it enters the prompt. Default-ON; kill-switch AI_INPUT_GUARD_DISABLED=1.
+  const safeUser = guardUserInput(opts.user);
   const completion = await client.chat.completions.create({
     model: opts.model || model,
     messages: [
       { role: 'system', content: opts.system },
-      { role: 'user', content: opts.user },
+      { role: 'user', content: safeUser },
     ],
     temperature: opts.temperature ?? 0.7,
     max_tokens: opts.max_tokens ?? 700,

@@ -2,6 +2,12 @@
 
 Severity axis independent from Security and Compliance. No composited scores.
 
+> ## Remediation status (post-certification implementation pass)
+> - **AI-M1 — CLOSED (code), default-ON.** `backend/services/ai-input-guard.ts`: a pure input-side injection guard (delimiter/marker stripping + instruction-override detection) wired into `chatJSON` before user text reaches prompts. Default-ON with env kill-switch `AI_INPUT_GUARD_DISABLED=1` (mirrors the output sanitizer). Unit tests pass.
+> - **AI-M2 — CLOSED (code), cadence flag-gated.** `fairnessMonitoringCadence` flag + `backend/services/fairness-cadence-scheduler.ts` + `backend/routes/ai-trust.ts`: a daily snapshot of the EXISTING read-only fairness summary (a pure SELECT — **no scoring change**) into an append-only log, surfaced read-only for the governance console (`/api/ai-trust/fairness/reports`, super-admin). Byte-identical OFF (0 tables). **Operational adoption** (published metrics on real cohort volume) is honest-low until fairness suites run on real cohorts — reported as an adoption axis, never fabricated.
+> - AI-L1/L2 and AI-F1 unchanged (Low/Future).
+> - **Measurement axes (not gaps):** calibration abstains until k_min=30; live inference unmeasured where AI keys unset (503 fail-fast).
+
 ## Launch-Critical — 0
 None. Recommendations are explainable, evidence-linked, confidence-honest, guardrailed, and never auto-executed.
 

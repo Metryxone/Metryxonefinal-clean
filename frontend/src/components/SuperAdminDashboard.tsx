@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { Screen } from '../App';
 
-import { Menu, RefreshCw, Search, Settings, Target, Brain, FileCheck, Database, Package, Calculator, Users, BookOpen, Network, Layers, Activity, Building2, Briefcase, Users2, UserCircle2, Map, BarChart2, BarChart3, GitBranch, Sparkles, PieChart, TrendingUp, AlertTriangle, MessageCircle, Bot, FileDown, CreditCard, Shield, FlaskConical, ClipboardList, Cpu, Award, Gauge, Zap, Sliders, Shuffle, Timer, LineChart, ClipboardCheck, Boxes, Grid3x3, Globe, ShieldCheck, Rocket } from 'lucide-react';
+import { Menu, RefreshCw, Search, Settings, Target, Brain, FileCheck, Database, Package, Calculator, Users, BookOpen, Network, Layers, Activity, Building2, Briefcase, Users2, UserCircle2, Map, BarChart2, BarChart3, GitBranch, Sparkles, PieChart, TrendingUp, AlertTriangle, MessageCircle, Bot, FileDown, CreditCard, Shield, FlaskConical, ClipboardList, Cpu, Award, Gauge, Zap, Sliders, Shuffle, Timer, LineChart, ClipboardCheck, Boxes, Grid3x3, Globe, ShieldCheck, Rocket, Microscope } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import SuperAdminLogin from './SuperAdminLogin';
@@ -178,6 +178,7 @@ const QuestionManagementPanel = lazy(() => import('./superadmin/QuestionManageme
 const AssessmentBuilderPanel = lazy(() => import('./superadmin/AssessmentBuilderPanel'));
 const AssessmentDeliveryPanel = lazy(() => import('./superadmin/AssessmentDeliveryPanel'));
 const AssessmentScoringPanel = lazy(() => import('./superadmin/AssessmentScoringPanel'));
+const AssessmentSciencePanel = lazy(() => import('./superadmin/AssessmentSciencePanel'));
 const DepartmentsPanel = lazy(() => import('./superadmin/DepartmentsPanel'));
 const RolesPanel = lazy(() => import('./superadmin/RolesPanel'));
 const RoleFamiliesPanel = lazy(() => import('./superadmin/RoleFamiliesPanel'));
@@ -530,6 +531,17 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
     queryKey: ['/api/assessment-scoring/enabled', 'enabled'],
     queryFn: async () => {
       const res = await fetch('/api/assessment-scoring/enabled', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // ── Assessment Science & Psychometrics (CAPADEX 3.0 · 3.6) flag probe (file-registry flag assessmentScience).
+  //    Probe /api/assessment-science/enabled (503-before-auth when OFF) → tab omitted (byte-identical UI). ──
+  const { data: assessmentScienceEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/assessment-science/enabled', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/assessment-science/enabled', { credentials: 'include' });
       return res.ok;
     },
     enabled: isAuthenticated,
@@ -1164,6 +1176,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       ...(assessmentBuilderEnabled ? [{ id: 'assessment-builder', label: 'Assessment Builder', icon: Boxes, node: <AssessmentBuilderPanel /> }] : []),
                       ...(assessmentDeliveryEnabled ? [{ id: 'assessment-delivery', label: 'Assessment Delivery', icon: Rocket, node: <AssessmentDeliveryPanel /> }] : []),
                       ...(assessmentScoringEnabled ? [{ id: 'assessment-scoring', label: 'Assessment Scoring', icon: Calculator, node: <AssessmentScoringPanel /> }] : []),
+                      ...(assessmentScienceEnabled ? [{ id: 'assessment-science', label: 'Assessment Science', icon: Microscope, node: <AssessmentSciencePanel /> }] : []),
                       ...(mx203KnowledgeEnabled ? [{ id: 'mx203-knowledge-center', label: 'Knowledge Center', icon: BookOpen, node: <Mx203KnowledgeCenterPanel /> }] : []),
                       { id: 'ont-career-tracks',        label: 'Career Tracks',            icon: Map,           node: <CareerTracksPanel /> },
                       { id: 'ont-competency-levels',    label: 'Competency Levels',        icon: BarChart2,     node: <CompetencyLevelsPanel /> },

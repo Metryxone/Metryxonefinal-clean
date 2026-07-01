@@ -1,0 +1,1484 @@
+{
+  "generated_at": "2026-07-01T13:21:02.503Z",
+  "read_only": true,
+  "platform_frozen": true,
+  "k_min": 30,
+  "scope": "INSTRUMENT / QUESTION QUALITY ONLY — item analysis/reliability/validity/quality governance/blueprint validation/frontend/ux/APIs that measure how GOOD the assessment/question is; it NEVER scores or interprets a candidate and does NOT do norms/standardization/benchmarking/AI-interpretation/reports (= Phase 3.7+)",
+  "axes": [
+    {
+      "key": "item_analysis",
+      "label": "Item Analysis",
+      "question": "Can item difficulty / discrimination / distractor / facility / exposure / information / quality / bias / retirement be measured per question?"
+    },
+    {
+      "key": "reliability",
+      "label": "Reliability",
+      "question": "Can internal-consistency / split-half / test-retest / inter-rater / parallel-forms reliability + SEM + CI be computed for an assessment?"
+    },
+    {
+      "key": "validity",
+      "label": "Validity",
+      "question": "Can face / content / construct / criterion / concurrent / predictive / convergent / discriminant validity be evidenced?"
+    },
+    {
+      "key": "quality_governance",
+      "label": "Quality & Governance",
+      "question": "Are question-quality checks + scientific/SME review, pilot testing, approval workflow, versioning & audit trail applied?"
+    },
+    {
+      "key": "blueprint_validation",
+      "label": "Blueprint Validation",
+      "question": "Is competency/behaviour/domain/skill/objective coverage + Bloom / difficulty / time distribution validated against a blueprint?"
+    },
+    {
+      "key": "frontend",
+      "label": "Science Frontend",
+      "question": "Is there an item-analysis / reliability / validity / quality-governance / blueprint console UI?"
+    },
+    {
+      "key": "ux",
+      "label": "Science UX",
+      "question": "Is the psychometrics workbench interactive (item drill-down, reliability preview, quality flags, ABSTAIN states) with honest empty/loading/error states?"
+    },
+    {
+      "key": "apis",
+      "label": "Science APIs",
+      "question": "Do item-analysis / reliability / validity / quality / blueprint / repository APIs exist?"
+    }
+  ],
+  "dimension_count": 8,
+  "registry": {
+    "dimensions": [
+      {
+        "key": "item_analysis",
+        "label": "Item Analysis",
+        "status": "SUPPORTED",
+        "statusNote": "ONE canonical item-analysis layer (asci_item_stats) computing difficulty/discrimination/distractor/facility/quality/retirement per question via the pure computeItemAnalysis mechanism (reusing pearsonR/variance from psychometric-intelligence-engine + irt3PL/adverseImpact for the IRT/DIF primitives). Item statistics ABSTAIN below k_min real responses (currently honest-low volume). Full IRT calibration, exposure control & group-level DIF stay PARTIAL — Phase-3.7 boundaries, not gaps.",
+        "evidence": {
+          "services": [
+            "services/psychometric-intelligence-engine.ts",
+            "services/sci-psychometric-engine.ts",
+            "services/assessment-science-engine.ts",
+            "services/assessment-science-mechanisms.ts"
+          ],
+          "routes": [
+            "routes/assessment-science.ts"
+          ],
+          "frontend": [
+            "components/superadmin/AssessmentSciencePanel.tsx",
+            "components/science/PsychometricsWorkbench.tsx"
+          ],
+          "tables": [
+            "adaptive_question_bank",
+            "sdi_items",
+            "capadex_responses",
+            "asci_item_stats"
+          ]
+        }
+      },
+      {
+        "key": "reliability",
+        "label": "Reliability",
+        "status": "SUPPORTED",
+        "statusNote": "ONE canonical reliability layer (asci_reliability) composing the EXISTING reliability engines — Cronbach α (sci-psychometric-engine.cronbachAlpha), test-retest, Cohen κ inter-rater, split-half, SEM & score CI via the pure computeReliability mechanism. Parallel-forms stays PARTIAL until a second equated form exists. Reliability ABSTAINS below k_min respondents. No duplicate reliability engine.",
+        "evidence": {
+          "services": [
+            "services/sci-psychometric-engine.ts",
+            "services/reliability-engine.ts",
+            "services/assessment-science-mechanisms.ts",
+            "services/assessment-science-engine.ts"
+          ],
+          "routes": [
+            "routes/assessment-science.ts"
+          ],
+          "frontend": [
+            "components/science/PsychometricsWorkbench.tsx"
+          ],
+          "tables": [
+            "capadex_sessions",
+            "capadex_responses",
+            "asci_reliability"
+          ]
+        }
+      },
+      {
+        "key": "validity",
+        "label": "Validity",
+        "status": "SUPPORTED",
+        "statusNote": "ONE canonical validity layer (asci_validity) evidencing content (blueprint coverage), construct (constructValidity/factorLoading), criterion/concurrent (correlation with an external criterion) and convergent/discriminant validity via the pure computeValidity mechanism. Face & predictive validity stay PARTIAL (need human ratings / longitudinal outcomes). No duplicate validity engine.",
+        "evidence": {
+          "services": [
+            "services/sci-psychometric-engine.ts",
+            "services/psychometric-intelligence-engine.ts",
+            "services/assessment-blueprint-engine.ts",
+            "services/assessment-science-mechanisms.ts"
+          ],
+          "routes": [
+            "routes/assessment-science.ts"
+          ],
+          "frontend": [
+            "components/science/PsychometricsWorkbench.tsx"
+          ],
+          "tables": [
+            "asci_validity",
+            "asci_blueprints"
+          ]
+        }
+      },
+      {
+        "key": "quality_governance",
+        "label": "Quality & Governance",
+        "status": "SUPPORTED",
+        "statusNote": "ONE canonical question-quality + governance layer (asci_quality_flags / asci_governance) applying 6 pure question-quality checks (duplicate/ambiguity/bias/readability/option-balance/clarity) + scientific/SME/validation review, approval workflow, versioning & audit trail (composing quality-validator.ts). Advisory only — flags for human review, never auto-edits or auto-retires. Pilot testing stays PARTIAL until real pilot cohorts run.",
+        "evidence": {
+          "services": [
+            "services/quality-validator.ts",
+            "services/assessment-science-mechanisms.ts",
+            "services/assessment-science-engine.ts"
+          ],
+          "routes": [
+            "routes/assessment-science.ts"
+          ],
+          "frontend": [
+            "components/science/PsychometricsWorkbench.tsx"
+          ],
+          "tables": [
+            "asci_quality_flags",
+            "asci_governance"
+          ]
+        }
+      },
+      {
+        "key": "blueprint_validation",
+        "label": "Blueprint Validation",
+        "status": "SUPPORTED",
+        "statusNote": "ONE canonical blueprint-validation layer (asci_blueprints) validating competency/behaviour/domain/skill coverage + Bloom / difficulty / time distribution against a blueprint (composing assessment-blueprint-engine.generateBlueprint). Learning-objective coverage stays PARTIAL until objectives are first-class. No duplicate blueprint engine.",
+        "evidence": {
+          "services": [
+            "services/assessment-blueprint-engine.ts",
+            "services/assessment-science-mechanisms.ts"
+          ],
+          "routes": [
+            "routes/assessment-science.ts"
+          ],
+          "frontend": [
+            "components/science/PsychometricsWorkbench.tsx"
+          ],
+          "tables": [
+            "assessment_blueprints",
+            "asci_blueprints"
+          ]
+        }
+      },
+      {
+        "key": "apis",
+        "label": "Science APIs",
+        "status": "SUPPORTED",
+        "statusNote": "item-analysis / reliability / validity / quality / blueprint / repository endpoints under /api/admin/assessment-science, composing the existing psychometric services. Read certifications are GET (to_regclass/fs probes); overlay writes are flag-gated POSTs.",
+        "evidence": {
+          "services": [
+            "services/assessment-science-engine.ts",
+            "services/assessment-science-mechanisms.ts"
+          ],
+          "routes": [
+            "routes/assessment-science.ts"
+          ],
+          "frontend": [],
+          "tables": []
+        }
+      },
+      {
+        "key": "frontend",
+        "label": "Science Frontend",
+        "status": "SUPPORTED",
+        "statusNote": "Super-admin certification console + interactive psychometrics workbench (item-analysis drill-down / reliability preview / validity evidence / quality-flag review / blueprint coverage) nested in the competency-framework admin shell.",
+        "evidence": {
+          "services": [],
+          "routes": [],
+          "frontend": [
+            "components/superadmin/AssessmentSciencePanel.tsx",
+            "components/science/PsychometricsWorkbench.tsx"
+          ],
+          "tables": []
+        }
+      },
+      {
+        "key": "ux",
+        "label": "Science UX",
+        "status": "SUPPORTED",
+        "statusNote": "The psychometrics workbench is interactive: item drill-down, reliability/validity preview, quality-flag triage, blueprint coverage bars, with HONEST empty / loading / error / ABSTAIN states (item stats show \"insufficient responses (< k_min)\" rather than fabricating a value). null≠0 is surfaced in the UI (— for unknown, 0 for measured-empty).",
+        "evidence": {
+          "services": [],
+          "routes": [],
+          "frontend": [
+            "components/science/PsychometricsWorkbench.tsx",
+            "components/superadmin/AssessmentSciencePanel.tsx"
+          ],
+          "tables": []
+        }
+      }
+    ],
+    "item_analysis_metrics": [
+      {
+        "key": "difficulty",
+        "label": "Difficulty (p-value)",
+        "status": "SUPPORTED",
+        "note": "Proportion answering an item in the keyed direction (mean item score / max) — pure computeItemAnalysis; ABSTAIN < k_min responses."
+      },
+      {
+        "key": "discrimination",
+        "label": "Discrimination (point-biserial)",
+        "status": "SUPPORTED",
+        "note": "Correlation of item score with total score (pearsonR) — how well the item separates high/low performers; ABSTAIN < k_min."
+      },
+      {
+        "key": "distractor_analysis",
+        "label": "Distractor analysis",
+        "status": "SUPPORTED",
+        "note": "Per-option selection frequency + non-functioning-distractor flag for MCQ items; ABSTAIN < k_min."
+      },
+      {
+        "key": "item_facility",
+        "label": "Item facility",
+        "status": "SUPPORTED",
+        "note": "Ease index (1 − difficulty) surfaced alongside p-value; ABSTAIN < k_min."
+      },
+      {
+        "key": "item_exposure",
+        "label": "Item exposure",
+        "status": "PARTIAL",
+        "note": "Times an item has been served (response volume). Overexposure control requires an adaptive delivery pool — a Phase-3.7 boundary."
+      },
+      {
+        "key": "item_information",
+        "label": "Item information (IRT)",
+        "status": "PARTIAL",
+        "note": "3PL item-information function (irt3PL) available; full IRT calibration needs a large calibrated pool (k_min ≫ 30) — honest PARTIAL until adoption volume exists."
+      },
+      {
+        "key": "item_quality_score",
+        "label": "Item quality score",
+        "status": "SUPPORTED",
+        "note": "Composite of difficulty band + discrimination band + distractor health + quality flags — read-only classification, never candidate-facing."
+      },
+      {
+        "key": "item_bias",
+        "label": "Item bias (DIF)",
+        "status": "PARTIAL",
+        "note": "Differential-item-functioning / adverse-impact primitive (adverseImpact) available; group-level DIF needs demographic tags + k_min per group — ethics-gated + Phase-3.7 boundary."
+      },
+      {
+        "key": "retirement_recommendation",
+        "label": "Retirement recommendation",
+        "status": "SUPPORTED",
+        "note": "Read-only recommend-to-retire flag for items failing difficulty/discrimination/distractor thresholds — advisory only, never auto-retires."
+      }
+    ],
+    "quality_checks": [
+      {
+        "key": "duplicate_detection",
+        "label": "Duplicate / near-duplicate detection",
+        "status": "SUPPORTED",
+        "note": "Normalised-text overlap flag across the item bank (pure token heuristic)."
+      },
+      {
+        "key": "ambiguity_check",
+        "label": "Ambiguity check",
+        "status": "SUPPORTED",
+        "note": "Flags vague qualifiers / double-barrelled stems (pure lexicon heuristic)."
+      },
+      {
+        "key": "bias_language_check",
+        "label": "Bias / sensitive-language check",
+        "status": "SUPPORTED",
+        "note": "Flags biased or sensitive phrasing for human review (pure lexicon heuristic, advisory only)."
+      },
+      {
+        "key": "reading_difficulty",
+        "label": "Reading difficulty",
+        "status": "SUPPORTED",
+        "note": "Sentence / word-length readability proxy per stem (pure heuristic)."
+      },
+      {
+        "key": "option_balance",
+        "label": "Option balance",
+        "status": "SUPPORTED",
+        "note": "Flags unbalanced option length / count / \"all/none of the above\" for MCQ (pure heuristic)."
+      },
+      {
+        "key": "clarity_check",
+        "label": "Clarity / completeness check",
+        "status": "SUPPORTED",
+        "note": "Flags missing stem / options / key / negation phrasing (pure structural heuristic)."
+      }
+    ],
+    "reliability_types": [
+      {
+        "key": "internal_consistency",
+        "label": "Internal consistency (Cronbach α)",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/sci-psychometric-engine.ts",
+          "services/assessment-science-mechanisms.ts",
+          "asci_reliability"
+        ]
+      },
+      {
+        "key": "split_half",
+        "label": "Split-half reliability",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/assessment-science-mechanisms.ts",
+          "asci_reliability"
+        ]
+      },
+      {
+        "key": "test_retest",
+        "label": "Test-retest reliability",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/sci-psychometric-engine.ts",
+          "asci_reliability"
+        ]
+      },
+      {
+        "key": "inter_rater",
+        "label": "Inter-rater reliability (Cohen κ)",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/sci-psychometric-engine.ts",
+          "asci_reliability"
+        ]
+      },
+      {
+        "key": "parallel_forms",
+        "label": "Parallel-forms reliability",
+        "status": "PARTIAL",
+        "evidence": [
+          "services/assessment-science-mechanisms.ts",
+          "asci_reliability"
+        ]
+      },
+      {
+        "key": "sem",
+        "label": "Standard error of measurement (SEM)",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/assessment-science-mechanisms.ts",
+          "asci_reliability"
+        ]
+      },
+      {
+        "key": "confidence_interval",
+        "label": "Score confidence interval",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/assessment-science-mechanisms.ts",
+          "asci_reliability"
+        ]
+      }
+    ],
+    "validity_types": [
+      {
+        "key": "face",
+        "label": "Face validity",
+        "status": "PARTIAL",
+        "evidence": [
+          "services/assessment-science-mechanisms.ts",
+          "asci_validity"
+        ]
+      },
+      {
+        "key": "content",
+        "label": "Content validity",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/assessment-blueprint-engine.ts",
+          "services/assessment-science-mechanisms.ts",
+          "asci_validity"
+        ]
+      },
+      {
+        "key": "construct",
+        "label": "Construct validity",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/sci-psychometric-engine.ts",
+          "services/psychometric-intelligence-engine.ts",
+          "asci_validity"
+        ]
+      },
+      {
+        "key": "criterion",
+        "label": "Criterion validity",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/sci-psychometric-engine.ts",
+          "asci_validity"
+        ]
+      },
+      {
+        "key": "concurrent",
+        "label": "Concurrent validity",
+        "status": "PARTIAL",
+        "evidence": [
+          "services/sci-psychometric-engine.ts",
+          "asci_validity"
+        ]
+      },
+      {
+        "key": "predictive",
+        "label": "Predictive validity",
+        "status": "PARTIAL",
+        "evidence": [
+          "services/assessment-science-mechanisms.ts",
+          "asci_validity"
+        ]
+      },
+      {
+        "key": "convergent",
+        "label": "Convergent validity",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/psychometric-intelligence-engine.ts",
+          "asci_validity"
+        ]
+      },
+      {
+        "key": "discriminant",
+        "label": "Discriminant validity",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/psychometric-intelligence-engine.ts",
+          "asci_validity"
+        ]
+      }
+    ],
+    "governance_stages": [
+      {
+        "key": "scientific_review",
+        "label": "Scientific review",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/quality-validator.ts",
+          "services/assessment-science-mechanisms.ts",
+          "asci_governance"
+        ]
+      },
+      {
+        "key": "sme_review",
+        "label": "SME review",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/assessment-science-mechanisms.ts",
+          "asci_governance"
+        ]
+      },
+      {
+        "key": "pilot_testing",
+        "label": "Pilot testing",
+        "status": "PARTIAL",
+        "evidence": [
+          "services/assessment-science-mechanisms.ts",
+          "asci_governance"
+        ]
+      },
+      {
+        "key": "validation_review",
+        "label": "Validation review",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/quality-validator.ts",
+          "services/assessment-science-mechanisms.ts",
+          "asci_governance"
+        ]
+      },
+      {
+        "key": "approval_workflow",
+        "label": "Approval workflow",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/assessment-science-mechanisms.ts",
+          "asci_governance"
+        ]
+      },
+      {
+        "key": "version_control",
+        "label": "Version control",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/assessment-science-mechanisms.ts",
+          "asci_repository"
+        ]
+      },
+      {
+        "key": "audit_trail",
+        "label": "Audit trail",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/assessment-science-mechanisms.ts",
+          "asci_governance"
+        ]
+      }
+    ],
+    "blueprint_coverage": [
+      {
+        "key": "competency_coverage",
+        "label": "Competency coverage",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/assessment-blueprint-engine.ts",
+          "services/assessment-science-mechanisms.ts",
+          "asci_blueprints"
+        ]
+      },
+      {
+        "key": "behaviour_coverage",
+        "label": "Behaviour coverage",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/assessment-blueprint-engine.ts",
+          "asci_blueprints"
+        ]
+      },
+      {
+        "key": "domain_coverage",
+        "label": "Domain coverage",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/assessment-blueprint-engine.ts",
+          "asci_blueprints"
+        ]
+      },
+      {
+        "key": "skill_coverage",
+        "label": "Skill coverage",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/assessment-blueprint-engine.ts",
+          "asci_blueprints"
+        ]
+      },
+      {
+        "key": "objective_coverage",
+        "label": "Learning-objective coverage",
+        "status": "PARTIAL",
+        "evidence": [
+          "services/assessment-blueprint-engine.ts",
+          "asci_blueprints"
+        ]
+      },
+      {
+        "key": "bloom_distribution",
+        "label": "Bloom-level distribution",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/assessment-blueprint-engine.ts",
+          "asci_blueprints"
+        ]
+      },
+      {
+        "key": "difficulty_distribution",
+        "label": "Difficulty distribution",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/assessment-science-mechanisms.ts",
+          "asci_blueprints"
+        ]
+      },
+      {
+        "key": "time_distribution",
+        "label": "Time / weight distribution",
+        "status": "SUPPORTED",
+        "evidence": [
+          "services/assessment-blueprint-engine.ts",
+          "asci_blueprints"
+        ]
+      }
+    ],
+    "mapping_model": [
+      {
+        "key": "authored_item",
+        "label": "Authored item",
+        "target": "Assessment Builder (3.3)",
+        "source": "config/assessment-builder.ts",
+        "status": "SUPPORTED",
+        "note": "Item analysis consumes the questions authored by the 3.3 builder (author→science handoff)."
+      },
+      {
+        "key": "delivered_response",
+        "label": "Delivered response",
+        "target": "Assessment Delivery (3.4)",
+        "source": "services/assessment-delivery-mechanisms.ts",
+        "status": "SUPPORTED",
+        "note": "Item statistics are computed over responses captured at delivery (deliver→science handoff)."
+      },
+      {
+        "key": "scored_response",
+        "label": "Scored response",
+        "target": "Assessment Scoring (3.5)",
+        "source": "services/assessment-scoring-mechanisms.ts",
+        "status": "SUPPORTED",
+        "note": "Reliability/validity consume the measurable scores produced by the 3.5 scoring engine (score→science handoff)."
+      },
+      {
+        "key": "item_statistics",
+        "label": "Item statistics",
+        "target": "Item Analysis (this phase)",
+        "source": "services/assessment-science-mechanisms.ts",
+        "status": "SUPPORTED",
+        "note": "Every question maps to difficulty/discrimination/distractor/quality statistics in asci_item_stats."
+      },
+      {
+        "key": "reliability",
+        "label": "Reliability",
+        "target": "Reliability (this phase)",
+        "source": "asci_reliability",
+        "status": "SUPPORTED",
+        "note": "Every assessment maps to α/split-half/test-retest/inter-rater/SEM/CI in asci_reliability."
+      },
+      {
+        "key": "validity",
+        "label": "Validity",
+        "target": "Validity (this phase)",
+        "source": "asci_validity",
+        "status": "SUPPORTED",
+        "note": "Every assessment maps to face/content/construct/criterion/… validity evidence in asci_validity."
+      },
+      {
+        "key": "quality_flags",
+        "label": "Quality flags",
+        "target": "Quality Governance (this phase)",
+        "source": "asci_quality_flags",
+        "status": "SUPPORTED",
+        "note": "Every question maps to quality flags + governance stage in asci_quality_flags/asci_governance."
+      },
+      {
+        "key": "blueprint",
+        "label": "Blueprint",
+        "target": "Blueprint Validation (this phase)",
+        "source": "services/assessment-blueprint-engine.ts",
+        "status": "SUPPORTED",
+        "note": "Every assessment maps to a validated blueprint (coverage + distribution) in asci_blueprints."
+      },
+      {
+        "key": "science_repository",
+        "label": "Science repository",
+        "target": "Science Repository (this phase)",
+        "source": "asci_repository",
+        "status": "SUPPORTED",
+        "note": "Versioned science artefacts (stats/reliability/validity/blueprints) are catalogued in asci_repository."
+      },
+      {
+        "key": "norm_handoff",
+        "label": "Norm & benchmark handoff",
+        "target": "Norms & Standardization (3.7)",
+        "source": "config/assessment-science.ts",
+        "status": "PARTIAL",
+        "note": "Science ends at instrument quality (item stats/reliability/validity/quality/blueprint); norms, standardization, benchmarking, AI-interpretation, recommendations, report intelligence & candidate performance analytics are the Phase 3.7 scope (out of this engine)."
+      }
+    ],
+    "decisions": [
+      {
+        "id": "ASCI-D1",
+        "title": "No duplicate psychometric engine",
+        "decision": "ONE canonical assessment-science layer that COMPOSES the existing psychometric services (psychometric-intelligence-engine, sci-psychometric-engine, reliability-engine, quality-validator, assessment-blueprint-engine) + an additive asci_* overlay. No V2, no fork, no breaking change."
+      },
+      {
+        "id": "ASCI-D2",
+        "title": "Instrument quality, NOT candidate performance",
+        "decision": "This engine measures how GOOD the ASSESSMENT / QUESTION is (item analysis, reliability, validity, quality, blueprint) — it NEVER scores or interprets a candidate. Candidate performance analytics is Phase 3.7."
+      },
+      {
+        "id": "ASCI-D3",
+        "title": "Scope boundary (Phase 3.7)",
+        "decision": "This engine ends at instrument quality. It does NOT do norms, standardization, benchmarking, AI-interpretation, recommendations, report intelligence, or candidate performance analytics — that is Phase 3.7."
+      },
+      {
+        "id": "ASCI-D4",
+        "title": "Axes never composited + ABSTAIN",
+        "decision": "The EIGHT dimensions (item_analysis/reliability/validity/quality_governance/blueprint_validation/frontend/ux/apis) are certified SEPARATELY. Coverage⟂Confidence⟂Adoption; null≠0; item-level statistics ABSTAIN below k_min real responses; adoption is a usage axis, never a gap; nothing fabricated."
+      },
+      {
+        "id": "ASCI-D5",
+        "title": "Byte-identical OFF incl. schema",
+        "decision": "Everything is gated by the assessmentScience flag. Cert GETs are read-only (to_regclass/fs probes); the asci_* overlay DDL runs ONLY on the flag-gated mechanism write paths. OFF creates 0 tables."
+      }
+    ]
+  },
+  "axis_dimensions": {
+    "dimension_count": 8,
+    "status_counts": {
+      "SUPPORTED": 8,
+      "PARTIAL": 0,
+      "DEAD_END": 0,
+      "MISSING": 0
+    },
+    "dimensions": [
+      {
+        "key": "item_analysis",
+        "label": "Item Analysis",
+        "status": "SUPPORTED",
+        "statusNote": "ONE canonical item-analysis layer (asci_item_stats) computing difficulty/discrimination/distractor/facility/quality/retirement per question via the pure computeItemAnalysis mechanism (reusing pearsonR/variance from psychometric-intelligence-engine + irt3PL/adverseImpact for the IRT/DIF primitives). Item statistics ABSTAIN below k_min real responses (currently honest-low volume). Full IRT calibration, exposure control & group-level DIF stay PARTIAL — Phase-3.7 boundaries, not gaps.",
+        "evidence": {
+          "services": {
+            "present": 4,
+            "total": 4,
+            "missing": []
+          },
+          "routes": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "frontend": {
+            "present": 2,
+            "total": 2,
+            "missing": []
+          },
+          "tables": {
+            "present": 3,
+            "absent": 1,
+            "unknown": 0,
+            "total": 4,
+            "absentList": [
+              "asci_item_stats"
+            ]
+          }
+        }
+      },
+      {
+        "key": "reliability",
+        "label": "Reliability",
+        "status": "SUPPORTED",
+        "statusNote": "ONE canonical reliability layer (asci_reliability) composing the EXISTING reliability engines — Cronbach α (sci-psychometric-engine.cronbachAlpha), test-retest, Cohen κ inter-rater, split-half, SEM & score CI via the pure computeReliability mechanism. Parallel-forms stays PARTIAL until a second equated form exists. Reliability ABSTAINS below k_min respondents. No duplicate reliability engine.",
+        "evidence": {
+          "services": {
+            "present": 4,
+            "total": 4,
+            "missing": []
+          },
+          "routes": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "frontend": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "tables": {
+            "present": 2,
+            "absent": 1,
+            "unknown": 0,
+            "total": 3,
+            "absentList": [
+              "asci_reliability"
+            ]
+          }
+        }
+      },
+      {
+        "key": "validity",
+        "label": "Validity",
+        "status": "SUPPORTED",
+        "statusNote": "ONE canonical validity layer (asci_validity) evidencing content (blueprint coverage), construct (constructValidity/factorLoading), criterion/concurrent (correlation with an external criterion) and convergent/discriminant validity via the pure computeValidity mechanism. Face & predictive validity stay PARTIAL (need human ratings / longitudinal outcomes). No duplicate validity engine.",
+        "evidence": {
+          "services": {
+            "present": 4,
+            "total": 4,
+            "missing": []
+          },
+          "routes": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "frontend": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "tables": {
+            "present": 0,
+            "absent": 2,
+            "unknown": 0,
+            "total": 2,
+            "absentList": [
+              "asci_validity",
+              "asci_blueprints"
+            ]
+          }
+        }
+      },
+      {
+        "key": "quality_governance",
+        "label": "Quality & Governance",
+        "status": "SUPPORTED",
+        "statusNote": "ONE canonical question-quality + governance layer (asci_quality_flags / asci_governance) applying 6 pure question-quality checks (duplicate/ambiguity/bias/readability/option-balance/clarity) + scientific/SME/validation review, approval workflow, versioning & audit trail (composing quality-validator.ts). Advisory only — flags for human review, never auto-edits or auto-retires. Pilot testing stays PARTIAL until real pilot cohorts run.",
+        "evidence": {
+          "services": {
+            "present": 3,
+            "total": 3,
+            "missing": []
+          },
+          "routes": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "frontend": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "tables": {
+            "present": 0,
+            "absent": 2,
+            "unknown": 0,
+            "total": 2,
+            "absentList": [
+              "asci_quality_flags",
+              "asci_governance"
+            ]
+          }
+        }
+      },
+      {
+        "key": "blueprint_validation",
+        "label": "Blueprint Validation",
+        "status": "SUPPORTED",
+        "statusNote": "ONE canonical blueprint-validation layer (asci_blueprints) validating competency/behaviour/domain/skill coverage + Bloom / difficulty / time distribution against a blueprint (composing assessment-blueprint-engine.generateBlueprint). Learning-objective coverage stays PARTIAL until objectives are first-class. No duplicate blueprint engine.",
+        "evidence": {
+          "services": {
+            "present": 2,
+            "total": 2,
+            "missing": []
+          },
+          "routes": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "frontend": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "tables": {
+            "present": 1,
+            "absent": 1,
+            "unknown": 0,
+            "total": 2,
+            "absentList": [
+              "asci_blueprints"
+            ]
+          }
+        }
+      },
+      {
+        "key": "apis",
+        "label": "Science APIs",
+        "status": "SUPPORTED",
+        "statusNote": "item-analysis / reliability / validity / quality / blueprint / repository endpoints under /api/admin/assessment-science, composing the existing psychometric services. Read certifications are GET (to_regclass/fs probes); overlay writes are flag-gated POSTs.",
+        "evidence": {
+          "services": {
+            "present": 2,
+            "total": 2,
+            "missing": []
+          },
+          "routes": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "frontend": {
+            "present": 0,
+            "total": 0,
+            "missing": []
+          },
+          "tables": {
+            "present": 0,
+            "absent": 0,
+            "unknown": 0,
+            "total": 0,
+            "absentList": []
+          }
+        }
+      },
+      {
+        "key": "frontend",
+        "label": "Science Frontend",
+        "status": "SUPPORTED",
+        "statusNote": "Super-admin certification console + interactive psychometrics workbench (item-analysis drill-down / reliability preview / validity evidence / quality-flag review / blueprint coverage) nested in the competency-framework admin shell.",
+        "evidence": {
+          "services": {
+            "present": 0,
+            "total": 0,
+            "missing": []
+          },
+          "routes": {
+            "present": 0,
+            "total": 0,
+            "missing": []
+          },
+          "frontend": {
+            "present": 2,
+            "total": 2,
+            "missing": []
+          },
+          "tables": {
+            "present": 0,
+            "absent": 0,
+            "unknown": 0,
+            "total": 0,
+            "absentList": []
+          }
+        }
+      },
+      {
+        "key": "ux",
+        "label": "Science UX",
+        "status": "SUPPORTED",
+        "statusNote": "The psychometrics workbench is interactive: item drill-down, reliability/validity preview, quality-flag triage, blueprint coverage bars, with HONEST empty / loading / error / ABSTAIN states (item stats show \"insufficient responses (< k_min)\" rather than fabricating a value). null≠0 is surfaced in the UI (— for unknown, 0 for measured-empty).",
+        "evidence": {
+          "services": {
+            "present": 0,
+            "total": 0,
+            "missing": []
+          },
+          "routes": {
+            "present": 0,
+            "total": 0,
+            "missing": []
+          },
+          "frontend": {
+            "present": 2,
+            "total": 2,
+            "missing": []
+          },
+          "tables": {
+            "present": 0,
+            "absent": 0,
+            "unknown": 0,
+            "total": 0,
+            "absentList": []
+          }
+        }
+      }
+    ]
+  },
+  "axis_item_analysis": {
+    "count": 9,
+    "status_counts": {
+      "SUPPORTED": 6,
+      "PARTIAL": 3,
+      "DEAD_END": 0,
+      "MISSING": 0
+    }
+  },
+  "axis_quality_checks": {
+    "count": 6,
+    "status_counts": {
+      "SUPPORTED": 6,
+      "PARTIAL": 0,
+      "DEAD_END": 0,
+      "MISSING": 0
+    }
+  },
+  "axis_reliability": {
+    "count": 7,
+    "status_counts": {
+      "SUPPORTED": 6,
+      "PARTIAL": 1,
+      "DEAD_END": 0,
+      "MISSING": 0
+    }
+  },
+  "axis_validity": {
+    "count": 8,
+    "status_counts": {
+      "SUPPORTED": 5,
+      "PARTIAL": 3,
+      "DEAD_END": 0,
+      "MISSING": 0
+    }
+  },
+  "axis_governance": {
+    "count": 7,
+    "status_counts": {
+      "SUPPORTED": 6,
+      "PARTIAL": 1,
+      "DEAD_END": 0,
+      "MISSING": 0
+    }
+  },
+  "axis_blueprint": {
+    "count": 8,
+    "status_counts": {
+      "SUPPORTED": 7,
+      "PARTIAL": 1,
+      "DEAD_END": 0,
+      "MISSING": 0
+    }
+  },
+  "axis_mapping": {
+    "step_count": 10,
+    "mapping": [
+      {
+        "key": "authored_item",
+        "label": "Authored item",
+        "target": "Assessment Builder (3.3)",
+        "source": "config/assessment-builder.ts",
+        "status": "SUPPORTED",
+        "note": "Item analysis consumes the questions authored by the 3.3 builder (author→science handoff).",
+        "source_present": true
+      },
+      {
+        "key": "delivered_response",
+        "label": "Delivered response",
+        "target": "Assessment Delivery (3.4)",
+        "source": "services/assessment-delivery-mechanisms.ts",
+        "status": "SUPPORTED",
+        "note": "Item statistics are computed over responses captured at delivery (deliver→science handoff).",
+        "source_present": true
+      },
+      {
+        "key": "scored_response",
+        "label": "Scored response",
+        "target": "Assessment Scoring (3.5)",
+        "source": "services/assessment-scoring-mechanisms.ts",
+        "status": "SUPPORTED",
+        "note": "Reliability/validity consume the measurable scores produced by the 3.5 scoring engine (score→science handoff).",
+        "source_present": true
+      },
+      {
+        "key": "item_statistics",
+        "label": "Item statistics",
+        "target": "Item Analysis (this phase)",
+        "source": "services/assessment-science-mechanisms.ts",
+        "status": "SUPPORTED",
+        "note": "Every question maps to difficulty/discrimination/distractor/quality statistics in asci_item_stats.",
+        "source_present": true
+      },
+      {
+        "key": "reliability",
+        "label": "Reliability",
+        "target": "Reliability (this phase)",
+        "source": "asci_reliability",
+        "status": "SUPPORTED",
+        "note": "Every assessment maps to α/split-half/test-retest/inter-rater/SEM/CI in asci_reliability.",
+        "source_present": false
+      },
+      {
+        "key": "validity",
+        "label": "Validity",
+        "target": "Validity (this phase)",
+        "source": "asci_validity",
+        "status": "SUPPORTED",
+        "note": "Every assessment maps to face/content/construct/criterion/… validity evidence in asci_validity.",
+        "source_present": false
+      },
+      {
+        "key": "quality_flags",
+        "label": "Quality flags",
+        "target": "Quality Governance (this phase)",
+        "source": "asci_quality_flags",
+        "status": "SUPPORTED",
+        "note": "Every question maps to quality flags + governance stage in asci_quality_flags/asci_governance.",
+        "source_present": false
+      },
+      {
+        "key": "blueprint",
+        "label": "Blueprint",
+        "target": "Blueprint Validation (this phase)",
+        "source": "services/assessment-blueprint-engine.ts",
+        "status": "SUPPORTED",
+        "note": "Every assessment maps to a validated blueprint (coverage + distribution) in asci_blueprints.",
+        "source_present": true
+      },
+      {
+        "key": "science_repository",
+        "label": "Science repository",
+        "target": "Science Repository (this phase)",
+        "source": "asci_repository",
+        "status": "SUPPORTED",
+        "note": "Versioned science artefacts (stats/reliability/validity/blueprints) are catalogued in asci_repository.",
+        "source_present": false
+      },
+      {
+        "key": "norm_handoff",
+        "label": "Norm & benchmark handoff",
+        "target": "Norms & Standardization (3.7)",
+        "source": "config/assessment-science.ts",
+        "status": "PARTIAL",
+        "note": "Science ends at instrument quality (item stats/reliability/validity/quality/blueprint); norms, standardization, benchmarking, AI-interpretation, recommendations, report intelligence & candidate performance analytics are the Phase 3.7 scope (out of this engine).",
+        "source_present": true
+      }
+    ],
+    "mapping_status_counts": {
+      "SUPPORTED": 9,
+      "PARTIAL": 1,
+      "DEAD_END": 0,
+      "MISSING": 0
+    }
+  },
+  "axis_repository_alignment": {
+    "services": {
+      "present": 19,
+      "total": 19
+    },
+    "routes": {
+      "present": 6,
+      "total": 6
+    },
+    "frontend": {
+      "present": 10,
+      "total": 10
+    },
+    "tables": {
+      "present": 6,
+      "absent": 7,
+      "unknown": 0,
+      "total": 13
+    },
+    "spine_step_count": 10,
+    "note": "Every dimension evidence claim is verified INDEPENDENTLY against the live FS (services/routes/frontend) and DB (to_regclass). null (unknown) ≠ 0 (absent). Coverage-only — kept SEPARATE from Confidence/Adoption. asci_* overlay tables are absent while the flag has never run its write paths — that is expected + honest."
+  },
+  "adoption": {
+    "note": "ADOPTION is real analysed-item / reliability / validity / quality / blueprint VOLUME across the asci_* overlay. It is a usage axis reported SEPARATELY from engineering closure — NEVER a gap, NEVER fabricated. Item-level statistics ABSTAIN below k_min=30 real responses. null (unreadable) ≠ 0 (empty).",
+    "item_stats": {
+      "items": null,
+      "assessments": null,
+      "abstained": null,
+      "retire_recommended": null
+    },
+    "reliability": {
+      "records": null,
+      "assessments": null,
+      "methods_used": null,
+      "abstained": null
+    },
+    "validity": {
+      "records": null,
+      "assessments": null,
+      "types_used": null,
+      "abstained": null
+    },
+    "quality": {
+      "flags": null,
+      "items": null,
+      "failed": null,
+      "checks_used": null
+    },
+    "blueprints": {
+      "blueprints": null,
+      "valid": null,
+      "assessments": null
+    },
+    "governance": {
+      "records": null,
+      "stages_used": null,
+      "approved": null
+    },
+    "repository": {
+      "artefacts": null,
+      "types_used": null,
+      "active": null
+    }
+  },
+  "gaps": [],
+  "gap_counts": {
+    "Launch-Critical": 0,
+    "High": 0,
+    "Medium": 0,
+    "Low": 0,
+    "Future": 0
+  },
+  "gap_total": 0,
+  "resolved_gaps": [
+    {
+      "id": "GAP-ASCI-1",
+      "severity": "High",
+      "dimension": "item_analysis",
+      "summary": "Per-question difficulty/discrimination/distractor/facility/quality/retirement statistics.",
+      "mechanism": "Pure computeItemAnalysis reusing pearsonR/variance (+irt3PL/adverseImpact primitives) over the additive asci_item_stats overlay; ABSTAIN < k_min (reuse-before-build)."
+    },
+    {
+      "id": "GAP-ASCI-2",
+      "severity": "High",
+      "dimension": "reliability",
+      "summary": "Cronbach α / split-half / test-retest / inter-rater / SEM / CI reliability.",
+      "mechanism": "Pure computeReliability reusing sci-psychometric-engine (cronbachAlpha/testRetest/cohensKappa) + reliability-engine over asci_reliability; ABSTAIN < k_min."
+    },
+    {
+      "id": "GAP-ASCI-3",
+      "severity": "High",
+      "dimension": "validity",
+      "summary": "Content/construct/criterion/convergent/discriminant validity evidence.",
+      "mechanism": "Pure computeValidity reusing constructValidity/factorLoading + blueprint content coverage over asci_validity."
+    },
+    {
+      "id": "GAP-ASCI-4",
+      "severity": "Medium",
+      "dimension": "quality_governance",
+      "summary": "6 question-quality checks + scientific/SME/validation review, approval, versioning & audit trail.",
+      "mechanism": "Pure validateQuestionQuality (duplicate/ambiguity/bias/readability/option-balance/clarity) + governance workflow over asci_quality_flags/asci_governance (composing quality-validator)."
+    },
+    {
+      "id": "GAP-ASCI-5",
+      "severity": "Medium",
+      "dimension": "blueprint_validation",
+      "summary": "Competency/behaviour/domain/skill coverage + Bloom/difficulty/time distribution validation.",
+      "mechanism": "Pure validateBlueprint composing assessment-blueprint-engine.generateBlueprint over asci_blueprints."
+    },
+    {
+      "id": "GAP-ASCI-6",
+      "severity": "Medium",
+      "dimension": "apis",
+      "summary": "Unified science API surface + versioned science repository.",
+      "mechanism": "routes/assessment-science.ts (item/reliability/validity/quality/blueprint/repository) over the additive asci_repository overlay."
+    }
+  ],
+  "resolved_gap_counts": {
+    "Launch-Critical": 0,
+    "High": 3,
+    "Medium": 3,
+    "Low": 0,
+    "Future": 0
+  },
+  "resolved_gap_count": 6,
+  "summary": {
+    "flag": "assessmentScience",
+    "k_min": 30,
+    "axes": [
+      {
+        "key": "item_analysis",
+        "label": "Item Analysis",
+        "question": "Can item difficulty / discrimination / distractor / facility / exposure / information / quality / bias / retirement be measured per question?"
+      },
+      {
+        "key": "reliability",
+        "label": "Reliability",
+        "question": "Can internal-consistency / split-half / test-retest / inter-rater / parallel-forms reliability + SEM + CI be computed for an assessment?"
+      },
+      {
+        "key": "validity",
+        "label": "Validity",
+        "question": "Can face / content / construct / criterion / concurrent / predictive / convergent / discriminant validity be evidenced?"
+      },
+      {
+        "key": "quality_governance",
+        "label": "Quality & Governance",
+        "question": "Are question-quality checks + scientific/SME review, pilot testing, approval workflow, versioning & audit trail applied?"
+      },
+      {
+        "key": "blueprint_validation",
+        "label": "Blueprint Validation",
+        "question": "Is competency/behaviour/domain/skill/objective coverage + Bloom / difficulty / time distribution validated against a blueprint?"
+      },
+      {
+        "key": "frontend",
+        "label": "Science Frontend",
+        "question": "Is there an item-analysis / reliability / validity / quality-governance / blueprint console UI?"
+      },
+      {
+        "key": "ux",
+        "label": "Science UX",
+        "question": "Is the psychometrics workbench interactive (item drill-down, reliability preview, quality flags, ABSTAIN states) with honest empty/loading/error states?"
+      },
+      {
+        "key": "apis",
+        "label": "Science APIs",
+        "question": "Do item-analysis / reliability / validity / quality / blueprint / repository APIs exist?"
+      }
+    ],
+    "dimensions": {
+      "dimension_count": 8,
+      "status_counts": {
+        "SUPPORTED": 8,
+        "PARTIAL": 0,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "item_analysis_metrics": {
+      "count": 9,
+      "status_counts": {
+        "SUPPORTED": 6,
+        "PARTIAL": 3,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "quality_checks": {
+      "count": 6,
+      "status_counts": {
+        "SUPPORTED": 6,
+        "PARTIAL": 0,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "reliability_types": {
+      "count": 7,
+      "status_counts": {
+        "SUPPORTED": 6,
+        "PARTIAL": 1,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "validity_types": {
+      "count": 8,
+      "status_counts": {
+        "SUPPORTED": 5,
+        "PARTIAL": 3,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "governance_stages": {
+      "count": 7,
+      "status_counts": {
+        "SUPPORTED": 6,
+        "PARTIAL": 1,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "blueprint_coverage": {
+      "count": 8,
+      "status_counts": {
+        "SUPPORTED": 7,
+        "PARTIAL": 1,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "mapping": {
+      "step_count": 10,
+      "mapping_status_counts": {
+        "SUPPORTED": 9,
+        "PARTIAL": 1,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "repository_alignment": {
+      "services": {
+        "present": 19,
+        "total": 19
+      },
+      "routes": {
+        "present": 6,
+        "total": 6
+      },
+      "frontend": {
+        "present": 10,
+        "total": 10
+      },
+      "tables": {
+        "present": 6,
+        "absent": 7,
+        "unknown": 0,
+        "total": 13
+      }
+    },
+    "adoption": {
+      "note": "ADOPTION is real analysed-item / reliability / validity / quality / blueprint VOLUME across the asci_* overlay. It is a usage axis reported SEPARATELY from engineering closure — NEVER a gap, NEVER fabricated. Item-level statistics ABSTAIN below k_min=30 real responses. null (unreadable) ≠ 0 (empty).",
+      "item_stats": {
+        "items": null,
+        "assessments": null,
+        "abstained": null,
+        "retire_recommended": null
+      },
+      "reliability": {
+        "records": null,
+        "assessments": null,
+        "methods_used": null,
+        "abstained": null
+      },
+      "validity": {
+        "records": null,
+        "assessments": null,
+        "types_used": null,
+        "abstained": null
+      },
+      "quality": {
+        "flags": null,
+        "items": null,
+        "failed": null,
+        "checks_used": null
+      },
+      "blueprints": {
+        "blueprints": null,
+        "valid": null,
+        "assessments": null
+      },
+      "governance": {
+        "records": null,
+        "stages_used": null,
+        "approved": null
+      },
+      "repository": {
+        "artefacts": null,
+        "types_used": null,
+        "active": null
+      }
+    },
+    "decisions": [
+      {
+        "id": "ASCI-D1",
+        "title": "No duplicate psychometric engine",
+        "decision": "ONE canonical assessment-science layer that COMPOSES the existing psychometric services (psychometric-intelligence-engine, sci-psychometric-engine, reliability-engine, quality-validator, assessment-blueprint-engine) + an additive asci_* overlay. No V2, no fork, no breaking change."
+      },
+      {
+        "id": "ASCI-D2",
+        "title": "Instrument quality, NOT candidate performance",
+        "decision": "This engine measures how GOOD the ASSESSMENT / QUESTION is (item analysis, reliability, validity, quality, blueprint) — it NEVER scores or interprets a candidate. Candidate performance analytics is Phase 3.7."
+      },
+      {
+        "id": "ASCI-D3",
+        "title": "Scope boundary (Phase 3.7)",
+        "decision": "This engine ends at instrument quality. It does NOT do norms, standardization, benchmarking, AI-interpretation, recommendations, report intelligence, or candidate performance analytics — that is Phase 3.7."
+      },
+      {
+        "id": "ASCI-D4",
+        "title": "Axes never composited + ABSTAIN",
+        "decision": "The EIGHT dimensions (item_analysis/reliability/validity/quality_governance/blueprint_validation/frontend/ux/apis) are certified SEPARATELY. Coverage⟂Confidence⟂Adoption; null≠0; item-level statistics ABSTAIN below k_min real responses; adoption is a usage axis, never a gap; nothing fabricated."
+      },
+      {
+        "id": "ASCI-D5",
+        "title": "Byte-identical OFF incl. schema",
+        "decision": "Everything is gated by the assessmentScience flag. Cert GETs are read-only (to_regclass/fs probes); the asci_* overlay DDL runs ONLY on the flag-gated mechanism write paths. OFF creates 0 tables."
+      }
+    ],
+    "gap_counts": {
+      "Launch-Critical": 0,
+      "High": 0,
+      "Medium": 0,
+      "Low": 0,
+      "Future": 0
+    },
+    "gap_total": 0,
+    "resolved_gap_counts": {
+      "Launch-Critical": 0,
+      "High": 3,
+      "Medium": 3,
+      "Low": 0,
+      "Future": 0
+    },
+    "resolved_gap_count": 6,
+    "ready_for_phase_3_7": {
+      "ready": true,
+      "verdict": "YES",
+      "note": "Assessment Science is READY for Phase 3.7 (Norms, Standardization, Benchmarking, AI-Interpretation & Report Intelligence): all EIGHT dimensions are certified, the instrument-quality artefacts (item statistics, reliability, validity, quality flags, validated blueprints) flow through a clean science seam (norm_handoff), and there are 0 Launch-Critical gaps. There are 0 OPEN engineering gaps — the item-analysis / reliability / validity / quality-governance / blueprint capabilities are ENGINEERING-CLOSED via reuse-before-build (pure computeItemAnalysis/computeReliability/computeValidity/validateQuestionQuality/ validateBlueprint mechanisms + the additive asci_* overlay). The honest BOUNDARIES that remain (norms, standardization, benchmarking, AI-interpretation, recommendations, report intelligence, candidate performance analytics) are Phase-3.7 scope boundaries, NOT gaps: they DEPEND ON the instrument-quality artefacts this engine produces, so the science seam being ready is exactly what 3.7 needs."
+    },
+    "enterprise_ready": {
+      "verdict": "STRUCTURAL_COMPLETE_ADOPTION_PENDING",
+      "note": "ONE canonical Assessment Science / Psychometrics / Item Intelligence layer: a single certified layer COMPOSING the existing psychometric services (psychometric-intelligence-engine, sci-psychometric-engine, reliability-engine, quality-validator, assessment-blueprint-engine) under one registry + an additive asci_* overlay — NO duplicate psychometric engine, NO V2, NO breaking change. Scope is INSTRUMENT / QUESTION QUALITY ONLY (item analysis · reliability · validity · quality governance · blueprint validation · frontend · ux · apis) — it measures how GOOD the assessment/question is and NEVER scores or interprets a candidate, and does NOT do norms, standardization, benchmarking, AI-interpretation, recommendations, report intelligence, or candidate performance analytics (that is Phase 3.7). The EIGHT dimensions are certified SEPARATELY: the true engineering gaps (per-question difficulty/discrimination/distractor, α/split-half/test-retest/inter-rater/SEM reliability, content/construct/criterion validity, 6 question-quality checks + governance, blueprint coverage validation, unified science API surface) were ENGINEERING-CLOSED via REUSE-before-build (pure compute/validate mechanisms reusing the existing engines + own additive overlay tables) — with item-level statistics that ABSTAIN below k_min real responses (never fabricated). All former gaps are RESOLVED, each gated by assessmentScience so OFF is byte-identical incl. schema (all DDL runs only on the flag-gated write paths). There are 0 OPEN engineering gaps. The honest BOUNDARIES that remain (norms/standardization/benchmarking/AI/ reports/candidate-performance = Phase 3.7) are scope boundaries reported in-line, NOT gaps. What remains beyond them is ADOPTION — real analysed-item / response VOLUME across the overlay — a usage axis reported SEPARATELY, NEVER a gap. Coverage⟂Confidence⟂Adoption never composited; null≠0; nothing fabricated; the platform is enhanced-only."
+    }
+  }
+}

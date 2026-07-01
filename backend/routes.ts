@@ -256,6 +256,7 @@ import { registerQuestionManagementRoutes } from "./routes/question-management";
 import { registerAssessmentBuilderRoutes } from "./routes/assessment-builder";
 import { registerAssessmentDeliveryRoutes } from "./routes/assessment-delivery";
 import { registerAssessmentScoringRoutes } from "./routes/assessment-scoring";
+import { registerAssessmentScienceRoutes } from "./routes/assessment-science";
 import { registerPersonaJourneyRoutes } from "./routes/persona-journey";
 import { registerAiOrchestrationRoutes } from "./routes/ai-orchestration";
 import { registerOperationalReadinessRoutes } from "./routes/operational-readiness";
@@ -14161,6 +14162,7 @@ Rules:
   registerAssessmentBuilderRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerAssessmentDeliveryRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerAssessmentScoringRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
+  registerAssessmentScienceRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerPersonaJourneyRoutes(app);
   registerOutcomeKpiRoutes(app, concernsPool, requireAuth, requireSuperAdmin);
   registerAiOrchestrationRoutes(app, concernsPool, requireAuth, requireSuperAdmin);

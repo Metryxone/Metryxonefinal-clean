@@ -325,6 +325,17 @@ export const FEATURE_FLAGS = {
    *  reliability/validity/norms/standardization/benchmark/AI-interpretation/reports = 3.6+). Default OFF,
    *  byte-identical incl. schema (DDL only on flag-gated write paths). Env: `FF_ASSESSMENT_SCORING`. */
   assessmentScoring: false,
+  /** CAPADEX 3.0 — Program 3 · Phase 3.6 Assessment Science / Psychometrics / Item Intelligence master switch.
+   *  READ-ONLY certification composer over the ONE canonical Assessment Science model (config/assessment-science.ts)
+   *  + reuse-before-build engineering-closure mechanisms. Certifies 8 INDEPENDENT dimensions SEPARATELY:
+   *  item_analysis · reliability · validity · quality_governance · blueprint_validation · frontend · ux · apis —
+   *  it measures INSTRUMENT / QUESTION QUALITY (how GOOD the assessment is) and NEVER scores/interprets a
+   *  candidate; norms/standardization/benchmark/AI-interpretation/reports/candidate-performance = Phase 3.7+.
+   *  COMPOSES the existing psychometric services (psychometric-intelligence-engine · sci-psychometric-engine ·
+   *  reliability-engine · quality-validator · assessment-blueprint-engine) + an additive asci_* overlay — NO
+   *  duplicate engine, NO V2. Default OFF, byte-identical incl. schema (DDL only on flag-gated write paths).
+   *  Env: `FF_ASSESSMENT_SCIENCE`. */
+  assessmentScience: false,
   /** CAPADEX 3.0 — Program 3 · Phase 3.2A Persona Experience / Intelligent Journey Router. When ON, the
    *  generic single-page persona selector is replaced by a progressive 5-step onboarding wizard
    *  (Who → Refine → Goal → Personalize → AI Journey Router) that REUSES the existing persona/sub-persona
@@ -2365,6 +2376,11 @@ export function isAssessmentDeliveryEnabled(): boolean {
 /** CAPADEX 3.0 — Program 3 · Phase 3.5 Assessment Measurement & Scoring Engine master switch. */
 export function isAssessmentScoringEnabled(): boolean {
   return isFlagEnabled('assessmentScoring');
+}
+
+/** CAPADEX 3.0 — Program 3 · Phase 3.6 Assessment Science / Psychometrics / Item Intelligence master switch. */
+export function isAssessmentScienceEnabled(): boolean {
+  return isFlagEnabled('assessmentScience');
 }
 
 /** CAPADEX 3.0 — Program 3 · Phase 3.2A Persona Experience / Intelligent Journey Router master switch. */

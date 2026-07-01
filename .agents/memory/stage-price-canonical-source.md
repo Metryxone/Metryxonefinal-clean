@@ -13,8 +13,12 @@ runtime consumers import it: `routes/capadex-payments.ts` (Razorpay order amount
 **Why:** the price table used to be hand-copied into all three with lockstep
 comments; a change in one that missed the others would charge/quote the wrong amount.
 
+`backend/scripts/wc-c7/wc-c7-audit.ts` now also imports STAGE_PRICES/PURCHASABLE_LADDER
+(its `LADDER`/`LADDER_PRICES` are assigned from them) so the audit can't validate against
+stale numbers. Note: the audit's prose Markdown report tables still contain literal
+₹499/₹999/₹1,999 as human-readable copy — not validation constants.
+
 ## Still-drifting copies (NOT yet unified — outside the backend-only unification)
 - `frontend/src/lib/behavioural-insights.ts` CAPADEX_STAGES hardcodes ₹499/₹999/₹1,999.
   The Vite frontend CANNOT import backend modules, so FE display vs BE charge can drift.
-- `scripts/wc-c7/wc-c7-audit.ts` has its own `LADDER_PRICES` copy.
 Curiosity (CAP_CUR) is free / not a purchasable rung → no price, absent from ladder.

@@ -31,11 +31,12 @@ import { buildSubscriptionLifecycle } from '../../services/wc7c/subscription-lif
 import { buildUpsellOverview } from '../../services/wc7c/upsell-engine';
 import { buildRenewalPipeline } from '../../services/wc7c/renewal-engine';
 import { buildEntitlementOverview } from '../../services/wc7c/entitlement-engine';
+import { STAGE_PRICES, PURCHASABLE_LADDER } from '../../config/stage-pricing';
 
 const OUT_DIR = path.resolve(__dirname, '../../audit/wc-c7');
 const HIGH_CONF = 0.7;
-const LADDER = ['CAP_INS', 'CAP_GRW', 'CAP_MAS'] as const;
-const LADDER_PRICES: Record<string, number> = { CAP_INS: 499, CAP_GRW: 999, CAP_MAS: 1999 };
+const LADDER = PURCHASABLE_LADDER;
+const LADDER_PRICES: Record<string, number> = STAGE_PRICES;
 const STUB_ROUTES = new Set(['competitive_exam', 'employability_index']);
 
 // PII mask: irreversible pseudonym — user_<first 10 hex chars of sha256(lower(email))>

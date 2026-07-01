@@ -129,3 +129,132 @@ describe('PersonaJourneyWizard — Goal step is filtered by track', () => {
     expect(pressed).toHaveLength(0);
   });
 });
+
+describe('PersonaJourneyWizard — Finish step hands off the exact persona & goal', () => {
+  // The four canonical focus labels we exercise (verbatim from FOCUS_OPTIONS).
+  const FOCUS = {
+    skills: 'Skills & competencies',
+  } as const;
+  // Timeline labels (verbatim from TIMELINE_OPTIONS).
+  const TIMELINE = {
+    short: 'Soon (1–3 months)',
+  } as const;
+
+  // Land the wizard directly on the final step (index 4) with a fully-chosen
+  // selection, so "Start my assessment" is the only action left to drive.
+  async function renderAtFinish(
+    state: Record<string, unknown>,
+    setters: Partial<PersonaJourneyWizardProps>,
+  ) {
+    seed({ ...state, step: 4 });
+    render(<PersonaJourneyWizard {...makeProps(setters)} />);
+    // Step 5 fires a (stubbed) /route fetch on mount; wait for the finish button
+    // to leave its loading-disabled state before clicking.
+    const finish = await screen.findByTestId('wizard-start-assessment');
+    return finish;
+  }
+
+  it('writes a self-taker\'s exact persona, legacyKey, goal+focus and timeline (is_proxy=false)', async () => {
+    const user = userEvent.setup();
+    const setPrimaryPersona = vi.fn();
+    const setSelectedPersona = vi.fn();
+    const setIsProxy = vi.fn();
+    const setAgeBand = vi.fn();
+    const setParticipantGoal = vi.fn();
+    const setGoalTimeline = vi.fn();
+    const onComplete = vi.fn();
+
+    // A mid-career professional (self-taker) who picked "Grow in my current role",
+    // added a "Skills & competencies" focus, and a "Soon (1–3 months)" timeline.
+    const finish = await renderAtFinish(
+      {
+        trackId: 'professional',
+        subId: 'mid_career_professional',
+        band: '24-45',
+        goal: 'growth',
+        focus: 'skills',
+        timeline: 'short',
+      },
+      {
+        setPrimaryPersona, setSelectedPersona, setIsProxy, setAgeBand,
+        setParticipantGoal, setGoalTimeline, onComplete,
+      },
+    );
+
+    await user.click(finish);
+
+    // Canonical sub-persona id (primary_persona) is handed off verbatim…
+    expect(setPrimaryPersona).toHaveBeenCalledWith('mid_career_professional');
+    // …and the legacyKey (NOT the sub-persona id) drives every downstream phase.
+    expect(setSelectedPersona).toHaveBeenCalledWith('professional');
+    // A self-taker is never a proxy.
+    expect(setIsProxy).toHaveBeenCalledWith(false);
+    // Canonical age band passes through unchanged.
+    expect(setAgeBand).toHaveBeenCalledWith('24-45');
+    // Goal label is composed with the focus suffix ("<goal> — <focus>").
+    expect(setParticipantGoal).toHaveBeenCalledWith(`${GOAL.growth} — ${FOCUS.skills}`);
+    // Timeline is written as its human label, not the raw id.
+    expect(setGoalTimeline).toHaveBeenCalledWith(TIMELINE.short);
+    // …and only then is the classic IntroPhase revealed.
+    expect(onComplete).toHaveBeenCalledTimes(1);
+  });
+
+  it('writes a proxy (parent) with is_proxy=true and a bare goal label (no focus suffix)', async () => {
+    const user = userEvent.setup();
+    const setPrimaryPersona = vi.fn();
+    const setSelectedPersona = vi.fn();
+    const setIsProxy = vi.fn();
+    const setAgeBand = vi.fn();
+    const setParticipantGoal = vi.fn();
+    const setGoalTimeline = vi.fn();
+
+    // A parent assessing their child, no focus and no timeline chosen.
+    const finish = await renderAtFinish(
+      {
+        trackId: 'proxy',
+        subId: 'parent',
+        band: '6-14',
+        goal: 'support',
+      },
+      {
+        setPrimaryPersona, setSelectedPersona, setIsProxy, setAgeBand,
+        setParticipantGoal, setGoalTimeline,
+      },
+    );
+
+    await user.click(finish);
+
+    expect(setPrimaryPersona).toHaveBeenCalledWith('parent');
+    expect(setSelectedPersona).toHaveBeenCalledWith('parent');
+    // The proxy flag MUST travel — this is the seam where a proxy could silently
+    // lose its is_proxy=true and be treated as a self-taker downstream.
+    expect(setIsProxy).toHaveBeenCalledWith(true);
+    expect(setAgeBand).toHaveBeenCalledWith('6-14');
+    // No focus → the goal label is written bare, with no " — <focus>" suffix.
+    expect(setParticipantGoal).toHaveBeenCalledWith(GOAL.support);
+    // No timeline chosen → empty string, never a stale/other value.
+    expect(setGoalTimeline).toHaveBeenCalledWith('');
+  });
+
+  it('drops a non-canonical age band on handoff (canonical age band only)', async () => {
+    const user = userEvent.setup();
+    const setAgeBand = vi.fn();
+
+    // A corrupt/legacy band that is NOT on the canonical whitelist must never be
+    // handed off — the setter receives '' instead of the bogus value.
+    const finish = await renderAtFinish(
+      {
+        trackId: 'professional',
+        subId: 'mid_career_professional',
+        band: 'not-a-band',
+        goal: 'growth',
+      },
+      { setAgeBand },
+    );
+
+    await user.click(finish);
+
+    expect(setAgeBand).toHaveBeenCalledWith('');
+    expect(setAgeBand).not.toHaveBeenCalledWith('not-a-band');
+  });
+});

@@ -67,7 +67,8 @@ export const COMPETENCY_WIZARD_STEPS: WizardStep[] = [
       'cmp-questions', 'cmp-questionbank', 'cmp-question-map',
       'cmp-custom-modules', 'cmp-assessment-mapping',
       'ont-concern-mapping', 'ont-ai-rules',
-      'question-factory',
+      'question-factory', 'question-management',
+      'assessment-builder', 'assessment-delivery',
     ],
   },
   {
@@ -75,7 +76,10 @@ export const COMPETENCY_WIZARD_STEPS: WizardStep[] = [
     title: 'Scoring & Benchmarks',
     description: 'Configure how results are measured — norms, scoring rules and benchmarks.',
     icon: Calculator,
-    tabIds: ['cmp-scoring', 'ont-benchmarks'],
+    tabIds: [
+      'cmp-scoring', 'ont-benchmarks',
+      'assessment-scoring', 'assessment-science',
+    ],
   },
   {
     id: 'validate',
@@ -87,6 +91,9 @@ export const COMPETENCY_WIZARD_STEPS: WizardStep[] = [
       'competency-coverage-matrices', 'global-intelligence', 'enterprise-workforce-console',
       'ecosystem-activation', 'enterprise-certification', 'go-live-center', 'founder-go-live',
       'platform-completion', 'mx203-knowledge-center',
+      'assessment-intelligence',
+      'platform-lifecycle', 'platform-lifecycle-operations', 'platform-intelligence-operations',
+      'operational-readiness', 'enterprise-intelligence-integration',
     ],
   },
 ];

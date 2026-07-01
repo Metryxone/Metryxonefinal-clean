@@ -91,14 +91,14 @@ function ErrorNote({ q }: { q: any }) {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
-type TabId = 'overview' | 'certification' | 'coverage' | 'capabilities' | 'live' | 'signals' | 'adoption' | 'gaps' | 'history';
+type TabId = 'overview' | 'certification' | 'coverage' | 'capabilities' | 'live' | 'signals' | 'latency' | 'adoption' | 'gaps' | 'history';
 
 export default function OperationalReadinessPanel() {
   const [tab, setTab] = React.useState<TabId>('overview');
   const TABS: Array<[TabId, string]> = [
     ['overview', 'Overview'], ['certification', 'Certification'], ['coverage', 'Coverage'],
     ['capabilities', 'Capabilities'], ['live', 'Live Health'], ['signals', 'Live Signals'],
-    ['adoption', 'Adoption'], ['gaps', 'Gap Register'], ['history', 'Snapshots'],
+    ['latency', 'Latency'], ['adoption', 'Adoption'], ['gaps', 'Gap Register'], ['history', 'Snapshots'],
   ];
   return (
     <div className="p-6 space-y-6 max-w-[1400px]">
@@ -128,6 +128,7 @@ export default function OperationalReadinessPanel() {
       {tab === 'capabilities' && <CapabilitiesSection />}
       {tab === 'live' && <LiveHealthSection />}
       {tab === 'signals' && <SignalsSection />}
+      {tab === 'latency' && <LatencySection />}
       {tab === 'adoption' && <AdoptionSection />}
       {tab === 'gaps' && <GapsSection />}
       {tab === 'history' && <HistorySection />}
@@ -716,6 +717,81 @@ function SignalsSection() {
           </>
         )}
       </div>
+    </div>
+  );
+}
+
+/* ── Latency — request-speed percentiles (p50/p95/p99), refreshed periodically ── */
+function pct(n?: number | null) {
+  // Percentiles are null until enough samples exist — render "—", NEVER a fabricated 0.
+  if (n == null || Number.isNaN(n)) return '—';
+  return `${num(n)} ms`;
+}
+function LatencySection() {
+  // Live metric — poll every 15s so an operator SEES a slowdown at a glance.
+  const q = useQuery<any>({
+    queryKey: [BASE, '/metrics/latency'],
+    queryFn: () => getJSON(`${BASE}/metrics/latency`),
+    staleTime: 10_000,
+    refetchInterval: 15_000,
+  });
+  const lat = q.data?.latency;
+  const overall = lat?.overall ?? {};
+  const byMethod: Record<string, any> = lat?.by_method ?? {};
+  const methods = Object.keys(byMethod).sort();
+  return (
+    <div className="space-y-4">
+      <div className="text-sm rounded-md p-3 flex items-start gap-2" style={{ background: '#EFF6FF', color: '#1E40AF' }}>
+        <Info className="w-4 h-4 mt-0.5 shrink-0" />
+        Request-speed percentiles estimated from the request-duration histogram (Prometheus semantics).
+        Percentiles are <b>null until enough samples exist</b> (p50 ≥ 2, p95 ≥ 20, p99 ≥ 100) and render
+        <b> —</b>, never a fabricated 0. Auto-refreshes every 15s.
+      </div>
+      <ErrorNote q={q} />
+
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <Stat icon={<Activity className="w-4 h-4" />} label="Requests sampled" value={num(overall.count)} />
+        <Stat icon={<Gauge className="w-4 h-4" />} label="Avg" value={pct(overall.avg_ms)} />
+        <Stat icon={<BarChart3 className="w-4 h-4" />} label="p50 (median)" value={pct(overall.p50_ms)} />
+        <Stat icon={<BarChart3 className="w-4 h-4" />} label="p95" value={pct(overall.p95_ms)} />
+        <Stat icon={<BarChart3 className="w-4 h-4" />} label="p99" value={pct(overall.p99_ms)} />
+      </div>
+
+      <Card><CardHeader className="pb-2">
+        <CardTitle className="text-sm flex items-center gap-2"><TrendingUp className="w-4 h-4" /> Per-method breakdown</CardTitle>
+        <CardDescription>A single slow HTTP verb is visible on its own row. {dash(lat?.metric)}</CardDescription>
+      </CardHeader>
+        <CardContent className="p-0">
+          {methods.length > 0 ? (
+            <div className="rounded-b border-t overflow-auto max-h-[55vh]">
+              <Table>
+                <TableHeader><TableRow>
+                  <TableHead>Method</TableHead><TableHead>Requests</TableHead><TableHead>Avg</TableHead>
+                  <TableHead>p50</TableHead><TableHead>p95</TableHead><TableHead>p99</TableHead>
+                </TableRow></TableHeader>
+                <TableBody>
+                  {methods.map((m) => {
+                    const r = byMethod[m] ?? {};
+                    return (
+                      <TableRow key={m}>
+                        <TableCell className="text-xs font-mono font-medium">{dash(m)}</TableCell>
+                        <TableCell className="text-xs">{num(r.count)}</TableCell>
+                        <TableCell className="text-xs">{pct(r.avg_ms)}</TableCell>
+                        <TableCell className="text-xs">{pct(r.p50_ms)}</TableCell>
+                        <TableCell className="text-xs">{pct(r.p95_ms)}</TableCell>
+                        <TableCell className="text-xs">{pct(r.p99_ms)}</TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          ) : (
+            <div className="text-sm text-gray-400 p-4">No per-method samples recorded yet — metrics accrue as requests flow (flag-ON only).</div>
+          )}
+        </CardContent></Card>
+
+      {lat?.note && <p className="text-xs text-gray-500 border-l pl-3">{dash(lat.note)}</p>}
     </div>
   );
 }

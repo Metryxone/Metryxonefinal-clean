@@ -313,6 +313,12 @@ export const FEATURE_FLAGS = {
    *  NEVER a gap; never fabricated. Coverage⟂Confidence⟂Adoption never composited; null≠0. Env:
    *  `FF_ASSESSMENT_BUILDER`. */
   assessmentBuilder: false,
+  /** CAPADEX 3.0 — Program 3 · Phase 3.4 Enterprise Assessment Delivery Engine (candidate-experience platform:
+   *  launch · session · candidate-experience · question-delivery · timing · response · accessibility ·
+   *  delivery-modes · security · notifications · frontend · APIs — owns candidate experience from launch until
+   *  submission; NOT scoring/psychometrics/norms/AI-interpretation/reports/analytics = 3.5+). Default OFF,
+   *  byte-identical incl. schema (DDL only on flag-gated write paths). Env: `FF_ASSESSMENT_DELIVERY`. */
+  assessmentDelivery: false,
   /** MX-103X — Live Employer Ecosystem Activation (read-only audit + certification console over the EXISTING
    *  employer hiring funnel). When ON, a PURE read-only composer at `/api/admin/employer-ecosystem/*`
    *  (super-admin) inventories the nine funnel stages — onboarding · create-job · role-DNA · competencies ·
@@ -2331,6 +2337,11 @@ export function isQuestionManagementPlatformEnabled(): boolean {
 /** CAPADEX 3.0 — Program 3 · Phase 3.3 Enterprise Assessment Builder master switch. */
 export function isAssessmentBuilderEnabled(): boolean {
   return isFlagEnabled('assessmentBuilder');
+}
+
+/** CAPADEX 3.0 — Program 3 · Phase 3.4 Enterprise Assessment Delivery Engine master switch. */
+export function isAssessmentDeliveryEnabled(): boolean {
+  return isFlagEnabled('assessmentDelivery');
 }
 
 export function isCustomerJourneyCompletionEnabled(): boolean {

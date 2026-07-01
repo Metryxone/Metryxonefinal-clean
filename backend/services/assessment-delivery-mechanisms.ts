@@ -107,6 +107,28 @@ async function count(pool: Pool, sql: string, params: unknown[] = []): Promise<n
   }
 }
 
+/**
+ * Read-only helpers: NEVER touch DDL. If the overlay table is absent (flag never
+ * exercised via a write), the query throws → we honestly return empty ([] / null),
+ * NEVER CREATE TABLE. DDL lives ONLY on the write paths (via ensureAdSchema).
+ */
+async function safeRows(pool: Pool, sql: string, params: unknown[] = []): Promise<unknown[]> {
+  try {
+    const { rows } = await pool.query(sql, params);
+    return rows;
+  } catch {
+    return [];
+  }
+}
+async function safeRow(pool: Pool, sql: string, params: unknown[] = []): Promise<unknown> {
+  try {
+    const { rows } = await pool.query(sql, params);
+    return rows[0] ?? null;
+  } catch {
+    return null;
+  }
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // LAUNCH — create / update / list / get a launch
 // ─────────────────────────────────────────────────────────────────────────────
@@ -134,15 +156,11 @@ export async function upsertLaunch(pool: Pool, input: LaunchInput): Promise<unkn
 }
 export async function listLaunches(pool: Pool): Promise<unknown[]> {
   assertEnabled();
-  await ensureAdSchema(pool);
-  const { rows } = await pool.query(`SELECT * FROM ad_launches ORDER BY updated_at DESC LIMIT 500`);
-  return rows;
+  return safeRows(pool, `SELECT * FROM ad_launches ORDER BY updated_at DESC LIMIT 500`);
 }
 export async function getLaunch(pool: Pool, launchKey: string): Promise<unknown> {
   assertEnabled();
-  await ensureAdSchema(pool);
-  const { rows } = await pool.query(`SELECT * FROM ad_launches WHERE launch_key=$1`, [launchKey]);
-  return rows[0] ?? null;
+  return safeRow(pool, `SELECT * FROM ad_launches WHERE launch_key=$1`, [launchKey]);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -180,11 +198,9 @@ export async function transitionSession(pool: Pool, sessionKey: string, status: 
 }
 export async function listSessions(pool: Pool, launchKey?: string): Promise<unknown[]> {
   assertEnabled();
-  await ensureAdSchema(pool);
-  const { rows } = launchKey
-    ? await pool.query(`SELECT * FROM ad_sessions WHERE launch_key=$1 ORDER BY started_at DESC LIMIT 500`, [launchKey])
-    : await pool.query(`SELECT * FROM ad_sessions ORDER BY started_at DESC LIMIT 500`);
-  return rows;
+  return launchKey
+    ? safeRows(pool, `SELECT * FROM ad_sessions WHERE launch_key=$1 ORDER BY started_at DESC LIMIT 500`, [launchKey])
+    : safeRows(pool, `SELECT * FROM ad_sessions ORDER BY started_at DESC LIMIT 500`);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -206,9 +222,7 @@ export async function saveResponse(pool: Pool, input: ResponseInput): Promise<un
 }
 export async function listResponses(pool: Pool, sessionKey: string): Promise<unknown[]> {
   assertEnabled();
-  await ensureAdSchema(pool);
-  const { rows } = await pool.query(`SELECT * FROM ad_responses WHERE session_key=$1 ORDER BY updated_at DESC`, [sessionKey]);
-  return rows;
+  return safeRows(pool, `SELECT * FROM ad_responses WHERE session_key=$1 ORDER BY updated_at DESC`, [sessionKey]);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -228,9 +242,7 @@ export async function recordEvent(pool: Pool, input: EventInput): Promise<unknow
 }
 export async function listEvents(pool: Pool, sessionKey: string): Promise<unknown[]> {
   assertEnabled();
-  await ensureAdSchema(pool);
-  const { rows } = await pool.query(`SELECT * FROM ad_events WHERE session_key=$1 ORDER BY created_at DESC LIMIT 500`, [sessionKey]);
-  return rows;
+  return safeRows(pool, `SELECT * FROM ad_events WHERE session_key=$1 ORDER BY created_at DESC LIMIT 500`, [sessionKey]);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -250,9 +262,7 @@ export async function recordNotification(pool: Pool, input: NotificationInput): 
 }
 export async function listNotifications(pool: Pool, launchKey: string): Promise<unknown[]> {
   assertEnabled();
-  await ensureAdSchema(pool);
-  const { rows } = await pool.query(`SELECT * FROM ad_notifications WHERE launch_key=$1 ORDER BY created_at DESC LIMIT 500`, [launchKey]);
-  return rows;
+  return safeRows(pool, `SELECT * FROM ad_notifications WHERE launch_key=$1 ORDER BY created_at DESC LIMIT 500`, [launchKey]);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

@@ -23,8 +23,8 @@ import { BRAND } from '@/design-system/tokens';
 import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
-  Activity, AlertTriangle, BarChart3, Bell, Boxes, Camera, CheckCircle2, Coins, Cpu, Database, Gauge, History, Inbox, Info,
-  LayoutDashboard, ListChecks, Server, ShieldCheck, TrendingUp, Wrench,
+  Activity, AlertTriangle, ArrowDown, ArrowRight, ArrowUp, BarChart3, Bell, Boxes, Camera, CheckCircle2, Coins, Cpu, Database, Gauge,
+  GitCompareArrows, History, Inbox, Info, LayoutDashboard, ListChecks, Minus, Server, ShieldCheck, TrendingUp, Wrench, X,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Badge } from '../ui/badge';
@@ -136,12 +136,226 @@ export default function OperationalReadinessPanel() {
   );
 }
 
-/* ── Snapshots — capture a point-in-time snapshot + review history ──────────── */
+/* ── Snapshot compare (drift diff) — honest deltas, null ≠ 0 ─────────────────
+ * Both snapshots keep the full `summary` verbatim (per-axis structural-coverage
+ * scores, verdicts, gap & status counts). We diff EARLIER (baseline) → LATER
+ * (current). A numeric delta is shown ONLY when BOTH sides are measured numbers;
+ * whenever either side is null/unmeasurable we render the transition WITHOUT a
+ * fabricated delta (— → n "newly measurable", n → — "no longer measurable").
+ */
+function toNum(n: any): number | null {
+  return n == null || Number.isNaN(Number(n)) ? null : Number(n);
+}
+
+/** Numeric delta cell — used for counts (always real numbers, 0 is a real 0). */
+function CountDelta({ a, b }: { a?: number | null; b?: number | null }) {
+  const an = toNum(a), bn = toNum(b);
+  if (an == null && bn == null) return <span className="text-gray-400">—</span>;
+  if (an == null || bn == null) {
+    return (
+      <span className="text-xs text-gray-500">
+        {an == null ? '—' : num(an)} <ArrowRight className="w-3 h-3 inline mx-0.5" /> {bn == null ? '—' : num(bn)}
+        <span className="text-gray-400 ml-1">({an == null ? 'newly measured' : 'no longer measured'})</span>
+      </span>
+    );
+  }
+  const d = bn - an;
+  const tone = d === 0 ? { c: '#6B7280', I: Minus } : d > 0 ? { c: '#B45309', I: ArrowUp } : { c: '#166534', I: ArrowDown };
+  const Icon = tone.I;
+  return (
+    <span className="text-xs" style={{ color: tone.c }}>
+      {num(an)} <ArrowRight className="w-3 h-3 inline mx-0.5 text-gray-400" /> {num(bn)}
+      <span className="inline-flex items-center gap-0.5 ml-1 font-semibold"><Icon className="w-3 h-3" />{d === 0 ? '0' : `${d > 0 ? '+' : ''}${num(d)}`}</span>
+    </span>
+  );
+}
+
+/** Score delta cell — 0–100 coverage OR "—" when unmeasurable. Up = coverage improved (green). */
+function ScoreDelta({ a, b }: { a?: number | null; b?: number | null }) {
+  const an = toNum(a), bn = toNum(b);
+  if (an == null && bn == null) return <span className="text-xs text-gray-400">— <span className="text-gray-400">(unmeasurable in both)</span></span>;
+  if (an == null || bn == null) {
+    return (
+      <span className="text-xs text-gray-500">
+        {an == null ? '—' : num(an)} <ArrowRight className="w-3 h-3 inline mx-0.5" /> {bn == null ? '—' : num(bn)}
+        <span className="text-gray-400 ml-1">({an == null ? 'newly measurable' : 'no longer measurable'})</span>
+      </span>
+    );
+  }
+  const d = bn - an;
+  const tone = d === 0 ? { c: '#6B7280', I: Minus } : d > 0 ? { c: '#166534', I: ArrowUp } : { c: '#991B1B', I: ArrowDown };
+  const Icon = tone.I;
+  return (
+    <span className="text-xs" style={{ color: tone.c }}>
+      {num(an)} <ArrowRight className="w-3 h-3 inline mx-0.5 text-gray-400" /> {num(bn)}
+      <span className="inline-flex items-center gap-0.5 ml-1 font-semibold"><Icon className="w-3 h-3" />{d === 0 ? '0' : `${d > 0 ? '+' : ''}${num(d)}`}</span>
+    </span>
+  );
+}
+
+/** Verdict / string change cell — shows a → b, unchanged marker when identical. */
+function VerdictDelta({ a, b }: { a?: string | null; b?: string | null }) {
+  const same = (a ?? null) === (b ?? null);
+  return (
+    <span className="inline-flex items-center gap-2 flex-wrap">
+      <Tone s={a} />
+      <ArrowRight className="w-3 h-3 text-gray-400" />
+      <Tone s={b} />
+      {same && <span className="text-[11px] text-gray-400">unchanged</span>}
+      {!same && <span className="text-[11px] font-semibold" style={{ color: '#B45309' }}>changed</span>}
+    </span>
+  );
+}
+
+function CompareSection({ a, b, labels }: { a: any; b: any; labels: Record<string, string> }) {
+  // Order baseline (earlier) → current (later) by captured_at so deltas read chronologically.
+  const [base, curr] = React.useMemo(() => {
+    const ta = new Date(a?.captured_at ?? 0).getTime();
+    const tb = new Date(b?.captured_at ?? 0).getTime();
+    return ta <= tb ? [a, b] : [b, a];
+  }, [a, b]);
+
+  const bs = base?.summary ?? {};
+  const cs = curr?.summary ?? {};
+
+  const scoreMap = (s: any): Record<string, number | null> => {
+    const out: Record<string, number | null> = {};
+    for (const r of (s?.certification_scores ?? [])) out[r.axis] = toNum(r.structural_coverage_score);
+    return out;
+  };
+  const baseScores = scoreMap(bs);
+  const currScores = scoreMap(cs);
+  const axisKeys = Array.from(new Set([...Object.keys(baseScores), ...Object.keys(currScores)]));
+
+  const gapKeys = Array.from(new Set([...Object.keys(bs.gap_counts ?? {}), ...Object.keys(cs.gap_counts ?? {})]));
+  const statusKeys = ['SUPPORTED', 'PARTIAL', 'DEAD_END', 'MISSING'];
+
+  function fmtDate(s?: string | null) {
+    if (s == null || s === '') return '—';
+    const d = new Date(s);
+    return Number.isNaN(d.getTime()) ? dash(s) : d.toLocaleString('en-IN');
+  }
+
+  return (
+    <Card className="border-2" style={{ borderColor: BRAND.primary }}>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm flex items-center gap-2"><GitCompareArrows className="w-4 h-4" /> Snapshot comparison</CardTitle>
+        <CardDescription>
+          Baseline <span className="font-mono">{dash(base?.snapshot_uid)}</span> ({fmtDate(base?.captured_at)}) →
+          Current <span className="font-mono">{dash(curr?.snapshot_uid)}</span> ({fmtDate(curr?.captured_at)}).
+          Deltas are shown only where BOTH sides are measured — <i>null ≠ 0; nothing fabricated.</i>
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {/* Verdicts */}
+        <div>
+          <div className="text-xs font-semibold text-gray-500 mb-1">Verdicts</div>
+          <div className="rounded border divide-y">
+            <div className="flex items-center justify-between gap-3 p-2 text-sm">
+              <span className="text-gray-600">Validation verdict</span>
+              <VerdictDelta a={bs.validation_verdict} b={cs.validation_verdict} />
+            </div>
+            <div className="flex items-center justify-between gap-3 p-2 text-sm">
+              <span className="text-gray-600">Enterprise readiness</span>
+              <VerdictDelta a={bs.enterprise_ready?.verdict} b={cs.enterprise_ready?.verdict} />
+            </div>
+          </div>
+        </div>
+
+        {/* Gap counts */}
+        <div>
+          <div className="text-xs font-semibold text-gray-500 mb-1">Gap counts (by severity)</div>
+          <div className="rounded border overflow-auto">
+            <Table>
+              <TableHeader><TableRow><TableHead>Severity</TableHead><TableHead>Change</TableHead></TableRow></TableHeader>
+              <TableBody>
+                {gapKeys.length === 0 && <TableRow><TableCell colSpan={2} className="text-xs text-gray-400">No gap severities recorded.</TableCell></TableRow>}
+                {gapKeys.map((k) => (
+                  <TableRow key={k}>
+                    <TableCell className="text-xs font-medium">{dash(k)}</TableCell>
+                    <TableCell><CountDelta a={(bs.gap_counts ?? {})[k]} b={(cs.gap_counts ?? {})[k]} /></TableCell>
+                  </TableRow>
+                ))}
+                <TableRow>
+                  <TableCell className="text-xs font-medium">Resolved mechanisms</TableCell>
+                  <TableCell><CountDelta a={bs.resolved_gap_count} b={cs.resolved_gap_count} /></TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+
+        {/* Status counts */}
+        <div>
+          <div className="text-xs font-semibold text-gray-500 mb-1">Domain status counts</div>
+          <div className="rounded border overflow-auto">
+            <Table>
+              <TableHeader><TableRow><TableHead>Status</TableHead><TableHead>Change</TableHead></TableRow></TableHeader>
+              <TableBody>
+                {statusKeys.map((k) => (
+                  <TableRow key={k}>
+                    <TableCell className="text-xs font-medium">{k.replace(/_/g, ' ')}</TableCell>
+                    <TableCell><CountDelta a={(bs.status_counts ?? {})[k]} b={(cs.status_counts ?? {})[k]} /></TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+
+        {/* Per-axis structural coverage scores */}
+        <div>
+          <div className="text-xs font-semibold text-gray-500 mb-1">Per-axis structural-coverage scores (0–100 · SEPARATE, never combined)</div>
+          <div className="rounded border overflow-auto max-h-[45vh]">
+            <Table>
+              <TableHeader><TableRow><TableHead>Axis</TableHead><TableHead>Score change</TableHead></TableRow></TableHeader>
+              <TableBody>
+                {axisKeys.length === 0 && <TableRow><TableCell colSpan={2} className="text-xs text-gray-400">No per-axis scores recorded.</TableCell></TableRow>}
+                {axisKeys.map((k) => (
+                  <TableRow key={k}>
+                    <TableCell className="text-xs font-medium">{labels[k] ?? dash(k)}</TableCell>
+                    <TableCell><ScoreDelta a={baseScores[k]} b={currScores[k]} /></TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+/* ── Snapshots — capture a point-in-time snapshot + review/compare history ───── */
 function HistorySection() {
   const { toast } = useToast();
   const qc = useQueryClient();
   const q = useEndpoint('/snapshots');
+  const qCert = useEndpoint('/certification');
   const list: any[] = q.data?.snapshots ?? [];
+  const [selected, setSelected] = React.useState<string[]>([]);
+
+  // Axis key → human label (static config, fetched from the live certification view).
+  const labels: Record<string, string> = React.useMemo(() => {
+    const m: Record<string, string> = {};
+    for (const ax of (qCert.data?.certification?.axes ?? [])) if (ax?.key) m[ax.key] = ax.label ?? ax.key;
+    return m;
+  }, [qCert.data]);
+
+  // Keep selection valid if the list changes (e.g. after a new capture).
+  React.useEffect(() => {
+    setSelected((prev) => prev.filter((uid) => list.some((s) => s.snapshot_uid === uid)));
+  }, [q.data]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function toggle(uid: string) {
+    setSelected((prev) => {
+      if (prev.includes(uid)) return prev.filter((x) => x !== uid);
+      if (prev.length >= 2) return [prev[1], uid]; // keep newest two picks
+      return [...prev, uid];
+    });
+  }
+
+  const picked = selected.map((uid) => list.find((s) => s.snapshot_uid === uid)).filter(Boolean) as any[];
 
   const capture = useMutation({
     mutationFn: async () => {
@@ -200,26 +414,57 @@ function HistorySection() {
       )}
 
       {list.length > 0 && (
+        <div className="text-sm rounded-md p-3 flex items-center justify-between gap-3 flex-wrap" style={{ background: '#F8FAFC', color: '#334155' }}>
+          <span className="flex items-center gap-2">
+            <GitCompareArrows className="w-4 h-4 shrink-0" />
+            Select <b>two</b> snapshots below to compare their axes, verdicts &amp; gap counts side by side ({num(selected.length)}/2 selected).
+          </span>
+          {selected.length > 0 && (
+            <Button variant="outline" size="sm" onClick={() => setSelected([])} className="shrink-0">
+              <X className="w-3.5 h-3.5 mr-1" /> Clear selection
+            </Button>
+          )}
+        </div>
+      )}
+
+      {picked.length === 2 && <CompareSection a={picked[0]} b={picked[1]} labels={labels} />}
+
+      {list.length > 0 && (
         <Card><CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center gap-2"><History className="w-4 h-4" /> Captured snapshots ({num(list.length)})</CardTitle>
-          <CardDescription>Most recent first. Verdict is the structural validation verdict recorded at capture time.</CardDescription>
+          <CardDescription>Most recent first. Verdict is the structural validation verdict recorded at capture time. Tick two rows to compare.</CardDescription>
         </CardHeader>
           <CardContent className="p-0">
             <div className="rounded-b border-t overflow-auto max-h-[60vh]">
               <Table>
                 <TableHeader><TableRow>
+                  <TableHead className="w-10">Compare</TableHead>
                   <TableHead>Captured at</TableHead><TableHead>Captured by</TableHead>
                   <TableHead>Verdict</TableHead><TableHead>Snapshot ID</TableHead>
                 </TableRow></TableHeader>
                 <TableBody>
-                  {list.map((s) => (
-                    <TableRow key={s.snapshot_uid}>
-                      <TableCell className="text-xs">{fmtDate(s.captured_at)}</TableCell>
-                      <TableCell className="text-xs">{dash(s.captured_by)}</TableCell>
-                      <TableCell className="text-xs"><Tone s={s?.summary?.validation_verdict} /></TableCell>
-                      <TableCell className="text-xs font-mono">{dash(s.snapshot_uid)}</TableCell>
-                    </TableRow>
-                  ))}
+                  {list.map((s) => {
+                    const checked = selected.includes(s.snapshot_uid);
+                    const disabled = !checked && selected.length >= 2;
+                    return (
+                      <TableRow key={s.snapshot_uid} className={checked ? 'bg-blue-50/60' : undefined}>
+                        <TableCell className="text-xs">
+                          <input
+                            type="checkbox"
+                            className="h-4 w-4 cursor-pointer disabled:cursor-not-allowed accent-current"
+                            checked={checked}
+                            disabled={disabled}
+                            onChange={() => toggle(s.snapshot_uid)}
+                            aria-label={`Select snapshot ${s.snapshot_uid} to compare`}
+                          />
+                        </TableCell>
+                        <TableCell className="text-xs">{fmtDate(s.captured_at)}</TableCell>
+                        <TableCell className="text-xs">{dash(s.captured_by)}</TableCell>
+                        <TableCell className="text-xs"><Tone s={s?.summary?.validation_verdict} /></TableCell>
+                        <TableCell className="text-xs font-mono">{dash(s.snapshot_uid)}</TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </div>

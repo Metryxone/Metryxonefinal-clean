@@ -62,6 +62,9 @@ interface NormalizedFilter {
   status: string;
   fromMs: number | null;
   toMs: number | null;
+  /** Trimmed, validated YYYY-MM-DD strings (null when absent/invalid) — for display + filenames. */
+  fromDate: string | null;
+  toDate: string | null;
   hasDate: boolean;
   active: boolean;
 }
@@ -74,12 +77,36 @@ function parseDateBound(s: string | null | undefined, endOfDay: boolean): number
   return Number.isFinite(t) ? t : null;
 }
 
+function normDate(s: string | null | undefined): string | null {
+  if (s == null) return null;
+  const trimmed = String(s).trim();
+  return /^\d{4}-\d{2}-\d{2}$/.test(trimmed) ? trimmed : null;
+}
+
 function normalizeFilter(f?: PartnerEcosystemFilter | null): NormalizedFilter {
   const status = f?.status ? String(f.status).trim() : '';
   const fromMs = parseDateBound(f?.from, false);
   const toMs = parseDateBound(f?.to, true);
   const hasDate = fromMs != null || toMs != null;
-  return { status, fromMs, toMs, hasDate, active: !!status || hasDate };
+  return { status, fromMs, toMs, fromDate: normDate(f?.from), toDate: normDate(f?.to), hasDate, active: !!status || hasDate };
+}
+
+/**
+ * Public description of the ACTIVE export filter, used to stamp a self-describing metadata block
+ * (and encode the window in the filename) into filtered CSV exports. Purely derived from the same
+ * normalization used to filter rows, so the stamp can never disagree with the data. When `active`
+ * is false the caller emits NO metadata block (unfiltered export stays byte-identical to before).
+ */
+export interface ExportFilterMeta {
+  active: boolean;
+  status: string | null;
+  from: string | null;
+  to: string | null;
+}
+
+export function describeExportFilter(filter?: PartnerEcosystemFilter | null): ExportFilterMeta {
+  const nf = normalizeFilter(filter);
+  return { active: nf.active, status: nf.status || null, from: nf.fromDate, to: nf.toDate };
 }
 
 /** True when an ISO/date string falls inside [fromMs, toMs] (either bound may be null = open). */

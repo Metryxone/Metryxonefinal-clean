@@ -29,7 +29,7 @@ import {
 } from '../services/tenant/tenant-isolation-enforcement';
 import { ensureTenantRelationshipSchema } from '../services/tenant/tenant-relationship-schema';
 import { ensurePartnerEcosystemSchema } from '../services/tenant/partner-ecosystem-schema';
-import { buildPartnerEcosystem, buildUnlinkableReferrals, type PartnerEcosystemFilter } from '../services/tenant/partner-ecosystem-engine';
+import { buildPartnerEcosystem, buildUnlinkableReferrals, describeExportFilter, type PartnerEcosystemFilter } from '../services/tenant/partner-ecosystem-engine';
 import { buildPartnerEcosystemValidation } from '../services/tenant/partner-ecosystem-validation';
 import {
   upsertPartnerAgreement,
@@ -181,14 +181,38 @@ export function registerMultiTenantArchitectureRoutes(
     if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`;
     return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   };
-  const sendCsv = (res: any, filename: string, header: string[], rows: any[]) => {
-    const lines = [header.map(csvEscape).join(',')];
+  const sendCsv = (res: any, filename: string, header: string[], rows: any[], commentLines?: string[]) => {
+    const lines: string[] = [];
+    // Additive, self-describing metadata block for FILTERED exports only. Rendered as clearly-labelled
+    // comment rows (`# …`) above the header. When commentLines is empty/undefined (full export) the
+    // output is byte-identical to before.
+    if (commentLines?.length) for (const c of commentLines) lines.push(`# ${c.replace(/[\r\n]+/g, ' ')}`);
+    lines.push(header.map(csvEscape).join(','));
     for (const r of rows) lines.push(header.map((h) => csvEscape(r[h])).join(','));
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.send(lines.join('\n'));
   };
   const csvStamp = () => new Date().toISOString().slice(0, 10);
+
+  // Builds the filename + optional metadata comment block for a partner CSV export. An unfiltered
+  // export keeps the legacy `<base>_<YYYY-MM-DD>.csv` name and NO comment block (byte-identical).
+  // A filtered export encodes the window in the filename (when dates are present) and prepends a
+  // small block recording the from/to window + status that produced the file, so the statement is
+  // self-describing when shared or archived for finance reconciliation.
+  const exportStamp = (req: any, baseName: string, label: string): { filename: string; comments?: string[] } => {
+    const meta = describeExportFilter(exportFilter(req));
+    if (!meta.active) return { filename: `${baseName}_${csvStamp()}.csv` };
+    const windowStr = meta.from || meta.to ? `${meta.from ?? 'earliest'} to ${meta.to ?? 'latest'}` : 'all dates';
+    const comments = [
+      `${label} — filtered export`,
+      `Date window: ${windowStr}`,
+      `Status filter: ${meta.status ?? 'any'}`,
+      `Generated: ${new Date().toISOString()}`,
+    ];
+    const namePart = meta.from || meta.to ? `${meta.from ?? 'start'}_${meta.to ?? 'end'}` : `filtered_${csvStamp()}`;
+    return { filename: `${baseName}_${namePart}.csv`, comments };
+  };
 
   // ── Reads (literal sub-paths registered before any /:id param routes) ──────────
   app.get('/api/admin/tenant-architecture/console/partner-ecosystem/ping', ...partnerChain, (_req: any, res) => {
@@ -227,7 +251,8 @@ export function registerMultiTenantArchitectureRoutes(
       const eco = await buildPartnerEcosystem(pool, exportFilter(req));
       const header = ['id', 'agreement_code', 'tenant_id', 'tenant_name', 'tenant_code', 'partner_type',
         'status', 'commission_pct', 'start_date', 'end_date', 'updated_at'];
-      sendCsv(res, `partner_agreements_${csvStamp()}.csv`, header, eco.agreements);
+      const { filename, comments } = exportStamp(req, 'partner_agreements', 'Partner Agreements');
+      sendCsv(res, filename, header, eco.agreements, comments);
     } catch (err) {
       handlePartnerError(err, res, 'agreements export');
     }
@@ -239,7 +264,8 @@ export function registerMultiTenantArchitectureRoutes(
       const header = ['id', 'referral_code', 'channel_partner_tenant_id', 'channel_partner_name',
         'referred_tenant_id', 'referred_tenant_name', 'status', 'commission_pct', 'commission_amount',
         'currency', 'referred_at', 'converted_at'];
-      sendCsv(res, `partner_referrals_${csvStamp()}.csv`, header, eco.referrals);
+      const { filename, comments } = exportStamp(req, 'partner_referrals', 'Partner Referrals');
+      sendCsv(res, filename, header, eco.referrals, comments);
     } catch (err) {
       handlePartnerError(err, res, 'referrals export');
     }
@@ -251,7 +277,8 @@ export function registerMultiTenantArchitectureRoutes(
       const header = ['channel_partner_tenant_id', 'channel_partner_name', 'referrals_total', 'converted',
         'pending', 'expired', 'rejected', 'earned_commission', 'currencies', 'converted_without_amount'];
       const rows = eco.payouts.map((p) => ({ ...p, currencies: p.currencies.join('/') }));
-      sendCsv(res, `partner_payouts_${csvStamp()}.csv`, header, rows);
+      const { filename, comments } = exportStamp(req, 'partner_payouts', 'Partner Payouts');
+      sendCsv(res, filename, header, rows, comments);
     } catch (err) {
       handlePartnerError(err, res, 'payouts export');
     }

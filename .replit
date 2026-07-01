@@ -107,6 +107,10 @@ args = "test-referred-email"
 task = "workflow.run"
 args = "module-access-mounts"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "adaptive-difficulty-seed"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -359,6 +363,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx tests/module-access-mounts.smoke.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "adaptive-difficulty-seed"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx scripts/verify-adaptive-difficulty-seed.ts"
 
 [workflows.workflow.metadata]
 isValidation = true

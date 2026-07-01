@@ -18,6 +18,7 @@ export const AUDIT_EVENT = {
   USER_ROLE_CHANGED:         'user_role_changed',
   ASSESSMENT_COMPLETED:      'assessment_completed',
   SCORE_COMPUTED:            'score_computed',
+  USAGE_QUOTA_CHANGED:       'usage_quota_changed',
 } as const;
 
 export type AuditEventType = (typeof AUDIT_EVENT)[keyof typeof AUDIT_EVENT];

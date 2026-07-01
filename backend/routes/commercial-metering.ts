@@ -19,9 +19,10 @@ import { ensureMeteringSchema } from '../services/commercial/metering-schema';
 import { ensureCommercialSchema } from '../services/commercial/catalog-schema';
 import {
   recordUsage, checkQuota, buildUsageOverview, isUsageType,
-  checkCreditDimension, spendCredits, listPlanQuotas, upsertPlanQuotas, buildPlanQuotaImpact,
+  checkCreditDimension, spendCredits, listPlanQuotas, upsertPlanQuotas, buildPlanQuotaImpact, listPlanQuotaAudit,
   listUsageOverrides, upsertUsageOverride, deleteUsageOverride,
 } from '../services/commercial/metering-engine';
+import { writeAuditEvent, AUDIT_EVENT } from '../lib/audit';
 import { buildIdentityConsumption, buildDimensionOverview, buildUsageTrend } from '../services/commercial/consumption-engine';
 import {
   isCommercialUsageMeteringEnabled,
@@ -251,6 +252,24 @@ export function registerCommercialMeteringRoutes(
         if (result.reason === 'not_found') return res.status(404).json({ error: 'plan not found' });
         return res.status(400).json({ error: 'invalid quota value (expected a non-negative integer)' });
       }
+      // Audit trail: write ONE record per real quota change (who / what plan / which dimensions /
+      // old→new / when). Skip no-op saves so the trail stays signal, not noise. Best-effort and
+      // non-throwing (writeAuditEvent swallows its own errors) so an audit hiccup never fails the save.
+      if (result.changes && result.changes.length > 0) {
+        const actor = req.user?.email ?? req.session?.email ?? 'system';
+        await writeAuditEvent(pool, {
+          event_type: AUDIT_EVENT.USAGE_QUOTA_CHANGED,
+          actor: String(actor),
+          payload: {
+            plan_id: planId,
+            // NB: stored as `plan_ref` (NOT `plan_code`) — the shared redactor masks any key matching
+            // /code/ so a `plan_code` key would be silently redacted. Read back as plan_code below.
+            plan_ref: result.plan_code ?? null,
+            plan_name: result.plan_name ?? null,
+            changes: result.changes,
+          },
+        });
+      }
       res.json({ ok: true, plan: result.plan });
     } catch (err) {
       console.error('[metering quotas upsert]', err);
@@ -305,6 +324,18 @@ export function registerCommercialMeteringRoutes(
     } catch (err) {
       console.error('[metering overrides delete]', err);
       res.status(500).json({ error: 'overrides delete failed' });
+    }
+  });
+
+  // Recent quota-change audit trail (super-admin, read-only). Each entry: who changed which plan's
+  // limits, the per-dimension old→new diff, and when. Honest empty when nothing has changed yet.
+  app.get('/api/admin/commercial/metering/quotas/audit', ...adminReadChain, async (req: any, res) => {
+    try {
+      const audit = await listPlanQuotaAudit(pool, req.query?.limit);
+      res.json(audit);
+    } catch (err) {
+      console.error('[metering quotas audit]', err);
+      res.status(500).json({ error: 'quotas audit failed' });
     }
   });
 

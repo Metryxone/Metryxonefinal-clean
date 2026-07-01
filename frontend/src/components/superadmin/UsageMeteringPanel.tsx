@@ -3,7 +3,7 @@ import React, { useMemo, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   RefreshCw, AlertTriangle, Gauge, Coins, Search, BarChart3, User, Info, TrendingUp,
-  SlidersHorizontal, Save, Check, RotateCcw, Users,
+  SlidersHorizontal, Save, Check, RotateCcw, Users, History,
 } from 'lucide-react';
 import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid,
@@ -237,6 +237,8 @@ function PlanQuotaEditor() {
       qc.invalidateQueries({ queryKey: ['/api/admin/commercial/metering/quotas/impact'] });
       qc.invalidateQueries({ queryKey: ['metering-consumption'] });
       qc.invalidateQueries({ queryKey: ['/api/admin/commercial/metering/dimensions'] });
+      // Surface the new audit entry immediately in the "Recent limit changes" card.
+      qc.invalidateQueries({ queryKey: ['/api/admin/commercial/metering/quotas/audit'] });
       window.setTimeout(() => setSavedPlan((cur) => (cur === vars.planId ? null : cur)), 2500);
     },
     onError: (err: any, vars) => {
@@ -733,6 +735,127 @@ function OverridesEditor() {
   );
 }
 
+// ── Quota-change audit trail ───────────────────────────────────────────────────────────────────────
+// Every limit edit is recorded (who / plan / dimension / old→new / when). This surfaces the most recent
+// changes so billing disputes and mistakes are traceable. Read-only; honest empty when nothing changed.
+interface QuotaChange {
+  dimension: string;
+  old_value: number | null;
+  new_value: number | null;
+}
+interface QuotaAuditEntry {
+  id: string;
+  actor: string;
+  plan_id: string | null;
+  plan_code: string | null;
+  plan_name: string | null;
+  changes: QuotaChange[];
+  created_at: string;
+}
+interface QuotaAuditOverview {
+  generated_at: string;
+  degraded: boolean;
+  entries: QuotaAuditEntry[];
+}
+
+function limitLabel(v: number | null): string {
+  return v == null ? 'Unmetered' : fmt(v);
+}
+
+function QuotaAuditTrail() {
+  const {
+    data, isLoading, isError, refetch, isFetching,
+  } = useQuery<QuotaAuditOverview | null>({
+    queryKey: ['/api/admin/commercial/metering/quotas/audit'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/commercial/metering/quotas/audit?limit=50', { credentials: 'include' });
+      if (!res.ok) throw new Error(`audit ${res.status}`);
+      return res.json();
+    },
+  });
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <History className="h-5 w-5" style={{ color: BRAND.primary }} /> Recent limit changes
+            </CardTitle>
+            <CardDescription>
+              An audit trail of who changed a plan&apos;s usage limits and when — the previous and new value for each
+              dimension. Recorded automatically on every save; makes billing disputes and mistakes traceable.
+            </CardDescription>
+          </div>
+          <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
+            <RefreshCw className={`h-4 w-4 mr-1 ${isFetching ? 'animate-spin' : ''}`} /> Refresh
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {isLoading ? (
+          <div className="flex items-center justify-center py-8 text-sm text-slate-400">
+            <RefreshCw className="h-4 w-4 mr-2 animate-spin" /> Loading…
+          </div>
+        ) : isError ? (
+          <div className="flex flex-col items-center justify-center gap-3 py-8 text-center">
+            <AlertTriangle className="h-6 w-6 text-amber-500" />
+            <p className="text-sm text-slate-500 max-w-md">
+              Couldn&apos;t load the change history. The metering feature may be disabled or you may not be signed in as a
+              super-admin.
+            </p>
+          </div>
+        ) : !data || data.entries.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-2 py-8 text-center text-sm text-slate-500">
+            <History className="h-6 w-6 text-slate-300" />
+            No limit changes recorded yet. Edits made above will appear here.
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {data.degraded && (
+              <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-amber-50 text-amber-700 text-xs">
+                <AlertTriangle className="h-4 w-4" />
+                The change history failed to read fully — the list below is partial (honest degraded state).
+              </div>
+            )}
+            {data.entries.map((entry) => (
+              <div key={entry.id} className="rounded-lg border border-slate-200 p-3 bg-white">
+                <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
+                  <div className="text-sm font-semibold text-slate-700">
+                    {entry.plan_name || entry.plan_code || 'Unknown plan'}
+                    {entry.plan_code && entry.plan_name && (
+                      <span className="ml-2 font-mono text-[11px] text-slate-400">{entry.plan_code}</span>
+                    )}
+                  </div>
+                  <div className="text-[11px] text-slate-400">
+                    {new Date(entry.created_at).toLocaleString('en-IN')}
+                  </div>
+                </div>
+                <div className="text-xs text-slate-500 mb-2">
+                  Changed by <span className="font-medium text-slate-600">{entry.actor}</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {entry.changes.map((c, i) => (
+                    <span
+                      key={`${entry.id}-${c.dimension}-${i}`}
+                      className="inline-flex items-center gap-1.5 rounded-md bg-slate-50 border border-slate-200 px-2 py-1 text-[11px]"
+                    >
+                      <span className="font-medium text-slate-600">{DIMENSION_LABELS[c.dimension] ?? c.dimension}</span>
+                      <span className="text-slate-400 line-through">{limitLabel(c.old_value)}</span>
+                      <span className="text-slate-400">→</span>
+                      <span className="font-semibold" style={{ color: BRAND.primary }}>{limitLabel(c.new_value)}</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function UsageMeteringPanel() {
   const [emailInput, setEmailInput] = useState('');
   const [lookupEmail, setLookupEmail] = useState<string | null>(null);
@@ -1001,6 +1124,8 @@ export default function UsageMeteringPanel() {
       <PlanQuotaEditor />
 
       <OverridesEditor />
+
+      <QuotaAuditTrail />
         </TabsContent>
 
         {/* ── Usage trends over time ─────────────────────────────────────── */}

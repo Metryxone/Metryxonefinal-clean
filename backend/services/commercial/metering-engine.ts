@@ -503,10 +503,22 @@ export async function listPlanQuotas(pool: Pool): Promise<PlanQuotaOverview> {
   return { generated_at: new Date().toISOString(), degraded, dimensions, plans };
 }
 
+/** A single per-dimension limit change captured for the audit trail. null = unmetered (no declared limit). */
+export interface QuotaChange {
+  dimension: UsageType;
+  old_value: number | null;
+  new_value: number | null;
+}
+
 export interface UpsertPlanQuotasResult {
   ok: boolean;
   reason?: 'not_found' | 'invalid';
   plan?: PlanQuotaRow;
+  // The effective per-dimension diff (only dimensions whose limit actually changed). Empty when the
+  // save was a no-op. The route uses this to write ONE audit record per real quota change.
+  changes?: QuotaChange[];
+  plan_code?: string;
+  plan_name?: string;
 }
 
 /**
@@ -534,11 +546,19 @@ export async function upsertPlanQuotas(
     clean.set(d, Math.trunc(n));
   }
 
+  const changes: QuotaChange[] = [];
+  let planCode = '';
+  let planName = '';
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
-    const { rows } = await client.query(`SELECT metadata FROM comm_plans WHERE id=$1 FOR UPDATE`, [planId]);
+    const { rows } = await client.query(
+      `SELECT code, name, metadata FROM comm_plans WHERE id=$1 FOR UPDATE`,
+      [planId],
+    );
     if (!rows.length) { await client.query('ROLLBACK'); return { ok: false, reason: 'not_found' }; }
+    planCode = String(rows[0].code ?? '');
+    planName = String(rows[0].name ?? '');
     const meta = (rows[0].metadata && typeof rows[0].metadata === 'object' && !Array.isArray(rows[0].metadata))
       ? { ...(rows[0].metadata as Record<string, unknown>) }
       : {};
@@ -546,6 +566,11 @@ export async function upsertPlanQuotas(
       ? { ...(meta.quotas as Record<string, unknown>) }
       : {};
     for (const [d, val] of clean) {
+      // Normalise the PREVIOUS declared limit to number|null so the audit diff compares like-for-like
+      // (absent / non-numeric metadata → unmetered null). Only record dimensions that actually moved.
+      const prevRaw = quotas[d];
+      const oldValue = prevRaw == null || !Number.isFinite(Number(prevRaw)) ? null : Number(prevRaw);
+      if (oldValue !== val) changes.push({ dimension: d, old_value: oldValue, new_value: val });
       if (val == null) delete quotas[d];
       else quotas[d] = val;
     }
@@ -560,7 +585,78 @@ export async function upsertPlanQuotas(
   }
 
   const overview = await listPlanQuotas(pool);
-  return { ok: true, plan: overview.plans.find((p) => p.plan_id === planId) };
+  return {
+    ok: true,
+    plan: overview.plans.find((p) => p.plan_id === planId),
+    changes,
+    plan_code: planCode,
+    plan_name: planName,
+  };
+}
+
+// ── Quota-change audit trail (read) ───────────────────────────────────────────────────────────────
+// Every quota edit writes a `usage_quota_changed` row to the shared capadex_audit_events ledger (the
+// route owns the write, using the unified writeAuditEvent). This read surfaces the most recent changes
+// for the admin panel. GET-never-writes: probe the table with to_regclass and degrade to an honest empty
+// trail when absent, rather than throwing or bootstrapping schema. Never throws.
+
+export interface QuotaAuditEntry {
+  id: string;
+  actor: string;
+  plan_id: string | null;
+  plan_code: string | null;
+  plan_name: string | null;
+  changes: QuotaChange[];
+  created_at: string;
+}
+
+export interface QuotaAuditOverview {
+  generated_at: string;
+  degraded: boolean;
+  entries: QuotaAuditEntry[];
+}
+
+export async function listPlanQuotaAudit(pool: Pool, limit = 50): Promise<QuotaAuditOverview> {
+  const lim = Math.min(200, Math.max(1, Math.trunc(Number(limit)) || 50));
+  const probe = await pool.query(`SELECT to_regclass('capadex_audit_events') AS oid`).catch(() => null);
+  if (!probe || probe.rows[0]?.oid == null) {
+    return { generated_at: new Date().toISOString(), degraded: false, entries: [] };
+  }
+  let degraded = false;
+  const rows = await pool
+    .query(
+      `SELECT id, actor, payload, created_at
+         FROM capadex_audit_events
+        WHERE event_type = 'usage_quota_changed'
+        ORDER BY created_at DESC
+        LIMIT $1`,
+      [lim],
+    )
+    .then((r) => r.rows)
+    .catch((e) => { console.error('[plan quota audit]', e); degraded = true; return [] as any[]; });
+
+  const entries: QuotaAuditEntry[] = rows.map((r) => {
+    const p = (r.payload && typeof r.payload === 'object' && !Array.isArray(r.payload))
+      ? (r.payload as Record<string, unknown>)
+      : {};
+    const rawChanges = Array.isArray(p.changes) ? (p.changes as any[]) : [];
+    const changes: QuotaChange[] = rawChanges.map((c) => ({
+      dimension: String(c?.dimension ?? '') as UsageType,
+      old_value: c?.old_value == null ? null : Number(c.old_value),
+      new_value: c?.new_value == null ? null : Number(c.new_value),
+    }));
+    return {
+      id: String(r.id),
+      actor: String(r.actor ?? 'system'),
+      plan_id: p.plan_id != null ? String(p.plan_id) : null,
+      // Stored as `plan_ref` to dodge the redactor's /code/ key mask (see route write path).
+      plan_code: p.plan_ref != null ? String(p.plan_ref) : null,
+      plan_name: p.plan_name != null ? String(p.plan_name) : null,
+      changes,
+      created_at: new Date(r.created_at).toISOString(),
+    };
+  });
+  return { generated_at: new Date().toISOString(), degraded, entries };
 }
 
 // ── Per-identity quota overrides (admin) ─────────────────────────────────────────────────────────

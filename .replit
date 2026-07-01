@@ -111,6 +111,10 @@ args = "module-access-mounts"
 task = "workflow.run"
 args = "adaptive-difficulty-seed"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "aint-scope-isolation"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -374,6 +378,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx scripts/verify-adaptive-difficulty-seed.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "aint-scope-isolation"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx scripts/task383-assessment-intelligence-scope-isolation.ts"
 
 [workflows.workflow.metadata]
 isValidation = true

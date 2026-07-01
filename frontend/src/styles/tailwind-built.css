@@ -1698,6 +1698,9 @@
   .max-h-\[60vh\] {
     max-height: 60vh;
   }
+  .max-h-\[65vh\] {
+    max-height: 65vh;
+  }
   .max-h-\[70vh\] {
     max-height: 70vh;
   }
@@ -3204,6 +3207,10 @@
   }
   .rounded-tr-sm {
     border-top-right-radius: calc(var(--radius) - 4px);
+  }
+  .rounded-b {
+    border-bottom-right-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
   }
   .rounded-b-2xl {
     border-bottom-right-radius: var(--radius-2xl);

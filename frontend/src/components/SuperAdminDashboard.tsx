@@ -164,6 +164,7 @@ const QuestionFactoryPanel = lazy(() => import('./superadmin/QuestionFactoryPane
 const PlatformLifecyclePanel = lazy(() => import('./superadmin/PlatformLifecyclePanel'));
 const PlatformLifecycleOperationsPanel = lazy(() => import('./superadmin/PlatformLifecycleOperationsPanel'));
 const PlatformIntelligenceOperationsPanel = lazy(() => import('./superadmin/PlatformIntelligenceOperationsPanel'));
+const OperationalReadinessPanel = lazy(() => import('./superadmin/OperationalReadinessPanel'));
 const EnterpriseIntegrationPanel = lazy(() => import('./superadmin/EnterpriseIntegrationPanel'));
 const GlobalRegionContentPanel = lazy(() => import('./superadmin/GlobalRegionContentPanel'));
 const GlobalIntelligencePanel = lazy(() => import('./superadmin/GlobalIntelligencePanel'));
@@ -372,6 +373,18 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
     queryFn: async () => {
       const res = await fetch('/api/admin/platform-intelligence-operations/feature-flag', { credentials: 'include' });
       return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+  // ── CAPADEX 3.0 Phase 2.5 Operational Readiness (flag operationalReadiness).
+  //    Probe /enabled ({enabled}) → flag OFF hides the tab entirely (byte-identical UI). ──
+  const { data: operationalReadinessEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/operational-readiness/enabled', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/operational-readiness/enabled', { credentials: 'include' });
+      if (!res.ok) return false;
+      const j = await res.json();
+      return j?.enabled === true;
     },
     enabled: isAuthenticated,
   });
@@ -1088,6 +1101,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       ...(platformLifecycleEnabled ? [{ id: 'platform-lifecycle', label: 'Platform Lifecycle', icon: Boxes, node: <PlatformLifecyclePanel /> }] : []),
                       ...(platformLifecycleOperationsEnabled ? [{ id: 'platform-lifecycle-operations', label: 'Platform Lifecycle Operations', icon: Boxes, node: <PlatformLifecycleOperationsPanel /> }] : []),
                       ...(platformIntelligenceOperationsEnabled ? [{ id: 'platform-intelligence-operations', label: 'Platform Intelligence Operations', icon: Boxes, node: <PlatformIntelligenceOperationsPanel /> }] : []),
+                      ...(operationalReadinessEnabled ? [{ id: 'operational-readiness', label: 'Operational Readiness', icon: Gauge, node: <OperationalReadinessPanel /> }] : []),
                       ...(enterpriseIntelligenceIntegrationEnabled ? [{ id: 'enterprise-intelligence-integration', label: 'Enterprise Intelligence Integration', icon: Boxes, node: <EnterpriseIntegrationPanel /> }] : []),
                       ...(globalCompetencyEnabled ? [{ id: 'global-region-content', label: 'Global Region Content', icon: Globe, node: <GlobalRegionContentPanel /> }] : []),
                       ...(globalIntelEnabled ? [{ id: 'global-intelligence', label: 'Global Intelligence', icon: Globe, node: <GlobalIntelligencePanel /> }] : []),
@@ -1457,6 +1471,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               {activeTab === 'platform-lifecycle' && platformLifecycleEnabled && <div className="h-full overflow-auto"><PlatformLifecyclePanel /></div>}
               {activeTab === 'platform-lifecycle-operations' && platformLifecycleOperationsEnabled && <div className="h-full overflow-auto"><PlatformLifecycleOperationsPanel /></div>}
               {activeTab === 'platform-intelligence-operations' && platformIntelligenceOperationsEnabled && <div className="h-full overflow-auto"><PlatformIntelligenceOperationsPanel /></div>}
+              {activeTab === 'operational-readiness' && operationalReadinessEnabled && <div className="h-full overflow-auto"><OperationalReadinessPanel /></div>}
               {activeTab === 'enterprise-intelligence-integration' && enterpriseIntelligenceIntegrationEnabled && <div className="h-full overflow-auto"><EnterpriseIntegrationPanel /></div>}
               {activeTab === 'global-region-content' && <div className="h-full overflow-auto"><GlobalRegionContentPanel /></div>}
               {activeTab === 'global-intelligence'  && <div className="h-full overflow-auto"><GlobalIntelligencePanel /></div>}

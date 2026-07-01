@@ -1,0 +1,21 @@
+{
+  "ts": "2026-07-01T00:36:49Z",
+  "method": "EXPLAIN (ANALYZE, BUFFERS), 3 reps, server-side Execution Time (ms); medians representative, 3rd-rep spikes are cold plan-cache/first-touch noise",
+  "db_size": "206 MB",
+  "explain": [
+    {"label":"count_full_scan mobility_transferability_maps (89,401 rows)","exec_ms_median":8.309,"exec_ms_all":[8.277,8.309,22.937]},
+    {"label":"count map_role_competency (52,362 rows)","exec_ms_median":4.991,"exec_ms_all":[4.846,4.991,45.157]},
+    {"label":"scan_limit1000 (89k table)","exec_ms_median":0.342,"exec_ms_all":[0.209,0.342,155.049]},
+    {"label":"groupby aig_monitoring_metrics by metric_name (29,974 rows)","exec_ms_median":6.838,"exec_ms_all":[5.22,6.838,249.635]},
+    {"label":"indexed_recent aig_monitoring_metrics last100 by recorded_at","exec_ms_median":0.079,"exec_ms_all":[0.074,0.079,0.089]}
+  ],
+  "counts": [
+    {"table":"mobility_transferability_maps","rows":89401,"size":"31 MB"},
+    {"table":"map_role_competency","rows":52362,"size":"16 MB"},
+    {"table":"p4_benchmark_trends","rows":26910,"size":"9208 kB"},
+    {"table":"aig_monitoring_metrics","rows":29974,"size":"6752 kB"},
+    {"table":"onto_competency_content_drafts","rows":17996,"size":"16 MB"},
+    {"table":"frp_role_evolution","rows":13160,"size":"3976 kB"},
+    {"table":"competency_question_templates","rows":2665,"size":"3920 kB"}
+  ]
+}

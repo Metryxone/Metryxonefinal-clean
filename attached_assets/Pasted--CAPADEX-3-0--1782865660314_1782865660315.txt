@@ -1,0 +1,435 @@
+# ==============================================================================
+#
+# CAPADEX 3.0
+#
+# 99% ENTERPRISE LAUNCH PROGRAM
+#
+# PROGRAM 2
+#
+# PHASE 2.3
+#
+# PERFORMANCE
+#
+# SCALABILITY
+#
+# LOAD VALIDATION
+#
+# ==============================================================================
+#
+# EXECUTION MODE
+#
+# IMPLEMENTATION
+#
+# Repository First
+#
+# Enhancement Only
+#
+# Measure Before Optimize
+#
+# Search Before Modify
+#
+# Reuse Before Build
+#
+# No New Business Features
+#
+# No New Architecture
+#
+# No V2
+#
+# No Duplicate Logic
+#
+# No Breaking Changes
+#
+# Human Approval Required
+#
+# ==============================================================================
+#
+# PRECONDITION
+#
+# Program 2 Phase 2.2
+# Technical Debt Resolution
+#
+# MUST be COMPLETE.
+#
+# If not,
+# STOP.
+#
+# ==============================================================================
+#
+# MISSION
+#
+# Improve and validate backend performance,
+# scalability and production readiness.
+#
+# This phase is NOT about adding features.
+#
+# It is about measuring,
+# optimizing,
+# validating,
+# and proving that CAPADEX can support
+# enterprise production workloads.
+#
+# Every optimization must be justified by
+# repository evidence or measured runtime evidence.
+#
+# ==============================================================================
+#
+# MANDATORY PERFORMANCE CONTRACT
+#
+# Before changing anything:
+#
+# 1. Search the repository.
+#
+# 2. Measure current performance.
+#
+# 3. Produce a performance baseline.
+#
+# 4. Identify bottlenecks.
+#
+# 5. Optimize only where measurable benefit exists.
+#
+# 6. Preserve business behaviour.
+#
+# 7. Preserve API compatibility.
+#
+# 8. Preserve database compatibility.
+#
+# 9. Benchmark before and after.
+#
+# 10. Never optimize based on assumptions.
+#
+# ==============================================================================
+#
+# REVIEW COMPLETE BACKEND
+#
+# Services
+#
+# APIs
+#
+# Routes
+#
+# Database
+#
+# ORM
+#
+# Query Layer
+#
+# AI Services
+#
+# Report Engine
+#
+# Background Jobs
+#
+# Queue Processing
+#
+# Analytics
+#
+# Caching
+#
+# File Storage
+#
+# Logging
+#
+# Monitoring
+#
+# ==============================================================================
+#
+# IDENTIFY PERFORMANCE BOTTLENECKS
+#
+# Slow APIs
+#
+# Large Responses
+#
+# Slow Queries
+#
+# Missing Indexes
+#
+# N+1 Queries
+#
+# Blocking Operations
+#
+# Sequential Processing
+#
+# Memory Hotspots
+#
+# CPU Hotspots
+#
+# Background Job Delays
+#
+# AI Latency
+#
+# Report Generation Delays
+#
+# ==============================================================================
+#
+# VALIDATE DATABASE
+#
+# Query Plans
+#
+# Index Utilization
+#
+# Connection Pool
+#
+# Transaction Duration
+#
+# Lock Contention
+#
+# Batch Processing
+#
+# Migration Health
+#
+# ==============================================================================
+#
+# VALIDATE API LAYER
+#
+# Response Time
+#
+# Throughput
+#
+# Payload Size
+#
+# Validation Overhead
+#
+# Serialization
+#
+# Timeout Handling
+#
+# Retry Logic
+#
+# Rate Limiting
+#
+# ==============================================================================
+#
+# VALIDATE AI SERVICES
+#
+# Prompt Execution Time
+#
+# Token Usage
+#
+# Parallel Requests
+#
+# Timeout Recovery
+#
+# Retry Behaviour
+#
+# Resource Consumption
+#
+# ==============================================================================
+#
+# VALIDATE REPORT GENERATION
+#
+# Report Rendering Time
+#
+# PDF Generation
+#
+# Chart Generation
+#
+# Data Aggregation
+#
+# Memory Consumption
+#
+# Export Performance
+#
+# ==============================================================================
+#
+# VALIDATE BACKGROUND PROCESSING
+#
+# Queue Performance
+#
+# Scheduling
+#
+# Retry Strategy
+#
+# Failure Recovery
+#
+# Resource Usage
+#
+# ==============================================================================
+#
+# LOAD TESTING
+#
+# Simulate
+#
+# Concurrent Users
+#
+# Concurrent Assessments
+#
+# Concurrent Report Generation
+#
+# Concurrent AI Requests
+#
+# Concurrent Dashboard Usage
+#
+# Concurrent Authentication
+#
+# Produce measurable evidence.
+#
+# ==============================================================================
+#
+# OPTIMIZE ONLY WHERE REQUIRED
+#
+# Query Optimization
+#
+# Caching
+#
+# Parallel Processing
+#
+# Batch Operations
+#
+# Resource Reuse
+#
+# Lazy Loading
+#
+# Pagination
+#
+# Background Processing
+#
+# Logging Optimization
+#
+# ONLY where repository evidence supports the change.
+#
+# ==============================================================================
+#
+# DO NOT
+#
+# Change business logic.
+#
+# Change scoring.
+#
+# Change assessments.
+#
+# Change AI behaviour.
+#
+# Introduce new architecture.
+#
+# Create duplicate implementations.
+#
+# ==============================================================================
+#
+# BENCHMARK
+#
+# Compare
+#
+# Before
+#
+# vs
+#
+# After
+#
+# for every optimization.
+#
+# Repository evidence required.
+#
+# ==============================================================================
+#
+# VERIFY
+#
+# No regressions.
+#
+# APIs remain compatible.
+#
+# Database remains compatible.
+#
+# Frontend remains compatible.
+#
+# Existing customer behaviour preserved.
+#
+# ==============================================================================
+#
+# PRODUCE
+#
+# 01 Executive Summary
+#
+# 02 Performance Baseline
+#
+# 03 Performance Bottleneck Register
+#
+# 04 API Performance Report
+#
+# 05 Database Performance Report
+#
+# 06 AI Performance Report
+#
+# 07 Report Generation Performance Report
+#
+# 08 Background Processing Report
+#
+# 09 Load Testing Report
+#
+# 10 Scalability Assessment
+#
+# 11 Optimization Summary
+#
+# 12 Before vs After Metrics
+#
+# 13 Remaining Performance Risks
+#
+# 14 Performance Certification
+#
+# ==============================================================================
+#
+# ACCEPTANCE CRITERIA
+#
+# Performance improvements are measurable.
+#
+# Repository evidence supports every optimization.
+#
+# Response times improved where applicable.
+#
+# Database efficiency improved.
+#
+# AI latency optimized where applicable.
+#
+# Report generation optimized.
+#
+# Background jobs optimized.
+#
+# Load testing completed.
+#
+# Scalability validated.
+#
+# No business functionality changed.
+#
+# No regressions introduced.
+#
+# ==============================================================================
+#
+# FINAL CERTIFICATION
+#
+# Certify independently:
+#
+# API Performance
+#
+# Database Performance
+#
+# AI Performance
+#
+# Report Performance
+#
+# Background Processing
+#
+# Scalability
+#
+# Load Readiness
+#
+# Never combine these scores.
+#
+# Finally answer:
+#
+# Is the backend capable of supporting
+# enterprise production workloads
+# based on measured evidence?
+#
+# If not,
+#
+# identify every remaining Launch Critical,
+# High,
+# Medium,
+# Low,
+# and Future performance gap.
+#
+# STOP.
+#
+# Human Approval Required.
+#
+# ==============================================================================

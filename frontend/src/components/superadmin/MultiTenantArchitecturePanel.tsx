@@ -825,6 +825,7 @@ function PartnerEcosystemView() {
       return next;
     });
   const [unlinkDeal, setUnlinkDeal] = useState<Record<number, string>>({});
+  const [unlinkEmail, setUnlinkEmail] = useState<Record<number, string>>({});
 
   // Export filter state (optional — date range + status; empty = full export, byte-identical to before)
   const [fltFrom, setFltFrom] = useState('');
@@ -1151,26 +1152,47 @@ function PartnerEcosystemView() {
                         )}
                       </TableCell>
                       <TableCell>
-                        <div className="flex flex-wrap items-center gap-1">
-                          <input
-                            className="h-7 w-24 rounded border border-gray-300 px-2 text-sm"
-                            placeholder={`value ${u.currency}`}
-                            value={unlinkDeal[u.id] ?? ''}
-                            onChange={(e) => setUnlinkDeal((s) => ({ ...s, [u.id]: e.target.value }))}
-                          />
-                          <Button size="sm" variant="outline" className="h-7 px-2 text-xs" disabled={busy}
-                            onClick={async () => {
-                              const raw = (unlinkDeal[u.id] ?? '').trim();
-                              if (raw === '') { setErr('Enter a deal value to set it manually.'); return; }
-                              const num = Number(raw);
-                              if (!Number.isFinite(num) || num < 0) { setErr('Deal value must be a non-negative number.'); return; }
-                              const ok = await post(`/referrals/${u.id}/resolve-deal-value`, { deal_value: num });
-                              if (ok) setUnlinkDeal((s) => { const n = { ...s }; delete n[u.id]; return n; });
-                            }}>Set value</Button>
-                          {u.reason === 'linkable' && (
-                            <Button size="sm" className="h-7 px-2 text-xs" disabled={busy}
-                              onClick={() => post(`/referrals/${u.id}/resolve-deal-value`, { link_deal: true })}>Link</Button>
+                        <div className="flex flex-col gap-1.5">
+                          {u.reason !== 'linkable' && (
+                            <div className="flex flex-wrap items-center gap-1">
+                              <input
+                                type="email"
+                                className="h-7 w-44 rounded border border-gray-300 px-2 text-sm"
+                                placeholder={u.reason === 'no_email' ? 'contact email' : 'correct contact email'}
+                                value={unlinkEmail[u.id] ?? ''}
+                                onChange={(e) => setUnlinkEmail((s) => ({ ...s, [u.id]: e.target.value }))}
+                              />
+                              <Button size="sm" variant="outline" className="h-7 px-2 text-xs" disabled={busy}
+                                onClick={async () => {
+                                  const raw = (unlinkEmail[u.id] ?? '').trim();
+                                  if (raw === '') { setErr('Enter a contact email to attach it.'); return; }
+                                  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw)) { setErr('Enter a valid email address.'); return; }
+                                  const ok = await post(`/referrals/${u.id}/referred-email`, { contact_email: raw });
+                                  if (ok) setUnlinkEmail((s) => { const n = { ...s }; delete n[u.id]; return n; });
+                                }}>{u.reason === 'no_email' ? 'Add email' : 'Fix email'}</Button>
+                            </div>
                           )}
+                          <div className="flex flex-wrap items-center gap-1">
+                            <input
+                              className="h-7 w-24 rounded border border-gray-300 px-2 text-sm"
+                              placeholder={`value ${u.currency}`}
+                              value={unlinkDeal[u.id] ?? ''}
+                              onChange={(e) => setUnlinkDeal((s) => ({ ...s, [u.id]: e.target.value }))}
+                            />
+                            <Button size="sm" variant="outline" className="h-7 px-2 text-xs" disabled={busy}
+                              onClick={async () => {
+                                const raw = (unlinkDeal[u.id] ?? '').trim();
+                                if (raw === '') { setErr('Enter a deal value to set it manually.'); return; }
+                                const num = Number(raw);
+                                if (!Number.isFinite(num) || num < 0) { setErr('Deal value must be a non-negative number.'); return; }
+                                const ok = await post(`/referrals/${u.id}/resolve-deal-value`, { deal_value: num });
+                                if (ok) setUnlinkDeal((s) => { const n = { ...s }; delete n[u.id]; return n; });
+                              }}>Set value</Button>
+                            {u.reason === 'linkable' && (
+                              <Button size="sm" className="h-7 px-2 text-xs" disabled={busy}
+                                onClick={() => post(`/referrals/${u.id}/resolve-deal-value`, { link_deal: true })}>Link</Button>
+                            )}
+                          </div>
                         </div>
                       </TableCell>
                     </TableRow>

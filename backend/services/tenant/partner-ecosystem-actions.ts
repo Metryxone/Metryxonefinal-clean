@@ -214,6 +214,16 @@ function asAmount(v: unknown): number | null {
   return Math.round(n * 100) / 100;
 }
 
+function asEmail(v: unknown): string {
+  const s = String(v ?? '').trim();
+  if (!s) throw new PartnerActionError('invalid_input', 'contact_email is required.');
+  // Permissive shape check (not RFC-complete) — guards obvious garbage without rejecting valid addresses.
+  if (s.length > 320 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s)) {
+    throw new PartnerActionError('invalid_input', 'contact_email must be a valid email address.');
+  }
+  return s;
+}
+
 // ── Agreements ─────────────────────────────────────────────────────────────────
 
 export interface UpsertAgreementInput {
@@ -613,4 +623,47 @@ export async function resolveReferralDealValue(
     params,
   );
   return upd.rows[0];
+}
+
+export interface SetReferredTenantEmailResult {
+  ok: true;
+  referred_tenant_id: number;
+  contact_email: string;
+  /** Fresh diagnosis after the write, so the caller can re-render the row without a round-trip. */
+  diagnosis: ReferralLinkDiagnosis;
+}
+
+/**
+ * Attach or correct a referred tenant's contact_email from the unlinkable-referrals view. Converted
+ * referrals whose referred tenant has NO contact_email can never auto-link to revenue (no ledger row can
+ * match them). Writing the missing/corrected email to tenants.contact_email makes the conversion
+ * auto-linkable going forward, then this re-diagnoses the referral (no_email → no_realized_revenue or
+ * linkable). WRITE PATH (ensure-schema), never fabricates — an explicit, operator-supplied email is
+ * required; the referral must have a referred tenant.
+ */
+export async function setReferralReferredTenantEmail(
+  pool: pg.Pool,
+  referralId: number,
+  email: unknown,
+): Promise<SetReferredTenantEmailResult> {
+  await ensurePartnerEcosystemSchema(pool);
+  const cur = await pool.query(
+    `SELECT id, status, referred_tenant_id FROM tenant_channel_referrals WHERE id = $1`,
+    [referralId],
+  );
+  if (cur.rowCount === 0) throw new PartnerActionError('not_found', `referral ${referralId} not found.`, 404);
+  if (String(cur.rows[0].status) !== 'converted') {
+    throw new PartnerActionError('invalid_state', 'a contact email can only be attached from the unlinkable view (converted referrals).');
+  }
+  const referredId = cur.rows[0].referred_tenant_id == null ? null : Number(cur.rows[0].referred_tenant_id);
+  if (referredId == null) {
+    throw new PartnerActionError('invalid_input', 'this referral has no referred tenant to attach an email to.');
+  }
+  if (!(await tenantExists(pool, referredId))) {
+    throw new PartnerActionError('tenant_not_found', `referred tenant ${referredId} does not exist.`, 404);
+  }
+  const contactEmail = asEmail(email);
+  await pool.query(`UPDATE tenants SET contact_email = $1 WHERE id = $2`, [contactEmail, referredId]);
+  const diagnosis = await diagnoseReferredTenantDealValue(pool, referredId);
+  return { ok: true, referred_tenant_id: referredId, contact_email: contactEmail, diagnosis };
 }

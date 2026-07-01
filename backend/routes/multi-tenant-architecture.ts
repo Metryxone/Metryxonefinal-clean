@@ -38,6 +38,7 @@ import {
   createChannelReferral,
   transitionReferral,
   resolveReferralDealValue,
+  setReferralReferredTenantEmail,
   PartnerActionError,
   PARTNER_TYPES,
   AGREEMENT_STATUSES,
@@ -354,6 +355,20 @@ export function registerMultiTenantArchitectureRoutes(
       }));
     } catch (err) {
       handlePartnerError(err, res, 'resolve referral deal value');
+    }
+  });
+
+  // Attach/correct the referred tenant's contact email on an already-converted referral (from the
+  // unlinkable-referrals view): writes tenants.contact_email so the conversion becomes auto-linkable,
+  // then re-diagnoses the row. WRITE PATH (ensure-schema via the helper), never fabricates.
+  app.post('/api/admin/tenant-architecture/console/partner-ecosystem/referrals/:id/referred-email', ...partnerChain, async (req: any, res) => {
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id)) return res.status(400).json({ error: 'invalid_id' });
+    try {
+      const { contact_email } = req.body ?? {};
+      res.json(await setReferralReferredTenantEmail(pool, id, contact_email));
+    } catch (err) {
+      handlePartnerError(err, res, 'set referred tenant email');
     }
   });
 }

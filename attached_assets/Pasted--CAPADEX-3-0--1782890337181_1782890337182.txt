@@ -1,0 +1,693 @@
+# ==============================================================================
+#
+# CAPADEX 3.0
+#
+# 99% ENTERPRISE LAUNCH PROGRAM
+#
+# PROGRAM 3
+#
+# PHASE 3.2
+#
+# ENTERPRISE QUESTION MANAGEMENT PLATFORM
+#
+# QUESTION LIBRARY
+#
+# QUESTION GOVERNANCE
+#
+# ==============================================================================
+#
+# EXECUTION MODE
+#
+# IMPLEMENTATION
+#
+# Repository First
+#
+# Product Blueprint First
+#
+# Enhancement Only
+#
+# Search Before Modify
+#
+# Reuse Before Build
+#
+# Preserve Existing Architecture
+#
+# No Duplicate Question Platforms
+#
+# No Breaking Changes
+#
+# Human Approval Required
+#
+# ==============================================================================
+#
+# PRECONDITION
+#
+# Program 3
+#
+# Phase 3.1
+#
+# Assessment Architecture
+#
+# MUST be COMPLETE.
+#
+# ==============================================================================
+#
+# MISSION
+#
+# Implement ONE enterprise Question Management Platform.
+#
+# This phase owns the complete lifecycle
+# of assessment questions.
+#
+# This phase DOES NOT implement:
+#
+# • Assessment Builder
+# • Assessment Delivery
+# • Scoring
+# • Psychometrics
+# • Norms
+# • Standardization
+# • AI Interpretation
+# • Recommendations
+# • Reports
+#
+# Those belong to later phases.
+#
+# ==============================================================================
+#
+# MANDATORY ENHANCEMENT CONTRACT
+#
+# Repository First.
+#
+# Search before modify.
+#
+# Reuse before build.
+#
+# Preserve existing APIs.
+#
+# Preserve existing database.
+#
+# Preserve frontend compatibility.
+#
+# No duplicate services.
+#
+# No V2 implementations.
+#
+# Repository is the source of truth.
+#
+# ==============================================================================
+#
+# SEARCH COMPLETE REPOSITORY
+#
+# Backend
+#
+# Frontend
+#
+# Database
+#
+# APIs
+#
+# Question Services
+#
+# Assessment Services
+#
+# Feature Flags
+#
+# Administration
+#
+# Reports
+#
+# Existing Question Components
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# GLOBAL QUESTION LIBRARY
+#
+# Organization Libraries
+#
+# Subject Libraries
+#
+# Domain Libraries
+#
+# Competency Libraries
+#
+# Behaviour Libraries
+#
+# Skill Libraries
+#
+# Shared Libraries
+#
+# Question Collections
+#
+# Question Packs
+#
+# Reusable Question Sets
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# QUESTION TYPES
+#
+# Single Choice
+#
+# Multiple Choice
+#
+# True / False
+#
+# Yes / No
+#
+# Likert Scale
+#
+# Rating Scale
+#
+# Matrix
+#
+# Ranking
+#
+# Matching
+#
+# Fill in the Blank
+#
+# Short Answer
+#
+# Long Answer
+#
+# Essay
+#
+# Numerical
+#
+# Formula
+#
+# Coding
+#
+# SQL
+#
+# Audio Response
+#
+# Video Response
+#
+# Image Response
+#
+# File Upload
+#
+# Case Study
+#
+# Scenario Based
+#
+# Situational Judgement
+#
+# Simulation Placeholder
+#
+# Psychometric Statement
+#
+# Forced Choice
+#
+# Survey Question
+#
+# Adaptive Placeholder
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# QUESTION METADATA
+#
+# Question ID
+#
+# External ID
+#
+# Version
+#
+# Status
+#
+# Owner
+#
+# Author
+#
+# Reviewer
+#
+# Approver
+#
+# Organization
+#
+# Business Domain
+#
+# Persona
+#
+# Lifecycle Stage
+#
+# Assessment Type
+#
+# Category
+#
+# Subject
+#
+# Topic
+#
+# Competency
+#
+# Behaviour
+#
+# Skill
+#
+# Learning Objective
+#
+# Bloom Level
+#
+# Difficulty Level
+#
+# Estimated Time
+#
+# Marks
+#
+# Weight
+#
+# Language
+#
+# Tags
+#
+# Keywords
+#
+# Created Date
+#
+# Updated Date
+#
+# Published Date
+#
+# Retirement Date
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# QUESTION LIFECYCLE
+#
+# Draft
+#
+# Under Review
+#
+# Approved
+#
+# Published
+#
+# Active
+#
+# Suspended
+#
+# Deprecated
+#
+# Archived
+#
+# Retired
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# QUESTION GOVERNANCE
+#
+# Ownership
+#
+# Review Workflow
+#
+# Approval Workflow
+#
+# Publishing Workflow
+#
+# Version Control
+#
+# Audit Trail
+#
+# Change History
+#
+# Access Control
+#
+# Permission Validation
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# QUESTION VERSION MANAGEMENT
+#
+# Major Versions
+#
+# Minor Versions
+#
+# Compare Versions
+#
+# Rollback
+#
+# Clone
+#
+# Fork
+#
+# Merge
+#
+# History
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# QUESTION ORGANIZATION
+#
+# Folders
+#
+# Collections
+#
+# Libraries
+#
+# Tags
+#
+# Categories
+#
+# Labels
+#
+# Favorites
+#
+# Archived Collections
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# QUESTION MAPPING
+#
+# Product Domain
+#
+# Persona
+#
+# Lifecycle Stage
+#
+# Customer Journey
+#
+# Assessment
+#
+# Competency
+#
+# Behaviour
+#
+# Skill
+#
+# Learning Objective
+#
+# Product Blueprint
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# QUESTION SEARCH
+#
+# Full Text Search
+#
+# Semantic Search
+#
+# Filter by Metadata
+#
+# Filter by Competency
+#
+# Filter by Persona
+#
+# Filter by Assessment
+#
+# Filter by Lifecycle
+#
+# Filter by Library
+#
+# Saved Searches
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# BULK OPERATIONS
+#
+# Bulk Import
+#
+# Bulk Export
+#
+# Bulk Edit
+#
+# Bulk Tag
+#
+# Bulk Review
+#
+# Bulk Approval
+#
+# Bulk Publish
+#
+# Bulk Archive
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# IMPORT / EXPORT
+#
+# Excel
+#
+# CSV
+#
+# JSON
+#
+# Template Import
+#
+# Validation
+#
+# Error Reporting
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# QUESTION APIs
+#
+# CRUD
+#
+# Search
+#
+# Bulk Operations
+#
+# Collections
+#
+# Libraries
+#
+# Versioning
+#
+# Workflow
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# FRONTEND
+#
+# Question Library
+#
+# Question Editor
+#
+# Question Viewer
+#
+# Question Preview
+#
+# Collections
+#
+# Libraries
+#
+# Advanced Search
+#
+# Filters
+#
+# Bulk Upload
+#
+# Bulk Edit
+#
+# Version History
+#
+# Review Screen
+#
+# Approval Screen
+#
+# Audit History
+#
+# ==============================================================================
+#
+# VERIFY
+#
+# Every Question maps to:
+#
+# Product Blueprint
+#
+# Business Domain
+#
+# Persona
+#
+# Lifecycle
+#
+# Assessment
+#
+# Competency
+#
+# Behaviour
+#
+# Skill
+#
+# ==============================================================================
+#
+# VERIFY
+#
+# Existing Question APIs remain compatible.
+#
+# Existing Assessment APIs remain compatible.
+#
+# Existing UI remains compatible.
+#
+# Existing database remains compatible.
+#
+# ==============================================================================
+#
+# DO NOT IMPLEMENT
+#
+# Assessment Builder
+#
+# Assessment Delivery
+#
+# Scoring
+#
+# Item Difficulty
+#
+# Item Discrimination
+#
+# Distractor Analysis
+#
+# Reliability
+#
+# Validity
+#
+# Norm Engine
+#
+# Standardization
+#
+# Benchmarking
+#
+# AI Interpretation
+#
+# Recommendation Engine
+#
+# Reports
+#
+# Analytics
+#
+# ==============================================================================
+#
+# PRODUCE
+#
+# 01 Executive Summary
+#
+# 02 Question Platform Report
+#
+# 03 Question Library Blueprint
+#
+# 04 Question Metadata Standard
+#
+# 05 Question Governance Report
+#
+# 06 Version Management Report
+#
+# 07 Workflow Report
+#
+# 08 Search & Discovery Report
+#
+# 09 Bulk Operations Report
+#
+# 10 API Report
+#
+# 11 Frontend Report
+#
+# 12 Repository Change Summary
+#
+# 13 Remaining Gaps
+#
+# 14 Phase 3.2 Certification
+#
+# ==============================================================================
+#
+# ACCEPTANCE CRITERIA
+#
+# ONE Question Platform.
+#
+# ONE Global Question Library.
+#
+# ONE Metadata Standard.
+#
+# ONE Governance Framework.
+#
+# ONE Version Management Model.
+#
+# ONE Workflow Model.
+#
+# ONE Search Platform.
+#
+# ONE API Layer.
+#
+# ONE Frontend Experience.
+#
+# Repository evidence required.
+#
+# No duplicate implementations.
+#
+# ==============================================================================
+#
+# FINAL CERTIFICATION
+#
+# Certify independently:
+#
+# Question Platform
+#
+# Question Library
+#
+# Metadata
+#
+# Governance
+#
+# Version Management
+#
+# Workflow
+#
+# APIs
+#
+# Frontend
+#
+# Never combine these scores.
+#
+# Finally answer:
+#
+# Is the Enterprise Question Management Platform
+# complete and ready
+# for Program 3 Phase 3.3
+# Assessment Builder & Authoring?
+#
+# If not,
+#
+# identify every remaining
+#
+# Launch Critical
+#
+# High
+#
+# Medium
+#
+# Low
+#
+# Future gap.
+#
+# STOP.
+#
+# Human Approval Required.
+#
+# ==============================================================================

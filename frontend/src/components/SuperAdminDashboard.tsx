@@ -174,6 +174,7 @@ const EnterpriseCertificationPanel = lazy(() => import('./superadmin/EnterpriseC
 const GoLiveCenterPanel = lazy(() => import('./superadmin/GoLiveCenterPanel'));
 const FounderGoLiveCenterPanel = lazy(() => import('./superadmin/FounderGoLiveCenterPanel'));
 const PlatformCompletionPanel = lazy(() => import('./superadmin/PlatformCompletionPanel'));
+const QuestionManagementPanel = lazy(() => import('./superadmin/QuestionManagementPanel'));
 const DepartmentsPanel = lazy(() => import('./superadmin/DepartmentsPanel'));
 const RolesPanel = lazy(() => import('./superadmin/RolesPanel'));
 const RoleFamiliesPanel = lazy(() => import('./superadmin/RoleFamiliesPanel'));
@@ -482,6 +483,17 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
     queryKey: ['/api/admin/platform-completion/enabled', 'enabled'],
     queryFn: async () => {
       const res = await fetch('/api/admin/platform-completion/enabled', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // ── Enterprise Question Management Platform (CAPADEX 3.0 · 3.2) flag probe (file-registry flag questionManagementPlatform).
+  //    Probe /api/question-management/enabled (503-before-auth when OFF) → tab omitted (byte-identical UI). ──
+  const { data: questionManagementEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/question-management/enabled', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/question-management/enabled', { credentials: 'include' });
       return res.ok;
     },
     enabled: isAuthenticated,
@@ -1112,6 +1124,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       ...(goLiveCertificationEnabled ? [{ id: 'go-live-center', label: 'Go-Live Center', icon: Rocket, node: <GoLiveCenterPanel /> }] : []),
                       ...(goLiveCertificationEnabled ? [{ id: 'founder-go-live', label: 'Founder Go-Live Center', icon: Building2, node: <FounderGoLiveCenterPanel /> }] : []),
                       ...(platformCompletionEnabled ? [{ id: 'platform-completion', label: 'Platform Completion', icon: Award, node: <PlatformCompletionPanel /> }] : []),
+                      ...(questionManagementEnabled ? [{ id: 'question-management', label: 'Question Management', icon: Boxes, node: <QuestionManagementPanel /> }] : []),
                       ...(mx203KnowledgeEnabled ? [{ id: 'mx203-knowledge-center', label: 'Knowledge Center', icon: BookOpen, node: <Mx203KnowledgeCenterPanel /> }] : []),
                       { id: 'ont-career-tracks',        label: 'Career Tracks',            icon: Map,           node: <CareerTracksPanel /> },
                       { id: 'ont-competency-levels',    label: 'Competency Levels',        icon: BarChart2,     node: <CompetencyLevelsPanel /> },

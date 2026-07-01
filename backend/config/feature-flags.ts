@@ -285,6 +285,19 @@ export const FEATURE_FLAGS = {
    *  byte-identical to legacy. Coverage⟂Confidence⟂Adoption never composited; null≠0.
    *  Env: `FF_ASSESSMENT_ARCHITECTURE_COMPLETION`. */
   assessmentArchitectureCompletion: false,
+  /** CAPADEX 3.0 — Program 3 · Phase 3.2 Enterprise Question Management Platform. When ON, a read-only
+   *  certification composer at `/api/admin/question-management/*` (super-admin) certifies the ONE canonical
+   *  Question Management Platform over the EXISTING question substrate (13 services · 7 route files · many
+   *  banks) across EIGHT INDEPENDENT dimensions reported SEPARATELY (never composited): platform · library ·
+   *  metadata · governance · version-management · workflow · apis · frontend. True engineering gaps are
+   *  CLOSED via reuse-before-build additive mechanisms (canonical metadata overlay, version history, collections,
+   *  saved searches, bulk-job ledger, review/approval/publish workflow) — each gated by this flag so OFF is
+   *  byte-identical incl. schema (all DDL runs ONLY on the flag-gated POST paths → OFF creates 0 tables). Flag
+   *  OFF → every `/api/admin/question-management/*` route 503 (503-before-auth), `/enabled` 503, public-config
+   *  `question_management_platform:false`, and the question flow + schema are byte-identical to legacy. Real
+   *  authored-question VOLUME is ADOPTION — a usage axis reported SEPARATELY, NEVER a gap; never fabricated.
+   *  Coverage⟂Confidence⟂Adoption never composited; null≠0. Env: `FF_QUESTION_MANAGEMENT_PLATFORM`. */
+  questionManagementPlatform: false,
   /** MX-103X — Live Employer Ecosystem Activation (read-only audit + certification console over the EXISTING
    *  employer hiring funnel). When ON, a PURE read-only composer at `/api/admin/employer-ecosystem/*`
    *  (super-admin) inventories the nine funnel stages — onboarding · create-job · role-DNA · competencies ·
@@ -2293,6 +2306,11 @@ export function isOperationalReadinessEnabled(): boolean {
 /** CAPADEX 3.0 — Program 3 · Phase 3.1 Assessment Architecture Completion master switch. */
 export function isAssessmentArchitectureCompletionEnabled(): boolean {
   return isFlagEnabled('assessmentArchitectureCompletion');
+}
+
+/** CAPADEX 3.0 — Program 3 · Phase 3.2 Enterprise Question Management Platform master switch. */
+export function isQuestionManagementPlatformEnabled(): boolean {
+  return isFlagEnabled('questionManagementPlatform');
 }
 
 export function isCustomerJourneyCompletionEnabled(): boolean {

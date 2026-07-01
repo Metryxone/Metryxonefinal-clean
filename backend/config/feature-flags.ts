@@ -271,6 +271,18 @@ export const FEATURE_FLAGS = {
    *  persisted output — NEVER invoked. Flag OFF → data routes 503, public-config `operational_readiness:false`,
    *  byte-identical legacy behaviour incl. schema. Env: `FF_OPERATIONAL_READINESS`. */
   operationalReadiness: false,
+  /** CAPADEX 3.0 — Program 3 · Phase 3.1 Assessment Architecture Completion (closes the nine architecture
+   *  gaps AP-1..AP-9 to ENGINEERING closure, additive & flag-gated). When ON: canonical T-scores (SD=10) +
+   *  stanines + sten (AP-7); norm-group extension for gender/education-tier/competitive-exam over the SAME
+   *  lbi-norms engine, computed ONLY from real data with k_min abstention, gender ethics-gated OFF (AP-4/5/6);
+   *  country benchmark cohorts reusing bench_cohorts.geography (AP-8); read-through activation of the EXISTING
+   *  aig_prompts registry for code-embedded prompts (AP-9); deterministic Bloom classification of the
+   *  behavioural clarity bank with honest abstention (AP-1); plus the read-only super-admin composer at
+   *  `/api/admin/assessment-architecture/*`. NEVER fabricates — abstains (null / provisional) when data is
+   *  insufficient; Coverage⟂Confidence⟂Adoption never composited. Flag OFF → data routes 503, public-config
+   *  `assessment_architecture_completion:false`, and the assessment flow + schema are byte-identical to legacy.
+   *  Env: `FF_ASSESSMENT_ARCHITECTURE_COMPLETION`. */
+  assessmentArchitectureCompletion: false,
   /** MX-103X — Live Employer Ecosystem Activation (read-only audit + certification console over the EXISTING
    *  employer hiring funnel). When ON, a PURE read-only composer at `/api/admin/employer-ecosystem/*`
    *  (super-admin) inventories the nine funnel stages — onboarding · create-job · role-DNA · competencies ·
@@ -2274,6 +2286,11 @@ export function isAiRecommendationReportOrchestrationEnabled(): boolean {
 /** CAPADEX 3.0 — Program 2 · Phase 2.5 Operational Readiness master switch. */
 export function isOperationalReadinessEnabled(): boolean {
   return isFlagEnabled('operationalReadiness');
+}
+
+/** CAPADEX 3.0 — Program 3 · Phase 3.1 Assessment Architecture Completion master switch. */
+export function isAssessmentArchitectureCompletionEnabled(): boolean {
+  return isFlagEnabled('assessmentArchitectureCompletion');
 }
 
 export function isCustomerJourneyCompletionEnabled(): boolean {

@@ -1,41 +1,42 @@
 # 18 · Capability Gap Register
 
-**Mode:** Read-only / planning-only. No changes. Evidence-grounded; MISSING = MISSING.
+**Original mode:** Read-only / planning-only. Evidence-grounded; MISSING = MISSING.
+**Update (Phase 3.1 build):** All 9 gaps ENGINEERING-CLOSED behind the additive, default-OFF flag `assessmentArchitectureCompletion` (`FF_ASSESSMENT_ARCHITECTURE_COMPLETION`). OFF is byte-identical incl. schema (own additive tables + flag-gated write paths only). "Closed" = **built, computes from REAL substrate, and abstains via k_min when data is insufficient** — NEVER fabricated norm/benchmark data. Coverage ⟂ Confidence ⟂ Adoption are never composited; null ≠ 0.
 
-## Severity Legend
-- **Launch-Critical** — blocks the core assessment→outcome spine. **Count: 0.**
-- **High** — materially limits a shipped capability. **Count: 0.**
-- **Medium** — meaningful capability/quality gap; schedule in Program 3. **Count: 5.**
-- **Low** — narrow/labelling/breadth gap; additive. **Count: 3.**
-- **Future** — out-of-scope-for-now capability. **Count: 1.**
+## Severity Legend (original planning snapshot)
+- **Launch-Critical:** 0 · **High:** 0 · **Medium:** 5 · **Low:** 3 · **Future:** 1.
 
-## Gap Table
-| ID | Layer | Gap | Evidence Basis | Severity | Type |
+## Gap Table — Resolution Status
+| ID | Layer | Gap | Severity | Resolution | Where |
 | :-- | :-- | :-- | :-- | :-- | :-- |
-| GAP-AP-1 | L2 Question | Bloom/cognitive-level coding present for CAF/academic (`BLOOM_MULTIPLIERS`, `aiTestGenerator.bloomsLevel`) but **not applied to the behavioural `psychometric_question_bank`** | Verified via grep | Low | PARTIAL |
-| GAP-AP-2 | L4 Delivery | No end-user **offline delivery** mode (only internal validation harnesses) | Explorer + grep | Future | MISSING |
-| GAP-AP-3 | L4 Delivery | No dedicated **accessibility** layer (WCAG/screen-reader/keyboard/contrast) in core assessment components; localization ≠ a11y | Explorer | Medium | MISSING |
-| GAP-AP-4 | L6 Norms | **Gender population norms** absent (may be a deliberate ethics/legal decision) | grep (no gender in norm/benchmark) | Medium | MISSING |
-| GAP-AP-5 | L6 Norms | **Education-tier population norms** (student/school/college/university) absent; segments exist for benchmarking, not as norm groups | Explorer | Medium | MISSING |
-| GAP-AP-6 | L6 Norms | **Competitive-exam population norms** (JEE/NEET/CUET) absent; persona *banks* exist, norm tables don't | Explorer | Medium | MISSING |
-| GAP-AP-7 | L7 Standardization | Canonical **T-scores (SD=10)** and **stanines** absent; existing SD=15 "T-like" scale is a deviation score (mislabel to correct) | grep in `caf/scoring-engine.ts` | Low | PARTIAL |
-| GAP-AP-8 | L8 Benchmark | **Country-level benchmarks** absent (industry/org/region present) | Explorer | Low | MISSING |
-| GAP-AP-9 | L13 Admin | **AI Prompt Management** absent — no versioned/governed prompt registry (prompts code-embedded) | Explorer | Medium | MISSING |
+| GAP-AP-1 | L2 Question | Bloom/cognitive-level coding not applied to behavioural clarity bank | Low | **CLOSED (engineering).** `classifyClarityBank`/`classifyBloom`/`bloomCoverage` derive Bloom levels from `capadex_clarity_questions` into own table `capadex_clarity_bloom`. Dev bank empty → honest `total:0` (adoption axis, not a gap). | `services/assessment-architecture-engine.ts` |
+| GAP-AP-2 | L4 Delivery | No end-user offline delivery mode | Future | **FOUNDATION shipped.** Opt-in PWA: `public/sw.js` (app-shell cache-first, network-first `/api`) + `manifest.webmanifest` + `lib/offline.ts` (localStorage response queue, idempotent flush on reconnect). Registered ONLY when flag ON. **Browser online/offline verification = ADOPTION axis (`offline_sessions`), not claimed here.** | `frontend/public/sw.js`, `frontend/src/lib/offline.ts` |
+| GAP-AP-3 | L4 Delivery | No dedicated accessibility layer (WCAG) | Medium | **FOUNDATION shipped.** `lib/accessibility.ts`: skip-link, polite ARIA live region + `announce()`, global `:focus-visible`, `.sr-only`, reduced-motion, modal focus-trap. Inits only when flag ON. i18next already mature (separate axis). **Screen-reader/axe audit = ADOPTION axis (`audited_screens`), not claimed here.** | `frontend/src/lib/accessibility.ts` |
+| GAP-AP-4 | L6 Norms | Gender population norms absent | Medium | **CLOSED (ethics-gated).** `computeGroupNorms('gender', …)` computes REAL norms only when `ASSESSMENT_GENDER_NORMS_ENABLED=1`; default abstains `ethics_gated_off`. Owner/legal decision preserved — never fabricated. | `services/assessment-architecture-engine.ts` |
+| GAP-AP-5 | L6 Norms | Education-tier population norms absent | Medium | **CLOSED (engineering).** `computeGroupNorms('education_tier', …)` writes `assessment_group_norms` when the dimension column exists + k≥30; substrate absent in dev → honest abstain `dimension_source_absent`. | `services/assessment-architecture-engine.ts` |
+| GAP-AP-6 | L6 Norms | Competitive-exam population norms absent | Medium | **CLOSED (engineering).** `computeGroupNorms('competitive_exam', …)`; same k_min=30 + honest `dimension_source_absent` abstain until persona/exam dimension is populated. | `services/assessment-architecture-engine.ts` |
+| GAP-AP-7 | L7 Standardization | Canonical T(SD=10)/stanines absent; SD=15 mislabelled | Low | **CLOSED.** Pure module adds true **T-score (M=50,SD=10)**, **stanine (1–9)**, **sten (1–10)**, z, percentile transforms; deviation SD=15 relabelled (no longer "T"). | `services/psychometric-standardization.ts` |
+| GAP-AP-8 | L8 Benchmark | Country-level benchmarks absent | Low | **CLOSED.** `bench_cohorts` `cohort_type` CHECK widened to add `'country'` (flag-gated write only); `registerCountryCohorts`/`listCountryCohorts` register country cohorts (scaffold rows); norms compute via the same k_min path. | `services/assessment-architecture-engine.ts` |
+| GAP-AP-9 | L13 Admin | AI Prompt Management absent (prompts code-embedded) | Medium | **CLOSED.** `CODE_EMBEDDED_PROMPTS` registry (3 slugs) + `registerCodeEmbeddedPrompts` govern prompts through existing `aig_prompts`/`aig_prompt_versions`; `resolvePrompt` reads through registry with literal fallback. | `services/prompt-registry-activation.ts` |
 
-## Duplicate / Overlapping Capabilities (intentional — recommend-only consolidation, NOT gaps)
-| ID | Overlap | Assessment | Decision |
-| :-- | :-- | :-- | :-- |
-| OVL-1 | Two scoring stacks: CAPADEX `dimension-scoring-engine.ts`/`weighting-engine.ts` (behavioural) vs CAF `caf/scoring-engine.ts` (IRT/CTT/SJT/BARS) | Science-distinct for different question families | KEEP BOTH; unified score-provenance view = recommend-only |
-| OVL-2 | Two benchmark engines: `benchmark-engine.ts` (cohort percentiles) vs `talent-benchmark-engine.ts` (industry/role/layer) | Different granularities | KEEP BOTH; unified benchmark-provenance view = recommend-only |
-| OVL-3 | Three question stores: `psychometric_question_bank` · `capadex_question_registry` · `competency_question_templates`/`onto_competency_question_map` | Role-distinct (bank vs registry vs competency) | KEEP ALL; unified question-registry view = recommend-only |
+## Axes (never composited)
+- **Coverage** (does the capability exist / compute): 9/9 engineering-closed or foundation-shipped.
+- **Confidence** (is output trustworthy): governed by k_min=30 + ethics gate; abstains honestly (`ethics_gated_off`, `dimension_source_absent`, cold-start `total:0`).
+- **Adoption** (real usage/data volume + browser/audit verification): honest-low/0 in dev — reported SEPARATELY, **never a gap**. AP-2 (`offline_sessions`) and AP-3 (`audited_screens`) require real-browser verification not available in this environment.
 
-> Overlaps are recommend-only consolidation candidates. Removing either scoring stack, benchmark engine, or question store would **break** a shipped assessment family — they are not duplication defects.
+## Duplicate / Overlapping Capabilities (unchanged — recommend-only, NOT gaps)
+| ID | Overlap | Decision |
+| :-- | :-- | :-- |
+| OVL-1 | Behavioural scoring (`dimension-scoring-engine`/`weighting-engine`) vs CAF (`caf/scoring-engine` IRT/CTT/SJT/BARS) | KEEP BOTH |
+| OVL-2 | `benchmark-engine` (cohort percentiles) vs `talent-benchmark-engine` (industry/role/layer) | KEEP BOTH |
+| OVL-3 | `psychometric_question_bank` · `capadex_question_registry` · competency question maps | KEEP ALL |
 
-## Conceptual Honesty Corrections (to bake into the freeze, no code change)
-1. **Norm vs Weighting vs Benchmark are three different things.** Only **age** has real population norms. Weighting policies (seniority/industry/geo) and benchmark cohorts must never be reported as "norms." (Drives GAP-AP-4/5/6 and Layer-6 PARTIAL.)
-2. **SD=15 is a deviation score, not a T-score.** Relabel; add true T(SD=10)/stanine as additive transforms. (GAP-AP-7.)
-3. **Outcome/KPI adoption is a separate axis** — honest-low/0 volume is NOT a gap.
+## Conceptual Honesty Corrections (baked into the freeze)
+1. **Norm vs Weighting vs Benchmark are three different things.** Group norms compute only from real dimension data + k_min; weighting/benchmark are never reported as "norms."
+2. **SD=15 is a deviation score, not a T-score.** True T(SD=10)/stanine/sten added as additive transforms.
+3. **Adoption is a separate axis** — honest-low/0 volume (and pending browser/axe verification) is NOT a gap.
 
 ## Summary
-- **0 Launch-Critical · 0 High · 5 Medium · 3 Low · 1 Future.**
-- No gap blocks launch. The 5 Medium gaps (accessibility + 3 norm populations + AI prompt mgmt) are the highest-value Program-3 enhancements. All gaps are additive over the frozen architecture.
+- **9/9 gaps engineering-closed or foundation-shipped**, all behind `assessmentArchitectureCompletion`, byte-identical OFF incl. schema.
+- **0 fabricated data points.** Every norm/benchmark/Bloom output computes from real substrate or abstains with an explicit honest reason.
+- **Remaining is ADOPTION, not engineering:** real assessment volume + browser/screen-reader verification for AP-2/AP-3 — reported on their own axes, never as gaps.

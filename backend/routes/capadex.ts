@@ -57,7 +57,7 @@ import { runEvidenceRuntime }   from '../services/signal-activation-runtime';
 import { resolveSeedConcernPk } from '../services/concern-signal-seeding';
 import type { EvidenceInput }   from '../services/evidence-engine';
 import { isRuntimeIntelligenceActivationEnabled, isRuntimeIntelligencePipelineEnabled, isSignalGroundingRuntimeEnabled } from '../config/feature-flags';
-import { isEvidenceGatedProgressionEnabled, isPersonaModelAlignmentEnabled, isPersonaModelExpansionEnabled, isAssessmentFrameworkCompletionEnabled, isCustomerJourneyCompletionEnabled, isProgressionEngineCompletionEnabled, isOutcomeFrameworkKpiEngineEnabled, isAiRecommendationReportOrchestrationEnabled, isProductTraceabilityCertificationEnabled, isOperationalReadinessEnabled } from '../config/feature-flags';
+import { isEvidenceGatedProgressionEnabled, isPersonaModelAlignmentEnabled, isPersonaModelExpansionEnabled, isAssessmentFrameworkCompletionEnabled, isCustomerJourneyCompletionEnabled, isProgressionEngineCompletionEnabled, isOutcomeFrameworkKpiEngineEnabled, isAiRecommendationReportOrchestrationEnabled, isProductTraceabilityCertificationEnabled, isOperationalReadinessEnabled, isAssessmentArchitectureCompletionEnabled } from '../config/feature-flags';
 import { resolveBridgeTagForConcernPk, loadGroundedLineage, groundingCoreToken } from '../services/signal-grounding-runtime';
 import { buildGuidanceForSession } from '../services/pil/runtime-guidance-engine';
 import { buildPipelineForSession } from '../services/pil/pipeline-resolver';
@@ -4236,6 +4236,9 @@ export function registerCapadexRoutes(app: Express, pool: Pool) {
         ai_recommendation_report_orchestration: isAiRecommendationReportOrchestrationEnabled(),
         product_traceability_certification: isProductTraceabilityCertificationEnabled(),
         operational_readiness: isOperationalReadinessEnabled(),
+        // CAPADEX 3.0 Phase 3.1 — Assessment Architecture Completion gate (read-only admin
+        // composer + additive psychometric closures). OFF → assessment flow + schema byte-identical.
+        assessment_architecture_completion: isAssessmentArchitectureCompletionEnabled(),
       });
     } catch (err) { next(err); }
   });

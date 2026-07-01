@@ -342,18 +342,40 @@ export function FreeAssessmentModal({ open, onOpenChange, onNavigate, initialPer
   // tailored sub-persona banks). Defaults false → byte-identical legacy flow.
   const [personaAlignmentEnabled, setPersonaAlignmentEnabled] = useState(false);
   const [personaExpansionEnabled, setPersonaExpansionEnabled] = useState(false);
+  // CAPADEX 3.0 Phase 3.1 — assessment-architecture completion gate (AP-2 offline
+  // capture + AP-3 accessibility announcements). Defaults false → byte-identical.
+  const [archCompletionEnabled, setArchCompletionEnabled] = useState(false);
   useEffect(() => {
     fetch('/api/capadex/public-config')
       .then(r => r.json())
-      .then((cfg: { counsellor_whatsapp_number?: string; websocket_runtime?: boolean; cognitive_load_engine?: boolean; persona_model_alignment?: boolean; persona_model_expansion?: boolean }) => {
+      .then((cfg: { counsellor_whatsapp_number?: string; websocket_runtime?: boolean; cognitive_load_engine?: boolean; persona_model_alignment?: boolean; persona_model_expansion?: boolean; assessment_architecture_completion?: boolean }) => {
         if (cfg.counsellor_whatsapp_number) setCounsellorNumber(cfg.counsellor_whatsapp_number);
         if (cfg.websocket_runtime)    setWsRuntimeEnabled(true);
         if (cfg.cognitive_load_engine) setCogLoadEnabled(true);
         if (cfg.persona_model_alignment) setPersonaAlignmentEnabled(true);
         if (cfg.persona_model_expansion) setPersonaExpansionEnabled(true);
+        if (cfg.assessment_architecture_completion) setArchCompletionEnabled(true);
       })
       .catch(() => {});
   }, []);
+
+  // AP-3 accessibility: announce each assessment phase change to assistive tech via
+  // the polite ARIA live region. Active only when the arch-completion flag is ON, so
+  // the default flow is byte-identical.
+  useEffect(() => {
+    if (!archCompletionEnabled) return;
+    const label: Record<string, string> = {
+      intro: 'Assessment introduction', questions: 'Assessment questions',
+      analyzing: 'Analyzing your responses', register: 'Registration',
+      capadex_q: 'Assessment questions', capadex_clarify: 'Clarifying your concern',
+      capadex_analyze: 'Analyzing your responses', capadex_bridge: 'Building your profile',
+      capadex_result: 'Your results', capadex_report: 'Your report',
+      capadex_packages: 'Assessment packages', capadex_preview: 'Report preview',
+      capadex_payment: 'Payment',
+    };
+    const msg = label[phase] || 'Assessment step changed';
+    void import('../lib/accessibility').then(({ announce }) => announce(msg)).catch(() => {});
+  }, [phase, archCompletionEnabled]);
 
   // Live cognitive runtime sync — active only during assessment questions and when feature flag enabled.
   // Passes guestKey = capadexSessionId as a capability token so the WS server can verify
@@ -1009,8 +1031,9 @@ export function FreeAssessmentModal({ open, onOpenChange, onNavigate, initialPer
       const stored = JSON.parse(sessionStorage.getItem(SEEN_CLARITY_KEY) || '[]');
       if (Array.isArray(stored)) seenClarityIds = stored.filter((x): x is string => typeof x === 'string');
     } catch { seenClarityIds = []; }
+    let analyzeBody: Record<string, unknown> = {};
     try {
-      const analyzeBody: Record<string, unknown> = {
+      analyzeBody = {
           // ── Legacy keys (kept for downstream phases + back-compat) ──
           concern_text: concernText,
           persona: selectedPersona,
@@ -1119,6 +1142,22 @@ export function FreeAssessmentModal({ open, onOpenChange, onNavigate, initialPer
       // Has clarification questions — brief fade then show them
       safeTimeout(() => setPhase('capadex_clarify'), 350);
     } catch {
+      // AP-2 offline capture: when the arch-completion flag is ON and the failure
+      // is due to being offline, queue the concern payload (idempotent by client
+      // key) so it replays to the exact endpoint on reconnect, and tell the user.
+      if (archCompletionEnabled && typeof navigator !== 'undefined' && navigator.onLine === false) {
+        try {
+          const { queueResponse } = await import('../lib/offline');
+          queueResponse({
+            client_key: `analyze_${capadexSessionId || 'anon'}_${Date.now()}`,
+            endpoint: '/api/capadex/concern/analyze',
+            payload: analyzeBody,
+          });
+          setCapadexError('You appear to be offline. Your response was saved and will be submitted automatically when you reconnect.');
+          setPhase('intro');
+          return;
+        } catch { /* fall through to the standard error */ }
+      }
       setCapadexError('Could not analyse concern. Please try again.');
       setPhase('intro');
     }

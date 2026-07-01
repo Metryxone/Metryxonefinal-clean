@@ -32,8 +32,11 @@ async function ensureSchema(pool: Pool): Promise<void> {
     channel text NOT NULL DEFAULT 'log',
     target text,                     -- email addr / webhook url (channel-dependent)
     enabled boolean NOT NULL DEFAULT true,
+    cooldown_seconds integer NOT NULL DEFAULT 900,  -- re-notify suppression window (0 = notify every cycle)
     created_at timestamptz NOT NULL DEFAULT now()
   )`);
+  // Additive column for stores created before the cooldown feature existed.
+  await pool.query(`ALTER TABLE ${RULES} ADD COLUMN IF NOT EXISTS cooldown_seconds integer NOT NULL DEFAULT 900`);
   await pool.query(`CREATE TABLE IF NOT EXISTS ${EVENTS} (
     id bigserial PRIMARY KEY,
     rule_id bigint,
@@ -44,9 +47,12 @@ async function ensureSchema(pool: Pool): Promise<void> {
     severity text NOT NULL,
     channel text NOT NULL,
     routed boolean NOT NULL DEFAULT false,
+    suppressed boolean NOT NULL DEFAULT false,  -- rule still firing but re-notification held (cooldown)
     detail text,
     fired_at timestamptz NOT NULL DEFAULT now()
   )`);
+  // Additive column for stores created before the cooldown feature existed.
+  await pool.query(`ALTER TABLE ${EVENTS} ADD COLUMN IF NOT EXISTS suppressed boolean NOT NULL DEFAULT false`);
   // Seed sane defaults ONLY when the store is empty (never duplicates on restart).
   const cnt = await pool.query(`SELECT count(*)::int AS n FROM ${RULES}`);
   if ((cnt.rows[0]?.n ?? 0) === 0) {
@@ -176,21 +182,44 @@ export async function evaluateAlertRules(pool: Pool) {
   const signals = await collectSignals(pool);
   const rules = await pool.query(`SELECT * FROM ${RULES} WHERE enabled = true`);
   const fired: any[] = [];
+  let suppressed_count = 0;
   for (const rule of rules.rows) {
     const observed = signals[rule.signal];
     if (observed == null) continue; // null signal → cannot evaluate (honest, no fabricated fire)
     if (!compare(observed, rule.comparator as Comparator, Number(rule.threshold))) continue;
     const subject = `[${String(rule.severity).toUpperCase()}] ${rule.name}`;
     const body = `signal=${rule.signal} observed=${observed} ${rule.comparator} threshold=${rule.threshold}`;
-    const routed = await route(rule.channel as Channel, rule.target, subject, body);
+
+    // Per-rule cooldown: a sustained regression pages ONCE, not on every evaluation cycle.
+    // The window is measured from the last event that actually NOTIFIED (routed=true); a failed
+    // route does not start a cooldown, so it is retried next cycle. cooldown_seconds=0 disables it.
+    const cooldownSec = Number(rule.cooldown_seconds ?? 900);
+    let suppressed = false;
+    if (cooldownSec > 0) {
+      const last = await pool.query(
+        `SELECT fired_at FROM ${EVENTS} WHERE rule_id = $1 AND routed = true ORDER BY fired_at DESC LIMIT 1`,
+        [rule.id],
+      );
+      if (last.rows[0]) {
+        const elapsedSec = (Date.now() - new Date(last.rows[0].fired_at).getTime()) / 1000;
+        if (elapsedSec < cooldownSec) suppressed = true;
+      }
+    }
+
+    // Suppressed: still fire a durable event (recorded honestly), but hold the notification.
+    const routed = suppressed ? false : await route(rule.channel as Channel, rule.target, subject, body);
+    const detail = suppressed
+      ? `${body} [suppressed: re-notification held for cooldown_seconds=${cooldownSec} after last notification]`
+      : body;
     const ins = await pool.query(
-      `INSERT INTO ${EVENTS} (rule_id, rule_name, signal, observed, threshold, severity, channel, routed, detail)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING id, fired_at`,
-      [rule.id, rule.name, rule.signal, observed, rule.threshold, rule.severity, rule.channel, routed, body],
+      `INSERT INTO ${EVENTS} (rule_id, rule_name, signal, observed, threshold, severity, channel, routed, suppressed, detail)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id, fired_at`,
+      [rule.id, rule.name, rule.signal, observed, rule.threshold, rule.severity, rule.channel, routed, suppressed, detail],
     );
-    fired.push({ rule_id: rule.id, rule_name: rule.name, observed, routed, event_id: ins.rows[0].id });
+    if (suppressed) suppressed_count += 1;
+    fired.push({ rule_id: rule.id, rule_name: rule.name, observed, routed, suppressed, event_id: ins.rows[0].id });
   }
-  return { evaluated: rules.rows.length, fired_count: fired.length, fired, signals };
+  return { evaluated: rules.rows.length, fired_count: fired.length, suppressed_count, fired, signals };
 }
 
 export async function listAlertRules(pool: Pool) {
@@ -201,14 +230,18 @@ export async function listAlertRules(pool: Pool) {
 
 export async function createAlertRule(
   pool: Pool,
-  input: { name: string; signal: string; comparator: Comparator; threshold: number; severity?: string; channel?: Channel; target?: string | null },
+  input: { name: string; signal: string; comparator: Comparator; threshold: number; severity?: string; channel?: Channel; target?: string | null; cooldown_seconds?: number },
 ) {
   if (!isOperationalReadinessEnabled()) return { ok: false, skipped: true };
   await ensureSchema(pool);
+  // Cooldown: default 900s; clamp negatives to 0 (0 = notify every cycle, legacy behaviour).
+  const cooldown = input.cooldown_seconds == null || !Number.isFinite(input.cooldown_seconds)
+    ? 900
+    : Math.max(0, Math.floor(input.cooldown_seconds));
   const r = await pool.query(
-    `INSERT INTO ${RULES} (name, signal, comparator, threshold, severity, channel, target)
-     VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *`,
-    [input.name, input.signal, input.comparator, input.threshold, input.severity ?? 'warning', input.channel ?? 'log', input.target ?? null],
+    `INSERT INTO ${RULES} (name, signal, comparator, threshold, severity, channel, target, cooldown_seconds)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`,
+    [input.name, input.signal, input.comparator, input.threshold, input.severity ?? 'warning', input.channel ?? 'log', input.target ?? null, cooldown],
   );
   return { ok: true, rule: r.rows[0] };
 }

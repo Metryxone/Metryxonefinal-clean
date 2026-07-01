@@ -156,11 +156,11 @@ export function registerOperationalReadinessRoutes(app: Express, pool: Pool, req
     res.json({ ready: true, ...(await listAlertRules(pool)) });
   }));
   app.post('/api/operational-readiness/alerts/rules', ...guards, safe(async (req, res) => {
-    const { name, signal, comparator, threshold, severity, channel, target } = req.body || {};
+    const { name, signal, comparator, threshold, severity, channel, target, cooldown_seconds } = req.body || {};
     if (!name || !signal || !comparator || threshold == null) {
       return res.status(400).json({ error: 'name, signal, comparator, threshold required' });
     }
-    res.json(await createAlertRule(pool, { name, signal, comparator, threshold: Number(threshold), severity, channel, target }));
+    res.json(await createAlertRule(pool, { name, signal, comparator, threshold: Number(threshold), severity, channel, target, cooldown_seconds: cooldown_seconds == null ? undefined : Number(cooldown_seconds) }));
   }));
   app.post('/api/operational-readiness/alerts/rules/:id/toggle', ...guards, safe(async (req, res) => {
     const enabled = req.body?.enabled !== false;

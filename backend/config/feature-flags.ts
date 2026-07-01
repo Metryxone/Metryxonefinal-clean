@@ -358,6 +358,18 @@ export const FEATURE_FLAGS = {
    *  V2. Default OFF, byte-identical incl. schema (DDL only on flag-gated write paths). Env:
    *  `FF_SCORE_STANDARDIZATION`. */
   scoreStandardization: false,
+  /** CAPADEX 3.0 — Program 3 · Phase 3.9 Enterprise Benchmark Intelligence Platform. When ON, exposes a
+   *  read-only certification layer + reuse-before-build mechanisms that turn a STANDARDIZED score (3.8) into
+   *  a BENCHMARK result (percentile/z/delta/quartile) against a reference group (self/peer/cohort/organization/
+   *  industry/functional/geographic/global/custom) across multiple comparison dimensions + time modes.
+   *  Certifies NINE INDEPENDENT dimensions SEPARATELY: benchmark_engine · comparison_engine · governance ·
+   *  super_admin · frontend · ux · apis · testing · documentation. COMPOSES the existing benchmark substrate
+   *  (peer-benchmark / m5-org-benchmark / mei-benchmark-engine / adaptive-benchmark / benchmark-engine /
+   *  comparative-intelligence) + the pure psychometric transforms + the 3.8 structured-AST formula engine (no
+   *  eval) under one registry + an additive `abmk_*` overlay — NO duplicate engine, NO V2. Benchmarking
+   *  ABSTAINS below k_min real members (never fabricated). Default OFF, byte-identical incl. schema (DDL only on
+   *  flag-gated write paths). Env: `FF_BENCHMARK_INTELLIGENCE`. */
+  benchmarkIntelligence: false,
   /** CAPADEX 3.0 — Program 3 · Phase 3.2A Persona Experience / Intelligent Journey Router. When ON, the
    *  generic single-page persona selector is replaced by a progressive 5-step onboarding wizard
    *  (Who → Refine → Goal → Personalize → AI Journey Router) that REUSES the existing persona/sub-persona
@@ -2413,6 +2425,11 @@ export function isAssessmentIntelligenceEnabled(): boolean {
 /** CAPADEX 3.0 — Program 3 · Phase 3.8 Enterprise Score Standardization & Interpretation master switch. */
 export function isScoreStandardizationEnabled(): boolean {
   return isFlagEnabled('scoreStandardization');
+}
+
+/** CAPADEX 3.0 — Program 3 · Phase 3.9 Enterprise Benchmark Intelligence Platform master switch. */
+export function isBenchmarkIntelligenceEnabled(): boolean {
+  return isFlagEnabled('benchmarkIntelligence');
 }
 
 /** CAPADEX 3.0 — Program 3 · Phase 3.2A Persona Experience / Intelligent Journey Router master switch. */

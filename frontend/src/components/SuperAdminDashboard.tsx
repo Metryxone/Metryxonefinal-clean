@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { Screen } from '../App';
 
-import { Menu, RefreshCw, Search, Settings, Target, Brain, FileCheck, Database, Package, Calculator, Users, BookOpen, Network, Layers, Activity, Building2, Briefcase, Users2, UserCircle2, Map, BarChart2, BarChart3, GitBranch, Sparkles, PieChart, TrendingUp, AlertTriangle, MessageCircle, Bot, FileDown, CreditCard, Shield, FlaskConical, ClipboardList, Cpu, Award, Gauge, Zap, Sliders, Shuffle, Timer, LineChart, ClipboardCheck, Boxes, Grid3x3, Globe, ShieldCheck, Rocket, Microscope } from 'lucide-react';
+import { Menu, RefreshCw, Search, Settings, Target, Brain, FileCheck, Database, Package, Calculator, Users, BookOpen, Network, Layers, Activity, Building2, Briefcase, Users2, UserCircle2, Map, BarChart2, BarChart3, GitBranch, Sparkles, PieChart, TrendingUp, AlertTriangle, MessageCircle, Bot, FileDown, CreditCard, Shield, FlaskConical, ClipboardList, Cpu, Award, Gauge, Zap, Sliders, Shuffle, Timer, LineChart, ClipboardCheck, Boxes, Grid3x3, Globe, ShieldCheck, Rocket, Microscope, GitCompare } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import SuperAdminLogin from './SuperAdminLogin';
@@ -182,6 +182,7 @@ const AssessmentScoringPanel = lazy(() => import('./superadmin/AssessmentScoring
 const AssessmentSciencePanel = lazy(() => import('./superadmin/AssessmentSciencePanel'));
 const AssessmentIntelligencePanel = lazy(() => import('./superadmin/AssessmentIntelligencePanel'));
 const ScoreStandardizationPanel = lazy(() => import('./superadmin/ScoreStandardizationPanel'));
+const BenchmarkIntelligencePanel = lazy(() => import('./superadmin/BenchmarkIntelligencePanel'));
 const DepartmentsPanel = lazy(() => import('./superadmin/DepartmentsPanel'));
 const RolesPanel = lazy(() => import('./superadmin/RolesPanel'));
 const RoleFamiliesPanel = lazy(() => import('./superadmin/RoleFamiliesPanel'));
@@ -567,6 +568,17 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
     queryKey: ['/api/score-standardization/enabled', 'enabled'],
     queryFn: async () => {
       const res = await fetch('/api/score-standardization/enabled', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // ── Benchmark Intelligence (CAPADEX 3.0 · 3.9) flag probe (file-registry flag benchmarkIntelligence).
+  //    Probe /api/benchmark-intelligence/enabled (503-before-auth when OFF) → tab omitted (byte-identical UI). ──
+  const { data: benchmarkIntelligenceEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/benchmark-intelligence/enabled', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/benchmark-intelligence/enabled', { credentials: 'include' });
       return res.ok;
     },
     enabled: isAuthenticated,
@@ -1205,6 +1217,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       ...(assessmentScienceEnabled ? [{ id: 'assessment-science', label: 'Assessment Science', icon: Microscope, node: <AssessmentSciencePanel /> }] : []),
                       ...(assessmentIntelligenceEnabled ? [{ id: 'assessment-intelligence', label: 'Assessment Intelligence', icon: Brain, node: <AssessmentIntelligencePanel /> }] : []),
                       ...(scoreStandardizationEnabled ? [{ id: 'score-standardization', label: 'Score Standardization', icon: Sliders, node: <ScoreStandardizationPanel /> }] : []),
+                      ...(benchmarkIntelligenceEnabled ? [{ id: 'benchmark-intelligence', label: 'Benchmark Intelligence', icon: GitCompare, node: <BenchmarkIntelligencePanel /> }] : []),
                       ...(mx203KnowledgeEnabled ? [{ id: 'mx203-knowledge-center', label: 'Knowledge Center', icon: BookOpen, node: <Mx203KnowledgeCenterPanel /> }] : []),
                       { id: 'ont-career-tracks',        label: 'Career Tracks',            icon: Map,           node: <CareerTracksPanel /> },
                       { id: 'ont-competency-levels',    label: 'Competency Levels',        icon: BarChart2,     node: <CompetencyLevelsPanel /> },

@@ -308,26 +308,49 @@ describe('PersonaJourneyWizard — Finish step hands off the exact persona & goa
     expect(setIsProxy).toHaveBeenCalledWith(true);
   });
 
-  it('hands off a split exam-aspirant (jee_aspirant) as legacyKey student, is_proxy=false (alignment ON)', async () => {
-    const user = userEvent.setup();
-    const setPrimaryPersona = vi.fn();
-    const setSelectedPersona = vi.fn();
-    const setIsProxy = vi.fn();
+  // Alignment splits the single "competitive_aspirant" into JEE/NEET/CUET/UPSC.
+  // Each split keeps legacyKey 'student' (self-taking learner), so the finer id
+  // must never leak a different legacyKey/is_proxy downstream. Task #355 pinned
+  // only JEE; a copy-paste slip on NEET/CUET/UPSC (wrong legacyKey or age band)
+  // would otherwise go unnoticed — so drive all four through the same handoff.
+  //
+  // Note the age-band difference: JEE/NEET/CUET allow ['14-17','17-24'] but UPSC
+  // allows ['17-24','24-45']. Each row seeds a band that is valid for its own
+  // sub-persona (a non-canonical / out-of-range band would be dropped on handoff).
+  const ALIGNMENT_ASPIRANTS: Array<{ subId: string; band: string }> = [
+    { subId: 'jee_aspirant', band: '17-24' },
+    { subId: 'neet_aspirant', band: '17-24' },
+    { subId: 'cuet_aspirant', band: '17-24' },
+    { subId: 'upsc_aspirant', band: '24-45' },
+  ];
 
-    // Alignment splits the single "competitive_aspirant" into JEE/NEET/CUET/UPSC.
-    // Each split keeps legacyKey 'student' (self-taking learner), so the finer id
-    // must never leak a different legacyKey downstream.
-    const finish = await renderAtFinish(
-      { trackId: 'learner', subId: 'jee_aspirant', band: '17-24', goal: 'exam' },
-      { personaModelAlignment: true, setPrimaryPersona, setSelectedPersona, setIsProxy },
-    );
+  it.each(ALIGNMENT_ASPIRANTS)(
+    'hands off a split exam-aspirant ($subId) as legacyKey student, is_proxy=false (alignment ON)',
+    async ({ subId, band }) => {
+      const user = userEvent.setup();
+      const setPrimaryPersona = vi.fn();
+      const setSelectedPersona = vi.fn();
+      const setIsProxy = vi.fn();
+      const setAgeBand = vi.fn();
 
-    await user.click(finish);
+      const finish = await renderAtFinish(
+        { trackId: 'learner', subId, band, goal: 'exam' },
+        { personaModelAlignment: true, setPrimaryPersona, setSelectedPersona, setIsProxy, setAgeBand },
+      );
 
-    expect(setPrimaryPersona).toHaveBeenCalledWith('jee_aspirant');
-    expect(setSelectedPersona).toHaveBeenCalledWith('student');
-    expect(setIsProxy).toHaveBeenCalledWith(false);
-  });
+      await user.click(finish);
+
+      // The finer split id is handed off verbatim as the primary persona…
+      expect(setPrimaryPersona).toHaveBeenCalledWith(subId);
+      // …but every split still borrows legacyKey 'student' downstream.
+      expect(setSelectedPersona).toHaveBeenCalledWith('student');
+      // A self-taking aspirant is never a proxy.
+      expect(setIsProxy).toHaveBeenCalledWith(false);
+      // The seeded band is valid for this sub-persona, so it survives the handoff
+      // (proves the row didn't silently drop to '' on a wrong/out-of-range band).
+      expect(setAgeBand).toHaveBeenCalledWith(band);
+    },
+  );
 
   it('does NOT resolve a flag-gated sub-persona when its flag is OFF (proves the flag gates the mapping)', async () => {
     const user = userEvent.setup();

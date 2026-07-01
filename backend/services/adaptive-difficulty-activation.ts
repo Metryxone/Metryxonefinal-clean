@@ -200,7 +200,176 @@ export type RoleDnaAnchor = {
   anchor: number | null;
   source_rows: number;
   reason: string;
+  /** How the role resolved to a curated Role-DNA (honest provenance).
+   *  'direct' = the role title/id IS one of the curated onto_roles;
+   *  'synonym'/'adjacent' = it resolved via the curated crosswalk below;
+   *  null = no basis (falls back to the stage anchor downstream). */
+  matched_via?: 'direct' | 'synonym' | 'adjacent' | null;
+  /** The curated onto_roles id whose runtime Role-DNA supplied the anchor. */
+  canonical_role_id?: string | null;
 };
+
+/**
+ * Curated adjacent-role / synonym crosswalk (Task #385 — "adapt difficulty for
+ * roles that don't yet have a curated profile").
+ *
+ * The runtime Role-DNA anchor only resolves for the ~15 roles that HAVE a curated
+ * `onto_roles` snapshot. A user who types a common variant ("Backend Developer",
+ * "SDE", "Front-end Engineer") or an adjacent title ("SRE", "Scrum Master") got
+ * NO Role-DNA match and silently fell back to the generic career-stage anchor.
+ *
+ * This is a HAND-VERIFIED, read-only map from a normalised free-text title →
+ * an EXISTING curated `onto_roles` id. It NEVER fabricates a proficiency: the
+ * anchor is still the AVG(expected_level) of the *canonical* role's real curated
+ * `competency_runtime_weights` rows. `kind` records honesty:
+ *   - 'synonym'  → the same role under a different name / spelling.
+ *   - 'adjacent' → a genuinely different but closely-related role whose curated
+ *                  levels are a DEFENSIBLE approximation (surfaced as such).
+ *
+ * Roles that match neither a curated onto_roles row NOR an entry here keep
+ * falling back honestly to the stage anchor. Bare ambiguous tokens (e.g. "pm")
+ * are deliberately excluded rather than guessed.
+ */
+export type RoleAlias = { canonical: string; kind: 'synonym' | 'adjacent' };
+export const ROLE_TITLE_ALIASES: Record<string, RoleAlias> = {
+  // Backend Engineer (role_be_eng)
+  'backend developer': { canonical: 'role_be_eng', kind: 'synonym' },
+  'back end engineer': { canonical: 'role_be_eng', kind: 'synonym' },
+  'back end developer': { canonical: 'role_be_eng', kind: 'synonym' },
+  'backend software engineer': { canonical: 'role_be_eng', kind: 'synonym' },
+  'server side engineer': { canonical: 'role_be_eng', kind: 'synonym' },
+  'server side developer': { canonical: 'role_be_eng', kind: 'synonym' },
+  'api engineer': { canonical: 'role_be_eng', kind: 'adjacent' },
+  // Senior Backend Engineer (role_sr_be_eng)
+  'sr backend engineer': { canonical: 'role_sr_be_eng', kind: 'synonym' },
+  'senior backend developer': { canonical: 'role_sr_be_eng', kind: 'synonym' },
+  'sr backend developer': { canonical: 'role_sr_be_eng', kind: 'synonym' },
+  'lead backend engineer': { canonical: 'role_sr_be_eng', kind: 'adjacent' },
+  // Frontend Engineer (role_fe_eng)
+  'frontend developer': { canonical: 'role_fe_eng', kind: 'synonym' },
+  'front end engineer': { canonical: 'role_fe_eng', kind: 'synonym' },
+  'front end developer': { canonical: 'role_fe_eng', kind: 'synonym' },
+  'frontend software engineer': { canonical: 'role_fe_eng', kind: 'synonym' },
+  'ui engineer': { canonical: 'role_fe_eng', kind: 'adjacent' },
+  'ui developer': { canonical: 'role_fe_eng', kind: 'adjacent' },
+  'web developer': { canonical: 'role_fe_eng', kind: 'adjacent' },
+  // Full Stack Engineer (role_fullstack_eng) — 'full stack engineer' self-alias
+  // catches hyphenated "Full-Stack Engineer" that the DB lower() match misses.
+  'full stack engineer': { canonical: 'role_fullstack_eng', kind: 'synonym' },
+  'fullstack engineer': { canonical: 'role_fullstack_eng', kind: 'synonym' },
+  'full stack developer': { canonical: 'role_fullstack_eng', kind: 'synonym' },
+  'fullstack developer': { canonical: 'role_fullstack_eng', kind: 'synonym' },
+  'full stack software engineer': { canonical: 'role_fullstack_eng', kind: 'synonym' },
+  // Software Engineer (role_software_eng)
+  'software developer': { canonical: 'role_software_eng', kind: 'synonym' },
+  'sde': { canonical: 'role_software_eng', kind: 'synonym' },
+  'swe': { canonical: 'role_software_eng', kind: 'synonym' },
+  'software development engineer': { canonical: 'role_software_eng', kind: 'synonym' },
+  'application developer': { canonical: 'role_software_eng', kind: 'synonym' },
+  'applications developer': { canonical: 'role_software_eng', kind: 'synonym' },
+  'programmer': { canonical: 'role_software_eng', kind: 'synonym' },
+  'software programmer': { canonical: 'role_software_eng', kind: 'synonym' },
+  'developer': { canonical: 'role_software_eng', kind: 'adjacent' },
+  // Senior Software Engineer (role_sr_software_eng)
+  'sr software engineer': { canonical: 'role_sr_software_eng', kind: 'synonym' },
+  'senior software developer': { canonical: 'role_sr_software_eng', kind: 'synonym' },
+  'senior sde': { canonical: 'role_sr_software_eng', kind: 'synonym' },
+  'sde ii': { canonical: 'role_sr_software_eng', kind: 'synonym' },
+  'sde 2': { canonical: 'role_sr_software_eng', kind: 'synonym' },
+  'senior swe': { canonical: 'role_sr_software_eng', kind: 'synonym' },
+  'senior developer': { canonical: 'role_sr_software_eng', kind: 'adjacent' },
+  'sr developer': { canonical: 'role_sr_software_eng', kind: 'adjacent' },
+  // DevOps Engineer (role_devops_eng)
+  'dev ops engineer': { canonical: 'role_devops_eng', kind: 'synonym' },
+  'devops': { canonical: 'role_devops_eng', kind: 'synonym' },
+  'site reliability engineer': { canonical: 'role_devops_eng', kind: 'adjacent' },
+  'sre': { canonical: 'role_devops_eng', kind: 'adjacent' },
+  'platform engineer': { canonical: 'role_devops_eng', kind: 'adjacent' },
+  'infrastructure engineer': { canonical: 'role_devops_eng', kind: 'adjacent' },
+  'cloud engineer': { canonical: 'role_devops_eng', kind: 'adjacent' },
+  // QA Engineer (role_qa_eng)
+  'quality assurance engineer': { canonical: 'role_qa_eng', kind: 'synonym' },
+  'qa analyst': { canonical: 'role_qa_eng', kind: 'synonym' },
+  'test engineer': { canonical: 'role_qa_eng', kind: 'synonym' },
+  'software test engineer': { canonical: 'role_qa_eng', kind: 'synonym' },
+  'qa tester': { canonical: 'role_qa_eng', kind: 'synonym' },
+  'quality engineer': { canonical: 'role_qa_eng', kind: 'synonym' },
+  'automation test engineer': { canonical: 'role_qa_eng', kind: 'adjacent' },
+  'sdet': { canonical: 'role_qa_eng', kind: 'adjacent' },
+  // Data Analyst (role_data_analyst)
+  'data analytics analyst': { canonical: 'role_data_analyst', kind: 'synonym' },
+  'analytics analyst': { canonical: 'role_data_analyst', kind: 'synonym' },
+  'business intelligence analyst': { canonical: 'role_data_analyst', kind: 'adjacent' },
+  'bi analyst': { canonical: 'role_data_analyst', kind: 'adjacent' },
+  'reporting analyst': { canonical: 'role_data_analyst', kind: 'adjacent' },
+  // Data Scientist (role_data_scientist)
+  'data science specialist': { canonical: 'role_data_scientist', kind: 'synonym' },
+  'applied scientist': { canonical: 'role_data_scientist', kind: 'adjacent' },
+  // Business Analyst (role_business_analyst)
+  'business systems analyst': { canonical: 'role_business_analyst', kind: 'synonym' },
+  'business process analyst': { canonical: 'role_business_analyst', kind: 'synonym' },
+  'systems analyst': { canonical: 'role_business_analyst', kind: 'adjacent' },
+  'functional analyst': { canonical: 'role_business_analyst', kind: 'adjacent' },
+  // Product Manager (role_pm)
+  'product mgr': { canonical: 'role_pm', kind: 'synonym' },
+  'senior product manager': { canonical: 'role_pm', kind: 'synonym' },
+  'associate product manager': { canonical: 'role_pm', kind: 'synonym' },
+  'product owner': { canonical: 'role_pm', kind: 'adjacent' },
+  'technical product manager': { canonical: 'role_pm', kind: 'adjacent' },
+  'group product manager': { canonical: 'role_pm', kind: 'adjacent' },
+  // Project Manager (role_project_manager)
+  'project mgr': { canonical: 'role_project_manager', kind: 'synonym' },
+  'it project manager': { canonical: 'role_project_manager', kind: 'synonym' },
+  'program manager': { canonical: 'role_project_manager', kind: 'adjacent' },
+  'delivery manager': { canonical: 'role_project_manager', kind: 'adjacent' },
+  'scrum master': { canonical: 'role_project_manager', kind: 'adjacent' },
+  'technical program manager': { canonical: 'role_project_manager', kind: 'adjacent' },
+  'project lead': { canonical: 'role_project_manager', kind: 'adjacent' },
+  // Engineering Manager (role_eng_manager)
+  'eng manager': { canonical: 'role_eng_manager', kind: 'synonym' },
+  'engineering mgr': { canonical: 'role_eng_manager', kind: 'synonym' },
+  'software engineering manager': { canonical: 'role_eng_manager', kind: 'synonym' },
+  'development manager': { canonical: 'role_eng_manager', kind: 'adjacent' },
+  'dev manager': { canonical: 'role_eng_manager', kind: 'adjacent' },
+  'technical manager': { canonical: 'role_eng_manager', kind: 'adjacent' },
+  'tech lead manager': { canonical: 'role_eng_manager', kind: 'adjacent' },
+  // Credit Analyst (role_credit_analyst)
+  'credit risk analyst': { canonical: 'role_credit_analyst', kind: 'synonym' },
+  'credit officer': { canonical: 'role_credit_analyst', kind: 'synonym' },
+  'credit underwriter': { canonical: 'role_credit_analyst', kind: 'synonym' },
+  'financial analyst': { canonical: 'role_credit_analyst', kind: 'adjacent' },
+  'risk analyst': { canonical: 'role_credit_analyst', kind: 'adjacent' },
+};
+
+/** Normalise a free-text role title for crosswalk lookup: lowercase, strip
+ *  punctuation that only varies spelling (hyphens/dots/slashes → space), collapse
+ *  whitespace. Deliberately conservative — no stemming or token dropping, so a
+ *  match is a real curated synonym/adjacent, never a fuzzy guess. */
+export function normalizeRoleTitle(role: string | null | undefined): string {
+  return String(role ?? '')
+    .toLowerCase()
+    .replace(/[._/\\-]+/g, ' ')
+    .replace(/[^a-z0-9 ]+/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/** READ-ONLY query for the AVG runtime Role-DNA expected_level of a role, matched
+ *  by curated onto_roles title OR id (case-insensitive). Returns the raw avg + n. */
+async function queryRoleDnaAnchor(pool: Pool, matchKey: string): Promise<{ avg: number; n: number }> {
+  const q = await pool.query<{ avg_expected: string | null; n: string }>(
+    `SELECT AVG(crw.expected_level)::numeric AS avg_expected, COUNT(*)::int AS n
+       FROM competency_runtime_weights crw
+       JOIN role_dna_profiles_v2 dp ON dp.id = crw.role_dna_id AND dp.is_active = true
+       JOIN onto_roles ro ON ro.id = dp.role_id
+      WHERE crw.expected_level IS NOT NULL
+        AND (lower(ro.title) = lower($1) OR lower(ro.id) = lower($1))`,
+    [matchKey],
+  );
+  const n = Number(q.rows[0]?.n ?? 0);
+  const avg = q.rows[0]?.avg_expected != null ? Number(q.rows[0].avg_expected) : NaN;
+  return { avg, n };
+}
 
 /**
  * READ-ONLY lookup of the runtime Role-DNA expected proficiency for a role.
@@ -209,6 +378,13 @@ export type RoleDnaAnchor = {
  * Every table is to_regclass probed; any missing table / no match / out-of-range
  * value → anchor=null with a reason (honest fallback to the stage anchor
  * downstream — never fabricated).
+ *
+ * When the role does NOT directly match a curated onto_roles row we consult the
+ * hand-verified `ROLE_TITLE_ALIASES` crosswalk and retry against the canonical
+ * (adjacent/synonym) curated role — the anchor is that real curated role's
+ * runtime Role-DNA, never a fabricated value, with the derivation surfaced in
+ * `reason`/`matched_via`. A role in neither the curated set nor the crosswalk
+ * stays anchor=null (honest stage-anchor fallback).
  *
  * Scale: `competency_runtime_weights.expected_level` is stored on a 0–100
  * proficiency scale (the runtime generator/seed write it that way — the curated
@@ -224,24 +400,40 @@ export async function lookupRoleDnaAnchor(pool: Pool, role: string | null | unde
     }
   }
   try {
-    const q = await pool.query<{ avg_expected: string | null; n: string }>(
-      `SELECT AVG(crw.expected_level)::numeric AS avg_expected, COUNT(*)::int AS n
-         FROM competency_runtime_weights crw
-         JOIN role_dna_profiles_v2 dp ON dp.id = crw.role_dna_id AND dp.is_active = true
-         JOIN onto_roles ro ON ro.id = dp.role_id
-        WHERE crw.expected_level IS NOT NULL
-          AND (lower(ro.title) = lower($1) OR lower(ro.id) = lower($1))`,
-      [r],
-    );
-    const n = Number(q.rows[0]?.n ?? 0);
-    if (n === 0) return { anchor: null, source_rows: 0, reason: 'no Role-DNA expected_level rows for this role' };
-    const avg = q.rows[0]?.avg_expected != null ? Number(q.rows[0].avg_expected) : NaN;
-    if (!Number.isFinite(avg) || avg < 0 || avg > 100) {
-      return { anchor: null, source_rows: n, reason: `Role-DNA expected_level out of [0,100] range (avg=${avg}) — rejected, not coerced` };
+    // 1. Direct match: the role IS one of the curated onto_roles (title or id).
+    const direct = await queryRoleDnaAnchor(pool, r);
+    if (direct.n > 0) {
+      if (!Number.isFinite(direct.avg) || direct.avg < 0 || direct.avg > 100) {
+        return { anchor: null, source_rows: direct.n, matched_via: 'direct', canonical_role_id: null,
+          reason: `Role-DNA expected_level out of [0,100] range (avg=${direct.avg}) — rejected, not coerced` };
+      }
+      return { anchor: Math.round(direct.avg), source_rows: direct.n, matched_via: 'direct', canonical_role_id: null,
+        reason: `Role-DNA expected_level averaged over ${direct.n} competencies` };
     }
-    return { anchor: Math.round(avg), source_rows: n, reason: `Role-DNA expected_level averaged over ${n} competencies` };
+
+    // 2. No direct curated role. Consult the hand-verified adjacent/synonym
+    //    crosswalk and retry against the canonical role's REAL curated Role-DNA.
+    const alias = ROLE_TITLE_ALIASES[normalizeRoleTitle(r)];
+    if (alias) {
+      const derived = await queryRoleDnaAnchor(pool, alias.canonical);
+      if (derived.n > 0) {
+        if (!Number.isFinite(derived.avg) || derived.avg < 0 || derived.avg > 100) {
+          return { anchor: null, source_rows: derived.n, matched_via: alias.kind, canonical_role_id: alias.canonical,
+            reason: `Role-DNA expected_level out of [0,100] range (avg=${derived.avg}) — rejected, not coerced` };
+        }
+        const how = alias.kind === 'synonym'
+          ? `synonym of curated role '${alias.canonical}'`
+          : `adjacent curated role '${alias.canonical}' (defensible approximation, not curated for this exact title)`;
+        return { anchor: Math.round(derived.avg), source_rows: derived.n, matched_via: alias.kind, canonical_role_id: alias.canonical,
+          reason: `Role-DNA expected_level derived via ${how}, averaged over ${derived.n} competencies` };
+      }
+    }
+
+    return { anchor: null, source_rows: 0, matched_via: null, canonical_role_id: null,
+      reason: 'no Role-DNA expected_level rows for this role (no curated or crosswalk match)' };
   } catch (e: any) {
-    return { anchor: null, source_rows: 0, reason: `Role-DNA lookup failed: ${e?.message ?? 'error'}` };
+    return { anchor: null, source_rows: 0, matched_via: null, canonical_role_id: null,
+      reason: `Role-DNA lookup failed: ${e?.message ?? 'error'}` };
   }
 }
 

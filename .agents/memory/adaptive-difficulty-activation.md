@@ -33,10 +33,23 @@ and new GET `/api/competency/assessment/difficulty-plan`. OFF = byte-identical i
   `to_regclass`-probed. NOTE the v2 chain — there is NO `onto_dna_profiles.is_current` hop here; that older join
   was wrong for the runtime weights table (weights key on the v2 UUID).
 - **Now populated** by `services/adaptive-assessment-seed.ts` (auto-runs fire-and-forget at
-  `registerCompetencyQuestionRoutes`, idempotent, so it survives merge-to-prod which carries code+DDL not rows):
-  44 weights across 5 role DNAs sourced from curated `onto_role_weights`. Role-differentiated anchors
-  (level×20): PM 48 · Backend Eng 57 · Credit Analyst 66 · Sr Backend 71 · Eng Manager 80. Roles WITHOUT a
-  curated DNA snapshot still fall back to the stage anchor (honest).
+  `registerCompetencyQuestionRoutes`, idempotent, so it survives merge-to-prod which carries code+DDL not rows).
+  ⚠️ **STALE-MEMORY CORRECTION (verified live):** all **15** curated `onto_roles` already have
+  `onto_dna_profiles`+`onto_role_weights` AND are seeded into `role_dna_profiles_v2` (15 rows) +
+  `competency_runtime_weights` (~106 rows) — NOT "5 roles". Sample anchors (0–100): PM 48 · Backend Eng 57 ·
+  Front-end 63 · DevOps 66 · SDE/SW Eng 67 · Project Mgr 70. So the seed side is DONE for all 15.
+- **Free-text role crosswalk (Task #385, in the ENGINE not the seed):** the direct DB match is exact
+  (`lower(onto_roles.title|id)`), so a user typing a synonym ("Backend Developer", "SDE") or an adjacent title
+  ("SRE", "Scrum Master") got NO match → stage anchor. Fixed with a hand-verified read-time map
+  `ROLE_TITLE_ALIASES` (normalized free-text → an EXISTING curated `onto_roles` id; `kind` `synonym`|`adjacent`)
+  consulted ONLY after the direct match misses. It **reuses the canonical role's REAL
+  `competency_runtime_weights`** — never fabricates a number; `matched_via`/`canonical_role_id`/`reason` carry
+  provenance (adjacent = flagged approximation). `normalizeRoleTitle` is conservative (lowercase, punct→space,
+  collapse ws — NO stemming/token-drop) so a match is a real curated variant, not a fuzzy guess.
+  **DEVIATION from the task's named seed file:** did NOT insert synonym/adjacent rows into shared `onto_roles`
+  (blast radius: `mobility_*`/`bench_*` FKs + phantom duplicate roles in pickers) — the crosswalk is the
+  low-blast-radius, single-source-of-truth alternative. Ambiguous bare tokens (e.g. "pm") deliberately excluded.
+  Roles in neither the curated set nor the crosswalk still fall back honestly to the stage anchor.
 - **Scale:** curated `onto_role_weights.expected_level` is a **1–5 ordinal** (`onto_proficiency_levels`); the seed
   converts to the 0–100 scale `competency_runtime_weights.expected_level` uses (`level/5*100`). The engine still
   REJECTS an AVG outside [0,100] to null (never coerces). `map_role_competency` is a disjoint `ont_*` INTEGER

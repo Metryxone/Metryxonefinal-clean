@@ -516,3 +516,130 @@ test('flag ON → GET /enabled reports 200 {enabled:true} (probe tracks the live
   assert.equal(body.ok, true);
   assert.equal(body.enabled, true, 'flag ON (module default) → probe reports enabled:true');
 });
+
+// ── 5. Flag-OFF byte-identical-OFF discipline for the REST of the module (Task #270) ─
+// Task #267 (section 4 above) only locked POST /complete + the /enabled probe.
+// Every OTHER gate-protected DATA route in this module shares the exact SAME
+// `gate` middleware, but had no standing flag-OFF test. A future refactor that
+// reordered the chain on any of them (e.g. moved a 503 INTO the handler, or
+// registered requireAuth before the gate) would let a flag-OFF request reach
+// auth/DB — potentially running the lazy ensure-schema on a path meant to be
+// inert — with no test catching it. This parameterizes the same guard over the
+// full remaining surface so "the rest of Career Discovery stays silent when
+// switched off" is enforced route-by-route.
+
+/** Every remaining gate-protected route (POST /complete + the ungated /enabled probe are covered above). */
+const GATED_ROUTES: Array<{ method: 'GET' | 'POST'; path: string; run: { body?: any; params?: any; query?: any } }> = [
+  { method: 'GET', path: '/api/career-discovery/values/questions', run: {} },
+  { method: 'GET', path: '/api/career-discovery/status', run: {} },
+  { method: 'GET', path: '/api/career-discovery/battery', run: {} },
+  { method: 'POST', path: '/api/career-discovery/values', run: { body: { responses: {} } } },
+  { method: 'GET', path: '/api/career-discovery/profile', run: {} },
+  { method: 'GET', path: '/api/career-discovery/explorer', run: { query: { limit: '12' } } },
+  { method: 'GET', path: '/api/career-discovery/explorer/market', run: { query: { region: 'IN' } } },
+  { method: 'POST', path: '/api/career-discovery/explorer/simulate', run: { body: { changes: [] } } },
+  { method: 'GET', path: '/api/career-discovery/explorer/role/:roleId', run: { params: { roleId: 'r1' } } },
+  { method: 'GET', path: '/api/career-discovery/guidance', run: {} },
+];
+
+/** Capture EVERY registered route chain (GET + POST), keyed by `${METHOD} ${path}`, with the supplied requireAuth. */
+function captureGatedRoutes(pool: Pool, requireAuth: RequireAuthShim): Record<string, any[]> {
+  const routes: Record<string, any[]> = {};
+  const fakeApp: any = {
+    use: () => {},
+    get: (path: string, ...handlers: any[]) => {
+      routes[`GET ${path}`] = handlers;
+    },
+    post: (path: string, ...handlers: any[]) => {
+      routes[`POST ${path}`] = handlers;
+    },
+  };
+  registerCareerDiscoveryRoutes(fakeApp, pool, requireAuth);
+  return routes;
+}
+
+type RequireAuthShim = (req: any, res: any, next: () => void) => void;
+
+/** Drive a captured chain with a minimal req/res, stopping when a middleware ends the response. */
+async function runRoute(chain: any[], run: { body?: any; params?: any; query?: any }): Promise<{ status: number; body: any }> {
+  const req: any = { body: run.body ?? {}, params: run.params ?? {}, query: run.query ?? {} };
+  let statusCode = 200;
+  let payload: any = null;
+  let ended = false;
+  const res: any = {
+    status(code: number) {
+      statusCode = code;
+      return res;
+    },
+    json(p: any) {
+      payload = p;
+      ended = true;
+      return res;
+    },
+  };
+  for (const h of chain) {
+    if (ended) break;
+    let nexted = false;
+    await h(req, res, () => {
+      nexted = true;
+    });
+    if (!nexted) break; // a middleware ended the response (gate 503 / auth stop / handler json)
+  }
+  return { status: statusCode, body: payload };
+}
+
+for (const route of GATED_ROUTES) {
+  test(`flag OFF → ${route.method} ${route.path} 503s from the gate BEFORE any auth or DB touch (no queries captured)`, async () => {
+    await withFlagOff(async () => {
+      const pool = new FakeDiscoveryPool();
+      let authCalls = 0;
+      const requireAuth: RequireAuthShim = (req, _res, next) => {
+        authCalls++;
+        if (!req.user) req.user = { id: 'student-test' };
+        next();
+      };
+      const routes = captureGatedRoutes(pool as unknown as Pool, requireAuth);
+      const chain = routes[`${route.method} ${route.path}`];
+      assert.ok(chain, `${route.method} ${route.path} was registered`);
+
+      const { status, body } = await runRoute(chain, route.run);
+
+      assert.equal(status, 503, 'a flag-OFF request is 503ed by the gate');
+      assert.equal(body.ok, false);
+      assert.equal(body.enabled, false, 'the 503 envelope reports the flag is disabled');
+
+      // Byte-identical-OFF: the gate short-circuited before requireAuth ran …
+      assert.equal(authCalls, 0, 'requireAuth was never reached (no auth touch when OFF)');
+      // … and before any handler issued a query (no DB / lazy ensure-schema touch).
+      assert.equal(pool.captured.length, 0, 'no SQL was issued when OFF — the lazy ensure-schema is never reached');
+      assert.equal(Object.keys(pool.store).length, 0, 'no career_discovery_results row was created on the inert flag-OFF path');
+    });
+  });
+}
+
+// ── Meta: prove the gate (not a broken/unregistered route) is what stops them ──
+// Non-tautology guard for the parameterized OFF test above. With the flag ON
+// (module default), the SAME routes must let the request THROUGH the gate and
+// reach requireAuth. Here requireAuth is a spy that ends the response with 401
+// so the heavy service handlers never run — we only assert the gate called
+// next() into auth. If a route were simply always-503 (or unregistered), this
+// would fail, proving the OFF assertions have teeth.
+for (const route of GATED_ROUTES) {
+  test(`flag ON → ${route.method} ${route.path} passes the gate through to requireAuth (proves OFF 503 is the gate)`, async () => {
+    const pool = new FakeDiscoveryPool();
+    let authCalls = 0;
+    const requireAuthStop: RequireAuthShim = (_req, res) => {
+      authCalls++;
+      res.status(401).json({ ok: false, stopped_at: 'auth' }); // end before the handler runs
+    };
+    const routes = captureGatedRoutes(pool as unknown as Pool, requireAuthStop);
+    const chain = routes[`${route.method} ${route.path}`];
+    assert.ok(chain, `${route.method} ${route.path} was registered`);
+
+    const { status } = await runRoute(chain, route.run);
+
+    assert.equal(authCalls, 1, 'the gate allowed the request through to requireAuth when the flag is ON');
+    assert.equal(status, 401, 'the auth spy — not the gate — ended the response when ON');
+    assert.equal(pool.captured.length, 0, 'no handler DB work ran (we stopped at auth) — this test isolates the gate→auth handoff');
+  });
+}

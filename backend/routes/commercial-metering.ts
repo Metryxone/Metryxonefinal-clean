@@ -19,7 +19,7 @@ import { ensureMeteringSchema } from '../services/commercial/metering-schema';
 import { ensureCommercialSchema } from '../services/commercial/catalog-schema';
 import {
   recordUsage, checkQuota, buildUsageOverview, isUsageType,
-  checkCreditDimension, spendCredits,
+  checkCreditDimension, spendCredits, listPlanQuotas, upsertPlanQuotas,
 } from '../services/commercial/metering-engine';
 import { buildIdentityConsumption, buildDimensionOverview } from '../services/commercial/consumption-engine';
 import {
@@ -68,6 +68,9 @@ export function registerCommercialMeteringRoutes(
   const userReadChain = [requireAuth, requireMeteringFlag];
   const adminReadChain = [requireAuth, requireSuperAdmin, requireMeteringFlag];
   const creditWriteChain = [requireAuth, requireMeteringFlag, ensureCreditSchema];
+  // Quota config lives on comm_plans.metadata; the write path bootstraps the catalog schema (after the
+  // flag gate → byte-identical OFF, no schema created when metering is disabled).
+  const adminQuotaWriteChain = [requireAuth, requireSuperAdmin, requireMeteringFlag, ensureCreditSchema];
 
   const isSuperAdmin = (req: any): boolean => {
     const roles = req.user?.roles || [];
@@ -201,6 +204,42 @@ export function registerCommercialMeteringRoutes(
     } catch (err) {
       console.error('[metering dimensions overview]', err);
       res.status(500).json({ error: 'dimensions overview failed' });
+    }
+  });
+
+  // ── Quota configuration (super-admin) ──────────────────────────────────────────────────────────
+  // List every plan with its declared per-dimension quotas (editable business dimensions). Read-only;
+  // honest empty catalog when the commercial substrate is absent.
+  app.get('/api/admin/commercial/metering/quotas', ...adminReadChain, async (_req: any, res) => {
+    try {
+      const overview = await listPlanQuotas(pool);
+      res.json(overview);
+    } catch (err) {
+      console.error('[metering quotas list]', err);
+      res.status(500).json({ error: 'quotas list failed' });
+    }
+  });
+
+  // Upsert a plan's declared per-dimension quotas. Touches ONLY comm_plans.metadata.quotas for the
+  // editable dimensions; empty/null clears a quota (→ unmetered). Reflects immediately in the
+  // consumption view since resolveQuotaWindow reads the plan metadata live.
+  app.put('/api/admin/commercial/metering/quotas/:planId', ...adminQuotaWriteChain, async (req: any, res) => {
+    try {
+      const planId = String(req.params.planId ?? '').trim();
+      if (!planId) return res.status(400).json({ error: 'planId required' });
+      const quotas = req.body?.quotas;
+      if (quotas == null || typeof quotas !== 'object' || Array.isArray(quotas)) {
+        return res.status(400).json({ error: 'quotas object required' });
+      }
+      const result = await upsertPlanQuotas(pool, planId, quotas as Record<string, unknown>);
+      if (!result.ok) {
+        if (result.reason === 'not_found') return res.status(404).json({ error: 'plan not found' });
+        return res.status(400).json({ error: 'invalid quota value (expected a non-negative integer)' });
+      }
+      res.json({ ok: true, plan: result.plan });
+    } catch (err) {
+      console.error('[metering quotas upsert]', err);
+      res.status(500).json({ error: 'quotas upsert failed' });
     }
   });
 }

@@ -68,6 +68,21 @@ export function dimensionKind(d: BusinessDimension): DimensionKind {
   return 'period_count';
 }
 
+/**
+ * The business dimensions that carry an EDITABLE per-plan quota. This is every business dimension
+ * EXCEPT `credits` (a consumable balance drawn from the credit ledger, not a declared per-period/level
+ * quota). Each of these is ALSO a UsageType, so a quota declared here resolves through
+ * resolveQuotaWindow AND is surfaced in the per-identity consumption view — editing one is reflected
+ * immediately in that view's limit/remaining.
+ */
+export const QUOTA_DIMENSIONS: readonly UsageType[] = BUSINESS_DIMENSIONS.filter(
+  (d) => dimensionKind(d) !== 'credit_balance',
+) as unknown as UsageType[];
+
+export function isQuotaDimension(v: unknown): v is UsageType {
+  return typeof v === 'string' && (QUOTA_DIMENSIONS as readonly string[]).includes(v);
+}
+
 export function isFeatureClass(v: unknown): v is FeatureClass {
   return typeof v === 'string' && (FEATURE_CLASSES as readonly string[]).includes(v);
 }

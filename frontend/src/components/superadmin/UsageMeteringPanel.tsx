@@ -1,8 +1,9 @@
 import { BRAND } from '@/design-system/tokens';
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useMemo, useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   RefreshCw, AlertTriangle, Gauge, Coins, Search, BarChart3, User, Info,
+  SlidersHorizontal, Save, Check, RotateCcw,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Button } from '../ui/button';
@@ -40,6 +41,24 @@ interface IdentityConsumption {
   generated_at: string;
   degraded: boolean;
   dimensions: DimensionConsumption[];
+}
+
+interface PlanQuotaRow {
+  plan_id: string;
+  plan_code: string;
+  plan_name: string;
+  product_id: string | null;
+  product_name: string | null;
+  segment: string | null;
+  is_active: boolean;
+  billing_interval: string;
+  quotas: Record<string, number>;
+}
+interface PlanQuotaOverview {
+  generated_at: string;
+  degraded: boolean;
+  dimensions: string[];
+  plans: PlanQuotaRow[];
 }
 
 const DIMENSION_LABELS: Record<string, string> = {
@@ -99,6 +118,223 @@ function quantityLabel(row: DimensionOverviewRow): string {
   if (row.dimension === 'credits') return 'Net balance';
   if (row.kind === 'level') return 'Current total';
   return 'Total quantity';
+}
+
+// ── Per-plan quota editor ────────────────────────────────────────────────────────────────────────
+// Declared quotas live on the plan (comm_plans.metadata.quotas). Editing them here is the canonical way
+// to change the limits enforced by the meter (fail-closed at 429) and shown in the consumption view —
+// no code change. A blank field = unmetered (no declared quota). Only whole non-negative numbers.
+function PlanQuotaEditor() {
+  const qc = useQueryClient();
+  const [drafts, setDrafts] = useState<Record<string, Record<string, string>>>({});
+  const [savedPlan, setSavedPlan] = useState<string | null>(null);
+  const [errorPlan, setErrorPlan] = useState<{ id: string; msg: string } | null>(null);
+
+  const {
+    data, isLoading, isError, refetch, isFetching,
+  } = useQuery<PlanQuotaOverview | null>({
+    queryKey: ['/api/admin/commercial/metering/quotas'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/commercial/metering/quotas', { credentials: 'include' });
+      if (!res.ok) throw new Error(`quotas ${res.status}`);
+      return res.json();
+    },
+  });
+
+  const dimensions = data?.dimensions ?? [];
+
+  const saveMutation = useMutation({
+    mutationFn: async ({ planId, quotas }: { planId: string; quotas: Record<string, string> }) => {
+      const res = await fetch(`/api/admin/commercial/metering/quotas/${encodeURIComponent(planId)}`, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quotas }),
+      });
+      if (!res.ok) {
+        let msg = `Save failed (${res.status})`;
+        try { const j = await res.json(); if (j?.error) msg = j.error; } catch { /* ignore */ }
+        throw new Error(msg);
+      }
+      return res.json();
+    },
+    onSuccess: (_r, vars) => {
+      setErrorPlan(null);
+      setSavedPlan(vars.planId);
+      setDrafts((prev) => { const next = { ...prev }; delete next[vars.planId]; return next; });
+      // Refresh the quota list AND the consumption/overview views so the new limit/remaining shows.
+      qc.invalidateQueries({ queryKey: ['/api/admin/commercial/metering/quotas'] });
+      qc.invalidateQueries({ queryKey: ['metering-consumption'] });
+      qc.invalidateQueries({ queryKey: ['/api/admin/commercial/metering/dimensions'] });
+      window.setTimeout(() => setSavedPlan((cur) => (cur === vars.planId ? null : cur)), 2500);
+    },
+    onError: (err: any, vars) => {
+      setErrorPlan({ id: vars.planId, msg: err?.message || 'Save failed' });
+    },
+  });
+
+  // Current input value for a plan+dimension: the in-progress draft if present, else the server value.
+  const valueFor = (plan: PlanQuotaRow, dim: string): string => {
+    const draft = drafts[plan.plan_id]?.[dim];
+    if (draft !== undefined) return draft;
+    const v = plan.quotas[dim];
+    return v == null ? '' : String(v);
+  };
+
+  const setValue = (planId: string, dim: string, val: string) => {
+    setDrafts((prev) => ({ ...prev, [planId]: { ...(prev[planId] || {}), [dim]: val } }));
+  };
+
+  const isDirty = (plan: PlanQuotaRow): boolean => {
+    const draft = drafts[plan.plan_id];
+    if (!draft) return false;
+    return dimensions.some((dim) => {
+      const server = plan.quotas[dim] == null ? '' : String(plan.quotas[dim]);
+      const cur = draft[dim];
+      return cur !== undefined && cur.trim() !== server;
+    });
+  };
+
+  const invalidDim = (plan: PlanQuotaRow): boolean =>
+    dimensions.some((dim) => {
+      const v = valueFor(plan, dim).trim();
+      if (v === '') return false;
+      const n = Number(v);
+      return !Number.isFinite(n) || n < 0 || !Number.isInteger(n);
+    });
+
+  const savePlan = (plan: PlanQuotaRow) => {
+    const quotas: Record<string, string> = {};
+    for (const dim of dimensions) quotas[dim] = valueFor(plan, dim).trim();
+    saveMutation.mutate({ planId: plan.plan_id, quotas });
+  };
+
+  const resetPlan = (planId: string) => {
+    setDrafts((prev) => { const next = { ...prev }; delete next[planId]; return next; });
+    if (errorPlan?.id === planId) setErrorPlan(null);
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <SlidersHorizontal className="h-5 w-5" style={{ color: BRAND.primary }} /> Plan usage limits
+            </CardTitle>
+            <CardDescription>
+              Set the per-period quota each plan grants per dimension. A blank field means unmetered (no declared
+              quota). Changes apply immediately to every identity on that plan — the meter fails closed once a
+              limit is reached.
+            </CardDescription>
+          </div>
+          <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
+            <RefreshCw className={`h-4 w-4 mr-1 ${isFetching ? 'animate-spin' : ''}`} /> Refresh
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {isLoading ? (
+          <div className="flex items-center justify-center h-32">
+            <RefreshCw className="h-6 w-6 animate-spin" style={{ color: BRAND.primary }} />
+          </div>
+        ) : isError ? (
+          <div className="flex flex-col items-center justify-center gap-3 py-8 text-center">
+            <AlertTriangle className="h-8 w-8 text-amber-500" />
+            <p className="text-sm text-slate-600">
+              Couldn&apos;t load plan quotas. The metering feature may be disabled or you may not be signed in as a
+              super-admin.
+            </p>
+            <Button variant="outline" size="sm" onClick={() => refetch()}>Retry</Button>
+          </div>
+        ) : !data || data.plans.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-2 py-8 text-center text-sm text-slate-500">
+            <Info className="h-6 w-6 text-slate-400" />
+            No plans found. Create plans in the catalog first, then set their usage limits here.
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {data.degraded && (
+              <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-amber-50 text-amber-800 text-sm">
+                <AlertTriangle className="h-4 w-4" />
+                Some plans failed to read — the list below is partial (honest degraded state).
+              </div>
+            )}
+            {data.plans.map((plan) => {
+              const dirty = isDirty(plan);
+              const invalid = invalidDim(plan);
+              const saving = saveMutation.isPending && saveMutation.variables?.planId === plan.plan_id;
+              return (
+                <div key={plan.plan_id} className="rounded-lg border border-slate-200 p-4 bg-white">
+                  <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
+                    <div className="min-w-0">
+                      <div className="font-semibold text-slate-700 flex items-center gap-2">
+                        {plan.plan_name}
+                        {!plan.is_active && <Badge className="bg-slate-100 text-slate-500 text-[10px]">Inactive</Badge>}
+                      </div>
+                      <div className="text-[11px] text-slate-400 flex flex-wrap gap-x-2 gap-y-0.5">
+                        <span className="font-mono">{plan.plan_code}</span>
+                        {plan.product_name && <span>· {plan.product_name}</span>}
+                        {plan.segment && <span>· {plan.segment}</span>}
+                        <span>· {plan.billing_interval}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {savedPlan === plan.plan_id && (
+                        <span className="flex items-center gap-1 text-xs text-emerald-600">
+                          <Check className="h-4 w-4" /> Saved
+                        </span>
+                      )}
+                      {dirty && (
+                        <Button variant="ghost" size="sm" onClick={() => resetPlan(plan.plan_id)} disabled={saving}>
+                          <RotateCcw className="h-4 w-4 mr-1" /> Reset
+                        </Button>
+                      )}
+                      <Button
+                        size="sm"
+                        onClick={() => savePlan(plan)}
+                        disabled={!dirty || invalid || saving}
+                        style={{ backgroundColor: BRAND.primary }}
+                        className="text-white"
+                      >
+                        {saving
+                          ? <RefreshCw className="h-4 w-4 mr-1 animate-spin" />
+                          : <Save className="h-4 w-4 mr-1" />}
+                        Save
+                      </Button>
+                    </div>
+                  </div>
+                  {errorPlan?.id === plan.plan_id && (
+                    <div className="flex items-center gap-2 mb-3 px-3 py-2 rounded-md bg-red-50 text-red-700 text-xs">
+                      <AlertTriangle className="h-4 w-4" /> {errorPlan.msg}
+                    </div>
+                  )}
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                    {dimensions.map((dim) => (
+                      <div key={dim}>
+                        <label className="block text-[11px] uppercase tracking-wide text-slate-500 mb-1">
+                          {DIMENSION_LABELS[dim] ?? dim}
+                        </label>
+                        <Input
+                          type="number"
+                          min={0}
+                          step={1}
+                          inputMode="numeric"
+                          value={valueFor(plan, dim)}
+                          onChange={(e) => setValue(plan.plan_id, dim, e.target.value)}
+                          placeholder="Unmetered"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
 }
 
 export default function UsageMeteringPanel() {
@@ -329,6 +565,8 @@ export default function UsageMeteringPanel() {
           )}
         </CardContent>
       </Card>
+
+      <PlanQuotaEditor />
     </div>
   );
 }

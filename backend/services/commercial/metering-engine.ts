@@ -15,7 +15,7 @@
  *     refuses (429) and does NOT write the over-quota event.
  */
 import type { Pool } from 'pg';
-import { parsePlanFeatures, isUsageType, usageTypeKind, type UsageType } from './plan-features';
+import { parsePlanFeatures, isUsageType, usageTypeKind, QUOTA_DIMENSIONS, type UsageType } from './plan-features';
 import { getCreditBalance, applyCredit, type CreditMutationResult } from './credit-ledger-runtime';
 
 // A pool OR a transaction client — both expose .query. Reads accept either so they can run inside the
@@ -392,6 +392,133 @@ export async function spendCredits(
     state: { email, dimension: 'credits', customer_id: customerId, balance: result.balance_paise, reason: 'has_customer' },
     reason: 'spent',
   };
+}
+
+// ── Admin quota configuration (per-plan) ─────────────────────────────────────────────────────────
+// Declared quotas live on comm_plans.metadata.quotas (see plan-features.ts). Editing them is the
+// canonical way to change the limits enforced by resolveQuotaWindow / surfaced in the consumption
+// view — no code change required. These helpers list + upsert those quotas, touching ONLY the editable
+// business dimensions (QUOTA_DIMENSIONS) and NEVER clobbering a plan's other metadata.
+
+export interface PlanQuotaRow {
+  plan_id: string;
+  plan_code: string;
+  plan_name: string;
+  product_id: string | null;
+  product_name: string | null;
+  segment: string | null;
+  is_active: boolean;
+  billing_interval: string;
+  quotas: Partial<Record<UsageType, number>>; // only the editable dimensions; absent = unmetered
+}
+
+export interface PlanQuotaOverview {
+  generated_at: string;
+  degraded: boolean;
+  dimensions: UsageType[];      // editable dimension order (for the UI table)
+  plans: PlanQuotaRow[];
+}
+
+/**
+ * List every plan with its declared quotas for the editable business dimensions. GET-never-writes:
+ * probe comm_plans with to_regclass and degrade to an honest empty catalog when absent, rather than
+ * bootstrapping schema. Never throws.
+ */
+export async function listPlanQuotas(pool: Pool): Promise<PlanQuotaOverview> {
+  const dimensions = [...QUOTA_DIMENSIONS];
+  const probe = await pool.query(`SELECT to_regclass('comm_plans') AS oid`).catch(() => null);
+  if (!probe || probe.rows[0]?.oid == null) {
+    return { generated_at: new Date().toISOString(), degraded: false, dimensions, plans: [] };
+  }
+  let degraded = false;
+  const rows = await pool
+    .query(
+      `SELECT p.id, p.code, p.name, p.billing_interval, p.is_active, p.metadata,
+              pr.id AS product_id, pr.name AS product_name, pr.segment
+         FROM comm_plans p
+         LEFT JOIN comm_products pr ON pr.id = p.product_id
+        ORDER BY pr.segment NULLS LAST, pr.sort_order NULLS LAST, p.sort_order, p.name`,
+    )
+    .then((r) => r.rows)
+    .catch((e) => { console.error('[plan quotas list]', e); degraded = true; return [] as any[]; });
+
+  const plans: PlanQuotaRow[] = rows.map((r) => {
+    const declared = parsePlanFeatures(r.metadata).quotas;
+    const quotas: Partial<Record<UsageType, number>> = {};
+    for (const d of QUOTA_DIMENSIONS) if (declared[d] != null) quotas[d] = declared[d]!;
+    return {
+      plan_id: String(r.id),
+      plan_code: String(r.code),
+      plan_name: String(r.name),
+      product_id: r.product_id ? String(r.product_id) : null,
+      product_name: r.product_name ? String(r.product_name) : null,
+      segment: r.segment ? String(r.segment) : null,
+      is_active: r.is_active !== false,
+      billing_interval: String(r.billing_interval ?? ''),
+      quotas,
+    };
+  });
+  return { generated_at: new Date().toISOString(), degraded, dimensions, plans };
+}
+
+export interface UpsertPlanQuotasResult {
+  ok: boolean;
+  reason?: 'not_found' | 'invalid';
+  plan?: PlanQuotaRow;
+}
+
+/**
+ * Upsert the editable per-dimension quotas for a plan into comm_plans.metadata.quotas WITHOUT
+ * clobbering the plan's other metadata (feature_classes, and any quota declared for a NON-editable
+ * usage_type such as legacy views/searches). Semantics per editable dimension:
+ *   - present with a finite value >= 0 → set that limit
+ *   - present but null / '' (empty) → clear the quota (→ unmetered)
+ *   - absent from the payload → left exactly as-is
+ * Read-modify-write under a FOR UPDATE row lock so concurrent admin edits can't lose an update.
+ */
+export async function upsertPlanQuotas(
+  pool: Pool,
+  planId: string,
+  input: Record<string, unknown>,
+): Promise<UpsertPlanQuotasResult> {
+  // Sanitize the incoming map down to the editable dimensions only. null/'' = explicit clear.
+  const clean = new Map<UsageType, number | null>();
+  for (const d of QUOTA_DIMENSIONS) {
+    if (!(d in input)) continue;
+    const v = (input as Record<string, unknown>)[d];
+    if (v == null || v === '') { clean.set(d, null); continue; }
+    const n = Number(v);
+    if (!Number.isFinite(n) || n < 0) return { ok: false, reason: 'invalid' };
+    clean.set(d, Math.trunc(n));
+  }
+
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    const { rows } = await client.query(`SELECT metadata FROM comm_plans WHERE id=$1 FOR UPDATE`, [planId]);
+    if (!rows.length) { await client.query('ROLLBACK'); return { ok: false, reason: 'not_found' }; }
+    const meta = (rows[0].metadata && typeof rows[0].metadata === 'object' && !Array.isArray(rows[0].metadata))
+      ? { ...(rows[0].metadata as Record<string, unknown>) }
+      : {};
+    const quotas = (meta.quotas && typeof meta.quotas === 'object' && !Array.isArray(meta.quotas))
+      ? { ...(meta.quotas as Record<string, unknown>) }
+      : {};
+    for (const [d, val] of clean) {
+      if (val == null) delete quotas[d];
+      else quotas[d] = val;
+    }
+    meta.quotas = quotas;
+    await client.query(`UPDATE comm_plans SET metadata=$2::jsonb, updated_at=now() WHERE id=$1`, [planId, JSON.stringify(meta)]);
+    await client.query('COMMIT');
+  } catch (err) {
+    await client.query('ROLLBACK').catch(() => {});
+    throw err;
+  } finally {
+    client.release();
+  }
+
+  const overview = await listPlanQuotas(pool);
+  return { ok: true, plan: overview.plans.find((p) => p.plan_id === planId) };
 }
 
 export { isUsageType };

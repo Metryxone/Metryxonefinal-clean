@@ -79,6 +79,10 @@ args = "test"
 task = "workflow.run"
 args = "partner-export-filters"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "access-control"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -254,6 +258,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx --test tests/partner-ecosystem-export-filters.test.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "access-control"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npm run test:access-control"
 
 [workflows.workflow.metadata]
 isValidation = true

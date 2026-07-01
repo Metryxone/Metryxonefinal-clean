@@ -21,14 +21,16 @@ import { BRAND } from '@/design-system/tokens';
  * `/gaps` resolved-mechanism ledger. Nothing is fabricated to fit a name.
  */
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
-  Activity, AlertTriangle, BarChart3, Bell, Boxes, CheckCircle2, Coins, Cpu, Database, Gauge, Inbox, Info,
+  Activity, AlertTriangle, BarChart3, Bell, Boxes, Camera, CheckCircle2, Coins, Cpu, Database, Gauge, History, Inbox, Info,
   LayoutDashboard, ListChecks, Server, ShieldCheck, TrendingUp, Wrench,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
+import { useToast } from '@/hooks/use-toast';
 
 const BASE = '/api/operational-readiness';
 
@@ -89,14 +91,14 @@ function ErrorNote({ q }: { q: any }) {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
-type TabId = 'overview' | 'certification' | 'coverage' | 'capabilities' | 'live' | 'signals' | 'adoption' | 'gaps';
+type TabId = 'overview' | 'certification' | 'coverage' | 'capabilities' | 'live' | 'signals' | 'adoption' | 'gaps' | 'history';
 
 export default function OperationalReadinessPanel() {
   const [tab, setTab] = React.useState<TabId>('overview');
   const TABS: Array<[TabId, string]> = [
     ['overview', 'Overview'], ['certification', 'Certification'], ['coverage', 'Coverage'],
     ['capabilities', 'Capabilities'], ['live', 'Live Health'], ['signals', 'Live Signals'],
-    ['adoption', 'Adoption'], ['gaps', 'Gap Register'],
+    ['adoption', 'Adoption'], ['gaps', 'Gap Register'], ['history', 'Snapshots'],
   ];
   return (
     <div className="p-6 space-y-6 max-w-[1400px]">
@@ -128,6 +130,100 @@ export default function OperationalReadinessPanel() {
       {tab === 'signals' && <SignalsSection />}
       {tab === 'adoption' && <AdoptionSection />}
       {tab === 'gaps' && <GapsSection />}
+      {tab === 'history' && <HistorySection />}
+    </div>
+  );
+}
+
+/* ── Snapshots — capture a point-in-time snapshot + review history ──────────── */
+function HistorySection() {
+  const { toast } = useToast();
+  const qc = useQueryClient();
+  const q = useEndpoint('/snapshots');
+  const list: any[] = q.data?.snapshots ?? [];
+
+  const capture = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(`${BASE}/audit/capture`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{}',
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body?.error || String(res.status));
+      if (body?.ready === false) throw new Error(body?.detail || 'measurement_error');
+      if (body?.ok === false) throw new Error(body?.error || 'capture_failed');
+      return body;
+    },
+    onSuccess: (body) => {
+      toast({ title: 'Snapshot captured', description: `Recorded ${dash(body?.snapshot_uid)}.` });
+      qc.invalidateQueries({ queryKey: [BASE, '/snapshots'] });
+    },
+    onError: (e: any) => {
+      toast({ title: 'Capture failed', description: e?.message ? String(e.message) : undefined, variant: 'destructive' });
+    },
+  });
+
+  function fmtDate(s?: string | null) {
+    if (s == null || s === '') return '—';
+    const d = new Date(s);
+    return Number.isNaN(d.getTime()) ? dash(s) : d.toLocaleString('en-IN');
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div className="text-sm rounded-md p-3 flex items-start gap-2 flex-1 min-w-[280px]" style={{ background: '#EFF6FF', color: '#1E40AF' }}>
+          <Info className="w-4 h-4 mt-0.5 shrink-0" />
+          A snapshot records the current certification &amp; summary for drift tracking over time. Each row
+          keeps the structural verdict verbatim — <i>null ≠ 0; nothing is fabricated.</i>
+        </div>
+        <Button onClick={() => capture.mutate()} disabled={capture.isPending} className="shrink-0">
+          <Camera className="w-4 h-4 mr-2" />
+          {capture.isPending ? 'Capturing…' : 'Capture snapshot'}
+        </Button>
+      </div>
+
+      {q.isLoading && <div className="text-sm text-gray-400">Loading…</div>}
+      {q.isError && <div className="text-sm text-gray-400">Unable to load — honest unavailable, no fabricated value.</div>}
+      {!q.isError && q.data && q.data.ready === false && q.data.error === 'measurement_error' && (
+        <div className="text-sm rounded-md p-3" style={{ background: '#FEF2F2', color: '#991B1B' }}>
+          Measurement error — snapshot history unreadable ({dash(q.data.note)}).
+        </div>
+      )}
+      {!q.isError && q.data && q.data.ready === false && q.data.error !== 'measurement_error' && (
+        <div className="text-sm rounded-md p-3" style={{ background: '#F9FAFB', color: '#6B7280' }}>
+          {dash(q.data.note) === '—' ? 'No snapshots captured yet.' : dash(q.data.note)}
+        </div>
+      )}
+
+      {list.length > 0 && (
+        <Card><CardHeader className="pb-2">
+          <CardTitle className="text-sm flex items-center gap-2"><History className="w-4 h-4" /> Captured snapshots ({num(list.length)})</CardTitle>
+          <CardDescription>Most recent first. Verdict is the structural validation verdict recorded at capture time.</CardDescription>
+        </CardHeader>
+          <CardContent className="p-0">
+            <div className="rounded-b border-t overflow-auto max-h-[60vh]">
+              <Table>
+                <TableHeader><TableRow>
+                  <TableHead>Captured at</TableHead><TableHead>Captured by</TableHead>
+                  <TableHead>Verdict</TableHead><TableHead>Snapshot ID</TableHead>
+                </TableRow></TableHeader>
+                <TableBody>
+                  {list.map((s) => (
+                    <TableRow key={s.snapshot_uid}>
+                      <TableCell className="text-xs">{fmtDate(s.captured_at)}</TableCell>
+                      <TableCell className="text-xs">{dash(s.captured_by)}</TableCell>
+                      <TableCell className="text-xs"><Tone s={s?.summary?.validation_verdict} /></TableCell>
+                      <TableCell className="text-xs font-mono">{dash(s.snapshot_uid)}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent></Card>
+      )}
     </div>
   );
 }

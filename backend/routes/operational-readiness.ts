@@ -20,7 +20,7 @@ import {
   getOperationalSnapshots,
   OPERATIONAL_MODEL,
 } from '../services/operational-readiness-engine';
-import { renderPrometheus, snapshotMetrics } from '../services/ops/metrics-registry';
+import { renderPrometheus, snapshotMetrics, snapshotLatencyPercentiles } from '../services/ops/metrics-registry';
 import {
   getQueueStats,
   getDeadLetters,
@@ -126,6 +126,13 @@ export function registerOperationalReadinessRoutes(app: Express, pool: Pool, req
   // JSON metrics snapshot (alt to Prometheus text; feeds alert-rule signals).
   app.get('/api/operational-readiness/metrics.json', ...guards, safe(async (_req, res) => {
     res.json({ ready: true, metrics: snapshotMetrics() });
+  }));
+
+  // Latency-percentile distribution (p50/p95/p99) — request-latency regressions become visible
+  // BEFORE users complain. Estimated from the EXISTING request-duration histogram (reuse-before-build).
+  // Percentiles are null until enough samples exist (null ≠ 0).
+  app.get('/api/operational-readiness/metrics/latency', ...guards, safe(async (_req, res) => {
+    res.json({ ready: true, latency: snapshotLatencyPercentiles() });
   }));
 
   // ── GAP-OPS-2: durable job queue + dead-letter ───────────────────────────────

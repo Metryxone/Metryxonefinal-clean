@@ -87,6 +87,100 @@ export function opsMetricsMiddleware() {
   };
 }
 
+/**
+ * GAP-OPS-3 (latency-percentile distribution): estimate a quantile (0<q<1) from the EXISTING
+ * cumulative latency histogram buckets using Prometheus `histogram_quantile` linear interpolation.
+ * REUSES the histogram substrate already recorded by opsMetricsMiddleware — no new capture pipeline.
+ *
+ * Honesty: returns null when there are too few samples to estimate the quantile meaningfully
+ * (a p99 needs at least ~100 observations to have a single sample in the tail) — never a fake 0.
+ */
+function minSamplesForQuantile(q: number): number {
+  return Math.ceil(1 / (1 - q)); // p50→2, p95→20, p99→100
+}
+
+function quantileFromBuckets(cumulative: number[], count: number, q: number): number | null {
+  if (count <= 0 || count < minSamplesForQuantile(q)) return null; // insufficient data → null (not 0)
+  const rank = q * count;
+  // cumulative[LAT_BUCKETS.length] is the +Inf bucket (== count).
+  let idx = -1;
+  for (let i = 0; i < cumulative.length; i++) {
+    if (cumulative[i] >= rank) { idx = i; break; }
+  }
+  if (idx < 0) return null;
+  // The quantile falls in the open-ended +Inf bucket → clamp to the highest finite bound (honest cap).
+  if (idx >= LAT_BUCKETS.length) return LAT_BUCKETS[LAT_BUCKETS.length - 1];
+  const bucketEnd = LAT_BUCKETS[idx];
+  const bucketStart = idx === 0 ? 0 : LAT_BUCKETS[idx - 1];
+  const cumBelow = idx === 0 ? 0 : cumulative[idx - 1];
+  const inBucket = cumulative[idx] - cumBelow;
+  if (inBucket <= 0) return bucketEnd;
+  const frac = (rank - cumBelow) / inBucket;
+  return Math.round((bucketStart + (bucketEnd - bucketStart) * frac) * 100) / 100;
+}
+
+/** Merge every histogram series sharing a metric base (across label variants) into one cumulative array. */
+function mergeHistogram(base: string): { cumulative: number[]; count: number; sum: number } {
+  const cumulative = new Array(LAT_BUCKETS.length + 1).fill(0);
+  let count = 0;
+  let sum = 0;
+  for (const [k, arr] of histBuckets) {
+    if (k.split('{')[0] !== base) continue;
+    for (let i = 0; i < arr.length; i++) cumulative[i] += arr[i];
+    count += histCount.get(k) || 0;
+    sum += histSum.get(k) || 0;
+  }
+  return { cumulative, count, sum };
+}
+
+/**
+ * Latency-percentile distribution (p50/p95/p99) for request-duration histograms.
+ * Aggregate across all methods + a per-method breakdown. All percentiles are honest histogram-bucket
+ * ESTIMATES (Prometheus semantics) and are null until enough samples exist. null ≠ 0.
+ */
+export function snapshotLatencyPercentiles(base = 'capadex_http_request_duration_ms') {
+  const build = (merged: { cumulative: number[]; count: number; sum: number }) => ({
+    count: merged.count,
+    avg_ms: merged.count > 0 ? Math.round((merged.sum / merged.count) * 100) / 100 : null,
+    p50_ms: quantileFromBuckets(merged.cumulative, merged.count, 0.5),
+    p95_ms: quantileFromBuckets(merged.cumulative, merged.count, 0.95),
+    p99_ms: quantileFromBuckets(merged.cumulative, merged.count, 0.99),
+  });
+
+  const overall = build(mergeHistogram(base));
+
+  // Per-method breakdown (label method="..."), so a single slow verb is visible.
+  const byMethod: Record<string, ReturnType<typeof build>> = {};
+  const methods = new Set<string>();
+  for (const [k] of histBuckets) {
+    if (k.split('{')[0] !== base) continue;
+    const m = /method="([^"]*)"/.exec(k);
+    if (m) methods.add(m[1]);
+  }
+  for (const method of methods) {
+    const cumulative = new Array(LAT_BUCKETS.length + 1).fill(0);
+    let count = 0;
+    let sum = 0;
+    for (const [k, arr] of histBuckets) {
+      if (k.split('{')[0] !== base) continue;
+      const mm = /method="([^"]*)"/.exec(k);
+      if (!mm || mm[1] !== method) continue;
+      for (let i = 0; i < arr.length; i++) cumulative[i] += arr[i];
+      count += histCount.get(k) || 0;
+      sum += histSum.get(k) || 0;
+    }
+    byMethod[method] = build({ cumulative, count, sum });
+  }
+
+  return {
+    metric: base,
+    buckets_ms: LAT_BUCKETS,
+    overall,
+    by_method: byMethod,
+    note: 'Histogram-bucket estimates (Prometheus histogram_quantile). Percentiles are null until enough samples exist (p50≥2, p95≥20, p99≥100) — null ≠ 0.',
+  };
+}
+
 /** Machine-readable JSON snapshot (for the /metrics JSON alt + alert-rule signals). */
 export function snapshotMetrics() {
   const uptimeSeconds = Math.round((Date.now() - startedAt) / 1000);

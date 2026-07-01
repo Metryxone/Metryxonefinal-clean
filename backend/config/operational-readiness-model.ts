@@ -114,7 +114,7 @@ export const OPERATIONAL_DOMAINS: OperationalDomain[] = [
     label: 'Metrics Coverage',
     axis: 'metrics',
     category: 'Metrics',
-    signals: ['API/DB Latency', 'Event-loop Lag', 'Memory/CPU', 'AI Runtime', 'KPI Rollup'],
+    signals: ['API/DB Latency', 'Latency Percentiles (p50/p95/p99)', 'Event-loop Lag', 'Memory/CPU', 'AI Runtime', 'KPI Rollup'],
     reuses: {
       services: ['services/runtime-intelligence.ts', 'services/intelligence-observability-engine.ts', 'services/ops/metrics-registry.ts'],
       routes: ['routes/operational-readiness.ts'],
@@ -122,7 +122,7 @@ export const OPERATIONAL_DOMAINS: OperationalDomain[] = [
       tables: ['ai_runtime_monitoring', 'orchestration_performance_logs', 'anl_kpi_daily'],
     },
     adoptionTable: 'anl_kpi_daily',
-    note: 'DB latency, event-loop lag, process/OS memory + CPU, AI-runtime rows and a KPI daily rollup are MEASURED. GAP-OPS-1 CLOSED: an in-process metrics registry (counters + latency histograms) fed by opsMetricsMiddleware now records API-throughput/error-rate + cache hit/miss and exports them as Prometheus text at /api/operational-readiness/metrics. An external APM/aggregation backend remains infra-owned (honest boundary, not fabricated).',
+    note: 'DB latency, event-loop lag, process/OS memory + CPU, AI-runtime rows and a KPI daily rollup are MEASURED. GAP-OPS-1 CLOSED: an in-process metrics registry (counters + latency histograms) fed by opsMetricsMiddleware now records API-throughput/error-rate + cache hit/miss and exports them as Prometheus text at /api/operational-readiness/metrics. Latency-percentile distribution (p50/p95/p99, aggregate + per-method) is now surfaced at /api/operational-readiness/metrics/latency — estimated from the SAME request-duration histogram (reuse-before-build), null until enough samples exist so request-latency regressions are visible before users complain. An external APM/aggregation backend remains infra-owned (honest boundary, not fabricated).',
   },
   {
     key: 'alerting',
@@ -256,6 +256,7 @@ export const RESOLVED_OPERATIONAL_GAPS = [
   { key: 'RES-OPS-11', axis: 'logging', former_gap: 'GAP-OPS-5', mechanism: 'upload-proxy proxyReq correlation header + FastAPI correlation_id_mw', detail: 'GAP-OPS-5 CLOSED: the correlation id (req.id) is propagated Node→FastAPI (x-request-id/x-correlation-id, flag-gated) and echoed by the FastAPI service. An external distributed-tracing backend stays an honest infra boundary.' },
   { key: 'RES-OPS-12', axis: 'observability', former_gap: 'GAP-OPS-6', mechanism: '/version + /metrics endpoints', detail: 'GAP-OPS-6 CLOSED: a build/version-info endpoint (/version) and a machine-readable metrics endpoint (/metrics) are now present (flag-gated).' },
   { key: 'RES-OPS-13', axis: 'disaster_recovery', former_gap: 'GAP-OPS-7', mechanism: 'config/disaster-recovery-manifest.ts + scripts/ops-dr-verify.ts + /dr/readiness', detail: 'GAP-OPS-7 CLOSED (readiness): an in-repo DR manifest (per-store RTO/RPO, backup mechanism, runbook refs), a readiness-verifier script and a /dr/readiness endpoint (config presence + live PostgreSQL connectivity). HONEST BOUNDARY: an actual restore DRILL + managed-DB backups remain infra-owned (restore_drill_executed:false) — recovery-READINESS, never a claimed executed restore.' },
+  { key: 'RES-OPS-14', axis: 'metrics', former_gap: 'GAP-OPS-3 (latency-percentile distribution — as scoped in the earlier scan revision; the gap register was later renumbered, GAP-OPS-3 now = alerting)', mechanism: 'ops/metrics-registry.ts snapshotLatencyPercentiles + /metrics/latency', detail: 'Latency-percentile distribution CLOSED: p50/p95/p99 (aggregate + per-method) are estimated from the EXISTING capadex_http_request_duration_ms histogram via Prometheus histogram_quantile linear interpolation and surfaced at /api/operational-readiness/metrics/latency (flag-gated). Reuse-before-build: no new capture pipeline — it reads the histogram opsMetricsMiddleware already records. Percentiles are null until enough samples exist (p50≥2, p95≥20, p99≥100) so request-latency regressions are visible before users complain. null ≠ 0; histogram-bucket estimates, not exact quantiles (honest).' },
 ];
 
 export const OPERATIONAL_MODEL_META = {

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-01T04:31:00.104Z",
+  "generated_at": "2026-07-01T04:39:04.945Z",
   "meta": {
     "phase": "CAPADEX 3.0 · Program 2 · Phase 2.5 — Observability, Monitoring & Operational Readiness",
     "flag": "operationalReadiness",
@@ -181,6 +181,7 @@
       "category": "Metrics",
       "signals": [
         "API/DB Latency",
+        "Latency Percentiles (p50/p95/p99)",
         "Event-loop Lag",
         "Memory/CPU",
         "AI Runtime",
@@ -203,7 +204,7 @@
         ]
       },
       "adoptionTable": "anl_kpi_daily",
-      "note": "DB latency, event-loop lag, process/OS memory + CPU, AI-runtime rows and a KPI daily rollup are MEASURED. GAP-OPS-1 CLOSED: an in-process metrics registry (counters + latency histograms) fed by opsMetricsMiddleware now records API-throughput/error-rate + cache hit/miss and exports them as Prometheus text at /api/operational-readiness/metrics. An external APM/aggregation backend remains infra-owned (honest boundary, not fabricated)."
+      "note": "DB latency, event-loop lag, process/OS memory + CPU, AI-runtime rows and a KPI daily rollup are MEASURED. GAP-OPS-1 CLOSED: an in-process metrics registry (counters + latency histograms) fed by opsMetricsMiddleware now records API-throughput/error-rate + cache hit/miss and exports them as Prometheus text at /api/operational-readiness/metrics. Latency-percentile distribution (p50/p95/p99, aggregate + per-method) is now surfaced at /api/operational-readiness/metrics/latency — estimated from the SAME request-duration histogram (reuse-before-build), null until enough samples exist so request-latency regressions are visible before users complain. An external APM/aggregation backend remains infra-owned (honest boundary, not fabricated)."
     },
     {
       "key": "alerting",
@@ -578,6 +579,7 @@
       "category": "Metrics",
       "signals": [
         "API/DB Latency",
+        "Latency Percentiles (p50/p95/p99)",
         "Event-loop Lag",
         "Memory/CPU",
         "AI Runtime",
@@ -607,7 +609,7 @@
         }
       },
       "coverage_pct": 100,
-      "note": "DB latency, event-loop lag, process/OS memory + CPU, AI-runtime rows and a KPI daily rollup are MEASURED. GAP-OPS-1 CLOSED: an in-process metrics registry (counters + latency histograms) fed by opsMetricsMiddleware now records API-throughput/error-rate + cache hit/miss and exports them as Prometheus text at /api/operational-readiness/metrics. An external APM/aggregation backend remains infra-owned (honest boundary, not fabricated)."
+      "note": "DB latency, event-loop lag, process/OS memory + CPU, AI-runtime rows and a KPI daily rollup are MEASURED. GAP-OPS-1 CLOSED: an in-process metrics registry (counters + latency histograms) fed by opsMetricsMiddleware now records API-throughput/error-rate + cache hit/miss and exports them as Prometheus text at /api/operational-readiness/metrics. Latency-percentile distribution (p50/p95/p99, aggregate + per-method) is now surfaced at /api/operational-readiness/metrics/latency — estimated from the SAME request-duration histogram (reuse-before-build), null until enough samples exist so request-latency regressions are visible before users complain. An external APM/aggregation backend remains infra-owned (honest boundary, not fabricated)."
     },
     {
       "key": "alerting",
@@ -1199,6 +1201,13 @@
         "former_gap": "GAP-OPS-7",
         "mechanism": "config/disaster-recovery-manifest.ts + scripts/ops-dr-verify.ts + /dr/readiness",
         "detail": "GAP-OPS-7 CLOSED (readiness): an in-repo DR manifest (per-store RTO/RPO, backup mechanism, runbook refs), a readiness-verifier script and a /dr/readiness endpoint (config presence + live PostgreSQL connectivity). HONEST BOUNDARY: an actual restore DRILL + managed-DB backups remain infra-owned (restore_drill_executed:false) — recovery-READINESS, never a claimed executed restore."
+      },
+      {
+        "key": "RES-OPS-14",
+        "axis": "metrics",
+        "former_gap": "GAP-OPS-3 (latency-percentile distribution — as scoped in the earlier scan revision; the gap register was later renumbered, GAP-OPS-3 now = alerting)",
+        "mechanism": "ops/metrics-registry.ts snapshotLatencyPercentiles + /metrics/latency",
+        "detail": "Latency-percentile distribution CLOSED: p50/p95/p99 (aggregate + per-method) are estimated from the EXISTING capadex_http_request_duration_ms histogram via Prometheus histogram_quantile linear interpolation and surfaced at /api/operational-readiness/metrics/latency (flag-gated). Reuse-before-build: no new capture pipeline — it reads the histogram opsMetricsMiddleware already records. Percentiles are null until enough samples exist (p50≥2, p95≥20, p99≥100) so request-latency regressions are visible before users complain. null ≠ 0; histogram-bucket estimates, not exact quantiles (honest)."
       }
     ],
     "gap_counts": {
@@ -1305,7 +1314,7 @@
       "Low": 0,
       "Future": 0
     },
-    "resolved_gap_count": 13,
+    "resolved_gap_count": 14,
     "validation_verdict": "STRUCTURAL_VALIDATED",
     "enterprise_ready": {
       "verdict": "STRUCTURAL_COMPLETE_ADOPTION_PENDING",

@@ -1,6 +1,6 @@
 # CAPADEX 3.0 · Program 2 · Phase 2.5 — Executive Summary
 
-> Deliverable 01 · Generated 2026-07-01T04:31:00.104Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:04e6998b3d95, written 2026-07-01T04:31:00.104Z).
+> Deliverable 01 · Generated 2026-07-01T04:39:04.945Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:756c369c3c11, written 2026-07-01T04:39:04.945Z).
 > Honesty: Coverage (evidence exists) ⟂ Confidence ⟂ Adoption (real volume) — NEVER composited. null ≠ 0. Built ≠ Operated ≠ Recoverable. Nothing fabricated.
 
 ## Question answered
@@ -33,7 +33,7 @@
 _Structural coverage = evidence exists (Coverage axis). It is **not** a runtime/quality/adoption claim. `—` = NULL (no measurable in-repo substrate), which is **not** 0._
 
 ## Gap posture (honest)
-**0 Launch-Critical · 0 High · 0 Medium · 0 Low · 0 Future.** 13 operational mechanisms already REUSED (deliverable 14).
+**0 Launch-Critical · 0 High · 0 Medium · 0 Low · 0 Future.** 14 operational mechanisms already REUSED (deliverable 14).
 
 ## Adoption (SEPARATE — never a gap)
 Adoption = real persisted volume per operational domain. Reported SEPARATELY from Coverage/Certification and NEVER composited. In a dev environment real operational volume is honest-low/0 — a usage axis, never an engineering gap. null = unreadable (≠ 0 = empty).

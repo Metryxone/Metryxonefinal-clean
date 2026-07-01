@@ -8,7 +8,8 @@
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "ontology:audit": "tsx scripts/ontology-audit.ts",
     "ontology:repair": "tsx scripts/ontology-repair.ts",
-    "test:isolation": "tsx scripts/cross-org-isolation-suite.ts"
+    "test:isolation": "tsx scripts/cross-org-isolation-suite.ts",
+    "test:outcome-intelligence": "tsx --test tests/outcome-intelligence-engine.test.ts"
   },
   "devDependencies": {
     "@types/cookie": "^0.6.0",

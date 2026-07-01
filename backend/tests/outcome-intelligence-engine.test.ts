@@ -7,7 +7,7 @@
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { summarizePlatform, OI_K_MIN } from '../services/outcome-intelligence-engine';
+import { summarizePlatform, median, OI_K_MIN } from '../services/outcome-intelligence-engine';
 
 type Blk = Parameters<typeof summarizePlatform>[0][number];
 
@@ -56,4 +56,22 @@ test('mixed null + real coverage sums only the readable substrates', () => {
   const p = summarizePlatform(blocks);
   assert.equal(p.realized_coverage, 7);
   assert.equal(p.types_with_coverage, 1);
+});
+
+test('median returns null for an empty array (never coerced to 0)', () => {
+  assert.equal(median([]), null);
+});
+
+test('median of an odd-length array is the middle value', () => {
+  assert.equal(median([3, 1, 2]), 2);
+});
+
+test('median of an even-length array averages the two middle values', () => {
+  assert.equal(median([4, 1, 3, 2]), 2.5);
+});
+
+test('median does not mutate its input and is order-agnostic', () => {
+  const input = [9, 1, 5];
+  assert.equal(median(input), 5);
+  assert.deepEqual(input, [9, 1, 5], 'input array must not be sorted in place');
 });

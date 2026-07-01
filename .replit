@@ -59,6 +59,10 @@ args = "journey-tail-mentor-authz"
 task = "workflow.run"
 args = "hiring-outcome-e2e"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "test-outcome-intelligence"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -179,6 +183,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx scripts/task253-hiring-outcome-e2e.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "test-outcome-intelligence"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npm run test:outcome-intelligence"
 
 [workflows.workflow.metadata]
 isValidation = true

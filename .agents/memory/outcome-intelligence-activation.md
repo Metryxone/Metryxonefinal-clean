@@ -18,6 +18,10 @@ Read-only, flag-gated (`outcomeIntelligenceActivation`, env `FF_OUTCOME_INTELLIG
 - **Ledger vs coverage internal consistency.** Coverage folded in the employer feeder but the ledger originally didn't read `employer_candidates` → 34 coverage vs 0 ledger rows looked broken. Ledger must surface the same substrates coverage counts (demo rows shown, flagged, never counted as evidence).
 - `student_subscriptions` has **no `is_demo`** column (career_outcomes/validation_loop_outcomes do) — its demo count is null, not 0.
 
+## Test runner
+- Backend engine tests use **`node:test` + `node:assert`**, run via **`tsx --test`** — NOT vitest. Only the frontend has vitest. Running these with vitest fails at load ("Tsconfig not found") because `backend/tsconfig.json` `extends "../tsconfig.json"` which does not exist on disk (dev/prod use tsx, which ignores the broken extends). **Do NOT try to make backend tests run under vitest** — use tsx. The 16 node:test backend suites all follow this.
+- Documented command: `cd backend && npm run test:outcome-intelligence` (script = `tsx --test tests/outcome-intelligence-engine.test.ts`). Wired as validation step `test-outcome-intelligence`. Covers the pure helpers `summarizePlatform` (per-type k_min abstain) and `median` (empty→null, odd/even, no-mutation) — both exported for unit reach.
+
 ## Honest dev state
 ~0 realized non-demo outcomes (never deployed). Verdict **PARTIAL**, accuracy ABSTAINED, realized_coverage 0, evidence_pairs 0 — the honest state, not a defect, never inflated. C3/C7 cert checks stay PARTIAL until k_min.
 

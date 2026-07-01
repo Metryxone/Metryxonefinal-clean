@@ -514,7 +514,7 @@ export async function composeLedger(pool: Pool, type?: OutcomeIntelType, limit =
 }
 
 /** Median of a numeric array (already-sorted-agnostic). null for an empty array. */
-function median(xs: number[]): number | null {
+export function median(xs: number[]): number | null {
   if (!xs.length) return null;
   const s = [...xs].sort((a, b) => a - b);
   const mid = Math.floor(s.length / 2);

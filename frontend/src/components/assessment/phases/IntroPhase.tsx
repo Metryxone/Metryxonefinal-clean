@@ -7,27 +7,15 @@ import { BRAND, CAPADEX_STAGES, FAM_TERMS, PERSONAS, getAgeRange } from '@/lib/b
 import { PhaseProps } from '../types';
 import { searchLocations } from '@/data/catalogs/locations';
 import { readPragatiHandoff, clearPragatiHandoff } from '@/lib/pragatiBridge';
-
-// ── Canonical age-band whitelist ─────────────────────────────────────────
-// Single source of truth for the 5-bucket bracket model. All age-band
-// validation (sub-persona allowed lists, server `typical_age_band` matches,
-// dropdown options) is normalised against this array. Kept un-exported so
-// Vite's Fast Refresh stays happy ("only component exports" rule) — this
-// file's sole export contract is the IntroPhase component below.
-const AGE_BANDS = ['6-14','14-17','17-24','24-45','45+'] as const;
-type AgeBand = typeof AGE_BANDS[number];
-
-// Typographical en-dash / em-dash → ASCII hyphen. Server data and i18n copy
-// can ship Unicode dashes (`17–24`); without normalisation those strings
-// fail strict `===` comparison against our `'17-24'` canon and silently
-// drop matching master rows from the typeahead. Applied to BOTH sides of
-// every age-band comparison.
-const normaliseDash = (s: string): string =>
-  (s || '').replace(/[-–—]/g, '-');
-
-// Convenience: is a candidate string a recognised AgeBand after dash normalisation?
-const isCanonicalAgeBand = (s: string): boolean =>
-  (AGE_BANDS as readonly string[]).includes(normaliseDash(s));
+// ── Canonical persona taxonomy (SINGLE SOURCE) ───────────────────────────
+// AGE_BANDS / AgeBand / AGE_BAND_LABEL / SubPersona / MacroTrackData /
+// buildTrackGroups + dash-normalisation helpers now live in the shared
+// persona-taxonomy module so IntroPhase and the Phase 3.2A onboarding wizard
+// consume ONE taxonomy (no fork). Icons stay a per-consumer UI concern.
+import {
+  AGE_BANDS, type AgeBand, AGE_BAND_LABEL, buildTrackGroups,
+  type SubPersona, type MacroTrackData, normaliseDash, isCanonicalAgeBand,
+} from '@/lib/persona-taxonomy';
 
 // Parse any age-range string into a numeric [min, max] interval. Handles the
 // canonical bands (`17-24`), the open-ended `45+`, and the arbitrary numeric
@@ -105,106 +93,18 @@ export function IntroPhase(props: PhaseProps) {
   // working off the existing PersonaKey union (student/teacher/campus/
   // jobseeker/parent/professional). New `is_proxy` flag flows directly
   // into the /analyze payload envelope.
-  // AgeBand type + AGE_BANDS canon now live at module scope (top of file)
-  // so they can be reused by tests and other components. We just import the
-  // label map here for display.
-  const AGE_BAND_LABEL: Record<AgeBand, string> = {
-    '6-14':  'School (6–14)',
-    '14-17': 'Senior School (14–17)',
-    '17-24': 'College / Early Adult (17–24)',
-    '24-45': 'Working Professional (24–45)',
-    '45+':   'Senior Professional (45+)',
+  // AgeBand / AGE_BANDS / AGE_BAND_LABEL / SubPersona / MacroTrackData /
+  // buildTrackGroups now live in the shared persona-taxonomy module (single
+  // source). We map each track id → its lucide icon here (UI concern) and
+  // build the flag-gated groups exactly as before, so OFF is byte-identical.
+  const TRACK_ICON: Record<MacroTrackData['id'], React.ComponentType<{ size?: number; className?: string }>> = {
+    school: School, learner: GraduationCap, professional: Briefcase, proxy: Users,
   };
-  type SubPersona = {
-    id: string;             // canonical primary_persona token, e.g. 'competitive_aspirant'
-    label: string;          // user-facing chip label, e.g. 'Competitive Aspirant'
-    legacyKey: PersonaKey;  // back-compat mapping into PersonaKey union
-    ageBands: AgeBand[];    // allowed brackets for this sub-persona
-  };
-  type MacroTrack = {
-    id: 'school' | 'learner' | 'professional' | 'proxy';
-    title: string;
-    subtitle: string;
-    isProxy: boolean;
-    icon: React.ComponentType<{ size?: number; className?: string }>;
-    subPersonas: SubPersona[];
-  };
-  // CAPADEX 3.0 Phase 1.2 — exam-aspirant split. When the personaModelAlignment
-  // flag is ON the single "JEE / NEET / UPSC aspirant" chip expands into four
-  // exam-specific sub-personas (each still legacyKey 'student'), unlocking the
-  // tailored behavioural banks. Flag OFF → the original single chip, byte-identical.
-  const competitiveAspirants: SubPersona[] = props.personaModelAlignment
-    ? [
-        { id: 'jee_aspirant',  label: 'JEE aspirant (Engineering)',     legacyKey: 'student', ageBands: ['14-17','17-24'] },
-        { id: 'neet_aspirant', label: 'NEET aspirant (Medical)',        legacyKey: 'student', ageBands: ['14-17','17-24'] },
-        { id: 'cuet_aspirant', label: 'CUET aspirant (University)',     legacyKey: 'student', ageBands: ['14-17','17-24'] },
-        { id: 'upsc_aspirant', label: 'UPSC / civil-services aspirant', legacyKey: 'student', ageBands: ['17-24','24-45'] },
-      ]
-    : [
-        { id: 'competitive_aspirant', label: 'JEE / NEET / UPSC aspirant', legacyKey: 'student', ageBands: ['14-17','17-24'] },
-      ];
-  // CAPADEX 3.0 Persona Model EXPANSION (G-F1) — first-class enterprise
-  // sub-personas added to the "Working professionals" track when the
-  // personaModelExpansion flag is ON (each still legacyKey 'professional',
-  // unlocking the tailored leadership/manager/L&D banks). Flag OFF → empty,
-  // so the professional track is byte-identical to legacy.
-  const enterprisePersonas: SubPersona[] = props.personaModelExpansion
-    ? [
-        { id: 'people_manager',      label: 'People manager (leads a team)', legacyKey: 'professional', ageBands: ['24-45','45+'] },
-        { id: 'senior_leadership',   label: 'Senior leadership / executive', legacyKey: 'professional', ageBands: ['24-45','45+'] },
-        { id: 'learning_development',label: 'Learning & development (L&D)',   legacyKey: 'professional', ageBands: ['24-45','45+'] },
-      ]
-    : [];
-  // CAPADEX 3.0 Persona Model EXPANSION (G-F2) — higher-education faculty as a
-  // first-class proxy sub-persona distinct from school teacher (legacyKey
-  // 'teacher'). Flag OFF → empty, so the proxy track is byte-identical.
-  const facultyPersonas: SubPersona[] = props.personaModelExpansion
-    ? [
-        { id: 'higher_ed_faculty', label: 'Higher-education faculty', legacyKey: 'teacher', ageBands: ['17-24','24-45'] },
-      ]
-    : [];
-  const TRACK_GROUPS: MacroTrack[] = [
-    {
-      id: 'school', title: 'School children', subtitle: 'A school student taking this themselves',
-      isProxy: false, icon: School,
-      subPersonas: [
-        { id: 'school_primary', label: 'Primary school (Class 1–5)',  legacyKey: 'student', ageBands: ['6-14'] },
-        { id: 'school_middle',  label: 'Middle school (Class 6–8)',   legacyKey: 'student', ageBands: ['6-14'] },
-        { id: 'school_high',    label: 'High school (Class 9–12)',    legacyKey: 'student', ageBands: ['14-17'] },
-      ],
-    },
-    {
-      id: 'learner', title: 'Students & learners', subtitle: 'School, college or competitive prep',
-      isProxy: false, icon: GraduationCap,
-      subPersonas: [
-        { id: 'campus_student',            label: 'College or university student',  legacyKey: 'campus',    ageBands: ['17-24'] },
-        ...competitiveAspirants,
-        { id: 'career_explorer',           label: 'Exploring my next move',         legacyKey: 'jobseeker', ageBands: ['17-24','24-45'] },
-        { id: 'skill_development_learner', label: 'Building new skills',            legacyKey: 'student',   ageBands: ['14-17','17-24','24-45'] },
-      ],
-    },
-    {
-      id: 'professional', title: 'Working professionals', subtitle: 'From first job to senior leadership',
-      isProxy: false, icon: Briefcase,
-      subPersonas: [
-        { id: 'early_career_professional',     label: 'Early career (0–3 yrs)',         legacyKey: 'professional', ageBands: ['17-24','24-45'] },
-        { id: 'mid_career_professional',       label: 'Mid career (3–10 yrs)',          legacyKey: 'professional', ageBands: ['24-45'] },
-        ...enterprisePersonas,
-        { id: 'career_transition_professional',label: 'Changing roles or industry',     legacyKey: 'jobseeker',    ageBands: ['24-45','45+'] },
-      ],
-    },
-    {
-      id: 'proxy', title: 'Parents, teachers & counsellors', subtitle: 'Assessing someone in your care',
-      isProxy: true, icon: Users,
-      subPersonas: [
-        { id: 'parent',              label: 'Parent',                   legacyKey: 'parent',  ageBands: ['6-14','14-17'] },
-        { id: 'teacher_educator',    label: 'Teacher or educator',      legacyKey: 'teacher', ageBands: ['6-14','14-17','17-24'] },
-        ...facultyPersonas,
-        { id: 'academic_counsellor', label: 'Academic counsellor',      legacyKey: 'teacher', ageBands: ['14-17','17-24'] },
-        { id: 'placement_career_cell',label: 'Placement / TPO cell',    legacyKey: 'teacher', ageBands: ['17-24'] },
-      ],
-    },
-  ];
+  type MacroTrack = MacroTrackData & { icon: React.ComponentType<{ size?: number; className?: string }> };
+  const TRACK_GROUPS: MacroTrack[] = buildTrackGroups({
+    alignment: !!props.personaModelAlignment,
+    expansion: !!props.personaModelExpansion,
+  }).map((t) => ({ ...t, icon: TRACK_ICON[t.id] }));
   const ALL_SUB_PERSONAS = TRACK_GROUPS.flatMap(t => t.subPersonas.map(sp => ({ ...sp, trackId: t.id, isProxy: t.isProxy })));
 
   // ── Granular state (sub-persona + age band) ─────────────────────────

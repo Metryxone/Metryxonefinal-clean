@@ -325,6 +325,18 @@ export const FEATURE_FLAGS = {
    *  reliability/validity/norms/standardization/benchmark/AI-interpretation/reports = 3.6+). Default OFF,
    *  byte-identical incl. schema (DDL only on flag-gated write paths). Env: `FF_ASSESSMENT_SCORING`. */
   assessmentScoring: false,
+  /** CAPADEX 3.0 — Program 3 · Phase 3.2A Persona Experience / Intelligent Journey Router. When ON, the
+   *  generic single-page persona selector is replaced by a progressive 5-step onboarding wizard
+   *  (Who → Refine → Goal → Personalize → AI Journey Router) that REUSES the existing persona/sub-persona
+   *  taxonomy + age bands (single source, no fork) and composes the existing customer-journey /
+   *  assessment-framework / lifecycle registries into a DETERMINISTIC journey resolver (never fabricated AI).
+   *  It is an additive wrap over FreeAssessmentModal/IntroPhase: the wizard resolves persona/legacyKey/
+   *  ageBand/goal and hands them into the existing modal state so the downstream analyze→clarify→questions→
+   *  results flow is untouched. B2B/admin personas route to their EXISTING login/registration entry points.
+   *  A read-only, GET-only resolver at `/api/persona-journey/route` (public, pure over static registries — no
+   *  DB, no user data) + an `/api/persona-journey/enabled` probe. Default OFF, byte-identical incl. schema
+   *  (zero DDL — the resolver reads only static config). Env: `FF_PERSONA_JOURNEY_ROUTER`. */
+  personaJourneyRouter: false,
   /** MX-103X — Live Employer Ecosystem Activation (read-only audit + certification console over the EXISTING
    *  employer hiring funnel). When ON, a PURE read-only composer at `/api/admin/employer-ecosystem/*`
    *  (super-admin) inventories the nine funnel stages — onboarding · create-job · role-DNA · competencies ·
@@ -2353,6 +2365,11 @@ export function isAssessmentDeliveryEnabled(): boolean {
 /** CAPADEX 3.0 — Program 3 · Phase 3.5 Assessment Measurement & Scoring Engine master switch. */
 export function isAssessmentScoringEnabled(): boolean {
   return isFlagEnabled('assessmentScoring');
+}
+
+/** CAPADEX 3.0 — Program 3 · Phase 3.2A Persona Experience / Intelligent Journey Router master switch. */
+export function isPersonaJourneyRouterEnabled(): boolean {
+  return isFlagEnabled('personaJourneyRouter');
 }
 
 export function isCustomerJourneyCompletionEnabled(): boolean {

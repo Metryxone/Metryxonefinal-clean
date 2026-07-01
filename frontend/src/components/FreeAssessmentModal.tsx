@@ -11,6 +11,7 @@ import { CapadexReportPhase } from "./assessment/phases/CapadexReportPhase";
 import { CapadexReliefModal } from "./assessment/CapadexReliefModal";
 import { AssessmentModalContext } from "@/contexts/AssessmentModalContext";
 import { IntroPhase } from "./assessment/phases/IntroPhase";
+import { PersonaJourneyWizard } from "./assessment/PersonaJourneyWizard";
 import { QuestionsPhase } from "./assessment/phases/QuestionsPhase";
 import { CapadexAnalyzePhase } from "./assessment/phases/CapadexAnalyzePhase";
 import { CapadexClarifyPhase } from "./assessment/phases/CapadexClarifyPhase";
@@ -345,16 +346,23 @@ export function FreeAssessmentModal({ open, onOpenChange, onNavigate, initialPer
   // CAPADEX 3.0 Phase 3.1 — assessment-architecture completion gate (AP-2 offline
   // capture + AP-3 accessibility announcements). Defaults false → byte-identical.
   const [archCompletionEnabled, setArchCompletionEnabled] = useState(false);
+  // CAPADEX 3.0 Phase 3.2A — persona journey router gate. Defaults false →
+  // byte-identical legacy IntroPhase selector. When ON, the progressive 5-step
+  // onboarding wizard renders first; once the user finishes it we set
+  // journeyWizardDone and fall through to the (persona-preset) IntroPhase.
+  const [personaJourneyRouterEnabled, setPersonaJourneyRouterEnabled] = useState(false);
+  const [journeyWizardDone, setJourneyWizardDone] = useState(false);
   useEffect(() => {
     fetch('/api/capadex/public-config')
       .then(r => r.json())
-      .then((cfg: { counsellor_whatsapp_number?: string; websocket_runtime?: boolean; cognitive_load_engine?: boolean; persona_model_alignment?: boolean; persona_model_expansion?: boolean; assessment_architecture_completion?: boolean }) => {
+      .then((cfg: { counsellor_whatsapp_number?: string; websocket_runtime?: boolean; cognitive_load_engine?: boolean; persona_model_alignment?: boolean; persona_model_expansion?: boolean; assessment_architecture_completion?: boolean; persona_journey_router?: boolean }) => {
         if (cfg.counsellor_whatsapp_number) setCounsellorNumber(cfg.counsellor_whatsapp_number);
         if (cfg.websocket_runtime)    setWsRuntimeEnabled(true);
         if (cfg.cognitive_load_engine) setCogLoadEnabled(true);
         if (cfg.persona_model_alignment) setPersonaAlignmentEnabled(true);
         if (cfg.persona_model_expansion) setPersonaExpansionEnabled(true);
         if (cfg.assessment_architecture_completion) setArchCompletionEnabled(true);
+        if (cfg.persona_journey_router) setPersonaJourneyRouterEnabled(true);
       })
       .catch(() => {});
   }, []);
@@ -3098,7 +3106,25 @@ export function FreeAssessmentModal({ open, onOpenChange, onNavigate, initialPer
           </div>
         )}
 
-        {phase === "intro" && <IntroPhase {...allPhaseProps} />}
+        {/* CAPADEX 3.0 Phase 3.2A — flag ON + wizard not yet finished → progressive
+            onboarding wizard; OFF or finished → byte-identical legacy IntroPhase. */}
+        {phase === "intro" && personaJourneyRouterEnabled && !journeyWizardDone ? (
+          <PersonaJourneyWizard
+            personaModelAlignment={personaAlignmentEnabled}
+            personaModelExpansion={personaExpansionEnabled}
+            setPrimaryPersona={setPrimaryPersona}
+            setSelectedPersona={setSelectedPersona}
+            setIsProxy={setIsProxy}
+            setAgeBand={setAgeBand}
+            setParticipantGoal={setParticipantGoal}
+            setGoalTimeline={setGoalTimeline}
+            onComplete={() => setJourneyWizardDone(true)}
+            onNavigate={(screen) => { onOpenChange(false); onNavigate?.(screen); }}
+            onClose={() => onOpenChange(false)}
+          />
+        ) : (
+          phase === "intro" && <IntroPhase {...allPhaseProps} />
+        )}
         {/* ─── QUESTIONS ─── */}
         {phase === "questions" && <QuestionsPhase {...allPhaseProps} />}
         {/* ─── CAPADEX ANALYZE ─── */}

@@ -97,6 +97,47 @@ describe('PersonaJourneyWizard — Goal step is filtered by track', () => {
     expect(screen.queryByText(GOAL.support)).not.toBeInTheDocument();
   });
 
+  it('offers an enterprise leader (people_manager) the professional track goals (expansion ON)', () => {
+    // people_manager exists ONLY under personaModelExpansion; it sits in the
+    // self-taker "professional" track and has no SUB_PERSONA_GOAL_MAP override,
+    // so it inherits GOAL_TRACK_MAP.professional. A future edit that dropped it
+    // from the professional track (or added a narrower override) would break the
+    // sensible goal set an enterprise leader is offered.
+    seed({ trackId: 'professional', subId: 'people_manager', band: '24-45', step: 2 });
+    render(<PersonaJourneyWizard {...makeProps({ personaModelExpansion: true })} />);
+
+    // professional → ['clarity', 'career', 'placement', 'growth']
+    expect(screen.getByText(GOAL.clarity)).toBeInTheDocument();
+    expect(screen.getByText(GOAL.career)).toBeInTheDocument();
+    expect(screen.getByText(GOAL.placement)).toBeInTheDocument();
+    expect(screen.getByText(GOAL.growth)).toBeInTheDocument();
+
+    // An enterprise leader is never offered exam prep (a learner/school goal) nor
+    // the proxy-only "support someone in my care".
+    expect(screen.queryByText(GOAL.exam)).not.toBeInTheDocument();
+    expect(screen.queryByText(GOAL.support)).not.toBeInTheDocument();
+  });
+
+  it('offers higher_ed_faculty (proxy track) only the proxy goals, never self-only goals (expansion ON)', () => {
+    // higher_ed_faculty exists ONLY under personaModelExpansion and lives in the
+    // proxy track (a faculty member assessing students). It inherits
+    // GOAL_TRACK_MAP.proxy and must therefore be offered ONLY ['support','clarity']
+    // — never the self-only exam/career/placement/growth goals that belong to the
+    // people being assessed, not to the faculty proxy.
+    seed({ trackId: 'proxy', subId: 'higher_ed_faculty', band: '24-45', step: 2 });
+    render(<PersonaJourneyWizard {...makeProps({ personaModelExpansion: true })} />);
+
+    // proxy → ['support', 'clarity']
+    expect(screen.getByText(GOAL.support)).toBeInTheDocument();
+    expect(screen.getByText(GOAL.clarity)).toBeInTheDocument();
+
+    // The self-only goals must NOT surface for a faculty proxy.
+    expect(screen.queryByText(GOAL.exam)).not.toBeInTheDocument();
+    expect(screen.queryByText(GOAL.career)).not.toBeInTheDocument();
+    expect(screen.queryByText(GOAL.placement)).not.toBeInTheDocument();
+    expect(screen.queryByText(GOAL.growth)).not.toBeInTheDocument();
+  });
+
   it('clears a stale goal when the track changes to one where it no longer applies', async () => {
     const user = userEvent.setup();
     // Start on the Goal step as a mid-career professional who has already picked

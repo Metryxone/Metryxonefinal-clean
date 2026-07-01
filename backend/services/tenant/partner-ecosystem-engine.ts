@@ -501,12 +501,22 @@ export interface UnlinkableReferralRow {
   linkable_source: string | null;
 }
 
+export interface UnlinkableReferralsAggregate {
+  /** Sum of linkable_value across reason='linkable' rows, kept SEPARATE per currency — never summed across currencies. */
+  linkable_value_by_currency: Record<string, number>;
+  /** How many reason='linkable' rows are captured in linkable_value_by_currency. */
+  linkable_row_count: number;
+  /** Blocked rows that cannot be auto-linked, broken out by reason. */
+  blocked: { no_email: number; no_realized_revenue: number; total: number };
+}
+
 export interface UnlinkableReferrals {
   generated_at: string;
   degraded: boolean;
   substrate: { referrals_table: boolean };
   total: number;
   by_reason: Record<string, number>;
+  aggregate: UnlinkableReferralsAggregate;
   rows: UnlinkableReferralRow[];
   notes: string[];
 }
@@ -531,7 +541,11 @@ export async function buildUnlinkableReferrals(pool: pg.Pool): Promise<Unlinkabl
   const hasReferrals = await exists(pool, 'tenant_channel_referrals');
   if (!hasReferrals) {
     notes.push('tenant_channel_referrals not provisioned yet — nothing to surface.');
-    return { generated_at, degraded, substrate: { referrals_table: false }, total: 0, by_reason: {}, rows: [], notes };
+    return {
+      generated_at, degraded, substrate: { referrals_table: false }, total: 0, by_reason: {},
+      aggregate: { linkable_value_by_currency: {}, linkable_row_count: 0, blocked: { no_email: 0, no_realized_revenue: 0, total: 0 } },
+      rows: [], notes,
+    };
   }
 
   // deal_value is an additive column; on a legacy substrate it may be absent (then it is NULL for all rows).
@@ -594,8 +608,27 @@ export async function buildUnlinkableReferrals(pool: pg.Pool): Promise<Unlinkabl
     }
   }
 
+  // Aggregate: sum the realized revenue waiting to be attached (linkable rows), kept SEPARATE per currency,
+  // and count the rows that stay blocked. Straight from the diagnosed rows — never fabricated.
+  const linkableValueByCurrency: Record<string, number> = {};
+  let linkableRowCount = 0;
+  for (const row of rows) {
+    if (row.reason === 'linkable' && row.linkable_value != null) {
+      linkableValueByCurrency[row.currency] = (linkableValueByCurrency[row.currency] ?? 0) + row.linkable_value;
+      linkableRowCount += 1;
+    }
+  }
+  const blockedNoEmail = byReason['no_email'] ?? 0;
+  const blockedNoRevenue = byReason['no_realized_revenue'] ?? 0;
+
   return {
     generated_at, degraded, substrate: { referrals_table: true },
-    total: rows.length, by_reason: byReason, rows, notes,
+    total: rows.length, by_reason: byReason,
+    aggregate: {
+      linkable_value_by_currency: linkableValueByCurrency,
+      linkable_row_count: linkableRowCount,
+      blocked: { no_email: blockedNoEmail, no_realized_revenue: blockedNoRevenue, total: blockedNoEmail + blockedNoRevenue },
+    },
+    rows, notes,
   };
 }

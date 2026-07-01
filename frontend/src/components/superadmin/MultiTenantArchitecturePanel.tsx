@@ -647,10 +647,16 @@ interface PUnlinkableRow {
   reason_label: string;
   linkable_value: number | null; linkable_source: string | null;
 }
+interface PUnlinkableAggregate {
+  linkable_value_by_currency: Record<string, number>;
+  linkable_row_count: number;
+  blocked: { no_email: number; no_realized_revenue: number; total: number };
+}
 interface PUnlinkable {
   generated_at: string; degraded: boolean;
   substrate: { referrals_table: boolean };
   total: number; by_reason: Record<string, number>;
+  aggregate: PUnlinkableAggregate;
   rows: PUnlinkableRow[]; notes: string[];
 }
 interface PartnerEco {
@@ -1131,6 +1137,32 @@ function PartnerEcosystemView() {
                   </span>
                 ))}
               </div>
+              {unlinkable.data.aggregate && (
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <div className="rounded-md border border-green-200 bg-green-50 p-3">
+                    <div className="text-xs font-medium text-green-800">Revenue waiting to be attached</div>
+                    {Object.keys(unlinkable.data.aggregate.linkable_value_by_currency).length === 0 ? (
+                      <div className="mt-1 text-sm text-gray-500">None linkable yet.</div>
+                    ) : (
+                      <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
+                        {Object.entries(unlinkable.data.aggregate.linkable_value_by_currency).map(([cur, val]) => (
+                          <span key={cur} className="text-lg font-semibold text-green-800">
+                            {val.toLocaleString()} <span className="text-xs font-normal text-green-700">{cur}</span>
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    <div className="mt-0.5 text-xs text-green-700">across {unlinkable.data.aggregate.linkable_row_count} linkable referral(s) — currencies kept separate</div>
+                  </div>
+                  <div className="rounded-md border border-amber-200 bg-amber-50 p-3">
+                    <div className="text-xs font-medium text-amber-800">Blocked rows (cannot auto-link)</div>
+                    <div className="mt-1 text-lg font-semibold text-amber-800">{unlinkable.data.aggregate.blocked.total}</div>
+                    <div className="mt-0.5 text-xs text-amber-700">
+                      no email: {unlinkable.data.aggregate.blocked.no_email} · no realized revenue: {unlinkable.data.aggregate.blocked.no_realized_revenue}
+                    </div>
+                  </div>
+                </div>
+              )}
               <Table>
                 <TableHeader>
                   <TableRow>

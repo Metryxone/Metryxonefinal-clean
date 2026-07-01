@@ -18,7 +18,7 @@ import type { Express, Request, Response } from 'express';
 import type { Pool } from 'pg';
 import { isCareerDiscoveryEnabled } from '../config/feature-flags';
 import { logAudit } from '../services/platform-audit';
-import { VALUES_QUESTIONS, VALUE_DIMENSIONS } from '../services/career-discovery-values';
+import { VALUES_QUESTIONS, VALUE_DIMENSIONS, pickKnownValuesResponses } from '../services/career-discovery-values';
 import {
   readDiscoveryStatus,
   persistValues,
@@ -86,7 +86,8 @@ export function registerCareerDiscoveryRoutes(app: Express, pool: Pool, requireA
   app.post(`${BASE}/values`, gate, requireAuth, async (req, res) => {
     const uid = selfId(req);
     if (!uid) return res.status(401).json({ ok: false, message: 'Unauthorized' });
-    const responses = (req.body && typeof req.body === 'object' ? (req.body.responses ?? req.body) : {}) as Record<string, unknown>;
+    const rawResponses = (req.body && typeof req.body === 'object' ? (req.body.responses ?? req.body) : {}) as Record<string, unknown>;
+    const responses = pickKnownValuesResponses(rawResponses);
     const scores = await persistValues(pool, uid, responses);
     void logAudit(pool, req, {
       action: 'update',

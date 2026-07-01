@@ -146,3 +146,19 @@ export function scoreValues(responses: Record<string, unknown> | null | undefine
 export function isValueDimension(v: unknown): v is ValueDimensionId {
   return typeof v === 'string' && DIMENSION_IDS.has(v);
 }
+
+/**
+ * Keep ONLY recognized Work Values answers (known question ids). Unknown / stray
+ * keys from a flat request body are dropped so they are never persisted into
+ * `values_responses`. Pure: returns a fresh object, never mutates the input.
+ */
+export function pickKnownValuesResponses(
+  responses: Record<string, unknown> | null | undefined,
+): Record<string, unknown> {
+  const resp = responses && typeof responses === 'object' ? responses : {};
+  const out: Record<string, unknown> = {};
+  for (const [qid, raw] of Object.entries(resp)) {
+    if (QUESTION_BY_ID.has(qid)) out[qid] = raw;
+  }
+  return out;
+}

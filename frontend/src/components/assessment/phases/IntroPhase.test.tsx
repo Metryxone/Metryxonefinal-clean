@@ -207,6 +207,48 @@ describe('IntroPhase — age band accordion stays alive across hyphen + plus opt
   });
 });
 
+describe('IntroPhase — persona block collapses when resolved upstream', () => {
+  // The PersonaJourneyWizard already asks "who is this for?" — so when it hands
+  // off (personaResolvedUpstream=true) the classic IntroPhase must NOT re-open
+  // the persona picker. It shows a confirmed "Selected · …" summary with the
+  // "Change who this is for" escape hatch, both collapsed.
+  it('starts the selected track COLLAPSED with a "Selected · …" summary + escape hatch when resolved upstream', () => {
+    const props = makeProps({
+      // campus_student lives in the "Students & learners" (learner) track.
+      primaryPersona: 'campus_student',
+      selectedPersona: 'campus',
+      personaResolvedUpstream: true,
+    } as any);
+    render(<IntroPhase {...props} />);
+
+    // The learner track header renders as a confirmed summary…
+    const header = screen.getByTestId('track-header-learner');
+    expect(header).toHaveTextContent(/Selected ·/i);
+    expect(header).toHaveTextContent(/College or university student/i);
+    // …and it is COLLAPSED: the sub-persona radio body must not be mounted.
+    expect(screen.queryByTestId('track-body-learner')).not.toBeInTheDocument();
+    // The escape hatch to reopen the full persona list is present.
+    expect(screen.getByTestId('change-persona')).toBeInTheDocument();
+    expect(screen.getByText(/Change who this is for/i)).toBeInTheDocument();
+  });
+
+  it('legacy path (flag OFF / no upstream) still auto-EXPANDS the selected track', () => {
+    // personaResolvedUpstream absent → byte-identical legacy behaviour: the
+    // track containing the current selection opens on mount.
+    const props = makeProps({
+      primaryPersona: 'campus_student',
+      selectedPersona: 'campus',
+    });
+    render(<IntroPhase {...props} />);
+
+    const header = screen.getByTestId('track-header-learner');
+    expect(header).toHaveTextContent(/Selected ·/i);
+    // Legacy: the body IS expanded (persona radios visible).
+    expect(screen.getByTestId('track-body-learner')).toBeInTheDocument();
+    expect(screen.getByTestId('persona-campus_student')).toBeInTheDocument();
+  });
+});
+
 describe('IntroPhase — strict 3-concern correlation cap', () => {
   it('blocks the 4th sequential add and surfaces the cap warning', async () => {
     const user = userEvent.setup();

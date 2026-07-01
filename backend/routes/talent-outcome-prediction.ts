@@ -7,6 +7,7 @@
  */
 import type { Express, Request, Response } from 'express';
 import type { Pool } from 'pg';
+import { recordPromotionOutcome, type RecordOutcomeResult } from '../services/validation-loop-intake';
 
 const FLAG = 'FF_CAREER_GRAPH';
 const flagOn = () => process.env[FLAG] === '1';
@@ -218,6 +219,82 @@ async function computePredictionsForUser(pool: Pool, email: string): Promise<any
   return results;
 }
 
+// ── Realized PROMOTION outcome (the missing back-half of the promotion prediction) ──────────────
+// The engine PREDICTS promotion_probability (ti_outcome_predictions) but the platform had no event
+// that records a REALIZED employee promotion, so the promotion calibration axis could never move
+// past ABSTAIN without fabricating an outcome. This helper turns a genuine promotion DECISION
+// (promoted = 1 / passed-over = 0) into a durable validation_loop_outcomes row, using the standing
+// decision-time promotion_probability as the prediction snapshot (NULL when no prediction exists →
+// Coverage-only, never coerced into a fake pair). Idempotent per (email, rf_id, decision_ref) so
+// re-recording the same promotion cycle is safe; a NEW cycle (new decision_ref) is a distinct row.
+// Flag-gated (validationLoop) / demo-aware (@example.com → is_demo) / never-throws inside the recorder.
+export interface RealizedPromotionArgs {
+  email: string;
+  /** Optional role-family id to bind the decision to a specific prediction; else the most recent. */
+  rfId?: number | null;
+  /** Realized binary decision: 1 = promoted, 0 = passed over. */
+  outcome: 0 | 1;
+  /** Distinct promotion-cycle marker so recurring promotions of the same person stay separate rows. */
+  decisionRef?: string | null;
+}
+
+export async function recordRealizedPromotionOutcome(
+  pool: Pool,
+  args: RealizedPromotionArgs,
+): Promise<RecordOutcomeResult & { rf_id?: number | null; predicted_prob?: number | null; ref_id?: string }> {
+  const email = String(args.email ?? '').trim().toLowerCase();
+  if (!email) return { recorded: false, reason: 'subject_email_required' };
+  if (args.outcome !== 0 && args.outcome !== 1) return { recorded: false, reason: 'outcome_must_be_0_or_1' };
+  // A per-cycle marker is REQUIRED on every call path (not just the HTTP route) so two real
+  // promotion cycles for the same (email, rf_id) can never collapse into one idempotent key.
+  const decisionRefIn = String(args.decisionRef ?? '').trim();
+  if (!decisionRefIn) return { recorded: false, reason: 'decision_ref_required' };
+
+  // Decision-time prediction snapshot: the standing promotion_probability at record time IS the
+  // prediction the promotion decision was made against (mirrors how hiring snapshots at terminal move).
+  let predRow: { id: number; rf_id: number; rf_name: string | null; promotion_probability: string | number | null; predicted_at: Date | string | null } | null = null;
+  try {
+    const r = args.rfId != null
+      ? await pool.query(
+          `SELECT id, rf_id, rf_name, promotion_probability, predicted_at
+             FROM ti_outcome_predictions WHERE user_email=$1 AND rf_id=$2 LIMIT 1`,
+          [email, args.rfId],
+        )
+      : await pool.query(
+          `SELECT id, rf_id, rf_name, promotion_probability, predicted_at
+             FROM ti_outcome_predictions WHERE user_email=$1 ORDER BY predicted_at DESC LIMIT 1`,
+          [email],
+        );
+    predRow = r.rows[0] ?? null;
+  } catch (err) {
+    // Never-throws: a lookup failure degrades to a Coverage-only (NULL-prediction) row rather than
+    // failing the realized-promotion capture — but log it so an operational issue is not silent.
+    console.warn('[talent-outcome-prediction] promotion prediction lookup failed:', (err as any)?.message ?? err);
+    predRow = null;
+  }
+
+  const pred = predRow?.promotion_probability != null ? Number(predRow.promotion_probability) : null;
+  const rfId = predRow?.rf_id ?? args.rfId ?? null;
+  const refId = `ti_promotion:${email}:${rfId ?? 'na'}:${decisionRefIn}`;
+
+  const result = await recordPromotionOutcome(pool, {
+    subjectEmail: email,
+    outcomeValue: args.outcome,
+    predictedProb: pred,
+    predictedBasis: 'promotion_probability',
+    source: 'talent_promotion_decision',
+    refId,
+    detail: {
+      rf_id: rfId,
+      rf_name: predRow?.rf_name ?? null,
+      prediction_id: predRow?.id ?? null,
+      predicted_at: predRow?.predicted_at ?? null,
+      decision_ref: decisionRefIn,
+    },
+  });
+  return { ...result, rf_id: rfId, predicted_prob: pred, ref_id: refId };
+}
+
 export function registerTalentOutcomePredictionRoutes(app: Express, pool: Pool, requireAuth: AuthFn, requireSuperAdmin: AuthFn): void {
   if (!flagOn()) return;
   ensureSchema(pool).catch(() => {});
@@ -241,6 +318,42 @@ export function registerTalentOutcomePredictionRoutes(app: Express, pool: Pool, 
       for (const u of users.rows) { try { await computePredictionsForUser(pool, u.user_email); done++; } catch { /* skip */ } }
       console.log(`[outcome-prediction] Bulk complete: ${done}/${users.rows.length}`);
     })();
+  });
+
+  // POST /api/admin/talent/predictions/:email/promotion-outcome
+  // Record a REALIZED promotion decision (promoted=1 / passed-over=0) for a talent, snapshotting the
+  // standing promotion_probability as the decision-time prediction. This is the genuine realized-
+  // promotion event the loop needs: it accrues promotion outcomes toward Coverage while calibration
+  // stays ABSTAINED until non-demo realized pairs reach k_min (never fabricates an outcome).
+  app.post('/api/admin/talent/predictions/:email/promotion-outcome', requireAuth, requireSuperAdmin, async (req: Request, res: Response) => {
+    try {
+      const email = decodeURIComponent(req.params.email).toLowerCase();
+      const b = (req.body ?? {}) as Record<string, unknown>;
+      const outcome = Number(b.outcome);
+      if (outcome !== 0 && outcome !== 1) {
+        return res.status(400).json({ ok: false, error: 'outcome_must_be_0_or_1', hint: '1 = promoted, 0 = passed over' });
+      }
+      const rfId = b.rf_id != null && Number.isFinite(Number(b.rf_id)) ? Number(b.rf_id) : null;
+      // Require an explicit promotion-cycle marker so two real cycles for the same (email, rf_id)
+      // never collapse into one idempotent key (a silent under-count of realized outcomes).
+      const decisionRef = String(b.decision_ref ?? '').trim();
+      if (!decisionRef) {
+        return res.status(400).json({ ok: false, error: 'decision_ref_required', hint: 'a stable per-promotion-cycle marker, e.g. "2026-H1"' });
+      }
+      const result = await recordRealizedPromotionOutcome(pool, { email, rfId, outcome: outcome as 0 | 1, decisionRef });
+      bustCache();
+      return res.json({
+        ok: result.recorded,
+        email,
+        ...result,
+        note: result.recorded
+          ? 'Realized promotion recorded with its decision-time prediction; calibration stays ABSTAINED until non-demo pairs reach k_min.'
+          : `Not recorded (${result.reason ?? 'unknown'}).`,
+      });
+    } catch (err) {
+      console.error('Promotion outcome record error:', err);
+      return res.status(500).json({ ok: false, error: 'record failed' });
+    }
   });
 
   // GET /api/admin/talent/predictions — list with filters

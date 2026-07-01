@@ -640,6 +640,69 @@ async function main() {
     );
   });
 
+  // ── Tracker honest-refusal / degraded branches: the WRITE must fail honestly
+  //    instead of fabricating a profile row, and the READ must never 500. Flag
+  //    stays ON (set above); poolMode flips per case and is restored to
+  //    'default' so nothing downstream is affected. Three guarantees:
+  //      • PUT with an ABSENT substrate (to_regclass → null) → 409, no UPDATE;
+  //      • PUT with NO profile row for this seeker → 409, no UPDATE (the client
+  //        keeps its localStorage copy — a row is NEVER invented);
+  //      • GET on an internal DB error → {ok:true, degraded:true} (never 500,
+  //        never throws). ──
+
+  // (i) PUT /tracker — ABSENT substrate → 409 + NO UPDATE issued.
+  poolMode = 'absent';
+  probe.reset();
+  const trackerPutAbsent = await call(base, 'PUT', '/api/launchpad-dashboard/tracker', {
+    auth: true,
+    body: { drives: [{ company: 'Acme', stage: 'applied' }] },
+  });
+  poolMode = 'default';
+  test('flag ON → PUT /tracker with ABSENT substrate returns 409 (never invents a profile)', () => {
+    assert.equal(trackerPutAbsent.status, 409, `expected 409, got ${trackerPutAbsent.status}`);
+    assert.equal(trackerPutAbsent.json?.ok, false);
+  });
+  test('flag ON → PUT /tracker with ABSENT substrate issues NO UPDATE (nothing written)', () => {
+    const update = probe.dbQueries.find((q) => /UPDATE\s+career_seeker_profiles\s+SET/i.test(q.sql));
+    assert.ok(!update, 'an UPDATE ran even though the substrate was absent');
+  });
+
+  // (ii) PUT /tracker — table present but NO profile row → 409 + NO UPDATE.
+  poolMode = 'no_profile';
+  probe.reset();
+  const trackerPutNoProfile = await call(base, 'PUT', '/api/launchpad-dashboard/tracker', {
+    auth: true,
+    body: { drives: [{ company: 'Acme', stage: 'applied' }] },
+  });
+  poolMode = 'default';
+  test('flag ON → PUT /tracker with NO profile row returns 409 (open your profile first)', () => {
+    assert.equal(trackerPutNoProfile.status, 409, `expected 409, got ${trackerPutNoProfile.status}`);
+    assert.equal(trackerPutNoProfile.json?.ok, false);
+  });
+  test('flag ON → PUT /tracker with NO profile row issues NO UPDATE (never invents a row)', () => {
+    // The SELECT ran (keyed by the SESSION uid) but no UPDATE followed.
+    const read = probe.dbQueries.find((q) => /SELECT\s+data\s+FROM\s+career_seeker_profiles\s+WHERE\s+user_id/i.test(q.sql));
+    assert.ok(read, 'expected the pre-update profile read query');
+    assert.equal(read!.params[0], SESSION_UID);
+    const update = probe.dbQueries.find((q) => /UPDATE\s+career_seeker_profiles\s+SET/i.test(q.sql));
+    assert.ok(!update, 'an UPDATE ran even though the seeker had no profile row');
+  });
+
+  // (iii) GET /tracker — internal DB error → honest-degraded, never 500/throws.
+  poolMode = 'error';
+  probe.reset();
+  const trackerGetDegraded = await call(base, 'GET', '/api/launchpad-dashboard/tracker', { auth: true });
+  poolMode = 'default';
+  test('flag ON → GET /tracker on an internal DB error degrades to {ok:true, degraded:true} (never 500, never throws)', () => {
+    assert.equal(trackerGetDegraded.status, 200, `expected 200 (degraded), got ${trackerGetDegraded.status}`);
+    assert.equal(trackerGetDegraded.json?.ok, true);
+    assert.equal(trackerGetDegraded.json?.degraded, true);
+    assert.strictEqual(trackerGetDegraded.json?.has_profile, null, 'has_profile must be null (unknown), not a fabricated value');
+    assert.strictEqual(trackerGetDegraded.json?.drives, null, 'drives must be null on a degraded read');
+    assert.strictEqual(trackerGetDegraded.json?.projects, null, 'projects must be null on a degraded read');
+    assert.strictEqual(trackerGetDegraded.json?.checklist, null, 'checklist must be null on a degraded read');
+  });
+
   // ══════════════════════════════════════════════════════════════════════════
   // Career Discovery (MX-302B) — same self-only guarantee on /guidance.
   // ══════════════════════════════════════════════════════════════════════════

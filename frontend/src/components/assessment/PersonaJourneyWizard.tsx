@@ -215,6 +215,14 @@ export function PersonaJourneyWizard(props: PersonaJourneyWizardProps) {
   const activeSub: SubPersona | null =
     activeTrack?.subPersonas.find((sp) => sp.id === subId) || null;
   const allowedBands: AgeBand[] = activeSub?.ageBands ?? [];
+  // For proxy personas (parent/teacher/counsellor) the age band is the age of the
+  // person being assessed — NOT the proxy's own age. A bare "Age group" heading
+  // reads as the parent's age, so reframe it to who the age actually refers to.
+  const ageGroupHeading = !activeTrack?.isProxy
+    ? 'Age group'
+    : activeSub?.id === 'parent'
+      ? "Your child's age group"
+      : "Age group of the person you're assessing";
 
   // Cross-track sub-persona search (Steps 1 & 2).
   const searchResults = React.useMemo(() => {
@@ -503,7 +511,7 @@ export function PersonaJourneyWizard(props: PersonaJourneyWizardProps) {
 
             {activeSub && (
               <div>
-                <div className="text-[12px] font-semibold text-slate-500 mb-2">Age group</div>
+                <div className="text-[12px] font-semibold text-slate-500 mb-2">{ageGroupHeading}</div>
                 <div className="flex flex-wrap gap-2">
                   {(allowedBands.length ? allowedBands : (AGE_BANDS as readonly AgeBand[])).map((b) => {
                     const selected = band === b;

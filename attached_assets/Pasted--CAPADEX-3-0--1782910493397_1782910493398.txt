@@ -1,0 +1,450 @@
+# ==============================================================================
+#
+# CAPADEX 3.0
+#
+# 99% ENTERPRISE LAUNCH PROGRAM
+#
+# PROGRAM 3
+#
+# PHASE 3.6
+#
+# ASSESSMENT SCIENCE
+#
+# PSYCHOMETRICS
+#
+# ITEM INTELLIGENCE PLATFORM
+#
+# ==============================================================================
+#
+# EXECUTION MODE
+#
+# IMPLEMENTATION
+#
+# Repository First
+#
+# Product Blueprint First
+#
+# Enhancement Only
+#
+# Search Before Modify
+#
+# Reuse Before Build
+#
+# Preserve Existing Architecture
+#
+# No Duplicate Psychometric Engines
+#
+# No Breaking Changes
+#
+# Human Approval Required
+#
+# ==============================================================================
+#
+# PRECONDITION
+#
+# Program 3
+#
+# Phase 3.5
+#
+# Assessment Measurement & Scoring Engine
+#
+# MUST be COMPLETE.
+#
+# ==============================================================================
+#
+# MISSION
+#
+# Implement ONE Enterprise Assessment Science Platform.
+#
+# This phase evaluates the QUALITY of assessments,
+# questions and measurement instruments.
+#
+# This phase does NOT measure candidate performance.
+#
+# It measures assessment quality.
+#
+# ==============================================================================
+#
+# MANDATORY ENHANCEMENT CONTRACT
+#
+# Repository First.
+#
+# Search before modify.
+#
+# Reuse before build.
+#
+# Preserve APIs.
+#
+# Preserve Database.
+#
+# Preserve Frontend.
+#
+# Repository is the source of truth.
+#
+# ==============================================================================
+#
+# SEARCH ENTIRE REPOSITORY
+#
+# Question Platform
+#
+# Assessment Builder
+#
+# Scoring Engine
+#
+# Reports
+#
+# Analytics
+#
+# Existing Psychometric Logic
+#
+# Existing Statistics
+#
+# Feature Flags
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# ITEM ANALYSIS
+#
+# Item Difficulty Index
+#
+# Item Discrimination Index
+#
+# Distractor Analysis
+#
+# Item Facility
+#
+# Item Exposure
+#
+# Item Usage
+#
+# Item Performance
+#
+# Item Quality Score
+#
+# Item Calibration
+#
+# Retirement Recommendation
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# RELIABILITY
+#
+# Internal Consistency
+#
+# Split Half Reliability
+#
+# Test Retest Reliability
+#
+# Inter Rater Reliability
+#
+# Parallel Forms Reliability
+#
+# Standard Error of Measurement
+#
+# Confidence Intervals
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# VALIDITY
+#
+# Face Validity
+#
+# Content Validity
+#
+# Construct Validity
+#
+# Criterion Validity
+#
+# Concurrent Validity
+#
+# Predictive Validity
+#
+# Convergent Validity
+#
+# Discriminant Validity
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# QUESTION QUALITY
+#
+# Duplicate Detection
+#
+# Ambiguity Detection
+#
+# Bias Detection
+#
+# Cultural Review
+#
+# Language Review
+#
+# Accessibility Review
+#
+# Reading Difficulty
+#
+# Question Clarity
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# BLUEPRINT VALIDATION
+#
+# Competency Coverage
+#
+# Behaviour Coverage
+#
+# Domain Coverage
+#
+# Skill Coverage
+#
+# Learning Objective Coverage
+#
+# Bloom Distribution
+#
+# Difficulty Distribution
+#
+# Time Distribution
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# QUALITY GOVERNANCE
+#
+# Scientific Review
+#
+# SME Review
+#
+# Pilot Review
+#
+# Validation Review
+#
+# Approval Workflow
+#
+# Version History
+#
+# Audit Trail
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# ASSESSMENT SCIENCE REPOSITORY
+#
+# Reliability History
+#
+# Validity History
+#
+# Pilot Results
+#
+# Calibration Results
+#
+# Item Analysis History
+#
+# Technical Manual
+#
+# Interpretation Manual
+#
+# Version Comparisons
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# FRONTEND
+#
+# Item Analysis Dashboard
+#
+# Reliability Dashboard
+#
+# Validity Dashboard
+#
+# Question Quality Dashboard
+#
+# Calibration Dashboard
+#
+# Technical Manual Viewer
+#
+# Review Workspace
+#
+# Approval Workspace
+#
+# ==============================================================================
+#
+# UX
+#
+# Interactive Charts
+#
+# Heat Maps
+#
+# Item Performance Matrix
+#
+# Question Comparison
+#
+# Version Comparison
+#
+# Trend Analysis
+#
+# Drill Down
+#
+# Export
+#
+# ==============================================================================
+#
+# APIs
+#
+# Item Analysis APIs
+#
+# Reliability APIs
+#
+# Validity APIs
+#
+# Quality APIs
+#
+# Calibration APIs
+#
+# Repository APIs
+#
+# ==============================================================================
+#
+# VERIFY
+#
+# Every Question
+#
+# Every Assessment
+#
+# Every Version
+#
+# has measurable scientific evidence.
+#
+# ==============================================================================
+#
+# DO NOT IMPLEMENT
+#
+# Norm Engine
+#
+# Standardization
+#
+# Benchmark Engine
+#
+# AI Interpretation
+#
+# Recommendation Engine
+#
+# Report Intelligence
+#
+# Candidate Analytics
+#
+# ==============================================================================
+#
+# PRODUCE
+#
+# 01 Executive Summary
+#
+# 02 Assessment Science Report
+#
+# 03 Item Analysis Report
+#
+# 04 Reliability Report
+#
+# 05 Validity Report
+#
+# 06 Blueprint Validation Report
+#
+# 07 Quality Governance Report
+#
+# 08 Science Repository Report
+#
+# 09 Frontend & UX Report
+#
+# 10 API Report
+#
+# 11 Repository Change Summary
+#
+# 12 Remaining Gaps
+#
+# 13 Phase 3.6 Certification
+#
+# ==============================================================================
+#
+# ACCEPTANCE CRITERIA
+#
+# ONE Assessment Science Platform.
+#
+# ONE Psychometric Engine.
+#
+# ONE Item Intelligence Platform.
+#
+# ONE Scientific Governance Model.
+#
+# ONE Quality Repository.
+#
+# Frontend implemented.
+#
+# UX implemented.
+#
+# APIs implemented.
+#
+# Repository evidence required.
+#
+# No duplicate implementations.
+#
+# ==============================================================================
+#
+# FINAL CERTIFICATION
+#
+# Certify independently:
+#
+# Item Analysis
+#
+# Reliability
+#
+# Validity
+#
+# Quality Governance
+#
+# Blueprint Validation
+#
+# Frontend
+#
+# UX
+#
+# APIs
+#
+# Never combine these scores.
+#
+# Finally answer:
+#
+# Is the Assessment Science &
+# Psychometric Platform
+# complete and ready
+# for Program 3 Phase 3.7
+# Enterprise Norm Engine?
+#
+# If not,
+#
+# identify every remaining
+#
+# Launch Critical
+#
+# High
+#
+# Medium
+#
+# Low
+#
+# Future gap.
+#
+# STOP.
+#
+# Human Approval Required.
+#
+# ==============================================================================

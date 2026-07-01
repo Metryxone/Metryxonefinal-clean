@@ -371,7 +371,7 @@ const PIPELINE_STALLED_DAYS = 10;
 /** Snapshot decision-time success probability the FIRST time a candidate lands on a terminal
  *  stage. Shared by the single PUT and the pipeline bulk-move so both stay consistent.
  *  Best-effort and never throws — a failed snapshot must not fail the move. */
-async function snapshotDecisionProb(pool: Pool, employerId: string, candidateId: string): Promise<void> {
+export async function snapshotDecisionProb(pool: Pool, employerId: string, candidateId: string): Promise<void> {
   try {
     const r = await pool.query(`SELECT * FROM employer_candidates WHERE id = $1 AND employer_id = $2`, [candidateId, employerId]);
     const row = r.rows[0];

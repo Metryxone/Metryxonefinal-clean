@@ -75,6 +75,10 @@ args = "lifecycle-stage-writers"
 task = "workflow.run"
 args = "test"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "partner-export-filters"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -239,6 +243,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npm run test:pure"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "partner-export-filters"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx --test tests/partner-ecosystem-export-filters.test.ts"
 
 [workflows.workflow.metadata]
 isValidation = true

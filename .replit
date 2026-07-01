@@ -91,6 +91,10 @@ args = "employer-competency-intel-e2e"
 task = "workflow.run"
 args = "mentor-booking-e2e"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "test-engines"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -299,6 +303,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx scripts/task343-mentor-booking-e2e.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "test-engines"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npm run test:engines:pure"
 
 [workflows.workflow.metadata]
 isValidation = true

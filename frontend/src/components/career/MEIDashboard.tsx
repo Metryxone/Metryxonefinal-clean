@@ -293,7 +293,7 @@ function BenchmarkPanel({ bm, dims }: { bm: BenchmarkResult; dims: DimScore[] })
         )}
       </div>
 
-      {bm.dimension_gaps.length > 0 && (
+      {(bm.dimension_gaps?.length ?? 0) > 0 && (
         <div>
           <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Dimension gaps vs. cohort median</p>
           <div className="space-y-2">
@@ -513,7 +513,7 @@ export default function MEIDashboard({ userId, className = '' }: MEIDashboardPro
               <h3 className="text-sm font-semibold text-gray-800">Your Profile Story</h3>
               <p className="text-sm text-gray-700 leading-relaxed">{narrative.band_narrative}</p>
 
-              {narrative.strength_narratives.length > 0 && (
+              {(narrative.strength_narratives?.length ?? 0) > 0 && (
                 <div className="space-y-2">
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Strengths</p>
                   {narrative.strength_narratives.map(s => (
@@ -525,7 +525,7 @@ export default function MEIDashboard({ userId, className = '' }: MEIDashboardPro
                 </div>
               )}
 
-              {narrative.gap_narratives.length > 0 && (
+              {(narrative.gap_narratives?.length ?? 0) > 0 && (
                 <div className="space-y-2">
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Opportunities</p>
                   {narrative.gap_narratives.map(g => (
@@ -537,7 +537,7 @@ export default function MEIDashboard({ userId, className = '' }: MEIDashboardPro
                 </div>
               )}
 
-              {narrative.composite_insights.length > 0 && (
+              {(narrative.composite_insights?.length ?? 0) > 0 && (
                 <div className="space-y-1.5">
                   {narrative.composite_insights.map((insight, i) => (
                     <div key={i} className="flex items-start gap-2 bg-blue-50 border border-blue-100 rounded-lg px-3 py-2">
@@ -658,6 +658,9 @@ export default function MEIDashboard({ userId, className = '' }: MEIDashboardPro
               </div>
             );
 
+            const hist = Array.isArray(fc.historical) ? fc.historical : [];
+            const proj = Array.isArray(fc.projected) ? fc.projected : [];
+
             const TREND_CONFIG = {
               improving: { label: 'Improving', icon: <TrendingUp className="h-4 w-4 text-green-600"/>, color: 'text-green-700', bg: 'bg-green-50', border: 'border-green-200' },
               stable:    { label: 'Stable',    icon: <Minus      className="h-4 w-4 text-blue-600"/>,  color: 'text-blue-700',  bg: 'bg-blue-50',  border: 'border-blue-200'  },
@@ -675,10 +678,10 @@ export default function MEIDashboard({ userId, className = '' }: MEIDashboardPro
                       ? 'No score history found. Complete an assessment to start tracking your EI trajectory.'
                       : 'Need at least 2 assessment sessions to compute a trend. Come back after your next session.'}
                   </p>
-                  {fc.data_points === 1 && fc.historical.length === 1 && (
+                  {fc.data_points === 1 && hist.length === 1 && (
                     <div className="mt-4 inline-flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-4 py-2">
                       <Award className="h-4 w-4 text-gray-500"/>
-                      <span className="text-sm font-semibold text-gray-800">{fc.historical[0].score}</span>
+                      <span className="text-sm font-semibold text-gray-800">{hist[0]?.score}</span>
                       <span className="text-xs text-gray-400">First score recorded</span>
                     </div>
                   )}
@@ -686,16 +689,16 @@ export default function MEIDashboard({ userId, className = '' }: MEIDashboardPro
               );
             }
 
-            const allScores = [...fc.historical.map(h => h.score), ...fc.projected.map(p => p.score)];
+            const allScores = [...hist.map(h => h.score), ...proj.map(p => p.score)];
             const minS = Math.max(0, Math.min(...allScores) - 5);
             const maxS = Math.min(99, Math.max(...allScores) + 5);
             const range = Math.max(maxS - minS, 1);
             const W = 320; const H = 80;
-            const nPoints = fc.historical.length + fc.projected.length;
+            const nPoints = hist.length + proj.length;
             const xStep = nPoints > 1 ? W / (nPoints - 1) : W;
             const toY = (s: number) => H - ((s - minS) / range) * H;
-            const histPts = fc.historical.map((h, i) => ({ x: i * xStep, y: toY(h.score) }));
-            const projPts = fc.projected.map((p, i) => ({ x: (fc.historical.length + i) * xStep, y: toY(p.score) }));
+            const histPts = hist.map((h, i) => ({ x: i * xStep, y: toY(h.score) }));
+            const projPts = proj.map((p, i) => ({ x: (hist.length + i) * xStep, y: toY(p.score) }));
             const histPath = histPts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
             const lastHist = histPts[histPts.length - 1];
             const projPath = projPts.length > 0 ? `M${lastHist.x.toFixed(1)},${lastHist.y.toFixed(1)} ` + projPts.map(p => `L${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ') : '';
@@ -755,15 +758,15 @@ export default function MEIDashboard({ userId, className = '' }: MEIDashboardPro
                 </div>
 
                 {/* Forecast table */}
-                {fc.projected.length > 0 && (
+                {proj.length > 0 && (
                   <div className="rounded-xl border border-gray-200 bg-white p-4">
                     <h3 className="text-sm font-semibold text-gray-800 mb-3">Score Forecast</h3>
                     <p className="text-xs text-gray-500 mb-3">
                       Directional extrapolation based on your trend. Actual scores depend on profile actions taken.
                     </p>
                     <div className="grid grid-cols-3 gap-3">
-                      {fc.projected.map(p => {
-                        const delta = p.score - fc.historical[fc.historical.length - 1].score;
+                      {proj.map(p => {
+                        const delta = p.score - (hist[hist.length - 1]?.score ?? p.score);
                         return (
                           <div key={p.session_offset} className="rounded-lg border border-gray-100 bg-gray-50 p-3 text-center">
                             <p className="text-xs text-gray-500 mb-1">{p.label}</p>
@@ -782,8 +785,8 @@ export default function MEIDashboard({ userId, className = '' }: MEIDashboardPro
                 <div className="rounded-xl border border-gray-200 bg-white p-4">
                   <h3 className="text-sm font-semibold text-gray-800 mb-3">Assessment Log</h3>
                   <div className="space-y-2">
-                    {[...fc.historical].reverse().map((h, i) => {
-                      const prev = fc.historical[fc.historical.length - 2 - i];
+                    {[...hist].reverse().map((h, i) => {
+                      const prev = hist[hist.length - 2 - i];
                       const delta = prev ? h.score - prev.score : null;
                       const bandKey = score.band;
                       const bandCfg = BAND_CONFIG[bandKey];

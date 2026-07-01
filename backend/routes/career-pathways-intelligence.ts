@@ -134,7 +134,7 @@ export function registerCareerPathwaysIntelligenceRoutes(
         rec_score: string; readiness_score: string; market_score: string;
         salary_delta_pct: string; transition_prob: string; behaviour_fit: string;
       }>(`
-        SELECT r.id AS role_id, r.title AS role_title, r.domain,
+        SELECT r.id AS role_id, r.title AS role_title, r.function_area AS domain,
                rec.segment, rec.rec_score, rec.readiness_score, rec.market_score,
                rec.salary_delta_pct, rec.transition_prob, rec.behaviour_fit
         FROM cg_user_recommendations rec
@@ -461,14 +461,14 @@ export function registerCareerPathwaysIntelligenceRoutes(
       const toRole = await pool.query<{
         id: number; title: string; domain: string; demand_score: number;
         growth_36mo: number; salary_p50: number; salary_p75: number;
-      }>('SELECT id, title, domain, demand_score, growth_36mo, salary_p50, salary_p75 FROM cg_roles WHERE id=$1', [toId]);
+      }>('SELECT id, title, function_area AS domain, demand_score, growth_30mo AS growth_36mo, avg_salary_inr AS salary_p50, NULL::int AS salary_p75 FROM cg_roles WHERE id=$1', [toId]);
       if (!toRole.rows.length) return res.status(404).json({ ok: false, error: 'Role not found' });
       const target = toRole.rows[0];
 
       // From role (if provided)
       let sourceRole: any = null;
       if (fromId) {
-        const fromRow = await pool.query('SELECT id, title, domain, salary_p50 FROM cg_roles WHERE id=$1', [fromId]);
+        const fromRow = await pool.query('SELECT id, title, function_area AS domain, avg_salary_inr AS salary_p50 FROM cg_roles WHERE id=$1', [fromId]);
         sourceRole = fromRow.rows[0] ?? null;
       }
 
@@ -577,7 +577,7 @@ export function registerCareerPathwaysIntelligenceRoutes(
         segment: string; status: string; action_at: string; notes: string | null;
         rec_score: string; readiness_score: string;
       }>(`
-        SELECT lc.id, lc.role_id, r.title AS role_title, r.domain,
+        SELECT lc.id, lc.role_id, r.title AS role_title, r.function_area AS domain,
                lc.segment, lc.status, lc.action_at, lc.notes,
                rec.rec_score, rec.readiness_score
         FROM cpi_rec_lifecycle lc
@@ -755,12 +755,12 @@ export function registerCareerPathwaysIntelligenceRoutes(
         ),
         // Top recommended roles by frequency
         pool.query<{ role_title: string; domain: string; rec_count: string; avg_score: string }>(
-          `SELECT r.title AS role_title, r.domain,
+          `SELECT r.title AS role_title, r.function_area AS domain,
                   COUNT(*) AS rec_count,
                   AVG(rec.rec_score)::numeric(5,2) AS avg_score
            FROM cg_user_recommendations rec
            JOIN cg_roles r ON r.id = rec.role_id
-           GROUP BY r.id, r.title, r.domain
+           GROUP BY r.id, r.title, r.function_area
            ORDER BY rec_count DESC LIMIT 10`
         ),
         // Recommendation lifecycle status distribution
@@ -787,11 +787,11 @@ export function registerCareerPathwaysIntelligenceRoutes(
     try {
       const [roleSummary, domainDist, skillDemand, trackPopularity] = await Promise.all([
         pool.query<{ title: string; domain: string; demand_score: number; growth_36mo: number; salary_p50: number }>(
-          `SELECT title, domain, demand_score, growth_36mo, salary_p50 FROM cg_roles ORDER BY demand_score DESC LIMIT 20`
+          `SELECT title, function_area AS domain, demand_score, growth_30mo AS growth_36mo, avg_salary_inr AS salary_p50 FROM cg_roles ORDER BY demand_score DESC LIMIT 20`
         ),
         pool.query<{ domain: string; role_count: string; avg_demand: string }>(
-          `SELECT domain, COUNT(*) AS role_count, AVG(demand_score)::numeric(5,1) AS avg_demand
-           FROM cg_roles GROUP BY domain ORDER BY role_count DESC`
+          `SELECT function_area AS domain, COUNT(*) AS role_count, AVG(demand_score)::numeric(5,1) AS avg_demand
+           FROM cg_roles GROUP BY function_area ORDER BY role_count DESC`
         ),
         pool.query<{ skill_name: string; role_count: string; avg_required: string }>(
           `SELECT skill_name, COUNT(*) AS role_count, AVG(required_level)::numeric(3,1) AS avg_required

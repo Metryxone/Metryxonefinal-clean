@@ -125,6 +125,7 @@ const LearningPlansPanel = lazy(() => import('./superadmin/LearningPlansPanel'))
 const FinancialsPanel = lazy(() => import('./superadmin/FinancialsPanel'));
 const RevenueDashboardPanel = lazy(() => import('./superadmin/RevenueDashboardPanel'));
 const UsageMeteringPanel = lazy(() => import('./superadmin/UsageMeteringPanel'));
+const ModuleAccessPanel = lazy(() => import('./superadmin/ModuleAccessPanel'));
 const CustomerSuccessPanel = lazy(() => import('./superadmin/CustomerSuccessPanel'));
 const OutcomeValidationPanel = lazy(() => import('./superadmin/OutcomeValidationPanel'));
 const OutcomeIntelligencePanel = lazy(() => import('./superadmin/OutcomeIntelligencePanel'));
@@ -741,6 +742,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
               {activeTab === 'financials'       && <FinancialsPanel />}
               {activeTab === 'revenue'          && <RevenueDashboardPanel />}
               {activeTab === 'usage-credits'    && <UsageMeteringPanel />}
+              {activeTab === 'module-access'    && <ModuleAccessPanel />}
               {activeTab === 'customer-success' && <CustomerSuccessPanel />}
               {activeTab === 'outcome-validation' && <OutcomeValidationPanel />}
               {activeTab === 'outcome-intelligence' && <OutcomeIntelligencePanel />}

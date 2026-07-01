@@ -726,6 +726,18 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
     enabled: isAuthenticated,
   });
 
+  // Module Access Control flag (moduleAccessControl) — when OFF the gated
+  // /api/entitlement/modules route 503s and the nav item self-hides, keeping
+  // flag-OFF byte-identical (the tab disappears, not just a panel-level 503).
+  const { data: moduleAccessEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/entitlement/modules', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/entitlement/modules', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
   // Fetch platform settings
   const { data: platformSettingsData = [], refetch: refetchSettings } = useQuery<any[]>({
     queryKey: ['/api/admin/platform-settings'],
@@ -2899,6 +2911,7 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
         { id: 'financials',    icon: Wallet,     label: 'Financials' },
         { id: 'revenue',          icon: TrendingUp, label: 'Revenue Intelligence' },
         { id: 'usage-credits',    icon: Gauge,      label: 'Usage & Credits' },
+        { id: 'module-access',    icon: ShieldCheck, label: 'Module Access' },
         { id: 'customer-success', icon: HeartPulse, label: 'Customer Success' },
       ]
     },
@@ -3092,6 +3105,11 @@ export function useAdminDashboardState(onNavigate?: (screen: string) => void): A
       usageMeteringEnabled
         ? group
         : { ...group, items: group.items.filter(it => it.id !== 'usage-credits') }
+    )
+    .map(group =>
+      moduleAccessEnabled
+        ? group
+        : { ...group, items: group.items.filter(it => it.id !== 'module-access') }
     )
     .filter(group => group.items.length > 0);
   const menuItems = navGroups.flatMap(g => g.items);

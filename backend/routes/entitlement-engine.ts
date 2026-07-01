@@ -35,6 +35,7 @@ import {
   ensureModuleRegistry,
 } from '../services/wc7c/module-access-engine.js';
 import { ensureEntitlementGrantsSchema } from '../services/commercial/entitlement-grants-schema.js';
+import { ensureArchitectureSchema } from '../services/commercial/architecture-schema.js';
 import { z } from 'zod';
 import { validate } from '../lib/validate.js';
 
@@ -53,6 +54,11 @@ const grantBody = z.object({
 function principalEmail(req: Request): string | null {
   const raw = (req as any).user?.email;
   return typeof raw === 'string' && raw.trim() ? raw.trim() : null;
+}
+
+async function tableExists(pool: Pool, qualifiedName: string): Promise<boolean> {
+  const { rows } = await pool.query<{ t: string | null }>('SELECT to_regclass($1) AS t', [qualifiedName]);
+  return !!rows[0]?.t;
 }
 
 export function registerEntitlementEngineRoutes(
@@ -198,6 +204,122 @@ export function registerEntitlementEngineRoutes(
         [email, moduleRaw, revokedBy],
       );
       return { revoked: rows.length, grants: rows };
+    }),
+  );
+
+  // ── GET /api/entitlement/admin/plans — plans + their mapped module codes (admin) ──
+  // Composes the EXISTING commercial catalog (comm_plans) with the plan→module rows in
+  // comm_plan_entitlements (feature_code = module code). Read-only: probes the entitlement
+  // table with to_regclass and degrades to "no modules mapped" when it hasn't been
+  // provisioned yet (never fabricates, never DDLs on a GET).
+  app.get(
+    '/api/entitlement/admin/plans',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    wrap(async () => {
+      const havePlans = await tableExists(pool, 'comm_plans');
+      if (!havePlans) return { plans: [], modules: Object.values(MODULE_REGISTRY) };
+      const { rows: planRows } = await pool.query<{
+        id: string; code: string; name: string; billing_interval: string;
+        price_paise: number; currency: string; is_active: boolean; product_name: string | null;
+      }>(
+        `SELECT p.id, p.code, p.name, p.billing_interval, p.price_paise, p.currency, p.is_active,
+                pr.name AS product_name
+           FROM comm_plans p
+           LEFT JOIN comm_products pr ON pr.id = p.product_id
+          ORDER BY p.sort_order, p.name`,
+      );
+
+      // Map plan_id → module codes (module-scoped entitlement rows only).
+      const moduleMap = new Map<string, string[]>();
+      if (await tableExists(pool, 'comm_plan_entitlements')) {
+        const { rows: entRows } = await pool.query<{ plan_id: string; feature_code: string }>(
+          `SELECT plan_id, feature_code
+             FROM comm_plan_entitlements
+            WHERE feature_code = ANY($1::text[])`,
+          [MODULE_CODES as unknown as string[]],
+        );
+        for (const r of entRows) {
+          if (!isModuleCode(r.feature_code)) continue;
+          const list = moduleMap.get(r.plan_id) ?? [];
+          list.push(r.feature_code);
+          moduleMap.set(r.plan_id, list);
+        }
+      }
+
+      return {
+        plans: planRows.map((p) => ({ ...p, modules: (moduleMap.get(p.id) ?? []).slice().sort() })),
+        modules: Object.values(MODULE_REGISTRY),
+      };
+    }),
+  );
+
+  // ── POST /api/entitlement/admin/plan-modules — attach a module to a plan (write path) ──
+  // Writes a comm_plan_entitlements row (feature_code = module code) so the plan's active
+  // subscribers inherit the module via deriveModuleAccess. Idempotent (ON CONFLICT DO NOTHING).
+  app.post(
+    '/api/entitlement/admin/plan-modules',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    validate({ body: z.object({ plan_id: z.string().trim().min(1), module: z.string().trim().min(1) }) }),
+    wrap(async (req, res) => {
+      const b = req.body ?? {};
+      const planId = String(b.plan_id ?? '').trim();
+      const moduleRaw = String(b.module ?? '').trim();
+      if (!isModuleCode(moduleRaw)) {
+        res.status(400).json({ ok: false, error: 'invalid_module', valid_modules: MODULE_CODES });
+        return undefined;
+      }
+      // Write path: ensure the catalog schema (comm_plans/comm_features/comm_plan_entitlements)
+      // and the module registry rows (FK target for feature_code) exist before inserting.
+      await ensureArchitectureSchema(pool);
+      await ensureModuleRegistry(pool);
+      try {
+        const { rows } = await pool.query(
+          `INSERT INTO comm_plan_entitlements (plan_id, feature_code, quota, quota_period)
+           VALUES ($1, $2, NULL, 'monthly')
+           ON CONFLICT (plan_id, feature_code) DO NOTHING
+           RETURNING id, plan_id, feature_code`,
+          [planId, moduleRaw],
+        );
+        return { attached: rows.length, mapping: rows[0] ?? null, plan_id: planId, module: moduleRaw };
+      } catch (e: any) {
+        if (e?.code === '23503') {
+          res.status(400).json({ ok: false, error: 'plan_not_found' });
+          return undefined;
+        }
+        throw e;
+      }
+    }),
+  );
+
+  // ── POST /api/entitlement/admin/plan-modules/remove — detach a module from a plan ──
+  // Deletes the plan→module entitlement row. Removing a plan mapping never touches per-email
+  // manual grants (a distinct source), so a granted identity keeps its module access.
+  app.post(
+    '/api/entitlement/admin/plan-modules/remove',
+    gate,
+    requireAuth,
+    requireSuperAdmin,
+    validate({ body: z.object({ plan_id: z.string().trim().min(1), module: z.string().trim().min(1) }) }),
+    wrap(async (req, res) => {
+      const b = req.body ?? {};
+      const planId = String(b.plan_id ?? '').trim();
+      const moduleRaw = String(b.module ?? '').trim();
+      if (!isModuleCode(moduleRaw)) {
+        res.status(400).json({ ok: false, error: 'invalid_module', valid_modules: MODULE_CODES });
+        return undefined;
+      }
+      await ensureArchitectureSchema(pool);
+      const { rows } = await pool.query(
+        `DELETE FROM comm_plan_entitlements
+          WHERE plan_id = $1 AND feature_code = $2
+          RETURNING id, plan_id, feature_code`,
+        [planId, moduleRaw],
+      );
+      return { removed: rows.length, plan_id: planId, module: moduleRaw };
     }),
   );
 }

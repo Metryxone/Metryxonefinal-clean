@@ -6380,6 +6380,7 @@ type DifficultyPlanEnvelope = {
   scoring_threshold: number;
   per_domain: Array<{ domain: string; approved_total: number; target_band_available: boolean; coverage_gap: boolean; note: string }>;
   bank: { table_present: boolean; approved_total: number; distinct_bands: string[]; served_difficulty_can_shift: boolean; note: string };
+  role_match?: { matched_via: 'direct' | 'synonym' | 'adjacent' | null; canonical_role_id: string | null } | null;
   honest_notes: string[];
 };
 
@@ -6412,6 +6413,11 @@ function DifficultyPlanPanel({ targetRole, careerStage }: { targetRole: string; 
   const targetTitle = targetLabel.charAt(0).toUpperCase() + targetLabel.slice(1);
   const rb = plan.readiness_bands;
   const proficiencyFromRoleDna = plan.seniority.proficiency_source === 'role_dna_expected_level';
+  // Honesty-over-optimism: when the Role-DNA anchor came from a closely-related
+  // (adjacent) curated role rather than an exact/synonym match, the difficulty is
+  // a defensible approximation — surface that subtly. Direct/synonym matches are
+  // exact/equivalent and carry no caveat.
+  const isApproxRoleMatch = proficiencyFromRoleDna && plan.role_match?.matched_via === 'adjacent';
 
   // A coverage gap surfaces when the live bank can't serve the target difficulty
   // band (either single-band bank, or specific domains missing the target rank).
@@ -6454,6 +6460,17 @@ function DifficultyPlanPanel({ targetRole, careerStage }: { targetRole: string; 
           <div className="text-[10px] text-gray-400 mt-1.5">
             {proficiencyFromRoleDna ? 'Anchored to this role\u2019s runtime Role-DNA.' : 'Anchored to your career-stage benchmark.'}
           </div>
+          {isApproxRoleMatch && (
+            <div
+              className="mt-2 flex items-start gap-1.5 rounded-lg border border-gray-200 bg-white px-2 py-1.5"
+              data-testid="difficulty-approx-role-note"
+            >
+              <Info size={11} className="text-gray-400 shrink-0 mt-px" />
+              <span className="text-[10px] text-gray-500 leading-snug">
+                Estimated from a closely-related role — we don’t have a curated profile for this exact title yet, so the difficulty is a defensible approximation.
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Readiness bar */}

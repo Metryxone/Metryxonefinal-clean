@@ -184,6 +184,17 @@ export type DifficultyPlan = {
     served_difficulty_can_shift: boolean;
     note: string;
   };
+  /** Honest provenance of how the role's proficiency anchor was resolved. When a
+   *  runtime Role-DNA anchor was used, `matched_via` records whether the role was
+   *  an exact/curated match ('direct'), an equivalent alias ('synonym'), or a
+   *  closely-related but different role whose curated levels are a DEFENSIBLE
+   *  approximation ('adjacent'). null when the stage anchor was used (no Role-DNA
+   *  match). `canonical_role_id` names the curated role that supplied the anchor
+   *  when the match came via the crosswalk (synonym/adjacent). */
+  role_match: {
+    matched_via: 'direct' | 'synonym' | 'adjacent' | null;
+    canonical_role_id: string | null;
+  } | null;
   honest_notes: string[];
 };
 
@@ -453,10 +464,14 @@ export async function buildDifficultyPlan(
   // to the stage anchor. The lookup is byte-identical to the stage fallback while
   // the table is unpopulated (returns null → seniority_anchor).
   let effectiveExpectedLevel = opts.expectedLevel ?? null;
+  // Honest provenance of the anchor's origin. Populated only when a Role-DNA
+  // anchor was actually consumed (not the stage fallback / explicit override).
+  let role_match: DifficultyPlan['role_match'] = null;
   if (effectiveExpectedLevel == null) {
     const dna = await lookupRoleDnaAnchor(pool, opts.role);
     if (dna.anchor != null) {
       effectiveExpectedLevel = dna.anchor;
+      role_match = { matched_via: dna.matched_via ?? null, canonical_role_id: dna.canonical_role_id ?? null };
       honest_notes.push(`Role-DNA anchor consumed: ${dna.reason}.`);
     } else {
       honest_notes.push(`Role-DNA anchor not used (${dna.reason}) — falling back to career-stage anchor.`);
@@ -475,6 +490,7 @@ export async function buildDifficultyPlan(
       per_domain: [],
       bank: { table_present: false, approved_total: 0, distinct_bands: [], served_difficulty_can_shift: false,
         note: 'bank table absent' },
+      role_match,
       honest_notes,
     };
   }
@@ -555,6 +571,7 @@ export async function buildDifficultyPlan(
         ? 'bank holds multiple difficulty bands across served domains'
         : 'bank holds a single difficulty band across served domains (medium-only) — honest coverage ceiling',
     },
+    role_match,
     honest_notes,
   };
 }

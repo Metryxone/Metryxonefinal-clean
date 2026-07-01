@@ -172,30 +172,47 @@ async function seedRuntimeRoleDna(pool: Pool): Promise<AdaptiveAssessmentSeedRes
 // Foundational (easier) + advanced (harder) variants for the 7 served domains.
 // Real, developmental multiple-choice items (best_option = correct index).
 // Language is developmental — never a hiring/suitability judgement.
+// Two variants per band per domain give the difficulty-affinity selection a real
+// 2-deep ladder to rotate through (not a single repeated item), so the SERVED
+// difficulty genuinely varies by level across attempts.
 type Variant = { dom: string; band: 'foundational' | 'advanced'; prompt: string; options: string[]; best: number };
 
 const DIFFICULTY_VARIANTS: Variant[] = [
   // COG — Cognitive / reasoning
   { dom: 'COG', band: 'foundational', prompt: 'A task takes 2 hours. You have 3 identical tasks to complete one after another. How long will they take in total?', options: ['6 hours', '5 hours', '3 hours', '2 hours'], best: 0 },
+  { dom: 'COG', band: 'foundational', prompt: 'A report has 40 pages and you have read 10. What fraction of the report is left to read?', options: ['Three quarters', 'One quarter', 'One half', 'One third'], best: 0 },
   { dom: 'COG', band: 'advanced', prompt: "A system's error rate doubles every hour. It was 0.5% at 09:00. Without intervention, the first hour it EXCEEDS 8% is:", options: ['14:00', '13:00', '12:00', '15:00'], best: 0 },
+  { dom: 'COG', band: 'advanced', prompt: 'Three signals point to a cause, but one of them is also fully explained by an unrelated event. The soundest inference is to:', options: ['Weight the two independent signals and discount the confounded one', 'Treat all three signals as equally strong evidence', 'Rely only on the most recent signal', 'Discard every signal and wait for certainty'], best: 0 },
   // COM — Communication
   { dom: 'COM', band: 'foundational', prompt: 'A teammate asks for a quick project update. The clearest first response is to:', options: ['Share the current status and the next step', 'Recount every detail from the past month', 'Tell them to check the tracker themselves', 'Postpone the conversation indefinitely'], best: 0 },
+  { dom: 'COM', band: 'foundational', prompt: 'You need to confirm a meeting time by message. The clearest wording is to:', options: ['State the exact day, time and time zone and ask them to confirm', 'Say "sometime this week works"', 'Assume they remember from last time', 'List every slot you have ever been free'], best: 0 },
   { dom: 'COM', band: 'advanced', prompt: 'You must convey complex technical findings to a non-technical executive who has five minutes. The most effective structure is to:', options: ['Lead with the decision needed and its impact, then offer detail on request', 'Walk through the methodology chronologically', 'Send the full report and read it aloud line by line', 'Open with technical caveats to manage expectations'], best: 0 },
+  { dom: 'COM', band: 'advanced', prompt: 'Two stakeholders read the same update and reach opposite conclusions. The most effective communication response is to:', options: ['Clarify the shared facts, name the differing assumptions, and realign on the decision', 'Repeat the original message unchanged', 'Side with whoever replied first', 'Escalate without addressing the misunderstanding'], best: 0 },
   // LEA — Leadership
   { dom: 'LEA', band: 'foundational', prompt: 'A new team member is unsure how to begin a task. A supportive first step is to:', options: ['Clarify the goal and ask what help they need', 'Reassign the task to someone faster', 'Wait to see whether they work it out alone', 'Quietly do the task yourself'], best: 0 },
+  { dom: 'LEA', band: 'foundational', prompt: 'A teammate did good work on a shared task. A constructive response is to:', options: ['Acknowledge their contribution specifically', 'Say nothing so they stay humble', 'Take credit to keep momentum', 'Point out only what could be better'], best: 0 },
   { dom: 'LEA', band: 'advanced', prompt: 'Two strong performers publicly disagree on direction, stalling delivery. The most constructive leadership move is to:', options: ['Facilitate a structured decision with shared criteria and a clear owner', 'Side with the more senior person to move quickly', 'Let them resolve it without any involvement', 'Escalate to your manager immediately'], best: 0 },
+  { dom: 'LEA', band: 'advanced', prompt: 'Your team consistently misses commitments despite long hours. The most effective leadership response is to:', options: ['Diagnose the systemic cause and adjust scope or process, not just effort', 'Ask everyone to work longer hours', 'Replace the lowest performer', 'Lower the visibility of the misses'], best: 0 },
   // EXE — Execution
   { dom: 'EXE', band: 'foundational', prompt: 'You have several tasks due today. A reliable way to start is to:', options: ['Order them by priority and deadline, then begin the top one', 'Do the easiest tasks first regardless of deadline', 'Work on whichever feels most interesting', 'Wait until you feel fully ready'], best: 0 },
+  { dom: 'EXE', band: 'foundational', prompt: 'Partway through a task you notice a small mistake. A reliable response is to:', options: ['Fix it now and continue', 'Ignore it and hope no one notices', 'Start the whole task over', 'Stop until someone tells you what to do'], best: 0 },
   { dom: 'EXE', band: 'advanced', prompt: 'Mid-sprint, a critical dependency slips by a week, threatening the deadline. The strongest execution response is to:', options: ['Re-scope to protect the core outcome and communicate the trade-offs early', 'Keep the original plan and hope to catch up', 'Quietly drop lower-priority items without telling stakeholders', 'Pause all work until the dependency is resolved'], best: 0 },
+  { dom: 'EXE', band: 'advanced', prompt: 'Two high-priority initiatives need the same limited resource this week. The strongest execution response is to:', options: ['Sequence them by impact and deadline, and set explicit expectations with both owners', 'Split the resource evenly and hope both finish', 'Do whichever owner asks most persistently', 'Delay both until more resource appears'], best: 0 },
   // ADP — Adaptability
   { dom: 'ADP', band: 'foundational', prompt: 'Your usual tool is unavailable just before a deadline. A practical response is to:', options: ['Find a workable alternative to keep making progress', 'Stop work until the tool comes back', 'Miss the deadline and cite the outage', 'Wait for someone else to fix it'], best: 0 },
+  { dom: 'ADP', band: 'foundational', prompt: 'A meeting is moved earlier at short notice. A practical response is to:', options: ['Adjust your plan and prepare the essentials for the new time', 'Skip it because the plan changed', 'Attend unprepared and complain about the change', 'Insist on keeping the original time'], best: 0 },
   { dom: 'ADP', band: 'advanced', prompt: 'New market data you helped gather reverses your team’s strategy. The most adaptive response is to:', options: ['Integrate the new evidence and help reframe the plan around it', 'Defend the original plan you invested in', 'Wait for leadership to dictate every change', 'Treat the new data as a one-off exception'], best: 0 },
+  { dom: 'ADP', band: 'advanced', prompt: 'A reorganisation changes how your work is measured mid-quarter. The most adaptive response is to:', options: ['Clarify the new measures and re-prioritise your work to fit them', 'Keep optimising for the old measures', 'Wait until the quarter ends to change anything', 'Assume the change will be reversed'], best: 0 },
   // TEC — Technical
   { dom: 'TEC', band: 'foundational', prompt: 'Before sharing your work for others to use, a good basic practice is to:', options: ['Test that it works and note how to run it', 'Share it immediately and fix issues later', 'Keep the steps only in your head', 'Remove documentation to save time'], best: 0 },
+  { dom: 'TEC', band: 'foundational', prompt: 'You are about to make a change to a shared file. A safe basic practice is to:', options: ['Keep a copy of the working version before changing it', 'Change it directly with no backup', 'Delete the old version first', 'Rename it and hope you remember why'], best: 0 },
   { dom: 'TEC', band: 'advanced', prompt: 'A recurring production issue has an unclear root cause. The most rigorous technical approach is to:', options: ['Form a hypothesis, reproduce it, then isolate the cause with evidence', 'Re-apply the fix that worked last time and move on', 'Restart the system each time it fails', 'Add broad error suppression to hide the symptom'], best: 0 },
+  { dom: 'TEC', band: 'advanced', prompt: 'A change passes local tests but fails intermittently in production. The most rigorous next step is to:', options: ['Reproduce under production-like conditions and add targeted logging to narrow the variance', 'Ship it again unchanged and watch', 'Roll back permanently and abandon the change', 'Assume the environment is at fault and stop investigating'], best: 0 },
   // EIQ — Emotional intelligence
   { dom: 'EIQ', band: 'foundational', prompt: 'A colleague seems frustrated during a meeting. A considerate response is to:', options: ['Acknowledge it and ask if they would like to share', 'Ignore it to keep things moving', 'Point it out publicly', 'Assume they are upset with you'], best: 0 },
+  { dom: 'EIQ', band: 'foundational', prompt: 'A teammate shares that they are feeling overwhelmed. A considerate first response is to:', options: ['Listen and ask what would help', 'Tell them everyone is busy', 'Change the subject quickly', 'Suggest they simply work harder'], best: 0 },
   { dom: 'EIQ', band: 'advanced', prompt: 'You receive sharp, partly unfair criticism in front of peers. The most emotionally intelligent response is to:', options: ['Stay composed, acknowledge any valid point, and continue the discussion later', 'Defend yourself forcefully on the spot', 'Withdraw and disengage for the rest of the meeting', 'Match the tone to stand your ground'], best: 0 },
+  { dom: 'EIQ', band: 'advanced', prompt: 'You notice rising tension between two colleagues affecting the wider team’s mood. The most emotionally intelligent response is to:', options: ['Address it discreetly with each, acknowledging feelings while refocusing on shared goals', 'Announce the conflict openly to clear the air', 'Ignore it until someone complains formally', 'Take the side you personally agree with'], best: 0 },
 ];
 
 async function seedDifficulty(pool: Pool): Promise<AdaptiveAssessmentSeedResult['difficulty']> {
@@ -215,14 +232,20 @@ async function seedDifficulty(pool: Pool): Promise<AdaptiveAssessmentSeedResult[
   await pool.query(`ALTER TABLE competency_question_templates ALTER COLUMN difficulty_band SET DEFAULT 'intermediate'`).catch(() => {});
 
   // 3. Author harder/easier variants so SERVED difficulty can shift by level.
+  //    Multiple variants per (domain, band) are auto-numbered so template keys
+  //    and origin ids stay unique and idempotent across re-runs.
+  const seqByDomBand = new Map<string, number>();
   for (const v of DIFFICULTY_VARIANTS) {
-    const key = `adaptive_${v.dom}_${v.band}_v1`;
-    const originId = `${v.dom}_${v.band === 'foundational' ? 'F' : 'A'}1`;
+    const dbKey = `${v.dom}_${v.band}`;
+    const seq = (seqByDomBand.get(dbKey) ?? 0) + 1;
+    seqByDomBand.set(dbKey, seq);
+    const key = `adaptive_${v.dom}_${v.band}_v${seq}`;
+    const originId = `${v.dom}_${v.band === 'foundational' ? 'F' : 'A'}${seq}`;
     const body = JSON.stringify({ prompt: v.prompt, options: v.options, best_option: v.best, origin_id: originId });
     const r = await pool.query(
       `INSERT INTO competency_question_templates
          (template_key, competency_code, question_type, template_body, difficulty_band, status, source, notes)
-       VALUES ($1, $2, 'multiple_choice', $3::jsonb, $4, 'approved', 'seed', 'Adaptive difficulty variant (Task #71)')
+       VALUES ($1, $2, 'multiple_choice', $3::jsonb, $4, 'approved', 'seed', 'Adaptive difficulty variant (harder/easier per served domain)')
        ON CONFLICT (template_key) DO NOTHING`,
       [key, v.dom, body, v.band],
     );

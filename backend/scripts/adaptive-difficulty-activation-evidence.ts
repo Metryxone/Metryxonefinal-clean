@@ -135,7 +135,7 @@ async function main() {
   const servedBands = Array.from(new Set(
     plan.per_domain.flatMap((d) => d.by_band.map((b) => b.band)),
   )).sort();
-  lines.push(`Served domains (COG/COM/LEA/EXE/ADP/TEC/EIQ) hold bands \`[${servedBands.join(', ')}]\` (unified 3-tier ladder). Each domain now carries a foundational + advanced variant alongside its intermediate stock, so the selection bonus has rows to discriminate between.`);
+  lines.push(`Served domains (COG/COM/LEA/EXE/ADP/TEC/EIQ) hold bands \`[${servedBands.join(', ')}]\` (unified 3-tier ladder). Each domain now carries 2 foundational + 2 advanced variants alongside its intermediate stock, so the selection bonus has a 2-deep-per-band ladder to discriminate and rotate through.`);
   lines.push('');
   // Show the bonus a junior (target foundational) vs a director (target advanced)
   // applies to the SAME candidate rows — opposite ends of the ladder are favoured.

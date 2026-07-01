@@ -17,9 +17,13 @@ and new GET `/api/competency/assessment/difficulty-plan`. OFF = byte-identical i
   ⚠️ A SEPARATE adaptive runtime FSM (`adaptive-assessment-engine.ts` + `assessment-runtime-orchestrator.ts`)
   keeps its OWN local `DifficultyBand='easy'|'medium'|'hard'` — its `bp.difficulty_band` comes from the blueprint
   generator, NOT from `competency_question_templates`, so the bank normalization does NOT touch it. Don't unify it.
-- Each served domain (COG/COM/LEA/EXE/ADP/TEC/EIQ) now carries a foundational + advanced variant alongside its
-  intermediate stock → **SERVED difficulty CAN shift by level**. Pools are shallow (1 harder/1 easier per domain):
-  enough to bias selection, not a deep per-domain ladder (honest residual; D5 = PASS ~88, not 100).
+- Each served domain (COG/COM/LEA/EXE/ADP/TEC/EIQ) now carries **2 foundational + 2 advanced** variants alongside
+  its intermediate stock → **SERVED difficulty CAN shift by level**. The 2-deep-per-band ladder lets the
+  difficulty-affinity selection rotate (not repeat one item) and fully saturate the served mix with the target band
+  (e.g. total=21: junior → 14 foundational / 0 advanced, director → 14 advanced / 0 foundational). Authored in
+  `adaptive-assessment-seed.ts` `DIFFICULTY_VARIANTS` (auto-numbered `_v{seq}` keys / `{F|A}{seq}` origin ids,
+  `ON CONFLICT(template_key) DO NOTHING` so re-run inserts only missing). Still not a fully deep item pool but the
+  shallow-single-item residual is closed; evidence D5 = 10/10 PASS, all coverage gaps `no`.
 - Senior level-aware bands == the legacy fixed ladder (85/72/58/45) BY DESIGN, so flag-ON for a senior subject
   is byte-identical to flag-OFF. Junior lowers the bar, director raises it (monotonic).
 

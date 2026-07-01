@@ -1,6 +1,6 @@
 # Adaptive Assessment Activation — Evidence
 
-Engine version: `1.0.0` · generated 2026-06-24T01:06:20.869Z
+Engine version: `1.0.0` · generated 2026-07-01T15:12:46.190Z
 
 > Read-only. Pure engine + `buildDifficultyPlan` over the live bank. No writes, no DDL.
 
@@ -36,18 +36,18 @@ Same weighted score (80) classified per level:
 
 ## 3. Live bank coverage (honest ceiling)
 
-Bank table present: `true` · approved total: `34` · distinct bands: `[advanced, foundational, intermediate]`
+Bank table present: `true` · approved total: `48` · distinct bands: `[advanced, foundational, intermediate]`
 Served difficulty can shift by level: **`true`** — bank holds multiple difficulty bands across served domains
 
 | Domain | Approved | Bands (band×count) | Target available | Coverage gap |
 |---|---|---|---|---|
-| COG | 6 | foundational×1, intermediate×4, advanced×1 | yes | no |
-| COM | 5 | foundational×1, intermediate×3, advanced×1 | yes | no |
-| LEA | 5 | foundational×1, intermediate×3, advanced×1 | yes | no |
-| EXE | 4 | foundational×1, intermediate×2, advanced×1 | yes | no |
-| ADP | 5 | foundational×1, intermediate×3, advanced×1 | yes | no |
-| TEC | 4 | foundational×1, intermediate×2, advanced×1 | yes | no |
-| EIQ | 5 | foundational×1, intermediate×3, advanced×1 | yes | no |
+| COG | 8 | foundational×2, intermediate×4, advanced×2 | yes | no |
+| COM | 7 | foundational×2, intermediate×3, advanced×2 | yes | no |
+| LEA | 7 | foundational×2, intermediate×3, advanced×2 | yes | no |
+| EXE | 6 | foundational×2, intermediate×2, advanced×2 | yes | no |
+| ADP | 7 | foundational×2, intermediate×3, advanced×2 | yes | no |
+| TEC | 6 | foundational×2, intermediate×2, advanced×2 | yes | no |
+| EIQ | 7 | foundational×2, intermediate×3, advanced×2 | yes | no |
 
 ### Honest notes
 - Role-DNA anchor not used (no role supplied) — falling back to career-stage anchor.
@@ -55,7 +55,7 @@ Served difficulty can shift by level: **`true`** — bank holds multiple difficu
 
 ## 4. Difficulty-affinity selection bias (live, on the varied served bank)
 
-Served domains (COG/COM/LEA/EXE/ADP/TEC/EIQ) hold bands `[advanced, foundational, intermediate]` (unified 3-tier ladder). Each domain now carries a foundational + advanced variant alongside its intermediate stock, so the selection bonus has rows to discriminate between.
+Served domains (COG/COM/LEA/EXE/ADP/TEC/EIQ) hold bands `[advanced, foundational, intermediate]` (unified 3-tier ladder). Each domain now carries 2 foundational + 2 advanced variants alongside its intermediate stock, so the selection bonus has a 2-deep-per-band ladder to discriminate and rotate through.
 
 | Served band | Junior bonus (target foundational) | Director bonus (target advanced) |
 |---|---|---|

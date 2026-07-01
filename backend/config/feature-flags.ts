@@ -259,6 +259,18 @@ export const FEATURE_FLAGS = {
    *  `ai_recommendation_report_orchestration:false`, byte-identical legacy behaviour incl. schema.
    *  Env: `FF_AI_RECOMMENDATION_REPORT_ORCHESTRATION`. */
   aiRecommendationReportOrchestration: false,
+  /** CAPADEX 3.0 — Program 2 · Phase 2.5 Operational Readiness (read-only composer auditing every EXISTING
+   *  observability / monitoring / logging / metrics / alerting / AI-ops / assessment-ops / report-ops /
+   *  disaster-recovery capability into ONE coherent Operational Readiness layer — "can CAPADEX be operated,
+   *  monitored, supported and recovered as an enterprise platform?"). When ON, a PURE read-only composer at
+   *  `/api/admin/operational-readiness/*` (super-admin) serves the canonical operational model + measured
+   *  coverage + an Operational Readiness Certification with 11 SEPARATE never-composited scores + a
+   *  severity-classified Operational Gap Register over EXISTING substrate (health-aggregator,
+   *  runtime-intelligence, intelligence-observability-engine, event bus, global-monitoring). Enhancement-only,
+   *  reuse-before-build, NO new monitoring system, ZERO DDL, no migration. Engines are read by existence /
+   *  persisted output — NEVER invoked. Flag OFF → data routes 503, public-config `operational_readiness:false`,
+   *  byte-identical legacy behaviour incl. schema. Env: `FF_OPERATIONAL_READINESS`. */
+  operationalReadiness: false,
   /** MX-103X — Live Employer Ecosystem Activation (read-only audit + certification console over the EXISTING
    *  employer hiring funnel). When ON, a PURE read-only composer at `/api/admin/employer-ecosystem/*`
    *  (super-admin) inventories the nine funnel stages — onboarding · create-job · role-DNA · competencies ·
@@ -642,21 +654,6 @@ export const FEATURE_FLAGS = {
    *  before any auth/DB touch → byte-identical legacy (zero new tables — it owns none). Super-admin
    *  gated. Human approval mandatory. Env: `FF_PRODUCT_TRACEABILITY_CERTIFICATION`. */
   productTraceabilityCertification: false,
-  /** CAPADEX 3.0 — Program 2 · Phase 2.5 Observability, Monitoring & Operational Readiness.
-   *  Read-only composer + canonical operational-readiness registry over the EXISTING
-   *  observability substrate (health-aggregator, runtime-intelligence, intelligence-observability,
-   *  adaptive-event-bus, aiClient health, redaction, requestId, capadex-safety-breaker, report/email).
-   *  Certifies 10 SEPARATE operational axes (observability · monitoring · logging · metrics ·
-   *  alerting · ai_operations · assessment_operations · report_operations · disaster_recovery ·
-   *  operational_readiness) that are NEVER combined; verdict is a SEPARATE structural axis.
-   *  Enhancement-only / measure-before-enhance / reuse-before-build / NO new monitoring system /
-   *  no V2 / no duplicate logic. Composes evidence by file-existence + persisted-output/table —
-   *  engines are NEVER invoked. Coverage⟂Confidence⟂Adoption never composited; null≠0; never
-   *  fabricated. Flag OFF → every data route 503 before any auth/DB touch → byte-identical legacy
-   *  (zero new tables — it owns none except an append-only snapshot created only on explicit POST
-   *  capture when ON). Super-admin gated; `/api/operational-readiness/enabled` is an ungated probe.
-   *  Human approval mandatory. Env: `FF_OPERATIONAL_READINESS`. */
-  operationalReadiness: false,
   /** CMP-M2 — Data-retention ENFORCEMENT scheduler. Default OFF; byte-identical incl. schema
    *  (retention_execution_log created only when ON). Enforces SAFE categories only: expire stale
    *  consents (reversible status change), purge expired/used MFA codes (transient tokens), stamp
@@ -2274,6 +2271,11 @@ export function isAiRecommendationReportOrchestrationEnabled(): boolean {
   return isFlagEnabled('aiRecommendationReportOrchestration');
 }
 
+/** CAPADEX 3.0 — Program 2 · Phase 2.5 Operational Readiness master switch. */
+export function isOperationalReadinessEnabled(): boolean {
+  return isFlagEnabled('operationalReadiness');
+}
+
 export function isCustomerJourneyCompletionEnabled(): boolean {
   return isFlagEnabled('customerJourneyCompletion');
 }
@@ -2950,9 +2952,6 @@ export function isEnterpriseIntelligenceCertificationEnabled(): boolean {
 }
 export function isProductTraceabilityCertificationEnabled(): boolean {
   return isFlagEnabled('productTraceabilityCertification');
-}
-export function isOperationalReadinessEnabled(): boolean {
-  return isFlagEnabled('operationalReadiness');
 }
 export function isRetentionEnforcementEnabled(): boolean {
   return isFlagEnabled('retentionEnforcement');

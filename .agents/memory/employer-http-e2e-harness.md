@@ -34,3 +34,11 @@ path from a `tsx` script (not direct DB writes like `e2e-employer-lifecycle.ts`)
 **Why:** the recording fn was unit-tested directly against the DB, but the authenticated
 session→CSRF→PUT/bulk-move→snapshot→record chain was never run e2e. Harness:
 `backend/scripts/task253-hiring-outcome-e2e.ts` (self-cleaning, @example.com / e2e-prefixed).
+
+## Now a registered validation step
+The harness is registered as the `hiring-outcome-e2e` validation command (`cd backend &&
+npx tsx scripts/task253-hiring-outcome-e2e.ts`) so a refactor that silently breaks the
+fire-and-forget recording path is caught automatically. **It needs the Backend API workflow
+live on :8080** — the run drives the real server; if the workflow is down the harness fails
+fast on ECONNREFUSED (that IS the honest fail). Keep the harness self-cleaning or repeated
+validation runs would leak throwaway rows into cert counts.

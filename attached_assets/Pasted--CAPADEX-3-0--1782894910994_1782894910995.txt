@@ -1,0 +1,551 @@
+# ==============================================================================
+#
+# CAPADEX 3.0
+#
+# 99% ENTERPRISE LAUNCH PROGRAM
+#
+# PROGRAM 3
+#
+# PHASE 3.3
+#
+# ENTERPRISE ASSESSMENT BUILDER
+#
+# AUTHORING PLATFORM
+#
+# ==============================================================================
+#
+# EXECUTION MODE
+#
+# IMPLEMENTATION
+#
+# Repository First
+#
+# Product Blueprint First
+#
+# Enhancement Only
+#
+# Search Before Modify
+#
+# Reuse Before Build
+#
+# Preserve Existing Architecture
+#
+# No Duplicate Assessment Builders
+#
+# No Breaking Changes
+#
+# Human Approval Required
+#
+# ==============================================================================
+#
+# PRECONDITION
+#
+# Program 3
+#
+# Phase 3.2
+#
+# Enterprise Question Management Platform
+#
+# MUST be COMPLETE.
+#
+# ==============================================================================
+#
+# MISSION
+#
+# Implement ONE Enterprise Assessment Builder.
+#
+# The Assessment Builder is responsible for
+# designing,
+# composing,
+# configuring,
+# validating,
+# versioning,
+# approving,
+# and publishing assessments.
+#
+# It does NOT deliver assessments.
+#
+# It does NOT score assessments.
+#
+# It does NOT perform psychometric analysis.
+#
+# ==============================================================================
+#
+# MANDATORY ENHANCEMENT CONTRACT
+#
+# Repository First.
+#
+# Search before modify.
+#
+# Reuse before build.
+#
+# Enhance existing implementation.
+#
+# Preserve APIs.
+#
+# Preserve Database.
+#
+# Preserve Frontend Compatibility.
+#
+# No duplicate builders.
+#
+# Repository is the source of truth.
+#
+# ==============================================================================
+#
+# SEARCH ENTIRE REPOSITORY
+#
+# Assessment Services
+#
+# Assessment APIs
+#
+# Question Platform
+#
+# Frontend
+#
+# Feature Flags
+#
+# Assessment Reports
+#
+# Administration
+#
+# Existing Builder Components
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# ASSESSMENT DESIGNER
+#
+# Create Assessment
+#
+# Edit Assessment
+#
+# Clone Assessment
+#
+# Version Assessment
+#
+# Archive Assessment
+#
+# Restore Assessment
+#
+# Publish Assessment
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# ASSESSMENT STRUCTURE
+#
+# Sections
+#
+# Pages
+#
+# Groups
+#
+# Categories
+#
+# Domains
+#
+# Sub Domains
+#
+# Competencies
+#
+# Behaviours
+#
+# Skills
+#
+# Learning Objectives
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# QUESTION COMPOSITION
+#
+# Add Questions
+#
+# Remove Questions
+#
+# Reorder Questions
+#
+# Question Pools
+#
+# Random Question Pools
+#
+# Mandatory Questions
+#
+# Optional Questions
+#
+# Section Rules
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# ASSESSMENT BLUEPRINTS
+#
+# Blueprint Templates
+#
+# Competency Distribution
+#
+# Behaviour Distribution
+#
+# Domain Distribution
+#
+# Question Mix
+#
+# Difficulty Mix
+#
+# Time Allocation
+#
+# Marks Distribution
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# ASSESSMENT RULES
+#
+# Passing Rules
+#
+# Completion Rules
+#
+# Eligibility Rules
+#
+# Navigation Rules
+#
+# Branching Rules
+#
+# Adaptive Placeholders
+#
+# Mandatory Sections
+#
+# Optional Sections
+#
+# Time Rules
+#
+# Attempt Rules
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# CONFIGURATION
+#
+# Languages
+#
+# Instructions
+#
+# Welcome Screen
+#
+# Completion Screen
+#
+# Branding
+#
+# Logos
+#
+# Themes
+#
+# Accessibility Options
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# VERSION MANAGEMENT
+#
+# Major Version
+#
+# Minor Version
+#
+# Draft Version
+#
+# Compare Versions
+#
+# Rollback
+#
+# Clone
+#
+# Audit History
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# VALIDATION
+#
+# Missing Questions
+#
+# Empty Sections
+#
+# Duplicate Questions
+#
+# Blueprint Validation
+#
+# Rule Validation
+#
+# Configuration Validation
+#
+# Publishing Validation
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# APPROVAL WORKFLOW
+#
+# Draft
+#
+# Review
+#
+# Approved
+#
+# Published
+#
+# Active
+#
+# Deprecated
+#
+# Archived
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# REUSABLE TEMPLATES
+#
+# School Assessments
+#
+# JEE
+#
+# NEET
+#
+# CUET
+#
+# Competitive Exams
+#
+# Freshers
+#
+# Job Seekers
+#
+# Professionals
+#
+# Leadership
+#
+# Enterprise
+#
+# Organization
+#
+# Custom Templates
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# FRONTEND
+#
+# Assessment Builder
+#
+# Drag and Drop Builder
+#
+# Section Editor
+#
+# Blueprint Editor
+#
+# Rule Editor
+#
+# Validation Panel
+#
+# Preview Mode
+#
+# Version History
+#
+# Approval Workflow
+#
+# Publishing Screen
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# APIs
+#
+# Assessment CRUD
+#
+# Builder APIs
+#
+# Blueprint APIs
+#
+# Version APIs
+#
+# Validation APIs
+#
+# Publishing APIs
+#
+# ==============================================================================
+#
+# VERIFY
+#
+# Every Assessment maps to
+#
+# Product Blueprint
+#
+# Personas
+#
+# Lifecycle
+#
+# Customer Journey
+#
+# Question Library
+#
+# Competencies
+#
+# Behaviours
+#
+# Skills
+#
+# Outcomes
+#
+# KPIs
+#
+# ==============================================================================
+#
+# VERIFY
+#
+# Existing APIs remain compatible.
+#
+# Existing UI remains compatible.
+#
+# Existing Database remains compatible.
+#
+# ==============================================================================
+#
+# DO NOT IMPLEMENT
+#
+# Assessment Delivery
+#
+# Candidate Runtime
+#
+# Timers
+#
+# Resume Logic
+#
+# Proctoring
+#
+# Scoring
+#
+# Item Analysis
+#
+# Norm Engine
+#
+# Standardization
+#
+# Benchmark Engine
+#
+# AI Interpretation
+#
+# Recommendation Engine
+#
+# Reports
+#
+# Analytics
+#
+# ==============================================================================
+#
+# PRODUCE
+#
+# 01 Executive Summary
+#
+# 02 Assessment Builder Report
+#
+# 03 Blueprint Framework
+#
+# 04 Assessment Structure Report
+#
+# 05 Configuration Report
+#
+# 06 Validation Report
+#
+# 07 Workflow Report
+#
+# 08 Version Management Report
+#
+# 09 API Report
+#
+# 10 Frontend Report
+#
+# 11 Repository Change Summary
+#
+# 12 Remaining Gaps
+#
+# 13 Phase 3.3 Certification
+#
+# ==============================================================================
+#
+# ACCEPTANCE CRITERIA
+#
+# ONE Enterprise Assessment Builder.
+#
+# ONE Blueprint Framework.
+#
+# ONE Authoring Experience.
+#
+# ONE Validation Framework.
+#
+# ONE Version Management Model.
+#
+# ONE Publishing Workflow.
+#
+# Repository evidence required.
+#
+# No duplicate implementations.
+#
+# ==============================================================================
+#
+# FINAL CERTIFICATION
+#
+# Certify independently:
+#
+# Assessment Builder
+#
+# Blueprint Framework
+#
+# Validation
+#
+# Version Management
+#
+# Publishing Workflow
+#
+# APIs
+#
+# Frontend
+#
+# Never combine these scores.
+#
+# Finally answer:
+#
+# Is the Enterprise Assessment Builder
+# complete and ready
+# for Program 3 Phase 3.4
+# Assessment Delivery Engine?
+#
+# If not,
+#
+# identify every remaining
+#
+# Launch Critical
+#
+# High
+#
+# Medium
+#
+# Low
+#
+# Future gap.
+#
+# STOP.
+#
+# Human Approval Required.
+#
+# ==============================================================================

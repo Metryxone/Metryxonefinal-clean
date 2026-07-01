@@ -115,6 +115,10 @@ args = "adaptive-difficulty-seed"
 task = "workflow.run"
 args = "aint-scope-isolation"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "adaptive-difficulty-served"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -389,6 +393,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx scripts/task383-assessment-intelligence-scope-isolation.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "adaptive-difficulty-served"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx scripts/task432-adaptive-difficulty-served-e2e.ts"
 
 [workflows.workflow.metadata]
 isValidation = true

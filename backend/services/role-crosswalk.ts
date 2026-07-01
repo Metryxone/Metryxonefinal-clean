@@ -149,6 +149,18 @@ const TITLE_SYNONYMS: Record<string, string[]> = {
   'network engineer': ['computer network architects'],
   'database administrator': ['database administrators', 'database architects'],
   'database engineer': ['database architects'],
+  // "Business Analyst" has no single O*NET occupation of that exact name. Its
+  // closest canonical occupations ("Management Analysts" 13-1111, "Business
+  // Intelligence Analysts" 15-2051.01, "Computer Systems Analysts" 15-1211) all
+  // carry NATIVE O*NET ratings, so the O*NET→Role-DNA weight bridge (which only
+  // inherits ESTIMATED links, source='onet_derived') can never surface an
+  // estimated profile through them. The O*NET catch-all "Business Operations
+  // Specialists, All Other" (13-1199.00) is the defensible bucket for a generic
+  // Business Analyst not elsewhere classified, and — being unrated by O*NET — it
+  // carries genuinely inherited (derived) competency weights. Mapping here lets
+  // the "Estimated / inherited" profile light up honestly on the Ontology
+  // Explorer / Career Mobility pages instead of the role staying unmatched.
+  'business analyst': ['business operations specialists, all other'],
 };
 
 function sourceFromCode(code: string): RoleMatch['source'] {

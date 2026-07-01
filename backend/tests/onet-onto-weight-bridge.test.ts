@@ -29,6 +29,7 @@ import {
   bridgeOnetDerivedWeights,
   buildCompetencyMatcher,
 } from '../services/onet-onto-weight-bridge';
+import { resolveOntRole } from '../services/role-crosswalk';
 
 /**
  * Build a fully self-contained onto_* fixture (role + current DNA profile +
@@ -286,6 +287,67 @@ test('bridgeOnetDerivedWeights bridges across naming differences and reports gap
     assert.equal(typeof r.competenciesMatched, 'number');
     assert.equal(typeof r.competenciesUnmatched, 'number');
     assert.ok(Array.isArray(r.unmatchedCompetencies), 'unmatched competencies reported as an array');
+  } finally {
+    await client.query('ROLLBACK').catch(() => {});
+    client.release();
+    await pool.end();
+  }
+});
+
+// ── Layer B: "Business Analyst" curated crosswalk — resolves to an O*NET
+//    occupation that carries estimated (onet_derived) links so the estimated
+//    profile lights up instead of the role staying honestly unmatched ─────────
+
+test('Business Analyst resolves to a derived-link O*NET occupation and gets an estimated profile', async (t) => {
+  if (!process.env.DATABASE_URL) {
+    t.skip('no DATABASE_URL — skipping live-DB crosswalk test');
+    return;
+  }
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    // The onto Role-DNA role must exist for this to be meaningful; skip if the
+    // ontology seed isn't present in this DB.
+    const ba = await client.query(
+      `SELECT oro.id, p.id AS profile_id
+         FROM onto_roles oro
+         JOIN onto_dna_profiles p ON p.role_id = oro.id AND p.is_current = TRUE
+        WHERE oro.id = 'role_business_analyst' AND oro.deprecated = FALSE`);
+    if (!ba.rows.length) {
+      t.skip('no role_business_analyst onto role/profile in this DB');
+      return;
+    }
+    const profileId = ba.rows[0].profile_id;
+
+    // The crosswalk must resolve "Business Analyst" to at least one O*NET
+    // occupation that carries onet_derived (estimated) links — otherwise the
+    // bridge has nothing to inherit and the role stays unmatched.
+    const derivedRoleRows = await client.query<{ role_id: number }>(
+      `SELECT DISTINCT role_id FROM map_role_competency
+        WHERE source = 'onet_derived' AND is_active = TRUE`);
+    const derivedRoleIds = new Set<number>(derivedRoleRows.rows.map((r) => r.role_id));
+    const candidates = await resolveOntRole(client as unknown as Pool, 'Business Analyst');
+    const linkable = candidates.find((c) => derivedRoleIds.has(c.id));
+    if (!linkable) {
+      // The O*NET library may not be imported in this DB; that is an honest
+      // environment gap, not a crosswalk failure, so skip rather than fail.
+      t.skip('no O*NET occupation with derived links resolves for Business Analyst in this DB (library not imported?)');
+      return;
+    }
+    assert.ok(linkable.matchType === 'alias' || linkable.matchType === 'exact_title',
+      'Business Analyst resolves via the curated alias (not a fabricated fuzzy match)');
+
+    // Running the bridge must produce estimated (onet_derived) weight rows for
+    // the Business Analyst DNA profile — the "estimated skill profile" the role
+    // was previously missing.
+    const r = await bridgeOnetDerivedWeights(client as unknown as Pool);
+    assert.equal(r.ok, true);
+    const w = await client.query(
+      `SELECT COUNT(*)::int n FROM onto_role_weights
+        WHERE dna_profile_id = $1 AND source = 'onet_derived'`, [profileId]);
+    assert.ok(w.rows[0].n > 0, 'Business Analyst now carries estimated (inherited) weights');
   } finally {
     await client.query('ROLLBACK').catch(() => {});
     client.release();

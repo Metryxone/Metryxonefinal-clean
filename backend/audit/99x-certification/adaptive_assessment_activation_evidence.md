@@ -1,6 +1,6 @@
 # Adaptive Assessment Activation — Evidence
 
-Engine version: `1.0.0` · generated 2026-07-01T15:12:46.190Z
+Engine version: `1.0.0` · generated 2026-07-01T16:49:39.687Z
 
 > Read-only. Pure engine + `buildDifficultyPlan` over the live bank. No writes, no DDL.
 
@@ -63,6 +63,28 @@ Served domains (COG/COM/LEA/EXE/ADP/TEC/EIQ) hold bands `[advanced, foundational
 | foundational (rank 1) | 0.6 | 0 |
 | intermediate (rank 2) | 0.3 | 0.3 |
 
+## 5. Role-title crosswalk integrity (guards silent orphan drift)
+
+`ROLE_TITLE_ALIASES` maps 91 free-text titles onto 15 curated `onto_roles` ids.
+
+| Canonical role id | Aliases | Runtime-weight rows | Resolves |
+|---|---|---|---|
+| `role_be_eng` | 7 | 7 | ✅ yes |
+| `role_business_analyst` | 4 | 6 | ✅ yes |
+| `role_credit_analyst` | 5 | 7 | ✅ yes |
+| `role_data_analyst` | 5 | 6 | ✅ yes |
+| `role_data_scientist` | 2 | 6 | ✅ yes |
+| `role_devops_eng` | 7 | 7 | ✅ yes |
+| `role_eng_manager` | 7 | 7 | ✅ yes |
+| `role_fe_eng` | 7 | 6 | ✅ yes |
+| `role_fullstack_eng` | 5 | 6 | ✅ yes |
+| `role_pm` | 6 | 16 | ✅ yes |
+| `role_project_manager` | 7 | 6 | ✅ yes |
+| `role_qa_eng` | 8 | 6 | ✅ yes |
+| `role_software_eng` | 9 | 6 | ✅ yes |
+| `role_sr_be_eng` | 4 | 7 | ✅ yes |
+| `role_sr_software_eng` | 8 | 7 | ✅ yes |
+
 ## Checks
 
 - ✅ PASS — proficiency anchor monotonic non-decreasing by level [55, 65, 75, 80, 85]
@@ -75,5 +97,6 @@ Served domains (COG/COM/LEA/EXE/ADP/TEC/EIQ) hold bands `[advanced, foundational
 - ✅ PASS — same served pool re-ranks oppositely by level (junior favours foundational, director favours advanced) — served difficulty genuinely shifts
 - ✅ PASS — band matcher discriminates on unified ladder (advanced→0.6 > intermediate→0.3 > foundational→0 for target rank 3)
 - ✅ PASS — unknown band → 0 bonus (never penalises an untagged row below a tagged one)
+- ✅ PASS — all 15 ROLE_TITLE_ALIASES canonical ids resolve to a curated role with >0 competency_runtime_weights rows (no silent orphan drift)
 
-**10/10 checks passed.**
+**11/11 checks passed.**

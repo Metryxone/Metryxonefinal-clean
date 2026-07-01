@@ -26,6 +26,7 @@ import {
   difficultyAffinityBonus,
   difficultyRank,
   buildDifficultyPlan,
+  ROLE_TITLE_ALIASES,
 } from '../services/adaptive-difficulty-activation';
 
 const LEVELS: SeniorityBand[] = ['junior', 'mid', 'senior', 'lead', 'director'];
@@ -168,6 +169,44 @@ async function main() {
   checks.push(assert(
     difficultyAffinityBonus('unknown_band', 3) === 0,
     `unknown band → 0 bonus (never penalises an untagged row below a tagged one)`,
+  ));
+
+  /* 5. ROLE_TITLE_ALIASES crosswalk integrity — every canonical id must resolve
+   *    to a real curated onto_roles row with >0 competency_runtime_weights rows.
+   *    A renamed/removed curated role id would leave an alias pointing at nothing
+   *    and silently revert to the generic stage anchor (weaker role-aware
+   *    difficulty, no error). This section fails loudly so drift is caught. */
+  lines.push('## 5. Role-title crosswalk integrity (guards silent orphan drift)');
+  lines.push('');
+  const canonicalIds = Array.from(new Set(Object.values(ROLE_TITLE_ALIASES).map((a) => a.canonical))).sort();
+  const aliasesByCanonical = new Map<string, number>();
+  for (const a of Object.values(ROLE_TITLE_ALIASES)) {
+    aliasesByCanonical.set(a.canonical, (aliasesByCanonical.get(a.canonical) ?? 0) + 1);
+  }
+  lines.push(`\`ROLE_TITLE_ALIASES\` maps ${Object.keys(ROLE_TITLE_ALIASES).length} free-text titles onto ${canonicalIds.length} curated \`onto_roles\` ids.`);
+  lines.push('');
+  lines.push('| Canonical role id | Aliases | Runtime-weight rows | Resolves |');
+  lines.push('|---|---|---|---|');
+  const orphaned: string[] = [];
+  for (const id of canonicalIds) {
+    const q = await pool.query<{ n: string }>(
+      `SELECT COUNT(*)::int AS n
+         FROM competency_runtime_weights crw
+         JOIN role_dna_profiles_v2 dp ON dp.id = crw.role_dna_id AND dp.is_active = true
+         JOIN onto_roles ro ON ro.id = dp.role_id
+        WHERE crw.expected_level IS NOT NULL AND lower(ro.id) = lower($1)`,
+      [id],
+    );
+    const n = Number(q.rows[0]?.n ?? 0);
+    if (n <= 0) orphaned.push(id);
+    lines.push(`| \`${id}\` | ${aliasesByCanonical.get(id) ?? 0} | ${n} | ${n > 0 ? '✅ yes' : '❌ ORPHANED'} |`);
+  }
+  lines.push('');
+  checks.push(assert(
+    orphaned.length === 0,
+    orphaned.length === 0
+      ? `all ${canonicalIds.length} ROLE_TITLE_ALIASES canonical ids resolve to a curated role with >0 competency_runtime_weights rows (no silent orphan drift)`
+      : `ROLE_TITLE_ALIASES has ${orphaned.length} ORPHANED canonical id(s) — renamed/removed curated role, would silently revert to the stage anchor: [${orphaned.join(', ')}]`,
   ));
 
   /* checks summary */

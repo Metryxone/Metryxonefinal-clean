@@ -119,6 +119,10 @@ args = "aint-scope-isolation"
 task = "workflow.run"
 args = "adaptive-difficulty-served"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "role-alias-integrity"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -404,6 +408,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx scripts/task432-adaptive-difficulty-served-e2e.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "role-alias-integrity"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx scripts/adaptive-difficulty-activation-evidence.ts"
 
 [workflows.workflow.metadata]
 isValidation = true

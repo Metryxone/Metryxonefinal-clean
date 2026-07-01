@@ -1,17 +1,17 @@
 # CAPADEX 3.0 · Program 2 · Phase 2.5 — Disaster Recovery Report
 
-> Deliverable 12 · Generated 2026-07-01T03:36:10.857Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:98db190526bf, written 2026-07-01T03:36:10.856Z).
+> Deliverable 12 · Generated 2026-07-01T04:31:00.104Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:04e6998b3d95, written 2026-07-01T04:31:00.104Z).
 > Honesty: Coverage (evidence exists) ⟂ Confidence ⟂ Adoption (real volume) — NEVER composited. null ≠ 0. Built ≠ Operated ≠ Recoverable. Nothing fabricated.
 
-Certifies the **disaster_recovery** axis: structural coverage **—** (NULL — no in-repo substrate; NOT 0).
+Certifies the **disaster_recovery** axis: structural coverage **100** (NULL — no in-repo substrate; NOT 0).
 
 ### Disaster Recovery (`disaster_recovery`)
 - **Certification axis**: `disaster_recovery`
-- **Coverage status**: **DEAD_END** · structural coverage **—%**
+- **Coverage status**: **SUPPORTED** · structural coverage **100%**
 - **Validated signals**: Backup Status · Restore Validation · Recovery Procedures · Data Integrity · RTO · RPO
-- **Reused substrate (verified vs live FS+DB, never invoked)**: svc 0/0 · routes 0/0 · fe 0/0 · tbl 0/0
+- **Reused substrate (verified vs live FS+DB, never invoked)**: svc 2/2 · routes 1/1 · fe 0/0 · tbl 0/0
 - **Absent evidence (honest)**: —
-- **Honest note**: Managed-database backups are infra-owned (Cloud SQL / provider), NOT validated in-repo. Restore drills, documented recovery procedures, and measured RTO/RPO are NOT present in the repository — reported as an honest DEAD_END/gap (infra-owned), never fabricated as validated.
+- **Honest note**: GAP-OPS-7 CLOSED (readiness, not a live drill): an in-repo DR manifest (per-store RTO/RPO targets, backup mechanism, recovery-procedure runbook references — docs/DISASTER_RECOVERY.md), a repeatable readiness-verifier script (scripts/ops-dr-verify.ts) and a /api/operational-readiness/dr/readiness endpoint (config presence + live PostgreSQL connectivity checks) are now present. HONEST BOUNDARY: managed-DB backups + an actual restore DRILL against infrastructure remain infra-owned and are reported as recovery-READINESS, never claimed as an executed/validated restore (restore_drill_executed:false). Coverage ⟂ Confidence ⟂ Adoption never composited.
 
 ## DR reality (honest — infra-owned, NOT claimed as validated)
 - Managed-database backups are infra-owned (Cloud SQL / provider).

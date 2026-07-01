@@ -1,6 +1,6 @@
 # CAPADEX 3.0 · Program 2 · Phase 2.5 — Assessment Operations Report
 
-> Deliverable 09 · Generated 2026-07-01T03:36:10.857Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:98db190526bf, written 2026-07-01T03:36:10.856Z).
+> Deliverable 09 · Generated 2026-07-01T04:31:00.104Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:04e6998b3d95, written 2026-07-01T04:31:00.104Z).
 > Honesty: Coverage (evidence exists) ⟂ Confidence ⟂ Adoption (real volume) — NEVER composited. null ≠ 0. Built ≠ Operated ≠ Recoverable. Nothing fabricated.
 
 Certifies the **assessment_operations** axis: structural coverage **100**.

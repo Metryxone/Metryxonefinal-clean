@@ -14,6 +14,28 @@ function getTransporter() {
   });
 }
 
+/**
+ * Ops 2.5 (flag operationalReadiness) — generic operational alert email sender.
+ * Reused by services/ops/alerting.ts to route alert-rule events over email.
+ * Returns false (never throws) so alert routing can degrade honestly.
+ */
+export async function sendOperationalAlertEmail(toEmail: string, subject: string, body: string): Promise<boolean> {
+  try {
+    const transporter = getTransporter();
+    const fromEmail = process.env.ZOHO_EMAIL || 'notifications@metryxone.com';
+    await transporter.sendMail({
+      from: `"MetryxOne Ops" <${fromEmail}>`,
+      to: toEmail,
+      subject,
+      text: body,
+    });
+    return true;
+  } catch (e: any) {
+    console.error('Failed to send operational alert email:', e?.message || e);
+    return false;
+  }
+}
+
 export async function sendMfaCode(toEmail: string, code: string, adminEmail: string): Promise<boolean> {
   try {
     const transporter = getTransporter();

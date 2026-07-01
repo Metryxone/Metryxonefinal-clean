@@ -216,7 +216,7 @@ import { seedRbac } from "./services/governance/rbac-seed";
 import { recordGovernanceAudit, recordFailedLogin } from "./services/governance/audit-engine";
 import { assertPasswordAcceptable } from "./lib/password-policy";
 import { logger } from "./lib/logger";
-import { isGovernanceRbacEnabled, isCareerLaunchpadEnabled } from "./config/feature-flags";
+import { isGovernanceRbacEnabled, isCareerLaunchpadEnabled, isOperationalReadinessEnabled } from "./config/feature-flags";
 import { logAudit as logPlatformAudit } from "./services/platform-audit";
 import {
   isCareerStage as isCareerStageMx302a,
@@ -5356,6 +5356,22 @@ ${context?.userName ? `- User name: ${context.userName}` : ""}
       pathRewrite: (path: string) => path.replace(/^\/api\/v1\/upload/, "") || "/",
       headers: UPLOAD_SERVICE_TOKEN ? { "x-upload-service-token": UPLOAD_SERVICE_TOKEN } : {},
       logLevel: "warn",
+      // Ops 2.5 (flag operationalReadiness) — propagate the correlation id to FastAPI so a
+      // request can be traced Node→FastAPI. Byte-identical OFF (no header added when OFF).
+      on: {
+        proxyReq: (proxyReq: any, req: any) => {
+          try {
+            if (!isOperationalReadinessEnabled()) return;
+            const rid = req.id || req.headers?.["x-request-id"];
+            if (rid) {
+              proxyReq.setHeader("x-request-id", String(rid));
+              proxyReq.setHeader("x-correlation-id", String(rid));
+            }
+          } catch {
+            /* header propagation must never break the proxy */
+          }
+        },
+      },
     } as any),
   );
 

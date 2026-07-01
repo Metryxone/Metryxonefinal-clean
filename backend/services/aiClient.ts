@@ -20,6 +20,7 @@
  */
 import OpenAI from 'openai';
 import { guardUserInput } from './ai-input-guard';
+import { recordAiTokenUsage } from './ops/ai-token-accounting';
 
 let cachedHealth: { ok: boolean; checkedAt: number; reason?: string } | null = null;
 const HEALTH_TTL_MS = 60_000;
@@ -110,6 +111,9 @@ export async function chatJSON(opts: { system: string; user: string; model?: str
     temperature: opts.temperature ?? 0.7,
     max_tokens: opts.max_tokens ?? 700,
   });
+  // Ops 2.5 (flag operationalReadiness): fire-and-forget AI token/cost accounting.
+  // No-op when the flag is OFF (byte-identical); never affects the returned value.
+  recordAiTokenUsage(opts.model || model, completion.usage as any, 'aiClient.chatJSON');
   const text = completion.choices?.[0]?.message?.content || '';
   const m = text.match(/\{[\s\S]*\}/);
   return JSON.parse(m ? m[0] : text);

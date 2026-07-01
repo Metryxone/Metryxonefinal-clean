@@ -1,21 +1,15 @@
 # CAPADEX 3.0 · Program 2 · Phase 2.5 — Operational Gap Register
 
-> Deliverable 14 · Generated 2026-07-01T03:36:10.857Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:98db190526bf, written 2026-07-01T03:36:10.856Z).
+> Deliverable 14 · Generated 2026-07-01T04:31:00.104Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:04e6998b3d95, written 2026-07-01T04:31:00.104Z).
 > Honesty: Coverage (evidence exists) ⟂ Confidence ⟂ Adoption (real volume) — NEVER composited. null ≠ 0. Built ≠ Operated ≠ Recoverable. Nothing fabricated.
 
-## Open gaps — **0 Launch-Critical · 0 High · 4 Medium · 2 Low · 1 Future**
+## Open gaps — **0 Launch-Critical · 0 High · 0 Medium · 0 Low · 0 Future**
 
 | ID | Severity | Axis | Title | Detail |
 |---|---|---|---|---|
-| GAP-OPS-1 | Medium | `metrics` | No metrics-export endpoint / APM pipeline | API throughput/error-rate counters, cache-hit ratio and a Prometheus/statsd export are absent. Latency/resource/AI/KPI signals ARE measured; the missing piece is external export/aggregation. Deferred (infra-owned). |
-| GAP-OPS-2 | Medium | `monitoring` | No durable queue / Dead-Letter-Queue for background jobs | The event bus is in-process fire-and-forget with no persisted retry/DLQ. Failed async work is not durably tracked. A durable queue + DLQ is a Medium operational enhancement for a future task. |
-| GAP-OPS-3 | Medium | `alerting` | No alert-rule store / notification routing | Failure conditions are detectable but alerts are client-derived from status, not pushed via a durable rule store + notification channel. Medium operational gap. |
-| GAP-OPS-4 | Medium | `ai_operations` | No AI cost / token accounting | AI latency/retry/health/provider/model are observable but per-request cost and token usage are not tracked. Medium gap; never fabricated as 0. |
-| GAP-OPS-5 | Low | `logging` | No cross-service correlation-ID propagation (Node→FastAPI) / distributed tracing | A per-request requestId exists on the Node service but is not propagated to the FastAPI upload service, and there is no distributed-tracing backend. Low/Medium gap. |
-| GAP-OPS-6 | Low | `observability` | No /version and no /metrics endpoint | Health + readiness exist; a build/version-info endpoint and a machine-readable metrics endpoint are absent. Low gap. |
-| GAP-OPS-7 | Future | `disaster_recovery` | Disaster-recovery validation is infra-owned, not validated in-repo | Managed-DB backups exist at the infra layer but restore drills, documented recovery procedures and measured RTO/RPO are not present in the repository. Future/infra gap — reported honestly, never claimed as validated. |
 
-## Resolved / reused mechanisms (6) — traceability that observability substrate EXISTS
+
+## Resolved / reused mechanisms (13) — traceability that observability substrate EXISTS
 
 | ID | Axis | Mechanism | Detail |
 |---|---|---|---|
@@ -25,5 +19,12 @@
 | RES-OPS-4 | `metrics` | `intelligence-observability-engine + anl_kpi_daily` | AI-runtime + orchestration-performance persistence + a KPI daily rollup already exist and are measured here. |
 | RES-OPS-5 | `ai_operations` | `aiClient.checkAIHealth + ai_runtime_monitoring` | External-AI health probe + AI-runtime persistence already exist and are composed here. |
 | RES-OPS-6 | `operational_readiness` | `capadex-safety-breaker + SuperAdminDashboard` | A circuit-breaker for external calls + a super-admin operational console already exist and are composed here. |
+| RES-OPS-7 | `metrics` | `ops/metrics-registry.ts + opsMetricsMiddleware + /metrics` | GAP-OPS-1 CLOSED: an in-process metrics registry (request counters + latency histograms + cache hit/miss) is recorded by opsMetricsMiddleware and exported as Prometheus text at /api/operational-readiness/metrics (+ JSON at /metrics.json). External APM aggregation stays an honest infra boundary. |
+| RES-OPS-8 | `monitoring` | `ops/durable-queue.ts (ops_job_queue + ops_job_dead_letter)` | GAP-OPS-2 CLOSED: a durable job queue with FOR UPDATE SKIP LOCKED claim, per-job attempt/retry/backoff, processing_ms timing, a Dead-Letter-Queue and a background worker. Stats + DLQ + enqueue + run endpoints under /queue/*. |
+| RES-OPS-9 | `alerting` | `ops/alerting.ts (ops_alert_rules + ops_alert_events) + email routing` | GAP-OPS-3 CLOSED: a durable alert-rule store (3 seeded defaults), a fired-event ledger, a signal evaluator, and notification routing (Zoho email + log). CRUD + evaluate endpoints under /alerts/*. |
+| RES-OPS-10 | `ai_operations` | `ops/ai-token-accounting.ts (ops_ai_token_usage) + aiClient hook` | GAP-OPS-4 CLOSED: per-request prompt/completion token + cost (per-1k pricing) recorded fire-and-forget from aiClient and summarised at /ai/token-usage. |
+| RES-OPS-11 | `logging` | `upload-proxy proxyReq correlation header + FastAPI correlation_id_mw` | GAP-OPS-5 CLOSED: the correlation id (req.id) is propagated Node→FastAPI (x-request-id/x-correlation-id, flag-gated) and echoed by the FastAPI service. An external distributed-tracing backend stays an honest infra boundary. |
+| RES-OPS-12 | `observability` | `/version + /metrics endpoints` | GAP-OPS-6 CLOSED: a build/version-info endpoint (/version) and a machine-readable metrics endpoint (/metrics) are now present (flag-gated). |
+| RES-OPS-13 | `disaster_recovery` | `config/disaster-recovery-manifest.ts + scripts/ops-dr-verify.ts + /dr/readiness` | GAP-OPS-7 CLOSED (readiness): an in-repo DR manifest (per-store RTO/RPO, backup mechanism, runbook refs), a readiness-verifier script and a /dr/readiness endpoint (config presence + live PostgreSQL connectivity). HONEST BOUNDARY: an actual restore DRILL + managed-DB backups remain infra-owned (restore_drill_executed:false) — recovery-READINESS, never a claimed executed restore. |
 
 _A reused mechanism means the observability substrate exists and is composed — NOT a claim of full adoption. Coverage ⟂ Adoption never composited._

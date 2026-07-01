@@ -125,6 +125,11 @@ import { requestId as _phase5RequestId, antiEnumDelay as _phase5AntiEnum } from 
 app.use(_phase5RequestId());
 app.use(_phase5AntiEnum(80));
 
+// Ops 2.5 (flag operationalReadiness) — HTTP throughput/error/latency metrics.
+// Byte-identical OFF: the middleware short-circuits with next() and records nothing.
+import { opsMetricsMiddleware as _opsMetrics } from './services/ops/metrics-registry.js';
+app.use(_opsMetrics());
+
 // Finding #6 — universal input-validation baseline (covers 100% of handlers).
 // Prototype-pollution + NUL-byte + structural-DoS guards on every request body
 // and query. Non-breaking for valid traffic; deep per-field schemas (lib/validate

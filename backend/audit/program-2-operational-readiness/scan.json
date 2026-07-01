@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-01T03:36:10.857Z",
+  "generated_at": "2026-07-01T04:31:00.104Z",
   "meta": {
     "phase": "CAPADEX 3.0 · Program 2 · Phase 2.5 — Observability, Monitoring & Operational Readiness",
     "flag": "operationalReadiness",
@@ -76,18 +76,20 @@
       ],
       "reuses": {
         "services": [
-          "services/aiClient.ts"
+          "services/aiClient.ts",
+          "services/ops/metrics-registry.ts"
         ],
         "routes": [
           "routes/health-aggregator.ts",
-          "index.ts"
+          "index.ts",
+          "routes/operational-readiness.ts"
         ],
         "frontend": [],
         "tables": [
           "health_snapshots"
         ]
       },
-      "note": "Health (/api/health), readiness (/api/health/ready) + a 6-domain aggregator exist. A dedicated /metrics export endpoint and a /version endpoint are NOT present — honest gaps, not fabricated."
+      "note": "Health (/api/health), readiness (/api/health/ready) + a 6-domain aggregator exist. GAP-OPS-6 CLOSED: /api/operational-readiness/version (build/node/env/commit/uptime) and /api/operational-readiness/metrics (Prometheus text exposition from the ops metrics registry) are now present (flag-gated)."
     },
     {
       "key": "monitoring_coverage",
@@ -131,13 +133,17 @@
       ],
       "reuses": {
         "services": [
-          "services/adaptive-event-bus.ts"
+          "services/adaptive-event-bus.ts",
+          "services/ops/durable-queue.ts"
         ],
-        "routes": [],
+        "routes": [
+          "routes/operational-readiness.ts"
+        ],
         "frontend": [],
         "tables": []
       },
-      "note": "An in-process fire-and-forget event bus exists. A durable queue, a Dead-Letter-Queue, and per-job retry/failure persistence are NOT present — honest gaps (a durable-queue/DLQ is a Medium operational gap, never fabricated)."
+      "adoptionTable": "ops_job_queue",
+      "note": "GAP-OPS-2 CLOSED: a durable job queue (ops_job_queue) with FOR UPDATE SKIP LOCKED claim, per-job attempt/retry/backoff, processing_ms timing, a Dead-Letter-Queue (ops_job_dead_letter) and a background worker are now present (flag-gated). Real job volume is a SEPARATE Adoption axis (honest-low/0 in dev, ops_* tables created lazily on first flag-ON write)."
     },
     {
       "key": "logging_traceability",
@@ -158,14 +164,15 @@
         ],
         "routes": [
           "index.ts",
-          "lib/redact.ts"
+          "lib/redact.ts",
+          "routes.ts"
         ],
         "frontend": [],
         "tables": [
           "admin_audit_logs"
         ]
       },
-      "note": "A levelled logger (debug/warn/error), a per-request requestId, redaction-at-write, and a redacted admin audit trail exist. Distributed trace-IDs propagated Node→FastAPI and a structured-log pipeline (APM) are NOT present — honest gaps."
+      "note": "A levelled logger (debug/warn/error), a per-request requestId, redaction-at-write, and a redacted admin audit trail exist. GAP-OPS-5 CLOSED: the correlation id is now propagated Node→FastAPI (upload proxy injects x-request-id/x-correlation-id, gated; FastAPI echoes it). A full external distributed-tracing backend (APM vendor) remains infra-owned — reported honestly, not fabricated."
     },
     {
       "key": "metrics_coverage",
@@ -182,9 +189,12 @@
       "reuses": {
         "services": [
           "services/runtime-intelligence.ts",
-          "services/intelligence-observability-engine.ts"
+          "services/intelligence-observability-engine.ts",
+          "services/ops/metrics-registry.ts"
         ],
-        "routes": [],
+        "routes": [
+          "routes/operational-readiness.ts"
+        ],
         "frontend": [],
         "tables": [
           "ai_runtime_monitoring",
@@ -193,7 +203,7 @@
         ]
       },
       "adoptionTable": "anl_kpi_daily",
-      "note": "DB latency, event-loop lag, process/OS memory + CPU, AI-runtime rows and a KPI daily rollup are MEASURED. A metrics-export endpoint (Prometheus/statsd) + API-throughput/error-rate counters + cache-hit ratio are NOT present — honest NULL (DEFERRED), never estimated."
+      "note": "DB latency, event-loop lag, process/OS memory + CPU, AI-runtime rows and a KPI daily rollup are MEASURED. GAP-OPS-1 CLOSED: an in-process metrics registry (counters + latency histograms) fed by opsMetricsMiddleware now records API-throughput/error-rate + cache hit/miss and exports them as Prometheus text at /api/operational-readiness/metrics. An external APM/aggregation backend remains infra-owned (honest boundary, not fabricated)."
     },
     {
       "key": "alerting",
@@ -210,15 +220,19 @@
       ],
       "reuses": {
         "services": [
-          "services/command-center/global-monitoring-engine.ts"
+          "services/command-center/global-monitoring-engine.ts",
+          "services/ops/alerting.ts",
+          "email.ts"
         ],
         "routes": [
-          "routes/health-aggregator.ts"
+          "routes/health-aggregator.ts",
+          "routes/operational-readiness.ts"
         ],
         "frontend": [],
         "tables": []
       },
-      "note": "Failure CONDITIONS are detectable (health domains report down/degraded; global-monitoring derives status). A durable alert-RULE store + notification routing (email/pager/webhook) are NOT present — alerts are client-derived from status, not pushed. Honest Medium gap."
+      "adoptionTable": "ops_alert_events",
+      "note": "GAP-OPS-3 CLOSED: a durable alert-RULE store (ops_alert_rules, seeded with 3 default rules) + a fired-event ledger (ops_alert_events) + a rule evaluator over live signals + notification routing (Zoho email via sendOperationalAlertEmail; log channel) are now present (flag-gated). Real fired-event volume is a SEPARATE Adoption axis (honest-low/0 in dev)."
     },
     {
       "key": "ai_operations",
@@ -238,16 +252,19 @@
       "reuses": {
         "services": [
           "services/aiClient.ts",
-          "services/intelligence-observability-engine.ts"
+          "services/intelligence-observability-engine.ts",
+          "services/ops/ai-token-accounting.ts"
         ],
-        "routes": [],
+        "routes": [
+          "routes/operational-readiness.ts"
+        ],
         "frontend": [],
         "tables": [
           "ai_runtime_monitoring"
         ]
       },
       "adoptionTable": "ai_runtime_monitoring",
-      "note": "AI health (checkAIHealth), provider/model, latency and retry behaviour are observable + persisted to ai_runtime_monitoring. Per-request COST and TOKEN accounting are NOT tracked — honest gap (never fabricated as 0)."
+      "note": "AI health (checkAIHealth), provider/model, latency and retry behaviour are observable + persisted to ai_runtime_monitoring. GAP-OPS-4 CLOSED: per-request TOKEN + COST accounting (prompt/completion tokens × per-1k pricing) is now recorded fire-and-forget from aiClient into ops_ai_token_usage and summarised at /api/operational-readiness/ai/token-usage. Real token volume is a SEPARATE Adoption axis (honest-low/0 in dev)."
     },
     {
       "key": "assessment_operations",
@@ -342,12 +359,17 @@
         "RPO"
       ],
       "reuses": {
-        "services": [],
-        "routes": [],
+        "services": [
+          "config/disaster-recovery-manifest.ts",
+          "scripts/ops-dr-verify.ts"
+        ],
+        "routes": [
+          "routes/operational-readiness.ts"
+        ],
         "frontend": [],
         "tables": []
       },
-      "note": "Managed-database backups are infra-owned (Cloud SQL / provider), NOT validated in-repo. Restore drills, documented recovery procedures, and measured RTO/RPO are NOT present in the repository — reported as an honest DEAD_END/gap (infra-owned), never fabricated as validated."
+      "note": "GAP-OPS-7 CLOSED (readiness, not a live drill): an in-repo DR manifest (per-store RTO/RPO targets, backup mechanism, recovery-procedure runbook references — docs/DISASTER_RECOVERY.md), a repeatable readiness-verifier script (scripts/ops-dr-verify.ts) and a /api/operational-readiness/dr/readiness endpoint (config presence + live PostgreSQL connectivity checks) are now present. HONEST BOUNDARY: managed-DB backups + an actual restore DRILL against infrastructure remain infra-owned and are reported as recovery-READINESS, never claimed as an executed/validated restore (restore_drill_executed:false). Coverage ⟂ Confidence ⟂ Adoption never composited."
     },
     {
       "key": "operational_dashboards",
@@ -379,11 +401,11 @@
   "decisions": [
     {
       "key": "no_new_monitoring_system",
-      "decision": "COMPOSE the existing observability substrate into ONE read-only operational-readiness view. NO parallel/duplicate monitoring engine, telemetry pipeline, or metadata store was created."
+      "decision": "COMPOSE the existing observability substrate into ONE read-only operational-readiness view. The gap-closure mechanisms (metrics registry, durable queue, alert store, token accounting, correlation-ID, DR manifest) are additive and flag-gated — NO parallel/duplicate monitoring engine or telemetry pipeline replaces the existing substrate."
     },
     {
-      "key": "measure_before_enhance",
-      "decision": "This phase MEASURES operational coverage and CLASSIFIES gaps. Deeper enhancements (DLQ, token/cost accounting, metrics export, alert-rule store, DR drills) are recorded as classified gaps for a future task — NOT built here, to preserve byte-identical-OFF and avoid business/infra change."
+      "key": "gaps_closed_additively",
+      "decision": "All 7 previously-classified operational gaps (GAP-OPS-1..7) are now CLOSED with REAL working mechanisms (metrics export, durable queue + DLQ, alert-rule store + notification routing, AI token/cost accounting, Node→FastAPI correlation-ID, /version + /metrics, DR manifest + readiness verifier). Every mechanism is additive and flag-gated behind operationalReadiness → flag OFF is byte-identical incl. schema (ops_* tables created lazily on first flag-ON write). Nothing fabricated: DR is recovery-READINESS not an executed restore drill; an external APM/tracing backend and managed-DB backups remain honest infra-owned boundaries."
     },
     {
       "key": "axes_never_composited",
@@ -391,7 +413,7 @@
     },
     {
       "key": "coverage_vs_adoption",
-      "decision": "Coverage (evidence exists) is reported separately from Adoption (real non-demo volume). Real operational volume is honest-low/0 in a dev environment — a usage axis, never a gap."
+      "decision": "Coverage (evidence exists) is reported separately from Adoption (real non-demo volume) and Confidence. Engineering closure of the 7 gaps is STRUCTURAL — real operational volume (jobs run, alerts fired, tokens spent, restore drills) is honest-low/0 in a dev environment — a usage/confidence axis, NEVER a gap and NEVER composited into coverage."
     }
   ],
   "coverage": [
@@ -411,13 +433,13 @@
       "status": "SUPPORTED",
       "evidence": {
         "services": {
-          "present": 1,
-          "total": 1,
+          "present": 2,
+          "total": 2,
           "absentList": []
         },
         "routes": {
-          "present": 2,
-          "total": 2,
+          "present": 3,
+          "total": 3,
           "absentList": []
         },
         "frontend": {
@@ -432,7 +454,7 @@
         }
       },
       "coverage_pct": 100,
-      "note": "Health (/api/health), readiness (/api/health/ready) + a 6-domain aggregator exist. A dedicated /metrics export endpoint and a /version endpoint are NOT present — honest gaps, not fabricated."
+      "note": "Health (/api/health), readiness (/api/health/ready) + a 6-domain aggregator exist. GAP-OPS-6 CLOSED: /api/operational-readiness/version (build/node/env/commit/uptime) and /api/operational-readiness/metrics (Prometheus text exposition from the ops metrics registry) are now present (flag-gated)."
     },
     {
       "key": "monitoring_coverage",
@@ -487,13 +509,13 @@
       "status": "SUPPORTED",
       "evidence": {
         "services": {
-          "present": 1,
-          "total": 1,
+          "present": 2,
+          "total": 2,
           "absentList": []
         },
         "routes": {
-          "present": 0,
-          "total": 0,
+          "present": 1,
+          "total": 1,
           "absentList": []
         },
         "frontend": {
@@ -508,7 +530,7 @@
         }
       },
       "coverage_pct": 100,
-      "note": "An in-process fire-and-forget event bus exists. A durable queue, a Dead-Letter-Queue, and per-job retry/failure persistence are NOT present — honest gaps (a durable-queue/DLQ is a Medium operational gap, never fabricated)."
+      "note": "GAP-OPS-2 CLOSED: a durable job queue (ops_job_queue) with FOR UPDATE SKIP LOCKED claim, per-job attempt/retry/backoff, processing_ms timing, a Dead-Letter-Queue (ops_job_dead_letter) and a background worker are now present (flag-gated). Real job volume is a SEPARATE Adoption axis (honest-low/0 in dev, ops_* tables created lazily on first flag-ON write)."
     },
     {
       "key": "logging_traceability",
@@ -531,8 +553,8 @@
           "absentList": []
         },
         "routes": {
-          "present": 2,
-          "total": 2,
+          "present": 3,
+          "total": 3,
           "absentList": []
         },
         "frontend": {
@@ -547,7 +569,7 @@
         }
       },
       "coverage_pct": 100,
-      "note": "A levelled logger (debug/warn/error), a per-request requestId, redaction-at-write, and a redacted admin audit trail exist. Distributed trace-IDs propagated Node→FastAPI and a structured-log pipeline (APM) are NOT present — honest gaps."
+      "note": "A levelled logger (debug/warn/error), a per-request requestId, redaction-at-write, and a redacted admin audit trail exist. GAP-OPS-5 CLOSED: the correlation id is now propagated Node→FastAPI (upload proxy injects x-request-id/x-correlation-id, gated; FastAPI echoes it). A full external distributed-tracing backend (APM vendor) remains infra-owned — reported honestly, not fabricated."
     },
     {
       "key": "metrics_coverage",
@@ -564,13 +586,13 @@
       "status": "SUPPORTED",
       "evidence": {
         "services": {
-          "present": 2,
-          "total": 2,
+          "present": 3,
+          "total": 3,
           "absentList": []
         },
         "routes": {
-          "present": 0,
-          "total": 0,
+          "present": 1,
+          "total": 1,
           "absentList": []
         },
         "frontend": {
@@ -585,7 +607,7 @@
         }
       },
       "coverage_pct": 100,
-      "note": "DB latency, event-loop lag, process/OS memory + CPU, AI-runtime rows and a KPI daily rollup are MEASURED. A metrics-export endpoint (Prometheus/statsd) + API-throughput/error-rate counters + cache-hit ratio are NOT present — honest NULL (DEFERRED), never estimated."
+      "note": "DB latency, event-loop lag, process/OS memory + CPU, AI-runtime rows and a KPI daily rollup are MEASURED. GAP-OPS-1 CLOSED: an in-process metrics registry (counters + latency histograms) fed by opsMetricsMiddleware now records API-throughput/error-rate + cache hit/miss and exports them as Prometheus text at /api/operational-readiness/metrics. An external APM/aggregation backend remains infra-owned (honest boundary, not fabricated)."
     },
     {
       "key": "alerting",
@@ -603,13 +625,13 @@
       "status": "SUPPORTED",
       "evidence": {
         "services": {
-          "present": 1,
-          "total": 1,
+          "present": 3,
+          "total": 3,
           "absentList": []
         },
         "routes": {
-          "present": 1,
-          "total": 1,
+          "present": 2,
+          "total": 2,
           "absentList": []
         },
         "frontend": {
@@ -624,7 +646,7 @@
         }
       },
       "coverage_pct": 100,
-      "note": "Failure CONDITIONS are detectable (health domains report down/degraded; global-monitoring derives status). A durable alert-RULE store + notification routing (email/pager/webhook) are NOT present — alerts are client-derived from status, not pushed. Honest Medium gap."
+      "note": "GAP-OPS-3 CLOSED: a durable alert-RULE store (ops_alert_rules, seeded with 3 default rules) + a fired-event ledger (ops_alert_events) + a rule evaluator over live signals + notification routing (Zoho email via sendOperationalAlertEmail; log channel) are now present (flag-gated). Real fired-event volume is a SEPARATE Adoption axis (honest-low/0 in dev)."
     },
     {
       "key": "ai_operations",
@@ -644,13 +666,13 @@
       "status": "SUPPORTED",
       "evidence": {
         "services": {
-          "present": 2,
-          "total": 2,
+          "present": 3,
+          "total": 3,
           "absentList": []
         },
         "routes": {
-          "present": 0,
-          "total": 0,
+          "present": 1,
+          "total": 1,
           "absentList": []
         },
         "frontend": {
@@ -665,7 +687,7 @@
         }
       },
       "coverage_pct": 100,
-      "note": "AI health (checkAIHealth), provider/model, latency and retry behaviour are observable + persisted to ai_runtime_monitoring. Per-request COST and TOKEN accounting are NOT tracked — honest gap (never fabricated as 0)."
+      "note": "AI health (checkAIHealth), provider/model, latency and retry behaviour are observable + persisted to ai_runtime_monitoring. GAP-OPS-4 CLOSED: per-request TOKEN + COST accounting (prompt/completion tokens × per-1k pricing) is now recorded fire-and-forget from aiClient into ops_ai_token_usage and summarised at /api/operational-readiness/ai/token-usage. Real token volume is a SEPARATE Adoption axis (honest-low/0 in dev)."
     },
     {
       "key": "assessment_operations",
@@ -795,16 +817,16 @@
         "RTO",
         "RPO"
       ],
-      "status": "DEAD_END",
+      "status": "SUPPORTED",
       "evidence": {
         "services": {
-          "present": 0,
-          "total": 0,
+          "present": 2,
+          "total": 2,
           "absentList": []
         },
         "routes": {
-          "present": 0,
-          "total": 0,
+          "present": 1,
+          "total": 1,
           "absentList": []
         },
         "frontend": {
@@ -818,8 +840,8 @@
           "absentList": []
         }
       },
-      "coverage_pct": null,
-      "note": "Managed-database backups are infra-owned (Cloud SQL / provider), NOT validated in-repo. Restore drills, documented recovery procedures, and measured RTO/RPO are NOT present in the repository — reported as an honest DEAD_END/gap (infra-owned), never fabricated as validated."
+      "coverage_pct": 100,
+      "note": "GAP-OPS-7 CLOSED (readiness, not a live drill): an in-repo DR manifest (per-store RTO/RPO targets, backup mechanism, recovery-procedure runbook references — docs/DISASTER_RECOVERY.md), a repeatable readiness-verifier script (scripts/ops-dr-verify.ts) and a /api/operational-readiness/dr/readiness endpoint (config presence + live PostgreSQL connectivity checks) are now present. HONEST BOUNDARY: managed-DB backups + an actual restore DRILL against infrastructure remain infra-owned and are reported as recovery-READINESS, never claimed as an executed/validated restore (restore_drill_executed:false). Coverage ⟂ Confidence ⟂ Adoption never composited."
     },
     {
       "key": "operational_dashboards",
@@ -878,9 +900,7 @@
           "DEAD_END": 0,
           "MISSING": 0
         },
-        "open_gaps": [
-          "GAP-OPS-6"
-        ]
+        "open_gaps": []
       },
       {
         "key": "monitoring",
@@ -897,9 +917,7 @@
           "DEAD_END": 0,
           "MISSING": 0
         },
-        "open_gaps": [
-          "GAP-OPS-2"
-        ]
+        "open_gaps": []
       },
       {
         "key": "logging",
@@ -915,9 +933,7 @@
           "DEAD_END": 0,
           "MISSING": 0
         },
-        "open_gaps": [
-          "GAP-OPS-5"
-        ]
+        "open_gaps": []
       },
       {
         "key": "metrics",
@@ -933,9 +949,7 @@
           "DEAD_END": 0,
           "MISSING": 0
         },
-        "open_gaps": [
-          "GAP-OPS-1"
-        ]
+        "open_gaps": []
       },
       {
         "key": "alerting",
@@ -951,9 +965,7 @@
           "DEAD_END": 0,
           "MISSING": 0
         },
-        "open_gaps": [
-          "GAP-OPS-3"
-        ]
+        "open_gaps": []
       },
       {
         "key": "ai_operations",
@@ -969,9 +981,7 @@
           "DEAD_END": 0,
           "MISSING": 0
         },
-        "open_gaps": [
-          "GAP-OPS-4"
-        ]
+        "open_gaps": []
       },
       {
         "key": "assessment_operations",
@@ -1009,19 +1019,17 @@
         "key": "disaster_recovery",
         "label": "Disaster Recovery",
         "definition": "Backup/restore/RTO/RPO validation (largely infra-owned — measured honestly, not assumed).",
-        "structural_coverage_score": null,
+        "structural_coverage_score": 100,
         "domains": [
           "disaster_recovery"
         ],
         "status_rollup": {
-          "SUPPORTED": 0,
+          "SUPPORTED": 1,
           "PARTIAL": 0,
-          "DEAD_END": 1,
+          "DEAD_END": 0,
           "MISSING": 0
         },
-        "open_gaps": [
-          "GAP-OPS-7"
-        ]
+        "open_gaps": []
       },
       {
         "key": "operational_readiness",
@@ -1054,12 +1062,28 @@
         "total_rows": 0
       },
       {
+        "key": "background_jobs",
+        "label": "Background Jobs & Queue",
+        "axis": "monitoring",
+        "table": "ops_job_queue",
+        "table_present": false,
+        "total_rows": null
+      },
+      {
         "key": "metrics_coverage",
         "label": "Metrics Coverage",
         "axis": "metrics",
         "table": "anl_kpi_daily",
         "table_present": true,
         "total_rows": 10
+      },
+      {
+        "key": "alerting",
+        "label": "Alerting",
+        "axis": "alerting",
+        "table": "ops_alert_events",
+        "table_present": false,
+        "total_rows": null
       },
       {
         "key": "ai_operations",
@@ -1089,57 +1113,7 @@
     "note": "Adoption = real persisted volume per operational domain. Reported SEPARATELY from Coverage/Certification and NEVER composited. In a dev environment real operational volume is honest-low/0 — a usage axis, never an engineering gap. null = unreadable (≠ 0 = empty)."
   },
   "gaps": {
-    "open_gaps": [
-      {
-        "key": "GAP-OPS-1",
-        "severity": "Medium",
-        "axis": "metrics",
-        "title": "No metrics-export endpoint / APM pipeline",
-        "detail": "API throughput/error-rate counters, cache-hit ratio and a Prometheus/statsd export are absent. Latency/resource/AI/KPI signals ARE measured; the missing piece is external export/aggregation. Deferred (infra-owned)."
-      },
-      {
-        "key": "GAP-OPS-2",
-        "severity": "Medium",
-        "axis": "monitoring",
-        "title": "No durable queue / Dead-Letter-Queue for background jobs",
-        "detail": "The event bus is in-process fire-and-forget with no persisted retry/DLQ. Failed async work is not durably tracked. A durable queue + DLQ is a Medium operational enhancement for a future task."
-      },
-      {
-        "key": "GAP-OPS-3",
-        "severity": "Medium",
-        "axis": "alerting",
-        "title": "No alert-rule store / notification routing",
-        "detail": "Failure conditions are detectable but alerts are client-derived from status, not pushed via a durable rule store + notification channel. Medium operational gap."
-      },
-      {
-        "key": "GAP-OPS-4",
-        "severity": "Medium",
-        "axis": "ai_operations",
-        "title": "No AI cost / token accounting",
-        "detail": "AI latency/retry/health/provider/model are observable but per-request cost and token usage are not tracked. Medium gap; never fabricated as 0."
-      },
-      {
-        "key": "GAP-OPS-5",
-        "severity": "Low",
-        "axis": "logging",
-        "title": "No cross-service correlation-ID propagation (Node→FastAPI) / distributed tracing",
-        "detail": "A per-request requestId exists on the Node service but is not propagated to the FastAPI upload service, and there is no distributed-tracing backend. Low/Medium gap."
-      },
-      {
-        "key": "GAP-OPS-6",
-        "severity": "Low",
-        "axis": "observability",
-        "title": "No /version and no /metrics endpoint",
-        "detail": "Health + readiness exist; a build/version-info endpoint and a machine-readable metrics endpoint are absent. Low gap."
-      },
-      {
-        "key": "GAP-OPS-7",
-        "severity": "Future",
-        "axis": "disaster_recovery",
-        "title": "Disaster-recovery validation is infra-owned, not validated in-repo",
-        "detail": "Managed-DB backups exist at the infra layer but restore drills, documented recovery procedures and measured RTO/RPO are not present in the repository. Future/infra gap — reported honestly, never claimed as validated."
-      }
-    ],
+    "open_gaps": [],
     "resolved_gaps": [
       {
         "key": "RES-OPS-1",
@@ -1176,73 +1150,70 @@
         "axis": "operational_readiness",
         "mechanism": "capadex-safety-breaker + SuperAdminDashboard",
         "detail": "A circuit-breaker for external calls + a super-admin operational console already exist and are composed here."
+      },
+      {
+        "key": "RES-OPS-7",
+        "axis": "metrics",
+        "former_gap": "GAP-OPS-1",
+        "mechanism": "ops/metrics-registry.ts + opsMetricsMiddleware + /metrics",
+        "detail": "GAP-OPS-1 CLOSED: an in-process metrics registry (request counters + latency histograms + cache hit/miss) is recorded by opsMetricsMiddleware and exported as Prometheus text at /api/operational-readiness/metrics (+ JSON at /metrics.json). External APM aggregation stays an honest infra boundary."
+      },
+      {
+        "key": "RES-OPS-8",
+        "axis": "monitoring",
+        "former_gap": "GAP-OPS-2",
+        "mechanism": "ops/durable-queue.ts (ops_job_queue + ops_job_dead_letter)",
+        "detail": "GAP-OPS-2 CLOSED: a durable job queue with FOR UPDATE SKIP LOCKED claim, per-job attempt/retry/backoff, processing_ms timing, a Dead-Letter-Queue and a background worker. Stats + DLQ + enqueue + run endpoints under /queue/*."
+      },
+      {
+        "key": "RES-OPS-9",
+        "axis": "alerting",
+        "former_gap": "GAP-OPS-3",
+        "mechanism": "ops/alerting.ts (ops_alert_rules + ops_alert_events) + email routing",
+        "detail": "GAP-OPS-3 CLOSED: a durable alert-rule store (3 seeded defaults), a fired-event ledger, a signal evaluator, and notification routing (Zoho email + log). CRUD + evaluate endpoints under /alerts/*."
+      },
+      {
+        "key": "RES-OPS-10",
+        "axis": "ai_operations",
+        "former_gap": "GAP-OPS-4",
+        "mechanism": "ops/ai-token-accounting.ts (ops_ai_token_usage) + aiClient hook",
+        "detail": "GAP-OPS-4 CLOSED: per-request prompt/completion token + cost (per-1k pricing) recorded fire-and-forget from aiClient and summarised at /ai/token-usage."
+      },
+      {
+        "key": "RES-OPS-11",
+        "axis": "logging",
+        "former_gap": "GAP-OPS-5",
+        "mechanism": "upload-proxy proxyReq correlation header + FastAPI correlation_id_mw",
+        "detail": "GAP-OPS-5 CLOSED: the correlation id (req.id) is propagated Node→FastAPI (x-request-id/x-correlation-id, flag-gated) and echoed by the FastAPI service. An external distributed-tracing backend stays an honest infra boundary."
+      },
+      {
+        "key": "RES-OPS-12",
+        "axis": "observability",
+        "former_gap": "GAP-OPS-6",
+        "mechanism": "/version + /metrics endpoints",
+        "detail": "GAP-OPS-6 CLOSED: a build/version-info endpoint (/version) and a machine-readable metrics endpoint (/metrics) are now present (flag-gated)."
+      },
+      {
+        "key": "RES-OPS-13",
+        "axis": "disaster_recovery",
+        "former_gap": "GAP-OPS-7",
+        "mechanism": "config/disaster-recovery-manifest.ts + scripts/ops-dr-verify.ts + /dr/readiness",
+        "detail": "GAP-OPS-7 CLOSED (readiness): an in-repo DR manifest (per-store RTO/RPO, backup mechanism, runbook refs), a readiness-verifier script and a /dr/readiness endpoint (config presence + live PostgreSQL connectivity). HONEST BOUNDARY: an actual restore DRILL + managed-DB backups remain infra-owned (restore_drill_executed:false) — recovery-READINESS, never a claimed executed restore."
       }
     ],
     "gap_counts": {
       "Launch-Critical": 0,
       "High": 0,
-      "Medium": 4,
-      "Low": 2,
-      "Future": 1
+      "Medium": 0,
+      "Low": 0,
+      "Future": 0
     },
     "by_severity": {
       "Launch-Critical": [],
       "High": [],
-      "Medium": [
-        {
-          "key": "GAP-OPS-1",
-          "severity": "Medium",
-          "axis": "metrics",
-          "title": "No metrics-export endpoint / APM pipeline",
-          "detail": "API throughput/error-rate counters, cache-hit ratio and a Prometheus/statsd export are absent. Latency/resource/AI/KPI signals ARE measured; the missing piece is external export/aggregation. Deferred (infra-owned)."
-        },
-        {
-          "key": "GAP-OPS-2",
-          "severity": "Medium",
-          "axis": "monitoring",
-          "title": "No durable queue / Dead-Letter-Queue for background jobs",
-          "detail": "The event bus is in-process fire-and-forget with no persisted retry/DLQ. Failed async work is not durably tracked. A durable queue + DLQ is a Medium operational enhancement for a future task."
-        },
-        {
-          "key": "GAP-OPS-3",
-          "severity": "Medium",
-          "axis": "alerting",
-          "title": "No alert-rule store / notification routing",
-          "detail": "Failure conditions are detectable but alerts are client-derived from status, not pushed via a durable rule store + notification channel. Medium operational gap."
-        },
-        {
-          "key": "GAP-OPS-4",
-          "severity": "Medium",
-          "axis": "ai_operations",
-          "title": "No AI cost / token accounting",
-          "detail": "AI latency/retry/health/provider/model are observable but per-request cost and token usage are not tracked. Medium gap; never fabricated as 0."
-        }
-      ],
-      "Low": [
-        {
-          "key": "GAP-OPS-5",
-          "severity": "Low",
-          "axis": "logging",
-          "title": "No cross-service correlation-ID propagation (Node→FastAPI) / distributed tracing",
-          "detail": "A per-request requestId exists on the Node service but is not propagated to the FastAPI upload service, and there is no distributed-tracing backend. Low/Medium gap."
-        },
-        {
-          "key": "GAP-OPS-6",
-          "severity": "Low",
-          "axis": "observability",
-          "title": "No /version and no /metrics endpoint",
-          "detail": "Health + readiness exist; a build/version-info endpoint and a machine-readable metrics endpoint are absent. Low gap."
-        }
-      ],
-      "Future": [
-        {
-          "key": "GAP-OPS-7",
-          "severity": "Future",
-          "axis": "disaster_recovery",
-          "title": "Disaster-recovery validation is infra-owned, not validated in-repo",
-          "detail": "Managed-DB backups exist at the infra layer but restore drills, documented recovery procedures and measured RTO/RPO are not present in the repository. Future/infra gap — reported honestly, never claimed as validated."
-        }
-      ]
+      "Medium": [],
+      "Low": [],
+      "Future": []
     }
   },
   "validation": {
@@ -1254,11 +1225,11 @@
       },
       "no_new_monitoring_system": {
         "pass": true,
-        "note": "COMPOSES the existing observability substrate. No parallel/duplicate monitoring engine, telemetry pipeline, or metadata store was created."
+        "note": "The certification composer COMPOSES the existing observability substrate — no parallel/duplicate certification engine. The 7 gap-closure mechanisms (metrics registry, durable queue + DLQ, alert-rule store, AI token accounting, correlation-ID, DR manifest) are ADDITIVE, flag-gated helpers that lightweight-instrument existing flows; they do not replace or fork any subsystem."
       },
       "read_only_no_ddl": {
         "pass": true,
-        "note": "Read paths are GET-only, never-throws, and create ZERO tables. The only write path is an explicit POST snapshot capture (flag-ON) that owns its lazy ensure-schema."
+        "note": "Read/certification paths are GET-only, never-throws, and create ZERO tables. Every write path (POST snapshot capture, durable queue, alert store, AI token accounting) guards `operationalReadiness` BEFORE any DDL and owns its lazy ensure-schema, so flag-OFF is byte-identical incl. schema (0 ops_* tables OFF; created lazily on first flag-ON write)."
       },
       "axes_never_composited": {
         "pass": true,
@@ -1280,9 +1251,9 @@
     "axis_count": 10,
     "domain_count": 12,
     "status_counts": {
-      "SUPPORTED": 11,
+      "SUPPORTED": 12,
       "PARTIAL": 0,
-      "DEAD_END": 1,
+      "DEAD_END": 0,
       "MISSING": 0
     },
     "certification_scores": [
@@ -1320,7 +1291,7 @@
       },
       {
         "axis": "disaster_recovery",
-        "structural_coverage_score": null
+        "structural_coverage_score": 100
       },
       {
         "axis": "operational_readiness",
@@ -1330,26 +1301,26 @@
     "gap_counts": {
       "Launch-Critical": 0,
       "High": 0,
-      "Medium": 4,
-      "Low": 2,
-      "Future": 1
+      "Medium": 0,
+      "Low": 0,
+      "Future": 0
     },
-    "resolved_gap_count": 6,
+    "resolved_gap_count": 13,
     "validation_verdict": "STRUCTURAL_VALIDATED",
     "enterprise_ready": {
       "verdict": "STRUCTURAL_COMPLETE_ADOPTION_PENDING",
       "operability_confidence": null,
-      "note": "CAPADEX can be observed, monitored and operated at a STRUCTURAL level: every certified axis composes existing substrate with 0 Launch-Critical gaps. Enterprise production-operation CONFIDENCE is WITHHELD (a SEPARATE axis) pending real operational volume + the classified Medium/Low/Future gaps (metrics export, DLQ, alert-rule store, AI cost/token, correlation-ID propagation, DR drills). Coverage⟂Confidence⟂Adoption never composited."
+      "note": "CAPADEX can be observed, monitored and operated at a STRUCTURAL level: every certified axis composes existing substrate and ALL 7 previously-classified operational gaps (GAP-OPS-1..7) are now CLOSED with real working mechanisms (metrics export, durable queue + DLQ, alert-rule store + notification routing, AI token/cost accounting, Node→FastAPI correlation-ID, /version + /metrics, DR manifest + readiness verifier) — 0 OPEN gaps of any severity. Enterprise production-operation CONFIDENCE is WITHHELD (a SEPARATE axis): engineering closure is STRUCTURAL; real operational volume (jobs run, alerts fired, tokens spent) is honest-low/0 in dev and an actual DR restore drill + managed-DB backups remain honest infra-owned boundaries. Coverage⟂Confidence⟂Adoption never composited; null ≠ 0; nothing fabricated."
     },
     "adoption_note": "Adoption = real persisted volume per operational domain. Reported SEPARATELY from Coverage/Certification and NEVER composited. In a dev environment real operational volume is honest-low/0 — a usage axis, never an engineering gap. null = unreadable (≠ 0 = empty).",
     "decisions": [
       {
         "key": "no_new_monitoring_system",
-        "decision": "COMPOSE the existing observability substrate into ONE read-only operational-readiness view. NO parallel/duplicate monitoring engine, telemetry pipeline, or metadata store was created."
+        "decision": "COMPOSE the existing observability substrate into ONE read-only operational-readiness view. The gap-closure mechanisms (metrics registry, durable queue, alert store, token accounting, correlation-ID, DR manifest) are additive and flag-gated — NO parallel/duplicate monitoring engine or telemetry pipeline replaces the existing substrate."
       },
       {
-        "key": "measure_before_enhance",
-        "decision": "This phase MEASURES operational coverage and CLASSIFIES gaps. Deeper enhancements (DLQ, token/cost accounting, metrics export, alert-rule store, DR drills) are recorded as classified gaps for a future task — NOT built here, to preserve byte-identical-OFF and avoid business/infra change."
+        "key": "gaps_closed_additively",
+        "decision": "All 7 previously-classified operational gaps (GAP-OPS-1..7) are now CLOSED with REAL working mechanisms (metrics export, durable queue + DLQ, alert-rule store + notification routing, AI token/cost accounting, Node→FastAPI correlation-ID, /version + /metrics, DR manifest + readiness verifier). Every mechanism is additive and flag-gated behind operationalReadiness → flag OFF is byte-identical incl. schema (ops_* tables created lazily on first flag-ON write). Nothing fabricated: DR is recovery-READINESS not an executed restore drill; an external APM/tracing backend and managed-DB backups remain honest infra-owned boundaries."
       },
       {
         "key": "axes_never_composited",
@@ -1357,19 +1328,19 @@
       },
       {
         "key": "coverage_vs_adoption",
-        "decision": "Coverage (evidence exists) is reported separately from Adoption (real non-demo volume). Real operational volume is honest-low/0 in a dev environment — a usage axis, never a gap."
+        "decision": "Coverage (evidence exists) is reported separately from Adoption (real non-demo volume) and Confidence. Engineering closure of the 7 gaps is STRUCTURAL — real operational volume (jobs run, alerts fired, tokens spent, restore drills) is honest-low/0 in a dev environment — a usage/confidence axis, NEVER a gap and NEVER composited into coverage."
       }
     ],
     "axes_note": "Coverage ⟂ Confidence ⟂ Adoption are SEPARATE and NEVER composited. The 10 operational axes are certified independently and never combined. null ≠ 0. Built ≠ Operated ≠ Recoverable."
   },
   "evidence_rollup": {
     "services": {
-      "present": 14,
-      "total": 14
+      "present": 22,
+      "total": 22
     },
     "routes": {
-      "present": 10,
-      "total": 10
+      "present": 17,
+      "total": 17
     },
     "frontend": {
       "present": 1,

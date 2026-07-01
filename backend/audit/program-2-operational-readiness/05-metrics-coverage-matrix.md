@@ -1,6 +1,6 @@
 # CAPADEX 3.0 · Program 2 · Phase 2.5 — Metrics Coverage Matrix
 
-> Deliverable 05 · Generated 2026-07-01T03:36:10.857Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:98db190526bf, written 2026-07-01T03:36:10.856Z).
+> Deliverable 05 · Generated 2026-07-01T04:31:00.104Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:04e6998b3d95, written 2026-07-01T04:31:00.104Z).
 > Honesty: Coverage (evidence exists) ⟂ Confidence ⟂ Adoption (real volume) — NEVER composited. null ≠ 0. Built ≠ Operated ≠ Recoverable. Nothing fabricated.
 
 Certifies the **metrics** axis: structural coverage **100**.
@@ -9,10 +9,10 @@ Certifies the **metrics** axis: structural coverage **100**.
 - **Certification axis**: `metrics`
 - **Coverage status**: **SUPPORTED** · structural coverage **100%**
 - **Validated signals**: API/DB Latency · Event-loop Lag · Memory/CPU · AI Runtime · KPI Rollup
-- **Reused substrate (verified vs live FS+DB, never invoked)**: svc 2/2 · routes 0/0 · fe 0/0 · tbl 3/3
+- **Reused substrate (verified vs live FS+DB, never invoked)**: svc 3/3 · routes 1/1 · fe 0/0 · tbl 3/3
 - **Absent evidence (honest)**: —
 - **Adoption (SEPARATE axis — real volume)**: table `anl_kpi_daily` present, rows **10**
-- **Honest note**: DB latency, event-loop lag, process/OS memory + CPU, AI-runtime rows and a KPI daily rollup are MEASURED. A metrics-export endpoint (Prometheus/statsd) + API-throughput/error-rate counters + cache-hit ratio are NOT present — honest NULL (DEFERRED), never estimated.
+- **Honest note**: DB latency, event-loop lag, process/OS memory + CPU, AI-runtime rows and a KPI daily rollup are MEASURED. GAP-OPS-1 CLOSED: an in-process metrics registry (counters + latency histograms) fed by opsMetricsMiddleware now records API-throughput/error-rate + cache hit/miss and exports them as Prometheus text at /api/operational-readiness/metrics. An external APM/aggregation backend remains infra-owned (honest boundary, not fabricated).
 
 ## Metric reality (Coverage ⟂ NULL for un-instrumented)
 | Metric | Status |

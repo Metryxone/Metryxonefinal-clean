@@ -54,6 +54,7 @@ import {
   saveResponse, listResponses,
   recordEvent, listEvents,
   recordNotification, listNotifications,
+  adaptiveNext, evaluateCodingRun,
 } from '../services/assessment-delivery-mechanisms';
 
 type Mw = (req: Request, res: Response, next: NextFunction) => void;
@@ -271,5 +272,26 @@ export function registerAssessmentDeliveryRoutes(
   app.get('/api/admin/assessment-delivery/notifications/:key', ...g, async (req: Request, res: Response) => {
     try { res.json({ ok: true, notifications: await listNotifications(pool, String(req.params.key)) }); }
     catch (err) { degraded(res, 'notifications-history', err); }
+  });
+
+  // ── DELIVERY-LAYER MECHANISMS — pure compute (no DB, no DDL). Power the adaptive
+  // player + coding runner. Flag-gated + super-admin like every other route. ──
+
+  // Adaptive routing: given the item pool + graded history, return the next item.
+  app.post('/api/admin/assessment-delivery/adaptive/next', ...g, async (req: Request, res: Response) => {
+    try {
+      const items = Array.isArray(req.body?.items) ? req.body.items : [];
+      const history = Array.isArray(req.body?.history) ? req.body.history : [];
+      res.json({ ok: true, result: adaptiveNext(items, history) });
+    } catch (err) { degraded(res, 'adaptive-next', err); }
+  });
+
+  // Coding run: delivery-time RUN feedback (expected-vs-actual). NOT the graded score.
+  app.post('/api/admin/assessment-delivery/coding/run', ...g, async (req: Request, res: Response) => {
+    try {
+      const actuals = Array.isArray(req.body?.actuals) ? req.body.actuals : [];
+      const expected = Array.isArray(req.body?.expected) ? req.body.expected : [];
+      res.json({ ok: true, result: evaluateCodingRun(actuals, expected) });
+    } catch (err) { degraded(res, 'coding-run', err); }
   });
 }

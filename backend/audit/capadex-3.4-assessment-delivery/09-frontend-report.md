@@ -1,12 +1,12 @@
 # CAPADEX 3.0 · Program 3 · Phase 3.4 — Frontend Report (dimension 7 · frontend)
 
-> Deliverable 09 · Generated 2026-07-01T09:39:51.721Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:6c0930a1b4b1, written 2026-07-01T09:39:51.722Z).
+> Deliverable 09 · Generated 2026-07-01T10:13:32.658Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:ba8e46395e4d, written 2026-07-01T10:13:32.658Z).
 > Scope: CANDIDATE EXPERIENCE ONLY — launch/session/candidate-experience/question-delivery/timing/response/accessibility/delivery-modes/security/notifications/frontend/APIs from launch until final submission; NOT scoring/psychometrics/norms/AI-interpretation/reports/analytics (= Phase 3.5+).
 > Honesty: the SEVEN certification dimensions (delivery_engine · candidate_experience · session_management · accessibility · security · apis · frontend) are reported SEPARATELY and NEVER composited. Adoption is a SEPARATE usage axis, never a gap. Coverage⟂Confidence⟂Adoption; null ≠ 0; never fabricated.
 
 The candidate-facing delivery frontend (exam-ready AssessmentPage / Timer / QuestionRenderer / JoinSessionPage) + the super-admin `AssessmentDeliveryPanel` console. Verified vs the live frontend tree.
 
-**Frontend evidence (verified):** fe 15/15.
+**Frontend evidence (verified):** fe 21/21.
 
 ### Candidate Experience (`candidate_experience`) — SUPPORTED
 _Eleven-step candidate journey (welcome→instructions→consent→verify→language→accessibility→practice→progress→navigation→section-navigation→completion) composing the existing candidate player + consent ledger._

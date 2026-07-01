@@ -305,3 +305,111 @@ export async function notificationCoverage(pool: Pool): Promise<{ notifications:
     launches: await count(pool, `SELECT COUNT(DISTINCT launch_key)::int FROM ad_notifications`),
   };
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ADAPTIVE ROUTING — delivery-layer next-question router (PURE, no DB, no DDL).
+//
+// This is a DELIVERY-LAYER adaptive router: it routes on delivery-available signals
+// (running objective-item correctness + a discrete difficulty ladder), NOT on latent
+// psychometric ability. Full IRT / ability-estimation routing is Phase 3.5 (scoring)
+// and is an honest SCOPE BOUNDARY, not a gap. A correct answer steps the target
+// difficulty UP one rung, an incorrect answer steps it DOWN one rung; the next item is
+// the un-served pool item nearest the target difficulty. Deterministic + side-effect free.
+// ─────────────────────────────────────────────────────────────────────────────
+export type AdaptiveDifficulty = 'easy' | 'medium' | 'hard';
+const DIFF_LADDER: AdaptiveDifficulty[] = ['easy', 'medium', 'hard'];
+export interface AdaptiveItem { ref: string; difficulty: AdaptiveDifficulty }
+export interface AdaptiveHistoryEntry { ref: string; correct: boolean }
+export interface AdaptiveNextResult {
+  next: AdaptiveItem | null;
+  target_difficulty: AdaptiveDifficulty;
+  served: number;
+  remaining: number;
+  rationale: string;
+  delivery_layer: true;
+  note: string;
+}
+
+function clampLadder(i: number): number {
+  return Math.max(0, Math.min(DIFF_LADDER.length - 1, i));
+}
+
+export function adaptiveNext(items: AdaptiveItem[], history: AdaptiveHistoryEntry[] = []): AdaptiveNextResult {
+  const pool = Array.isArray(items) ? items.filter((x) => x && typeof x.ref === 'string') : [];
+  const hist = Array.isArray(history) ? history : [];
+  const servedRefs = new Set(hist.map((h) => h.ref));
+
+  // Start at medium; walk the ladder one rung per graded answer.
+  let idx = 1;
+  for (const h of hist) {
+    idx = clampLadder(idx + (h.correct ? 1 : -1));
+  }
+  const target = DIFF_LADDER[idx];
+
+  const unserved = pool.filter((it) => !servedRefs.has(it.ref));
+  let next: AdaptiveItem | null = null;
+  if (unserved.length > 0) {
+    // Nearest-difficulty pick to the target rung; stable (first match wins).
+    next = unserved
+      .map((it) => ({ it, dist: Math.abs(DIFF_LADDER.indexOf(it.difficulty) - idx) }))
+      .sort((a, b) => a.dist - b.dist)[0].it;
+  }
+
+  const last = hist[hist.length - 1];
+  const rationale = hist.length === 0
+    ? 'No answers yet → start at medium difficulty.'
+    : `Last answer ${last?.correct ? 'CORRECT → step difficulty UP' : 'INCORRECT → step difficulty DOWN'} to ${target}.`;
+
+  return {
+    next,
+    target_difficulty: target,
+    served: servedRefs.size,
+    remaining: unserved.length,
+    rationale,
+    delivery_layer: true,
+    note: 'Delivery-layer routing on objective correctness + difficulty ladder. Psychometric IRT / ability-estimation routing is Phase 3.5 (scoring) — a scope boundary, not a gap.',
+  };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CODING RUN — delivery-time execution FEEDBACK (PURE, no DB, no DDL).
+//
+// The candidate executes their code in-browser (JS runtime) and submits the actual
+// outputs; this compares them to expected outputs so the candidate gets immediate
+// RUN feedback ("3/5 tests passed"). This is DELIVERY feedback, NOT the graded score /
+// psychometrics — final scoring is Phase 3.5. The final source is captured to
+// ad_responses via the normal saveResponse path.
+// ─────────────────────────────────────────────────────────────────────────────
+export interface CodingTestCase { name?: string; expected: string }
+export interface CodingActual { name?: string; actual: string }
+export interface CodingRunCase { name: string; expected: string; actual: string; passed: boolean }
+export interface CodingRunResult {
+  total: number;
+  passed: number;
+  failed: number;
+  results: CodingRunCase[];
+  delivery_layer: true;
+  note: string;
+}
+
+const normOut = (v: unknown): string => String(v ?? '').replace(/\r\n/g, '\n').trim();
+
+export function evaluateCodingRun(actuals: CodingActual[], expected: CodingTestCase[]): CodingRunResult {
+  const exp = Array.isArray(expected) ? expected : [];
+  const act = Array.isArray(actuals) ? actuals : [];
+  const results: CodingRunCase[] = exp.map((e, i) => {
+    const a = act[i] ?? {};
+    const name = e.name || a.name || `case_${i + 1}`;
+    const passed = normOut(a.actual) === normOut(e.expected);
+    return { name, expected: normOut(e.expected), actual: normOut(a.actual), passed };
+  });
+  const passed = results.filter((r) => r.passed).length;
+  return {
+    total: results.length,
+    passed,
+    failed: results.length - passed,
+    results,
+    delivery_layer: true,
+    note: 'Delivery-time RUN feedback (expected-vs-actual test cases). NOT the graded/psychometric score — final scoring is Phase 3.5. Final source is captured to ad_responses.',
+  };
+}

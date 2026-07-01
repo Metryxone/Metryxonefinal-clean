@@ -24,8 +24,15 @@ CANDIDATE EXPERIENCE ONLY — everything from **launch until final submission**.
 - SSoT scan `scripts/capadex-3.4-assessment-delivery-scan.ts` → `audit/capadex-3.4-assessment-delivery/scan.json`; generator `scripts/capadex-3.4-generate-deliverables.ts` reads ONLY scan.json so docs never drift. **Re-run BOTH after creating the frontend panel** or the frontend dimension stays 4/5 (the panel is one of the 15 verified frontend files).
 - Frontend `AssessmentDeliveryPanel.tsx` + SuperAdminDashboard wiring (lazy import + `/enabled` probe + conditional-spread nav, hidden OFF).
 
-## Measured verdict (scan.json)
-7/7 dimensions SUPPORTED; delivery-modes 3 SUP/3 PART (coding/video/simulation deferred), question-delivery 6 SUP/1 PART (real adaptive routing DEPENDS ON 3.5), security 5 SUP/1 PART (browser lockdown/proctoring Future). Repo-align svc 11/11 · rt 11/11 · fe 15/15 · tbl 8/13 (5 absent — overlay not written while OFF, honest). Gaps 0 Launch-Critical · 1 Low · 3 Future = 4 OPEN + 7 RESOLVED. Verdict `STRUCTURAL_COMPLETE_ADOPTION_PENDING`; ready_for_3.5 YES.
+## Measured verdict (scan.json — after implementation gap-closure)
+7/7 dimensions SUPPORTED; ALL modes now SUPPORTED (delivery-modes 6/6, question-delivery 7/7, security 6/6). Repo-align svc 11/11 · rt 11/11 · fe 21/21 · tbl 8/13 (5 absent — overlay not written while OFF, honest). Gaps **0 OPEN + 11 RESOLVED**. Verdict `STRUCTURAL_COMPLETE_ADOPTION_PENDING`; ready_for_3.5 YES.
+
+## When the directive is "close gaps + implement" (NOT certify-only)
+A prior certify-only pass left 4 delivery gaps OPEN as honest deferrals. The follow-up directive was to make them FUNCTIONAL. Lessons:
+- **Close by building real flag-gated capability, not by re-labelling.** coding/video/simulation/adaptive/proctoring delivery modes got first-class runner components (delivery/) + PURE backend mechanisms + flag+super-admin-gated POST routes; only THEN flip config PARTIAL→SUPPORTED, add frontend evidence paths, move gaps into `RESOLVED_AD_GAPS`, set `AD_GAPS=[]`.
+- **Distinguish an engineering gap from a scope BOUNDARY.** The web platform can close delivery-layer coding (JS exec), delivery-layer adaptive next-item, and web-level proctoring (visibility/focus/fullscreen). It CANNOT close multi-language server sandbox, psychometric IRT/ability-estimation (=Phase 3.5), or OS-level secure browser — those are boundaries reported in-line on the row, NEVER OPEN gaps and never fabricated as done. `scoring_handoff` mapping row STAYS PARTIAL (3.5 boundary).
+- **The generator has narrative text in TWO forms that both drift**: (1) template-literal blocks interpolating `${RESOLVED.length}`/`${scan.gap_total}` and (2) STATIC per-section footnote strings hardcoding "PARTIAL … deferrals". After a status flip, grep the WHOLE generator for stale words (`PARTIAL`, `deferr`, `remaining OPEN`, `seven`, `AD-1..AD-N`) — the static footnotes are the easy miss (they don't reference scan counts so they silently contradict the regenerated numbers).
+- Order is always: re-run scan THEN generator (generator reads ONLY scan.json), THEN grep the emitted `.md` for stale narrative.
 
 ## Invariants
-Coverage⟂Confidence⟂Adoption never composited; null≠0; adoption (real delivered-session volume) is a SEPARATE usage axis, NEVER a gap and never fabricated. STOP for approval — flag OFF, no merge/deploy.
+Coverage⟂Confidence⟂Adoption never composited; null≠0; adoption (real delivered-session volume) is a SEPARATE usage axis, NEVER a gap and never fabricated. Engineering closure ⟂ adoption: gaps 0 but real delivered-session volume honest 0. STOP for approval — flag OFF, no merge/deploy.

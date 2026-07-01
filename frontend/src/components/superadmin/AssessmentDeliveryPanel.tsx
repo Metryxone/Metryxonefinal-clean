@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { RefreshCw, AlertTriangle, CircleSlash, Boxes, Layers, ShieldCheck, GitBranch, ListChecks, Rocket } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
+import DeliveryModesPreview from '../delivery/DeliveryModesPreview';
 
 const BASE = '/api/admin/assessment-delivery';
 
@@ -225,6 +226,12 @@ export default function AssessmentDeliveryPanel() {
           <Stat label="Events" value={ado.events?.events} hint={`security ${ado.events?.security_events ?? '—'} · sessions ${ado.events?.sessions ?? '—'}`} />
           <Stat label="Notifications" value={ado.notifications?.notifications} hint={`sent ${ado.notifications?.sent ?? '—'} · launches ${ado.notifications?.launches ?? '—'}`} />
         </div>
+      </Section>
+
+      {/* Live delivery modes (engineering-closed GAP-AD-1..4) */}
+      <Section title="Live delivery modes — coding · recorded response · simulation · adaptive · proctoring" icon={<Rocket className="h-4 w-4" style={{ color: BRAND.primary }} />}
+        subtitle="The five first-class flag-gated runners that engineering-close GAP-AD-1..4. Interactive demos with sample content; onCommit wires to the ad_* overlay in the candidate flow.">
+        <DeliveryModesPreview />
       </Section>
 
       {/* Gaps */}

@@ -92,7 +92,7 @@ The **ONE canonical Enterprise Assessment Delivery Engine** — a single certifi
 
 It defines **${D.dimension_count} certification dimensions**, ${CX.count} candidate-experience steps, ${DM.count} delivery modes, ${QD.count} question-delivery modes, ${LA.count} launch modes, ${SE.count} session capabilities, ${TI.count} timing capabilities, ${RE.count} response capabilities, ${AC.count} accessibility capabilities, ${SEC.count} security controls, ${NO.count} notification types, and a ${MAP.step_count}-step launch→submission mapping model.
 
-This is a **CERTIFICATION** deliverable (mirrors Phases 1.3–1.7 + 3.1 + 3.2 + 3.3). Every true engineering gap (AD-1..AD-${RESOLVED.length}) is ENGINEERING-CLOSED via REUSE-before-build (own additive \`ad_*\` tables + helpers), all gated by \`assessmentDelivery\` (default OFF) so the OFF path is byte-identical incl. schema — **all DDL runs only on the flag-gated write paths**, never at read time.
+This is a **CERTIFICATION + IMPLEMENTATION** deliverable (mirrors Phases 1.3–1.7 + 3.1 + 3.2 + 3.3). All ${RESOLVED.length} true engineering gaps are ENGINEERING-CLOSED — the reuse-before-build \`ad_*\` overlay gaps via own additive tables + helpers, and the coding/video/simulation/adaptive/proctoring delivery gaps via first-class flag-gated delivery components + pure mechanisms — all gated by \`assessmentDelivery\` (default OFF) so the OFF path is byte-identical incl. schema — **all DDL runs only on the flag-gated write paths**, never at read time.
 
 ## The seven INDEPENDENT dimensions (reported SEPARATELY — never composited)
 | # | Dimension | Measured result |
@@ -108,7 +108,7 @@ This is a **CERTIFICATION** deliverable (mirrors Phases 1.3–1.7 + 3.1 + 3.2 + 
 **Repository-alignment (Coverage-only, verified vs live FS+DB):** svc ${R.services.present}/${R.services.total} · rt ${R.routes.present}/${R.routes.total} · fe ${R.frontend.present}/${R.frontend.total} · tbl ${R.tables.present}/${R.tables.total} (absent ${R.tables.absent}, unknown ${R.tables.unknown}).
 
 ## Gaps — ${scan.gap_total} OPEN · ${RESOLVED.length} RESOLVED (engineering-closed, adoption reported separately)
-**${scan.gap_total} OPEN gaps** (${GC['Launch-Critical']} Launch-Critical · ${GC.High} High · ${GC.Medium} Medium · ${GC.Low} Low · ${GC.Future} Future). The seven former engineering gaps (AD-1..AD-${RESOLVED.length}) are ENGINEERING-CLOSED via reuse (${RESOLVED.length} RESOLVED). The remaining OPEN gaps are genuine Future/Low deferrals (coding/video/simulation delivery, real adaptive routing, browser lockdown/proctoring) — **none Launch-Critical**. What remains beyond them is **ADOPTION** — real delivered-session VOLUME across the overlay — a usage axis reported SEPARATELY, NEVER a gap and NEVER fabricated as adopted.
+**${scan.gap_total} OPEN gaps** (${GC['Launch-Critical']} Launch-Critical · ${GC.High} High · ${GC.Medium} Medium · ${GC.Low} Low · ${GC.Future} Future). All ${RESOLVED.length} former engineering gaps are ENGINEERING-CLOSED (${RESOLVED.length} RESOLVED): the \`ad_*\` overlay gaps via reuse-before-build, and the coding/video/simulation delivery, delivery-layer adaptive routing, and web-level browser lockdown/proctoring gaps via first-class flag-gated delivery components + pure mechanisms. There are **0 OPEN engineering gaps**. The honest BOUNDARIES that remain — multi-language server execution sandbox, psychometric IRT / ability-estimation routing (Phase 3.5), OS-level secure browser — are scope boundaries reported in-line on the affected rows, **NOT gaps**. What remains beyond them is **ADOPTION** — real delivered-session VOLUME across the overlay — a usage axis reported SEPARATELY, NEVER a gap and NEVER fabricated as adopted.
 
 ## Ready for Phase 3.5 (Scoring)?
 **${S.ready_for_phase_3_5.verdict}.** ${S.ready_for_phase_3_5.note}
@@ -126,7 +126,7 @@ catTable('Delivery modes', DM.count, DM.status_counts, REG.delivery_modes) +
 catTable('Question-delivery modes', QD.count, QD.status_counts, REG.question_delivery_modes) +
 `\n## Launch modes (${LA.count})\n` +
 ctrlTable('Launch modes', LA.count, LA.status_counts, LA.controls) +
-`\n_PARTIAL delivery modes (coding/video/simulation) and PARTIAL question-delivery (real adaptive routing) are honest deferrals — adaptive routing itself DEPENDS ON Phase 3.5. The delivery seam being ready is exactly what 3.5 needs._\n`;
+`\n_Coding/video/simulation delivery modes and delivery-layer adaptive question routing are ENGINEERING-CLOSED (first-class flag-gated delivery components + pure mechanisms). The honest boundary that remains is PSYCHOMETRIC adaptive routing — IRT / ability-estimation — which belongs to Phase 3.5; the delivery seam being ready is exactly what 3.5 consumes. This is a scope boundary, not a gap._\n`;
 
 // ── 03 Candidate Experience Report (dimension 2) ─────────────────────────
 files['03-candidate-experience-report.md'] = HEAD('03', 'Candidate Experience Report (dimension 2 · candidate_experience)') +
@@ -152,7 +152,7 @@ ctrlTable('Accessibility capabilities', AC.count, AC.status_counts, AC.controls)
 files['06-assessment-security-report.md'] = HEAD('06', 'Assessment Security Report (dimension 5 · security)') +
 `Delivery-scoped security controls (${SEC.count}) — session integrity, tamper/anomaly events, consent, audit. REUSES the existing security-middleware + unified-audit-trail; delivery-scoped events land in the additive \`ad_events\` ledger. This is DELIVERY integrity — NOT scoring or psychometrics.\n\n` +
 ctrlTable('Security controls', SEC.count, SEC.status_counts, SEC.controls) +
-`\n_PARTIAL controls (browser lockdown / hardware proctoring) are honest Future deferrals — not Launch-Critical._\n`;
+`\n_Web-level browser lockdown and proctoring (visibility / focus / fullscreen enforcement) are ENGINEERING-CLOSED (first-class flag-gated \`ProctoringGuard\`). The honest boundary that remains is OS-level secure-browser lockdown, which is not web-achievable — a scope boundary, not a gap and not Launch-Critical._\n`;
 
 // ── 07 Notification Report ───────────────────────────────────────────────
 files['07-notification-report.md'] = HEAD('07', 'Notification Report (delivery notifications)') +
@@ -212,7 +212,7 @@ files['10-repository-change-summary.md'] = HEAD('10', 'Repository Change Summary
 // ── 11 Remaining Gaps ────────────────────────────────────────────────────
 files['11-remaining-gaps.md'] = HEAD('11', 'Remaining Gaps (OPEN Future/Low · engineering-closed via reuse)') +
 `**${scan.gap_total} OPEN gaps: ${GC['Launch-Critical']} Launch-Critical · ${GC.High} High · ${GC.Medium} Medium · ${GC.Low} Low · ${GC.Future} Future.**\n\n` +
-`The seven former engineering gaps (AD-1..AD-${RESOLVED.length}) are **ENGINEERING-CLOSED** via REUSE-before-build, each gated by \`assessmentDelivery\` (byte-identical OFF incl. schema; DDL only on the flag-gated write paths). The remaining OPEN gaps are genuine Future/Low deferrals — **none Launch-Critical**. What remains beyond them is **ADOPTION** — real delivered-session volume — a usage axis reported SEPARATELY, NEVER a gap. Coverage⟂Confidence⟂Adoption never composited; never fabricated.\n\n` +
+`All ${RESOLVED.length} former engineering gaps are **ENGINEERING-CLOSED** — the \`ad_*\` overlay gaps via REUSE-before-build, the coding/video/simulation/adaptive/proctoring delivery gaps via first-class flag-gated delivery components + pure mechanisms — each gated by \`assessmentDelivery\` (byte-identical OFF incl. schema; DDL only on the flag-gated write paths). There are **0 OPEN engineering gaps**. The honest BOUNDARIES that remain (multi-language server execution sandbox, psychometric IRT / ability-estimation routing = Phase 3.5, OS-level secure browser) are scope boundaries reported in-line, **NOT gaps**. What remains beyond them is **ADOPTION** — real delivered-session volume — a usage axis reported SEPARATELY, NEVER a gap. Coverage⟂Confidence⟂Adoption never composited; never fabricated.\n\n` +
 `## Open gaps\n` +
 ((['Launch-Critical', 'High', 'Medium', 'Low', 'Future'] as const).some((sev) => GAPS.some((g) => g.severity === sev))
   ? (['Launch-Critical', 'High', 'Medium', 'Low', 'Future'] as const).map((sev) => {
@@ -247,7 +247,7 @@ files['12-phase-3.4-certification.md'] = HEAD('12', 'Phase 3.4 Certification & V
 `| 5 | Security (${SEC.count} controls) | ${sc(SEC.status_counts)} |\n` +
 `| 6 | APIs — launch (${LA.count}) / notifications (${NO.count}) | ${sc(LA.status_counts)} / ${sc(NO.status_counts)} |\n` +
 `| 7 | Frontend + repository-alignment | svc ${R.services.present}/${R.services.total} · rt ${R.routes.present}/${R.routes.total} · fe ${R.frontend.present}/${R.frontend.total} · tbl ${R.tables.present}/${R.tables.total} |\n\n` +
-`- **Gaps**: ${scan.gap_total} OPEN · ${RESOLVED.length} RESOLVED (all seven AD-1..AD-${RESOLVED.length} engineering-closed via reuse). Adoption reported separately, never a gap.\n\n` +
+`- **Gaps**: ${scan.gap_total} OPEN · ${RESOLVED.length} RESOLVED (all ${RESOLVED.length} former gaps engineering-closed — \`ad_*\` overlay via reuse, delivery modes via first-class flag-gated components). Adoption reported separately, never a gap.\n\n` +
 `## Acceptance criteria (from spec)\n` +
 `| Criterion | Result |\n|---|---|\n` +
 `| ONE canonical Assessment Delivery registry | ✅ \`config/assessment-delivery.ts\` (${D.dimension_count} dimensions · ${CX.count} candidate-experience steps · ${DM.count} delivery modes) |\n` +
@@ -265,7 +265,7 @@ REG.decisions.map((d: any) => `- **${d.title}** (\`${d.id}\`) — ${d.decision}`
 `${S.enterprise_ready.note}\n\n` +
 `## Ready for Phase 3.5 (Scoring)?\n` +
 `**${S.ready_for_phase_3_5.verdict}.** ${S.ready_for_phase_3_5.note}\n\n` +
-`**Plainly:** YES on structure — ONE canonical Enterprise Assessment Delivery Engine COMPOSING the existing assessment runtimes under one registry, with ${D.dimension_count} dimensions all SUPPORTED, a ${CX.count}-step candidate journey, ${DM.count} delivery modes, ${SE.count} session capabilities, ${AC.count} accessibility capabilities, ${SEC.count} security controls, and ${NO.count} notification types — each evidence claim verified against the live repository. Scope is CANDIDATE EXPERIENCE ONLY (launch→submission); it never scores, runs psychometrics, or emits reports (Phase 3.5+). The SEVEN certification dimensions are reported SEPARATELY and NEVER composited. All seven former engineering gaps (AD-1..AD-${RESOLVED.length}) are ENGINEERING-CLOSED via reuse (${scan.gap_total} OPEN · ${RESOLVED.length} RESOLVED), all behind \`assessmentDelivery\` so OFF is byte-identical incl. schema. What remains is ADOPTION — real delivered-session volume — a usage axis reported SEPARATELY, NEVER a gap and NEVER fabricated as adopted. Coverage⟂Confidence⟂Adoption; null≠0; nothing fabricated; the platform is enhanced-only.\n`;
+`**Plainly:** YES on structure — ONE canonical Enterprise Assessment Delivery Engine COMPOSING the existing assessment runtimes under one registry, with ${D.dimension_count} dimensions all SUPPORTED, a ${CX.count}-step candidate journey, ${DM.count} delivery modes, ${SE.count} session capabilities, ${AC.count} accessibility capabilities, ${SEC.count} security controls, and ${NO.count} notification types — each evidence claim verified against the live repository. Scope is CANDIDATE EXPERIENCE ONLY (launch→submission); it never scores, runs psychometrics, or emits reports (Phase 3.5+). The SEVEN certification dimensions are reported SEPARATELY and NEVER composited. All ${RESOLVED.length} former engineering gaps are ENGINEERING-CLOSED (${scan.gap_total} OPEN · ${RESOLVED.length} RESOLVED) — the \`ad_*\` overlay via reuse-before-build, the coding/video/simulation/adaptive/proctoring delivery modes via first-class flag-gated delivery components + pure mechanisms — all behind \`assessmentDelivery\` so OFF is byte-identical incl. schema. The honest boundaries that remain (multi-language server sandbox, psychometric IRT routing = Phase 3.5, OS-level secure browser) are scope boundaries, NOT gaps. What remains is ADOPTION — real delivered-session volume — a usage axis reported SEPARATELY, NEVER a gap and NEVER fabricated as adopted. Coverage⟂Confidence⟂Adoption; null≠0; nothing fabricated; the platform is enhanced-only.\n`;
 
 const EXPECTED = [
   '01-executive-summary.md', '02-delivery-engine-report.md', '03-candidate-experience-report.md',

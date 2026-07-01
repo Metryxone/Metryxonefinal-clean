@@ -1,6 +1,6 @@
 # CAPADEX 3.0 · Program 3 · Phase 3.4 — Repository Change Summary & Alignment
 
-> Deliverable 10 · Generated 2026-07-01T09:39:51.721Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:6c0930a1b4b1, written 2026-07-01T09:39:51.722Z).
+> Deliverable 10 · Generated 2026-07-01T10:13:32.658Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:ba8e46395e4d, written 2026-07-01T10:13:32.658Z).
 > Scope: CANDIDATE EXPERIENCE ONLY — launch/session/candidate-experience/question-delivery/timing/response/accessibility/delivery-modes/security/notifications/frontend/APIs from launch until final submission; NOT scoring/psychometrics/norms/AI-interpretation/reports/analytics (= Phase 3.5+).
 > Honesty: the SEVEN certification dimensions (delivery_engine · candidate_experience · session_management · accessibility · security · apis · frontend) are reported SEPARATELY and NEVER composited. Adoption is a SEPARATE usage axis, never a gap. Coverage⟂Confidence⟂Adoption; null ≠ 0; never fabricated.
 
@@ -25,7 +25,7 @@ Every dimension evidence claim verified INDEPENDENTLY against the live filesyste
 |---|---|
 | Services | 11/11 |
 | Routes | 11/11 |
-| Frontend | 15/15 |
+| Frontend | 21/21 |
 | Tables | 8/13 (absent 5, unknown 0) |
 
 _Every dimension evidence claim is verified INDEPENDENTLY against the live FS (services/routes/frontend) and DB (to_regclass). null (unknown) ≠ 0 (absent). Coverage-only — kept SEPARATE from Confidence/Adoption. ad_* overlay tables are absent while the flag has never run its write paths — that is expected + honest._

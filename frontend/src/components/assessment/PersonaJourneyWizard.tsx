@@ -311,6 +311,24 @@ export function PersonaJourneyWizard(props: PersonaJourneyWizardProps) {
   }
   function back() { setStep((s) => Math.max(0, s - 1)); }
 
+  // Step 0 is a single-choice step: picking "who this is for" is the entire task,
+  // so a click both selects the track AND advances to Refine — no extra Continue
+  // hop. This matches the immediate behaviour of the search results and the B2B
+  // cards. Back still returns here with the selection intact.
+  function selectTrackAndAdvance(t: MacroTrackData) {
+    setTrackId(t.id);
+    // Drop a stale sub-persona/band that belonged to a different track.
+    if (subId && !t.subPersonas.some((sp) => sp.id === subId)) { setSubId(null); setBand(''); }
+    // Auto-pick the sub-persona (and its age band) when the track has exactly one.
+    if (t.subPersonas.length === 1) {
+      const only = t.subPersonas[0];
+      setSubId(only.id);
+      if (only.ageBands.length === 1) setBand(only.ageBands[0]);
+    }
+    setSearch('');
+    setStep(1);
+  }
+
   return (
     <div className="flex flex-col max-h-[95vh]" data-testid="persona-journey-wizard">
       {/* Header + progress */}
@@ -370,6 +388,14 @@ export function PersonaJourneyWizard(props: PersonaJourneyWizardProps) {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => {
+                  // Enter jumps straight to the top match — no need to reach for the mouse.
+                  if (e.key === 'Enter' && searchResults.length > 0) {
+                    e.preventDefault();
+                    const top = searchResults[0];
+                    pickSearchResult(top.track, top.sp);
+                  }
+                }}
                 placeholder="Search (e.g. college student, manager, parent)…"
                 aria-label="Search personas"
                 className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-[14px] focus:outline-none focus:ring-2"
@@ -400,20 +426,22 @@ export function PersonaJourneyWizard(props: PersonaJourneyWizardProps) {
                   <button
                     key={t.id}
                     type="button"
-                    onClick={() => { setTrackId(t.id); if (subId && !t.subPersonas.some((sp) => sp.id === subId)) { setSubId(null); setBand(''); } }}
+                    onClick={() => selectTrackAndAdvance(t)}
                     aria-pressed={selected}
-                    className="text-left p-4 rounded-2xl border-2 transition-all duration-150 hover:shadow-sm"
-                    style={{ borderColor: selected ? BRAND_DEEP : '#e2e8f0', background: selected ? '#f5f8ff' : '#fff' }}
+                    className="group text-left p-4 rounded-2xl border-2 transition-all duration-150 hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2"
+                    style={{ borderColor: selected ? BRAND_DEEP : '#e2e8f0', background: selected ? '#f5f8ff' : '#fff', ['--tw-ring-color' as string]: BRAND_DEEP }}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: selected ? BRAND_DEEP : '#f1f5f9', color: selected ? '#fff' : BRAND_DEEP }}>
+                      <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors" style={{ background: selected ? BRAND_DEEP : '#f1f5f9', color: selected ? '#fff' : BRAND_DEEP }}>
                         <Icon size={20} />
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <div className="font-semibold text-[14px] text-slate-800">{t.title}</div>
                         <div className="text-[12px] text-slate-500">{t.subtitle}</div>
                       </div>
-                      {selected && <Check size={18} className="ml-auto" style={{ color: BRAND_DEEP }} />}
+                      {selected
+                        ? <Check size={18} className="ml-auto flex-shrink-0" style={{ color: BRAND_DEEP }} />
+                        : <ArrowRight size={16} className="ml-auto flex-shrink-0 text-slate-300 transition-all group-hover:text-slate-400 group-hover:translate-x-0.5" />}
                     </div>
                   </button>
                 );
@@ -421,7 +449,7 @@ export function PersonaJourneyWizard(props: PersonaJourneyWizardProps) {
             </div>
 
             {/* B2B / admin exits */}
-            <div className="mt-6">
+            <div className="mt-6 pt-5 border-t border-slate-100">
               <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">
                 Not taking the assessment yourself?
               </div>

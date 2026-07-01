@@ -99,6 +99,10 @@ args = "test-engines"
 task = "workflow.run"
 args = "persona-journey-mapping"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "test-referred-email"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -329,6 +333,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx --test tests/persona-journey-mapping-coverage.test.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "test-referred-email"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx --test tests/partner-ecosystem-referred-email.test.ts"
 
 [workflows.workflow.metadata]
 isValidation = true

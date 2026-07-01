@@ -1,0 +1,67 @@
+#347 - Phase 3.1 Assessment Architecture
+What & Why
+CAPADEX 3.0 · Program 3 · Phase 3.1 — Assessment Architecture · Lifecycle · Governance. Precondition met: Phase 3.0 Assessment Platform Blueprint is APPROVED and frozen.
+
+Establish and certify the ONE canonical Assessment Architecture defined by the approved blueprint — enhancement-only, reuse-before-build, no duplicate frameworks, no breaking changes. The mandatory discovery pass (already run) proves most of this architecture already exists as pure-data registries; this phase consolidates it into one coherent, certified architecture layer and produces 10 evidence-grounded deliverable docs, then STOPS for human approval before Phase 3.2 (Question Management Platform).
+
+Execution contract (from the spec, non-negotiable): Repository-first · Blueprint-first · Enhancement-only · Search-before-modify · Reuse-before-build · Preserve existing architecture · No duplicate assessment frameworks · No breaking changes · Additive/flag-gated/byte-identical-off · Human approval required.
+
+What ALREADY exists (from discovery — reuse, do NOT rebuild):
+
+Canonical type taxonomy: FROZEN 10-type registry in backend/config/assessment-framework.ts (entry/baseline/diagnostic/behaviour/competency/learning/performance/progress/exit/continuous) + SPEC_19_CROSSWALK. The taxonomy is FROZEN — this phase does NOT re-decide it. CAF has its own AssessmentTypeCode (behavioral/functional/cognitive/leadership/future_readiness) in backend/services/caf/types.ts.
+Lifecycle machinery (per-artifact, distributed): question registry lifecycle (capadex_question_registry: draft/testing/active/candidate_for_retirement/deprecated/archived + transitionStatus); MX-202B content approval (onto_competency_content_drafts: draft/verified/approved/rejected/archived, two-track); platform lifecycle registry (platform_lifecycle_registry, ownership + append-only history); academic (exams/exam_attempts status).
+Governance (distributed): approval-workflow-view, unified-audit-trail, question-registry governance triage, adaptive question-governance reject, competency versioning (onto_competency_versions).
+Metadata: rich per-type metadata in assessment-framework.ts registry + DB tables (assessment_templates, lbi_question_bank, competency_library, psychometric_domains).
+Mappings: assessment-framework.ts (type→persona/lifecycle/journey/competency/scoring/benchmark/AI/rec/report/outcome/KPI), customer-journey.ts, ai-orchestration-model.ts; traceability composers scripts/capadex-1.3-*/1.4-*; blueprint docs 08/17.
+Honest architecture gaps the phase must name (not silently paper over):
+
+Spec lists 15 canonical TYPES; repo has 10 (frozen). Aptitude / Organization / Custom are NOT first-class named types — must be adjudicated via crosswalk (fold-in vs honest-absent), never fabricated.
+No dedicated assessment CATEGORY registry — categories exist only as industry tags (IND_EDU/IND_GOV/IND_HEALTH/IND_CORP), roles, and behavioural domains. Government/Healthcare/NGO/Research categories are non-validated scaffolds (per Phase 3.0 boundary markers — no clinical/diagnostic claims).
+No single assessment-LEVEL 10-state lifecycle (Draft→Review→Pilot→Validation→Approval→Published→Active→Suspended→Deprecated→Archived) — existing lifecycles are per-question / per-content-draft / per-capability. This phase encodes ONE canonical lifecycle MODEL that composes/maps onto the existing per-artifact machinery (registry/model), it does NOT rip out or replace them.
+No single canonical metadata STANDARD (the 18 fields: id/version/owner/business_domain/persona/lifecycle_stage/competencies/behaviours/skills/duration/language/difficulty/type/category/tags/status/created_by/updated_by) applied uniformly — metadata is rich but per-registry/per-table.
+Done looks like
+ONE canonical assessment architecture, lifecycle model, governance model, metadata standard, and mapping model — encoded as pure-data registries + a read-only composer/verifier + flag-gated routes (mirroring the CAPADEX 1.3–1.7 pattern), default OFF and byte-identical-off including schema (zero DDL / reads-only).
+10 numbered deliverable docs produced under backend/audit/program-3-phase-3.1-assessment-architecture/: 01 Executive Summary · 02 Assessment Architecture Report · 03 Assessment Type Matrix · 04 Assessment Category Matrix · 05 Assessment Lifecycle Report · 06 Assessment Governance Report · 07 Metadata Standard · 08 Assessment Mapping Matrix · 09 Repository Change Summary · 10 Remaining Architecture Gaps.
+Each of the five axes (Architecture / Lifecycle / Governance / Metadata / Repository-Alignment) certified INDEPENDENTLY — never composited into one score. Coverage ⟂ Confidence ⟂ Adoption stay separate. null ≠ 0.
+Final verdict answers: "Is the Assessment Architecture complete and ready for Phase 3.2?" with every remaining gap classified Launch-Critical / High / Medium / Low / Future, citing REAL repo evidence (MISSING = MISSING).
+Existing APIs / DB / frontend unchanged and verified aligned; no duplicate framework introduced.
+STOP for human approval — nothing proceeds to Phase 3.2 until sign-off.
+Out of scope (explicit — these are LATER phases)
+Building a Question Builder, Assessment Builder, Norm Engine, or Reports (spec DO-NOT list — Phase 3.2+).
+Re-deciding the FROZEN 10-type taxonomy or re-shaping any Phase 3.0 blueprint verdict.
+Any migration / DDL / new runtime table (this phase reads + registers only; flag-off creates 0 tables).
+Any breaking change to existing assessment APIs, schema, or UI.
+Turning the feature flag ON in production or deploying (stop-for-approval).
+Closing the Phase 3.0 content gaps (accessibility / population norms / AI prompt mgmt / T-score-stanine / etc.) — those are separate 3.x remediation tasks.
+Steps
+Canonical architecture registry — Add a pure-data registry that encodes the ONE canonical assessment architecture by COMPOSING the existing assessment-framework.ts frozen taxonomy: the canonical type set with an honest crosswalk for the spec's 15 names (fold-in vs adjudicated-absent for Aptitude/Organization/Custom), and the canonical category model (education/career/enterprise + non-validated government/healthcare/NGO/research/certification scaffolds with explicit "not validated / not for clinical use" boundary markers). No new taxonomy; reference existing engines/tables as evidence.
+Canonical lifecycle + governance + metadata models — Encode ONE canonical assessment-level lifecycle model (10 states) that MAPS onto the existing per-artifact lifecycles (question registry / content-approval / platform-lifecycle) rather than replacing them; ONE governance model composing the existing approval-workflow-view, unified-audit-trail, versioning, and registry-governance triage; ONE metadata standard (18 fields) with a per-source coverage crosswalk showing where each field lives today and where it is honest-absent.
+Read-only composer + flag-gated routes — Add a never-throws read-only composer/verifier that certifies each axis independently (architecture/lifecycle/governance/metadata/repo-alignment) by verifying registry claims against live filesystem + DB existence (to_regclass-verified table names, no invocation of engines), plus flag-gated super-admin routes (/enabled probe + per-axis GETs) behind a NEW default-OFF feature flag; 503-before-auth when OFF; wire the flag getter into the /public-config import site. Byte-identical OFF incl. schema.
+SSoT scan + deliverables generator — Add a scan script that emits one scan.json (types/categories/lifecycle/governance/metadata/mappings/coverage/gaps) and a generator that reads ONLY scan.json to write the 10 deliverable docs so they can never drift from measured evidence. Include the honest gap register (Launch-Critical/High/Medium/Low/Future) and the independent per-axis certification.
+Alignment verification + STOP — Verify existing assessment APIs / DB / frontend remain byte-identical with the flag OFF (esbuild parse + flag-off route probes; do NOT rely on the pathologically-slow vite build — validate backend via esbuild + dist grep). Produce doc 09 (Repository Change Summary) and doc 10 (Remaining Architecture Gaps), then STOP for human approval.
+Critical architectural constraints
+No duplicate framework: assessment-framework.ts remains THE single source of the type taxonomy — the new registry composes it, never forks it.
+Reuse-before-build: every "IMPLEMENT" in the spec maps to composing/registering existing substrate; create a new module ONLY where discovery proves no equivalent exists (documented in doc 09).
+Independent certification: Architecture / Lifecycle / Governance / Metadata / Repository-Alignment are certified SEPARATELY and NEVER combined into a single score (spec: "Never combine these").
+Honesty: cite real file paths / table names (to_regclass-verified); MISSING = MISSING; null ≠ 0; Coverage ⟂ Confidence ⟂ Adoption never composited; never fabricate.
+public-config dual import-site trap (from prior phases): the new flag getter must be imported at the /public-config site or that endpoint 500s.
+Relevant files
+backend/config/assessment-framework.ts
+backend/config/customer-journey.ts
+backend/config/ai-orchestration-model.ts
+backend/services/caf/types.ts
+backend/services/caf/scoring-engine.ts
+backend/services/question-registry-service.ts
+backend/services/mx202b-verified-lifecycle.ts
+backend/services/mx202b-content-approval.ts
+backend/services/platform-lifecycle.ts
+backend/services/governance/approval-workflow-view.ts
+backend/services/governance/unified-audit-trail.ts
+backend/services/adaptive/question-governance-reject.ts
+backend/services/lbi-norms-engine.ts
+backend/config/feature-flags.ts
+backend/routes/capadex.ts
+backend/shared/schema.ts
+backend/audit/program-3-assessment-platform-blueprint/08-assessment-mapping-matrix.md
+backend/audit/program-3-assessment-platform-blueprint/17-assessment-platform-traceability-matrix.md
+backend/audit/program-3-assessment-platform-blueprint/18-capability-gap-register.md

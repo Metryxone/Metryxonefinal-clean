@@ -10,13 +10,11 @@
  * would be a new intelligence engine, out of scope for this wave). Upsell with no prior paid stage →
  * not eligible (`no_prior_purchase`).
  *
- * STAGE_PRICES / LADDER mirror routes/capadex-payments.ts — keep in lockstep.
+ * STAGE_PRICES / LADDER come from the canonical `config/stage-pricing.ts` source.
  */
 import type { Pool } from 'pg';
 import type { SubscriptionActivation } from './subscription-engine';
-
-const STAGE_PRICES: Record<string, number> = { CAP_INS: 499, CAP_GRW: 999, CAP_MAS: 1999 };
-const LADDER = ['CAP_INS', 'CAP_GRW', 'CAP_MAS'] as const;
+import { STAGE_PRICES, PURCHASABLE_LADDER as LADDER } from '../../config/stage-pricing';
 
 export interface UpsellTarget { code: string; label: string; price: number; currency: 'INR'; }
 

@@ -14,6 +14,7 @@ import { createHmac } from 'crypto';
 import { z } from 'zod';
 import { validate } from '../lib/validate';
 import { stageLabel as canonStageLabel } from '../lib/lifecycle';
+import { STAGE_PRICES } from '../config/stage-pricing';
 import { sendPaymentConfirmationUser, sendPaymentConfirmationAdmin } from '../email';
 import { sendWhatsAppNotification } from '../services/whatsapp';
 
@@ -47,12 +48,6 @@ const refundBody = z.object({
   payment_id: idLike,
   reason: optStr(1000),
 });
-
-const STAGE_PRICES: Record<string, number> = {
-  CAP_INS: 499,
-  CAP_GRW: 999,
-  CAP_MAS: 1999,
-};
 
 function getRazorpay() {
   const keyId     = process.env.RAZORPAY_KEY_ID;

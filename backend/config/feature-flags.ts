@@ -271,16 +271,18 @@ export const FEATURE_FLAGS = {
    *  persisted output — NEVER invoked. Flag OFF → data routes 503, public-config `operational_readiness:false`,
    *  byte-identical legacy behaviour incl. schema. Env: `FF_OPERATIONAL_READINESS`. */
   operationalReadiness: false,
-  /** CAPADEX 3.0 — Program 3 · Phase 3.1 Assessment Architecture Completion (closes the nine architecture
-   *  gaps AP-1..AP-9 to ENGINEERING closure, additive & flag-gated). When ON: canonical T-scores (SD=10) +
-   *  stanines + sten (AP-7); norm-group extension for gender/education-tier/competitive-exam over the SAME
-   *  lbi-norms engine, computed ONLY from real data with k_min abstention, gender ethics-gated OFF (AP-4/5/6);
-   *  country benchmark cohorts reusing bench_cohorts.geography (AP-8); read-through activation of the EXISTING
-   *  aig_prompts registry for code-embedded prompts (AP-9); deterministic Bloom classification of the
-   *  behavioural clarity bank with honest abstention (AP-1); plus the read-only super-admin composer at
-   *  `/api/admin/assessment-architecture/*`. NEVER fabricates — abstains (null / provisional) when data is
-   *  insufficient; Coverage⟂Confidence⟂Adoption never composited. Flag OFF → data routes 503, public-config
-   *  `assessment_architecture_completion:false`, and the assessment flow + schema are byte-identical to legacy.
+  /** CAPADEX 3.0 — Program 3 · Phase 3.1 Assessment Architecture CERTIFICATION (read-only, mirrors
+   *  Phases 1.3–1.7). Gates the pure-data canonical Assessment Architecture registry
+   *  (`config/assessment-architecture.ts`) + a never-throws read-only composer
+   *  (`services/assessment-architecture-engine.ts`) that certifies FIVE INDEPENDENT axes over the EXISTING
+   *  frozen substrate — architecture (13 layers + 10-type taxonomy) · lifecycle (ONE 10-state model mapped
+   *  onto existing per-artifact states) · governance · metadata (18-field standard + per-source coverage) ·
+   *  repository-alignment — each verified vs the live FS+DB and reported SEPARATELY (never composited).
+   *  NO new engine, NO V2, ZERO DDL, reads-only. Remaining architecture gaps (0 Launch-Critical · 0 High ·
+   *  5 Medium · 3 Low · 1 Future) are certified as HONEST OPEN additive work, never fabricated as closed.
+   *  Flag OFF → super-admin composer routes at `/api/admin/assessment-architecture/*` 503 (503-before-auth),
+   *  public-config `assessment_architecture_completion:false`, and the assessment flow + schema are
+   *  byte-identical to legacy. Coverage⟂Confidence⟂Adoption never composited; null≠0.
    *  Env: `FF_ASSESSMENT_ARCHITECTURE_COMPLETION`. */
   assessmentArchitectureCompletion: false,
   /** MX-103X — Live Employer Ecosystem Activation (read-only audit + certification console over the EXISTING

@@ -1,25 +1,21 @@
 ---
-name: Assessment Architecture Completion (CAPADEX 3.0 Program 3 · Phase 3.1)
-description: Flag assessmentArchitectureCompletion — how the 9 AP-* architecture gaps were engineering-closed additively without fabricating norm/benchmark data.
+name: Assessment Architecture Certification (CAPADEX 3.0 Phase 3.1)
+description: Phase 3.1 is a READ-ONLY certification of the ONE canonical Assessment Architecture over EXISTING substrate — NOT gap-remediation; the 9 capability gaps remain OPEN additive work.
 ---
 
-# Assessment Architecture Completion (Phase 3.1)
+# Assessment Architecture Certification (CAPADEX 3.0 · Program 3 · Phase 3.1)
 
-Flag `assessmentArchitectureCompletion` / `FF_ASSESSMENT_ARCHITECTURE_COMPLETION`, default OFF, byte-identical OFF **including schema**. Closes 9 architecture gaps AP-1..AP-9 over the frozen assessment architecture. "100% closure" here = **built + computes from REAL substrate + abstains via k_min when data is insufficient** — NEVER fabricated norms/benchmarks.
+Flag `assessmentArchitectureCompletion` (`FF_ASSESSMENT_ARCHITECTURE_COMPLETION`), default OFF, byte-identical OFF incl. schema (zero DDL, reads-only).
 
-## The honesty rule that shaped every norm/benchmark path
-Group norms (`computeGroupNorms`) compute REAL population norms ONLY when the source dimension column exists AND k≥30; otherwise they **abstain with an explicit reason** (`dimension_source_absent`) — they never invent a distribution. Gender norms are additionally **ethics-gated** behind `ASSESSMENT_GENDER_NORMS_ENABLED` (owner/legal decision) → default abstains `ethics_gated_off`. Country benchmarks widen the `bench_cohorts` `cohort_type` CHECK to add `'country'` **only on the flag-gated write path**; registered rows are scaffolds, norms still gated by the same k_min. Bloom classification of the behavioural clarity bank is honest `total:0` when the bank is empty (dev) — that is the ADOPTION axis, not a gap.
+## What it is
+A CERTIFICATION deliverable mirroring CAPADEX 1.3–1.7 — NOT a build/remediation phase. It COMPOSES the frozen `config/assessment-framework.ts` into a pure-data canonical registry (`config/assessment-architecture.ts`: 13 architecture layers, 2 families CAPADEX+CAF, 10-type taxonomy + crosswalk, ONE 10-state lifecycle, governance controls, 18-field metadata standard, 15-step mapping model) and certifies it via a never-throws read-only composer (`services/assessment-architecture-engine.ts`) exposing FIVE INDEPENDENT axes — architecture · lifecycle · governance · metadata · repository-alignment — **NEVER composited**. Routes `routes/assessment-architecture.ts` (flag-gated `/enabled` probe + super-admin GETs). SSoT `scan.json` + generator writing ONLY from scan.json → 10 numbered docs + completion-certification at `backend/audit/program-3-phase-3.1-assessment-architecture/`. Verdict `ARCHITECTURE_COMPLETE_ADDITIVE_GAPS_PENDING`.
 
-## Byte-identical-OFF forced these shapes
-- Own additive tables only (`assessment_group_norms`, `capadex_clarity_bloom`); the `bench_cohorts` CHECK widening runs ONLY when a flag-gated write endpoint is hit.
-- Routes gate flag→auth→superadmin: 503 when OFF, 401 at the global `/api/admin` gate.
-- **public-config is a dual import-site trap** (same as prior CAPADEX phases): the getter must be imported into `routes/capadex.ts` `/public-config` or the endpoint 500s (no tsc here). Key `assessment_architecture_completion`.
+## The gaps are OPEN, not closed
+**Why:** an earlier pass mislabelled Phase 3.1 as gap-remediation and shipped out-of-scope code (`psychometric-standardization.ts`, `prompt-registry-activation.ts`, `frontend/src/lib/offline.ts`, `frontend/src/lib/accessibility.ts`, `frontend/public/sw.js`, `manifest.webmanifest`) that was then REMOVED. All 9 capability gaps (GAP-AP-1..9: 0 Launch-Critical · 0 High · 5 Medium · 3 Low · 1 Future) are HONEST OPEN additive work over the FROZEN 13-layer architecture — none built, none blocks certification.
+**How to apply:** never claim these gaps closed; any doc/memory saying "engineering-closed / foundation-shipped" is stale. The machine-verified truth is `scan.json`. `backend/audit/program-3-assessment-platform-blueprint/18-capability-gap-register.md` was corrected to report them OPEN — keep it consistent with scan.json if you regenerate.
 
-## Frontend foundations (AP-2 offline, AP-3 accessibility) — keep OFF truly byte-identical
-- Do NOT add manifest/theme-color to static `index.html` — inject them inside the flag-gated `initOfflineDelivery()` so OFF `index.html` is unchanged. The ONLY accepted OFF-path delta is a single startup `/api/capadex/public-config` fetch (the standard flag-detection pattern already used across the app).
-- `lib/accessibility.ts` (skip-link, ARIA live-region + `announce()`, focus-visible, focus-trap) and `lib/offline.ts` (SW register + localStorage idempotent response queue) are INERT until `initAccessibility()`/`initOfflineDelivery()` are called, which happens only when the flag is ON.
-- WIRE the foundations, don't just ship scaffolds: `FreeAssessmentModal` announces each `phase` change (flag-gated) and enqueues the `/api/capadex/concern/analyze` payload in the catch path when `navigator.onLine===false` (idempotent `client_key`, replays on reconnect). When hoisting a body used in the catch (e.g. `analyzeBody`), declare it `let` BEFORE the `try` or it's out of scope.
-- **Adoption ≠ engineering**: real offline sessions + screen-reader/axe verification need a real browser (not available here) — report on their own axes, never as a gap.
-
-## Verification without a build
-Backend paths verified by a one-off tsx smoke script calling the engine directly (flag not needed for direct calls; routes enforce it). Frontend verified by esbuild single-file parse (Vite build is pathologically slow) + HMR health in the running workflow. Coverage⟂Confidence⟂Adoption never composited; null≠0.
+## Traps
+- **public-config is a dual import-site:** `routes/capadex.ts` `/public-config` must IMPORT `isAssessmentArchitectureCompletionEnabled` or the endpoint 500s (no tsc here).
+- **`/enabled` = 503-before-auth when OFF** (flagGate runs first). The super-admin `/api/admin/assessment-architecture/*` routes return **401** when OFF because the GLOBAL `/api/admin` auth gate precedes the route-level flagGate — OFF smoke ∈ {401,403,503}, all honest.
+- **null ≠ 0**: norms/benchmarks abstain (`dimension_source_absent`, gender `ethics_gated_off`, k_min=30) — never fabricate. Coverage⟂Confidence⟂Adoption reported separately; adoption is never a gap.
+- Validate via esbuild parse (vite build pathologically slow); run scan + generator from `backend/` with `npx tsx`; NEVER pkill.

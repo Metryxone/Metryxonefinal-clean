@@ -39,10 +39,11 @@ interface RoleWeightRow {
 
 async function getRoleVector(pool: Pool, roleId: string): Promise<RoleWeightRow[]> {
   return cached(`mob:rv:${roleId}`, async () => {
-    // `source` carries provenance so downstream surfaces can flag estimated /
-    // inherited competencies. onto_role_weights now carries a real provenance
-    // column: 'curated' for hand-authored weights, 'onet_derived' for weights
-    // bridged from related O*NET occupations (see onet-onto-weight-bridge.ts).
+    // `source` carries provenance so downstream surfaces can flag each weight.
+    // onto_role_weights now carries a real provenance column: 'curated' for
+    // hand-authored weights, 'onet' for weights rated directly by O*NET for a
+    // resolved occupation (Verified), and 'onet_derived' for weights inherited
+    // from a related O*NET occupation (estimated) — see onet-onto-weight-bridge.ts.
     // COALESCE keeps any pre-migration legacy row honest.
     await ensureOntoRoleWeightSourceColumn(pool);
     const { rows } = await pool.query<RoleWeightRow>(`

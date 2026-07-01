@@ -272,11 +272,12 @@ export function createOntologyService(pool: Pool) {
         };
       }
       const profile = profileRes.rows[0];
-      // `source` lets user-facing surfaces flag competencies whose weights are
-      // estimated/inherited rather than measured. onto_role_weights now carries a
-      // real provenance column: hand-authored rows are 'curated', while rows
-      // bridged from related O*NET occupations are 'onet_derived' (see
-      // services/onet-onto-weight-bridge.ts). COALESCE keeps legacy rows honest.
+      // `source` lets user-facing surfaces flag each weight's provenance.
+      // onto_role_weights now carries a real provenance column: hand-authored rows
+      // are 'curated', rows rated directly by O*NET for a resolved occupation are
+      // 'onet' (Verified from O*NET), and rows inherited from a related O*NET
+      // occupation are 'onet_derived' (estimated). See
+      // services/onet-onto-weight-bridge.ts. COALESCE keeps legacy rows honest.
       await ensureOntoRoleWeightSourceColumn(pool);
       const weights = await pool.query(
         `SELECT w.competency_id, c.canonical_name, c.domain_id, c.family_id,

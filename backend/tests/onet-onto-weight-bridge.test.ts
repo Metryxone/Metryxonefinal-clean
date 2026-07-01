@@ -3,17 +3,21 @@
  *
  * Run with:  npx tsx backend/tests/onet-onto-weight-bridge.test.ts
  *
- * Covers services/onet-onto-weight-bridge.ts, which maps real O*NET-derived
- * competency links (map_role_competency.source='onet_derived', ont_* namespace)
- * across into the user-facing Role-DNA table (onto_role_weights, onto_*
- * namespace) so the "Estimated / inherited" honesty badge on
- * OntologyExplorerPage / CareerMobilityPage fires on genuinely estimated rows.
+ * Covers services/onet-onto-weight-bridge.ts, which maps real O*NET competency
+ * links (map_role_competency.source in 'onet' native / 'onet_derived' estimated,
+ * ont_* namespace) across into the user-facing Role-DNA table (onto_role_weights,
+ * onto_* namespace), stamping each bridged row with its genuine provenance so the
+ * "Verified from O*NET" (native) vs "Estimated / inherited" honesty badges on
+ * OntologyExplorerPage / CareerMobilityPage fire on the right rows.
  *
  *   Layer A (pure): profToLevel / PROFICIENCY_TO_LEVEL band → level mapping.
  *   Layer B (live DB, skipped without DATABASE_URL): inside a ROLLBACK-only
  *     transaction —
  *       · a derived link that name-matches across namespaces is bridged and
  *         stamped source='onet_derived';
+ *       · a NATIVE link (source='onet') is bridged and stamped source='onet';
+ *       · when both a native and an estimated link exist for the same pair, the
+ *         native one wins (precedence native > estimated);
  *       · curated weights are never touched (count + sources unchanged);
  *       · a competency the profile already curates is NOT overwritten (curated
  *         always wins);
@@ -163,8 +167,11 @@ test('bridgeOnetDerivedWeights brings O*NET-derived links into onto_role_weights
     }
     const { role_id, title, profile_id, comp_id, canonical_name } = target.rows[0];
 
+    // Count curated rows PRECISELY (source = 'curated'); a `<> 'onet_derived'`
+    // predicate would also sweep in native 'onet' rows the bridge legitimately
+    // adds, making the "untouched" assertion falsely fail.
     const beforeCurated = await client.query(
-      `SELECT COUNT(*)::int n FROM onto_role_weights WHERE source <> 'onet_derived'`);
+      `SELECT COUNT(*)::int n FROM onto_role_weights WHERE source = 'curated'`);
     const curatedCount = beforeCurated.rows[0].n;
 
     // Stand up the ont_* (O*NET) side: a role with the SAME title and a
@@ -199,9 +206,9 @@ test('bridgeOnetDerivedWeights brings O*NET-derived links into onto_role_weights
     assert.equal(got.rows[0].expected_level, 4, "advanced band → level 4");
     assert.ok(got.rows[0].weight > 0, 'weight normalised to a positive fraction');
 
-    // Curated rows are never touched (count unchanged, none flipped to derived).
+    // Curated rows are never touched (count unchanged, none flipped to bridged).
     const afterCurated = await client.query(
-      `SELECT COUNT(*)::int n FROM onto_role_weights WHERE source <> 'onet_derived'`);
+      `SELECT COUNT(*)::int n FROM onto_role_weights WHERE source = 'curated'`);
     assert.equal(afterCurated.rows[0].n, curatedCount, 'curated weights untouched');
 
     // Curated always wins: re-point the derived link at a competency the profile
@@ -426,6 +433,132 @@ test('bridgeOnetDerivedWeights prefers the linkable role when an exact-title rol
     assert.equal(got.rows.length, 1, 'derived weight bridged from the linkable (partial-title) role');
     assert.equal(got.rows[0].source, 'onet_derived');
     assert.equal(got.rows[0].expected_level, 4, 'advanced band → level 4');
+  } finally {
+    await client.query('ROLLBACK').catch(() => {});
+    client.release();
+    await pool.end();
+  }
+});
+
+// ── Layer B: NATIVE O*NET links (source='onet') are bridged AND stamped 'onet'
+//    so the "Verified from O*NET" badge fires on directly-rated occupations ────
+
+test('bridgeOnetDerivedWeights bridges a NATIVE O*NET link and stamps it source=onet', async (t) => {
+  if (!process.env.DATABASE_URL) {
+    t.skip('no DATABASE_URL — skipping live-DB bridge test');
+    return;
+  }
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    const fx = await seedSyntheticOntoFixture(client);
+    if (!fx) {
+      t.skip('no ontology seed present in this DB');
+      return;
+    }
+
+    // Stand up the ont_* side with a NATIVE link: the role title / competency
+    // name match the curated fixtures, and the map link is source='onet' — a
+    // weight rated DIRECTLY by O*NET for the occupation this role resolves to.
+    const ontRole = await client.query(
+      `INSERT INTO ont_roles (code, title, status, is_active)
+       VALUES ($1, $2, 'published', true) RETURNING id`,
+      [`TEST_NATIVE_ROLE_${fx.uniq}`, fx.roleTitle]);
+    const ontComp = await client.query(
+      `INSERT INTO ont_competencies (code, name, category, competency_type, is_active, status)
+       VALUES ($1, $2, 'behavioral', 'behavioral', true, 'published') RETURNING id`,
+      [`TEST_NATIVE_COMP_${fx.uniq}`, fx.compName]);
+    await client.query(
+      `INSERT INTO map_role_competency (role_id, competency_id, importance_tier, weight, target_proficiency, source, is_active)
+       VALUES ($1, $2, 'core', 1.0, 'advanced', 'onet', true)`,
+      [ontRole.rows[0].id, ontComp.rows[0].id]);
+
+    const r = await bridgeOnetDerivedWeights(client as unknown as Pool);
+    assert.equal(r.ok, true);
+
+    // The native link landed on the curated pair, stamped 'onet' (verified).
+    const got = await client.query(
+      `SELECT source, expected_level FROM onto_role_weights
+        WHERE dna_profile_id = $1 AND competency_id = $2`, [fx.profileId, fx.compId]);
+    assert.equal(got.rows.length, 1, 'native weight bridged for the matched pair');
+    assert.equal(got.rows[0].source, 'onet', 'native link stamped source=onet (verified)');
+    assert.equal(got.rows[0].expected_level, 4, 'advanced band → level 4');
+
+    // Native rows are surfaced separately in the honest breakdown.
+    assert.ok((r.nativeLinksBridged ?? 0) >= 1, 'native links tallied in the summary');
+  } finally {
+    await client.query('ROLLBACK').catch(() => {});
+    client.release();
+    await pool.end();
+  }
+});
+
+// ── Layer B: precedence — when a native AND an estimated link both resolve for
+//    the same curated pair, the NATIVE one wins (native > estimated) ───────────
+
+test('bridgeOnetDerivedWeights prefers a NATIVE link over an estimated one for the same pair', async (t) => {
+  if (!process.env.DATABASE_URL) {
+    t.skip('no DATABASE_URL — skipping live-DB bridge test');
+    return;
+  }
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    const fx = await seedSyntheticOntoFixture(client);
+    if (!fx) {
+      t.skip('no ontology seed present in this DB');
+      return;
+    }
+
+    // Two ont_* roles resolve from the SAME curated title, each linking the SAME
+    // curated competency (by name):
+    //   NATIVE   — an EXACT-title role whose link is source='onet' (directly rated).
+    //   ESTIMATED — a partial-title synonym whose link is source='onet_derived'.
+    // Both are linkable, so the bridge collects a candidate from each; precedence
+    // must pick the native one and stamp the bridged row 'onet'.
+    const nativeRole = await client.query(
+      `INSERT INTO ont_roles (code, title, status, is_active)
+       VALUES ($1, $2, 'published', true) RETURNING id`,
+      [`TEST_PREC_NATIVE_${fx.uniq}`, fx.roleTitle]);
+    const derivedRole = await client.query(
+      `INSERT INTO ont_roles (code, title, status, is_active)
+       VALUES ($1, $2, 'published', true) RETURNING id`,
+      [`TEST_PREC_DERIVED_${fx.uniq}`, `${fx.roleTitle} Specialist`]);
+
+    const nativeComp = await client.query(
+      `INSERT INTO ont_competencies (code, name, category, competency_type, is_active, status)
+       VALUES ($1, $2, 'behavioral', 'behavioral', true, 'published') RETURNING id`,
+      [`TEST_PREC_NCOMP_${fx.uniq}`, fx.compName]);
+    const derivedComp = await client.query(
+      `INSERT INTO ont_competencies (code, name, category, competency_type, is_active, status)
+       VALUES ($1, $2, 'behavioral', 'behavioral', true, 'published') RETURNING id`,
+      [`TEST_PREC_DCOMP_${fx.uniq}`, fx.compName]);
+
+    // Native link → advanced (level 4); estimated link → novice (level 1). If the
+    // estimated link were (wrongly) chosen the bridged level would be 1, so the
+    // level assertion doubles as a provenance-precedence check.
+    await client.query(
+      `INSERT INTO map_role_competency (role_id, competency_id, importance_tier, weight, target_proficiency, source, is_active)
+       VALUES ($1, $2, 'core', 1.0, 'advanced', 'onet', true)`,
+      [nativeRole.rows[0].id, nativeComp.rows[0].id]);
+    await client.query(
+      `INSERT INTO map_role_competency (role_id, competency_id, importance_tier, weight, target_proficiency, source, is_active)
+       VALUES ($1, $2, 'core', 1.0, 'novice', 'onet_derived', true)`,
+      [derivedRole.rows[0].id, derivedComp.rows[0].id]);
+
+    const r = await bridgeOnetDerivedWeights(client as unknown as Pool);
+    assert.equal(r.ok, true);
+
+    const got = await client.query(
+      `SELECT source, expected_level FROM onto_role_weights
+        WHERE dna_profile_id = $1 AND competency_id = $2`, [fx.profileId, fx.compId]);
+    assert.equal(got.rows.length, 1, 'one bridged row for the curated pair');
+    assert.equal(got.rows[0].source, 'onet', 'native provenance wins over estimated');
+    assert.equal(got.rows[0].expected_level, 4, 'native (advanced) level kept, not estimated (novice)');
   } finally {
     await client.query('ROLLBACK').catch(() => {});
     client.release();

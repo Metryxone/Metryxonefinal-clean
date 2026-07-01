@@ -65,7 +65,11 @@ interface RoleDNA {
     competency_id: string; canonical_name: string;
     domain_id: string; family_id: string;
     weight: number; expected_level: number; rationale: string | null;
-    /** Provenance — 'onet_derived' means estimated/inherited rather than measured. */
+    /**
+     * Provenance — 'curated' hand-authored, 'onet' rated directly by O*NET
+     * ("Verified from O*NET"), 'onet_derived' estimated/inherited from a related
+     * occupation.
+     */
     source?: string;
   }[];
   weight_sum: number;
@@ -73,6 +77,8 @@ interface RoleDNA {
 
 /** True when a competency's weight is estimated/inherited from O*NET, not measured. */
 const isEstimatedSource = (source?: string) => source === 'onet_derived';
+/** True when a competency's weight is rated DIRECTLY by O*NET for this occupation. */
+const isVerifiedSource = (source?: string) => source === 'onet';
 
 
 
@@ -543,6 +549,13 @@ function RoleDNAPane() {
             <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-2">
               Role DNA — weighted competency vector
             </div>
+            {dna.weights.some(w => isVerifiedSource(w.source)) && (
+              <p className="text-[11px] text-emerald-800 bg-emerald-50 border border-emerald-100 rounded-lg px-3 py-2 mb-3">
+                <span className="font-semibold">Verified from O*NET</span> weights are rated
+                directly by O*NET for the occupation this role resolves to — the
+                higher-confidence provenance.
+              </p>
+            )}
             {dna.weights.some(w => isEstimatedSource(w.source)) && (
               <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2 mb-3">
                 <span className="font-semibold">Estimated</span> weights are inherited from
@@ -556,6 +569,11 @@ function RoleDNAPane() {
                   <div className="flex items-center justify-between text-[12.5px]">
                     <span className="font-medium flex items-center gap-1.5" style={{ color: BRAND.primary }}>
                       {w.canonical_name}
+                      {isVerifiedSource(w.source) && (
+                        <span className="text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                          Verified · O*NET
+                        </span>
+                      )}
                       {isEstimatedSource(w.source) && (
                         <span className="text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800">
                           Estimated

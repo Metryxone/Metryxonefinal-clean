@@ -6,23 +6,29 @@
  *     Role-DNA pane (OntologyExplorerPage) and Capability Heatmap
  *     (CareerMobilityPage) read via getRoleDNA / getRoleVector → onto_role_weights.
  *   - `ont_*`  (integer ids) — the O*NET-imported library (RolesPanel /
- *     role-crosswalk) where REAL O*NET-derived links live in
- *     map_role_competency.source = 'onet_derived' (estimated weights inherited
- *     from related SOC occupations by deriveUnratedRoleCompetencies).
+ *     role-crosswalk) where REAL O*NET links live in map_role_competency:
+ *       · source = 'onet'         — NATIVE ratings, directly rated by O*NET for
+ *         that occupation (higher-confidence, "Verified from O*NET").
+ *       · source = 'onet_derived' — ESTIMATED weights inherited from related SOC
+ *         occupations by deriveUnratedRoleCompetencies ("Estimated / inherited").
  *
- * The two never met, so the user pages' "Estimated / inherited" honesty badge
- * could never fire. This bridge maps the O*NET-derived links across the two
- * namespaces (role and competency by synonym/fuzzy name) and writes them into
- * onto_role_weights stamped source='onet_derived', so the badge lights up on the
- * genuinely estimated competencies — and ONLY those.
+ * The two never met, so the user pages' provenance badges could never fire. This
+ * bridge maps BOTH kinds of link across the two namespaces (role and competency
+ * by synonym/fuzzy name) and writes them into onto_role_weights stamped with the
+ * matching provenance ('onet' → Verified, 'onet_derived' → Estimated), so each
+ * badge lights up on the genuinely native / genuinely estimated competencies —
+ * and ONLY those.
  *
  * Discipline:
  *   - ADDITIVE: a curated (dna_profile_id, competency_id) weight ALWAYS wins; a
- *     derived row is inserted only for competencies the profile doesn't curate.
+ *     bridged row is inserted only for competencies the profile doesn't curate.
+ *   - PRECEDENCE: curated > native ('onet') > estimated ('onet_derived'). A role
+ *     that resolves to a directly-rated occupation surfaces its native ratings in
+ *     preference to inherited estimates.
  *   - HONEST: only rows that genuinely match across both namespaces bridge. No
  *     name match ⇒ no row (an honest gap, never fabricated).
- *   - IDEMPOTENT: every run rebuilds the onet_derived rows from scratch; curated
- *     rows are never touched.
+ *   - IDEMPOTENT: every run rebuilds the bridged ('onet' + 'onet_derived') rows
+ *     from scratch; curated rows are never touched.
  */
 
 import type { Pool } from 'pg';
@@ -125,6 +131,20 @@ export function profToLevel(band: string | null | undefined): number {
   return PROFICIENCY_TO_LEVEL[band.toLowerCase().trim()] ?? 3;
 }
 
+/**
+ * Role-match confidence rank (lower = stronger). Mirrors the crosswalk's own
+ * ranking so a native (directly-rated) candidate is only preferred over an
+ * estimated one when it is at least as strong a title match — we never downgrade
+ * match quality just to chase native ratings.
+ */
+const ROLE_MATCH_RANK: Record<RoleMatchType, number> = {
+  code: 0,
+  exact_title: 1,
+  alias: 2,
+  partial_title: 3,
+};
+const roleMatchRank = (t: RoleMatchType): number => ROLE_MATCH_RANK[t] ?? 9;
+
 // Lazy ensure-schema mirroring 20261212_onto_role_weights_source.sql (no runner).
 let sourceColumnReady: Promise<void> | null = null;
 export function ensureOntoRoleWeightSourceColumn(pool: Pool): Promise<void> {
@@ -145,8 +165,12 @@ export function ensureOntoRoleWeightSourceColumn(pool: Pool): Promise<void> {
 }
 
 export interface BridgeResult {
-  /** onet_derived weight rows present in onto_role_weights after the rebuild. */
+  /** All bridged weight rows ('onet' + 'onet_derived') after the rebuild. */
   linksBridged: number;
+  /** Native ('onet', directly-rated) weight rows bridged (subset of linksBridged). */
+  nativeLinksBridged?: number;
+  /** Estimated ('onet_derived', inherited) weight rows bridged (subset of linksBridged). */
+  derivedLinksBridged?: number;
   ok: boolean;
   error?: string;
   /** Curated onto_roles that resolved to an ont_roles library role. */
@@ -189,11 +213,12 @@ export async function bridgeOnetDerivedWeights(pool: Pool): Promise<BridgeResult
   try {
     await ensureOntoRoleWeightSourceColumn(pool);
 
-    // Clear prior derived rows only — curated weights are never touched. This
-    // keeps the bridge idempotent and drops any link that no longer qualifies
-    // (e.g. a competency that has since gained a curated weight, or a role that
-    // gained native O*NET ratings so its estimates were retired upstream).
-    await pool.query(`DELETE FROM onto_role_weights WHERE source = 'onet_derived'`);
+    // Clear prior bridged rows only ('onet' native + 'onet_derived' estimated) —
+    // curated weights are never touched. This keeps the bridge idempotent and
+    // drops any link that no longer qualifies (e.g. a competency that has since
+    // gained a curated weight, or a role that gained native O*NET ratings so its
+    // estimates were retired upstream).
+    await pool.query(`DELETE FROM onto_role_weights WHERE source IN ('onet', 'onet_derived')`);
 
     // 1. Resolve each curated role (with a current DNA profile) to an ont_roles
     //    library role via the shared crosswalk. Two curated roles may resolve to
@@ -205,18 +230,25 @@ export async function bridgeOnetDerivedWeights(pool: Pool): Promise<BridgeResult
        WHERE oro.deprecated = FALSE
     `);
 
-    // Which library roles actually carry O*NET-derived links? A curated title can
-    // resolve to several library roles (e.g. an exact-title seeded role AND an
-    // alias/synonym O*NET role). The crosswalk's "best" pick favours exact_title
-    // and total competency count, which can select a seeded role that has NO
-    // derived estimates while a synonym role does — silently bridging nothing.
-    // So among a title's ranked candidates we prefer the best-ranked one that
-    // genuinely has derived links, and only fall back to the top match otherwise.
-    const derivedRoleRows = await pool.query<{ role_id: number }>(
-      `SELECT DISTINCT role_id FROM map_role_competency
-        WHERE source = 'onet_derived' AND is_active = TRUE`,
+    // Which library roles actually carry bridgeable O*NET links, and of which
+    // kind? A curated title can resolve to several library roles (e.g. an
+    // exact-title seeded role AND an alias/synonym O*NET role). The crosswalk's
+    // "best" pick favours exact_title and total competency count, which can select
+    // a role that has NO links while a synonym role does — silently bridging
+    // nothing. So among a title's ranked candidates we prefer the best-ranked one
+    // that genuinely has links, preferring NATIVE ('onet', directly-rated) over
+    // ESTIMATED ('onet_derived', inherited) when the native match is no weaker.
+    const linkRoleRows = await pool.query<{ role_id: number; source: string }>(
+      `SELECT DISTINCT role_id, source FROM map_role_competency
+        WHERE source IN ('onet', 'onet_derived') AND is_active = TRUE`,
     );
-    const derivedRoleIds = new Set<number>(derivedRoleRows.rows.map((r) => r.role_id));
+    const nativeRoleIds = new Set<number>();
+    const derivedRoleIds = new Set<number>();
+    for (const row of linkRoleRows.rows) {
+      if (row.source === 'onet') nativeRoleIds.add(row.role_id);
+      else if (row.source === 'onet_derived') derivedRoleIds.add(row.role_id);
+    }
+    const bridgeableRoleIds = new Set<number>([...nativeRoleIds, ...derivedRoleIds]);
 
     // When the Ontology Hierarchy Completion flag is ON, prefer the persisted
     // ont_*→onto_* crosswalk: a curated, human-confirmable mapping that the
@@ -250,14 +282,24 @@ export async function bridgeOnetDerivedWeights(pool: Pool): Promise<BridgeResult
       // linkable role exists under the same title. This mirrors the same
       // "prefer the linkable role" discipline already applied below.
       const mapped = crosswalk.get(r.role_id);
-      if (mapped != null && derivedRoleIds.has(mapped)) {
+      if (mapped != null && bridgeableRoleIds.has(mapped)) {
         rolesFromCrosswalk += 1;
         assign(mapped, r.profile_id);
         continue;
       }
       const candidates = await resolveOntRole(pool, r.title); // ranked best-first
-      // Prefer the best-ranked candidate that actually has derived links.
-      const linkable = candidates.find((c) => derivedRoleIds.has(c.id));
+      // Prefer the best-ranked candidate that actually has links, favouring a
+      // NATIVE (directly-rated) role over an ESTIMATED one — but only when the
+      // native candidate is at least as strong a title match, so we never trade
+      // match quality for provenance.
+      const nativeC = candidates.find((c) => nativeRoleIds.has(c.id));
+      const derivedC = candidates.find((c) => derivedRoleIds.has(c.id));
+      let linkable: typeof candidates[number] | undefined;
+      if (nativeC && (!derivedC || roleMatchRank(nativeC.matchType) <= roleMatchRank(derivedC.matchType))) {
+        linkable = nativeC;
+      } else {
+        linkable = derivedC ?? nativeC;
+      }
       if (linkable) {
         roleMatchTypes[linkable.matchType] = (roleMatchTypes[linkable.matchType] ?? 0) + 1;
         assign(linkable.id, r.profile_id);
@@ -303,16 +345,17 @@ export async function bridgeOnetDerivedWeights(pool: Pool): Promise<BridgeResult
     //    plus the curated competency vocabulary for name matching.
     const ontRoleIds = [...ontRoleToProfiles.keys()];
     const [links, ontoComps] = await Promise.all([
-      pool.query<{ role_id: number; comp_name: string; raw_weight: number; band: string | null }>(
+      pool.query<{ role_id: number; comp_name: string; raw_weight: number; band: string | null; source: string }>(
         `
         SELECT mrc.role_id        AS role_id,
                oce.name           AS comp_name,
                mrc.weight::float  AS raw_weight,
-               mrc.target_proficiency AS band
+               mrc.target_proficiency AS band,
+               mrc.source         AS source
           FROM map_role_competency mrc
           JOIN ont_competencies oce ON oce.id = mrc.competency_id
          WHERE mrc.role_id = ANY($1::int[])
-           AND mrc.source = 'onet_derived'
+           AND mrc.source IN ('onet', 'onet_derived')
            AND mrc.is_active = TRUE
            AND oce.is_active = TRUE
         `,
@@ -329,7 +372,7 @@ export async function bridgeOnetDerivedWeights(pool: Pool): Promise<BridgeResult
     //    can resolve to the same curated competency more than once (e.g. via a
     //    synonym) — keep the highest raw weight so the per-profile normalisation
     //    isn't double-counted.
-    interface Candidate { profileId: string; compId: string; raw: number; band: string | null }
+    interface Candidate { profileId: string; compId: string; raw: number; band: string | null; source: 'onet' | 'onet_derived' }
     const candidates = new Map<string, Candidate>();
     const unmatchedComps = new Set<string>();
     let competenciesMatched = 0;
@@ -342,11 +385,18 @@ export async function bridgeOnetDerivedWeights(pool: Pool): Promise<BridgeResult
       competenciesMatched += 1;
       const profiles = ontRoleToProfiles.get(link.role_id) ?? [];
       const raw = Number(link.raw_weight) || 0;
+      const src: 'onet' | 'onet_derived' = link.source === 'onet' ? 'onet' : 'onet_derived';
       for (const profileId of profiles) {
         const key = `${profileId}::${cm.id}`;
         const existing = candidates.get(key);
-        if (!existing || raw > existing.raw) {
-          candidates.set(key, { profileId, compId: cm.id, raw, band: link.band });
+        // Native ('onet', directly-rated) beats estimated regardless of raw
+        // weight; within the same provenance tier keep the highest raw weight.
+        const better =
+          !existing ||
+          (src === 'onet' && existing.source !== 'onet') ||
+          (src === existing.source && raw > existing.raw);
+        if (better) {
+          candidates.set(key, { profileId, compId: cm.id, raw, band: link.band, source: src });
         }
       }
     }
@@ -378,12 +428,16 @@ export async function bridgeOnetDerivedWeights(pool: Pool): Promise<BridgeResult
       const sum = sumByProfile.get(c.profileId) ?? 0;
       let weight = sum > 0 ? c.raw / sum : 0;
       weight = Math.min(1, Math.max(0, Math.round(weight * 1000) / 1000));
-      return { profileId: c.profileId, compId: c.compId, weight, level: profToLevel(c.band) };
+      return { profileId: c.profileId, compId: c.compId, weight, level: profToLevel(c.band), source: c.source };
     });
 
-    // 6. Insert the derived rows (chunked). ON CONFLICT DO NOTHING is a final
-    //    guard; curated rows were already excluded in step 4.
+    // 6. Insert the bridged rows (chunked), each stamped with its genuine
+    //    provenance: 'onet' native (Verified from O*NET) vs 'onet_derived'
+    //    estimated (inherited). ON CONFLICT DO NOTHING is a final guard; curated
+    //    rows were already excluded in step 4.
     let linksBridged = 0;
+    let nativeLinksBridged = 0;
+    let derivedLinksBridged = 0;
     for (let i = 0; i < rows.length; i += INSERT_CHUNK) {
       const batch = rows.slice(i, i + INSERT_CHUNK);
       const values: string[] = [];
@@ -396,8 +450,10 @@ export async function bridgeOnetDerivedWeights(pool: Pool): Promise<BridgeResult
           r.compId,
           r.weight,
           r.level,
-          'Estimated from a related O*NET occupation (inherited)',
-          'onet_derived',
+          r.source === 'onet'
+            ? 'Rated directly by O*NET for this occupation (verified)'
+            : 'Estimated from a related O*NET occupation (inherited)',
+          r.source,
         );
       });
       const ins = await pool.query(
@@ -408,11 +464,17 @@ export async function bridgeOnetDerivedWeights(pool: Pool): Promise<BridgeResult
         params,
       );
       linksBridged += ins.rowCount ?? 0;
+      for (const r of batch) {
+        if (r.source === 'onet') nativeLinksBridged += 1;
+        else derivedLinksBridged += 1;
+      }
     }
 
     const result: BridgeResult = {
       ...baseResult,
       linksBridged,
+      nativeLinksBridged,
+      derivedLinksBridged,
       competenciesMatched,
       competenciesUnmatched: unmatchedComps.size,
       unmatchedCompetencies: [...unmatchedComps].slice(0, SAMPLE_CAP),
@@ -432,7 +494,8 @@ function logSummary(r: BridgeResult, totalRoles: number): void {
       `(${JSON.stringify(r.roleMatchTypes ?? {})}, crosswalk ${r.rolesFromCrosswalk ?? 0}), unmatched roles ${r.rolesUnmatched ?? 0}; ` +
       `competency links matched ${r.competenciesMatched ?? 0}, ` +
       `unmatched competency names ${r.competenciesUnmatched ?? 0}; ` +
-      `derived weights bridged ${r.linksBridged}`,
+      `weights bridged ${r.linksBridged} ` +
+      `(native/verified ${r.nativeLinksBridged ?? 0}, estimated/inherited ${r.derivedLinksBridged ?? 0})`,
   );
   if (r.unmatchedRoles && r.unmatchedRoles.length) {
     console.warn('[onet-onto-weight-bridge] unmatched roles (sample):', r.unmatchedRoles);

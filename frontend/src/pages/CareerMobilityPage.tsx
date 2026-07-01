@@ -35,12 +35,17 @@ interface CompGap {
   competency_id: string; canonical_name: string; user_score: number; target_anchor: number;
   gap: number; weight: number; family_id: string; domain_id: string;
   category: string; status: 'meets'|'close'|'develop'|'priority';
-  /** Provenance of the role's target weight — 'onet_derived' means estimated/inherited. */
+  /**
+   * Provenance of the role's target weight — 'onet' means rated directly by O*NET
+   * ("Verified"), 'onet_derived' means estimated/inherited.
+   */
   source?: string;
 }
 
 /** True when a role competency's target is estimated/inherited from O*NET, not measured. */
 const isEstimated = (source?: string) => source === 'onet_derived';
+/** True when a role competency's target is rated DIRECTLY by O*NET for this occupation. */
+const isVerified = (source?: string) => source === 'onet';
 interface Transferable {
   competency_id: string; canonical_name: string;
   user_score: number; transferability: number; contribution: number;
@@ -241,6 +246,14 @@ export default function CareerMobilityPage({ onNavigate }: Props) {
 
           {/* 4. Competency gap heatmap */}
           <Panel title="Capability Heatmap" icon={<LayersIcon size={16} />} span={8}>
+            {report.comparison.competency_gaps.some(g => isVerified(g.source)) && (
+              <div style={{ fontSize: 11, color: '#065F46', background: '#ECFDF5',
+                            border: '1px solid #A7F3D0', borderRadius: 8,
+                            padding: '6px 10px', marginBottom: 8 }}>
+                <strong>Verified from O*NET</strong> targets are rated directly by O*NET for
+                the occupation this role resolves to — the higher-confidence provenance.
+              </div>
+            )}
             {report.comparison.competency_gaps.some(g => isEstimated(g.source)) && (
               <div style={{ fontSize: 11, color: '#92400E', background: '#FFFBEB',
                             border: '1px solid #FDE68A', borderRadius: 8,
@@ -256,6 +269,12 @@ export default function CareerMobilityPage({ onNavigate }: Props) {
                   <div style={{ fontSize: 12, fontWeight: 600, display: 'flex',
                                 alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
                     {g.canonical_name}
+                    {isVerified(g.source) && (
+                      <span style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase',
+                                     letterSpacing: 0.3, color: '#047857', background: '#D1FAE5',
+                                     border: '1px solid #A7F3D0', borderRadius: 999,
+                                     padding: '1px 6px' }}>Verified · O*NET</span>
+                    )}
                     {isEstimated(g.source) && (
                       <span style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase',
                                      letterSpacing: 0.3, color: '#B45309', background: '#FEF3C7',

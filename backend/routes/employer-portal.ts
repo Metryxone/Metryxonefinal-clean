@@ -405,14 +405,14 @@ async function snapshotDecisionProb(pool: Pool, employerId: string, candidateId:
 // No Hire → 0; Maybe/blank carry no binary verdict → skipped. The candidate's assessment-derived
 // match score (0..100) is the decision-time prediction (treated as ABSENT when 0/uninitialised —
 // never coerced into a fake 0-probability pair). Flag-gated/demo-aware/idempotent inside the recorder.
-function recommendationToOutcome(rec: string): 0 | 1 | null {
+export function recommendationToOutcome(rec: string): 0 | 1 | null {
   const r = rec.trim().toLowerCase();
   if (r === 'strong hire' || r === 'hire') return 1;
   if (r === 'no hire') return 0;
   return null; // Maybe / blank / unknown → no realized binary verdict
 }
 
-async function recordInterviewPerformanceOutcome(pool: Pool, employerId: string, interviewId: string): Promise<void> {
+export async function recordInterviewPerformanceOutcome(pool: Pool, employerId: string, interviewId: string): Promise<void> {
   try {
     const ir = await pool.query(`SELECT * FROM employer_interviews WHERE id = $1 AND employer_id = $2`, [interviewId, employerId]);
     const iv = ir.rows[0];
@@ -445,14 +445,14 @@ async function recordInterviewPerformanceOutcome(pool: Pool, employerId: string,
 // selected candidate joined) → 1; Declined/Withdrawn/Expired (did not join) → 0. Draft/Sent/
 // Negotiating/pending_approval are non-terminal → skipped. The candidate's decision-time success
 // probability (predicted_prob_at_decision, else match score) is the prediction (0/absent → NULL).
-function offerStatusToRetention(status: string): 0 | 1 | null {
+export function offerStatusToRetention(status: string): 0 | 1 | null {
   const s = status.trim().toLowerCase();
   if (s === 'accepted') return 1;
   if (s === 'declined' || s === 'withdrawn' || s === 'expired') return 0;
   return null; // Draft/Sent/Negotiating/pending_approval → not a terminal yield outcome
 }
 
-async function recordOfferRetentionOutcome(pool: Pool, employerId: string, offerId: string): Promise<void> {
+export async function recordOfferRetentionOutcome(pool: Pool, employerId: string, offerId: string): Promise<void> {
   try {
     const or = await pool.query(`SELECT * FROM employer_offers WHERE id = $1 AND employer_id = $2`, [offerId, employerId]);
     const off = or.rows[0];

@@ -1572,6 +1572,9 @@
   .h-\[88vh\] {
     height: 88vh;
   }
+  .h-\[180px\] {
+    height: 180px;
+  }
   .h-\[200px\] {
     height: 200px;
   }
@@ -2375,6 +2378,9 @@
   }
   .min-w-\[260px\] {
     min-width: 260px;
+  }
+  .min-w-\[280px\] {
+    min-width: 280px;
   }
   .min-w-\[600px\] {
     min-width: 600px;

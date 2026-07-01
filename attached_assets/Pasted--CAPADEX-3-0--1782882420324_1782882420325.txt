@@ -1,0 +1,438 @@
+# ==============================================================================
+#
+# CAPADEX 3.0
+#
+# 99% ENTERPRISE LAUNCH PROGRAM
+#
+# PROGRAM 3
+#
+# PHASE 3.1
+#
+# ASSESSMENT ARCHITECTURE
+#
+# LIFECYCLE
+#
+# GOVERNANCE
+#
+# ==============================================================================
+#
+# EXECUTION MODE
+#
+# IMPLEMENTATION
+#
+# Repository First
+#
+# Product Blueprint First
+#
+# Enhancement Only
+#
+# Search Before Modify
+#
+# Reuse Before Build
+#
+# Preserve Existing Architecture
+#
+# No Duplicate Assessment Frameworks
+#
+# No Breaking Changes
+#
+# Human Approval Required
+#
+# ==============================================================================
+#
+# PRECONDITION
+#
+# Program 3
+#
+# Phase 3.0
+#
+# Assessment Platform Blueprint
+#
+# MUST be APPROVED.
+#
+# If not,
+#
+# STOP.
+#
+# ==============================================================================
+#
+# MISSION
+#
+# Implement the canonical Assessment Architecture
+# defined in the Assessment Platform Blueprint.
+#
+# Enhance existing repository capabilities.
+#
+# Do NOT redesign.
+#
+# Do NOT create parallel frameworks.
+#
+# One Assessment Architecture.
+#
+# ==============================================================================
+#
+# MANDATORY ENHANCEMENT CONTRACT
+#
+# Before implementing:
+#
+# 1. Search the complete repository.
+#
+# 2. Locate every assessment implementation.
+#
+# 3. Compare with the approved Assessment Blueprint.
+#
+# 4. Enhance existing components whenever possible.
+#
+# 5. Create new modules only when repository evidence
+#    proves no equivalent capability exists.
+#
+# 6. Preserve API compatibility.
+#
+# 7. Preserve database compatibility.
+#
+# 8. Preserve frontend compatibility.
+#
+# ==============================================================================
+#
+# REVIEW ENTIRE REPOSITORY
+#
+# Assessment Services
+#
+# Assessment APIs
+#
+# Assessment Database
+#
+# Assessment UI
+#
+# Assessment Reports
+#
+# AI Services
+#
+# Question Engine
+#
+# Scoring
+#
+# Norms
+#
+# Administration
+#
+# Feature Flags
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# CANONICAL ASSESSMENT TYPES
+#
+# Academic
+#
+# Psychometric
+#
+# Aptitude
+#
+# Personality
+#
+# Behaviour
+#
+# Competency
+#
+# Cognitive
+#
+# Career
+#
+# Employability
+#
+# Leadership
+#
+# Skills
+#
+# Learning
+#
+# Wellness
+#
+# Organization
+#
+# Custom Assessments
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# ASSESSMENT CATEGORIES
+#
+# Education
+#
+# Career
+#
+# Enterprise
+#
+# Government
+#
+# Healthcare
+#
+# NGO
+#
+# Research
+#
+# Certification
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# ASSESSMENT LIFECYCLE
+#
+# Draft
+#
+# Review
+#
+# Pilot
+#
+# Validation
+#
+# Approval
+#
+# Published
+#
+# Active
+#
+# Suspended
+#
+# Deprecated
+#
+# Archived
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# ASSESSMENT METADATA
+#
+# Assessment ID
+#
+# Version
+#
+# Owner
+#
+# Business Domain
+#
+# Persona
+#
+# Lifecycle Stage
+#
+# Competencies
+#
+# Behaviours
+#
+# Skills
+#
+# Duration
+#
+# Language
+#
+# Difficulty
+#
+# Assessment Type
+#
+# Category
+#
+# Tags
+#
+# Status
+#
+# Created By
+#
+# Updated By
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# ASSESSMENT GOVERNANCE
+#
+# Ownership
+#
+# Review Workflow
+#
+# Approval Workflow
+#
+# Publishing Workflow
+#
+# Version Control
+#
+# Audit Trail
+#
+# Change History
+#
+# Retirement Process
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# MAPPINGS
+#
+# Every Assessment
+#
+# →
+#
+# Product Domain
+#
+# Persona
+#
+# Lifecycle Stage
+#
+# Journey
+#
+# Competencies
+#
+# Question Bank
+#
+# Scoring Engine
+#
+# Norm Engine
+#
+# Standardization
+#
+# Benchmark Engine
+#
+# AI Interpretation
+#
+# Recommendation Engine
+#
+# Report Templates
+#
+# Outcomes
+#
+# KPIs
+#
+# ==============================================================================
+#
+# VERIFY
+#
+# Every assessment supports:
+#
+# Versioning
+#
+# Governance
+#
+# Lifecycle
+#
+# Traceability
+#
+# AI
+#
+# Reporting
+#
+# Analytics
+#
+# ==============================================================================
+#
+# VERIFY
+#
+# Frontend
+#
+# Backend
+#
+# Database
+#
+# APIs
+#
+# remain aligned.
+#
+# ==============================================================================
+#
+# DO NOT
+#
+# Build Question Builder.
+#
+# Build Assessment Builder.
+#
+# Build Norm Engine.
+#
+# Build Reports.
+#
+# Those belong to later phases.
+#
+# ==============================================================================
+#
+# PRODUCE
+#
+# 01 Executive Summary
+#
+# 02 Assessment Architecture Report
+#
+# 03 Assessment Type Matrix
+#
+# 04 Assessment Category Matrix
+#
+# 05 Assessment Lifecycle Report
+#
+# 06 Assessment Governance Report
+#
+# 07 Metadata Standard
+#
+# 08 Assessment Mapping Matrix
+#
+# 09 Repository Change Summary
+#
+# 10 Remaining Architecture Gaps
+#
+# ==============================================================================
+#
+# ACCEPTANCE CRITERIA
+#
+# One canonical assessment architecture.
+#
+# One lifecycle model.
+#
+# One governance model.
+#
+# One metadata standard.
+#
+# One assessment mapping model.
+#
+# No duplicate assessment frameworks.
+#
+# Existing functionality preserved.
+#
+# Repository evidence provided.
+#
+# ==============================================================================
+#
+# FINAL VALIDATION
+#
+# Certify independently:
+#
+# Assessment Architecture
+#
+# Lifecycle
+#
+# Governance
+#
+# Metadata
+#
+# Repository Alignment
+#
+# Never combine these.
+#
+# Finally answer:
+#
+# Is the Assessment Architecture
+# complete and ready for
+# Phase 3.2 (Question Management Platform)?
+#
+# If not,
+#
+# identify every remaining
+# Launch Critical,
+# High,
+# Medium,
+# Low,
+# and Future gap.
+#
+# STOP.
+#
+# Human Approval Required.
+#
+# ==============================================================================

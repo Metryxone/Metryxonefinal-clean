@@ -181,6 +181,7 @@ const AssessmentDeliveryPanel = lazy(() => import('./superadmin/AssessmentDelive
 const AssessmentScoringPanel = lazy(() => import('./superadmin/AssessmentScoringPanel'));
 const AssessmentSciencePanel = lazy(() => import('./superadmin/AssessmentSciencePanel'));
 const AssessmentIntelligencePanel = lazy(() => import('./superadmin/AssessmentIntelligencePanel'));
+const ScoreStandardizationPanel = lazy(() => import('./superadmin/ScoreStandardizationPanel'));
 const DepartmentsPanel = lazy(() => import('./superadmin/DepartmentsPanel'));
 const RolesPanel = lazy(() => import('./superadmin/RolesPanel'));
 const RoleFamiliesPanel = lazy(() => import('./superadmin/RoleFamiliesPanel'));
@@ -555,6 +556,17 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
     queryKey: ['/api/assessment-intelligence/enabled', 'enabled'],
     queryFn: async () => {
       const res = await fetch('/api/assessment-intelligence/enabled', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // ── Score Standardization (CAPADEX 3.0 · 3.8) flag probe (file-registry flag scoreStandardization).
+  //    Probe /api/score-standardization/enabled (503-before-auth when OFF) → tab omitted (byte-identical UI). ──
+  const { data: scoreStandardizationEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/score-standardization/enabled', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/score-standardization/enabled', { credentials: 'include' });
       return res.ok;
     },
     enabled: isAuthenticated,
@@ -1192,6 +1204,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       ...(assessmentScoringEnabled ? [{ id: 'assessment-scoring', label: 'Assessment Scoring', icon: Calculator, node: <AssessmentScoringPanel /> }] : []),
                       ...(assessmentScienceEnabled ? [{ id: 'assessment-science', label: 'Assessment Science', icon: Microscope, node: <AssessmentSciencePanel /> }] : []),
                       ...(assessmentIntelligenceEnabled ? [{ id: 'assessment-intelligence', label: 'Assessment Intelligence', icon: Brain, node: <AssessmentIntelligencePanel /> }] : []),
+                      ...(scoreStandardizationEnabled ? [{ id: 'score-standardization', label: 'Score Standardization', icon: Sliders, node: <ScoreStandardizationPanel /> }] : []),
                       ...(mx203KnowledgeEnabled ? [{ id: 'mx203-knowledge-center', label: 'Knowledge Center', icon: BookOpen, node: <Mx203KnowledgeCenterPanel /> }] : []),
                       { id: 'ont-career-tracks',        label: 'Career Tracks',            icon: Map,           node: <CareerTracksPanel /> },
                       { id: 'ont-competency-levels',    label: 'Competency Levels',        icon: BarChart2,     node: <CompetencyLevelsPanel /> },

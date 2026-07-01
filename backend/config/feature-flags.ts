@@ -347,6 +347,17 @@ export const FEATURE_FLAGS = {
    *  + an additive `aint_*` overlay — NO duplicate engine, NO V2. Default OFF, byte-identical incl. schema
    *  (DDL only on flag-gated write paths). Env: `FF_ASSESSMENT_INTELLIGENCE`. */
   assessmentIntelligence: false,
+  /** CAPADEX 3.0 — Program 3 · Phase 3.8 Enterprise Score Standardization & Interpretation Framework master
+   *  switch. When ON, exposes the read-only Score Standardization certification composer + additive `astd_*`
+   *  overlay that converts a RAW assessment score into a STANDARDIZED, interpretable, reusable, explainable
+   *  score: percentile/z/T/standard/stanine/sten/deviation + composite/domain/competency/behaviour/skill/overall
+   *  standard scores, performance bands and deterministic interpretation-rule verdicts. Certifies TEN
+   *  INDEPENDENT dimensions SEPARATELY: standardization · formula · interpretation · governance · super_admin ·
+   *  frontend · ux · apis · testing · documentation. COMPOSES the existing psychometric-standardization service
+   *  under a structured-AST formula engine (no eval) + an additive `astd_*` overlay — NO duplicate engine, NO
+   *  V2. Default OFF, byte-identical incl. schema (DDL only on flag-gated write paths). Env:
+   *  `FF_SCORE_STANDARDIZATION`. */
+  scoreStandardization: false,
   /** CAPADEX 3.0 — Program 3 · Phase 3.2A Persona Experience / Intelligent Journey Router. When ON, the
    *  generic single-page persona selector is replaced by a progressive 5-step onboarding wizard
    *  (Who → Refine → Goal → Personalize → AI Journey Router) that REUSES the existing persona/sub-persona
@@ -2397,6 +2408,11 @@ export function isAssessmentScienceEnabled(): boolean {
 /** CAPADEX 3.0 — Program 3 · Phase 3.7 Assessment Intelligence (interpretation & reporting) master switch. */
 export function isAssessmentIntelligenceEnabled(): boolean {
   return isFlagEnabled('assessmentIntelligence');
+}
+
+/** CAPADEX 3.0 — Program 3 · Phase 3.8 Enterprise Score Standardization & Interpretation master switch. */
+export function isScoreStandardizationEnabled(): boolean {
+  return isFlagEnabled('scoreStandardization');
 }
 
 /** CAPADEX 3.0 — Program 3 · Phase 3.2A Persona Experience / Intelligent Journey Router master switch. */

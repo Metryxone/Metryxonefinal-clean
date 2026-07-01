@@ -1,0 +1,373 @@
+# ==============================================================================
+#
+# CAPADEX 3.0
+#
+# PROGRAM 3
+#
+# PHASE 3.2A
+#
+# PERSONA EXPERIENCE
+#
+# INTELLIGENT JOURNEY ROUTER
+#
+# FRONTEND IMPLEMENTATION
+#
+# ==============================================================================
+#
+# EXECUTION MODE
+#
+# IMPLEMENTATION
+#
+# Repository First
+#
+# Product Blueprint First
+#
+# Frontend First
+#
+# UX First
+#
+# Enhancement Only
+#
+# Search Before Modify
+#
+# Reuse Before Build
+#
+# No Duplicate Persona Logic
+#
+# No Backend Redesign
+#
+# ==============================================================================
+#
+# MISSION
+#
+# Replace the current generic persona selector
+# with an intelligent, progressive,
+# enterprise-grade onboarding experience.
+#
+# Reuse the existing Product Blueprint,
+# Persona Blueprint,
+# Lifecycle Model,
+# Journey Model,
+# and Assessment Framework.
+#
+# ==============================================================================
+#
+# SEARCH ENTIRE REPOSITORY
+#
+# Persona Components
+#
+# Landing Pages
+#
+# Assessment Entry Pages
+#
+# Registration Flow
+#
+# Onboarding Components
+#
+# Journey Router
+#
+# Feature Flags
+#
+# Navigation
+#
+# ==============================================================================
+#
+# IMPLEMENT
+#
+# STEP 1
+#
+# WHO ARE YOU?
+#
+# School Student
+#
+# College Student
+#
+# Competitive Exam Aspirant
+#
+# Job Seeker
+#
+# Working Professional
+#
+# Manager
+#
+# HR Professional
+#
+# Leader / Executive
+#
+# Parent
+#
+# Teacher
+#
+# Counselor
+#
+# Educational Institution
+#
+# Employer
+#
+# Organization
+#
+# Super Administrator
+#
+# ==============================================================================
+#
+# STEP 2
+#
+# REFINE PERSONA
+#
+# School Student
+#
+# → Class 6–8
+#
+# → Class 9
+#
+# → Class 10
+#
+# → Class 11
+#
+# → Class 12
+#
+# → Foundation
+#
+# ==============================================================================
+#
+# College
+#
+# Diploma
+#
+# Undergraduate
+#
+# Postgraduate
+#
+# MBA
+#
+# Engineering
+#
+# Medical
+#
+# Law
+#
+# Commerce
+#
+# Arts
+#
+# Science
+#
+# ==============================================================================
+#
+# Competitive Exams
+#
+# JEE Main
+#
+# JEE Advanced
+#
+# NEET
+#
+# CUET
+#
+# CAT
+#
+# GATE
+#
+# UPSC
+#
+# SSC
+#
+# Banking
+#
+# Railways
+#
+# State PSC
+#
+# Defence
+#
+# Police
+#
+# Teaching Eligibility
+#
+# Other Competitive Exams
+#
+# ==============================================================================
+#
+# Career
+#
+# Fresher
+#
+# Early Career
+#
+# Experienced Professional
+#
+# Career Transition
+#
+# Career Returnee
+#
+# Entrepreneur
+#
+# Freelancer
+#
+# ==============================================================================
+#
+# Enterprise
+#
+# Individual Contributor
+#
+# Team Lead
+#
+# Manager
+#
+# Senior Manager
+#
+# Director
+#
+# VP
+#
+# CXO
+#
+# HR
+#
+# Talent Acquisition
+#
+# Learning & Development
+#
+# Organization Development
+#
+# ==============================================================================
+#
+# STEP 3
+#
+# GOAL
+#
+# Know Myself
+#
+# Improve Learning
+#
+# Exam Readiness
+#
+# Career Discovery
+#
+# Skill Development
+#
+# Employability
+#
+# Leadership Growth
+#
+# Performance Improvement
+#
+# Hiring
+#
+# Promotion Readiness
+#
+# Succession Planning
+#
+# Organization Insights
+#
+# ==============================================================================
+#
+# STEP 4
+#
+# PERSONALIZE
+#
+# Preferred Language
+#
+# Time Available
+#
+# Assessment Length
+#
+# Current Class
+#
+# Experience
+#
+# Industry
+#
+# Location
+#
+# Learning Preference
+#
+# ==============================================================================
+#
+# STEP 5
+#
+# AI JOURNEY ROUTER
+#
+# Determine:
+#
+# Correct Lifecycle
+#
+# Correct Assessment
+#
+# Correct Dashboard
+#
+# Correct Report
+#
+# Correct Recommendations
+#
+# Correct Learning Journey
+#
+# ==============================================================================
+#
+# FRONTEND UX
+#
+# Progressive Wizard
+#
+# Cards
+#
+# Icons
+#
+# Animations
+#
+# Search
+#
+# Keyboard Navigation
+#
+# Responsive Design
+#
+# WCAG 2.2 AA
+#
+# Mobile First
+#
+# Auto Save
+#
+# Resume Later
+#
+# ==============================================================================
+#
+# VERIFY
+#
+# Every Persona maps to:
+#
+# Lifecycle
+#
+# Assessment
+#
+# Dashboard
+#
+# Reports
+#
+# AI
+#
+# Outcomes
+#
+# KPIs
+#
+# ==============================================================================
+#
+# PRODUCE
+#
+# Persona Experience Report
+#
+# Journey Routing Report
+#
+# Frontend Screens
+#
+# UX Validation Report
+#
+# Persona Mapping Matrix
+#
+# Repository Change Summary
+#
+# ==============================================================================
+#
+# STOP
+#
+# Human Approval Required.
+#
+# ==============================================================================

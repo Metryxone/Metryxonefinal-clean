@@ -353,6 +353,10 @@ export function FreeAssessmentModal({ open, onOpenChange, onNavigate, initialPer
   const [personaJourneyRouterEnabled, setPersonaJourneyRouterEnabled] = useState(false);
   const [journeyWizardDone, setJourneyWizardDone] = useState(false);
   useEffect(() => {
+    // Re-read on every open so a feature-flag flip is picked up without a full
+    // page reload (config is cheap + cached server-side). Byte-identical result
+    // when nothing changed.
+    if (!open) return;
     fetch('/api/capadex/public-config')
       .then(r => r.json())
       .then((cfg: { counsellor_whatsapp_number?: string; websocket_runtime?: boolean; cognitive_load_engine?: boolean; persona_model_alignment?: boolean; persona_model_expansion?: boolean; assessment_architecture_completion?: boolean; persona_journey_router?: boolean }) => {
@@ -365,7 +369,7 @@ export function FreeAssessmentModal({ open, onOpenChange, onNavigate, initialPer
         if (cfg.persona_journey_router) setPersonaJourneyRouterEnabled(true);
       })
       .catch(() => {});
-  }, []);
+  }, [open]);
 
   // AP-3 accessibility: announce each assessment phase change to assistive tech via
   // the polite ARIA live region. Active only when the arch-completion flag is ON, so

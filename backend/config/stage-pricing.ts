@@ -11,6 +11,13 @@
  *   • services/wc7c/subscription-engine.ts — next-rung target price
  *   • services/wc7c/upsell-engine.ts       — upsell target price
  *
+ * Frontend DISPLAY mirror: the Vite frontend cannot import backend modules, so
+ * `frontend/src/lib/behavioural-insights.ts` (`CAPADEX_STAGE_PRICES_INR`) holds a
+ * hand-mirror of these values (clarity→CAP_INS, growth→CAP_GRW, mastery→CAP_MAS).
+ * `backend/tests/stage-price-lockstep.test.ts` asserts the two stay identical, so
+ * the price shown to a customer can never drift from the price actually charged.
+ * If you change a price here, update the frontend mirror (or the test fails).
+ *
  * Curiosity (CAP_CUR) is the free pre-purchase stage and is NOT a purchasable rung, so
  * it carries no price and is absent from the ladder.
  *

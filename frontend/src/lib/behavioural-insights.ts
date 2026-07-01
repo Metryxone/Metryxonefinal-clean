@@ -559,6 +559,29 @@ export const LOCKED_DOMAINS_BY_PERSONA: Record<PersonaKey, string[]> = {
 
 export const FAM_TERMS = ['competency', 'learning style', 'memory style', 'focus pattern', 'processing style', 'cognitive strengths', 'behavioural profile'];
 
+/* ── CAPADEX purchasable-stage prices ──────────────────────────────
+ * DISPLAY MIRROR of the backend canonical source
+ * `backend/config/stage-pricing.ts` (STAGE_PRICES). The Vite frontend cannot
+ * import backend modules, so these values are mirrored here — and kept honest
+ * by the lockstep regression test `backend/tests/stage-price-lockstep.test.ts`,
+ * which parses this map and asserts each value equals the backend STAGE_PRICES
+ * for the mapped stage code. Changing a price in EITHER file without the other
+ * FAILS that test, so the price shown to a customer can never drift from the
+ * price the Razorpay order (`routes/capadex-payments.ts`) actually charges.
+ *
+ * Tier key ↔ backend stage code: clarity→CAP_INS, growth→CAP_GRW, mastery→CAP_MAS.
+ * Amounts are whole INR (₹). All display strings below are DERIVED from this map
+ * via `formatInr`, so the map is the single frontend-side source.
+ */
+export const CAPADEX_STAGE_PRICES_INR: Record<'clarity' | 'growth' | 'mastery', number> = {
+  clarity: 499, // CAP_INS
+  growth: 999, // CAP_GRW
+  mastery: 1999, // CAP_MAS
+};
+
+/** Format a whole-INR amount for display (e.g. 1999 → "₹1,999"). */
+export const formatInr = (amount: number): string => `₹${amount.toLocaleString('en-IN')}`;
+
 /* ── Upgrade tiers ─────────────────────────────────────────────── */
 export const UPGRADE_TIERS: {
   key: string; name: string; feel: string; tagline: string;
@@ -568,20 +591,20 @@ export const UPGRADE_TIERS: {
   {
     key: 'clarity', name: 'Clarity', feel: 'Understanding',
     tagline: 'Understand your full behavioral pattern',
-    icon: BookOpen, color: '#2EC4B6', price: '₹499', priceNote: 'one-time',
+    icon: BookOpen, color: '#2EC4B6', price: formatInr(CAPADEX_STAGE_PRICES_INR.clarity), priceNote: 'one-time',
     benefits: ['Complete 19-domain behavioral map', 'Learning & working style identified', 'Domain-by-domain personalised insight', 'Downloadable PDF report'],
   },
   {
     key: 'growth', name: 'Growth', feel: 'Improvement',
     tagline: 'Turn insight into measurable progress',
-    icon: TrendingUp, color: '#1D3E8B', price: '₹999', priceNote: 'one-time',
+    icon: TrendingUp, color: '#1D3E8B', price: formatInr(CAPADEX_STAGE_PRICES_INR.growth), priceNote: 'one-time',
     popular: true,
     benefits: ['Everything in Clarity', '90-day personalised action plan', 'Mentor-match recommendation', 'Progress tracking & re-assessment'],
   },
   {
     key: 'mastery', name: 'Mastery', feel: 'Peak performance',
     tagline: 'Your complete behavioural intelligence blueprint',
-    icon: Award, color: '#0B3C5D', price: '₹1,999', priceNote: 'one-time',
+    icon: Award, color: '#0B3C5D', price: formatInr(CAPADEX_STAGE_PRICES_INR.mastery), priceNote: 'one-time',
     benefits: ['Everything in Growth', 'Career or academic intelligence profile', '1-on-1 mentor session included', 'Succession & growth readiness map'],
   },
 ];

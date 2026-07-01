@@ -174,6 +174,19 @@ async function call(
   return { status: res.status, json };
 }
 
+// The telemetry handler fires `logAudit` fire-and-forget (`void`), so the audit
+// INSERT lands on the stub pool AFTER the HTTP response resolves. Poll the probe
+// for the platform_audit_log INSERT so the metadata-only assertions read the row
+// the production logger actually persisted.
+async function waitForAuditInsert(): Promise<{ sql: string; params: any[] } | null> {
+  for (let i = 0; i < 100; i++) {
+    const ins = probe.dbQueries.find((q) => /INSERT\s+INTO\s+platform_audit_log/i.test(q.sql));
+    if (ins) return ins;
+    await new Promise((r) => setTimeout(r, 5));
+  }
+  return null;
+}
+
 async function main() {
   const { server, base } = await buildServer();
 
@@ -252,6 +265,117 @@ async function main() {
     assert.ok(
       !probe.dbQueries.some((q) => (q.params ?? []).includes(ATTACKER_UID)),
       'a client-supplied id reached the DB layer',
+    );
+  });
+
+  // ── Telemetry (metadata-only render audit): POST /telemetry records a render
+  //    audit through the shared REDACTING platform-audit logger. Its documented
+  //    guarantee is "metadata only — never user content or scores". Lock that in
+  //    so a future refactor cannot start logging profile text, scores, or another
+  //    seeker's id into the audit trail without a test failing:
+  //      • the persisted audit row carries ONLY metadata (widget counts + a
+  //        boolean availability map);
+  //      • free-text / score-like body fields are NEVER persisted;
+  //      • the audited entityId is the SESSION uid, never a client-supplied id.
+  //    logAudit is fire-and-forget (`void`), so the stub pool records the INSERT
+  //    after the response resolves — waitForAuditInsert() polls for it. The flag
+  //    is ON here (set above). ──
+  const SECRET_TEXT = 'MY_PRIVATE_ESSAY_ABOUT_MYSELF';
+  const SECRET_NAME = 'Alice Very Secret Name';
+  const SECRET_SCORE = 987654;
+
+  probe.reset();
+  const telemetry = await call(
+    base,
+    'POST',
+    `/api/launchpad-dashboard/telemetry?id=${ATTACKER_UID}&user_id=${ATTACKER_UID}&subject=${ATTACKER_UID}`,
+    {
+      auth: true,
+      body: {
+        // Legitimate metadata the handler is allowed to record:
+        event: 'launchpad_dashboard_render',
+        widgets_total: 8,
+        widget_availability: { profile: true, skills: false, resume: SECRET_TEXT },
+        ai_mode: 'rule_based',
+        // Free-text / score-like / identity fields the handler must NEVER persist:
+        profile_text: SECRET_TEXT,
+        summary: SECRET_TEXT,
+        notes: SECRET_TEXT,
+        full_name: SECRET_NAME,
+        readiness_score: SECRET_SCORE,
+        score: SECRET_SCORE,
+        percent: SECRET_SCORE,
+        id: ATTACKER_UID,
+        user_id: ATTACKER_UID,
+        subject: ATTACKER_UID,
+      },
+    },
+  );
+  test('flag ON → POST /telemetry 200 for an authenticated seeker', () => {
+    assert.equal(telemetry.status, 200);
+    assert.equal(telemetry.json?.ok, true);
+  });
+
+  const auditInsert = await waitForAuditInsert();
+  test('flag ON → POST /telemetry persists a platform-audit row', () => {
+    assert.ok(auditInsert, 'expected an INSERT INTO platform_audit_log from the fire-and-forget logAudit');
+  });
+
+  // The INSERT binds: [actor_id, actor_email, action, entity_type, entity_id,
+  // entity_label, before, after, metadata, ip] → entity_id = params[4],
+  // metadata (redactJson string) = params[8].
+  const auditParams = auditInsert?.params ?? [];
+  const auditEntityId = auditParams[4];
+  let auditMeta: any = null;
+  try {
+    auditMeta = typeof auditParams[8] === 'string' ? JSON.parse(auditParams[8]) : null;
+  } catch {
+    auditMeta = null;
+  }
+
+  test('flag ON → telemetry audit entityId is the SESSION uid, NEVER a client-supplied id', () => {
+    assert.equal(auditEntityId, SESSION_UID, `audit entity_id leaked: got ${auditEntityId}`);
+    assert.notEqual(auditEntityId, ATTACKER_UID);
+  });
+
+  test('flag ON → telemetry audit metadata contains ONLY metadata keys (counts + availability map)', () => {
+    assert.ok(auditMeta && typeof auditMeta === 'object', 'expected a parsed metadata object');
+    const keys = Object.keys(auditMeta).sort();
+    assert.deepEqual(
+      keys,
+      ['ai_mode', 'event', 'widget_availability', 'widgets_total', 'widgets_with_data'],
+      `unexpected metadata keys persisted: ${keys.join(', ')}`,
+    );
+  });
+
+  test('flag ON → telemetry metadata: widget totals are numbers, availability is a boolean-only map', () => {
+    assert.equal(typeof auditMeta.widgets_total, 'number', 'widgets_total should be a number');
+    assert.equal(typeof auditMeta.widgets_with_data, 'number', 'widgets_with_data should be a number');
+    const vals = Object.values(auditMeta.widget_availability ?? {});
+    assert.ok(vals.length > 0, 'expected a non-empty availability map');
+    assert.ok(vals.every((v) => typeof v === 'boolean'), 'availability map carried a non-boolean value');
+  });
+
+  test('flag ON → telemetry metadata: a non-boolean availability value is coerced to false (text not persisted)', () => {
+    // `resume` was sent as free text; it must be coerced to false and its text
+    // must not survive, and it must not be counted as a widget-with-data.
+    assert.equal(auditMeta.widget_availability.resume, false, 'a free-text availability value was not coerced to false');
+    assert.equal(auditMeta.widgets_with_data, 1, 'only genuinely-true widgets should be counted (got a miscount)');
+  });
+
+  test('flag ON → telemetry audit trail does NOT persist free-text / score-like body fields', () => {
+    const serialized = JSON.stringify(auditMeta);
+    assert.ok(!serialized.includes(SECRET_TEXT), 'free-text body content leaked into the audit metadata');
+    assert.ok(!serialized.includes(SECRET_NAME), 'a free-text name leaked into the audit metadata');
+    assert.ok(!serialized.includes(String(SECRET_SCORE)), 'a score-like value leaked into the audit metadata');
+  });
+
+  test("flag ON → telemetry: no client-supplied id reaches ANY audit column (entity or metadata)", () => {
+    const leaked = auditParams.filter((p) => typeof p === 'string' && p.includes(ATTACKER_UID));
+    assert.equal(
+      leaked.length,
+      0,
+      `a client-supplied id leaked into the audit row: ${JSON.stringify(leaked)}`,
     );
   });
 

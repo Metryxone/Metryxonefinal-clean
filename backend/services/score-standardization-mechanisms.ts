@@ -775,6 +775,68 @@ export async function listConfigs(pool: Pool, scope?: string): Promise<Record<st
     : safeRows(pool, `SELECT * FROM astd_configs ORDER BY config_key, version DESC LIMIT 500`);
 }
 
+/**
+ * CONFIG SCOPE PRECEDENCE — deterministic order (most-specific wins) used to RESOLVE which stored
+ * standardization config actually APPLIES for a given resolution context. Organization / institution
+ * overrides beat a fully-custom scope, which beats the demographic (industry / country) and the
+ * assessment-context (lifecycle / persona / assessment) scopes. This turns the eight config SCOPES from
+ * "can be stored" into "stored AND resolvable/applied".
+ */
+export const CONFIG_SCOPE_PRECEDENCE = [
+  'organization', 'institution', 'custom', 'industry', 'country', 'lifecycle', 'persona', 'assessment',
+] as const;
+export type ConfigScope = typeof CONFIG_SCOPE_PRECEDENCE[number];
+
+// Which resolution-context field carries the scope_ref for each scope (assessment uses assessment_slug).
+const SCOPE_CONTEXT_FIELD: Record<ConfigScope, string> = {
+  organization: 'organization', institution: 'institution', custom: 'custom', industry: 'industry',
+  country: 'country', lifecycle: 'lifecycle', persona: 'persona', assessment: 'assessment_slug',
+};
+
+export interface ResolveConfigContext {
+  assessment_slug?: string; persona?: string; lifecycle?: string; industry?: string;
+  organization?: string; country?: string; institution?: string; custom?: string;
+}
+export interface ResolveConfigResult {
+  resolved: boolean;
+  scope: ConfigScope | null;
+  scope_ref: string | null;
+  config: Record<string, unknown> | null;
+  precedence: readonly ConfigScope[];
+  candidates_considered: number;
+  reason: string;
+}
+/**
+ * PURE (read-only) config resolution: walk CONFIG_SCOPE_PRECEDENCE (most-specific first) and, for each
+ * scope the context supplies a scope_ref for, look up the latest matching astd_configs row. The first
+ * match wins. If no context field is supplied → resolved:false / reason:'no_context'; if context is
+ * supplied but nothing matches → resolved:false / reason:'no_matching_config'. Reuses the null-safe
+ * `safeRows` reader (missing overlay table → [] → resolved:false), so it is byte-identical OFF (the
+ * route is flag-gated) and never throws. Persists nothing; never fabricates a config.
+ */
+export async function resolveConfig(pool: Pool, context: ResolveConfigContext = {}): Promise<ResolveConfigResult> {
+  let considered = 0;
+  for (const scope of CONFIG_SCOPE_PRECEDENCE) {
+    const raw = context ? (context as Record<string, unknown>)[SCOPE_CONTEXT_FIELD[scope]] : undefined;
+    const ref = raw == null ? '' : String(raw).trim();
+    if (!ref) continue;
+    considered += 1;
+    const rows = await safeRows(
+      pool,
+      `SELECT * FROM astd_configs WHERE scope=$1 AND scope_ref=$2 ORDER BY version DESC LIMIT 1`,
+      [scope, ref],
+    );
+    if (rows[0]) {
+      return { resolved: true, scope, scope_ref: ref, config: rows[0], precedence: CONFIG_SCOPE_PRECEDENCE, candidates_considered: considered, reason: 'matched' };
+    }
+  }
+  return {
+    resolved: false, scope: null, scope_ref: null, config: null,
+    precedence: CONFIG_SCOPE_PRECEDENCE, candidates_considered: considered,
+    reason: considered === 0 ? 'no_context' : 'no_matching_config',
+  };
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // GOVERNANCE — append-only lifecycle transitions + version history + rollback + audit
 // ─────────────────────────────────────────────────────────────────────────────

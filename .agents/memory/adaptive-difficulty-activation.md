@@ -38,7 +38,7 @@ and new GET `/api/competency/assessment/difficulty-plan`. OFF = byte-identical i
   `onto_dna_profiles`+`onto_role_weights` AND are seeded into `role_dna_profiles_v2` (15 rows) +
   `competency_runtime_weights` (~106 rows) — NOT "5 roles". Sample anchors (0–100): PM 48 · Backend Eng 57 ·
   Front-end 63 · DevOps 66 · SDE/SW Eng 67 · Project Mgr 70. So the seed side is DONE for all 15.
-- **Free-text role crosswalk (Task #385, in the ENGINE not the seed):** the direct DB match is exact
+- **Free-text role crosswalk (in the ENGINE not the seed):** the direct DB match is exact
   (`lower(onto_roles.title|id)`), so a user typing a synonym ("Backend Developer", "SDE") or an adjacent title
   ("SRE", "Scrum Master") got NO match → stage anchor. Fixed with a hand-verified read-time map
   `ROLE_TITLE_ALIASES` (normalized free-text → an EXISTING curated `onto_roles` id; `kind` `synonym`|`adjacent`)

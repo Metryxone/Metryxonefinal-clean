@@ -55,19 +55,21 @@ export default function ScoreStandardizationPanel() {
     dimensions: any | null;
     gaps: any | null;
     adoption: any | null;
+    orgConfigs: any[] | null;
   }>({
     queryKey: [`${BASE}/console`],
     queryFn: async () => {
       const probe = await fetch(`/api/score-standardization/enabled`, { credentials: 'include' });
       // 403/503 = flag genuinely OFF. 401/5xx/network = load error (surface, not "disabled").
-      if (probe.status === 403 || probe.status === 503) return { disabled: true, summary: null, dimensions: null, gaps: null, adoption: null };
+      if (probe.status === 403 || probe.status === 503) return { disabled: true, summary: null, dimensions: null, gaps: null, adoption: null, orgConfigs: null };
       if (!probe.ok) throw new Error(`score-standardization enabled probe failed: ${probe.status}`);
       const getJson = async (p: string) => {
         try { const r = await fetch(`${BASE}${p}`, { credentials: 'include' }); return r.ok ? await r.json() : null; }
         catch { return null; }
       };
-      const [summary, dimensions, gaps, adoption] = await Promise.all([
+      const [summary, dimensions, gaps, adoption, orgConfigs] = await Promise.all([
         getJson('/summary'), getJson('/dimensions'), getJson('/gaps'), getJson('/adoption'),
+        getJson('/configs?scope=organization'),
       ]);
       return {
         disabled: false,
@@ -75,6 +77,7 @@ export default function ScoreStandardizationPanel() {
         dimensions: dimensions?.dimensions ?? null,
         gaps: gaps ?? null,
         adoption: adoption?.adoption ?? null,
+        orgConfigs: Array.isArray(orgConfigs?.configs) ? orgConfigs.configs : null,
       };
     },
   });
@@ -105,6 +108,7 @@ export default function ScoreStandardizationPanel() {
   const resolved: any[] = data.gaps?.resolved_gaps ?? [];
   const openGaps: any[] = data.gaps?.gaps ?? [];
   const gapTotal = data.gaps?.gap_total ?? 0;
+  const orgConfigs: any[] = data.orgConfigs ?? [];
 
   return (
     <div className="space-y-5 p-5">
@@ -232,8 +236,40 @@ export default function ScoreStandardizationPanel() {
         </div>
       </Section>
 
+      {/* Organization overrides (scoped configs) */}
+      <Section title="Organization overrides — organization-scoped standardization configs" icon={<Boxes className="h-4 w-4" style={{ color: BRAND.primary }} />}
+        subtitle="Organization-scoped config rows (astd_configs, scope=organization) that override the default formula / band set / interpretation rule via most-specific-wins resolution. Resolve any context interactively in the workbench below. Populated org configs are a SEPARATE adoption axis — honest 0, never a coverage gap. null (unreadable) ≠ 0 (empty).">
+        {orgConfigs.length === 0
+          ? <p className="text-xs text-muted-foreground">No organization-scoped configs — honestly 0 (a SEPARATE adoption axis, never a gap). The resolution mechanism is fully wired; author one via the config save mechanism.</p>
+          : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="text-left text-muted-foreground">
+                    <th className="py-1 pr-3">Config key</th><th className="py-1 pr-3">Ver</th>
+                    <th className="py-1 pr-3">Scope ref</th><th className="py-1 pr-3">Formula</th>
+                    <th className="py-1 pr-3">Band set</th><th className="py-1 pr-3">Rule</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orgConfigs.map((c: any, i: number) => (
+                    <tr key={`${c.config_key ?? 'cfg'}-${c.version ?? i}`} className="border-t align-top">
+                      <td className="py-1 pr-3 font-medium">{c.config_key ?? '—'}{c.label ? <span className="ml-1 text-muted-foreground">({c.label})</span> : null}</td>
+                      <td className="py-1 pr-3 tabular-nums">{c.version ?? '—'}</td>
+                      <td className="py-1 pr-3">{c.scope_ref ?? '—'}</td>
+                      <td className="py-1 pr-3">{c.formula_key ?? '—'}</td>
+                      <td className="py-1 pr-3">{c.band_set_key ?? '—'}</td>
+                      <td className="py-1 pr-3">{c.rule_key ?? '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+      </Section>
+
       {/* Live standardization workbench (engineering-closed gaps) */}
-      <Section title="Standardization workbench — standard scores · structured-AST formulas · bands · interpretation · validation" icon={<Sliders className="h-4 w-4" style={{ color: BRAND.primary }} />}
+      <Section title="Standardization workbench — standard scores · structured-AST formulas · bands · interpretation · validation · custom bands · scoped resolve · regression · heat map" icon={<Sliders className="h-4 w-4" style={{ color: BRAND.primary }} />}
         subtitle="The pure, deterministic mechanisms that engineering-close the standardization & interpretation gaps via reuse-before-build. Formulas are a STRUCTURED AST (no eval). Norm-referenced standardization ABSTAINS below k_min real members — never fabricated. Interactive demos; persists nothing unless a write mechanism is called explicitly.">
         <StandardizationWorkbench />
       </Section>

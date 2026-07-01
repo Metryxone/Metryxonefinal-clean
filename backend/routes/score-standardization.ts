@@ -58,11 +58,11 @@ import {
   composeRepositoryAlignment, composeAdoption, classifiedGaps, composeSummary,
 } from '../services/score-standardization-engine';
 import {
-  computeStandardScoreSet, validateFormula, evaluateFormula, classifyBand,
-  evaluateInterpretationRule, validateDistribution, validateRange, validateBoundary, validateStatistical,
+  computeStandardScoreSet, validateFormula, evaluateFormula, classifyBand, computeHeatmap,
+  evaluateInterpretationRule, validateDistribution, validateRange, validateBoundary, validateStatistical, validateRegression,
   saveFormula, listFormulas, saveStandardScore, listStandardScores,
   saveBandSet, listBandSets, saveInterpretationRule, listInterpretationRules,
-  saveConfig, listConfigs, recordGovernanceTransition, listGovernanceLog,
+  saveConfig, listConfigs, resolveConfig, recordGovernanceTransition, listGovernanceLog,
   saveValidation, listValidations,
 } from '../services/score-standardization-mechanisms';
 
@@ -278,6 +278,14 @@ export function registerScoreStandardizationRoutes(
         result = validateBoundary(Array.isArray(input?.bands) ? input.bands : []);
       } else if (checkType === 'statistical') {
         result = validateStatistical({ mean: input?.mean == null ? null : Number(input.mean), sd: input?.sd == null ? null : Number(input.sd) });
+      } else if (checkType === 'regression') {
+        result = validateRegression({
+          mode: input?.mode === 'band' ? 'band' : 'formula',
+          baseline: input?.baseline, candidate: input?.candidate,
+          samples: Array.isArray(input?.samples) ? input.samples : [],
+          tolerance: input?.tolerance == null ? undefined : Number(input.tolerance),
+          knownVars: Array.isArray(input?.knownVars) ? input.knownVars.map(String) : undefined,
+        });
       } else {
         const kMin = input?.k_min == null ? undefined : Number(input.k_min);
         result = validateDistribution(
@@ -295,6 +303,14 @@ export function registerScoreStandardizationRoutes(
       }
       res.json({ ok: true, result, saved });
     } catch (err) { degraded(res, 'compute-validation', err); }
+  });
+
+  app.post('/api/admin/score-standardization/compute/heatmap', ...g, async (req: Request, res: Response) => {
+    try {
+      const cohorts = (req.body?.cohorts && typeof req.body.cohorts === 'object' && !Array.isArray(req.body.cohorts)) ? req.body.cohorts : {};
+      const customBands = Array.isArray(req.body?.bands) ? req.body.bands : undefined;
+      res.json({ ok: true, result: computeHeatmap(cohorts, customBands) });
+    } catch (err) { degraded(res, 'compute-heatmap', err); }
   });
 
   // ── OVERLAY WRITES + LISTS — the ONLY DDL sites (behind flag + super-admin). ──
@@ -363,6 +379,15 @@ export function registerScoreStandardizationRoutes(
   app.get('/api/admin/score-standardization/configs', ...g, async (req: Request, res: Response) => {
     try { res.json({ ok: true, configs: await listConfigs(pool, req.query.scope ? String(req.query.scope) : undefined) }); }
     catch (err) { degraded(res, 'configs-list', err); }
+  });
+
+  app.post('/api/admin/score-standardization/configs/resolve', ...g, async (req: Request, res: Response) => {
+    try {
+      const context = (req.body?.context && typeof req.body.context === 'object' && !Array.isArray(req.body.context))
+        ? req.body.context
+        : (req.body && typeof req.body === 'object' ? req.body : {});
+      res.json({ ok: true, result: await resolveConfig(pool, context) });
+    } catch (err) { degraded(res, 'configs-resolve', err); }
   });
 
   app.post('/api/admin/score-standardization/governance/transition', ...g, async (req: Request, res: Response) => {

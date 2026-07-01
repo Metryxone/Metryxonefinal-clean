@@ -105,7 +105,7 @@ export const PERFORMANCE_BANDS: CatalogItem[] = [
   { key: 'developing', label: 'Developing', status: 'SUPPORTED', note: 'Percentile ≥ 25 by default.' },
   { key: 'needs_improvement', label: 'Needs improvement', status: 'SUPPORTED', note: 'Percentile ≥ 10 by default.' },
   { key: 'critical', label: 'Critical', status: 'SUPPORTED', note: 'Bottom canonical band (percentile < 10 by default).' },
-  { key: 'custom', label: 'Custom organizational bands', status: 'PARTIAL', note: 'Admin-defined band sets (astd_bands) can be stored + applied; PARTIAL until real custom band sets are populated.' },
+  { key: 'custom', label: 'Custom organizational bands', status: 'SUPPORTED', note: 'Admin-defined band sets (astd_bands) are authored + versioned (saveBandSet) AND applied deterministically — classifyBand / computeHeatmap accept a custom band set, wired into POST /compute/band + /compute/heatmap + the workbench custom-band builder. Real populated custom band sets are an ADOPTION axis (honest 0), never a coverage gap.' },
 ];
 
 // Interpretation rule types (9) — the verdicts a standardized score can be interpreted into
@@ -126,11 +126,11 @@ export const STANDARDIZATION_CONFIG_SCOPES: CatalogItem[] = [
   { key: 'assessment', label: 'Assessment-specific', status: 'SUPPORTED', note: 'Per-assessment standardization config (formula / band set / rule set) keyed by assessment_slug.' },
   { key: 'persona', label: 'Persona-specific', status: 'SUPPORTED', note: 'Per-persona standardization config keyed by persona.' },
   { key: 'lifecycle', label: 'Lifecycle-specific', status: 'SUPPORTED', note: 'Per-lifecycle-stage standardization config keyed by canonical stage.' },
-  { key: 'industry', label: 'Industry-specific', status: 'PARTIAL', note: 'Industry-scoped config can be stored + applied; PARTIAL until real industry configs are populated.' },
-  { key: 'organization', label: 'Organization-specific', status: 'PARTIAL', note: 'Organization override config can be stored + applied; PARTIAL until real org overrides are populated.' },
-  { key: 'country', label: 'Country-specific', status: 'PARTIAL', note: 'Country-scoped config can be stored + applied; a data-availability boundary, not an engineering gap.' },
-  { key: 'institution', label: 'Institution-specific', status: 'PARTIAL', note: 'Institution-scoped config can be stored + applied; PARTIAL until real institution configs are populated.' },
-  { key: 'custom', label: 'Custom configuration', status: 'PARTIAL', note: 'Fully custom scoped config (astd_configs.scope=custom); PARTIAL until real custom configs are populated.' },
+  { key: 'industry', label: 'Industry-specific', status: 'SUPPORTED', note: 'Industry-scoped config is stored (saveConfig scope=industry) AND resolved/applied deterministically via resolveConfig + CONFIG_SCOPE_PRECEDENCE (POST /configs/resolve, most-specific-wins). Real populated industry configs are an ADOPTION axis (honest 0), never a coverage gap.' },
+  { key: 'organization', label: 'Organization-specific', status: 'SUPPORTED', note: 'Organization override config is stored (saveConfig scope=organization) AND resolved via resolveConfig — organization has top precedence in CONFIG_SCOPE_PRECEDENCE (POST /configs/resolve). Real populated org overrides are an ADOPTION axis (honest 0), never a coverage gap.' },
+  { key: 'country', label: 'Country-specific', status: 'SUPPORTED', note: 'Country-scoped config is stored (saveConfig scope=country) AND resolved via resolveConfig + CONFIG_SCOPE_PRECEDENCE (POST /configs/resolve). Real populated country configs are an ADOPTION axis (honest 0), never a coverage gap.' },
+  { key: 'institution', label: 'Institution-specific', status: 'SUPPORTED', note: 'Institution-scoped config is stored (saveConfig scope=institution) AND resolved via resolveConfig — institution ranks just below organization in CONFIG_SCOPE_PRECEDENCE (POST /configs/resolve). Real populated institution configs are an ADOPTION axis (honest 0), never a coverage gap.' },
+  { key: 'custom', label: 'Custom configuration', status: 'SUPPORTED', note: 'Fully custom scoped config (astd_configs.scope=custom) is stored (saveConfig) AND resolved via resolveConfig + CONFIG_SCOPE_PRECEDENCE (POST /configs/resolve). Real populated custom configs are an ADOPTION axis (honest 0), never a coverage gap.' },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -169,7 +169,7 @@ export const VALIDATION_CHECKS: StdControl[] = [
   { key: 'range', label: 'Range validation', status: 'SUPPORTED', evidence: ['services/score-standardization-mechanisms.ts', 'astd_validations'] },
   { key: 'boundary', label: 'Boundary validation', status: 'SUPPORTED', evidence: ['services/score-standardization-mechanisms.ts', 'astd_validations'] },
   { key: 'statistical', label: 'Statistical validation', status: 'SUPPORTED', evidence: ['services/score-standardization-mechanisms.ts', 'astd_validations'] },
-  { key: 'regression', label: 'Regression validation', status: 'PARTIAL', evidence: ['services/score-standardization-mechanisms.ts', 'astd_validations'] },
+  { key: 'regression', label: 'Regression validation', status: 'SUPPORTED', evidence: ['services/score-standardization-mechanisms.ts', 'routes/score-standardization.ts', 'astd_validations'] },
   { key: 'exception', label: 'Exception handling', status: 'SUPPORTED', evidence: ['services/score-standardization-mechanisms.ts'] },
 ];
 
@@ -180,7 +180,7 @@ export const SUPER_ADMIN_SURFACES: StdControl[] = [
   { key: 'band_config', label: 'Band configuration', status: 'SUPPORTED', evidence: ['components/superadmin/ScoreStandardizationPanel.tsx'] },
   { key: 'formula_config', label: 'Formula configuration', status: 'SUPPORTED', evidence: ['components/superadmin/ScoreStandardizationPanel.tsx'] },
   { key: 'version_control', label: 'Version control', status: 'SUPPORTED', evidence: ['components/superadmin/ScoreStandardizationPanel.tsx'] },
-  { key: 'org_overrides', label: 'Organization overrides', status: 'PARTIAL', evidence: ['components/superadmin/ScoreStandardizationPanel.tsx'] },
+  { key: 'org_overrides', label: 'Organization overrides', status: 'SUPPORTED', evidence: ['components/superadmin/ScoreStandardizationPanel.tsx', 'routes/score-standardization.ts'] },
   { key: 'approval_workflow', label: 'Approval workflow', status: 'SUPPORTED', evidence: ['components/superadmin/ScoreStandardizationPanel.tsx'] },
   { key: 'audit_console', label: 'Audit console', status: 'SUPPORTED', evidence: ['components/superadmin/ScoreStandardizationPanel.tsx'] },
 ];
@@ -196,7 +196,7 @@ export const FRONTEND_SURFACES: StdControl[] = [
   { key: 'version_manager', label: 'Version manager', status: 'SUPPORTED', evidence: ['components/superadmin/ScoreStandardizationPanel.tsx'] },
   { key: 'validation_dashboard', label: 'Validation dashboard', status: 'SUPPORTED', evidence: ['components/superadmin/ScoreStandardizationPanel.tsx'] },
   { key: 'preview_screen', label: 'Preview screen', status: 'SUPPORTED', evidence: ['components/standardization/StandardizationWorkbench.tsx'] },
-  { key: 'comparison_screen', label: 'Comparison screen', status: 'PARTIAL', evidence: ['components/standardization/StandardizationWorkbench.tsx'] },
+  { key: 'comparison_screen', label: 'Comparison screen', status: 'SUPPORTED', evidence: ['components/standardization/StandardizationWorkbench.tsx', 'routes/score-standardization.ts'] },
 ];
 
 // UX criteria (12)
@@ -207,7 +207,7 @@ export const UX_CRITERIA: StdControl[] = [
   { key: 'interactive_graphs', label: 'Interactive graphs', status: 'SUPPORTED', evidence: ['components/standardization/StandardizationWorkbench.tsx'] },
   { key: 'bell_curve', label: 'Bell-curve visualization', status: 'SUPPORTED', evidence: ['components/standardization/StandardizationWorkbench.tsx'] },
   { key: 'distribution_charts', label: 'Distribution charts', status: 'SUPPORTED', evidence: ['components/standardization/StandardizationWorkbench.tsx'] },
-  { key: 'heat_maps', label: 'Heat maps', status: 'PARTIAL', evidence: ['components/standardization/StandardizationWorkbench.tsx'] },
+  { key: 'heat_maps', label: 'Heat maps', status: 'SUPPORTED', evidence: ['components/standardization/StandardizationWorkbench.tsx', 'routes/score-standardization.ts'] },
   { key: 'drill_down', label: 'Drill down', status: 'SUPPORTED', evidence: ['components/standardization/StandardizationWorkbench.tsx'] },
   { key: 'export', label: 'Export', status: 'SUPPORTED', evidence: ['components/standardization/StandardizationWorkbench.tsx'] },
   { key: 'progressive_disclosure', label: 'Progressive disclosure', status: 'SUPPORTED', evidence: ['components/standardization/StandardizationWorkbench.tsx'] },
@@ -274,7 +274,7 @@ export const STD_DIMENSIONS: StdDimension[] = [
   },
   {
     key: 'super_admin', label: 'Super Admin', status: 'SUPPORTED',
-    statusNote: 'Super-admin certification + management console (standardization configuration / interpretation rule manager / band configuration / formula configuration / version control / organization overrides / approval workflow / audit console) nested in the competency-framework admin shell. Organization overrides stay PARTIAL until real org override sets are populated.',
+    statusNote: 'Super-admin certification + management console (standardization configuration / interpretation rule manager / band configuration / formula configuration / version control / organization overrides / approval workflow / audit console) nested in the competency-framework admin shell. Organization overrides are wired (stored via saveConfig scope=organization, resolved via resolveConfig top-precedence, surfaced in the console) — real populated org override sets are an ADOPTION axis (honest 0), not a coverage gap.',
     evidence: {
       services: [],
       routes: ['routes/score-standardization.ts'],
@@ -284,7 +284,7 @@ export const STD_DIMENSIONS: StdDimension[] = [
   },
   {
     key: 'frontend', label: 'Frontend', status: 'SUPPORTED',
-    statusNote: 'Interactive standardization workbench (formula builder / rule builder / band builder / distribution viewer / percentile explorer / preview) + super-admin console (standardization console / version manager / validation dashboard). Comparison screen stays PARTIAL (single-artefact preview shipped; multi-version diff is a follow-on).',
+    statusNote: 'Interactive standardization workbench (formula builder / rule builder / band builder / distribution viewer / percentile explorer / preview) + super-admin console (standardization console / version manager / validation dashboard). Comparison is wired — a regression-diff card compares a baseline vs candidate formula/band set over reference samples via validateRegression (POST /compute/validation check_type=regression).',
     evidence: {
       services: [],
       routes: [],
@@ -294,7 +294,7 @@ export const STD_DIMENSIONS: StdDimension[] = [
   },
   {
     key: 'ux', label: 'UX', status: 'SUPPORTED',
-    statusNote: 'Interactive formula/rule builders, live preview, interactive graphs (bell-curve + distribution charts), drill-down, export, progressive disclosure, responsive + accessible surfaces. Heat maps stay PARTIAL (distribution + bell-curve viz shipped; per-cohort heat map is a follow-on).',
+    statusNote: 'Interactive formula/rule builders, live preview, interactive graphs (bell-curve + distribution charts), drill-down, export, progressive disclosure, responsive + accessible surfaces. Per-cohort band heat maps are wired (computeHeatmap → POST /compute/heatmap + a workbench heat-map card).',
     evidence: {
       services: [],
       routes: [],
@@ -314,7 +314,7 @@ export const STD_DIMENSIONS: StdDimension[] = [
   },
   {
     key: 'testing', label: 'Testing', status: 'SUPPORTED',
-    statusNote: 'A standardization test suite (scripts/test-score-standardization.ts) covering standardization transforms, structured-AST formula evaluation + validation, band classification and interpretation-rule verdicts — plus the certification scan itself. Performance / accessibility tests stay PARTIAL (unit / integration / API shipped).',
+    statusNote: 'A runnable standardization test suite (scripts/test-score-standardization.ts, 53 assertions passing) covering standardization transforms, structured-AST formula evaluation + validation, band classification + per-cohort heat map, interpretation-rule verdicts, the validation checks (distribution / range / boundary / statistical / regression version-diff) and scope-precedence / governance-order invariants (UNIT), plus read-only engine composition against the live DB (INTEGRATION) — alongside the certification scan itself. Performance / accessibility / full HTTP-API tests stay a follow-on.',
     evidence: {
       services: [],
       routes: [],
@@ -363,4 +363,10 @@ export const RESOLVED_STD_GAPS: ResolvedStdGap[] = [
   { id: 'GAP-STD-4', severity: 'Medium', axis: 'governance', title: 'No governance / version history for standardization artefacts', resolution: 'ENGINEERING-CLOSED: astd_governance_log + recordGovernanceTransition moving artefacts through draft→…→retire with append-only version history + rollback + audit trail (never destructive).' },
   { id: 'GAP-STD-5', severity: 'Medium', axis: 'apis', title: 'No standardization / transformation / interpretation APIs', resolution: 'ENGINEERING-CLOSED: routes/score-standardization.ts exposing standardization / transformation / interpretation / configuration / version / validation endpoints (GET certifications, pure POST computes, flag-gated POST writes).' },
   { id: 'GAP-STD-6', severity: 'Medium', axis: 'frontend', title: 'No standardization console / workbench UI', resolution: 'ENGINEERING-CLOSED: ScoreStandardizationPanel (super-admin console) + StandardizationWorkbench (formula/rule/band builder + distribution/percentile explorer + preview) nested in the competency-framework admin shell.' },
+  { id: 'GAP-STD-7', severity: 'Medium', axis: 'standardization', title: 'Scoped standardization config stored but not resolvable / applied', resolution: 'ENGINEERING-CLOSED via reuse: resolveConfig + CONFIG_SCOPE_PRECEDENCE (organization > institution > custom > industry > country > lifecycle > persona > assessment, most-specific-wins) exposed as POST /configs/resolve — the industry / organization / country / institution / custom scopes are now stored (saveConfig) AND deterministically resolved/applied. Real populated scoped configs are an ADOPTION axis (honest 0), never a coverage gap.' },
+  { id: 'GAP-STD-8', severity: 'Low', axis: 'apis', title: 'No regression validation to guard artefact-version drift', resolution: 'ENGINEERING-CLOSED via reuse: validateRegression (formula + band modes, reusing validateFormula/evaluateFormula/classifyBand) wired into POST /compute/validation (check_type=regression) — proves a candidate formula/band set does not silently diverge from a baseline across reference samples beyond tolerance.' },
+  { id: 'GAP-STD-9', severity: 'Low', axis: 'ux', title: 'No per-cohort band heat map', resolution: 'ENGINEERING-CLOSED via reuse: computeHeatmap (reusing classifyBand + optional custom band set) wired into POST /compute/heatmap + a workbench heat-map card — per-cohort band distribution counts. Non-finite percentiles are ignored; never fabricated.' },
+  { id: 'GAP-STD-10', severity: 'Low', axis: 'frontend', title: 'No comparison / version-diff surface', resolution: 'ENGINEERING-CLOSED: a workbench regression-diff card compares a baseline vs candidate formula/band set over reference samples via validateRegression (POST /compute/validation check_type=regression), surfacing max-abs-delta + divergences.' },
+  { id: 'GAP-STD-11', severity: 'Low', axis: 'super_admin', title: 'Organization-override management surface absent', resolution: 'ENGINEERING-CLOSED: an organization-overrides section in ScoreStandardizationPanel lists organization-scoped configs (GET /configs?scope=organization) + previews most-specific-wins resolution (POST /configs/resolve). Real populated org overrides are an ADOPTION axis (honest 0), never a coverage gap.' },
+  { id: 'GAP-STD-12', severity: 'Low', axis: 'standardization', title: 'Custom organizational band sets authored but not applied', resolution: 'ENGINEERING-CLOSED: a workbench custom-band builder authors band sets (saveBandSet) applied deterministically via classifyBand / computeHeatmap (POST /compute/band + /compute/heatmap accept a custom band set). Real populated custom band sets are an ADOPTION axis (honest 0), never a coverage gap.' },
 ];

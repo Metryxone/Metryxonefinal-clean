@@ -1,10 +1,10 @@
 # CAPADEX 3.0 · Program 3 · Phase 3.8 — API Report (dimension 8 · apis)
 
-> Deliverable 11 · Generated 2026-07-01T15:58:21.450Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:71e5cbf5bb8c, written 2026-07-01T15:58:21.449Z).
+> Deliverable 11 · Generated 2026-07-01T17:13:35.500Z · Source of truth: `scan.json` (read-only repo+DB scan, sha256:470cd868e0df, written 2026-07-01T17:13:35.497Z).
 > Scope: STANDARDIZATION & INTERPRETATION ONLY — standard scores/structured-AST formula engine/interpretation rules/governance/super admin/frontend/ux/APIs/testing/documentation that turn a SCORED + VALIDATED result (3.5 Scoring + 3.6 Science) into standard scores, performance bands and interpretation-rule verdicts; it NEVER re-scores or re-validates the instrument. Benchmark / AI-interpretation / recommendation / report / dashboard / candidate-analytics are OUT OF SCOPE (later phases).
 > Honesty: the TEN certification dimensions (standardization · formula · interpretation · governance · super_admin · frontend · ux · apis · testing · documentation) are reported SEPARATELY and NEVER composited. Adoption is a SEPARATE usage axis, never a gap. Norm-referenced standardization ABSTAINS below k_min=30 real members. Formulas are a STRUCTURED AST (no eval / new Function). Coverage⟂Confidence⟂Adoption; null ≠ 0; never fabricated.
 
-The unified standardization API surface at `/api/admin/score-standardization/*` (super-admin cert GETs) + `/api/score-standardization/enabled` (flag probe) + the mechanism POST paths (compute/{standard-scores,formula/validate,formula/evaluate,band,interpretation,validation}) and the overlay write paths (formulas / standard-scores / bands / interpretation-rules / configs / validations save + list GETs + governance transition).
+The unified standardization API surface at `/api/admin/score-standardization/*` (super-admin cert GETs) + `/api/score-standardization/enabled` (flag probe) + the mechanism POST paths (compute/{standard-scores,formula/validate,formula/evaluate,band,interpretation,validation,heatmap}, configs/resolve) and the overlay write paths (formulas / standard-scores / bands / interpretation-rules / configs / validations save + list GETs + governance transition).
 
 ## Traceability model (6 scored-result→standardized-artefact links)
 Each link → the artefact it carries + the EXISTING source it REUSES (reuse-before-build).

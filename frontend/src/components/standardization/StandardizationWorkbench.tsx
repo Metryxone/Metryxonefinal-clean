@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { Sigma, Sliders, ListChecks, ShieldCheck, Layers, Calculator } from 'lucide-react';
+import { Sigma, Sliders, ListChecks, ShieldCheck, Layers, Calculator, Palette, Building2, GitCompare, Grid3x3 } from 'lucide-react';
 import { BRAND } from '@/design-system/tokens';
 import { Button } from '../ui/button';
 
@@ -67,7 +67,7 @@ export default function StandardizationWorkbench() {
 
   // ── structured-AST formula ──
   const defaultAst = JSON.stringify(
-    { op: 'add', args: [{ var: 'domain' }, { op: 'mul', args: [{ var: 'behaviour' }, { const: 0.5 }] }] },
+    { type: 'op', op: '+', args: [{ type: 'var', name: 'domain' }, { type: 'op', op: '*', args: [{ type: 'var', name: 'behaviour' }, { type: 'const', value: 0.5 }] }] },
     null, 2,
   );
   const [ast, setAst] = React.useState(defaultAst);
@@ -97,11 +97,65 @@ export default function StandardizationWorkbench() {
     check_type: 'distribution', input: { n: Number(val.n), mean: Number(val.mean), sd: Number(val.sd) },
   }) });
 
+  // ── custom-band builder ──
+  const defaultBands = JSON.stringify(
+    [
+      { key: 'top', label: 'Top', min_percentile: 67 },
+      { key: 'mid', label: 'Middle', min_percentile: 34 },
+      { key: 'low', label: 'Low', min_percentile: 0 },
+    ], null, 2,
+  );
+  const [bandSet, setBandSet] = React.useState(defaultBands);
+  const [bandPct, setBandPct] = React.useState('72');
+  const cbandM = useMutation({ mutationFn: () => {
+    let parsed: unknown;
+    try { parsed = JSON.parse(bandSet); } catch { throw new Error('band set is not valid JSON'); }
+    if (!Array.isArray(parsed)) throw new Error('band set must be a JSON array');
+    return post('/compute/band', { percentile: Number(bandPct), bands: parsed });
+  } });
+
+  // ── scoped config resolver ──
+  const [resolveCtx, setResolveCtx] = React.useState('{ "organization": "acme", "persona": "student" }');
+  const resolveM = useMutation({ mutationFn: () => {
+    let parsed: unknown;
+    try { parsed = JSON.parse(resolveCtx); } catch { throw new Error('context is not valid JSON'); }
+    return post('/configs/resolve', { context: parsed });
+  } });
+
+  // ── regression / version-diff ──
+  const defaultBaseline = JSON.stringify({ type: 'op', op: '+', args: [{ type: 'var', name: 'domain' }, { type: 'var', name: 'behaviour' }] });
+  const defaultCandidate = JSON.stringify({ type: 'op', op: '+', args: [{ type: 'var', name: 'domain' }, { type: 'op', op: '*', args: [{ type: 'var', name: 'behaviour' }, { type: 'const', value: 1.05 }] }] });
+  const defaultSamples = JSON.stringify([{ domain: 70, behaviour: 40 }, { domain: 55, behaviour: 60 }]);
+  const [baseAst, setBaseAst] = React.useState(defaultBaseline);
+  const [candAst, setCandAst] = React.useState(defaultCandidate);
+  const [regSamples, setRegSamples] = React.useState(defaultSamples);
+  const [regTol, setRegTol] = React.useState('0.5');
+  const regM = useMutation({ mutationFn: () => {
+    let b: unknown, c: unknown, s: unknown;
+    try { b = JSON.parse(baseAst); } catch { throw new Error('baseline AST is not valid JSON'); }
+    try { c = JSON.parse(candAst); } catch { throw new Error('candidate AST is not valid JSON'); }
+    try { s = JSON.parse(regSamples); } catch { throw new Error('samples is not valid JSON'); }
+    return post('/compute/validation', { check_type: 'regression', input: { mode: 'formula', baseline: b, candidate: c, samples: s, tolerance: Number(regTol) } });
+  } });
+
+  // ── per-cohort heat map ──
+  const defaultCohorts = JSON.stringify({ 'Batch A': [82, 55, 30, 12], 'Batch B': [90, 70, 45, 20] }, null, 2);
+  const [cohorts, setCohorts] = React.useState(defaultCohorts);
+  const heatM = useMutation({ mutationFn: () => {
+    let parsed: unknown;
+    try { parsed = JSON.parse(cohorts); } catch { throw new Error('cohorts is not valid JSON'); }
+    return post('/compute/heatmap', { cohorts: parsed });
+  } });
+
   const ssR = ssM.data?.result;
   const bandR = bandM.data?.result;
   const interpR = interpM.data?.result;
   const valR = valM.data?.result;
   const fEvalR = fEval.data?.result;
+  const cbandR = cbandM.data?.result;
+  const resolveR = resolveM.data?.result;
+  const regR = regM.data?.result;
+  const heatR = heatM.data?.result;
 
   return (
     <div className="grid grid-cols-1 gap-3 md:grid-cols-2" data-testid="standardization-workbench">
@@ -198,6 +252,101 @@ export default function StandardizationWorkbench() {
           </div>
         )}
       </Card>
+
+      {/* Custom organizational band set */}
+      <Card title="Custom organizational band set" icon={<Palette className="h-4 w-4" style={{ color: BRAND.primary }} />}
+        subtitle="Author a custom band set (JSON) and classify a percentile against it deterministically (reuses classifyBand). Populated org band sets are a SEPARATE adoption axis — honest 0, never a coverage gap.">
+        <div className="mb-2 grid grid-cols-1 gap-2">
+          <Field label="Band set (JSON array of {key,label,min_percentile})"><textarea className={`${inputCls} h-24 font-mono`} value={bandSet} onChange={e => setBandSet(e.target.value)} /></Field>
+          <Field label="Percentile"><input className={inputCls} value={bandPct} onChange={e => setBandPct(e.target.value)} /></Field>
+        </div>
+        <Button size="sm" variant="outline" onClick={() => cbandM.mutate()} disabled={cbandM.isPending}>Classify with custom bands</Button>
+        {cbandM.error && <div className="mt-2 text-[11px] text-red-600">{String((cbandM.error as Error).message)}</div>}
+        {cbandR && (
+          <div className="mt-2 text-[11px]">
+            <div>band: <Val value={cbandR.band ?? cbandR.label} /></div>
+            <div>band set: <Val value={cbandR.band_set} /></div>
+            {cbandR.abstained && <div className="text-amber-600 italic">abstained (percentile not measurable)</div>}
+          </div>
+        )}
+      </Card>
+
+      {/* Scoped config resolver */}
+      <Card title="Scoped config resolver" icon={<Building2 className="h-4 w-4" style={{ color: BRAND.primary }} />}
+        subtitle="Resolve the most-specific-wins standardization config for a context (organization → institution → custom → industry → country → lifecycle → persona → assessment). No matching row → resolved:false — never fabricated.">
+        <div className="mb-2 grid grid-cols-1 gap-2">
+          <Field label="Context (JSON)"><textarea className={`${inputCls} h-16 font-mono`} value={resolveCtx} onChange={e => setResolveCtx(e.target.value)} /></Field>
+        </div>
+        <Button size="sm" variant="outline" onClick={() => resolveM.mutate()} disabled={resolveM.isPending}>Resolve</Button>
+        {resolveM.error && <div className="mt-2 text-[11px] text-red-600">{String((resolveM.error as Error).message)}</div>}
+        {resolveR && (
+          <div className="mt-2 text-[11px]">
+            <div>resolved: <Val value={String(resolveR.resolved)} /></div>
+            <div>scope: <Val value={resolveR.scope} /></div>
+            <div>scope ref: <Val value={resolveR.scope_ref} /></div>
+            <div>candidates considered: <Val value={resolveR.candidates_considered} /></div>
+            <div>reason: <Val value={resolveR.reason} /></div>
+          </div>
+        )}
+      </Card>
+
+      {/* Regression / version-diff */}
+      <Card title="Regression / version-diff" icon={<GitCompare className="h-4 w-4" style={{ color: BRAND.primary }} />}
+        subtitle="Prove a candidate formula version does not silently diverge from a baseline across reference samples beyond tolerance (reuses validateRegression on the structured-AST interpreter — NO eval). Divergences are explicit errors, never a fabricated pass.">
+        <div className="mb-2 grid grid-cols-1 gap-2">
+          <Field label="Baseline AST (JSON)"><textarea className={`${inputCls} h-16 font-mono`} value={baseAst} onChange={e => setBaseAst(e.target.value)} /></Field>
+          <Field label="Candidate AST (JSON)"><textarea className={`${inputCls} h-16 font-mono`} value={candAst} onChange={e => setCandAst(e.target.value)} /></Field>
+          <Field label="Samples (JSON array of vars)"><textarea className={`${inputCls} h-16 font-mono`} value={regSamples} onChange={e => setRegSamples(e.target.value)} /></Field>
+          <Field label="Tolerance"><input className={inputCls} value={regTol} onChange={e => setRegTol(e.target.value)} /></Field>
+        </div>
+        <Button size="sm" variant="outline" onClick={() => regM.mutate()} disabled={regM.isPending}>Compare</Button>
+        {regM.error && <div className="mt-2 text-[11px] text-red-600">{String((regM.error as Error).message)}</div>}
+        {regR && (
+          <div className="mt-2 text-[11px]">
+            <div>passed: <Val value={String(regR.passed)} /></div>
+            <div>max abs delta: <Val value={regR.detail?.max_abs_delta} /></div>
+            <div>divergences: <Val value={regR.detail?.divergence_count} /> of {regR.detail?.sample_count}</div>
+            {Array.isArray(regR.errors) && regR.errors.length > 0 && (
+              <div className="text-red-600">errors: {regR.errors.join('; ')}</div>
+            )}
+          </div>
+        )}
+      </Card>
+
+      {/* Per-cohort band heat map */}
+      <div className="md:col-span-2">
+        <Card title="Per-cohort band heat map" icon={<Grid3x3 className="h-4 w-4" style={{ color: BRAND.primary }} />}
+          subtitle="Per-cohort distribution across performance bands (reuses computeHeatmap + classifyBand). Non-finite percentiles are ignored (contribute to neither n nor any band) — never fabricated.">
+          <div className="mb-2 grid grid-cols-1 gap-2">
+            <Field label="Cohorts (JSON: name → percentiles[])"><textarea className={`${inputCls} h-20 font-mono`} value={cohorts} onChange={e => setCohorts(e.target.value)} /></Field>
+          </div>
+          <Button size="sm" variant="outline" onClick={() => heatM.mutate()} disabled={heatM.isPending}>Compute heat map</Button>
+          {heatM.error && <div className="mt-2 text-[11px] text-red-600">{String((heatM.error as Error).message)}</div>}
+          {heatR && Array.isArray(heatR.rows) && (
+            <div className="mt-2 overflow-x-auto">
+              <table className="text-[10px] tabular-nums">
+                <thead>
+                  <tr>
+                    <th className="px-2 py-1 text-left">Cohort</th>
+                    <th className="px-2 py-1 text-right">n</th>
+                    {heatR.bands.map((b: any) => <th key={b.key} className="px-2 py-1 text-right">{b.label}</th>)}
+                  </tr>
+                </thead>
+                <tbody>
+                  {heatR.rows.map((row: any) => (
+                    <tr key={row.cohort} className="border-t">
+                      <td className="px-2 py-1">{row.cohort}</td>
+                      <td className="px-2 py-1 text-right">{row.n}</td>
+                      {row.cells.map((c: any) => <td key={c.band} className="px-2 py-1 text-right">{c.count}</td>)}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="mt-1 text-[10px] text-muted-foreground">Total classified: {heatR.total}</div>
+            </div>
+          )}
+        </Card>
+      </div>
 
       <div className="md:col-span-2 flex items-center gap-2 rounded-lg border bg-slate-50 p-2 text-[10px] text-muted-foreground">
         <Sliders className="h-3 w-3" style={{ color: BRAND.primary }} />

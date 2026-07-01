@@ -23,7 +23,7 @@ import { BRAND } from '@/design-system/tokens';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Activity, AlertTriangle, BarChart3, Boxes, CheckCircle2, Database, Gauge, Info,
+  Activity, AlertTriangle, BarChart3, Bell, Boxes, CheckCircle2, Coins, Cpu, Database, Gauge, Inbox, Info,
   LayoutDashboard, ListChecks, Server, ShieldCheck, TrendingUp, Wrench,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
@@ -58,6 +58,8 @@ const STATE_TONE: Record<string, { bg: string; fg: string }> = {
   dead_end: { bg: '#F3F4F6', fg: '#6B7280' }, missing: { bg: '#FEE2E2', fg: '#991B1B' },
   fail: { bg: '#FEE2E2', fg: '#991B1B' }, failed: { bg: '#FEE2E2', fg: '#991B1B' },
   structural_incomplete: { bg: '#FEE2E2', fg: '#991B1B' },
+  critical: { bg: '#FEE2E2', fg: '#991B1B' }, warning: { bg: '#FEF3C7', fg: '#92400E' },
+  info: { bg: '#E0E7FF', fg: '#3730A3' },
 };
 function Tone({ s }: { s?: string | null }) {
   if (!s) return <span style={{ color: '#9CA3AF' }}>—</span>;
@@ -87,13 +89,14 @@ function ErrorNote({ q }: { q: any }) {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
-type TabId = 'overview' | 'certification' | 'coverage' | 'capabilities' | 'live' | 'adoption' | 'gaps';
+type TabId = 'overview' | 'certification' | 'coverage' | 'capabilities' | 'live' | 'signals' | 'adoption' | 'gaps';
 
 export default function OperationalReadinessPanel() {
   const [tab, setTab] = React.useState<TabId>('overview');
   const TABS: Array<[TabId, string]> = [
     ['overview', 'Overview'], ['certification', 'Certification'], ['coverage', 'Coverage'],
-    ['capabilities', 'Capabilities'], ['live', 'Live Health'], ['adoption', 'Adoption'], ['gaps', 'Gap Register'],
+    ['capabilities', 'Capabilities'], ['live', 'Live Health'], ['signals', 'Live Signals'],
+    ['adoption', 'Adoption'], ['gaps', 'Gap Register'],
   ];
   return (
     <div className="p-6 space-y-6 max-w-[1400px]">
@@ -122,6 +125,7 @@ export default function OperationalReadinessPanel() {
       {tab === 'coverage' && <CoverageSection />}
       {tab === 'capabilities' && <CapabilitiesSection />}
       {tab === 'live' && <LiveHealthSection />}
+      {tab === 'signals' && <SignalsSection />}
       {tab === 'adoption' && <AdoptionSection />}
       {tab === 'gaps' && <GapsSection />}
     </div>
@@ -376,6 +380,246 @@ function LiveHealthSection() {
             ))}
           </CardContent></Card>
       )}
+    </div>
+  );
+}
+
+/* ── Live Signals — real operational telemetry (queue · alerts · AI cost · metrics) ──
+ * READ-ONLY. Composes the already-shipped Phase 2.5 read endpoints. No enqueue / evaluate /
+ * toggle write actions are surfaced here (out of scope). A table-absent read returns
+ * ready:false → we render an honest "no volume yet" note, NEVER a fabricated 0. null ≠ 0.
+ */
+function bytes(n?: number | null) {
+  if (n == null || Number.isNaN(n)) return '—';
+  const u = ['B', 'KB', 'MB', 'GB', 'TB'];
+  let v = n, i = 0;
+  while (v >= 1024 && i < u.length - 1) { v /= 1024; i++; }
+  return `${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 1 }).format(v)} ${u[i]}`;
+}
+function usd(n?: number | null) {
+  if (n == null || Number.isNaN(Number(n))) return '—';
+  return `$${new Intl.NumberFormat('en-US', { maximumFractionDigits: 6 }).format(Number(n))}`;
+}
+function fmtTime(s?: string | null) {
+  if (!s) return '—';
+  const d = new Date(s);
+  return Number.isNaN(d.getTime()) ? dash(s) : d.toLocaleString('en-IN');
+}
+/** Honest empty note used when a read returns ready:false (table absent = no volume yet). */
+function EmptyNote({ children }: { children: React.ReactNode }) {
+  return <div className="text-sm rounded-md p-3" style={{ background: '#F9FAFB', color: '#6B7280' }}>{children}</div>;
+}
+
+function SignalsSection() {
+  const qQueue = useEndpoint('/queue/stats');
+  const qDlq = useEndpoint('/queue/dead-letter');
+  const qRules = useEndpoint('/alerts/rules');
+  const qEvents = useEndpoint('/alerts/events');
+  const qAi = useEndpoint('/ai/token-usage');
+  const qMetrics = useEndpoint('/metrics.json');
+
+  const queue = qQueue.data?.queue;
+  const dlqRows: any[] = qDlq.data?.dead_letters ?? [];
+  const dlqReady = qDlq.data?.ready !== false;
+  const rules: any[] = qRules.data?.rules ?? [];
+  const rulesReady = qRules.data?.ready !== false;
+  const events: any[] = qEvents.data?.events ?? [];
+  const eventsReady = qEvents.data?.ready !== false;
+  const ai = qAi.data?.usage;
+  const metrics = qMetrics.data?.metrics;
+
+  const byStatus = queue?.by_status ?? {};
+
+  return (
+    <div className="space-y-6">
+      <div className="text-sm rounded-md p-3 flex items-start gap-2" style={{ background: '#EFF6FF', color: '#1E40AF' }}>
+        <Info className="w-4 h-4 mt-0.5 shrink-0" />
+        Live operational telemetry from the Phase 2.5 mechanisms — durable job queue, alert rules &amp;
+        fired events, AI token/cost accounting, and the in-process metrics registry. These are <b>read-only</b>
+        views. In dev, real volume is often <b>0</b>; a table that does not exist yet reads as <b>no volume yet</b>
+        (null = unreadable ≠ 0 = empty). Nothing here is fabricated.
+      </div>
+
+      {/* ── Job queue ─────────────────────────────────────────────────────── */}
+      <div className="space-y-2">
+        <div className="text-sm font-semibold flex items-center gap-2" style={{ color: BRAND.ink }}>
+          <Inbox className="w-4 h-4" /> Durable job queue
+        </div>
+        <ErrorNote q={qQueue} />
+        {queue?.ready === false && <EmptyNote>{dash(queue?.note) || 'Queue table absent until first enqueue (flag-ON).'}</EmptyNote>}
+        {queue?.ready === true && (
+          <>
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+              <Stat icon={<Activity className="w-4 h-4" />} label="Pending" value={num(byStatus.pending ?? 0)} />
+              <Stat icon={<Activity className="w-4 h-4" />} label="Processing" value={num(byStatus.processing ?? 0)} />
+              <Stat icon={<CheckCircle2 className="w-4 h-4" />} label="Succeeded" value={num(byStatus.succeeded ?? 0)} />
+              <Stat icon={<AlertTriangle className="w-4 h-4" />} label="Failed" value={num(byStatus.failed ?? 0)} />
+              <Stat icon={<AlertTriangle className="w-4 h-4" />} label="Dead-letter" value={num(queue.dead_letter_count ?? 0)} />
+              <Stat icon={<Gauge className="w-4 h-4" />} label="Processing (ms)" value={num(queue.processing_ms?.avg)} hint={`max ${num(queue.processing_ms?.max)}`} />
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* ── Dead-letter queue ─────────────────────────────────────────────── */}
+      <div className="space-y-2">
+        <div className="text-sm font-semibold flex items-center gap-2" style={{ color: BRAND.ink }}>
+          <AlertTriangle className="w-4 h-4" /> Dead-letter queue ({dlqReady ? num(dlqRows.length) : '—'})
+        </div>
+        <ErrorNote q={qDlq} />
+        {!dlqReady && <EmptyNote>No dead-letter records yet (table absent until flag-ON). null ≠ 0.</EmptyNote>}
+        {dlqReady && dlqRows.length === 0 && <EmptyNote>No dead-lettered jobs. This is a healthy empty state (0), not unreadable.</EmptyNote>}
+        {dlqReady && dlqRows.length > 0 && (
+          <div className="rounded border overflow-auto max-h-[40vh]">
+            <Table>
+              <TableHeader><TableRow>
+                <TableHead>Job type</TableHead><TableHead>Attempts</TableHead><TableHead>Last error</TableHead><TableHead>Dead-lettered</TableHead>
+              </TableRow></TableHeader>
+              <TableBody>
+                {dlqRows.map((r) => (
+                  <TableRow key={r.id}>
+                    <TableCell className="text-xs font-mono">{dash(r.job_type)}</TableCell>
+                    <TableCell className="text-xs">{num(r.attempts)}</TableCell>
+                    <TableCell className="text-xs text-red-700 max-w-[420px] truncate" title={dash(r.last_error)}>{dash(r.last_error)}</TableCell>
+                    <TableCell className="text-xs">{fmtTime(r.dead_lettered_at)}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      </div>
+
+      {/* ── Alert rules ───────────────────────────────────────────────────── */}
+      <div className="space-y-2">
+        <div className="text-sm font-semibold flex items-center gap-2" style={{ color: BRAND.ink }}>
+          <Bell className="w-4 h-4" /> Alert rules ({rulesReady ? num(rules.length) : '—'})
+        </div>
+        <ErrorNote q={qRules} />
+        {!rulesReady && <EmptyNote>{dash(qRules.data?.note) || 'Alert-rule store absent until flag-ON.'}</EmptyNote>}
+        {rulesReady && rules.length > 0 && (
+          <div className="rounded border overflow-auto max-h-[40vh]">
+            <Table>
+              <TableHeader><TableRow>
+                <TableHead>Name</TableHead><TableHead>Signal</TableHead><TableHead>Condition</TableHead>
+                <TableHead>Severity</TableHead><TableHead>Channel</TableHead><TableHead>Enabled</TableHead>
+              </TableRow></TableHeader>
+              <TableBody>
+                {rules.map((r) => (
+                  <TableRow key={r.id}>
+                    <TableCell className="text-xs font-medium">{dash(r.name)}</TableCell>
+                    <TableCell className="text-xs font-mono">{dash(r.signal)}</TableCell>
+                    <TableCell className="text-xs font-mono">{dash(r.comparator)} {num(r.threshold)}</TableCell>
+                    <TableCell className="text-xs"><Tone s={r.severity} /></TableCell>
+                    <TableCell className="text-xs">{dash(r.channel)}</TableCell>
+                    <TableCell className="text-xs">
+                      <Badge style={r.enabled
+                        ? { background: '#DCFCE7', color: '#166534', border: 'none' }
+                        : { background: '#F3F4F6', color: '#6B7280', border: 'none' }}>{r.enabled ? 'enabled' : 'disabled'}</Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      </div>
+
+      {/* ── Fired alert events ────────────────────────────────────────────── */}
+      <div className="space-y-2">
+        <div className="text-sm font-semibold flex items-center gap-2" style={{ color: BRAND.ink }}>
+          <Activity className="w-4 h-4" /> Recent fired alert events ({eventsReady ? num(events.length) : '—'})
+        </div>
+        <ErrorNote q={qEvents} />
+        {!eventsReady && <EmptyNote>No alert events yet (null ≠ 0).</EmptyNote>}
+        {eventsReady && events.length === 0 && <EmptyNote>No alerts have fired. Healthy empty state (0), not unreadable.</EmptyNote>}
+        {eventsReady && events.length > 0 && (
+          <div className="rounded border overflow-auto max-h-[40vh]">
+            <Table>
+              <TableHeader><TableRow>
+                <TableHead>Rule</TableHead><TableHead>Signal</TableHead><TableHead>Observed</TableHead>
+                <TableHead>Threshold</TableHead><TableHead>Severity</TableHead><TableHead>Routed</TableHead><TableHead>Fired</TableHead>
+              </TableRow></TableHeader>
+              <TableBody>
+                {events.map((e) => (
+                  <TableRow key={e.id}>
+                    <TableCell className="text-xs font-medium">{dash(e.rule_name)}</TableCell>
+                    <TableCell className="text-xs font-mono">{dash(e.signal)}</TableCell>
+                    <TableCell className="text-xs">{num(e.observed)}</TableCell>
+                    <TableCell className="text-xs">{num(e.threshold)}</TableCell>
+                    <TableCell className="text-xs"><Tone s={e.severity} /></TableCell>
+                    <TableCell className="text-xs">{e.routed ? 'yes' : 'no'}</TableCell>
+                    <TableCell className="text-xs">{fmtTime(e.fired_at)}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      </div>
+
+      {/* ── AI token + cost accounting ────────────────────────────────────── */}
+      <div className="space-y-2">
+        <div className="text-sm font-semibold flex items-center gap-2" style={{ color: BRAND.ink }}>
+          <Coins className="w-4 h-4" /> AI token &amp; cost accounting
+        </div>
+        <ErrorNote q={qAi} />
+        {ai?.ready === false && <EmptyNote>{dash(ai?.note) || 'AI token-usage table absent until first AI call (flag-ON).'}</EmptyNote>}
+        {ai?.ready === true && (
+          <>
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
+              <Stat icon={<Activity className="w-4 h-4" />} label="AI calls" value={num(Number(ai.totals?.calls))} />
+              <Stat icon={<Cpu className="w-4 h-4" />} label="Prompt tokens" value={num(Number(ai.totals?.prompt_tokens))} />
+              <Stat icon={<Cpu className="w-4 h-4" />} label="Completion tokens" value={num(Number(ai.totals?.completion_tokens))} />
+              <Stat icon={<BarChart3 className="w-4 h-4" />} label="Total tokens" value={num(Number(ai.totals?.total_tokens))} />
+              <Stat icon={<Coins className="w-4 h-4" />} label="Total cost" value={usd(ai.totals?.cost_usd)} hint="unknown-model cost = —" />
+            </div>
+            {Array.isArray(ai.by_model) && ai.by_model.length > 0 && (
+              <div className="rounded border overflow-auto max-h-[40vh]">
+                <Table>
+                  <TableHeader><TableRow>
+                    <TableHead>Model</TableHead><TableHead>Calls</TableHead><TableHead>Total tokens</TableHead><TableHead>Cost</TableHead>
+                  </TableRow></TableHeader>
+                  <TableBody>
+                    {ai.by_model.map((m: any, i: number) => (
+                      <TableRow key={m.model ?? i}>
+                        <TableCell className="text-xs font-mono">{dash(m.model)}</TableCell>
+                        <TableCell className="text-xs">{num(Number(m.calls))}</TableCell>
+                        <TableCell className="text-xs">{num(Number(m.total_tokens))}</TableCell>
+                        <TableCell className="text-xs">{usd(m.cost_usd)}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* ── In-process metrics registry ───────────────────────────────────── */}
+      <div className="space-y-2">
+        <div className="text-sm font-semibold flex items-center gap-2" style={{ color: BRAND.ink }}>
+          <Gauge className="w-4 h-4" /> Metrics registry
+        </div>
+        <ErrorNote q={qMetrics} />
+        {metrics && (
+          <>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+              <Stat icon={<Activity className="w-4 h-4" />} label="Uptime (s)" value={num(metrics.uptime_seconds)} />
+              <Stat icon={<TrendingUp className="w-4 h-4" />} label="HTTP requests" value={num(metrics.http_requests_total)} />
+              <Stat icon={<AlertTriangle className="w-4 h-4" />} label="HTTP 5xx errors" value={num(metrics.http_request_errors_total)} />
+              <Stat icon={<Gauge className="w-4 h-4" />} label="Error ratio" value={metrics.http_error_ratio == null ? '—' : num(metrics.http_error_ratio)} hint="— = no traffic yet" />
+              <Stat icon={<Cpu className="w-4 h-4" />} label="Heap used" value={bytes(metrics.process_heap_used_bytes)} />
+              <Stat icon={<Server className="w-4 h-4" />} label="RSS" value={bytes(metrics.process_rss_bytes)} />
+            </div>
+            <p className="text-[11px] text-gray-400">
+              In-process counters (a metrics registry, not a data store). Error ratio is <b>—</b> until traffic is observed
+              (null ≠ 0). Counters reset on restart.
+            </p>
+          </>
+        )}
+      </div>
     </div>
   );
 }

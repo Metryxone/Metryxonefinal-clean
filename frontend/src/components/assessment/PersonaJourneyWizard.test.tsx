@@ -257,4 +257,96 @@ describe('PersonaJourneyWizard — Finish step hands off the exact persona & goa
     expect(setAgeBand).toHaveBeenCalledWith('');
     expect(setAgeBand).not.toHaveBeenCalledWith('not-a-band');
   });
+
+  // ── Flag-ON sub-persona handoffs ───────────────────────────────────────
+  // The taxonomy grows extra sub-personas only when the persona-model flags are
+  // ON: expansion adds enterprise roles + higher-ed faculty, alignment splits
+  // the competitive aspirant into JEE/NEET/CUET/UPSC. A wrong legacyKey or
+  // is_proxy on any of these would silently mis-route every downstream phase,
+  // so pin the handoff mapping for each with its gating flag turned ON.
+
+  it('maps an enterprise sub-persona (people_manager) to legacyKey professional, is_proxy=false (expansion ON)', async () => {
+    const user = userEvent.setup();
+    const setPrimaryPersona = vi.fn();
+    const setSelectedPersona = vi.fn();
+    const setIsProxy = vi.fn();
+
+    // people_manager exists ONLY under personaModelExpansion; it sits in the
+    // self-taker "professional" track and must borrow legacyKey 'professional'.
+    const finish = await renderAtFinish(
+      { trackId: 'professional', subId: 'people_manager', band: '24-45', goal: 'growth' },
+      { personaModelExpansion: true, setPrimaryPersona, setSelectedPersona, setIsProxy },
+    );
+
+    await user.click(finish);
+
+    expect(setPrimaryPersona).toHaveBeenCalledWith('people_manager');
+    // legacyKey is the enterprise → 'professional' borrow, NOT the sub-persona id.
+    expect(setSelectedPersona).toHaveBeenCalledWith('professional');
+    // An enterprise leader takes the assessment themselves — never a proxy.
+    expect(setIsProxy).toHaveBeenCalledWith(false);
+  });
+
+  it('maps higher_ed_faculty to legacyKey teacher, is_proxy=true (expansion ON)', async () => {
+    const user = userEvent.setup();
+    const setPrimaryPersona = vi.fn();
+    const setSelectedPersona = vi.fn();
+    const setIsProxy = vi.fn();
+
+    // higher_ed_faculty exists ONLY under personaModelExpansion and lives in the
+    // proxy track (a faculty member assessing students), so it MUST hand off
+    // legacyKey 'teacher' AND is_proxy=true — the exact seam a wrong mapping hides.
+    const finish = await renderAtFinish(
+      { trackId: 'proxy', subId: 'higher_ed_faculty', band: '24-45', goal: 'clarity' },
+      { personaModelExpansion: true, setPrimaryPersona, setSelectedPersona, setIsProxy },
+    );
+
+    await user.click(finish);
+
+    expect(setPrimaryPersona).toHaveBeenCalledWith('higher_ed_faculty');
+    expect(setSelectedPersona).toHaveBeenCalledWith('teacher');
+    expect(setIsProxy).toHaveBeenCalledWith(true);
+  });
+
+  it('hands off a split exam-aspirant (jee_aspirant) as legacyKey student, is_proxy=false (alignment ON)', async () => {
+    const user = userEvent.setup();
+    const setPrimaryPersona = vi.fn();
+    const setSelectedPersona = vi.fn();
+    const setIsProxy = vi.fn();
+
+    // Alignment splits the single "competitive_aspirant" into JEE/NEET/CUET/UPSC.
+    // Each split keeps legacyKey 'student' (self-taking learner), so the finer id
+    // must never leak a different legacyKey downstream.
+    const finish = await renderAtFinish(
+      { trackId: 'learner', subId: 'jee_aspirant', band: '17-24', goal: 'exam' },
+      { personaModelAlignment: true, setPrimaryPersona, setSelectedPersona, setIsProxy },
+    );
+
+    await user.click(finish);
+
+    expect(setPrimaryPersona).toHaveBeenCalledWith('jee_aspirant');
+    expect(setSelectedPersona).toHaveBeenCalledWith('student');
+    expect(setIsProxy).toHaveBeenCalledWith(false);
+  });
+
+  it('does NOT resolve a flag-gated sub-persona when its flag is OFF (proves the flag gates the mapping)', async () => {
+    const user = userEvent.setup();
+    const setPrimaryPersona = vi.fn();
+    const setSelectedPersona = vi.fn();
+    const onComplete = vi.fn();
+
+    // With expansion OFF, people_manager is absent from the taxonomy, so activeSub
+    // never resolves and handleFinish is a no-op — nothing is handed off. This is
+    // the contrast that makes the flag-ON tests above meaningful.
+    const finish = await renderAtFinish(
+      { trackId: 'professional', subId: 'people_manager', band: '24-45', goal: 'growth' },
+      { personaModelExpansion: false, setPrimaryPersona, setSelectedPersona, onComplete },
+    );
+
+    await user.click(finish);
+
+    expect(setPrimaryPersona).not.toHaveBeenCalled();
+    expect(setSelectedPersona).not.toHaveBeenCalled();
+    expect(onComplete).not.toHaveBeenCalled();
+  });
 });

@@ -470,6 +470,194 @@ async function sectionCareerSeekerBodyKeyed() {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
+// Section F — career-seeker.ts per-item JOBS + GOALS writes (URL :id, no subject
+//   id read at all). Unlike the profile writes above, these handlers never
+//   resolve a subject id from the body OR the URL — the row id comes from the URL
+//   (`:id`) but every UPDATE/DELETE is scoped by `WHERE id = :id AND user_id =
+//   u.id`, where `u.id` is the SESSION principal. That scoping is what stops
+//   student A from editing/deleting student B's saved jobs or goals: a row owned
+//   by B simply never matches A's session uid, so the UPDATE affects 0 rows
+//   (→ 404 on the empty RETURNING) and the DELETE is a silent no-op.
+//
+//   There is no `:userId`/body-id guard here because there is no subject id to
+//   guard — the subject is the session principal, implicit. So a future refactor
+//   that drops the `AND user_id = u.id` clause, or starts binding the user_id
+//   COLUMN from a body/param id, would silently re-open a write IDOR with NO
+//   failing test. This section is that regression. (NB: these handlers DO merge
+//   the request body into the item's `data` JSONB by design — so a body field
+//   legitimately reaches the DB inside the data column; the invariant we pin is
+//   narrower: the user_id COLUMN bind is always the session uid, and every
+//   UPDATE/DELETE stays scoped by user_id.)
+//
+//   Harness: career-seeker uses drizzle `db.execute(sql\`…\`)`; we compile each
+//   query via PgDialect to recover the real ($1,$2,…) params. The DB is
+//   simulated to honour the scoping — a SELECT/UPDATE returns a row ONLY when the
+//   URL id belongs to the session (own row); a FOREIGN id yields no row, exactly
+//   as `AND user_id = u.id` would in Postgres.
+// ════════════════════════════════════════════════════════════════════════════
+async function sectionJobsGoalsPerItem() {
+  console.log('\nCareer Seeker jobs + goals per-item writes — self-only scope (URL :id)');
+
+  const dialect = new PgDialect();
+  const probe: { queries: Array<{ sql: string; params: any[] }> } = { queries: [] };
+
+  const OWN_JOB_ID = 'job-self-1';
+  const FOREIGN_JOB_ID = 'job-victim-9';
+  const OWN_GOAL_ID = 'goal-self-1';
+  const FOREIGN_GOAL_ID = 'goal-victim-9';
+  const OWNED = new Set([OWN_JOB_ID, OWN_GOAL_ID]);
+
+  // Simulate `WHERE id = :id AND user_id = u.id`: a SELECT/UPDATE ... RETURNING
+  // yields a row ONLY when the URL id belongs to the session principal. A foreign
+  // id (a row owned by another student) never matches → empty rows, exactly as
+  // the real scoped query would return for a non-owner.
+  (storageDb as any).execute = async (query: any) => {
+    const compiled = dialect.sqlToQuery(query);
+    const params = compiled.params as any[];
+    probe.queries.push({ sql: compiled.sql, params });
+    const targetsOwnRow = params.some((p) => OWNED.has(String(p)));
+    if (/RETURNING|SELECT/i.test(compiled.sql)) {
+      if (targetsOwnRow) {
+        const id = params.find((p) => OWNED.has(String(p)));
+        return { rows: [{ id, data: {}, status: 'Saved', completed: false, updated_at: new Date().toISOString() }] };
+      }
+      return { rows: [] };
+    }
+    return { rows: [] };
+  };
+  // Fire-and-forget side effects (propagateModuleUpdate / onJobStageChanged /
+  // onGoalCompleted / learning-passport) flow through the module pool — record
+  // + answer benignly so they never throw and never confuse the assertions.
+  (storagePool as any).query = async (sql: string, params?: any[]) => {
+    probe.queries.push({ sql, params: params ?? [] });
+    return { rows: [], rowCount: 0 };
+  };
+
+  const app = express();
+  app.use(express.json());
+  app.use((req: Request, _res: Response, next: NextFunction) => {
+    if (req.headers['x-test-auth'] === '1') {
+      (req as any).user = { id: SESSION_UID, role: (req.headers['x-test-role'] as string) || undefined, email: 'self@example.com', username: 'self' };
+      (req as any).isAuthenticated = () => true;
+    } else {
+      (req as any).isAuthenticated = () => false;
+    }
+    next();
+  });
+  registerCareerSeekerRoutes(app);
+  const server = http.createServer(app);
+  const base: string = await new Promise((resolve) => {
+    server.listen(0, () => {
+      const addr = server.address();
+      const port = typeof addr === 'object' && addr ? addr.port : 0;
+      resolve(`http://127.0.0.1:${port}`);
+    });
+  });
+
+  // Only the drizzle writes against the item tables (SELECT/UPDATE/DELETE) — the
+  // pg-pool side effects are excluded.
+  const jobWrites = () => probe.queries.filter((q) => /career_seeker_jobs/i.test(q.sql));
+  const goalWrites = () => probe.queries.filter((q) => /career_seeker_goals/i.test(q.sql));
+
+  // Every item write MUST scope by user_id, and the user_id COLUMN bind (always
+  // the LAST param in these SELECT/UPDATE/DELETE statements) MUST be the session
+  // uid — never an attacker-supplied id.
+  const assertScopedToSession = (writes: Array<{ sql: string; params: any[] }>, label: string) => {
+    assert.ok(writes.length > 0, `${label}: expected at least one item write`);
+    for (const q of writes) {
+      assert.ok(/where[\s\S]*user_id\s*=/i.test(q.sql), `${label}: a write was NOT scoped by user_id → ${q.sql}`);
+      const uidBind = q.params[q.params.length - 1];
+      assert.equal(uidBind, SESSION_UID, `${label}: user_id column bind was not the session uid (got ${uidBind})`);
+      assert.ok(!q.params.some((p) => String(p) === ATTACKER_UID), `${label}: an attacker id reached a write param`);
+    }
+  };
+
+  // A malicious body laced with the attacker's id under every key a naive
+  // refactor might start binding the user_id column from.
+  const malice = { user_id: ATTACKER_UID, userId: ATTACKER_UID, id: ATTACKER_UID };
+
+  // ── JOBS: update own row → 200, scoped to session ──────────────────────────
+  probe.queries = [];
+  const jobSelf = await call(base, 'PUT', `/api/cv/jobs/${OWN_JOB_ID}`, { auth: true, body: { ...malice, status: 'Applied' } });
+  await test('jobs update own → 200', () => {
+    assert.equal(jobSelf.status, 200);
+    assert.equal(jobSelf.json?.success, true);
+  });
+  await test('jobs update own → every write scoped to the SESSION uid (body id ignored for user_id column)', () => {
+    assertScopedToSession(jobWrites(), 'jobs update own');
+  });
+
+  // ── JOBS: update a FOREIGN row → 404, no mutation of another student's row ──
+  probe.queries = [];
+  const jobForeign = await call(base, 'PUT', `/api/cv/jobs/${FOREIGN_JOB_ID}`, { auth: true, body: { status: 'Rejected' } });
+  await test('jobs update foreign id → 404 (row owned by another student never matches)', () => {
+    assert.equal(jobForeign.status, 404);
+    assert.equal(jobForeign.json?.success, false);
+  });
+  await test('jobs update foreign id → the UPDATE was still scoped by session user_id (no cross-user write)', () => {
+    assertScopedToSession(jobWrites(), 'jobs update foreign');
+  });
+
+  // ── JOBS: delete own → 200, scoped ─────────────────────────────────────────
+  probe.queries = [];
+  const jobDelSelf = await call(base, 'DELETE', `/api/cv/jobs/${OWN_JOB_ID}`, { auth: true });
+  await test('jobs delete own → 200 and scoped to the SESSION uid', () => {
+    assert.equal(jobDelSelf.status, 200);
+    assertScopedToSession(jobWrites().filter((q) => /DELETE/i.test(q.sql)), 'jobs delete own');
+  });
+
+  // ── JOBS: delete a FOREIGN row → 200 no-op, but scoped by user_id (0 rows) ──
+  probe.queries = [];
+  const jobDelForeign = await call(base, 'DELETE', `/api/cv/jobs/${FOREIGN_JOB_ID}`, { auth: true });
+  await test('jobs delete foreign id → 200 no-op, DELETE scoped by session user_id (another student unaffected)', () => {
+    assert.equal(jobDelForeign.status, 200);
+    assertScopedToSession(jobWrites().filter((q) => /DELETE/i.test(q.sql)), 'jobs delete foreign');
+  });
+
+  // ── GOALS: update own → 200, scoped ────────────────────────────────────────
+  probe.queries = [];
+  const goalSelf = await call(base, 'PUT', `/api/cv/goals/${OWN_GOAL_ID}`, { auth: true, body: { ...malice, completed: true } });
+  await test('goals update own → 200', () => {
+    assert.equal(goalSelf.status, 200);
+    assert.equal(goalSelf.json?.success, true);
+  });
+  await test('goals update own → every write scoped to the SESSION uid (body id ignored for user_id column)', () => {
+    assertScopedToSession(goalWrites(), 'goals update own');
+  });
+
+  // ── GOALS: update a FOREIGN row → 404 BEFORE any UPDATE runs ───────────────
+  probe.queries = [];
+  const goalForeign = await call(base, 'PUT', `/api/cv/goals/${FOREIGN_GOAL_ID}`, { auth: true, body: { completed: true } });
+  await test('goals update foreign id → 404 (scoped SELECT finds no owned row)', () => {
+    assert.equal(goalForeign.status, 404);
+    assert.equal(goalForeign.json?.success, false);
+  });
+  await test('goals update foreign id → 404 fires BEFORE any UPDATE (no cross-user mutation)', () => {
+    const updates = goalWrites().filter((q) => /UPDATE\s+career_seeker_goals/i.test(q.sql));
+    assert.equal(updates.length, 0, 'an UPDATE ran despite the foreign row never matching');
+    assertScopedToSession(goalWrites(), 'goals update foreign (SELECT scope)');
+  });
+
+  // ── GOALS: delete own → 200, scoped ────────────────────────────────────────
+  probe.queries = [];
+  const goalDelSelf = await call(base, 'DELETE', `/api/cv/goals/${OWN_GOAL_ID}`, { auth: true });
+  await test('goals delete own → 200 and scoped to the SESSION uid', () => {
+    assert.equal(goalDelSelf.status, 200);
+    assertScopedToSession(goalWrites().filter((q) => /DELETE/i.test(q.sql)), 'goals delete own');
+  });
+
+  // ── GOALS: delete a FOREIGN row → 200 no-op, scoped by user_id ─────────────
+  probe.queries = [];
+  const goalDelForeign = await call(base, 'DELETE', `/api/cv/goals/${FOREIGN_GOAL_ID}`, { auth: true });
+  await test('goals delete foreign id → 200 no-op, DELETE scoped by session user_id (another student unaffected)', () => {
+    assert.equal(goalDelForeign.status, 200);
+    assertScopedToSession(goalWrites().filter((q) => /DELETE/i.test(q.sql)), 'goals delete foreign');
+  });
+
+  await new Promise<void>((resolve) => server.close(() => resolve()));
+}
+
+// ════════════════════════════════════════════════════════════════════════════
 // Section D — the shared guards, as pure functions (the single source of truth
 //   both DB-backed write surfaces above resolve their subject through).
 // ════════════════════════════════════════════════════════════════════════════
@@ -522,6 +710,7 @@ async function main() {
   await sectionPassport();
   await sectionCareerSeeker();
   await sectionCareerSeekerBodyKeyed();
+  await sectionJobsGoalsPerItem();
 
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed > 0) process.exit(1);

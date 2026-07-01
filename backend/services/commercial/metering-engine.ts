@@ -687,4 +687,181 @@ export async function deleteUsageOverride(
   return { ok: true, deleted: (res.rowCount ?? 0) > 0 };
 }
 
+// ── Plan quota impact preview (super-admin) ──────────────────────────────────────────────────────
+// Before an admin lowers a per-plan limit, they need to see WHO it affects: how many active
+// identities are on the plan, and how many are already consuming MORE than the value they're about
+// to set. This composer measures that live off the SAME substrate the meter enforces against
+// (comm_subscriptions → comm_customers → comm_usage_events), honouring each dimension's counting kind
+// (period_count vs level) and each subscription's current billing window — so the preview reconciles
+// with what checkQuota / resolveQuotaWindow would decide. READ-ONLY, never throws, honest empties.
+//
+// used_values holds the CURRENT usage reading (numbers only — no emails/PII) for every active
+// identity on the plan that has a NON-ZERO reading for that dimension. The frontend derives
+// "N of M identities exceed the new value V" client-side as used_values.filter(u => u > V).length,
+// so the count updates live as the admin types without a request per keystroke. Identities with a
+// zero reading are omitted (they can never exceed a non-negative limit) but still counted in
+// active_identities (the M denominator).
+
+export interface PlanQuotaImpactRow {
+  plan_id: string;
+  active_subscriptions: number;                                   // active/trial subs on this plan
+  active_identities: number;                                      // distinct emails among them
+  usage: Partial<Record<UsageType, { measured_identities: number; used_values: number[] }>>;
+}
+
+export interface PlanQuotaImpactOverview {
+  generated_at: string;
+  degraded: boolean;
+  dimensions: UsageType[];       // editable dimension order (mirrors listPlanQuotas)
+  plans: PlanQuotaImpactRow[];
+}
+
+/**
+ * Per-plan impact preview: active-subscription/identity counts and the current per-identity usage
+ * distribution for each editable dimension. GET-never-writes: probes the substrate with to_regclass
+ * and degrades to honest empties (never bootstraps schema). Never throws.
+ */
+export async function buildPlanQuotaImpact(pool: Pool): Promise<PlanQuotaImpactOverview> {
+  const dimensions = [...QUOTA_DIMENSIONS];
+  const generated_at = new Date().toISOString();
+
+  const probe = await pool
+    .query(`SELECT to_regclass('comm_subscriptions') AS subs, to_regclass('comm_customers') AS cust`)
+    .catch(() => null);
+  if (!probe || probe.rows[0]?.subs == null || probe.rows[0]?.cust == null) {
+    // No subscription substrate → no identities to impact. Honest empty, not degraded.
+    return { generated_at, degraded: false, dimensions, plans: [] };
+  }
+
+  let degraded = false;
+  const fail = () => { degraded = true; };
+
+  const rowByPlan = new Map<string, PlanQuotaImpactRow>();
+
+  // Seed a row for EVERY plan in the catalog so the admin sees an honest count for each — including a
+  // measured 0 (a plan with no active subscribers is real data, not fabricated). Only seed when the
+  // catalog read succeeds; a failed read must degrade rather than invent 0s we didn't actually measure.
+  const planRows = await pool
+    .query(`SELECT id FROM comm_plans`)
+    .then((r) => r.rows)
+    .catch((e) => { console.error('[plan impact catalog]', e); fail(); return null as any[] | null; });
+  if (planRows) {
+    for (const r of planRows) {
+      rowByPlan.set(String(r.id), {
+        plan_id: String(r.id), active_subscriptions: 0, active_identities: 0, usage: {},
+      });
+    }
+  }
+
+  // Active/trial subscription + distinct-identity counts per plan (the M denominator).
+  const countRows = await pool
+    .query(
+      `SELECT s.plan_id,
+              COUNT(*)                         AS subs,
+              COUNT(DISTINCT lower(c.email))   AS identities
+         FROM comm_subscriptions s
+         JOIN comm_customers c ON c.id = s.customer_id
+        WHERE s.status IN ('active','trial')
+          AND (s.current_period_end IS NULL OR s.current_period_end >= now())
+        GROUP BY s.plan_id`,
+    )
+    .then((r) => r.rows)
+    .catch((e) => { console.error('[plan impact counts]', e); fail(); return [] as any[]; });
+
+  for (const r of countRows) {
+    const id = String(r.plan_id);
+    const existing = rowByPlan.get(id);
+    if (existing) {
+      existing.active_subscriptions = Number(r.subs ?? 0);
+      existing.active_identities = Number(r.identities ?? 0);
+    } else {
+      // A subscription whose plan wasn't in the catalog read (or catalog read failed) — still honest.
+      rowByPlan.set(id, {
+        plan_id: id,
+        active_subscriptions: Number(r.subs ?? 0),
+        active_identities: Number(r.identities ?? 0),
+        usage: {},
+      });
+    }
+  }
+
+  const usageProbe = await pool
+    .query(`SELECT to_regclass('comm_usage_events') AS oid`)
+    .catch(() => null);
+  const hasUsage = usageProbe?.rows[0]?.oid != null;
+  if (hasUsage && rowByPlan.size > 0) {
+    const pcTypes = dimensions.filter((d) => usageTypeKind(d) === 'period_count') as string[];
+    const levelTypes = dimensions.filter((d) => usageTypeKind(d) === 'level') as string[];
+
+    // The set of active identities per plan + each identity's counting window (period_count uses the
+    // subscription's current_period_start; a plan can carry several subs for one email → MIN window is
+    // the most inclusive, matching the meter's "count since the period start" intent). Shared by both
+    // the period_count and level aggregations below.
+    const idsCte = `
+      WITH ids AS (
+        SELECT s.plan_id,
+               lower(c.email) AS email,
+               MIN(COALESCE(s.current_period_start, date_trunc('month', now()))) AS pstart
+          FROM comm_subscriptions s
+          JOIN comm_customers c ON c.id = s.customer_id
+         WHERE s.status IN ('active','trial')
+           AND (s.current_period_end IS NULL OR s.current_period_end >= now())
+         GROUP BY s.plan_id, lower(c.email)
+      )`;
+
+    const pushUsage = (planId: string, dim: UsageType, used: number) => {
+      const row = rowByPlan.get(planId);
+      if (!row) return;
+      let cell = row.usage[dim];
+      if (!cell) { cell = { measured_identities: 0, used_values: [] }; row.usage[dim] = cell; }
+      // Omit zero readings — they can never exceed a non-negative limit — but keep the honest count.
+      if (used > 0) { cell.measured_identities += 1; cell.used_values.push(used); }
+    };
+
+    if (pcTypes.length) {
+      // PERIOD_COUNT: SUM(quantity) since each identity's window start (INNER JOIN → only identities
+      // with activity; zero-usage identities never exceed and are covered by active_identities).
+      await pool
+        .query(
+          `${idsCte}
+           SELECT i.plan_id, u.usage_type, COALESCE(SUM(u.quantity), 0) AS used
+             FROM ids i
+             JOIN comm_usage_events u
+               ON lower(u.email) = i.email
+              AND u.usage_type = ANY($1)
+              AND u.occurred_at >= i.pstart
+            GROUP BY i.plan_id, u.usage_type, i.email`,
+          [pcTypes],
+        )
+        .then((r) => { for (const row of r.rows) pushUsage(String(row.plan_id), String(row.usage_type) as UsageType, Number(row.used ?? 0)); })
+        .catch((e) => { console.error('[plan impact period_count]', e); fail(); });
+    }
+
+    if (levelTypes.length) {
+      // LEVEL (storage): the current reading is the LATEST value per identity (a gauge), NOT a sum —
+      // mirrors countUsage's level branch. Period window is irrelevant for a gauge.
+      await pool
+        .query(
+          `${idsCte},
+           latest AS (
+             SELECT DISTINCT ON (lower(email), usage_type)
+                    lower(email) AS email, usage_type, quantity
+               FROM comm_usage_events
+              WHERE usage_type = ANY($1)
+              ORDER BY lower(email), usage_type, occurred_at DESC, created_at DESC
+           )
+           SELECT i.plan_id, l.usage_type, l.quantity AS used
+             FROM ids i
+             JOIN latest l ON l.email = i.email
+            GROUP BY i.plan_id, l.usage_type, i.email, l.quantity`,
+          [levelTypes],
+        )
+        .then((r) => { for (const row of r.rows) pushUsage(String(row.plan_id), String(row.usage_type) as UsageType, Number(row.used ?? 0)); })
+        .catch((e) => { console.error('[plan impact level]', e); fail(); });
+    }
+  }
+
+  return { generated_at, degraded, dimensions, plans: [...rowByPlan.values()] };
+}
+
 export { isUsageType };

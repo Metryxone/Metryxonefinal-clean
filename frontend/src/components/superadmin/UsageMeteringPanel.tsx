@@ -3,7 +3,7 @@ import React, { useMemo, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   RefreshCw, AlertTriangle, Gauge, Coins, Search, BarChart3, User, Info, TrendingUp,
-  SlidersHorizontal, Save, Check, RotateCcw,
+  SlidersHorizontal, Save, Check, RotateCcw, Users,
 } from 'lucide-react';
 import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid,
@@ -77,6 +77,22 @@ interface UsageOverrideOverview {
   degraded: boolean;
   dimensions: string[];
   overrides: UsageOverrideRow[];
+}
+interface PlanImpactUsageCell {
+  measured_identities: number;
+  used_values: number[];
+}
+interface PlanImpactRow {
+  plan_id: string;
+  active_subscriptions: number;
+  active_identities: number;
+  usage: Record<string, PlanImpactUsageCell>;
+}
+interface PlanImpactOverview {
+  generated_at: string;
+  degraded: boolean;
+  dimensions: string[];
+  plans: PlanImpactRow[];
 }
 interface TrendPoint {
   period: string;
@@ -178,6 +194,23 @@ function PlanQuotaEditor() {
     },
   });
 
+  // Impact preview: active-subscription counts + current per-identity usage distribution per plan, so
+  // the admin sees WHO a limit change affects before saving. Read-only; failure degrades quietly (the
+  // editor still works, we just don't show the "who's affected" hints) rather than blocking edits.
+  const { data: impact } = useQuery<PlanImpactOverview | null>({
+    queryKey: ['/api/admin/commercial/metering/quotas/impact'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/commercial/metering/quotas/impact', { credentials: 'include' });
+      if (!res.ok) throw new Error(`impact ${res.status}`);
+      return res.json();
+    },
+  });
+  const impactByPlan = useMemo(() => {
+    const m = new Map<string, PlanImpactRow>();
+    for (const p of impact?.plans ?? []) m.set(p.plan_id, p);
+    return m;
+  }, [impact]);
+
   const dimensions = data?.dimensions ?? [];
 
   const saveMutation = useMutation({
@@ -201,6 +234,7 @@ function PlanQuotaEditor() {
       setDrafts((prev) => { const next = { ...prev }; delete next[vars.planId]; return next; });
       // Refresh the quota list AND the consumption/overview views so the new limit/remaining shows.
       qc.invalidateQueries({ queryKey: ['/api/admin/commercial/metering/quotas'] });
+      qc.invalidateQueries({ queryKey: ['/api/admin/commercial/metering/quotas/impact'] });
       qc.invalidateQueries({ queryKey: ['metering-consumption'] });
       qc.invalidateQueries({ queryKey: ['/api/admin/commercial/metering/dimensions'] });
       window.setTimeout(() => setSavedPlan((cur) => (cur === vars.planId ? null : cur)), 2500);
@@ -239,6 +273,30 @@ function PlanQuotaEditor() {
       const n = Number(v);
       return !Number.isFinite(n) || n < 0 || !Number.isInteger(n);
     });
+
+  // How many active identities on this plan already consume MORE than the value the admin is about to
+  // set for a dimension. Returns null when there's nothing to warn about (field untouched, cleared to
+  // unmetered, invalid, no impact data, or nobody exceeds). Warns on ANY value that would lock out a
+  // live customer — most acutely when lowering an existing limit.
+  const exceedInfo = (
+    plan: PlanQuotaRow,
+    dim: string,
+  ): { newLimit: number; exceeding: number; activeIdentities: number } | null => {
+    const draftRaw = drafts[plan.plan_id]?.[dim];
+    if (draftRaw === undefined) return null;               // not edited this session
+    const trimmed = draftRaw.trim();
+    if (trimmed === '') return null;                       // cleared → unmetered, can't lock anyone out
+    const n = Number(trimmed);
+    if (!Number.isFinite(n) || n < 0 || !Number.isInteger(n)) return null;
+    const server = plan.quotas[dim];
+    if (server != null && n >= server) return null;        // not tightening the limit
+    const imp = impactByPlan.get(plan.plan_id);
+    const cell = imp?.usage?.[dim];
+    if (!cell) return null;
+    const exceeding = cell.used_values.filter((u) => u > n).length;
+    if (exceeding <= 0) return null;
+    return { newLimit: n, exceeding, activeIdentities: imp?.active_identities ?? exceeding };
+  };
 
   const savePlan = (plan: PlanQuotaRow) => {
     const quotas: Record<string, string> = {};
@@ -301,6 +359,7 @@ function PlanQuotaEditor() {
               const dirty = isDirty(plan);
               const invalid = invalidDim(plan);
               const saving = saveMutation.isPending && saveMutation.variables?.planId === plan.plan_id;
+              const imp = impactByPlan.get(plan.plan_id);
               return (
                 <div key={plan.plan_id} className="rounded-lg border border-slate-200 p-4 bg-white">
                   <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
@@ -315,6 +374,22 @@ function PlanQuotaEditor() {
                         {plan.segment && <span>· {plan.segment}</span>}
                         <span>· {plan.billing_interval}</span>
                       </div>
+                      {imp && (
+                        <div className="mt-1.5 flex items-center gap-1.5 text-[11px] text-slate-500">
+                          <Users className="h-3.5 w-3.5 text-slate-400" />
+                          {imp.active_subscriptions === 0 ? (
+                            <span>No active subscriptions</span>
+                          ) : (
+                            <span>
+                              <strong className="text-slate-700">{fmt(imp.active_subscriptions)}</strong>
+                              {' '}active subscription{imp.active_subscriptions === 1 ? '' : 's'}
+                              {imp.active_identities !== imp.active_subscriptions && (
+                                <> · {fmt(imp.active_identities)} identit{imp.active_identities === 1 ? 'y' : 'ies'}</>
+                              )}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
                     <div className="flex items-center gap-2">
                       {savedPlan === plan.plan_id && (
@@ -347,22 +422,37 @@ function PlanQuotaEditor() {
                     </div>
                   )}
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                    {dimensions.map((dim) => (
-                      <div key={dim}>
-                        <label className="block text-[11px] uppercase tracking-wide text-slate-500 mb-1">
-                          {DIMENSION_LABELS[dim] ?? dim}
-                        </label>
-                        <Input
-                          type="number"
-                          min={0}
-                          step={1}
-                          inputMode="numeric"
-                          value={valueFor(plan, dim)}
-                          onChange={(e) => setValue(plan.plan_id, dim, e.target.value)}
-                          placeholder="Unmetered"
-                        />
-                      </div>
-                    ))}
+                    {dimensions.map((dim) => {
+                      const exceed = exceedInfo(plan, dim);
+                      return (
+                        <div key={dim}>
+                          <label className="block text-[11px] uppercase tracking-wide text-slate-500 mb-1">
+                            {DIMENSION_LABELS[dim] ?? dim}
+                          </label>
+                          <Input
+                            type="number"
+                            min={0}
+                            step={1}
+                            inputMode="numeric"
+                            value={valueFor(plan, dim)}
+                            onChange={(e) => setValue(plan.plan_id, dim, e.target.value)}
+                            placeholder="Unmetered"
+                            className={exceed ? 'border-red-400 focus-visible:ring-red-400' : undefined}
+                          />
+                          {exceed && (
+                            <div className="mt-1 flex items-start gap-1 text-[11px] text-red-600 leading-tight">
+                              <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-px" />
+                              <span>
+                                <strong>{fmt(exceed.exceeding)}</strong> of {fmt(exceed.activeIdentities)}{' '}
+                                already {exceed.exceeding === 1 ? 'exceeds' : 'exceed'} {fmt(exceed.newLimit)} — saving locks{' '}
+                                {exceed.exceeding === 1 ? 'them' : 'them all'} out
+                                {dim === 'storage' ? ' until usage drops' : ' this period'}.
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               );

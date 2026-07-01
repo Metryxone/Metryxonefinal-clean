@@ -19,7 +19,7 @@ import { ensureMeteringSchema } from '../services/commercial/metering-schema';
 import { ensureCommercialSchema } from '../services/commercial/catalog-schema';
 import {
   recordUsage, checkQuota, buildUsageOverview, isUsageType,
-  checkCreditDimension, spendCredits, listPlanQuotas, upsertPlanQuotas,
+  checkCreditDimension, spendCredits, listPlanQuotas, upsertPlanQuotas, buildPlanQuotaImpact,
   listUsageOverrides, upsertUsageOverride, deleteUsageOverride,
 } from '../services/commercial/metering-engine';
 import { buildIdentityConsumption, buildDimensionOverview, buildUsageTrend } from '../services/commercial/consumption-engine';
@@ -218,6 +218,20 @@ export function registerCommercialMeteringRoutes(
     } catch (err) {
       console.error('[metering quotas list]', err);
       res.status(500).json({ error: 'quotas list failed' });
+    }
+  });
+
+  // Impact preview: per-plan active-subscription/identity counts + current per-identity usage
+  // distribution per editable dimension, so the admin sees WHO a limit change affects (and how many
+  // already exceed a value they're about to set) BEFORE saving. Read-only; honest empty when the
+  // subscription substrate is absent.
+  app.get('/api/admin/commercial/metering/quotas/impact', ...adminReadChain, async (_req: any, res) => {
+    try {
+      const impact = await buildPlanQuotaImpact(pool);
+      res.json(impact);
+    } catch (err) {
+      console.error('[metering quotas impact]', err);
+      res.status(500).json({ error: 'quotas impact failed' });
     }
   });
 

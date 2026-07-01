@@ -11060,6 +11060,11 @@
       --tw-ring-color: var(--color-blue-500);
     }
   }
+  .focus-visible\:ring-red-400 {
+    &:focus-visible {
+      --tw-ring-color: var(--color-red-400);
+    }
+  }
   .focus-visible\:ring-ring {
     &:focus-visible {
       --tw-ring-color: var(--ring);

@@ -104,6 +104,15 @@ const probe = {
   },
 };
 
+// Capture any unhandled promise rejection so the telemetry resilience test can
+// prove the fire-and-forget `void logAudit(...)` never leaks one — even when the
+// audit write throws. If a future refactor stripped logAudit's try/catch, the
+// rejected promise would surface here and fail the assertion.
+const unhandledRejections: unknown[] = [];
+process.on('unhandledRejection', (reason) => {
+  unhandledRejections.push(reason);
+});
+
 // Stub requireAuth mirroring production semantics: reject (401) without a
 // session, otherwise pin req.user to the SESSION principal and continue. It
 // increments a counter so we can prove the flag gate runs BEFORE auth when OFF.
@@ -128,12 +137,24 @@ const requireAuth = (req: Request, res: Response, next: () => void) => {
 type PoolMode = 'default' | 'no_profile' | 'absent' | 'error';
 let poolMode: PoolMode = 'default';
 
+// When true, ANY query touching the audit substrate (`platform_audit_log` — the
+// ensure-schema DDL or the INSERT) rejects, simulating "audit DB down / schema
+// DDL fails". Scoped to the audit path ONLY so the telemetry handler's own code
+// still runs normally; only the fire-and-forget logAudit write blows up.
+let auditPoolThrows = false;
+
 // Stub pg Pool: records every query (so we can assert "DB untouched when OFF"
 // and "the data read used the SESSION uid, not a client id"). Returns a present
 // table + a populated profile so the summary handler reaches its full read path.
 const pool = {
   query: async (sql: string, params?: any[]) => {
     probe.dbQueries.push({ sql, params: params ?? [] });
+    // Audit substrate down: reject the ensure-schema DDL / INSERT so the
+    // fire-and-forget logAudit path throws (recorded above so the test can prove
+    // the throwing path was actually exercised).
+    if (auditPoolThrows && /platform_audit_log/i.test(sql)) {
+      throw new Error('simulated audit write failure (DB down / schema DDL failed)');
+    }
     if (poolMode === 'error') {
       throw new Error('simulated internal DB failure');
     }
@@ -412,6 +433,52 @@ async function main() {
       `a client-supplied id leaked into the audit row: ${JSON.stringify(leaked)}`,
     );
   });
+
+  // ── Resilience contract (broken audit logger must NEVER drop the render): the
+  //    telemetry handler fires the shared audit logger fire-and-forget
+  //    (`void logAudit(...)`), and logAudit is best-effort by design ("never
+  //    propagate"). If the audit write throws — DB down, ensure-schema DDL fails
+  //    — the endpoint MUST still return 200 to the client, MUST NOT reject the
+  //    request, and MUST NOT leave an unhandled promise rejection. Task #256
+  //    verified WHAT gets persisted on success; this locks the failure contract
+  //    so a future change that `await`ed the logger, or stripped its try/catch,
+  //    cannot turn a transient DB blip into a user-visible 500 on every dashboard
+  //    render without a test failing. Flag stays ON; `auditPoolThrows` makes the
+  //    audit substrate (and ONLY the audit substrate) reject. ──
+  process.env[FF] = 'true';
+  const rejectionsBefore = unhandledRejections.length;
+  auditPoolThrows = true;
+  probe.reset();
+  const telemetryThrow = await call(
+    base,
+    'POST',
+    '/api/launchpad-dashboard/telemetry',
+    {
+      auth: true,
+      body: { event: 'launchpad_dashboard_render', widgets_total: 8, widget_availability: { profile: true } },
+    },
+  );
+  test('flag ON → POST /telemetry still returns 200 even when the audit INSERT rejects', () => {
+    assert.equal(telemetryThrow.status, 200, `expected 200 despite a failing audit write, got ${telemetryThrow.status}`);
+    assert.equal(telemetryThrow.json?.ok, true);
+  });
+  test('flag ON → POST /telemetry attempted the audit write (the throwing path was actually exercised)', () => {
+    const attempted = probe.dbQueries.some((q) => /platform_audit_log/i.test(q.sql));
+    assert.ok(attempted, 'expected the handler to attempt the audit write, so the reject was actually hit');
+  });
+  // The fire-and-forget `void logAudit(...)` settles AFTER the HTTP response, so
+  // give any (mis)handled promise a few event-loop ticks to surface as an
+  // unhandledRejection before asserting none leaked.
+  await new Promise((r) => setTimeout(r, 50));
+  test('flag ON → a throwing audit write does NOT reject the request or leave an unhandled promise rejection', () => {
+    assert.equal(
+      unhandledRejections.length,
+      rejectionsBefore,
+      'the failing audit write leaked an unhandled promise rejection: ' +
+        String(unhandledRejections[unhandledRejections.length - 1]),
+    );
+  });
+  auditPoolThrows = false;
 
   // ── Honest-empty / degraded: the summary must NEVER invent readiness. When
   //    the seeker has no profile row, when the substrate itself is absent, or on

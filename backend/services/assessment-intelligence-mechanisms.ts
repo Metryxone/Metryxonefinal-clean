@@ -155,13 +155,43 @@ export async function ensureAintSchema(pool: Pool): Promise<void> {
       artefact_key   TEXT NOT NULL,
       version        INTEGER NOT NULL DEFAULT 1,
       artefact_type  TEXT NOT NULL DEFAULT 'standard_scores',
-      ref            TEXT,
+      ref            TEXT NOT NULL DEFAULT '',
       payload        JSONB NOT NULL DEFAULT '{}'::jsonb,
       status         TEXT NOT NULL DEFAULT 'active',
       created_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
       updated_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
-      UNIQUE (artefact_key, version)
+      UNIQUE (ref, artefact_key, version)
     );
+    -- Reconcile aint_repository if it was created earlier with the OLD unscoped
+    -- unique key (artefact_key, version): scope it by ref so two DIFFERENT
+    -- candidates/assessments can never overwrite the same artefact_key+version.
+    -- Idempotent: no-op once the table already carries the scoped key. The new
+    -- key is a superset of the old one, so any data valid under the old key is
+    -- valid under the new one — adding it can never fail on existing rows.
+    DO $aint_repo_reconcile$
+    BEGIN
+      UPDATE aint_repository SET ref = '' WHERE ref IS NULL;
+      BEGIN
+        ALTER TABLE aint_repository ALTER COLUMN ref SET DEFAULT '';
+        ALTER TABLE aint_repository ALTER COLUMN ref SET NOT NULL;
+      EXCEPTION WHEN others THEN NULL;
+      END;
+      IF EXISTS (
+        SELECT 1 FROM pg_constraint
+        WHERE conrelid = 'aint_repository'::regclass AND contype = 'u'
+          AND conname = 'aint_repository_artefact_key_version_key'
+      ) THEN
+        ALTER TABLE aint_repository DROP CONSTRAINT aint_repository_artefact_key_version_key;
+      END IF;
+      IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint
+        WHERE conrelid = 'aint_repository'::regclass AND contype = 'u'
+          AND conname = 'aint_repository_ref_artefact_key_version_key'
+      ) THEN
+        ALTER TABLE aint_repository
+          ADD CONSTRAINT aint_repository_ref_artefact_key_version_key UNIQUE (ref, artefact_key, version);
+      END IF;
+    END $aint_repo_reconcile$;
   `);
   schemaReady = true;
 }
@@ -656,9 +686,9 @@ export async function saveRepositoryArtefact(pool: Pool, input: RepositoryInput)
   await ensureAintSchema(pool);
   const { rows } = await pool.query(
     `INSERT INTO aint_repository (artefact_key, version, artefact_type, ref, payload, status)
-     VALUES ($1,COALESCE($2,1),COALESCE($3,'standard_scores'),$4,COALESCE($5,'{}')::jsonb,COALESCE($6,'active'))
-     ON CONFLICT (artefact_key, version) DO UPDATE SET
-       artefact_type=EXCLUDED.artefact_type, ref=EXCLUDED.ref, payload=EXCLUDED.payload,
+     VALUES ($1,COALESCE($2,1),COALESCE($3,'standard_scores'),COALESCE($4,''),COALESCE($5,'{}')::jsonb,COALESCE($6,'active'))
+     ON CONFLICT (ref, artefact_key, version) DO UPDATE SET
+       artefact_type=EXCLUDED.artefact_type, payload=EXCLUDED.payload,
        status=EXCLUDED.status, updated_at=now()
      RETURNING *`,
     [input.artefact_key, input.version ?? null, input.artefact_type ?? null, input.ref ?? null,

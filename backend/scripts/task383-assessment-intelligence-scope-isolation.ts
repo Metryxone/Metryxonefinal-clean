@@ -7,7 +7,8 @@
  * upsert conflict keys originally excluded the scope columns, so two DIFFERENT candidates (or two
  * DIFFERENT assessments) that happened to share the same record `*_key` would silently OVERWRITE each
  * other. The keys are now scoped by `(assessment_slug, subject_ref, *_key)` (and, for benchmarks, `scope`;
- * for norm tables, `(assessment_slug, norm_key, norm_type)`). This validator proves that stays correct.
+ * for norm tables, `(assessment_slug, norm_key, norm_type)`; for the versioned interpretation-artefact
+ * catalogue `aint_repository`, `(ref, artefact_key, version)`). This validator proves that stays correct.
  *
  * It runs as an ISOLATED flag-ON process (sets `FF_ASSESSMENT_INTELLIGENCE=true` in THIS process only —
  * the shared Backend API workflow keeps the flag OFF, byte-identical) and calls the real save mechanisms.
@@ -32,6 +33,7 @@ import {
   saveReport,
   savePerformance,
   saveNormTable,
+  saveRepositoryArtefact,
 } from '../services/assessment-intelligence-mechanisms';
 
 let pass = 0, fail = 0;
@@ -139,6 +141,29 @@ const KEY = `${tag}-key`; // one shared record key reused across scopes on purpo
       log(r2.rows.length === 1 && Number(r2.rows[0].reference_mean) === 99,
         'norm_tables: re-save same tuple updates in place (idempotent)', `rows=${r2.rows.length} val=${r2.rows[0]?.reference_mean}`);
     }
+
+    // ── aint_repository — key (ref, artefact_key, version) ───────────────────────────────────────
+    // The versioned interpretation-artefact catalogue. Two DIFFERENT candidates/assessments (distinct
+    // `ref`) can legitimately publish an artefact with the SAME artefact_key + version — they must NOT
+    // overwrite each other. Re-publishing the SAME (ref, artefact_key, version) is an idempotent update.
+    {
+      const AK = `${tag}-artefact`;
+      const R1 = `${tag}-refA`;
+      const R2 = `${tag}-refB`;
+      await saveRepositoryArtefact(pool, { artefact_key: AK, version: 1, ref: R1, artefact_type: 'interpretations', payload: { v: 'A' } });
+      await saveRepositoryArtefact(pool, { artefact_key: AK, version: 1, ref: R2, artefact_type: 'interpretations', payload: { v: 'B' } }); // diff ref, SAME key+version
+      const r = await pool.query(`SELECT ref, payload FROM aint_repository WHERE artefact_key=$1 AND version=1 ORDER BY ref`, [AK]);
+      log(r.rows.length === 2, 'repository: 2 distinct-ref artefacts persist for same artefact_key+version (no overwrite)', `got ${r.rows.length}`);
+      const a = r.rows.find((x) => x.ref === R1);
+      const b = r.rows.find((x) => x.ref === R2);
+      log(a?.payload?.v === 'A' && b?.payload?.v === 'B',
+        'repository: each candidate/assessment keeps its OWN artefact payload', `A=${a?.payload?.v} B=${b?.payload?.v}`);
+      // Idempotent re-publish of the SAME (ref, artefact_key, version) → in-place update, no duplicate.
+      await saveRepositoryArtefact(pool, { artefact_key: AK, version: 1, ref: R1, artefact_type: 'interpretations', payload: { v: 'A2' } });
+      const r2 = await pool.query(`SELECT payload FROM aint_repository WHERE artefact_key=$1 AND version=1 AND ref=$2`, [AK, R1]);
+      log(r2.rows.length === 1 && r2.rows[0].payload?.v === 'A2',
+        'repository: re-save same (ref, artefact_key, version) updates in place (idempotent)', `rows=${r2.rows.length} val=${r2.rows[0]?.payload?.v}`);
+    }
   } catch (e) {
     log(false, 'validator threw', (e as Error).message);
   } finally {
@@ -147,6 +172,7 @@ const KEY = `${tag}-key`; // one shared record key reused across scopes on purpo
       await pool.query(`DELETE FROM ${t} WHERE assessment_slug LIKE $1 OR subject_ref LIKE $1`, [`${tag}%`]).catch(() => {});
     }
     await pool.query(`DELETE FROM aint_norm_tables WHERE assessment_slug LIKE $1 OR norm_key LIKE $1`, [`${tag}%`]).catch(() => {});
+    await pool.query(`DELETE FROM aint_repository WHERE ref LIKE $1 OR artefact_key LIKE $1`, [`${tag}%`]).catch(() => {});
     // Confirm cleanup left no residue.
     let residue = 0;
     for (const t of ['aint_standard_scores', 'aint_benchmarks', 'aint_interpretations', 'aint_reports', 'aint_performance', 'aint_norm_tables']) {
@@ -154,6 +180,8 @@ const KEY = `${tag}-key`; // one shared record key reused across scopes on purpo
       const c = await pool.query(`SELECT COUNT(*)::int AS n FROM ${t} WHERE assessment_slug LIKE $1 OR ${key} LIKE $1`, [`${tag}%`]).catch(() => ({ rows: [{ n: -1 }] }));
       residue += Number(c.rows[0].n) || 0;
     }
+    const cRepo = await pool.query(`SELECT COUNT(*)::int AS n FROM aint_repository WHERE ref LIKE $1 OR artefact_key LIKE $1`, [`${tag}%`]).catch(() => ({ rows: [{ n: -1 }] }));
+    residue += Number(cRepo.rows[0].n) || 0;
     log(residue === 0, 'cleanup: no test rows remain', `residue=${residue}`);
     await pool.end();
   }

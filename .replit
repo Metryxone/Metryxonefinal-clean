@@ -103,6 +103,10 @@ args = "persona-journey-mapping"
 task = "workflow.run"
 args = "test-referred-email"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "module-access-mounts"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -344,6 +348,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx --test tests/partner-ecosystem-referred-email.test.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "module-access-mounts"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx tests/module-access-mounts.smoke.ts"
 
 [workflows.workflow.metadata]
 isValidation = true

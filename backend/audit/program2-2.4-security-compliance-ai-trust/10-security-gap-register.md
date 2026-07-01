@@ -6,7 +6,7 @@ Severity: **Launch-Critical** (blocks any prod) · **High** (blocks broad prod) 
 > Security controls follow the **default-ON + env kill-switch** convention (mirroring CSRF); new features are flag-gated default-OFF, byte-identical incl. schema.
 > - **SEC-M1 — CLOSED (code).** Session lifetime is now env-configurable: `SESSION_MAX_AGE_DAYS` (default 7), `SESSION_ROLLING` (default off), `SESSION_IDLE_MINUTES` (default 0 = disabled). Defaults are byte-identical to prior behaviour. (`backend/routes.ts`)
 > - **SEC-H1 — MECHANISM ADDED; owner attestation PENDING.** Boot-time env preflight now emits a `[WARN]` for `PROD_DB_ISOLATION_ATTESTED` until the owner completes `docs/compliance/PROD_DB_ISOLATION_CHECKLIST.md` and sets the attestation var. Verification itself remains an owner/ops action (cannot be code-proven). (`backend/lib/env-preflight.ts`)
-> - **SEC-M2 — DECISION REQUIRED (owner).** App-layer field-level PII encryption not implemented. This register notes provider-level encryption is typically acceptable for DPDP/GDPR; retrofitting encryption onto populated PII columns is a destructive, key-management-bearing change and is brought to the owner as an explicit decision rather than done blindly.
+> - **SEC-M2 — DECISION RECORDED (owner-approved).** Provider-level at-rest encryption ACCEPTED; app-layer field-level PII encryption intentionally NOT implemented (retrofitting onto populated PII is destructive + key-management-bearing; provider-level is typically acceptable for DPDP/GDPR). See `docs/compliance/SEC-M2-encryption-decision.md` for rationale + re-open conditions.
 > - SEC-L1/L2/L3 and SEC-F* unchanged (Low/Future).
 
 ## Launch-Critical — 0

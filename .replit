@@ -67,6 +67,10 @@ args = "test-outcome-intelligence"
 task = "workflow.run"
 args = "lifecycle-stage-parity"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "lifecycle-stage-writers"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -209,6 +213,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx scripts/verify-lifecycle-stage-normalization.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "lifecycle-stage-writers"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx scripts/verify-canonical-stage-writers.ts"
 
 [workflows.workflow.metadata]
 isValidation = true

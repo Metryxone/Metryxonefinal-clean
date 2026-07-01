@@ -75,9 +75,11 @@ CAP_INS → 'Clarity'; junk/null → null).
 - `canonicalStageFor` (→ wc3_stage_state/progression) and the outcome insert (current/desired_stage,
   sourced from persisted L1 + `STORED_STAGE_ORDER`) are canon BY CONSTRUCTION; outcome also routes
   current_stage through the guard for defense-in-depth.
-- Guarantee is enforced by `scripts/verify-canonical-stage-writers.ts` (fails loudly / exit 1) —
-  run it ALONGSIDE `verify-lifecycle-stage-normalization.ts`. **Why:** Task #306 proved reads;
-  this proves writes can never reintroduce a non-canonical value.
+- Guarantee is enforced by `scripts/verify-canonical-stage-writers.ts` (fails loudly / exit 1),
+  now registered as the **`lifecycle-stage-writers`** validation step (companion to
+  `lifecycle-stage-parity`), so a drifting WRITER hard-fails the build automatically — no longer
+  manual-only. **Why:** Task #306 proved reads; this proves writes can never reintroduce a
+  non-canonical value. Add a matching assertion here when you add a new writer of a stage column.
 
 ## What was deliberately left alone
 `services/wc5/*` memory just passthrough-stores `canonical_stage` (no label→number map) so there

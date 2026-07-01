@@ -27,6 +27,19 @@ type Row = {
   };
 };
 
+type RoleDnaCoverage = {
+  measurable: boolean;
+  total_roles: number | null;
+  role_dna_driven: number | null;
+  stage_anchor_fallback: number | null;
+  coverage_ratio: number | null;
+  driven_roles: Array<{ role_id: string; title: string | null; anchor: number; competencies: number }>;
+  crosswalk_canonical_roles: number;
+  crosswalk_aliases: number;
+  reason: string;
+  notes: string[];
+};
+
 const DOMAINS = ['', 'COG', 'COM', 'LEA', 'EXE', 'ADP', 'TEC', 'EIQ'];
 const STATUSES: Array<'' | Row['status']> = ['', 'draft', 'approved', 'rejected', 'archived'];
 const SOURCES: Array<'' | Row['source']> = ['', 'seed', 'manual', 'generated'];
@@ -52,6 +65,7 @@ export default function CompetencyQuestionsPanel() {
   const [gen, setGen] = useState<{ count: number; code: string }>({ count: 10, code: '' });
   const [busy, setBusy] = useState(false);
   const [stats, setStats] = useState<{ totals: Array<{ status: string; n: number }> }>({ totals: [] });
+  const [coverage, setCoverage] = useState<RoleDnaCoverage | null>(null);
 
   const load = async () => {
     setLoading(true); setErr('');
@@ -67,6 +81,8 @@ export default function CompetencyQuestionsPanel() {
       setRows(j.rows || []);
       const s = await fetch('/api/admin/competency-questions/stats', { credentials: 'include' }).then((x) => x.json());
       if (s?.ok) setStats({ totals: s.totals || [] });
+      const c = await fetch('/api/admin/competency-questions/role-dna-coverage', { credentials: 'include' }).then((x) => x.json());
+      if (c?.ok) setCoverage(c.coverage as RoleDnaCoverage);
     } catch (e: any) { setErr(e.message || String(e)); }
     finally { setLoading(false); }
   };
@@ -189,6 +205,72 @@ export default function CompetencyQuestionsPanel() {
           </div>
         ))}
       </div>
+
+      <section className="rounded-lg border border-slate-200 bg-white p-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <h3 className="font-semibold text-slate-900">Role-DNA difficulty coverage</h3>
+          <span className="text-xs text-slate-500">How many roles drive difficulty from real Role-DNA vs the career-stage default.</span>
+        </div>
+        {!coverage ? (
+          <div className="text-sm text-slate-500">Loading coverage…</div>
+        ) : !coverage.measurable ? (
+          <div className="rounded border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+            Coverage unmeasurable — {coverage.reason}
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+              <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3">
+                <div className="text-xs uppercase tracking-wide text-emerald-700">Driven by Role-DNA</div>
+                <div className="text-2xl font-semibold text-emerald-800">{coverage.role_dna_driven ?? '—'}</div>
+              </div>
+              <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                <div className="text-xs uppercase tracking-wide text-slate-500">Stage-anchor fallback</div>
+                <div className="text-2xl font-semibold text-slate-800">{coverage.stage_anchor_fallback ?? '—'}</div>
+              </div>
+              <div className="rounded-lg border border-slate-200 bg-white p-3">
+                <div className="text-xs uppercase tracking-wide text-slate-500">Total roles</div>
+                <div className="text-2xl font-semibold text-slate-900">{coverage.total_roles ?? '—'}</div>
+              </div>
+              <div className="rounded-lg border border-indigo-200 bg-indigo-50 p-3">
+                <div className="text-xs uppercase tracking-wide text-indigo-700">Coverage</div>
+                <div className="text-2xl font-semibold text-indigo-800">
+                  {coverage.coverage_ratio == null ? '—' : `${Math.round(coverage.coverage_ratio * 1000) / 10}%`}
+                </div>
+              </div>
+            </div>
+            {coverage.notes.length > 0 && (
+              <ul className="text-xs text-slate-600 list-disc pl-5 space-y-0.5">
+                {coverage.notes.map((n, i) => <li key={i}>{n}</li>)}
+              </ul>
+            )}
+            {coverage.driven_roles.length > 0 && (
+              <details className="text-sm">
+                <summary className="cursor-pointer text-slate-700 font-medium">
+                  {coverage.driven_roles.length} role(s) driven by Role-DNA
+                </summary>
+                <div className="mt-2 overflow-x-auto">
+                  <table className="min-w-full text-xs">
+                    <thead className="text-[10px] uppercase text-slate-500 border-b border-slate-200">
+                      <tr><th className="text-left py-1 pr-3">Role</th><th className="text-left py-1 pr-3">ID</th><th className="text-right py-1 pr-3">Anchor (0–100)</th><th className="text-right py-1 pr-3">Competencies</th></tr>
+                    </thead>
+                    <tbody>
+                      {coverage.driven_roles.map((dr) => (
+                        <tr key={dr.role_id} className="border-b border-slate-100">
+                          <td className="py-1 pr-3 text-slate-800">{dr.title || <span className="text-slate-400">—</span>}</td>
+                          <td className="py-1 pr-3 font-mono text-slate-500">{dr.role_id}</td>
+                          <td className="py-1 pr-3 text-right text-slate-800">{dr.anchor}</td>
+                          <td className="py-1 pr-3 text-right text-slate-600">{dr.competencies}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </details>
+            )}
+          </>
+        )}
+      </section>
 
       <section className="rounded-lg border border-slate-200 bg-white p-4 space-y-3">
         <div className="flex items-center justify-between">

@@ -29,7 +29,7 @@
 import type { Express, Request, Response, NextFunction, RequestHandler } from 'express';
 import type { Pool } from 'pg';
 import { isAdaptiveDifficultyActivationEnabled } from '../config/feature-flags';
-import { buildDifficultyPlan, difficultyAffinityBonus } from '../services/adaptive-difficulty-activation';
+import { buildDifficultyPlan, difficultyAffinityBonus, composeRoleDnaCoverage } from '../services/adaptive-difficulty-activation';
 
 type TemplateRow = {
   id: string;
@@ -371,6 +371,20 @@ export function registerCompetencyQuestionRoutes(
       const sql = `SELECT * FROM competency_question_templates ${where.length ? 'WHERE ' + where.join(' AND ') : ''} ORDER BY updated_at DESC LIMIT ${limit}`;
       const rs = await pool.query<TemplateRow>(sql, args);
       res.json({ ok: true, count: rs.rows.length, rows: rs.rows });
+    } catch (e) { next(e); }
+  });
+
+  // ---------- Role-DNA difficulty coverage (super-admin visibility) ----------
+  // Read-only: reports how many job roles actually DRIVE assessment difficulty
+  // from real runtime Role-DNA vs how many fall back to the career-stage anchor,
+  // over the SAME engine chain the runtime uses. Honest ratio (null≠0), never
+  // fabricated. Not gated by the adaptive flag — it observes the seeded data
+  // that exists regardless of the flag (the flag only gates the engine's
+  // selection bias / HTTP exposure).
+  app.get('/api/admin/competency-questions/role-dna-coverage', requireAuth, requireSuperAdmin, async (_req, res, next) => {
+    try {
+      const coverage = await composeRoleDnaCoverage(pool);
+      res.json({ ok: true, coverage });
     } catch (e) { next(e); }
   });
 

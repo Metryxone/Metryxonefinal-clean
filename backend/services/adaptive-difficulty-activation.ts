@@ -576,6 +576,139 @@ export async function buildDifficultyPlan(
   };
 }
 
+/* --------------------- Role-DNA coverage (admin visibility) ------------------ */
+
+export type RoleDnaCoverageRole = {
+  role_id: string;
+  title: string | null;
+  /** AVG runtime Role-DNA expected_level (0–100), the anchor this role drives. */
+  anchor: number;
+  /** number of competency_runtime_weights rows backing the anchor */
+  competencies: number;
+};
+
+export type RoleDnaCoverage = {
+  /** null when the engine chain is unmeasurable (a required table absent / query
+   *  failed) — deliberately DISTINCT from a real 0. */
+  measurable: boolean;
+  total_roles: number | null;
+  /** roles whose difficulty is driven by real runtime Role-DNA expected_level */
+  role_dna_driven: number | null;
+  /** roles that fall back to the career-stage seniority anchor (total − driven) */
+  stage_anchor_fallback: number | null;
+  /** driven / total, rounded to 4dp; null when unmeasurable or total is 0 */
+  coverage_ratio: number | null;
+  /** the driven roles with their anchors (honest, never fabricated) */
+  driven_roles: RoleDnaCoverageRole[];
+  /** distinct curated onto_roles reachable via the hand-verified free-text
+   *  crosswalk (extends coverage for typed synonym/adjacent titles at read
+   *  time — these are NOT extra seeded roles, just alternate names). */
+  crosswalk_canonical_roles: number;
+  crosswalk_aliases: number;
+  reason: string;
+  notes: string[];
+};
+
+/**
+ * READ-ONLY coverage report for super-admin visibility: how many job roles
+ * actually DRIVE assessment difficulty from real runtime Role-DNA
+ * (`competency_runtime_weights` → `role_dna_profiles_v2` is_active →
+ * `onto_roles`) versus how many silently fall back to the career-stage anchor.
+ *
+ * Uses the SAME engine chain as `lookupRoleDnaAnchor` so the reported coverage
+ * is exactly the ceiling the runtime observes. Every table is to_regclass
+ * probed; a missing table / failed query → `measurable:false` with null counts
+ * (honest, never a fabricated 0). No writes, no DDL.
+ */
+export async function composeRoleDnaCoverage(pool: Pool): Promise<RoleDnaCoverage> {
+  const notes: string[] = [];
+  // Static crosswalk facts (read-time free-text → curated role mapping). These
+  // extend coverage for typed titles but do not add seeded roles.
+  const crosswalk_aliases = Object.keys(ROLE_TITLE_ALIASES).length;
+  const crosswalk_canonical_roles = new Set(
+    Object.values(ROLE_TITLE_ALIASES).map((a) => a.canonical),
+  ).size;
+
+  const unmeasurable = (reason: string): RoleDnaCoverage => ({
+    measurable: false,
+    total_roles: null,
+    role_dna_driven: null,
+    stage_anchor_fallback: null,
+    coverage_ratio: null,
+    driven_roles: [],
+    crosswalk_canonical_roles,
+    crosswalk_aliases,
+    reason,
+    notes,
+  });
+
+  for (const t of ['competency_runtime_weights', 'role_dna_profiles_v2', 'onto_roles']) {
+    if (!(await tableExists(pool, t))) {
+      return unmeasurable(`${t} absent — Role-DNA coverage unmeasurable (not zero)`);
+    }
+  }
+
+  try {
+    const totalR = await pool.query<{ n: string }>(`SELECT COUNT(*)::int AS n FROM onto_roles`);
+    const total_roles = Number(totalR.rows[0]?.n ?? 0);
+
+    const drivenR = await pool.query<{ role_id: string; title: string | null; anchor: string | null; competencies: string }>(
+      `SELECT ro.id AS role_id, ro.title AS title,
+              AVG(crw.expected_level)::numeric AS anchor,
+              COUNT(*)::int AS competencies
+         FROM competency_runtime_weights crw
+         JOIN role_dna_profiles_v2 dp ON dp.id = crw.role_dna_id AND dp.is_active = true
+         JOIN onto_roles ro ON ro.id = dp.role_id
+        WHERE crw.expected_level IS NOT NULL
+        GROUP BY ro.id, ro.title
+        ORDER BY ro.title NULLS LAST, ro.id`,
+    );
+
+    const driven_roles: RoleDnaCoverageRole[] = [];
+    for (const row of drivenR.rows) {
+      const avg = row.anchor != null ? Number(row.anchor) : NaN;
+      // Mirror the engine: reject an out-of-range anchor rather than coerce it.
+      if (!Number.isFinite(avg) || avg < 0 || avg > 100) continue;
+      driven_roles.push({
+        role_id: row.role_id,
+        title: row.title,
+        anchor: Math.round(avg),
+        competencies: Number(row.competencies),
+      });
+    }
+
+    const role_dna_driven = driven_roles.length;
+    const stage_anchor_fallback = Math.max(0, total_roles - role_dna_driven);
+    const coverage_ratio = total_roles > 0 ? Math.round((role_dna_driven / total_roles) * 1e4) / 1e4 : null;
+
+    if (total_roles === 0) {
+      notes.push('onto_roles is empty — no roles to cover (0, not null).');
+    } else if (role_dna_driven === 0) {
+      notes.push('No role currently drives difficulty from runtime Role-DNA — every role falls back to the career-stage anchor.');
+    } else if (stage_anchor_fallback > 0) {
+      notes.push(`${stage_anchor_fallback} of ${total_roles} roles have no runtime Role-DNA and fall back to the career-stage anchor.`);
+    } else {
+      notes.push('Every curated role drives difficulty from runtime Role-DNA.');
+    }
+    notes.push(`Free-text crosswalk maps ${crosswalk_aliases} typed titles onto ${crosswalk_canonical_roles} curated roles at read time (does not add seeded roles).`);
+
+    return {
+      measurable: true,
+      total_roles,
+      role_dna_driven,
+      stage_anchor_fallback,
+      coverage_ratio,
+      driven_roles,
+      crosswalk_canonical_roles,
+      crosswalk_aliases,
+      reason: 'Role-DNA coverage measured over the live engine chain (competency_runtime_weights → role_dna_profiles_v2 → onto_roles).',
+      notes,
+    };
+  } catch (e: any) {
+    return unmeasurable(`Role-DNA coverage query failed: ${e?.message ?? 'error'}`);
+  }
+}
+
 /**
  * Difficulty-affinity bonus for a single bank row, given a target rank. Pure,
  * additive scoring term layered ON TOP of the existing affinity score when the

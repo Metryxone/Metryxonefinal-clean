@@ -63,6 +63,10 @@ args = "hiring-outcome-e2e"
 task = "workflow.run"
 args = "test-outcome-intelligence"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "lifecycle-stage-parity"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -194,6 +198,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npm run test:outcome-intelligence"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "lifecycle-stage-parity"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npx tsx scripts/verify-lifecycle-stage-normalization.ts"
 
 [workflows.workflow.metadata]
 isValidation = true

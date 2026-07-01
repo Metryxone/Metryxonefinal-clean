@@ -62,6 +62,7 @@
 - **Strengths canon**: strengths come ONLY from CSI `positive_factors` / positive longitudinal growth — NEVER from raw concern-signal magnitude (signals are concern-DIAGNOSTIC).
 - **Admin APIs**: `requireAuth` + `requireSuperAdmin`, 60s cache, `?refresh=1` to bust.
 - **PIL knowledge graph namespace**: `pil_kg_*` — NEVER bare `kg_*` (bare `kg_*` is the live Employability graph; PIL materialize against it would WIPE it). → `.agents/memory/kg-table-name-collision.md`.
+- **Lifecycle-stage read parity**: every stored-stage reader must route through `normalizeStoredStage` (`backend/lib/lifecycle.ts`); drift is caught automatically by the **`lifecycle-stage-parity`** validation step (`backend/scripts/verify-lifecycle-stage-normalization.ts`). Add a matching assertion when you add a new stage read. → `.agents/memory/lifecycle-stage-read-normalization.md`.
 
 ---
 

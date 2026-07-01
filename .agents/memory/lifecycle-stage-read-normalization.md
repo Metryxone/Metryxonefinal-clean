@@ -45,6 +45,13 @@ can just route its lookup through this one normalizer and stay byte-identical.
   not the CAPADEX lifecycle stage.
 - `services/adaptive-assessment.ts` `STAGE_CODE_TO_NAME` already aliases canon `STAGE_CODE_TO_LABEL`.
 
+## Registered validation check (fails the build on drift)
+`scripts/verify-lifecycle-stage-normalization.ts` is registered as the **`lifecycle-stage-parity`**
+validation step (validation skill), so it runs on every change and hard-fails if any stage reader
+drifts from its legacy map. **Why:** the harness used to run only by hand — a new ad-hoc stage map
+or a changed weight could ship silently. If you add another stored-stage read, add a matching
+assertion here or the guard's coverage silently narrows.
+
 ## Byte-identity gotchas (proven by `scripts/verify-lifecycle-stage-normalization.ts`)
 - **The three legacy maps disagreed on edge handling**: trend trimmed + lower-cased; subscription
   floor lower-cased but did NOT trim; growth-plan `stageScore` was CASE-SENSITIVE and did NOT trim.

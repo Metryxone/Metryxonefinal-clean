@@ -71,6 +71,10 @@ args = "lifecycle-stage-parity"
 task = "workflow.run"
 args = "lifecycle-stage-writers"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "test"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -224,6 +228,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npx tsx scripts/verify-canonical-stage-writers.ts"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "test"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npm run test:pure"
 
 [workflows.workflow.metadata]
 isValidation = true

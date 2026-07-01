@@ -25,7 +25,7 @@ import {
   canTransition, applyOverridesToPayload, DISPUTE_OVERRIDE_VERSION,
 } from '../services/dispute-override-engine.js';
 import {
-  hasPermission, assignRole, effectivePermissions, revokeAssignment, RBAC_TENANT_VERSION,
+  hasPermission, hasPermissionScoped, assignRole, effectivePermissions, revokeAssignment, RBAC_TENANT_VERSION,
 } from '../services/rbac-tenant-engine.js';
 import {
   computeRoi, LEARNING_ROI_VERSION,
@@ -122,7 +122,11 @@ test('dispute: applyOverridesToPayload patches nested fields and respects expiry
 test('rbac: hasPermission supports wildcards', () => {
   assert.equal(hasPermission(['enterprise:*'], 'enterprise:write'), true);
   assert.equal(hasPermission(['enterprise:read'], 'enterprise:write'), false);
-  assert.equal(hasPermission(['platform:*'], 'wos:write'), true);
+  // Base hasPermission only honours SAME-prefix wildcards; a cross-namespace
+  // `platform:*` grant is NOT universal here (that global rule lives in
+  // hasPermissionScoped, which treats a platform-wide `platform:*` as god-mode).
+  assert.equal(hasPermission(['platform:*'], 'wos:write'), false);
+  assert.equal(hasPermissionScoped(['platform:*'], [], 'wos:write'), true);
   assert.equal(hasPermission([], 'anything'), false);
 });
 

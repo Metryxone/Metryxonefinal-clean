@@ -105,12 +105,27 @@ const requireAuth = (req: Request, res: Response, next: () => void) => {
   return res.status(401).json({ ok: false, message: 'Unauthorized' });
 };
 
+// Pool behaviour mode — lets a single stub pool exercise the summary handler's
+// honest-empty / degraded branches deterministically without a real database:
+//   • 'default'    — table present + a populated profile (full read path)
+//   • 'no_profile' — table present but the seeker has NO profile row
+//   • 'absent'     — the substrate itself is missing (to_regclass → null)
+//   • 'error'      — every query throws (internal DB failure)
+// All flag-gate / IDOR assertions run in 'default'; the honest-empty/degraded
+// tests flip it and restore it so downstream (tracker / career-discovery) tests
+// keep seeing the populated substrate they expect.
+type PoolMode = 'default' | 'no_profile' | 'absent' | 'error';
+let poolMode: PoolMode = 'default';
+
 // Stub pg Pool: records every query (so we can assert "DB untouched when OFF"
 // and "the data read used the SESSION uid, not a client id"). Returns a present
 // table + a populated profile so the summary handler reaches its full read path.
 const pool = {
   query: async (sql: string, params?: any[]) => {
     probe.dbQueries.push({ sql, params: params ?? [] });
+    if (poolMode === 'error') {
+      throw new Error('simulated internal DB failure');
+    }
     // competencyRuntimeReady() probe: count how many of the supplied relations
     // exist. Report ALL present so the composed career-match engine proceeds to
     // its subject-keyed signal composition (instead of short-circuiting) — this
@@ -120,11 +135,19 @@ const pool = {
       return { rows: [{ n: arr.length }] };
     }
     if (/to_regclass/i.test(sql)) {
+      if (poolMode === 'absent') {
+        // Substrate missing — both column aliases resolve to null.
+        return { rows: [{ t: null, reg: null }] };
+      }
       // Both shapes used in the codebase: `... AS t` (launchpad) and
       // `to_regclass($1) AS reg` (career-discovery tableExists).
       return { rows: [{ t: 'public.career_seeker_profiles', reg: params?.[0] ?? 'public.career_seeker_profiles' }] };
     }
     if (/career_seeker_profiles\s+WHERE\s+user_id/i.test(sql)) {
+      if (poolMode === 'no_profile') {
+        // Table present, but this seeker has no profile row yet.
+        return { rows: [] };
+      }
       return {
         rows: [
           {
@@ -377,6 +400,61 @@ async function main() {
       0,
       `a client-supplied id leaked into the audit row: ${JSON.stringify(leaked)}`,
     );
+  });
+
+  // ── Honest-empty / degraded: the summary must NEVER invent readiness. When
+  //    the seeker has no profile row, when the substrate itself is absent, or on
+  //    an internal DB error, it must return null (never a fabricated 0% or fake
+  //    checklist) and must never throw / 500. Flag stays ON; poolMode flips per
+  //    case and is restored to 'default' so downstream tests are unaffected. ──
+
+  // (1) Authenticated seeker with NO profile row → honest empty (null ≠ 0).
+  poolMode = 'no_profile';
+  probe.reset();
+  const noProfile = await call(base, 'GET', '/api/launchpad-dashboard/summary', { auth: true });
+  poolMode = 'default';
+  test('flag ON → /summary with NO profile row returns has_profile:false + readiness:null + widgets:null (not 0)', () => {
+    assert.equal(noProfile.status, 200);
+    assert.equal(noProfile.json?.ok, true);
+    assert.equal(noProfile.json?.has_profile, false);
+    assert.strictEqual(noProfile.json?.readiness, null, 'readiness must be null, not a fabricated 0%');
+    assert.strictEqual(noProfile.json?.widgets, null, 'widgets must be null, not a fabricated empty checklist');
+  });
+  test('flag ON → /summary with NO profile row keyed the read by the SESSION uid', () => {
+    const read = probe.dbQueries.find((q) => /career_seeker_profiles\s+WHERE\s+user_id/i.test(q.sql));
+    assert.ok(read, 'expected a profile read query');
+    assert.equal(read!.params[0], SESSION_UID);
+  });
+
+  // (2) Absent substrate (to_regclass → null) → honest empty state.
+  poolMode = 'absent';
+  probe.reset();
+  const absent = await call(base, 'GET', '/api/launchpad-dashboard/summary', { auth: true });
+  poolMode = 'default';
+  test('flag ON → /summary with ABSENT substrate returns has_profile:false + readiness:null + widgets:null', () => {
+    assert.equal(absent.status, 200);
+    assert.equal(absent.json?.ok, true);
+    assert.equal(absent.json?.has_profile, false);
+    assert.strictEqual(absent.json?.readiness, null, 'readiness must be null when the substrate is absent');
+    assert.strictEqual(absent.json?.widgets, null, 'widgets must be null when the substrate is absent');
+  });
+  test('flag ON → /summary with ABSENT substrate never queries the profile row (probe short-circuits)', () => {
+    const read = probe.dbQueries.find((q) => /career_seeker_profiles\s+WHERE\s+user_id/i.test(q.sql));
+    assert.ok(!read, 'the profile row should NOT be read once the to_regclass probe returns null');
+  });
+
+  // (3) Internal DB error → honest-degraded envelope; never throws / never 500s.
+  poolMode = 'error';
+  probe.reset();
+  const degraded = await call(base, 'GET', '/api/launchpad-dashboard/summary', { auth: true });
+  poolMode = 'default';
+  test('flag ON → /summary on an internal DB error degrades to {ok:true, degraded:true} (never 500, never throws)', () => {
+    assert.equal(degraded.status, 200, `expected 200 (degraded), got ${degraded.status}`);
+    assert.equal(degraded.json?.ok, true);
+    assert.equal(degraded.json?.degraded, true);
+    assert.strictEqual(degraded.json?.has_profile, null, 'has_profile must be null (unknown), not a fabricated value');
+    assert.strictEqual(degraded.json?.readiness, null, 'readiness must be null on a degraded read');
+    assert.strictEqual(degraded.json?.widgets, null, 'widgets must be null on a degraded read');
   });
 
   // ── Tracker (WRITE surface): the higher-impact IDOR. PUT /tracker persists

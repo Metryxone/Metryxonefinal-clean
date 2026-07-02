@@ -1,0 +1,2172 @@
+{
+  "generated_at": "2026-07-02T01:17:50.467Z",
+  "read_only": true,
+  "platform_frozen": true,
+  "k_min": 30,
+  "scope": "INTERPRETATION, EXPLAINABILITY, CONFIDENCE & HALLUCINATION-PROTECTION ONLY — interpretation engine / explainability / confidence / hallucination-protection / rule-repository / super admin / frontend / ux / APIs / testing / documentation that turn a STANDARDIZED score (3.8) + BENCHMARK result (3.9) into an interpreted, explainable, confidence-scored, hallucination-protected result; it NEVER re-scores, re-standardizes, re-benchmarks or builds a norm. Recommendation / learning-path / growth-planning / report-generation / dashboard-intelligence are OUT OF SCOPE (later phases; boundaries). Interpretation ABSTAINS below the confidence / k_min evidence floor (never fabricated). The reused interpretation substrate (aiClient health-gated LLM seam / mei-narrative-engine rule-driven narration prior-art / 3.8 structured-AST formula engine / psychometric transforms) is composed by EXISTENCE — never invoked at compose time.",
+  "axes": [
+    {
+      "key": "ai_interpretation",
+      "label": "AI Interpretation",
+      "question": "Can a standardized + benchmarked result be interpreted (overall / domain / competency / behaviour / employability / leadership / readiness …) deterministically, with an OPTIONAL honest-degrading LLM narration constrained to grounded tokens?"
+    },
+    {
+      "key": "explainability",
+      "label": "Explainability",
+      "question": "Does every interpretation carry a full explanation (why / evidence basis / data sources / rule reference / score reference / benchmark reference / assessment reference / confidence rationale)?"
+    },
+    {
+      "key": "confidence",
+      "label": "Confidence",
+      "question": "Is each interpretation confidence-scored from evidence completeness, with missing-evidence detection, a human-review recommendation and abstention below the floor?"
+    },
+    {
+      "key": "hallucination_protection",
+      "label": "Hallucination Protection",
+      "question": "Is the LLM constrained to grounded tokens, with unsupported-claim detection, reference verification, deterministic fallback and source tagging so no output is fabricated?"
+    },
+    {
+      "key": "rule_repository",
+      "label": "Rule Repository",
+      "question": "Is there a governed, versioned interpretation rule / prompt / threshold / policy repository (draft→…→retire + version history + rollback + audit)?"
+    },
+    {
+      "key": "super_admin",
+      "label": "Super Admin",
+      "question": "Is there a super-admin console (interpretation library / rule configuration / prompt management / threshold configuration / version manager / approval / audit)?"
+    },
+    {
+      "key": "frontend",
+      "label": "Frontend",
+      "question": "Is there an interpretation dashboard / explanation viewer / confidence indicators / evidence explorer / rule-trace viewer / hallucination flags / interpretation workbench?"
+    },
+    {
+      "key": "ux",
+      "label": "UX",
+      "question": "Does the UX support interactive filtering / drill-down / expandable explanations / confidence visualization / evidence linking / saved views / responsive / accessible surfaces?"
+    },
+    {
+      "key": "apis",
+      "label": "APIs",
+      "question": "Do interpretation / explainability / confidence / rule / configuration APIs exist?"
+    },
+    {
+      "key": "testing",
+      "label": "Testing",
+      "question": "Is there a testing suite (unit / integration / API) covering interpretation, explainability, confidence, hallucination protection, determinism and composite-index evaluation?"
+    },
+    {
+      "key": "documentation",
+      "label": "Documentation",
+      "question": "Is there a documentation set (architecture / interpretation library / explainability framework / confidence framework / API / admin / release notes)?"
+    }
+  ],
+  "dimension_count": 11,
+  "registry": {
+    "dimensions": [
+      {
+        "key": "ai_interpretation",
+        "label": "AI Interpretation",
+        "status": "SUPPORTED",
+        "statusNote": "ONE canonical interpretation layer (aixp_runs) turning a standardized (3.8) + benchmarked (3.9) result into an interpreted result. The CORE is DETERMINISTIC — selectInterpretationRule (3.8 structured-AST condition, NO eval) + renderInterpretation (grounded {{token}} render). An OPTIONAL LLM narration (aiClient.checkAIHealth-gated, grounded-token-constrained) enhances phrasing and degrades honestly to deterministic + source-tagged on any failure. 7 interpretation KINDS are SUPPORTED (overall/domain/competency/behaviour/employability/leadership/readiness); the 3 finer KINDS (skill/learning/growth) are PARTIAL — depending on finer standardized input upstream / accumulated volume (GAP-AIXP-1), a breadth boundary NOT an engine gap. A composite interpretation index reuses the 3.8 structured-AST formula engine (no eval).",
+        "evidence": {
+          "services": [
+            "services/ai-interpretation-mechanisms.ts",
+            "services/ai-interpretation-engine.ts",
+            "services/aiClient.ts",
+            "services/mei-narrative-engine.ts",
+            "services/score-standardization-mechanisms.ts",
+            "services/psychometric-standardization.ts"
+          ],
+          "routes": [
+            "routes/ai-interpretation.ts"
+          ],
+          "frontend": [
+            "components/ai-interpretation/AiInterpretationWorkbench.tsx"
+          ],
+          "tables": [
+            "astd_standard_scores",
+            "abmk_results",
+            "aixp_runs",
+            "aixp_rules"
+          ]
+        }
+      },
+      {
+        "key": "explainability",
+        "label": "Explainability",
+        "status": "SUPPORTED",
+        "statusNote": "Every interpretation carries a full explanation via composeExplanation — why (reasoning) / evidence basis / data sources / rule reference / score reference / benchmark reference / assessment reference / confidence rationale (8 facets). Each reference resolves to a real provenance value (verifyReferences); an absent reference (no benchmark yet) is an honest null, never fabricated.",
+        "evidence": {
+          "services": [
+            "services/ai-interpretation-mechanisms.ts",
+            "services/ai-interpretation-engine.ts"
+          ],
+          "routes": [
+            "routes/ai-interpretation.ts"
+          ],
+          "frontend": [
+            "components/ai-interpretation/AiInterpretationWorkbench.tsx"
+          ],
+          "tables": [
+            "aixp_runs"
+          ]
+        }
+      },
+      {
+        "key": "confidence",
+        "label": "Confidence",
+        "status": "SUPPORTED",
+        "statusNote": "computeConfidence scores each interpretation from evidence completeness (fraction of required facets present → score + band), lists missing evidence, raises a human_review flag below the review threshold, and ABSTAINS below k_min / the confidence floor. Confidence ⟂ Coverage ⟂ Adoption — never composited. Confidence is COMPUTED, never guessed; null (unknown) ≠ 0.",
+        "evidence": {
+          "services": [
+            "services/ai-interpretation-mechanisms.ts",
+            "services/ai-interpretation-engine.ts"
+          ],
+          "routes": [
+            "routes/ai-interpretation.ts"
+          ],
+          "frontend": [
+            "components/ai-interpretation/AiInterpretationWorkbench.tsx"
+          ],
+          "tables": [
+            "aixp_runs",
+            "aixp_thresholds"
+          ]
+        }
+      },
+      {
+        "key": "hallucination_protection",
+        "label": "Hallucination Protection",
+        "status": "SUPPORTED",
+        "statusNote": "The OPTIONAL LLM narration is constrained to a grounded-token whitelist; detectUnsupportedClaims scans output for facts not in the grounded set (any hit → deterministic fallback + human_review); verifyReferences confirms cited refs resolve; a deterministic fallback covers model-unavailable / validation-failure; and every output is source-tagged (ai | deterministic + ai_available + reason). No output is ever fabricated.",
+        "evidence": {
+          "services": [
+            "services/ai-interpretation-mechanisms.ts",
+            "services/ai-interpretation-engine.ts",
+            "services/aiClient.ts"
+          ],
+          "routes": [
+            "routes/ai-interpretation.ts"
+          ],
+          "frontend": [
+            "components/ai-interpretation/AiInterpretationWorkbench.tsx"
+          ],
+          "tables": [
+            "aixp_runs",
+            "aixp_prompt_links"
+          ]
+        }
+      },
+      {
+        "key": "rule_repository",
+        "label": "Rule Repository",
+        "status": "SUPPORTED",
+        "statusNote": "ONE governed, versioned interpretation asset store: aixp_rules (kind + structured-AST condition + grounded template) + aixp_prompt_links (LLM prompt templates + grounded-token whitelist) + aixp_thresholds (confidence/review/k_min) + aixp_policies (scoped interpretation policies), each moving through draft→review→validate→approve→publish→archive→retire with append-only version history + rollback + audit (aixp_governance_log + aixp_audit_log). Scope precedence resolves the most-specific config. Never destructive.",
+        "evidence": {
+          "services": [
+            "services/ai-interpretation-mechanisms.ts",
+            "services/ai-interpretation-engine.ts"
+          ],
+          "routes": [
+            "routes/ai-interpretation.ts"
+          ],
+          "frontend": [
+            "components/superadmin/AiInterpretationPanel.tsx"
+          ],
+          "tables": [
+            "aixp_rules",
+            "aixp_prompt_links",
+            "aixp_thresholds",
+            "aixp_policies",
+            "aixp_governance_log",
+            "aixp_audit_log"
+          ]
+        }
+      },
+      {
+        "key": "super_admin",
+        "label": "Super Admin",
+        "status": "SUPPORTED",
+        "statusNote": "Super-admin certification + management console (interpretation library / rule configuration / prompt management / threshold configuration / version manager / interpretation approval / audit console) nested in the competency-framework admin shell. Real populated rule/prompt volume is an ADOPTION axis (honest 0), not a coverage gap.",
+        "evidence": {
+          "services": [],
+          "routes": [
+            "routes/ai-interpretation.ts"
+          ],
+          "frontend": [
+            "components/superadmin/AiInterpretationPanel.tsx"
+          ],
+          "tables": []
+        }
+      },
+      {
+        "key": "frontend",
+        "label": "Frontend",
+        "status": "SUPPORTED",
+        "statusNote": "Interactive interpretation workbench (explanation viewer / confidence indicators / evidence explorer / rule-trace viewer / hallucination flags / interpretation dashboard) + super-admin console (interpretation library / version manager / audit console). Panels render REAL computed data — no fabricated interpretation; an empty / abstained result renders an honest empty/abstain state.",
+        "evidence": {
+          "services": [],
+          "routes": [],
+          "frontend": [
+            "components/superadmin/AiInterpretationPanel.tsx",
+            "components/ai-interpretation/AiInterpretationWorkbench.tsx"
+          ],
+          "tables": []
+        }
+      },
+      {
+        "key": "ux",
+        "label": "UX",
+        "status": "SUPPORTED",
+        "statusNote": "Interactive filtering, drill-down, expandable explanations, confidence visualization, evidence linking, saved views (aixp_saved_views), responsive + accessible surfaces. Confidence / evidence visualizations render real computed data; non-finite / missing values are shown as honest empty, never fabricated.",
+        "evidence": {
+          "services": [],
+          "routes": [],
+          "frontend": [
+            "components/ai-interpretation/AiInterpretationWorkbench.tsx"
+          ],
+          "tables": [
+            "aixp_saved_views"
+          ]
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "status": "SUPPORTED",
+        "statusNote": "interpretation / explainability / confidence / rule / configuration endpoints under /api/admin/ai-interpretation, composing the reused interpretation substrate + the aixp_* overlay. Read certifications are GET (to_regclass/fs probes); pure interpretation / explanation / confidence / hallucination-scan / composite computes are pure POSTs; overlay writes + governance transitions are flag-gated POSTs. The interpret endpoint returns an honest abstained / deterministic-fallback result when evidence is thin or the model is unavailable.",
+        "evidence": {
+          "services": [
+            "services/ai-interpretation-engine.ts",
+            "services/ai-interpretation-mechanisms.ts"
+          ],
+          "routes": [
+            "routes/ai-interpretation.ts"
+          ],
+          "frontend": [],
+          "tables": []
+        }
+      },
+      {
+        "key": "testing",
+        "label": "Testing",
+        "status": "SUPPORTED",
+        "statusNote": "A runnable interpretation test suite (tests/capadex-3.10-ai-interpretation.test.ts) covering rule selection (structured-AST condition), grounded token render, confidence scoring + abstention, unsupported-claim detection + reference verification (hallucination protection), deterministic fallback + source tagging, and structured-AST composite-index evaluation + validation (no eval), plus read-only engine composition against the live DB (INTEGRATION) — alongside the certification scan itself. UI / end-to-end / accessibility / performance test suites stay a follow-on boundary (PARTIAL), reported in-line, NOT a gap.",
+        "evidence": {
+          "services": [],
+          "routes": [],
+          "frontend": [],
+          "tables": []
+        }
+      },
+      {
+        "key": "documentation",
+        "label": "Documentation",
+        "status": "SUPPORTED",
+        "statusNote": "A documentation set (docs/AI_INTERPRETATION.md — architecture / interpretation library / explainability framework / confidence framework / API reference / admin guide / release notes) + the auto-generated deliverable pack (16 reports). An end-user (learner/candidate-facing) interpretation guide stays a follow-on boundary (PARTIAL), reported in-line, NOT a gap.",
+        "evidence": {
+          "services": [],
+          "routes": [],
+          "frontend": [],
+          "tables": []
+        }
+      }
+    ],
+    "interpretation_kinds": [
+      {
+        "key": "overall",
+        "label": "Overall interpretation",
+        "status": "SUPPORTED",
+        "note": "Interprets the overall standardized + benchmarked result — selectInterpretationRule over the overall band + benchmark percentile, rendered from grounded tokens."
+      },
+      {
+        "key": "domain",
+        "label": "Domain interpretation",
+        "status": "SUPPORTED",
+        "note": "Per-domain interpretation over the standardized domain scores + domain benchmark (3.9), rendered from grounded tokens."
+      },
+      {
+        "key": "competency",
+        "label": "Competency interpretation",
+        "status": "SUPPORTED",
+        "note": "Per-competency interpretation over the standardized competency scores + competency benchmark (3.9)."
+      },
+      {
+        "key": "behaviour",
+        "label": "Behaviour interpretation",
+        "status": "SUPPORTED",
+        "note": "Per-behaviour interpretation over the standardized behaviour scores + behaviour benchmark (3.9)."
+      },
+      {
+        "key": "employability",
+        "label": "Employability interpretation",
+        "status": "SUPPORTED",
+        "note": "Employability interpretation composing the MEI substrate + employability benchmark (3.9); the mei-narrative-engine is prior-art rule-driven narration."
+      },
+      {
+        "key": "leadership",
+        "label": "Leadership interpretation",
+        "status": "SUPPORTED",
+        "note": "Leadership interpretation over the standardized leadership scores + leadership benchmark (3.9)."
+      },
+      {
+        "key": "readiness",
+        "label": "Readiness interpretation",
+        "status": "SUPPORTED",
+        "note": "Readiness interpretation over the standardized readiness scores + readiness benchmark (3.9)."
+      },
+      {
+        "key": "skill",
+        "label": "Skill interpretation",
+        "status": "PARTIAL",
+        "note": "Skill-level interpretation depends on a finer-grained standardized skill input not uniformly present upstream (GAP-AIXP-1). Reachable when the standardized substrate exposes skill scores. PARTIAL, not MISSING."
+      },
+      {
+        "key": "learning",
+        "label": "Learning interpretation",
+        "status": "PARTIAL",
+        "note": "Learning-outcome interpretation depends on a standardized learning-outcome input not uniformly present upstream (GAP-AIXP-1)."
+      },
+      {
+        "key": "growth",
+        "label": "Growth interpretation",
+        "status": "PARTIAL",
+        "note": "Longitudinal growth interpretation depends on accumulated benchmark time-series VOLUME (abmk_results) — an ADOPTION axis (honest 0), reported SEPARATELY, never a gap."
+      }
+    ],
+    "explainability_criteria": [
+      {
+        "key": "why_explanation",
+        "label": "Why (reasoning)",
+        "status": "SUPPORTED",
+        "note": "The plain-language reason this interpretation was produced — derived from the fired rule + the observed band / percentile. Deterministic, grounded."
+      },
+      {
+        "key": "evidence_basis",
+        "label": "Evidence basis",
+        "status": "SUPPORTED",
+        "note": "The concrete evidence supporting the interpretation (which scores / dimensions / benchmark drove it) — carried as a structured evidence[] on every result."
+      },
+      {
+        "key": "data_sources",
+        "label": "Data sources",
+        "status": "SUPPORTED",
+        "note": "The upstream data sources (standardized score 3.8 / benchmark 3.9 / assessment) the interpretation reads from — enumerated on every result."
+      },
+      {
+        "key": "rule_reference",
+        "label": "Rule reference",
+        "status": "SUPPORTED",
+        "note": "The interpretation rule (aixp_rules key + version) that fired — carried on every result for full traceability."
+      },
+      {
+        "key": "score_reference",
+        "label": "Score reference",
+        "status": "SUPPORTED",
+        "note": "The standardized score (astd_standard_scores) interpreted — the interpretation input, carried on every result."
+      },
+      {
+        "key": "benchmark_reference",
+        "label": "Benchmark reference",
+        "status": "SUPPORTED",
+        "note": "The benchmark result (abmk_results, 3.9) the interpretation contextualizes — carried on every result; null when no benchmark exists yet (honest null)."
+      },
+      {
+        "key": "assessment_reference",
+        "label": "Assessment reference",
+        "status": "SUPPORTED",
+        "note": "The assessment + version the interpreted score was produced against — carried on every result."
+      },
+      {
+        "key": "confidence_rationale",
+        "label": "Confidence rationale",
+        "status": "SUPPORTED",
+        "note": "Why the interpretation has the confidence it does — the evidence-completeness breakdown + missing-evidence list from computeConfidence."
+      }
+    ],
+    "confidence_criteria": [
+      {
+        "key": "confidence_scoring",
+        "label": "Confidence scoring",
+        "status": "SUPPORTED",
+        "note": "computeConfidence maps the fraction of required evidence present to a confidence score (0..1) + a band (low/medium/high). Deterministic."
+      },
+      {
+        "key": "evidence_completeness",
+        "label": "Evidence completeness",
+        "status": "SUPPORTED",
+        "note": "Which required evidence facets (score / benchmark / rule / cohort) are present vs missing — the confidence numerator/denominator."
+      },
+      {
+        "key": "missing_evidence",
+        "label": "Missing-evidence detection",
+        "status": "SUPPORTED",
+        "note": "The explicit list of missing evidence facets — surfaced so a reviewer knows exactly what is absent. null ≠ 0."
+      },
+      {
+        "key": "human_review",
+        "label": "Human-review recommendation",
+        "status": "SUPPORTED",
+        "note": "A human_review flag is raised when confidence is below the review threshold or an unsupported claim was detected — never auto-published silently."
+      },
+      {
+        "key": "abstention",
+        "label": "Abstention below floor",
+        "status": "SUPPORTED",
+        "note": "When cohort/evidence is below k_min / the confidence floor the interpretation ABSTAINS (abstained:true) rather than asserting — never fabricated."
+      }
+    ],
+    "hallucination_controls": [
+      {
+        "key": "grounded_tokens_only",
+        "label": "Grounded tokens only",
+        "status": "SUPPORTED",
+        "note": "The LLM narration prompt is constrained to a whitelist of grounded tokens (the actual scores / bands / percentiles / dimensions) — it may only phrase, never introduce new facts."
+      },
+      {
+        "key": "unsupported_claim_detection",
+        "label": "Unsupported-claim detection",
+        "status": "SUPPORTED",
+        "note": "detectUnsupportedClaims scans narration output for numeric / factual claims not present in the grounded token set; any hit forces the deterministic fallback + human_review."
+      },
+      {
+        "key": "reference_verification",
+        "label": "Reference verification",
+        "status": "SUPPORTED",
+        "note": "verifyReferences confirms every score / benchmark / rule reference cited in the explanation resolves to a real provenance value — unresolved refs are dropped, never fabricated."
+      },
+      {
+        "key": "deterministic_fallback",
+        "label": "Deterministic fallback",
+        "status": "SUPPORTED",
+        "note": "If the model is unavailable (checkAIHealth not ok) OR the output fails validation, the interpretation falls back to the deterministic rule-rendered text with source:'deterministic' + a reason."
+      },
+      {
+        "key": "source_tagging",
+        "label": "Source tagging",
+        "status": "SUPPORTED",
+        "note": "Every interpretation is tagged source:'ai' | 'deterministic' (+ ai_available + reason) so a consumer always knows whether a human-grade model or the deterministic core produced it."
+      }
+    ],
+    "rule_capabilities": [
+      {
+        "key": "interpretation_rules",
+        "label": "Interpretation rules",
+        "status": "SUPPORTED",
+        "note": "aixp_rules: versioned interpretation rules (kind + structured-AST condition + grounded template + state). selectInterpretationRule picks the highest-priority matching rule."
+      },
+      {
+        "key": "prompt_links",
+        "label": "Prompt templates",
+        "status": "SUPPORTED",
+        "note": "aixp_prompt_links: versioned LLM prompt templates linked to a rule, carrying the grounded-token whitelist that constrains narration."
+      },
+      {
+        "key": "thresholds",
+        "label": "Confidence / abstention thresholds",
+        "status": "SUPPORTED",
+        "note": "aixp_thresholds: versioned confidence / review / k_min thresholds resolved by scope precedence."
+      },
+      {
+        "key": "policies",
+        "label": "Interpretation policies",
+        "status": "SUPPORTED",
+        "note": "aixp_policies: versioned, scoped interpretation policies (which kinds / personas an interpretation config applies to) resolved by scope precedence."
+      },
+      {
+        "key": "versioning_governance",
+        "label": "Versioning & governance",
+        "status": "SUPPORTED",
+        "note": "Every rule / prompt / threshold / policy moves through draft→review→validate→approve→publish→archive→retire with append-only version history + rollback + audit (aixp_governance_log + aixp_audit_log)."
+      }
+    ],
+    "persona_coverage": [
+      {
+        "key": "student",
+        "label": "Student",
+        "status": "SUPPORTED",
+        "note": "Student-lens interpretation over the standardized + benchmarked result."
+      },
+      {
+        "key": "graduate",
+        "label": "Graduate / fresher",
+        "status": "SUPPORTED",
+        "note": "Graduate/fresher-lens interpretation."
+      },
+      {
+        "key": "professional",
+        "label": "Working professional",
+        "status": "SUPPORTED",
+        "note": "Professional-lens interpretation."
+      },
+      {
+        "key": "jobseeker",
+        "label": "Job seeker",
+        "status": "SUPPORTED",
+        "note": "Job-seeker-lens interpretation."
+      },
+      {
+        "key": "career_switcher",
+        "label": "Career switcher",
+        "status": "SUPPORTED",
+        "note": "Career-switcher-lens interpretation."
+      },
+      {
+        "key": "manager",
+        "label": "People manager",
+        "status": "SUPPORTED",
+        "note": "Manager-lens interpretation."
+      },
+      {
+        "key": "senior_leadership",
+        "label": "Senior leadership",
+        "status": "SUPPORTED",
+        "note": "Senior-leadership-lens interpretation."
+      },
+      {
+        "key": "entrepreneur",
+        "label": "Entrepreneur",
+        "status": "SUPPORTED",
+        "note": "Entrepreneur-lens interpretation."
+      },
+      {
+        "key": "returner",
+        "label": "Returner (career break)",
+        "status": "SUPPORTED",
+        "note": "Returner-lens interpretation."
+      },
+      {
+        "key": "faculty",
+        "label": "Faculty / educator",
+        "status": "SUPPORTED",
+        "note": "Faculty-lens interpretation (batch-confined institutional read)."
+      },
+      {
+        "key": "counsellor",
+        "label": "Counsellor",
+        "status": "SUPPORTED",
+        "note": "Counsellor-lens interpretation."
+      },
+      {
+        "key": "parent",
+        "label": "Parent",
+        "status": "SUPPORTED",
+        "note": "Parent-lens interpretation (consent-gated)."
+      },
+      {
+        "key": "hr",
+        "label": "HR / talent partner",
+        "status": "PARTIAL",
+        "note": "HR/talent-lens interpretation reachable via the generic professional/organization rule set; a first-class HR-specific rule depth is deferred to authored volume (GAP-AIXP-2). PARTIAL, not MISSING."
+      }
+    ],
+    "lifecycle_coverage": [
+      {
+        "key": "discover",
+        "label": "Discover",
+        "status": "SUPPORTED",
+        "note": "Interpretation at discovery — what the standardized + benchmarked result means for this subject."
+      },
+      {
+        "key": "diagnose",
+        "label": "Diagnose",
+        "status": "PARTIAL",
+        "note": "Diagnostic interpretation depends on the finer-grained diagnostic standardized inputs (skill/learning-outcome) not uniformly present upstream (GAP-AIXP-2)."
+      },
+      {
+        "key": "recommend",
+        "label": "Recommend",
+        "status": "PARTIAL",
+        "note": "Interpretation FEEDS the Recommendation Engine, which is a DO-NOT-IMPLEMENT boundary for 3.10 — the interpretation output is present; the recommend stage itself is a later-phase boundary, not a gap."
+      },
+      {
+        "key": "learn",
+        "label": "Learn",
+        "status": "SUPPORTED",
+        "note": "Interpretation at the learn stage — what the current result means for what to learn (interpretation only; learning-path is a boundary)."
+      },
+      {
+        "key": "improve",
+        "label": "Improve",
+        "status": "SUPPORTED",
+        "note": "Interpretation of improvement — what a changed result means (point-in-time; longitudinal improvement depends on accumulated volume)."
+      },
+      {
+        "key": "grow",
+        "label": "Grow",
+        "status": "SUPPORTED",
+        "note": "Interpretation at the grow stage — what the result means for growth (interpretation only; growth-planning is a boundary)."
+      },
+      {
+        "key": "transition",
+        "label": "Transition",
+        "status": "PARTIAL",
+        "note": "Transition-stage interpretation depends on role/occupation standardized inputs not uniformly present upstream (GAP-AIXP-2)."
+      },
+      {
+        "key": "sustain",
+        "label": "Sustain",
+        "status": "PARTIAL",
+        "note": "Sustain-stage (longitudinal) interpretation depends on accumulated benchmark time-series VOLUME — an ADOPTION axis (honest 0), reported SEPARATELY, never a gap."
+      }
+    ],
+    "super_admin_surfaces": [
+      {
+        "key": "interpretation_library",
+        "label": "Interpretation library",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/superadmin/AiInterpretationPanel.tsx"
+        ]
+      },
+      {
+        "key": "rule_configuration",
+        "label": "Rule configuration",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/superadmin/AiInterpretationPanel.tsx"
+        ]
+      },
+      {
+        "key": "prompt_management",
+        "label": "Prompt management",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/superadmin/AiInterpretationPanel.tsx"
+        ]
+      },
+      {
+        "key": "threshold_configuration",
+        "label": "Threshold configuration",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/superadmin/AiInterpretationPanel.tsx"
+        ]
+      },
+      {
+        "key": "version_manager",
+        "label": "Version manager",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/superadmin/AiInterpretationPanel.tsx"
+        ]
+      },
+      {
+        "key": "interpretation_approval",
+        "label": "Interpretation approval workflow",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/superadmin/AiInterpretationPanel.tsx"
+        ]
+      },
+      {
+        "key": "audit_console",
+        "label": "Audit console",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/superadmin/AiInterpretationPanel.tsx"
+        ]
+      }
+    ],
+    "frontend_surfaces": [
+      {
+        "key": "interpretation_dashboard",
+        "label": "Interpretation dashboard",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/superadmin/AiInterpretationPanel.tsx"
+        ]
+      },
+      {
+        "key": "explanation_viewer",
+        "label": "Explanation viewer",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/ai-interpretation/AiInterpretationWorkbench.tsx"
+        ]
+      },
+      {
+        "key": "confidence_indicators",
+        "label": "Confidence indicators",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/ai-interpretation/AiInterpretationWorkbench.tsx"
+        ]
+      },
+      {
+        "key": "evidence_explorer",
+        "label": "Evidence explorer",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/ai-interpretation/AiInterpretationWorkbench.tsx"
+        ]
+      },
+      {
+        "key": "rule_trace_viewer",
+        "label": "Rule-trace viewer",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/ai-interpretation/AiInterpretationWorkbench.tsx"
+        ]
+      },
+      {
+        "key": "hallucination_flags",
+        "label": "Hallucination flags",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/ai-interpretation/AiInterpretationWorkbench.tsx"
+        ]
+      },
+      {
+        "key": "interpretation_workbench",
+        "label": "Interpretation workbench",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/ai-interpretation/AiInterpretationWorkbench.tsx"
+        ]
+      }
+    ],
+    "ux_criteria": [
+      {
+        "key": "interactive_filtering",
+        "label": "Interactive filtering",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/ai-interpretation/AiInterpretationWorkbench.tsx"
+        ]
+      },
+      {
+        "key": "drill_down",
+        "label": "Drill down",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/ai-interpretation/AiInterpretationWorkbench.tsx"
+        ]
+      },
+      {
+        "key": "expandable_explanations",
+        "label": "Expandable explanations",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/ai-interpretation/AiInterpretationWorkbench.tsx"
+        ]
+      },
+      {
+        "key": "confidence_visualization",
+        "label": "Confidence visualization",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/ai-interpretation/AiInterpretationWorkbench.tsx"
+        ]
+      },
+      {
+        "key": "evidence_linking",
+        "label": "Evidence linking",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/ai-interpretation/AiInterpretationWorkbench.tsx"
+        ]
+      },
+      {
+        "key": "saved_views",
+        "label": "Saved views",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/ai-interpretation/AiInterpretationWorkbench.tsx",
+          "routes/ai-interpretation.ts",
+          "aixp_saved_views"
+        ]
+      },
+      {
+        "key": "responsive",
+        "label": "Responsive design",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/ai-interpretation/AiInterpretationWorkbench.tsx"
+        ]
+      },
+      {
+        "key": "accessibility",
+        "label": "Accessibility",
+        "status": "SUPPORTED",
+        "evidence": [
+          "components/ai-interpretation/AiInterpretationWorkbench.tsx"
+        ]
+      }
+    ],
+    "api_groups": [
+      {
+        "key": "interpretation_apis",
+        "label": "Interpretation APIs",
+        "status": "SUPPORTED",
+        "evidence": [
+          "routes/ai-interpretation.ts",
+          "services/ai-interpretation-mechanisms.ts"
+        ]
+      },
+      {
+        "key": "explainability_apis",
+        "label": "Explainability APIs",
+        "status": "SUPPORTED",
+        "evidence": [
+          "routes/ai-interpretation.ts",
+          "services/ai-interpretation-mechanisms.ts"
+        ]
+      },
+      {
+        "key": "confidence_apis",
+        "label": "Confidence APIs",
+        "status": "SUPPORTED",
+        "evidence": [
+          "routes/ai-interpretation.ts",
+          "services/ai-interpretation-mechanisms.ts"
+        ]
+      },
+      {
+        "key": "rule_apis",
+        "label": "Rule APIs",
+        "status": "SUPPORTED",
+        "evidence": [
+          "routes/ai-interpretation.ts",
+          "aixp_rules",
+          "aixp_prompt_links"
+        ]
+      },
+      {
+        "key": "configuration_apis",
+        "label": "Configuration APIs",
+        "status": "SUPPORTED",
+        "evidence": [
+          "routes/ai-interpretation.ts",
+          "aixp_policies",
+          "aixp_thresholds"
+        ]
+      }
+    ],
+    "testing_coverage": [
+      {
+        "key": "unit",
+        "label": "Unit tests",
+        "status": "SUPPORTED",
+        "evidence": [
+          "tests/capadex-3.10-ai-interpretation.test.ts"
+        ]
+      },
+      {
+        "key": "integration",
+        "label": "Integration tests",
+        "status": "SUPPORTED",
+        "evidence": [
+          "tests/capadex-3.10-ai-interpretation.test.ts"
+        ]
+      },
+      {
+        "key": "api",
+        "label": "API tests",
+        "status": "SUPPORTED",
+        "evidence": [
+          "tests/capadex-3.10-ai-interpretation.test.ts"
+        ]
+      },
+      {
+        "key": "interpretation",
+        "label": "Interpretation tests",
+        "status": "SUPPORTED",
+        "evidence": [
+          "tests/capadex-3.10-ai-interpretation.test.ts"
+        ]
+      },
+      {
+        "key": "explainability",
+        "label": "Explainability tests",
+        "status": "SUPPORTED",
+        "evidence": [
+          "tests/capadex-3.10-ai-interpretation.test.ts"
+        ]
+      },
+      {
+        "key": "confidence",
+        "label": "Confidence tests",
+        "status": "SUPPORTED",
+        "evidence": [
+          "tests/capadex-3.10-ai-interpretation.test.ts"
+        ]
+      },
+      {
+        "key": "hallucination",
+        "label": "Hallucination-protection tests",
+        "status": "SUPPORTED",
+        "evidence": [
+          "tests/capadex-3.10-ai-interpretation.test.ts"
+        ]
+      },
+      {
+        "key": "ui_e2e",
+        "label": "UI / end-to-end tests (follow-on boundary — PARTIAL, not a gap)",
+        "status": "PARTIAL",
+        "evidence": []
+      }
+    ],
+    "doc_set": [
+      {
+        "key": "architecture",
+        "label": "Architecture",
+        "status": "SUPPORTED",
+        "evidence": [
+          "docs/AI_INTERPRETATION.md"
+        ]
+      },
+      {
+        "key": "interpretation_library",
+        "label": "Interpretation library",
+        "status": "SUPPORTED",
+        "evidence": [
+          "docs/AI_INTERPRETATION.md"
+        ]
+      },
+      {
+        "key": "explainability_framework",
+        "label": "Explainability framework",
+        "status": "SUPPORTED",
+        "evidence": [
+          "docs/AI_INTERPRETATION.md"
+        ]
+      },
+      {
+        "key": "confidence_framework",
+        "label": "Confidence framework",
+        "status": "SUPPORTED",
+        "evidence": [
+          "docs/AI_INTERPRETATION.md"
+        ]
+      },
+      {
+        "key": "api_reference",
+        "label": "API reference",
+        "status": "SUPPORTED",
+        "evidence": [
+          "docs/AI_INTERPRETATION.md"
+        ]
+      },
+      {
+        "key": "admin_guide",
+        "label": "Admin guide",
+        "status": "SUPPORTED",
+        "evidence": [
+          "docs/AI_INTERPRETATION.md"
+        ]
+      },
+      {
+        "key": "release_notes",
+        "label": "Release notes",
+        "status": "SUPPORTED",
+        "evidence": [
+          "docs/AI_INTERPRETATION.md"
+        ]
+      }
+    ],
+    "traceability_model": [
+      {
+        "key": "standardized_score",
+        "label": "Standardized score",
+        "source": "astd_standard_scores",
+        "status": "SUPPORTED",
+        "note": "The standardized score (3.8) interpreted — the interpretation input, carried on every run."
+      },
+      {
+        "key": "benchmark_result",
+        "label": "Benchmark result",
+        "source": "abmk_results (3.9)",
+        "status": "SUPPORTED",
+        "note": "The benchmark result (3.9) the interpretation contextualizes — carried on every run; null when no benchmark exists yet (honest null)."
+      },
+      {
+        "key": "assessment_version",
+        "label": "Assessment version",
+        "source": "aixp_runs.assessment_version",
+        "status": "SUPPORTED",
+        "note": "The assessment version the interpreted score was produced against — carried on every run."
+      },
+      {
+        "key": "norm_version",
+        "label": "Norm version",
+        "source": "aint_norm_tables (3.7) + aixp_runs.norm_version",
+        "status": "SUPPORTED",
+        "note": "The norm reference (3.7) the score was standardized against — carried on every run."
+      },
+      {
+        "key": "standardization_version",
+        "label": "Standardization version",
+        "source": "astd_configs + aixp_runs.standardization_version",
+        "status": "SUPPORTED",
+        "note": "The versioned standardization config (3.8) applied — carried on every run."
+      },
+      {
+        "key": "benchmark_version",
+        "label": "Benchmark version",
+        "source": "abmk_configs (3.9) + aixp_runs.benchmark_version",
+        "status": "SUPPORTED",
+        "note": "The versioned benchmark config (3.9) applied — carried on every run."
+      },
+      {
+        "key": "rule_version",
+        "label": "Rule version",
+        "source": "aixp_rules.version + aixp_runs.rule_version",
+        "status": "SUPPORTED",
+        "note": "The interpretation rule (key + version) that fired — carried on every run."
+      },
+      {
+        "key": "prompt_version",
+        "label": "Prompt version",
+        "source": "aixp_prompt_links.version + aixp_runs.prompt_version",
+        "status": "SUPPORTED",
+        "note": "The prompt template (key + version) used for narration — carried on every run; null when narration is deterministic (honest null)."
+      },
+      {
+        "key": "interpretation_version",
+        "label": "Interpretation version",
+        "source": "aixp_policies.version + aixp_runs.interpretation_version",
+        "status": "SUPPORTED",
+        "note": "The versioned interpretation policy applied — carried on every run."
+      }
+    ],
+    "decisions": [
+      {
+        "id": "D1",
+        "title": "Compose, never duplicate",
+        "decision": "AI Interpretation COMPOSES the existing interpretation substrate (aiClient health-gated LLM seam + mei-narrative-engine rule-driven narration prior-art) + the pure 3.8 structured-AST formula engine + the pure psychometric transforms under one platform + an additive aixp_* overlay — NO duplicate AI / interpretation engine, NO V2, NO breaking change."
+      },
+      {
+        "id": "D2",
+        "title": "Downstream of standardization + benchmarking",
+        "decision": "Interpretation consumes the standardized scores (3.8) + benchmark results (3.9) + norm references (3.7). It NEVER re-scores, NEVER re-standardizes, NEVER re-benchmarks, NEVER builds a norm."
+      },
+      {
+        "id": "D3",
+        "title": "Eleven dimensions certified SEPARATELY",
+        "decision": "ai_interpretation · explainability · confidence · hallucination_protection · rule_repository · super_admin · frontend · ux · apis · testing · documentation are reported SEPARATELY and NEVER composited into a single score."
+      },
+      {
+        "id": "D4",
+        "title": "Deterministic core, honest-degrading AI narration",
+        "decision": "The interpretation CORE is deterministic (rule-select via 3.8 AST + grounded token render + confidence + explanation). The LLM narration is OPTIONAL: health-gated, grounded-token-constrained, output-validated (detectUnsupportedClaims + verifyReferences), and falls back to deterministic + source-tag on ANY failure. AI output is NEVER fabricated."
+      },
+      {
+        "id": "D5",
+        "title": "Composite index is a STRUCTURED AST (no eval)",
+        "decision": "The composite interpretation index reuses the 3.8 structured-AST formula engine (const/var/op/weighted/clamp/standardize nodes) evaluated by a whitelisted interpreter (evaluateFormula) — NEVER eval / new Function / string-executed. Formulas are validated before evaluation."
+      },
+      {
+        "id": "D6",
+        "title": "ABSTAIN below floor; null ≠ 0",
+        "decision": "Interpretation ABSTAINS below k_min real evidence / the confidence floor. Coverage ⟂ Confidence ⟂ Adoption are never composited. null (unknown) ≠ 0 (absent). Never fabricate."
+      },
+      {
+        "id": "D7",
+        "title": "Governed & versioned, never destructive",
+        "decision": "Every interpretation asset (rule / prompt / threshold / policy) moves through draft→review→validate→approve→publish→archive→retire with append-only version history + rollback + audit trail. Governance transitions are recorded, never destructive."
+      },
+      {
+        "id": "D8",
+        "title": "Byte-identical OFF incl. schema",
+        "decision": "All DDL runs only on the flag-gated write paths; read certifications are GET (to_regclass/fs probes) and pure computes are side-effect-free. OFF is byte-identical incl. schema (0 aixp_* tables)."
+      },
+      {
+        "id": "D9",
+        "title": "DO-NOT-IMPLEMENT boundaries",
+        "decision": "Recommendation Engine, Learning-Path Engine, Growth-Planning Engine, Report Generation and Dashboard Intelligence are NOT built in 3.10 — interpretation FEEDS them. They are later-phase BOUNDARIES, never counted as gaps."
+      },
+      {
+        "id": "D10",
+        "title": "Breadth is honest, never forced",
+        "decision": "Fine-grained interpretation KINDS (finer standardized inputs upstream), some persona / lifecycle depth (authored volume) and longitudinal modes (accumulated volume) are PARTIAL / ADOPTION — reported SEPARATELY and in-line, never padded to 100%, never fabricated."
+      }
+    ],
+    "boundaries": [
+      {
+        "key": "recommendation_engine",
+        "label": "Recommendation Engine",
+        "owner": "later phase",
+        "note": "Interpretation FEEDS recommendations; it does NOT generate them. Building a recommendation engine here is out of scope — a boundary, not a gap."
+      },
+      {
+        "key": "learning_path",
+        "label": "Learning-Path Engine",
+        "owner": "later phase",
+        "note": "Interpretation of \"what to learn\" is present; authoring a learning path is out of scope — a boundary, not a gap."
+      },
+      {
+        "key": "growth_planning",
+        "label": "Growth-Planning Engine",
+        "owner": "later phase",
+        "note": "Interpretation of growth is present; a growth-planning engine is out of scope — a boundary, not a gap."
+      },
+      {
+        "key": "report_generation",
+        "label": "Report Generation",
+        "owner": "later phase (report-factory)",
+        "note": "Interpretation is a report INPUT; report generation / rendering is out of scope here — a boundary, not a gap."
+      },
+      {
+        "key": "dashboard_intelligence",
+        "label": "Dashboard Intelligence",
+        "owner": "later phase",
+        "note": "Interpretation feeds dashboards; building dashboard intelligence is out of scope here — a boundary, not a gap."
+      }
+    ]
+  },
+  "axis_dimensions": {
+    "dimension_count": 11,
+    "status_counts": {
+      "SUPPORTED": 11,
+      "PARTIAL": 0,
+      "DEAD_END": 0,
+      "MISSING": 0
+    },
+    "dimensions": [
+      {
+        "key": "ai_interpretation",
+        "label": "AI Interpretation",
+        "status": "SUPPORTED",
+        "statusNote": "ONE canonical interpretation layer (aixp_runs) turning a standardized (3.8) + benchmarked (3.9) result into an interpreted result. The CORE is DETERMINISTIC — selectInterpretationRule (3.8 structured-AST condition, NO eval) + renderInterpretation (grounded {{token}} render). An OPTIONAL LLM narration (aiClient.checkAIHealth-gated, grounded-token-constrained) enhances phrasing and degrades honestly to deterministic + source-tagged on any failure. 7 interpretation KINDS are SUPPORTED (overall/domain/competency/behaviour/employability/leadership/readiness); the 3 finer KINDS (skill/learning/growth) are PARTIAL — depending on finer standardized input upstream / accumulated volume (GAP-AIXP-1), a breadth boundary NOT an engine gap. A composite interpretation index reuses the 3.8 structured-AST formula engine (no eval).",
+        "evidence": {
+          "services": {
+            "present": 6,
+            "total": 6,
+            "missing": []
+          },
+          "routes": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "frontend": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "tables": {
+            "present": 0,
+            "absent": 4,
+            "unknown": 0,
+            "total": 4,
+            "absentList": [
+              "astd_standard_scores",
+              "abmk_results",
+              "aixp_runs",
+              "aixp_rules"
+            ]
+          }
+        }
+      },
+      {
+        "key": "explainability",
+        "label": "Explainability",
+        "status": "SUPPORTED",
+        "statusNote": "Every interpretation carries a full explanation via composeExplanation — why (reasoning) / evidence basis / data sources / rule reference / score reference / benchmark reference / assessment reference / confidence rationale (8 facets). Each reference resolves to a real provenance value (verifyReferences); an absent reference (no benchmark yet) is an honest null, never fabricated.",
+        "evidence": {
+          "services": {
+            "present": 2,
+            "total": 2,
+            "missing": []
+          },
+          "routes": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "frontend": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "tables": {
+            "present": 0,
+            "absent": 1,
+            "unknown": 0,
+            "total": 1,
+            "absentList": [
+              "aixp_runs"
+            ]
+          }
+        }
+      },
+      {
+        "key": "confidence",
+        "label": "Confidence",
+        "status": "SUPPORTED",
+        "statusNote": "computeConfidence scores each interpretation from evidence completeness (fraction of required facets present → score + band), lists missing evidence, raises a human_review flag below the review threshold, and ABSTAINS below k_min / the confidence floor. Confidence ⟂ Coverage ⟂ Adoption — never composited. Confidence is COMPUTED, never guessed; null (unknown) ≠ 0.",
+        "evidence": {
+          "services": {
+            "present": 2,
+            "total": 2,
+            "missing": []
+          },
+          "routes": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "frontend": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "tables": {
+            "present": 0,
+            "absent": 2,
+            "unknown": 0,
+            "total": 2,
+            "absentList": [
+              "aixp_runs",
+              "aixp_thresholds"
+            ]
+          }
+        }
+      },
+      {
+        "key": "hallucination_protection",
+        "label": "Hallucination Protection",
+        "status": "SUPPORTED",
+        "statusNote": "The OPTIONAL LLM narration is constrained to a grounded-token whitelist; detectUnsupportedClaims scans output for facts not in the grounded set (any hit → deterministic fallback + human_review); verifyReferences confirms cited refs resolve; a deterministic fallback covers model-unavailable / validation-failure; and every output is source-tagged (ai | deterministic + ai_available + reason). No output is ever fabricated.",
+        "evidence": {
+          "services": {
+            "present": 3,
+            "total": 3,
+            "missing": []
+          },
+          "routes": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "frontend": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "tables": {
+            "present": 0,
+            "absent": 2,
+            "unknown": 0,
+            "total": 2,
+            "absentList": [
+              "aixp_runs",
+              "aixp_prompt_links"
+            ]
+          }
+        }
+      },
+      {
+        "key": "rule_repository",
+        "label": "Rule Repository",
+        "status": "SUPPORTED",
+        "statusNote": "ONE governed, versioned interpretation asset store: aixp_rules (kind + structured-AST condition + grounded template) + aixp_prompt_links (LLM prompt templates + grounded-token whitelist) + aixp_thresholds (confidence/review/k_min) + aixp_policies (scoped interpretation policies), each moving through draft→review→validate→approve→publish→archive→retire with append-only version history + rollback + audit (aixp_governance_log + aixp_audit_log). Scope precedence resolves the most-specific config. Never destructive.",
+        "evidence": {
+          "services": {
+            "present": 2,
+            "total": 2,
+            "missing": []
+          },
+          "routes": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "frontend": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "tables": {
+            "present": 0,
+            "absent": 6,
+            "unknown": 0,
+            "total": 6,
+            "absentList": [
+              "aixp_rules",
+              "aixp_prompt_links",
+              "aixp_thresholds",
+              "aixp_policies",
+              "aixp_governance_log",
+              "aixp_audit_log"
+            ]
+          }
+        }
+      },
+      {
+        "key": "super_admin",
+        "label": "Super Admin",
+        "status": "SUPPORTED",
+        "statusNote": "Super-admin certification + management console (interpretation library / rule configuration / prompt management / threshold configuration / version manager / interpretation approval / audit console) nested in the competency-framework admin shell. Real populated rule/prompt volume is an ADOPTION axis (honest 0), not a coverage gap.",
+        "evidence": {
+          "services": {
+            "present": 0,
+            "total": 0,
+            "missing": []
+          },
+          "routes": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "frontend": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "tables": {
+            "present": 0,
+            "absent": 0,
+            "unknown": 0,
+            "total": 0,
+            "absentList": []
+          }
+        }
+      },
+      {
+        "key": "frontend",
+        "label": "Frontend",
+        "status": "SUPPORTED",
+        "statusNote": "Interactive interpretation workbench (explanation viewer / confidence indicators / evidence explorer / rule-trace viewer / hallucination flags / interpretation dashboard) + super-admin console (interpretation library / version manager / audit console). Panels render REAL computed data — no fabricated interpretation; an empty / abstained result renders an honest empty/abstain state.",
+        "evidence": {
+          "services": {
+            "present": 0,
+            "total": 0,
+            "missing": []
+          },
+          "routes": {
+            "present": 0,
+            "total": 0,
+            "missing": []
+          },
+          "frontend": {
+            "present": 2,
+            "total": 2,
+            "missing": []
+          },
+          "tables": {
+            "present": 0,
+            "absent": 0,
+            "unknown": 0,
+            "total": 0,
+            "absentList": []
+          }
+        }
+      },
+      {
+        "key": "ux",
+        "label": "UX",
+        "status": "SUPPORTED",
+        "statusNote": "Interactive filtering, drill-down, expandable explanations, confidence visualization, evidence linking, saved views (aixp_saved_views), responsive + accessible surfaces. Confidence / evidence visualizations render real computed data; non-finite / missing values are shown as honest empty, never fabricated.",
+        "evidence": {
+          "services": {
+            "present": 0,
+            "total": 0,
+            "missing": []
+          },
+          "routes": {
+            "present": 0,
+            "total": 0,
+            "missing": []
+          },
+          "frontend": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "tables": {
+            "present": 0,
+            "absent": 1,
+            "unknown": 0,
+            "total": 1,
+            "absentList": [
+              "aixp_saved_views"
+            ]
+          }
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "status": "SUPPORTED",
+        "statusNote": "interpretation / explainability / confidence / rule / configuration endpoints under /api/admin/ai-interpretation, composing the reused interpretation substrate + the aixp_* overlay. Read certifications are GET (to_regclass/fs probes); pure interpretation / explanation / confidence / hallucination-scan / composite computes are pure POSTs; overlay writes + governance transitions are flag-gated POSTs. The interpret endpoint returns an honest abstained / deterministic-fallback result when evidence is thin or the model is unavailable.",
+        "evidence": {
+          "services": {
+            "present": 2,
+            "total": 2,
+            "missing": []
+          },
+          "routes": {
+            "present": 1,
+            "total": 1,
+            "missing": []
+          },
+          "frontend": {
+            "present": 0,
+            "total": 0,
+            "missing": []
+          },
+          "tables": {
+            "present": 0,
+            "absent": 0,
+            "unknown": 0,
+            "total": 0,
+            "absentList": []
+          }
+        }
+      },
+      {
+        "key": "testing",
+        "label": "Testing",
+        "status": "SUPPORTED",
+        "statusNote": "A runnable interpretation test suite (tests/capadex-3.10-ai-interpretation.test.ts) covering rule selection (structured-AST condition), grounded token render, confidence scoring + abstention, unsupported-claim detection + reference verification (hallucination protection), deterministic fallback + source tagging, and structured-AST composite-index evaluation + validation (no eval), plus read-only engine composition against the live DB (INTEGRATION) — alongside the certification scan itself. UI / end-to-end / accessibility / performance test suites stay a follow-on boundary (PARTIAL), reported in-line, NOT a gap.",
+        "evidence": {
+          "services": {
+            "present": 0,
+            "total": 0,
+            "missing": []
+          },
+          "routes": {
+            "present": 0,
+            "total": 0,
+            "missing": []
+          },
+          "frontend": {
+            "present": 0,
+            "total": 0,
+            "missing": []
+          },
+          "tables": {
+            "present": 0,
+            "absent": 0,
+            "unknown": 0,
+            "total": 0,
+            "absentList": []
+          }
+        }
+      },
+      {
+        "key": "documentation",
+        "label": "Documentation",
+        "status": "SUPPORTED",
+        "statusNote": "A documentation set (docs/AI_INTERPRETATION.md — architecture / interpretation library / explainability framework / confidence framework / API reference / admin guide / release notes) + the auto-generated deliverable pack (16 reports). An end-user (learner/candidate-facing) interpretation guide stays a follow-on boundary (PARTIAL), reported in-line, NOT a gap.",
+        "evidence": {
+          "services": {
+            "present": 0,
+            "total": 0,
+            "missing": []
+          },
+          "routes": {
+            "present": 0,
+            "total": 0,
+            "missing": []
+          },
+          "frontend": {
+            "present": 0,
+            "total": 0,
+            "missing": []
+          },
+          "tables": {
+            "present": 0,
+            "absent": 0,
+            "unknown": 0,
+            "total": 0,
+            "absentList": []
+          }
+        }
+      }
+    ]
+  },
+  "axis_interpretation_kinds": {
+    "count": 10,
+    "status_counts": {
+      "SUPPORTED": 7,
+      "PARTIAL": 3,
+      "DEAD_END": 0,
+      "MISSING": 0
+    }
+  },
+  "axis_explainability_criteria": {
+    "count": 8,
+    "status_counts": {
+      "SUPPORTED": 8,
+      "PARTIAL": 0,
+      "DEAD_END": 0,
+      "MISSING": 0
+    }
+  },
+  "axis_confidence_criteria": {
+    "count": 5,
+    "status_counts": {
+      "SUPPORTED": 5,
+      "PARTIAL": 0,
+      "DEAD_END": 0,
+      "MISSING": 0
+    }
+  },
+  "axis_hallucination_controls": {
+    "count": 5,
+    "status_counts": {
+      "SUPPORTED": 5,
+      "PARTIAL": 0,
+      "DEAD_END": 0,
+      "MISSING": 0
+    }
+  },
+  "axis_rule_capabilities": {
+    "count": 5,
+    "status_counts": {
+      "SUPPORTED": 5,
+      "PARTIAL": 0,
+      "DEAD_END": 0,
+      "MISSING": 0
+    }
+  },
+  "axis_persona_coverage": {
+    "count": 13,
+    "status_counts": {
+      "SUPPORTED": 12,
+      "PARTIAL": 1,
+      "DEAD_END": 0,
+      "MISSING": 0
+    }
+  },
+  "axis_lifecycle_coverage": {
+    "count": 8,
+    "status_counts": {
+      "SUPPORTED": 4,
+      "PARTIAL": 4,
+      "DEAD_END": 0,
+      "MISSING": 0
+    }
+  },
+  "axis_super_admin_surfaces": {
+    "count": 7,
+    "status_counts": {
+      "SUPPORTED": 7,
+      "PARTIAL": 0,
+      "DEAD_END": 0,
+      "MISSING": 0
+    }
+  },
+  "axis_frontend_surfaces": {
+    "count": 7,
+    "status_counts": {
+      "SUPPORTED": 7,
+      "PARTIAL": 0,
+      "DEAD_END": 0,
+      "MISSING": 0
+    }
+  },
+  "axis_ux_criteria": {
+    "count": 8,
+    "status_counts": {
+      "SUPPORTED": 8,
+      "PARTIAL": 0,
+      "DEAD_END": 0,
+      "MISSING": 0
+    }
+  },
+  "axis_api_groups": {
+    "count": 5,
+    "status_counts": {
+      "SUPPORTED": 5,
+      "PARTIAL": 0,
+      "DEAD_END": 0,
+      "MISSING": 0
+    }
+  },
+  "axis_testing_coverage": {
+    "count": 8,
+    "status_counts": {
+      "SUPPORTED": 7,
+      "PARTIAL": 1,
+      "DEAD_END": 0,
+      "MISSING": 0
+    }
+  },
+  "axis_doc_set": {
+    "count": 7,
+    "status_counts": {
+      "SUPPORTED": 7,
+      "PARTIAL": 0,
+      "DEAD_END": 0,
+      "MISSING": 0
+    }
+  },
+  "axis_traceability": {
+    "link_count": 9,
+    "traceability": [
+      {
+        "key": "standardized_score",
+        "label": "Standardized score",
+        "source": "astd_standard_scores",
+        "status": "SUPPORTED",
+        "note": "The standardized score (3.8) interpreted — the interpretation input, carried on every run.",
+        "source_present": false
+      },
+      {
+        "key": "benchmark_result",
+        "label": "Benchmark result",
+        "source": "abmk_results (3.9)",
+        "status": "SUPPORTED",
+        "note": "The benchmark result (3.9) the interpretation contextualizes — carried on every run; null when no benchmark exists yet (honest null).",
+        "source_present": false
+      },
+      {
+        "key": "assessment_version",
+        "label": "Assessment version",
+        "source": "aixp_runs.assessment_version",
+        "status": "SUPPORTED",
+        "note": "The assessment version the interpreted score was produced against — carried on every run.",
+        "source_present": false
+      },
+      {
+        "key": "norm_version",
+        "label": "Norm version",
+        "source": "aint_norm_tables (3.7) + aixp_runs.norm_version",
+        "status": "SUPPORTED",
+        "note": "The norm reference (3.7) the score was standardized against — carried on every run.",
+        "source_present": true
+      },
+      {
+        "key": "standardization_version",
+        "label": "Standardization version",
+        "source": "astd_configs + aixp_runs.standardization_version",
+        "status": "SUPPORTED",
+        "note": "The versioned standardization config (3.8) applied — carried on every run.",
+        "source_present": false
+      },
+      {
+        "key": "benchmark_version",
+        "label": "Benchmark version",
+        "source": "abmk_configs (3.9) + aixp_runs.benchmark_version",
+        "status": "SUPPORTED",
+        "note": "The versioned benchmark config (3.9) applied — carried on every run.",
+        "source_present": false
+      },
+      {
+        "key": "rule_version",
+        "label": "Rule version",
+        "source": "aixp_rules.version + aixp_runs.rule_version",
+        "status": "SUPPORTED",
+        "note": "The interpretation rule (key + version) that fired — carried on every run.",
+        "source_present": false
+      },
+      {
+        "key": "prompt_version",
+        "label": "Prompt version",
+        "source": "aixp_prompt_links.version + aixp_runs.prompt_version",
+        "status": "SUPPORTED",
+        "note": "The prompt template (key + version) used for narration — carried on every run; null when narration is deterministic (honest null).",
+        "source_present": false
+      },
+      {
+        "key": "interpretation_version",
+        "label": "Interpretation version",
+        "source": "aixp_policies.version + aixp_runs.interpretation_version",
+        "status": "SUPPORTED",
+        "note": "The versioned interpretation policy applied — carried on every run.",
+        "source_present": false
+      }
+    ],
+    "trace_status_counts": {
+      "SUPPORTED": 9,
+      "PARTIAL": 0,
+      "DEAD_END": 0,
+      "MISSING": 0
+    }
+  },
+  "axis_repository_alignment": {
+    "services": {
+      "present": 17,
+      "total": 17
+    },
+    "routes": {
+      "present": 7,
+      "total": 7
+    },
+    "frontend": {
+      "present": 9,
+      "total": 9
+    },
+    "tables": {
+      "present": 0,
+      "absent": 16,
+      "unknown": 0,
+      "total": 16
+    },
+    "trace_link_count": 9,
+    "note": "Every dimension evidence claim is verified INDEPENDENTLY against the live FS (services/routes/frontend) and DB (to_regclass). null (unknown) ≠ 0 (absent). Coverage-only — kept SEPARATE from Confidence/Adoption. The reused interpretation substrate (aiClient health-gated LLM seam / mei-narrative-engine rule-driven narration prior-art / 3.8 structured-AST formula engine / psychometric transforms) is composed by EXISTENCE — never invoked at compose time. aixp_* overlay tables are absent while the flag has never run its write paths — that is expected + honest."
+  },
+  "adoption": {
+    "note": "ADOPTION is real interpreted / governed / audited / saved-view VOLUME across the aixp_* overlay. It is a usage axis reported SEPARATELY from engineering closure — NEVER a gap, NEVER fabricated. Interpretation ABSTAINS below the confidence / k_min=30 evidence floor. null (unreadable) ≠ 0 (empty).",
+    "overlay": {
+      "rules": null,
+      "prompt_links": null,
+      "policies": null,
+      "thresholds": null,
+      "runs": null,
+      "ai_runs": null,
+      "abstained_runs": null,
+      "human_review_runs": null,
+      "governance_events": null,
+      "audit_events": null,
+      "saved_views": null
+    }
+  },
+  "gaps": [
+    {
+      "id": "GAP-AIXP-1",
+      "severity": "Medium",
+      "axis": "ai_interpretation",
+      "title": "Fine-grained interpretation kinds PARTIAL",
+      "detail": "skill / learning / growth interpretation depends on a finer-grained standardized input (skill / learning-outcome scores) that the upstream standardized substrate (3.5 / 3.6 / 3.8) does not uniformly expose, and on accumulated benchmark time-series VOLUME (growth); overall / domain / competency / behaviour / employability / leadership / readiness are SUPPORTED. Closing it depends on finer standardized inputs upstream + adoption, not the interpretation engine itself. PARTIAL, never MISSING."
+    },
+    {
+      "id": "GAP-AIXP-2",
+      "severity": "Medium",
+      "axis": "ai_interpretation",
+      "title": "Persona / lifecycle interpretation depth PARTIAL",
+      "detail": "HR-specific persona depth and the diagnose / recommend / transition / sustain lifecycle stages are reachable via the generic rule set but a first-class persona / stage-specific rule depth depends on authored rule volume + (for recommend) a DO-NOT-IMPLEMENT downstream boundary. Closing it is authoring / adoption, not a new engine."
+    },
+    {
+      "id": "GAP-AIXP-3",
+      "severity": "Future",
+      "axis": "ai_interpretation",
+      "title": "Fine-tuned grounded interpretation model",
+      "detail": "A domain fine-tuned grounded interpretation model (vs the deterministic core + grounded-token-constrained general LLM narration shipped today) is a Future enhancement; the deterministic + grounded + validated path is already correct and hallucination-protected, so a tuned model is additive, not a correctness gap."
+    }
+  ],
+  "gap_counts": {
+    "Launch-Critical": 0,
+    "High": 0,
+    "Medium": 2,
+    "Low": 0,
+    "Future": 1
+  },
+  "gap_total": 3,
+  "resolved_gaps": [
+    {
+      "id": "GAP-AIXP-R1",
+      "severity": "High",
+      "axis": "ai_interpretation",
+      "title": "No canonical interpretation layer",
+      "resolution": "ENGINEERING-CLOSED via reuse: aixp_runs + selectInterpretationRule (3.8 structured-AST condition, NO eval) + renderInterpretation (grounded {{token}} render) turning a standardized (3.8) + benchmarked (3.9) result into an interpreted result across 7 SUPPORTED interpretation kinds. ABSTAINS below the evidence floor."
+    },
+    {
+      "id": "GAP-AIXP-R2",
+      "severity": "High",
+      "axis": "explainability",
+      "title": "No explanation / reasoning for interpretations",
+      "resolution": "ENGINEERING-CLOSED: composeExplanation emitting why / evidence basis / data sources / rule / score / benchmark / assessment / confidence-rationale (8 facets) on every interpretation, with verifyReferences confirming each ref resolves."
+    },
+    {
+      "id": "GAP-AIXP-R3",
+      "severity": "High",
+      "axis": "confidence",
+      "title": "No confidence scoring / abstention",
+      "resolution": "ENGINEERING-CLOSED: computeConfidence scoring interpretations from evidence completeness (score + band + missing-evidence + human-review flag) and ABSTAINING below k_min / the confidence floor. null ≠ 0."
+    },
+    {
+      "id": "GAP-AIXP-R4",
+      "severity": "High",
+      "axis": "hallucination_protection",
+      "title": "No hallucination protection on LLM output",
+      "resolution": "ENGINEERING-CLOSED: grounded-token-constrained narration + detectUnsupportedClaims + verifyReferences + deterministic fallback (checkAIHealth-gated) + source tagging — no output is ever fabricated."
+    },
+    {
+      "id": "GAP-AIXP-R5",
+      "severity": "Medium",
+      "axis": "rule_repository",
+      "title": "No governed / versioned interpretation rule store",
+      "resolution": "ENGINEERING-CLOSED: aixp_rules + aixp_prompt_links + aixp_thresholds + aixp_policies + aixp_governance_log + aixp_audit_log + recordGovernanceTransition (draft→…→retire + version history + rollback + audit, never destructive) + scope-precedence config resolution."
+    },
+    {
+      "id": "GAP-AIXP-R6",
+      "severity": "Medium",
+      "axis": "apis",
+      "title": "No interpretation / explainability / confidence / rule / configuration APIs",
+      "resolution": "ENGINEERING-CLOSED: routes/ai-interpretation.ts exposing interpretation / explainability / confidence / rule / configuration endpoints (GET certifications, pure POST computes, flag-gated POST writes)."
+    },
+    {
+      "id": "GAP-AIXP-R7",
+      "severity": "Medium",
+      "axis": "frontend",
+      "title": "No interpretation console / workbench UI",
+      "resolution": "ENGINEERING-CLOSED: AiInterpretationPanel (super-admin console) + AiInterpretationWorkbench (explanation viewer / confidence indicators / evidence explorer / rule-trace viewer / hallucination flags) nested in the competency-framework admin shell."
+    },
+    {
+      "id": "GAP-AIXP-R8",
+      "severity": "Medium",
+      "axis": "super_admin",
+      "title": "No interpretation library / rule / prompt / threshold / version / approval / audit console",
+      "resolution": "ENGINEERING-CLOSED: AiInterpretationPanel surfaces (interpretation library / rule configuration / prompt management / threshold configuration / version manager / approval / audit console)."
+    },
+    {
+      "id": "GAP-AIXP-R9",
+      "severity": "Low",
+      "axis": "ux",
+      "title": "No saved views / expandable explanations / drill-down",
+      "resolution": "ENGINEERING-CLOSED: aixp_saved_views + saveView/listViews + workbench expandable explanations + drill-down + interactive filtering + evidence linking + confidence visualization."
+    },
+    {
+      "id": "GAP-AIXP-R10",
+      "severity": "Low",
+      "axis": "ai_interpretation",
+      "title": "No composite interpretation index",
+      "resolution": "ENGINEERING-CLOSED via reuse: evaluateInterpretationFormula reusing the 3.8 structured-AST formula engine (evaluateFormula/validateFormula — const/var/op/weighted/clamp/standardize, NO eval/new Function) to compose a weighted composite interpretation index, validated before evaluation."
+    }
+  ],
+  "resolved_gap_counts": {
+    "Launch-Critical": 0,
+    "High": 4,
+    "Medium": 4,
+    "Low": 2,
+    "Future": 0
+  },
+  "resolved_gap_count": 10,
+  "summary": {
+    "flag": "aiInterpretation",
+    "k_min": 30,
+    "axes": [
+      {
+        "key": "ai_interpretation",
+        "label": "AI Interpretation",
+        "question": "Can a standardized + benchmarked result be interpreted (overall / domain / competency / behaviour / employability / leadership / readiness …) deterministically, with an OPTIONAL honest-degrading LLM narration constrained to grounded tokens?"
+      },
+      {
+        "key": "explainability",
+        "label": "Explainability",
+        "question": "Does every interpretation carry a full explanation (why / evidence basis / data sources / rule reference / score reference / benchmark reference / assessment reference / confidence rationale)?"
+      },
+      {
+        "key": "confidence",
+        "label": "Confidence",
+        "question": "Is each interpretation confidence-scored from evidence completeness, with missing-evidence detection, a human-review recommendation and abstention below the floor?"
+      },
+      {
+        "key": "hallucination_protection",
+        "label": "Hallucination Protection",
+        "question": "Is the LLM constrained to grounded tokens, with unsupported-claim detection, reference verification, deterministic fallback and source tagging so no output is fabricated?"
+      },
+      {
+        "key": "rule_repository",
+        "label": "Rule Repository",
+        "question": "Is there a governed, versioned interpretation rule / prompt / threshold / policy repository (draft→…→retire + version history + rollback + audit)?"
+      },
+      {
+        "key": "super_admin",
+        "label": "Super Admin",
+        "question": "Is there a super-admin console (interpretation library / rule configuration / prompt management / threshold configuration / version manager / approval / audit)?"
+      },
+      {
+        "key": "frontend",
+        "label": "Frontend",
+        "question": "Is there an interpretation dashboard / explanation viewer / confidence indicators / evidence explorer / rule-trace viewer / hallucination flags / interpretation workbench?"
+      },
+      {
+        "key": "ux",
+        "label": "UX",
+        "question": "Does the UX support interactive filtering / drill-down / expandable explanations / confidence visualization / evidence linking / saved views / responsive / accessible surfaces?"
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "question": "Do interpretation / explainability / confidence / rule / configuration APIs exist?"
+      },
+      {
+        "key": "testing",
+        "label": "Testing",
+        "question": "Is there a testing suite (unit / integration / API) covering interpretation, explainability, confidence, hallucination protection, determinism and composite-index evaluation?"
+      },
+      {
+        "key": "documentation",
+        "label": "Documentation",
+        "question": "Is there a documentation set (architecture / interpretation library / explainability framework / confidence framework / API / admin / release notes)?"
+      }
+    ],
+    "dimensions": {
+      "dimension_count": 11,
+      "status_counts": {
+        "SUPPORTED": 11,
+        "PARTIAL": 0,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "interpretation_kinds": {
+      "count": 10,
+      "status_counts": {
+        "SUPPORTED": 7,
+        "PARTIAL": 3,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "explainability_criteria": {
+      "count": 8,
+      "status_counts": {
+        "SUPPORTED": 8,
+        "PARTIAL": 0,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "confidence_criteria": {
+      "count": 5,
+      "status_counts": {
+        "SUPPORTED": 5,
+        "PARTIAL": 0,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "hallucination_controls": {
+      "count": 5,
+      "status_counts": {
+        "SUPPORTED": 5,
+        "PARTIAL": 0,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "rule_capabilities": {
+      "count": 5,
+      "status_counts": {
+        "SUPPORTED": 5,
+        "PARTIAL": 0,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "persona_coverage": {
+      "count": 13,
+      "status_counts": {
+        "SUPPORTED": 12,
+        "PARTIAL": 1,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "lifecycle_coverage": {
+      "count": 8,
+      "status_counts": {
+        "SUPPORTED": 4,
+        "PARTIAL": 4,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "super_admin_surfaces": {
+      "count": 7,
+      "status_counts": {
+        "SUPPORTED": 7,
+        "PARTIAL": 0,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "frontend_surfaces": {
+      "count": 7,
+      "status_counts": {
+        "SUPPORTED": 7,
+        "PARTIAL": 0,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "ux_criteria": {
+      "count": 8,
+      "status_counts": {
+        "SUPPORTED": 8,
+        "PARTIAL": 0,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "api_groups": {
+      "count": 5,
+      "status_counts": {
+        "SUPPORTED": 5,
+        "PARTIAL": 0,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "testing_coverage": {
+      "count": 8,
+      "status_counts": {
+        "SUPPORTED": 7,
+        "PARTIAL": 1,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "doc_set": {
+      "count": 7,
+      "status_counts": {
+        "SUPPORTED": 7,
+        "PARTIAL": 0,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "traceability": {
+      "link_count": 9,
+      "trace_status_counts": {
+        "SUPPORTED": 9,
+        "PARTIAL": 0,
+        "DEAD_END": 0,
+        "MISSING": 0
+      }
+    },
+    "repository_alignment": {
+      "services": {
+        "present": 17,
+        "total": 17
+      },
+      "routes": {
+        "present": 7,
+        "total": 7
+      },
+      "frontend": {
+        "present": 9,
+        "total": 9
+      },
+      "tables": {
+        "present": 0,
+        "absent": 16,
+        "unknown": 0,
+        "total": 16
+      }
+    },
+    "adoption": {
+      "note": "ADOPTION is real interpreted / governed / audited / saved-view VOLUME across the aixp_* overlay. It is a usage axis reported SEPARATELY from engineering closure — NEVER a gap, NEVER fabricated. Interpretation ABSTAINS below the confidence / k_min=30 evidence floor. null (unreadable) ≠ 0 (empty).",
+      "overlay": {
+        "rules": null,
+        "prompt_links": null,
+        "policies": null,
+        "thresholds": null,
+        "runs": null,
+        "ai_runs": null,
+        "abstained_runs": null,
+        "human_review_runs": null,
+        "governance_events": null,
+        "audit_events": null,
+        "saved_views": null
+      }
+    },
+    "decisions": [
+      {
+        "id": "D1",
+        "title": "Compose, never duplicate",
+        "decision": "AI Interpretation COMPOSES the existing interpretation substrate (aiClient health-gated LLM seam + mei-narrative-engine rule-driven narration prior-art) + the pure 3.8 structured-AST formula engine + the pure psychometric transforms under one platform + an additive aixp_* overlay — NO duplicate AI / interpretation engine, NO V2, NO breaking change."
+      },
+      {
+        "id": "D2",
+        "title": "Downstream of standardization + benchmarking",
+        "decision": "Interpretation consumes the standardized scores (3.8) + benchmark results (3.9) + norm references (3.7). It NEVER re-scores, NEVER re-standardizes, NEVER re-benchmarks, NEVER builds a norm."
+      },
+      {
+        "id": "D3",
+        "title": "Eleven dimensions certified SEPARATELY",
+        "decision": "ai_interpretation · explainability · confidence · hallucination_protection · rule_repository · super_admin · frontend · ux · apis · testing · documentation are reported SEPARATELY and NEVER composited into a single score."
+      },
+      {
+        "id": "D4",
+        "title": "Deterministic core, honest-degrading AI narration",
+        "decision": "The interpretation CORE is deterministic (rule-select via 3.8 AST + grounded token render + confidence + explanation). The LLM narration is OPTIONAL: health-gated, grounded-token-constrained, output-validated (detectUnsupportedClaims + verifyReferences), and falls back to deterministic + source-tag on ANY failure. AI output is NEVER fabricated."
+      },
+      {
+        "id": "D5",
+        "title": "Composite index is a STRUCTURED AST (no eval)",
+        "decision": "The composite interpretation index reuses the 3.8 structured-AST formula engine (const/var/op/weighted/clamp/standardize nodes) evaluated by a whitelisted interpreter (evaluateFormula) — NEVER eval / new Function / string-executed. Formulas are validated before evaluation."
+      },
+      {
+        "id": "D6",
+        "title": "ABSTAIN below floor; null ≠ 0",
+        "decision": "Interpretation ABSTAINS below k_min real evidence / the confidence floor. Coverage ⟂ Confidence ⟂ Adoption are never composited. null (unknown) ≠ 0 (absent). Never fabricate."
+      },
+      {
+        "id": "D7",
+        "title": "Governed & versioned, never destructive",
+        "decision": "Every interpretation asset (rule / prompt / threshold / policy) moves through draft→review→validate→approve→publish→archive→retire with append-only version history + rollback + audit trail. Governance transitions are recorded, never destructive."
+      },
+      {
+        "id": "D8",
+        "title": "Byte-identical OFF incl. schema",
+        "decision": "All DDL runs only on the flag-gated write paths; read certifications are GET (to_regclass/fs probes) and pure computes are side-effect-free. OFF is byte-identical incl. schema (0 aixp_* tables)."
+      },
+      {
+        "id": "D9",
+        "title": "DO-NOT-IMPLEMENT boundaries",
+        "decision": "Recommendation Engine, Learning-Path Engine, Growth-Planning Engine, Report Generation and Dashboard Intelligence are NOT built in 3.10 — interpretation FEEDS them. They are later-phase BOUNDARIES, never counted as gaps."
+      },
+      {
+        "id": "D10",
+        "title": "Breadth is honest, never forced",
+        "decision": "Fine-grained interpretation KINDS (finer standardized inputs upstream), some persona / lifecycle depth (authored volume) and longitudinal modes (accumulated volume) are PARTIAL / ADOPTION — reported SEPARATELY and in-line, never padded to 100%, never fabricated."
+      }
+    ],
+    "boundaries": [
+      {
+        "key": "recommendation_engine",
+        "label": "Recommendation Engine",
+        "owner": "later phase",
+        "note": "Interpretation FEEDS recommendations; it does NOT generate them. Building a recommendation engine here is out of scope — a boundary, not a gap."
+      },
+      {
+        "key": "learning_path",
+        "label": "Learning-Path Engine",
+        "owner": "later phase",
+        "note": "Interpretation of \"what to learn\" is present; authoring a learning path is out of scope — a boundary, not a gap."
+      },
+      {
+        "key": "growth_planning",
+        "label": "Growth-Planning Engine",
+        "owner": "later phase",
+        "note": "Interpretation of growth is present; a growth-planning engine is out of scope — a boundary, not a gap."
+      },
+      {
+        "key": "report_generation",
+        "label": "Report Generation",
+        "owner": "later phase (report-factory)",
+        "note": "Interpretation is a report INPUT; report generation / rendering is out of scope here — a boundary, not a gap."
+      },
+      {
+        "key": "dashboard_intelligence",
+        "label": "Dashboard Intelligence",
+        "owner": "later phase",
+        "note": "Interpretation feeds dashboards; building dashboard intelligence is out of scope here — a boundary, not a gap."
+      }
+    ],
+    "gap_counts": {
+      "Launch-Critical": 0,
+      "High": 0,
+      "Medium": 2,
+      "Low": 0,
+      "Future": 1
+    },
+    "gap_total": 3,
+    "resolved_gap_counts": {
+      "Launch-Critical": 0,
+      "High": 4,
+      "Medium": 4,
+      "Low": 2,
+      "Future": 0
+    },
+    "resolved_gap_count": 10,
+    "ready_for_certification": {
+      "ready": true,
+      "verdict": "YES",
+      "note": "Enterprise AI Interpretation & Explainability is READY for certification: all ELEVEN dimensions are certified, every standardized (3.8) + benchmarked (3.9) result flows through a clean interpretation seam (standardized + benchmarked result → rule selection via 3.8 structured-AST condition → grounded {{token}} render → confidence scoring + abstention → 8-facet explanation → OPTIONAL grounded-token-constrained LLM narration validated by unsupported-claim detection + reference verification → deterministic fallback + source tag → governance → audit), and there are 0 Launch-Critical gaps. The interpretation / explainability / confidence / hallucination-protection / rule-repository capabilities are ENGINEERING-CLOSED via reuse-before-build (pure selectInterpretationRule / renderInterpretation / computeConfidence / composeExplanation / detectUnsupportedClaims / verifyReferences / evaluateInterpretationFormula mechanisms reusing the existing aiClient health-gated LLM seam + the 3.8 structured-AST formula engine + the psychometric transforms, over the additive aixp_* overlay). Interpretation ABSTAINS below the confidence / k_min evidence floor — never fabricated. The OPEN gaps are all NON-Launch-Critical breadth / upstream-input boundaries: GAP-AIXP-1 (fine-grained skill / learning / growth interpretation kinds — depend on finer standardized inputs upstream / accumulated volume; the 7 core kinds are SUPPORTED) + GAP-AIXP-2 (persona / lifecycle interpretation depth — reachable via the generic rule set, first-class depth depends on authored volume) are Medium; GAP-AIXP-3 (a domain fine-tuned grounded interpretation model — the deterministic + grounded + validated path already ships) is Future. Real interpreted / governed / saved VOLUME is an ADOPTION axis (honest 0), reported SEPARATELY, never a gap."
+    },
+    "enterprise_ready": {
+      "verdict": "STRUCTURAL_COMPLETE_ADOPTION_PENDING",
+      "note": "ONE canonical Enterprise AI Interpretation & Explainability Platform: a single certified layer COMPOSING the existing interpretation substrate (aiClient health-gated LLM seam / mei-narrative-engine rule-driven narration prior-art) + the pure 3.8 structured-AST formula engine + the pure psychometric transforms (zFromValue/zToPercentile) under one registry + an additive aixp_* overlay — NO duplicate AI / interpretation engine, NO V2, NO breaking change. Scope is INTERPRETATION, EXPLAINABILITY, CONFIDENCE & HALLUCINATION-PROTECTION only (ai_interpretation · explainability · confidence · hallucination_protection · rule_repository · super_admin · frontend · ux · apis · testing · documentation) — it turns a STANDARDIZED score (3.8) + BENCHMARK result (3.9) into an interpreted, explainable, confidence-scored, hallucination-protected result and NEVER re-scores, re-standardizes, re-benchmarks or builds a norm. The interpretation CORE is DETERMINISTIC (rule-select via 3.8 AST + grounded token render + confidence + 8-facet explanation); the LLM NARRATION is an OPTIONAL, honest-degrading seam (checkAIHealth-gated, grounded-token-constrained, output-validated by detectUnsupportedClaims + verifyReferences, falling back to deterministic + source-tag on ANY failure) — AI output is NEVER fabricated. The composite interpretation index is a STRUCTURED AST (no eval). The ELEVEN dimensions are certified SEPARATELY: the interpretation / explainability / confidence / hallucination-protection / rule-repository / API / console / workbench capabilities were ENGINEERING-CLOSED via REUSE-before-build (pure compute mechanisms reusing the existing aiClient + 3.8 formula engine + psychometric transforms + own additive overlay tables). A governed, versioned interpretation asset store (rules / prompts / thresholds / policies resolved most-specific-wins) with draft→…→retire + version history + rollback + audit + saved views is WIRED, each gated by aiInterpretation so OFF is byte-identical incl. schema (all DDL runs only on the flag-gated write paths). Recommendation / learning-path / growth-planning / report-generation / dashboard-intelligence are DO-NOT-IMPLEMENT boundaries (interpretation FEEDS them) — reported in-line, NEVER gaps. The OPEN gaps (GAP-AIXP-1 fine-grained interpretation kinds + GAP-AIXP-2 persona / lifecycle depth — both Medium breadth boundaries, each already reachable via the generic rule set; GAP-AIXP-3 fine-tuned grounded model — Future, additive) are reported in-line, NOT Launch-Critical. What remains beyond them is ADOPTION — real interpreted / governed / saved VOLUME across the overlay — a usage axis reported SEPARATELY, NEVER a gap. Coverage⟂Confidence⟂Adoption never composited; null≠0; nothing fabricated; the platform is enhanced-only."
+    }
+  }
+}

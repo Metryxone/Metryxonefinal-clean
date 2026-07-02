@@ -370,6 +370,15 @@ export const FEATURE_FLAGS = {
    *  ABSTAINS below k_min real members (never fabricated). Default OFF, byte-identical incl. schema (DDL only on
    *  flag-gated write paths). Env: `FF_BENCHMARK_INTELLIGENCE`. */
   benchmarkIntelligence: false,
+  /** CAPADEX 3.0 — Program 3 · Phase 3.10 Enterprise AI Interpretation & Explainability Platform. When ON,
+   *  exposes a read-only certification composer over the ONE canonical AI Interpretation model + reuse-before-build
+   *  engineering-closure mechanisms (deterministic rule-select → grounded render → confidence + abstention →
+   *  8-facet explanation → OPTIONAL health-gated grounded narration → hallucination guard). ELEVEN dimensions
+   *  certified SEPARATELY. Interpretation ABSTAINS below the confidence / k_min floor (never fabricated). Scope
+   *  is interpretation/explainability/confidence/hallucination-protection ONLY — recommendation / learning-path /
+   *  report / dashboard are OUT OF SCOPE boundaries, NOT gaps. Default OFF, byte-identical incl. schema (DDL only
+   *  on flag-gated write paths). Env: `FF_AI_INTERPRETATION`. */
+  aiInterpretation: false,
   /** CAPADEX 3.0 — Program 3 · Phase 3.2A Persona Experience / Intelligent Journey Router. When ON, the
    *  generic single-page persona selector is replaced by a progressive 5-step onboarding wizard
    *  (Who → Refine → Goal → Personalize → AI Journey Router) that REUSES the existing persona/sub-persona
@@ -2430,6 +2439,11 @@ export function isScoreStandardizationEnabled(): boolean {
 /** CAPADEX 3.0 — Program 3 · Phase 3.9 Enterprise Benchmark Intelligence Platform master switch. */
 export function isBenchmarkIntelligenceEnabled(): boolean {
   return isFlagEnabled('benchmarkIntelligence');
+}
+
+/** CAPADEX 3.0 — Program 3 · Phase 3.10 Enterprise AI Interpretation & Explainability Platform master switch. */
+export function isAiInterpretationEnabled(): boolean {
+  return isFlagEnabled('aiInterpretation');
 }
 
 /** CAPADEX 3.0 — Program 3 · Phase 3.2A Persona Experience / Intelligent Journey Router master switch. */

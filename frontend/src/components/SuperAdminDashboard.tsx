@@ -183,6 +183,7 @@ const AssessmentSciencePanel = lazy(() => import('./superadmin/AssessmentScience
 const AssessmentIntelligencePanel = lazy(() => import('./superadmin/AssessmentIntelligencePanel'));
 const ScoreStandardizationPanel = lazy(() => import('./superadmin/ScoreStandardizationPanel'));
 const BenchmarkIntelligencePanel = lazy(() => import('./superadmin/BenchmarkIntelligencePanel'));
+const AiInterpretationPanel = lazy(() => import('./superadmin/AiInterpretationPanel'));
 const DepartmentsPanel = lazy(() => import('./superadmin/DepartmentsPanel'));
 const RolesPanel = lazy(() => import('./superadmin/RolesPanel'));
 const RoleFamiliesPanel = lazy(() => import('./superadmin/RoleFamiliesPanel'));
@@ -579,6 +580,17 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
     queryKey: ['/api/benchmark-intelligence/enabled', 'enabled'],
     queryFn: async () => {
       const res = await fetch('/api/benchmark-intelligence/enabled', { credentials: 'include' });
+      return res.ok;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // ── AI Interpretation & Explainability (CAPADEX 3.0 · 3.10) flag probe (file-registry flag aiInterpretation).
+  //    Probe /api/ai-interpretation/enabled (503-before-auth when OFF) → tab omitted (byte-identical UI). ──
+  const { data: aiInterpretationEnabled = false } = useQuery<boolean>({
+    queryKey: ['/api/ai-interpretation/enabled', 'enabled'],
+    queryFn: async () => {
+      const res = await fetch('/api/ai-interpretation/enabled', { credentials: 'include' });
       return res.ok;
     },
     enabled: isAuthenticated,
@@ -1218,6 +1230,7 @@ export default function SuperAdminDashboard({ onNavigate }: { onNavigate?: (scre
                       ...(assessmentIntelligenceEnabled ? [{ id: 'assessment-intelligence', label: 'Assessment Intelligence', icon: Brain, node: <AssessmentIntelligencePanel /> }] : []),
                       ...(scoreStandardizationEnabled ? [{ id: 'score-standardization', label: 'Score Standardization', icon: Sliders, node: <ScoreStandardizationPanel /> }] : []),
                       ...(benchmarkIntelligenceEnabled ? [{ id: 'benchmark-intelligence', label: 'Benchmark Intelligence', icon: GitCompare, node: <BenchmarkIntelligencePanel /> }] : []),
+                      ...(aiInterpretationEnabled ? [{ id: 'ai-interpretation', label: 'AI Interpretation', icon: Sparkles, node: <AiInterpretationPanel /> }] : []),
                       ...(mx203KnowledgeEnabled ? [{ id: 'mx203-knowledge-center', label: 'Knowledge Center', icon: BookOpen, node: <Mx203KnowledgeCenterPanel /> }] : []),
                       { id: 'ont-career-tracks',        label: 'Career Tracks',            icon: Map,           node: <CareerTracksPanel /> },
                       { id: 'ont-competency-levels',    label: 'Competency Levels',        icon: BarChart2,     node: <CompetencyLevelsPanel /> },

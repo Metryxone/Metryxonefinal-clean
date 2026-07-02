@@ -1,6 +1,6 @@
 # Adaptive Assessment Activation — Evidence
 
-Engine version: `1.0.0` · generated 2026-07-01T16:49:39.687Z
+Engine version: `1.0.0` · generated 2026-07-02T01:20:52.390Z
 
 > Read-only. Pure engine + `buildDifficultyPlan` over the live bank. No writes, no DDL.
 
